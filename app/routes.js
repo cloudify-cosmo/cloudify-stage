@@ -5,14 +5,15 @@
 import React from 'react';
 import { Route, IndexRoute, Redirect } from 'react-router';
 
-import Layout from './components/Layout';
+import Layout from './components/layout/Layout';
 import Page from './components/Page';
-import NotFound from './components/NotFoundComponent';
+import NotFound from './components/NotFound';
 
 export default (
     <Route path="/" component={Layout}>
-        <IndexRoute component={Page} />
+        <Route path='/page/(:pageId)' component={Page}/>
         <Route path="404" component={NotFound} />
+        <IndexRoute component={Page} />
         <Redirect from="*" to="404" />
     </Route>
 );

@@ -1,6 +1,5 @@
 'use strict';
 
-//var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
@@ -14,7 +13,8 @@ module.exports = {
     ],
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'app.bundle.js'
+        filename: 'app.bundle.js',
+        publicPath: '/'
     },
 
     plugins: [
@@ -28,6 +28,12 @@ module.exports = {
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development')
+        })
+        ,
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            _: "lodash"
         })
     ],
     //eslint: {
@@ -50,8 +56,8 @@ module.exports = {
                 test: /\.scss$/,
                 loader: 'style!css!sass?modules&localIdentName=[name]---[local]---[hash:base64:5]'
             },
-            { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
-            { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" }
+            { test: /\.css$/, loader: "style-loader!css-loader?importLoaders=1" },
+            { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
         ]
     }
 };

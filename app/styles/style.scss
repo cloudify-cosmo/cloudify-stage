@@ -1,3 +1,60 @@
 body {
-  color: red
 }
+
+.main {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  top: 40px;
+
+  .ui.left.menu.sidebar {
+    z-index: 0;
+    top: 38px;
+    height: auto !important;
+    bottom: 29px;
+  }
+}
+/*
+.header {
+  height : 50px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0px;
+  left :0;
+  right: 0;
+  height: 20px;
+}
+
+.main {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 20px;
+  top: 50px;
+
+  .sidebar{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width : 200px;
+
+
+    .pages {
+      .active {
+        color : blue;
+      }
+    }
+  }
+
+  .dashboard {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 200px;
+    right: 0;
+  }
+}*/

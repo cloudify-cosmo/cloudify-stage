@@ -4,11 +4,21 @@
 
 import React, { Component, PropTypes } from 'react';
 
+import SideBar from './SideBar';
+import Dashboard from './Dashboard';
+
 export default class Page extends Component {
     render() {
+
         return (
-            <div className="page-container">
-                this is a page
+            <div className='main'>
+                <SideBar/>
+
+                <div className="pusher">
+                    <div className="ui basic segment">
+                        <Dashboard/>
+                    </div>
+                </div>
             </div>
         );
     }

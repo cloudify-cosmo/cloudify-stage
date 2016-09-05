@@ -7,11 +7,15 @@ import { routerMiddleware } from 'react-router-redux'
 import createLogger from 'redux-logger'
 import { createStore, applyMiddleware } from 'redux'
 
+import StatePersister from './utils/StatePersister';
+import throttle from 'lodash/throttle';
+
 import reducers from './reducers';
 
-export default (initialState = {},history) => {
+export default (history) => {
 
-    return createStore(
+    const initialState = StatePersister.load();
+    var store = createStore(
         reducers,
         initialState,
         applyMiddleware(
@@ -20,5 +24,9 @@ export default (initialState = {},history) => {
             createLogger() // neat middleware that logs actions
         )
     );
+
+    store.subscribe(throttle(()=>{StatePersister.save(store.getState());},1000));
+
+    return store;
 };
 

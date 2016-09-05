@@ -4,9 +4,12 @@
 
 import { routerReducer} from 'react-router-redux';
 import { combineReducers } from 'redux';
+import pages from './pageReducer';
+import selectedPage from './selectedPageReducer';
 
 const rootReducer = combineReducers({
-    // reducer,
+    pages,
+    selectedPage,
     routing: routerReducer
 });
 
