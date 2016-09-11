@@ -2,9 +2,11 @@
 
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
 
 module.exports = {
+    context: path.join(__dirname),
     devtool: 'source-map',
     resolve: {
         alias: {
@@ -23,6 +25,10 @@ module.exports = {
     },
 
     plugins: [
+        new CopyWebpackPlugin([
+            { from: 'app/images',
+             to: 'app/images'}
+        ]),
         new HtmlWebpackPlugin({
             template: 'app/index.tmpl.html',
             inject: 'body',
@@ -62,7 +68,7 @@ module.exports = {
                 loader: 'style!css!sass?modules&localIdentName=[name]---[local]---[hash:base64:5]'
             },
             { test: /\.css$/, loader: "style-loader!css-loader?importLoaders=1" },
-            { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
+            { test: /\.(png|woff|woff2|eot|ttf|svg|jpg)$/, loader: 'url-loader?limit=100000' }
         ]
     }
 };
