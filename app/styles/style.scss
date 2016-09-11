@@ -44,14 +44,15 @@ body {
 }
 
 // TODO need to calc it according to screen size
-.addWidgetPopup {
-  max-height: 400px;
+.addWidgetModal {
+  max-height: 600px;
 
   .widgetsList {
-    max-height: 235px;
+    max-height: 435px;
     overflow: auto;
   }
 }
+
 /*
 .header {
   height : 50px;
