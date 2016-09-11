@@ -30,10 +30,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 let EditWidgetComponent = ({plugins,onWidgetEdited,onPluginInstalled}) => {
     return (
-        <div>
+        <span>
             <EditWidgetIcon/>
             <EditWidgetModal plugins={plugins} onWidgetEdited={onWidgetEdited} onPluginInstalled={onPluginInstalled}/>
-        </div>
+        </span>
     );
 };
 

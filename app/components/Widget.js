@@ -69,10 +69,10 @@ export default class Widget extends Component {
                         :
                         <div className='ui segment red grid-stack-item-content'>
                             <h5 className='ui header dividing'>{this.props.widget.name}</h5>
-                            <span className='widgetEditButtons'>
+                            <div className='widgetEditButtons'>
                                 <EditWidget/>
                                 <i className="remove link icon small"></i>
-                            </span>
+                            </div>
 
                             Widget content
                         </div>
