@@ -29,6 +29,10 @@ module.exports = {
             { from: 'app/images',
              to: 'app/images'}
         ]),
+        new CopyWebpackPlugin([
+            { from: 'plugins',
+             to: 'plugins'}
+        ]),
         new HtmlWebpackPlugin({
             template: 'app/index.tmpl.html',
             inject: 'body',
