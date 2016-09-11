@@ -5,6 +5,7 @@
 
 import * as types from '../actions/types';
 import {v4} from 'node-uuid';
+import widgets from './widgetsReducer';
 
 const page = (state = {}, action) => {
     switch (action.type) {
@@ -27,6 +28,15 @@ const pages = (state = [], action) => {
                 ...state,
                 page(undefined, action)
             ];
+        case types.ADD_WIDGET:
+            return state.map( (page) => {
+                if (page.id === action.pageId) {
+                    return Object.assign({}, page, {
+                        widgets: widgets(page.widgets,action)
+                    })
+                }
+                return page
+            });
         default:
             return state;
     }

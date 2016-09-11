@@ -12,7 +12,6 @@ import React, { Component, PropTypes } from 'react';
 
 export default class EditIcon extends Component {
     static propTypes = {
-        children: PropTypes.any.isRequired,
         onClick: PropTypes.func
     };
 

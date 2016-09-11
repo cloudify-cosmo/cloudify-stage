@@ -2,18 +2,19 @@
  * Created by kinneretzin on 07/09/2016.
  */
 
+
 addPlugin({
-    name: "topology",
+    name: "usersList",
     description: 'blah blah blah',
-    initialWidth: 8,
-    initialHeight: 4,
-    color: "yellow",
+    initialWidth: 4,
+    initialHeight: 3,
+    color: "orange",
     render: function(plugin,context,pluginUtils) {
+
         if (!plugin.template) {
-            return 'Topology: missing template';
+            return 'usersList: missing template';
         }
 
         return pluginUtils.buildFromTemplate(plugin.template);
-
     }
 });

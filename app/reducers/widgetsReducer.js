@@ -13,6 +13,8 @@ const widget = (state = {}, action) => {
             return {
                 id: v4(),
                 name: action.name,
+                width: action.plugin.initialWidth,
+                height: action.plugin.initialHeight,
                 plugin: action.plugin.name
             };
         default:

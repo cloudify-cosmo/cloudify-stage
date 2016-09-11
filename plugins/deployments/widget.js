@@ -7,8 +7,13 @@ addPlugin({
     description: 'blah blah blah',
     initialWidth: 8,
     initialHeight: 6,
-    render: function(pluginUtils,context) {
-        return 'bbb';
+    color : "purple",
+    render: function(plugin,context,pluginUtils) {
 
+        if (!plugin.template) {
+            return 'deployments: missing template';
+        }
+
+        return pluginUtils.buildFromTemplate(plugin.template);
     }
 });

@@ -18,8 +18,11 @@ export default (history) => {
 
     if (initialState === undefined) {
         initialState = {
-            pages: [],
-            selected: null
+            pages: [{
+                id: "0",
+                name: 'first page',
+                widgets: []
+            }]
         }
     }
 

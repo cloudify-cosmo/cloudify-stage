@@ -9,3 +9,4 @@ export const ADD_WIDGET = 'ADD_WIDGET';
 export const REQ_PLUGINS = 'REQ_PLUGINS';
 export const RES_PLUGINS = 'RES_PLUGINS';
 export const ERR_PLUGINS = 'ERR_PLUGINS';
+export const SET_CONTEXT_VALUE = 'SET_CONTEXT_VALUE';

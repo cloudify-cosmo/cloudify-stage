@@ -12,6 +12,7 @@ import InlineEdit from 'react-edit-inline';
 
 import EditWidget from '../containers/EditWidget';
 import PluginUtils from '../utils/pluginUtils';
+import PluginContext from '../utils/pluginContext';
 
 
 export default class Widget extends Component {
@@ -37,6 +38,10 @@ export default class Widget extends Component {
         this.dataChanged = this.dataChanged.bind(this);
     };
 
+    componentDidMount() {
+    }
+
+
     dataChanged(data) {
         this.setState({...data})
     }
@@ -44,7 +49,11 @@ export default class Widget extends Component {
     renderWidget() {
         var widgetHtml = 'widget content';
         if (this.props.widget.plugin && this.props.widget.plugin.render) {
-            widgetHtml = this.props.widget.plugin.render(this.props.widget.plugin,{},PluginUtils);
+            try {
+                widgetHtml = this.props.widget.plugin.render(this.props.widget.plugin,PluginContext,PluginUtils);
+            } catch (e) {
+                console.error('Error rendering widget',e);
+            }
         }
         return {__html: widgetHtml};
     }
@@ -53,7 +62,7 @@ export default class Widget extends Component {
         return (
             <div id={this.props.widget.id}
                  className='grid-stack-item widget'
-                 data-gs-auto-position='true' data-gs-width="3" data-gs-height="2">
+                 data-gs-auto-position='true' data-gs-width={this.props.widget.width} data-gs-height={this.props.widget.height}>
                     {/*
                     <Flipcard type="vertical">
                         <div className='ui segment red widgetContent' >
@@ -66,7 +75,7 @@ export default class Widget extends Component {
                     */}
                     {
                         this.state.isInEditMode ?
-                        <div className='ui segment red grid-stack-item-content'>
+                        <div className={'ui segment grid-stack-item-content '+ (this.props.widget.plugin && this.props.widget.plugin.color ? this.props.widget.plugin.color : 'red')}>
                             <h5 className='ui header dividing'>{this.props.widget.name} edit mode</h5>
 
                             <div className='widgetSaveButtons ui segment center aligned basic'>
@@ -85,7 +94,7 @@ export default class Widget extends Component {
                             </div>
                         </div>
                         :
-                        <div className='ui segment red grid-stack-item-content'>
+                        <div className={'ui segment grid-stack-item-content '+ (this.props.widget.plugin && this.props.widget.plugin.color ? this.props.widget.plugin.color : 'red')}>
                             <h5 className='ui header dividing'>
                                             <InlineEdit
                                           text={this.state.name}
