@@ -16,5 +16,12 @@ addPlugin({
         }
 
         return pluginUtils.buildFromTemplate(plugin.template);
+    },
+    attachEvents : function (plugin,context,pluginUtils) {
+        $('.blueprintName').on('click',function(event) {
+            //var element = $(event.currentTarget).data('name');
+            context.setValue('blueprintId',2);
+        });
+
     }
 });
