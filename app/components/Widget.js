@@ -9,6 +9,7 @@
 
 import React, { Component, PropTypes } from 'react';
 
+import EditWidget from '../containers/EditWidget';
 
 export default class Widget extends Component {
     static propTypes = {
@@ -17,6 +18,10 @@ export default class Widget extends Component {
 
     toggleEditMode() {
         this.setState({isInEditMode: !this.state.isInEditMode});
+        $('.widgetSettingsIcon')
+        .click(function(){
+          $('.editWidgetModal.modal').modal('show');
+          });
     }
 
     constructor(props, context) {
@@ -64,10 +69,10 @@ export default class Widget extends Component {
                         :
                         <div className='ui segment red grid-stack-item-content'>
                             <h5 className='ui header dividing'>{this.props.widget.name}</h5>
-                            <div className='widgetEditButtons'>
-                                <i className="write link icon small" onClick={this.toggleEditMode.bind(this)}></i>
+                            <span className='widgetEditButtons'>
+                                <EditWidget/>
                                 <i className="remove link icon small"></i>
-                            </div>
+                            </span>
 
                             Widget content
                         </div>

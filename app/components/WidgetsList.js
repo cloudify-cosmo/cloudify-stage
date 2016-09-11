@@ -358,6 +358,8 @@ export default class WidgetsList extends Component {
                         return <Widget key={widget.id} widget={widget}></Widget>;
                     },this)
                 }
+            <Widget key={0} widget={{name:'abc',id:0}}></Widget>
+
             </div>
         );
     }

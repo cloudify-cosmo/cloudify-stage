@@ -15,10 +15,6 @@ export default class AddWidgetModal extends Component {
         onPluginInstalled: PropTypes.func.isRequired
     };
 
-    componentDidMount () {
-        $('.large.modal')
-           .modal('show');
-    }
 
     render() {
         return (
