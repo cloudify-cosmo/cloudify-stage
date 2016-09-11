@@ -353,6 +353,7 @@ export default class WidgetsList extends Component {
                     </div>
                 </div>
 
+                <Widget key={0} widget={{name:'abc',id:0}}></Widget>
                 {
                     this.props.widgets.map(function(widget){
                         return <Widget key={widget.id} widget={widget}></Widget>;

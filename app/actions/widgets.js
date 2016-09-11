@@ -5,9 +5,10 @@
 
 import * as types from './types';
 
-export function addWidget(name) {
+export function addWidget(name,plugin) {
     return {
         type: types.ADD_WIDGET,
-        name
+        name,
+        plugin
     };
 }

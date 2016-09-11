@@ -12,7 +12,8 @@ const widget = (state = {}, action) => {
         case types.ADD_WIDGET:
             return {
                 id: v4(),
-                name: action.name
+                name: action.name,
+                plugin: action.plugin.name
             };
         default:
             return state;

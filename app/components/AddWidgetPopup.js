@@ -15,15 +15,20 @@ export default class AddWidgetPopup extends Component {
         onPluginInstalled: PropTypes.func.isRequired
     };
 
-    componentDidMount () {
-        $('.addWidgetBtn')
-            .popup({
-                transition: 'vertical flip',
-                popup: '.addWidgetPopup',
-                on: 'click',
-                position: 'bottom left'
-            })
-        ;
+    //componentDidMount () {
+    //    $('.addWidgetBtn')
+    //        .popup({
+    //            transition: 'vertical flip',
+    //            popup: '.addWidgetPopup',
+    //            on: 'click',
+    //            position: 'bottom left'
+    //        })
+    //    ;
+    //}
+
+    addWidget(widget) {
+        this.props.onWidgetAdded(widget);
+        $('.addWidgetBtn').popup('hide');
     }
 
     render() {
@@ -53,105 +58,15 @@ export default class AddWidgetPopup extends Component {
                                             <div className="description">
                                             </div>
                                             <div className="extra">
-                                                <div className="ui right floated secondary button small">
+                                                <div className="ui right floated secondary button small" onClick={this.addWidget.bind(this,widget)}>
                                                     Add
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 );
-                            })
+                            },this)
                         }
-                        <div className="item">
-                            <div className='ui image small bordered'>
-                                <img src="/app/images/topology/topology4.png"/>
-                            </div>
-                            <div className="content">
-                                <a className="header">Topology</a>
-                                <div className="meta">
-                                    <span>This widget shows topology ...</span>
-                                </div>
-                                <div className="description">
-                                </div>
-                                <div className="extra">
-                                    <div className="ui right floated secondary button small">
-                                        Add
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className='ui image small bordered'>
-                                <img src="/app/images/topology/topology2.png"/>
-                            </div>
-                            <div className="content">
-                                <a className="header">Blueprints</a>
-                                <div className="meta">
-                                    <span>list of blueprints</span>
-                                </div>
-                                <div className="description">
-                                </div>
-                                <div className="extra">
-                                    <div className="ui right floated secondary button small">
-                                        Add
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className='ui image small bordered'>
-                                <img src="/app/images/topology/topology1.png"/>
-                            </div>
-                            <div className="content">
-                                <a className="header">Deployments</a>
-                                <div className="meta">
-                                    <span>This widget a list of deployments</span>
-                                </div>
-                                <div className="description">
-                                </div>
-                                <div className="extra">
-                                    <div className="ui right floated secondary button small">
-                                        Add
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className='ui image small bordered'>
-                                <img src="/app/images/topology/topology5.png"/>
-                            </div>
-                            <div className="content">
-                                <a className="header">Users</a>
-                                <div className="meta">
-                                    <span>Users list</span>
-                                </div>
-                                <div className="description">
-                                </div>
-                                <div className="extra">
-                                    <div className="ui right floated secondary button small">
-                                        Add
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="item">
-                            <div className='ui image small bordered'>
-                                <img src="/app/images/topology/topology3.png"/>
-                            </div>
-                            <div className="content">
-                                <a className="header">KPI</a>
-                                <div className="meta">
-                                    <span>Shows a selected KPI</span>
-                                </div>
-                                <div className="description">
-                                </div>
-                                <div className="extra">
-                                    <div className="ui right floated secondary button small">
-                                        Add
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <button className="fluid ui button">Install new plugin</button>

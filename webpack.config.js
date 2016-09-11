@@ -5,7 +5,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 
 module.exports = {
-    devtool: 'eval-source-map',
+    devtool: 'source-map',
     resolve: {
         alias: {
             'jquery-ui': 'jquery-ui/ui'
