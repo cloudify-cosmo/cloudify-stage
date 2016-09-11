@@ -8,9 +8,11 @@
 
 
 import React, { Component, PropTypes } from 'react';
+import InlineEdit from 'react-edit-inline';
 
 import EditWidget from '../containers/EditWidget';
 import PluginUtils from '../utils/pluginUtils';
+
 
 export default class Widget extends Component {
     static propTypes = {
@@ -29,9 +31,15 @@ export default class Widget extends Component {
         super(props, context);
 
         this.state = {
-            isInEditMode: false
+            isInEditMode: false,
+            name: "Demo Widget"
         };
+        this.dataChanged = this.dataChanged.bind(this);
     };
+
+    dataChanged(data) {
+        this.setState({...data})
+    }
 
     renderWidget() {
         var widgetHtml = 'widget content';
@@ -78,7 +86,13 @@ export default class Widget extends Component {
                         </div>
                         :
                         <div className='ui segment red grid-stack-item-content'>
-                            <h5 className='ui header dividing'>{this.props.widget.name}</h5>
+                            <h5 className='ui header dividing'>
+                                            <InlineEdit
+                                          text={this.state.name}
+                                            change={this.dataChanged}
+                                            paramName="name"
+                                            />
+                            </h5>
                             <div className='widgetEditButtons'>
                                 <EditWidget/>
                                 <i className="remove link icon small"></i>

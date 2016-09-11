@@ -16,7 +16,7 @@ export default class Dashboard extends Component {
       super(props);
       this.dataChanged = this.dataChanged.bind(this);
       this.state = {
-        message: 'Demo Page'
+        name: 'Demo Page'
       }
     }
 
@@ -30,9 +30,9 @@ export default class Dashboard extends Component {
             <div className="">
                 <h3 className='ui header dividing'>
                 <InlineEdit
-              text={this.state.message}
+              text={this.state.name}
                 change={this.dataChanged}
-                paramName="message"
+                paramName="name"
                 />
                 </h3>
                 <AddWidget/>
