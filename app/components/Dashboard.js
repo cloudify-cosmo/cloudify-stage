@@ -4,17 +4,36 @@
 
 
 import React, { Component, PropTypes } from 'react';
+import InlineEdit from 'react-edit-inline';
 
 import AddWidget from '../containers/AddWidget';
 import Widgets from '../containers/Widgets';
 
+
+
 export default class Dashboard extends Component {
+    constructor(props){
+      super(props);
+      this.dataChanged = this.dataChanged.bind(this);
+      this.state = {
+        message: 'Demo Page'
+      }
+    }
+
+    dataChanged(data) {
+        this.setState({...data})
+    }
 
     render() {
-        return (
+
+            return (
             <div className="">
                 <h3 className='ui header dividing'>
-                    My Page
+                <InlineEdit
+              text={this.state.message}
+                change={this.dataChanged}
+                paramName="message"
+                />
                 </h3>
                 <AddWidget/>
 
