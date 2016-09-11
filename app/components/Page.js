@@ -4,6 +4,7 @@
 
 
 import React, { Component, PropTypes } from 'react';
+import InlineEdit from 'react-edit-inline';
 
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './WidgetsList';
@@ -13,11 +14,27 @@ export default class Page extends Component {
         page: PropTypes.object.isRequired
     }
 
+    constructor(props){
+        super(props);
+        this.dataChanged = this.dataChanged.bind(this);
+        this.state = {
+            name: 'Demo Page'
+        }
+    }
+
+    dataChanged(data) {
+        this.setState({...data})
+    }
+
     render() {
         return (
             <div className="">
                 <h3 className='ui header dividing'>
-                    {this.props.page.name}
+                    <InlineEdit
+                        text={this.state.name}
+                        change={this.dataChanged}
+                        paramName="name"
+                        />
                 </h3>
                 <AddWidget pageId={this.props.page.id}/>
 
