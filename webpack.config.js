@@ -6,6 +6,11 @@ var path = require('path');
 
 module.exports = {
     devtool: 'eval-source-map',
+    resolve: {
+        alias: {
+            'jquery-ui': 'jquery-ui/ui'
+        }
+    },
     entry: [
         'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
         'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors

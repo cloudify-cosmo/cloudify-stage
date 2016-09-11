@@ -11,11 +11,11 @@ import Pages from '../containers/Pages';
 export default class SideBar extends Component {
     render() {
         return (
-        <div className="ui visible left vertical sidebar menu">
+        <div className="ui visible left vertical sidebar menu small">
                 <div className="ui center aligned basic segment">
                     <AddPageButton/>
                 </div>
-                {/*
+            {/*
                 <div className='ui item'>
                     <h5 className="ui header olive"> <div className="sub header">Pages </div></h5>
                 </div>

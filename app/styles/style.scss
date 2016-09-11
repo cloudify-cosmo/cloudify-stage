@@ -5,14 +5,51 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 30px;
+  bottom: 0;
+  //bottom: 30px;
   top: 40px;
 
   .ui.left.menu.sidebar {
     z-index: 0;
     top: 38px;
-    height: auto !important;
-    bottom: 29px;
+    //height: auto !important;
+    //bottom: 29px;
+  }
+
+  .page {
+    margin-left: 13rem;
+
+    .ui.labeled.icon.button.addWidgetBtn {
+      position: absolute;
+      top: 5px;
+      right: 15px;
+    }
+  }
+}
+
+.widget {
+
+  .widgetEditButtons {
+    position: absolute;
+    top: 0px;
+    right : 0px;
+    display: none;
+  }
+
+  &:hover {
+    .widgetEditButtons{
+      display: block;
+    }
+  }
+}
+
+// TODO need to calc it according to screen size
+.addWidgetPopup {
+  max-height: 400px;
+
+  .widgetsList {
+    max-height: 235px;
+    overflow: auto;
   }
 }
 /*
@@ -58,3 +95,133 @@ body {
     right: 0;
   }
 }*/
+
+// Flip stuff
+.flipcard {
+  -webkit-perspective: 1000;
+  -moz-perspective: 1000;
+  -ms-perspective: 1000;
+  perspective: 1000;
+  -ms-transform: perspective(1000px);
+  -moz-transform: perspective(1000px);
+  -moz-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+
+}
+/* START: Accommodating for IE */
+.flipcard--enabled.flipcard:hover .flipcard__Back,
+.flipcard--flipped .flipcard__Back {
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+  -ms-transform: rotateY(0deg);
+  -o-transform: rotateY(0deg);
+  transform: rotateY(0deg);
+}
+.flipcard--enabled.flipcard:hover .flipcard__Front,
+.flipcard--flipped .flipcard__Front {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+/* END: Accommodating for IE */
+.flipcard__Flipper {
+  -webkit-transition: 0.6s;
+  -webkit-transform-style: preserve-3d;
+  -ms-transition: 0.6s;
+  -moz-transition: 0.6s;
+  -moz-transform: perspective(1000px);
+  -moz-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+}
+.flipcard__Front, .flipcard__Back {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transition: 0.6s;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transform: rotateY(0deg);
+  -moz-transition: 0.6s;
+  -moz-transform-style: preserve-3d;
+  -moz-transform: rotateY(0deg);
+  -o-transition: 0.6s;
+  -o-transform-style: preserve-3d;
+  -o-transform: rotateY(0deg);
+  -ms-transition: 0.6s;
+  -ms-transform-style: preserve-3d;
+  -ms-transform: rotateY(0deg);
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+}
+.flipcard__Front {
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+  -ms-transform: rotateY(0deg);
+  -o-transform: rotateY(0deg);
+  z-index: 2;
+}
+.flipcard__Back {
+  -webkit-transform: rotateY(-180deg);
+  -moz-transform: rotateY(-180deg);
+  -ms-transform: rotateY(-180deg);
+  -o-transform: rotateY(-180deg);
+  transform: rotateY(-180deg);
+}
+/* vertical */
+.flipcard--vertical {
+  position: relative;
+}
+.flipcard--vertical .flipcard__Back {
+  -webkit-transform: rotateX(180deg);
+  -moz-transform: rotateX(180deg);
+  -ms-transform: rotateX(180deg);
+  -o-transform: rotateX(180deg);
+  transform: rotateX(180deg);
+}
+.flipcard--vertical .flipcard__Flipper {
+  -webkit-transform-origin: 100% 150px;
+  -moz-transform-origin: 100% 150px;
+  -ms-transform-origin: 100% 150px;
+  -o-transform-origin: 100% 150px;
+  transform-origin: 100% 150px;
+}
+/* START: Accommodating for IE */
+.flipcard--enabled.flipcard--vertical:hover .flipcard__Back,
+.flipcard--vertical.flipcard--flipped .flipcard__Back {
+  -webkit-transform: rotateX(0deg);
+  -moz-transform: rotateX(0deg);
+  -ms-transform: rotateX(0deg);
+  -o-transform: rotateX(0deg);
+  transform: rotateX(0deg);
+}
+.flipcard--enabled.flipcard--vertical:hover .flipcard__Front,
+.flipcard--vertical.flipcard--flipped .flipcard__Front {
+  -webkit-transform: rotateX(180deg);
+  -moz-transform: rotateX(180deg);
+  -ms-transform: rotateX(180deg);
+  -o-transform: rotateX(180deg);
+  transform: rotateX(180deg);
+}
+/* END: Accommodating for IE */

@@ -14,7 +14,7 @@ export default class Page extends Component {
             <div className='main'>
                 <SideBar/>
 
-                <div className="pusher">
+                <div className="page">
                     <div className="ui basic segment">
                         <Dashboard/>
                     </div>

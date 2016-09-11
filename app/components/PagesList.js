@@ -9,7 +9,7 @@ export default class PagesList extends Component {
     static propTypes = {
         onPageSelected: PropTypes.func.isRequired,
         pages: PropTypes.array.isRequired,
-        selected: PropTypes.string.isRequired
+        selected: PropTypes.string
     };
 
     render() {

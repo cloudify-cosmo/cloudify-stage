@@ -14,7 +14,15 @@ import reducers from './reducers';
 
 export default (history) => {
 
-    const initialState = StatePersister.load();
+    let initialState = StatePersister.load();
+
+    if (initialState === undefined) {
+        initialState = {
+            pages: [],
+            selected: null
+        }
+    }
+
     var store = createStore(
         reducers,
         initialState,

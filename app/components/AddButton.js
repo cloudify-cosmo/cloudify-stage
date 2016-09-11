@@ -13,12 +13,16 @@ import React, { Component, PropTypes } from 'react';
 export default class AddButton extends Component {
     static propTypes = {
         children: PropTypes.any.isRequired,
-        onClick: PropTypes.func.isRequired
+        onClick: PropTypes.func
     };
+
+    static defaultProps = {
+        onClick: function(){}
+    }
 
     render() {
         return (
-            <button className="ui labeled icon button tiny teal basic" onClick={this.props.onClick}>
+            <button className={"ui labeled icon button tiny teal basic " + this.props.className} onClick={this.props.onClick}>
                 <i className="plus icon"></i>
                 {this.props.children}
             </button>

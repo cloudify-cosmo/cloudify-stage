@@ -8,7 +8,7 @@ import WidgetsList from '../components/WidgetsList';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        widgets: state.selectedPage.widgets
+        widgets: state.selectedPage && state.selectedPage.widgets ? state.selectedPage.widgets : []
     }
 };
 

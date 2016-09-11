@@ -5,16 +5,21 @@
 
 import React, { Component, PropTypes } from 'react';
 
-import AddWidgetButton from '../containers/AddWidgetButton';
+import AddWidget from '../containers/AddWidget';
 import Widgets from '../containers/Widgets';
 
 export default class Dashboard extends Component {
+
     render() {
         return (
-            <div className="pusher">
-                <AddWidgetButton/>
-                <div className='ui divider'/>
+            <div className="">
+                <h3 className='ui header dividing'>
+                    My Page
+                </h3>
+                <AddWidget/>
+
                 <Widgets/>
+
             </div>
         );
     }

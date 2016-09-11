@@ -12,11 +12,8 @@ import '../semantic/dist/semantic.css';
 import '../semantic/dist/semantic';
 
 // Import gridstack
-//import 'jquery-ui';
-//import '../node_modules/gridstack/dist/gridstack.css';
-//import '../node_modules/gridstack/dist/gridstack.js';
-
-
+import '../node_modules/gridstack/dist/gridstack.css';
+import '../node_modules/gridstack/dist/gridstack.js';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -26,10 +23,14 @@ import { syncHistoryWithStore } from 'react-router-redux'
 
 import configureStore  from './configureStore';
 import routes from './routes';
+import {fetchPlugins} from './actions/plugins';
 
 const store = configureStore(browserHistory);
 
 const history = syncHistoryWithStore(browserHistory, store);
+
+// Fetch plugins
+store.dispatch(fetchPlugins());
 
 //history.listen(location => analyticsService.track(location.pathname))
 
