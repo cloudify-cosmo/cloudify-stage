@@ -10,6 +10,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import EditWidget from '../containers/EditWidget';
+import PluginUtils from '../utils/pluginUtils';
 
 export default class Widget extends Component {
     static propTypes = {
@@ -31,6 +32,15 @@ export default class Widget extends Component {
             isInEditMode: false
         };
     };
+
+    renderWidget() {
+        var widgetHtml = 'widget content';
+        if (this.props.widget.plugin && this.props.widget.plugin.render) {
+            widgetHtml = this.props.widget.plugin.render(this.props.widget.plugin,{},PluginUtils);
+        }
+        return {__html: widgetHtml};
+    }
+
     render() {
         return (
             <div id={this.props.widget.id}
@@ -74,7 +84,7 @@ export default class Widget extends Component {
                                 <i className="remove link icon small"></i>
                             </div>
 
-                            Widget content
+                            <div dangerouslySetInnerHTML={this.renderWidget()} />
                         </div>
                     }
             </div>

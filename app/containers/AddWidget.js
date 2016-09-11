@@ -6,6 +6,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import AddWidgetButton from '../components/AddWidgetButton';
+import {addWidget} from '../actions/widgets';
 import AddWidgetModal from '../components/AddWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
@@ -18,8 +19,8 @@ let nameIndex = 0;
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onWidgetAdded: (widgetDef) => {
-            //dispatch(addPage('Page_'+(nameIndex++)))
+        onWidgetAdded: (plugin) => {
+            dispatch(addWidget('Widget_'+(nameIndex++),plugin));
         },
         onPluginInstalled : ()=> {
             // dispatch

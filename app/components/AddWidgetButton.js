@@ -8,10 +8,10 @@ import AddButton from '../components/AddButton'
 
 export default class AddWidgetButton extends Component {
     componentDidMount () {
-        $('.addWidgetBtn')
-        .click(function(){
-          $('.addWidgetModal.modal').modal('show');
-          });    }
+        $('.addWidgetBtn').click(()=>{
+            $('.addWidgetModal.modal').modal('show');
+        });
+    }
 
     render() {
         return (
