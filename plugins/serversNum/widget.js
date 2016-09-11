@@ -4,15 +4,15 @@
 
 
 addPlugin({
-    name: "blueprints",
+    name: "serversNum",
     description: 'blah blah blah',
-    initialWidth: 8,
-    initialHeight: 5,
-    color : "blue",
+    initialWidth: 4,
+    initialHeight: 2,
+    color: "green",
     render: function(plugin,context,pluginUtils) {
 
         if (!plugin.template) {
-            return 'Blueprints: missing template';
+            return 'ServersNum: missing template';
         }
 
         return pluginUtils.buildFromTemplate(plugin.template);

@@ -7,5 +7,20 @@
   },
   {
     "name": "topology"
+  },
+  {
+    "name": "deploymentNum"
+  },
+  {
+    "name" : "serversNum"
+  },
+  {
+    "name" : "pluginsNum"
+  },
+  {
+    "name" : "usersList"
+  },
+  {
+    "name" : "graph"
   }
 ]

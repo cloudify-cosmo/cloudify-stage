@@ -11,7 +11,8 @@ import AddWidgetModal from '../components/AddWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        plugins: state.plugins.items
+        plugins: state.plugins.items,
+        pageId: ownProps.pageId
     }
 };
 
@@ -20,7 +21,7 @@ let nameIndex = 0;
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onWidgetAdded: (plugin) => {
-            dispatch(addWidget('Widget_'+(nameIndex++),plugin));
+            dispatch(addWidget(ownProps.pageId,'Widget_'+(nameIndex++),plugin));
         },
         onPluginInstalled : ()=> {
             // dispatch
