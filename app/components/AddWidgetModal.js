@@ -8,7 +8,7 @@
 
 import React, { Component, PropTypes } from 'react';
 
-export default class AddWidgetPopup extends Component {
+export default class AddWidgetModal extends Component {
     static propTypes = {
         plugins: PropTypes.array.isRequired,
         onWidgetAdded: PropTypes.func.isRequired,
@@ -16,20 +16,14 @@ export default class AddWidgetPopup extends Component {
     };
 
     componentDidMount () {
-        $('.addWidgetBtn')
-            .popup({
-                transition: 'vertical flip',
-                popup: '.addWidgetPopup',
-                on: 'click',
-                position: 'bottom left'
-            })
-        ;
+        $('.large.modal')
+           .modal('show');
     }
 
     render() {
         return (
-            <div className="ui very wide popup addWidgetPopup">
-                <div className="ui segment basic compact">
+            <div className="ui modal addWidgetModal">
+                <div className="ui segment basic large">
                     <div className="ui icon input fluid mini">
                         <i className="search icon"></i>
                         <input type="text" placeholder="Search widgets ..."/>

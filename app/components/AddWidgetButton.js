@@ -9,14 +9,9 @@ import AddButton from '../components/AddButton'
 export default class AddWidgetButton extends Component {
     componentDidMount () {
         $('.addWidgetBtn')
-            .popup({
-                transition: 'vertical flip',
-                popup: '.addWidgetPopup',
-                on: 'click',
-                position: 'bottom left'
-            })
-        ;
-    }
+        .click(function(){
+          $('.addWidgetModal.modal').modal('show');
+          });    }
 
     render() {
         return (

@@ -6,7 +6,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import AddWidgetButton from '../components/AddWidgetButton';
-import AddWidgetPopup from '../components/AddWidgetPopup';
+import AddWidgetModal from '../components/AddWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -32,7 +32,7 @@ let AddWidgetComponent = ({plugins,onWidgetAdded,onPluginInstalled}) => {
     return (
         <div>
             <AddWidgetButton/>
-            <AddWidgetPopup plugins={plugins} onWidgetAdded={onWidgetAdded} onPluginInstalled={onPluginInstalled}/>
+            <AddWidgetModal plugins={plugins} onWidgetAdded={onWidgetAdded} onPluginInstalled={onPluginInstalled}/>
         </div>
     );
 };
