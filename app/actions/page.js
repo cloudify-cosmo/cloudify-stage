@@ -18,3 +18,12 @@ export function selectPage(page) {
         page
     };
 }
+
+export function renamePage(pageId,newName) {
+    return {
+        type: types.RENAME_PAGE,
+        pageId,
+        name: newName
+    }
+
+}

@@ -29,6 +29,16 @@ const widgets = (state = [], action) => {
                 ...state,
                 widget(undefined, action)
             ];
+        case types.RENAME_WIDGET:
+            return state.map( (widget) => {
+                if (widget.id === action.widgetId) {
+                    return Object.assign({}, widget, {
+                        name: action.name
+                    })
+                }
+                return widget
+            });
+
         default:
             return state;
     }

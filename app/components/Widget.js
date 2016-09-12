@@ -17,26 +17,14 @@ import EditWidgetIcon from './EditWidgetIcon';
 
 export default class Widget extends Component {
     static propTypes = {
-        widget: PropTypes.object.isRequired
+        pageId: PropTypes.string.isRequired,
+        widget: PropTypes.object.isRequired,
+        onWidgetNameChange: PropTypes.func.isRequired
     };
 
     constructor(props, context) {
         super(props, context);
-
-        this.state = {
-            isInEditMode: false,
-            name: "Demo Widget"
-        };
-        this.dataChanged = this.dataChanged.bind(this);
     };
-
-    componentDidMount() {
-    }
-
-
-    dataChanged(data) {
-        this.setState({...data})
-    }
 
     renderWidget() {
         var widgetHtml = 'widget content';
@@ -68,11 +56,11 @@ export default class Widget extends Component {
 
                     <div className={'ui segment grid-stack-item-content '+ (this.props.widget.plugin && this.props.widget.plugin.color ? this.props.widget.plugin.color : 'red')}>
                         <h5 className='ui header dividing'>
-                                        <InlineEdit
-                                      text={this.state.name}
-                                        change={this.dataChanged}
-                                        paramName="name"
-                                        />
+                            <InlineEdit
+                                text={this.props.widget.name}
+                                change={data=>this.props.onWidgetNameChange(this.props.pageId,this.props.widget.id,data.name)}
+                                paramName="name"
+                            />
                         </h5>
                         <div className='widgetEditButtons'>
                             <EditWidgetIcon/>

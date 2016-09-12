@@ -12,19 +12,8 @@ import EditWidgetModal from './EditWidgetModal';
 
 export default class Page extends Component {
     static propTypes = {
-        page: PropTypes.object.isRequired
-    }
-
-    constructor(props){
-        super(props);
-        this.dataChanged = this.dataChanged.bind(this);
-        this.state = {
-            name: 'Demo Page'
-        }
-    }
-
-    dataChanged(data) {
-        this.setState({...data})
+        page: PropTypes.object.isRequired,
+        onPageNameChange: PropTypes.func.isRequired
     }
 
     render() {
@@ -32,14 +21,14 @@ export default class Page extends Component {
             <div className="">
                 <h3 className='ui header dividing'>
                     <InlineEdit
-                        text={this.state.name}
-                        change={this.dataChanged}
+                        text={this.props.page.name}
+                        change={data=>this.props.onPageNameChange(this.props.page.id,data.name)}
                         paramName="name"
                         />
                 </h3>
                 <AddWidget pageId={this.props.page.id}/>
 
-                <WidgetsList widgets={this.props.page.widgets}/>
+                <WidgetsList widgets={this.props.page.widgets} pageId={this.props.page.id}/>
 
                 {/* Modal is here so it will exist one time in the page. we dont need it for each edit button*/}
                 <EditWidgetModal/>

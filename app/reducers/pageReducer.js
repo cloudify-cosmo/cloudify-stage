@@ -37,6 +37,25 @@ const pages = (state = [], action) => {
                 }
                 return page
             });
+        case types.RENAME_PAGE:
+            return state.map( (page) => {
+                if (page.id === action.pageId) {
+                    return Object.assign({}, page, {
+                        name: action.name
+                    })
+                }
+                return page
+            });
+        case types.RENAME_WIDGET:
+            return state.map( (page) => {
+                if (page.id === action.pageId) {
+                    return Object.assign({}, page, {
+                        widgets: widgets(page.widgets,action)
+                    })
+                }
+                return page
+            });
+
         default:
             return state;
     }

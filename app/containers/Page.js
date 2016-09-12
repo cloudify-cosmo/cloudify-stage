@@ -5,6 +5,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Page from '../components/Page';
+import {renamePage} from '../actions/page';
 
 const mapStateToProps = (state, ownProps) => {
     var pageData = _.clone(_.find(state.pages,{id:ownProps.pageId}));
@@ -22,6 +23,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        onPageNameChange: (pageId,newName)=> {
+            dispatch(renamePage(pageId,newName));
+        }
     }
 };
 

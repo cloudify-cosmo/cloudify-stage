@@ -4,12 +4,12 @@
 
 import React, { Component, PropTypes } from 'react';
 
-//import Flipcard from './Flipcard';
-import Widget from './Widget';
+import Widget from '../containers/Widget';
 
 export default class WidgetsList extends Component {
 
     static propTypes = {
+        pageId: PropTypes.string.isRequired,
         widgets: PropTypes.array.isRequired
     };
 
@@ -57,7 +57,7 @@ export default class WidgetsList extends Component {
                 {/* temp example widgets */}
                 {
                     this.props.widgets.map(function(widget){
-                        return <Widget key={widget.id} widget={widget}></Widget>;
+                        return <Widget key={widget.id} widget={widget} pageId={this.props.pageId}></Widget>;
                     },this)
                 }
 

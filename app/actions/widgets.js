@@ -13,3 +13,13 @@ export function addWidget(pageId,name,plugin) {
         plugin
     };
 }
+
+export function renameWidget(pageId,widgetId,newName) {
+    return {
+        type: types.RENAME_WIDGET,
+        pageId,
+        widgetId,
+        name: newName
+    }
+
+}
