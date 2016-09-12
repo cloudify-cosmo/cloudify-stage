@@ -23,3 +23,14 @@ export function renameWidget(pageId,widgetId,newName) {
     }
 
 }
+
+export function changeWidgetGridData(pageId,widgetId,gridData) {
+    return {
+        type: types.CHANGE_WIDGET_GRID_DATA,
+        pageId,
+        widgetId,
+        gridData
+
+    }
+
+}

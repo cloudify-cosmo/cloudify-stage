@@ -5,11 +5,11 @@
 
 import * as types from '../actions/types';
 
-const contextReducer = (state = {}, action) => {
+const context = (state = {}, action) => {
     switch (action.type) {
         case types.SET_CONTEXT_VALUE:
-            var newState = Object.assign({}.state);
-            newState[action.key] = value;
+            var newState = Object.assign({},state);
+            newState[action.key] = action.value;
             return newState;
         default:
             return state;
@@ -17,4 +17,4 @@ const contextReducer = (state = {}, action) => {
 };
 
 
-export default contextReducer;
+export default context;

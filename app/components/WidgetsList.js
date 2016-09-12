@@ -10,7 +10,8 @@ export default class WidgetsList extends Component {
 
     static propTypes = {
         pageId: PropTypes.string.isRequired,
-        widgets: PropTypes.array.isRequired
+        widgets: PropTypes.array.isRequired,
+        onWidgetsGridDataChange: PropTypes.func.isRequired
     };
 
     componentDidMount () {
@@ -19,10 +20,39 @@ export default class WidgetsList extends Component {
             verticalMargin: 10
         });
 
-        //$('.widget').flip();
+        $('.grid-stack').off('change').on('change', (event, items)=> {
+            this._saveChangedItems(items);
+        });
+    }
+
+    _saveChangedItems(items) {
+        if (items) {
+            items.forEach(item=>{
+                var widgetId = $(item.el).attr('id');
+                console.log('Widget data changed for id: '+widgetId,{
+                    height: item.height,
+                    width: item.width,
+                    x: item.x,
+                    y: item.y
+                })
+
+                this.props.onWidgetsGridDataChange(this.props.pageId,widgetId,{
+                    height: item.height,
+                    width: item.width,
+                    x: item.x,
+                    y: item.y
+                });
+            },this);
+        }
+
+    }
+    componentWillUnmount() {
+        $('.grid-stack').off('change');
     }
 
     componentWillUpdate(nextProps) {
+        $('.grid-stack').off('change');
+
         var gridStack = $('.grid-stack').data('gridstack');
         // Remove widgets if needed
         const toRemove = _.differenceWith(this.props.widgets, nextProps.widgets, (a, b) => {
@@ -48,6 +78,11 @@ export default class WidgetsList extends Component {
             const el = document.getElementById(w.id)
             gridStack.makeWidget(el);
         });
+
+        $('.grid-stack').off('change').on('change', (event, items)=> {
+            this._saveChangedItems(items);
+        });
+
     }
 
     render() {

@@ -2,9 +2,17 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
-import {setValue} from '../actions/context';
+
 export default class Context {
-    static setValue(key,value) {
-        setValue(key,value);
+    constructor(setContextValue,contextData) {
+        this._setValue = setContextValue;
+        this._data = contextData;
+
+    }
+    setValue(key,value) {
+        this._setValue(key,value);
+    }
+    getValue(key) {
+        return this._data[key];
     }
 }

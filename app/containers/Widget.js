@@ -6,15 +6,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Widget from '../components/Widget';
 import {renameWidget} from '../actions/widgets';
+import {setValue} from '../actions/context';
 
 const mapStateToProps = (state, ownProps) => {
-    return {}
+    return {
+        context: state.context
+    }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onWidgetNameChange: (pageId,widgetId,newName)=> {
             dispatch(renameWidget(pageId,widgetId,newName));
+        },
+        setContextValue: (key,value) => {
+            dispatch(setValue(key,value));
         }
     }
 };

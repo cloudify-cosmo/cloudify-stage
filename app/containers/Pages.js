@@ -18,7 +18,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onPageSelected: (page) => {
-            dispatch(selectPage(page));
             dispatch(push('/page/'+page.id));
         }
     }

@@ -12,13 +12,6 @@ export function addPage(name) {
     };
 }
 
-export function selectPage(page) {
-    return {
-        type: types.SELECT_PAGE,
-        page
-    };
-}
-
 export function renamePage(pageId,newName) {
     return {
         type: types.RENAME_PAGE,

@@ -14,6 +14,6 @@ addPlugin({
             return 'deployments: missing template';
         }
 
-        return pluginUtils.buildFromTemplate(plugin.template);
+        return pluginUtils.buildFromTemplate(plugin.template,{blueprintId: context.getValue('blueprintId') || 'none'});
     }
 });

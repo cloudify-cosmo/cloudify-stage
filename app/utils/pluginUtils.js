@@ -8,4 +8,8 @@ export default class PluginUtils {
         var compiled = _.template(html);
         return compiled(data);
     }
+
+    static jQuery(selector) {
+        return $(selector);
+    }
 }

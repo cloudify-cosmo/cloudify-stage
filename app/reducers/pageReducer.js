@@ -29,6 +29,8 @@ const pages = (state = [], action) => {
                 page(undefined, action)
             ];
         case types.ADD_WIDGET:
+        case types.RENAME_WIDGET:
+        case types.CHANGE_WIDGET_GRID_DATA:
             return state.map( (page) => {
                 if (page.id === action.pageId) {
                     return Object.assign({}, page, {
@@ -42,15 +44,6 @@ const pages = (state = [], action) => {
                 if (page.id === action.pageId) {
                     return Object.assign({}, page, {
                         name: action.name
-                    })
-                }
-                return page
-            });
-        case types.RENAME_WIDGET:
-            return state.map( (page) => {
-                if (page.id === action.pageId) {
-                    return Object.assign({}, page, {
-                        widgets: widgets(page.widgets,action)
                     })
                 }
                 return page

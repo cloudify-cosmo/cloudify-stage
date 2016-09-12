@@ -44,7 +44,8 @@ export default (history) => {
                         width: 5,
                         height: 4
                     }]
-            }]
+            }],
+            context: {}
         }
     }
 

@@ -13,7 +13,8 @@ import EditWidgetModal from './EditWidgetModal';
 export default class Page extends Component {
     static propTypes = {
         page: PropTypes.object.isRequired,
-        onPageNameChange: PropTypes.func.isRequired
+        onPageNameChange: PropTypes.func.isRequired,
+        onWidgetsGridDataChange: PropTypes.func.isRequired
     }
 
     render() {
@@ -28,7 +29,8 @@ export default class Page extends Component {
                 </h3>
                 <AddWidget pageId={this.props.page.id}/>
 
-                <WidgetsList widgets={this.props.page.widgets} pageId={this.props.page.id}/>
+                <WidgetsList widgets={this.props.page.widgets} pageId={this.props.page.id}
+                             onWidgetsGridDataChange={this.props.onWidgetsGridDataChange}/>
 
                 {/* Modal is here so it will exist one time in the page. we dont need it for each edit button*/}
                 <EditWidgetModal/>

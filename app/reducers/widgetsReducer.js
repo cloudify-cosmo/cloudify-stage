@@ -38,6 +38,18 @@ const widgets = (state = [], action) => {
                 }
                 return widget
             });
+        case types.CHANGE_WIDGET_GRID_DATA:
+            return state.map( (widget) => {
+                if (widget.id === action.widgetId) {
+                    return Object.assign({}, widget, {
+                        x: action.gridData.x,
+                        y: action.gridData.y,
+                        width: action.gridData.width,
+                        height: action.gridData.height
+                    })
+                }
+                return widget
+            });
 
         default:
             return state;

@@ -19,18 +19,25 @@ export default class Widget extends Component {
     static propTypes = {
         pageId: PropTypes.string.isRequired,
         widget: PropTypes.object.isRequired,
-        onWidgetNameChange: PropTypes.func.isRequired
+        context: PropTypes.object.isRequired,
+        onWidgetNameChange: PropTypes.func.isRequired,
+        setContextValue: PropTypes.func.isRequired
     };
 
     constructor(props, context) {
         super(props, context);
     };
 
+    _buildPluginContext () {
+        return new PluginContext(this.props.setContextValue,this.props.context);
+
+    }
+
     renderWidget() {
         var widgetHtml = 'widget content';
         if (this.props.widget.plugin && this.props.widget.plugin.render) {
             try {
-                widgetHtml = this.props.widget.plugin.render(this.props.widget.plugin,PluginContext,PluginUtils);
+                widgetHtml = this.props.widget.plugin.render(this.props.widget.plugin,this._buildPluginContext(),PluginUtils);
             } catch (e) {
                 console.error('Error rendering widget',e);
             }
@@ -38,11 +45,33 @@ export default class Widget extends Component {
         return {__html: widgetHtml};
     }
 
+    attachEvents(container) {
+        if (this.props.widget.plugin && this.props.widget.plugin.events) {
+            try {
+                //this.props.widget.plugin.attachEvents(this.props.widget.plugin,this._buildPluginContext(),PluginUtils);
+
+                _.each(this.props.widget.plugin.events,(event)=>{
+                    if (!event || !event.selector || !event.event || !event.fn) {
+                        console.warn('Cannot attach event, missing data. Event data is ',event);
+                        return;
+                    }
+                    $(container).find(event.selector).off(event.event);
+                    $(container).find(event.selector).on(event.event,()=>{event.fn(this.props.widget.plugin,this._buildPluginContext(),PluginUtils)});
+                },this);
+            } catch (e) {
+                console.error('Error attaching events to widget',e);
+            }
+        }
+    }
     render() {
         return (
             <div id={this.props.widget.id}
                  className='grid-stack-item widget'
-                 data-gs-auto-position='true' data-gs-width={this.props.widget.width} data-gs-height={this.props.widget.height}>
+                 data-gs-auto-position={!(this.props.widget.x !== undefined && this.props.widget.y !== undefined)}
+                 data-gs-x={this.props.widget.x}
+                 data-gs-y={this.props.widget.y}
+                 data-gs-width={this.props.widget.width}
+                 data-gs-height={this.props.widget.height}>
                     {/*
                     <Flipcard type="vertical">
                         <div className='ui segment red widgetContent' >
@@ -67,7 +96,7 @@ export default class Widget extends Component {
                             <i className="remove link icon small"></i>
                         </div>
 
-                        <div dangerouslySetInnerHTML={this.renderWidget()} />
+                        <div dangerouslySetInnerHTML={this.renderWidget()} ref={(container)=>this.attachEvents(container)} />
                     </div>
             </div>
         );
