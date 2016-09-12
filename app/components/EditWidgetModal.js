@@ -5,16 +5,6 @@
 import React, { Component, PropTypes } from 'react';
 
 export default class EditWidgetModal extends Component {
-    static propTypes = {
-        plugins: PropTypes.array.isRequired,
-        onWidgetEdited: PropTypes.func.isRequired,
-        onPluginInstalled: PropTypes.func.isRequired
-    };
-
-    componentDidMount () {
-        $('#select')
-        .dropdown();   }
-
     render() {
         return (
             <div className="ui large modal editWidgetModal">
@@ -29,11 +19,11 @@ export default class EditWidgetModal extends Component {
                         <input type="text" placeholder="Filter by name ..."/>
                     </div>
                     <div className="ui divider"></div>
-                    <div className="ui floating labeled icon dropdown button" id="select">
+                    <div className="ui floating labeled icon dropdown button" ref={select=>$(select).dropdown()}>
                       <i className="filter icon"></i>
                       <span className="text">Filter by Status</span>
                       <div className="menu">
-                        <div className="header">
+                        <div className="item">
                           <i className="circular inverted green thumbs up outline icon"></i>
                           Up
                         </div>
@@ -49,11 +39,11 @@ export default class EditWidgetModal extends Component {
                     </div>
              </div>
             </div>
-                <div className="actions">
-                    <button className="ui approve button">Save</button>
-                    <button className="ui cancel button">Cancel</button>
-                    </div>
-                </div>
+            <div className="actions">
+                <button className="ui approve button">Save</button>
+                <button className="ui cancel button">Cancel</button>
+            </div>
+        </div>
         );
     }
 }

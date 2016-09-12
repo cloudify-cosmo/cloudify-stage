@@ -4,18 +4,18 @@
 
 import React, { Component } from 'react';
 
-import EditIcon from '../components/EditIcon'
-
 export default class EditWidgetIcon extends Component {
-    componentDidMount () {
-        $('.editWidgetIcon')
-        .click(function(){
-          $('.editWidgetModal.modal').modal('show');
-          });    }
-
     render() {
         return (
-            <EditIcon className='compact editWidgetIcon'/>
+            <i className="setting link icon small editWidgetIcon"
+               ref={(icon)=> {
+                      if (icon != null) {
+                            $(icon).click(()=>{
+                                $('.editWidgetModal.modal').modal('show');
+                            });
+                      }
+                  }}
+            />
         );
     }
 }

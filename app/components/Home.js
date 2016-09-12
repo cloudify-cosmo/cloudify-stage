@@ -8,15 +8,16 @@ import SideBar from './SideBar';
 import Page from '../containers/Page';
 
 export default class Home extends Component {
-    render() {
 
+    render() {
+        var pageId = this.props.params.pageId || "0";
         return (
             <div className='main'>
-                <SideBar pageId={this.props.params.pageId}/>
+                <SideBar pageId={pageId}/>
 
                 <div className="page">
                     <div className="ui basic segment">
-                        <Page pageId={this.props.params.pageId}/>
+                        <Page pageId={pageId}/>
                     </div>
                 </div>
             </div>

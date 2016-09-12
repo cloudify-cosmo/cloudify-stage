@@ -17,11 +17,33 @@ export default (history) => {
     let initialState = StatePersister.load();
 
     if (initialState === undefined) {
+        // Todo move to some template handler
         initialState = {
             pages: [{
                 id: "0",
                 name: 'first page',
-                widgets: []
+                widgets: [{
+                        id: "01",
+                        name: "Blueprints List",
+                        plugin: "blueprints",
+                        width: 7,
+                        height: 5
+                    },
+                    {
+                        id: "02",
+                        name: "Deployments",
+                        plugin: "deploymentNum",
+                        width: 5,
+                        height: 3
+
+                    },
+                    {
+                        id: "03",
+                        name : "topology",
+                        plugin: "topology",
+                        width: 5,
+                        height: 4
+                    }]
             }]
         }
     }
