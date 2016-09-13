@@ -10,8 +10,8 @@ export default class Header extends Component {
     render() {
         return (
             <div className="ui top fixed menu teal inverted">
-                <div className="item">
-                    <img src="/app/images/cloudify-logo.png"></img>
+                <div className="logo">
+                    <img src="/app/images/Cloudify-logo.png"></img>
                 </div>
             </div>
         );

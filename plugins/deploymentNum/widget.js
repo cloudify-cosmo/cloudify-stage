@@ -4,11 +4,13 @@
 
 
 addPlugin({
-    name: "deploymentNum",
+    id: "deploymentNum",
+    name: 'Number of deployments',
     description: 'blah blah blah',
     initialWidth: 4,
     initialHeight: 2,
     color: "violet",
+    showHeader: false,
     render: function(plugin,context,pluginUtils) {
 
         if (!plugin.template) {

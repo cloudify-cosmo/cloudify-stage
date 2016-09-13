@@ -4,11 +4,13 @@
 
 
 addPlugin({
-    name: "serversNum",
+    id: "serversNum",
+    name: 'Number of servers',
     description: 'blah blah blah',
     initialWidth: 4,
     initialHeight: 2,
     color: "green",
+    showHeader: false,
     render: function(plugin,context,pluginUtils) {
 
         if (!plugin.template) {

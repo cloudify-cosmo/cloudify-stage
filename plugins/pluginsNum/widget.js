@@ -4,11 +4,13 @@
 
 
 addPlugin({
-    name: "pluginsNum",
+    id: "pluginsNum",
+    name: "Number of plugins",
     description: 'blah blah blah',
-    initialWidth: 4,
+    initialWidth: 2,
     initialHeight: 2,
     color: "teal",
+    showHeader: false,
     render: function(plugin,context,pluginUtils) {
 
         if (!plugin.template) {

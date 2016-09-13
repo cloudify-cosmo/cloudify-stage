@@ -15,7 +15,7 @@ export default class SideBar extends Component {
 
     render() {
         return (
-        <div className="ui visible left vertical sidebar menu small">
+        <div className="ui visible left vertical sidebar menu small inverted">
                 <div className="ui center aligned basic segment">
                     <AddPageButton/>
                 </div>

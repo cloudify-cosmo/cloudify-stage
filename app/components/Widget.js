@@ -34,7 +34,7 @@ export default class Widget extends Component {
     }
 
     renderWidget() {
-        var widgetHtml = 'widget content';
+        var widgetHtml = 'Loading...';
         if (this.props.widget.plugin && this.props.widget.plugin.render) {
             try {
                 widgetHtml = this.props.widget.plugin.render(this.props.widget.plugin,this._buildPluginContext(),PluginUtils);
@@ -72,25 +72,21 @@ export default class Widget extends Component {
                  data-gs-y={this.props.widget.y}
                  data-gs-width={this.props.widget.width}
                  data-gs-height={this.props.widget.height}>
-                    {/*
-                    <Flipcard type="vertical">
-                        <div className='ui segment red widgetContent' >
-                            <h5 className='ui header dividing'>{widget.name}</h5>
-                        </div>
-                        <div className='ui segment red widgetContent'>
-                            <h5 className='ui header dividing'>{widget.name} edit mode</h5>
-                        </div>
-                    </Flipcard>
-                    */}
 
                     <div className={'ui segment grid-stack-item-content '+ (this.props.widget.plugin && this.props.widget.plugin.color ? this.props.widget.plugin.color : 'red')}>
-                        <h5 className='ui header dividing'>
-                            <InlineEdit
-                                text={this.props.widget.name}
-                                change={data=>this.props.onWidgetNameChange(this.props.pageId,this.props.widget.id,data.name)}
-                                paramName="name"
-                            />
-                        </h5>
+                        {
+                            this.props.widget.plugin && this.props.widget.plugin.showHeader ?
+                                <h5 className='ui header dividing'>
+                                    <InlineEdit
+                                        text={this.props.widget.name}
+                                        change={data=>this.props.onWidgetNameChange(this.props.pageId,this.props.widget.id,data.name)}
+                                        paramName="name"
+                                        />
+                                </h5>
+                                :
+                                ''
+                        }
+
                         <div className='widgetEditButtons'>
                             <EditWidgetIcon/>
                             <i className="remove link icon small"></i>

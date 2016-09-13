@@ -4,7 +4,8 @@
 
 
 addPlugin({
-    name: "usersList",
+    id: "usersList",
+    name: "Users list",
     description: 'blah blah blah',
     initialWidth: 4,
     initialHeight: 3,

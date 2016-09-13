@@ -37,12 +37,12 @@ export default class AddWidgetModal extends Component {
                                 return (
                                     <div className="item" key={widget.name}>
                                         <div className='ui image small bordered'>
-                                            <img src={'/plugins/'+widget.name+'/widget.png'}/>
+                                            <img src={'/plugins/'+widget.id+'/widget.png'}/>
                                         </div>
                                         <div className="content">
                                             <a className="header">{widget.name}</a>
                                             <div className="meta">
-                                                <span>This widget shows topology ...</span>
+                                                <span>{widget.description}</span>
                                             </div>
                                             <div className="description">
                                             </div>

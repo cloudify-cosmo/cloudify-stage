@@ -3,7 +3,8 @@
  */
 
 addPlugin({
-    name: "deployments",
+    id: "deployments",
+    name: 'Blueprint deployments',
     description: 'blah blah blah',
     initialWidth: 8,
     initialHeight: 6,

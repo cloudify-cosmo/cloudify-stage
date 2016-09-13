@@ -4,7 +4,8 @@
 
 
 addPlugin({
-    name: "graph",
+    id: "graph",
+    name: "some graph",
     description: 'blah blah blah',
     initialWidth: 8,
     initialHeight: 4,

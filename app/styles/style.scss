@@ -1,6 +1,15 @@
 body {
 }
 
+.logo {
+  img {
+    height: 35px;
+    margin-left: 5px;
+    position: absolute;
+    margin-top: 2px;
+  }
+}
+
 .main {
   position: absolute;
   left: 0;

@@ -20,16 +20,34 @@ function fetchPluginTemplate(path) {
         //.then({response => response.text());
 }
 
+class Plugin {
+    constructor(data) {
+        // Set default
+        this.showHeader = true;
+        this.initialWidth = 3;
+        this.initialHeight = 3;
+        this.color = "blue";
+
+        // Override defaults with data
+        Object.assign(this,data);
+
+        if (!this.name) {
+            throw new Error('Missing plugin name. Plugin data is :',data);
+        }
+        if (!this.id) {
+            throw new Error('Missing plugin id. Plugin data is :',data);
+        }
+
+    }
+}
 export default class PluginsLoader {
     static init() {
         window.addPlugin = function(pluginData) {
-            plugins.push(pluginData);
+            plugins.push(new Plugin(pluginData));
         }
 
     }
     static load() {
-        //return fetch('/plugins/plugins.json')
-        //    .then(response => response.json());
 
         return fetch('/plugins/plugins.json')
             .then(response => response.json())
@@ -44,7 +62,7 @@ export default class PluginsLoader {
                 var promises = [];
                 plugins.forEach((plugin)=> {
                     promises.push(
-                        fetchPluginTemplate('/plugins/' + plugin.name + '/widget.html')
+                        fetchPluginTemplate('/plugins/' + plugin.id + '/widget.html')
                             .then( (pluginHtml)=>{
                                 if (pluginHtml) {
                                     plugin.template = pluginHtml;

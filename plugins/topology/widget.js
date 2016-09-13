@@ -3,6 +3,7 @@
  */
 
 addPlugin({
+    id: 'topology',
     name: "topology",
     description: 'blah blah blah',
     initialWidth: 8,

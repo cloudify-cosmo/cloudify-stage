@@ -4,7 +4,8 @@
 
 
 addPlugin({
-    name: "blueprints",
+    id: "blueprints",
+    name: "Blueprints list",
     description: 'blah blah blah',
     initialWidth: 8,
     initialHeight: 5,
