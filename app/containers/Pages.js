@@ -8,17 +8,34 @@ import PagesList from '../components/PagesList';
 import {selectPage} from '../actions/page';
 import { push } from 'react-router-redux';
 
+const findSelectedRootPage = (pages,selectedPageId) => {
+    var pagesMap = _.keyBy(pages,'id');
+
+    var _r = (page) => {
+        if (!page.parent) {
+            return page.id;
+        }
+        return _r(pagesMap[page.parent]);
+    };
+
+    return _r(pagesMap[selectedPageId]);
+
+};
+
 const mapStateToProps = (state, ownProps) => {
+
+    var selected = findSelectedRootPage(state.pages,ownProps.pageId);
+
     return {
         pages: state.pages,
-        selected :ownProps.pageId
-    }
+        selected :selected
+    };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onPageSelected: (page) => {
-            dispatch(push('/page/'+page.id));
+            dispatch(selectPage(page.id));
         }
     }
 };

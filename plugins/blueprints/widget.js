@@ -14,7 +14,15 @@ addPlugin({
         {
             selector: '.blueprintName',
             event: 'click',
-            fn: (plugin,context,pluginUtils)=> context.setValue('blueprintId',(context.getValue('blueprintId') || 0 ) + 1)
+            fn: (widget,context,pluginUtils)=> context.setValue('blueprintId',(context.getValue('blueprintId') || 0 ) + 1)
+        },
+        {
+            selector: '.blueprintDrilldown',
+            event: 'click',
+            fn: (widget,context,pluginUtils)=> {
+                context.setValue('blueprintId','Drilled down blueprint');
+                context.drillDown(widget,'template1');
+            }
         }
     ],
 

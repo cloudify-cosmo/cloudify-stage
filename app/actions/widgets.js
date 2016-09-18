@@ -4,6 +4,8 @@
 
 
 import * as types from './types';
+import {createDrilldownPage,selectPage} from './page';
+import {v4} from 'node-uuid';
 
 export function addWidget(pageId,name,plugin) {
     return {
@@ -24,6 +26,13 @@ export function renameWidget(pageId,widgetId,newName) {
 
 }
 
+export function removeWidget(pageId,widgetId) {
+    return {
+        type: types.REMOVE_WIDGET,
+        pageId,
+        widgetId
+    }
+}
 export function changeWidgetGridData(pageId,widgetId,gridData) {
     return {
         type: types.CHANGE_WIDGET_GRID_DATA,
@@ -33,4 +42,37 @@ export function changeWidgetGridData(pageId,widgetId,gridData) {
 
     }
 
+}
+
+export function setWidgetDrilldownPage(widgetId,drillDownPageId) {
+    return {
+        type : types.SET_DRILLDOWN_PAGE,
+        widgetId,
+        drillDownPageId
+    }
+
+}
+
+export function drillDownToPage(widget,defaultTemplate) {
+
+
+    return function (dispatch) {
+
+        if (widget.drillDownPageId) {
+            // TODO dispatch set drill down (for breadcrumbs)
+            dispatch(selectPage(widget.drillDownPageId));
+
+        } else {
+            var newPageId = v4();
+            dispatch(createDrilldownPage(Object.assign({id:newPageId},defaultTemplate)));
+            dispatch(setWidgetDrilldownPage(widget.id,newPageId));
+            dispatch(selectPage(newPageId));
+            //// dispatch action to create drilldown page. It will also drilldown to it
+            //this._createDrillDownPage(widget,defaultTemplate);
+        }
+
+        //return PluginsLoader.load()
+        //    .then(data => dispatch(receivePlugins(data)))
+        //    .catch(err => dispatch(errorsPlugins(err)))
+    }
 }

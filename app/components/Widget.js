@@ -20,8 +20,11 @@ export default class Widget extends Component {
         pageId: PropTypes.string.isRequired,
         widget: PropTypes.object.isRequired,
         context: PropTypes.object.isRequired,
+        templates : PropTypes.object.isRequired,
         onWidgetNameChange: PropTypes.func.isRequired,
-        setContextValue: PropTypes.func.isRequired
+        setContextValue: PropTypes.func.isRequired,
+        onDrilldownToPage: PropTypes.func.isRequired,
+        onWidgetRemoved: PropTypes.func.isRequired
     };
 
     constructor(props, context) {
@@ -29,7 +32,7 @@ export default class Widget extends Component {
     };
 
     _buildPluginContext () {
-        return new PluginContext(this.props.setContextValue,this.props.context);
+        return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this.props.templates);
 
     }
 
@@ -56,7 +59,7 @@ export default class Widget extends Component {
                         return;
                     }
                     $(container).find(event.selector).off(event.event);
-                    $(container).find(event.selector).on(event.event,()=>{event.fn(this.props.widget.plugin,this._buildPluginContext(),PluginUtils)});
+                    $(container).find(event.selector).on(event.event,()=>{event.fn(this.props.widget,this._buildPluginContext(),PluginUtils)});
                 },this);
             } catch (e) {
                 console.error('Error attaching events to widget',e);
@@ -89,7 +92,7 @@ export default class Widget extends Component {
 
                         <div className='widgetEditButtons'>
                             <EditWidgetIcon/>
-                            <i className="remove link icon small"></i>
+                            <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}></i>
                         </div>
 
                         <div dangerouslySetInnerHTML={this.renderWidget()} ref={(container)=>this.attachEvents(container)} />

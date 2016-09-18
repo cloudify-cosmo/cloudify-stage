@@ -8,6 +8,24 @@ import Page from '../components/Page';
 import {renamePage} from '../actions/page';
 import {changeWidgetGridData} from '../actions/widgets';
 
+const buildPagesList = (pages,selectedPageId) => {
+    var pagesMap = _.keyBy(pages,'id');
+    var pagesList = [];
+
+    var _r = (page) => {
+        pagesList.push({id:page.id,name:page.name});
+        if (!page.parent) {
+            return;
+        }
+        return _r(pagesMap[page.parent]);
+    };
+
+    _r(pagesMap[selectedPageId]);
+
+    return pagesList;
+
+};
+
 const mapStateToProps = (state, ownProps) => {
     var pageData = _.clone(_.find(state.pages,{id:ownProps.pageId}));
     var widgets = _.map(pageData.widgets,(wd)=>{
@@ -18,7 +36,8 @@ const mapStateToProps = (state, ownProps) => {
     pageData.widgets = widgets;
 
     return {
-        page: pageData
+        page: pageData,
+        pagesList: buildPagesList(state.pages,ownProps.pageId)
     }
 };
 

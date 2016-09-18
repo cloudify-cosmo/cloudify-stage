@@ -16,7 +16,7 @@ export default class PagesList extends Component {
         return (
             <div className="pages">
                 {
-                    this.props.pages.map(function(page){
+                    _.filter(this.props.pages, (p)=>{return !p.isDrillDown}).map(function(page){
                         return <div key={page.id} className={'item ' + (this.props.selected === page.id ? 'active' : '')} onClick={()=>{this.props.onPageSelected(page);} }>{page.name}</div>
                     },this)
                 }

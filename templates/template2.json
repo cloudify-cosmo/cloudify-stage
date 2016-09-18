@@ -1,0 +1,23 @@
+{
+  "name": "second page",
+  "widgets": [
+    {
+      "name": "Blueprints List2",
+      "plugin": "blueprints",
+      "width": 7,
+      "height": 5
+    },
+    {
+      "name": "Deployments",
+      "plugin": "deploymentNum",
+      "width": 5,
+      "height": 3
+    },
+    {
+      "name": "topology",
+      "plugin": "topology",
+      "width": 5,
+      "height": 4
+    }
+  ]
+}

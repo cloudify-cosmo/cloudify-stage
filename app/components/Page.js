@@ -4,15 +4,17 @@
 
 
 import React, { Component, PropTypes } from 'react';
-import InlineEdit from 'react-edit-inline';
+//import InlineEdit from 'react-edit-inline';
 
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './WidgetsList';
 import EditWidgetModal from './EditWidgetModal';
+import Breadcrumbs from './Breadcrumbs';
 
 export default class Page extends Component {
     static propTypes = {
         page: PropTypes.object.isRequired,
+        pagesList: PropTypes.array.isRequired,
         onPageNameChange: PropTypes.func.isRequired,
         onWidgetsGridDataChange: PropTypes.func.isRequired
     }
@@ -20,14 +22,19 @@ export default class Page extends Component {
     render() {
         return (
             <div className="">
-                <h3 className='ui header dividing'>
+                <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange}/>
+                {/*
+                 <h3 className='ui header dividing'>
                     <InlineEdit
                         text={this.props.page.name}
                         change={data=>this.props.onPageNameChange(this.props.page.id,data.name)}
                         paramName="name"
                         />
                 </h3>
+                 */}
                 <AddWidget pageId={this.props.page.id}/>
+
+                <div className='ui divider'/>
 
                 <WidgetsList widgets={this.props.page.widgets} pageId={this.props.page.id}
                              onWidgetsGridDataChange={this.props.onWidgetsGridDataChange}/>

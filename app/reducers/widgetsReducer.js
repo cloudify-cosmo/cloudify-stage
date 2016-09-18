@@ -15,7 +15,7 @@ const widget = (state = {}, action) => {
                 name: action.name,
                 width: action.plugin.initialWidth,
                 height: action.plugin.initialHeight,
-                plugin: action.plugin.name
+                plugin: action.plugin.id
             };
         default:
             return state;
@@ -46,6 +46,21 @@ const widgets = (state = [], action) => {
                         y: action.gridData.y,
                         width: action.gridData.width,
                         height: action.gridData.height
+                    })
+                }
+                return widget
+            });
+        case types.REMOVE_WIDGET:
+            var removeIndex = _.findIndex(state,{id:action.widgetId});
+            return [
+                ...state.slice(0,removeIndex),
+                ...state.slice(removeIndex+1)
+            ];
+        case types.SET_DRILLDOWN_PAGE:
+            return state.map( (widget) => {
+                if (widget.id === action.widgetId) {
+                    return Object.assign({}, widget, {
+                        drillDownPageId: action.drillDownPageId
                     })
                 }
                 return widget

@@ -5,12 +5,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Widget from '../components/Widget';
-import {renameWidget} from '../actions/widgets';
+import {renameWidget,drillDownToPage,removeWidget} from '../actions/widgets';
 import {setValue} from '../actions/context';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        context: state.context
+        context: state.context,
+        templates: state.templates.items || {}
     }
 };
 
@@ -21,6 +22,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         setContextValue: (key,value) => {
             dispatch(setValue(key,value));
+        },
+        onDrilldownToPage: (widget,defaultTemplate) => {
+            dispatch(drillDownToPage(widget,defaultTemplate));
+        },
+        onWidgetRemoved: (pageId,widgetId) => {
+            dispatch(removeWidget(pageId,widgetId));
         }
     }
 };
