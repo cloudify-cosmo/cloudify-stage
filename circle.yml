@@ -1,15 +1,13 @@
 machine:
   node:
     version: 4.4.5
-
 dependencies:
   override:
     - npm install
     - npm install webpack -g
   post:
     - gulp build
-      pwd: semantic
-
+        pwd: semantic
 deployment:
   s3:
     branch: master
