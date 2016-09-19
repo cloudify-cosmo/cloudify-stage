@@ -24,10 +24,6 @@ export default class Page extends Component {
         if (this.props.isEditMode) {
             elements.push(<AddWidget pageId={this.props.page.id}/>);
         }
-        else
-        {
-            elements.push(<div/>);
-        }
         return (
             <div className="">
                 <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange}/>

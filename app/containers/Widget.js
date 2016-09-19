@@ -11,7 +11,8 @@ import {setValue} from '../actions/context';
 const mapStateToProps = (state, ownProps) => {
     return {
         context: state.context,
-        templates: state.templates.items || {}
+        templates: state.templates.items || {},
+        isEditMode: state.header.isEditMode
     }
 };
 
