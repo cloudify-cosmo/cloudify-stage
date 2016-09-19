@@ -11,6 +11,7 @@
   "author": "Kinneret Zin",
   "license": "",
   "dependencies": {
+    "angular": "^1.5.8",
     "babel-polyfill": "^6.13.0",
     "better-console": "^0.2.4",
     "del": "^2.2.2",
