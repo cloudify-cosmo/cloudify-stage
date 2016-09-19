@@ -5,7 +5,9 @@ dependencies:
   override:
     - npm install
     - npm install webpack -g
+    - npm install gulp -g
     - gulp build
+        pwd: semantic
 deployment:
   s3:
     branch: master
