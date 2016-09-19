@@ -6,10 +6,12 @@ dependencies:
   override:
     - npm install
     - npm install webpack -g
+  post:
+    - gulp build
+      pwd: semantic
+
 deployment:
   s3:
     branch: master
     commands:
-      - gulp build
-        pwd: semantic
       - webpack --config webpack.config-prod.js
