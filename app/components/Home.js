@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 
-import SideBar from './SideBar';
+import SideBar from '../containers/SideBar';
 import Page from '../containers/Page';
 
 export default class Home extends Component {
@@ -13,7 +13,7 @@ export default class Home extends Component {
         var pageId = this.props.params.pageId || "0";
         return (
             <div className='main'>
-                <SideBar pageId={pageId}/>
+                <SideBar/>
 
                 <div className="page">
                     <div className="ui basic segment">

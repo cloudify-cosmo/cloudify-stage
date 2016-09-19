@@ -41,7 +41,7 @@ export default class Page extends Component {
 
                 <WidgetsList widgets={this.props.page.widgets} pageId={this.props.page.id}
                              onWidgetsGridDataChange={this.props.onWidgetsGridDataChange}
-                             isEditMode={this.props.isEditMode}
+                             isEditMode={this.props.isEditMode || false}
                              />
 
                 {/* Modal is here so it will exist one time in the page. we dont need it for each edit button*/}
