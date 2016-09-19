@@ -7,11 +7,13 @@ import React, { Component, PropTypes } from 'react';
 import Widget from '../containers/Widget';
 
 export default class WidgetsList extends Component {
+    static isEditMode = false;
 
     static propTypes = {
         pageId: PropTypes.string.isRequired,
         widgets: PropTypes.array.isRequired,
-        onWidgetsGridDataChange: PropTypes.func.isRequired
+        onWidgetsGridDataChange: PropTypes.func.isRequired,
+        isEditMode: PropTypes.bool.isRequired
     };
 
     componentDidMount () {
@@ -23,6 +25,7 @@ export default class WidgetsList extends Component {
         $('.grid-stack').off('change').on('change', (event, items)=> {
             this._saveChangedItems(items);
         });
+
     }
 
     _saveChangedItems(items) {
@@ -42,12 +45,27 @@ export default class WidgetsList extends Component {
                     x: item.x,
                     y: item.y
                 });
+
             },this);
         }
 
     }
     componentWillUnmount() {
         $('.grid-stack').off('change');
+    }
+
+    toggleWidgetListEditMode(isEditMode) {
+        this.isEditMode = isEditMode;
+        var gridStack = $('.grid-stack').data('gridstack');
+        if (isEditMode)
+        {
+            gridStack.enable();
+        }
+        else
+        {
+            gridStack.disable();
+        }
+
     }
 
     componentWillUpdate(nextProps) {
@@ -66,6 +84,7 @@ export default class WidgetsList extends Component {
         //$('.widget').flip();
 
     }
+
     componentDidUpdate(prevProps, prevState) {
 
         var gridStack = $('.grid-stack').data('gridstack');
@@ -82,6 +101,11 @@ export default class WidgetsList extends Component {
         $('.grid-stack').off('change').on('change', (event, items)=> {
             this._saveChangedItems(items);
         });
+
+        if (this.isEditMode != this.props.isEditMode)
+        {
+            this.toggleWidgetListEditMode(this.props.isEditMode);
+        }
 
     }
 

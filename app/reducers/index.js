@@ -8,8 +8,10 @@ import pages from './pageReducer';
 import plugins from './pluginsReducer';
 import templates from './templatesReducer';
 import context from './contextReducer';
+import header from './headerReducer';
 
 const rootReducer = combineReducers({
+    header,
     pages,
     plugins,
     templates,

@@ -9,7 +9,7 @@ import WidgetsList from '../components/WidgetsList';
 const mapStateToProps = (state, ownProps) => {
 
     // Attach the relevant plugin object to the widget (according to plugin name)
-    var widgetsData = state.selectedPage && state.selectedPage.widgets ? state.selectedPage.widgets : [];
+    var widgetsData = state.selectedPage && state.selectedPage.widgets ? state.selectedPage.widgets : [] && state.isEditMode;
     var widgets = _.map(widgetsData,(wd)=>{
         var w = _.clone(wd);
         w.plugin = _.find(state.plugins.items,{name:w.plugin});
@@ -28,6 +28,7 @@ const mapStateToProps = (state, ownProps) => {
 //        }
 //    }
 //};
+
 
 const Widgets = connect(
     mapStateToProps,

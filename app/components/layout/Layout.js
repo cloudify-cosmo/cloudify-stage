@@ -5,18 +5,19 @@
 
 import React, { Component, PropTypes } from 'react';
 
-import Header from './Header';
+import Header from '../../containers/layout/Header';
 import Footer from './Footer';
+
 
 export default class Layout extends Component {
     static propTypes = {
-        children: PropTypes.element.isRequired
+        children: PropTypes.element.isRequired,
     };
 
     render() {
         return (
             <div>
-                <Header/>
+                <Header />
 
                 {this.props.children}
 

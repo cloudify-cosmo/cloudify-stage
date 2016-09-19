@@ -17,7 +17,7 @@ export default class Page extends Component {
         pagesList: PropTypes.array.isRequired,
         onPageNameChange: PropTypes.func.isRequired,
         onWidgetsGridDataChange: PropTypes.func.isRequired
-    }
+        }
 
     render() {
         return (
@@ -37,7 +37,9 @@ export default class Page extends Component {
                 <div className='ui divider'/>
 
                 <WidgetsList widgets={this.props.page.widgets} pageId={this.props.page.id}
-                             onWidgetsGridDataChange={this.props.onWidgetsGridDataChange}/>
+                             onWidgetsGridDataChange={this.props.onWidgetsGridDataChange}
+                             isEditMode={this.props.isEditMode}
+                             />
 
                 {/* Modal is here so it will exist one time in the page. we dont need it for each edit button*/}
                 <EditWidgetModal/>
