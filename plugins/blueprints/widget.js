@@ -10,29 +10,69 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 5,
     color : "blue",
+    //fetchUrl: '/plugins/blueprints/data.json',
+    fetchData: function(plugin,context,pluginUtils) {
+        return new Promise( (resolve,reject) => {
+            pluginUtils.jQuery.get('/plugins/blueprints/blueprints.json')
+                .done((blueprints)=> {
+
+                    pluginUtils.jQuery.get('/plugins/blueprints/deployments.json')
+                        .done((deployments)=>{
+
+                            var depCount = _.countBy(deployments.items,'blueprint_id');
+                            // Count deployments
+                            _.each(blueprints.items,(blueprint)=>{
+                                blueprint.depCount = depCount[blueprint.id];
+
+                            });
+
+                            resolve(blueprints);
+                        })
+                        .fail(reject);
+                })
+                .fail(reject)
+        });
+    },
+
     events: [
         {
             selector: '.blueprintName',
             event: 'click',
-            fn: (widget,context,pluginUtils)=> context.setValue('blueprintId',(context.getValue('blueprintId') || 0 ) + 1)
+            fn: (e,widget,context,pluginUtils)=> {
+                var blueprintId = pluginUtils.jQuery(e.currentTarget).data('id');
+                var oldSelectedBlueprintId = context.getValue('blueprintId');
+                context.setValue('blueprintId',blueprintId === oldSelectedBlueprintId ? null : blueprintId);
+            }
         },
         {
             selector: '.blueprintDrilldown',
             event: 'click',
-            fn: (widget,context,pluginUtils)=> {
-                context.setValue('blueprintId','Drilled down blueprint');
+            fn: (e,widget,context,pluginUtils)=> {
+                var blueprintId = pluginUtils.jQuery(e.currentTarget).data('id');
+                context.setValue('blueprintId',blueprintId);
+
                 context.drillDown(widget,'template1');
             }
         }
     ],
 
-    render: function(plugin,context,pluginUtils) {
+    render: function(plugin,data,context,pluginUtils) {
 
         if (!plugin.template) {
             return 'Blueprints: missing template';
         }
 
-        return pluginUtils.buildFromTemplate(plugin.template);
+        var selectedBlueprint = context.getValue('blueprintId');
+        var formattedData = Object.assign({},data,{
+            items: _.map (data.items,(item)=>{
+                return Object.assign({},item,{
+                    created_at: pluginUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    updated_at: pluginUtils.moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
+                    isSelected: selectedBlueprint === item.id
+                })
+            })
+        });
+        return pluginUtils.buildFromTemplate(plugin.template,formattedData);
     }
     //attachEvents : function (plugin,context,pluginUtils) {
 

@@ -1,1 +1,1 @@
-# react-n-redux-starter-kit
+# Cloudify new UI

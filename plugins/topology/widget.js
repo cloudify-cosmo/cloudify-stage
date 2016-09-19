@@ -9,7 +9,7 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color: "yellow",
-    render: function(plugin,context,pluginUtils) {
+    render: function(plugin,data,context,pluginUtils) {
         if (!plugin.template) {
             return 'Topology: missing template';
         }

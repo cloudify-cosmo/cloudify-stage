@@ -10,7 +10,7 @@ addPlugin({
     initialWidth: 4,
     initialHeight: 3,
     color: "orange",
-    render: function(plugin,context,pluginUtils) {
+    render: function(plugin,data,context,pluginUtils) {
 
         if (!plugin.template) {
             return 'usersList: missing template';

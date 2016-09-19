@@ -10,7 +10,7 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color : "blue",
-    render: function(plugin,context,pluginUtils) {
+    render: function(plugin,data,context,pluginUtils) {
 
         if (!plugin.template) {
             return 'graph: missing template';
