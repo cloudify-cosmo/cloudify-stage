@@ -6,7 +6,7 @@ dependencies:
     - npm install
     - npm install webpack -g
     - npm install gulp -g
-    - gulp build
+    - gulp build:
         pwd:
           semantic
 deployment:
