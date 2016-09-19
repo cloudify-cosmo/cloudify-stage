@@ -11,7 +11,7 @@ addPlugin({
     initialHeight: 2,
     color: "green",
     showHeader: false,
-    render: function(plugin,context,pluginUtils) {
+    render: function(plugin,data,context,pluginUtils) {
 
         if (!plugin.template) {
             return 'ServersNum: missing template';

@@ -14,8 +14,6 @@ module.exports = {
         }
     },
     entry: [
-        'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
-        'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
         './app/app.js'
     ],
     output: {
@@ -43,10 +41,9 @@ module.exports = {
             filename: 'index.html'
         }),
         new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('development')
+            'process.env.NODE_ENV': JSON.stringify('prod')
         })
         ,
         new webpack.ProvidePlugin({
@@ -65,7 +62,7 @@ module.exports = {
             {
                 test: /\.js?$/,
                 exclude: /node_modules/,
-                loaders: ['react-hot','babel']
+                loaders: ['babel']
             },
             {
                 test: /\.json?$/,

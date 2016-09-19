@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "updated_at": "2016-07-20 09:10:53.103579",
+      "created_at": "2016-07-20 09:10:53.103579",
+      "description": null,
+      "id": "drupal"
+    },
+    {
+      "updated_at": "2016-08-30 10:57:47.188792",
+      "created_at": "2016-08-30 10:57:47.188792",
+      "description": "This blueprint defines two Azure VMs (within an Availability Set) connected to a Load Balancer and running an IIS web server + Cloudify example web app. \nIn order to allow for deployments to communicate to an existing manager, the deployment must use the manager's Virtual Network and Subnet.  This will allow the deployment to be mostly isolated (it will have its own Resource Group, Storage Account, etc...) while still being on the same network as the existing manager.\nThis deployment may take up to 30-45 minutes to complete.  Azure is not the fastest cloud when it comes to provisioning resources such as the Storage Account and Virtual Machines.  Also, Windows VMs requires a long time to process and execute the Virtual Machine Extensions (Desired State Configuration).\n",
+      "id": "winpoc"
+    },
+    {
+      "updated_at": "2016-08-30 11:01:38.555435",
+      "created_at": "2016-08-30 11:01:38.555435",
+      "description": "This blueprint defines two Azure VMs (within an Availability Set) connected to a Load Balancer and running an IIS web server + Cloudify example web app. \nIn order to allow for deployments to communicate to an existing manager, the deployment must use the manager's Virtual Network and Subnet.  This will allow the deployment to be mostly isolated (it will have its own Resource Group, Storage Account, etc...) while still being on the same network as the existing manager.\nThis deployment may take up to 30-45 minutes to complete.  Azure is not the fastest cloud when it comes to provisioning resources such as the Storage Account and Virtual Machines.  Also, Windows VMs requires a long time to process and execute the Virtual Machine Extensions (Desired State Configuration).\n",
+      "id": "winpoc-no-group"
+    }
+  ],
+  "metadata": {
+    "pagination": {
+      "total": 3,
+      "offset": 0,
+      "size": 10000
+    }
+  }
+}

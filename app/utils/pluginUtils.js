@@ -2,6 +2,8 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
+import momentImport from 'moment';
+
 export default class PluginUtils {
     static buildFromTemplate(html, data) {
 
@@ -9,7 +11,6 @@ export default class PluginUtils {
         return compiled(data);
     }
 
-    static jQuery(selector) {
-        return $(selector);
-    }
+    static moment = momentImport;
+    static jQuery = $;
 }

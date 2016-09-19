@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "blueprint_id": "drupal"
+    },
+    {
+      "blueprint_id": "winpoc"
+    },
+    {
+      "blueprint_id": "winpoc-no-group"
+    }
+  ],
+  "metadata": {
+    "pagination": {
+      "total": 3,
+      "offset": 0,
+      "size": 10000
+    }
+  }
+}

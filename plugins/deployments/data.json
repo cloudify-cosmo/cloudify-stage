@@ -1,0 +1,585 @@
+{
+  "items": [
+    {
+      "inputs": {
+        "dbPort": 3306,
+        "agent_user": "ubuntu",
+        "vm_flavor": "8f4b7ae1-b8c2-431f-bb0c-362a5ece0381",
+        "vm_image": "6c3047c6-17b1-4aaf-a657-9229bb481e50",
+        "docRoot": "/var/www/html",
+        "memcachePort": 11211
+      },
+      "blueprint_id": "drupal",
+      "outputs": {
+        "endpoint": {
+          "description": "My application endpoint",
+          "value": {
+            "drupal_url": {
+              "concat": [
+                "http://",
+                {
+                  "get_attribute": [
+                    "apache_ip",
+                    "floating_ip_address"
+                  ]
+                },
+                ":",
+                80
+              ]
+            }
+          }
+        }
+      },
+      "created_at": "2016-07-20 09:15:29.124631",
+      "updated_at": "2016-07-20 09:15:29.124631",
+      "workflows": [
+        {
+          "created_at": null,
+          "name": "restart_vms",
+          "parameters": {
+            "node_instance_id": {
+              "default": null,
+              "description": "The node instance id which will be restarted - default(null) = All instances..."
+            },
+            "node_id": {
+              "description": "The node id whose instance will be restarted"
+            },
+            "my_input": {
+              "default": null,
+              "description": "Additional input"
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "scale",
+          "parameters": {
+            "scalable_entity_name": {
+              "description": "Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+            },
+            "scale_compute": {
+              "default": false,
+              "description": "If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+            },
+            "delta": {
+              "default": 1,
+              "description": "How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n"
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "drush_setvar",
+          "parameters": {
+            "variable_value": {},
+            "variable_name": {}
+          }
+        },
+        {
+          "created_at": null,
+          "name": "heal",
+          "parameters": {
+            "diagnose_value": {
+              "default": "Not provided",
+              "description": "Diagnosed reason of failure"
+            },
+            "node_instance_id": {
+              "description": "Which node instance has failed"
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "update",
+          "parameters": {
+            "skip_uninstall": {
+              "default": false
+            },
+            "remove_target_instance_ids": {
+              "default": []
+            },
+            "added_instance_ids": {
+              "default": []
+            },
+            "reduce_target_instance_ids": {
+              "default": []
+            },
+            "reduced_instance_ids": {
+              "default": []
+            },
+            "modified_entity_ids": {
+              "default": []
+            },
+            "added_target_instances_ids": {
+              "default": []
+            },
+            "update_id": {
+              "default": ""
+            },
+            "skip_install": {
+              "default": false
+            },
+            "removed_instance_ids": {
+              "default": []
+            },
+            "extend_target_instance_ids": {
+              "default": []
+            },
+            "extended_instance_ids": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "execute_operation",
+          "parameters": {
+            "operation_kwargs": {
+              "default": {}
+            },
+            "node_ids": {
+              "default": []
+            },
+            "node_instance_ids": {
+              "default": []
+            },
+            "run_by_dependency_order": {
+              "default": false
+            },
+            "operation": {},
+            "allow_kwargs_override": {
+              "default": null
+            },
+            "type_names": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "drush_install",
+          "parameters": {
+            "project_name": {}
+          }
+        },
+        {
+          "created_at": null,
+          "name": "install",
+          "parameters": {}
+        },
+        {
+          "created_at": null,
+          "name": "install_new_agents",
+          "parameters": {
+            "validate": {
+              "default": true
+            },
+            "node_instance_ids": {
+              "default": []
+            },
+            "install": {
+              "default": true
+            },
+            "install_agent_timeout": {
+              "default": 300
+            },
+            "node_ids": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "uninstall",
+          "parameters": {}
+        }
+      ],
+      "id": "drupal1"
+    },
+    {
+      "inputs": {
+        "webserver_port": 8080,
+        "loadbalancer_port": 80,
+        "retry_after": 45,
+        "vm_image_version": "latest",
+        "vm_os_family": "windows",
+        "vm_image_sku": "2012-R2-Datacenter",
+        "vm_os_username": "cloudify",
+        "location": "eastus",
+        "resource_prefix": "cfy",
+        "subscription_id": 1,
+        "vm_image_publisher": "MicrosoftWindowsServer",
+        "resource_suffix": 1,
+        "vm_image_offer": "WindowsServer",
+        "mgr_resource_group_name": 1,
+        "mgr_virtual_network_name": 1,
+        "client_id": 1,
+        "vm_size": "Standard_A2",
+        "mgr_subnet_name": 1,
+        "tenant_id": 1,
+        "webserver_ps1_url": "https://github.com/01000101/cloudify-azure-plugin/raw/scaling/examples/resources/windows-iis-webapp.ps1.zip",
+        "vm_os_password": "Cl0ud1fy!",
+        "client_secret": 1,
+        "mgr_storage_account_name": 1
+      },
+      "blueprint_id": "winpoc",
+      "outputs": {
+        "webapp_port": {
+          "value": 80
+        },
+        "webapp_ip": {
+          "value": {
+            "get_attribute": [
+              "load_balancer",
+              "public_ip"
+            ]
+          }
+        },
+        "webapp_endpoint": {
+          "value": {
+            "concat": [
+              "http://",
+              {
+                "get_attribute": [
+                  "load_balancer",
+                  "public_ip"
+                ]
+              },
+              ":",
+              80
+            ]
+          }
+        }
+      },
+      "created_at": "2016-08-30 10:58:51.399550",
+      "updated_at": "2016-08-30 10:58:51.399550",
+      "workflows": [
+        {
+          "created_at": null,
+          "name": "scale",
+          "parameters": {
+            "scalable_entity_name": {
+              "description": "Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+            },
+            "scale_compute": {
+              "default": false,
+              "description": "If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+            },
+            "delta": {
+              "default": 1,
+              "description": "How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n"
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "heal",
+          "parameters": {
+            "diagnose_value": {
+              "default": "Not provided",
+              "description": "Diagnosed reason of failure"
+            },
+            "node_instance_id": {
+              "description": "Which node instance has failed"
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "update",
+          "parameters": {
+            "skip_uninstall": {
+              "default": false
+            },
+            "remove_target_instance_ids": {
+              "default": []
+            },
+            "added_instance_ids": {
+              "default": []
+            },
+            "reduce_target_instance_ids": {
+              "default": []
+            },
+            "reduced_instance_ids": {
+              "default": []
+            },
+            "modified_entity_ids": {
+              "default": []
+            },
+            "added_target_instances_ids": {
+              "default": []
+            },
+            "update_id": {
+              "default": ""
+            },
+            "skip_install": {
+              "default": false
+            },
+            "removed_instance_ids": {
+              "default": []
+            },
+            "extend_target_instance_ids": {
+              "default": []
+            },
+            "extended_instance_ids": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "execute_operation",
+          "parameters": {
+            "operation_kwargs": {
+              "default": {}
+            },
+            "node_ids": {
+              "default": []
+            },
+            "node_instance_ids": {
+              "default": []
+            },
+            "run_by_dependency_order": {
+              "default": false
+            },
+            "operation": {},
+            "allow_kwargs_override": {
+              "default": null
+            },
+            "type_names": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "install",
+          "parameters": {}
+        },
+        {
+          "created_at": null,
+          "name": "install_new_agents",
+          "parameters": {
+            "validate": {
+              "default": true
+            },
+            "node_instance_ids": {
+              "default": []
+            },
+            "install": {
+              "default": true
+            },
+            "install_agent_timeout": {
+              "default": 300
+            },
+            "node_ids": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "uninstall",
+          "parameters": {}
+        }
+      ],
+      "id": "winpocg"
+    },
+    {
+      "inputs": {
+        "webserver_port": 8080,
+        "loadbalancer_port": 80,
+        "retry_after": 45,
+        "vm_image_version": "latest",
+        "vm_os_family": "windows",
+        "vm_image_sku": "2012-R2-Datacenter",
+        "vm_os_username": "cloudify",
+        "location": "eastus",
+        "resource_prefix": "cfy",
+        "subscription_id": 1,
+        "vm_image_publisher": "MicrosoftWindowsServer",
+        "resource_suffix": 1,
+        "vm_image_offer": "WindowsServer",
+        "mgr_resource_group_name": 1,
+        "mgr_virtual_network_name": 1,
+        "client_id": 1,
+        "vm_size": "Standard_A2",
+        "mgr_subnet_name": 1,
+        "tenant_id": 1,
+        "webserver_ps1_url": "https://github.com/01000101/cloudify-azure-plugin/raw/scaling/examples/resources/windows-iis-webapp.ps1.zip",
+        "vm_os_password": "Cl0ud1fy!",
+        "client_secret": 1,
+        "mgr_storage_account_name": 1
+      },
+      "blueprint_id": "winpoc-no-group",
+      "outputs": {
+        "webapp_port": {
+          "value": 80
+        },
+        "webapp_ip": {
+          "value": {
+            "get_attribute": [
+              "load_balancer",
+              "public_ip"
+            ]
+          }
+        },
+        "webapp_endpoint": {
+          "value": {
+            "concat": [
+              "http://",
+              {
+                "get_attribute": [
+                  "load_balancer",
+                  "public_ip"
+                ]
+              },
+              ":",
+              80
+            ]
+          }
+        }
+      },
+      "created_at": "2016-08-30 11:02:17.935879",
+      "updated_at": "2016-08-30 11:02:17.935879",
+      "workflows": [
+        {
+          "created_at": null,
+          "name": "scale",
+          "parameters": {
+            "scalable_entity_name": {
+              "description": "Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+            },
+            "scale_compute": {
+              "default": false,
+              "description": "If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+            },
+            "delta": {
+              "default": 1,
+              "description": "How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n"
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "heal",
+          "parameters": {
+            "diagnose_value": {
+              "default": "Not provided",
+              "description": "Diagnosed reason of failure"
+            },
+            "node_instance_id": {
+              "description": "Which node instance has failed"
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "update",
+          "parameters": {
+            "skip_uninstall": {
+              "default": false
+            },
+            "remove_target_instance_ids": {
+              "default": []
+            },
+            "added_instance_ids": {
+              "default": []
+            },
+            "reduce_target_instance_ids": {
+              "default": []
+            },
+            "reduced_instance_ids": {
+              "default": []
+            },
+            "modified_entity_ids": {
+              "default": []
+            },
+            "added_target_instances_ids": {
+              "default": []
+            },
+            "update_id": {
+              "default": ""
+            },
+            "skip_install": {
+              "default": false
+            },
+            "removed_instance_ids": {
+              "default": []
+            },
+            "extend_target_instance_ids": {
+              "default": []
+            },
+            "extended_instance_ids": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "execute_operation",
+          "parameters": {
+            "operation_kwargs": {
+              "default": {}
+            },
+            "node_ids": {
+              "default": []
+            },
+            "node_instance_ids": {
+              "default": []
+            },
+            "run_by_dependency_order": {
+              "default": false
+            },
+            "operation": {},
+            "allow_kwargs_override": {
+              "default": null
+            },
+            "type_names": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "install",
+          "parameters": {}
+        },
+        {
+          "created_at": null,
+          "name": "install_new_agents",
+          "parameters": {
+            "validate": {
+              "default": true
+            },
+            "node_instance_ids": {
+              "default": []
+            },
+            "install": {
+              "default": true
+            },
+            "install_agent_timeout": {
+              "default": 300
+            },
+            "node_ids": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "uninstall",
+          "parameters": {}
+        }
+      ],
+      "id": "winpoc-nog"
+    }
+  ],
+  "metadata": {
+    "pagination": {
+      "total": 3,
+      "offset": 0,
+      "size": 10000
+    }
+  }
+}

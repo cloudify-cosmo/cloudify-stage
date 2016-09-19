@@ -13,7 +13,7 @@ import InlineEdit from 'react-edit-inline';
 import PluginUtils from '../utils/pluginUtils';
 import PluginContext from '../utils/pluginContext';
 import EditWidgetIcon from './EditWidgetIcon';
-
+import WidgetDynamicContent from './WidgetDynamicContent';
 
 export default class Widget extends Component {
     static propTypes = {
@@ -27,45 +27,6 @@ export default class Widget extends Component {
         onWidgetRemoved: PropTypes.func.isRequired
     };
 
-    constructor(props, context) {
-        super(props, context);
-    };
-
-    _buildPluginContext () {
-        return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this.props.templates);
-
-    }
-
-    renderWidget() {
-        var widgetHtml = 'Loading...';
-        if (this.props.widget.plugin && this.props.widget.plugin.render) {
-            try {
-                widgetHtml = this.props.widget.plugin.render(this.props.widget.plugin,this._buildPluginContext(),PluginUtils);
-            } catch (e) {
-                console.error('Error rendering widget',e);
-            }
-        }
-        return {__html: widgetHtml};
-    }
-
-    attachEvents(container) {
-        if (this.props.widget.plugin && this.props.widget.plugin.events) {
-            try {
-                //this.props.widget.plugin.attachEvents(this.props.widget.plugin,this._buildPluginContext(),PluginUtils);
-
-                _.each(this.props.widget.plugin.events,(event)=>{
-                    if (!event || !event.selector || !event.event || !event.fn) {
-                        console.warn('Cannot attach event, missing data. Event data is ',event);
-                        return;
-                    }
-                    $(container).find(event.selector).off(event.event);
-                    $(container).find(event.selector).on(event.event,()=>{event.fn(this.props.widget,this._buildPluginContext(),PluginUtils)});
-                },this);
-            } catch (e) {
-                console.error('Error attaching events to widget',e);
-            }
-        }
-    }
     render() {
         return (
             <div id={this.props.widget.id}
@@ -95,7 +56,21 @@ export default class Widget extends Component {
                             <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}></i>
                         </div>
 
-                        <div dangerouslySetInnerHTML={this.renderWidget()} ref={(container)=>this.attachEvents(container)} />
+                        {
+                            this.props.widget.plugin ?
+                                <WidgetDynamicContent widget={this.props.widget}
+                                                      templates={this.props.templates}
+                                                      context={this.props.context}
+                                                      setContextValue={this.props.setContextValue}
+                                                      onDrilldownToPage={this.props.onDrilldownToPage}/>
+                                :
+                                <div className='ui segment basic' style={{height:'100%'}}>
+                                    <div className="ui active inverted dimmer">
+                                        <div className="ui text loader">Loading</div>
+                                    </div>
+                                </div>
+                        }
+
                     </div>
             </div>
         );
