@@ -20,6 +20,14 @@ export default class Page extends Component {
         }
 
     render() {
+        var elements = [];
+        if (this.props.isEditMode) {
+            elements.push(<AddWidget pageId={this.props.page.id}/>);
+        }
+        else
+        {
+            elements.push(<div/>);
+        }
         return (
             <div className="">
                 <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange}/>
@@ -32,8 +40,7 @@ export default class Page extends Component {
                         />
                 </h3>
                  */}
-                <AddWidget pageId={this.props.page.id}/>
-
+                {elements}
                 <div className='ui divider'/>
 
                 <WidgetsList widgets={this.props.page.widgets} pageId={this.props.page.id}
@@ -45,5 +52,6 @@ export default class Page extends Component {
                 <EditWidgetModal/>
             </div>
         );
+
     }
 }
