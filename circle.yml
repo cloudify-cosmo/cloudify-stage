@@ -7,7 +7,9 @@ dependencies:
     - npm install
     - npm install webpack -g
 deployment:
-  aws:
+  s3:
     branch: master
     commands:
-      - webpack
+      - gulp build
+        pwd: semantic
+      - webpack --config webpack.config-prod.js
