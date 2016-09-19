@@ -1,13 +1,16 @@
 machine:
   node:
     version: 4.4.5
-
 dependencies:
   override:
     - npm install
     - npm install webpack -g
+    - npm install gulp -g
+    - gulp build:
+        pwd:
+          semantic
 deployment:
-  aws:
+  s3:
     branch: master
     commands:
-      - webpack
+      - webpack --config webpack.config-prod.js

@@ -3,6 +3,7 @@
  */
 
 import momentImport from 'moment';
+import anglarImport from 'angular';
 
 export default class PluginUtils {
     static buildFromTemplate(html, data) {
@@ -13,4 +14,5 @@ export default class PluginUtils {
 
     static moment = momentImport;
     static jQuery = $;
+    static angular = anglarImport;
 }

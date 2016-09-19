@@ -97,6 +97,10 @@ export default class Widget extends Component {
                 console.error('Error attaching events to widget',e);
             }
         }
+
+        if (this.props.widget.plugin.postRender) {
+            this.props.widget.plugin.postRender($(container),this.props.widget,this.state.data,this._buildPluginContext(),PluginUtils);
+        }
     }
     render() {
         return (

@@ -22,5 +22,8 @@
   },
   {
     "name" : "graph"
+  },
+  {
+    "name" : "angularTest"
   }
 ]

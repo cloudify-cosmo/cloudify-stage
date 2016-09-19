@@ -72,6 +72,13 @@ export default class PluginsLoader {
                 return Promise.all(promises);
             })
             .then(()=> {
+                _.each(plugins,p=>{
+                    if (p.init && typeof p.init === 'function') {
+                        p.init(PluginUtils);
+                    }
+                })
+            })
+            .then(()=> {
                 var loadedPlugins = _.clone(plugins);
                 plugins = []; // Clear for next time
                 return loadedPlugins;
