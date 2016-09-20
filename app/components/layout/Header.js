@@ -9,21 +9,13 @@ import { connect } from 'react-redux'
 export default class Header extends Component {
     static isEditMode = false;
     static propTypes = {
-        onWidgetsGridEditModeChange: PropTypes.func.isRequired
+        onWidgetsGridEditModeChange: PropTypes.func.isRequired,
+        isEditMode: PropTypes.bool.isRequired
     };
 
 
-    componentDidMount () {
-        if (this.isEditMode == null)
-        {
-            this.isEditMode = false;
-        }
-    }
-    //$('.grid-stack').on('enable');
-
     toggleEditMode() {
-        this.isEditMode = !this.isEditMode;
-        this.props.onWidgetsGridEditModeChange(this.isEditMode);
+        this.props.onWidgetsGridEditModeChange(!this.props.isEditMode);
     }
 
     render() {
@@ -37,6 +29,6 @@ export default class Header extends Component {
                 </div>
            </div>
 
-                );
+        );
     }
 }
