@@ -18,17 +18,25 @@ export default class Breadcrumbs extends Component {
                 elements.push(<span key={p.id} className='section'>{p.name}</span>);
                 elements.push(<span key={'d_'+p.id} className="divider">/</span>);
             } else {
-
-                elements.push(
-                    <span key={p.id} className='section active'>
-                        <InlineEdit
-                            text={p.name}
-                            change={data=>this.props.onPageNameChange(p.id,data.name)}
-                            paramName="name"
-                            />
-                    </span>
-                    );
-
+                if (this.props.isEditMode) {
+                    elements.push(
+                        <span key={p.id} className='section active'>
+                            <InlineEdit
+                                text={p.name}
+                                change={data=>this.props.onPageNameChange(p.id,data.name)}
+                                paramName="name"
+                                />
+                        </span>
+                        );
+                }
+                else
+                {
+                    elements.push(
+                        <span key={p.id} className='section active'>
+                            <label> {p.name} </label>
+                        </span>
+                        );
+                }
                 //elements.push(<span key={p.id} className='section active'>{p.name}</span>);
             }
 
