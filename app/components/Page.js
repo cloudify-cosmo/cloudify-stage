@@ -26,7 +26,7 @@ export default class Page extends Component {
         }
         return (
             <div className="">
-                <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange}/>
+                <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange} isEditMode={this.props.isEditMode}/>
                 {/*
                  <h3 className='ui header dividing'>
                     <InlineEdit
