@@ -15,7 +15,7 @@ export default class Breadcrumbs extends Component {
         var elements = [];
         _.each(_(this.props.pagesList).reverse().value(),(p,index)=>{
             if (index !== this.props.pagesList.length-1) {
-                elements.push(<span key={p.id} className='section'>{p.name}</span>);
+                elements.push(<span key={p.id} className='section'><a href={"/page/"+p.id}> {p.name}</a></span>);
                 elements.push(<span key={'d_'+p.id} className="divider">/</span>);
             } else {
                 if (this.props.isEditMode) {
