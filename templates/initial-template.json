@@ -1,23 +1,69 @@
 {
-  "name": "first page",
+  "name": "Application",
   "widgets": [
     {
       "name": "Blueprints List",
       "plugin": "blueprints",
-      "width": 7,
-      "height": 5
+      "width": 6,
+      "height": 4,
+      "x": 0,
+      "y": 2
     },
     {
       "name": "Deployments",
-      "plugin": "deploymentNum",
-      "width": 5,
-      "height": 3
+      "width": 6,
+      "height": 4,
+      "plugin": "deployments",
+      "x": 6,
+      "y": 2
     },
     {
-      "name": "topology",
-      "plugin": "topology",
-      "width": 5,
-      "height": 4
+      "name": "Widget_0",
+      "width": 2,
+      "height": 2,
+      "plugin": "deploymentNum",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "Widget_1",
+      "width": 2,
+      "height": 2,
+      "plugin": "serversNum",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "name": "Widget_2",
+      "width": 2,
+      "height": 2,
+      "plugin": "pluginsNum",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "name": "Users list",
+      "width": 4,
+      "height": 4,
+      "plugin": "usersList",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "name": "CPU Utilization - System",
+      "width": 6,
+      "height": 2,
+      "plugin": "cpuUtilizationSystem",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "name": "Cloudify github examples",
+      "width": 8,
+      "height": 4,
+      "plugin": "githubExamples",
+      "x": 4,
+      "y": 6
     }
   ]
 }
