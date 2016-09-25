@@ -8,14 +8,15 @@ import InlineEdit from 'react-edit-inline';
 export default class Breadcrumbs extends Component {
     static propTypes = {
         pagesList: PropTypes.array.isRequired,
-        onPageNameChange: PropTypes.func.isRequired
+        onPageNameChange: PropTypes.func.isRequired,
+        onPageSelected: PropTypes.func.isRequired
     };
 
     render() {
         var elements = [];
         _.each(_(this.props.pagesList).reverse().value(),(p,index)=>{
             if (index !== this.props.pagesList.length-1) {
-                elements.push(<span key={p.id} className='section'><a href={"/page/"+p.id}> {p.name}</a></span>);
+                elements.push(<div key={p.id} className='section' onClick={()=>{this.props.onPageSelected(p);} }>{p.name}</div>);
                 elements.push(<span key={'d_'+p.id} className="divider">/</span>);
             } else {
                 if (this.props.isEditMode) {

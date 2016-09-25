@@ -6,6 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Page from '../components/Page';
 import {renamePage} from '../actions/page';
+import {selectPage} from '../actions/page';
 import {changeWidgetGridData} from '../actions/widgets';
 
 const buildPagesList = (pages,selectedPageId) => {
@@ -46,6 +47,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onPageNameChange: (pageId,newName)=> {
             dispatch(renamePage(pageId,newName));
+        },
+        onPageSelected: (page) => {
+            dispatch(selectPage(page.id));
         },
         onWidgetsGridDataChange: (pageId,widgetId,gridData)=>{
             dispatch(changeWidgetGridData(pageId,widgetId,gridData));
