@@ -9,8 +9,8 @@ import Header from '../../components/layout/Header';
 
 
 const mapStateToProps = (state, ownProps) => {
-return {
-        isEditMode: state.header.isEditMode
+    return {
+        isEditMode: state.header.isEditMode || false
     }
 };
 

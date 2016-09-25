@@ -1,0 +1,1461 @@
+{
+  "items": [
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:37.920+0000",
+      "@timestamp": "2016-09-22T12:21:37.922Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "Execution done (return_code=0): /tmp/N0UYJ/bomber.sh"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:37.801+0000",
+      "@timestamp": "2016-09-22T12:21:37.803Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:37.682+0000",
+      "@timestamp": "2016-09-22T12:21:37.684Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:37.566+0000",
+      "@timestamp": "2016-09-22T12:21:37.568Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:37.425+0000",
+      "@timestamp": "2016-09-22T12:21:37.427Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    },
+    {
+      "level": "debug",
+      "timestamp": "2016-09-22 12:21:37.301+0000",
+      "@timestamp": "2016-09-22T12:21:37.303Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "DEBUG: You have been BOMBED"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:37.181+0000",
+      "@timestamp": "2016-09-22T12:21:37.184Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:37.046+0000",
+      "@timestamp": "2016-09-22T12:21:37.048Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:36.932+0000",
+      "@timestamp": "2016-09-22T12:21:36.934Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:36.813+0000",
+      "@timestamp": "2016-09-22T12:21:36.815Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    },
+    {
+      "level": "debug",
+      "timestamp": "2016-09-22 12:21:36.696+0000",
+      "@timestamp": "2016-09-22T12:21:36.698Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "DEBUG: You have been BOMBED"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:36.477+0000",
+      "@timestamp": "2016-09-22T12:21:36.481Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:36.347+0000",
+      "@timestamp": "2016-09-22T12:21:36.350Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:36.228+0000",
+      "@timestamp": "2016-09-22T12:21:36.232Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:36.112+0000",
+      "@timestamp": "2016-09-22T12:21:36.114Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    },
+    {
+      "level": "debug",
+      "timestamp": "2016-09-22 12:21:35.996+0000",
+      "@timestamp": "2016-09-22T12:21:35.999Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "DEBUG: You have been BOMBED"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:35.880+0000",
+      "@timestamp": "2016-09-22T12:21:35.883Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:35.762+0000",
+      "@timestamp": "2016-09-22T12:21:35.774Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:35.534+0000",
+      "@timestamp": "2016-09-22T12:21:35.536Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:35.408+0000",
+      "@timestamp": "2016-09-22T12:21:35.410Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    },
+    {
+      "level": "debug",
+      "timestamp": "2016-09-22 12:21:35.288+0000",
+      "@timestamp": "2016-09-22T12:21:35.292Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "DEBUG: You have been BOMBED"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:35.154+0000",
+      "@timestamp": "2016-09-22T12:21:35.157Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:35.032+0000",
+      "@timestamp": "2016-09-22T12:21:35.035Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:34.914+0000",
+      "@timestamp": "2016-09-22T12:21:34.916Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:34.799+0000",
+      "@timestamp": "2016-09-22T12:21:34.802Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    },
+    {
+      "level": "debug",
+      "timestamp": "2016-09-22 12:21:34.684+0000",
+      "@timestamp": "2016-09-22T12:21:34.686Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "DEBUG: You have been BOMBED"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:34.568+0000",
+      "@timestamp": "2016-09-22T12:21:34.573Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:34.452+0000",
+      "@timestamp": "2016-09-22T12:21:34.457Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:34.334+0000",
+      "@timestamp": "2016-09-22T12:21:34.337Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:34.218+0000",
+      "@timestamp": "2016-09-22T12:21:34.222Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    },
+    {
+      "level": "debug",
+      "timestamp": "2016-09-22 12:21:34.104+0000",
+      "@timestamp": "2016-09-22T12:21:34.107Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "DEBUG: You have been BOMBED"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:33.989+0000",
+      "@timestamp": "2016-09-22T12:21:33.991Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:33.870+0000",
+      "@timestamp": "2016-09-22T12:21:33.873Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:33.755+0000",
+      "@timestamp": "2016-09-22T12:21:33.758Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:33.639+0000",
+      "@timestamp": "2016-09-22T12:21:33.643Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    },
+    {
+      "level": "debug",
+      "timestamp": "2016-09-22 12:21:33.525+0000",
+      "@timestamp": "2016-09-22T12:21:33.527Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "DEBUG: You have been BOMBED"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:33.410+0000",
+      "@timestamp": "2016-09-22T12:21:33.412Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:33.293+0000",
+      "@timestamp": "2016-09-22T12:21:33.296Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:33.178+0000",
+      "@timestamp": "2016-09-22T12:21:33.180Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:33.062+0000",
+      "@timestamp": "2016-09-22T12:21:33.065Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    },
+    {
+      "level": "debug",
+      "timestamp": "2016-09-22 12:21:32.938+0000",
+      "@timestamp": "2016-09-22T12:21:32.940Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "DEBUG: You have been BOMBED"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:32.821+0000",
+      "@timestamp": "2016-09-22T12:21:32.823Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:32.707+0000",
+      "@timestamp": "2016-09-22T12:21:32.709Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:32.593+0000",
+      "@timestamp": "2016-09-22T12:21:32.594Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:32.474+0000",
+      "@timestamp": "2016-09-22T12:21:32.480Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    },
+    {
+      "level": "debug",
+      "timestamp": "2016-09-22 12:21:32.360+0000",
+      "@timestamp": "2016-09-22T12:21:32.363Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "DEBUG: You have been BOMBED"
+      }
+    },
+    {
+      "level": "critical",
+      "timestamp": "2016-09-22 12:21:32.124+0000",
+      "@timestamp": "2016-09-22T12:21:32.126Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "CRITICAL: You have been BOMBED"
+      }
+    },
+    {
+      "level": "error",
+      "timestamp": "2016-09-22 12:21:32.008+0000",
+      "@timestamp": "2016-09-22T12:21:32.011Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "ERROR: You have been BOMBED"
+      }
+    },
+    {
+      "level": "warning",
+      "timestamp": "2016-09-22 12:21:31.892+0000",
+      "@timestamp": "2016-09-22T12:21:31.895Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "WARNING: You have been BOMBED"
+      }
+    },
+    {
+      "level": "info",
+      "timestamp": "2016-09-22 12:21:31.773+0000",
+      "@timestamp": "2016-09-22T12:21:31.776Z",
+      "tags": [
+        "event"
+      ],
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "logger": "de1f1b57-e69f-451a-b89c-7104ea780850",
+      "type": "cloudify_log",
+      "message": {
+        "text": "INFO: You have been BOMBED"
+      }
+    }
+  ],
+  "metadata": {
+    "pagination": {
+      "total": 103,
+      "offset": 0,
+      "size": 50
+    }
+  }
+}

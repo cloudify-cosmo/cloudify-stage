@@ -8,11 +8,14 @@
     },
     {
       "blueprint_id": "winpoc-no-group"
+    },
+    {
+      "blueprint_id": "bomber"
     }
   ],
   "metadata": {
     "pagination": {
-      "total": 3,
+      "total": 4,
       "offset": 0,
       "size": 10000
     }

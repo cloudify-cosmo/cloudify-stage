@@ -15,7 +15,7 @@ export default class AddWidgetModal extends Component {
         onPluginInstalled: PropTypes.func.isRequired
     };
 
- addWidget(widget) {
+    addWidget(widget) {
         this.props.onWidgetAdded(widget);
         $('.addWidgetModal').modal('hide');
     }

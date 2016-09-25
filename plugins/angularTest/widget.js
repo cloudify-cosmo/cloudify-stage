@@ -33,11 +33,11 @@ addPlugin({
                 };
             });
     },
-    render: function(plugin,data,context,pluginUtils) {
+    render: function(widget,data,context,pluginUtils) {
         var d = {
             name: 'name'+ Math.floor((Math.random() * 5) + 1)
         };
-        return pluginUtils.buildFromTemplate(plugin.template,d);
+        return pluginUtils.buildFromTemplate(widget.plugin.template,d);
     },
     postRender: function(el,plugin,data,context,pluginUtils) {
         var e = el.find('.angularTestContainer');

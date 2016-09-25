@@ -11,12 +11,12 @@ addPlugin({
     initialHeight: 2,
     color: "green",
     showHeader: false,
-    render: function(plugin,data,context,pluginUtils) {
+    render: function(widget,data,context,pluginUtils) {
 
-        if (!plugin.template) {
+        if (!widget.plugin.template) {
             return 'ServersNum: missing template';
         }
 
-        return pluginUtils.buildFromTemplate(plugin.template);
+        return pluginUtils.buildFromTemplate(widget.plugin.template);
     }
 });

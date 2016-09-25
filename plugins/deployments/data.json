@@ -573,11 +573,149 @@
         }
       ],
       "id": "winpoc-nog"
+    },
+    {
+      "inputs": {},
+      "blueprint_id": "bomber",
+      "outputs": {},
+      "created_at": "2016-09-22 12:20:17.789726",
+      "updated_at": "2016-09-22 12:20:17.789726",
+      "workflows": [
+        {
+          "created_at": null,
+          "name": "scale",
+          "parameters": {
+            "scalable_entity_name": {
+              "description": "Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+            },
+            "scale_compute": {
+              "default": false,
+              "description": "If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+            },
+            "delta": {
+              "default": 1,
+              "description": "How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n"
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "heal",
+          "parameters": {
+            "diagnose_value": {
+              "default": "Not provided",
+              "description": "Diagnosed reason of failure"
+            },
+            "node_instance_id": {
+              "description": "Which node instance has failed"
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "update",
+          "parameters": {
+            "skip_uninstall": {
+              "default": false
+            },
+            "remove_target_instance_ids": {
+              "default": []
+            },
+            "added_instance_ids": {
+              "default": []
+            },
+            "reduce_target_instance_ids": {
+              "default": []
+            },
+            "reduced_instance_ids": {
+              "default": []
+            },
+            "modified_entity_ids": {
+              "default": []
+            },
+            "added_target_instances_ids": {
+              "default": []
+            },
+            "update_id": {
+              "default": ""
+            },
+            "skip_install": {
+              "default": false
+            },
+            "removed_instance_ids": {
+              "default": []
+            },
+            "extend_target_instance_ids": {
+              "default": []
+            },
+            "extended_instance_ids": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "execute_operation",
+          "parameters": {
+            "operation_kwargs": {
+              "default": {}
+            },
+            "node_ids": {
+              "default": []
+            },
+            "node_instance_ids": {
+              "default": []
+            },
+            "run_by_dependency_order": {
+              "default": false
+            },
+            "operation": {},
+            "allow_kwargs_override": {
+              "default": null
+            },
+            "type_names": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "install",
+          "parameters": {}
+        },
+        {
+          "created_at": null,
+          "name": "install_new_agents",
+          "parameters": {
+            "validate": {
+              "default": true
+            },
+            "node_instance_ids": {
+              "default": []
+            },
+            "install": {
+              "default": true
+            },
+            "install_agent_timeout": {
+              "default": 300
+            },
+            "node_ids": {
+              "default": []
+            }
+          }
+        },
+        {
+          "created_at": null,
+          "name": "uninstall",
+          "parameters": {}
+        }
+      ],
+      "id": "bomber"
     }
   ],
   "metadata": {
     "pagination": {
-      "total": 3,
+      "total": 4,
       "offset": 0,
       "size": 10000
     }

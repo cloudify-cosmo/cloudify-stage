@@ -4,16 +4,16 @@
 
 
 addPlugin({
-    id: "usersList",
-    name: "Users list",
+    id: "cpuUtilizationUser",
+    name: "CPU Utilization - User",
     description: 'blah blah blah',
-    initialWidth: 4,
-    initialHeight: 3,
-    color: "orange",
+    initialWidth: 8,
+    initialHeight: 4,
+    color : "purple",
     render: function(widget,data,context,pluginUtils) {
 
         if (!widget.plugin.template) {
-            return 'usersList: missing template';
+            return 'graph: missing template';
         }
 
         return pluginUtils.buildFromTemplate(widget.plugin.template);

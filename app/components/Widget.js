@@ -28,11 +28,6 @@ export default class Widget extends Component {
     };
 
     render() {
-        var elements = [];
-        if (this.props.isEditMode) {
-            elements.push(<EditWidgetIcon/>);
-            elements.push(<i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>);
-        }
         return (
             <div id={this.props.widget.id}
                  className='grid-stack-item widget'
@@ -55,9 +50,15 @@ export default class Widget extends Component {
                                 :
                                 ''
                         }
-                        <div className='widgetEditButtons'>
-                        {elements}
-                        </div>
+                        {
+                            this.props.isEditMode ?
+                                <div className='widgetEditButtons'>
+                                    <EditWidgetIcon/>
+                                    <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
+                                </div>
+                                :
+                                ''
+                        }
                         {
                             this.props.widget.plugin ?
                                 <WidgetDynamicContent widget={this.props.widget}

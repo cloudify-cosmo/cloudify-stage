@@ -21,7 +21,7 @@ let nameIndex = 0;
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onWidgetAdded: (plugin) => {
-            dispatch(addWidget(ownProps.pageId,'Widget_'+(nameIndex++),plugin));
+            dispatch(addWidget(ownProps.pageId,plugin.name || 'Widget_'+(nameIndex++),plugin));
         },
         onPluginInstalled : ()=> {
             // dispatch

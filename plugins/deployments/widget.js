@@ -10,16 +10,35 @@ addPlugin({
     initialHeight: 6,
     color : "purple",
     fetchUrl: '/plugins/deployments/data.json',
-    render: function(plugin,data,context,pluginUtils) {
 
-        if (!plugin.template) {
+    events: [
+        {
+            selector: '.row',
+            event: 'click',
+            fn: (e,widget,context,pluginUtils)=> {
+                var deploymentId = pluginUtils.jQuery(e.currentTarget).data('id');
+                context.setValue('deploymentId',deploymentId);
+
+                context.drillDown(widget,'deployment');
+            }
+        }
+
+    ],
+
+    render: function(widget,data,context,pluginUtils) {
+
+        if (!widget.plugin.template) {
             return 'deployments: missing template';
         }
 
         var formattedData = Object.assign({},data);
         var blueprintId = context.getValue('blueprintId');
+        var filter = context.getValue('filterDep'+widget.id);
         if (blueprintId) {
             formattedData.items = _.filter(data.items,{blueprint_id:blueprintId});
+        }
+        if (filter) {
+            formattedData.items = _.filter(formattedData.items,{status:filter});
         }
 
         formattedData = Object.assign({},formattedData,{
@@ -33,6 +52,20 @@ addPlugin({
 
         formattedData.blueprintId = blueprintId;
 
-        return pluginUtils.buildFromTemplate(plugin.template,formattedData);
+        return pluginUtils.buildFromTemplate(widget.plugin.template,formattedData);
+    },
+
+    postRender: function(el,widget,data,context,pluginUtils) {
+        pluginUtils.jQuery(el).find('.ui.dropdown').dropdown({
+            onChange: (value, text, $choice) => {
+                context.setValue('filterDep'+widget.id,value);
+            }
+        });
+
+        var filter = context.getValue('filterDep'+widget.id);
+        if (filter) {
+            pluginUtils.jQuery(el).find('.ui.dropdown').dropdown('set selected',filter);
+        }
+
     }
 });

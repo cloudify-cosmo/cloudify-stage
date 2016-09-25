@@ -10,12 +10,12 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color : "blue",
-    render: function(plugin,data,context,pluginUtils) {
+    render: function(widget,data,context,pluginUtils) {
 
-        if (!plugin.template) {
+        if (!widget.plugin.template) {
             return 'graph: missing template';
         }
 
-        return pluginUtils.buildFromTemplate(plugin.template);
+        return pluginUtils.buildFromTemplate(widget.plugin.template);
     }
 });

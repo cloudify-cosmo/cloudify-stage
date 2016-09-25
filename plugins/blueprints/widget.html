@@ -18,11 +18,10 @@
 <%
         _.each(items, function(item) {
 %>
-        <tr class="<%= item.isSelected ? 'active' : '' %>">
+        <tr class="row <%= item.isSelected ? 'active' : '' %>" data-id='<%=item.id%>'>
             <td>
                 <div>
-                    <a class='blueprintName' data-id='<%=item.id%>' href="javascript:void(0)"><%=item.id%></a>
-                    <a class='blueprintDrilldown' href="javascript:void(0)"><i class="circular inverted teal link tiny arrow down icon"></i></a>
+                    <a class='blueprintName' href="javascript:void(0)"><%=item.id%></a>
                 </div>
             </td>
             <td><%=item.created_at%></td>

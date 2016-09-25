@@ -6,6 +6,24 @@
         <div>Deployments for blueprint with id: <%=blueprintId%></div>
     <% } %>
 
+    <div>
+        <div class="ui selection dropdown fluid">
+            <input type="hidden" name="statusFilter">
+            <div class="default text">Filter by status</div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+                <div class="item" data-value="ok">
+                    <i class="check circle icon inverted green"></i>
+                    OK
+                </div>
+                <div class="item" data-value="error">
+                    <i class="remove circle icon inverted red"></i>
+                    Error
+                </div>
+            </div>
+        </div>
+    </div>
+
     <table class="ui very compact table">
         <thead>
         <tr>
@@ -13,17 +31,25 @@
             <th>Blueprint</th>
             <th>Created</th>
             <th>Updated</th>
+            <th>Status</th>
         </tr>
         </thead>
         <tbody>
         <%
         _.each(items, function(item) {
         %>
-        <tr>
+        <tr class="row" data-id="<%=item.id%>">
             <td><%=item.id%></td>
             <td><%=item.blueprint_id%></td>
             <td><%=item.created_at%></td>
             <td><%=item.updated_at%></td>
+            <td>
+                <% if (item.status === 'ok') { %>
+                    <i class="check circle icon inverted green"></i>
+                <% } else { %>
+                    <i class="remove circle icon inverted red"></i>
+                <% } %>
+            </td>
             <!--<td><div class="ui green horizontal label"><%=item.depCount%></div></td>-->
         </tr>
         <%

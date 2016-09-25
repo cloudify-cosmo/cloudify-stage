@@ -23,7 +23,11 @@
   {
     "name" : "graph"
   },
-  {
-    "name" : "angularTest"
-  }
+  { "name" : "cpuUtilizationSystem" },
+  { "name" : "cpuUtilizationUser" },
+  { "name" : "inputs" },
+  { "name" : "githubExamples" },
+  { "name" : "events" },
+  { "name" : "logs" }
+
 ]

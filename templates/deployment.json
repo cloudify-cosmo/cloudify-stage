@@ -1,0 +1,11 @@
+{
+  "name": "deployment",
+  "widgets": [
+    {
+      "name": "topology",
+      "plugin": "topology",
+      "width": 5,
+      "height": 4
+    }
+  ]
+}

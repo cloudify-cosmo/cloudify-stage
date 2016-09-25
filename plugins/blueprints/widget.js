@@ -36,29 +36,29 @@ addPlugin({
 
     events: [
         {
-            selector: '.blueprintName',
+            selector: '.row',
             event: 'click',
             fn: (e,widget,context,pluginUtils)=> {
                 var blueprintId = pluginUtils.jQuery(e.currentTarget).data('id');
                 var oldSelectedBlueprintId = context.getValue('blueprintId');
                 context.setValue('blueprintId',blueprintId === oldSelectedBlueprintId ? null : blueprintId);
             }
-        },
-        {
-            selector: '.blueprintDrilldown',
-            event: 'click',
-            fn: (e,widget,context,pluginUtils)=> {
-                var blueprintId = pluginUtils.jQuery(e.currentTarget).data('id');
-                context.setValue('blueprintId',blueprintId);
-
-                context.drillDown(widget,'template1');
-            }
         }
+        //{
+        //    selector: '.blueprintDrilldown',
+        //    event: 'click',
+        //    fn: (e,widget,context,pluginUtils)=> {
+        //        var blueprintId = pluginUtils.jQuery(e.currentTarget).data('id');
+        //        context.setValue('blueprintId',blueprintId);
+        //
+        //        context.drillDown(widget,'template1');
+        //    }
+        //}
     ],
 
-    render: function(plugin,data,context,pluginUtils) {
+    render: function(widget,data,context,pluginUtils) {
 
-        if (!plugin.template) {
+        if (!widget.plugin.template) {
             return 'Blueprints: missing template';
         }
 
@@ -72,7 +72,7 @@ addPlugin({
                 })
             })
         });
-        return pluginUtils.buildFromTemplate(plugin.template,formattedData);
+        return pluginUtils.buildFromTemplate(widget.plugin.template,formattedData);
     }
     //attachEvents : function (plugin,context,pluginUtils) {
 

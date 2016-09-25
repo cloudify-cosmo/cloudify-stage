@@ -1,0 +1,299 @@
+{
+  "items": [
+    {
+      "event_type": "workflow_succeeded",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:21:38.565+0000",
+      "@timestamp": "2016-09-22T12:21:38.567Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "deployment_id": "bomber",
+        "workflow_id": "install",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3",
+        "blueprint_id": "bomber"
+      },
+      "message": {
+        "text": "'install' workflow execution succeeded",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "task_succeeded",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:21:37.997+0000",
+      "@timestamp": "2016-09-22T12:21:38.000Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "deployment_id": "bomber",
+        "task_current_retries": 0,
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "task_total_retries": -1,
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "message": {
+        "text": "Task succeeded 'script_runner.tasks.run'",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "task_started",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:21:25.096+0000",
+      "@timestamp": "2016-09-22T12:21:25.126Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "deployment_id": "bomber",
+        "task_current_retries": 0,
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "task_total_retries": -1,
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "message": {
+        "text": "Task started 'script_runner.tasks.run'",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "sending_task",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:21:25.070+0000",
+      "@timestamp": "2016-09-22T12:21:25.074Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "deployment_id": "bomber",
+        "task_current_retries": 0,
+        "task_id": "de1f1b57-e69f-451a-b89c-7104ea780850",
+        "blueprint_id": "bomber",
+        "plugin": "script",
+        "task_target": "cloudify.management",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "task_name": "script_runner.tasks.run",
+        "task_queue": "cloudify.management",
+        "operation": "cloudify.interfaces.lifecycle.start",
+        "task_total_retries": -1,
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "message": {
+        "text": "Sending task 'script_runner.tasks.run'",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "workflow_node_event",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:21:25.027+0000",
+      "@timestamp": "2016-09-22T12:21:25.029Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "blueprint_id": "bomber",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "message": {
+        "text": "Starting node",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "workflow_node_event",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:21:24.614+0000",
+      "@timestamp": "2016-09-22T12:21:24.617Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "blueprint_id": "bomber",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "message": {
+        "text": "Configuring node",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "workflow_node_event",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:21:24.182+0000",
+      "@timestamp": "2016-09-22T12:21:24.186Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "blueprint_id": "bomber",
+        "node_name": "bomber",
+        "workflow_id": "install",
+        "node_id": "bomber_25df7",
+        "deployment_id": "bomber",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3"
+      },
+      "message": {
+        "text": "Creating node",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "workflow_started",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:21:23.688+0000",
+      "@timestamp": "2016-09-22T12:21:23.691Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "deployment_id": "bomber",
+        "workflow_id": "install",
+        "execution_id": "852a8a6f-ff54-498a-a4ee-8eed25ffeff3",
+        "blueprint_id": "bomber"
+      },
+      "message": {
+        "text": "Starting 'install' workflow execution",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "workflow_succeeded",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:20:20.132+0000",
+      "@timestamp": "2016-09-22T12:20:20.137Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "deployment_id": "bomber",
+        "workflow_id": "create_deployment_environment",
+        "execution_id": "4eb675de-2093-4ce4-ac0d-29784d37f75c",
+        "blueprint_id": "bomber"
+      },
+      "message": {
+        "text": "'create_deployment_environment' workflow execution succeeded",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "workflow_stage",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:20:19.877+0000",
+      "@timestamp": "2016-09-22T12:20:19.910Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "deployment_id": "bomber",
+        "workflow_id": "create_deployment_environment",
+        "execution_id": "4eb675de-2093-4ce4-ac0d-29784d37f75c",
+        "blueprint_id": "bomber"
+      },
+      "message": {
+        "text": "Creating deployment work directory",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "workflow_stage",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:20:19.788+0000",
+      "@timestamp": "2016-09-22T12:20:19.810Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "deployment_id": "bomber",
+        "workflow_id": "create_deployment_environment",
+        "execution_id": "4eb675de-2093-4ce4-ac0d-29784d37f75c",
+        "blueprint_id": "bomber"
+      },
+      "message": {
+        "text": "Skipping starting deployment policy engine core - no policies defined",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    },
+    {
+      "event_type": "workflow_started",
+      "tags": [
+        "event"
+      ],
+      "timestamp": "2016-09-22 12:20:19.413+0000",
+      "@timestamp": "2016-09-22T12:20:19.424Z",
+      "message_code": null,
+      "@version": "1",
+      "context": {
+        "deployment_id": "bomber",
+        "workflow_id": "create_deployment_environment",
+        "execution_id": "4eb675de-2093-4ce4-ac0d-29784d37f75c",
+        "blueprint_id": "bomber"
+      },
+      "message": {
+        "text": "Starting 'create_deployment_environment' workflow execution",
+        "arguments": null
+      },
+      "type": "cloudify_event"
+    }
+  ],
+  "metadata": {
+    "pagination": {
+      "total": 12,
+      "offset": 0,
+      "size": 50
+    }
+  }
+}

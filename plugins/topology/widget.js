@@ -9,12 +9,23 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color: "yellow",
-    render: function(plugin,data,context,pluginUtils) {
-        if (!plugin.template) {
+    render: function(widget,data,context,pluginUtils) {
+        if (!widget.plugin.template) {
             return 'Topology: missing template';
         }
 
-        return pluginUtils.buildFromTemplate(plugin.template);
+        var deploymentId = context.getValue('deploymentId');
+        var topologyData = {
+            topologyPic: '/plugins/topology/topology1.png'
+        };
+        if (deploymentId) {
+            if (deploymentId.indexOf('drupal') >= 0 ){
+                topologyData.topologyPic = '/plugins/topology/topology2.png';
+            } else if (deploymentId.indexOf('winpoc-n') >= 0 ){
+                topologyData.topologyPic = '/plugins/topology/topology3.png';
+            } // Else we stick with topology1
+        }
+        return pluginUtils.buildFromTemplate(widget.plugin.template,topologyData);
 
     }
 });

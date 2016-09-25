@@ -52,7 +52,7 @@ export default class Widget extends Component {
                 });
 
         } else if (this.props.widget.plugin.fetchData && typeof this.props.widget.plugin.fetchData === 'function') {
-            this.props.widget.plugin.fetchData(this.props.widget.plugin,this._buildPluginContext(),PluginUtils)
+            this.props.widget.plugin.fetchData(this.props.widget,this._buildPluginContext(),PluginUtils)
                 .then((data)=> {
                     console.log('widget :'+this.props.widget.name + ' data fetched');
                     this.setState({data: data});
@@ -72,7 +72,7 @@ export default class Widget extends Component {
         var widgetHtml = 'Loading...';
         if (this.props.widget.plugin && this.props.widget.plugin.render) {
             try {
-                widgetHtml = this.props.widget.plugin.render(this.props.widget.plugin,this.state.data,this._buildPluginContext(),PluginUtils);
+                widgetHtml = this.props.widget.plugin.render(this.props.widget,this.state.data,this._buildPluginContext(),PluginUtils);
             } catch (e) {
                 console.error('Error rendering widget',e);
             }
