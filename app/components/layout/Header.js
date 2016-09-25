@@ -12,7 +12,6 @@ export default class Header extends Component {
         isEditMode: PropTypes.bool.isRequired
     };
 
-
     toggleEditMode() {
         this.props.onWidgetsGridEditModeChange(!this.props.isEditMode);
     }
@@ -24,7 +23,26 @@ export default class Header extends Component {
                     <img src="/app/images/Cloudify-logo.png"></img>
                 </div>
                 <div className="right menu">
-                    <div className="ui dropdown item" ref={dropdown=>$(dropdown).dropdown()}>
+                    <div className="ui inline dropdown item" ref={select=>$(select).dropdown()}>
+                        <div className="dropDownText text">Manager1</div>
+                        <i className="inverted dropdown icon"></i>
+                        <div className="menu">
+                            <div className="item active selected">
+                                Manager1
+                            </div>
+                            <div className="item">
+                                Manager2
+                            </div>
+                            <div className="item">
+                                Manager3
+                            </div>
+                            <div className="item">
+                                Manager4
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="ui dropdown inline item" ref={dropdown=>$(dropdown).dropdown()}>
                         <i className="circular user icon"></i>
                         <i className="dropdown icon"></i>
                         <div className="menu">
@@ -38,7 +56,7 @@ export default class Header extends Component {
                     </div>
                     {/*<i className="inverted configure link icon large" onClick={this.toggleEditMode.bind(this)}/>*/}
                 </div>
-           </div>
+            </div>
 
         );
     }

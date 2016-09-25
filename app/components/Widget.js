@@ -28,6 +28,21 @@ export default class Widget extends Component {
     };
 
     render() {
+        var elements = [];
+        if (this.props.isEditMode) {
+            elements.push(
+                        <InlineEdit
+                            text={this.props.widget.name}
+                            change={data=>this.props.onWidgetNameChange(this.props.pageId,this.props.widget.id,data.name)}
+                            paramName="name"
+                            />);
+        }
+        else
+        {
+            elements.push(
+                        <label>{this.props.widget.name}</label>
+                        );
+        }
         return (
             <div id={this.props.widget.id}
                  className='grid-stack-item widget'
@@ -41,11 +56,7 @@ export default class Widget extends Component {
                         {
                             this.props.widget.plugin && this.props.widget.plugin.showHeader ?
                                 <h5 className='ui header dividing'>
-                                    <InlineEdit
-                                        text={this.props.widget.name}
-                                        change={data=>this.props.onWidgetNameChange(this.props.pageId,this.props.widget.id,data.name)}
-                                        paramName="name"
-                                        />
+                                {elements}
                                 </h5>
                                 :
                                 ''

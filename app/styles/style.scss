@@ -10,16 +10,15 @@ body {
   }
 }
 
-//.editmode {
-//    right: 0;
-//    position: absolute;
-//    margin-top: 8px;
-//    margin-right: 5px;
-//}
-
 .ui.top.menu .right.menu .ui.dropdown.item{
   padding: 5px 10px;
   border-left: none;
+}
+
+.dropDownText
+{
+  color: #ffffff;
+  display: inline-block;
 }
 
 .main {
@@ -54,6 +53,9 @@ body {
     right: 0;
   }
 
+  .ui.breadcrumb .section:not(.active) {
+    cursor: pointer;
+  }
 }
 
 .widget {
