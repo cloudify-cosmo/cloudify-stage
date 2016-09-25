@@ -55,7 +55,6 @@ export default class WidgetsList extends Component {
     }
 
     toggleWidgetListEditMode(isEditMode) {
-        this.isEditMode = isEditMode;
         var gridStack = $('.grid-stack').data('gridstack');
         if (isEditMode)
         {
@@ -102,11 +101,7 @@ export default class WidgetsList extends Component {
             this._saveChangedItems(items);
         });
 
-        if (this.isEditMode != this.props.isEditMode)
-        {
-            this.toggleWidgetListEditMode(this.props.isEditMode);
-        }
-
+        this.toggleWidgetListEditMode(this.props.isEditMode);
     }
 
     render() {

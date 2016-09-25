@@ -12,39 +12,16 @@ import throttle from 'lodash/throttle';
 
 import reducers from './reducers';
 
+import initialTemplate from '../templates/initial-template.json';
+import {v4} from 'node-uuid';
+
 export default (history) => {
 
     let initialState = StatePersister.load();
 
     if (initialState === undefined) {
-        // Todo move to some template handler
         initialState = {
-            pages: [{
-                id: "0",
-                name: 'first page',
-                widgets: [{
-                        id: "01",
-                        name: "Blueprints List",
-                        plugin: "blueprints",
-                        width: 7,
-                        height: 5
-                    },
-                    {
-                        id: "02",
-                        name: "Deployments",
-                        plugin: "deploymentNum",
-                        width: 5,
-                        height: 3
-
-                    },
-                    {
-                        id: "03",
-                        name : "topology",
-                        plugin: "topology",
-                        width: 5,
-                        height: 4
-                    }]
-            }],
+            pages: [buildInitialTemplate()],
             context: {}
         }
     }
@@ -63,4 +40,14 @@ export default (history) => {
 
     return store;
 };
+
+function buildInitialTemplate() {
+    initialTemplate.id = "0";
+
+    _.each(initialTemplate.widgets,(widget)=> {
+        widget.id = v4();
+    });
+
+    return initialTemplate;
+}
 

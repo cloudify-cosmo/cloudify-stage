@@ -1,11 +1,45 @@
 {
-  "name": "deployment",
+  "name": "Deployment",
   "widgets": [
     {
       "name": "topology",
       "plugin": "topology",
+      "width": 12,
+      "height": 5,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "CPU Utilization - System",
+      "width": 6,
+      "height": 4,
+      "plugin": "cpuUtilizationSystem",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "name": "CPU Utilization - User",
+      "width": 6,
+      "height": 4,
+      "plugin": "cpuUtilizationUser",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "name": "Deployment Inputs",
       "width": 5,
-      "height": 4
+      "height": 3,
+      "plugin": "inputs",
+      "x": 0,
+      "y": 9
+    },
+    {
+      "name": "Deployment Events",
+      "width": 7,
+      "height": 3,
+      "plugin": "events",
+      "x": 5,
+      "y": 9
     }
   ]
 }
