@@ -10,11 +10,17 @@ body {
   }
 }
 
-.editmode {
+.rightHeader {
     right: 0;
     position: absolute;
     margin-top: 8px;
-    margin-right: 5px;
+    margin-right: 10px;
+}
+
+.dropDownText
+{
+  color: #ffffff;
+  display: inline-block;
 }
 
 .main {

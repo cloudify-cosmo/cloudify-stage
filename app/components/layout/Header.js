@@ -13,7 +13,6 @@ export default class Header extends Component {
         isEditMode: PropTypes.bool.isRequired
     };
 
-
     toggleEditMode() {
         this.props.onWidgetsGridEditModeChange(!this.props.isEditMode);
     }
@@ -24,9 +23,27 @@ export default class Header extends Component {
                 <div className="logo">
                     <img src="/app/images/Cloudify-logo.png"></img>
                 </div>
-                <div className="editmode">
-                    <i className="inverted configure link icon large" onClick={this.toggleEditMode.bind(this)}/>
-                </div>
+             <div className="rightHeader">
+                    <div className="ui inline dropdown" ref={select=>$(select).dropdown()}>
+                      <div className="dropDownText text">Manager1</div>
+                      <i className="inverted dropdown icon"></i>
+                      <div className="menu">
+                        <div className="item active selected">
+                          Manager1
+                        </div>
+                        <div className="item">
+                          Manager2
+                        </div>
+                        <div className="item">
+                          Manager3
+                        </div>
+                        <div className="item">
+                          Manager4
+                        </div>
+                      </div>
+                    </div>
+                <i className="inverted configure link icon large" onClick={this.toggleEditMode.bind(this)}/>
+             </div>
            </div>
 
         );
