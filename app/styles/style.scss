@@ -10,11 +10,16 @@ body {
   }
 }
 
-.editmode {
-    right: 0;
-    position: absolute;
-    margin-top: 8px;
-    margin-right: 5px;
+//.editmode {
+//    right: 0;
+//    position: absolute;
+//    margin-top: 8px;
+//    margin-right: 5px;
+//}
+
+.ui.top.menu .right.menu .ui.dropdown.item{
+  padding: 5px 10px;
+  border-left: none;
 }
 
 .main {
@@ -68,6 +73,32 @@ body {
 
   .row {
     cursor: pointer;
+
+    .rowActions {
+      white-space: nowrap;
+//      visibility: hidden;
+    }
+
+    &:hover .rowActions{
+//      visibility: visible;
+    }
+
+
+  }
+
+
+  .widgetContent {
+    position: absolute;
+    top: 35px;
+    bottom: 15px;
+    left: 0px;
+    right: 0;
+    overflow: auto;
+    padding: 10px;
+
+    &.noHeader {
+      top: 0px;
+    }
   }
 }
 

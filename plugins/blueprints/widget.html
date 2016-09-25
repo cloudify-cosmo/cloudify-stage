@@ -12,6 +12,7 @@
             <th>Created</th>
             <th>Updated</th>
             <th># Deployments</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -27,9 +28,22 @@
             <td><%=item.created_at%></td>
             <td><%=item.updated_at%></td>
             <td><div class="ui green horizontal label"><%=item.depCount%></div></td>
+            <td>
+                <div class="rowActions">
+                    <i class="road icon link bordered"></i>
+                    <i class="trash icon link bordered"></i>
+                </div>
+            </td>
         </tr>
 <%
         })
+
+//<i class="small icons">
+//    <i class="large loading notched circle icon"></i>
+//    <i class="small remove icon"></i>
+//</i>
+
+
 %>
         </tbody>
     </table>

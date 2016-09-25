@@ -10,6 +10,11 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 5,
     color : "blue",
+    configure: {
+        "name" : 'filterBy',
+        "type": "string",
+        "isRequired" : false
+    },
     //fetchUrl: '/plugins/blueprints/data.json',
     fetchData: function(plugin,context,pluginUtils) {
         return new Promise( (resolve,reject) => {

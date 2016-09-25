@@ -32,6 +32,7 @@
             <th>Created</th>
             <th>Updated</th>
             <th>Status</th>
+            <th/>
         </tr>
         </thead>
         <tbody>
@@ -49,6 +50,14 @@
                 <% } else { %>
                     <i class="remove circle icon inverted red"></i>
                 <% } %>
+            </td>
+
+            <td>
+                <div class="rowActions">
+                    <i class="rocket icon link bordered"></i>
+                    <i class="write icon link bordered"></i>
+                    <i class="trash icon link bordered"></i>
+                </div>
             </td>
             <!--<td><div class="ui green horizontal label"><%=item.depCount%></div></td>-->
         </tr>

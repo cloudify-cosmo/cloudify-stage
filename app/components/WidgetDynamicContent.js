@@ -104,7 +104,8 @@ export default class Widget extends Component {
     }
     render() {
         return (
-            <div dangerouslySetInnerHTML={this.renderWidget()} ref={(container)=>this.attachEvents(container)} />
+            <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader')}
+                dangerouslySetInnerHTML={this.renderWidget()} ref={(container)=>this.attachEvents(container)} />
         );
     }
 }
