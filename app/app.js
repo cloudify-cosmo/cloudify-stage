@@ -22,7 +22,7 @@ import { Router, browserHistory ,useRouterHistory} from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux'
 
 import configureStore  from './configureStore';
-import routes from './routes';
+import createRoutes from './routes';
 import {fetchPlugins} from './actions/plugins';
 import {fetchTemplates} from './actions/templates';
 import PluginLoader from './utils/pluginsLoader';
@@ -40,7 +40,7 @@ store.dispatch(fetchTemplates());
 
 ReactDOM.render(
     <Provider store={store}>
-        <Router history={history} routes={routes} />
+        <Router history={history} routes={createRoutes(store)} />
     </Provider>,
     document.getElementById('app')
 );

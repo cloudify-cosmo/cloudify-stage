@@ -39,7 +39,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         page: pageData,
         pagesList: buildPagesList(state.pages,ownProps.pageId),
-        isEditMode: state.header.isEditMode
+        isEditMode: state.config.isEditMode
     }
 };
 

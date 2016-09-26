@@ -5,6 +5,12 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
 
+var plugins = require('./plugins/plugins.json');
+//var entries = [];
+//plugins.forEach((p)=>{
+//   entries.push(['./plugin/'+p.name+'/widget.orig.js']);
+//});
+
 module.exports = {
     context: path.join(__dirname),
     devtool: 'source-map',
@@ -13,14 +19,17 @@ module.exports = {
             'jquery-ui': 'jquery-ui/ui'
         }
     },
-    entry: [
-        'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
-        'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-        './app/app.js'
-    ],
+    entry: {
+        "app.bundle": [
+            'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
+            'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
+            './app/app.js'
+        ]//,
+        //'plugins/reactTest/widget' : './plugins/reactTest/widget.orig.js'
+    },
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'app.bundle.js',
+        filename: '[name].js',
         publicPath: '/'
     },
 

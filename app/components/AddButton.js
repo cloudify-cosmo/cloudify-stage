@@ -2,11 +2,6 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-/**
- * Created by kinneretzin on 29/08/2016.
- */
-
-
 import React, { Component, PropTypes } from 'react';
 
 

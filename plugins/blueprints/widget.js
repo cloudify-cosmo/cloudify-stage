@@ -18,10 +18,10 @@ addPlugin({
     //fetchUrl: '/plugins/blueprints/data.json',
     fetchData: function(plugin,context,pluginUtils) {
         return new Promise( (resolve,reject) => {
-            pluginUtils.jQuery.get('/plugins/blueprints/blueprints.json')
+            pluginUtils.jQuery.get({url:'/plugins/blueprints/blueprints.json',dataType: 'json'})
                 .done((blueprints)=> {
 
-                    pluginUtils.jQuery.get('/plugins/blueprints/deployments.json')
+                    pluginUtils.jQuery.get({url: '/plugins/blueprints/deployments.json',dataType: 'json'})
                         .done((deployments)=>{
 
                             var depCount = _.countBy(deployments.items,'blueprint_id');

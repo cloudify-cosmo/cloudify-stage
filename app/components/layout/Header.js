@@ -5,11 +5,13 @@
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux'
+import Managers from '../Managers';
 
 export default class Header extends Component {
     static propTypes = {
         onWidgetsGridEditModeChange: PropTypes.func.isRequired,
-        isEditMode: PropTypes.bool.isRequired
+        isEditMode: PropTypes.bool.isRequired,
+        managers: PropTypes.any.isRequired
     };
 
     toggleEditMode() {
@@ -23,25 +25,7 @@ export default class Header extends Component {
                     <img src="/app/images/Cloudify-logo.png"></img>
                 </div>
                 <div className="right menu">
-                    <div className="ui inline dropdown item" ref={select=>$(select).dropdown()}>
-                        <div className="dropDownText text">Manager1</div>
-                        <i className="inverted dropdown icon"></i>
-                        <div className="menu">
-                            <div className="item active selected">
-                                Manager1
-                            </div>
-                            <div className="item">
-                                Manager2
-                            </div>
-                            <div className="item">
-                                Manager3
-                            </div>
-                            <div className="item">
-                                Manager4
-                            </div>
-                        </div>
-                    </div>
-
+                    <Managers managers={this.props.managers}/>
                     <div className="ui dropdown inline item" ref={dropdown=>$(dropdown).dropdown()}>
                         <i className="circular user icon"></i>
                         <i className="dropdown icon"></i>

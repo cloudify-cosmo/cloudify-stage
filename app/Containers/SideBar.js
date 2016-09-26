@@ -10,7 +10,7 @@ import SideBar from '../components/SideBar';
 const mapStateToProps = (state, ownProps) => {
 return {
         pageId:     ownProps.pageId || "0",
-        isEditMode: state.header.isEditMode || false
+        isEditMode: state.config.isEditMode || false
     }
 };
 

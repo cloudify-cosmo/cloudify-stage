@@ -8,14 +8,16 @@ import pages from './pageReducer';
 import plugins from './pluginsReducer';
 import templates from './templatesReducer';
 import context from './contextReducer';
-import header from './headerReducer';
+import managers from './managersReducer';
+import config from './configReducer';
 
 const rootReducer = combineReducers({
-    header,
+    managers,
     pages,
     plugins,
     templates,
     context,
+    config,
     routing: routerReducer
 });
 

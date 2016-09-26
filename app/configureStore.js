@@ -22,7 +22,8 @@ export default (history) => {
     if (initialState === undefined) {
         initialState = {
             pages: [buildInitialTemplate()],
-            context: {}
+            context: {},
+            managers: {}
         }
     }
 

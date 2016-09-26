@@ -1,9 +1,9 @@
 import * as types from '../actions/types';
 
-const header = (state = {}, action) => {
+const config = (state = {}, action) => {
     switch (action.type) {
 
-        case types.SET_DASHBOARD_EDIT_MODE:
+        case types.SET_CONFIG_EDIT_MODE:
             return {
                 isEditMode: action.isEditMode
             };
@@ -12,4 +12,4 @@ const header = (state = {}, action) => {
     }
 };
 
-export default header;
+export default config;

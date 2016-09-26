@@ -4,13 +4,14 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {setDashboardEditMode} from '../../actions/header';
+import {setEditMode} from '../../actions/config';
 import Header from '../../components/layout/Header';
 
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isEditMode: state.header.isEditMode || false
+        isEditMode: state.config.isEditMode || false,
+        managers: state.managers
     }
 };
 
@@ -18,7 +19,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onWidgetsGridEditModeChange: (isEditMode) => {
-            dispatch(setDashboardEditMode(isEditMode));
+            dispatch(setEditMode(isEditMode));
         }
     }
 };
