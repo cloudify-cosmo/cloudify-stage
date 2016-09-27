@@ -96,6 +96,17 @@ render parameters are:
 
 ###Widget object
 
+Event object has the following attributes
+
+attribute | description
+--- | ---
+id | The id of the widget (uuid)
+name | The display name of the widget (The plugin name is the default name for the widget, but the user can chagne it)
+height | The actual height of the widget on the page
+width | The actual width of the widget on the page 
+x | The actual x location of the widget on the page
+y | The actual y location of the widget on the page
+plugin | The plugin object as it was passed to addPlugin method. The only additional field there that the widget can access is the 'template'. The template is fetched from the html and added on the plugin definition.
 
 ###Plugin context
 Plugin context gives access to the application context. Using the context we can pass arguments between widgets, for example when a blueprint is selected, set the context to the selected blueprint, and all the widgets that can filter by blueprint can read this value and filter accordingly.
