@@ -11,7 +11,6 @@ import React, { Component, PropTypes } from 'react';
 import InlineEdit from 'react-edit-inline';
 
 import PluginUtils from '../utils/pluginUtils';
-import PluginContext from '../utils/pluginContext';
 import EditWidgetIcon from './EditWidgetIcon';
 import WidgetDynamicContent from './WidgetDynamicContent';
 
@@ -21,6 +20,7 @@ export default class Widget extends Component {
         widget: PropTypes.object.isRequired,
         context: PropTypes.object.isRequired,
         templates : PropTypes.object.isRequired,
+        manager: PropTypes.object.isRequired,
         onWidgetNameChange: PropTypes.func.isRequired,
         setContextValue: PropTypes.func.isRequired,
         onDrilldownToPage: PropTypes.func.isRequired,
@@ -70,6 +70,7 @@ export default class Widget extends Component {
                                 <WidgetDynamicContent widget={this.props.widget}
                                                       templates={this.props.templates}
                                                       context={this.props.context}
+                                                      manager={this.props.manager}
                                                       setContextValue={this.props.setContextValue}
                                                       onDrilldownToPage={this.props.onDrilldownToPage}/>
                                 :

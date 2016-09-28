@@ -12,6 +12,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         context: state.context,
         templates: state.templates.items || {},
+        manager: state.managers && state.managers.items && state.managers.items.length > 0  ? state.managers.items[0] : {},
         isEditMode: state.config.isEditMode
     }
 };

@@ -16,12 +16,13 @@ import EditWidgetIcon from './EditWidgetIcon';
 
 import fetch from 'isomorphic-fetch'
 
-export default class Widget extends Component {
+export default class WidgetDynamicContent extends Component {
     static propTypes = {
         //pageId: PropTypes.string.isRequired,
         widget: PropTypes.object.isRequired,
         context: PropTypes.object.isRequired,
         templates : PropTypes.object.isRequired,
+        manager: PropTypes.object.isRequired,
         setContextValue: PropTypes.func.isRequired,
         onDrilldownToPage: PropTypes.func.isRequired
     };
@@ -32,13 +33,11 @@ export default class Widget extends Component {
     }
 
     _buildPluginContext () {
-        return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this.props.templates);
+        return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this._fetchData.bind(this),this.props.templates,this.props.manager);
 
     }
 
-    // In component will mount fetch the data if needed
-    componentDidMount() {
-        console.log('widget :'+this.props.widget.name + ' mounted');
+    _fetchData() {
         if (this.props.widget.plugin.fetchUrl) {
             fetch(this.props.widget.plugin.fetchUrl)
                 .then(response => response.json())
@@ -63,6 +62,11 @@ export default class Widget extends Component {
                 });
         }
 
+    }
+    // In component will mount fetch the data if needed
+    componentDidMount() {
+        console.log('widget :'+this.props.widget.name + ' mounted');
+        this._fetchData();
     }
 
     componentWillUnmount() {
