@@ -115,6 +115,12 @@ Using the context is done by using 'setValue' and 'getValue' of the pluginContex
  * setValue(key,value)
  * getValue(key) - returns value
 
+It gives access to the selected manager's url:
+ * getManagerUrl()
+
+If we did some actions in the widget that will require fetching the data again (for example we added a record) we can ask the app to refresh only this plugin by calling:
+ * refresh()
+
 Plugin context also support drilling down to a page.
 Drilling down to a page requires passing the drilldown page template name. Templates will be described in the next section. When a widget is on a page, and drilldown action done (through link click event to a button for example), if its the first time we access this drilldown page, the app will create a new page based on the passed template. Once this page is created the user can edit it like any other page. All next accesses to this page will use this page.
 The drillDown method is defined like so:
@@ -248,6 +254,20 @@ gets the html template and the data for the template and returns a compiled html
 for example:
 ```javascript
    return pluginUtils.buildFromTemplate("<div>something</div>",{});
+```
+
+*renderLoading*()
+returns an html string that generates a standard loading. Can be used to generate loading indication incase the data was not fetched yet.
+For example:
+
+```javascript
+    render: function(widget,data,context,pluginUtils) {
+        if (_.isEmpty(data)) {
+            return pluginUtils.renderLoading();
+        }
+
+        return pluginUtils.buildFromTemplate(widget.plugin.template,data);
+    },
 ```
 
 *moment* a date/time parsing utility. [Moment documentation](http://momentjs.com/docs/)
