@@ -472,6 +472,7 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 5,
     color: "blue",
+    initialConfiguration: {filter_by: "addistest"},
     isReact: true,
     init: function init(pluginUtils) {
         BlueprintsTable = (0, _BlueprintsTable2.default)(pluginUtils);

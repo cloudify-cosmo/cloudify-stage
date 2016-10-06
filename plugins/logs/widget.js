@@ -9,6 +9,7 @@ addPlugin({
     initialWidth: 5,
     initialHeight: 4,
     color: "yellow",
+    initialConfiguration: {filter_by: ""},
     fetchUrl: '/plugins/logs/data.json',
     render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {

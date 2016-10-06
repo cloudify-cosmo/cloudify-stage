@@ -5,7 +5,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Widget from '../components/Widget';
-import {renameWidget,drillDownToPage,removeWidget} from '../actions/widgets';
+import {renameWidget,drillDownToPage,removeWidget,editWidget} from '../actions/widgets';
 import {setValue} from '../actions/context';
 
 const mapStateToProps = (state, ownProps) => {
@@ -30,6 +30,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onWidgetRemoved: (pageId,widgetId) => {
             dispatch(removeWidget(pageId,widgetId));
+        },
+        onWidgetEdited: (widget, newConfiguration) => {
+            dispatch(editWidget(widget, newConfiguration));
         }
     }
 };

@@ -8,7 +8,6 @@ import React, { Component, PropTypes } from 'react';
 
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './WidgetsList';
-import EditWidgetModal from './EditWidgetModal';
 import Breadcrumbs from './Breadcrumbs';
 
 export default class Page extends Component {
@@ -21,10 +20,6 @@ export default class Page extends Component {
         }
 
     render() {
-        var elements = [];
-        if (this.props.isEditMode) {
-            elements.push(<AddWidget pageId={this.props.page.id}/>);
-        }
         return (
             <div className="">
                 <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange} isEditMode={this.props.isEditMode} onPageSelected={this.props.onPageSelected}/>
@@ -37,7 +32,13 @@ export default class Page extends Component {
                         />
                 </h3>
                  */}
-                {elements}
+                 {
+                    this.props.isEditMode ?
+                    <AddWidget pageId={this.props.page.id}/>
+                    :
+                    ''
+                 }
+
                 <div className='ui divider'/>
 
                 <WidgetsList widgets={this.props.page.widgets} pageId={this.props.page.id}
@@ -46,7 +47,6 @@ export default class Page extends Component {
                              />
 
                 {/* Modal is here so it will exist one time in the page. we dont need it for each edit button*/}
-                <EditWidgetModal/>
             </div>
         );
 

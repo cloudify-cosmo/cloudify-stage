@@ -15,7 +15,8 @@ const widget = (state = {}, action) => {
                 name: action.name,
                 width: action.plugin.initialWidth,
                 height: action.plugin.initialHeight,
-                plugin: action.plugin.id
+                plugin: action.plugin.id,
+                configuration: action.plugin.initialConfiguration
             };
         default:
             return state;
@@ -34,6 +35,15 @@ const widgets = (state = [], action) => {
                 if (widget.id === action.widgetId) {
                     return Object.assign({}, widget, {
                         name: action.name
+                    })
+                }
+                return widget
+            });
+        case types.EDIT_WIDGET:
+            return state.map( (widget) => {
+                if (widget.id === action.widgetId) {
+                    return Object.assign({}, widget, {
+                        configuration: action.configuration
                     })
                 }
                 return widget
