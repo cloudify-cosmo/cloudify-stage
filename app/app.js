@@ -15,6 +15,12 @@ import '../semantic/dist/semantic';
 import '../node_modules/gridstack/dist/gridstack.css';
 import '../node_modules/gridstack/dist/gridstack.js';
 
+// Import datatables
+import '../node_modules/datatables.net/js/jquery.dataTables.js';
+import '../datatables/dataTables.semanticui.min.js';
+import '../datatables/dataTables.semanticui.min.css';
+//import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';

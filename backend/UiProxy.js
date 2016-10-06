@@ -36,7 +36,7 @@ app.get('/',function (req, res,next) {
             .get(serverUrl)
             .on('error', function(err) {
                 console.log('Error has occured ',err);
-                next.err(err);
+                next(err);
             }).pipe(res);
     } else {
         res.status(404).send({message: 'no server url passed'});
@@ -51,7 +51,7 @@ app.put('/',function(req,res,next){
         req.pipe(request.put(serverUrl))
             .on('error', function(err) {
                 console.log('Error has occured ',err);
-                next.err(err);
+                next(err);
             }).pipe(res);
     } else {
         res.status(404).send({message: 'no server url passed'});

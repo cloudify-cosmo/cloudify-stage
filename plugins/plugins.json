@@ -27,6 +27,7 @@
   { "name" : "cpuUtilizationUser" },
   { "name" : "inputs" },
   { "name" : "githubExamples" },
-  { "name" : "events" }
+  { "name" : "events" },
+  { "name" : "reactTest"}
 
 ]

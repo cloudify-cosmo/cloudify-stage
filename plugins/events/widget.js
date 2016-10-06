@@ -10,7 +10,7 @@ addPlugin({
     initialHeight: 4,
     color: "green",
     fetchUrl: '/plugins/events/data.json',
-    render: function(widget,data,context,pluginUtils) {
+    render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {
             return 'Events: missing template';
         }

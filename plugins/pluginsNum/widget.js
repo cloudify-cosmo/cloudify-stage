@@ -11,7 +11,7 @@ addPlugin({
     initialHeight: 2,
     color: "teal",
     showHeader: false,
-    render: function(widget,data,context,pluginUtils) {
+    render: function(widget,data,error,context,pluginUtils) {
 
         if (!widget.plugin.template) {
             return 'Plugins num: missing template';

@@ -10,7 +10,7 @@ addPlugin({
     initialHeight: 4,
     color: "teal",
     fetchUrl: 'https://api.github.com/search/repositories?q=-nfv+in:name+fork:true+user:cloudify-examples',
-    render: function(widget,data,context,pluginUtils) {
+    render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {
             return 'Inputs: missing template';
         }

@@ -76,12 +76,24 @@ export default class WidgetDynamicContent extends Component {
         var widgetHtml = 'Loading...';
         if (this.props.widget.plugin && this.props.widget.plugin.render) {
             try {
-                widgetHtml = this.props.widget.plugin.render(this.props.widget,this.state.data,this._buildPluginContext(),PluginUtils);
+                widgetHtml = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._buildPluginContext(),PluginUtils);
             } catch (e) {
-                console.error('Error rendering widget',e);
+                console.error('Error rendering widget - '+e.message,e.stack);
             }
         }
         return {__html: widgetHtml};
+    }
+
+    renderReact () {
+        var widget = 'Loading...';
+        if (this.props.widget.plugin && this.props.widget.plugin.render) {
+            try {
+                widget = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._buildPluginContext(),PluginUtils);
+            } catch (e) {
+                console.error('Error rendering widget - '+e.message,e.stack);
+            }
+        }
+        return widget;
     }
 
     attachEvents(container) {
@@ -108,8 +120,14 @@ export default class WidgetDynamicContent extends Component {
     }
     render() {
         return (
+            this.props.widget.plugin.isReact ?
+            <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader')}>
+                {this.renderReact()}
+            </div>
+                :
             <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader')}
-                dangerouslySetInnerHTML={this.renderWidget()} ref={(container)=>this.attachEvents(container)} />
+                 dangerouslySetInnerHTML={this.renderWidget()} ref={(container)=>this.attachEvents(container)} />
+
         );
     }
 }

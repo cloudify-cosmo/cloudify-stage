@@ -33,7 +33,7 @@ addPlugin({
                 };
             });
     },
-    render: function(widget,data,context,pluginUtils) {
+    render: function(widget,data,error,context,pluginUtils) {
         var d = {
             name: 'name'+ Math.floor((Math.random() * 5) + 1)
         };

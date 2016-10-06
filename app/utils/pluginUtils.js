@@ -17,6 +17,18 @@ let Loading = ({}) => {
     );
 };
 
+let Error = ({err}) => {
+    return (
+        <div className='ui segment basic' style={{height:'100%'}}>
+            <div className="ui negative message">
+                <div className="header">
+                    Error has occured
+                </div>
+                <p>{err}</p>
+            </div>
+        </div>
+    )
+};
 
 export default class PluginUtils {
     static buildFromTemplate(html, data) {
@@ -27,6 +39,17 @@ export default class PluginUtils {
 
     static renderLoading() {
         return ReactDOMServer.renderToString(<Loading/>);
+    }
+    static renderReactLoading() {
+        return <Loading/>;
+    }
+
+    static renderError(err) {
+        return ReactDOMServer.renderToString(<Error err={err}/>);
+    }
+
+    static renderReactError(err) {
+        return <Error err={err}/>;
     }
 
     static moment = momentImport;

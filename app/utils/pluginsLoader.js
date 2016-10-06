@@ -6,6 +6,10 @@ import fetch from 'isomorphic-fetch'
 import ScriptLoader from './scriptLoader';
 import PluginUtils from './pluginUtils';
 
+import React from 'react';
+import $ from 'jquery';
+import _ from 'lodash';
+
 var plugins = [];
 
 function fetchPluginTemplate(path) {
@@ -44,7 +48,11 @@ export default class PluginsLoader {
     static init() {
         window.addPlugin = function(pluginData) {
             plugins.push(new Plugin(pluginData));
-        }
+        };
+
+        window.React = React;
+        window.$ = $;
+        window._ = _;
 
     }
     static load() {

@@ -10,7 +10,7 @@ addPlugin({
     initialHeight: 4,
     color: "yellow",
     fetchUrl: '/plugins/logs/data.json',
-    render: function(widget,data,context,pluginUtils) {
+    render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {
             return 'Logs: missing template';
         }
