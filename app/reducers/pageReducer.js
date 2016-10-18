@@ -58,6 +58,7 @@ const pages = (state = [], action) => {
         case types.ADD_WIDGET:
         case types.RENAME_WIDGET:
         case types.CHANGE_WIDGET_GRID_DATA:
+        case types.EDIT_WIDGET:
         case types.REMOVE_WIDGET:
             return state.map( (page) => {
                 if (page.id === action.pageId) {

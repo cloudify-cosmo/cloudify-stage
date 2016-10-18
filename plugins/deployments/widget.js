@@ -10,6 +10,7 @@ addPlugin({
     initialHeight: 6,
     color : "purple",
     fetchUrl: '[manager]/api/v2.1/deployments',
+    initialConfiguration: {filter_by: ""},
     events: [
         {
             selector: '.row',

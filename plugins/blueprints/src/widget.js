@@ -16,6 +16,7 @@ Stage.addPlugin({
     initialWidth: 8,
     initialHeight: 5,
     color : "blue",
+    initialConfiguration: {filter_by: ""},
     isReact: true,
     init: function(pluginUtils) {
         BlueprintsTable = renderBlueprintsTable(pluginUtils);

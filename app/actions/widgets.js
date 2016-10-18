@@ -33,6 +33,15 @@ export function removeWidget(pageId,widgetId) {
         widgetId
     }
 }
+
+export function editWidget(widget) {
+    return {
+        type: types.EDIT_WIDGET,
+        widget,
+        configuration
+    }
+}
+
 export function changeWidgetGridData(pageId,widgetId,gridData) {
     return {
         type: types.CHANGE_WIDGET_GRID_DATA,

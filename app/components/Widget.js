@@ -11,7 +11,7 @@ import React, { Component, PropTypes } from 'react';
 import InlineEdit from 'react-edit-inline';
 
 import PluginUtils from '../utils/pluginUtils';
-import EditWidgetIcon from './EditWidgetIcon';
+import EditWidget from '../Containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
 
 export default class Widget extends Component {
@@ -24,7 +24,8 @@ export default class Widget extends Component {
         onWidgetNameChange: PropTypes.func.isRequired,
         setContextValue: PropTypes.func.isRequired,
         onDrilldownToPage: PropTypes.func.isRequired,
-        onWidgetRemoved: PropTypes.func.isRequired
+        onWidgetRemoved: PropTypes.func.isRequired,
+        onWidgetEdited: PropTypes.func.isRequired,
     };
 
     render() {
@@ -59,7 +60,7 @@ export default class Widget extends Component {
                         {
                             this.props.isEditMode ?
                                 <div className='widgetEditButtons'>
-                                    <EditWidgetIcon/>
+                                    <EditWidget pageId={this.props.pageId} widget={this.props.widget}/>
                                     <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                                 </div>
                                 :

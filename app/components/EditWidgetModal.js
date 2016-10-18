@@ -5,9 +5,21 @@
 import React, { Component, PropTypes } from 'react';
 
 export default class EditWidgetModal extends Component {
+
+    static propTypes = {
+        configuration: PropTypes.object.isRequired,
+        widgetId: PropTypes.string.isRequired,
+        onWidgetEdited: PropTypes.func.isRequired
+    };
+
+    editWidget(widget, configuration) {
+        this.props.onWidgetEdited(widget, configuration);
+        $('#editWidgetModal-'+widget.id).modal('hide');
+    }
+
     render() {
         return (
-            <div className="ui large modal editWidgetModal">
+            <div className="ui large modal" id={"editWidgetModal-"+this.props.widgetId}>
               <div className="header">
                 Configure Widget
               </div>
@@ -16,7 +28,7 @@ export default class EditWidgetModal extends Component {
                 <div className="ui segment basic large">
                     <div className="ui icon input fluid mini">
                         <i className="search icon"></i>
-                        <input type="text" placeholder="Filter by name ..."/>
+                        <input type="text" name="filter_by" placeholder="Filter by name ..." defaultValue={this.props.configuration.filter_by}/>
                     </div>
                     <div className="ui divider"></div>
                     <div className="ui floating labeled icon dropdown button" ref={select=>$(select).dropdown()}>

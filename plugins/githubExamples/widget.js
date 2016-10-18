@@ -9,6 +9,7 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color: "teal",
+    initialConfiguration: {filter_by: ""},
     fetchUrl: 'https://api.github.com/search/repositories?q=-nfv+in:name+fork:true+user:cloudify-examples',
     render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {

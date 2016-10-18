@@ -33,6 +33,7 @@ class Plugin {
         this.initialWidth = 3;
         this.initialHeight = 3;
         this.color = "blue";
+        this.initialConfiguration = {filter_by: ""};
 
         // Override defaults with data
         Object.assign(this,data);
