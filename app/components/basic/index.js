@@ -3,6 +3,7 @@
  */
 
 import Modal, {Header,Body,Footer} from './Modal';
+import Confirm from './Confirm';
 
-export {Modal, Header as  ModalHeader, Footer as ModalFooter, Body as ModalBody};
+export {Modal, Header as  ModalHeader, Footer as ModalFooter, Body as ModalBody,Confirm };
 

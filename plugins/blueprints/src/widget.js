@@ -2,11 +2,10 @@
  * Created by kinneretzin on 07/09/2016.
  */
 
-import renderBlueprintsTable from './BlueprintsTable';
+import BlueprintsTable from './BlueprintsTable';
 import renderUploadBlueprintModal from './UploadBlueprintModal';
 import DeployModal from './CreateDeploymentModal';
 
-var BlueprintsTable = null;
 var UploadModal = null;
 
 Stage.addPlugin({
@@ -19,7 +18,6 @@ Stage.addPlugin({
     initialConfiguration: {filter_by: ""},
     isReact: true,
     init: function(pluginUtils) {
-        BlueprintsTable = renderBlueprintsTable(pluginUtils);
         UploadModal = renderUploadBlueprintModal(pluginUtils);
     },
 
