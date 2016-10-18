@@ -25,11 +25,18 @@ addPlugin({
 
     ],
 
+    _refreshDeployments: function(context) {
+        context.refresh();
+    },
+
     render: function(widget,data,error,context,pluginUtils) {
 
         if (!widget.plugin.template) {
             return 'deployments: missing template';
         }
+
+        context.getEventBus().off('deployment:refresh',this._refreshDeployments);
+        context.getEventBus().on('deployment:refresh',()=>this._refreshDeployments(context));
 
         var formattedData = Object.assign({},data);
         var blueprintId = context.getValue('blueprintId');

@@ -49,6 +49,8 @@ export default class extends React.Component {
             .done((deployment)=> {
                 thi$.props.context.setValue(this.props.widget.id + 'createDeploy',null);
 
+                thi$.props.context.getEventBus().trigger('deployment:refresh');
+
             })
             .fail((jqXHR, textStatus, errorThrown)=>{
                 thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})

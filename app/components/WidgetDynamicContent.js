@@ -13,6 +13,7 @@ import InlineEdit from 'react-edit-inline';
 import PluginUtils from '../utils/pluginUtils';
 import PluginContext from '../utils/pluginContext';
 import EditWidgetIcon from './EditWidgetIcon';
+import PluginEventBus from '../utils/PluginEventBus';
 
 import fetch from 'isomorphic-fetch'
 
@@ -33,7 +34,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     _buildPluginContext () {
-        return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this._fetchData.bind(this),this.props.templates,this.props.manager);
+        return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this._fetchData.bind(this),this.props.templates,this.props.manager,PluginEventBus);
 
     }
 
