@@ -34,7 +34,7 @@ export default class extends React.Component {
 
     _deleteBlueprint() {
         if (!this.state.item) {
-            this.setState({error: 'Something went wrong, no selected item for delete'});
+            this.setState({error: 'Something went wrong, no blueprint was selected for delete'});
             return;
         }
 

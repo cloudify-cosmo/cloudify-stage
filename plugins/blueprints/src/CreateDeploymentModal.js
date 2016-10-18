@@ -49,7 +49,7 @@ export default class extends React.Component {
             .done((deployment)=> {
                 thi$.props.context.setValue(this.props.widget.id + 'createDeploy',null);
 
-                thi$.props.context.getEventBus().trigger('deployment:refresh');
+                thi$.props.context.getEventBus().trigger('deployments:refresh');
 
             })
             .fail((jqXHR, textStatus, errorThrown)=>{
