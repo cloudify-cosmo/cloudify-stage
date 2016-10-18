@@ -39,7 +39,10 @@ export default class WidgetDynamicContent extends Component {
 
     _fetchData() {
         if (this.props.widget.plugin.fetchUrl) {
-            fetch(this.props.widget.plugin.fetchUrl)
+            var context = this._buildPluginContext();
+
+            var fetchUrl = _.replace(this.props.widget.plugin.fetchUrl,'[manager]', context.getManagerUrl());
+            fetch(fetchUrl)
                 .then(response => response.json())
                 .then((data)=> {
                     console.log('widget :'+this.props.widget.name + ' data fetched');

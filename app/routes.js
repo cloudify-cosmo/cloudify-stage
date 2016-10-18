@@ -14,7 +14,7 @@ import SetManager from './containers/SetManager';
 
 export default (store)=> {
     const isManagerDefined = (nextState, replace, callback) => {
-        if (store.getState().managers.items.length === 0) {
+        if (!store.getState().managers.items || store.getState().managers.items.length === 0) {
             replace('/manager')
         }
         callback();

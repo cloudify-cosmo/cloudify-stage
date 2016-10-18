@@ -11,7 +11,10 @@ export default (pluginUtils)=> {
             this.props.context.setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);
         }
 
-        _createDeployment(item){
+        _createDeployment(item,event){
+            event.stopPropagation();
+
+            this.props.context.setValue(this.props.widget.id + 'createDeploy',item);
         }
 
         _deleteBlueprint(item){

@@ -10,6 +10,8 @@ import React from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
 
+import * as BasicComponents from '../components/basic';
+
 var plugins = [];
 
 function fetchPluginTemplate(path) {
@@ -48,6 +50,14 @@ export default class PluginsLoader {
     static init() {
         window.addPlugin = function(pluginData) {
             plugins.push(new Plugin(pluginData));
+        };
+
+
+        window.Stage = {
+            addPlugin: (pluginData)=> {
+                plugins.push(new Plugin(pluginData));
+            },
+            Basic: BasicComponents
         };
 
         window.React = React;

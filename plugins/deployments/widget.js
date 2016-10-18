@@ -9,8 +9,7 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 6,
     color : "purple",
-    fetchUrl: '/plugins/deployments/data.json',
-
+    fetchUrl: '[manager]/api/v2.1/deployments',
     events: [
         {
             selector: '.row',

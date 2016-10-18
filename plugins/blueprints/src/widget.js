@@ -4,11 +4,12 @@
 
 import renderBlueprintsTable from './BlueprintsTable';
 import renderUploadBlueprintModal from './UploadBlueprintModal';
+import DeployModal from './CreateDeploymentModal';
 
 var BlueprintsTable = null;
 var UploadModal = null;
 
-addPlugin({
+Stage.addPlugin({
     id: "blueprints",
     name: "Blueprints list",
     description: 'blah blah blah',
@@ -76,6 +77,7 @@ addPlugin({
             <div>
                 <BlueprintsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
                 <UploadModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+                <DeployModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
             </div>
         );
     }

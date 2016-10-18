@@ -30,6 +30,10 @@ let Error = ({err}) => {
     )
 };
 
+
+import Modal, {Header,Body,Footer} from '../components/basic/Modal';
+
+
 export default class PluginUtils {
     static buildFromTemplate(html, data) {
 
@@ -56,4 +60,11 @@ export default class PluginUtils {
     static jQuery = $;
     static angular = anglarImport;
     static React = React;
+
+    static components = {
+        Modal: Modal,
+        ModalBody: Body,
+        ModalHeader: Header,
+        ModalFooter: Footer
+    }
 }
