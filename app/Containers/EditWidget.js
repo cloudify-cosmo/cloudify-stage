@@ -22,7 +22,7 @@ let nameIndex = 0;
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onWidgetEdited: (configuration) => {
-            dispatch(editWidget(ownProps.widget, configuration || ownProps.widget.configuration));
+            dispatch(editWidget(ownProps.pageId, ownProps.widget.id, configuration || ownProps.widget.configuration));
         }
     }
 };
@@ -31,7 +31,7 @@ let EditWidgetComponent = ({widget,configuration, onWidgetEdited}) => {
     return (
         <div>
             <EditWidgetIcon widgetId={widget.id} />
-            <EditWidgetModal widgetId={widget.id} configuration={configuration} onWidgetEdited={onWidgetEdited} />
+            <EditWidgetModal widget={widget} configuration={configuration} onWidgetEdited={onWidgetEdited} />
         </div>
     );
 };

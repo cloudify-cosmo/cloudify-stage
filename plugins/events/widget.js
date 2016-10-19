@@ -9,7 +9,7 @@ addPlugin({
     initialWidth: 5,
     initialHeight: 4,
     color: "green",
-    initialConfiguration: {filter_by: ""},
+    initialConfiguration: {filterBy: ""},
     fetchUrl: '/plugins/events/data.json',
     render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {

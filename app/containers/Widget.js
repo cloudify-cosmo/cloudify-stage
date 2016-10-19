@@ -31,8 +31,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onWidgetRemoved: (pageId,widgetId) => {
             dispatch(removeWidget(pageId,widgetId));
         },
-        onWidgetEdited: (widget, newConfiguration) => {
-            dispatch(editWidget(widget, newConfiguration));
+        onWidgetEdited: (widgetId, newConfiguration) => {
+            dispatch(editWidget(widgetId, newConfiguration));
         }
     }
 };

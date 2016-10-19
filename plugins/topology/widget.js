@@ -9,7 +9,7 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color: "yellow",
-    initialConfiguration: {filter_by: "yo yo yo"},
+    initialConfiguration: {filterBy: "yo yo yo"},
     render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {
             return 'Topology: missing template';

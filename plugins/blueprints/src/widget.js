@@ -15,7 +15,7 @@ Stage.addPlugin({
     initialWidth: 8,
     initialHeight: 5,
     color : "blue",
-    initialConfiguration: {filter_by: ""},
+    initialConfiguration: {filterBy: ""},
     isReact: true,
     init: function(pluginUtils) {
         UploadModal = renderUploadBlueprintModal(pluginUtils);

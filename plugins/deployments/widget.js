@@ -631,7 +631,7 @@ Stage.addPlugin({
     initialHeight: 6,
     color: "purple",
     fetchUrl: '[manager]/api/v2.1/deployments',
-    initialConfiguration: { filter_by: "" },
+    initialConfiguration: { filterBy: "" },
     isReact: true,
 
     render: function render(widget, data, error, context, pluginUtils) {
