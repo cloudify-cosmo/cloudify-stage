@@ -74,6 +74,21 @@ app.delete('/',function(req,res,next){
     }
 
 });
+app.post('/',function(req,res,next){
+    var serverUrl = req.query.su;
+    if (serverUrl) {
+        console.log('Proxying post request to server with url: '+serverUrl);
+
+        req.pipe(request.post(serverUrl))
+            .on('error', function(err) {
+                console.log('Error has occured ',err);
+                next(err);
+            }).pipe(res);
+    } else {
+        res.status(404).send({message: 'no server url passed'});
+    }
+
+});
 
 app.listen(8000, function () {
     console.log('UI Proxy runs on port 8000!');

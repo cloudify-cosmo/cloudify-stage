@@ -76,6 +76,7 @@ export default class WidgetDynamicContent extends Component {
     componentWillUnmount() {
         console.log('widget :'+this.props.widget.name + ' unmounts');
     }
+
     renderWidget() {
         var widgetHtml = 'Loading...';
         if (this.props.widget.plugin && this.props.widget.plugin.render) {

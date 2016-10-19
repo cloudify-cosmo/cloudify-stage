@@ -3,54 +3,18 @@
  */
 
 import ExecuteWorkflow from './ExecuteWorkflow';
+import ExecuteModal from './WorkflowParametersModal';
+
+import Actions from './actions';
 
 export default class extends React.Component {
     constructor(props,context) {
         super(props,context);
 
         this.state = {
-            confirmDelete:false
+            confirmDelete:false,
+            showExecuteModal: false
         }
-    }
-
-    _selectDeployment(item) {
-        this.props.context.setValue('deploymentId',item.id);
-        this.props.context.drillDown(this.props.widget,'deployment');
-    }
-
-    _deleteDeploymentConfirm(item,event){
-        event.stopPropagation();
-
-        this.setState({
-            confirmDelete : true,
-            item: item
-        });
-    }
-
-    _deleteDeployment() {
-        if (!this.state.item) {
-            this.setState({error: 'Something went wrong, no deployment was selected for delete'});
-            return;
-        }
-
-        var thi$ = this;
-        $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/deployments/'+this.state.item.id,
-            "headers": {"content-type": "application/json"},
-            method: 'delete'
-        })
-            .done(()=> {
-                thi$.setState({confirmDelete: false});
-                thi$.props.context.getEventBus().trigger('deployments:refresh');
-            })
-            .fail((jqXHR, textStatus, errorThrown)=>{
-                thi$.setState({confirmDelete: false});
-                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
-            });
-    }
-
-    _refreshData() {
-        this.props.context.refresh();
     }
 
     componentDidMount() {
@@ -73,6 +37,67 @@ export default class extends React.Component {
         if (filter) {
             $(dropdown).dropdown('set selected',filter);
         }
+    }
+
+    _selectDeployment(item) {
+        this.props.context.setValue('deploymentId',item.id);
+        this.props.context.drillDown(this.props.widget,'deployment');
+    }
+
+    _deleteDeploymentConfirm(item,event){
+        event.stopPropagation();
+
+        this.setState({
+            confirmDelete : true,
+            deleteDep: item
+        });
+    }
+
+    _deleteDeployment() {
+        if (!this.state.deleteDep) {
+            this.setState({error: 'Something went wrong, no deployment was selected for delete'});
+            return;
+        }
+
+        var actions = new Actions(this.props.context);
+
+        actions.delete(this.state.deleteDep).then(()=>{
+            this.setState({confirmDelete: false,deleteDep:null});
+            this.props.context.getEventBus().trigger('deployments:refresh');
+        }).catch((err)=>{
+            this.setState({confirmDelete: false,deleteDep: null});
+            this.setState({error: err});
+        });
+    }
+
+    _refreshData() {
+        this.props.context.refresh();
+    }
+    
+    _showExecuteWorkflowModal (deployment,workflow) {
+        this.setState({
+            showExecuteModal: true,
+            executeDep: deployment,
+            executeWorkflow: workflow
+        });
+    }
+
+    _hideExecuteWorkflowModal() {
+        this.setState({
+            showExecuteModal: false,
+            executeDep: null,
+            executeWorkflow: null
+        });
+    }
+    _executeWorkflow(deployment,workflow,params) {
+        var actions = new Actions(this.props.context);
+
+        actions.execute(deployment,workflow,params).then(()=>{
+            this._hideExecuteWorkflowModal();
+            this.props.context.getEventBus().trigger('executions:refresh');
+        }).catch((err)=>{
+            this.setState({error: err});
+        })
     }
     render() {
         var Confirm = Stage.Basic.Confirm;
@@ -141,7 +166,7 @@ export default class extends React.Component {
 
                                     <td>
                                         <div className="rowActions">
-                                            <ExecuteWorkflow item={item}/>
+                                            <ExecuteWorkflow item={item} onWorkflowSelected={this._showExecuteWorkflowModal.bind(this)}/>
                                             <i className="write icon link bordered" title="Edit deployment"></i>
                                             <i className="trash icon link bordered" title="Delete deployment" onClick={this._deleteDeploymentConfirm.bind(this,item)}></i>
                                         </div>
@@ -156,6 +181,12 @@ export default class extends React.Component {
                          show={this.state.confirmDelete}
                          onConfirm={this._deleteDeployment.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
+                <ExecuteModal
+                    show={this.state.showExecuteModal}
+                    deployment={this.state.executeDep}
+                    workflow={this.state.executeWorkflow}
+                    onExecute={this._executeWorkflow.bind(this)}
+                    onCancel={this._hideExecuteWorkflowModal.bind(this)}/>
             </div>
 
         );

@@ -36,6 +36,7 @@ export default class Modal extends Component {
         $(this.refs.modalObj).modal(this.props.show ? 'show': 'hide');
     }
     componentWillUnmount() {
+        $(this.refs.modalObj).modal('hide');
         $(this.refs.modalObj).modal('destroy');
         $(this.refs.modalObj).remove();
     }
@@ -75,10 +76,12 @@ export default class Modal extends Component {
         });
 
         return (
-            <div className={"ui modal "+this.props.className} ref='modalObj'>
-                {modalHeader}
-                {modalBody}
-                {modalFooter}
+            <div>
+                <div className={"ui modal "+this.props.className} ref='modalObj'>
+                    {modalHeader}
+                    {modalBody}
+                    {modalFooter}
+                </div>
             </div>
         );
     }
