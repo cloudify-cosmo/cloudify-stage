@@ -2,13 +2,13 @@
  * Created by kinneretzin on 07/09/2016.
  */
 
-import renderBlueprintsTable from './BlueprintsTable';
+import BlueprintsTable from './BlueprintsTable';
 import renderUploadBlueprintModal from './UploadBlueprintModal';
+import DeployModal from './CreateDeploymentModal';
 
-var BlueprintsTable = null;
 var UploadModal = null;
 
-addPlugin({
+Stage.addPlugin({
     id: "blueprints",
     name: "Blueprints list",
     description: 'blah blah blah',
@@ -18,7 +18,6 @@ addPlugin({
     initialConfiguration: {filterBy: ""},
     isReact: true,
     init: function(pluginUtils) {
-        BlueprintsTable = renderBlueprintsTable(pluginUtils);
         UploadModal = renderUploadBlueprintModal(pluginUtils);
     },
 
@@ -77,6 +76,7 @@ addPlugin({
             <div>
                 <BlueprintsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
                 <UploadModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+                <DeployModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
             </div>
         );
     }

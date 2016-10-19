@@ -4,7 +4,7 @@
 
 
 export default class Context {
-    constructor(setContextValue,contextData,onDrilldownToPage,onRefresh,templates,manager) {
+    constructor(setContextValue,contextData,onDrilldownToPage,onRefresh,templates,manager,eventBus) {
         this._setValue = setContextValue;
         this._data = contextData;
 
@@ -12,6 +12,7 @@ export default class Context {
         this._onRefresh = onRefresh;
         this._templates = templates;
         this._manager = manager;
+        this._eventBus = eventBus;
     }
     setValue(key,value) {
         this._setValue(key,value);
@@ -30,6 +31,10 @@ export default class Context {
 
     refresh() {
         this._onRefresh();
+    }
+
+    getEventBus (){
+        return this._eventBus;
     }
 
 }

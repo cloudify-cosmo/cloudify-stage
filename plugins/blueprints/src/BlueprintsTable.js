@@ -2,23 +2,84 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
-export default (pluginUtils)=> {
+export default class extends React.Component {
 
-    return class extends React.Component {
+    constructor(props,context) {
+        super(props,context);
 
-        _selectBlueprint (item){
-            var oldSelectedBlueprintId = this.props.context.getValue('blueprintId');
-            this.props.context.setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);
+        this.state = {
+            confirmDelete:false
+        }
+    }
+
+    _selectBlueprint (item){
+        var oldSelectedBlueprintId = this.props.context.getValue('blueprintId');
+        this.props.context.setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);
+    }
+
+    _createDeployment(item,event){
+        event.stopPropagation();
+
+        this.props.context.setValue(this.props.widget.id + 'createDeploy',item);
+    }
+
+    _deleteBlueprintConfirm(item,event){
+        event.stopPropagation();
+
+        this.setState({
+            confirmDelete : true,
+            item: item
+        });
+    }
+
+    _deleteBlueprint() {
+        if (!this.state.item) {
+            this.setState({error: 'Something went wrong, no blueprint was selected for delete'});
+            return;
         }
 
-        _createDeployment(item){
-        }
+        var thi$ = this;
+        $.ajax({
+            url: thi$.props.context.getManagerUrl() + '/api/v2.1/blueprints/'+this.state.item.id,
+            "headers": {"content-type": "application/json"},
+            method: 'delete'
+        })
+            .done(()=> {
+                thi$.setState({confirmDelete: false});
+                thi$.props.context.getEventBus().trigger('blueprints:refresh');
+            })
+            .fail((jqXHR, textStatus, errorThrown)=>{
+                thi$.setState({confirmDelete: false});
+                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
+            });
+    }
 
-        _deleteBlueprint(item){
-        }
+    _refreshData() {
+        this.props.context.refresh();
+    }
 
-        render() {
-            return (
+    componentDidMount() {
+        this.props.context.getEventBus().on('blueprints:refresh',this._refreshData,this);
+    }
+
+    componentWillUnmount() {
+        this.props.context.getEventBus().off('blueprints:refresh',this._refreshData);
+    }
+
+    render() {
+        var Confirm = Stage.Basic.Confirm;
+
+        return (
+            <div>
+                {
+                    this.state.error ?
+                        <div className="ui error message" style={{"display":"block"}}>
+                            <div className="header">Error Occured</div>
+                            <p>{this.state.error}</p>
+                        </div>
+                        :
+                        ''
+                }
 
                 <table className="ui very compact table blueprintsTable">
                     <thead>
@@ -46,7 +107,7 @@ export default (pluginUtils)=> {
                                     <td>
                                         <div className="rowActions">
                                             <i className="rocket icon link bordered" title="Create deployment" onClick={this._createDeployment.bind(this,item)}></i>
-                                            <i className="trash icon link bordered" title="Delete blueprint" onClick={this._deleteBlueprint.bind(this,item)}></i>
+                                            <i className="trash icon link bordered" title="Delete blueprint" onClick={this._deleteBlueprintConfirm.bind(this,item)}></i>
                                         </div>
                                     </td>
                                 </tr>
@@ -55,8 +116,12 @@ export default (pluginUtils)=> {
                     }
                     </tbody>
                 </table>
+                <Confirm title='Are you sure you want to remove this blueprint?'
+                         show={this.state.confirmDelete}
+                         onConfirm={this._deleteBlueprint.bind(this)}
+                         onCancel={()=>this.setState({confirmDelete : false})} />
+            </div>
 
-            );
-        }
-    };
+        );
+    }
 };
