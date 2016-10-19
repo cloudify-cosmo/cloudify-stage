@@ -31,7 +31,7 @@ export default class WidgetDynamicContent extends Component {
     constructor(props) {
         super(props);
         this.state = {data: {}};
-    }
+    }   
 
     _buildPluginContext () {
         return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this._fetchData.bind(this),this.props.templates,this.props.manager,PluginEventBus);
@@ -63,6 +63,8 @@ export default class WidgetDynamicContent extends Component {
                 .then((data)=> {
                     console.log('widget :'+this.props.widget.name + ' data fetched');
                     this.setState({data: data});
+
+
                 })
                 .catch((e)=>{
                     console.error(e);
@@ -71,6 +73,14 @@ export default class WidgetDynamicContent extends Component {
         }
 
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.widget.configuration.fetchUsername != this.props.widget.configuration.fetchUsername)
+        {
+            this._fetchData();
+        }
+    }
+
     // In component will mount fetch the data if needed
     componentDidMount() {
         console.log('widget :'+this.props.widget.name + ' mounted');

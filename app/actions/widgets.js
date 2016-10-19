@@ -34,10 +34,11 @@ export function removeWidget(pageId,widgetId) {
     }
 }
 
-export function editWidget(widget) {
+export function editWidget(pageId, widgetId, configuration) {
     return {
         type: types.EDIT_WIDGET,
-        widget,
+        pageId,
+        widgetId,
         configuration
     }
 }

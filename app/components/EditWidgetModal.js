@@ -8,18 +8,23 @@ export default class EditWidgetModal extends Component {
 
     static propTypes = {
         configuration: PropTypes.object.isRequired,
-        widgetId: PropTypes.string.isRequired,
+        widget: PropTypes.object.isRequired,
         onWidgetEdited: PropTypes.func.isRequired
     };
 
-    editWidget(widget, configuration) {
-        this.props.onWidgetEdited(widget, configuration);
-        $('#editWidgetModal-'+widget.id).modal('hide');
+    _editWidget() {
+        let fetchUsername = document.getElementById('fetchUsername').value;
+        if (fetchUsername != this.props.configuration.fetchUsername)
+        {
+            //this.props.widget.configuration.fetchUsername = fetchUsername;
+            this.props.onWidgetEdited({fetchUsername: fetchUsername});
+        }
+        $('#editWidgetModal-'+this.props.widget.id).modal('hide');
     }
 
     render() {
         return (
-            <div className="ui large modal" id={"editWidgetModal-"+this.props.widgetId}>
+            <div className="ui large modal" id={"editWidgetModal-"+this.props.widget.id}>
               <div className="header">
                 Configure Widget
               </div>
@@ -33,12 +38,15 @@ export default class EditWidgetModal extends Component {
                     <div className="ui divider"></div>
                     {
                         this.props.configuration ?
-                            <div>
-                            <div className="ui icon input fluid mini">
-                                <input type="text" name="fetchUsername" placeholder="Fetch with username ..." defaultValue={this.props.configuration.fetchUsername}/>
-                            </div>
-                            <div className="ui divider"/>
-                            </div>
+                            this.props.configuration.fetchUsername ?
+                                <div>
+                                <div className="ui icon input fluid mini">
+                                    <input type="text" id="fetchUsername" placeholder="Fetch with username ..." defaultValue={this.props.configuration.fetchUsername}/>
+                                </div>
+                                <div className="ui divider"/>
+                                </div>
+                                :
+                                ''
                             :
                             ''
                     }
@@ -63,7 +71,7 @@ export default class EditWidgetModal extends Component {
              </div>
             </div>
             <div className="actions">
-                <button className="ui approve button" onClick={this.editWidget.bind(this,widget)}>Save</button>
+                <button className="ui approve button" onClick={this._editWidget.bind(this)}>Save</button>
                 <button className="ui cancel button">Cancel</button>
             </div>
         </div>
