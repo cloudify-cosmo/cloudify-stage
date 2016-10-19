@@ -2,6 +2,8 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
+import ExecuteWorkflow from './ExecuteWorkflow';
+
 export default class extends React.Component {
     constructor(props,context) {
         super(props,context);
@@ -31,20 +33,20 @@ export default class extends React.Component {
             return;
         }
 
-        //var thi$ = this;
-        //$.ajax({
-        //    url: thi$.props.context.getManagerUrl() + '/api/v2.1/blueprints/'+this.state.item.id,
-        //    "headers": {"content-type": "application/json"},
-        //    method: 'delete'
-        //})
-        //    .done(()=> {
-        //        thi$.setState({confirmDelete: false});
-        //        thi$.props.context.getEventBus().trigger('blueprints:refresh');
-        //    })
-        //    .fail((jqXHR, textStatus, errorThrown)=>{
-        //        thi$.setState({confirmDelete: false});
-        //        thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
-        //    });
+        var thi$ = this;
+        $.ajax({
+            url: thi$.props.context.getManagerUrl() + '/api/v2.1/deployments/'+this.state.item.id,
+            "headers": {"content-type": "application/json"},
+            method: 'delete'
+        })
+            .done(()=> {
+                thi$.setState({confirmDelete: false});
+                thi$.props.context.getEventBus().trigger('deployments:refresh');
+            })
+            .fail((jqXHR, textStatus, errorThrown)=>{
+                thi$.setState({confirmDelete: false});
+                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
+            });
     }
 
     _refreshData() {
@@ -139,7 +141,7 @@ export default class extends React.Component {
 
                                     <td>
                                         <div className="rowActions">
-                                            <i className="road icon link bordered" title="Execute workflow"></i>
+                                            <ExecuteWorkflow item={item}/>
                                             <i className="write icon link bordered" title="Edit deployment"></i>
                                             <i className="trash icon link bordered" title="Delete deployment" onClick={this._deleteDeploymentConfirm.bind(this,item)}></i>
                                         </div>
@@ -150,7 +152,7 @@ export default class extends React.Component {
                     }
                     </tbody>
                 </table>
-                <Confirm title='Are you sure you want to remove this blueprint?'
+                <Confirm title='Are you sure you want to remove this deployment?'
                          show={this.state.confirmDelete}
                          onConfirm={this._deleteDeployment.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
