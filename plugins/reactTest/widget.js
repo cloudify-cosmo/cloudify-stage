@@ -58,7 +58,7 @@ addPlugin({
     initialWidth: 4,
     initialHeight: 2,
     color: "violet",
-    initialConfiguration: {filter_by: ""},
+    initialConfiguration: {filterBy: ""},
     showHeader: true,
     isReact: true,
     //init: function(pluginUtils) {

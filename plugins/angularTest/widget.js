@@ -10,7 +10,7 @@ addPlugin({
     initialWidth: 4,
     initialHeight: 2,
     color: "violet",
-    initialConfiguration: {filter_by: ""},
+    initialConfiguration: {filterBy: ""},
     showHeader: false,
     init: function(pluginUtils) {
         var angular = pluginUtils.angular;

@@ -9,7 +9,7 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 6,
     color : "purple",
-    initialConfiguration: {filter_by: ""},
+    initialConfiguration: {filterBy: ""},
     fetchUrl: '/plugins/deployments/data.json',
 
     events: [

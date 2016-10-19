@@ -28,9 +28,20 @@ export default class EditWidgetModal extends Component {
                 <div className="ui segment basic large">
                     <div className="ui icon input fluid mini">
                         <i className="search icon"></i>
-                        <input type="text" name="filter_by" placeholder="Filter by name ..." defaultValue={this.props.configuration.filter_by}/>
+                        <input type="text" name="filterBy" placeholder="Filter by name ..." defaultValue={this.props.configuration.filterBy}/>
                     </div>
                     <div className="ui divider"></div>
+                    {
+                        this.props.configuration ?
+                            <div>
+                            <div className="ui icon input fluid mini">
+                                <input type="text" name="fetchUsername" placeholder="Fetch with username ..." defaultValue={this.props.configuration.fetchUsername}/>
+                            </div>
+                            <div className="ui divider"/>
+                            </div>
+                            :
+                            ''
+                    }
                     <div className="ui floating labeled icon dropdown button" ref={select=>$(select).dropdown()}>
                       <i className="filter icon"></i>
                       <span className="text">Filter by Status</span>
@@ -52,7 +63,7 @@ export default class EditWidgetModal extends Component {
              </div>
             </div>
             <div className="actions">
-                <button className="ui approve button">Save</button>
+                <button className="ui approve button" onClick={this.editWidget.bind(this,widget)}>Save</button>
                 <button className="ui cancel button">Cancel</button>
             </div>
         </div>
