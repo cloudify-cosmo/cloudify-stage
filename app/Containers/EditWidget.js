@@ -13,7 +13,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         pageId: ownProps.pageId,
         widget: ownProps.widget,
-        configuration: ownProps.widget.configuration
+        configuration: ownProps.widget.configuration || {}
     }
 };
 
@@ -29,10 +29,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 let EditWidgetComponent = ({widget,configuration, onWidgetEdited}) => {
     return (
-        <div>
+        <span>
             <EditWidgetIcon widgetId={widget.id} />
             <EditWidgetModal widget={widget} configuration={configuration} onWidgetEdited={onWidgetEdited} />
-        </div>
+        </span>
     );
 };
 

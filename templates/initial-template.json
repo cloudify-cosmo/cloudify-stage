@@ -7,7 +7,8 @@
       "width": 6,
       "height": 4,
       "x": 0,
-      "y": 2
+      "y": 2,
+      "configuration" : {}
     },
     {
       "name": "Deployments",
@@ -15,7 +16,8 @@
       "height": 4,
       "plugin": "deployments",
       "x": 6,
-      "y": 2
+      "y": 2,
+      "configuration" : {}
     },
     {
       "name": "Widget_0",
@@ -23,7 +25,8 @@
       "height": 2,
       "plugin": "deploymentNum",
       "x": 0,
-      "y": 0
+      "y": 0,
+      "configuration" : {}
     },
     {
       "name": "Widget_1",
@@ -31,7 +34,8 @@
       "height": 2,
       "plugin": "serversNum",
       "x": 4,
-      "y": 0
+      "y": 0,
+      "configuration" : {}
     },
     {
       "name": "Widget_2",
@@ -39,7 +43,8 @@
       "height": 2,
       "plugin": "pluginsNum",
       "x": 2,
-      "y": 0
+      "y": 0,
+      "configuration" : {}
     },
     {
       "name": "Users list",
@@ -47,7 +52,8 @@
       "height": 4,
       "plugin": "usersList",
       "x": 0,
-      "y": 6
+      "y": 6,
+      "configuration" : {}
     },
     {
       "name": "CPU Utilization - System",
@@ -55,7 +61,8 @@
       "height": 2,
       "plugin": "cpuUtilizationSystem",
       "x": 6,
-      "y": 0
+      "y": 0,
+      "configuration" : {}
     },
     {
       "name": "Cloudify github examples",
@@ -63,7 +70,8 @@
       "height": 4,
       "plugin": "githubExamples",
       "x": 4,
-      "y": 6
+      "y": 6,
+      "configuration" : {"fetchUserName": "cloudify-examples"}
     }
   ]
 }

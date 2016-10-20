@@ -75,7 +75,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.widget.configuration.fetchUsername != this.props.widget.configuration.fetchUsername)
+        if (prevProps.widget.configuration && prevProps.widget.configuration.fetchUsername != this.props.widget.configuration.fetchUsername)
         {
             this._fetchData();
         }
