@@ -9,14 +9,16 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color: "teal",
-    initialConfiguration: {filterBy: {title: "Filter by", icon:"search", placeHolder: "Specify name to filter with...", default: ""}, fetchUsername: {title: "Fetch with username:", placeHolder:"Type username..", default:"cloudify-examples"} , hostname:{title:"Hostname", placeHolder: "Hostname you'd like to use", default:"https://cloudify.com"}},
-    fetchUrl: 'https://api.github.com/search/repositories?q=-nfv+in:name+fork:true+user:',
+    initialConfiguration: [
+        {id: 'fetchUsername', name: 'Fetch with username' ,placeHolder:"Type username..", default:"cloudify-examples",fetch:true}
+    ],
+    fetchUrl: 'https://api.github.com/users/[config:fetchUsername]/repos',
     render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {
             return 'Inputs: missing template';
         }
 
-        return pluginUtils.buildFromTemplate(widget.plugin.template,data);
+        return pluginUtils.buildFromTemplate(widget.plugin.template,{items:data});
 
     }
 });

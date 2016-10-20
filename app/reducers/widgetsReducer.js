@@ -16,7 +16,28 @@ const widget = (state = {}, action) => {
                 width: action.plugin.initialWidth,
                 height: action.plugin.initialHeight,
                 plugin: action.plugin.id,
-                configuration: action.plugin.initialConfiguration
+                configuration: action.plugin.initialConfiguration.map((config)=>{
+                    var currConf = Object.assign({},config);
+                    if (!currConf.id) {
+                        currConf.id = v4();
+                    }
+                    if (!currConf.name) {
+                        currConf.name = currConf.id;
+                    }
+
+                    // If we have a default (but not value) set it as the initial value
+                    if (config.default && !config.value) {
+                        currConf.value = currConf.default;
+                    }
+
+                    // If there was no default and no value, set it to null (so it wont be undefined)
+                    if (!currConf.value) {
+                        currConf.value = null;
+                    }
+
+                    // Else all is good return it
+                    return currConf;
+                })
             };
         default:
             return state;

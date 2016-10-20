@@ -12,7 +12,10 @@ Stage.addPlugin({
     initialHeight: 6,
     color : "purple",
     fetchUrl: '[manager]/api/v2.1/deployments',
-    initialConfiguration: {filter_by: ""},
+    initialConfiguration:
+        [
+            {id: "clickToDrillDown",name: "Should click to drilldown", placeHolder: "True of false to click to drill down", default: "true"}
+        ],
     isReact: true,
 
     render: function(widget,data,error,context,pluginUtils) {

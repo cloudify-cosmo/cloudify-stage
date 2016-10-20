@@ -13,7 +13,7 @@ export default class extends React.Component {
     _refreshData() {
         this.props.context.refresh();
     }
-    
+
     componentDidMount() {
         this.props.context.getEventBus().on('executions:refresh', this._refreshData, this);
     }

@@ -41,7 +41,10 @@ export default class extends React.Component {
 
     _selectDeployment(item) {
         this.props.context.setValue('deploymentId',item.id);
-        this.props.context.drillDown(this.props.widget,'deployment');
+        var drillDownConfig = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:'clickToDrillDown'}) : {};
+        if (drillDownConfig && drillDownConfig.value === 'true') {
+            this.props.context.drillDown(this.props.widget,'deployment');
+        }
     }
 
     _deleteDeploymentConfirm(item,event){
@@ -73,7 +76,7 @@ export default class extends React.Component {
     _refreshData() {
         this.props.context.refresh();
     }
-    
+
     _showExecuteWorkflowModal (deployment,workflow) {
         this.setState({
             showExecuteModal: true,

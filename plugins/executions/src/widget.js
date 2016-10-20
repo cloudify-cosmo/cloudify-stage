@@ -12,7 +12,6 @@ Stage.addPlugin({
     initialHeight: 6,
     color : "purple",
     fetchUrl: '[manager]/api/v2.1/executions',
-    initialConfiguration: {},
     isReact: true,
 
     render: function(widget,data,error,context,pluginUtils) {

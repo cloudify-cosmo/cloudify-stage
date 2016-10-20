@@ -7,33 +7,46 @@ import React, { Component, PropTypes } from 'react';
 export default class EditWidgetModal extends Component {
 
     static propTypes = {
-        configuration: PropTypes.object.isRequired,
+        configuration: PropTypes.array.isRequired,
         widget: PropTypes.object.isRequired,
         onWidgetEdited: PropTypes.func.isRequired
     };
 
     _editWidget() {
-        let fetchUsername = document.getElementById('fetchUsername-' + this.props.widget.id ).value;
-        if (fetchUsername != this.props.configuration.fetchUsername)
-        {
-            //this.props.widget.configuration.fetchUsername = fetchUsername;
-            var configuration = $.extend(true, {}, this.props.configuration);
-            configuration.fetchUsername.value = fetchUsername;
-            this.props.onWidgetEdited(configuration);
+        // Get the changed configurations
+        var config;
+        $(this.refs.modal).find('.configInput').each((index,input)=>{
+            var $input = $(input);
+            var id = $input.data('id');
+            var value = $input.val();
+
+            config = this.props.configuration.map((conf)=>{
+                if (conf.id === id) {
+                    return Object.assign({},conf,{value:value});
+                }
+                return conf;
+            });
+        });
+
+        if (config) {
+            this.props.onWidgetEdited(config);
         }
+
+
+        //let fetchUsername = document.getElementById('fetchUsername-' + this.props.widget.id ).value;
+        //if (fetchUsername != this.props.configuration.fetchUsername)
+        //{
+        //    //this.props.widget.configuration.fetchUsername = fetchUsername;
+        //    var configuration = $.extend(true, {}, this.props.configuration);
+        //    configuration.fetchUsername.value = fetchUsername;
+        //    this.props.onWidgetEdited(configuration);
+        //}
         $('#editWidgetModal-'+this.props.widget.id).modal('hide');
     }
 
     render() {
-    var formattedData = [];
-    this.props.widget.configuration ?
-        formattedData = $.map(this.props.widget.configuration, function(value, key) {
-            return [{key:key, placeHolder: value.placeHolder, icon: value.icon, default: value.default, value: value.value, title: value.title}];
-        })
-        :
-        ''
         return (
-            <div className="ui large modal" id={"editWidgetModal-"+this.props.widget.id} key={"editWidgetModal-"+this.props.widget.id}>
+            <div className="ui large modal" ref='modal' id={'editWidgetModal-'+this.props.widget.id}>
               <div className="header">
                 Configure Widget
               </div>
@@ -41,45 +54,23 @@ export default class EditWidgetModal extends Component {
               <div className="content">
                 <div className="ui segment basic large">
                     {
-                        formattedData ?
-                            formattedData.map((item)=>{
-                                return (
-                                <div key={item.key+'-'+this.props.widget.id}>
-                                <h4> {item.title} </h4>
-                                <div className="ui icon input fluid mini">
-                                    {
-                                        item.icon ?
-                                            <i className={item.icon + " icon"}></i>
-                                            :
-                                            ''
-                                    }
-                                    <input type="text" id={item.key+'-'+this.props.widget.id} placeholder={item.placeHolder} defaultValue={item.value || item.default}/>
+                        this.props.configuration.map((config)=>{
+                            return (
+                                <div key={config.id}>
+                                    <h4> {config.name} </h4>
+                                    <div className="ui icon input fluid mini">
+                                        {
+                                            config.icon ?
+                                                <i className={config.icon + " icon"}></i>
+                                                :
+                                                ''
+                                        }
+                                        <input className='configInput' data-id={config.id} type="text" placeholder={config.placeHolder} defaultValue={config.value || config.default}/>
+                                    </div>
                                 </div>
-                                <div className="ui divider"/>
-                                </div>
-                                );
-                            })
-                        :
-                        ''
+                            );
+                        })
                     }
-                    <div className="ui floating labeled icon dropdown button" ref={select=>$(select).dropdown()}>
-                      <i className="filter icon"></i>
-                      <span className="text">Filter by Status</span>
-                      <div className="menu">
-                        <div className="item">
-                          <i className="circular inverted green thumbs up outline icon"></i>
-                          Up
-                        </div>
-                        <div className="item">
-                          <i className="circular inverted red thumbs down outline icon"></i>
-                          Down
-                        </div>
-                        <div className="item">
-                          <i className="circular inverted orange hourglass half icon"></i>
-                          Warning
-                        </div>
-                      </div>
-                    </div>
              </div>
             </div>
             <div className="actions">

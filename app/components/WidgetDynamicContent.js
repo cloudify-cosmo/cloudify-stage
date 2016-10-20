@@ -43,11 +43,11 @@ export default class WidgetDynamicContent extends Component {
             var context = this._buildPluginContext();
 
             var fetchUrl = _.replace(this.props.widget.plugin.fetchUrl,'[manager]', context.getManagerUrl());
-            if (this.props.widget.configuration && this.props.widget.configuration.fetchUsername)
-            {
-                var username = this.props.widget.configuration.fetchUsername.value || this.props.widget.configuration.fetchUsername.default;
-                fetchUrl = fetchUrl + username;
-            }
+            fetchUrl = _.replace(fetchUrl,/\[config:(.*)\]/i,(match,configName)=>{
+                var conf = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:configName}) : {};
+                return conf && conf.value ? conf.value : 'NA';
+            });
+
             fetch(fetchUrl)
                 .then(response => response.json())
                 .then((data)=> {
@@ -76,10 +76,19 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.widget.configuration && prevProps.widget.configuration.fetchUsername &&
-            this.props.widget.configuration && this.props.widget.configuration.fetchUsername &&
-            prevProps.widget.configuration.fetchUsername.value != this.props.widget.configuration.fetchUsername.value)
-        {
+        // Check if any configuration that requires fetch was changed
+
+        var requiresFetch = false;
+        if (prevProps.widget.configuration && this.props.widget.configuration) {
+            _.each(this.props.widget.configuration,(config)=>{
+                var oldConfig = _.find(prevProps.widget.configuration,{id:config.id});
+                if (oldConfig.value !== config.value && config.fetch) {
+                    requiresFetch = true;
+                }
+            })
+        }
+
+        if (requiresFetch) {
             this._fetchData();
         }
     }
