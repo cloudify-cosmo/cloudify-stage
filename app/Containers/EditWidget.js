@@ -22,16 +22,16 @@ let nameIndex = 0;
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onWidgetEdited: (configuration) => {
-            dispatch(editWidget(ownProps.pageId, ownProps.widget.id, configuration || ownProps.widget.configuration));
+            dispatch(editWidget(ownProps.pageId, ownProps.widget.id, configuration || ownProps.widget.configuration || ownProps.widget.initialConfiguration));
         }
     }
 };
 
-let EditWidgetComponent = ({widget,configuration, onWidgetEdited}) => {
+let EditWidgetComponent = ({widget, onWidgetEdited}) => {
     return (
         <div>
             <EditWidgetIcon widgetId={widget.id} />
-            <EditWidgetModal widget={widget} configuration={configuration} onWidgetEdited={onWidgetEdited} />
+            <EditWidgetModal widget={widget} configuration={widget.configuration || widget.initialConfiguration || {}} onWidgetEdited={onWidgetEdited} />
         </div>
     );
 };

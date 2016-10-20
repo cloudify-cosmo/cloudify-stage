@@ -60,7 +60,7 @@ export default class Widget extends Component {
                         {
                             this.props.isEditMode ?
                                 <div className='widgetEditButtons'>
-                                    <EditWidget pageId={this.props.pageId} widget={this.props.widget} configuration={this.props.configuration}/>
+                                    <EditWidget pageId={this.props.pageId} widget={this.props.widget}/>
                                     <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                                 </div>
                                 :
