@@ -27,9 +27,16 @@ Stage.addPlugin({
         var formattedData = Object.assign({},data);
 
         var blueprintId = context.getValue('blueprintId');
+        var deploymentId = context.getValue('deploymentId');
+
         if (blueprintId) {
             formattedData.items = _.filter(data.items,{blueprint_id:blueprintId});
         }
+
+        if (deploymentId) {
+            formattedData.items = _.filter(data.items,{deployment_id:deploymentId});
+        }
+
 
         formattedData = Object.assign({},formattedData,{
             items: _.map (formattedData.items,(item)=>{

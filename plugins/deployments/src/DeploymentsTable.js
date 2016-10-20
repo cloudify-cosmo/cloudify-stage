@@ -150,7 +150,7 @@ export default class extends React.Component {
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <tr key={item.id} className='row' onClick={this._selectDeployment.bind(this,item)}>
+                                <tr key={item.id} className={'row ' + (item.isSelected ? 'active' : '')} onClick={this._selectDeployment.bind(this,item)}>
                                     <td>
                                         <div>
                                             <a className='deploymentName' href="javascript:void(0)">{item.id}</a>
