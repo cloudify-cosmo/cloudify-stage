@@ -31,7 +31,7 @@ export default class WidgetDynamicContent extends Component {
     constructor(props) {
         super(props);
         this.state = {data: {}};
-    }   
+    }
 
     _buildPluginContext () {
         return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this._fetchData.bind(this),this.props.templates,this.props.manager,PluginEventBus);
@@ -45,7 +45,8 @@ export default class WidgetDynamicContent extends Component {
             var fetchUrl = _.replace(this.props.widget.plugin.fetchUrl,'[manager]', context.getManagerUrl());
             if (this.props.widget.configuration && this.props.widget.configuration.fetchUsername)
             {
-                fetchUrl = fetchUrl + this.props.widget.configuration.fetchUsername;
+                var username = this.props.widget.configuration.fetchUsername.value || this.props.widget.configuration.fetchUsername.default;
+                fetchUrl = fetchUrl + username;
             }
             fetch(fetchUrl)
                 .then(response => response.json())
@@ -75,7 +76,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.widget.configuration.fetchUsername != this.props.widget.configuration.fetchUsername)
+        if (prevProps.widget.configuration.fetchUsername.value != this.props.widget.configuration.fetchUsername.value)
         {
             this._fetchData();
         }

@@ -17,12 +17,21 @@ export default class EditWidgetModal extends Component {
         if (fetchUsername != this.props.configuration.fetchUsername)
         {
             //this.props.widget.configuration.fetchUsername = fetchUsername;
-            this.props.onWidgetEdited({fetchUsername: fetchUsername});
+            var configuration = $.extend(true, {}, this.props.configuration);
+            configuration.fetchUsername.value = fetchUsername;
+            this.props.onWidgetEdited(configuration);
         }
         $('#editWidgetModal-'+this.props.widget.id).modal('hide');
     }
 
     render() {
+    var formattedData = [];
+    this.props.widget.configuration ?
+        formattedData = $.map(this.props.widget.configuration, function(value, key) {
+            return [{key: key, placeHolder: value.placeHolder, icon: value.icon, default: value.default, value: value.value, title: value.title}];
+        })
+        :
+        ''
         return (
             <div className="ui large modal" id={"editWidgetModal-"+this.props.widget.id}>
               <div className="header">
@@ -31,24 +40,27 @@ export default class EditWidgetModal extends Component {
 
               <div className="content">
                 <div className="ui segment basic large">
-                    <div className="ui icon input fluid mini">
-                        <i className="search icon"></i>
-                        <input type="text" name="filterBy" placeholder="Filter by name ..." defaultValue={this.props.configuration.filterBy}/>
-                    </div>
-                    <div className="ui divider"></div>
                     {
-                        this.props.configuration ?
-                            this.props.configuration.fetchUsername ?
+                        formattedData ?
+                            formattedData.map((item)=>{
+                                return (
                                 <div>
+                                <h4> {item.title} </h4>
                                 <div className="ui icon input fluid mini">
-                                    <input type="text" id="fetchUsername" placeholder="Fetch with username ..." defaultValue={this.props.configuration.fetchUsername}/>
+                                    {
+                                        item.icon ?
+                                            <i className={item.icon + " icon"}></i>
+                                            :
+                                            ''
+                                    }
+                                    <input type="text" id={item.key} placeholder={item.placeHolder} defaultValue={item.value || item.default}/>
                                 </div>
                                 <div className="ui divider"/>
                                 </div>
-                                :
-                                ''
-                            :
-                            ''
+                                );
+                            })
+                        :
+                        ''
                     }
                     <div className="ui floating labeled icon dropdown button" ref={select=>$(select).dropdown()}>
                       <i className="filter icon"></i>

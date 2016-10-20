@@ -10,7 +10,6 @@ addPlugin({
     initialWidth: 4,
     initialHeight: 2,
     color: "violet",
-    initialConfiguration: {filterBy: ""},
     showHeader: false,
     render: function(widget,data,error,context,pluginUtils) {
 

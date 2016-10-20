@@ -33,7 +33,7 @@ class Plugin {
         this.initialWidth = 3;
         this.initialHeight = 3;
         this.color = "blue";
-        this.initialConfiguration = {filterBy: ""};
+        this.initialConfiguration = {filterBy: {title: "Filter by:", placeHolder: "Specify name to filter with...", default:"", icon:"search"}};
 
         // Override defaults with data
         Object.assign(this,data);

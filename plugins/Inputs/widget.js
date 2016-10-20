@@ -9,7 +9,6 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color: "teal",
-    initialConfiguration: {filterBy: ""},
     fetchUrl: '/plugins/inputs/data.json',
     render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {
