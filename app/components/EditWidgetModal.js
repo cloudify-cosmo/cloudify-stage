@@ -13,7 +13,7 @@ export default class EditWidgetModal extends Component {
     };
 
     _editWidget() {
-        let fetchUsername = document.getElementById('fetchUsername').value;
+        let fetchUsername = document.getElementById('fetchUsername-' + this.props.widget.id ).value;
         if (fetchUsername != this.props.configuration.fetchUsername)
         {
             //this.props.widget.configuration.fetchUsername = fetchUsername;
@@ -28,12 +28,12 @@ export default class EditWidgetModal extends Component {
     var formattedData = [];
     this.props.widget.configuration ?
         formattedData = $.map(this.props.widget.configuration, function(value, key) {
-            return [{key: key, placeHolder: value.placeHolder, icon: value.icon, default: value.default, value: value.value, title: value.title}];
+            return [{key:key, placeHolder: value.placeHolder, icon: value.icon, default: value.default, value: value.value, title: value.title}];
         })
         :
         ''
         return (
-            <div className="ui large modal" id={"editWidgetModal-"+this.props.widget.id}>
+            <div className="ui large modal" id={"editWidgetModal-"+this.props.widget.id} key={"editWidgetModal-"+this.props.widget.id}>
               <div className="header">
                 Configure Widget
               </div>
@@ -44,7 +44,7 @@ export default class EditWidgetModal extends Component {
                         formattedData ?
                             formattedData.map((item)=>{
                                 return (
-                                <div>
+                                <div key={item.key+'-'+this.props.widget.id}>
                                 <h4> {item.title} </h4>
                                 <div className="ui icon input fluid mini">
                                     {
@@ -53,7 +53,7 @@ export default class EditWidgetModal extends Component {
                                             :
                                             ''
                                     }
-                                    <input type="text" id={item.key} placeholder={item.placeHolder} defaultValue={item.value || item.default}/>
+                                    <input type="text" id={item.key+'-'+this.props.widget.id} placeholder={item.placeHolder} defaultValue={item.value || item.default}/>
                                 </div>
                                 <div className="ui divider"/>
                                 </div>
