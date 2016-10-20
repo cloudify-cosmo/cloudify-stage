@@ -14,13 +14,13 @@ export default class EditWidgetModal extends Component {
 
     _editWidget() {
         // Get the changed configurations
-        var config;
+        var config = this.props.configuration;
         $(this.refs.modal).find('.configInput').each((index,input)=>{
             var $input = $(input);
             var id = $input.data('id');
             var value = $input.val();
 
-            config = this.props.configuration.map((conf)=>{
+            config = config.map((conf)=>{
                 if (conf.id === id) {
                     return Object.assign({},conf,{value:value});
                 }
@@ -31,16 +31,7 @@ export default class EditWidgetModal extends Component {
         if (config) {
             this.props.onWidgetEdited(config);
         }
-
-
-        //let fetchUsername = document.getElementById('fetchUsername-' + this.props.widget.id ).value;
-        //if (fetchUsername != this.props.configuration.fetchUsername)
-        //{
-        //    //this.props.widget.configuration.fetchUsername = fetchUsername;
-        //    var configuration = $.extend(true, {}, this.props.configuration);
-        //    configuration.fetchUsername.value = fetchUsername;
-        //    this.props.onWidgetEdited(configuration);
-        //}
+        
         $('#editWidgetModal-'+this.props.widget.id).modal('hide');
     }
 

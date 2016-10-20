@@ -14,7 +14,8 @@ Stage.addPlugin({
     fetchUrl: '[manager]/api/v2.1/deployments',
     initialConfiguration:
         [
-            {id: "clickToDrillDown",name: "Should click to drilldown", placeHolder: "True of false to click to drill down", default: "true"}
+            {id: "clickToDrillDown",name: "Should click to drilldown", placeHolder: "True of false to click to drill down", default: "true"},
+            {id: "blueprintIdFilter",name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by"}
         ],
     isReact: true,
 
@@ -28,9 +29,18 @@ Stage.addPlugin({
             return pluginUtils.renderReactError(error);
         }
 
+
         var formattedData = Object.assign({},data);
         var blueprintId = context.getValue('blueprintId');
         var deploymentId = context.getValue('deploymentId');
+
+        // Find if we have a config for blueprint selection
+        var blueprintIdFilter = widget.configuration ? _.find(widget.configuration,{id:'blueprintIdFilter'}) : {};
+        if (blueprintIdFilter && blueprintIdFilter.value) {
+            blueprintId = blueprintIdFilter.value;
+        }
+
+
         var filter = context.getValue('filterDep'+widget.id);
         if (blueprintId) {
             formattedData.items = _.filter(data.items,{blueprint_id:blueprintId});
