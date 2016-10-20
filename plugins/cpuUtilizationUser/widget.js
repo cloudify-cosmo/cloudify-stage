@@ -10,7 +10,6 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color : "purple",
-    initialConfiguration: {filterBy: ""},
     render: function(widget,data,error,context,pluginUtils) {
 
         if (!widget.plugin.template) {

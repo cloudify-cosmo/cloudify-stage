@@ -71,7 +71,7 @@
       "plugin": "githubExamples",
       "x": 4,
       "y": 6,
-      "configuration" : {"fetchUserName": "cloudify-examples"}
+      "configuration" : {"fetchUsername": { "value": "cloudify-examples" }}
     }
   ]
 }
