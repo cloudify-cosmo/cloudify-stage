@@ -17,9 +17,20 @@ addPlugin({
 
         var formattedData = Object.assign({},data);
         var deploymentId = context.getValue('deploymentId');
-        if (deploymentId) {
+        var blueprintId = context.getValue('blueprintId');
+        var executionId = context.getValue('executionId');
+
+        if (executionId) {
+            formattedData.items = _.filter(data.items, (item)=> {
+                return item.context.execution_id === executionId;
+            });
+        } else if (deploymentId) {
             formattedData.items = _.filter(data.items,(item)=>{
                 return item.context.deployment_id === deploymentId;
+            });
+        } else if (blueprintId) {
+            formattedData.items = _.filter(data.items,(item)=>{
+                return item.context.blueprint_id === blueprintId;
             });
         }
 

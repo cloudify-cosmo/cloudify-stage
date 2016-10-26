@@ -40,10 +40,13 @@ export default class extends React.Component {
     }
 
     _selectDeployment(item) {
-        this.props.context.setValue('deploymentId',item.id);
         var drillDownConfig = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:'clickToDrillDown'}) : {};
         if (drillDownConfig && drillDownConfig.value === 'true') {
+            this.props.context.setValue('deploymentId',item.id);
             this.props.context.drillDown(this.props.widget,'deployment');
+        } else {
+            var oldSelectedDeploymentId = this.props.context.getValue('deploymentId');
+            this.props.context.setValue('deploymentId',item.id === oldSelectedDeploymentId ? null : item.id);
         }
     }
 

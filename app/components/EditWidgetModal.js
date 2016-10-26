@@ -31,7 +31,7 @@ export default class EditWidgetModal extends Component {
         if (config) {
             this.props.onWidgetEdited(config);
         }
-        
+
         $('#editWidgetModal-'+this.props.widget.id).modal('hide');
     }
 

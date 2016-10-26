@@ -2,6 +2,7 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
+import config from '../config.json';
 
 export default class Context {
     constructor(setContextValue,contextData,onDrilldownToPage,onRefresh,templates,manager,eventBus) {
@@ -26,7 +27,7 @@ export default class Context {
     }
 
     getManagerUrl() {
-        return `http://localhost:8000/?su=http://${this._manager.ip}`;
+        return `http://${config.proxyIp}:8000/?su=http://${this._manager.ip}`;
     }
 
     refresh() {
