@@ -23,6 +23,11 @@ export default class extends React.Component {
     }
 
 
+    _selectExecution(item) {
+        var oldSelectedExecutionId = this.props.context.getValue('executionId');
+        this.props.context.setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
+    }
+    
     render() {
         return (
             <div>
@@ -52,7 +57,7 @@ export default class extends React.Component {
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <tr key={item.id} className='row'>
+                                <tr key={item.id} className={'row ' + (item.isSelected ? 'active' : '')} onClick={this._selectExecution.bind(this,item)}>
                                     <td>{item.blueprint_id}</td>
                                     <td>{item.deployment_id}</td>
                                     <td>{item.workflow_id}</td>

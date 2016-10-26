@@ -28,6 +28,7 @@
   { "name" : "inputs" },
   { "name" : "githubExamples" },
   { "name" : "events" },
+  { "name" : "logs" },
   { "name" : "reactTest"},
   { "name" : "executions"}
 
