@@ -30,6 +30,6 @@
   { "name" : "events" },
   { "name" : "logs" },
   { "name" : "reactTest"},
-  { "name" : "executions"}
-
+  { "name" : "executions"},
+  { "name" : "plugins"}
 ]

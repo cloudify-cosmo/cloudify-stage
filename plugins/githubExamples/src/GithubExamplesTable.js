@@ -53,7 +53,7 @@ export default class extends React.Component {
                         this.props.data.items.map((item)=>{
                             return (
                                 <tr key={item.id} className={'row ' + (item.isSelected ? 'active' : '')} onClick={this._selectExample.bind(this,item)}>
-                                    <td>{item.name}</td>
+                                    <td><a href={item.html_url} target="_blank">{item.name}</a></td>
                                     <td>{item.description}</td>
                                 </tr>
                             );

@@ -58,7 +58,7 @@
       "y": 0
     },
     {
-      "name": "Cloudify github examples",
+      "name": "GitHub repositories list",
       "width": 8,
       "height": 4,
       "plugin": "githubExamples",

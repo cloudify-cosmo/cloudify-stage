@@ -6,7 +6,7 @@ import GithubExamplesTable from './GithubExamplesTable';
 
 Stage.addPlugin({
     id: 'githubExamples',
-    name: "Cloudify github examples",
+    name: "GitHub repositories list",
     description: 'This plugin shows a list of cloudify example repositories',
     initialWidth: 8,
     initialHeight: 4,
@@ -28,17 +28,21 @@ Stage.addPlugin({
 
         var formattedData = Object.assign({},data);
 
-        var exampleId = context.getValue('id');
-        var selectedExample = context.getValue('id');
+        var exampleId = context.getValue('exampleId');
+        var selectedExample = context.getValue('exampleId');
 
         if (exampleId) {
-            formattedData.items = _.filter(data.items,{example_name:exampleName});
+            formattedData.items = _.filter(data.items,{id: exampleId});
         }
 
         formattedData = Object.assign({},formattedData,{
-            items: _.map (formattedData.items,(item)=>{
+            items: _.map (formattedData,(item)=>{
                 return Object.assign({},item,{
-                    isSelected: item.id === selectedExample
+                    isSelected: item.id === selectedExample,
+                    id: item.id,
+                    name: item.name,
+                    description: item.description,
+                    url: item.url
                 })
             })
         });
