@@ -28,9 +28,10 @@
   { "name" : "inputs" },
   { "name" : "githubExamples" },
   { "name" : "events" },
+  { "name" : "plugins"},
+  { "name" : "snapshots"},
   { "name" : "logs" },
   { "name" : "executionFilter" },
   { "name" : "reactTest"},
   { "name" : "executions"}
-
 ]

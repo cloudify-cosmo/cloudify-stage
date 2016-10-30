@@ -27,8 +27,58 @@ export default class extends React.Component {
         var oldSelectedExecutionId = this.props.context.getValue('executionId');
         this.props.context.setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
     }
-    
+
+    renderFields(fieldsToShow,item) {
+        var fields = [];
+
+        if (fieldsToShow.indexOf("Blueprint") >= 0 && !this.props.data.blueprintId) {
+            fields.push(<td key={item.id+'Blueprint'}>{item.blueprint_id}</td>)
+        }
+        if (fieldsToShow.indexOf("Deployment") >= 0 && !this.props.data.deploymentId) {
+            fields.push(<td key={item.id+'Deployment'}>{item.deployment_id}</td>);
+        }
+
+        if (fieldsToShow.indexOf("Workflow") >= 0) {
+            fields.push(<td key={item.id+'Workflow'}>{item.workflow_id}</td>);
+        }
+
+        if (fieldsToShow.indexOf("Id") >= 0 ) {
+            fields.push(<td key={item.id+'Id'}>{item.id}</td>);
+        }
+        if (fieldsToShow.indexOf("Created") >= 0) {
+            fields.push(<td key={item.id+'Created'}>{item.created_at}</td>);
+        }
+        if (fieldsToShow.indexOf("IsSystem") >= 0) {
+            fields.push(<td key={item.id+'IsSystem'}>{item.is_system_workflow ? 'true' : 'false'}</td>);
+        }
+        if (fieldsToShow.indexOf("Status") >= 0) {
+            fields.push(
+                <td key={item.id+'Status'}>
+                    {item.status}
+                    { _.isEmpty(item.error) ?
+                        <i className="check circle icon inverted green"></i>
+                        :
+                        <i className="remove circle icon inverted red"></i>
+                    }
+                </td>
+            );
+        }
+
+        return fields;
+    }
     render() {
+        var fieldsToShowConfig = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:'fieldsToShow'}) : {};
+        var fieldsToShow = [];
+        try {
+            // First set it to default, so if abends in json parse will have the default
+            fieldsToShow = _.find(this.props.widget.plugin.initialConfiguration,{id:'fieldsToShow'}) || ["Id"];
+
+            fieldsToShow = (fieldsToShowConfig && fieldsToShowConfig.value) ? JSON.parse(fieldsToShowConfig.value) : fieldsToShow;
+
+        } catch (e) {
+            console.error('Error parsing fields-to-show configuration for executions table');
+        }
+
         return (
             <div>
                 {
@@ -44,13 +94,13 @@ export default class extends React.Component {
                 <table className="ui very compact table executionsTable">
                     <thead>
                     <tr>
-                        <th>Blueprint</th>
-                        <th>Deployment</th>
-                        <th>Workflow</th>
-                        <th>Id</th>
-                        <th>Created</th>
-                        <th>Is System</th>
-                        <th>Status</th>
+                        { fieldsToShow.indexOf("Blueprint") >= 0 && !this.props.data.blueprintId? <th>Blueprint</th> : null}
+                        { fieldsToShow.indexOf("Deployment") >= 0 && !this.props.data.deploymentId?<th>Deployment</th> : null}
+                        { fieldsToShow.indexOf("Workflow") >= 0 ?<th>Workflow</th> : null}
+                        { fieldsToShow.indexOf("Id") >= 0 ?<th>Id</th> : null}
+                        { fieldsToShow.indexOf("Created") >= 0 ?<th>Created</th> : null}
+                        { fieldsToShow.indexOf("IsSystem") >= 0 ?<th>Is System</th> : null}
+                        { fieldsToShow.indexOf("Status") >= 0 ?<th>Status</th> : null}
                     </tr>
                     </thead>
                     <tbody>
@@ -58,20 +108,7 @@ export default class extends React.Component {
                         this.props.data.items.map((item)=>{
                             return (
                                 <tr key={item.id} className={'row ' + (item.isSelected ? 'active' : '')} onClick={this._selectExecution.bind(this,item)}>
-                                    <td>{item.blueprint_id}</td>
-                                    <td>{item.deployment_id}</td>
-                                    <td>{item.workflow_id}</td>
-                                    <td>{item.id}</td>
-                                    <td>{item.created_at}</td>
-                                    <td>{item.is_system_workflow ? 'true' : 'false'}</td>
-                                    <td>
-                                        {item.status}
-                                        { _.isEmpty(item.error) ?
-                                            <i className="check circle icon inverted green"></i>
-                                            :
-                                            <i className="remove circle icon inverted red"></i>
-                                        }
-                                    </td>
+                                    {this.renderFields(fieldsToShow,item)}
                                 </tr>
                             );
                         })

@@ -13,6 +13,11 @@ Stage.addPlugin({
     color : "purple",
     fetchUrl: '[manager]/api/v2.1/executions',
     isReact: true,
+    initialConfiguration:
+        [
+            {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Enter list of comma separated field names (json format)",
+                default: '["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Status"]'}
+        ],
 
     render: function(widget,data,error,context,pluginUtils) {
 
@@ -48,6 +53,8 @@ Stage.addPlugin({
             })
         });
 
+        formattedData.blueprintId = blueprintId;
+        formattedData.deploymentId = deploymentId;
         return (
             <ExecutionsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
         );

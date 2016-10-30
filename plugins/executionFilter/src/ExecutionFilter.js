@@ -45,6 +45,8 @@ export default class ExecutionFilter extends React.Component {
     }
 
     render() {
+        var FilterByExecutionsConfig = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:'FilterByExecutions'}) : {};
+        var shouldShowExecutionsFilter = FilterByExecutionsConfig && FilterByExecutionsConfig.value === 'true';
         return (
             <div>
                 {
@@ -90,21 +92,26 @@ export default class ExecutionFilter extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className='field'>
-                            <div className="ui search selection dropdown" ref={(select)=>$(select).dropdown({onChange: this._selectExecution.bind(this)})}>
-                                <input type="hidden" name="deployment"/>
-                                <i className="dropdown icon"></i>
-                                <div className="default text">Select Execution</div>
-                                <div className="menu">
-                                    <div className='item' data-value="">Select Execution</div>
-                                    {
-                                        this.props.data.executions.items.map((execution)=>{
-                                            return <div key={execution.id} className="item" data-value={execution.id}>{execution.id + '-' + execution.workflow_id}</div>;
-                                        })
-                                    }
+                        {
+                            shouldShowExecutionsFilter ?
+                                <div className='field'>
+                                    <div className="ui search selection dropdown" ref={(select)=>$(select).dropdown({onChange: this._selectExecution.bind(this)})}>
+                                        <input type="hidden" name="deployment"/>
+                                        <i className="dropdown icon"></i>
+                                        <div className="default text">Select Execution</div>
+                                        <div className="menu">
+                                            <div className='item' data-value="">Select Execution</div>
+                                            {
+                                                this.props.data.executions.items.map((execution)=>{
+                                                    return <div key={execution.id} className="item" data-value={execution.id}>{execution.id + '-' + execution.workflow_id}</div>;
+                                                })
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            :
+                                ''
+                        }
 
                     </div>
                 </div>
