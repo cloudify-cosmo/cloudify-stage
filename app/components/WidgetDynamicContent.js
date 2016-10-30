@@ -152,7 +152,7 @@ export default class WidgetDynamicContent extends Component {
     render() {
         return (
             this.props.widget.plugin.isReact ?
-            <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader')}>
+            <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader ') + (this.props.widget.plugin.showBorder ? '' : ' noBorder ')}>
                 {this.renderReact()}
             </div>
                 :

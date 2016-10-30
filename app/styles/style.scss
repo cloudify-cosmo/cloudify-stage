@@ -58,6 +58,11 @@ body {
   }
 }
 
+.grid-stack > .grid-stack-item.widget > .grid-stack-item-content {
+  overflow-x: initial;
+  overflow-y: initial;
+}
+
 .widget {
 
   .widgetEditButtons {
@@ -70,6 +75,10 @@ body {
   &:hover {
     .widgetEditButtons{
       display: block;
+    }
+
+    .ui.basic.segment.borderOnHover {
+      border: 1px solid rgba(34, 36, 38, 0.15);
     }
   }
 
@@ -99,7 +108,11 @@ body {
     padding: 10px;
 
     &.noHeader {
-      top: 0px;
+      top: 15px;
+    }
+
+    &.noBorder {
+      overflow: initial;
     }
   }
 }

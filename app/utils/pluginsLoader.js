@@ -30,6 +30,7 @@ class Plugin {
     constructor(data) {
         // Set default
         this.showHeader = true;
+        this.showBorder = true;
         this.initialWidth = 3;
         this.initialHeight = 3;
         this.color = "blue";

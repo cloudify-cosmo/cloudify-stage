@@ -29,6 +29,7 @@
   { "name" : "githubExamples" },
   { "name" : "events" },
   { "name" : "logs" },
+  { "name" : "executionFilter" },
   { "name" : "reactTest"},
   { "name" : "executions"}
 

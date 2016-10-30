@@ -38,7 +38,11 @@ export default class Widget extends Component {
                  data-gs-width={this.props.widget.width}
                  data-gs-height={this.props.widget.height}>
 
-                    <div className={'ui segment grid-stack-item-content '+ (this.props.widget.plugin && this.props.widget.plugin.color ? this.props.widget.plugin.color : 'red')}>
+                    <div className={'ui segment grid-stack-item-content '+
+                                    (this.props.widget.plugin && !this.props.widget.plugin.showBorder ? 'basic ' : '') +
+                                    (this.props.isEditMode && this.props.widget.plugin && !this.props.widget.plugin.showBorder ? 'borderOnHover ' : '') +
+                                    (this.props.widget.plugin && this.props.widget.plugin.color && this.props.widget.plugin.showBorder ? this.props.widget.plugin.color : '')
+                                    }>
                         {
                             this.props.widget.plugin && this.props.widget.plugin.showHeader ?
                                 <h5 className='ui header dividing'>
