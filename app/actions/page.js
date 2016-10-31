@@ -45,3 +45,11 @@ export function selectPage(pageId) {
         dispatch(push('/page/'+pageId));
     }
 }
+
+export function removePage(pageId) {
+    return {
+        type: types.REMOVE_PAGE,
+        pageId: pageId
+        }
+}
+

@@ -63,6 +63,26 @@ body {
   overflow-y: initial;
 }
 
+.pageMenuItem{
+  .pageRemoveButton {
+    position: absolute;
+    top: 0px;
+    right : 0px;
+    display: none;
+  }
+
+  &:hover {
+    .pageRemoveButton{
+      display: block;
+    }
+
+    .ui.basic.segment.borderOnHover {
+      border: 1px solid rgba(34, 36, 38, 0.15);
+    }
+  }
+
+}
+
 .widget {
 
   .widgetEditButtons {
