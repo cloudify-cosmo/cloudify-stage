@@ -117,6 +117,19 @@ body {
   }
 }
 
+.uploadSnapshot {
+  float: right;
+}
+
+.createSnapshot {
+  float: right;
+}
+
+.snapshotsButtons {
+  position: relative;
+  bottom: 5px;
+}
+
 // TODO need to calc it according to screen size
 .editWidgetModal {
   max-height: 600px;
