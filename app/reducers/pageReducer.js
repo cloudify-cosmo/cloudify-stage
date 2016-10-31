@@ -12,7 +12,7 @@ const page = (state = {}, action) => {
 
         case types.ADD_PAGE:
             return {
-                id: v4(),
+                id: action.newPageId,
                 name: action.name,
                 widgets: []
             };
