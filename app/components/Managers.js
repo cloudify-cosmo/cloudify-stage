@@ -13,14 +13,14 @@ export default class Managers extends Component {
     constructor(props) {
         super(props);
 
-        this.handleConfigClick = this.handleConfigClick.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
         this.dropdownRef.dropdown({action: 'hide'});
     }
 
-    handleConfigClick(event) {
+    handleClick(event) {
         if (event.target.id === "configureManagerIcon") {
             browserHistory.push("/manager");
         } else {
@@ -33,13 +33,14 @@ export default class Managers extends Component {
         return (
             <div className="ui inline dropdown item" ref={select=>this.dropdownRef=$(select)}>
                 <div className="dropDownText text">{selectedManager.name}</div>
+                <i className="inverted dropdown icon"></i>
                 <div className="menu" style={{minWidth: '190px', left: 'auto', right: '0'}}>
                     {
                         this.props.managers.items.map((manager)=>{
                             let isManagerSelected = (manager.id === this.props.managers.selected);
 
                             return (
-                                <div key={manager.ip} className={"item "+ (isManagerSelected ? 'active selected' : '') } onClick={this.handleConfigClick} data-text={manager.name} data-value={manager.ip}>
+                                <div key={manager.ip} className={"item "+ (isManagerSelected ? 'active selected' : '') } onClick={this.handleClick} data-text={manager.name} data-value={manager.ip}>
                                     <span className="text">{manager.name}</span>
                                     <span className="description" style={{float: 'none'}}>{manager.ip}</span>
                                     {isManagerSelected && <i className="small configure link icon" style={{margin: '0 0 0 0.5em', opacity: '0.5'}} id="configureManagerIcon"></i>}
