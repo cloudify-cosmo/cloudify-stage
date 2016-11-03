@@ -184,7 +184,7 @@ export default (pluginUtils)=> {
                                 </div>
 
                                 <div className="field">
-                                    <input type="text" required name='blueprintName' id='blueprintName' placeholder="Blueprint name" required/>
+                                    <input type="text" name='blueprintName' id='blueprintName' placeholder="Blueprint name" required/>
                                 </div>
                                 <div className="field">
                                     <input type="text" name='blueprintFileName' id='blueprintFileName' placeholder="Blueprint filename e.g. blueprint"/>

@@ -129,7 +129,7 @@ export default (snapshotUtils)=> {
                         <div className="content">
                             <form className="ui form createForm" onSubmit={this._submitCreate.bind(this)} action="">
                                 <div className="field">
-                                    <input type="text" required name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
+                                    <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
                                 </div>
                                 {
                                     this.state.createErr ?

@@ -173,7 +173,7 @@ export default (snapshotUtils)=> {
                                     </div>
                                 </div>
                                 <div className="field">
-                                    <input type="text" required name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
+                                    <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
                                 </div>
                                 {
                                     this.state.uploadErr ?
