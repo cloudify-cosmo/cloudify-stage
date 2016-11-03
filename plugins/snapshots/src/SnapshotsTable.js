@@ -28,12 +28,16 @@ export default class extends React.Component {
 
     _restoreSnapshot(item,event) {
         var thi$ = this;
+        var data = {force: false, recreate_deployments_envs: false};
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+item.id+'/archive',
-            method: 'get'
+            url: thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+item.id+'/restore',
+            "headers": {"content-type": "application/json"},
+            data: JSON.stringify(data),
+            dataType: "json",
+            method: 'post'
         })
             .done(()=> {
-                  window.location = thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+item.id+'/archive';
+                thi$.props.context.getEventBus().trigger('snapshots:refresh');
               })
             .fail((jqXHR, textStatus, errorThrown)=>{
                 thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
@@ -92,7 +96,7 @@ export default class extends React.Component {
         var Confirm = Stage.Basic.Confirm;
 
         return (
-            <div>
+                <div className="snapshotsTableDiv">
                 {
                     this.state.error ?
                         <div className="ui error message" style={{"display":"block"}}>
@@ -102,7 +106,6 @@ export default class extends React.Component {
                         :
                         ''
                 }
-
                 <table className="ui very compact table snapshotsTable">
                     <thead>
                     <tr>
@@ -126,7 +129,7 @@ export default class extends React.Component {
                                     <td>{item.status}</td>
                                     <td>
                                         <div className="rowActions">
-                                            <i className="restore icon link bordered" title="Restore" onClick={this._restoreSnapshot.bind(this,item)}></i>
+                                            <i className="undo icon link bordered" title="Restore" onClick={this._restoreSnapshot.bind(this,item)}></i>
                                             <i className="download icon link bordered" title="Download" onClick={this._downloadSnapshot.bind(this,item)}></i>
                                             <i className="trash icon link bordered" title="Delete" onClick={this._deleteSnapshotConfirm.bind(this,item)}></i>
                                         </div>

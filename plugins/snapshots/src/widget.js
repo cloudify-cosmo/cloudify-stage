@@ -55,9 +55,11 @@ Stage.addPlugin({
 
         return (
             <div>
+                <div className="snapshotsButtons">
+                    <CreateModal widget={widget} data={formattedData} context={context} utils={snapshotUtils}/>
+                    <UploadModal widget={widget} data={formattedData} context={context} utils={snapshotUtils}/>
+                 </div>
                 <SnapshotsTable widget={widget} data={formattedData} context={context} utils={snapshotUtils}/>
-                <CreateModal widget={widget} data={formattedData} context={context} utils={snapshotUtils}/>
-                <UploadModal widget={widget} data={formattedData} context={context} utils={snapshotUtils}/>
             </div>
         );
     }

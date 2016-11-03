@@ -17,7 +17,7 @@ export default class SideBar extends Component {
     render() {
         return (
             <div className="ui visible left vertical sidebar menu small inverted">
-                <Pages pageId={this.props.pageId}/>
+                <Pages pageId={this.props.pageId} isEditMode={this.props.isEditMode}/>
                 {
                     this.props.isEditMode ?
                         <div className="ui center aligned basic segment addButtonContainer">

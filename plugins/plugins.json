@@ -33,5 +33,6 @@
   { "name" : "logs" },
   { "name" : "executionFilter" },
   { "name" : "reactTest"},
+  { "name" : "outputs"},
   { "name" : "executions"}
 ]

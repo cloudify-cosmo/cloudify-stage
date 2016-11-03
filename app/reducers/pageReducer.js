@@ -12,10 +12,11 @@ const page = (state = {}, action) => {
 
         case types.ADD_PAGE:
             return {
-                id: v4(),
+                id: action.newPageId,
                 name: action.name,
                 widgets: []
             };
+        case types.REMOVE_PAGE:
         case types.CREATE_DRILLDOWN_PAGE:
             return Object.assign({
                     isDrillDown: true
@@ -68,6 +69,12 @@ const pages = (state = [], action) => {
                 }
                 return page
             });
+        case types.REMOVE_PAGE:
+            var removeIndex = _.findIndex(state,{id:action.pageId});
+            return [
+                ...state.slice(0,removeIndex),
+                ...state.slice(removeIndex+1)
+            ];
         case types.RENAME_PAGE:
             return state.map( (page) => {
                 if (page.id === action.pageId) {

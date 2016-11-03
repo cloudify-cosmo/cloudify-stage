@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Page from '../components/Page';
 import {renamePage} from '../actions/page';
 import {selectPage} from '../actions/page';
+import {removePage} from '../actions/page';
 import {changeWidgetGridData} from '../actions/widgets';
 
 const buildPagesList = (pages,selectedPageId) => {
@@ -14,6 +15,10 @@ const buildPagesList = (pages,selectedPageId) => {
     var pagesList = [];
 
     var _r = (page) => {
+        if (!page)
+        {
+            page = pagesMap["0"];
+        }
         pagesList.push({id:page.id,name:page.name});
         if (!page.parent) {
             return;
@@ -28,7 +33,14 @@ const buildPagesList = (pages,selectedPageId) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    var pageData = _.clone(_.find(state.pages,{id:ownProps.pageId}));
+    var pagesMap = _.keyBy(state.pages,'id');
+    var page = pagesMap[ownProps.pageId];
+    var pageId = "0";
+    if (page)
+    {
+        pageId = page.id;
+    }
+    var pageData = _.clone(_.find(state.pages,{id:pageId}));
     var widgets = _.map(pageData.widgets,(wd)=>{
         var w = _.clone(wd);
         w.plugin = _.find(state.plugins.items,{id:w.plugin});
@@ -38,7 +50,7 @@ const mapStateToProps = (state, ownProps) => {
 
     return {
         page: pageData,
-        pagesList: buildPagesList(state.pages,ownProps.pageId),
+        pagesList: buildPagesList(state.pages,pageId),
         isEditMode: state.config.isEditMode
     }
 };
@@ -50,6 +62,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onPageSelected: (page) => {
             dispatch(selectPage(page.id));
+        },
+        onPageRemoved: (page) => {
+            dispatch(removePage(page.id));
         },
         onWidgetsGridDataChange: (pageId,widgetId,gridData)=>{
             dispatch(changeWidgetGridData(pageId,widgetId,gridData));

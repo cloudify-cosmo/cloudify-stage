@@ -5,12 +5,22 @@
 
 import * as types from './types';
 import { push } from 'react-router-redux';
+import {v4} from 'node-uuid';
 
-export function addPage(name) {
+export function createPage(name, newPageId) {
     return {
         type: types.ADD_PAGE,
-        name
+        name,
+        newPageId
     };
+}
+
+export function addPage(name) {
+    return function (dispatch) {
+        var newPageId = v4();
+        dispatch(createPage(name, newPageId));
+        dispatch(selectPage(newPageId))
+    }
 }
 
 export function createDrilldownPage(data,parentPageId) {
@@ -35,3 +45,11 @@ export function selectPage(pageId) {
         dispatch(push('/page/'+pageId));
     }
 }
+
+export function removePage(pageId) {
+    return {
+        type: types.REMOVE_PAGE,
+        pageId: pageId
+        }
+}
+
