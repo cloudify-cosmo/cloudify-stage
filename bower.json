@@ -1,0 +1,22 @@
+{
+  "name": "cloudify-ui-new",
+  "description": "New cloudify ui project",
+  "main": "index.js",
+  "authors": [
+    "Kinneret Zin"
+  ],
+  "license": "",
+  "homepage": "https://github.com/cloudify-cosmo/cloudify-stage",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "cloudify-blueprint-topology": "http://gigaspaces-repository-eu.s3.amazonaws.com/org/cloudify3/3.4.0/ga-RELEASE/composer/blueprint-topology.zip",
+    "d3": "^4.3.0"
+  }
+}
