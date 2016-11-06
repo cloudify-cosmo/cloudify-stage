@@ -12,7 +12,7 @@ class Topology extends React.Component {
             .controller('topologyController', ['$scope','DataProcessingService', function($scope,DataProcessingService) {
 
                 $scope.topologyData = {};
-                $scope.topologyLoading = false;
+                $scope.topologyLoading = true;
 
 
                 $scope.dataUpdated = (newData) => {
@@ -20,29 +20,64 @@ class Topology extends React.Component {
                         var topologyData = {
                             data: newData.items[0],
                             scale: 0.75,
-                            offset: [0, 29]
+                            offset: [0, 0]
                         };
                         $scope.topologyData = DataProcessingService.encodeTopologyFromRest(topologyData);
-                        $scope.$apply();
+                    } else {
+                        $scope.topologyData = {};
                     }
+                    $scope.topologyLoading = false;
+                    $scope.$apply();
                 };
+
+                $scope.setLoading = () => {
+                    $scope.topologyLoading = true;
+                    $scope.$apply();
+                };
+
                 binder.$scope = $scope;
 
 
             }]);
 
         angular.bootstrap(this.refs.topologyContainer, ['topologyApp']);
+        this._setStyle();
+
+        // Set the first time data
+        this.binder.$scope.dataUpdated(this.props.data);
     }
 
     //_refreshData() {
     //    this.props.context.refresh();
     //}
 
+    _setStyle() {
+        $(this.refs.topologyContainer).find('.topologyContainer').css({
+                "position": "absolute",
+                "left": "10px",
+                "top": "10px",
+                "bottom": "10px",
+                "right": "10px"
+            });
+
+        $(this.refs.topologyContainer).find('.loading').html(this.props.utils.renderLoading());
+
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (this.props.data.blueprintId !== prevProps.data.blueprintId ||
             this.props.data.deploymentId !== prevProps.data.deploymentId
             ) {
-            this.props.context.refresh();
+                this.binder.$scope.setLoading();
+                this.props.context.refresh();
+
+            // It was set to empty
+            //if (!this.props.data.blueprintId && !this.props.data.deploymentId) {
+            //    this.binder.$scope.dataUpdated(this.props.data);
+            //} else {
+            //    this.binder.$scope.setLoading();
+            //    this.props.context.refresh();
+            //}
         } else {
             this.binder.$scope.dataUpdated(this.props.data);
         }
@@ -82,7 +117,7 @@ Stage.addPlugin({
         var deploymentId = context.getValue('deploymentId');
         var blueprintId = context.getValue('blueprintId');
 
-        if (!deploymentId && !blueprintId) {
+        if (_.isEmpty(deploymentId) && _.isEmpty(blueprintId)) {
             return Promise.resolve({});
         }
 
