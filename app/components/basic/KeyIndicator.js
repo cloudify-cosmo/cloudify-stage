@@ -20,8 +20,8 @@ export default class KeyIndicator extends Component {
 
     render() {
         return (
-            <div className="centerBox">
-                <div className="ui statistic ">
+            <div className="keyIndicator">
+                <div className="ui statistic">
                     <div className="value">
                         <i className={this.props.icon + " icon"}></i> {this.props.number}
                     </div>
