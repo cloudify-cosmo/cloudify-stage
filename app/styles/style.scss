@@ -190,6 +190,13 @@ body {
 
 }
 
+.centerBox {
+  text-align: center;
+  position: relative;
+  transform: translate(0px, -50%);
+  top: 50%;
+}
+
 
 /*
 .header {
