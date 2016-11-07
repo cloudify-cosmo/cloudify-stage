@@ -8,8 +8,8 @@ plugins/blueprints/widget.js
 plugins/deploymentNum/widget.js
 plugins/deployments/widget.js
 plugins/events/widget.js
-plugins/executionFilter/widget.js
-plugins/githubExamples/widget.js
+plugins/filter/widget.js
+plugins/githubRepositories/widget.js
 plugins/logs/widget.js
 plugins/outputs/widget.js
 plugins/plugins/widget.js

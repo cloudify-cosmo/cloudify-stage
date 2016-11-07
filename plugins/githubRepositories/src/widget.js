@@ -2,12 +2,12 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-import GithubExamplesTable from './GithubExamplesTable';
+import GithubRepositoriesTable from './GithubRepositoriesTable';
 
 Stage.addPlugin({
-    id: 'githubExamples',
+    id: 'githubRepositories',
     name: "GitHub repositories list",
-    description: 'This plugin shows a list of cloudify example repositories',
+    description: 'This plugin shows a users\'s repositories',
     initialWidth: 8,
     initialHeight: 4,
     color: "teal",
@@ -28,17 +28,9 @@ Stage.addPlugin({
 
         var formattedData = Object.assign({},data);
 
-        var exampleId = context.getValue('exampleId');
-        var selectedExample = context.getValue('exampleId');
-
-        if (exampleId) {
-            formattedData.items = _.filter(data.items,{id: exampleId});
-        }
-
         formattedData = Object.assign({},formattedData,{
             items: _.map (formattedData,(item)=>{
                 return Object.assign({},item,{
-                    isSelected: item.id === selectedExample,
                     id: item.id,
                     name: item.name,
                     description: item.description,
@@ -48,7 +40,7 @@ Stage.addPlugin({
         });
 
         return (
-            <GithubExamplesTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+            <GithubRepositoriesTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
         );
     }
 });
