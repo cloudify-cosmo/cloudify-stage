@@ -32,12 +32,8 @@ Stage.addPlugin({
 
     render: function(widget,data,error,context,pluginUtils) {
 
-        if (!data) {
+        if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();
-        }
-
-        if (error) {
-            return pluginUtils.renderReactError(error);
         }
 
         var selectedPlugin = context.getValue('pluginId');

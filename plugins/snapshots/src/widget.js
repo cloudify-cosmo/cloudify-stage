@@ -35,12 +35,8 @@ Stage.addPlugin({
 
     render: function(widget,data,error,context,snapshotUtils) {
 
-        if (!data) {
-            return snapshotUtils.renderReactLoading();
-        }
-
-        if (error) {
-            return snapshotUtils.renderReactError(error);
+        if (_.isEmpty(data)) {
+            return pluginUtils.renderReactLoading();
         }
 
         var selectedSnapshot = context.getValue('snapshotId');

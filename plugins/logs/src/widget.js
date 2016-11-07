@@ -14,12 +14,8 @@ Stage.addPlugin({
     fetchUrl: '[manager]/api/v2.1/events',
     isReact: true,
     render: function(widget,data,error,context,pluginUtils) {
-        if (!data) {
+        if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();
-        }
-
-        if (error) {
-            return pluginUtils.renderReactError(error);
         }
 
         var formattedData = Object.assign({},data,{
