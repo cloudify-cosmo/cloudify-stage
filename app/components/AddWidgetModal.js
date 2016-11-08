@@ -20,20 +20,29 @@ export default class AddWidgetModal extends Component {
         $('.addWidgetModal').modal('hide');
     }
 
+    constructor(props,context){
+        super(props, context);
+
+        this.state = {
+            filteredPlugins: props.filteredPlugins || props.plugins
+        };
+    }
+
     render() {
         return (
             <div className="ui modal addWidgetModal">
                 <div className="ui segment basic large">
                     <div className="ui icon input fluid mini">
                         <i className="search icon"></i>
-                        <input type="text" placeholder="Search widgets ..."/>
+                        <input type="text" placeholder="Search widgets ..." onChange={(e)=>this.setState({filteredPlugins: this.props.plugins.filter(function (el) {
+                                                                                                                                                       return el.name.toLowerCase().includes(e.target.value.toLowerCase() || '')})})}/>
                     </div>
 
                     <div className="ui divider"></div>
 
                     <div className="ui items divided widgetsList">
                         {
-                            this.props.plugins.map(function(widget){
+                            this.state.filteredPlugins.map(function(widget){
                                 return (
                                     <div className="item" key={widget.name}>
                                         <div className='ui image small bordered'>
