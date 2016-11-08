@@ -3,7 +3,7 @@
  */
 
 import Topology from './Topology';
-
+import DataFetcher from './DataFetcher';
 
 let getConfig = (widgetConfig,id) =>{
     var conf = widgetConfig ? _.find(widgetConfig,{id:id}) : {};
@@ -30,6 +30,13 @@ Stage.addPlugin({
         var deploymentId = context.getValue('deploymentId');
         var blueprintId = context.getValue('blueprintId');
 
+        return DataFetcher.fetch(context.getManagerUrl(),blueprintId,deploymentId);
+    },
+/*
+    fetchData: function(plugin,context,pluginUtils) {
+        var deploymentId = context.getValue('deploymentId');
+        var blueprintId = context.getValue('blueprintId');
+
         if (_.isEmpty(deploymentId) && _.isEmpty(blueprintId)) {
             return Promise.resolve({});
         }
@@ -48,12 +55,12 @@ Stage.addPlugin({
                     .fail(reject)
             });
         }
-    },
+    },*/
     render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {
             return 'Topology: missing template';
         }
-        
+
         var topologyConfig = {
             enableNodeClick: getConfig(widget.configuration,'enableNodeClick'),
             enableGroupClick: getConfig(widget.configuration,'enableGroupClick'),
