@@ -15,9 +15,10 @@ angular
 
 
         $scope.dataUpdated = (newData) => {
-            if (newData && newData.items && newData.items[0]) {
+            if (newData && newData.data) {
                 var topologyData = {
-                    data: newData.items[0],
+                    data: newData.data,
+                    instances: newData.instances,
                     scale: 0.75,
                     offset: [0, 0]
                 };
