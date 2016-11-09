@@ -78,7 +78,7 @@ export default (snapshotUtils)=> {
 
             // Call create method
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+snapshotId,
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${snapshotId}`),
             //dataType: 'json',
             "headers": {"content-type": "application/json"},
             method: 'put',

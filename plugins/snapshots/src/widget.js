@@ -25,7 +25,7 @@ Stage.addPlugin({
     fetchData: function(snapshot,context,snapshotUtils) {
         return new Promise( (resolve,reject) => {
             snapshotUtils.jQuery.get({
-                url: context.getManagerUrl() + '/api/v2.1/snapshots?_include=id,created_at,status',
+                url: context.getManagerUrl('/api/v2.1/snapshots?_include=id,created_at,status'),
                 dataType: 'json'
                 })
                 .done((snapshots)=> {resolve(snapshots);})

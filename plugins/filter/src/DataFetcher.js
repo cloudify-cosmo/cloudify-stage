@@ -3,11 +3,11 @@
  */
 
 export default class DataFetcher{
-    static fetch(managerUrl) {
+    static fetch(managerUrlFunc) {
         return Promise.all([
-            this.fetchBlueprints(managerUrl),
-            this.fetchDeployments(managerUrl),
-            this.fetchExecutions(managerUrl)
+            this.fetchBlueprints(managerUrlFunc),
+            this.fetchDeployments(managerUrlFunc),
+            this.fetchExecutions(managerUrlFunc)
         ]).then( data=>{
             return Promise.resolve({
                 blueprints: data[0],
@@ -17,29 +17,29 @@ export default class DataFetcher{
         })
     }
 
-    static fetchBlueprints(managerUrl) {
+    static fetchBlueprints(managerUrlFunc) {
         return new Promise( (resolve,reject) => {
             $.get({
-                url: managerUrl + '/api/v2.1/blueprints?_include=id',
+                url: managerUrlFunc('/api/v2.1/blueprints?_include=id'),
                 dataType: 'json'
             }).done(resolve).fail(reject);
         });
 
     }
 
-    static fetchDeployments(managerUrl) {
+    static fetchDeployments(managerUrlFunc) {
         return new Promise( (resolve,reject) => {
             $.get({
-                url: managerUrl + '/api/v2.1/deployments?_include=id,blueprint_id',
+                url: managerUrlFunc('/api/v2.1/deployments?_include=id,blueprint_id'),
                 dataType: 'json'
             }).done(resolve).fail(reject)
         });
     }
 
-    static fetchExecutions(managerUrl) {
+    static fetchExecutions(managerUrlFunc) {
         return new Promise( (resolve,reject) => {
             $.get({
-                url: managerUrl + '/api/v2.1/executions?_include=id,blueprint_id,deployment_id,workflow_id',
+                url: managerUrlFunc('/api/v2.1/executions?_include=id,blueprint_id,deployment_id,workflow_id'),
                 dataType: 'json'
             }).done(resolve).fail(reject);
         });

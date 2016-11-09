@@ -14,7 +14,7 @@ Stage.addPlugin({
     fetchData: function(output,context,pluginUtils) {
         return new Promise( (resolve,reject) => {
             pluginUtils.jQuery.get({
-                url: context.getManagerUrl() + '/api/v2.1/deployments?_include=id,outputs',
+                url: context.getManagerUrl('/api/v2.1/deployments?_include=id,outputs'),
                 dataType: 'json'
                 })
                 .done((outputs)=> {resolve(outputs);})
