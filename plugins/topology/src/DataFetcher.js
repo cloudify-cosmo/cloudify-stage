@@ -8,7 +8,6 @@ export default class DataFetcher{
             return Promise.resolve({});
         }
 
-        // TODO show current execution if one exists
         if (deploymentId) {
             var fetchDeployment = Promise.resolve({blueprint_id: blueprintId});
             if (!blueprintId) {

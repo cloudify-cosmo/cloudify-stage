@@ -2,8 +2,6 @@
 dist
 node_modules
 bower_components
-
-
 plugins/blueprints/widget.js
 plugins/deploymentNum/widget.js
 plugins/deployments/widget.js
@@ -18,3 +16,4 @@ plugins/reactTest/widget.js
 plugins/snapshots/widget.js
 plugins/executions/widget.js
 plugins/topology/widget.js
+plugins/serversNum/widget.js
