@@ -15,6 +15,7 @@ export default class Page extends Component {
         page: PropTypes.object.isRequired,
         pagesList: PropTypes.array.isRequired,
         onPageNameChange: PropTypes.func.isRequired,
+        onPageDescriptionChange: PropTypes.func.isRequired,
         onWidgetsGridDataChange: PropTypes.func.isRequired,
         onPageSelected: PropTypes.func.isRequired,
         onPageRemoved: PropTypes.func.isRequired
@@ -23,7 +24,7 @@ export default class Page extends Component {
     render() {
         return (
             <div className="">
-                <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange} isEditMode={this.props.isEditMode} onPageSelected={this.props.onPageSelected} onPageRemoved={this.props.onPageRemoved}/>
+                <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange} onPageDescriptionChange={this.props.onPageDescriptionChange} isEditMode={this.props.isEditMode} onPageSelected={this.props.onPageSelected} onPageRemoved={this.props.onPageRemoved}/>
                 {/*
                  <h3 className='ui header dividing'>
                     <InlineEdit

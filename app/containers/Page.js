@@ -8,18 +8,20 @@ import Page from '../components/Page';
 import {renamePage} from '../actions/page';
 import {selectPage} from '../actions/page';
 import {removePage} from '../actions/page';
+import {updatePageDescription} from '../actions/page';
 import {changeWidgetGridData} from '../actions/widgets';
 
 const buildPagesList = (pages,selectedPageId) => {
     var pagesMap = _.keyBy(pages,'id');
     var pagesList = [];
 
+
     var _r = (page) => {
         if (!page)
         {
             page = pagesMap["0"];
         }
-        pagesList.push({id:page.id,name:page.name});
+        pagesList.push({id:page.id, name:page.name, description:page.description});
         if (!page.parent) {
             return;
         }
@@ -59,6 +61,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onPageNameChange: (pageId,newName)=> {
             dispatch(renamePage(pageId,newName));
+        },
+        onPageDescriptionChange: (pageId,newDescription)=> {
+            dispatch(updatePageDescription(pageId,newDescription));
         },
         onPageSelected: (page) => {
             dispatch(selectPage(page.id));
