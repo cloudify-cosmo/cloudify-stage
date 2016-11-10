@@ -10,38 +10,23 @@ export default (pluginUtils)=> {
             super(props,context);
 
             this.state = {
-                uploadErr: null
+                uploadErr: null,
+                show: false
             }
         }
 
-        componentDidMount() {
-            this._initModal(this.refs.modalObj);
-        }
-        componentDidUpdate() {
-            pluginUtils.jQuery(this.refs.modalObj).modal('refresh');
-        }
-        componentWillUnmount() {
-            pluginUtils.jQuery(this.refs.modalObj).modal('destroy');
-            pluginUtils.jQuery(this.refs.modalObj).remove();
+        onApprove () {
+            $(this.refs.submitUploadBtn).click();
+            return false;
         }
 
-        _initModal(modalObj) {
-            pluginUtils.jQuery(modalObj).modal({
-                closable  : false,
-                onDeny    : function(){
-                    //window.alert('Wait not yet!');
-                    //return false;
-                },
-                onApprove : function() {
-                    pluginUtils.jQuery('.uploadFormSubmitBtn').click();
-                    return false;
-                }
-            });
-
+        onDeny () {
+            this.setState({show: false});
+            return true;
         }
 
         _showModal() {
-            pluginUtils.jQuery('.uploadBlueprintModal').modal('show');
+            this.setState({show: true});
         }
 
         _openFileSelection(e) {
@@ -55,7 +40,6 @@ export default (pluginUtils)=> {
             var filename = fullPathFileName.split('\\').pop();
 
             pluginUtils.jQuery('input.uploadBlueprintFile').val(filename).attr('title',fullPathFileName);
-
         }
 
         _submitUpload(e) {
@@ -143,19 +127,24 @@ export default (pluginUtils)=> {
             }
         }
         render() {
+            var Modal = Stage.Basic.Modal;
+            var Header = Stage.Basic.ModalHeader;
+            var Body = Stage.Basic.ModalBody;
+            var Footer = Stage.Basic.ModalFooter;
+
             return (
                 <div>
-                    <button className="ui labeled icon button uploadBlueprint" onClick={this._showModal}>
+                    <button className="ui labeled icon button uploadBlueprint" onClick={this._showModal.bind(this)}>
                         <i className="upload icon"></i>
                         Upload
                     </button>
 
-                    <div className="ui modal uploadBlueprintModal" ref='modalObj'>
-                        <div className="header">
+                    <Modal show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
+                        <Header>
                             <i className="upload icon"></i> Upload blueprint
-                        </div>
+                        </Header>
 
-                        <div className="content">
+                        <Body>
                             <form className="ui form uploadForm" onSubmit={this._submitUpload.bind(this)} action="">
                                 <div className="fields">
                                     <div className="field nine wide">
@@ -204,23 +193,22 @@ export default (pluginUtils)=> {
                                         ''
                                 }
 
-                                <input type='submit' style={{"display": "none"}} className='uploadFormSubmitBtn'/>
+                                <input type='submit' style={{"display": "none"}} ref='submitUploadBtn'/>
                             </form>
-                        </div>
+                        </Body>
 
-                        <div className="actions">
+                        <Footer>
                             <div className="ui cancel basic button">
                                 <i className="remove icon"></i>
                                 Cancel
                             </div>
-                            <div className="ui ok green  button">
+                            <div className="ui ok green button">
                                 <i className="upload icon"></i>
                                 Upload
                             </div>
-                        </div>
-                    </div>
+                        </Footer>
+                    </Modal>
                 </div>
-
             );
         }
     };
