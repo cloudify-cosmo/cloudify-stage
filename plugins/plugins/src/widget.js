@@ -19,17 +19,7 @@ Stage.addPlugin({
         UploadModal = renderUploadPluginModal(pluginUtils);
     },
 
-    fetchData: function(plugin,context,pluginUtils) {
-        return new Promise( (resolve,reject) => {
-            pluginUtils.jQuery.get({
-                url: context.getManagerUrl('/api/v2.1/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at'),
-                dataType: 'json'
-                })
-                .done((plugins)=> {resolve(plugins);})
-                .fail(reject)
-        });
-    },
-
+    fetchUrl: '[manager]/api/v2.1/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at',
     render: function(widget,data,error,context,pluginUtils) {
 
         if (_.isEmpty(data)) {

@@ -12,7 +12,7 @@ export default class {
         return new Promise((resolve,reject)=>{
             $.ajax({
                 url: this.context.getManagerUrl(`/api/v2.1/deployments/${deployment.id}`),
-                "headers": {"content-type": "application/json"},
+                "headers": Object.assign({"content-type": "application/json"},this.context.getSecurityHeaders()),
                 method: 'delete'
             })
                 .done(()=> {
@@ -32,7 +32,7 @@ export default class {
         return new Promise((resolve,reject)=>{
             $.ajax({
                 url: this.context.getManagerUrl('/api/v2.1/executions'),
-                "headers": {"content-type": "application/json"},
+                "headers": Object.assign({"content-type": "application/json"},this.context.getSecurityHeaders()),
                 method: 'post',
                 data: JSON.stringify({
                     'deployment_id': deployment.id,

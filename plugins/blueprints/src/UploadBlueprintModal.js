@@ -107,7 +107,13 @@ export default (pluginUtils)=> {
                     formObj.find('.ui.error.message.uploadFailed').show();
                 }
             });
+
             xhr.open('put',this.props.context.getManagerUrl(`/api/v2.1/blueprints/${blueprintName}` + (!_.isEmpty(blueprintFileName) ? '?application_file_name='+blueprintFileName+'.yaml' : '')));
+            var securityHeaders = this.props.context.getSecurityHeaders();
+            if (securityHeaders) {
+                xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
+            }
+
             xhr.send(file);
 
             return false;

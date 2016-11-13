@@ -68,7 +68,8 @@ export default class DataFetcher{
         return new Promise( (resolve,reject) => {
             $.get({
                 url: context.getManagerUrl(`/api/v2.1/blueprints?id=${blueprintId}`),
-                dataType: 'json'
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done(resolve).fail(reject);
         });
     }
@@ -76,7 +77,8 @@ export default class DataFetcher{
         return new Promise( (resolve,reject) => {
             $.get({
                 url: context.getManagerUrl(`/api/v2.1/nodes?deployment_id=${deploymentId}`),
-                dataType: 'json'
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done(resolve).fail(reject);
         });
     }
@@ -84,7 +86,8 @@ export default class DataFetcher{
         return new Promise( (resolve,reject) => {
             $.get({
                 url: context.getManagerUrl(`/api/v2.1/node-instances?deployment_id=${deploymentId}`),
-                dataType: 'json'
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done(resolve).fail(reject);
         });
     }
@@ -93,7 +96,8 @@ export default class DataFetcher{
         return new Promise( (resolve,reject) => {
             $.get({
                 url: context.getManagerUrl(`/api/v2.1/deployments?id=${deploymentId}&_include=id,blueprint_id`),
-                dataType: 'json'
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done((deployments)=>{
                 if (!deployments || !deployments.items || deployments.items.length !== 1) {
                     reject(new Error('Cannot find deployment'));
@@ -108,7 +112,8 @@ export default class DataFetcher{
         return new Promise( (resolve,reject) => {
             $.get({
                 url: context.getManagerUrl(`/api/v2.1/executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&status=pending&status=started&status=cancelling&status=force_cancelling`),
-                dataType: 'json'
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done((executions)=>{
                 resolve(_.first(executions.items));
             }).fail(reject)

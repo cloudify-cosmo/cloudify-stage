@@ -27,10 +27,13 @@ export default class extends React.Component {
     }
 
     _downloadPlugin(item,event) {
+        event.stopPropagation();
+
         var thi$ = this;
         $.ajax({
             url: thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${item.id}/archive`),
-            method: 'get'
+            method: 'get',
+            headers:thi$.props.context.getSecurityHeaders()
         })
             .done(()=> {
                   window.location = thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${item.id}/archive`);
@@ -49,7 +52,7 @@ export default class extends React.Component {
         var thi$ = this;
         $.ajax({
             url: thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${this.state.item.id}`),
-            "headers": {"content-type": "application/json"},
+            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
             method: 'delete'
         })
             .done(()=> {

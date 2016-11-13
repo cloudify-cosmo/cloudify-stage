@@ -80,7 +80,7 @@ export default (snapshotUtils)=> {
         $.ajax({
             url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${snapshotId}`),
             //dataType: 'json',
-            "headers": {"content-type": "application/json"},
+            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
             method: 'put',
             data: JSON.stringify({
                 'snapshot_id': snapshotId

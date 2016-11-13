@@ -21,7 +21,8 @@ export default class DataFetcher{
         return new Promise( (resolve,reject) => {
             $.get({
                 url: context.getManagerUrl('/api/v2.1/blueprints?_include=id'),
-                dataType: 'json'
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done(resolve).fail(reject);
         });
 
@@ -31,7 +32,8 @@ export default class DataFetcher{
         return new Promise( (resolve,reject) => {
             $.get({
                 url: context.getManagerUrl('/api/v2.1/deployments?_include=id,blueprint_id'),
-                dataType: 'json'
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done(resolve).fail(reject)
         });
     }
@@ -40,7 +42,8 @@ export default class DataFetcher{
         return new Promise( (resolve,reject) => {
             $.get({
                 url: context.getManagerUrl('/api/v2.1/executions?_include=id,blueprint_id,deployment_id,workflow_id'),
-                dataType: 'json'
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done(resolve).fail(reject);
         });
     }

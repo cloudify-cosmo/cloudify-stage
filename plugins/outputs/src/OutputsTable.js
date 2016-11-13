@@ -42,10 +42,17 @@ export default class extends React.Component {
                     <tbody>
                     {
                         this.props.data.items.map((item)=>{
+                            var value = '';
+                            try {
+                                value = JSON.stringify(item.value);
+                            } catch (e) {
+                                console.error('cannot parse output value',e);
+                            }
+
                             return (
                                 <tr key={item.id}>
                                     <td>{item.description}</td>
-                                    <td>{item.value}</td>
+                                    <td>{value}</td>
                                 </tr>
                             );
                         })

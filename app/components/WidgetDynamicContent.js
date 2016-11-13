@@ -38,24 +38,41 @@ export default class WidgetDynamicContent extends Component {
 
     }
 
+    _fetch(url,context) {
+        var fetchUrl = _.replace(url,/\[config:(.*)\]/i,(match,configName)=>{
+            var conf = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:configName}) : {};
+            return conf && conf.value ? conf.value : 'NA';
+        });
+
+        if (_.startsWith(fetchUrl, '[manager]')) {
+            fetchUrl = context.getManagerUrl(_.replace(fetchUrl,'[manager]', ''));
+        }
+
+        // Only add auth token if we access the manager
+        if (url.indexOf('[manager]') >= 0) {
+            var headers = {headers: context.getSecurityHeaders()};
+            return fetch(fetchUrl,headers).then(response => response.json())
+        } else {
+            return fetch(fetchUrl).then(response => response.json())
+        }
+    }
+
     _fetchData() {
         if (this.props.widget.plugin.fetchUrl) {
             var context = this._buildPluginContext();
 
-            var fetchUrl = _.replace(this.props.widget.plugin.fetchUrl,/\[config:(.*)\]/i,(match,configName)=>{
-                var conf = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:configName}) : {};
-                return conf && conf.value ? conf.value : 'NA';
-            });
-
-            if (_.startsWith(fetchUrl, '[manager]')) {
-                fetchUrl = context.getManagerUrl(_.replace(fetchUrl,'[manager]', ''));
+            var urls = this.props.widget.plugin.fetchUrl;
+            if (!Array.isArray(urls)){
+                urls = [urls];
             }
 
-            fetch(fetchUrl)
-                .then(response => response.json())
+            var fetches = _.map(urls,(url)=>this._fetch(url,context));
+
+            //this._fetch(this.props.widget.plugin.fetchUrl)
+            Promise.all(fetches)
                 .then((data)=> {
                     console.log('widget :'+this.props.widget.name + ' data fetched');
-                    this.setState({data: data});
+                    this.setState({data: data.length === 1 ? data[0] : data});
                 })
                 .catch((e)=>{
                     console.error(e);

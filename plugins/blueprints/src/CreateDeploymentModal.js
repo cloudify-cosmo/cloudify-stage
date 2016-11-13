@@ -39,7 +39,7 @@ export default class extends React.Component {
         $.ajax({
             url: thi$.props.context.getManagerUrl(`/api/v2.1/deployments/${deploymentId}`),
             //dataType: 'json',
-            "headers": {"content-type": "application/json"},
+            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
             method: 'put',
             data: JSON.stringify({
                 'blueprint_id': blueprintId,
