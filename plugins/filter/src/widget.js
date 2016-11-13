@@ -15,7 +15,7 @@ Stage.addPlugin({
     showHeader: false,
     showBorder: false,
     fetchData: function(plugin,context,pluginUtils) {
-        return DataFetcher.fetch(context.getManagerUrl);
+        return DataFetcher.fetch(context);
     },
 
     isReact: true,

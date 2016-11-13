@@ -18,6 +18,7 @@ Stage.addPlugin({
     initialHeight: 4,
     color: "yellow",
     isReact: true,
+    hasTemplate: true,
     initialConfiguration: [
         {id: 'enableNodeClick', name: 'Enable node click' ,placeHolder:"true of false", default:"true"},
         {id: 'enableGroupClick', name: 'Enable group click' ,placeHolder:"true of false", default:"true"},
@@ -30,7 +31,7 @@ Stage.addPlugin({
         var deploymentId = context.getValue('deploymentId');
         var blueprintId = context.getValue('blueprintId');
 
-        return DataFetcher.fetch(context.getManagerUrl,blueprintId,deploymentId);
+        return DataFetcher.fetch(context,blueprintId,deploymentId);
     },
 /*
     fetchData: function(plugin,context,pluginUtils) {
