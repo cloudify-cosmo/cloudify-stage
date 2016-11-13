@@ -15,7 +15,7 @@ Stage.addPlugin({
     fetchData: function(plugin,context,pluginUtils) {
         return new Promise( (resolve,reject) => {
             pluginUtils.jQuery.get({
-                url: context.getManagerUrl() + '/api/v2.1/deployments?_include=id',
+                url: context.getManagerUrl('/api/v2.1/deployments?_include=id'),
                 dataType: 'json'
             }).done((deployments)=> {
                 resolve({number: deployments.metadata.pagination.total});

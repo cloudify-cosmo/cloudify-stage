@@ -3,7 +3,7 @@
  */
 
 export default class DataFetcher{
-    static fetch(managerUrl,blueprintId,deploymentId) {
+    static fetch(managerUrlFunc,blueprintId,deploymentId) {
         if (_.isEmpty(deploymentId) && _.isEmpty(blueprintId)) {
             return Promise.resolve({});
         }
@@ -11,15 +11,15 @@ export default class DataFetcher{
         if (deploymentId) {
             var fetchDeployment = Promise.resolve({blueprint_id: blueprintId});
             if (!blueprintId) {
-                fetchDeployment = this.fetchDeployment(managerUrl,deploymentId);
+                fetchDeployment = this.fetchDeployment(managerUrlFunc,deploymentId);
             }
 
             return fetchDeployment.then((deployment)=>{
                 return Promise.all([
-                    this.fetchBlueprint(managerUrl,deployment.blueprint_id),
-                    this.fetchNodes(managerUrl,deploymentId),
-                    this.fetchNodeInstances(managerUrl,deploymentId),
-                    this.fetchRunningExecution(managerUrl,deploymentId)
+                    this.fetchBlueprint(managerUrlFunc,deployment.blueprint_id),
+                    this.fetchNodes(managerUrlFunc,deploymentId),
+                    this.fetchNodeInstances(managerUrlFunc,deploymentId),
+                    this.fetchRunningExecution(managerUrlFunc,deploymentId)
                 ]).then( data=>{
 
 
@@ -54,7 +54,7 @@ export default class DataFetcher{
             })
 
         } else if (blueprintId) {
-            return this.fetchBlueprint(managerUrl,blueprintId).then((blueprint)=>{
+            return this.fetchBlueprint(managerUrlFunc,blueprintId).then((blueprint)=>{
                 return Promise.resolve(
                     {
                         data: blueprint && blueprint.items && blueprint.items[0] ? blueprint.items[0] : {}
@@ -64,35 +64,35 @@ export default class DataFetcher{
 
     }
 
-    static fetchBlueprint(managerUrl,blueprintId) {
+    static fetchBlueprint(managerUrlFunc,blueprintId) {
         return new Promise( (resolve,reject) => {
             $.get({
-                url: managerUrl + '/api/v2.1/blueprints?id='+blueprintId,
+                url: managerUrlFunc(`/api/v2.1/blueprints?id=${blueprintId}`),
                 dataType: 'json'
             }).done(resolve).fail(reject);
         });
     }
-    static fetchNodes(managerUrl,deploymentId) {
+    static fetchNodes(managerUrlFunc,deploymentId) {
         return new Promise( (resolve,reject) => {
             $.get({
-                url: managerUrl + '/api/v2.1/nodes?deployment_id='+deploymentId,
+                url: managerUrlFunc(`/api/v2.1/nodes?deployment_id=${deploymentId}`),
                 dataType: 'json'
             }).done(resolve).fail(reject);
         });
     }
-    static fetchNodeInstances(managerUrl,deploymentId) {
+    static fetchNodeInstances(managerUrlFunc,deploymentId) {
         return new Promise( (resolve,reject) => {
             $.get({
-                url: managerUrl + '/api/v2.1/node-instances?deployment_id='+deploymentId,
+                url: managerUrlFunc(`/api/v2.1/node-instances?deployment_id=${deploymentId}`),
                 dataType: 'json'
             }).done(resolve).fail(reject);
         });
     }
 
-    static fetchDeployment(managerUrl,deploymentId) {
+    static fetchDeployment(managerUrlFunc,deploymentId) {
         return new Promise( (resolve,reject) => {
             $.get({
-                url: managerUrl + '/api/v2.1/deployments?id='+deploymentId+'&_include=id,blueprint_id',
+                url: managerUrlFunc(`/api/v2.1/deployments?id=${deploymentId}&_include=id,blueprint_id`),
                 dataType: 'json'
             }).done((deployments)=>{
                 if (!deployments || !deployments.items || deployments.items.length !== 1) {
@@ -104,11 +104,10 @@ export default class DataFetcher{
         });
     }
 
-    static fetchRunningExecution(managerUrl,deploymentId) {
+    static fetchRunningExecution(managerUrlFunc,deploymentId) {
         return new Promise( (resolve,reject) => {
             $.get({
-                url: managerUrl + '/api/v2.1/executions?_include=id,workflow_id,status&deployment_id='+deploymentId+
-                                '&status=pending&status=started&status=cancelling&status=force_cancelling',
+                url: managerUrlFunc(`/api/v2.1/executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&status=pending&status=started&status=cancelling&status=force_cancelling`),
                 dataType: 'json'
             }).done((executions)=>{
                 resolve(_.first(executions.items));

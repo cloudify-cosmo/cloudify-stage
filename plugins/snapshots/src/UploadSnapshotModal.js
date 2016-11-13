@@ -114,8 +114,7 @@ export default (snapshotUtils)=> {
                     formObj.find('.ui.error.message.uploadFailed').show();
                 }
             });
-            xhr.open('put',this.props.context.getManagerUrl() +
-                '/api/v2.1/snapshots/' + snapshotId + "/archive");
+            xhr.open('put',this.props.context.getManagerUrl(`/api/v2.1/snapshots/${snapshotId}/archive`));
             xhr.send(file);
 
             return false;

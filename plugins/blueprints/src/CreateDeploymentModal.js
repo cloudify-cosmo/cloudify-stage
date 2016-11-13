@@ -37,7 +37,7 @@ export default class extends React.Component {
 
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/deployments/'+deploymentId,
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/deployments/${deploymentId}`),
             //dataType: 'json',
             "headers": {"content-type": "application/json"},
             method: 'put',

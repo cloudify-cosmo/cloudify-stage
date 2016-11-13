@@ -23,13 +23,13 @@ Stage.addPlugin({
     fetchData: function(plugin,context,pluginUtils) {
         return new Promise( (resolve,reject) => {
             pluginUtils.jQuery.get({
-                url: context.getManagerUrl() + '/api/v2.1/blueprints?_include=id,updated_at,created_at,description,plan',
+                url: context.getManagerUrl('/api/v2.1/blueprints?_include=id,updated_at,created_at,description'),
                 dataType: 'json'
                 })
                 .done((blueprints)=> {
 
                     pluginUtils.jQuery.get({
-                        url: context.getManagerUrl() + '/api/v2.1/deployments?_include=id,blueprint_id',
+                        url: context.getManagerUrl('/api/v2.1/deployments?_include=id,blueprint_id'),
                         dataType: 'json'
                         })
                         .done((deployments)=>{

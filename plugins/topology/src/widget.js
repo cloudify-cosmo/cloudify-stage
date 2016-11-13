@@ -30,7 +30,7 @@ Stage.addPlugin({
         var deploymentId = context.getValue('deploymentId');
         var blueprintId = context.getValue('blueprintId');
 
-        return DataFetcher.fetch(context.getManagerUrl(),blueprintId,deploymentId);
+        return DataFetcher.fetch(context.getManagerUrl,blueprintId,deploymentId);
     },
 /*
     fetchData: function(plugin,context,pluginUtils) {

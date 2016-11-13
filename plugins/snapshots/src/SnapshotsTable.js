@@ -30,7 +30,7 @@ export default class extends React.Component {
         var thi$ = this;
         var data = {force: false, recreate_deployments_envs: false};
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+item.id+'/restore',
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/restore`),
             "headers": {"content-type": "application/json"},
             data: JSON.stringify(data),
             dataType: "json",
@@ -47,11 +47,11 @@ export default class extends React.Component {
     _downloadSnapshot(item,event) {
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+item.id+'/archive',
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/archive`),
             method: 'get'
         })
             .done(()=> {
-                  window.location = thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+item.id+'/archive';
+                  window.location = thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/archive`);
               })
             .fail((jqXHR, textStatus, errorThrown)=>{
                 thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
@@ -66,7 +66,7 @@ export default class extends React.Component {
 
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+this.state.item.id,
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${this.state.item.id}`),
             "headers": {"content-type": "application/json"},
             method: 'delete'
         })
