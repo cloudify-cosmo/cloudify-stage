@@ -11,6 +11,7 @@ addPlugin({
     initialHeight: 2,
     color: "violet",
     showHeader: false,
+    hasTemplate: true,
     init: function(pluginUtils) {
         var angular = pluginUtils.angular;
 
