@@ -29,11 +29,11 @@ export default class extends React.Component {
     _downloadPlugin(item,event) {
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/plugins/'+item.id+'/archive',
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${item.id}/archive`),
             method: 'get'
         })
             .done(()=> {
-                  window.location = thi$.props.context.getManagerUrl() + '/api/v2.1/plugins/'+item.id+'/archive';
+                  window.location = thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${item.id}/archive`);
               })
             .fail((jqXHR, textStatus, errorThrown)=>{
                 thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
@@ -48,7 +48,7 @@ export default class extends React.Component {
 
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/plugins/'+this.state.item.id,
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${this.state.item.id}`),
             "headers": {"content-type": "application/json"},
             method: 'delete'
         })

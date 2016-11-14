@@ -4,6 +4,16 @@
 
 import 'babel-polyfill';
 
+//import $ from 'jquery'
+window.$ = $;
+import 'jquery-ui/ui/core.js';
+import 'jquery-ui/ui/widget.js';
+import 'jquery-ui/ui/widgets/mouse.js';
+import 'jquery-ui/ui/widgets/draggable.js';
+import 'jquery-ui/ui/widgets/droppable.js';
+
+import _ from 'lodash';
+
 //import '../styles/bootstrap.min.css';
 import './styles/style.scss';
 
@@ -16,9 +26,9 @@ import '../node_modules/gridstack/dist/gridstack.css';
 import '../node_modules/gridstack/dist/gridstack.js';
 
 // Import datatables
-import '../node_modules/datatables.net/js/jquery.dataTables.js';
-import '../datatables/dataTables.semanticui.min.js';
-import '../datatables/dataTables.semanticui.min.css';
+//import '../node_modules/datatables.net/js/jquery.dataTables.js';
+//import '../datatables/dataTables.semanticui.min.js';
+//import '../datatables/dataTables.semanticui.min.css';
 //import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
 
 import React from 'react';
@@ -32,6 +42,11 @@ import createRoutes from './routes';
 import {fetchPlugins} from './actions/plugins';
 import {fetchTemplates} from './actions/templates';
 import PluginLoader from './utils/pluginsLoader';
+
+
+//window._ = _;
+//window.$ = $;
+window.React = React;
 
 const store = configureStore(browserHistory);
 

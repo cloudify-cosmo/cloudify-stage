@@ -11,7 +11,7 @@ export default class {
     delete(deployment) {
         return new Promise((resolve,reject)=>{
             $.ajax({
-                url: this.context.getManagerUrl() + '/api/v2.1/deployments/'+deployment.id,
+                url: this.context.getManagerUrl(`/api/v2.1/deployments/${deployment.id}`),
                 "headers": {"content-type": "application/json"},
                 method: 'delete'
             })
@@ -31,7 +31,7 @@ export default class {
     execute(deployment,workflow,params) {
         return new Promise((resolve,reject)=>{
             $.ajax({
-                url: this.context.getManagerUrl() + '/api/v2.1/executions',
+                url: this.context.getManagerUrl('/api/v2.1/executions'),
                 "headers": {"content-type": "application/json"},
                 method: 'post',
                 data: JSON.stringify({

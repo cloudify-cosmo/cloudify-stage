@@ -15,8 +15,11 @@ module.exports = {
     context: path.join(__dirname),
     devtool: 'source-map',
     resolve: {
+        modulesDirectories: ["web_modules", "node_modules", "bower_components"],
+        fallback: __dirname + "/node_modules",
         alias: {
-            'jquery-ui': 'jquery-ui/ui'
+            'jquery-ui': 'jquery-ui/ui',
+            'jquery': __dirname + "/node_modules/jquery" // Always make sure we take jquery from the same place
         }
     },
     entry: {
@@ -58,11 +61,13 @@ module.exports = {
             'process.env.NODE_ENV': JSON.stringify('development')
         })
         ,
+        new webpack.ResolverPlugin(
+            new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(".bower.json", ["main"])
+        ),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
-            _: "lodash",
-            React: 'React'
+            d3: 'd3'
         })
     ],
     //eslint: {
@@ -70,11 +75,12 @@ module.exports = {
     //    failOnWarning: false,
     //    failOnError: false
     //},
+    resolveLoader: { fallback: __dirname + "/node_modules" },
     module: {
         loaders: [
             {
                 test: /\.js?$/,
-                exclude: /node_modules/,
+                exclude: [/bower_components/, /node_modules/,/cloudify-blueprint-topology/],
                 loaders: ['react-hot','babel']
             },
             {
@@ -86,7 +92,11 @@ module.exports = {
                 loader: 'style!css!sass?modules&localIdentName=[name]---[local]---[hash:base64:5]'
             },
             { test: /\.css$/, loader: "style-loader!css-loader?importLoaders=1" },
-            { test: /\.(png|woff|woff2|eot|ttf|svg|jpg)$/, loader: 'url-loader?limit=100000' }
+            //{ test: /\.(png|woff|woff2|eot|ttf|svg|jpg)$/, loader: 'url-loader?limit=100000' },
+            //{ test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/, loader: 'url-loader?limit=100000' }
+            { test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/
+                , loader: 'url-loader?limit=100000&name=[name].[ext]'
+            }
         ]
     }
 };

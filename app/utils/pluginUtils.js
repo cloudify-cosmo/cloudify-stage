@@ -3,8 +3,8 @@
  */
 
 import momentImport from 'moment';
-import anglarImport from 'angular';
 import React from 'react';
+
 var ReactDOMServer = require('react-dom/server');
 
 let Loading = ({}) => {
@@ -54,6 +54,5 @@ export default class PluginUtils {
 
     static moment = momentImport;
     static jQuery = $;
-    static angular = anglarImport;
     static React = React;
 }

@@ -2,7 +2,7 @@
  * Created by kinneretzin on 27/10/2016.
  */
 
-export default class ExecutionFilter extends React.Component {
+export default class Filter extends React.Component {
     constructor(props, context) {
         super(props, context);
 

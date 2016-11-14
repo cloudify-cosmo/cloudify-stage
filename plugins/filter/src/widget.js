@@ -3,19 +3,19 @@
  */
 
 import DataFetcher from './DataFetcher';
-import ExecutionFilter from './ExecutionFilter';
+import Filter from './Filter';
 
 Stage.addPlugin({
-    id: 'executionFilter',
-    name: "Execution Filters",
-    description: 'Adds a filter section for executions list',
+    id: 'filter',
+    name: "Filter by blueprint/deployment/execution",
+    description: 'Adds a filter section for blueprints, deployments and execution list',
     initialWidth: 12,
     initialHeight: 1,
     color: "yellow",
     showHeader: false,
     showBorder: false,
     fetchData: function(plugin,context,pluginUtils) {
-        return DataFetcher.fetch(context.getManagerUrl());
+        return DataFetcher.fetch(context);
     },
 
     isReact: true,
@@ -30,7 +30,7 @@ Stage.addPlugin({
         }
 
         return (
-            <ExecutionFilter widget={widget} data={data} context={context} utils={pluginUtils}/>
+            <Filter widget={widget} data={data} context={context} utils={pluginUtils}/>
         );
 
     }

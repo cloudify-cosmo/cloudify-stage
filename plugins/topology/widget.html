@@ -1,1 +1,19 @@
-<img class="ui fluid image" src="<%=topologyPic%>"/>
+<div class='topologyContainer' ng-controller="topologyController">
+    <topology-directive
+            topology="topologyData"
+            loading="topologyLoading"
+            auto-layout="true"
+            enable-drop="true"
+            enable-drag-edit="false"
+            enable-context-menu="false"
+            enable-drag-to-select="false"
+            auto-scale="true"
+
+            enable-node-click="<%=enableNodeClick%>"
+            enable-group-click="<%=enableGroupClick%>"
+            enable-zoom="<%=enableZoom%>"
+            enable-drag="<%=enableDrag%>"
+            show-toolbar="<%=showToolbar%>"
+            />
+</div>
+

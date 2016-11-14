@@ -53,6 +53,7 @@ body {
     right: 0;
   }
 
+
   .ui.breadcrumb .section:not(.active) {
     cursor: pointer;
   }
@@ -63,25 +64,30 @@ body {
   overflow-y: initial;
 }
 
-.pageMenuItem{
-  .pageRemoveButton {
+.pageMenuItem {
+}
+
+.pageRemoveButton {
     position: absolute;
     top: 0px;
     right : 0px;
-    display: none;
-  }
-
-  &:hover {
-    .pageRemoveButton{
-      display: block;
-    }
-
-    .ui.basic.segment.borderOnHover {
-      border: 1px solid rgba(34, 36, 38, 0.15);
-    }
-  }
-
+    display:none;
+    visibility: hidden;
 }
+
+.pageMenuItem:hover .pageRemoveButton{display:block; visibility: visible;}
+
+.pageDescription {
+  clear: both;
+  float:left;
+}
+
+.pageTitle {
+  clear: both;
+  float:left;
+  line-height: 1.5;
+}
+
 
 .widget {
 
@@ -380,3 +386,14 @@ body {
   transform: rotateX(180deg);
 }
 /* END: Accommodating for IE */
+
+.managersMenu .menu {
+  minWidth: 190px;
+  left: auto !important;
+  right: 0;
+}
+
+.managersMenu .configure.icon {
+  margin: 0 0 0 0.5em !important;
+  opacity: 0.5 !important;
+}

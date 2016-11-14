@@ -14,6 +14,7 @@ const page = (state = {}, action) => {
             return {
                 id: action.newPageId,
                 name: action.name,
+                description: 'Please add description...',
                 widgets: []
             };
         case types.REMOVE_PAGE:
@@ -80,6 +81,15 @@ const pages = (state = [], action) => {
                 if (page.id === action.pageId) {
                     return Object.assign({}, page, {
                         name: action.name
+                    })
+                }
+                return page
+            });
+        case types.UPDATE_PAGE_DESCRIPTION:
+            return state.map( (page) => {
+                if (page.id === action.pageId) {
+                    return Object.assign({}, page, {
+                        description: action.description
                     })
                 }
                 return page

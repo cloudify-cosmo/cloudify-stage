@@ -37,9 +37,16 @@ export function renamePage(pageId,newName) {
         pageId,
         name: newName
     }
-
 }
 
+export function updatePageDescription(pageId,newDescription) {
+    return {
+        type: types.UPDATE_PAGE_DESCRIPTION,
+        pageId,
+        description: newDescription
+    }
+
+}
 export function selectPage(pageId) {
     return function (dispatch) {
         dispatch(push('/page/'+pageId));

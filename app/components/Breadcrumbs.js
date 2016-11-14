@@ -9,6 +9,7 @@ export default class Breadcrumbs extends Component {
     static propTypes = {
         pagesList: PropTypes.array.isRequired,
         onPageNameChange: PropTypes.func.isRequired,
+        onPageDescriptionChange: PropTypes.func.isRequired,
         onPageSelected: PropTypes.func.isRequired
     };
 
@@ -21,7 +22,7 @@ export default class Breadcrumbs extends Component {
             } else {
                 if (this.props.isEditMode) {
                     elements.push(
-                        <span key={p.id} className='section active'>
+                        <span key={p.id + "_name"} className='section active pageTitle'>
                             <InlineEdit
                                 text={p.name}
                                 change={data=>this.props.onPageNameChange(p.id,data.name)}
@@ -29,21 +30,33 @@ export default class Breadcrumbs extends Component {
                                 />
                         </span>
                         );
+                     elements.push(
+                        <span key={p.id + "_description"} className='pageDescription'>
+                            <InlineEdit
+                                text={p.description}
+                                change={data=>this.props.onPageDescriptionChange(p.id,data.description)}
+                                paramName="description"
+                                />
+                        </span>
+                     );
                 }
                 else
                 {
                     elements.push(
-                        <span key={p.id} className='section active'>
-                            <label> {p.name} </label>
+                        <span key={p.id + "_name"} className='section active pageTitle'>
+                            {p.name}
                         </span>
                         );
+                     elements.push(
+                        <span key={p.id + "_description"} className="pageDescription"> {p.description}  </span>
+                     );
                 }
                 //elements.push(<span key={p.id} className='section active'>{p.name}</span>);
             }
 
         });
         return (
-            <div className='ui breadcrumb'>
+            <div className='ui breadcrumb breadcrumbLineHeight'>
                 {elements}
             </div>
         );

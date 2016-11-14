@@ -6,9 +6,21 @@ import fetch from 'isomorphic-fetch'
 import ScriptLoader from './scriptLoader';
 import PluginUtils from './pluginUtils';
 
-import React from 'react';
-import $ from 'jquery';
-import _ from 'lodash';
+//import React from 'react';
+//import $ from 'jquery';
+//import _ from 'lodash';
+
+// Import topology project
+//import 'jquery-ui/ui/core.js';
+//import 'jquery-ui/ui/widget.js';
+//import 'jquery-ui/ui/widgets/mouse.js';
+//import 'jquery-ui/ui/widgets/draggable.js';
+//import 'jquery-ui/ui/widgets/droppable.js';
+//
+import 'angular';
+
+import '../../bower_components/cloudify-blueprint-topology/dist/styles/blueprint-topology.css';
+import '../../bower_components/cloudify-blueprint-topology/dist/scripts/blueprint-topology-tpls.js';
 
 import * as BasicComponents from '../components/basic';
 
@@ -62,9 +74,9 @@ export default class PluginsLoader {
             Basic: BasicComponents
         };
 
-        window.React = React;
-        window.$ = $;
-        window._ = _;
+        //window.React = React;
+        //window.$ = $;
+        //window._ = _;
 
     }
     static load() {
@@ -81,13 +93,15 @@ export default class PluginsLoader {
             .then(()=> {
                 var promises = [];
                 plugins.forEach((plugin)=> {
-                    promises.push(
-                        fetchPluginTemplate('/plugins/' + plugin.id + '/widget.html')
-                            .then( (pluginHtml)=>{
-                                if (pluginHtml) {
-                                    plugin.template = pluginHtml;
-                                }
-                            }));
+                    if (plugin.hasTemplate) {
+                        promises.push(
+                            fetchPluginTemplate('/plugins/' + plugin.id + '/widget.html')
+                                .then((pluginHtml)=> {
+                                    if (pluginHtml) {
+                                        plugin.template = pluginHtml;
+                                    }
+                                }));
+                    }
                 });
                 return Promise.all(promises);
             })

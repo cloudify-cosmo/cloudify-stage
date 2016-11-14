@@ -40,7 +40,7 @@ export default class extends React.Component {
 
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/blueprints/'+this.state.item.id,
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/blueprints/${this.state.item.id}`),
             "headers": {"content-type": "application/json"},
             method: 'delete'
         })
