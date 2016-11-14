@@ -11,7 +11,8 @@ export default (pluginUtils)=> {
 
             this.state = {
                 uploadErr: null,
-                show: false
+                show: false,
+                loading: false
             }
         }
 
@@ -77,9 +78,8 @@ export default (pluginUtils)=> {
                 return false;
             }
 
-            // Disalbe the form
-            formObj.parents('.modal').find('.actions .button').attr('disabled','disabled').addClass('disabled loading');
-            formObj.addClass('loading');
+            // Disable the form
+            this.setState({loading: true});
 
             // Call upload method
             var xhr = new XMLHttpRequest();
@@ -91,17 +91,14 @@ export default (pluginUtils)=> {
             xhr.addEventListener("error", function(e){
                 console.log('xhr upload error', e, this.responseText);
                 thi$._processUploadErrIfNeeded(this);
-                formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
-                formObj.removeClass('loading');
-
+                thi$.setState({loading: false});
             });
             xhr.addEventListener('load', function(e) {
                 console.log('xhr upload complete', e, this.responseText);
-                formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
-                formObj.removeClass('loading');
+                thi$.setState({loading: false});
 
                 if (!thi$._processUploadErrIfNeeded(this)) {
-                    formObj.parents('.modal').modal('hide');
+                    thi$.setState({show: false});
                     thi$.props.context.refresh();
                 } else {
                     formObj.find('.ui.error.message.uploadFailed').show();
@@ -130,6 +127,7 @@ export default (pluginUtils)=> {
             var Header = Stage.Basic.ModalHeader;
             var Body = Stage.Basic.ModalBody;
             var Footer = Stage.Basic.ModalFooter;
+            var ErrorMessage = Stage.Basic.ErrorMessage;
 
             return (
                 <div>
@@ -138,7 +136,7 @@ export default (pluginUtils)=> {
                         Upload
                     </button>
 
-                    <Modal show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
+                    <Modal show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                         <Header>
                             <i className="upload icon"></i> Upload blueprint
                         </Header>
@@ -178,19 +176,9 @@ export default (pluginUtils)=> {
                                     <input type="text" name='blueprintFileName' id='blueprintFileName' placeholder="Blueprint filename e.g. blueprint"/>
                                 </div>
 
-                                <div className="ui error message" style={{"display":"none"}}>
-                                    <div className="header">Missing data</div>
-                                    <p>Please fill in all the required fields</p>
-                                </div>
-                                {
-                                    this.state.uploadErr ?
-                                        <div className="ui error message uploadFailed" style={{"display":"block"}}>
-                                            <div className="header">Error uploading file</div>
-                                            <p>{this.state.uploadErr}</p>
-                                        </div>
-                                        :
-                                        ''
-                                }
+                                <ErrorMessage error="Please fill in all the required fields" header="Missing data" show={false}/>
+
+                                <ErrorMessage error={this.state.uploadErr} header="Error uploading file"/>
 
                                 <input type='submit' style={{"display": "none"}} ref='submitUploadBtn'/>
                             </form>

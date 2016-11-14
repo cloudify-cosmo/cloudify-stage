@@ -115,6 +115,8 @@ export default (snapshotUtils)=> {
             }
         }
         render() {
+            var ErrorMessage = Stage.Basic.ErrorMessage;
+
             return (
                 <div>
                     <button className="ui labeled icon button createSnapshot" onClick={this._showModal}>
@@ -131,15 +133,8 @@ export default (snapshotUtils)=> {
                                 <div className="field">
                                     <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
                                 </div>
-                                {
-                                    this.state.createErr ?
-                                        <div className="ui error message createFailed" style={{"display":"block"}}>
-                                            <div className="header">Error createing file</div>
-                                            <p>{this.state.createErr}</p>
-                                        </div>
-                                        :
-                                        ''
-                                }
+
+                                <ErrorMessage error={this.state.createErr} header="Error creating file" className="createFailed"/>
 
                                 <input type='submit' style={{"display": "none"}} className='createFormSubmitBtn'/>
                             </form>
