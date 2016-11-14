@@ -3,7 +3,7 @@ import OutputsTable from './OutputsTable';
 Stage.addPlugin({
     id: "outputs",
     name: "Deployment Outputs",
-    description: 'blah blah blah',
+    description: 'This plugin shows the deployment outputs',
     initialWidth: 8,
     initialHeight: 5,
     color : "blue",
@@ -11,55 +11,39 @@ Stage.addPlugin({
     init: function(pluginUtils) {
     },
 
-    fetchData: function(output,context,pluginUtils) {
+    fetchData: function(plugin,context,pluginUtils) {
+        let deploymentId = context.getValue('deploymentId');
+
         return new Promise( (resolve,reject) => {
-            pluginUtils.jQuery.get({
-                url: context.getManagerUrl('/api/v2.1/deployments?_include=id,outputs'),
-                dataType: 'json'
-                })
-                .done((outputs)=> {resolve(outputs);})
-                .fail(reject)
+            if (deploymentId) {
+                pluginUtils.jQuery.get({
+                    url: context.getManagerUrl(`/api/v2.1/deployments?_include=id,outputs&id=${deploymentId}`),
+                    dataType: 'json'
+                }).done((data)=> {
+                    //for selected deployemntId there should be only one item including all outputs
+                    resolve({outputs: _.get(data, "items[0].outputs", {})});
+                }).fail(reject)
+            } else {
+                resolve({outputs:{}});
+            }
         });
     },
 
     render: function(widget,data,error,context,pluginUtils) {
-
-        if (!data) {
+        if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();
         }
 
-        if (error) {
-            return pluginUtils.renderReactError(error);
-        }
-
-        var deploymentId = context.getValue('deploymentId');
-        var filteredItems = {items:[]};
-        var formattedData = {items:[]};
-        if (deploymentId) {
-            filteredItems.items = _.filter(data.items,{id:deploymentId});
-            formattedData = Object.assign({},data,{
-                items: _.map (filteredItems.items,(item)=>{
-                    var description = "";
-                    var value = "";
-                    if (item.outputs.endpoint)
-                    {
-                        description = item.outputs.endpoint.description;
-                        value = JSON.stringify(item.outputs.endpoint.value);
-                    }
-                    return Object.assign({},item,{
-                        id: item.id,
-                        description: description,
-                        value: value
-                    })
-                })
-            });
-
-        }
+        let formattedData = Object.assign({},data,{
+            items: Object.keys(data.outputs).map(function(key) {
+                let val = data.outputs[key];
+                return {id: key, description: val.description, value: val.value};
+            }),
+            deploymentId : context.getValue('deploymentId')
+        });
 
         return (
-            <div>
-                <OutputsTable widget={widget} data={formattedData} context={context} utils={pluginUtils} deploymentId={deploymentId}/>
-            </div>
+            <OutputsTable data={formattedData} context={context}/>
         );
     }
 });

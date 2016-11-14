@@ -75,7 +75,6 @@ export default class WidgetDynamicContent extends Component {
                     this.setState({error: 'Error fetching widget data'});
                 });
         }
-
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -122,6 +121,10 @@ export default class WidgetDynamicContent extends Component {
         var widget = 'Loading...';
         if (this.props.widget.plugin && this.props.widget.plugin.render) {
             try {
+                if (this.state.error) {
+                    return PluginUtils.renderReactError(this.state.error);
+                }
+
                 widget = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._buildPluginContext(),PluginUtils);
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);

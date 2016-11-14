@@ -29,10 +29,6 @@ Stage.addPlugin({
             return pluginUtils.renderReactLoading();
         }
 
-        if (error) {
-            return pluginUtils.renderReactError(error);
-        }
-
         return (
             <Filter widget={widget} data={data} context={context} utils={pluginUtils}/>
         );

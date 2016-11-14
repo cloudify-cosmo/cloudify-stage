@@ -17,21 +17,13 @@ Stage.addPlugin({
             pluginUtils.jQuery.get({
                 url: context.getManagerUrl('/api/v2.1/node-instances?_include=id'),
                 dataType: 'json'
-            }).done((nodes)=> {
-                resolve({number: nodes.metadata.pagination.total});
+            }).done((data)=> {
+                resolve({number: _.get(data, "metadata.pagination.total", 0)});
             }).fail(reject)
         });
     },
 
     render: function(widget,data,error,context,pluginUtils) {
-        if (!data) {
-            return pluginUtils.renderReactLoading();
-        }
-
-        if (error) {
-            return pluginUtils.renderReactError(error);
-        }
-
         let KeyIndicator = Stage.Basic.KeyIndicator;
 
         return (
