@@ -15,7 +15,7 @@ Stage.addPlugin({
     showHeader: false,
     showBorder: false,
     fetchData: function(plugin,context,pluginUtils) {
-        return DataFetcher.fetch(context.getManagerUrl());
+        return DataFetcher.fetch(context);
     },
 
     isReact: true,
@@ -27,10 +27,6 @@ Stage.addPlugin({
     render: function(widget,data,error,context,pluginUtils) {
         if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();
-        }
-
-        if (error) {
-            return pluginUtils.renderReactError(error);
         }
 
         return (

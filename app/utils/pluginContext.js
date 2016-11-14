@@ -3,6 +3,7 @@
  */
 
 import config from '../config.json';
+import CommonUtils from '../utils/CommonUtils';
 
 export default class Context {
     constructor(setContextValue,contextData,onDrilldownToPage,onRefresh,templates,manager,eventBus) {
@@ -26,8 +27,8 @@ export default class Context {
         this._onDrilldowToPage(widget,this._templates[defaultTemplate]);
     }
 
-    getManagerUrl() {
-        return `http://${config.proxyIp}:8000/?su=http://${this._manager.ip}`;
+    getManagerUrl(queryString) {
+        return CommonUtils.createManagerUrl(config.proxyIp, this._manager.ip, queryString);
     }
 
     refresh() {

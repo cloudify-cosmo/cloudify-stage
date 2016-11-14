@@ -22,7 +22,7 @@ Stage.addPlugin({
     fetchData: function(plugin,context,pluginUtils) {
         return new Promise( (resolve,reject) => {
             pluginUtils.jQuery.get({
-                url: context.getManagerUrl() + '/api/v2.1/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at',
+                url: context.getManagerUrl('/api/v2.1/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at'),
                 dataType: 'json'
                 })
                 .done((plugins)=> {resolve(plugins);})
@@ -32,12 +32,8 @@ Stage.addPlugin({
 
     render: function(widget,data,error,context,pluginUtils) {
 
-        if (!data) {
+        if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();
-        }
-
-        if (error) {
-            return pluginUtils.renderReactError(error);
         }
 
         var selectedPlugin = context.getValue('pluginId');

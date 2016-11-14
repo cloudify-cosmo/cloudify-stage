@@ -113,8 +113,7 @@ export default (pluginUtils)=> {
                     formObj.find('.ui.error.message.uploadFailed').show();
                 }
             });
-            xhr.open('post',this.props.context.getManagerUrl() +
-                '/api/v2.1/plugins');
+            xhr.open('post',this.props.context.getManagerUrl('/api/v2.1/plugins'));
             xhr.send(file);
 
             return false;

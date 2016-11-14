@@ -29,11 +29,11 @@ export default class extends React.Component {
     _downloadPlugin(item,event) {
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/plugins/'+item.id+'/archive',
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${item.id}/archive`),
             method: 'get'
         })
             .done(()=> {
-                  window.location = thi$.props.context.getManagerUrl() + '/api/v2.1/plugins/'+item.id+'/archive';
+                  window.location = thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${item.id}/archive`);
               })
             .fail((jqXHR, textStatus, errorThrown)=>{
                 thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
@@ -48,7 +48,7 @@ export default class extends React.Component {
 
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/plugins/'+this.state.item.id,
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${this.state.item.id}`),
             "headers": {"content-type": "application/json"},
             method: 'delete'
         })
@@ -76,18 +76,11 @@ export default class extends React.Component {
 
     render() {
         var Confirm = Stage.Basic.Confirm;
+        var ErrorMessage = Stage.Basic.ErrorMessage;
 
         return (
             <div>
-                {
-                    this.state.error ?
-                        <div className="ui error message" style={{"display":"block"}}>
-                            <div className="header">Error Occured</div>
-                            <p>{this.state.error}</p>
-                        </div>
-                        :
-                        ''
-                }
+                <ErrorMessage error={this.state.error}/>
 
                 <table className="ui very compact table pluginsTable">
                     <thead>

@@ -1,3 +1,7 @@
+/**
+ * Created by pawelposel on 07/11/2016.
+ */
+
 export default class extends React.Component {
 
     constructor(props, context) {
@@ -10,11 +14,11 @@ export default class extends React.Component {
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('outputs:refresh',this._refreshData,this);
+        this.props.context.getEventBus().on('inputs:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('outputs:refresh',this._refreshData);
+        this.props.context.getEventBus().off('inputs:refresh', this._refreshData);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -30,21 +34,21 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <div>Outputs for deployment with id: {this.props.data.deploymentId || "NA"}</div>
+                <div>Inputs for deployment with id: {this.props.data.deploymentId || "NA"}</div>
 
                 <table className="ui very compact table outputsTable">
                     <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Value</th>
-                    </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
                     </thead>
                     <tbody>
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <tr key={item.id}>
-                                    <td>{item.description}</td>
+                                <tr key={item.name}>
+                                    <td>{item.name}</td>
                                     <td>{item.value}</td>
                                 </tr>
                             );

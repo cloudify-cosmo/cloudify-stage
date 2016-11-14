@@ -42,11 +42,14 @@ export default class WidgetDynamicContent extends Component {
         if (this.props.widget.plugin.fetchUrl) {
             var context = this._buildPluginContext();
 
-            var fetchUrl = _.replace(this.props.widget.plugin.fetchUrl,'[manager]', context.getManagerUrl());
-            fetchUrl = _.replace(fetchUrl,/\[config:(.*)\]/i,(match,configName)=>{
+            var fetchUrl = _.replace(this.props.widget.plugin.fetchUrl,/\[config:(.*)\]/i,(match,configName)=>{
                 var conf = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:configName}) : {};
                 return conf && conf.value ? conf.value : 'NA';
             });
+
+            if (_.startsWith(fetchUrl, '[manager]')) {
+                fetchUrl = context.getManagerUrl(_.replace(fetchUrl,'[manager]', ''));
+            }
 
             fetch(fetchUrl)
                 .then(response => response.json())
@@ -72,7 +75,6 @@ export default class WidgetDynamicContent extends Component {
                     this.setState({error: 'Error fetching widget data'});
                 });
         }
-
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -119,6 +121,10 @@ export default class WidgetDynamicContent extends Component {
         var widget = 'Loading...';
         if (this.props.widget.plugin && this.props.widget.plugin.render) {
             try {
+                if (this.state.error) {
+                    return PluginUtils.renderReactError(this.state.error);
+                }
+
                 widget = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._buildPluginContext(),PluginUtils);
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);

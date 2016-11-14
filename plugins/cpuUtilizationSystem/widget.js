@@ -10,6 +10,7 @@ addPlugin({
     initialWidth: 8,
     initialHeight: 4,
     color : "blue",
+    hasTemplate: true,
     render: function(widget,data,error,context,pluginUtils) {
 
         if (!widget.plugin.template) {
