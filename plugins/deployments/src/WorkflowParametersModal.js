@@ -58,6 +58,7 @@ export default class extends React.Component {
         var Header = Stage.Basic.ModalHeader;
         var Body = Stage.Basic.ModalBody;
         var Footer = Stage.Basic.ModalFooter;
+        var ErrorMessage = Stage.Basic.ErrorMessage;
 
         return (
             <div className='executeModalContainer'>
@@ -79,15 +80,8 @@ export default class extends React.Component {
                             })
                         }
 
-                        {
-                            this.state.error ?
-                                <div className="ui error message executeFailed" style={{"display":"block"}}>
-                                    <div className="header">Error executing blueprint</div>
-                                    <p>{this.state.error}</p>
-                                </div>
-                                :
-                                ''
-                        }
+                        <ErrorMessage error={this.state.error} header="Error executing blueprint" className="executeFailed"/>
+
                         <input type='submit' style={{"display": "none"}} ref='submitExecuteBtn'/>
                     </form>
                     </Body>

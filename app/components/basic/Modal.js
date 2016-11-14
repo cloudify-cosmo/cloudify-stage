@@ -16,14 +16,16 @@ export default class Modal extends Component {
         className: PropTypes.string,
         onDeny: PropTypes.func,
         onApprove: PropTypes.func,
-        show: PropTypes.bool
+        show: PropTypes.bool,
+        loading: PropTypes.bool
     };
 
     static defaultProps = {
         className: '',
         onDeny: function() {return true;},
         onApprove: function() {return true;},
-        show: false
+        show: false,
+        loading: false
     };
 
     componentDidMount() {
@@ -58,21 +60,21 @@ export default class Modal extends Component {
     _showModal() {
         $(this.refs.modalObj).modal('show');
     }
-    render() {
 
+    render() {
         var modalBody = null;
         var modalHeader = null;
         var modalFooter = null;
 
+        var self = this;
         React.Children.forEach(this.props.children, function(child,index) {
             if (child.type && child.type.name === "ModalBody") {
-                modalBody = child;
+                modalBody = React.cloneElement(child, {loading:self.props.loading});
             } else if (child.type && child.type.name === "ModalHeader") {
                 modalHeader = child;
             } else if (child.type && child.type.name === "ModalFooter") {
-                modalFooter = child;
+                modalFooter = React.cloneElement(child, {loading:self.props.loading});;
             }
-
         });
 
         return (
