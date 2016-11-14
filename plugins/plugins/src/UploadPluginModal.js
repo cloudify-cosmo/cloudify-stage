@@ -132,6 +132,8 @@ export default (pluginUtils)=> {
             }
         }
         render() {
+            var ErrorMessage = Stage.Basic.ErrorMessage;
+
             return (
                 <div>
                     <button className="ui labeled icon button uploadPlugin" onClick={this._showModal}>
@@ -172,15 +174,7 @@ export default (pluginUtils)=> {
                                     </div>
                                 </div>
 
-                                {
-                                    this.state.uploadErr ?
-                                        <div className="ui error message uploadFailed" style={{"display":"block"}}>
-                                            <div className="header">Error uploading file</div>
-                                            <p>{this.state.uploadErr}</p>
-                                        </div>
-                                        :
-                                        ''
-                                }
+                                <ErrorMessage error={this.state.uploadErr} header="Error uploading file" className="uploadFailed"/>
 
                                 <input type='submit' style={{"display": "none"}} className='uploadFormSubmitBtn'/>
                             </form>

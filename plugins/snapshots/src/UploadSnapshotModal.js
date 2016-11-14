@@ -133,6 +133,8 @@ export default (snapshotUtils)=> {
             }
         }
         render() {
+            var ErrorMessage = Stage.Basic.ErrorMessage;
+
             return (
                 <div>
                     <button className="ui labeled icon button uploadSnapshot" onClick={this._showModal}>
@@ -174,15 +176,8 @@ export default (snapshotUtils)=> {
                                 <div className="field">
                                     <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
                                 </div>
-                                {
-                                    this.state.uploadErr ?
-                                        <div className="ui error message uploadFailed" style={{"display":"block"}}>
-                                            <div className="header">Error uploading file</div>
-                                            <p>{this.state.uploadErr}</p>
-                                        </div>
-                                        :
-                                        ''
-                                }
+
+                                <ErrorMessage error={this.state.uploadErr} header="Error uploading file" className="uploadFailed"/>
 
                                 <input type='submit' style={{"display": "none"}} className='uploadFormSubmitBtn'/>
                             </form>
