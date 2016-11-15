@@ -4,12 +4,12 @@
 
 import fetch from 'isomorphic-fetch';
 import config from '../config.json';
-
+import CommonUtils from './commonUtils';
 
 export default class Auth {
     static login(managerIp,username,password) {
 
-        return fetch(`http://${config.proxyIp}:8000/?su=http://${managerIp}/api/v2.1/tokens`,
+        return fetch(CommonUtils.createManagerUrl(config.proxyIp, managerIp, '/api/v2.1/tokens'),
              {
                 method: 'GET',
                 headers: {

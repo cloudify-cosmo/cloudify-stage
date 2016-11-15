@@ -13,7 +13,7 @@ import Login from './containers/Login';
 export default (store)=> {
     let isLoggedIn = (nextState, replace, callback) => {
         var state = store.getState();
-        var currentManager = state.managers && state.managers.items && state.managers.items.length > 0  ? state.managers.items[0] : null;
+        var currentManager = _.get(state, 'managers.items[0]', null);
         if (!currentManager) {
             console.log('User doesn\'t have any manager, navigating to set manager');
             replace('/login');

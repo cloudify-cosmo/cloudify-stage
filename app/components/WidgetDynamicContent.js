@@ -35,7 +35,6 @@ export default class WidgetDynamicContent extends Component {
 
     _buildPluginContext () {
         return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this._fetchData.bind(this),this.props.templates,this.props.manager,PluginEventBus);
-
     }
 
     _fetch(url,context) {
