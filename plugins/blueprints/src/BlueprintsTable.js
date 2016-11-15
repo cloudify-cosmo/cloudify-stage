@@ -40,8 +40,8 @@ export default class extends React.Component {
 
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/blueprints/'+this.state.item.id,
-            "headers": {"content-type": "application/json"},
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/blueprints/${this.state.item.id}`),
+            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
             method: 'delete'
         })
             .done(()=> {
@@ -68,18 +68,11 @@ export default class extends React.Component {
 
     render() {
         var Confirm = Stage.Basic.Confirm;
+        var ErrorMessage = Stage.Basic.ErrorMessage;
 
         return (
             <div>
-                {
-                    this.state.error ?
-                        <div className="ui error message" style={{"display":"block"}}>
-                            <div className="header">Error Occured</div>
-                            <p>{this.state.error}</p>
-                        </div>
-                        :
-                        ''
-                }
+                <ErrorMessage error={this.state.error}/>
 
                 <table className="ui very compact table blueprintsTable">
                     <thead>

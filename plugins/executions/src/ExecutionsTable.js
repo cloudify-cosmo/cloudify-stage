@@ -79,17 +79,11 @@ export default class extends React.Component {
             console.error('Error parsing fields-to-show configuration for executions table');
         }
 
+        var ErrorMessage = Stage.Basic.ErrorMessage;
+
         return (
             <div>
-                {
-                    this.state.error ?
-                        <div className="ui error message" style={{"display":"block"}}>
-                            <div className="header">Error Occured</div>
-                            <p>{this.state.error}</p>
-                        </div>
-                        :
-                        ''
-                }
+                <ErrorMessage error={this.state.error}/>
 
                 <table className="ui very compact table executionsTable">
                     <thead>

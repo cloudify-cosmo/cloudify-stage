@@ -18,6 +18,7 @@ Stage.addPlugin({
     initialHeight: 4,
     color: "yellow",
     isReact: true,
+    hasTemplate: true,
     initialConfiguration: [
         {id: 'enableNodeClick', name: 'Enable node click' ,placeHolder:"true of false", default:"true"},
         {id: 'enableGroupClick', name: 'Enable group click' ,placeHolder:"true of false", default:"true"},
@@ -30,32 +31,9 @@ Stage.addPlugin({
         var deploymentId = context.getValue('deploymentId');
         var blueprintId = context.getValue('blueprintId');
 
-        return DataFetcher.fetch(context.getManagerUrl(),blueprintId,deploymentId);
+        return DataFetcher.fetch(context,blueprintId,deploymentId);
     },
-/*
-    fetchData: function(plugin,context,pluginUtils) {
-        var deploymentId = context.getValue('deploymentId');
-        var blueprintId = context.getValue('blueprintId');
 
-        if (_.isEmpty(deploymentId) && _.isEmpty(blueprintId)) {
-            return Promise.resolve({});
-        }
-
-        if (deploymentId) {
-            return Promise.resolve({});
-        } else if (blueprintId) {
-            return new Promise( (resolve,reject) => {
-                pluginUtils.jQuery.get({
-                    url: context.getManagerUrl() + '/api/v2.1/blueprints?id='+blueprintId,
-                    dataType: 'json'
-                })
-                    .done((blueprint)=> {
-                        resolve(blueprint)
-                    })
-                    .fail(reject)
-            });
-        }
-    },*/
     render: function(widget,data,error,context,pluginUtils) {
         if (!widget.plugin.template) {
             return 'Topology: missing template';

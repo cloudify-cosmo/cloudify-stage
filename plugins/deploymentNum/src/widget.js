@@ -15,21 +15,18 @@ Stage.addPlugin({
     fetchData: function(plugin,context,pluginUtils) {
         return new Promise( (resolve,reject) => {
             pluginUtils.jQuery.get({
-                url: context.getManagerUrl() + '/api/v2.1/deployments?_include=id',
-                dataType: 'json'
+                url: context.getManagerUrl('/api/v2.1/deployments?_include=id'),
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done((deployments)=> {
-                resolve({number: deployments.metadata.pagination.total});
+                resolve({number: _.get(data, "metadata.pagination.total", 0)});
             }).fail(reject)
         });
     },
 
     render: function(widget,data,error,context,pluginUtils) {
-        if (!data) {
+        if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();
-        }
-
-        if (error) {
-            return pluginUtils.renderReactError(error);
         }
 
         let KeyIndicator = Stage.Basic.KeyIndicator;

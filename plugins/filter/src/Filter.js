@@ -45,20 +45,13 @@ export default class Filter extends React.Component {
     }
 
     render() {
+        var ErrorMessage = Stage.Basic.ErrorMessage;
         var FilterByExecutionsConfig = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:'FilterByExecutions'}) : {};
         var shouldShowExecutionsFilter = FilterByExecutionsConfig && FilterByExecutionsConfig.value === 'true';
+
         return (
             <div>
-                {
-                    this.state.error ?
-                        <div className="ui error message" style={{"display":"block"}}>
-                            <div className="header">Error Occured</div>
-                            <p>{this.state.error}</p>
-                        </div>
-                        :
-                        ''
-                }
-
+                <ErrorMessage error={this.state.error}/>
 
                 <div className="ui equal width form">
                     <div className='fields'>

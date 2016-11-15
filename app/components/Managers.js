@@ -51,7 +51,7 @@ export default class Managers extends Component {
         return (
             <div className="ui inline dropdown item managersMenu" ref={select=>$(select).dropdown({action: 'hide'})}>
                 <div className="dropDownText text">
-                                {selectedManager.name}
+                                {selectedManager.ip}
                                 {
                                     this.state.selectedManagerStatus ?
                                         <i className="circle icon small green"/>
@@ -65,9 +65,8 @@ export default class Managers extends Component {
                             let isManagerSelected = (manager.id === this.props.managers.selected);
 
                             return (
-                                <div key={manager.ip} className={"item "+ (isManagerSelected ? 'active selected' : '') } onClick={this.handleClick.bind(this)} data-text={manager.name} data-value={manager.ip}>
-                                    <span className="text">{manager.name}</span>
-                                    <span className="description" style={{float: 'none'}}>{manager.ip}</span>
+                                <div key={manager.ip} className={"item "+ (isManagerSelected ? 'active selected' : '') } onClick={this.handleClick.bind(this)} data-text={manager.ip} data-value={manager.ip}>
+                                    <span className="text">{manager.ip}</span>
                                     {isManagerSelected && <i className="small configure link icon" id="configureManagerIcon"></i>}
                                 </div>
                             );

@@ -114,8 +114,13 @@ export default (snapshotUtils)=> {
                     formObj.find('.ui.error.message.uploadFailed').show();
                 }
             });
-            xhr.open('put',this.props.context.getManagerUrl() +
-                '/api/v2.1/snapshots/' + snapshotId + "/archive");
+
+            xhr.open('put',this.props.context.getManagerUrl(`/api/v2.1/snapshots/${snapshotId}/archive`));
+            var securityHeaders = this.props.context.getSecurityHeaders();
+            if (securityHeaders) {
+                xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
+            }
+
             xhr.send(file);
 
             return false;
@@ -134,6 +139,8 @@ export default (snapshotUtils)=> {
             }
         }
         render() {
+            var ErrorMessage = Stage.Basic.ErrorMessage;
+
             return (
                 <div>
                     <button className="ui labeled icon button uploadSnapshot" onClick={this._showModal}>
@@ -175,15 +182,8 @@ export default (snapshotUtils)=> {
                                 <div className="field">
                                     <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
                                 </div>
-                                {
-                                    this.state.uploadErr ?
-                                        <div className="ui error message uploadFailed" style={{"display":"block"}}>
-                                            <div className="header">Error uploading file</div>
-                                            <p>{this.state.uploadErr}</p>
-                                        </div>
-                                        :
-                                        ''
-                                }
+
+                                <ErrorMessage error={this.state.uploadErr} header="Error uploading file" className="uploadFailed"/>
 
                                 <input type='submit' style={{"display": "none"}} className='uploadFormSubmitBtn'/>
                             </form>

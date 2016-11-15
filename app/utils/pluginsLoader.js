@@ -93,13 +93,15 @@ export default class PluginsLoader {
             .then(()=> {
                 var promises = [];
                 plugins.forEach((plugin)=> {
-                    promises.push(
-                        fetchPluginTemplate('/plugins/' + plugin.id + '/widget.html')
-                            .then( (pluginHtml)=>{
-                                if (pluginHtml) {
-                                    plugin.template = pluginHtml;
-                                }
-                            }));
+                    if (plugin.hasTemplate) {
+                        promises.push(
+                            fetchPluginTemplate('/plugins/' + plugin.id + '/widget.html')
+                                .then((pluginHtml)=> {
+                                    if (pluginHtml) {
+                                        plugin.template = pluginHtml;
+                                    }
+                                }));
+                    }
                 });
                 return Promise.all(promises);
             })

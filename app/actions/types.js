@@ -28,4 +28,6 @@ export const SET_DRILLDOWN_PAGE = 'SET_DRILLDOWN_PAGE';
 
 export const SET_CONFIG_EDIT_MODE = 'SET_CONFIG_EDIT_MODE';
 
-export const SET_MANAGER = 'SET_MANAGER';
+export const REQ_LOGIN = 'REQ_LOGIN';
+export const RES_LOGIN = 'RES_LOGIN';
+export const ERR_LOGIN = 'ERR_LOGIN';

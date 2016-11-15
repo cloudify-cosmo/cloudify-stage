@@ -27,11 +27,13 @@ export default class extends React.Component {
     }
 
     _restoreSnapshot(item,event) {
+        event.stopPropagation();
+
         var thi$ = this;
         var data = {force: false, recreate_deployments_envs: false};
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+item.id+'/restore',
-            "headers": {"content-type": "application/json"},
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/restore`),
+            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
             data: JSON.stringify(data),
             dataType: "json",
             method: 'post'
@@ -45,13 +47,17 @@ export default class extends React.Component {
     }
 
     _downloadSnapshot(item,event) {
+        event.stopPropagation();
+
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+item.id+'/archive',
-            method: 'get'
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/archive`),
+            method: 'get',
+            headers:thi$.props.context.getSecurityHeaders()
+
         })
             .done(()=> {
-                  window.location = thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+item.id+'/archive';
+                  window.location = thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/archive`);
               })
             .fail((jqXHR, textStatus, errorThrown)=>{
                 thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
@@ -66,8 +72,8 @@ export default class extends React.Component {
 
         var thi$ = this;
         $.ajax({
-            url: thi$.props.context.getManagerUrl() + '/api/v2.1/snapshots/'+this.state.item.id,
-            "headers": {"content-type": "application/json"},
+            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${this.state.item.id}`),
+            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
             method: 'delete'
         })
             .done(()=> {
@@ -94,18 +100,12 @@ export default class extends React.Component {
 
     render() {
         var Confirm = Stage.Basic.Confirm;
+        var ErrorMessage = Stage.Basic.ErrorMessage;
 
         return (
-                <div className="snapshotsTableDiv">
-                {
-                    this.state.error ?
-                        <div className="ui error message" style={{"display":"block"}}>
-                            <div className="header">Error Occured</div>
-                            <p>{this.state.error}</p>
-                        </div>
-                        :
-                        ''
-                }
+            <div className="snapshotsTableDiv">
+                <ErrorMessage error={this.state.error}/>
+
                 <table className="ui very compact table snapshotsTable">
                     <thead>
                     <tr>

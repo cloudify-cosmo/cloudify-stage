@@ -15,7 +15,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onManagerConfig: () => {
-            dispatch(push('/manager'));
+            dispatch(push('/login'));
         },
 
         onManagerChange: () => {
@@ -24,9 +24,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 };
 
-const WManagers = connect(
+export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Managers);
-
-export default WManagers;
