@@ -70,13 +70,13 @@ export function drillDownToPage(widget,defaultTemplate) {
 
         if (widget.drillDownPageId) {
             // TODO dispatch set drill down (for breadcrumbs)
-            dispatch(selectPage(widget.drillDownPageId));
+            dispatch(selectPage(widget.drillDownPageId,true));
 
         } else {
             var newPageId = v4();
             dispatch(createDrilldownPage(Object.assign({id:newPageId},defaultTemplate)));
             dispatch(setWidgetDrilldownPage(widget.id,newPageId));
-            dispatch(selectPage(newPageId));
+            dispatch(selectPage(newPageId,true));
             //// dispatch action to create drilldown page. It will also drilldown to it
             //this._createDrillDownPage(widget,defaultTemplate);
         }

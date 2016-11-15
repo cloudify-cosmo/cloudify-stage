@@ -66,7 +66,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(updatePageDescription(pageId,newDescription));
         },
         onPageSelected: (page) => {
-            dispatch(selectPage(page.id));
+            dispatch(selectPage(page.id,page.isDrillDown));
         },
         onPageRemoved: (page) => {
             dispatch(removePage(page.id));
