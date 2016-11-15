@@ -113,7 +113,13 @@ export default (pluginUtils)=> {
                     formObj.find('.ui.error.message.uploadFailed').show();
                 }
             });
+
             xhr.open('post',this.props.context.getManagerUrl('/api/v2.1/plugins'));
+            var securityHeaders = this.props.context.getSecurityHeaders();
+            if (securityHeaders) {
+                xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
+            }
+
             xhr.send(file);
 
             return false;

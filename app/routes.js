@@ -8,25 +8,32 @@ import { Route, IndexRoute, Redirect } from 'react-router';
 import Layout from './components/layout/Layout';
 import Home from './components/Home';
 import NotFound from './components/NotFound';
-
-import SetManager from './containers/SetManager';
-
+import Login from './containers/Login';
 
 export default (store)=> {
-    const isManagerDefined = (nextState, replace, callback) => {
-        if (!store.getState().managers.items || store.getState().managers.items.length === 0) {
-            replace('/manager')
+    let isLoggedIn = (nextState, replace, callback) => {
+        var state = store.getState();
+        var currentManager = _.get(state, 'managers.items[0]', null);
+        if (!currentManager) {
+            console.log('User doesn\'t have any manager, navigating to set manager');
+            replace('/login');
+        } else {
+            let auth = currentManager.auth;
+            if (!auth || (auth.isSecured && !auth.token) ) {
+                console.log('Current manager doesnt have any token assigned, navigating to login');
+                replace('/login');
+            }
         }
         callback();
     };
 
     return (
         <Route>
-            <Route path='/manager' component={SetManager}/>
-            <Route path="/" component={Layout}>
-                <Route path='/page/(:pageId)' component={Home} onEnter={isManagerDefined}/>
+            <Route path='/login' component={Login}/>
+            <Route path="/" component={Layout} onEnter={isLoggedIn}>
+                <Route path='/page/(:pageId)' component={Home}/>
                 <Route path="404" component={NotFound}/>
-                <IndexRoute component={Home} params={{pageId:0}} onEnter={isManagerDefined}/>
+                <IndexRoute component={Home} params={{pageId:0}}/>
                 <Redirect from="*" to="404"/>
             </Route>
         </Route>

@@ -31,6 +31,11 @@ export default class Context {
         return CommonUtils.createManagerUrl(config.proxyIp, this._manager.ip, queryString);
     }
 
+    getSecurityHeaders() {
+        var auth = this._manager.auth;
+        return (auth.isSecured && auth.token ? {"Authentication-Token": auth.token} : undefined);
+    }
+
     refresh() {
         this._onRefresh();
     }

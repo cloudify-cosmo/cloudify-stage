@@ -114,7 +114,13 @@ export default (snapshotUtils)=> {
                     formObj.find('.ui.error.message.uploadFailed').show();
                 }
             });
+
             xhr.open('put',this.props.context.getManagerUrl(`/api/v2.1/snapshots/${snapshotId}/archive`));
+            var securityHeaders = this.props.context.getSecurityHeaders();
+            if (securityHeaders) {
+                xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
+            }
+
             xhr.send(file);
 
             return false;

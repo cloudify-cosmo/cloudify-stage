@@ -16,9 +16,10 @@ Stage.addPlugin({
 
         return new Promise( (resolve,reject) => {
             if (deploymentId) {
-                pluginUtils.jQuery.get({
+                $.get({
                     url: context.getManagerUrl(`/api/v2.1/deployments?_include=id,outputs&id=${deploymentId}`),
-                    dataType: 'json'
+                    dataType: 'json',
+                    headers: context.getSecurityHeaders()
                 }).done((data)=> {
                     //for selected deployemntId there should be only one item including all outputs
                     resolve({outputs: _.get(data, "items[0].outputs", {})});

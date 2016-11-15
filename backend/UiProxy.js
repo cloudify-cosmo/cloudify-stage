@@ -14,7 +14,7 @@ let  allowAccessOrigin = (req,res,next) => {
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,authorization,authentication-token');
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -32,8 +32,7 @@ app.get('/',function (req, res,next) {
     var serverUrl = req.query.su;
     if (serverUrl) {
         console.log('Proxying get request to server with url: '+serverUrl);
-        request
-            .get(serverUrl)
+        req.pipe(request.get(serverUrl))
             .on('error', function(err) {
                 console.log('Error has occured ',err);
                 next(err);

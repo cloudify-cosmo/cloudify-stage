@@ -16,7 +16,8 @@ Stage.addPlugin({
         return new Promise( (resolve,reject) => {
             pluginUtils.jQuery.get({
                 url: context.getManagerUrl('/api/v2.1/plugins?_include=id'),
-                dataType: 'json'
+                dataType: 'json',
+                headers: context.getSecurityHeaders()
             }).done((data)=> {
                 resolve({number: _.get(data, "metadata.pagination.total", 0)});
             }).fail(reject)

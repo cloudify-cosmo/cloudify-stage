@@ -172,14 +172,14 @@ body {
 }
 
 
-.configManager.ui.segment {
+.configManager.ui.segment , .loginPage.ui.segment {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
 
-  .configManagerContainer {
+  .configManagerContainer,.loginContainer {
     margin: auto;
     width: 400px;
     height: 170px;

@@ -20,7 +20,8 @@ Stage.addPlugin({
             if (deploymentId) {
                 pluginUtils.jQuery.get({
                     url: context.getManagerUrl(`/api/v2.1/deployments?_include=id,inputs&id=${deploymentId}`),
-                    dataType: 'json'
+                    dataType: 'json',
+                    headers: context.getSecurityHeaders()
                 }).done((data)=> {
                     //for selected deployemntId there should be only one item including all inputs
                     resolve({inputs: _.get(data, "items[0].inputs", {})});
