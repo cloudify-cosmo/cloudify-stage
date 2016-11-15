@@ -18,7 +18,7 @@ Stage.addPlugin({
                 url: context.getManagerUrl('/api/v2.1/deployments?_include=id'),
                 dataType: 'json',
                 headers: context.getSecurityHeaders()
-            }).done((deployments)=> {
+            }).done((data)=> {
                 resolve({number: _.get(data, "metadata.pagination.total", 0)});
             }).fail(reject)
         });
