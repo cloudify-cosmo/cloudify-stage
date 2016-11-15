@@ -4,11 +4,11 @@
 
 
 import React, { Component, PropTypes } from 'react';
-//import InlineEdit from 'react-edit-inline';
 
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './WidgetsList';
 import Breadcrumbs from './Breadcrumbs';
+import {EditableLabel} from './basic';
 
 export default class Page extends Component {
     static propTypes = {
@@ -18,23 +18,25 @@ export default class Page extends Component {
         onPageDescriptionChange: PropTypes.func.isRequired,
         onWidgetsGridDataChange: PropTypes.func.isRequired,
         onPageSelected: PropTypes.func.isRequired,
-        onPageRemoved: PropTypes.func.isRequired
-        }
+        onPageRemoved: PropTypes.func.isRequired,
+        isEditMode: PropTypes.bool.isRequired
+        };
 
     render() {
         return (
             <div className="">
-                <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange} onPageDescriptionChange={this.props.onPageDescriptionChange} isEditMode={this.props.isEditMode} onPageSelected={this.props.onPageSelected} onPageRemoved={this.props.onPageRemoved}/>
-                {/*
-                 <h3 className='ui header dividing'>
-                    <InlineEdit
-                        text={this.props.page.name}
-                        change={data=>this.props.onPageNameChange(this.props.page.id,data.name)}
-                        paramName="name"
+                <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange} isEditMode={this.props.isEditMode} onPageSelected={this.props.onPageSelected} onPageRemoved={this.props.onPageRemoved}/>
+
+                <div>
+                    <EditableLabel
+                       text={this.props.page.description}
+                       placeholder='Page description'
+                       className='pageDescription'
+                       isEditEnable={this.props.isEditMode}
+                       onEditDone={(newDesc)=>this.props.onPageDescriptionChange(this.props.page.id,newDesc)}
                         />
-                </h3>
-                 */}
-                 {
+                </div>
+                {
                     this.props.isEditMode ?
                     <AddWidget pageId={this.props.page.id}/>
                     :

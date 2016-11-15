@@ -81,13 +81,16 @@ body {
 }
 
 .pageDescription {
-  clear: both;
-  float:left;
+  opacity: 0.6;
+  font-size: 12px;
+
+  &.editPlaceholder {
+    font-style: italic;
+  }
 }
 
 .pageTitle {
   clear: both;
-  float:left;
   line-height: 1.5;
 }
 
