@@ -5,7 +5,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux'
-import Managers from '../../Containers/Managers.js';
+import Managers from '../../containers/Managers.js';
 
 export default class Header extends Component {
     static propTypes = {

@@ -5,10 +5,12 @@
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux';
 import Managers from '../components/Managers'
+import {getStatus} from '../actions/managers';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        managers: ownProps.managers
+        managers: ownProps.managers,
+        selectedManager:_.find(ownProps.managers.items,{id:ownProps.managers.selected})
     }
 };
 
@@ -20,6 +22,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
         onManagerChange: () => {
             //TODO: handle multiple manager switching
+        },
+
+        fetchManagerStatus: (manager) => {
+            dispatch(getStatus(manager));
         }
     }
 };

@@ -9,17 +9,10 @@ import config from '../config.json';
 export default class Managers extends Component {
     static propTypes = {
         managers: PropTypes.any.isRequired,
+        selectedManager : PropTypes.object.isRequired,
         onManagerConfig: PropTypes.func.isRequired,
         onManagerChange: PropTypes.func.isRequired
     };
-
-    constructor(props,context){
-        super(props, context);
-
-        this.state = {
-            selectedManagerStatus: ''
-        };
-    }
 
     handleClick(event) {
         if (event.target.id === "configureManagerIcon") {
@@ -29,35 +22,22 @@ export default class Managers extends Component {
         }
     }
 
-
-    _getManagerUrl(selectedManager) {
-        return `http://${config.proxyIp}:8000/?su=http://${selectedManager.ip}`;
+    componentWillMount() {
+        this.props.fetchManagerStatus(this.props.selectedManager);
     }
 
-    _getManagerStatus(selectedManager)
-    {
-        var thi$ = this;
-        $.ajax({
-            url: thi$._getManagerUrl(selectedManager) + '/api/v2.1/events?_include=status',
-            dataType: 'json',
-            method: 'get',
-            success: function(response) {this.setState({selectedManagerStatus: response.status});}
-        })
+    renderStatusIcon(status) {
+        if (!status) return <i className="circle icon statusIcon"/>;
+        if (status === 'running') return <i className="circle icon green statusIcon"/>;
+        return <i className="circle icon red statusIcon"/>;
     }
-
     render() {
-        var selectedManager = _.find(this.props.managers.items,{id:this.props.managers.selected});
-        this._getManagerStatus(selectedManager);
         return (
             <div className="ui inline dropdown item managersMenu" ref={select=>$(select).dropdown({action: 'hide'})}>
                 <div className="dropDownText text">
-                                {selectedManager.ip}
-                                {
-                                    this.state.selectedManagerStatus ?
-                                        <i className="circle icon small green"/>
-                                    :
-                                        <i className="circle icon small red"/>
-                                }</div>
+                    {this.props.selectedManager.ip}
+                    {this.renderStatusIcon(this.props.selectedManager.status)}
+                </div>
                 <i className="inverted dropdown icon"></i>
                 <div className="menu">
                     {

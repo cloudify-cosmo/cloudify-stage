@@ -3,7 +3,7 @@
  */
 
 import config from '../config.json';
-import CommonUtils from '../utils/CommonUtils';
+import CommonUtils from '../utils/commonUtils';
 
 export default class Context {
     constructor(setContextValue,contextData,onDrilldownToPage,onRefresh,templates,manager,eventBus) {
