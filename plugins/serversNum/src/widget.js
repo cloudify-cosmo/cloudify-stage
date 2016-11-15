@@ -25,6 +25,10 @@ Stage.addPlugin({
     },
 
     render: function(widget,data,error,context,pluginUtils) {
+        if (_.isEmpty(data)) {
+            return pluginUtils.renderReactLoading();
+        }
+
         let KeyIndicator = Stage.Basic.KeyIndicator;
 
         return (

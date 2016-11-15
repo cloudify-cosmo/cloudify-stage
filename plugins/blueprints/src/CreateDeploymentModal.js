@@ -77,6 +77,7 @@ export default class extends React.Component {
         var Header = Stage.Basic.ModalHeader;
         var Body = Stage.Basic.ModalBody;
         var Footer = Stage.Basic.ModalFooter;
+        var ErrorMessage = Stage.Basic.ErrorMessage;
 
         var deployItem = this.props.context.getValue(this.props.widget.id + 'createDeploy');
         var shouldShow = !_.isEmpty(deployItem);
@@ -112,15 +113,8 @@ export default class extends React.Component {
                             })
                         }
 
-                        {
-                            this.state.error ?
-                                <div className="ui error message deployFailed" style={{"display":"block"}}>
-                                    <div className="header">Error deploying blueprint</div>
-                                    <p>{this.state.error}</p>
-                                </div>
-                                :
-                                ''
-                        }
+                        <ErrorMessage error={this.state.error} header="Error deploying blueprint" className="deployFailed"/>
+
                         <input type='submit' style={{"display": "none"}} ref='submitDeployBtn'/>
                     </form>
                     </Body>
