@@ -6,6 +6,7 @@ import {setValue as setContextValue} from '../actions/context';
 import config from '../config.json';
 import CommonUtils from '../utils/commonUtils';
 import PluginEventBus from '../utils/PluginEventBus';
+import {drillDownToPage} from '../actions/widgets';
 
 class Context {
     constructor (store) {

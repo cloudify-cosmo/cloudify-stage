@@ -11,6 +11,8 @@ const context = (state = {}, action) => {
             var newState = Object.assign({},state);
             newState[action.key] = action.value;
             return newState;
+        case types.CLEAR_CONTEXT:
+            return {};
         default:
             return state;
     }
