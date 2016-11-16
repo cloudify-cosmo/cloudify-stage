@@ -14,10 +14,9 @@ const page = (state = {}, action) => {
             return {
                 id: action.newPageId,
                 name: action.name,
-                description: 'Please add description...',
+                description: '',
                 widgets: []
             };
-        case types.REMOVE_PAGE:
         case types.CREATE_DRILLDOWN_PAGE:
             return Object.assign({
                     isDrillDown: true
@@ -43,7 +42,14 @@ const page = (state = {}, action) => {
                 }
             }
             return pageData;
-
+        case types.UPDATE_PAGE_DESCRIPTION:
+            return Object.assign({}, state, {
+                description: action.description
+            });
+        case types.RENAME_PAGE:
+            return Object.assign({}, state, {
+                name: action.name
+            });
         default:
             return state;
     }
@@ -77,22 +83,13 @@ const pages = (state = [], action) => {
                 ...state.slice(removeIndex+1)
             ];
         case types.RENAME_PAGE:
-            return state.map( (page) => {
-                if (page.id === action.pageId) {
-                    return Object.assign({}, page, {
-                        name: action.name
-                    })
-                }
-                return page
-            });
         case types.UPDATE_PAGE_DESCRIPTION:
-            return state.map( (page) => {
-                if (page.id === action.pageId) {
-                    return Object.assign({}, page, {
-                        description: action.description
-                    })
+
+            return state.map( (p) => {
+                if (p.id === action.pageId) {
+                    return page(p,action);
                 }
-                return page
+                return p
             });
         case types.SET_DRILLDOWN_PAGE:
             // Add drilldown page to children list of this page, and drilldown page parent id
