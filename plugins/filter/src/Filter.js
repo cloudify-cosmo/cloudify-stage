@@ -33,11 +33,36 @@ export default class Filter extends React.Component {
     //}
 
     _selectBlueprint(blueprintId){ //value,text,$choise) {
+        // Clear the selected deployment && execution if its not related to the selected blueprint
+        if (!_.isEmpty(blueprintId)) {
+            if (this.props.data.deploymentId) {
+                var currDeployment = _.find(this.props.data.deployments.items,{id:this.props.data.deploymentId});
+                if (currDeployment.blueprint_id !== blueprintId) {
+                    this.props.context.setValue('deploymentId',null);
+                }
+            }
+
+            if (this.props.data.executionId) {
+                var currExecution = _.find(this.props.data.executions.items,{id:this.props.data.executionId});
+                if (currExecution.blueprint_id !== blueprintId) {
+                    this.props.context.setValue('executionId',null);
+                }
+            }
+        }
+
         this.props.context.setValue('blueprintId',blueprintId);
     }
 
     _selectDeployment(deploymentId) {
+        // Clear the selected execution if its not related to the selected deployment
+        if (this.props.data.executionId && !_.isEmpty(deploymentId)) {
+            var currExecution = _.find(this.props.data.executions.items,{id:this.props.data.executionId});
+            if (currExecution.deployment_id !== deploymentId) {
+                this.props.context.setValue('executionId',null);
+            }
+        }
         this.props.context.setValue('deploymentId',deploymentId);
+
     }
 
     _selectExecution(executionId) {
@@ -57,7 +82,7 @@ export default class Filter extends React.Component {
                     <div className='fields'>
                         <div className='field'>
                             <div className="ui search selection dropdown" ref={(select)=>$(select).dropdown({onChange: this._selectBlueprint.bind(this)})}>
-                                <input type="hidden" name="blueprint"/>
+                                <input type="hidden" name="blueprint" value={this.props.data.blueprintId || ''}/>
                                 <i className="dropdown icon"></i>
                                 <div className="default text">Select Blueprint</div>
                                 <div className="menu">
@@ -72,7 +97,7 @@ export default class Filter extends React.Component {
                         </div>
                         <div className='field'>
                             <div className="ui search selection dropdown" ref={(select)=>$(select).dropdown({onChange: this._selectDeployment.bind(this)})}>
-                                <input type="hidden" name="deployment"/>
+                                <input type="hidden" name="deployment" value={this.props.data.deploymentId || ''}/>
                                 <i className="dropdown icon"></i>
                                 <div className="default text">Select Deployment</div>
                                 <div className="menu">
@@ -89,11 +114,11 @@ export default class Filter extends React.Component {
                             shouldShowExecutionsFilter ?
                                 <div className='field'>
                                     <div className="ui search selection dropdown" ref={(select)=>$(select).dropdown({onChange: this._selectExecution.bind(this)})}>
-                                        <input type="hidden" name="deployment"/>
+                                        <input type="hidden" name="deployment" value={this.props.data.executionId || ''}/>
                                         <i className="dropdown icon"></i>
                                         <div className="default text">Select Execution</div>
                                         <div className="menu">
-                                            <div className='item' data-value="">Select Execution</div>
+                                            <div className='item default' data-value="">Select Execution</div>
                                             {
                                                 this.props.data.executions.items.map((execution)=>{
                                                     return <div key={execution.id} className="item" data-value={execution.id}>{execution.id + '-' + execution.workflow_id}</div>;
