@@ -13,4 +13,4 @@ deployment:
   s3:
     branch: master
     commands:
-      - webpack --config webpack.config-prod.js
+      - webpack --config webpack.config-prod.js --bail
