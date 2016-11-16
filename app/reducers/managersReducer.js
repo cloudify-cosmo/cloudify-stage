@@ -43,6 +43,14 @@ const managers = (state = {}, action) => {
                 ]
             });
 
+        case types.SET_MANAGER_STATUS:
+            return Object.assign({}, state, {
+                items: [
+                    Object.assign(state.items[0], {
+                        status: action.status
+                    })
+                ]
+            });
         default:
             return state;
     }

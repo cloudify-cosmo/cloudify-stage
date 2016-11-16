@@ -387,15 +387,21 @@ body {
 }
 /* END: Accommodating for IE */
 
-.managersMenu .menu {
-  minWidth: 190px;
-  left: auto !important;
-  right: 0;
-}
+.managersMenu {
+  .menu {
+    minWidth: 190px;
+    left: auto !important;
+    right: 0;
+  }
 
-.managersMenu .configure.icon {
-  margin: 0 0 0 0.5em !important;
-  opacity: 0.5 !important;
+  .configure.icon {
+    margin: 0 0 0 0.5em !important;
+    opacity: 0.5 !important;
+  }
+
+  &.ui.dropdown > .text > .icon.statusIcon {
+    margin-left: 5px;
+  }
 }
 
 .execOverlay pre code {

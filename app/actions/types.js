@@ -31,3 +31,5 @@ export const SET_CONFIG_EDIT_MODE = 'SET_CONFIG_EDIT_MODE';
 export const REQ_LOGIN = 'REQ_LOGIN';
 export const RES_LOGIN = 'RES_LOGIN';
 export const ERR_LOGIN = 'ERR_LOGIN';
+
+export const SET_MANAGER_STATUS = 'SET_MANAGER_STATUS';
