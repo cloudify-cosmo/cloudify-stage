@@ -68,14 +68,17 @@ body {
 }
 
 .pageRemoveButton {
-    position: absolute;
-    top: 0px;
-    right : 0px;
-    display:none;
-    visibility: hidden;
+  position: absolute;
+  right : 5px;
+  display:none;
+  visibility: hidden;
+  top: 40%;
 }
 
-.pageMenuItem:hover .pageRemoveButton{display:block; visibility: visible;}
+.pageMenuItem:hover .pageRemoveButton{
+  display:block;
+  visibility: visible;
+}
 
 .pageDescription {
   clear: both;
