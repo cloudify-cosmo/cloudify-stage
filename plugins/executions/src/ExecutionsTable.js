@@ -2,8 +2,6 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-import Highlight from 'react-highlight';
-
 export default class extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -29,11 +27,11 @@ export default class extends React.Component {
         this.props.context.setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
     }
 
-    _showInOverlay(id) {
-        $("#" + id).modal({"observeChanges": true}).modal("show");
-    }
-
     renderFields(fieldsToShow,item) {
+        var HighlightText = Stage.Basic.HighlightText;
+        var Overlay = Stage.Basic.Overlay;
+        var Checkmark = Stage.Basic.Checkmark;
+
         var fields = [];
 
         if (fieldsToShow.indexOf("Blueprint") >= 0 && !this.props.data.blueprintId) {
@@ -54,18 +52,15 @@ export default class extends React.Component {
             fields.push(<td key={item.id+'Created'}>{item.created_at}</td>);
         }
         if (fieldsToShow.indexOf("IsSystem") >= 0) {
-            fields.push(<td key={item.id+'IsSystem'}>{item.is_system_workflow ?
-                        <i className="checkmark box icon grey" title="Yes"/>
-                        :
-                        <i className="square outline icon grey" title="No"/>
-                    }
-            </td>);
+            fields.push(<td key={item.id+'IsSystem'}><Checkmark value={item.is_system_workflow}/></td>);
         }
         if (fieldsToShow.indexOf("Params") >= 0) {
             fields.push(
                 <td key={item.id+'Params'}>
-                    <i className="options icon link bordered" title="Execution parameters" onClick={this._showInOverlay.bind(true, item.id+'Params')}></i>
-                    <div id={item.id+'Params'} className="ui large modal execOverlay"><div className="content"><Highlight className='json'>{JSON.stringify(item.parameters, null, 2)}</Highlight></div></div>
+                    <Overlay>
+                        <i data-overlay-action className="options icon link bordered" title="Execution parameters"></i>
+                        <HighlightText className='json'>{JSON.stringify(item.parameters, null, 2)}</HighlightText>
+                    </Overlay>
                 </td>
             );
         }
@@ -75,10 +70,10 @@ export default class extends React.Component {
                     { _.isEmpty(item.error) ?
                         <i className="check circle icon inverted green"></i>
                         :
-                        <div>
-                            <i className="remove circle icon red link bordered" onClick={this._showInOverlay.bind(true, item.id+'Error')}></i>
-                            <div id={item.id+'Error'} className="ui large modal execOverlay"><div className="content"><Highlight className='python'>{item.error}</Highlight></div></div>
-                        </div>
+                        <Overlay>
+                            <i data-overlay-action className="remove circle icon red link bordered" title="Error details"></i>
+                            <HighlightText className='python'>{item.error}</HighlightText>
+                        </Overlay>
                     }
                     {item.status}
                 </td>
