@@ -406,3 +406,20 @@ body {
     margin-left: 5px;
   }
 }
+
+.ui.inline.loader.widgetLoader {
+  position:  absolute;
+  left: auto;
+  bottom: auto;
+  display: none;
+
+  &.header {
+    right: 12px;
+    top: 4px;
+  }
+
+  &.noheader {
+    right: 5px;
+    top: 5px;
+  }
+}
