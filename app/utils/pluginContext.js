@@ -3,7 +3,7 @@
  */
 
 import config from '../config.json';
-import CommonUtils from '../utils/commonUtils';
+import StageUtils from '../utils/stageUtils';
 
 export default class Context {
     constructor(setContextValue,contextData,onDrilldownToPage,onRefresh,templates,manager,eventBus) {
@@ -28,7 +28,7 @@ export default class Context {
     }
 
     getManagerUrl(queryString) {
-        return CommonUtils.createManagerUrl(config.proxyIp, this._manager.ip, queryString);
+        return StageUtils.createManagerUrl(config.proxyIp, this._manager.ip, queryString);
     }
 
     getSecurityHeaders() {

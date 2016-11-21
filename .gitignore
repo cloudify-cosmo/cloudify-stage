@@ -19,3 +19,4 @@ plugins/snapshots/widget.js
 plugins/executions/widget.js
 plugins/topology/widget.js
 plugins/serversNum/widget.js
+plugins/graph/widget.js
