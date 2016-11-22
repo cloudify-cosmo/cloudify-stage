@@ -16,7 +16,7 @@ Stage.addPlugin({
     initialConfiguration:
         [
             {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Enter list of comma separated field names (json format)",
-                default: '["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Status"]'}
+             default: '["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Params","Status"]'}
         ],
 
     render: function(widget,data,error,context,pluginUtils) {

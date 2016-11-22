@@ -6,6 +6,7 @@
 import * as types from './types';
 import { push } from 'react-router-redux';
 import {v4} from 'node-uuid';
+import {clearContext} from './context';
 
 export function createPage(name, newPageId) {
     return {
@@ -19,7 +20,7 @@ export function addPage(name) {
     return function (dispatch) {
         var newPageId = v4();
         dispatch(createPage(name, newPageId));
-        dispatch(selectPage(newPageId))
+        dispatch(selectPage(newPageId,false))
     }
 }
 
@@ -47,8 +48,12 @@ export function updatePageDescription(pageId,newDescription) {
     }
 
 }
-export function selectPage(pageId) {
+export function selectPage(pageId,isDrilldown) {
     return function (dispatch) {
+
+        if (!isDrilldown) {
+            dispatch(clearContext());
+        }
         dispatch(push('/page/'+pageId));
     }
 }

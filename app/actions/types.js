@@ -16,6 +16,7 @@ export const RES_TEMPLATES = 'RES_TEMPLATES';
 export const ERR_TEMPLATES = 'ERR_TEMPLATES';
 
 export const SET_CONTEXT_VALUE = 'SET_CONTEXT_VALUE';
+export const CLEAR_CONTEXT = 'CLEAR_CONTEXT';
 export const RENAME_PAGE = 'RENAME_PAGE';
 export const RENAME_WIDGET = 'RENAME_WIDGET';
 export const REMOVE_WIDGET = 'REMOVE_WIDGET';

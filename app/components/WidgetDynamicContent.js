@@ -11,9 +11,8 @@ import React, { Component, PropTypes } from 'react';
 import InlineEdit from 'react-edit-inline';
 
 import PluginUtils from '../utils/pluginUtils';
-import PluginContext from '../utils/pluginContext';
 import EditWidgetIcon from './EditWidgetIcon';
-import PluginEventBus from '../utils/PluginEventBus';
+import {getContext} from '../utils/Context';
 
 import fetch from 'isomorphic-fetch'
 
@@ -33,8 +32,8 @@ export default class WidgetDynamicContent extends Component {
         this.state = {data: {}};
     }
 
-    _buildPluginContext () {
-        return new PluginContext(this.props.setContextValue,this.props.context,this.props.onDrilldownToPage,this._fetchData.bind(this),this.props.templates,this.props.manager,PluginEventBus);
+    _getContext () {
+        return getContext(this._fetchData.bind(this));
     }
 
     _fetch(url,context) {
@@ -58,7 +57,7 @@ export default class WidgetDynamicContent extends Component {
 
     _fetchData() {
         if (this.props.widget.plugin.fetchUrl) {
-            var context = this._buildPluginContext();
+            var context = this._getContext();
 
             var urls = this.props.widget.plugin.fetchUrl;
             if (!Array.isArray(urls)){
@@ -79,7 +78,7 @@ export default class WidgetDynamicContent extends Component {
                 });
 
         } else if (this.props.widget.plugin.fetchData && typeof this.props.widget.plugin.fetchData === 'function') {
-            this.props.widget.plugin.fetchData(this.props.widget,this._buildPluginContext(),PluginUtils)
+            this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),PluginUtils)
                 .then((data)=> {
                     console.log('widget :'+this.props.widget.name + ' data fetched');
                     this.setState({data: data});
@@ -125,7 +124,7 @@ export default class WidgetDynamicContent extends Component {
         var widgetHtml = 'Loading...';
         if (this.props.widget.plugin && this.props.widget.plugin.render) {
             try {
-                widgetHtml = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._buildPluginContext(),PluginUtils);
+                widgetHtml = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._getContext(),PluginUtils);
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
             }
@@ -141,7 +140,7 @@ export default class WidgetDynamicContent extends Component {
                     return PluginUtils.renderReactError(this.state.error);
                 }
 
-                widget = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._buildPluginContext(),PluginUtils);
+                widget = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._getContext(),PluginUtils);
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
             }
@@ -152,15 +151,13 @@ export default class WidgetDynamicContent extends Component {
     attachEvents(container) {
         if (this.props.widget.plugin && this.props.widget.plugin.events) {
             try {
-                //this.props.widget.plugin.attachEvents(this.props.widget.plugin,this._buildPluginContext(),PluginUtils);
-
                 _.each(this.props.widget.plugin.events,(event)=>{
                     if (!event || !event.selector || !event.event || !event.fn) {
                         console.warn('Cannot attach event, missing data. Event data is ',event);
                         return;
                     }
                     $(container).find(event.selector).off(event.event);
-                    $(container).find(event.selector).on(event.event,(e)=>{event.fn(e,this.props.widget,this._buildPluginContext(),PluginUtils)});
+                    $(container).find(event.selector).on(event.event,(e)=>{event.fn(e,this.props.widget,this._getContext(),PluginUtils)});
                 },this);
             } catch (e) {
                 console.error('Error attaching events to widget',e);
@@ -168,7 +165,7 @@ export default class WidgetDynamicContent extends Component {
         }
 
         if (this.props.widget.plugin.postRender) {
-            this.props.widget.plugin.postRender($(container),this.props.widget,this.state.data,this._buildPluginContext(),PluginUtils);
+            this.props.widget.plugin.postRender($(container),this.props.widget,this.state.data,this._getContext(),PluginUtils);
         }
     }
     render() {

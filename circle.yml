@@ -5,7 +5,9 @@ dependencies:
   override:
     - npm install
     - npm install webpack -g
+    - npm install bower -g
     - npm install gulp -g
+    - bower install
     - gulp build:
         pwd:
           semantic
@@ -13,4 +15,4 @@ deployment:
   s3:
     branch: master
     commands:
-      - webpack --config webpack.config-prod.js
+      - webpack --config webpack.config-prod.js --bail

@@ -36,9 +36,7 @@ Stage.addPlugin({
             "values": [{ "x": 1, "y": 14 }, { "x": 2, "y": 77 }, { "x": 3, "y": 16 }]
         }];
 
-        return new Promise( (resolve,reject) => {
-            resolve({lineData: lineData, barData: barData});
-        });
+        return Promise.resolve({lineData: lineData, barData: barData});
     },
 
     render: function(widget,data,error,context,pluginUtils) {

@@ -13,3 +13,8 @@ export function setValue(key,value) {
     };
 }
 
+export function clearContext() {
+    return {
+        type: types.CLEAR_CONTEXT
+    };
+}

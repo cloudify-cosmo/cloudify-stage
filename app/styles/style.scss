@@ -68,11 +68,11 @@ body {
 }
 
 .pageRemoveButton {
-  position: absolute;
-  right : 5px;
-  display:none;
-  visibility: hidden;
-  top: 40%;
+    position: absolute;
+    right : 5px;
+    display:none;
+    visibility: hidden;
+    top: 40%;
 }
 
 .pageMenuItem:hover .pageRemoveButton{
@@ -81,13 +81,16 @@ body {
 }
 
 .pageDescription {
-  clear: both;
-  float:left;
+  opacity: 0.6;
+  font-size: 12px;
+
+  &.editPlaceholder {
+    font-style: italic;
+  }
 }
 
 .pageTitle {
   clear: both;
-  float:left;
   line-height: 1.5;
 }
 
@@ -406,3 +409,9 @@ body {
     margin-left: 5px;
   }
 }
+
+/* Customize Highlight styles */
+code.hljs {
+  background: white;
+}
+

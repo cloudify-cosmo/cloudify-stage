@@ -25,6 +25,9 @@ import '../semantic/dist/semantic';
 import '../node_modules/gridstack/dist/gridstack.css';
 import '../node_modules/gridstack/dist/gridstack.js';
 
+// Import highlight
+import '../node_modules/highlight.js/styles/github.css';
+
 // Import datatables
 //import '../node_modules/datatables.net/js/jquery.dataTables.js';
 //import '../datatables/dataTables.semanticui.min.js';
@@ -42,15 +45,15 @@ import createRoutes from './routes';
 import {fetchPlugins} from './actions/plugins';
 import {fetchTemplates} from './actions/templates';
 import PluginLoader from './utils/pluginsLoader';
+import {createContext} from './utils/Context';
 
-
-//window._ = _;
-//window.$ = $;
 window.React = React;
 
 const store = configureStore(browserHistory);
 
 const history = syncHistoryWithStore(browserHistory, store);
+
+createContext(store);
 
 // Fetch plugins
 PluginLoader.init();

@@ -2,6 +2,7 @@
 dist
 node_modules
 bower_components
+npm-debug.log
 
 plugins/blueprints/widget.js
 plugins/deploymentNum/widget.js
