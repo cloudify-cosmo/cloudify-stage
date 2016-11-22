@@ -25,6 +25,9 @@ import '../semantic/dist/semantic';
 import '../node_modules/gridstack/dist/gridstack.css';
 import '../node_modules/gridstack/dist/gridstack.js';
 
+// Import highlight
+import '../node_modules/highlight.js/styles/github.css';
+
 // Import datatables
 //import '../node_modules/datatables.net/js/jquery.dataTables.js';
 //import '../datatables/dataTables.semanticui.min.js';
