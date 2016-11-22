@@ -2,11 +2,6 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-/**
- * Created by kinneretzin on 29/08/2016.
- */
-
-
 import React, { Component, PropTypes } from 'react';
 import InlineEdit from 'react-edit-inline';
 
@@ -29,11 +24,15 @@ export default class WidgetDynamicContent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {data: {}};
+        this.state = {
+            data: {},
+            loading: false
+        };
+        this.loadingTimeout = null;
     }
 
     _getContext () {
-        return getContext(this._fetchData.bind(this));
+        return getContext(this._refresh.bind(this));
     }
 
     _fetch(url,context) {
@@ -55,6 +54,23 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
+    _refresh() {
+        this._showLoading();
+        this._fetchData();
+    }
+
+    _showLoading() {
+        clearTimeout(this.loadingTimeout);
+        this.loadingTimeout = setTimeout(()=>{this.setState({loading: true});}, 1000);
+    }
+
+    _hideLoading() {
+        clearTimeout(this.loadingTimeout);
+        if (this.state.loading) {
+            this.setState({loading: false});
+        }
+    }
+
     _fetchData() {
         if (this.props.widget.plugin.fetchUrl) {
             var context = this._getContext();
@@ -66,15 +82,16 @@ export default class WidgetDynamicContent extends Component {
 
             var fetches = _.map(urls,(url)=>this._fetch(url,context));
 
-            //this._fetch(this.props.widget.plugin.fetchUrl)
             Promise.all(fetches)
                 .then((data)=> {
                     console.log('widget :'+this.props.widget.name + ' data fetched');
                     this.setState({data: data.length === 1 ? data[0] : data});
+                    this._hideLoading();
                 })
                 .catch((e)=>{
                     console.error(e);
                     this.setState({error: 'Error fetching widget data'});
+                    this._hideLoading();
                 });
 
         } else if (this.props.widget.plugin.fetchData && typeof this.props.widget.plugin.fetchData === 'function') {
@@ -82,12 +99,12 @@ export default class WidgetDynamicContent extends Component {
                 .then((data)=> {
                     console.log('widget :'+this.props.widget.name + ' data fetched');
                     this.setState({data: data});
-
-
+                    this._hideLoading();
                 })
                 .catch((e)=>{
                     console.error(e);
                     this.setState({error: 'Error fetching widget data'});
+                    this._hideLoading();
                 });
         }
     }
@@ -170,14 +187,20 @@ export default class WidgetDynamicContent extends Component {
     }
     render() {
         return (
-            this.props.widget.plugin.isReact ?
-            <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader ') + (this.props.widget.plugin.showBorder ? '' : ' noBorder ')}>
-                {this.renderReact()}
-            </div>
-                :
-            <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader')}
-                 dangerouslySetInnerHTML={this.renderWidget()} ref={(container)=>this.attachEvents(container)} />
+            <div>
+                <div className={`ui ${this.state.loading?'active':''} small inline loader widgetLoader ${this.props.widget.plugin.showHeader?'header':'noheader'}`}></div>
 
+                {
+                    this.props.widget.plugin.isReact ?
+                    <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader ') + (this.props.widget.plugin.showBorder ? '' : ' noBorder ')}>
+                        {this.renderReact()}
+                    </div>
+                    :
+                    <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader')}
+                         dangerouslySetInnerHTML={this.renderWidget()}
+                         ref={(container)=>this.attachEvents(container)}/>
+                }
+            </div>
         );
     }
 }

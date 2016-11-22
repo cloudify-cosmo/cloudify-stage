@@ -410,6 +410,23 @@ body {
   }
 }
 
+.ui.inline.loader.widgetLoader {
+  position:  absolute;
+  left: auto;
+  bottom: auto;
+  display: none;
+
+  &.header {
+    right: 12px;
+    top: 4px;
+  }
+
+  &.noheader {
+    right: 5px;
+    top: 5px;
+  }
+}
+
 /* Customize Highlight styles */
 code.hljs {
   background: white;
