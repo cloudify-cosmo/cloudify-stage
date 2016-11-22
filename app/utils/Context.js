@@ -19,7 +19,7 @@ class Context {
             this._initFromStore();
         });
     }
-    
+
     _initFromStore () {
         var state = this.store.getState();
         this.context = state.context;
