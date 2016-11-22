@@ -30,6 +30,8 @@ export default class extends React.Component {
     renderFields(fieldsToShow,item) {
         var HighlightText = Stage.Basic.HighlightText;
         var Overlay = Stage.Basic.Overlay;
+        var OverlayAction = Stage.Basic.OverlayAction;
+        var OverlayContent = Stage.Basic.OverlayContent;
         var Checkmark = Stage.Basic.Checkmark;
 
         var fields = [];
@@ -58,8 +60,12 @@ export default class extends React.Component {
             fields.push(
                 <td key={item.id+'Params'}>
                     <Overlay>
-                        <i data-overlay-action className="options icon link bordered" title="Execution parameters"></i>
-                        <HighlightText className='json'>{JSON.stringify(item.parameters, null, 2)}</HighlightText>
+                        <OverlayAction>
+                            <i data-overlay-action className="options icon link bordered" title="Execution parameters"></i>
+                        </OverlayAction>
+                        <OverlayContent>
+                            <HighlightText className='json'>{JSON.stringify(item.parameters, null, 2)}</HighlightText>
+                        </OverlayContent>
                     </Overlay>
                 </td>
             );
@@ -71,8 +77,12 @@ export default class extends React.Component {
                         <i className="check circle icon inverted green"></i>
                         :
                         <Overlay>
-                            <i data-overlay-action className="remove circle icon red link bordered" title="Error details"></i>
-                            <HighlightText className='python'>{item.error}</HighlightText>
+                            <OverlayAction>
+                                <i data-overlay-action className="remove circle icon red link bordered" title="Error details"></i>
+                            </OverlayAction>
+                            <OverlayContent>
+                                <HighlightText className='python'>{item.error}</HighlightText>
+                            </OverlayContent>
                         </Overlay>
                     }
                     {item.status}

@@ -4,6 +4,11 @@
 
 import React, { Component, PropTypes } from 'react';
 
+import OverlayAction from './OverlayAction';
+import OverlayContent from './OverlayContent';
+
+export {OverlayAction, OverlayContent};
+
 export default class Overlay extends Component {
 
     static propTypes = {
@@ -29,23 +34,23 @@ export default class Overlay extends Component {
     }
 
     render() {
-        var excludes = [];
-        var includes = [];
+        var overlayAction = null;
+        var overlayContent = null;
 
         var self = this;
         React.Children.forEach(this.props.children, function(child,index) {
-            if (child.props["data-overlay-action"]) {
-                excludes.push(React.cloneElement(child, {onClick: self._showOverlay.bind(self), key: index}));
-            } else {
-                includes.push(child);
+            if (child.type && child.type.name === "OverlayAction") {
+                overlayAction = React.cloneElement(child, {onClick:self._showOverlay.bind(self)});
+            } else if (child.type && child.type.name === "OverlayContent") {
+                overlayContent = child;
             }
         });
 
         return (
             <div>
-                {excludes}
+                {overlayAction}
                 <div className={`ui ${this.props.className} modal`} ref='overlayObj'>
-                    <div className="content">{includes}</div>
+                    {overlayContent}
                 </div>
             </div>
         )

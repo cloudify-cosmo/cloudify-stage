@@ -4,9 +4,9 @@
 
 import React, { Component, PropTypes } from 'react';
 
-import Modal from './Modal';
-import Footer from './ModalFooter';
-import Header from './ModalHeader';
+import Modal from './modal/Modal';
+import Footer from './modal/ModalFooter';
+import Header from './modal/ModalHeader';
 
 export default class Confirm extends Component {
     static propTypes = {
