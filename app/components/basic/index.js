@@ -9,6 +9,7 @@ import ErrorMessage from './ErrorMessage';
 import HighlightText from './HighlightText';
 import Overlay from './Overlay';
 import Checkmark from './Checkmark';
+import EditableLabel from './EditableLabel';
 
-export {Modal, Header as  ModalHeader, Footer as ModalFooter, Body as ModalBody, Confirm, KeyIndicator, ErrorMessage, HighlightText, Overlay, Checkmark};
+export {Modal, Header as  ModalHeader, Footer as ModalFooter, Body as ModalBody, Confirm, KeyIndicator, ErrorMessage, HighlightText, Overlay, Checkmark, EditableLabel};
 

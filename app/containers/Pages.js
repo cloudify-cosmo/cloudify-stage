@@ -42,7 +42,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onPageSelected: (page) => {
-            dispatch(selectPage(page.id));
+            dispatch(selectPage(page.id,page.isDrillDown));
         },
         onPageRemoved: (page) => {
             dispatch(removePage(page.id));

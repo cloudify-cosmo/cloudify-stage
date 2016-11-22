@@ -69,22 +69,28 @@ body {
 
 .pageRemoveButton {
     position: absolute;
-    top: 0px;
-    right : 0px;
+    right : 5px;
     display:none;
     visibility: hidden;
+    top: 40%;
 }
 
-.pageMenuItem:hover .pageRemoveButton{display:block; visibility: visible;}
+.pageMenuItem:hover .pageRemoveButton{
+  display:block;
+  visibility: visible;
+}
 
 .pageDescription {
-  clear: both;
-  float:left;
+  opacity: 0.6;
+  font-size: 12px;
+
+  &.editPlaceholder {
+    font-style: italic;
+  }
 }
 
 .pageTitle {
   clear: both;
-  float:left;
   line-height: 1.5;
 }
 
