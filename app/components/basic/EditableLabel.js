@@ -8,7 +8,6 @@ import InlineEdit from 'react-edit-inline';
 export default class EditableLabel extends Component {
 
     static propTypes = {
-        id: PropTypes.any,
         text: PropTypes.string,
         placeholder: PropTypes.string,
         className: PropTypes.string,
@@ -24,7 +23,6 @@ export default class EditableLabel extends Component {
     };
 
     render() {
-        console.log('editable label for : '+(this.props.text || this.props.placeholder) +' is '+ this.props.isEditEnable);
         if (this.props.isEditEnable) {
             return (
                 <InlineEdit
