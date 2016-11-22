@@ -28,37 +28,28 @@ export default class Modal extends Component {
         loading: false
     };
 
-    componentDidMount() {
-        this._initModal(this.refs.modalObj);
-
-        $(this.refs.modalObj).modal(this.props.show ? 'show': 'hide');
-    }
     componentDidUpdate() {
-        $(this.refs.modalObj).modal('refresh');
-        $(this.refs.modalObj).modal(this.props.show ? 'show': 'hide');
+        if (this.props.show) {
+            var thi$ = this;
+            $(this.refs.modalObj).modal({
+                closable: false,
+                observeChanges: true,
+                onDeny: function () {
+                    return thi$.props.onDeny();
+                },
+                onApprove: function () {
+                    return thi$.props.onApprove();
+                }
+            }).modal('show');
+        }
     }
+
+
     componentWillUnmount() {
-        $(this.refs.modalObj).modal('hide');
-        $(this.refs.modalObj).modal('destroy');
-        $(this.refs.modalObj).remove();
-    }
-
-    _initModal(modalObj) {
-        var thi$ = this;
-        $(modalObj).modal({
-            closable  : false,
-            onDeny    : function(){
-                return thi$.props.onDeny();
-            },
-            onApprove : function() {
-                return thi$.props.onApprove();
-            }
-        });
-
-    }
-
-    _showModal() {
-        $(this.refs.modalObj).modal('show');
+        $(this.refs.modalObj)
+            .modal('hide')
+            .modal('destroy')
+            .remove();
     }
 
     render() {

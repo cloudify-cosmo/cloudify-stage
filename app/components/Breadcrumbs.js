@@ -4,12 +4,12 @@
 
 import React, { Component,PropTypes } from 'react';
 import InlineEdit from 'react-edit-inline';
+import {EditableLabel} from './basic';
 
 export default class Breadcrumbs extends Component {
     static propTypes = {
         pagesList: PropTypes.array.isRequired,
         onPageNameChange: PropTypes.func.isRequired,
-        onPageDescriptionChange: PropTypes.func.isRequired,
         onPageSelected: PropTypes.func.isRequired
     };
 
@@ -20,38 +20,15 @@ export default class Breadcrumbs extends Component {
                 elements.push(<div key={p.id} className='section' onClick={()=>{this.props.onPageSelected(p);} }>{p.name}</div>);
                 elements.push(<span key={'d_'+p.id} className="divider">/</span>);
             } else {
-                if (this.props.isEditMode) {
-                    elements.push(
-                        <span key={p.id + "_name"} className='section active pageTitle'>
-                            <InlineEdit
-                                text={p.name}
-                                change={data=>this.props.onPageNameChange(p.id,data.name)}
-                                paramName="name"
-                                />
-                        </span>
-                        );
-                     elements.push(
-                        <span key={p.id + "_description"} className='pageDescription'>
-                            <InlineEdit
-                                text={p.description}
-                                change={data=>this.props.onPageDescriptionChange(p.id,data.description)}
-                                paramName="description"
-                                />
-                        </span>
-                     );
-                }
-                else
-                {
-                    elements.push(
-                        <span key={p.id + "_name"} className='section active pageTitle'>
-                            {p.name}
-                        </span>
-                        );
-                     elements.push(
-                        <span key={p.id + "_description"} className="pageDescription"> {p.description}  </span>
-                     );
-                }
-                //elements.push(<span key={p.id} className='section active'>{p.name}</span>);
+                elements.push(
+                    <EditableLabel key={p.id}
+                        text={p.name}
+                        placeHolder='You must fill a page name'
+                        className='section active pageTitle'
+                        isEditEnable={this.props.isEditMode}
+                        onEditDone={(newName)=>this.props.onPageNameChange(p.id,newName)}
+                        />
+                );
             }
 
         });

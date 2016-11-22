@@ -11,7 +11,7 @@ import React, { Component, PropTypes } from 'react';
 import InlineEdit from 'react-edit-inline';
 
 import PluginUtils from '../utils/pluginUtils';
-import EditWidget from '../Containers/EditWidget';
+import EditWidget from '../containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
 
 export default class Widget extends Component {
