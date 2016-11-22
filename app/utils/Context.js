@@ -4,7 +4,7 @@
 
 import {setValue as setContextValue} from '../actions/context';
 import config from '../config.json';
-import CommonUtils from '../utils/commonUtils';
+import StageUtils from '../utils/stageUtils';
 import PluginEventBus from '../utils/PluginEventBus';
 import {drillDownToPage} from '../actions/widgets';
 
@@ -39,7 +39,7 @@ class Context {
     }
 
     getManagerUrl(queryString) {
-        return CommonUtils.createManagerUrl(config.proxyIp, this.manager.ip, queryString);
+        return StageUtils.createManagerUrl(config.proxyIp, this.manager.ip, queryString);
     }
 
     getSecurityHeaders() {

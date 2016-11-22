@@ -10,7 +10,10 @@ import HighlightText from './HighlightText';
 import Overlay, {OverlayAction,OverlayContent} from './overlay/Overlay';
 import Checkmark from './Checkmark';
 import EditableLabel from './EditableLabel';
+import StageLineChart from './charts/StageLineChart';
+import StageBarChart from './charts/StageBarChart';
 
 export {Modal, Header as  ModalHeader, Footer as ModalFooter, Body as ModalBody, Confirm, EditableLabel,
-        KeyIndicator, ErrorMessage, HighlightText, Overlay, OverlayAction, OverlayContent, Checkmark};
+        KeyIndicator, ErrorMessage, HighlightText, Overlay, OverlayAction, OverlayContent, Checkmark,
+        StageLineChart as LineChart, StageBarChart as BarChart};
 
