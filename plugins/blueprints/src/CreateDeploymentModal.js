@@ -8,7 +8,8 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            error: null
+            error: null,
+            loading: false
         }
     }
 
@@ -35,27 +36,17 @@ export default class extends React.Component {
             inputs[input.data('name')] = input.val();
         });
 
-        var thi$ = this;
-        $.ajax({
-            url: thi$.props.context.getManagerUrl(`/api/v2.1/deployments/${deploymentId}`),
-            //dataType: 'json',
-            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
-            method: 'put',
-            data: JSON.stringify({
-                'blueprint_id': blueprintId,
-                inputs: inputs
-            })
-        })
-            .done((deployment)=> {
-                thi$.props.context.setValue(this.props.widget.id + 'createDeploy',null);
+        // Disable the form
+        this.setState({loading: true});
 
-                thi$.props.context.getEventBus().trigger('deployments:refresh');
-
-            })
-            .fail((jqXHR, textStatus, errorThrown)=>{
-                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
+        this.props.context.doPut(`/api/v2.1/deployments/${deploymentId}`, {'blueprint_id': blueprintId, inputs: inputs})
+            .then((deployment)=> {
+                this.setState({loading: false});
+                this.props.context.setValue(this.props.widget.id + 'createDeploy',null);
+                this.props.context.getEventBus().trigger('deployments:refresh');
+            }).catch((err)=> {
+                 this.setState({loading: false, error: err});
             });
-
 
         return false;
     }
@@ -91,7 +82,7 @@ export default class extends React.Component {
         );
         return (
             <div>
-                <Modal show={shouldShow} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
+                <Modal show={shouldShow} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                     <Header>
                         <i className="rocket icon"></i> Deploy blueprint {deployItem.id}
                     </Header>

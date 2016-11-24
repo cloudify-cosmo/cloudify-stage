@@ -2,6 +2,8 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
+import DeployModal from './CreateDeploymentModal';
+
 export default class extends React.Component {
 
     constructor(props,context) {
@@ -20,7 +22,12 @@ export default class extends React.Component {
     _createDeployment(item,event){
         event.stopPropagation();
 
-        this.props.context.setValue(this.props.widget.id + 'createDeploy',item);
+        this.props.context.doGet(`/api/v2.1/blueprints?_include=id,plan&id=${item.id}`)
+            .then((data)=> {
+                this.props.context.setValue(this.props.widget.id + 'createDeploy', _.get(data, "items[0]", {}));
+            }).catch((err)=> {
+                this.setState({error: err});
+            });
     }
 
     _deleteBlueprintConfirm(item,event){
@@ -38,19 +45,13 @@ export default class extends React.Component {
             return;
         }
 
-        var thi$ = this;
-        $.ajax({
-            url: thi$.props.context.getManagerUrl(`/api/v2.1/blueprints/${this.state.item.id}`),
-            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
-            method: 'delete'
-        })
-            .done(()=> {
-                thi$.setState({confirmDelete: false});
-                thi$.props.context.getEventBus().trigger('blueprints:refresh');
-            })
-            .fail((jqXHR, textStatus, errorThrown)=>{
-                thi$.setState({confirmDelete: false});
-                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
+        this.props.context.doDelete(`/api/v2.1/blueprints/${this.state.item.id}`)
+            .then(()=> {
+                this.setState({confirmDelete: false});
+                this.props.context.getEventBus().trigger('blueprints:refresh');
+            }).catch((err)=> {
+                this.setState({confirmDelete: false});
+                this.setState({error: err});
             });
     }
 
@@ -109,10 +110,14 @@ export default class extends React.Component {
                     }
                     </tbody>
                 </table>
+
                 <Confirm title='Are you sure you want to remove this blueprint?'
                          show={this.state.confirmDelete}
                          onConfirm={this._deleteBlueprint.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
+
+                <DeployModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+
             </div>
 
         );

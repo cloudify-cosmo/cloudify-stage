@@ -59,9 +59,7 @@ Stage.addPlugin({
         formattedData.blueprintId = blueprintId;
 
         return (
-            <div>
-                <DeploymentsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
-            </div>
+            <DeploymentsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
         );
     }
 });

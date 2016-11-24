@@ -14,7 +14,7 @@ Stage.addPlugin({
 
     fetchData: function(plugin,context,pluginUtils) {
         return new Promise( (resolve,reject) => {
-            pluginUtils.jQuery.get({
+            $.get({
                 url: context.getManagerUrl('/api/v2.1/plugins?_include=id'),
                 dataType: 'json',
                 headers: context.getSecurityHeaders()

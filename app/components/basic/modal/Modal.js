@@ -41,9 +41,10 @@ export default class Modal extends Component {
                     return thi$.props.onApprove();
                 }
             }).modal('show');
+        } else {
+            $(this.refs.modalObj).modal("hide");
         }
     }
-
 
     componentWillUnmount() {
         $(this.refs.modalObj)

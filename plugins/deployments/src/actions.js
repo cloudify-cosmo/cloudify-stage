@@ -9,19 +9,7 @@ export default class {
     }
 
     delete(deployment) {
-        return new Promise((resolve,reject)=>{
-            $.ajax({
-                url: this.context.getManagerUrl(`/api/v2.1/deployments/${deployment.id}`),
-                "headers": Object.assign({"content-type": "application/json"},this.context.getSecurityHeaders()),
-                method: 'delete'
-            })
-                .done(()=> {
-                    resolve();
-                })
-                .fail((jqXHR, textStatus, errorThrown)=>{
-                    reject(jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown);
-                });
-        });
+        return this.context.doDelete(`/api/v2.1/deployments/${deployment.id}`);
     }
 
     update() {
@@ -29,23 +17,12 @@ export default class {
     }
 
     execute(deployment,workflow,params) {
-        return new Promise((resolve,reject)=>{
-            $.ajax({
-                url: this.context.getManagerUrl('/api/v2.1/executions'),
-                "headers": Object.assign({"content-type": "application/json"},this.context.getSecurityHeaders()),
-                method: 'post',
-                data: JSON.stringify({
+        return this.context.doPost('/api/v2.1/executions',
+                {
                     'deployment_id': deployment.id,
                     'workflow_id' : workflow.name,
                     parameters: params
-                })
-            })
-                .done((execution)=> {
-                    resolve(execution);
-                })
-                .fail((jqXHR, textStatus, errorThrown)=>{
-                    reject(jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)
-                });
-        });
+                }
+        );
     }
 }

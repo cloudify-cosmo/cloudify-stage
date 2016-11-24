@@ -18,7 +18,7 @@ Stage.addPlugin({
 
         return new Promise( (resolve,reject) => {
             if (deploymentId) {
-                pluginUtils.jQuery.get({
+                $.get({
                     url: context.getManagerUrl(`/api/v2.1/deployments?_include=id,inputs&id=${deploymentId}`),
                     dataType: 'json',
                     headers: context.getSecurityHeaders()

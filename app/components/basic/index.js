@@ -11,6 +11,19 @@ import Overlay, {OverlayAction,OverlayContent} from './overlay/Overlay';
 import Checkmark from './Checkmark';
 import EditableLabel from './EditableLabel';
 
-export {Modal, Header as  ModalHeader, Footer as ModalFooter, Body as ModalBody, Confirm, EditableLabel,
-        KeyIndicator, ErrorMessage, HighlightText, Overlay, OverlayAction, OverlayContent, Checkmark};
+export {
+    Modal,
+    Header as  ModalHeader,
+    Footer as ModalFooter,
+    Body as ModalBody,
+    Confirm,
+    EditableLabel,
+    KeyIndicator,
+    ErrorMessage,
+    HighlightText,
+    Overlay,
+    OverlayAction,
+    OverlayContent,
+    Checkmark
+};
 

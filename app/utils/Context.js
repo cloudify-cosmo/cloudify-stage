@@ -50,7 +50,40 @@ class Context {
     getEventBus (){
         return PluginEventBus;
     }
+
+    doAjax(method, url, data) {
+        return new Promise((resolve,reject)=> {
+            $.ajax({
+                url: this.getManagerUrl(url),
+                headers: Object.assign({"content-type": "application/json"}, this.getSecurityHeaders()),
+                method,
+                data: data ? JSON.stringify(data) : {}
+            }).done((data)=> {
+                resolve(data);
+            }).fail((jqXHR, textStatus, errorThrown)=> {
+                reject(jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)
+            });
+        });
+    }
+
+    doGet(url, data) {
+        return this.doAjax("get", url, data);
+    }
+
+    doPost(url, data) {
+        return this.doAjax("post", url, data);
+    }
+
+    doDelete(url, data) {
+        return this.doAjax("delete", url, data);
+    }
+
+    doPut(url, data) {
+        return this.doAjax("put", url, data);
+    }
+
     refresh () {}
+
 }
 
 var context = null;

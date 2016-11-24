@@ -3,9 +3,7 @@
  */
 
 import PluginsTable from './PluginsTable';
-import renderUploadPluginModal from './UploadPluginModal';
-
-var UploadModal = null;
+import UploadModal from './UploadPluginModal';
 
 Stage.addPlugin({
     id: "plugins",
@@ -15,10 +13,6 @@ Stage.addPlugin({
     initialHeight: 5,
     color : "blue",
     isReact: true,
-    init: function(pluginUtils) {
-        UploadModal = renderUploadPluginModal(pluginUtils);
-    },
-
     fetchUrl: '[manager]/api/v2.1/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at',
     render: function(widget,data,error,context,pluginUtils) {
 
@@ -38,8 +32,8 @@ Stage.addPlugin({
 
         return (
             <div>
-                <PluginsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
-                <UploadModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+                <PluginsTable widget={widget} data={formattedData} context={context}/>
+                <UploadModal widget={widget} data={formattedData} context={context}/>
             </div>
         );
     }

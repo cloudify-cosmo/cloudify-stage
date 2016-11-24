@@ -53,6 +53,5 @@ export default class PluginUtils {
     }
 
     static moment = momentImport;
-    static jQuery = $;
     static React = React;
 }

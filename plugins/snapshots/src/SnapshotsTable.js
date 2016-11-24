@@ -1,6 +1,8 @@
 /**
  * Created by kinneretzin on 02/10/2016.
  */
+import UploadModal from './UploadSnapshotModal';
+import CreateModal from './CreateSnapshotModal';
 
 export default class extends React.Component {
 
@@ -29,39 +31,24 @@ export default class extends React.Component {
     _restoreSnapshot(item,event) {
         event.stopPropagation();
 
-        var thi$ = this;
         var data = {force: false, recreate_deployments_envs: false};
-        $.ajax({
-            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/restore`),
-            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
-            data: JSON.stringify(data),
-            dataType: "json",
-            method: 'post'
-        })
-            .done(()=> {
-                thi$.props.context.getEventBus().trigger('snapshots:refresh');
-              })
-            .fail((jqXHR, textStatus, errorThrown)=>{
-                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
+        this.props.context.doPost(`/api/v2.1/snapshots/${item.id}/restore`, data)
+            .then(()=> {
+                this.props.context.getEventBus().trigger('snapshots:refresh');
+            }).catch((err)=> {
+                this.setState({error: err});
             });
     }
 
     _downloadSnapshot(item,event) {
         event.stopPropagation();
 
-        var thi$ = this;
-        $.ajax({
-            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/archive`),
-            method: 'get',
-            headers:thi$.props.context.getSecurityHeaders()
-
-        })
-            .done(()=> {
-                  window.location = thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/archive`);
-              })
-            .fail((jqXHR, textStatus, errorThrown)=>{
-                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
-            });
+        this.props.context.doGet(`/api/v2.1/snapshots/${item.id}/archive`)
+                        .then(()=> {
+                            window.location = this.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/archive`);
+                        }).catch((err)=> {
+                            this.setState({error: err});
+                        });
     }
 
     _deleteSnapshot() {
@@ -70,20 +57,15 @@ export default class extends React.Component {
             return;
         }
 
-        var thi$ = this;
-        $.ajax({
-            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${this.state.item.id}`),
-            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
-            method: 'delete'
-        })
-            .done(()=> {
-                thi$.setState({confirmDelete: false});
-                thi$.props.context.getEventBus().trigger('snapshots:refresh');
-            })
-            .fail((jqXHR, textStatus, errorThrown)=>{
-                thi$.setState({confirmDelete: false});
-                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
-            });
+        this.props.context.doDelete(`/api/v2.1/snapshots/${this.state.item.id}`)
+                            .then(()=> {
+                                this.setState({confirmDelete: false});
+                                this.props.context.getEventBus().trigger('snapshots:refresh');
+                            }).catch((err)=> {
+                                this.setState({confirmDelete: false});
+                                this.setState({error: err});
+                            });
+
     }
 
     _refreshData() {
@@ -140,10 +122,16 @@ export default class extends React.Component {
                     }
                     </tbody>
                 </table>
+
                 <Confirm title='Are you sure you want to remove this snapshot?'
                          show={this.state.confirmDelete}
                          onConfirm={this._deleteSnapshot.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
+
+                <CreateModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+
+                <UploadModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+
             </div>
 
         );
