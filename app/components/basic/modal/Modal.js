@@ -42,7 +42,10 @@ export default class Modal extends Component {
                 }
             }).modal('show');
         } else {
-            $(this.refs.modalObj).modal("hide");
+            //Protection against useless modal initializing -> any .modal() execution including "hide" creates dimmer and rebind the content to it
+            if ($(this.refs.modalObj).parent(".dimmer").length > 0) {
+                $(this.refs.modalObj).modal("hide");
+            }
         }
     }
 
