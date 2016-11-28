@@ -5,16 +5,26 @@
 'use strict';
 
 import jsdom from 'jsdom';
-
 import _ from 'lodash';
 import $ from 'jquery';
+import chai from 'chai';
 
-global.document = jsdom.jsdom('<html><body></body></html>');
+global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
 global.window = document.defaultView;
 global.navigator = window.navigator;
+Object.keys(document.defaultView).forEach((property) => {
+    if (typeof global[property] === 'undefined') {
+        global[property] = document.defaultView[property];
+    }
+});
 
+global.$ = global.jQuery = global.window.$ = global.window.jQuery = $(window);
 global._ = _;
-global.$ = $;
+
+chai.use(require('chai-enzyme')());
+chai.use(require('sinon-chai'));
+
+require('../semantic/dist/semantic');
 
 function noop() {
     return {};

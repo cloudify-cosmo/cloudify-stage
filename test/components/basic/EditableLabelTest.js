@@ -5,7 +5,7 @@
 import React from 'react'
 import { shallow , mount} from 'enzyme'
 import {expect} from 'chai';
-import EditableLabel from '../app/components/basic/EditableLabel';
+import EditableLabel from '../../../app/components/basic/EditableLabel';
 import InlineEdit from 'react-edit-inline';
 import sinon from 'sinon';
 
