@@ -11,6 +11,9 @@ Stage.addPlugin({
     color : "teal",
     showHeader: false,
     isReact: true,
+    initialConfiguration: [
+        {id: "pollingTime", default: 5}
+    ],
 
     fetchData: function(plugin,context,pluginUtils) {
         return new Promise( (resolve,reject) => {

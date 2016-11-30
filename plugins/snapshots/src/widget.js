@@ -17,6 +17,9 @@ Stage.addPlugin({
     initialHeight: 4,
     color : "blue",
     isReact: true,
+    initialConfiguration: [
+        {id: "pollingTime", default: 30}
+    ],
     init: function(snapshotUtils) {
         UploadModal = renderUploadSnapshotModal(snapshotUtils);
         CreateModal = renderCreateSnapshotModal(snapshotUtils);
