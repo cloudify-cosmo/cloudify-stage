@@ -8,44 +8,15 @@ export default class {
         this.context = context;
     }
 
-    delete(deployment) {
-        return new Promise((resolve,reject)=>{
-            $.ajax({
-                url: this.context.getManagerUrl(`/api/v2.1/deployments/${deployment.id}`),
-                "headers": Object.assign({"content-type": "application/json"},this.context.getSecurityHeaders()),
-                method: 'delete'
-            })
-                .done(()=> {
-                    resolve();
-                })
-                .fail((jqXHR, textStatus, errorThrown)=>{
-                    reject(jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown);
-                });
-        });
+    doDelete(blueprint) {
+        return this.context.getManager().doDelete(`/deployments/${blueprint.id}`);
     }
 
-    update() {
-
-    }
-
-    execute(deployment,workflow,params) {
-        return new Promise((resolve,reject)=>{
-            $.ajax({
-                url: this.context.getManagerUrl('/api/v2.1/executions'),
-                "headers": Object.assign({"content-type": "application/json"},this.context.getSecurityHeaders()),
-                method: 'post',
-                data: JSON.stringify({
-                    'deployment_id': deployment.id,
-                    'workflow_id' : workflow.name,
-                    parameters: params
-                })
-            })
-                .done((execution)=> {
-                    resolve(execution);
-                })
-                .fail((jqXHR, textStatus, errorThrown)=>{
-                    reject(jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)
-                });
+    doExecute(deployment,workflow,params) {
+        return this.context.getManager().doPost('/executions',null,{
+            'deployment_id': deployment.id,
+            'workflow_id' : workflow.name,
+            parameters: params
         });
     }
 }

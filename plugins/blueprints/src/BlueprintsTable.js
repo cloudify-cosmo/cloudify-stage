@@ -2,6 +2,8 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
+import Actions from './actions';
+
 export default class extends React.Component {
 
     constructor(props,context) {
@@ -20,7 +22,10 @@ export default class extends React.Component {
     _createDeployment(item,event){
         event.stopPropagation();
 
-        this.props.context.setValue(this.props.widget.id + 'createDeploy',item);
+        // Get the full blueprint data (including plan for inputs
+        (new Actions(this.props.context)).doGetFullBlueprintData(item).then((fullBlueprint)=>{
+            this.props.context.setValue(this.props.widget.id + 'createDeploy',fullBlueprint);
+        });
     }
 
     _deleteBlueprintConfirm(item,event){
@@ -38,19 +43,15 @@ export default class extends React.Component {
             return;
         }
 
-        var thi$ = this;
-        $.ajax({
-            url: thi$.props.context.getManagerUrl(`/api/v2.1/blueprints/${this.state.item.id}`),
-            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
-            method: 'delete'
-        })
-            .done(()=> {
-                thi$.setState({confirmDelete: false});
-                thi$.props.context.getEventBus().trigger('blueprints:refresh');
+        var actions = new Actions(this.props.context);
+
+        actions.doDelete(this.state.item)
+            .then(()=> {
+                this.setState({confirmDelete: false});
+                this.props.context.getEventBus().trigger('blueprints:refresh');
             })
-            .fail((jqXHR, textStatus, errorThrown)=>{
-                thi$.setState({confirmDelete: false});
-                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
+            .catch((err)=>{
+                this.setState({confirmDelete: false,error: err.error});
             });
     }
 
