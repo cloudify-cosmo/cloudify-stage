@@ -14,6 +14,7 @@ Stage.addPlugin({
     color: "yellow",
     showHeader: false,
     showBorder: false,
+    zIndex: 2,
     fetchData: function(plugin,context,pluginUtils) {
         return DataFetcher.fetch(context);
     },

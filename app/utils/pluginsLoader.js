@@ -47,6 +47,7 @@ class Plugin {
         this.initialHeight = 3;
         this.color = "blue";
         this.initialConfiguration = [];
+        this.zIndex = 0;
 
         // Override defaults with data
         Object.assign(this,data);
