@@ -62,11 +62,6 @@ class Plugin {
 }
 export default class PluginsLoader {
     static init() {
-        window.addPlugin = function(pluginData) {
-            plugins.push(new Plugin(pluginData));
-        };
-
-
         window.Stage = {
             addPlugin: (pluginData)=> {
                 plugins.push(new Plugin(pluginData));
@@ -86,7 +81,7 @@ export default class PluginsLoader {
             .then((data)=> {
                 var promises = [];
                 data.forEach((plugin)=>{
-                    promises.push(new ScriptLoader('/plugins/'+plugin.name+'/widget.js').load());
+                    promises.push(new ScriptLoader('/plugins/'+plugin+'/widget.js').load());
                 });
                 return Promise.all(promises);
             })
