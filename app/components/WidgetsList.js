@@ -49,7 +49,14 @@ export default class WidgetsList extends Component {
             },this);
         }
 
+        //Re add style on grid-stack-item which is being removed during widgets relocating
+        _.each(this.props.widgets,(w)=>{
+            if (w.plugin && w.plugin.zIndex) {
+                $(`#${w.id}`).css("z-index", w.plugin.zIndex);
+            }
+        });
     }
+
     componentWillUnmount() {
         $('.grid-stack').off('change');
     }
