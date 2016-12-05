@@ -8,7 +8,14 @@ import CommonUtils from './commonUtils';
 
 export default class Auth {
 
-    static getApiVersion(managerIp,username,password) {
+    static login(managerIp,username,password) {
+
+        return this._getApiVersion(managerIp,username,password)
+                    .then(version => this._getLoginToken(managerIp,username,password,version));
+
+    }
+
+    static _getApiVersion(managerIp,username,password) {
 
         return fetch(CommonUtils.createManagerUrl(config.proxyIp, managerIp, '/version'),
             {
@@ -69,7 +76,7 @@ export default class Auth {
                 if (apiVer) {
                     return Promise.resolve(apiVer);
                 } else {
-                    return Promise.reject(`Cannot determine API version from server version ${version}`);
+                    throw Error(`Cannot determine API version from server version ${version}`);
                 }
             })
             .catch((e)=>{
@@ -78,7 +85,7 @@ export default class Auth {
             });
     }
 
-    static getLoginToken(managerIp,username,password,version) {
+    static _getLoginToken(managerIp,username,password,version) {
 
         return fetch(CommonUtils.createManagerUrl(config.proxyIp, managerIp, `/api/${version}/tokens`),
             {
@@ -99,7 +106,7 @@ export default class Auth {
                     return Promise.reject(data);
                 }
 
-                return Promise.resolve(data.value);
+                return Promise.resolve({token:data.value, version});
             })
             .catch((e)=>{
                 console.error(e);

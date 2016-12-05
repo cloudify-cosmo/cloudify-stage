@@ -40,18 +40,12 @@ export function login (ip,username,password) {
 
         dispatch(requestLogin());
 
-        return Auth.getApiVersion(ip,username,password)
-            .then(version => {
-
-                Auth.getLoginToken(ip,username,password,version)
-                    .then(token => {
-                        dispatch(receiveLogin(ip, username, token, version));
+        return Auth.login(ip,username,password)
+                    .then(data => {
+                        dispatch(receiveLogin(ip, username, data.token, data.version));
                         dispatch(push('/'));
                     })
-                    .catch(err => dispatch(errorLogin(ip,username,err)))
-
-            })
-            .catch(err => dispatch(errorLogin(ip,username,err)))
+                    .catch(err => dispatch(errorLogin(ip,username,err)));
     }
 }
 
@@ -61,9 +55,7 @@ function setStatus(status) {
         status,
         receivedAt: Date.now()
     }
-
 }
-
 
 export function getStatus (manager) {
     return function(dispatch) {

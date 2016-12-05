@@ -3,7 +3,7 @@
  */
 
 
-addPlugin({
+Stage.addPlugin({
     id: "usersList",
     name: "Users list",
     description: 'blah blah blah',
