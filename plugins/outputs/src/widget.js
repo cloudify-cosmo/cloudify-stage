@@ -8,6 +8,10 @@ Stage.addPlugin({
     initialHeight: 5,
     color : "blue",
     isReact: true,
+    initialConfiguration: [
+        {id: "pollingTime", default: 2}
+    ],
+
     fetchData: function(plugin,context,pluginUtils) {
         let deploymentId = context.getValue('deploymentId');
 

@@ -21,6 +21,7 @@ const managers = (state = {}, action) => {
                         },
                         version: 'v2.1',
                         err: null,
+                        version: action.version,
                         lastUpdated: action.receivedAt
                     }
                 ]

@@ -11,6 +11,9 @@ Stage.addPlugin({
     color : "violet",
     showHeader: false,
     isReact: true,
+    initialConfiguration: [
+        {id: "pollingTime", default: 5}
+    ],
     fetchUrl: '[manager]/deployments?_include=id',
     render: function(widget,data,error,context,pluginUtils) {
         if (_.isEmpty(data)) {

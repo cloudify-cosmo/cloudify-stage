@@ -7,27 +7,110 @@ import config from '../config.json';
 import CommonUtils from './commonUtils';
 
 export default class Auth {
+
     static login(managerIp,username,password) {
 
-        // TODO need to fix after version merge
-        return fetch(CommonUtils.createManagerUrl(config.proxyIp, managerIp, '/api/v2.1/tokens'),
-             {
+        return this._getApiVersion(managerIp,username,password)
+                    .then(version => this._getLoginToken(managerIp,username,password,version));
+
+    }
+
+    static _getApiVersion(managerIp,username,password) {
+
+        return fetch(CommonUtils.createManagerUrl(config.proxyIp, managerIp, '/version'),
+            {
                 method: 'GET',
                 headers: {
                     'authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
                 }
             })
-            .then(response => response.json())
-            .catch((e)=>{
-                console.error(e);
-                return Promise.reject(e.message);
+            .then(response => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+
+                return response.json();
             })
             .then((data)=> {
                 if (data.error_code) {
-                    return Promise.reject(data.message);
+                    return Promise.reject(data);
                 }
 
-                return Promise.resolve(data.value);
+                return Promise.resolve(data.version);
+            })
+            .then((version)=> {
+                /*
+                    (0 - 3.2.1] -> v1
+                    (3.2.1 - 3.3.1] -> v2
+                    (3.3.1 - 3.4.x] -> v2.1
+                    (3.4.x - 4.0.x] -> v3
+                */
+
+                const mapping = [
+                    {left: "0.0.0", right: "3.2.1", version: "v1"},
+                    {left: "3.2.1", right: "3.3.1", version: "v2"},
+                    {left: "3.3.1", right: "3.4.100", version: "v2.1"},
+                    {left: "3.4.100", right: "4.0.100", version: "v3"},
+                ];
+
+                function _fill(v) {
+                    return _.padEnd(_.defaultTo(v, '0'), 3, '0');
+                }
+
+                function _number(value) {
+                    let v = _.words(value);
+                    return _.toNumber(_fill(v[0]) + _fill(v[1]) + _fill(v[2]));
+                }
+
+                let verNum = _number(version);
+                let apiVer = null;
+                _.each(mapping,m=>{
+                    let leftNum = _number(m.left);
+                    let rightNum = _number(m.right);
+                    if (verNum > leftNum && verNum <= rightNum) {
+                        apiVer = m.version;
+                        return false;
+                    }
+                })
+
+                if (apiVer) {
+                    return Promise.resolve(apiVer);
+                } else {
+                    throw Error(`Cannot determine API version from server version ${version}`);
+                }
+            })
+            .catch((e)=>{
+                console.error(e);
+                return Promise.reject(e.message);
+            });
+    }
+
+    static _getLoginToken(managerIp,username,password,version) {
+
+        return fetch(CommonUtils.createManagerUrl(config.proxyIp, managerIp, `/api/${version}/tokens`),
+            {
+                method: 'GET',
+                headers: {
+                    'authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+
+                return response.json();
+            })
+            .then((data)=> {
+                if (data.error_code) {
+                    return Promise.reject(data);
+                }
+
+                return Promise.resolve({token:data.value, version});
+            })
+            .catch((e)=>{
+                console.error(e);
+                return Promise.reject(e.message);
             });
 
     }

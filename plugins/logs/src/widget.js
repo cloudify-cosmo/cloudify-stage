@@ -13,6 +13,10 @@ Stage.addPlugin({
     color: "purple",
     fetchUrl: '[manager]/events',
     isReact: true,
+    initialConfiguration: [
+        {id: "pollingTime", default: 2}
+    ],
+
     render: function(widget,data,error,context,pluginUtils) {
         if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();

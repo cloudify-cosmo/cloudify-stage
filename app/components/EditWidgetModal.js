@@ -43,12 +43,12 @@ export default class EditWidgetModal extends Component {
               </div>
 
               <div className="content">
-                <div className="ui segment basic large">
+                  <div className="ui form">
                     {
                         this.props.configuration.map((config)=>{
                             return (
-                                <div key={config.id}>
-                                    <h4> {config.name} </h4>
+                                <div className="field" key={config.id}>
+                                    <label>{config.name}</label>
                                     <div className="ui icon input fluid mini">
                                         {
                                             config.icon ?
@@ -62,7 +62,7 @@ export default class EditWidgetModal extends Component {
                             );
                         })
                     }
-             </div>
+                  </div>
             </div>
             <div className="actions">
                 <button className="ui approve button" onClick={this._editWidget.bind(this)}>Save</button>
