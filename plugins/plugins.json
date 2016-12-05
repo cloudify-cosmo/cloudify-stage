@@ -1,38 +1,21 @@
 [
-  {
-    "name": "blueprints"
-  },
-  {
-    "name": "deployments"
-  },
-  {
-    "name": "topology"
-  },
-  {
-    "name": "deploymentNum"
-  },
-  {
-    "name" : "serversNum"
-  },
-  {
-    "name" : "pluginsNum"
-  },
-  {
-    "name" : "usersList"
-  },
-  {
-    "name" : "graph"
-  },
-  { "name" : "cpuUtilizationSystem" },
-  { "name" : "cpuUtilizationUser" },
-  { "name" : "inputs" },
-  { "name" : "githubRepositories" },
-  { "name" : "events" },
-  { "name" : "plugins"},
-  { "name" : "snapshots"},
-  { "name" : "logs" },
-  { "name" : "filter" },
-  { "name" : "reactTest"},
-  { "name" : "outputs"},
-  { "name" : "executions"}
+  "blueprints",
+  "deployments",
+  "topology",
+  "deploymentNum",
+  "serversNum",
+  "pluginsNum",
+  "usersList",
+  "graph",
+  "cpuUtilizationSystem",
+  "cpuUtilizationUser",
+  "inputs",
+  "githubRepositories",
+  "events",
+  "plugins",
+  "snapshots",
+  "logs",
+  "filter",
+  "outputs",
+  "executions"
 ]
