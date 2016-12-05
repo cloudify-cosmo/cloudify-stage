@@ -3,7 +3,7 @@
  */
 
 
-addPlugin({
+Stage.addPlugin({
     id: "graph",
     name: "some graph",
     description: 'blah blah blah',

@@ -11,7 +11,7 @@ Stage.addPlugin({
     initialWidth: 5,
     initialHeight: 4,
     color: "green",
-    fetchUrl: '[manager]/api/v2.1/events',
+    fetchUrl: '[manager]/events',
     isReact: true,
     initialConfiguration: [
         {id: "pollingTime", default: 2}

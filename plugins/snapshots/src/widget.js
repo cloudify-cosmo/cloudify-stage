@@ -12,7 +12,7 @@ var CreateModal = null;
 Stage.addPlugin({
     id: "snapshots",
     name: "Snapshots list",
-    description: 'blah blah blah',
+    description: 'Snapshots list',
     initialWidth: 4,
     initialHeight: 4,
     color : "blue",
@@ -20,14 +20,14 @@ Stage.addPlugin({
     initialConfiguration: [
         {id: "pollingTime", default: 30}
     ],
-    init: function(snapshotUtils) {
-        UploadModal = renderUploadSnapshotModal(snapshotUtils);
-        CreateModal = renderCreateSnapshotModal(snapshotUtils);
+    init: function(pluginUtils) {
+        UploadModal = renderUploadSnapshotModal(pluginUtils);
+        CreateModal = renderCreateSnapshotModal(pluginUtils);
     },
 
-    fetchUrl: '[manager]/api/v2.1/snapshots?_include=id,created_at,status',
+    fetchUrl: '[manager]/snapshots?_include=id,created_at,status',
 
-    render: function(widget,data,error,context,snapshotUtils) {
+    render: function(widget,data,error,context,pluginUtils) {
 
         if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();
@@ -37,7 +37,7 @@ Stage.addPlugin({
         var formattedData = Object.assign({},data,{
             items: _.map (data.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: snapshotUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    created_at: pluginUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
                     isSelected: selectedSnapshot === item.id
                 })
             })
@@ -46,10 +46,10 @@ Stage.addPlugin({
         return (
             <div>
                 <div className="snapshotsButtons">
-                    <CreateModal widget={widget} data={formattedData} context={context} utils={snapshotUtils}/>
-                    <UploadModal widget={widget} data={formattedData} context={context} utils={snapshotUtils}/>
+                    <CreateModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+                    <UploadModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
                  </div>
-                <SnapshotsTable widget={widget} data={formattedData} context={context} utils={snapshotUtils}/>
+                <SnapshotsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
             </div>
         );
     }
