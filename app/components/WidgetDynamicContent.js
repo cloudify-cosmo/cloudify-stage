@@ -29,10 +29,11 @@ export default class WidgetDynamicContent extends Component {
             loading: false
         };
         this.loadingTimeout = null;
+        this.pollingTimeout = null;
     }
 
     _getContext () {
-        return getContext(this._refresh.bind(this));
+        return getContext(this._fetchData.bind(this));
     }
 
     _fetch(url,context) {
@@ -50,9 +51,14 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
-    _refresh() {
+    _beforeFetch() {
+        this._stopPolling();
         this._showLoading();
-        this._fetchData();
+    }
+
+    _afterFetch() {
+        this._hideLoading();
+        this._startPolling();
     }
 
     _showLoading() {
@@ -67,8 +73,27 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
+    _stopPolling() {
+        clearTimeout(this.pollingTimeout);
+    }
+
+    _startPolling() {
+        this._stopPolling();
+
+        let pollingTimeOptions = _.find(this.props.widget.configuration,{id:"pollingTime"});
+
+        let interval = _.get(pollingTimeOptions, "value", 0);
+
+        if (interval > 0) {
+            console.log(`Polling widget '${this.props.widget.name}' - time interval: ${interval} sec`);
+            this.pollingTimeout = setTimeout(()=>{this._fetchData()}, interval * 1000);
+        }
+    }
+
     _fetchData() {
         if (this.props.widget.plugin.fetchUrl) {
+            this._beforeFetch();
+
             var context = this._getContext();
 
             var urls = this.props.widget.plugin.fetchUrl;
@@ -80,40 +105,44 @@ export default class WidgetDynamicContent extends Component {
 
             Promise.all(fetches)
                 .then((data)=> {
-                    console.log('widget :'+this.props.widget.name + ' data fetched');
+                    console.log(`Widget '${this.props.widget.name}' data fetched`);
                     this.setState({data: data.length === 1 ? data[0] : data});
-                    this._hideLoading();
+                    this._afterFetch();
                 })
                 .catch((e)=>{
                     console.error(e);
                     this.setState({error: 'Error fetching widget data'});
-                    this._hideLoading();
+                    this._afterFetch();
                 });
 
         } else if (this.props.widget.plugin.fetchData && typeof this.props.widget.plugin.fetchData === 'function') {
+            this._beforeFetch();
+
             this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),PluginUtils)
                 .then((data)=> {
-                    console.log('widget :'+this.props.widget.name + ' data fetched');
+                    console.log(`Widget '${this.props.widget.name}' data fetched`);
                     this.setState({data: data});
-                    this._hideLoading();
+                    this._afterFetch();
                 })
                 .catch((e)=>{
                     console.error(e);
                     this.setState({error: 'Error fetching widget data'});
-                    this._hideLoading();
+                    this._afterFetch();
                 });
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
         // Check if any configuration that requires fetch was changed
-
         var requiresFetch = false;
         if (prevProps.widget.configuration && this.props.widget.configuration) {
+
             _.each(this.props.widget.configuration,(config)=>{
                 var oldConfig = _.find(prevProps.widget.configuration,{id:config.id});
-                if (oldConfig.value !== config.value && config.fetch) {
+
+                if (oldConfig.value !== config.value) {
                     requiresFetch = true;
+                    return false;
                 }
             })
         }
@@ -125,12 +154,13 @@ export default class WidgetDynamicContent extends Component {
 
     // In component will mount fetch the data if needed
     componentDidMount() {
-        console.log('widget :'+this.props.widget.name + ' mounted');
+        console.log(`Widget '${this.props.widget.name}' mounted`);
         this._fetchData();
     }
 
     componentWillUnmount() {
-        console.log('widget :'+this.props.widget.name + ' unmounts');
+        this._stopPolling();
+        console.log(`Widget '${this.props.widget.name}' unmounts`);
     }
 
     renderWidget() {

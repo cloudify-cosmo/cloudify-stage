@@ -11,6 +11,9 @@ Stage.addPlugin({
     color : "teal",
     showHeader: false,
     isReact: true,
+    initialConfiguration: [
+        {id: "pollingTime", default: 5}
+    ],
     fetchUrl: '[manager]/plugins?_include=id',
     render: function(widget,data,error,context,pluginUtils) {
         if (_.isEmpty(data)) {
@@ -18,7 +21,6 @@ Stage.addPlugin({
         }
 
         var num = _.get(data, "metadata.pagination.total", 0);
-
         let KeyIndicator = Stage.Basic.KeyIndicator;
 
         return (

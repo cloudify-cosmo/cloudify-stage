@@ -20,10 +20,10 @@ Stage.addPlugin({
         '[manager]/executions?_include=id,blueprint_id,deployment_id,workflow_id'
     ],
     isReact: true,
-    initialConfiguration:
-        [
-            {id: "FilterByExecutions",name: "Should show execution filter", placeHolder: "True of false if to show execution filter as well", default: "true"}
-        ],
+    initialConfiguration: [
+        {id: "pollingTime", default: 5},
+        {id: "FilterByExecutions",name: "Should show execution filter", placeHolder: "True of false if to show execution filter as well", default: "true"}
+    ],
 
     _processData(blueprintId,deploymentId,executionId,data) {
         var processedData = Object.assign({},data,{
