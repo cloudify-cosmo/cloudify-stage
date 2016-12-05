@@ -11,28 +11,18 @@ Stage.addPlugin({
     color : "teal",
     showHeader: false,
     isReact: true,
-
-    fetchData: function(plugin,context,pluginUtils) {
-        return new Promise( (resolve,reject) => {
-            pluginUtils.jQuery.get({
-                url: context.getManagerUrl('/api/v2.1/plugins?_include=id'),
-                dataType: 'json',
-                headers: context.getSecurityHeaders()
-            }).done((data)=> {
-                resolve({number: _.get(data, "metadata.pagination.total", 0)});
-            }).fail(reject)
-        });
-    },
-
+    fetchUrl: '[manager]/plugins?_include=id',
     render: function(widget,data,error,context,pluginUtils) {
         if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();
         }
 
+        var num = _.get(data, "metadata.pagination.total", 0);
+
         let KeyIndicator = Stage.Basic.KeyIndicator;
 
         return (
-            <KeyIndicator title="Plugins" icon="plug" number={data.number}/>
+            <KeyIndicator title="Plugins" icon="plug" number={num}/>
         );
     }
 });

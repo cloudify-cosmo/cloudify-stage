@@ -10,8 +10,8 @@ var UploadModal = null;
 
 Stage.addPlugin({
     id: "blueprints",
-    name: "Blueprints list",
-    description: 'blah blah blah',
+    name: "Blueprints catalog",
+    description: 'Shows a blueprints catalog',
     initialWidth: 8,
     initialHeight: 5,
     color : "blue",
@@ -21,8 +21,8 @@ Stage.addPlugin({
     },
 
     fetchUrl: [
-        '[manager]/api/v2.1/blueprints?_include=id,updated_at,created_at,description',
-        '[manager]/api/v2.1/deployments?_include=id,blueprint_id'
+        '[manager]/blueprints?_include=id,updated_at,created_at,description',
+        '[manager]/deployments?_include=id,blueprint_id'
     ],
 
     _processData(data,context,pluginUtils) {

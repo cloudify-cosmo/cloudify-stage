@@ -11,7 +11,7 @@ Stage.addPlugin({
     initialWidth: 8,
     initialHeight: 6,
     color : "purple",
-    fetchUrl: '[manager]/api/v2.1/executions',
+    fetchUrl: '[manager]/executions',
     isReact: true,
     initialConfiguration:
         [

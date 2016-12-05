@@ -2,6 +2,8 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+import Actions from './actions';
+
 export default (snapshotUtils)=> {
 
     return class extends React.Component {
@@ -61,8 +63,6 @@ export default (snapshotUtils)=> {
         _submitCreate(e) {
             e.preventDefault();
 
-            var thi$ = this;
-
             var formObj = snapshotUtils.jQuery(e.currentTarget);
 
             // Clear errors
@@ -77,27 +77,18 @@ export default (snapshotUtils)=> {
             formObj.addClass('loading');
 
             // Call create method
-        $.ajax({
-            url: thi$.props.context.getManagerUrl(`/api/v2.1/snapshots/${snapshotId}`),
-            //dataType: 'json',
-            "headers": Object.assign({"content-type": "application/json"},thi$.props.context.getSecurityHeaders()),
-            method: 'put',
-            data: JSON.stringify({
-                'snapshot_id': snapshotId
-            })
-        })
-            .done((snapshot)=> {
-                thi$.props.context.setValue(this.props.widget.id + 'createSnapshot',null);
-
-                thi$.props.context.getEventBus().trigger('snapshots:refresh');
-
-            })
-            .fail((jqXHR, textStatus, errorThrown)=>{
-                thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
-            });
-
-            formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
-            formObj.removeClass('loading');
+            (new Actions(this.props.context)).doCreate(snapshotId)
+                .then(()=>{
+                    this.props.context.setValue(this.props.widget.id + 'createSnapshot',null);
+                    this.props.context.getEventBus().trigger('snapshots:refresh');
+                    formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
+                    formObj.removeClass('loading');
+                })
+                .catch((err)=>{
+                    this.setState({error: err.error});
+                    formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
+                    formObj.removeClass('loading');
+                });
 
             return false;
         }
