@@ -16,7 +16,7 @@ describe('(Component) Confirm', () => {
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Confirm title="test title" ></Confirm>, { attachTo: div.get(0) }
+            <Confirm title="test title" className="confirmTest"></Confirm>, { attachTo: div.get(0) }
         );
     });
 
@@ -25,31 +25,31 @@ describe('(Component) Confirm', () => {
     });
 
     it('renders title', () => {
-        expect(wrapper.find('.ui.modal .header')).to.have.text('test title');
+        expect(wrapper.find('.confirmTest .header')).to.have.text('test title');
     });
 
     it('shows up', () => {
         wrapper.setProps({show:true});
-        expect($('.ui.dimmer.active .ui.modal').length > 0).to.be.true;
+        expect($('.ui.dimmer.active .confirmTest').length > 0).to.be.true;
     });
 
     it('clicks ok button', () => {
         var cb = sinon.spy();
         wrapper.setProps({onConfirm:cb});
-        $(".ok").trigger( "click" );
+        $(".confirmTest .ok").trigger( "click" );
         expect(cb).to.have.been.calledOnce;
     });
 
     it('clicks cancel button', () => {
         var cb = sinon.spy();
         wrapper.setProps({onCancel:cb});
-        $(".cancel").trigger( "click" );
+        $(".confirmTest .cancel").trigger( "click" );
         expect(cb).to.have.been.calledOnce;
     });
 
     it('unmounts', () => {
         wrapper.unmount();
-        expect($('.ui.dimmer .content').length > 0).to.be.false;
+        expect($('.ui.dimmer .confirmTest').length > 0).to.be.false;
     });
 
     after(() => {
