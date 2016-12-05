@@ -16,6 +16,9 @@ Stage.addPlugin({
     initialHeight: 5,
     color : "blue",
     isReact: true,
+    initialConfiguration: [
+        {id: "pollingTime", default: 2}
+    ],
     init: function(pluginUtils) {
         UploadModal = renderUploadBlueprintModal(pluginUtils);
     },
