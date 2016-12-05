@@ -7,6 +7,7 @@ import config from '../config.json';
 import CommonUtils from '../utils/commonUtils';
 import PluginEventBus from '../utils/PluginEventBus';
 import {drillDownToPage} from '../actions/widgets';
+import Manager from './Manager';
 
 class Context {
     constructor (store) {
@@ -25,6 +26,7 @@ class Context {
         this.context = state.context;
         this.templates = state.templates.items || {};
         this.manager = _.get(state, "managers.items[0]", {});
+        this._Manager = new Manager(this.manager);
     }
 
     setValue(key,value) {
@@ -49,6 +51,10 @@ class Context {
 
     getEventBus (){
         return PluginEventBus;
+    }
+
+    getManager() {
+        return this._Manager;
     }
     refresh () {}
 }

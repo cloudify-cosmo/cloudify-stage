@@ -11,7 +11,7 @@ Stage.addPlugin({
     initialWidth: 5,
     initialHeight: 4,
     color: "purple",
-    fetchUrl: '[manager]/api/v2.1/events',
+    fetchUrl: '[manager]/events',
     isReact: true,
     render: function(widget,data,error,context,pluginUtils) {
         if (_.isEmpty(data)) {

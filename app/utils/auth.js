@@ -9,6 +9,7 @@ import CommonUtils from './commonUtils';
 export default class Auth {
     static login(managerIp,username,password) {
 
+        // TODO need to fix after version merge
         return fetch(CommonUtils.createManagerUrl(config.proxyIp, managerIp, '/api/v2.1/tokens'),
              {
                 method: 'GET',

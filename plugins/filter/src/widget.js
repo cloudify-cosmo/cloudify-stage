@@ -2,7 +2,6 @@
  * Created by kinneretzin on 07/09/2016.
  */
 
-import DataFetcher from './DataFetcher';
 import Filter from './Filter';
 
 Stage.addPlugin({
@@ -14,11 +13,12 @@ Stage.addPlugin({
     color: "yellow",
     showHeader: false,
     showBorder: false,
-    zIndex: 2,
-    fetchData: function(plugin,context,pluginUtils) {
-        return DataFetcher.fetch(context);
-    },
-
+    keepOnTop: true,
+    fetchUrl: [
+        '[manager]/blueprints?_include=id',
+        '[manager]/deployments?_include=id,blueprint_id',
+        '[manager]/executions?_include=id,blueprint_id,deployment_id,workflow_id'
+    ],
     isReact: true,
     initialConfiguration:
         [
@@ -30,14 +30,14 @@ Stage.addPlugin({
             blueprintId,
             deploymentId,
             executionId,
-            deployments:{
-                items: data.deployments.items
-            },
             blueprints: {
-                items: data.blueprints.items
+                items: data[0].items
+            },
+            deployments:{
+                items: data[1].items
             },
             executions: {
-                items: data.executions.items
+                items: data[2].items
             }
         });
 

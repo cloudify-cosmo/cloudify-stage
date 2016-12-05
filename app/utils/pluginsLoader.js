@@ -47,10 +47,12 @@ class Plugin {
         this.initialHeight = 3;
         this.color = "blue";
         this.initialConfiguration = [];
-        this.zIndex = 0;
+        this.keepOnTop = false;
 
         // Override defaults with data
         Object.assign(this,data);
+
+        this.zIndex = this.keepOnTop ? 5 : 0;
 
         if (!this.name) {
             throw new Error('Missing plugin name. Plugin data is :',data);
@@ -63,11 +65,6 @@ class Plugin {
 }
 export default class PluginsLoader {
     static init() {
-        window.addPlugin = function(pluginData) {
-            plugins.push(new Plugin(pluginData));
-        };
-
-
         window.Stage = {
             addPlugin: (pluginData)=> {
                 plugins.push(new Plugin(pluginData));
@@ -87,7 +84,7 @@ export default class PluginsLoader {
             .then((data)=> {
                 var promises = [];
                 data.forEach((plugin)=>{
-                    promises.push(new ScriptLoader('/plugins/'+plugin.name+'/widget.js').load());
+                    promises.push(new ScriptLoader('/plugins/'+plugin+'/widget.js').load());
                 });
                 return Promise.all(promises);
             })

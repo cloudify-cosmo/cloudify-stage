@@ -2,6 +2,8 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+import Actions from './actions';
+
 export default (pluginUtils)=> {
 
     return class extends React.Component {
@@ -48,7 +50,7 @@ export default (pluginUtils)=> {
 
             var thi$ = this;
 
-            var formObj = pluginUtils.jQuery(e.currentTarget);
+            var formObj = $(e.currentTarget);
 
             // Clear errors
             formObj.find('.error:not(.message)').removeClass('error');
@@ -81,53 +83,19 @@ export default (pluginUtils)=> {
             // Disable the form
             this.setState({loading: true});
 
-            // Call upload method
-            var xhr = new XMLHttpRequest();
-            (xhr.upload || xhr).addEventListener('progress', function(e) {
-                var done = e.position || e.loaded
-                var total = e.totalSize || e.total;
-                console.log('xhr progress: ' + Math.round(done/total*100) + '%');
-            });
-            xhr.addEventListener("error", function(e){
-                console.log('xhr upload error', e, this.responseText);
-                thi$._processUploadErrIfNeeded(this);
-                thi$.setState({loading: false});
-            });
-            xhr.addEventListener('load', function(e) {
-                console.log('xhr upload complete', e, this.responseText);
-                thi$.setState({loading: false});
+            var actions = new Actions(this.props.context);
+            actions.doUpload(blueprintName,blueprintFileName,file).then(()=>{
+                this.setState({loading: false,show: false});
+                this.props.context.refresh();
+            }).catch((err)=>{
+                this.setState({uploadErr: err.error,loading: false});
+                formObj.find('.ui.error.message.uploadFailed').show();
 
-                if (!thi$._processUploadErrIfNeeded(this)) {
-                    thi$.setState({show: false});
-                    thi$.props.context.refresh();
-                } else {
-                    formObj.find('.ui.error.message.uploadFailed').show();
-                }
             });
-
-            xhr.open('put',this.props.context.getManagerUrl(`/api/v2.1/blueprints/${blueprintName}` + (!_.isEmpty(blueprintFileName) ? '?application_file_name='+blueprintFileName+'.yaml' : '')));
-            var securityHeaders = this.props.context.getSecurityHeaders();
-            if (securityHeaders) {
-                xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
-            }
-
-            xhr.send(file);
 
             return false;
         }
 
-        _processUploadErrIfNeeded(xhr) {
-            try {
-                var response = JSON.parse(xhr.responseText);
-                if (response.message) {
-                    this.setState({uploadErr: response.message});
-                    return true;
-                }
-            } catch (err) {
-                console.err('Cannot parse upload response',err);
-                return false;
-            }
-        }
         render() {
             var Modal = Stage.Basic.Modal;
             var Header = Stage.Basic.ModalHeader;

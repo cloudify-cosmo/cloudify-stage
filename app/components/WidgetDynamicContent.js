@@ -9,7 +9,7 @@ import PluginUtils from '../utils/pluginUtils';
 import EditWidgetIcon from './EditWidgetIcon';
 import {getContext} from '../utils/Context';
 
-import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-fetch';
 
 export default class WidgetDynamicContent extends Component {
     static propTypes = {
@@ -41,14 +41,10 @@ export default class WidgetDynamicContent extends Component {
             return conf && conf.value ? conf.value : 'NA';
         });
 
-        if (_.startsWith(fetchUrl, '[manager]')) {
-            fetchUrl = context.getManagerUrl(_.replace(fetchUrl,'[manager]', ''));
-        }
-
         // Only add auth token if we access the manager
         if (url.indexOf('[manager]') >= 0) {
-            var headers = {headers: context.getSecurityHeaders()};
-            return fetch(fetchUrl,headers).then(response => response.json())
+            var baseUrl = url.substring('[manager]'.length);
+            return context.getManager().doGet(baseUrl);
         } else {
             return fetch(fetchUrl).then(response => response.json())
         }

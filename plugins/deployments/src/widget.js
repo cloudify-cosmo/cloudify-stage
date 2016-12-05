@@ -11,7 +11,7 @@ Stage.addPlugin({
     initialWidth: 8,
     initialHeight: 6,
     color : "purple",
-    fetchUrl: '[manager]/api/v2.1/deployments',
+    fetchUrl: '[manager]/deployments',
     initialConfiguration:
         [
             {id: "clickToDrillDown",name: "Should click to drilldown", placeHolder: "True of false to click to drill down", default: "true"},

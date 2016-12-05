@@ -2,6 +2,8 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+import Actions from './actions';
+
 export default (snapshotUtils)=> {
 
     return class extends React.Component {
@@ -61,8 +63,6 @@ export default (snapshotUtils)=> {
         _submitUpload(e) {
             e.preventDefault();
 
-            var thi$ = this;
-
             var formObj = snapshotUtils.jQuery(e.currentTarget);
 
             // Clear errors
@@ -89,55 +89,25 @@ export default (snapshotUtils)=> {
             formObj.addClass('loading');
 
             // Call upload method
-            var xhr = new XMLHttpRequest();
-            (xhr.upload || xhr).addEventListener('progress', function(e) {
-                var done = e.position || e.loaded
-                var total = e.totalSize || e.total;
-                console.log('xhr progress: ' + Math.round(done/total*100) + '%');
-            });
-            xhr.addEventListener("error", function(e){
-                console.log('xhr upload error', e, this.responseText);
-                thi$._processUploadErrIfNeeded(this);
-                formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
-                formObj.removeClass('loading');
+            (new Actions(this.props.context)).doUpload(snapshotId,file)
+                .then(()=>{
+                    formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
+                    formObj.removeClass('loading');
 
-            });
-            xhr.addEventListener('load', function(e) {
-                console.log('xhr upload complete', e, this.responseText);
-                formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
-                formObj.removeClass('loading');
-
-                if (!thi$._processUploadErrIfNeeded(this)) {
                     formObj.parents('.modal').modal('hide');
-                    thi$.props.context.refresh();
-                } else {
+                    this.props.context.refresh();
+                })
+                .catch(err=>{
+                    this.setState({uploadErr: err.error});
                     formObj.find('.ui.error.message.uploadFailed').show();
-                }
-            });
+                    formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
+                    formObj.removeClass('loading');
 
-            xhr.open('put',this.props.context.getManagerUrl(`/api/v2.1/snapshots/${snapshotId}/archive`));
-            var securityHeaders = this.props.context.getSecurityHeaders();
-            if (securityHeaders) {
-                xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
-            }
-
-            xhr.send(file);
+                });
 
             return false;
         }
 
-        _processUploadErrIfNeeded(xhr) {
-            try {
-                var response = JSON.parse(xhr.responseText);
-                if (response.message) {
-                    this.setState({uploadErr: response.message});
-                    return true;
-                }
-            } catch (err) {
-                console.err('Cannot parse upload response',err);
-                return false;
-            }
-        }
         render() {
             var ErrorMessage = Stage.Basic.ErrorMessage;
 

@@ -11,15 +11,24 @@ export default class DataFetcher{
         if (deploymentId) {
             var fetchDeployment = Promise.resolve({blueprint_id: blueprintId});
             if (!blueprintId) {
-                fetchDeployment = this.fetchDeployment(context,deploymentId);
+                fetchDeployment = context.getManager().doGet(`/deployments?id=${deploymentId}&_include=id,blueprint_id`)
+                                            .then((deployments)=>{
+                                                var deployment = _.get(deployments,'items[0]',null);
+                                                if (!deployment) {
+                                                    return Promise.reject(new Error('Cannot find deployment'));
+                                                } else {
+                                                    return Promise.resolve(deployment);
+                                                }
+                                            });
             }
 
             return fetchDeployment.then((deployment)=>{
                 return Promise.all([
-                    this.fetchBlueprint(context,deployment.blueprint_id),
-                    this.fetchNodes(context,deploymentId),
-                    this.fetchNodeInstances(context,deploymentId),
-                    this.fetchRunningExecution(context,deploymentId)
+                    context.getManager().doGet(`/blueprints?id=${deployment.blueprint_id}`),
+                    context.getManager().doGet(`/nodes?deployment_id=${deploymentId}`),
+                    context.getManager().doGet(`/node-instances?deployment_id=${deploymentId}`),
+                    context.getManager().doGet(`/executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&status=pending&status=started&status=cancelling&status=force_cancelling`)
+                        .then(executions=>Promise.resolve(_.first(executions.items))),
                 ]).then( data=>{
 
 
@@ -54,71 +63,13 @@ export default class DataFetcher{
             })
 
         } else if (blueprintId) {
-            return this.fetchBlueprint(context,blueprintId).then((blueprint)=>{
-                return Promise.resolve(
-                    {
-                        data: blueprint && blueprint.items && blueprint.items[0] ? blueprint.items[0] : {}
-                    });
+            return context.getManager().doGet(`/blueprints?id=${blueprintId}`).then((blueprint)=>{
+                return Promise.resolve({data:_.get(blueprint,'items[0]',{})});
             })
         }
 
     }
 
-    static fetchBlueprint(context,blueprintId) {
-        return new Promise( (resolve,reject) => {
-            $.get({
-                url: context.getManagerUrl(`/api/v2.1/blueprints?id=${blueprintId}`),
-                dataType: 'json',
-                headers: context.getSecurityHeaders()
-            }).done(resolve).fail(reject);
-        });
-    }
-    static fetchNodes(context,deploymentId) {
-        return new Promise( (resolve,reject) => {
-            $.get({
-                url: context.getManagerUrl(`/api/v2.1/nodes?deployment_id=${deploymentId}`),
-                dataType: 'json',
-                headers: context.getSecurityHeaders()
-            }).done(resolve).fail(reject);
-        });
-    }
-    static fetchNodeInstances(context,deploymentId) {
-        return new Promise( (resolve,reject) => {
-            $.get({
-                url: context.getManagerUrl(`/api/v2.1/node-instances?deployment_id=${deploymentId}`),
-                dataType: 'json',
-                headers: context.getSecurityHeaders()
-            }).done(resolve).fail(reject);
-        });
-    }
-
-    static fetchDeployment(context,deploymentId) {
-        return new Promise( (resolve,reject) => {
-            $.get({
-                url: context.getManagerUrl(`/api/v2.1/deployments?id=${deploymentId}&_include=id,blueprint_id`),
-                dataType: 'json',
-                headers: context.getSecurityHeaders()
-            }).done((deployments)=>{
-                if (!deployments || !deployments.items || deployments.items.length !== 1) {
-                    reject(new Error('Cannot find deployment'));
-                } else {
-                    resolve(deployments.items[0]);
-                }
-            }).fail(reject)
-        });
-    }
-
-    static fetchRunningExecution(context,deploymentId) {
-        return new Promise( (resolve,reject) => {
-            $.get({
-                url: context.getManagerUrl(`/api/v2.1/executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&status=pending&status=started&status=cancelling&status=force_cancelling`),
-                dataType: 'json',
-                headers: context.getSecurityHeaders()
-            }).done((executions)=>{
-                resolve(_.first(executions.items));
-            }).fail(reject)
-        });
-    }
     static sortNodesById (nodes) {
         nodes.sort(function(node1, node2) {
             if (node1.id < node2.id) {
