@@ -6,7 +6,6 @@ import * as types from './types';
 import Auth from '../utils/auth';
 import { push } from 'react-router-redux';
 import CommonUtils from '../utils/commonUtils';
-import config from '../config.json';
 
 function requestLogin() {
     return {
@@ -59,7 +58,7 @@ function setStatus(status) {
 
 export function getStatus (manager) {
     return function(dispatch) {
-        return fetch(CommonUtils.createManagerUrl(config.proxyIp, manager.ip, '/api/v2.1/status'),
+        return fetch(CommonUtils.createManagerUrl(manager.ip, '/api/v2.1/status'),
             {
                 method: 'GET',
                 headers: (manager.auth.isSecured && manager.auth.token ? {"Authentication-Token": manager.auth.token} : undefined)

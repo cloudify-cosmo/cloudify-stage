@@ -1,14 +1,17 @@
 'use strict';
 /**
- * Created by kinneretzin on 27/09/2016.
+ * Created by kinneretzin on 05/12/2016.
  */
-
 
 var express = require('express');
 let path = require('path');
 var app = express();
 
+var ServerProxy = require('./ServerProxy');
+
 app.use(express.static(path.resolve(__dirname , "../dist")));
+
+app.use('/sp',ServerProxy);
 
 // BrowserHistory code
 app.get('*',function (request, response){
@@ -16,6 +19,5 @@ app.get('*',function (request, response){
 });
 
 app.listen(8088, function () {
-    console.log('UI runs on port 8088!');
+    console.log('Stage runs on port 8088!');
 });
-
