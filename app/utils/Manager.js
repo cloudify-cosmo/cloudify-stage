@@ -133,6 +133,10 @@ export default class Manager {
         return CommonUtils.createManagerUrl(config.proxyIp, this._data.ip, urlInServer);
     }
 
+    getManagerUrl(url,data) {
+        return this._buildActualUrl(url,data);
+    }
+
     _buildSecurityHeader(){
         var auth = this._data.auth;
         return (auth.isSecured && auth.token ? {"Authentication-Token": auth.token} : undefined);

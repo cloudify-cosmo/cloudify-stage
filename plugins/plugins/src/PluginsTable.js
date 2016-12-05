@@ -31,7 +31,7 @@ export default class extends React.Component {
     _downloadPlugin(item,event) {
         event.stopPropagation();
 
-        window.open(this.props.context.getManager()._buildActualUrl(`/plugins/${item.id}/archive`));
+        window.open(this.props.context.getManager().getManagerUrl(`/plugins/${item.id}/archive`));
     }
 
     _deletePlugin() {
@@ -47,7 +47,6 @@ export default class extends React.Component {
             })
             .catch(err=>{
                 this.setState({confirmDelete: false,error: err.error});
-                //thi$.setState({error: (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)})
             });
     }
 

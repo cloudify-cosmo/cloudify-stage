@@ -8,11 +8,8 @@ export default class {
         this.context = context;
     }
 
-    //doDownload(blueprint) {
-    //}
     doDelete(plugin) {
         return this.context.getManager().doDelete(`/plugins/${plugin.id}`);
-        //    url: thi$.props.context.getManagerUrl(`/api/v2.1/plugins/${this.state.item.id}`),
 
     }
 

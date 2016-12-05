@@ -41,7 +41,7 @@ export default class extends React.Component {
     _downloadSnapshot(item,event) {
         event.stopPropagation();
 
-        window.open(this.props.context.getManager()._buildActualUrl(`/snapshots/${item.id}/archive`));
+        window.open(this.props.context.getManager().getManagerUrl(`/snapshots/${item.id}/archive`));
     }
 
     _deleteSnapshot() {
