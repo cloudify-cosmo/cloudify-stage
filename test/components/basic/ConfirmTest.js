@@ -33,18 +33,20 @@ describe('(Component) Confirm', () => {
         expect($('.ui.dimmer.active .confirmTest').length > 0).to.be.true;
     });
 
-    it('clicks ok button', () => {
+    it('clicks ok button', (done) => {
         var cb = sinon.spy();
         wrapper.setProps({onConfirm:cb});
         $(".confirmTest .ok").trigger( "click" );
         expect(cb).to.have.been.calledOnce;
+        done();
     });
 
-    it('clicks cancel button', () => {
+    it('clicks cancel button', (done) => {
         var cb = sinon.spy();
         wrapper.setProps({onCancel:cb});
         $(".confirmTest .cancel").trigger( "click" );
         expect(cb).to.have.been.calledOnce;
+        done();
     });
 
     it('unmounts', () => {
