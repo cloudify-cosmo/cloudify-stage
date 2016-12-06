@@ -55,6 +55,7 @@ class Context {
     getManager() {
         return this._Manager;
     }
+
     refresh () {}
 }
 

@@ -1,6 +1,8 @@
 /**
  * Created by kinneretzin on 02/10/2016.
  */
+import UploadModal from './UploadSnapshotModal';
+import CreateModal from './CreateSnapshotModal';
 
 import Actions from './actions';
 
@@ -31,7 +33,8 @@ export default class extends React.Component {
     _restoreSnapshot(item,event) {
         event.stopPropagation();
 
-        (new Actions(this.props.context)).doRestore(item).then(()=>{
+        var actions = new Actions(this.props.context);
+        actions.doRestore(item).then(()=>{
             this.props.context.refresh();
         }).catch((err)=>{
             this.setState({error:err.error});
@@ -50,11 +53,12 @@ export default class extends React.Component {
             return;
         }
 
-        (new Actions(this.props.context)).doDelete(this.state.item).then(()=>{
+        var actions = new Actions(this.props.context);
+        actions.doDelete(this.state.item).then(()=>{
             this.setState({confirmDelete: false});
             this.props.context.refresh();
         }).catch((err)=>{
-            this.setState({confirmDelete: false,error: err.error});
+            this.setState({confirmDelete: false, error: err.error});
         });
     }
 
@@ -112,10 +116,16 @@ export default class extends React.Component {
                     }
                     </tbody>
                 </table>
+
                 <Confirm title='Are you sure you want to remove this snapshot?'
                          show={this.state.confirmDelete}
                          onConfirm={this._deleteSnapshot.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
+
+                <CreateModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+
+                <UploadModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+
             </div>
 
         );

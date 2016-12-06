@@ -66,12 +66,11 @@ export default class extends React.Component {
         }
 
         var actions = new Actions(this.props.context);
-
         actions.doDelete(this.state.deleteDep).then(()=>{
-            this.setState({confirmDelete: false,deleteDep:null});
+            this.setState({confirmDelete: false, deleteDep:null});
             this.props.context.getEventBus().trigger('deployments:refresh');
         }).catch((err)=>{
-            this.setState({confirmDelete: false,deleteDep: null,error: err.error});
+            this.setState({confirmDelete: false, deleteDep: null, error: err.error});
         });
     }
 
@@ -96,7 +95,6 @@ export default class extends React.Component {
     }
     _executeWorkflow(deployment,workflow,params) {
         var actions = new Actions(this.props.context);
-
         actions.doExecute(deployment,workflow,params).then(()=>{
             this._hideExecuteWorkflowModal();
             this.props.context.getEventBus().trigger('executions:refresh');
@@ -175,10 +173,12 @@ export default class extends React.Component {
                     }
                     </tbody>
                 </table>
+
                 <Confirm title='Are you sure you want to remove this deployment?'
                          show={this.state.confirmDelete}
                          onConfirm={this._deleteDeployment.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
+
                 <ExecuteModal
                     show={this.state.showExecuteModal}
                     deployment={this.state.executeDep}

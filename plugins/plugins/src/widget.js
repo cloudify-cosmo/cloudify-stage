@@ -3,9 +3,7 @@
  */
 
 import PluginsTable from './PluginsTable';
-import renderUploadPluginModal from './UploadPluginModal';
-
-var UploadModal = null;
+import UploadModal from './UploadPluginModal';
 
 Stage.addPlugin({
     id: "plugins",
@@ -18,11 +16,8 @@ Stage.addPlugin({
     initialConfiguration: [
         {id: "pollingTime", default: 30}
     ],
-    init: function(pluginUtils) {
-        UploadModal = renderUploadPluginModal(pluginUtils);
-    },
-
     fetchUrl: '[manager]/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at',
+
     render: function(widget,data,error,context,pluginUtils) {
 
         if (_.isEmpty(data)) {
@@ -41,8 +36,8 @@ Stage.addPlugin({
 
         return (
             <div>
-                <PluginsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
-                <UploadModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+                <PluginsTable widget={widget} data={formattedData} context={context}/>
+                <UploadModal widget={widget} data={formattedData} context={context}/>
             </div>
         );
     }

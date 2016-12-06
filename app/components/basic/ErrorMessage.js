@@ -8,7 +8,7 @@ export default class ErrorMessage extends Component {
 
     static propTypes = {
         header: PropTypes.string,
-        error: PropTypes.string,
+        error: PropTypes.any,
         className: PropTypes.string,
         show: PropTypes.bool
     };

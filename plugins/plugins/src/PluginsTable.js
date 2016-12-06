@@ -40,13 +40,14 @@ export default class extends React.Component {
             return;
         }
 
-        (new Actions(this.props.context)).doDelete(this.state.item)
+        var actions = new Actions(this.props.context);
+        actions.doDelete(this.state.item)
             .then(()=> {
                 this.setState({confirmDelete: false});
                 this.props.context.getEventBus().trigger('plugins:refresh');
             })
             .catch(err=>{
-                this.setState({confirmDelete: false,error: err.error});
+                this.setState({confirmDelete: false, error: err.error});
             });
     }
 
@@ -111,6 +112,7 @@ export default class extends React.Component {
                     }
                     </tbody>
                 </table>
+
                 <Confirm title='Are you sure you want to remove this plugin?'
                          show={this.state.confirmDelete}
                          onConfirm={this._deletePlugin.bind(this)}

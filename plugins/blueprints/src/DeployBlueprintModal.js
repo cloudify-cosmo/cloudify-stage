@@ -10,7 +10,8 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            error: null
+            error: null,
+            loading: false
         }
     }
 
@@ -36,17 +37,19 @@ export default class extends React.Component {
             inputs[input.data('name')] = input.val();
         });
 
+        // Disable the form
+        this.setState({loading: true});
+
         var actions = new Actions(this.props.context);
         actions.doDeploy(deployItem,deploymentId,inputs)
             .then((/*deployment*/)=> {
+                this.setState({loading: false});
                 this.props.context.setValue(this.props.widget.id + 'createDeploy',null);
                 this.props.context.getEventBus().trigger('deployments:refresh');
-
             })
             .catch((err)=>{
-                this.setState({error: err.error});
+                this.setState({loading: false, error: err.error});
             });
-
 
         return false;
     }
@@ -82,7 +85,7 @@ export default class extends React.Component {
         );
         return (
             <div>
-                <Modal show={shouldShow} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
+                <Modal show={shouldShow} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                     <Header>
                         <i className="rocket icon"></i> Deploy blueprint {deployItem.id}
                     </Header>

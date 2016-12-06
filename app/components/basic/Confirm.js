@@ -20,7 +20,7 @@ export default class Confirm extends Component {
         onCancel: function() {return true;},
         show: false
     };
-
+    
     render() {
         return (
             <Modal onApprove={this.props.onConfirm} onDeny={this.props.onCancel} show={this.props.show}>
@@ -28,11 +28,9 @@ export default class Confirm extends Component {
                 <Footer>
                     <Footer>
                         <div className="ui cancel basic button">
-                            <i className="icon"></i>
                             No
                         </div>
                         <div className="ui ok green  button">
-                            <i className="icon"></i>
                             Yes
                         </div>
                     </Footer>
