@@ -4,9 +4,8 @@
 
 export default class CommonUtils {
 
-    static createManagerUrl(proxyIp, managerIp, queryString) {
+    static createManagerUrl(managerIp, queryString) {
         let su = encodeURIComponent(`http://${managerIp}${queryString?queryString:''}`);
-        return `http://${proxyIp}:8000/?su=${su}`;
+        return `http://${window.location.hostname}:8088/sp/?su=${su}`;
     }
-
 }
