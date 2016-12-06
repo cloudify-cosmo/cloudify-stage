@@ -4,7 +4,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
-import config from '../config.json';
 
 export default class Managers extends Component {
     static propTypes = {

@@ -6,7 +6,7 @@ import * as types from './types';
 import Auth from '../utils/auth';
 import { push } from 'react-router-redux';
 import CommonUtils from '../utils/commonUtils';
-import config from '../config.json';
+import Manager from '../utils/Manager';
 
 function requestLogin() {
     return {
@@ -58,26 +58,19 @@ function setStatus(status) {
 }
 
 export function getStatus (manager) {
+    var managerAccessor = new Manager(manager);
     return function(dispatch) {
-        return fetch(CommonUtils.createManagerUrl(config.proxyIp, manager.ip, '/api/v2.1/status'),
-            {
-                method: 'GET',
-                headers: (manager.auth.isSecured && manager.auth.token ? {"Authentication-Token": manager.auth.token} : undefined)
-            })
-            .then(response => response.json())
-            .catch((e)=>{
-                console.error(e);
-                dispatch(setStatus('Error'));
-            })
-            .then((data)=> {
+        managerAccessor.doGet('/status')
+            .then((data)=>{
                 if (data.error_code) {
                     dispatch(setStatus('Error'));
                     return;
                 }
 
                 dispatch(setStatus(data.status));
+            }).catch((err)=>{
+                console.error(err);
+                dispatch(setStatus('Error'));
             });
-
-
     }
 }
