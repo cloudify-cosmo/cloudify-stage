@@ -2,6 +2,8 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+import Actions from './actions';
+
 export default class extends React.Component {
 
     constructor(props,context) {
@@ -44,8 +46,6 @@ export default class extends React.Component {
     _submitUpload(e) {
         e.preventDefault();
 
-        var thi$ = this;
-
         var formObj = $(e.currentTarget);
 
         // Clear errors
@@ -70,53 +70,19 @@ export default class extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        // Call upload method
-        var xhr = new XMLHttpRequest();
-        (xhr.upload || xhr).addEventListener('progress', function(e) {
-            var done = e.position || e.loaded
-            var total = e.totalSize || e.total;
-            console.log('xhr progress: ' + Math.round(done/total*100) + '%');
-        });
-        xhr.addEventListener("error", function(e){
-            console.log('xhr upload error', e, this.responseText);
-            thi$._processUploadErrIfNeeded(this);
-            thi$.setState({loading: false});
-        });
-        xhr.addEventListener('load', function(e) {
-            console.log('xhr upload complete', e, this.responseText);
-            thi$.setState({loading: false});
-
-            if (!thi$._processUploadErrIfNeeded(this)) {
-                thi$.setState({show: false});
-                thi$.props.context.refresh();
-            } else {
-                formObj.find('.ui.error.message.uploadFailed').show();
-            }
-        });
-
-        xhr.open('put',this.props.context.getManagerUrl(`/api/v2.1/snapshots/${snapshotId}/archive`));
-        var securityHeaders = this.props.context.getSecurityHeaders();
-        if (securityHeaders) {
-            xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
-        }
-
-        xhr.send(file);
+        var actions = new Actions(this.props.context);
+        actions.doUpload(snapshotId,file)
+            .then(()=>{
+                this.setState({loading: false, show: false});
+                this.props.context.refresh();
+            })
+            .catch(err=>{
+                this.setState({loading: false, uploadErr: err.error});
+            });
 
         return false;
     }
 
-    _processUploadErrIfNeeded(xhr) {
-        try {
-            var response = JSON.parse(xhr.responseText);
-            if (response.message) {
-                this.setState({uploadErr: response.message});
-                return true;
-            }
-        } catch (err) {
-            console.err('Cannot parse upload response',err);
-            return false;
-        }
-    }
     render() {
         var Modal = Stage.Basic.Modal;
         var Header = Stage.Basic.ModalHeader;
@@ -162,6 +128,7 @@ export default class extends React.Component {
                                     <input type="file" name='snapshotFile' id="snapshotFile" style={{"display": "none"}} onChange={this._uploadFileChanged}/>
                                 </div>
                             </div>
+
                             <div className="field">
                                 <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
                             </div>
@@ -186,7 +153,6 @@ export default class extends React.Component {
                     </Footer>
                 </Modal>
             </div>
-
         );
     }
 };

@@ -3,6 +3,7 @@
  */
 
 import DeployModal from './CreateDeploymentModal';
+import Actions from './actions';
 
 export default class extends React.Component {
 
@@ -22,12 +23,13 @@ export default class extends React.Component {
     _createDeployment(item,event){
         event.stopPropagation();
 
-        this.props.context.doGet(`/api/v2.1/blueprints?_include=id,plan&id=${item.id}`)
-            .then((data)=> {
-                this.props.context.setValue(this.props.widget.id + 'createDeploy', _.get(data, "items[0]", {}));
-            }).catch((err)=> {
-                this.setState({error: err});
-            });
+        // Get the full blueprint data (including plan for inputs)
+        var actions = new Actions(this.props.context);
+        actions.doGetFullBlueprintData(item).then((fullBlueprint)=>{
+            this.props.context.setValue(this.props.widget.id + 'createDeploy',fullBlueprint);
+        }).catch((err)=> {
+            this.setState({error: err.error});
+        });
     }
 
     _deleteBlueprintConfirm(item,event){
@@ -45,13 +47,14 @@ export default class extends React.Component {
             return;
         }
 
-        this.props.context.doDelete(`/api/v2.1/blueprints/${this.state.item.id}`)
+        var actions = new Actions(this.props.context);
+        actions.doDelete(this.state.item)
             .then(()=> {
                 this.setState({confirmDelete: false});
                 this.props.context.getEventBus().trigger('blueprints:refresh');
-            }).catch((err)=> {
-                this.setState({confirmDelete: false});
-                this.setState({error: err});
+            })
+            .catch((err)=>{
+                this.setState({confirmDelete: false, error: err.error});
             });
     }
 

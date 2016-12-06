@@ -2,6 +2,8 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+import Actions from './actions.js';
+
 export default class extends React.Component {
 
     constructor(props,context) {
@@ -28,7 +30,6 @@ export default class extends React.Component {
         this.setState({show: true});
     }
 
-
     _openFileSelection(e) {
         e.preventDefault();
         $('#pluginFile').click();
@@ -40,7 +41,6 @@ export default class extends React.Component {
         var filename = fullPathFileName.split('\\').pop();
 
         $('input.uploadPluginFile').val(filename).attr('title',fullPathFileName);
-
     }
 
     _submitUpload(e) {
@@ -71,53 +71,19 @@ export default class extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        // Call upload method
-        var xhr = new XMLHttpRequest();
-        (xhr.upload || xhr).addEventListener('progress', function(e) {
-            var done = e.position || e.loaded
-            var total = e.totalSize || e.total;
-            console.log('xhr progress: ' + Math.round(done/total*100) + '%');
-        });
-        xhr.addEventListener("error", function(e){
-            console.log('xhr upload error', e, this.responseText);
-            thi$._processUploadErrIfNeeded(this);
-            thi$.setState({loading: false});
-        });
-        xhr.addEventListener('load', function(e) {
-            console.log('xhr upload complete', e, this.responseText);
-            thi$.setState({loading: false});
-
-            if (!thi$._processUploadErrIfNeeded(this)) {
-                thi$.setState({show: false});
-                thi$.props.context.refresh();
-            } else {
-                formObj.find('.ui.error.message.uploadFailed').show();
-            }
-        });
-
-        xhr.open('post',this.props.context.getManagerUrl('/api/v2.1/plugins'));
-        var securityHeaders = this.props.context.getSecurityHeaders();
-        if (securityHeaders) {
-            xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
-        }
-
-        xhr.send(file);
+        var actions = new Actions(this.props.context);
+        actions.doUpload(file)
+            .then(()=>{
+                this.setState({loading: false, show: false});
+                this.props.context.refresh();
+            })
+            .catch(err=>{
+                this.setState({uploadErr: err.error, loading: false});
+            });
 
         return false;
     }
 
-    _processUploadErrIfNeeded(xhr) {
-        try {
-            var response = JSON.parse(xhr.responseText);
-            if (response.message) {
-                this.setState({uploadErr: response.message});
-                return true;
-            }
-        } catch (err) {
-            console.err('Cannot parse upload response',err);
-            return false;
-        }
-    }
     render() {
         var Modal = Stage.Basic.Modal;
         var Header = Stage.Basic.ModalHeader;
@@ -144,7 +110,7 @@ export default class extends React.Component {
                                     <div className="ui labeled input">
                                         <div className="ui label">
                                             http://
-                                            </div>
+                                        </div>
                                         <input type="text" name='pluginFileUrl' placeholder="Enter plugin url"></input>
                                     </div>
                                 </div>
@@ -185,7 +151,6 @@ export default class extends React.Component {
                     </Footer>
                 </Modal>
             </div>
-
         );
     }
 };

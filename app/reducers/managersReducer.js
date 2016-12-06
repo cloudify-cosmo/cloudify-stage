@@ -20,6 +20,7 @@ const managers = (state = {}, action) => {
                             token: action.token
                         },
                         err: null,
+                        version: action.version,
                         lastUpdated: action.receivedAt
                     }
                 ]

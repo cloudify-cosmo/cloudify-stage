@@ -7,15 +7,18 @@ import UploadModal from './UploadBlueprintModal';
 
 Stage.addPlugin({
     id: "blueprints",
-    name: "Blueprints list",
-    description: 'blah blah blah',
+    name: "Blueprints catalog",
+    description: 'Shows a blueprints catalog',
     initialWidth: 8,
     initialHeight: 5,
     color : "blue",
     isReact: true,
+    initialConfiguration: [
+        {id: "pollingTime", default: 2}
+    ],
     fetchUrl: [
-        '[manager]/api/v2.1/blueprints?_include=id,updated_at,created_at,description',
-        '[manager]/api/v2.1/deployments?_include=id,blueprint_id'
+        '[manager]/blueprints?_include=id,updated_at,created_at,description',
+        '[manager]/deployments?_include=id,blueprint_id'
     ],
 
     _processData(data,context,pluginUtils) {
@@ -40,6 +43,7 @@ Stage.addPlugin({
 
         return formattedData;
     },
+
     render: function(widget,data,error,context,pluginUtils) {
 
         if (_.isEmpty(data)) {

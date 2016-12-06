@@ -7,12 +7,15 @@ import SnapshotsTable from './SnapshotsTable';
 Stage.addPlugin({
     id: "snapshots",
     name: "Snapshots list",
-    description: 'blah blah blah',
+    description: 'Snapshots list',
     initialWidth: 4,
     initialHeight: 4,
     color : "blue",
     isReact: true,
-    fetchUrl: '[manager]/api/v2.1/snapshots?_include=id,created_at,status',
+    initialConfiguration: [
+        {id: "pollingTime", default: 30}
+    ],
+    fetchUrl: '[manager]/snapshots?_include=id,created_at,status',
 
     render: function(widget,data,error,context,pluginUtils) {
 

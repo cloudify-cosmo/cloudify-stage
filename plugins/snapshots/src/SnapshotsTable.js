@@ -4,6 +4,8 @@
 import UploadModal from './UploadSnapshotModal';
 import CreateModal from './CreateSnapshotModal';
 
+import Actions from './actions';
+
 export default class extends React.Component {
 
     constructor(props,context) {
@@ -31,24 +33,18 @@ export default class extends React.Component {
     _restoreSnapshot(item,event) {
         event.stopPropagation();
 
-        var data = {force: false, recreate_deployments_envs: false};
-        this.props.context.doPost(`/api/v2.1/snapshots/${item.id}/restore`, data)
-            .then(()=> {
-                this.props.context.getEventBus().trigger('snapshots:refresh');
-            }).catch((err)=> {
-                this.setState({error: err});
-            });
+        var actions = new Actions(this.props.context);
+        actions.doRestore(item).then(()=>{
+            this.props.context.refresh();
+        }).catch((err)=>{
+            this.setState({error:err.error});
+        });
     }
 
     _downloadSnapshot(item,event) {
         event.stopPropagation();
 
-        this.props.context.doGet(`/api/v2.1/snapshots/${item.id}/archive`)
-                        .then(()=> {
-                            window.location = this.props.context.getManagerUrl(`/api/v2.1/snapshots/${item.id}/archive`);
-                        }).catch((err)=> {
-                            this.setState({error: err});
-                        });
+        window.open(this.props.context.getManager().getManagerUrl(`/snapshots/${item.id}/archive`));
     }
 
     _deleteSnapshot() {
@@ -57,15 +53,13 @@ export default class extends React.Component {
             return;
         }
 
-        this.props.context.doDelete(`/api/v2.1/snapshots/${this.state.item.id}`)
-                            .then(()=> {
-                                this.setState({confirmDelete: false});
-                                this.props.context.getEventBus().trigger('snapshots:refresh');
-                            }).catch((err)=> {
-                                this.setState({confirmDelete: false});
-                                this.setState({error: err});
-                            });
-
+        var actions = new Actions(this.props.context);
+        actions.doDelete(this.state.item).then(()=>{
+            this.setState({confirmDelete: false});
+            this.props.context.refresh();
+        }).catch((err)=>{
+            this.setState({confirmDelete: false, error: err.error});
+        });
     }
 
     _refreshData() {

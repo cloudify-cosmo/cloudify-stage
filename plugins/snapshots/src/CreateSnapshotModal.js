@@ -2,10 +2,12 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+import Actions from './actions';
+
 export default class extends React.Component {
 
     constructor(props,context) {
-        super(props,context);
+        super(props, context);
 
         this.state = {
             createErr: null,
@@ -33,10 +35,6 @@ export default class extends React.Component {
 
         var formObj = $(e.currentTarget);
 
-        // Clear errors
-        formObj.find('.error:not(.message)').removeClass('error');
-        formObj.find('.ui.error.message').hide();
-
         // Get the data
         var snapshotId = formObj.find("input[name='snapshotId']").val();
 
@@ -44,14 +42,16 @@ export default class extends React.Component {
         this.setState({loading: true});
 
         // Call create method
-        this.props.context.doPut(`/api/v2.1/snapshots/${snapshotId}`, {'snapshot_id': snapshotId})
-                    .then((snapshot)=> {
-                        this.props.context.setValue(this.props.widget.id + 'createSnapshot',null);
-                        this.props.context.getEventBus().trigger('snapshots:refresh');
-                        this.setState({loading: false, show: false});
-                    }).catch((err)=> {
-                        this.setState({loading: false, error: err});
-                    });
+        var actions = new Actions(this.props.context);
+        actions.doCreate(snapshotId)
+            .then(()=>{
+                this.props.context.setValue(this.props.widget.id + 'createSnapshot',null);
+                this.props.context.getEventBus().trigger('snapshots:refresh');
+                this.setState({loading: false, show: false});
+            })
+            .catch((err)=>{
+                this.setState({loading: false, error: err.error});
+            });
 
         return false;
     }

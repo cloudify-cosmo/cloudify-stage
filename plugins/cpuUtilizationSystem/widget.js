@@ -3,7 +3,7 @@
  */
 
 
-addPlugin({
+Stage.addPlugin({
     id: "cpuUtilizationSystem",
     name: "CPU Utilization - System",
     description: 'blah blah blah',

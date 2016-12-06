@@ -5,18 +5,8 @@
 import fetch from 'isomorphic-fetch'
 import ScriptLoader from './scriptLoader';
 import PluginUtils from './pluginUtils';
+import {v4} from 'node-uuid';
 
-//import React from 'react';
-//import $ from 'jquery';
-//import _ from 'lodash';
-
-// Import topology project
-//import 'jquery-ui/ui/core.js';
-//import 'jquery-ui/ui/widget.js';
-//import 'jquery-ui/ui/widgets/mouse.js';
-//import 'jquery-ui/ui/widgets/draggable.js';
-//import 'jquery-ui/ui/widgets/droppable.js';
-//
 import 'angular';
 
 import '../../bower_components/cloudify-blueprint-topology/dist/styles/blueprint-topology.css';
@@ -35,10 +25,10 @@ function fetchPluginTemplate(path) {
             }
             return response.text();
         });
-        //.then({response => response.text());
 }
 
 class Plugin {
+
     constructor(data) {
         // Set default
         this.showHeader = true;
@@ -51,34 +41,43 @@ class Plugin {
         // Override defaults with data
         Object.assign(this,data);
 
+        this.initPollingTime();
+
         if (!this.name) {
             throw new Error('Missing plugin name. Plugin data is :',data);
         }
         if (!this.id) {
             throw new Error('Missing plugin id. Plugin data is :',data);
         }
-
     }
-}
-export default class PluginsLoader {
-    static init() {
-        window.addPlugin = function(pluginData) {
-            plugins.push(new Plugin(pluginData));
+
+    initPollingTime() {
+        const pollingTimeOption = {
+            id: "pollingTime",
+            name: "Refresh time interval",
+            placeHolder: "Enter time interval in seconds",
+            default: 0
         };
 
+        let option = _.find(this.initialConfiguration,{id:"pollingTime"});
+        if (option) {
+            Object.assign(option, Object.assign({}, pollingTimeOption, option));
+        } else {
+            this.initialConfiguration.unshift(pollingTimeOption);
+        }
+    }
+}
 
+export default class PluginsLoader {
+    static init() {
         window.Stage = {
             addPlugin: (pluginData)=> {
                 plugins.push(new Plugin(pluginData));
             },
             Basic: BasicComponents
         };
-
-        //window.React = React;
-        //window.$ = $;
-        //window._ = _;
-
     }
+
     static load() {
 
         return fetch('/plugins/plugins.json')
@@ -86,7 +85,7 @@ export default class PluginsLoader {
             .then((data)=> {
                 var promises = [];
                 data.forEach((plugin)=>{
-                    promises.push(new ScriptLoader('/plugins/'+plugin.name+'/widget.js').load());
+                    promises.push(new ScriptLoader('/plugins/'+plugin+'/widget.js').load());
                 });
                 return Promise.all(promises);
             })

@@ -7,6 +7,7 @@ import config from '../config.json';
 import CommonUtils from '../utils/commonUtils';
 import PluginEventBus from '../utils/PluginEventBus';
 import {drillDownToPage} from '../actions/widgets';
+import Manager from './Manager';
 
 class Context {
     constructor (store) {
@@ -25,6 +26,7 @@ class Context {
         this.context = state.context;
         this.templates = state.templates.items || {};
         this.manager = _.get(state, "managers.items[0]", {});
+        this._Manager = new Manager(this.manager);
     }
 
     setValue(key,value) {
@@ -51,39 +53,11 @@ class Context {
         return PluginEventBus;
     }
 
-    doAjax(method, url, data) {
-        return new Promise((resolve,reject)=> {
-            $.ajax({
-                url: this.getManagerUrl(url),
-                headers: Object.assign({"content-type": "application/json"}, this.getSecurityHeaders()),
-                method,
-                data: data ? JSON.stringify(data) : {}
-            }).done((data)=> {
-                resolve(data);
-            }).fail((jqXHR, textStatus, errorThrown)=> {
-                reject(jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : errorThrown)
-            });
-        });
-    }
-
-    doGet(url, data) {
-        return this.doAjax("get", url, data);
-    }
-
-    doPost(url, data) {
-        return this.doAjax("post", url, data);
-    }
-
-    doDelete(url, data) {
-        return this.doAjax("delete", url, data);
-    }
-
-    doPut(url, data) {
-        return this.doAjax("put", url, data);
+    getManager() {
+        return this._Manager;
     }
 
     refresh () {}
-
 }
 
 var context = null;

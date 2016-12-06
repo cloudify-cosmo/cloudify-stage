@@ -8,12 +8,16 @@ import UploadModal from './UploadPluginModal';
 Stage.addPlugin({
     id: "plugins",
     name: "Plugins list",
-    description: 'blah blah blah',
+    description: 'Plugins list',
     initialWidth: 8,
     initialHeight: 5,
     color : "blue",
     isReact: true,
-    fetchUrl: '[manager]/api/v2.1/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at',
+    initialConfiguration: [
+        {id: "pollingTime", default: 30}
+    ],
+    fetchUrl: '[manager]/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at',
+
     render: function(widget,data,error,context,pluginUtils) {
 
         if (_.isEmpty(data)) {

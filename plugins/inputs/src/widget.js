@@ -12,24 +12,18 @@ Stage.addPlugin({
     initialHeight: 4,
     color : "teal",
     isReact: true,
+    initialConfiguration: [
+        {id: "pollingTime", default: 2}
+    ],
 
     fetchData: function(plugin,context,pluginUtils) {
         let deploymentId = context.getValue('deploymentId');
 
-        return new Promise( (resolve,reject) => {
-            if (deploymentId) {
-                $.get({
-                    url: context.getManagerUrl(`/api/v2.1/deployments?_include=id,inputs&id=${deploymentId}`),
-                    dataType: 'json',
-                    headers: context.getSecurityHeaders()
-                }).done((data)=> {
-                    //for selected deployemntId there should be only one item including all inputs
-                    resolve({inputs: _.get(data, "items[0].inputs", {})});
-                }).fail(reject)
-            } else {
-                resolve({inputs:{}});
-            }
-        });
+        if (deploymentId) {
+            return context.getManager().doGet(`/deployments?_include=id,inputs&id=${deploymentId}`)
+                .then(data=>Promise.resolve({inputs: _.get(data, "items[0].inputs", {})}));
+        }
+        return Promise.resolve({inputs:{}});
     },
 
     render: function(widget,data,error,context,pluginUtils) {

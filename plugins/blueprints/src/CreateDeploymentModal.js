@@ -2,6 +2,8 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+import Actions from './actions';
+
 export default class extends React.Component {
 
     constructor(props,context) {
@@ -26,7 +28,6 @@ export default class extends React.Component {
             return false;
         }
 
-        var blueprintId = deployItem.id;
         var deploymentId = $('[name=deploymentName]').val();
 
         var inputs = {};
@@ -39,13 +40,15 @@ export default class extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        this.props.context.doPut(`/api/v2.1/deployments/${deploymentId}`, {'blueprint_id': blueprintId, inputs: inputs})
-            .then((deployment)=> {
+        var actions = new Actions(this.props.context);
+        actions.doDeploy(deployItem,deploymentId,inputs)
+            .then((/*deployment*/)=> {
                 this.setState({loading: false});
                 this.props.context.setValue(this.props.widget.id + 'createDeploy',null);
                 this.props.context.getEventBus().trigger('deployments:refresh');
-            }).catch((err)=> {
-                 this.setState({loading: false, error: err});
+            })
+            .catch((err)=>{
+                this.setState({loading: false, error: err.error});
             });
 
         return false;

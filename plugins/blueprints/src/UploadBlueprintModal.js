@@ -2,6 +2,8 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+import Actions from './actions';
+
 export default class extends React.Component {
 
     constructor(props,context) {
@@ -44,8 +46,6 @@ export default class extends React.Component {
     _submitUpload(e) {
         e.preventDefault();
 
-        var thi$ = this;
-
         var formObj = $(e.currentTarget);
 
         // Clear errors
@@ -79,53 +79,17 @@ export default class extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        // Call upload method
-        var xhr = new XMLHttpRequest();
-        (xhr.upload || xhr).addEventListener('progress', function(e) {
-            var done = e.position || e.loaded
-            var total = e.totalSize || e.total;
-            console.log('xhr progress: ' + Math.round(done/total*100) + '%');
+        var actions = new Actions(this.props.context);
+        actions.doUpload(blueprintName,blueprintFileName,file).then(()=>{
+            this.setState({loading: false,show: false});
+            this.props.context.refresh();
+        }).catch((err)=>{
+            this.setState({uploadErr: err.error, loading: false});
         });
-        xhr.addEventListener("error", function(e){
-            console.log('xhr upload error', e, this.responseText);
-            thi$._processUploadErrIfNeeded(this);
-            thi$.setState({loading: false});
-        });
-        xhr.addEventListener('load', function(e) {
-            console.log('xhr upload complete', e, this.responseText);
-            thi$.setState({loading: false});
-
-            if (!thi$._processUploadErrIfNeeded(this)) {
-                thi$.setState({show: false});
-                thi$.props.context.refresh();
-            } else {
-                formObj.find('.ui.error.message.uploadFailed').show();
-            }
-        });
-
-        xhr.open('put',this.props.context.getManagerUrl(`/api/v2.1/blueprints/${blueprintName}` + (!_.isEmpty(blueprintFileName) ? '?application_file_name='+blueprintFileName+'.yaml' : '')));
-        var securityHeaders = this.props.context.getSecurityHeaders();
-        if (securityHeaders) {
-            xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
-        }
-
-        xhr.send(file);
 
         return false;
     }
 
-    _processUploadErrIfNeeded(xhr) {
-        try {
-            var response = JSON.parse(xhr.responseText);
-            if (response.message) {
-                this.setState({uploadErr: response.message});
-                return true;
-            }
-        } catch (err) {
-            console.err('Cannot parse upload response',err);
-            return false;
-        }
-    }
     render() {
         var Modal = Stage.Basic.Modal;
         var Header = Stage.Basic.ModalHeader;
@@ -169,8 +133,23 @@ export default class extends React.Component {
                                             <i className="attach icon"></i>
                                         </button>
                                     </div>
-                                    <input type="file" name='blueprintFile' id="blueprintFile" style={{"display": "none"}} onChange={this._uploadFileChanged}/>
+                                    <input type="text" name='blueprintFileUrl' placeholder="Enter blueprint url"></input>
                                 </div>
+                            </div>
+
+                            <div className="field one wide" style={{"position":"relative"}}>
+                                <div className="ui vertical divider">
+                                    Or
+                                </div>
+                            </div>
+                            <div className="field eight wide">
+                                <div className="ui action input">
+                                    <input type="text" readOnly='true' value="" className="uploadBlueprintFile" onClick={this._openFileSelection}></input>
+                                    <button className="ui icon button uploadBlueprintFile" onClick={this._openFileSelection}>
+                                        <i className="attach icon"></i>
+                                    </button>
+                                </div>
+                                <input type="file" name='blueprintFile' id="blueprintFile" style={{"display": "none"}} onChange={this._uploadFileChanged}/>
                             </div>
 
                             <div className="field">
