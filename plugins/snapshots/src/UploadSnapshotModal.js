@@ -47,9 +47,7 @@ export default class extends React.Component {
     componentWillUpdate(prevProps, prevState) {
         //same Modal instance is used multiple time so we need to reset states
         if (this.state.show && prevState.show != this.state.show) {
-            this.setState({showErr: false});
-            this.setState({uploadErr: null});
-            this.setState({loading: false});
+            this.setState({showErr:false, uploadErr:null, loading:false});
             $("form input:text").val("");
             $("form input:file").val("");
         }

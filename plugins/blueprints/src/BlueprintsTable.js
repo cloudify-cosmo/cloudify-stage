@@ -2,7 +2,7 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
-import DeployModal from './CreateDeploymentModal';
+import DeployModal from './DeployBlueprintModal';
 import Actions from './actions';
 
 export default class extends React.Component {
