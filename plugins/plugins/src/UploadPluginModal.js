@@ -12,7 +12,8 @@ export default class extends React.Component {
         this.state = {
             uploadErr: null,
             show: false,
-            loading: false
+            loading: false,
+            showErr: false
         }
     }
 
@@ -43,6 +44,17 @@ export default class extends React.Component {
         $('input.uploadPluginFile').val(filename).attr('title',fullPathFileName);
     }
 
+    componentWillUpdate(prevProps, prevState) {
+        //same Modal instance is used multiple time so we need to reset states
+        if (this.state.show && prevState.show != this.state.show) {
+            this.setState({showErr: false});
+            this.setState({uploadErr: null});
+            this.setState({loading: false});
+            $("form input:text").val("");
+            $("form input:file").val("");
+        }
+    }
+
     _submitUpload(e) {
         e.preventDefault();
 
@@ -51,8 +63,7 @@ export default class extends React.Component {
         var formObj = $(e.currentTarget);
 
         // Clear errors
-        formObj.find('.error:not(.message)').removeClass('error');
-        formObj.find('.ui.error.message').hide();
+        this.setState({showErr: false});
 
         // Get the data
         var pluginFileUrl = formObj.find("input[name='pluginFileUrl']").val();
@@ -60,11 +71,7 @@ export default class extends React.Component {
 
         // Check that we have all we need
         if (_.isEmpty(pluginFileUrl) && !file) {
-            formObj.addClass('error');
-            formObj.find("input.uploadPluginFile").parents('.field').addClass('error');
-            formObj.find("input[name='pluginFileUrl']").parents('.field').addClass('error');
-            formObj.find('.ui.error.message').show();
-
+            this.setState({showErr: true});
             return false;
         }
 
@@ -104,9 +111,9 @@ export default class extends React.Component {
                     </Header>
 
                     <Body>
-                        <form className="ui form uploadForm" onSubmit={this._submitUpload.bind(this)} action="">
+                        <form className={`ui form uploadForm ${this.state.showErr?"error":""}`} onSubmit={this._submitUpload.bind(this)} action="">
                             <div className="fields">
-                                <div className="field nine wide">
+                                <div className={`field nine wide ${this.state.showErr?"error":""}`}>
                                     <div className="ui labeled input">
                                         <div className="ui label">
                                             http://
@@ -120,7 +127,7 @@ export default class extends React.Component {
                                         Or
                                     </div>
                                 </div>
-                                <div className="field eight wide">
+                                <div className={`field eight wide ${this.state.showErr?"error":""}`}>
                                     <div className="ui action input">
                                         <input type="text" readOnly='true' value="" className="uploadPluginFile" onClick={this._openFileSelection}></input>
                                         <button className="ui icon button uploadPluginFile" onClick={this._openFileSelection}>
@@ -131,7 +138,7 @@ export default class extends React.Component {
                                 </div>
                             </div>
 
-                            <ErrorMessage error="Please fill in all the required fields" header="Missing data" show={false}/>
+                            <ErrorMessage error="Please fill in all the required fields" header="Missing data" show={this.state.showErr}/>
 
                             <ErrorMessage error={this.state.uploadErr} header="Error uploading file" className="uploadFailed"/>
 

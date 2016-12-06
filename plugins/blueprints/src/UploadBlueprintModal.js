@@ -11,6 +11,7 @@ export default class extends React.Component {
 
         this.state = {
             uploadErr: null,
+            showErr: false,
             show: false,
             loading: false
         }
@@ -36,6 +37,17 @@ export default class extends React.Component {
         return false;
     }
 
+    componentWillUpdate(prevProps, prevState) {
+        //same Modal instance is used multiple time so we need to reset states
+        if (this.state.show && prevState.show != this.state.show) {
+            this.setState({showErr: false});
+            this.setState({uploadErr: null});
+            this.setState({loading: false});
+            $("form input:text").val("");
+            $("form input:file").val("");
+        }
+    }
+
     _uploadFileChanged(e){
         var fullPathFileName = $(e.currentTarget).val();
         var filename = fullPathFileName.split('\\').pop();
@@ -49,8 +61,7 @@ export default class extends React.Component {
         var formObj = $(e.currentTarget);
 
         // Clear errors
-        formObj.find('.error:not(.message)').removeClass('error');
-        formObj.find('.ui.error.message').hide();
+        this.setState({showErr: false});
 
         // Get the data
         var blueprintName = formObj.find("input[name='blueprintName']").val();
@@ -60,19 +71,12 @@ export default class extends React.Component {
 
         // Check that we have all we need
         if (_.isEmpty(blueprintFileUrl) && !file) {
-            formObj.addClass('error');
-            formObj.find("input.uploadBlueprintFile").parents('.field').addClass('error');
-            formObj.find("input[name='blueprintFileUrl']").parents('.field').addClass('error');
-            formObj.find('.ui.error.message').show();
-
+            this.setState({showErr: true});
             return false;
         }
 
         if (_.isEmpty(blueprintName)) {
-            formObj.addClass('error');
-            formObj.find("input[name='blueprintName']").parents('.field').addClass('error');
-            formObj.find('.ui.error.message').show();
-
+            this.setState({showErr: true});
             return false;
         }
 
@@ -80,7 +84,7 @@ export default class extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.context);
-        actions.doUpload(blueprintName,blueprintFileName,file).then(()=>{
+        actions.doUpload(blueprintName, blueprintFileName, file).then(()=>{
             this.setState({loading: false,show: false});
             this.props.context.refresh();
         }).catch((err)=>{
@@ -110,14 +114,14 @@ export default class extends React.Component {
                     </Header>
 
                     <Body>
-                        <form className="ui form uploadForm" onSubmit={this._submitUpload.bind(this)} action="">
+                        <form className={`ui form uploadForm ${this.state.showErr?"error":""}`} onSubmit={this._submitUpload.bind(this)} action="">
                             <div className="fields">
-                                <div className="field nine wide">
+                                <div className={`field nine wide ${this.state.showErr?"error":""}`}>
                                     <div className="ui labeled input">
                                         <div className="ui label">
                                             http://
                                         </div>
-                                        <input type="text" name='blueprintFileUrl' placeholder="Enter blueprint url"></input>
+                                        <input type="text" name="blueprintFileUrl" placeholder="Enter blueprint url"></input>
                                     </div>
                                 </div>
 
@@ -126,30 +130,15 @@ export default class extends React.Component {
                                         Or
                                     </div>
                                 </div>
-                                <div className="field eight wide">
+                                <div className={`field eight wide ${this.state.showErr?"error":""}`}>
                                     <div className="ui action input">
                                         <input type="text" readOnly='true' value="" className="uploadBlueprintFile" onClick={this._openFileSelection}></input>
                                         <button className="ui icon button uploadBlueprintFile" onClick={this._openFileSelection}>
                                             <i className="attach icon"></i>
                                         </button>
                                     </div>
-                                    <input type="text" name='blueprintFileUrl' placeholder="Enter blueprint url"></input>
+                                    <input type="file" name='blueprintFile' id="blueprintFile" style={{"display": "none"}} onChange={this._uploadFileChanged}/>
                                 </div>
-                            </div>
-
-                            <div className="field one wide" style={{"position":"relative"}}>
-                                <div className="ui vertical divider">
-                                    Or
-                                </div>
-                            </div>
-                            <div className="field eight wide">
-                                <div className="ui action input">
-                                    <input type="text" readOnly='true' value="" className="uploadBlueprintFile" onClick={this._openFileSelection}></input>
-                                    <button className="ui icon button uploadBlueprintFile" onClick={this._openFileSelection}>
-                                        <i className="attach icon"></i>
-                                    </button>
-                                </div>
-                                <input type="file" name='blueprintFile' id="blueprintFile" style={{"display": "none"}} onChange={this._uploadFileChanged}/>
                             </div>
 
                             <div className="field">
@@ -159,7 +148,7 @@ export default class extends React.Component {
                                 <input type="text" name='blueprintFileName' id='blueprintFileName' placeholder="Blueprint filename e.g. blueprint"/>
                             </div>
 
-                            <ErrorMessage error="Please fill in all the required fields" header="Missing data" show={false}/>
+                            <ErrorMessage error="Please fill in all the required fields" header="Missing data" show={this.state.showErr}/>
 
                             <ErrorMessage error={this.state.uploadErr} header="Error uploading file" className="uploadFailed"/>
 
