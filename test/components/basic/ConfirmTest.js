@@ -34,12 +34,12 @@ describe('(Component) Confirm', () => {
     });
 
     it('clicks ok button', function(done) {
-        this.timeout(5000);
+        this.timeout(10000);
         var cb = sinon.spy();
         wrapper.setProps({onConfirm:cb});
         $(".confirmTest .ok").trigger( "click" );
         expect(cb).to.have.been.calledOnce;
-        setTimeout(done, 100);
+        done();
     });
 
     it('clicks cancel button', () => {
