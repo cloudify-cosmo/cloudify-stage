@@ -3,7 +3,7 @@
  */
 
 import fetch from 'isomorphic-fetch';
-import CommonUtils from './commonUtils';
+import StageUtils from './stageUtils';
 
 import log from 'loglevel';
 
@@ -129,7 +129,7 @@ export default class Manager {
     _buildActualUrl(url,data) {
         var queryString = data ? '?'+$.param(data) : '';
         var urlInServer = `/api/${this._data.version}${url}${queryString}`;
-        return CommonUtils.createManagerUrl(this._data.ip, urlInServer);
+        return StageUtils.createManagerUrl(this._data.ip, urlInServer);
     }
 
     getManagerUrl(url,data) {

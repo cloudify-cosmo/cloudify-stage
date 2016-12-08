@@ -3,7 +3,7 @@
  */
 
 import {setValue as setContextValue} from '../actions/context';
-import CommonUtils from '../utils/commonUtils';
+import StageUtils from '../utils/stageUtils';
 import PluginEventBus from '../utils/PluginEventBus';
 import {drillDownToPage} from '../actions/widgets';
 import Manager from './Manager';
@@ -40,7 +40,7 @@ class Context {
     }
 
     getManagerUrl(queryString) {
-        return CommonUtils.createManagerUrl(this.manager.ip, queryString);
+        return StageUtils.createManagerUrl(this.manager.ip, queryString);
     }
 
     getSecurityHeaders() {

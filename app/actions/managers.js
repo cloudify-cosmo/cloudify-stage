@@ -5,7 +5,6 @@
 import * as types from './types';
 import Auth from '../utils/auth';
 import { push } from 'react-router-redux';
-import CommonUtils from '../utils/commonUtils';
 import Manager from '../utils/Manager';
 
 function requestLogin() {
