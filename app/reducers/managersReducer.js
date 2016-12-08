@@ -19,7 +19,6 @@ const managers = (state = {}, action) => {
                             isSecured : true,
                             token: action.token
                         },
-                        version: 'v2.1',
                         err: null,
                         version: action.version,
                         lastUpdated: action.receivedAt
@@ -39,7 +38,6 @@ const managers = (state = {}, action) => {
                             isSecured : true,
                             token: action.token
                         },
-                        version: 'v2.1',
                         err: action.error,
                         lastUpdated: action.receivedAt
                     }
