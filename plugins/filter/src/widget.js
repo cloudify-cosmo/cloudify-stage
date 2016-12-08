@@ -13,6 +13,7 @@ Stage.addPlugin({
     color: "yellow",
     showHeader: false,
     showBorder: false,
+    keepOnTop: true,
     fetchUrl: [
         '[manager]/blueprints?_include=id',
         '[manager]/deployments?_include=id,blueprint_id',

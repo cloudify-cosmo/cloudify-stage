@@ -3,11 +3,6 @@
  */
 
 import SnapshotsTable from './SnapshotsTable';
-import renderUploadSnapshotModal from './UploadSnapshotModal';
-import renderCreateSnapshotModal from './CreateSnapshotModal';
-
-var UploadModal = null;
-var CreateModal = null;
 
 Stage.addPlugin({
     id: "snapshots",
@@ -20,11 +15,6 @@ Stage.addPlugin({
     initialConfiguration: [
         {id: "pollingTime", default: 30}
     ],
-    init: function(pluginUtils) {
-        UploadModal = renderUploadSnapshotModal(pluginUtils);
-        CreateModal = renderCreateSnapshotModal(pluginUtils);
-    },
-
     fetchUrl: '[manager]/snapshots?_include=id,created_at,status',
 
     render: function(widget,data,error,context,pluginUtils) {
@@ -44,13 +34,7 @@ Stage.addPlugin({
         });
 
         return (
-            <div>
-                <div className="snapshotsButtons">
-                    <CreateModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
-                    <UploadModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
-                 </div>
-                <SnapshotsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
-            </div>
+            <SnapshotsTable widget={widget} data={formattedData} context={context}/>
         );
     }
 });

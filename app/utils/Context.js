@@ -3,7 +3,6 @@
  */
 
 import {setValue as setContextValue} from '../actions/context';
-import config from '../config.json';
 import CommonUtils from '../utils/commonUtils';
 import PluginEventBus from '../utils/PluginEventBus';
 import {drillDownToPage} from '../actions/widgets';
@@ -41,7 +40,7 @@ class Context {
     }
 
     getManagerUrl(queryString) {
-        return CommonUtils.createManagerUrl(config.proxyIp, this.manager.ip, queryString);
+        return CommonUtils.createManagerUrl(this.manager.ip, queryString);
     }
 
     getSecurityHeaders() {
@@ -56,6 +55,7 @@ class Context {
     getManager() {
         return this._Manager;
     }
+
     refresh () {}
 }
 

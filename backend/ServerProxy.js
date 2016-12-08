@@ -1,12 +1,13 @@
 'use strict';
 /**
- * Created by kinneretzin on 27/09/2016.
+ * Created by kinneretzin on 05/12/2016.
  */
 
 
 var express = require('express');
-var app = express();
 var request = require('request');
+
+var router = express.Router();
 
 let  allowAccessOrigin = (req,res,next) => {
     // Setting access control allow origin headers
@@ -22,11 +23,11 @@ let  allowAccessOrigin = (req,res,next) => {
     next();
 };
 
-app.use(allowAccessOrigin);
+router.use(allowAccessOrigin);
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
-app.get('/',function (req, res,next) {
+router.get('/',function (req, res,next) {
 
 
     var serverUrl = req.query.su;
@@ -42,7 +43,7 @@ app.get('/',function (req, res,next) {
     }
 });
 
-app.put('/',function(req,res,next){
+router.put('/',function(req,res,next){
     var serverUrl = req.query.su;
     if (serverUrl) {
         console.log('Proxying put request to server with url: '+serverUrl);
@@ -58,7 +59,7 @@ app.put('/',function(req,res,next){
 
 });
 
-app.delete('/',function(req,res,next){
+router.delete('/',function(req,res,next){
     var serverUrl = req.query.su;
     if (serverUrl) {
         console.log('Proxying delete request to server with url: '+serverUrl);
@@ -73,7 +74,7 @@ app.delete('/',function(req,res,next){
     }
 
 });
-app.post('/',function(req,res,next){
+router.post('/',function(req,res,next){
     var serverUrl = req.query.su;
     if (serverUrl) {
         console.log('Proxying post request to server with url: '+serverUrl);
@@ -89,7 +90,4 @@ app.post('/',function(req,res,next){
 
 });
 
-app.listen(8000, function () {
-    console.log('UI Proxy runs on port 8000!');
-});
-
+module.exports = router;

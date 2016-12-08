@@ -13,6 +13,13 @@ export default class AddWidgetButton extends Component {
         });
     }
 
+    componentWillUnmount() {
+        $('.addWidgetModal.modal')
+            .modal('hide')
+            .modal('destroy')
+            .remove();
+    }
+
     render() {
         return (
             <AddButton className='compact addWidgetBtn'>Add Widget</AddButton>

@@ -2,6 +2,7 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
+import DeployModal from './DeployBlueprintModal';
 import Actions from './actions';
 
 export default class extends React.Component {
@@ -22,9 +23,12 @@ export default class extends React.Component {
     _createDeployment(item,event){
         event.stopPropagation();
 
-        // Get the full blueprint data (including plan for inputs
-        (new Actions(this.props.context)).doGetFullBlueprintData(item).then((fullBlueprint)=>{
+        // Get the full blueprint data (including plan for inputs)
+        var actions = new Actions(this.props.context);
+        actions.doGetFullBlueprintData(item).then((fullBlueprint)=>{
             this.props.context.setValue(this.props.widget.id + 'createDeploy',fullBlueprint);
+        }).catch((err)=> {
+            this.setState({error: err.error});
         });
     }
 
@@ -44,14 +48,13 @@ export default class extends React.Component {
         }
 
         var actions = new Actions(this.props.context);
-
         actions.doDelete(this.state.item)
             .then(()=> {
                 this.setState({confirmDelete: false});
                 this.props.context.getEventBus().trigger('blueprints:refresh');
             })
             .catch((err)=>{
-                this.setState({confirmDelete: false,error: err.error});
+                this.setState({confirmDelete: false, error: err.error});
             });
     }
 
@@ -110,10 +113,14 @@ export default class extends React.Component {
                     }
                     </tbody>
                 </table>
+
                 <Confirm title='Are you sure you want to remove this blueprint?'
                          show={this.state.confirmDelete}
                          onConfirm={this._deleteBlueprint.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
+
+                <DeployModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+
             </div>
 
         );

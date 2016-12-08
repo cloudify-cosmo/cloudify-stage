@@ -15,6 +15,7 @@ Stage.addPlugin({
         {id: "pollingTime", default: 5}
     ],
     fetchUrl: '[manager]/node-instances?_include=id',
+
     render: function(widget,data,error,context,pluginUtils) {
         if (_.isEmpty(data)) {
             return pluginUtils.renderReactLoading();

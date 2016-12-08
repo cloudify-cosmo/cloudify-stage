@@ -4,173 +4,156 @@
 
 import Actions from './actions.js';
 
-export default (pluginUtils)=> {
+export default class extends React.Component {
 
-    return class extends React.Component {
+    constructor(props,context) {
+        super(props,context);
 
-        constructor(props,context) {
-            super(props,context);
+        this.state = {
+            uploadErr: null,
+            show: false,
+            loading: false,
+            showErr: false
+        }
+    }
 
-            this.state = {
-                uploadErr: null
-            }
+    onApprove () {
+        $(this.refs.submitUploadBtn).click();
+        return false;
+    }
+
+    onDeny () {
+        this.setState({show: false});
+        return true;
+    }
+
+    _showModal() {
+        this.setState({show: true});
+    }
+
+    _openFileSelection(e) {
+        e.preventDefault();
+        $('#pluginFile').click();
+        return false;
+    }
+
+    _uploadFileChanged(e){
+        var fullPathFileName = $(e.currentTarget).val();
+        var filename = fullPathFileName.split('\\').pop();
+
+        $('input.uploadPluginFile').val(filename).attr('title',fullPathFileName);
+    }
+
+    componentWillUpdate(prevProps, prevState) {
+        //same Modal instance is used multiple time so we need to reset states
+        if (this.state.show && prevState.show != this.state.show) {
+            this.setState({showErr:false, uploadErr:null, loading:false});
+            $("form input:text").val("");
+            $("form input:file").val("");
+        }
+    }
+
+    _submitUpload(e) {
+        e.preventDefault();
+
+        var formObj = $(e.currentTarget);
+
+        // Clear errors
+        this.setState({showErr: false});
+
+        // Get the data
+        var pluginFileUrl = formObj.find("input[name='pluginFileUrl']").val();
+        var file = document.getElementById('pluginFile').files[0];
+
+        // Check that we have all we need
+        if (_.isEmpty(pluginFileUrl) && !file) {
+            this.setState({showErr: true});
+            return false;
         }
 
-        componentDidMount() {
-            this._initModal(this.refs.modalObj);
-        }
-        componentDidUpdate() {
-            pluginUtils.jQuery(this.refs.modalObj).modal('refresh');
-        }
-        componentWillUnmount() {
-            pluginUtils.jQuery(this.refs.modalObj).modal('destroy');
-            pluginUtils.jQuery(this.refs.modalObj).remove();
-        }
+        // Disable the form
+        this.setState({loading: true});
 
-        _initModal(modalObj) {
-            pluginUtils.jQuery(modalObj).modal({
-                closable  : false,
-                onDeny    : function(){
-                    //window.alert('Wait not yet!');
-                    //return false;
-                },
-                onApprove : function() {
-                    pluginUtils.jQuery('.uploadFormSubmitBtn').click();
-                    return false;
-                }
+        var actions = new Actions(this.props.context);
+        actions.doUpload(file)
+            .then(()=>{
+                this.setState({loading: false, show: false});
+                this.props.context.refresh();
+            })
+            .catch(err=>{
+                this.setState({uploadErr: err.error, loading: false});
             });
 
-        }
+        return false;
+    }
 
-        _showModal() {
-            pluginUtils.jQuery('.uploadPluginModal').modal('show');
-        }
+    render() {
+        var Modal = Stage.Basic.Modal;
+        var Header = Stage.Basic.ModalHeader;
+        var Body = Stage.Basic.ModalBody;
+        var Footer = Stage.Basic.ModalFooter;
+        var ErrorMessage = Stage.Basic.ErrorMessage;
 
-        _openFileSelection(e) {
-            e.preventDefault();
-            pluginUtils.jQuery('#pluginFile').click();
-            return false;
-        }
+        return (
+            <div>
+                <button className="ui labeled icon button uploadPlugin" onClick={this._showModal.bind(this)}>
+                    <i className="upload icon"></i>
+                    Upload
+                </button>
 
-        _uploadFileChanged(e){
-            var fullPathFileName = pluginUtils.jQuery(e.currentTarget).val();
-            var filename = fullPathFileName.split('\\').pop();
+                <Modal show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+                    <Header>
+                        <i className="upload icon"></i> Upload plugin
+                    </Header>
 
-            pluginUtils.jQuery('input.uploadPluginFile').val(filename).attr('title',fullPathFileName);
-
-        }
-
-        _submitUpload(e) {
-            e.preventDefault();
-
-            var thi$ = this;
-
-            var formObj = pluginUtils.jQuery(e.currentTarget);
-
-            // Clear errors
-            formObj.find('.error:not(.message)').removeClass('error');
-            formObj.find('.ui.error.message').hide();
-
-            // Get the data
-            var pluginFileUrl = formObj.find("input[name='pluginFileUrl']").val();
-            var file = document.getElementById('pluginFile').files[0];
-
-            // Check that we have all we need
-            if (_.isEmpty(pluginFileUrl) && !file) {
-                formObj.addClass('error');
-                formObj.find("input.uploadPluginFile").parents('.field').addClass('error');
-                formObj.find("input[name='pluginFileUrl']").parents('.field').addClass('error');
-                formObj.find('.ui.error.message').show();
-
-                return false;
-            }
-
-            // Disalbe the form
-            formObj.parents('.modal').find('.actions .button').attr('disabled','disabled').addClass('disabled loading');
-            formObj.addClass('loading');
-
-            (new Actions(this.props.context)).doUpload(file)
-                .then(()=>{
-                    formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
-                    formObj.removeClass('loading');
-
-                    formObj.parents('.modal').modal('hide');
-                    this.props.context.refresh();
-                })
-                .catch(err=>{
-                    this.setState({uploadErr: err.error});
-                    formObj.find('.ui.error.message.uploadFailed').show();
-                    formObj.parents('.modal').find('.actions .button').removeAttr('disabled').removeClass('disabled loading');
-                    formObj.removeClass('loading');
-
-                });
-
-            return false;
-        }
-
-        render() {
-            var ErrorMessage = Stage.Basic.ErrorMessage;
-
-            return (
-                <div>
-                    <button className="ui labeled icon button uploadPlugin" onClick={this._showModal}>
-                        <i className="upload icon"></i>
-                        Upload
-                    </button>
-
-                    <div className="ui modal uploadPluginModal" ref='modalObj'>
-                        <div className="header">
-                            <i className="upload icon"></i> Upload plugin
-                        </div>
-
-                        <div className="content">
-                            <form className="ui form uploadForm" onSubmit={this._submitUpload.bind(this)} action="">
-                                <div className="fields">
-                                    <div className="field nine wide">
-                                        <div className="ui labeled input">
-                                            <div className="ui label">
-                                                http://
-                                            </div>
-                                            <input type="text" name='pluginFileUrl' placeholder="Enter plugin url"></input>
+                    <Body>
+                        <form className={`ui form uploadForm ${this.state.showErr?"error":""}`} onSubmit={this._submitUpload.bind(this)} action="">
+                            <div className="fields">
+                                <div className={`field nine wide ${this.state.showErr?"error":""}`}>
+                                    <div className="ui labeled input">
+                                        <div className="ui label">
+                                            http://
                                         </div>
-                                    </div>
-
-                                    <div className="field one wide" style={{"position":"relative"}}>
-                                        <div className="ui vertical divider">
-                                            Or
-                                        </div>
-                                    </div>
-                                    <div className="field eight wide">
-                                        <div className="ui action input">
-                                            <input type="text" readOnly='true' value="" className="uploadPluginFile" onClick={this._openFileSelection}></input>
-                                            <button className="ui icon button uploadPluginFile" onClick={this._openFileSelection}>
-                                                <i className="attach icon"></i>
-                                            </button>
-                                        </div>
-                                        <input type="file" name='pluginFile' id="pluginFile" style={{"display": "none"}} onChange={this._uploadFileChanged}/>
+                                        <input type="text" name='pluginFileUrl' placeholder="Enter plugin url"></input>
                                     </div>
                                 </div>
 
-                                <ErrorMessage error={this.state.uploadErr} header="Error uploading file" className="uploadFailed"/>
-
-                                <input type='submit' style={{"display": "none"}} className='uploadFormSubmitBtn'/>
-                            </form>
-                        </div>
-
-                        <div className="actions">
-                            <div className="ui cancel basic button">
-                                <i className="remove icon"></i>
-                                Cancel
+                                <div className="field one wide" style={{"position":"relative"}}>
+                                    <div className="ui vertical divider">
+                                        Or
+                                    </div>
+                                </div>
+                                <div className={`field eight wide ${this.state.showErr?"error":""}`}>
+                                    <div className="ui action input">
+                                        <input type="text" readOnly='true' value="" className="uploadPluginFile" onClick={this._openFileSelection}></input>
+                                        <button className="ui icon button uploadPluginFile" onClick={this._openFileSelection}>
+                                            <i className="attach icon"></i>
+                                        </button>
+                                    </div>
+                                    <input type="file" name='pluginFile' id="pluginFile" style={{"display": "none"}} onChange={this._uploadFileChanged}/>
+                                </div>
                             </div>
-                            <div className="ui ok green  button">
-                                <i className="upload icon"></i>
-                                Upload
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-            );
-        }
-    };
+                            <ErrorMessage error="Please fill in all the required fields" header="Missing data" show={this.state.showErr}/>
+
+                            <ErrorMessage error={this.state.uploadErr} header="Error uploading file" className="uploadFailed"/>
+
+                            <input type='submit' style={{"display": "none"}} ref='submitUploadBtn'/>
+                        </form>
+                    </Body>
+
+                    <Footer>
+                        <div className="ui cancel basic button">
+                            <i className="remove icon"></i>
+                            Cancel
+                        </div>
+                        <div className="ui ok green  button">
+                            <i className="upload icon"></i>
+                            Upload
+                        </div>
+                    </Footer>
+                </Modal>
+            </div>
+        );
+    }
 };

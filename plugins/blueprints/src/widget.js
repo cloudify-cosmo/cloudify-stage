@@ -3,10 +3,7 @@
  */
 
 import BlueprintsTable from './BlueprintsTable';
-import renderUploadBlueprintModal from './UploadBlueprintModal';
-import DeployModal from './CreateDeploymentModal';
-
-var UploadModal = null;
+import UploadModal from './UploadBlueprintModal';
 
 Stage.addPlugin({
     id: "blueprints",
@@ -19,10 +16,6 @@ Stage.addPlugin({
     initialConfiguration: [
         {id: "pollingTime", default: 2}
     ],
-    init: function(pluginUtils) {
-        UploadModal = renderUploadBlueprintModal(pluginUtils);
-    },
-
     fetchUrl: [
         '[manager]/blueprints?_include=id,updated_at,created_at,description',
         '[manager]/deployments?_include=id,blueprint_id'
@@ -50,6 +43,7 @@ Stage.addPlugin({
 
         return formattedData;
     },
+
     render: function(widget,data,error,context,pluginUtils) {
 
         if (_.isEmpty(data)) {
@@ -59,9 +53,8 @@ Stage.addPlugin({
         var formattedData = this._processData(data,context,pluginUtils);
         return (
             <div>
-                <BlueprintsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
-                <UploadModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
-                <DeployModal widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+                <BlueprintsTable widget={widget} data={formattedData} context={context}/>
+                <UploadModal widget={widget} data={formattedData} context={context}/>
             </div>
         );
     }

@@ -36,7 +36,8 @@ export default class Widget extends Component {
                  data-gs-x={this.props.widget.x}
                  data-gs-y={this.props.widget.y}
                  data-gs-width={this.props.widget.width}
-                 data-gs-height={this.props.widget.height}>
+                 data-gs-height={this.props.widget.height}
+                 style={(this.props.widget.plugin && this.props.widget.plugin.zIndex)?{"zIndex":this.props.widget.plugin.zIndex}:{}}>
 
                     <div className={'ui segment grid-stack-item-content '+
                                     (this.props.widget.plugin && !this.props.widget.plugin.showBorder ? 'basic ' : '') +
