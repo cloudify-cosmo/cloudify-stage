@@ -11,11 +11,13 @@ import Header from './modal/ModalHeader';
 export default class Confirm extends Component {
     static propTypes = {
         title: PropTypes.string.isRequired,
+        className: PropTypes.string,
         onConfirm: PropTypes.func,
         show: PropTypes.bool
     };
 
     static defaultProps = {
+        className: '',
         onConfirm: function() {return true;},
         onCancel: function() {return true;},
         show: false
@@ -23,7 +25,7 @@ export default class Confirm extends Component {
     
     render() {
         return (
-            <Modal onApprove={this.props.onConfirm} onDeny={this.props.onCancel} show={this.props.show}>
+            <Modal className={this.props.className} onApprove={this.props.onConfirm} onDeny={this.props.onCancel} show={this.props.show}>
                 <Header>{this.props.title}</Header>
                 <Footer>
                     <Footer>
