@@ -25,7 +25,7 @@ export default class Widget extends Component {
         setContextValue: PropTypes.func.isRequired,
         onDrilldownToPage: PropTypes.func.isRequired,
         onWidgetRemoved: PropTypes.func.isRequired,
-        onWidgetEdited: PropTypes.func.isRequired,
+        onWidgetEdited: PropTypes.func.isRequired
     };
 
     render() {
@@ -72,7 +72,9 @@ export default class Widget extends Component {
                                 ''
                         }
                         {
-                            this.props.widget.plugin ?
+                            (this.props.widget.plugin &&
+                            !_.isEmpty(_.get(this.props,'manager.tenants.selected')) &&
+                            !_.get(this.props,'manager.tenants.isFetching'))?
                                 <WidgetDynamicContent widget={this.props.widget}
                                                       templates={this.props.templates}
                                                       context={this.props.context}

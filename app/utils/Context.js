@@ -24,7 +24,7 @@ class Context {
         var state = this.store.getState();
         this.context = state.context;
         this.templates = state.templates.items || {};
-        this.manager = _.get(state, "managers.items[0]", {});
+        this.manager = state.manager || {};
         this._Manager = new Manager(this.manager);
     }
 

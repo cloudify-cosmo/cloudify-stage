@@ -105,7 +105,7 @@ export default class WidgetDynamicContent extends Component {
             this.fetchDataPromise.promise
                     .then((data)=> {
                         console.log(`Widget '${this.props.widget.name}' data fetched`);
-                        this.setState({data: data.length === 1 ? data[0] : data});
+                        this.setState({data: data.length === 1 ? data[0] : data,error: null});
                         this._afterFetch();
                     })
                     .catch((e)=>{
@@ -117,6 +117,7 @@ export default class WidgetDynamicContent extends Component {
                         this.setState({error: 'Error fetching widget data'});
                         this._afterFetch();
                     });
+
         } else if (this.props.widget.plugin.fetchData && typeof this.props.widget.plugin.fetchData === 'function') {
             this._beforeFetch();
 
@@ -125,7 +126,7 @@ export default class WidgetDynamicContent extends Component {
             this.fetchDataPromise.promise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
-                    this.setState({data: data});
+                    this.setState({data: data,error: null});
                     this._afterFetch();
                 })
                 .catch((e)=>{
@@ -153,6 +154,10 @@ export default class WidgetDynamicContent extends Component {
                     return false;
                 }
             })
+        }
+
+        if (prevProps.manager.tenants.selected !== this.props.manager.tenants.selected) {
+            requiresFetch = true;
         }
 
         if (requiresFetch) {
