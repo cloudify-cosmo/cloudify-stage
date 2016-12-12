@@ -80,11 +80,9 @@ export default class WidgetDynamicContent extends Component {
         this._stopPolling();
 
         let pollingTimeOptions = _.find(this.props.widget.configuration,{id:"pollingTime"});
-        let pollingEnabledOptions = _.find(this.props.widget.configuration,{id:"pollingEnabled"});
-
         let interval = _.get(pollingTimeOptions, "value", 0);
 
-        if (interval > 0 && this.mounted && _.get(pollingEnabledOptions, "value", "true") === 'true') {
+        if (interval > 0 && this.mounted) {
             console.log(`Polling widget '${this.props.widget.name}' - time interval: ${interval} sec`);
             this.pollingTimeout = setTimeout(()=>{this._fetchData()}, interval * 1000);
         }

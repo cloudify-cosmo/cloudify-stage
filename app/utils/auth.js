@@ -3,7 +3,7 @@
  */
 
 import fetch from 'isomorphic-fetch';
-import StageUtils from './stageUtils';
+import Manager from './Manager';
 
 export default class Auth {
 
@@ -16,7 +16,7 @@ export default class Auth {
 
     static _getApiVersion(managerIp,username,password) {
 
-        return fetch(StageUtils.createManagerUrl(managerIp, '/version'),
+        return fetch(Manager.createManagerUrl(managerIp, '/version'),
             {
                 method: 'GET',
                 headers: {
@@ -86,7 +86,7 @@ export default class Auth {
 
     static _getLoginToken(managerIp,username,password,version) {
 
-        return fetch(StageUtils.createManagerUrl(managerIp, `/api/${version}/tokens`),
+        return fetch(Manager.createManagerUrl(managerIp, `/api/${version}/tokens`),
             {
                 method: 'GET',
                 headers: {

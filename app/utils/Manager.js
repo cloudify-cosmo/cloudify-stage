@@ -11,6 +11,11 @@ let logger = log.getLogger("Manager");
 
 export default class Manager {
 
+    static createManagerUrl(managerIp, queryString) {
+        let su = encodeURIComponent(`http://${managerIp}${queryString?queryString:''}`);
+        return `http://${window.location.hostname}:8088/sp/?su=${su}`;
+    }
+
     constructor(managerData) {
         this._data = managerData;
     }
@@ -129,7 +134,7 @@ export default class Manager {
     _buildActualUrl(url,data) {
         var queryString = data ? '?'+$.param(data) : '';
         var urlInServer = `/api/${this._data.version}${url}${queryString}`;
-        return StageUtils.createManagerUrl(this._data.ip, urlInServer);
+        return Manager.createManagerUrl(this._data.ip, urlInServer);
     }
 
     getManagerUrl(url,data) {

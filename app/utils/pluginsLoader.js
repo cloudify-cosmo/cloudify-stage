@@ -68,14 +68,6 @@ class Plugin {
         } else {
             this.initialConfiguration.unshift(pollingTimeOption);
         }
-
-        const pollingEnabledOption = {
-            id: "pollingEnabled",
-            name: "Automatic refresh enabled",
-            placeHolder: "True or false to enable automatic refresh",
-            default: "true"
-        };
-        this.initialConfiguration.unshift(pollingEnabledOption);
     }
 }
 

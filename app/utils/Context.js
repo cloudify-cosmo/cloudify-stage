@@ -40,7 +40,7 @@ class Context {
     }
 
     getManagerUrl(queryString) {
-        return StageUtils.createManagerUrl(this.manager.ip, queryString);
+        return Manager.createManagerUrl(this.manager.ip, queryString);
     }
 
     getSecurityHeaders() {

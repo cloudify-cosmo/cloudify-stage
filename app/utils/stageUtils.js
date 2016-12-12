@@ -4,11 +4,6 @@
 
 export default class StageUtils {
 
-    static createManagerUrl(managerIp, queryString) {
-        let su = encodeURIComponent(`http://${managerIp}${queryString?queryString:''}`);
-        return `http://${window.location.hostname}:8088/sp/?su=${su}`;
-    }
-
     static makeCancelable(promise) {
         let hasCanceled_ = false;
 
