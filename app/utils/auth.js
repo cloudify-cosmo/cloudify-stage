@@ -16,7 +16,7 @@ export default class Auth {
 
     static _getApiVersion(managerIp,username,password) {
 
-        return fetch(Manager.createManagerUrl(managerIp, '/version'),
+        return fetch(new Manager({ip:managerIp}).getManagerUrl("/version"),
             {
                 method: 'GET',
                 headers: {
@@ -86,7 +86,7 @@ export default class Auth {
 
     static _getLoginToken(managerIp,username,password,version) {
 
-        return fetch(Manager.createManagerUrl(managerIp, `/api/${version}/tokens`),
+        return fetch(new Manager({ip:managerIp, version}).getManagerUrl("/tokens"),
             {
                 method: 'GET',
                 headers: {

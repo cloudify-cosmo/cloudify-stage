@@ -39,10 +39,6 @@ class Context {
         this.store.dispatch(drillDownToPage(widget,this.templates[defaultTemplate]));
     }
 
-    getManagerUrl(queryString) {
-        return Manager.createManagerUrl(this.manager.ip, queryString);
-    }
-
     getSecurityHeaders() {
         var auth = this.manager.auth;
         return (auth.isSecured && auth.token ? {"Authentication-Token": auth.token} : undefined);
