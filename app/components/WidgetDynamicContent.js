@@ -26,6 +26,9 @@ export default class WidgetDynamicContent extends Component {
         super(props);
         this.state = {
             data: {},
+            fetchParams: {pageSize: this.props.widget.plugin.pageSize,
+                          sortColumn: this.props.widget.plugin.sortColumn,
+                          sortAscending: this.props.widget.plugin.sortAscending},
             loading: false
         };
         this.loadingTimeout = null;
@@ -36,7 +39,7 @@ export default class WidgetDynamicContent extends Component {
         return getContext(this._fetchData.bind(this));
     }
 
-    _fetch(url,context) {
+    _fetch(url, filter, context) {
         var fetchUrl = _.replace(url,/\[config:(.*)\]/i,(match,configName)=>{
             var conf = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:configName}) : {};
             return conf && conf.value ? conf.value : 'NA';
@@ -45,6 +48,14 @@ export default class WidgetDynamicContent extends Component {
         // Only add auth token if we access the manager
         if (url.indexOf('[manager]') >= 0) {
             var baseUrl = url.substring('[manager]'.length);
+
+            //Apply fetch filter
+            let queryFilter = "";
+            if (filter) {
+                queryFilter = (baseUrl.indexOf("?") > 0?"&":"?") + filter;
+            }
+            baseUrl = _.replace(baseUrl, '[filter]', queryFilter);
+
             return context.getManager().doGet(baseUrl);
         } else {
             return fetch(fetchUrl).then(response => response.json())
@@ -90,7 +101,34 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
-    _fetchData() {
+    _queryFilter(params) {
+        if (params) {
+            this.setState({fetchParams: params});
+        } else {
+            params = this.state.fetchParams;
+        }
+
+        let query = "";
+        if (params) {
+            if (params.sortColumn) {
+                query += `&_sort=${params.sortAscending?'':'-'}${params.sortColumn}`;
+            }
+
+            if (params.pageSize) {
+                query += `&_size=${params.pageSize}`;
+            }
+
+            if (params && params.currentPage) {
+                query += `&_offset=${(params.currentPage-1)*params.pageSize}`;
+            }
+        }
+
+        return _.trimStart(query, "&");
+    }
+
+    _fetchData(params) {
+        let filter = this._queryFilter(params);
+
         if (this.props.widget.plugin.fetchUrl) {
             this._beforeFetch();
 
@@ -101,7 +139,7 @@ export default class WidgetDynamicContent extends Component {
                 urls = [urls];
             }
 
-            var fetches = _.map(urls,(url)=>this._fetch(url,context));
+            var fetches = _.map(urls,(url)=> this._fetch(url, filter, context));
 
             Promise.all(fetches)
                 .then((data)=> {
@@ -118,7 +156,7 @@ export default class WidgetDynamicContent extends Component {
         } else if (this.props.widget.plugin.fetchData && typeof this.props.widget.plugin.fetchData === 'function') {
             this._beforeFetch();
 
-            this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),PluginUtils)
+            this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),PluginUtils, filter)
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
                     this.setState({data: data});

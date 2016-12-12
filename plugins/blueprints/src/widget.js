@@ -3,7 +3,6 @@
  */
 
 import BlueprintsTable from './BlueprintsTable';
-import UploadModal from './UploadBlueprintModal';
 
 Stage.addPlugin({
     id: "blueprints",
@@ -17,9 +16,10 @@ Stage.addPlugin({
         {id: "pollingTime", default: 2}
     ],
     fetchUrl: [
-        '[manager]/blueprints?_include=id,updated_at,created_at,description',
+        '[manager]/blueprints?_include=id,updated_at,created_at,description[filter]',
         '[manager]/deployments?_include=id,blueprint_id'
     ],
+    pageSize: 5,
 
     _processData(data,context,pluginUtils) {
         var blueprintsData = data[0];
@@ -38,7 +38,8 @@ Stage.addPlugin({
                     updated_at: pluginUtils.moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
                     isSelected: selectedBlueprint === item.id
                 })
-            })
+            }),
+            total: _.get(blueprintsData, "metadata.pagination.total", 0)
         });
 
         return formattedData;
@@ -54,7 +55,6 @@ Stage.addPlugin({
         return (
             <div>
                 <BlueprintsTable widget={widget} data={formattedData} context={context}/>
-                <UploadModal widget={widget} data={formattedData} context={context}/>
             </div>
         );
     }

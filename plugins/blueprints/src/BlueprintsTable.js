@@ -4,6 +4,7 @@
 
 import DeployModal from './DeployBlueprintModal';
 import Actions from './actions';
+import UploadModal from './UploadBlueprintModal';
 
 export default class extends React.Component {
 
@@ -70,49 +71,63 @@ export default class extends React.Component {
         this.props.context.getEventBus().off('blueprints:refresh',this._refreshData);
     }
 
+    fetchGridData(filterParams) {
+        this.props.context.refresh(filterParams);
+    }
+
     render() {
         var Confirm = Stage.Basic.Confirm;
         var ErrorMessage = Stage.Basic.ErrorMessage;
+        var Grid = Stage.Basic.Grid;
 
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <table className="ui very compact table blueprintsTable">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Created</th>
-                        <th>Updated</th>
-                        <th># Deployments</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <Grid.Table fetchData={this.fetchGridData.bind(this)}
+                            totalSize={this.props.data.total}
+                            pageSize={this.props.widget.plugin.pageSize}>
+
+                    <Grid.Header>
+                        <Grid.Row>
+                            <Grid.Column label="Name" name="id" width="30%"/>
+                            <Grid.Column label="Created" name="created_at" width="20%"/>
+                            <Grid.Column label="Updated" name="updated_at" width="20%"/>
+                            <Grid.Column label="# Deployments" width="20%"/>
+                            <Grid.Column width="10%"/>
+                        </Grid.Row>
+                    </Grid.Header>
+
+                    <Grid.Body>
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <tr key={item.id} className={"row "+ (item.isSelected ? 'active' : '')} onClick={this._selectBlueprint.bind(this,item)}>
-                                    <td>
+                                <Grid.Row key={item.id} select={item.isSelected} onClick={this._selectBlueprint.bind(this, item)}>
+                                    <Grid.Data>
                                         <div>
                                             <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
                                         </div>
-                                    </td>
-                                    <td>{item.created_at}</td>
-                                    <td>{item.updated_at}</td>
-                                    <td><div className="ui green horizontal label">{item.depCount}</div></td>
-                                    <td>
+                                    </Grid.Data>
+                                    <Grid.Data>{item.created_at}</Grid.Data>
+                                    <Grid.Data>{item.updated_at}</Grid.Data>
+                                    <Grid.Data><div className="ui green horizontal label">{item.depCount}</div></Grid.Data>
+                                    <Grid.Data className="center aligned">
                                         <div className="rowActions">
                                             <i className="rocket icon link bordered" title="Create deployment" onClick={this._createDeployment.bind(this,item)}></i>
                                             <i className="trash icon link bordered" title="Delete blueprint" onClick={this._deleteBlueprintConfirm.bind(this,item)}></i>
                                         </div>
-                                    </td>
-                                </tr>
+                                    </Grid.Data>
+                                </Grid.Row>
                             );
                         })
                     }
-                    </tbody>
-                </table>
+                    </Grid.Body>
+
+                    <Grid.Action>
+                        <UploadModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+                    </Grid.Action>
+
+                </Grid.Table>
 
                 <Confirm title='Are you sure you want to remove this blueprint?'
                          show={this.state.confirmDelete}
