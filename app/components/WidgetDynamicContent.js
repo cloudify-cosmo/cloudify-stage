@@ -3,17 +3,14 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import InlineEdit from 'react-edit-inline';
-
 import PluginUtils from '../utils/pluginUtils';
-import EditWidgetIcon from './EditWidgetIcon';
+import StageUtils from '../utils/stageUtils';
 import {getContext} from '../utils/Context';
 
 import fetch from 'isomorphic-fetch';
 
 export default class WidgetDynamicContent extends Component {
     static propTypes = {
-        //pageId: PropTypes.string.isRequired,
         widget: PropTypes.object.isRequired,
         context: PropTypes.object.isRequired,
         templates : PropTypes.object.isRequired,
@@ -30,6 +27,8 @@ export default class WidgetDynamicContent extends Component {
         };
         this.loadingTimeout = null;
         this.pollingTimeout = null;
+        this.fetchDataPromise = null;
+        this.mounted = false;
     }
 
     _getContext () {
@@ -81,10 +80,9 @@ export default class WidgetDynamicContent extends Component {
         this._stopPolling();
 
         let pollingTimeOptions = _.find(this.props.widget.configuration,{id:"pollingTime"});
-
         let interval = _.get(pollingTimeOptions, "value", 0);
 
-        if (interval > 0) {
+        if (interval > 0 && this.mounted) {
             console.log(`Polling widget '${this.props.widget.name}' - time interval: ${interval} sec`);
             this.pollingTimeout = setTimeout(()=>{this._fetchData()}, interval * 1000);
         }
@@ -103,28 +101,38 @@ export default class WidgetDynamicContent extends Component {
 
             var fetches = _.map(urls,(url)=>this._fetch(url,context));
 
-            Promise.all(fetches)
-                .then((data)=> {
-                    console.log(`Widget '${this.props.widget.name}' data fetched`);
-                    this.setState({data: data.length === 1 ? data[0] : data});
-                    this._afterFetch();
-                })
-                .catch((e)=>{
-                    console.error(e);
-                    this.setState({error: 'Error fetching widget data'});
-                    this._afterFetch();
-                });
-
+            this.fetchDataPromise = StageUtils.makeCancelable(Promise.all(fetches));
+            this.fetchDataPromise.promise
+                    .then((data)=> {
+                        console.log(`Widget '${this.props.widget.name}' data fetched`);
+                        this.setState({data: data.length === 1 ? data[0] : data});
+                        this._afterFetch();
+                    })
+                    .catch((e)=>{
+                        if (e.isCanceled) {
+                            console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
+                            return;
+                        }
+                        console.error(e);
+                        this.setState({error: 'Error fetching widget data'});
+                        this._afterFetch();
+                    });
         } else if (this.props.widget.plugin.fetchData && typeof this.props.widget.plugin.fetchData === 'function') {
             this._beforeFetch();
 
-            this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),PluginUtils)
+            this.fetchDataPromise = StageUtils.makeCancelable(
+                                  this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),PluginUtils));
+            this.fetchDataPromise.promise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
                     this.setState({data: data});
                     this._afterFetch();
                 })
                 .catch((e)=>{
+                    if (e.isCanceled) {
+                        console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
+                        return;
+                    }
                     console.error(e);
                     this.setState({error: 'Error fetching widget data'});
                     this._afterFetch();
@@ -154,12 +162,19 @@ export default class WidgetDynamicContent extends Component {
 
     // In component will mount fetch the data if needed
     componentDidMount() {
+        this.mounted = true;
+
         console.log(`Widget '${this.props.widget.name}' mounted`);
         this._fetchData();
     }
 
     componentWillUnmount() {
+        this.mounted = false;
+
         this._stopPolling();
+        if (this.fetchDataPromise) {
+            this.fetchDataPromise.cancel();
+        }
         console.log(`Widget '${this.props.widget.name}' unmounts`);
     }
 

@@ -3,7 +3,7 @@
  */
 
 import fetch from 'isomorphic-fetch';
-import CommonUtils from './commonUtils';
+import Manager from './Manager';
 
 export default class Auth {
 
@@ -16,7 +16,7 @@ export default class Auth {
 
     static _getApiVersion(managerIp,username,password) {
 
-        return fetch(CommonUtils.createManagerUrl(managerIp, '/version'),
+        return fetch(new Manager({ip:managerIp}).getManagerUrl("/version"),
             {
                 method: 'GET',
                 headers: {
@@ -86,7 +86,7 @@ export default class Auth {
 
     static _getLoginToken(managerIp,username,password,version) {
 
-        return fetch(CommonUtils.createManagerUrl(managerIp, `/api/${version}/tokens`),
+        return fetch(new Manager({ip:managerIp, version}).getManagerUrl("/tokens"),
             {
                 method: 'GET',
                 headers: {
