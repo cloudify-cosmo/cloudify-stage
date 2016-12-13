@@ -23,7 +23,7 @@ export default (history) => {
         initialState = {
             pages: [buildInitialTemplate()],
             context: {},
-            managers: {}
+            manager: {}
         }
     }
 

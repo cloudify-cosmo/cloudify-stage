@@ -39,7 +39,6 @@ export default class Header extends Component {
                                 <i className="configure icon"></i>
                                 {this.props.isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
                             </div>
-                            <div className="item"><i className="shutdown icon"></i> Logout</div>
                         </div>
                     </div>
                     {/*<i className="inverted configure link icon large" onClick={this.toggleEditMode.bind(this)}/>*/}

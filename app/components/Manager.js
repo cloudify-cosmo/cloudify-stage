@@ -10,7 +10,15 @@ export default class Manager extends Component {
     };
 
     componentWillMount() {
-        this.props.fetchManagerStatus(this.props.manager);
+        if (_.get(this.props.manager,'tenants.selected')) {
+            this.props.fetchManagerStatus(this.props.manager);
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (_.get(prevProps.manager,'tenants.selected') !== _.get(this.props.manager,'tenants.selected')) {
+            this.props.fetchManagerStatus(this.props.manager);
+        }
     }
 
     renderStatusIcon(status) {
