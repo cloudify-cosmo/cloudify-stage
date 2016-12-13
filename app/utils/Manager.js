@@ -81,6 +81,10 @@ export default class Manager {
             if (securityHeaders) {
                 xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
             }
+            var selectedTenant = _.get(this._data,'tenants.selected',null);
+            if (selectedTenant) {
+                xhr.setRequestHeader("tenant","selectedTenant");
+            }
 
             xhr.send(file);
         });
@@ -93,9 +97,12 @@ export default class Manager {
         logger.debug(method+' data. URL: '+url);
 
         var headers = Object.assign({
-            "Content-Type": "application/json",
-            "tenant": _.get(this._data,'tenants.selected',null)
+            "Content-Type": "application/json"
         },securityHeaders);
+        var selectedTenant = _.get(this._data,'tenants.selected',null);
+        if (selectedTenant) {
+            headers.tenant = selectedTenant;
+        }
 
         var options = {
             method: method,
