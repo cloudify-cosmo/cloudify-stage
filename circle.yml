@@ -13,6 +13,9 @@ dependencies:
         pwd:
           semantic
     - grunt build
+    - npm install:
+        pwd:
+          backend
 deployment:
   webpackall:
     branch: /.*/
