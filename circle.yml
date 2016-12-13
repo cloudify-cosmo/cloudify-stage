@@ -17,10 +17,6 @@ dependencies:
         pwd:
           backend
 deployment:
-  webpackall:
-    branch: /.*/
-    commands:
-      - webpack --config webpack.config-prod.js --bail
   demo-deploy:
     branch: deploy-demo
     commands:
@@ -28,3 +24,7 @@ deployment:
       - tar -cvzf stage.tar.gz dist/** backend/**
       - scp stage.tar.gz ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com:~
       - cat ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
+  webpackall:
+    branch: /.*/
+    commands:
+      - webpack --config webpack.config-prod.js --bail
