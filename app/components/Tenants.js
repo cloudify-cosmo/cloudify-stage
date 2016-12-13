@@ -3,7 +3,6 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import { browserHistory } from 'react-router';
 
 export default class Tenants extends Component {
     static propTypes = {

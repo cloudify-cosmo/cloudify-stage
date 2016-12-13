@@ -3,7 +3,6 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import { browserHistory } from 'react-router';
 
 export default class Manager extends Component {
     static propTypes = {

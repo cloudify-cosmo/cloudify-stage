@@ -16,7 +16,6 @@ import TenantReducer from '../../app/reducers/tenantsReducer.js';
 import {getTenants,requestTenants,recieveTenants,errorTenants,selectTenant} from '../../app/actions/tenants.js';
 
 import * as types from '../../app/actions/types.js';
-import CommonUtils from '../../app/utils/commonUtils.js';
 
 const mockStore = configureMockStore([ thunk ]);
 
