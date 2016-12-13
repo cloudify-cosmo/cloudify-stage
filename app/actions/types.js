@@ -10,11 +10,6 @@ export const REQ_PLUGINS = 'REQ_PLUGINS';
 export const RES_PLUGINS = 'RES_PLUGINS';
 export const ERR_PLUGINS = 'ERR_PLUGINS';
 
-
-export const REQ_TEMPLATES = 'REQ_TEMPLATES';
-export const RES_TEMPLATES = 'RES_TEMPLATES';
-export const ERR_TEMPLATES = 'ERR_TEMPLATES';
-
 export const SET_CONTEXT_VALUE = 'SET_CONTEXT_VALUE';
 export const CLEAR_CONTEXT = 'CLEAR_CONTEXT';
 export const RENAME_PAGE = 'RENAME_PAGE';

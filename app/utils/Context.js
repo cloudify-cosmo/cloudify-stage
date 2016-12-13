@@ -23,7 +23,7 @@ class Context {
     _initFromStore () {
         var state = this.store.getState();
         this.context = state.context;
-        this.templates = state.templates.items || {};
+        this.templates = state.templates || {};
         this.manager = state.manager || {};
         this._Manager = new Manager(this.manager);
     }

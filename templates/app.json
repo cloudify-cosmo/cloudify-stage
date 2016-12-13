@@ -1,0 +1,79 @@
+{
+  "name": "Application",
+  "widgets": [
+    {
+      "name": "Blueprints List",
+      "plugin": "blueprints",
+      "width": 6,
+      "height": 4,
+      "x": 0,
+      "y": 2
+    },
+    {
+      "name": "Deployments",
+      "width": 6,
+      "height": 4,
+      "plugin": "deployments",
+      "x": 6,
+      "y": 2
+    },
+    {
+      "name": "Widget_0",
+      "width": 2,
+      "height": 2,
+      "plugin": "deploymentNum",
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "Widget_1",
+      "width": 2,
+      "height": 2,
+      "plugin": "serversNum",
+      "x": 4,
+      "y": 0
+    },
+    {
+      "name": "Widget_2",
+      "width": 2,
+      "height": 2,
+      "plugin": "pluginsNum",
+      "x": 2,
+      "y": 0
+    },
+    {
+      "name": "Users list",
+      "width": 4,
+      "height": 4,
+      "plugin": "usersList",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "name": "CPU Utilization - System",
+      "width": 6,
+      "height": 2,
+      "plugin": "cpuUtilizationSystem",
+      "x": 6,
+      "y": 0
+    },
+    {
+      "name": "GitHub repositories list",
+      "width": 8,
+      "height": 4,
+      "plugin": "githubRepositories",
+      "x": 4,
+      "y": 6,
+      "configuration:" : [
+        {
+          "default":"cloudify-examples",
+          "fetch" : true,
+          "id":"fetchUsername",
+          "name" : "Fetch with username",
+          "placeHolder":"Type username..",
+          "value" :"cloudify-examples"
+        }
+      ]
+    }
+  ]
+}
