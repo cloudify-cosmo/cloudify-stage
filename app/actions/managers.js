@@ -61,11 +61,6 @@ export function getStatus (manager) {
     return function(dispatch) {
         managerAccessor.doGet('/status')
             .then((data)=>{
-                if (data.error_code) {
-                    dispatch(setStatus('Error'));
-                    return;
-                }
-
                 dispatch(setStatus(data.status));
             }).catch((err)=>{
                 console.error(err);

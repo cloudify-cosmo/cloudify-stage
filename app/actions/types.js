@@ -33,4 +33,9 @@ export const REQ_LOGIN = 'REQ_LOGIN';
 export const RES_LOGIN = 'RES_LOGIN';
 export const ERR_LOGIN = 'ERR_LOGIN';
 
+export const REQ_TENANTS = 'REQ_TENANTS';
+export const RES_TENANTS = 'RES_TENANTS';
+export const ERR_TENANTS = 'ERR_TENANTS';
+
 export const SET_MANAGER_STATUS = 'SET_MANAGER_STATUS';
+export const SELECT_TENANT = 'SELECT_TENANT';

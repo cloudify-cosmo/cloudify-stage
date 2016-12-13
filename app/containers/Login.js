@@ -9,9 +9,9 @@ import {login} from '../actions/managers';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        ip:  !state.managers.items || state.managers.items.length === 0 ? '' : state.managers.items[0].ip,
-        username:  !state.managers.items || state.managers.items.length === 0 ? '' : state.managers.items[0].username,
-        loginError: !state.managers.items || state.managers.items.length === 0 ? '' : state.managers.items[0].err
+        ip:  !state.manager ? '' : state.manager.ip,
+        username:  !state.manager ? '' : state.manager.username,
+        loginError: !state.manager ? '' : state.manager.err
     };
 };
 

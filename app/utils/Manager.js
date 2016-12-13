@@ -93,7 +93,8 @@ export default class Manager {
         logger.debug(method+' data. URL: '+url);
 
         var headers = Object.assign({
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "tenant": _.get(this._data,'tenants.selected',null)
         },securityHeaders);
 
         var options = {
