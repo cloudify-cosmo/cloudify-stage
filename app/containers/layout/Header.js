@@ -11,7 +11,7 @@ import Header from '../../components/layout/Header';
 const mapStateToProps = (state, ownProps) => {
     return {
         isEditMode: state.config.isEditMode || false,
-        managers: state.managers
+        manager: state.manager || {}
     }
 };
 

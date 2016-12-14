@@ -3,7 +3,7 @@
  */
 
 import fetch from 'isomorphic-fetch';
-import CommonUtils from './commonUtils';
+import StageUtils from './stageUtils';
 
 import log from 'loglevel';
 
@@ -81,6 +81,10 @@ export default class Manager {
             if (securityHeaders) {
                 xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
             }
+            var selectedTenant = _.get(this._data,'tenants.selected',null);
+            if (selectedTenant) {
+                xhr.setRequestHeader("tenant","selectedTenant");
+            }
 
             xhr.send(file);
         });
@@ -95,6 +99,10 @@ export default class Manager {
         var headers = Object.assign({
             "Content-Type": "application/json"
         },securityHeaders);
+        var selectedTenant = _.get(this._data,'tenants.selected',null);
+        if (selectedTenant) {
+            headers.tenant = selectedTenant;
+        }
 
         var options = {
             method: method,
@@ -128,8 +136,10 @@ export default class Manager {
 
     _buildActualUrl(url,data) {
         var queryString = data ? '?'+$.param(data) : '';
-        var urlInServer = `/api/${this._data.version}${url}${queryString}`;
-        return CommonUtils.createManagerUrl(this._data.ip, urlInServer);
+        var urlInServer = `${this._data.version?'/api/'+this._data.version:''}${url}${queryString}`;
+
+        let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
+        return `http://${window.location.hostname}:8088/sp/?su=${su}`;
     }
 
     getManagerUrl(url,data) {

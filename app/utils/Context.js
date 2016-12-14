@@ -3,7 +3,7 @@
  */
 
 import {setValue as setContextValue} from '../actions/context';
-import CommonUtils from '../utils/commonUtils';
+import StageUtils from '../utils/stageUtils';
 import PluginEventBus from '../utils/PluginEventBus';
 import {drillDownToPage} from '../actions/widgets';
 import Manager from './Manager';
@@ -23,8 +23,8 @@ class Context {
     _initFromStore () {
         var state = this.store.getState();
         this.context = state.context;
-        this.templates = state.templates.items || {};
-        this.manager = _.get(state, "managers.items[0]", {});
+        this.templates = state.templates || {};
+        this.manager = state.manager || {};
         this._Manager = new Manager(this.manager);
     }
 
@@ -37,15 +37,6 @@ class Context {
 
     drillDown(widget,defaultTemplate) {
         this.store.dispatch(drillDownToPage(widget,this.templates[defaultTemplate]));
-    }
-
-    getManagerUrl(queryString) {
-        return CommonUtils.createManagerUrl(this.manager.ip, queryString);
-    }
-
-    getSecurityHeaders() {
-        var auth = this.manager.auth;
-        return (auth.isSecured && auth.token ? {"Authentication-Token": auth.token} : undefined);
     }
 
     getEventBus (){

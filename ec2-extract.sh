@@ -4,9 +4,7 @@ rm -R stage
 mkdir stage
 tar -zxvf stage.tar.gz -C stage
 rm stage.tar.gz
-cd stage
-npm install express
-npm install request
+cd stage/backend
 forever list
 forever stopall
-forever start backend/server.js;
+forever start server.js;

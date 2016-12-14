@@ -15,17 +15,20 @@ import reducers from './reducers';
 import initialTemplate from '../templates/initial-template.json';
 import {v4} from 'node-uuid';
 
-export default (history) => {
+export default (history,templates) => {
 
     let initialState = StatePersister.load();
 
     if (initialState === undefined) {
         initialState = {
-            pages: [buildInitialTemplate()],
+            pages: buildInitialTemplate(templates),
             context: {},
-            managers: {}
+            manager: {}
         }
     }
+    initialState = Object.assign({},initialState,{
+        templates: templates
+    });
 
     var store = createStore(
         reducers,
@@ -42,13 +45,30 @@ export default (history) => {
     return store;
 };
 
-function buildInitialTemplate() {
-    initialTemplate.id = "0";
+function buildInitialTemplate(templates) {
+    let idIndex = 0;
+    let initTemplate = [];
 
-    _.each(initialTemplate.widgets,(widget)=> {
-        widget.id = v4();
+    _.each(initialTemplate,(templateName)=>{
+        var template = templates[templateName];
+        if (!template) {
+            console.error('Cannot find template : '+templateName + ' Skipping... ');
+            return;
+        }
+
+        var tpl = Object.assign({},template,{
+            id:""+(idIndex++),
+            widgets: _.map(template.widgets,(widget)=>{
+                return Object.assign({},widget,{
+                    id: v4()
+                })
+            })
+
+        });
+
+        initTemplate.push(tpl);
     });
 
-    return initialTemplate;
+    return initTemplate;
 }
 
