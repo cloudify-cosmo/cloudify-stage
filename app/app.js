@@ -28,12 +28,6 @@ import '../node_modules/gridstack/dist/gridstack.js';
 // Import highlight
 import '../node_modules/highlight.js/styles/github.css';
 
-// Import datatables
-//import '../node_modules/datatables.net/js/jquery.dataTables.js';
-//import '../datatables/dataTables.semanticui.min.js';
-//import '../datatables/dataTables.semanticui.min.css';
-//import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -43,28 +37,30 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import configureStore  from './configureStore';
 import createRoutes from './routes';
 import {fetchPlugins} from './actions/plugins';
-import {fetchTemplates} from './actions/templates';
 import PluginLoader from './utils/pluginsLoader';
 import {createContext} from './utils/Context';
 
+import TemplatesLoader from './utils/templatesLoader';
+
 window.React = React;
+PluginLoader.init();
+TemplatesLoader.load().then((templates)=>{
+    const store = configureStore(browserHistory,templates);
 
-const store = configureStore(browserHistory);
+    const history = syncHistoryWithStore(browserHistory, store);
 
-const history = syncHistoryWithStore(browserHistory, store);
-
-createContext(store);
+    createContext(store);
 
 // Fetch plugins
-PluginLoader.init();
-store.dispatch(fetchPlugins());
-store.dispatch(fetchTemplates());
+    store.dispatch(fetchPlugins());
 
 //history.listen(location => analyticsService.track(location.pathname))
 
-ReactDOM.render(
-    <Provider store={store}>
-        <Router history={history} routes={createRoutes(store)} />
-    </Provider>,
-    document.getElementById('app')
-);
+    ReactDOM.render(
+        <Provider store={store}>
+            <Router history={history} routes={createRoutes(store)} />
+        </Provider>,
+        document.getElementById('app')
+    );
+});
+
