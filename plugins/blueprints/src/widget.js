@@ -16,7 +16,7 @@ Stage.addPlugin({
         {id: "pollingTime", default: 2}
     ],
     fetchUrl: [
-        '[manager]/blueprints?_include=id,updated_at,created_at,description[filter]',
+        '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',
         '[manager]/deployments?_include=id,blueprint_id'
     ],
     pageSize: 5,

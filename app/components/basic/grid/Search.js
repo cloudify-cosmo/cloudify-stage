@@ -8,8 +8,11 @@ export default class Search extends Component {
 
     render() {
         return (
-            <div className="ui input">
-                <label><input type="search" placeholder="Search"/></label>
+            <div className="field">
+                <div className="ui icon input">
+                    <input type="text" placeholder="Search..."/>
+                        <i className="search icon"/>
+                </div>
             </div>
         );
     }

@@ -12,7 +12,7 @@ export default class GridAction extends Component {
 
     render() {
         return (
-            <div>
+            <div className="field actionField">
                 {this.props.children}
             </div>
         );

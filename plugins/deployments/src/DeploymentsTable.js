@@ -93,6 +93,7 @@ export default class extends React.Component {
             executeWorkflow: null
         });
     }
+
     _executeWorkflow(deployment,workflow,params) {
         var actions = new Actions(this.props.context);
         actions.doExecute(deployment,workflow,params).then(()=>{
@@ -102,77 +103,77 @@ export default class extends React.Component {
             this.setState({error: err.error});
         })
     }
+
+    fetchGridData(fetchParams) {
+        this.props.context.refresh(fetchParams);
+    }
+
     render() {
         var Confirm = Stage.Basic.Confirm;
         var ErrorMessage = Stage.Basic.ErrorMessage;
+        var Grid = Stage.Basic.Grid;
 
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <div>
-                    <div className="ui selection dropdown fluid" ref={this._initDropdown.bind(this)}>
-                        <input type="hidden" name="statusFilter"/>
-                        <div className="default text">Filter by status</div>
-                        <i className="dropdown icon"></i>
-                        <div className="menu">
-                            <div className="item" data-value="ok">
-                                <i className="check circle icon inverted green"></i>
-                                OK
-                            </div>
-                            <div className="item" data-value="error">
-                                <i className="remove circle icon inverted red"></i>
-                                Error
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <Grid.Table fetchData={this.fetchGridData.bind(this)}
+                            totalSize={this.props.data.total}
+                            pageSize={this.props.widget.plugin.pageSize}
+                            selectable={true}
+                            className="deploymentTable">
 
-                <table className="ui very compact table deploymentTable">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Blueprint</th>
-                        <th>Created</th>
-                        <th>Updated</th>
-                        <th>Status</th>
-                        <th/>
-                    </tr>
-                    </thead>
-                    <tbody>
+                    <Grid.Column label="Name" name="id" width="25%"/>
+                    <Grid.Column label="Blueprint" name="created_at" width="25%"/>
+                    <Grid.Column label="Created" name="created_at" width="15%"/>
+                    <Grid.Column label="Updated" name="updated_at" width="15%"/>
+                    <Grid.Column label="Status" width="6%"/>
+                    <Grid.Column width="14%"/>
+
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <tr key={item.id} className={'row ' + (item.isSelected ? 'active' : '')} onClick={this._selectDeployment.bind(this,item)}>
-                                    <td>
-                                        <div>
-                                            <a className='deploymentName' href="javascript:void(0)">{item.id}</a>
-                                        </div>
-                                    </td>
-                                    <td>{item.blueprint_id}</td>
-                                    <td>{item.created_at}</td>
-                                    <td>{item.updated_at}</td>
-                                    <td>
+                                <Grid.Row key={item.id} select={item.isSelected} onClick={this._selectDeployment.bind(this, item)}>
+                                    <Grid.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></Grid.Data>
+                                    <Grid.Data>{item.blueprint_id}</Grid.Data>
+                                    <Grid.Data>{item.created_at}</Grid.Data>
+                                    <Grid.Data>{item.updated_at}</Grid.Data>
+                                    <Grid.Data>
                                         { item.status === 'ok' ?
                                             <i className="check circle icon inverted green"></i>
                                             :
                                             <i className="remove circle icon inverted red"></i>
                                         }
-                                    </td>
-
-                                    <td>
-                                        <div className="rowActions">
-                                            <ExecuteWorkflow item={item} onWorkflowSelected={this._showExecuteWorkflowModal.bind(this)}/>
-                                            <i className="write icon link bordered" title="Edit deployment"></i>
-                                            <i className="trash icon link bordered" title="Delete deployment" onClick={this._deleteDeploymentConfirm.bind(this,item)}></i>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    </Grid.Data>
+                                    <Grid.Data className="center aligned rowActions">
+                                        <ExecuteWorkflow item={item} onWorkflowSelected={this._showExecuteWorkflowModal.bind(this)}/>
+                                        <i className="write icon link bordered" title="Edit deployment"></i>
+                                        <i className="trash icon link bordered" title="Delete deployment" onClick={this._deleteDeploymentConfirm.bind(this,item)}></i>
+                                    </Grid.Data>
+                                </Grid.Row>
                             );
                         })
                     }
-                    </tbody>
-                </table>
+
+                    <Grid.Filter>
+                        <div className="ui selection dropdown" ref={this._initDropdown.bind(this)}>
+                            <input type="hidden" name="statusFilter"/>
+                            <div className="default text">Filter by status</div>
+                            <i className="dropdown icon"></i>
+                            <div className="menu">
+                                <div className="item" data-value="ok">
+                                    <i className="check circle icon inverted green"></i>
+                                    OK
+                                </div>
+                                <div className="item" data-value="error">
+                                    <i className="remove circle icon inverted red"></i>
+                                    Error
+                                </div>
+                            </div>
+                        </div>
+                    </Grid.Filter>
+
+                </Grid.Table>
 
                 <Confirm title='Are you sure you want to remove this deployment?'
                          show={this.state.confirmDelete}

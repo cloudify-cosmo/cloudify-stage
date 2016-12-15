@@ -3,7 +3,6 @@
  */
 
 import PluginsTable from './PluginsTable';
-import UploadModal from './UploadPluginModal';
 
 Stage.addPlugin({
     id: "plugins",
@@ -16,7 +15,8 @@ Stage.addPlugin({
     initialConfiguration: [
         {id: "pollingTime", default: 30}
     ],
-    fetchUrl: '[manager]/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at',
+    fetchUrl: '[manager]/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at[params]',
+    pageSize: 5,
 
     render: function(widget,data,error,context,pluginUtils) {
 
@@ -33,12 +33,10 @@ Stage.addPlugin({
                 })
             })
         });
+        formattedData.total =  _.get(data, "metadata.pagination.total", 0);
 
         return (
-            <div>
-                <PluginsTable widget={widget} data={formattedData} context={context}/>
-                <UploadModal widget={widget} data={formattedData} context={context}/>
-            </div>
+            <PluginsTable widget={widget} data={formattedData} context={context}/>
         );
     }
 });

@@ -71,8 +71,8 @@ export default class extends React.Component {
         this.props.context.getEventBus().off('blueprints:refresh',this._refreshData);
     }
 
-    fetchGridData(filterParams) {
-        this.props.context.refresh(filterParams);
+    fetchGridData(fetchParams) {
+        this.props.context.refresh(fetchParams);
     }
 
     render() {
@@ -86,42 +86,32 @@ export default class extends React.Component {
 
                 <Grid.Table fetchData={this.fetchGridData.bind(this)}
                             totalSize={this.props.data.total}
-                            pageSize={this.props.widget.plugin.pageSize}>
+                            pageSize={this.props.widget.plugin.pageSize}
+                            selectable={true}
+                            className="blueprintsTable">
 
-                    <Grid.Header>
-                        <Grid.Row>
-                            <Grid.Column label="Name" name="id" width="30%"/>
-                            <Grid.Column label="Created" name="created_at" width="20%"/>
-                            <Grid.Column label="Updated" name="updated_at" width="20%"/>
-                            <Grid.Column label="# Deployments" width="20%"/>
-                            <Grid.Column width="10%"/>
-                        </Grid.Row>
-                    </Grid.Header>
+                    <Grid.Column label="Name" name="id" width="30%"/>
+                    <Grid.Column label="Created" name="created_at" width="20%"/>
+                    <Grid.Column label="Updated" name="updated_at" width="20%"/>
+                    <Grid.Column label="# Deployments" width="20%"/>
+                    <Grid.Column width="10%"/>
 
-                    <Grid.Body>
                     {
                         this.props.data.items.map((item)=>{
                             return (
                                 <Grid.Row key={item.id} select={item.isSelected} onClick={this._selectBlueprint.bind(this, item)}>
-                                    <Grid.Data>
-                                        <div>
-                                            <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
-                                        </div>
-                                    </Grid.Data>
+                                    <Grid.Data><a className='blueprintName' href="javascript:void(0)">{item.id}</a></Grid.Data>
                                     <Grid.Data>{item.created_at}</Grid.Data>
                                     <Grid.Data>{item.updated_at}</Grid.Data>
                                     <Grid.Data><div className="ui green horizontal label">{item.depCount}</div></Grid.Data>
-                                    <Grid.Data className="center aligned">
-                                        <div className="rowActions">
-                                            <i className="rocket icon link bordered" title="Create deployment" onClick={this._createDeployment.bind(this,item)}></i>
-                                            <i className="trash icon link bordered" title="Delete blueprint" onClick={this._deleteBlueprintConfirm.bind(this,item)}></i>
-                                        </div>
+                                    <Grid.Data className="center aligned rowActions">
+                                        <i className="rocket icon link bordered" title="Create deployment" onClick={this._createDeployment.bind(this,item)}></i>
+                                        <i className="trash icon link bordered" title="Delete blueprint" onClick={this._deleteBlueprintConfirm.bind(this,item)}></i>
                                     </Grid.Data>
                                 </Grid.Row>
                             );
                         })
                     }
-                    </Grid.Body>
 
                     <Grid.Action>
                         <UploadModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>

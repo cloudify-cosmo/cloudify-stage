@@ -23,22 +23,25 @@ export default class WidgetDynamicContent extends Component {
         super(props);
         this.state = {
             data: {},
-            fetchParams: {pageSize: this.props.widget.plugin.pageSize,
-                          sortColumn: this.props.widget.plugin.sortColumn,
-                          sortAscending: this.props.widget.plugin.sortAscending},
             loading: false
         };
         this.loadingTimeout = null;
         this.pollingTimeout = null;
         this.fetchDataPromise = null;
         this.mounted = false;
+        this.fetchParams = {
+            gridParams: {pageSize: this.props.widget.plugin.pageSize,
+                sortColumn: this.props.widget.plugin.sortColumn,
+                sortAscending: this.props.widget.plugin.sortAscending},
+            filterParams: {}
+        };
     }
 
     _getContext () {
         return getContext(this._fetchData.bind(this));
     }
 
-    _fetch(url, filter, context) {
+    _fetch(url, context) {
         var fetchUrl = _.replace(url,/\[config:(.*)\]/i,(match,configName)=>{
             var conf = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:configName}) : {};
             return conf && conf.value ? conf.value : 'NA';
@@ -49,16 +52,45 @@ export default class WidgetDynamicContent extends Component {
             var baseUrl = url.substring('[manager]'.length);
 
             //Apply fetch filter
-            let queryFilter = "";
-            if (filter) {
-                queryFilter = (baseUrl.indexOf("?") > 0?"&":"?") + filter;
+            let queryString = this._prepareQueryString();
+            let fetchParams = "";
+            if (queryString) {
+                fetchParams = (baseUrl.indexOf("?") > 0?"&":"?") + queryString;
             }
-            baseUrl = _.replace(baseUrl, '[filter]', queryFilter);
+            baseUrl = _.replace(baseUrl, '[params]', fetchParams);
 
             return context.getManager().doGet(baseUrl);
         } else {
             return fetch(fetchUrl).then(response => response.json())
         }
+    }
+
+    _prepareQueryString() {
+        let query = "";
+
+        let gridParams = this.fetchParams.gridParams;
+        if (gridParams) {
+            if (gridParams.sortColumn) {
+                query += `&_sort=${gridParams.sortAscending?'':'-'}${gridParams.sortColumn}`;
+            }
+
+            if (gridParams.pageSize) {
+                query += `&_size=${gridParams.pageSize}`;
+            }
+
+            if (gridParams.currentPage) {
+                query += `&_offset=${(gridParams.currentPage-1)*gridParams.pageSize}`;
+            }
+        }
+
+        let filterParams = this.fetchParams.filterParams;
+        _.forIn(filterParams, function(value, key) {
+            if (!_.isNil(value)) {
+                query += `&${key}=${value}`;
+            }
+        });
+
+        return _.trimStart(query, "&");
     }
 
     _beforeFetch() {
@@ -99,33 +131,14 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
-    _queryFilter(params) {
-        if (params) {
-            this.setState({fetchParams: params});
-        } else {
-            params = this.state.fetchParams;
-        }
-
-        let query = "";
-        if (params) {
-            if (params.sortColumn) {
-                query += `&_sort=${params.sortAscending?'':'-'}${params.sortColumn}`;
-            }
-
-            if (params.pageSize) {
-                query += `&_size=${params.pageSize}`;
-            }
-
-            if (params && params.currentPage) {
-                query += `&_offset=${(params.currentPage-1)*params.pageSize}`;
-            }
-        }
-
-        return _.trimStart(query, "&");
-    }
-
     _fetchData(params) {
-        let filter = this._queryFilter(params);
+        if (params) {
+            this.fetchParams = _.merge({}, this.fetchParams, params.gridParams ? params : {filterParams: params});
+        }
+
+        if (this.fetchDataPromise) {
+            this.fetchDataPromise.cancel();
+        }
 
         if (this.props.widget.plugin.fetchUrl) {
             this._beforeFetch();
@@ -137,7 +150,7 @@ export default class WidgetDynamicContent extends Component {
                 urls = [urls];
             }
 
-            var fetches = _.map(urls,(url)=> this._fetch(url, filter, context));
+            var fetches = _.map(urls,(url)=> this._fetch(url, context));
 
             this.fetchDataPromise = StageUtils.makeCancelable(Promise.all(fetches));
             this.fetchDataPromise.promise
@@ -160,7 +173,8 @@ export default class WidgetDynamicContent extends Component {
             this._beforeFetch();
 
             this.fetchDataPromise = StageUtils.makeCancelable(
-                                  this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),PluginUtils, filter));
+                                  this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),
+                                                                     PluginUtils, this._prepareQueryString()));
             this.fetchDataPromise.promise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
@@ -180,6 +194,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+
         // Check if any configuration that requires fetch was changed
         var requiresFetch = false;
         if (prevProps.widget.configuration && this.props.widget.configuration) {
@@ -196,6 +211,16 @@ export default class WidgetDynamicContent extends Component {
 
         if (prevProps.manager.tenants.selected !== this.props.manager.tenants.selected) {
             requiresFetch = true;
+        }
+
+        if (this.props.widget.plugin.fetchParams && typeof this.props.widget.plugin.fetchParams === 'function') {
+            let params = this.props.widget.plugin.fetchParams(this.props.widget, this._getContext());
+
+            let mergedParams = _.merge({}, this.fetchParams, {filterParams: params});
+            if (!_.isEqual(this.fetchParams, mergedParams)) {
+                this.fetchParams = mergedParams;
+                requiresFetch = true;
+            }
         }
 
         if (requiresFetch) {

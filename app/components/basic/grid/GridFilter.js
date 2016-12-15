@@ -4,18 +4,18 @@
   
 import React, { Component, PropTypes } from 'react';
 
-export default class GridFooter extends Component {
+export default class GridFilter extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
+        className: PropTypes.string
     };
 
     render() {
         return (
-            <tfoot>
+            <div className={`field ${this.props.className}`}>
                 {this.props.children}
-            </tfoot>
+            </div>
         );
     }
 }
- 

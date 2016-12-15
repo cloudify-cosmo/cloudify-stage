@@ -11,7 +11,7 @@ Stage.addPlugin({
     initialWidth: 8,
     initialHeight: 6,
     color : "purple",
-    fetchUrl: '[manager]/deployments',
+    fetchUrl: '[manager]/deployments[params]',
     initialConfiguration:
         [
             {id: "pollingTime", default: 2},
@@ -19,6 +19,21 @@ Stage.addPlugin({
             {id: "blueprintIdFilter",name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by"}
         ],
     isReact: true,
+    pageSize: 5,
+
+    fetchParams: function(widget, context) {
+        var blueprintId = context.getValue('blueprintId');
+
+        // Find if we have a config for blueprint selection
+        var blueprintIdFilter = widget.configuration ? _.find(widget.configuration,{id:'blueprintIdFilter'}) : {};
+        if (blueprintIdFilter && blueprintIdFilter.value) {
+            blueprintId = blueprintIdFilter.value;
+        }
+
+        return {
+            blueprint_id: blueprintId
+        }
+    },
 
     render: function(widget,data,error,context,pluginUtils) {
 
@@ -27,20 +42,7 @@ Stage.addPlugin({
         }
 
         var formattedData = Object.assign({},data);
-        var blueprintId = context.getValue('blueprintId');
-        var deploymentId = context.getValue('deploymentId');
-
-        // Find if we have a config for blueprint selection
-        var blueprintIdFilter = widget.configuration ? _.find(widget.configuration,{id:'blueprintIdFilter'}) : {};
-        if (blueprintIdFilter && blueprintIdFilter.value) {
-            blueprintId = blueprintIdFilter.value;
-        }
-
-
-        var filter = context.getValue('filterDep'+widget.id);
-        if (blueprintId) {
-            formattedData.items = _.filter(data.items,{blueprint_id:blueprintId});
-        }
+        var selectedDeployment = context.getValue('deploymentId');
 
         formattedData = Object.assign({},formattedData,{
             items: _.map (formattedData.items,(item)=>{
@@ -48,16 +50,19 @@ Stage.addPlugin({
                     created_at: pluginUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
                     updated_at: pluginUtils.moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
                     status: item.status || 'ok',
-                    isSelected: deploymentId === item.id
+                    isSelected: selectedDeployment === item.id
                 })
             })
         });
+        formattedData.total =  _.get(data, "metadata.pagination.total", 0);
 
+        var filter = context.getValue('filterDep'+widget.id);
         if (filter) {
             formattedData.items = _.filter(formattedData.items,{status:filter});
         }
 
-        formattedData.blueprintId = blueprintId;
+        let params = this.fetchParams(widget, context);
+        formattedData.blueprintId = params.blueprint_id;
 
         return (
             <DeploymentsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>

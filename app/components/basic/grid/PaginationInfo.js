@@ -24,7 +24,7 @@ export default class PaginationInfo extends Component {
         return (
             <div>
                 Page size:&nbsp;
-                <div className="ui compact selection dropdown" ref={(select)=>$(select).dropdown({onChange: this.props.onPageSizeChange})}>
+                <div className="ui compact selection dropdown" ref={(select)=>$(select).dropdown({onChange: this.props.onPageSizeChange, direction: 'upward'})}>
                     <i className="dropdown icon"></i>
                     <div className="text">{this.props.pageSize}</div>
                     <div className="menu">

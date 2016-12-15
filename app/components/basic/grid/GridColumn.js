@@ -9,11 +9,13 @@ export default class GridColumn extends Component {
     static propTypes = {
         label: PropTypes.string,
         name: PropTypes.string,
-        width: PropTypes.string
+        width: PropTypes.string,
+        show: PropTypes.bool
     };
 
     static defaultProps = {
-        width: ""
+        width: "",
+        show: true
     };
 
     static contextTypes = {
@@ -40,6 +42,10 @@ export default class GridColumn extends Component {
     }
 
     render() {
+        if (!this.props.show) {
+            return null;
+        }
+
         return (
             <th className={this._className()} style={this.props.width?{width:this.props.width}:{}} onClick={this._onClick.bind(this)}>
                 {this.props.label}

@@ -3,13 +3,11 @@
  */
   
 import React, { Component, PropTypes } from 'react';
-import GridHeader from './GridHeader';
-import GridBody from './GridBody';
-import GridFooter from './GridFooter';
 import GridRow from './GridRow';
 import GridColumn from './GridColumn';
 import GridData from './GridData';
 import GridAction from './GridAction';
+import GridFilter from './GridFilter';
 import PaginationInfo from './PaginationInfo';
 import Pagination from './Pagination';
 import Search from './Search';
@@ -30,19 +28,20 @@ class GridTable extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
-        fetchData: PropTypes.func,
+        fetchData: PropTypes.func.isRequired,
+        totalSize: PropTypes.number.isRequired,
         pageSize: PropTypes.number,
         sortColumn: PropTypes.string,
         sortAscending: PropTypes.bool,
-        totalSize: PropTypes.number,
         searchable: PropTypes.bool,
-        data: PropTypes.any,
-        idName: PropTypes.any
+        selectable: PropTypes.bool,
+        className: PropTypes.string
     };
 
     static defaultProps = {
         totalSize: 0,
-        searchable: true
+        searchable: true,
+        selectable: false
     };
 
     static childContextTypes = {
@@ -79,99 +78,72 @@ class GridTable extends Component {
         this.setState({currentPage: page});
     }
 
-    _processData() {
-        let processedData = this.props.data;
-
-        if (this.state.sortColumn) {
-            processedData = _.orderBy(processedData, [this.state.sortColumn, this.props.idName], [this.state.sortAscending?"asc":"desc", "asc"]);
-        } else {
-            processedData = _.orderBy(processedData, [this.props.idName], ["asc"]);
-        }
-
-        let start = (this.state.currentPage - 1) * this.state.pageSize;
-        processedData = _.slice(processedData, start, start + this.state.pageSize)
-
-        return processedData;
-    }
-
-    _fetchData() {
-        if (this.props.data) {
-            let processedData = this._processData();
-            this.props.fetchData(processedData);
-        } else {
-            this.props.fetchData({...this.state});
-        }
-    }
-
-    _getTotalSize() {
-        return this.props.data ? this.props.data.length : this.props.totalSize;
-    }
-
-    componentDidMount() {
-        if (this.props.data) {
-            this._fetchData();
-        }
-    }
-
     componentDidUpdate(prevProps, prevState) {
         if (!_.isEqual(this.state, prevState)) {
-            this._fetchData();
+            this.props.fetchData({gridParams: {...this.state}});
         }
     }
 
     render() {
-        var gridHeader = null;
-        var gridBody = null;
-        var gridFooter = null;
+        var headerColumns = [];
+        var bodyRows = [];
         var gridAction = null;
+        var gridFilters = [];
 
+        var showCols = [];
         React.Children.forEach(this.props.children, function(child) {
-            if (child.type) {
-                if (child.type.name === "GridHeader") {
-                    gridHeader = child;
-                } else if (child.type && child.type.name === "GridBody") {
-                    gridBody = child;
-                } else if (child.type && child.type.name === "GridFooter") {
-                    gridFooter = child;
+            if (child && child.type) {
+                if (child.type.name === "GridColumn") {
+                    showCols.push(child.props.show);
+                    headerColumns.push(child);
+                } else if (child.type && child.type.name === "GridRow") {
+                    bodyRows.push(React.cloneElement(child, {showCols}));
                 } else if (child.type && child.type.name === "GridAction") {
                     gridAction = child;
+                } else if (child.type && child.type.name === "GridFilter") {
+                    gridFilters.push(child);
                 }
             }
         });
 
         return (
-            <div className="ui grid">
-                <div className="row no-bottom-padding">
-                    <div className="seven wide column">
-                        {this.props.searchable && <Search/>}
-                    </div>
-                    <div className="right aligned nine wide column">
-                        {gridAction}
+            <div className="ui grid gridTable">
+                <div className="sixteen wide column gridAction">
+                    <div className="ui form">
+                        <div className="inline fields">
+                            {this.props.searchable && <Search/>}
+                            {gridFilters}
+                            {gridAction}
+                        </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="sixteen wide column">
-                        <table className="ui very compact table hover sortable" cellSpacing="0">
-                            {this._getTotalSize() <= 0 && (
-                                <tbody><tr className="noDataRow"><td colSpan="100" className="center aligned">No data available</td></tr></tbody>
-                            )}
 
-                            {gridHeader}
-                            {gridBody}
-                            {gridFooter}
-                        </table>
-                    </div>
+                <div className="sixteen wide column">
+                    <table className={`ui very compact table sortable ${this.props.selectable?'selectable':''} ${this.props.className}`} cellSpacing="0" cellPadding="0">
+                        <thead><tr>
+                            {headerColumns}
+                        </tr></thead>
+                        {this.props.totalSize <= 0 ?
+                            <tbody><tr className="noDataRow"><td colSpan={headerColumns.length} className="center aligned">No data available</td></tr></tbody>
+                         :
+                            <tbody>{bodyRows}</tbody>
+                        }
+                    </table>
                 </div>
-                <div className="row no-top-padding">
-                    <div className="seven wide column">
-                        <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                        totalSize={this._getTotalSize()} onPageSizeChange={this._changePageSize.bind(this)}/>
+
+                {this.props.totalSize > 0 &&
+                    <div className="row gridPagination">
+                        <div className="seven wide column">
+                            <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}
+                                            totalSize={this.props.totalSize}
+                                            onPageSizeChange={this._changePageSize.bind(this)}/>
+                        </div>
+                        <div className="right aligned nine wide column">
+                            <Pagination currentPage={this.state.currentPage} pageSize={this.state.pageSize}
+                                        totalSize={this.props.totalSize} onPageChange={this._changePage.bind(this)}/>
+                        </div>
                     </div>
-                    <div className="right aligned nine wide column">
-                        <Pagination currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                    totalSize={this._getTotalSize()} onPageChange={this._changePage.bind(this)}/>
-                    </div>
-                </div>
+                }
             </div>
         );
     }
@@ -179,11 +151,9 @@ class GridTable extends Component {
 
 export default {
     Table:GridTable,
-    Header:GridHeader,
-    Body:GridBody,
-    Footer:GridFooter,
     Row:GridRow,
     Column:GridColumn,
     Data:GridData,
-    Action:GridAction
+    Action:GridAction,
+    Filter:GridFilter
 };
