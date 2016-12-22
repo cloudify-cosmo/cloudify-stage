@@ -18,9 +18,9 @@ class GridTable extends Component {
         super(props,context);
 
         this.state = {
-            sortColumn: _.get(props, "sortColumn", ""),
-            sortAscending: _.get(props, "sortAscending", true),
-            pageSize: _.get(props, "pageSize", 5),
+            sortColumn: props.sortColumn,
+            sortAscending: props.sortAscending,
+            pageSize: props.pageSize,
             currentPage: 1,
             searchText: ""
         }
@@ -41,7 +41,10 @@ class GridTable extends Component {
     static defaultProps = {
         totalSize: 0,
         searchable: true,
-        selectable: false
+        selectable: false,
+        sortColumn: "",
+        sortAscending: true,
+        pageSize: 5
     };
 
     static childContextTypes = {
@@ -76,6 +79,23 @@ class GridTable extends Component {
 
     _changePage(page){
         this.setState({currentPage: page});
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let changedProps = {};
+        if (this.props.pageSize != nextProps.pageSize) {
+            changedProps.pageSize = nextProps.pageSize;
+        }
+        if (this.props.sortColumn != nextProps.sortColumn) {
+            changedProps.sortColumn = nextProps.sortColumn;
+        }
+        if (this.props.sortAscending != nextProps.sortAscending) {
+            changedProps.sortAscending = nextProps.sortAscending;
+        }
+
+        if (!_.isEmpty(changedProps)) {
+            this.setState(changedProps);
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -131,7 +151,7 @@ class GridTable extends Component {
                     </table>
                 </div>
 
-                {this.props.totalSize > 0 &&
+                {this.props.totalSize > this.state.pageSize &&
                     <div className="row gridPagination">
                         <div className="seven wide column">
                             <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}

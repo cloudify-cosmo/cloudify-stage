@@ -51,46 +51,44 @@ export default class WidgetDynamicContent extends Component {
         if (url.indexOf('[manager]') >= 0) {
             var baseUrl = url.substring('[manager]'.length);
 
-            //Apply fetch filter
-            let queryString = this._prepareQueryString();
-            let fetchParams = "";
-            if (queryString) {
-                fetchParams = (baseUrl.indexOf("?") > 0?"&":"?") + queryString;
+            let params = {};
+            if (url.indexOf('[params]') >= 0) {
+                params = this._fetchParams();
+                baseUrl = _.replace(baseUrl, '[params]', "");
             }
-            baseUrl = _.replace(baseUrl, '[params]', fetchParams);
 
-            return context.getManager().doGet(baseUrl);
+            return context.getManager().doGet(baseUrl, params);
         } else {
             return fetch(fetchUrl).then(response => response.json())
         }
     }
 
-    _prepareQueryString() {
-        let query = "";
+    _fetchParams() {
+        let params = {};
 
         let gridParams = this.fetchParams.gridParams;
         if (gridParams) {
             if (gridParams.sortColumn) {
-                query += `&_sort=${gridParams.sortAscending?'':'-'}${gridParams.sortColumn}`;
+                params._sort = `${gridParams.sortAscending?'':'-'}${gridParams.sortColumn}`;
             }
 
             if (gridParams.pageSize) {
-                query += `&_size=${gridParams.pageSize}`;
+                params._size=gridParams.pageSize;
             }
 
             if (gridParams.currentPage) {
-                query += `&_offset=${(gridParams.currentPage-1)*gridParams.pageSize}`;
+                params._offset=(gridParams.currentPage-1)*gridParams.pageSize;
             }
         }
 
         let filterParams = this.fetchParams.filterParams;
         _.forIn(filterParams, function(value, key) {
             if (!_.isNil(value)) {
-                query += `&${key}=${value}`;
+                params[key] = value;
             }
         });
 
-        return _.trimStart(query, "&");
+        return params;
     }
 
     _beforeFetch() {
@@ -174,7 +172,7 @@ export default class WidgetDynamicContent extends Component {
 
             this.fetchDataPromise = StageUtils.makeCancelable(
                                   this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),
-                                                                     PluginUtils, this._prepareQueryString()));
+                                                                          PluginUtils, this._fetchParams()));
             this.fetchDataPromise.promise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);

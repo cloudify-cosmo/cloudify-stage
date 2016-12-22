@@ -124,7 +124,7 @@ export default class extends React.Component {
                             className="deploymentTable">
 
                     <Grid.Column label="Name" name="id" width="25%"/>
-                    <Grid.Column label="Blueprint" name="created_at" width="25%"/>
+                    <Grid.Column label="Blueprint" name="blueprint_id" width="25%"/>
                     <Grid.Column label="Created" name="created_at" width="15%"/>
                     <Grid.Column label="Updated" name="updated_at" width="15%"/>
                     <Grid.Column label="Status" width="6%"/>

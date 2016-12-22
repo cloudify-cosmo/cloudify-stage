@@ -135,7 +135,7 @@ export default class Manager {
     }
 
     _buildActualUrl(url,data) {
-        var queryString = data ? '?'+$.param(data) : '';
+        var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data) : '';
         var urlInServer = `${this._data.version?'/api/'+this._data.version:''}${url}${queryString}`;
 
         let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);

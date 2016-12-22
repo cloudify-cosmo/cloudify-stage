@@ -16,7 +16,7 @@ export default class PaginationInfo extends Component {
     render() {
         let pageCount = Math.ceil(this.props.totalSize/this.props.pageSize);
 
-        if (this.props.totalSize <= 0 || pageCount <= 1) {
+        if (pageCount <= 1) {
             return null;
         }
 

@@ -23,22 +23,13 @@ export default class GridRow extends Component {
     }
 
     render() {
-        var showAll = true;
-        for (var i=0; i<this.props.showCols.length; i++) {
-            showAll = showAll && this.props.showCols[i];
-        }
-
         let children = [];
-        if (showAll) {
-            children = this.props.children;
-        } else {
-            let index = 0;
-            React.Children.forEach(this.props.children, (child) => {
-                if (child.type && child.type.name === "GridData" && this._showData(index++)) {
-                    children.push(child);
-                }
-            });
-        }
+        let index = 0;
+        React.Children.forEach(this.props.children, (child) => {
+            if (child.type && child.type.name === "GridData" && this._showData(index++)) {
+                children.push(child);
+            }
+        });
 
         return (
             <tr className={this.props.select?"active":""} onClick={this.props.onClick}>

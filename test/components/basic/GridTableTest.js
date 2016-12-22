@@ -50,7 +50,6 @@ describe('(Component) GridTable', () => {
     it('renders data rows', () => {
         wrapper.setProps({totalSize:5});
         expect(wrapper.find(".gridTable tbody tr")).to.have.length(5);
-        expect(wrapper.find(".gridTable .gridPagination")).to.have.length(1);
     });
 
     it('renders selected row', () => {
@@ -106,10 +105,12 @@ describe('(Component) GridTable', () => {
     });
 
     it('renders default page size', () => {
-        expect(wrapper.find(".gridTable .gridPagination .dropdown .text")).to.have.text('25');
+        wrapper.setProps({totalSize:10});
+        wrapper.setProps({pageSize:5});
 
+        expect(wrapper.find(".gridTable .gridPagination .dropdown .text")).to.have.text('5');
         let dropdownText = wrapper.find(".gridTable .gridPagination .selection.dropdown .menu").text();
-        expect(wrapper.find(".gridTable .gridPagination").childAt(0).text().replace(dropdownText, "") ).to.be.equal("Page size: 25  1 to 5 of 5 entries");
+        expect(wrapper.find(".gridTable .gridPagination").childAt(0).text().replace(dropdownText, "") ).to.be.equal("Page size: 5  1 to 5 of 10 entries");
     });
 
     it('changes page size', () => {
@@ -121,10 +122,11 @@ describe('(Component) GridTable', () => {
     });
 
     describe('renders paginator and', () => {
-
         it('tests paginator for single page', () => {
             wrapper.setProps({totalSize:5});
-            expect(wrapper.find(".gridTable .pagination")).to.have.length(0);
+            expect(wrapper.find(".gridTable .gridPagination")).to.have.length(0);
+            wrapper.setProps({totalSize:7});
+            expect(wrapper.find(".gridTable .gridPagination")).to.have.length(1);
         });
 
         it('tests paginator for pages count equals to default number of pages', () => {
