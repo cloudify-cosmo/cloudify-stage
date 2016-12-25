@@ -15,7 +15,8 @@ Stage.addPlugin({
     initialConfiguration: [
         {id: "pollingTime", default: 30}
     ],
-    fetchUrl: '[manager]/snapshots?_include=id,created_at,status',
+    fetchUrl: '[manager]/snapshots?_include=id,created_at,status[params]',
+    pageSize: 5,
 
     render: function(widget,data,error,context,pluginUtils) {
 
@@ -32,6 +33,7 @@ Stage.addPlugin({
                 })
             })
         });
+        formattedData.total =  _.get(data, "metadata.pagination.total", 0);
 
         return (
             <SnapshotsTable widget={widget} data={formattedData} context={context}/>

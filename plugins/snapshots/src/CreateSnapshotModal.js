@@ -39,7 +39,7 @@ export default class extends React.Component {
         var snapshotId = formObj.find("input[name='snapshotId']").val();
 
         // Disable the form
-        this.setState({loading: true});
+        this.setState({loading: true, createErr: null});
 
         // Call create method
         var actions = new Actions(this.props.context);
@@ -50,7 +50,7 @@ export default class extends React.Component {
                 this.setState({loading: false, show: false});
             })
             .catch((err)=>{
-                this.setState({loading: false, error: err.error});
+                this.setState({loading: false, createErr: err.error});
             });
 
         return false;

@@ -74,57 +74,59 @@ export default class extends React.Component {
         this.props.context.getEventBus().off('snapshots:refresh',this._refreshData);
     }
 
+    fetchGridData(fetchParams) {
+        this.props.context.refresh(fetchParams);
+    }
+
     render() {
         var Confirm = Stage.Basic.Confirm;
         var ErrorMessage = Stage.Basic.ErrorMessage;
+        var Grid = Stage.Basic.Grid;
 
         return (
             <div className="snapshotsTableDiv">
                 <ErrorMessage error={this.state.error}/>
 
-                <table className="ui very compact table snapshotsTable">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Created at</th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <Grid.Table fetchData={this.fetchGridData.bind(this)}
+                            totalSize={this.props.data.total}
+                            pageSize={this.props.widget.plugin.pageSize}
+                            selectable={true}
+                            className="snapshotsTable">
+
+                    <Grid.Column label="Id" name="id" width="40%"/>
+                    <Grid.Column label="Created at" name="created_at" width="25%"/>
+                    <Grid.Column label="Status" name="status" width="20%"/>
+                    <Grid.Column width="15%"/>
+
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <tr key={item.id} className={"row "+ (item.isSelected ? 'active' : '')} onClick={this._selectSnapshot.bind(this,item)}>
-                                    <td>
-                                        <div>
-                                            <a className='snapshotName' href="javascript:void(0)">{item.id}</a>
-                                        </div>
-                                    </td>
-                                    <td>{item.created_at}</td>
-                                    <td>{item.status}</td>
-                                    <td>
-                                        <div className="rowActions">
-                                            <i className="undo icon link bordered" title="Restore" onClick={this._restoreSnapshot.bind(this,item)}></i>
-                                            <i className="download icon link bordered" title="Download" onClick={this._downloadSnapshot.bind(this,item)}></i>
-                                            <i className="trash icon link bordered" title="Delete" onClick={this._deleteSnapshotConfirm.bind(this,item)}></i>
-                                        </div>
-                                    </td>
-                            </tr>
+                                <Grid.Row key={item.id} select={item.isSelected} onClick={this._selectSnapshot.bind(this, item)}>
+                                    <Grid.Data><a className='snapshotName' href="javascript:void(0)">{item.id}</a></Grid.Data>
+                                    <Grid.Data>{item.created_at}</Grid.Data>
+                                    <Grid.Data>{item.status}</Grid.Data>
+                                    <Grid.Data className="center aligned rowActions">
+                                        <i className="undo icon link bordered" title="Restore" onClick={this._restoreSnapshot.bind(this,item)}></i>
+                                        <i className="download icon link bordered" title="Download" onClick={this._downloadSnapshot.bind(this,item)}></i>
+                                        <i className="trash icon link bordered" title="Delete" onClick={this._deleteSnapshotConfirm.bind(this,item)}></i>
+                                    </Grid.Data>
+                                </Grid.Row>
                             );
                         })
                     }
-                    </tbody>
-                </table>
+
+                    <Grid.Action>
+                        <CreateModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+
+                        <UploadModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+                    </Grid.Action>
+
+                </Grid.Table>
 
                 <Confirm title='Are you sure you want to remove this snapshot?'
                          show={this.state.confirmDelete}
                          onConfirm={this._deleteSnapshot.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
-
-                <CreateModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
-
-                <UploadModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
 
             </div>
 

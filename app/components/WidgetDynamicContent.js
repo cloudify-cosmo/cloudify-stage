@@ -29,13 +29,19 @@ export default class WidgetDynamicContent extends Component {
         this.pollingTimeout = null;
         this.fetchDataPromise = null;
         this.mounted = false;
+        this.fetchParams = {
+            gridParams: {pageSize: this.props.widget.plugin.pageSize,
+                sortColumn: this.props.widget.plugin.sortColumn,
+                sortAscending: this.props.widget.plugin.sortAscending},
+            filterParams: {}
+        };
     }
 
     _getContext () {
         return getContext(this._fetchData.bind(this));
     }
 
-    _fetch(url,context) {
+    _fetch(url, context) {
         var fetchUrl = _.replace(url,/\[config:(.*)\]/i,(match,configName)=>{
             var conf = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:configName}) : {};
             return conf && conf.value ? conf.value : 'NA';
@@ -44,10 +50,45 @@ export default class WidgetDynamicContent extends Component {
         // Only add auth token if we access the manager
         if (url.indexOf('[manager]') >= 0) {
             var baseUrl = url.substring('[manager]'.length);
-            return context.getManager().doGet(baseUrl);
+
+            let params = {};
+            if (url.indexOf('[params]') >= 0) {
+                params = this._fetchParams();
+                baseUrl = _.replace(baseUrl, '[params]', "");
+            }
+
+            return context.getManager().doGet(baseUrl, params);
         } else {
             return fetch(fetchUrl).then(response => response.json())
         }
+    }
+
+    _fetchParams() {
+        let params = {};
+
+        let gridParams = this.fetchParams.gridParams;
+        if (gridParams) {
+            if (gridParams.sortColumn) {
+                params._sort = `${gridParams.sortAscending?'':'-'}${gridParams.sortColumn}`;
+            }
+
+            if (gridParams.pageSize) {
+                params._size=gridParams.pageSize;
+            }
+
+            if (gridParams.currentPage) {
+                params._offset=(gridParams.currentPage-1)*gridParams.pageSize;
+            }
+        }
+
+        let filterParams = this.fetchParams.filterParams;
+        _.forIn(filterParams, function(value, key) {
+            if (!_.isNil(value)) {
+                params[key] = value;
+            }
+        });
+
+        return params;
     }
 
     _beforeFetch() {
@@ -88,7 +129,15 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
-    _fetchData() {
+    _fetchData(params) {
+        if (params) {
+            this.fetchParams = _.merge({}, this.fetchParams, params.gridParams ? params : {filterParams: params});
+        }
+
+        if (this.fetchDataPromise) {
+            this.fetchDataPromise.cancel();
+        }
+
         if (this.props.widget.plugin.fetchUrl) {
             this._beforeFetch();
 
@@ -99,7 +148,7 @@ export default class WidgetDynamicContent extends Component {
                 urls = [urls];
             }
 
-            var fetches = _.map(urls,(url)=>this._fetch(url,context));
+            var fetches = _.map(urls,(url)=> this._fetch(url, context));
 
             this.fetchDataPromise = StageUtils.makeCancelable(Promise.all(fetches));
             this.fetchDataPromise.promise
@@ -122,7 +171,8 @@ export default class WidgetDynamicContent extends Component {
             this._beforeFetch();
 
             this.fetchDataPromise = StageUtils.makeCancelable(
-                                  this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),PluginUtils));
+                                  this.props.widget.plugin.fetchData(this.props.widget,this._getContext(),
+                                                                          PluginUtils, this._fetchParams()));
             this.fetchDataPromise.promise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
@@ -142,6 +192,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+
         // Check if any configuration that requires fetch was changed
         var requiresFetch = false;
         if (prevProps.widget.configuration && this.props.widget.configuration) {
@@ -158,6 +209,16 @@ export default class WidgetDynamicContent extends Component {
 
         if (prevProps.manager.tenants.selected !== this.props.manager.tenants.selected) {
             requiresFetch = true;
+        }
+
+        if (this.props.widget.plugin.fetchParams && typeof this.props.widget.plugin.fetchParams === 'function') {
+            let params = this.props.widget.plugin.fetchParams(this.props.widget, this._getContext());
+
+            let mergedParams = _.merge({}, this.fetchParams, {filterParams: params});
+            if (!_.isEqual(this.fetchParams, mergedParams)) {
+                this.fetchParams = mergedParams;
+                requiresFetch = true;
+            }
         }
 
         if (requiresFetch) {

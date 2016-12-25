@@ -275,3 +275,42 @@ code.hljs {
   background: white;
 }
 
+/* Grid table */
+
+.gridTable {
+  margin: -0.75rem !important;
+
+  .gridAction {
+    padding-bottom: 0px !important;
+  }
+
+  .gridAction .inline.fields {
+    margin-bottom: 0px !important;
+  }
+
+  .gridPagination {
+    padding-top: 0px !important;
+  }
+
+  .noDataRow {
+    height: 50px;
+  }
+
+  .actionField {
+    margin-left: auto !important;
+    padding-right: 0px !important;
+  }
+
+  .actionField > button {
+    margin-right: 1em;
+  }
+
+  .actionField > button:last-child, .actionField > div:last-child button {
+    margin-right: 0 !important;
+  }
+
+  .actionField > div {
+    display: inline-block;
+  }
+
+}

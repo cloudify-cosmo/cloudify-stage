@@ -11,13 +11,21 @@ Stage.addPlugin({
     initialWidth: 8,
     initialHeight: 6,
     color : "purple",
-    fetchUrl: '[manager]/executions',
+    fetchUrl: '[manager]/executions[params]',
     isReact: true,
     initialConfiguration:
         [
             {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Enter list of comma separated field names (json format)",
              default: '["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Params","Status"]'}
         ],
+    pageSize: 5,
+
+    fetchParams: function(widget, context) {
+        return {
+            blueprint_id: context.getValue('blueprintId'),
+            deployment_id: context.getValue('deploymentId')
+        }
+    },
 
     render: function(widget,data,error,context,pluginUtils) {
 
@@ -26,19 +34,7 @@ Stage.addPlugin({
         }
 
         var formattedData = Object.assign({},data);
-
-        var blueprintId = context.getValue('blueprintId');
-        var deploymentId = context.getValue('deploymentId');
         var selectedExecution = context.getValue('executionId');
-
-        if (blueprintId) {
-            formattedData.items = _.filter(data.items,{blueprint_id:blueprintId});
-        }
-
-        if (deploymentId) {
-            formattedData.items = _.filter(data.items,{deployment_id:deploymentId});
-        }
-
 
         formattedData = Object.assign({},formattedData,{
             items: _.map (formattedData.items,(item)=>{
@@ -48,9 +44,12 @@ Stage.addPlugin({
                 })
             })
         });
+        formattedData.total = _.get(data, "metadata.pagination.total", 0);
 
-        formattedData.blueprintId = blueprintId;
-        formattedData.deploymentId = deploymentId;
+        let params = this.fetchParams(widget, context);
+        formattedData.blueprintId = params.blueprint_id;
+        formattedData.deploymentId = params.deployment_id;
+
         return (
             <ExecutionsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
         );

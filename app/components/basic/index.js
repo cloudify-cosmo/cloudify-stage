@@ -10,6 +10,7 @@ import HighlightText from './HighlightText';
 import Overlay, {OverlayAction,OverlayContent} from './overlay/Overlay';
 import Checkmark from './Checkmark';
 import EditableLabel from './EditableLabel';
+import Grid from './grid/GridTable';
 
 export {
     Modal,
@@ -24,6 +25,6 @@ export {
     Overlay,
     OverlayAction,
     OverlayContent,
-    Checkmark
+    Checkmark,
+    Grid
 };
-
