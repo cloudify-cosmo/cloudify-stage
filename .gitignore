@@ -9,3 +9,7 @@ bower_components
 
 stage.tar.gz
 /widgets/common/common.js
+
+reports
+selenium-debug.log
+tests_output
