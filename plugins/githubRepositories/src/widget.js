@@ -16,10 +16,10 @@ Stage.addPlugin({
         {id: 'fetchUsername', name: 'Fetch with username' ,placeHolder:"Type username..", default:"cloudify-examples",fetch:true}
     ],
     fetchUrl: 'https://api.github.com/users/[config:fetchUsername]/repos',
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
 
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
         var formattedData = Object.assign({},data);
@@ -36,7 +36,7 @@ Stage.addPlugin({
         });
 
         return (
-            <GithubRepositoriesTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+            <GithubRepositoriesTable widget={widget} data={formattedData} context={toolbox}/>
         );
     }
 });

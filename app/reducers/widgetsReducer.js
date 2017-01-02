@@ -6,6 +6,24 @@
 import * as types from '../actions/types';
 import {v4} from 'node-uuid';
 
+let buildConfig = (plugin)=>{
+
+    var configs = {};
+
+    _.each(plugin.initialConfiguration,(config)=>{
+        if (!config.id) {
+            console.log('Cannot process config for plugin :"'+plugin.name+'" , because it missing an Id ',config);
+            return;
+        }
+
+        var value = config.default && !config.value ? config.default : (_.isUndefined(config.value) ? null : config.value );
+
+        configs[config.id] = value;
+    });
+
+    return configs;
+};
+
 const widget = (state = {}, action) => {
     switch (action.type) {
 
@@ -13,31 +31,12 @@ const widget = (state = {}, action) => {
             return {
                 id: v4(),
                 name: action.name,
-                width: action.plugin.initialWidth,
-                height: action.plugin.initialHeight,
+                width: action.width || action.plugin.initialWidth,
+                height: action.height || action.plugin.initialHeight,
+                x: action.x,
+                y: action.y,
                 plugin: action.plugin.id,
-                configuration: action.plugin.initialConfiguration.map((config)=>{
-                    var currConf = Object.assign({},config);
-                    if (!currConf.id) {
-                        currConf.id = v4();
-                    }
-                    if (!currConf.name) {
-                        currConf.name = currConf.id;
-                    }
-
-                    // If we have a default (but not value) set it as the initial value
-                    if (config.default && !config.value) {
-                        currConf.value = currConf.default;
-                    }
-
-                    // If there was no default and no value, set it to null (so it wont be undefined)
-                    if (!currConf.value) {
-                        currConf.value = null;
-                    }
-
-                    // Else all is good return it
-                    return currConf;
-                })
+                configuration: buildConfig(action.plugin)
             };
         default:
             return state;

@@ -4,16 +4,16 @@
 
 
 export default class {
-    constructor(context) {
-        this.context = context;
+    constructor(toolbox) {
+        this.toolbox = toolbox;
     }
 
     doDelete(plugin) {
-        return this.context.getManager().doDelete(`/plugins/${plugin.id}`);
+        return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`);
 
     }
 
     doUpload(file) {
-        return this.context.getManager().doUpload(`/plugins`,null,file,'post');
+        return this.toolbox.getManager().doUpload(`/plugins`,null,file,'post');
     }
 }

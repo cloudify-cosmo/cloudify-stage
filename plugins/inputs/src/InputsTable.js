@@ -10,15 +10,15 @@ export default class extends React.Component {
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('inputs:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('inputs:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('inputs:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('inputs:refresh', this._refreshData);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -33,8 +33,6 @@ export default class extends React.Component {
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
-
-                <div>Inputs for deployment with id: {this.props.data.deploymentId || "NA"}</div>
 
                 <table className="ui very compact table outputsTable">
                     <thead>

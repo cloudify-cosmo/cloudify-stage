@@ -50,19 +50,19 @@ Stage.addPlugin({
 
         return processedData;
     },
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
-        var selectedBlueprint = context.getValue('blueprintId');
-        var selectedDeployment = context.getValue('deploymentId');
-        var selectedExecution = context.getValue('executionId');
+        var selectedBlueprint = toolbox.getContext().getValue('blueprintId');
+        var selectedDeployment = toolbox.getContext().getValue('deploymentId');
+        var selectedExecution = toolbox.getContext().getValue('executionId');
 
         var processedData = this._processData(selectedBlueprint,selectedDeployment,selectedExecution,data);
 
         return (
-            <Filter widget={widget} data={processedData} context={context} utils={pluginUtils}/>
+            <Filter widget={widget} data={processedData} toolbox={toolbox}/>
         );
 
     }
