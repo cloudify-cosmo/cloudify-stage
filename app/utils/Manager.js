@@ -83,7 +83,7 @@ export default class Manager {
             }
             var selectedTenant = _.get(this._data,'tenants.selected',null);
             if (selectedTenant) {
-                xhr.setRequestHeader("tenant","selectedTenant");
+                xhr.setRequestHeader("tenant",selectedTenant);
             }
 
             xhr.send(file);

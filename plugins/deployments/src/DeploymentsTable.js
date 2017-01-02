@@ -18,35 +18,35 @@ export default class extends React.Component {
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('deployments:refresh',this._refreshData,this);
+        this.props.toolbox.getEventBus().on('deployments:refresh',this._refreshData,this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('deployments:refresh',this._refreshData);
+        this.props.toolbox.getEventBus().off('deployments:refresh',this._refreshData);
     }
 
     _initDropdown(dropdown) {
         var thi$ = this;
         $(dropdown).dropdown({
             onChange: (value, text, $choice) => {
-                thi$.props.context.setValue('filterDep'+thi$.props.widget.id,value);
+                thi$.props.toolbox.getContext().setValue('filterDep'+thi$.props.widget.id,value);
             }
         });
 
-        var filter = this.props.context.getValue('filterDep'+this.props.widget.id);
+        var filter = this.props.toolbox.getContext().getValue('filterDep'+this.props.widget.id);
         if (filter) {
             $(dropdown).dropdown('set selected',filter);
         }
     }
 
     _selectDeployment(item) {
-        var drillDownConfig = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:'clickToDrillDown'}) : {};
-        if (drillDownConfig && drillDownConfig.value === 'true') {
-            this.props.context.setValue('deploymentId',item.id);
-            this.props.context.drillDown(this.props.widget,'deployment');
+        var drillDownConfig = this.props.widget.configuration.clickToDrillDown;
+        if (drillDownConfig === 'true') {
+            this.props.toolbox.getContext().setValue('deploymentId',item.id);
+            this.props.toolbox.drillDown(this.props.widget,'deployment');
         } else {
-            var oldSelectedDeploymentId = this.props.context.getValue('deploymentId');
-            this.props.context.setValue('deploymentId',item.id === oldSelectedDeploymentId ? null : item.id);
+            var oldSelectedDeploymentId = this.props.toolbox.getContext().getValue('deploymentId');
+            this.props.toolbox.getContext().setValue('deploymentId',item.id === oldSelectedDeploymentId ? null : item.id);
         }
     }
 
@@ -65,17 +65,17 @@ export default class extends React.Component {
             return;
         }
 
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doDelete(this.state.deleteDep).then(()=>{
             this.setState({confirmDelete: false, deleteDep:null});
-            this.props.context.getEventBus().trigger('deployments:refresh');
+            this.props.toolbox.getEventBus().trigger('deployments:refresh');
         }).catch((err)=>{
             this.setState({confirmDelete: false, deleteDep: null, error: err.error});
         });
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     _showExecuteWorkflowModal (deployment,workflow) {
@@ -95,17 +95,17 @@ export default class extends React.Component {
     }
 
     _executeWorkflow(deployment,workflow,params) {
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doExecute(deployment,workflow,params).then(()=>{
             this._hideExecuteWorkflowModal();
-            this.props.context.getEventBus().trigger('executions:refresh');
+            this.props.toolbox.getEventBus().trigger('executions:refresh');
         }).catch((err)=>{
             this.setState({error: err.error});
         })
     }
 
     fetchGridData(fetchParams) {
-        this.props.context.refresh(fetchParams);
+        this.props.toolbox.refresh(fetchParams);
     }
 
     render() {

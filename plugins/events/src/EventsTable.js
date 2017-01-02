@@ -2,7 +2,7 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-export default class extends React.Component {
+export default class EventsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -11,25 +11,30 @@ export default class extends React.Component {
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('events:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('events:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('events:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('events:refresh', this._refreshData);
     }
 
 
     _selectEvent(item) {
-        var oldSelectedEventId = this.props.context.getValue('eventId');
-        this.props.context.setValue('eventId',item.id === oldSelectedEventId ? null : item.id);
+        var oldSelectedEventId = this.props.toolbox.getContext().getValue('eventId');
+        this.props.toolbox.getContext().setValue('eventId',item.id === oldSelectedEventId ? null : item.id);
     }
     
     render() {
         var ErrorMessage = Stage.Basic.ErrorMessage;
+
+        var filteredColumnsTitles = [];
+        if (!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId) filteredColumnsTitles.push(<th key='blueprintHeader'>Blueprint</th>);
+        if (!this.props.data.deploymentId && !this.props.data.executionId) filteredColumnsTitles.push(<th key='deploymentHeader'>Deployment</th>);
+        if (!this.props.data.executionId ) filteredColumnsTitles.push( <th key='workflowHeader'>Workflow</th>);
 
         return (
             <div>
@@ -38,9 +43,7 @@ export default class extends React.Component {
                 <table className="ui very compact table eventsTable">
                     <thead>
                     <tr>
-                        {!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId ? <th key=''>Blueprint</th> : ''}
-                        {!this.props.data.deploymentId && !this.props.data.executionId ? <th>Deployment</th> : ''}
-                        { !this.props.data.executionId ? <th>Workflow</th> : ''}
+                        {filteredColumnsTitles}
                         <th>Event Type</th>
                         <th>Timestamp</th>
                         <th>Operation</th>
@@ -52,12 +55,15 @@ export default class extends React.Component {
                     <tbody>
                     {
                         this.props.data.items.map((item)=>{
+                            var filteredColumns = [];
+
+                            if (!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId) filteredColumns.push(<td key='blueprint'>{item.context.blueprint_id}</td>);
+                            if (!this.props.data.deploymentId && !this.props.data.executionId)filteredColumns.push( <td key='deployment'>{item.context.deployment_id}</td>);
+                            if (!this.props.data.executionId) filteredColumns.push( <td key='workflow'>{item.context.workflow_id}</td>);
+
                             return (
                                 <tr key={item.id} className={'row ' + (item.isSelected ? 'active' : '')} onClick={this._selectEvent.bind(this,item)}>
-                                    {!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId ? <td>{item.context.blueprint_id}</td> : ''}
-                                    {!this.props.data.deploymentId && !this.props.data.executionId ? <td>{item.context.deployment_id}</td> : ''}
-                                    { !this.props.data.executionId ? <td>{item.context.workflow_id}</td> : '' }
-
+                                    {filteredColumns}
                                     <td>{item.event_type}</td>
                                     <td>{item.timestamp}</td>
                                     <td>{item.context.operation}</td>

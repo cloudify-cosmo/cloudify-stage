@@ -21,7 +21,7 @@ Stage.addPlugin({
     ],
     pageSize: 5,
 
-    _processData(data,context,pluginUtils) {
+    _processData(data,toolbox) {
         var blueprintsData = data[0];
         var deploymentData = data[1];
         var depCount = _.countBy(deploymentData.items,'blueprint_id');
@@ -30,12 +30,12 @@ Stage.addPlugin({
             blueprint.depCount = depCount[blueprint.id] || 0;
         });
 
-        var selectedBlueprint = context.getValue('blueprintId');
+        var selectedBlueprint = toolbox.getContext().getValue('blueprintId');
         var formattedData = Object.assign({},blueprintsData,{
             items: _.map (blueprintsData.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: pluginUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
-                    updated_at: pluginUtils.moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
+                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
                     isSelected: selectedBlueprint === item.id
                 })
             }),
@@ -45,16 +45,16 @@ Stage.addPlugin({
         return formattedData;
     },
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
 
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
-        var formattedData = this._processData(data,context,pluginUtils);
+        var formattedData = this._processData(data,toolbox);
         return (
             <div>
-                <BlueprintsTable widget={widget} data={formattedData} context={context}/>
+                <BlueprintsTable widget={widget} data={formattedData} toolbox={toolbox}/>
             </div>
         );
     }

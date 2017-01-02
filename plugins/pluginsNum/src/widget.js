@@ -16,9 +16,9 @@ Stage.addPlugin({
     ],
     fetchUrl: '[manager]/plugins?_include=id',
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
         var num = _.get(data, "metadata.pagination.total", 0);

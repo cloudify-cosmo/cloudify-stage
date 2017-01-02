@@ -11,12 +11,12 @@ Stage.addPlugin({
     initialHeight: 4,
     color : "purple",
     hasTemplate: true,
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
 
         if (!widget.plugin.template) {
             return 'graph: missing template';
         }
 
-        return pluginUtils.buildFromTemplate(widget.plugin.template);
+        return _.template(widget.plugin.template)();
     }
 });

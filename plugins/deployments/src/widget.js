@@ -21,34 +21,30 @@ Stage.addPlugin({
     isReact: true,
     pageSize: 5,
 
-    fetchParams: function(widget, context) {
-        var blueprintId = context.getValue('blueprintId');
+    fetchParams: function(widget, toolbox) {
+        var blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        // Find if we have a config for blueprint selection
-        var blueprintIdFilter = widget.configuration ? _.find(widget.configuration,{id:'blueprintIdFilter'}) : {};
-        if (blueprintIdFilter && blueprintIdFilter.value) {
-            blueprintId = blueprintIdFilter.value;
-        }
+        blueprintId = _.isEmpty(widget.configuration.blueprintIdFilter) ? blueprintId : widget.configuration.blueprintIdFilter;
 
         return {
             blueprint_id: blueprintId
         }
     },
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
 
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
         var formattedData = Object.assign({},data);
-        var selectedDeployment = context.getValue('deploymentId');
+        var selectedDeployment = toolbox.getContext().getValue('deploymentId');
 
         formattedData = Object.assign({},formattedData,{
             items: _.map (formattedData.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: pluginUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
-                    updated_at: pluginUtils.moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
+                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
                     status: item.status || 'ok',
                     isSelected: selectedDeployment === item.id
                 })
@@ -56,16 +52,16 @@ Stage.addPlugin({
         });
         formattedData.total =  _.get(data, "metadata.pagination.total", 0);
 
-        var filter = context.getValue('filterDep'+widget.id);
+        var filter = toolbox.getContext().getValue('filterDep'+widget.id);
         if (filter) {
             formattedData.items = _.filter(formattedData.items,{status:filter});
         }
 
-        let params = this.fetchParams(widget, context);
+        let params = this.fetchParams(widget, toolbox);
         formattedData.blueprintId = params.blueprint_id;
 
         return (
-            <DeploymentsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+            <DeploymentsTable widget={widget} data={formattedData} toolbox={toolbox}/>
         );
     }
 });

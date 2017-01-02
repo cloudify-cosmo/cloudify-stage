@@ -18,17 +18,17 @@ Stage.addPlugin({
     fetchUrl: '[manager]/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at[params]',
     pageSize: 5,
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
 
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
-        var selectedPlugin = context.getValue('pluginId');
+        var selectedPlugin = toolbox.getContext().getValue('pluginId');
         var formattedData = Object.assign({},data,{
             items: _.map (data.items,(item)=>{
                 return Object.assign({},item,{
-                    uploaded_at: pluginUtils.moment(item.uploaded_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    uploaded_at: moment(item.uploaded_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
                     isSelected: selectedPlugin === item.id
                 })
             })
@@ -36,7 +36,7 @@ Stage.addPlugin({
         formattedData.total =  _.get(data, "metadata.pagination.total", 0);
 
         return (
-            <PluginsTable widget={widget} data={formattedData} context={context}/>
+            <PluginsTable widget={widget} data={formattedData} toolbox={toolbox}/>
         );
     }
 });
