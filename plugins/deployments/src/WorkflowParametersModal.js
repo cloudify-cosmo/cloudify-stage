@@ -49,11 +49,9 @@ export default class extends React.Component {
 
         return false;
     }
-    render() {
-        if (!this.props.show || !this.props.workflow) {
-            return <div className='executeModalContainer'/>;
-        }
 
+
+    render() {
         var Modal = Stage.Basic.Modal;
         var Header = Stage.Basic.ModalHeader;
         var Body = Stage.Basic.ModalBody;
@@ -61,15 +59,14 @@ export default class extends React.Component {
         var ErrorMessage = Stage.Basic.ErrorMessage;
 
         return (
-            <div className='executeModalContainer'>
-                <Modal show={this.props.show} className='executeModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
-                    <Header>
-                        <i className="road icon"></i> Execute workflow {this.props.workflow.name}
-                    </Header>
+            <Modal show={this.props.show} className='executeModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
+                <Header>
+                    <i className="road icon"></i> Execute workflow {this.props.workflow ? this.props.workflow.name : ""}
+                </Header>
 
-                    <Body>
-                    <form className="ui form executeForm" onSubmit={this._submitExecute.bind(this)} action="" ref='executeForm'>
-                        {
+                <Body>
+                <form className="ui form executeForm" onSubmit={this._submitExecute.bind(this)} action="" ref='executeForm'>
+                        {this.props.workflow &&
                             _.map(this.props.workflow.parameters,(parameter,name)=>{
                                 return (
                                     <div className="field" key={name}>
@@ -84,21 +81,19 @@ export default class extends React.Component {
 
                         <input type='submit' style={{"display": "none"}} ref='submitExecuteBtn'/>
                     </form>
-                    </Body>
+                </Body>
 
-                    <Footer>
-                        <div className="ui cancel basic button">
-                            <i className="remove icon"></i>
-                            Cancel
-                        </div>
-                        <div className="ui ok green  button">
-                            <i className="rocket icon"></i>
-                            Execute
-                        </div>
-                    </Footer>
-                </Modal>
-            </div>
-
+                <Footer>
+                    <div className="ui cancel basic button">
+                        <i className="remove icon"></i>
+                        Cancel
+                    </div>
+                    <div className="ui ok green  button">
+                        <i className="rocket icon"></i>
+                        Execute
+                    </div>
+                </Footer>
+            </Modal>
         );
     }
 };

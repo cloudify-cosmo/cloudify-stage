@@ -11,6 +11,8 @@ import Overlay, {OverlayAction,OverlayContent} from './overlay/Overlay';
 import Checkmark from './Checkmark';
 import EditableLabel from './EditableLabel';
 import Grid from './grid/GridTable';
+import Pagination from './pagination/Pagination';
+import Segment from './segment/SegmentList';
 
 export {
     Modal,
@@ -26,5 +28,7 @@ export {
     OverlayAction,
     OverlayContent,
     Checkmark,
-    Grid
+    Grid,
+    Segment,
+    Pagination
 };

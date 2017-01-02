@@ -83,7 +83,7 @@ export default class WidgetDynamicContent extends Component {
 
         let filterParams = this.fetchParams.filterParams;
         _.forIn(filterParams, function(value, key) {
-            if (!_.isNil(value)) {
+            if (!(typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null)) {
                 params[key] = value;
             }
         });
@@ -143,10 +143,9 @@ export default class WidgetDynamicContent extends Component {
 
             var context = this._getContext();
 
-            var urls = this.props.widget.plugin.fetchUrl;
-            if (!Array.isArray(urls)){
-                urls = [urls];
-            }
+            var url = this.props.widget.plugin.fetchUrl;
+
+            var urls = _.isString(url) ? [url] : _.valuesIn(url);
 
             var fetches = _.map(urls,(url)=> this._fetch(url, context));
 
@@ -154,7 +153,17 @@ export default class WidgetDynamicContent extends Component {
             this.fetchDataPromise.promise
                     .then((data)=> {
                         console.log(`Widget '${this.props.widget.name}' data fetched`);
-                        this.setState({data: data.length === 1 ? data[0] : data,error: null});
+
+                        var output = data;
+                        if (!_.isString(url)) {
+                            output = {};
+                            let keys = _.keysIn(url);
+                            for (var i=0; i < data.length; i++) {
+                                output[keys[i]] = data[i];
+                            }
+                        }
+
+                        this.setState({data: output, error: null});
                         this._afterFetch();
                     })
                     .catch((e)=>{

@@ -15,15 +15,15 @@ Stage.addPlugin({
     initialConfiguration: [
         {id: "pollingTime", default: 2}
     ],
-    fetchUrl: [
-        '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',
-        '[manager]/deployments?_include=id,blueprint_id'
-    ],
+    fetchUrl: {
+        blueprints: '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',
+        deployments: '[manager]/deployments?_include=id,blueprint_id'
+    },
     pageSize: 5,
 
     _processData(data,context,pluginUtils) {
-        var blueprintsData = data[0];
-        var deploymentData = data[1];
+        var blueprintsData = data.blueprints;
+        var deploymentData = data.deployments;
         var depCount = _.countBy(deploymentData.items,'blueprint_id');
         // Count deployments
         _.each(blueprintsData.items,(blueprint)=>{

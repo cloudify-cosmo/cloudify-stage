@@ -8,8 +8,7 @@ import GridColumn from './GridColumn';
 import GridData from './GridData';
 import GridAction from './GridAction';
 import GridFilter from './GridFilter';
-import PaginationInfo from './PaginationInfo';
-import Pagination from './Pagination';
+import Pagination from '../pagination/Pagination';
 import Search from './Search';
 
 class GridTable extends Component {
@@ -20,8 +19,6 @@ class GridTable extends Component {
         this.state = {
             sortColumn: props.sortColumn,
             sortAscending: props.sortAscending,
-            pageSize: props.pageSize,
-            currentPage: 1,
             searchText: ""
         }
     }
@@ -39,12 +36,11 @@ class GridTable extends Component {
     };
 
     static defaultProps = {
-        totalSize: 0,
-        searchable: true,
+        searchable: false,
         selectable: false,
         sortColumn: "",
         sortAscending: true,
-        pageSize: 5
+        className: ""
     };
 
     static childContextTypes = {
@@ -70,22 +66,12 @@ class GridTable extends Component {
             ascending = true;
         }
 
-        this.setState({sortColumn:name, sortAscending:ascending, currentPage: 1});
-    }
-
-    _changePageSize(size){
-        this.setState({pageSize: parseInt(size), currentPage: 1});
-    }
-
-    _changePage(page){
-        this.setState({currentPage: page});
+        this.refs.pagination.reset();
+        this.setState({sortColumn:name, sortAscending:ascending});
     }
 
     componentWillReceiveProps(nextProps) {
         let changedProps = {};
-        if (this.props.pageSize != nextProps.pageSize) {
-            changedProps.pageSize = nextProps.pageSize;
-        }
         if (this.props.sortColumn != nextProps.sortColumn) {
             changedProps.sortColumn = nextProps.sortColumn;
         }
@@ -100,8 +86,12 @@ class GridTable extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (!_.isEqual(this.state, prevState)) {
-            this.props.fetchData({gridParams: {...this.state}});
+            this._fetchData();
         }
+    }
+
+    _fetchData() {
+        this.props.fetchData({gridParams: Object.assign({}, this.state, this.refs.pagination.state)});
     }
 
     render() {
@@ -127,18 +117,18 @@ class GridTable extends Component {
         });
 
         return (
-            <div className="ui grid gridTable">
-                <div className="sixteen wide column gridAction">
-                    <div className="ui form">
-                        <div className="inline fields">
-                            {this.props.searchable && <Search/>}
-                            {gridFilters}
-                            {gridAction}
-                        </div>
+            <div className={`gridTable ${this.props.className}`}>
+                <div className="ui small form">
+                    <div className="inline fields">
+                        {this.props.searchable && <Search/>}
+                        {gridFilters}
+                        {gridAction}
                     </div>
                 </div>
 
-                <div className="sixteen wide column">
+                <Pagination totalSize={this.props.totalSize}
+                            pageSize={this.props.pageSize}
+                            fetchData={this._fetchData.bind(this)} ref="pagination">
                     <table className={`ui very compact table sortable ${this.props.selectable?'selectable':''} ${this.props.className}`} cellSpacing="0" cellPadding="0">
                         <thead><tr>
                             {headerColumns}
@@ -149,21 +139,7 @@ class GridTable extends Component {
                             <tbody>{bodyRows}</tbody>
                         }
                     </table>
-                </div>
-
-                {this.props.totalSize > this.state.pageSize &&
-                    <div className="row gridPagination">
-                        <div className="seven wide column">
-                            <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                            totalSize={this.props.totalSize}
-                                            onPageSizeChange={this._changePageSize.bind(this)}/>
-                        </div>
-                        <div className="right aligned nine wide column">
-                            <Pagination currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                        totalSize={this.props.totalSize} onPageChange={this._changePage.bind(this)}/>
-                        </div>
-                    </div>
-                }
+                </Pagination>
             </div>
         );
     }

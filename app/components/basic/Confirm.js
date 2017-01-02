@@ -22,7 +22,7 @@ export default class Confirm extends Component {
         onCancel: function() {return true;},
         show: false
     };
-    
+
     render() {
         return (
             <Modal className={this.props.className} onApprove={this.props.onConfirm} onDeny={this.props.onCancel} show={this.props.show}>

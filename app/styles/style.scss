@@ -143,7 +143,7 @@ body {
     left: 0px;
     right: 0;
     overflow: auto;
-    padding: 10px;
+    padding: 15px;
 
     &.noHeader {
       top: 15px;
@@ -276,21 +276,7 @@ code.hljs {
 }
 
 /* Grid table */
-
 .gridTable {
-  margin: -0.75rem !important;
-
-  .gridAction {
-    padding-bottom: 0px !important;
-  }
-
-  .gridAction .inline.fields {
-    margin-bottom: 0px !important;
-  }
-
-  .gridPagination {
-    padding-top: 0px !important;
-  }
 
   .noDataRow {
     height: 50px;
@@ -313,4 +299,75 @@ code.hljs {
     display: inline-block;
   }
 
+}
+
+/* Pagination */
+
+.gridPagination .pagination.menu .item {
+  padding-top: 0.78571429em !important;
+  padding-bottom: 0.78571429em !important;
+}
+
+/* Segment list */
+
+.segmentList {
+
+  .segments {
+    border: none !important;
+  }
+
+  .segment {
+    box-shadow: none !important;
+
+    .nodeState .segment {
+      padding: 2px 15px !important;
+    }
+
+    .nodeState .icon {
+      margin-right: 0px;
+    }
+
+    .rightDivider {
+      position: relative;
+    }
+
+    .rightDivider::after {
+      content: "";
+      border-left: 1px solid rgba(34, 36, 38, 0.15);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      height: calc(100% - 2rem);
+      position: absolute;
+      right: 0;
+      width: 0px;
+    }
+
+  }
+
+  .column.action  {
+
+    .icon.dropdown {
+      position: absolute;
+      right: 10px;
+    }
+  }
+
+  .ui.icon.header {
+    color: inherit;
+
+    .content {
+      margin-bottom:5px;
+    }
+
+    .icon {
+      font-size: 2em;
+      margin-bottom:0px;
+    }
+  }
+}
+
+/* Modal */
+
+.ui.modal > .content {
+  max-height: 350px;
+  overflow: auto;
 }

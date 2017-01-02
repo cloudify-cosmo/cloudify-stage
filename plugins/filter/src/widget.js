@@ -14,11 +14,11 @@ Stage.addPlugin({
     showHeader: false,
     showBorder: false,
     keepOnTop: true,
-    fetchUrl: [
-        '[manager]/blueprints?_include=id',
-        '[manager]/deployments?_include=id,blueprint_id',
-        '[manager]/executions?_include=id,blueprint_id,deployment_id,workflow_id'
-    ],
+    fetchUrl: {
+        blueprints: '[manager]/blueprints?_include=id',
+        deployments: '[manager]/deployments?_include=id,blueprint_id',
+        executions: '[manager]/executions?_include=id,blueprint_id,deployment_id,workflow_id'
+    },
     isReact: true,
     initialConfiguration: [
         {id: "pollingTime", default: 5},
@@ -31,13 +31,13 @@ Stage.addPlugin({
             deploymentId,
             executionId,
             blueprints: {
-                items: data[0].items
+                items: data.blueprints.items
             },
             deployments:{
-                items: data[1].items
+                items: data.deployments.items
             },
             executions: {
-                items: data[2].items
+                items: data.executions.items
             }
         });
 
