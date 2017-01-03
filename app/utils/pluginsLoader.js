@@ -8,6 +8,7 @@ import PluginUtils from './pluginUtils';
 import {v4} from 'node-uuid';
 
 import 'angular';
+import 'd3';
 
 import '../../bower_components/cloudify-blueprint-topology/dist/styles/blueprint-topology.css';
 import '../../bower_components/cloudify-blueprint-topology/dist/scripts/blueprint-topology-tpls.js';
