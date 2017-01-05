@@ -11,12 +11,12 @@ Stage.addPlugin({
     initialWidth: 8,
     initialHeight: 6,
     color : "purple",
-    fetchUrl: '[manager]/deployments[params]',
     initialConfiguration:
         [
             {id: "pollingTime", default: 2},
             {id: "clickToDrillDown",name: "Should click to drilldown", placeHolder: "True of false to click to drill down", default: "true"},
-            {id: "blueprintIdFilter",name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by"}
+            {id: "blueprintIdFilter",name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by"},
+            {id: "displayComponent",name: "Display component", placeHolder: "Enter new if segment list or old if grid table", default: "new"}
         ],
     isReact: true,
     pageSize: 5,
@@ -31,34 +31,54 @@ Stage.addPlugin({
         }
     },
 
-    render: function(widget,data,error,toolbox) {
+    fetchData: function(plugin,toolbox,params) {
+        var deploymentData = toolbox.getManager().doGet('/deployments',params);
 
+        var deploymentIds = deploymentData.then(data=>Promise.resolve([...new Set(data.items.map(item=>item.id))]));
+
+        var nodeData = deploymentIds.then(ids=>{
+                    return toolbox.getManager().doGet('/nodes?_include=deployment_id', {deployment_id: ids});
+                });
+
+        var nodeInstanceData = deploymentIds.then(ids=>{
+                    return toolbox.getManager().doGet('/node-instances?_include=state,deployment_id', {deployment_id: ids});
+                });
+
+        return Promise.all([deploymentData, nodeData, nodeInstanceData]).then(function(data) {
+                let deploymentData = data[0];
+                let nodeSize = _.countBy(data[1].items, "deployment_id");
+                let nodeInstanceData = _.groupBy(data[2].items, "deployment_id");
+
+                let formattedData = Object.assign({},deploymentData,{
+                    items: _.map (deploymentData.items,(item)=>{
+                        return Object.assign({},item,{
+                            nodeSize: nodeSize[item.id],
+                            nodeStates: _.countBy(nodeInstanceData[item.id], "state"),
+                            created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                            updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm')
+                        })
+                    })
+                });
+                formattedData.total =  _.get(deploymentData, "metadata.pagination.total", 0);
+                formattedData.blueprintId = params.blueprint_id;
+
+                return Promise.resolve(formattedData);
+            });
+    },
+
+    render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading/>;
         }
 
-        var formattedData = Object.assign({},data);
-        var selectedDeployment = toolbox.getContext().getValue('deploymentId');
-
-        formattedData = Object.assign({},formattedData,{
-            items: _.map (formattedData.items,(item)=>{
+        let selectedDeployment = toolbox.getContext().getValue('deploymentId');
+        let formattedData = Object.assign({},data,{
+            items: _.map (data.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
-                    updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
-                    status: item.status || 'ok',
                     isSelected: selectedDeployment === item.id
                 })
             })
         });
-        formattedData.total =  _.get(data, "metadata.pagination.total", 0);
-
-        var filter = toolbox.getContext().getValue('filterDep'+widget.id);
-        if (filter) {
-            formattedData.items = _.filter(formattedData.items,{status:filter});
-        }
-
-        let params = this.fetchParams(widget, toolbox);
-        formattedData.blueprintId = params.blueprint_id;
 
         return (
             <DeploymentsTable widget={widget} data={formattedData} toolbox={toolbox}/>

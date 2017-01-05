@@ -4,7 +4,7 @@
   
 import React, { Component, PropTypes } from 'react';
 
-export default class PaginationInfo extends Component {
+export default class Paginator extends Component {
 
     static propTypes = {
         currentPage: PropTypes.number.isRequired,
@@ -13,6 +13,8 @@ export default class PaginationInfo extends Component {
         onPageChange: PropTypes.func.isRequired
     };
 
+    static pagerPositions = 5;
+
     render() {
         let pageCount = Math.ceil(this.props.totalSize/this.props.pageSize);
 
@@ -20,21 +22,21 @@ export default class PaginationInfo extends Component {
             return null;
         }
 
-        const pagerPositions = 5;
-
         let prevPageDisabled = this.props.currentPage == 1;
         let nextPageDisabled = this.props.currentPage == pageCount;
 
-        let begin = pageCount <= pagerPositions ? 1 : Math.max(this.props.currentPage - Math.floor(pagerPositions/2), 1);
-        if (this.props.currentPage > pagerPositions && this.props.currentPage > pageCount - Math.floor(pagerPositions/2)) {
-            begin = pageCount - pagerPositions + 1;
+        let begin = pageCount <= Paginator.pagerPositions ?
+                                     1 : Math.max(this.props.currentPage - Math.floor(Paginator.pagerPositions/2), 1);
+        if (this.props.currentPage > Paginator.pagerPositions &&
+            this.props.currentPage > pageCount - Math.floor(Paginator.pagerPositions/2)) {
+            begin = pageCount - Paginator.pagerPositions + 1;
         }
 
-        let end = Math.min(begin + pagerPositions - 1, pageCount);
+        let end = Math.min(begin + Paginator.pagerPositions - 1, pageCount);
 
         var pagerElements = [];
         for (var i = begin; i <= end; i++) {
-            if (begin>1 && pageCount > pagerPositions && i==begin) {
+            if (begin>1 && pageCount > Paginator.pagerPositions && i==begin) {
                 pagerElements.push(<a key={i} className={`item`}
                                       onClick={() => this.props.onPageChange(1)}>1</a>);
                 if (begin>2) {
@@ -61,7 +63,7 @@ export default class PaginationInfo extends Component {
         }
 
         return (
-            <div className="ui right floated pagination menu">
+            <div className="ui right floated small pagination menu">
                 <a className={`icon item ${prevPageDisabled?'disabled':''}`}
                    onClick={()=>{if (!prevPageDisabled) this.props.onPageChange(this.props.currentPage - 1)}}>
                     <i className="link angle left icon"></i>

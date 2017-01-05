@@ -81,6 +81,7 @@ export default class Manager {
             if (securityHeaders) {
                 xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
             }
+
             var selectedTenant = _.get(this._data,'tenants.selected',null);
             if (selectedTenant) {
                 xhr.setRequestHeader("tenant",selectedTenant);
@@ -135,7 +136,7 @@ export default class Manager {
     }
 
     _buildActualUrl(url,data) {
-        var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data) : '';
+        var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data, true) : '';
         var urlInServer = `${this._data.version?'/api/'+this._data.version:''}${url}${queryString}`;
 
         let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
