@@ -18,17 +18,17 @@ Stage.addPlugin({
     fetchUrl: '[manager]/snapshots?_include=id,created_at,status[params]',
     pageSize: 5,
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
 
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
-        var selectedSnapshot = context.getValue('snapshotId');
+        var selectedSnapshot = toolbox.getContext().getValue('snapshotId');
         var formattedData = Object.assign({},data,{
             items: _.map (data.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: pluginUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
                     isSelected: selectedSnapshot === item.id
                 })
             })
@@ -36,7 +36,7 @@ Stage.addPlugin({
         formattedData.total =  _.get(data, "metadata.pagination.total", 0);
 
         return (
-            <SnapshotsTable widget={widget} data={formattedData} context={context}/>
+            <SnapshotsTable widget={widget} data={formattedData} toolbox={toolbox}/>
         );
     }
 });

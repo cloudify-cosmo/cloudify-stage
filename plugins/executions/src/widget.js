@@ -20,38 +20,38 @@ Stage.addPlugin({
         ],
     pageSize: 5,
 
-    fetchParams: function(widget, context) {
+    fetchParams: function(widget, toolbox) {
         return {
-            blueprint_id: context.getValue('blueprintId'),
-            deployment_id: context.getValue('deploymentId')
+            blueprint_id: toolbox.getContext().getValue('blueprintId'),
+            deployment_id: toolbox.getContext().getValue('deploymentId')
         }
     },
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
 
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
         var formattedData = Object.assign({},data);
-        var selectedExecution = context.getValue('executionId');
+        var selectedExecution = toolbox.getContext().getValue('executionId');
 
         formattedData = Object.assign({},formattedData,{
             items: _.map (formattedData.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: pluginUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
                     isSelected: item.id === selectedExecution
                 })
             })
         });
         formattedData.total = _.get(data, "metadata.pagination.total", 0);
 
-        let params = this.fetchParams(widget, context);
+        let params = this.fetchParams(widget, toolbox);
         formattedData.blueprintId = params.blueprint_id;
         formattedData.deploymentId = params.deployment_id;
 
         return (
-            <ExecutionsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+            <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox}/>
         );
     }
 });

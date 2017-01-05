@@ -17,8 +17,8 @@ export default class extends React.Component {
     }
 
     _selectSnapshot (item){
-        var oldSelectedSnapshotId = this.props.context.getValue('snapshotId');
-        this.props.context.setValue('snapshotId',item.id === oldSelectedSnapshotId ? null : item.id);
+        var oldSelectedSnapshotId = this.props.toolbox.getContext().getValue('snapshotId');
+        this.props.toolbox.getContext().setValue('snapshotId',item.id === oldSelectedSnapshotId ? null : item.id);
     }
 
     _deleteSnapshotConfirm(item,event){
@@ -33,9 +33,9 @@ export default class extends React.Component {
     _restoreSnapshot(item,event) {
         event.stopPropagation();
 
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doRestore(item).then(()=>{
-            this.props.context.refresh();
+            this.props.toolbox.refresh();
         }).catch((err)=>{
             this.setState({error:err.error});
         });
@@ -44,7 +44,7 @@ export default class extends React.Component {
     _downloadSnapshot(item,event) {
         event.stopPropagation();
 
-        window.open(this.props.context.getManager().getManagerUrl(`/snapshots/${item.id}/archive`));
+        window.open(this.props.toolbox.getManager().getManagerUrl(`/snapshots/${item.id}/archive`));
     }
 
     _deleteSnapshot() {
@@ -53,29 +53,29 @@ export default class extends React.Component {
             return;
         }
 
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doDelete(this.state.item).then(()=>{
             this.setState({confirmDelete: false});
-            this.props.context.refresh();
+            this.props.toolbox.refresh();
         }).catch((err)=>{
             this.setState({confirmDelete: false, error: err.error});
         });
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('snapshots:refresh',this._refreshData,this);
+        this.props.toolbox.getEventBus().on('snapshots:refresh',this._refreshData,this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('snapshots:refresh',this._refreshData);
+        this.props.toolbox.getEventBus().off('snapshots:refresh',this._refreshData);
     }
 
     fetchGridData(fetchParams) {
-        this.props.context.refresh(fetchParams);
+        this.props.toolbox.refresh(fetchParams);
     }
 
     render() {
@@ -116,9 +116,9 @@ export default class extends React.Component {
                     }
 
                     <Grid.Action>
-                        <CreateModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+                        <CreateModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
 
-                        <UploadModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+                        <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
                     </Grid.Action>
 
                 </Grid.Table>

@@ -11,19 +11,19 @@ export default class Filter extends React.Component {
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('blueprints:refresh', this._refreshData, this);
-        this.props.context.getEventBus().on('deployments:refresh', this._refreshData, this);
-        this.props.context.getEventBus().on('executions:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('blueprints:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('deployments:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('executions:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('blueprints:refresh', this._refreshData);
-        this.props.context.getEventBus().off('deployments:refresh', this._refreshData);
-        this.props.context.getEventBus().off('executions:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('blueprints:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('deployments:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('executions:refresh', this._refreshData);
     }
 
 
@@ -33,46 +33,56 @@ export default class Filter extends React.Component {
     //}
 
     _selectBlueprint(blueprintId){ //value,text,$choise) {
+        if (_.isEmpty(blueprintId)) {
+            blueprintId = null;
+        }
+
         // Clear the selected deployment && execution if its not related to the selected blueprint
         if (!_.isEmpty(blueprintId)) {
             if (this.props.data.deploymentId) {
                 var currDeployment = _.find(this.props.data.deployments.items,{id:this.props.data.deploymentId});
                 if (currDeployment.blueprint_id !== blueprintId) {
-                    this.props.context.setValue('deploymentId',null);
+                    this.props.toolbox.getContext().setValue('deploymentId',null);
                 }
             }
 
             if (this.props.data.executionId) {
                 var currExecution = _.find(this.props.data.executions.items,{id:this.props.data.executionId});
                 if (currExecution.blueprint_id !== blueprintId) {
-                    this.props.context.setValue('executionId',null);
+                    this.props.toolbox.getContext().setValue('executionId',null);
                 }
             }
         }
 
-        this.props.context.setValue('blueprintId',blueprintId);
+        this.props.toolbox.getContext().setValue('blueprintId',blueprintId);
     }
 
     _selectDeployment(deploymentId) {
+        if (_.isEmpty(deploymentId)) {
+            deploymentId = null;
+        }
         // Clear the selected execution if its not related to the selected deployment
         if (this.props.data.executionId && !_.isEmpty(deploymentId)) {
             var currExecution = _.find(this.props.data.executions.items,{id:this.props.data.executionId});
             if (currExecution.deployment_id !== deploymentId) {
-                this.props.context.setValue('executionId',null);
+                this.props.toolbox.getContext().setValue('executionId',null);
             }
         }
-        this.props.context.setValue('deploymentId',deploymentId);
+        this.props.toolbox.getContext().setValue('deploymentId',deploymentId);
 
     }
 
     _selectExecution(executionId) {
-        this.props.context.setValue('executionId',executionId);
+        if (_.isEmpty(executionId)) {
+            executionId = null;
+        }
+        this.props.toolbox.getContext().setValue('executionId',executionId);
     }
 
     render() {
         var ErrorMessage = Stage.Basic.ErrorMessage;
-        var FilterByExecutionsConfig = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:'FilterByExecutions'}) : {};
-        var shouldShowExecutionsFilter = FilterByExecutionsConfig && FilterByExecutionsConfig.value === 'true';
+        var FilterByExecutionsConfig = this.props.widget.configuration.FilterByExecutions;
+        var shouldShowExecutionsFilter = FilterByExecutionsConfig && FilterByExecutionsConfig === 'true';
 
         return (
             <div>

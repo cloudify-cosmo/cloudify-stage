@@ -13,22 +13,27 @@ import throttle from 'lodash/throttle';
 import reducers from './reducers';
 
 import initialTemplate from '../templates/initial-template.json';
-import {v4} from 'node-uuid';
 
-export default (history,templates) => {
+import {createPageFromInitialTemplate} from './actions/page';
+
+export default (history,templates,plugins) => {
 
     let initialState = StatePersister.load();
 
-    if (initialState === undefined) {
+    let hasInitState = initialState !== undefined;
+    if (!hasInitState) {
         initialState = {
-            pages: buildInitialTemplate(templates),
             context: {},
-            manager: {}
+            manager: {},
+            templates: templates,
+            plugins: plugins
         }
+    } else {
+        initialState = Object.assign({},initialState,{
+            templates: templates,
+            plugins: plugins
+        });
     }
-    initialState = Object.assign({},initialState,{
-        templates: templates
-    });
 
     var store = createStore(
         reducers,
@@ -40,35 +45,14 @@ export default (history,templates) => {
         )
     );
 
+    // If needed add the initial pages/widgets from the template
+    if (!hasInitState) {
+        store.dispatch(createPageFromInitialTemplate(initialTemplate,templates,plugins));
+    }
+
     store.subscribe(throttle(()=>{StatePersister.save(store.getState());},1000));
 
     return store;
 };
 
-function buildInitialTemplate(templates) {
-    let idIndex = 0;
-    let initTemplate = [];
-
-    _.each(initialTemplate,(templateName)=>{
-        var template = templates[templateName];
-        if (!template) {
-            console.error('Cannot find template : '+templateName + ' Skipping... ');
-            return;
-        }
-
-        var tpl = Object.assign({},template,{
-            id:""+(idIndex++),
-            widgets: _.map(template.widgets,(widget)=>{
-                return Object.assign({},widget,{
-                    id: v4()
-                })
-            })
-
-        });
-
-        initTemplate.push(tpl);
-    });
-
-    return initTemplate;
-}
 

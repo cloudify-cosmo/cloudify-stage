@@ -4,11 +4,12 @@
 
 import fetch from 'isomorphic-fetch'
 import ScriptLoader from './scriptLoader';
-import PluginUtils from './pluginUtils';
 import {v4} from 'node-uuid';
+var ReactDOMServer = require('react-dom/server');
 
 import 'angular';
 import 'd3';
+import momentImport from 'moment';
 
 import '../../bower_components/cloudify-blueprint-topology/dist/styles/blueprint-topology.css';
 import '../../bower_components/cloudify-blueprint-topology/dist/scripts/blueprint-topology-tpls.js';
@@ -78,8 +79,13 @@ export default class PluginsLoader {
             addPlugin: (pluginData)=> {
                 plugins.push(new Plugin(pluginData));
             },
-            Basic: BasicComponents
+            Basic: BasicComponents,
+            ComponentToHtmlString: (component)=>{
+                return ReactDOMServer.renderToString(component);
+            }
         };
+
+        window.moment = momentImport;
     }
 
     static load() {
@@ -111,7 +117,7 @@ export default class PluginsLoader {
             .then(()=> {
                 _.each(plugins,p=>{
                     if (p.init && typeof p.init === 'function') {
-                        p.init(PluginUtils);
+                        p.init();
                     }
                 })
             })

@@ -20,31 +20,27 @@ Stage.addPlugin({
     isReact: true,
     pageSize: 5,
 
-    fetchParams: function(widget, context) {
-        var blueprintId = context.getValue('blueprintId');
+    fetchParams: function(widget, toolbox) {
+        var blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        // Find if we have a config for blueprint selection
-        var blueprintIdFilter = widget.configuration ? _.find(widget.configuration,{id:'blueprintIdFilter'}) : {};
-        if (blueprintIdFilter && blueprintIdFilter.value) {
-            blueprintId = blueprintIdFilter.value;
-        }
+        blueprintId = _.isEmpty(widget.configuration.blueprintIdFilter) ? blueprintId : widget.configuration.blueprintIdFilter;
 
         return {
             blueprint_id: blueprintId
         }
     },
 
-    fetchData: function(plugin,context,pluginUtils,params) {
-        var deploymentData = context.getManager().doGet('/deployments',params);
+    fetchData: function(plugin,toolbox,params) {
+        var deploymentData = toolbox.getManager().doGet('/deployments',params);
 
         var deploymentIds = deploymentData.then(data=>Promise.resolve([...new Set(data.items.map(item=>item.id))]));
 
         var nodeData = deploymentIds.then(ids=>{
-                    return context.getManager().doGet('/nodes?_include=deployment_id', {deployment_id: ids});
+                    return toolbox.getManager().doGet('/nodes?_include=deployment_id', {deployment_id: ids});
                 });
 
         var nodeInstanceData = deploymentIds.then(ids=>{
-                    return context.getManager().doGet('/node-instances?_include=state,deployment_id', {deployment_id: ids});
+                    return toolbox.getManager().doGet('/node-instances?_include=state,deployment_id', {deployment_id: ids});
                 });
 
         return Promise.all([deploymentData, nodeData, nodeInstanceData]).then(function(data) {
@@ -57,8 +53,8 @@ Stage.addPlugin({
                         return Object.assign({},item,{
                             nodeSize: nodeSize[item.id],
                             nodeStates: _.countBy(nodeInstanceData[item.id], "state"),
-                            created_at: pluginUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
-                            updated_at: pluginUtils.moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm')
+                            created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                            updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm')
                         })
                     })
                 });
@@ -69,13 +65,12 @@ Stage.addPlugin({
             });
     },
 
-    render: function(widget,data,error,context,pluginUtils) {
-
+    render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
-        let selectedDeployment = context.getValue('deploymentId');
+        let selectedDeployment = toolbox.getContext().getValue('deploymentId');
         let formattedData = Object.assign({},data,{
             items: _.map (data.items,(item)=>{
                 return Object.assign({},item,{
@@ -85,7 +80,7 @@ Stage.addPlugin({
         });
 
         return (
-            <DeploymentsTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+            <DeploymentsTable widget={widget} data={formattedData} toolbox={toolbox}/>
         );
     }
 });

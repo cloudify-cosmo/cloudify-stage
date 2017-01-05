@@ -17,17 +17,17 @@ export default class extends React.Component {
     }
 
     _selectBlueprint (item){
-        var oldSelectedBlueprintId = this.props.context.getValue('blueprintId');
-        this.props.context.setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);
+        var oldSelectedBlueprintId = this.props.toolbox.getContext().getValue('blueprintId');
+        this.props.toolbox.getContext().setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);
     }
 
     _createDeployment(item,event){
         event.stopPropagation();
 
         // Get the full blueprint data (including plan for inputs)
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doGetFullBlueprintData(item).then((fullBlueprint)=>{
-            this.props.context.setValue(this.props.widget.id + 'createDeploy',fullBlueprint);
+            this.props.toolbox.getContext().setValue(this.props.widget.id + 'createDeploy',fullBlueprint);
         }).catch((err)=> {
             this.setState({error: err.error});
         });
@@ -48,11 +48,11 @@ export default class extends React.Component {
             return;
         }
 
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doDelete(this.state.item)
             .then(()=> {
                 this.setState({confirmDelete: false});
-                this.props.context.getEventBus().trigger('blueprints:refresh');
+                this.props.toolbox.getEventBus().trigger('blueprints:refresh');
             })
             .catch((err)=>{
                 this.setState({confirmDelete: false, error: err.error});
@@ -60,19 +60,19 @@ export default class extends React.Component {
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('blueprints:refresh',this._refreshData,this);
+        this.props.toolbox.getEventBus().on('blueprints:refresh',this._refreshData,this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('blueprints:refresh',this._refreshData);
+        this.props.toolbox.getEventBus().off('blueprints:refresh',this._refreshData);
     }
 
     fetchGridData(fetchParams) {
-        this.props.context.refresh(fetchParams);
+        this.props.toolbox.refresh(fetchParams);
     }
 
     render() {
@@ -114,7 +114,7 @@ export default class extends React.Component {
                     }
 
                     <Grid.Action>
-                        <UploadModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+                        <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
                     </Grid.Action>
 
                 </Grid.Table>
@@ -124,7 +124,7 @@ export default class extends React.Component {
                          onConfirm={this._deleteBlueprint.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
 
-                <DeployModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+                <DeployModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
 
             </div>
 

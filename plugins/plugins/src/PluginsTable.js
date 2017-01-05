@@ -16,8 +16,8 @@ export default class extends React.Component {
     }
 
     _selectPlugin (item){
-        var oldSelectedPluginId = this.props.context.getValue('pluginId');
-        this.props.context.setValue('pluginId',item.id === oldSelectedPluginId ? null : item.id);
+        var oldSelectedPluginId = this.props.toolbox.getContext().getValue('pluginId');
+        this.props.toolbox.getContext().setValue('pluginId',item.id === oldSelectedPluginId ? null : item.id);
     }
 
     _deletePluginConfirm(item,event){
@@ -32,7 +32,7 @@ export default class extends React.Component {
     _downloadPlugin(item,event) {
         event.stopPropagation();
 
-        window.open(this.props.context.getManager().getManagerUrl(`/plugins/${item.id}/archive`));
+        window.open(this.props.toolbox.getManager().getManagerUrl(`/plugins/${item.id}/archive`));
     }
 
     _deletePlugin() {
@@ -41,11 +41,11 @@ export default class extends React.Component {
             return;
         }
 
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doDelete(this.state.item)
             .then(()=> {
                 this.setState({confirmDelete: false});
-                this.props.context.getEventBus().trigger('plugins:refresh');
+                this.props.toolbox.getEventBus().trigger('plugins:refresh');
             })
             .catch(err=>{
                 this.setState({confirmDelete: false, error: err.error});
@@ -53,19 +53,19 @@ export default class extends React.Component {
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('plugins:refresh',this._refreshData,this);
+        this.props.toolbox.getEventBus().on('plugins:refresh',this._refreshData,this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('plugins:refresh',this._refreshData);
+        this.props.toolbox.getEventBus().off('plugins:refresh',this._refreshData);
     }
 
     fetchGridData(fetchParams) {
-        this.props.context.refresh(fetchParams);
+        this.props.toolbox.refresh(fetchParams);
     }
 
     render() {
@@ -113,7 +113,7 @@ export default class extends React.Component {
                     }
 
                     <Grid.Action>
-                        <UploadModal widget={this.props.widget} data={this.props.data} context={this.props.context}/>
+                        <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
                     </Grid.Action>
 
                 </Grid.Table>

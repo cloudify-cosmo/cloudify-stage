@@ -27,37 +27,36 @@ Stage.addPlugin({
         {id: 'showToolbar', name: 'Show toolbar' ,placeHolder:"true of false", default:"true"}
     ],
 
-    fetchData: function(plugin,context,pluginUtils) {
-        var deploymentId = context.getValue('deploymentId');
-        var blueprintId = context.getValue('blueprintId');
+    fetchData: function(plugin,toolbox) {
+        var deploymentId = toolbox.getContext().getValue('deploymentId');
+        var blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        return DataFetcher.fetch(context,blueprintId,deploymentId);
+        return DataFetcher.fetch(toolbox,blueprintId,deploymentId);
     },
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
         if (!widget.plugin.template) {
             return 'Topology: missing template';
         }
 
         var topologyConfig = {
-            enableNodeClick: getConfig(widget.configuration,'enableNodeClick'),
-            enableGroupClick: getConfig(widget.configuration,'enableGroupClick'),
-            enableZoom: getConfig(widget.configuration,'enableZoom'),
-            enableDrag: getConfig(widget.configuration,'enableDrag'),
-            showToolbar: getConfig(widget.configuration,'showToolbar')
+            enableNodeClick: widget.configuration.enableNodeClick === 'true',
+            enableGroupClick: widget.configuration.enableGroupClick === 'true',
+            enableZoom: widget.configuration.enableZoom === 'true',
+            enableDrag: widget.configuration.enableDrag === 'true',
+            showToolbar: widget.configuration.showToolbar === 'true'
         };
 
         var topologyTemplate = _.template(widget.plugin.template)(topologyConfig);
-        var deploymentId = context.getValue('deploymentId');
-        var blueprintId = context.getValue('blueprintId');
+        var deploymentId = toolbox.getContext().getValue('deploymentId');
+        var blueprintId = toolbox.getContext().getValue('blueprintId');
 
         var formattedData = Object.assign({},data,{
             deploymentId,
             blueprintId,
             topologyConfig
         });
-        return <Topology template={topologyTemplate}
-                         widget={widget} data={formattedData} context={context} utils={pluginUtils}/>;
+        return <Topology template={topologyTemplate} widget={widget} data={formattedData} toolbox={toolbox}/>;
 
     }
 

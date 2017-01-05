@@ -13,6 +13,7 @@ import EditableLabel from './EditableLabel';
 import Grid from './grid/GridTable';
 import Pagination from './pagination/Pagination';
 import Segment from './segment/SegmentList';
+import Loading from './Loading';
 
 export {
     Modal,
@@ -30,5 +31,6 @@ export {
     Checkmark,
     Grid,
     Segment,
-    Pagination
+    Pagination,
+    Loading
 };

@@ -6,7 +6,7 @@ Stage.addPlugin({
     id: "serversNum",
     name: "Number of servers",
     description: 'Number of servers',
-    initialWidth: 4,
+    initialWidth: 2,
     initialHeight: 2,
     color : "green",
     showHeader: false,
@@ -16,9 +16,9 @@ Stage.addPlugin({
     ],
     fetchUrl: '[manager]/node-instances?_include=id',
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
         var num = _.get(data, "metadata.pagination.total", 0);

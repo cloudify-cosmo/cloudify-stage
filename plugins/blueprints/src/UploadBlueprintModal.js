@@ -81,10 +81,10 @@ export default class extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doUpload(blueprintName, blueprintFileName, file).then(()=>{
             this.setState({loading: false,show: false});
-            this.props.context.refresh();
+            this.props.toolbox.refresh();
         }).catch((err)=>{
             this.setState({uploadErr: err.error, loading: false});
         });
