@@ -105,70 +105,113 @@ export default class extends React.Component {
         var Confirm = Stage.Basic.Confirm;
         var ErrorMessage = Stage.Basic.ErrorMessage;
         var Segment = Stage.Basic.Segment;
+        var Grid = Stage.Basic.Grid;
+
+        var showOldComponent = this.props.widget.configuration['displayComponent'] === 'old';
 
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <Segment.List totalSize={this.props.data.total}
-                              pageSize={this.props.widget.plugin.pageSize}
-                              fetchData={this.fetchSegmentData.bind(this)}>
-                    {
-                        this.props.data.items.map((item)=>{
-                            return (
-                                <Segment.Item key={item.id} select={item.isSelected}
-                                              onClick={this._selectDeployment.bind(this, item)}>
-                                    <div className="ui grid">
-                                        <div className="four wide center aligned column rightDivider">
-                                            <h3 className="ui icon header">
-                                                <div className="content">
-                                                    {item.id}
-                                                </div>
-                                                <i className="check circle outline icon"></i>
-                                            </h3>
-                                        </div>
-                                        <div className="two wide column">
-                                            <h5 className="ui icon header">Blueprint</h5>
-                                            <p>{item.blueprint_id}</p>
-                                        </div>
-                                        <div className="two wide column">
-                                            <h5 className="ui icon header">Created</h5>
-                                            <p>{item.created_at}</p>
-                                        </div>
-                                        <div className="two wide column">
-                                            <h5 className="ui icon header">Updated</h5>
-                                            <p>{item.updated_at}</p>
-                                        </div>
-                                        <div className="four wide column">
-                                            <h5 className="ui icon header">Nodes ({item.nodeSize})</h5>
-                                            <div className="ui five column grid">
-                                                <div className="column center aligned">
-                                                    <NodeState icon="spinner" title="uninitialized" value={item.nodeStates.uninitialized}/>
-                                                </div>
-                                                <div className="column center aligned">
-                                                    <NodeState icon="plus" title="created" value={item.nodeStates.created}/>
-                                                </div>
-                                                <div className="column center aligned">
-                                                    <NodeState icon="remove" title="deleted" value={item.nodeStates.deleted}/>
-                                                </div>
-                                                <div className="column center aligned">
-                                                    <NodeState icon="warning" title="stopped" value={item.nodeStates.stopped}/>
-                                                </div>
-                                                <div className="column center aligned">
-                                                    <NodeState icon="checkmark" title="started" value={item.nodeStates.started}/>
+                {!showOldComponent ?
+
+                    <Segment.List totalSize={this.props.data.total}
+                                  pageSize={this.props.widget.plugin.pageSize}
+                                  fetchData={this.fetchSegmentData.bind(this)}>
+                        {
+                            this.props.data.items.map((item) => {
+                                return (
+                                    <Segment.Item key={item.id} select={item.isSelected}
+                                                  onClick={this._selectDeployment.bind(this, item)}>
+                                        <div className="ui grid">
+                                            <div className="four wide center aligned column rightDivider">
+                                                <h3 className="ui icon header">
+                                                    <div className="content">
+                                                        {item.id}
+                                                    </div>
+                                                    <i className="check circle outline icon"></i>
+                                                </h3>
+                                            </div>
+                                            <div className="two wide column">
+                                                <h5 className="ui icon header">Blueprint</h5>
+                                                <p>{item.blueprint_id}</p>
+                                            </div>
+                                            <div className="two wide column">
+                                                <h5 className="ui icon header">Created</h5>
+                                                <p>{item.created_at}</p>
+                                            </div>
+                                            <div className="two wide column">
+                                                <h5 className="ui icon header">Updated</h5>
+                                                <p>{item.updated_at}</p>
+                                            </div>
+                                            <div className="four wide column">
+                                                <h5 className="ui icon header">Nodes ({item.nodeSize})</h5>
+                                                <div className="ui five column grid">
+                                                    <div className="column center aligned">
+                                                        <NodeState icon="spinner" title="uninitialized"
+                                                                   value={item.nodeStates.uninitialized}/>
+                                                    </div>
+                                                    <div className="column center aligned">
+                                                        <NodeState icon="plus" title="created"
+                                                                   value={item.nodeStates.created}/>
+                                                    </div>
+                                                    <div className="column center aligned">
+                                                        <NodeState icon="remove" title="deleted"
+                                                                   value={item.nodeStates.deleted}/>
+                                                    </div>
+                                                    <div className="column center aligned">
+                                                        <NodeState icon="warning" title="stopped"
+                                                                   value={item.nodeStates.stopped}/>
+                                                    </div>
+                                                    <div className="column center aligned">
+                                                        <NodeState icon="checkmark" title="started"
+                                                                   value={item.nodeStates.started}/>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="two wide column action">
-                                            <MenuAction item={item} onSelectAction={this._selectAction.bind(this)}/>
+                                            <div className="two wide column action">
+                                                <MenuAction item={item} onSelectAction={this._selectAction.bind(this)}/>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Segment.Item>
-                            );
-                        })
-                    }
-                </Segment.List>
+                                    </Segment.Item>
+                                );
+                            })
+                        }
+                    </Segment.List>
+                    :
+                    <Grid.Table fetchData={this.fetchSegmentData.bind(this)}
+                                totalSize={this.props.data.total}
+                                pageSize={this.props.widget.plugin.pageSize}
+                                selectable={true}
+                                className="deploymentTable">
+
+                        <Grid.Column label="Name" name="id" width="25%"/>
+                        <Grid.Column label="Blueprint" name="blueprint_id" width="25%"/>
+                        <Grid.Column label="Created" name="created_at" width="18%"/>
+                        <Grid.Column label="Updated" name="updated_at" width="18%"/>
+                        <Grid.Column width="14%"/>
+
+                        {
+                            this.props.data.items.map((item)=>{
+                                return (
+                                    <Grid.Row key={item.id} select={item.isSelected} onClick={this._selectDeployment.bind(this, item)}>
+                                        <Grid.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></Grid.Data>
+                                        <Grid.Data>{item.blueprint_id}</Grid.Data>
+                                        <Grid.Data>{item.created_at}</Grid.Data>
+                                        <Grid.Data>{item.updated_at}</Grid.Data>
+                                        <Grid.Data className="center aligned rowActions">
+                                            <MenuAction item={item} bordered={true} onSelectAction={this._selectAction.bind(this)}/>
+                                            <i className="write icon link bordered" title="Edit deployment"></i>
+                                            <i className="trash icon link bordered" title="Delete deployment" onClick={this._deleteDeploymentConfirm.bind(this,item)}></i>
+                                        </Grid.Data>
+                                    </Grid.Row>
+                                );
+                            })
+                        }
+                    </Grid.Table>
+                }
+
 
                 <Confirm title='Are you sure you want to remove this deployment?'
                          show={this.state.confirmDelete}

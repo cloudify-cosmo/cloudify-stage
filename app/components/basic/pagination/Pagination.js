@@ -54,8 +54,19 @@ export default class Pagination extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        let changedProps = {};
+
         if (this.props.pageSize != nextProps.pageSize) {
-            this.setState({pageSize: nextProps.pageSize});
+            changedProps.pageSize = nextProps.pageSize;
+        }
+
+        let pageCount = Math.ceil(nextProps.totalSize/nextProps.pageSize);
+        if (this.state.currentPage > pageCount) {
+            changedProps.currentPage = 1;
+        }
+
+        if (!_.isEmpty(changedProps)) {
+            this.setState(changedProps);
         }
     }
 

@@ -17,7 +17,7 @@ export default class extends React.Component {
     render () {
         return (
             <div className="ui icon top right pointing dropdown" ref={(dropdown)=>$(dropdown).dropdown({onChange: this.onDropdownChange.bind(this)})} onClick={(e)=>e.stopPropagation()}>
-                <i className="ellipsis vertical large link icon"></i>
+                <i className={this.props.bordered?'road icon link bordered':'ellipsis vertical large link icon'}></i>
                 <div className="menu" ref="popupMenu">
                     <div className="item" data-value="details">Details</div>
                     <div className="header">Execute workflow</div>
