@@ -17,5 +17,6 @@
   "logs",
   "filter",
   "outputs",
-  "executions"
+  "executions",
+  "nodes"
 ]
