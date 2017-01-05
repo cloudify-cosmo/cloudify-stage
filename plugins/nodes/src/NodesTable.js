@@ -11,19 +11,19 @@ export default class extends React.Component {
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('nodes:refresh',this._refreshData,this);
+        this.props.toolbox.getEventBus().on('nodes:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('nodes:refresh',this._refreshData);
+        this.props.toolbox.getEventBus().off('nodes:refresh', this._refreshData);
     }
 
     fetchGridData(fetchParams) {
-        this.props.context.refresh(fetchParams);
+        this.props.toolbox.refresh(fetchParams);
     }
 
     render() {

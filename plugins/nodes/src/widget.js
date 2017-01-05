@@ -16,20 +16,20 @@ Stage.addPlugin({
     fetchUrl: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships[params]',
     pageSize: 5,
 
-    fetchParams: function(widget, context) {
+    fetchParams: function(widget, toolbox) {
         return {
-            deployment_id: context.getValue('deploymentId'),
-            blueprint_id: context.getValue('blueprintId')
+            deployment_id: toolbox.getContext().getValue('deploymentId'),
+            blueprint_id: toolbox.getContext().getValue('blueprintId')
         }
     },
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget, data, error, toolbox) {
 
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
-        let params = this.fetchParams(widget, context);
+        let params = this.fetchParams(widget, toolbox);
         let formattedData = data;
         formattedData = Object.assign({}, formattedData, {
             items : _.map (formattedData.items, (item) => {
@@ -49,7 +49,7 @@ Stage.addPlugin({
         });
 
         return (
-            <NodesTable widget={widget} data={formattedData} context={context} utils={pluginUtils}/>
+            <NodesTable widget={widget} data={formattedData} toolbox={toolbox}/>
         );
     }
 });
