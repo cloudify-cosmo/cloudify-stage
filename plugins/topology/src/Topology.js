@@ -36,8 +36,9 @@ export default class Topology extends React.Component {
             "right": "10px"
         });
 
+        var loadingHtml = Stage.ComponentToHtmlString(<Stage.Basic.Loading/>);
         // Change the loading indication to be our loading indication (only available after bootstraping angular component - defined in the directive)
-        $(this.refs.topologyContainer).find('.loading').html(this.props.utils.renderLoading());
+        $(this.refs.topologyContainer).find('.loading').html(loadingHtml);
 
     }
 
@@ -72,7 +73,7 @@ export default class Topology extends React.Component {
             this.props.data.deploymentId !== prevProps.data.deploymentId) {
 
             angularAppManager.fireEvent('setLoading');
-            this.props.context.refresh();
+            this.props.toolbox.refresh();
 
             // Check if configuration has changed, if so , set the initialized to true, to cause it to render again, but now it
             // will re-create the angular directive.
@@ -95,7 +96,7 @@ export default class Topology extends React.Component {
     render () {
         // Not render the directive incase initialized is false
         if (!this.state.initialized) {
-            return this.props.utils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
         return (

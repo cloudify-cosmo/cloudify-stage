@@ -21,7 +21,7 @@ export default class extends React.Component {
     }
 
     _deploy() {
-        var deployItem = this.props.context.getValue(this.props.widget.id + 'createDeploy');
+        var deployItem = this.props.toolbox.getContext().getValue(this.props.widget.id + 'createDeploy');
 
         if (!deployItem) {
             this.setState({error: 'Blueprint not selected'});
@@ -40,12 +40,12 @@ export default class extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doDeploy(deployItem,deploymentId,inputs)
             .then((/*deployment*/)=> {
                 this.setState({loading: false});
-                this.props.context.setValue(this.props.widget.id + 'createDeploy',null);
-                this.props.context.getEventBus().trigger('deployments:refresh');
+                this.props.toolbox.getContext().setValue(this.props.widget.id + 'createDeploy',null);
+                this.props.toolbox.getEventBus().trigger('deployments:refresh');
             })
             .catch((err)=>{
                 this.setState({loading: false, error: err.error});
@@ -55,7 +55,7 @@ export default class extends React.Component {
     }
 
     onDeny () {
-        this.props.context.setValue(this.props.widget.id + 'createDeploy',null);
+        this.props.toolbox.getContext().setValue(this.props.widget.id + 'createDeploy',null);
         return true;
     }
 
@@ -73,7 +73,7 @@ export default class extends React.Component {
         var Footer = Stage.Basic.ModalFooter;
         var ErrorMessage = Stage.Basic.ErrorMessage;
 
-        var deployItem = this.props.context.getValue(this.props.widget.id + 'createDeploy');
+        var deployItem = this.props.toolbox.getContext().getValue(this.props.widget.id + 'createDeploy');
         var shouldShow = !_.isEmpty(deployItem);
         deployItem = Object.assign({},{
                 id: '',

@@ -11,38 +11,42 @@ export default class extends React.Component {
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('executions:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('executions:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('executions:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('executions:refresh', this._refreshData);
     }
 
     _selectExecution(item) {
-        var oldSelectedExecutionId = this.props.context.getValue('executionId');
-        this.props.context.setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
+        var oldSelectedExecutionId = this.props.toolbox.getContext().getValue('executionId');
+        this.props.toolbox.getContext().setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
     }
 
     fetchGridData(fetchParams) {
-        this.props.context.refresh(fetchParams);
+        this.props.toolbox.refresh(fetchParams);
     }
 
     render() {
-        var fieldsToShowConfig = this.props.widget.configuration ? _.find(this.props.widget.configuration,{id:'fieldsToShow'}) : {};
-        var fieldsToShow = [];
+
+        var fieldsToShowConfig;
         try {
-            // First set it to default, so if abends in json parse will have the default
-            fieldsToShow = _.find(this.props.widget.plugin.initialConfiguration,{id:'fieldsToShow'}) || ["Id"];
-
-            fieldsToShow = (fieldsToShowConfig && fieldsToShowConfig.value) ? JSON.parse(fieldsToShowConfig.value) : fieldsToShow;
-
+            fieldsToShowConfig = JSON.parse(this.props.widget.configuration.fieldsToShow);
         } catch (e) {
             console.error('Error parsing fields-to-show configuration for executions table');
         }
+
+        var fieldsToShow = [];
+        if (fieldsToShowConfig && Array.isArray(fieldsToShowConfig)) {
+            fieldsToShow = fieldsToShowConfig;
+        } else {
+            fieldsToShow = _.find(this.props.widget.plugin.initialConfiguration,{id:'fieldsToShow'}).default || ["Id"];
+        }
+
 
         var ErrorMessage = Stage.Basic.ErrorMessage;
         var Grid = Stage.Basic.Grid;

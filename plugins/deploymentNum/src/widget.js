@@ -6,7 +6,7 @@ Stage.addPlugin({
     id: "deploymentNum",
     name: "Number of deployments",
     description: 'Number of deployments',
-    initialWidth: 4,
+    initialWidth: 2,
     initialHeight: 2,
     color : "violet",
     showHeader: false,
@@ -16,9 +16,9 @@ Stage.addPlugin({
     ],
     fetchUrl: '[manager]/deployments?_include=id',
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
         var num = _.get(data, "metadata.pagination.total", 0);

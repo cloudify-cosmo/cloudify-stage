@@ -3,7 +3,7 @@
  */
 
 export default class DataFetcher{
-    static fetch(context,blueprintId,deploymentId) {
+    static fetch(toolbox,blueprintId,deploymentId) {
         if (_.isEmpty(deploymentId) && _.isEmpty(blueprintId)) {
             return Promise.resolve({});
         }
@@ -11,7 +11,7 @@ export default class DataFetcher{
         if (deploymentId) {
             var fetchDeployment = Promise.resolve({blueprint_id: blueprintId});
             if (!blueprintId) {
-                fetchDeployment = context.getManager().doGet(`/deployments?id=${deploymentId}&_include=id,blueprint_id`)
+                fetchDeployment = toolbox.getManager().doGet(`/deployments?id=${deploymentId}&_include=id,blueprint_id`)
                                             .then((deployments)=>{
                                                 var deployment = _.get(deployments,'items[0]',null);
                                                 if (!deployment) {
@@ -24,10 +24,10 @@ export default class DataFetcher{
 
             return fetchDeployment.then((deployment)=>{
                 return Promise.all([
-                    context.getManager().doGet(`/blueprints?id=${deployment.blueprint_id}`),
-                    context.getManager().doGet(`/nodes?deployment_id=${deploymentId}`),
-                    context.getManager().doGet(`/node-instances?deployment_id=${deploymentId}`),
-                    context.getManager().doGet(`/executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&status=pending&status=started&status=cancelling&status=force_cancelling`)
+                    toolbox.getManager().doGet(`/blueprints?id=${deployment.blueprint_id}`),
+                    toolbox.getManager().doGet(`/nodes?deployment_id=${deploymentId}`),
+                    toolbox.getManager().doGet(`/node-instances?deployment_id=${deploymentId}`),
+                    toolbox.getManager().doGet(`/executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&status=pending&status=started&status=cancelling&status=force_cancelling`)
                         .then(executions=>Promise.resolve(_.first(executions.items))),
                 ]).then( data=>{
 
@@ -63,7 +63,7 @@ export default class DataFetcher{
             })
 
         } else if (blueprintId) {
-            return context.getManager().doGet(`/blueprints?id=${blueprintId}`).then((blueprint)=>{
+            return toolbox.getManager().doGet(`/blueprints?id=${blueprintId}`).then((blueprint)=>{
                 return Promise.resolve({data:_.get(blueprint,'items[0]',{})});
             })
         }

@@ -4,16 +4,16 @@
 
 
 export default class {
-    constructor(context) {
-        this.context = context;
+    constructor(toolbox) {
+        this.toolbox = toolbox;
     }
 
     doDelete(blueprint) {
-        return this.context.getManager().doDelete(`/deployments/${blueprint.id}`);
+        return this.toolbox.getManager().doDelete(`/deployments/${blueprint.id}`);
     }
 
     doExecute(deployment,workflow,params) {
-        return this.context.getManager().doPost('/executions',null,{
+        return this.toolbox.getManager().doPost('/executions',null,{
             'deployment_id': deployment.id,
             'workflow_id' : workflow.name,
             parameters: params

@@ -12,19 +12,19 @@ Stage.addPlugin({
         {id: "pollingTime", default: 2}
     ],
 
-    fetchData: function(plugin,context,pluginUtils) {
-        let deploymentId = context.getValue('deploymentId');
+    fetchData: function(plugin,toolbox) {
+        let deploymentId = toolbox.getContext().getValue('deploymentId');
 
         if (deploymentId) {
-            return context.getManager().doGet(`/deployments?_include=id,outputs&id=${deploymentId}`)
+            return toolbox.getManager().doGet(`/deployments?_include=id,outputs&id=${deploymentId}`)
                 .then(data=>Promise.resolve({outputs: _.get(data, "items[0].outputs", {})}));
         }
         return Promise.resolve({outputs:{}});
     },
 
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
-            return pluginUtils.renderReactLoading();
+            return <Stage.Basic.Loading/>;
         }
 
         let formattedData = Object.assign({},data,{
@@ -32,11 +32,11 @@ Stage.addPlugin({
                 let val = data.outputs[key];
                 return {id: key, description: val.description, value: val.value};
             }),
-            deploymentId : context.getValue('deploymentId')
+            deploymentId : toolbox.getContext().getValue('deploymentId')
         });
 
         return (
-            <OutputsTable data={formattedData} context={context}/>
+            <OutputsTable data={formattedData} toolbox={toolbox}/>
         );
     }
 });

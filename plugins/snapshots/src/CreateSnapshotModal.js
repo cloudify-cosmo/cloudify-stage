@@ -42,11 +42,11 @@ export default class extends React.Component {
         this.setState({loading: true, createErr: null});
 
         // Call create method
-        var actions = new Actions(this.props.context);
+        var actions = new Actions(this.props.toolbox);
         actions.doCreate(snapshotId)
             .then(()=>{
-                this.props.context.setValue(this.props.widget.id + 'createSnapshot',null);
-                this.props.context.getEventBus().trigger('snapshots:refresh');
+                this.props.toolbox.getContext().setValue(this.props.widget.id + 'createSnapshot',null);
+                this.props.toolbox.getEventBus().trigger('snapshots:refresh');
                 this.setState({loading: false, show: false});
             })
             .catch((err)=>{

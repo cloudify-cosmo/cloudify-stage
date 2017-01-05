@@ -11,7 +11,7 @@ import AddWidgetModal from '../components/AddWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        plugins: state.plugins.items,
+        plugins: state.plugins,
         pageId: ownProps.pageId
     }
 };

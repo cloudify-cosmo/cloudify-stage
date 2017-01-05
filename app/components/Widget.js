@@ -10,7 +10,6 @@
 import React, { Component, PropTypes } from 'react';
 import InlineEdit from 'react-edit-inline';
 
-import PluginUtils from '../utils/pluginUtils';
 import EditWidget from '../containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
 
@@ -23,9 +22,7 @@ export default class Widget extends Component {
         manager: PropTypes.object.isRequired,
         onWidgetNameChange: PropTypes.func.isRequired,
         setContextValue: PropTypes.func.isRequired,
-        onDrilldownToPage: PropTypes.func.isRequired,
-        onWidgetRemoved: PropTypes.func.isRequired,
-        onWidgetEdited: PropTypes.func.isRequired
+        onWidgetRemoved: PropTypes.func.isRequired
     };
 
     render() {
@@ -70,8 +67,7 @@ export default class Widget extends Component {
                                               templates={this.props.templates}
                                               context={this.props.context}
                                               manager={this.props.manager}
-                                              setContextValue={this.props.setContextValue}
-                                              onDrilldownToPage={this.props.onDrilldownToPage}/>
+                                              setContextValue={this.props.setContextValue}/>
                         :
                         <div className='ui segment basic' style={{height:'100%'}}>
                             <div className="ui active inverted dimmer">

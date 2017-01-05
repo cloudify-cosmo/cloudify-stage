@@ -18,15 +18,13 @@ const page = (state = {}, action) => {
                 widgets: []
             };
         case types.CREATE_DRILLDOWN_PAGE:
-            return Object.assign({
-                    isDrillDown: true
-                },
-                action.data,
-                {
-                    widgets: action.data.widgets.map((w)=>{
-                        return Object.assign({id:v4()},w);
-                    })
-                });
+            return {
+                isDrillDown: true,
+                id: action.newPageId,
+                name: action.name,
+                description: '',
+                widgets: []
+            };
 
         case types.SET_DRILLDOWN_PAGE:
             var pageData = Object.assign({},state,{

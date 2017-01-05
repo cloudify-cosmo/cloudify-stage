@@ -7,6 +7,7 @@ import * as types from './types';
 import { push } from 'react-router-redux';
 import {v4} from 'node-uuid';
 import {clearContext} from './context';
+import {addWidget} from './widgets';
 
 export function createPage(name, newPageId) {
     return {
@@ -24,10 +25,11 @@ export function addPage(name) {
     }
 }
 
-export function createDrilldownPage(data,parentPageId) {
+export function createDrilldownPage(newPageId,name) {
     return {
         type: types.CREATE_DRILLDOWN_PAGE,
-        data
+        newPageId,
+        name
     }
 
 }
@@ -63,5 +65,28 @@ export function removePage(pageId) {
         type: types.REMOVE_PAGE,
         pageId: pageId
         }
+}
+
+export function createPageFromInitialTemplate(initialTemplate,templates,plugins) {
+    return function (dispatch) {
+
+        let idIndex = 0;
+
+        _.each(initialTemplate,(templateName)=>{
+            var template = templates[templateName];
+            if (!template) {
+                console.error('Cannot find template : '+templateName + ' Skipping... ');
+                return;
+            }
+
+            var currId = idIndex.toString();
+            dispatch(createPage(template.name,currId));
+            _.each(template.widgets,(widget)=>{
+                var plugin = _.find(plugins,{id:widget.plugin});
+                dispatch(addWidget(currId,widget.name,plugin,widget.width,widget.height,widget.x,widget.y));
+            });
+            idIndex++;
+        });
+    }
 }
 

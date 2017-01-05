@@ -11,12 +11,12 @@ Stage.addPlugin({
     initialHeight: 3,
     color: "orange",
     hasTemplate: true,
-    render: function(widget,data,error,context,pluginUtils) {
+    render: function(widget,data,error,toolbox) {
 
         if (!widget.plugin.template) {
             return 'usersList: missing template';
         }
 
-        return pluginUtils.buildFromTemplate(widget.plugin.template);
+        return _.template(widget.plugin.template)();
     }
 });

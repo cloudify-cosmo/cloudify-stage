@@ -11,6 +11,7 @@ import Overlay, {OverlayAction,OverlayContent} from './overlay/Overlay';
 import Checkmark from './Checkmark';
 import EditableLabel from './EditableLabel';
 import Grid from './grid/GridTable';
+import Loading from './Loading';
 
 export {
     Modal,
@@ -26,5 +27,6 @@ export {
     OverlayAction,
     OverlayContent,
     Checkmark,
-    Grid
+    Grid,
+    Loading
 };

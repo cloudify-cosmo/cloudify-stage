@@ -11,21 +11,21 @@ export default class extends React.Component {
     }
 
     _refreshData() {
-        this.props.context.refresh();
+        this.props.toolbox.refresh();
     }
 
     componentDidMount() {
-        this.props.context.getEventBus().on('events:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('events:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.context.getEventBus().off('events:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('events:refresh', this._refreshData);
     }
 
 
     _selectEvent(item) {
-        var oldSelectedEventId = this.props.context.getValue('eventId');
-        this.props.context.setValue('eventId',item.id === oldSelectedEventId ? null : item.id);
+        var oldSelectedEventId = this.props.toolbox.getContext().getValue('eventId');
+        this.props.toolbox.getContext().setValue('eventId',item.id === oldSelectedEventId ? null : item.id);
     }
     
     render() {

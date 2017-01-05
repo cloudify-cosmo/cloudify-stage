@@ -3,29 +3,11 @@
  */
 
 import {setValue as setContextValue} from '../actions/context';
-import StageUtils from '../utils/stageUtils';
-import PluginEventBus from '../utils/PluginEventBus';
-import {drillDownToPage} from '../actions/widgets';
-import Manager from './Manager';
 
-class Context {
+export default class Context {
     constructor (store) {
-        // Save the link to the store on the context (so we can dispatch to it later)
         this.store = store;
-        this._initFromStore();
-
-        // Subscribe to store change
-        this.unsubscribe = store.subscribe(() => {
-            this._initFromStore();
-        });
-    }
-
-    _initFromStore () {
-        var state = this.store.getState();
-        this.context = state.context;
-        this.templates = state.templates || {};
-        this.manager = state.manager || {};
-        this._Manager = new Manager(this.manager);
+        this.context = store.getState().context;
     }
 
     setValue(key,value) {
@@ -34,38 +16,4 @@ class Context {
     getValue(key) {
         return this.context[key];
     }
-
-    drillDown(widget,defaultTemplate) {
-        this.store.dispatch(drillDownToPage(widget,this.templates[defaultTemplate]));
-    }
-
-    getEventBus (){
-        return PluginEventBus;
-    }
-
-    getManager() {
-        return this._Manager;
-    }
-
-    refresh () {}
 }
-
-var context = null;
-
-let createContext = (store) =>{
-    context = new Context(store);
-};
-
-let getContext  = (onRefresh)=>{
-    return new Proxy(context,{
-        get: (target, name)=> {
-            if (name === 'refresh') {
-                return onRefresh;
-            } else {
-                return target[name];
-            }
-        }
-    });
-};
-
-export {createContext,getContext};

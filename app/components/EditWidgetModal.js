@@ -7,25 +7,21 @@ import React, { Component, PropTypes } from 'react';
 export default class EditWidgetModal extends Component {
 
     static propTypes = {
-        configuration: PropTypes.array.isRequired,
+        configuration: PropTypes.object.isRequired,
+        configDef: PropTypes.array.isRequired,
         widget: PropTypes.object.isRequired,
         onWidgetEdited: PropTypes.func.isRequired
     };
 
     _editWidget() {
         // Get the changed configurations
-        var config = this.props.configuration;
+        var config = _.clone(this.props.configuration);
         $(this.refs.modal).find('.configInput').each((index,input)=>{
             var $input = $(input);
             var id = $input.data('id');
             var value = $input.val();
 
-            config = config.map((conf)=>{
-                if (conf.id === id) {
-                    return Object.assign({},conf,{value:value});
-                }
-                return conf;
-            });
+            config[id] = value;
         });
 
         if (config) {
@@ -45,7 +41,9 @@ export default class EditWidgetModal extends Component {
               <div className="content">
                   <div className="ui form">
                     {
-                        this.props.configuration.map((config)=>{
+                        this.props.configDef.map((config)=>{
+                            var currValue = _.get(this.props.config,'[config.id]',config.value || config.default);
+
                             return (
                                 <div className="field" key={config.id}>
                                     <label>{config.name}</label>
@@ -56,7 +54,7 @@ export default class EditWidgetModal extends Component {
                                                 :
                                                 ''
                                         }
-                                        <input className='configInput' data-id={config.id} type="text" placeholder={config.placeHolder} defaultValue={config.value || config.default}/>
+                                        <input className='configInput' data-id={config.id} type="text" placeholder={config.placeHolder} defaultValue={currValue}/>
                                     </div>
                                 </div>
                             );

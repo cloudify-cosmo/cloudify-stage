@@ -25,14 +25,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         setContextValue: (key,value) => {
             dispatch(setValue(key,value));
         },
-        onDrilldownToPage: (widget,defaultTemplate) => {
-            dispatch(drillDownToPage(widget,defaultTemplate));
-        },
         onWidgetRemoved: (pageId,widgetId) => {
             dispatch(removeWidget(pageId,widgetId));
-        },
-        onWidgetEdited: (widgetId, newConfiguration) => {
-            dispatch(editWidget(widgetId, newConfiguration));
         }
     }
 };
