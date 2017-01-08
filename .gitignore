@@ -14,8 +14,8 @@ plugins/outputs/widget.js
 plugins/inputs/widget.js
 plugins/plugins/widget.js
 plugins/pluginsNum/widget.js
-plugins/reactTest/widget.js
 plugins/snapshots/widget.js
 plugins/executions/widget.js
 plugins/topology/widget.js
 plugins/serversNum/widget.js
+plugins/nodes/widget.js
