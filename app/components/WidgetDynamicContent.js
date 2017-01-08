@@ -162,6 +162,8 @@ export default class WidgetDynamicContent extends Component {
                             for (var i=0; i < data.length; i++) {
                                 output[keys[i]] = data[i];
                             }
+                        } else {
+                            output = data[0];
                         }
 
                         this.setState({data: output, error: null});
