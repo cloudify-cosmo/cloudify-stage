@@ -83,7 +83,7 @@ export function createPageFromInitialTemplate(initialTemplate,templates,plugins)
             dispatch(createPage(template.name,currId));
             _.each(template.widgets,(widget)=>{
                 var plugin = _.find(plugins,{id:widget.plugin});
-                dispatch(addWidget(currId,widget.name,plugin,widget.width,widget.height,widget.x,widget.y));
+                dispatch(addWidget(currId,widget.name,plugin,widget.width,widget.height,widget.x,widget.y,widget.configuration));
             });
             idIndex++;
         });

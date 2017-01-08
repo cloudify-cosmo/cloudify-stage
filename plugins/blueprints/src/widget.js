@@ -2,7 +2,7 @@
  * Created by kinneretzin on 07/09/2016.
  */
 
-import BlueprintsTable from './BlueprintsTable';
+import BlueprintsList from './BlueprintsList';
 
 Stage.addPlugin({
     id: "blueprints",
@@ -13,7 +13,8 @@ Stage.addPlugin({
     color : "blue",
     isReact: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 2}
+        {id: "pollingTime", default: 2},
+        {id: "displayStyle",name: "Display style", placeHolder: "Enter 'table' or 'catalog'", default: "table"}
     ],
     fetchUrl: {
         blueprints: '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',
@@ -55,7 +56,7 @@ Stage.addPlugin({
         var formattedData = this._processData(data,toolbox);
         return (
             <div>
-                <BlueprintsTable widget={widget} data={formattedData} toolbox={toolbox}/>
+                <BlueprintsList widget={widget} data={formattedData} toolbox={toolbox}/>
             </div>
         );
     }

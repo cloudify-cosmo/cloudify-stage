@@ -1,0 +1,17 @@
+{
+  "name": "Blueprints",
+  "widgets": [
+    {
+      "name": "Blueprints Catalog",
+      "plugin": "blueprints",
+      "width": 12,
+      "height": 13,
+      "x": 0,
+      "y": 0,
+      "configuration":{
+        "displayStyle":"catalog"
+      }
+    }
+
+  ]
+}
