@@ -7,7 +7,7 @@ import * as types from './types';
 import {createDrilldownPage,selectPage} from './page';
 import {v4} from 'node-uuid';
 
-export function addWidget(pageId,name,plugin,width,height,x,y) {
+export function addWidget(pageId,name,plugin,width,height,x,y,configuration) {
     return {
         type: types.ADD_WIDGET,
         pageId,
@@ -16,7 +16,8 @@ export function addWidget(pageId,name,plugin,width,height,x,y) {
         width,
         height,
         x,
-        y
+        y,
+        configuration
     };
 }
 

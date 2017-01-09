@@ -5,17 +5,23 @@
       "name": "Blueprints List",
       "plugin": "blueprints",
       "width": 6,
-      "height": 4,
+      "height": 5,
       "x": 0,
-      "y": 2
+      "y": 2,
+      "configuration":{
+        "displayStyle":"table"
+      }
     },
     {
       "name": "Deployments",
       "width": 6,
-      "height": 4,
+      "height": 5,
       "plugin": "deployments",
       "x": 6,
-      "y": 2
+      "y": 2,
+      "configuration":{
+        "displayComponent":"old"
+      }
     },
     {
       "name": "Widget_0",
@@ -47,7 +53,7 @@
       "height": 4,
       "plugin": "usersList",
       "x": 0,
-      "y": 6
+      "y": 7
     },
     {
       "name": "CPU Utilization - System",
@@ -63,17 +69,7 @@
       "height": 4,
       "plugin": "githubRepositories",
       "x": 4,
-      "y": 6,
-      "configuration:" : [
-        {
-          "default":"cloudify-examples",
-          "fetch" : true,
-          "id":"fetchUsername",
-          "name" : "Fetch with username",
-          "placeHolder":"Type username..",
-          "value" :"cloudify-examples"
-        }
-      ]
+      "y": 7
     }
   ]
 }

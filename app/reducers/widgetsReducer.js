@@ -36,7 +36,7 @@ const widget = (state = {}, action) => {
                 x: action.x,
                 y: action.y,
                 plugin: action.plugin.id,
-                configuration: buildConfig(action.plugin)
+                configuration: Object.assign({},buildConfig(action.plugin),action.configuration)
             };
         default:
             return state;
