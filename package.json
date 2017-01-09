@@ -15,7 +15,7 @@
     "angular": "^1.5.8",
     "babel-polyfill": "^6.13.0",
     "better-console": "^0.2.4",
-    "d3": "^4.3.0",
+    "d3": "~3.5.2",
     "datatables.net": "^1.10.12",
     "datatables.net-dt": "^1.10.12",
     "del": "^2.2.2",
