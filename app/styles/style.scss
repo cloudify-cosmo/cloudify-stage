@@ -338,9 +338,9 @@ code.hljs {
       height: calc(100% - 2rem);
       position: absolute;
       right: 0;
+      top: 1rem;
       width: 0px;
     }
-
   }
 
   .column.action  {
@@ -370,4 +370,16 @@ code.hljs {
 .ui.modal > .content {
   max-height: 350px;
   overflow: auto;
+}
+
+/* Center vertically */
+
+.verticalCenter {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.menu .indent {
+  padding-left: 25px;
 }
