@@ -4,6 +4,7 @@
   
 import React, { Component, PropTypes } from 'react';
 import SegmentItem from './SegmentItem';
+import SegmentAction from './SegmentAction';
 import Pagination from '../pagination/Pagination';
 
 class SegmentList extends Component {
@@ -31,8 +32,30 @@ class SegmentList extends Component {
     }
 
     render() {
+        var segmentAction = null;
+        var children = [];
+
+        React.Children.forEach(this.props.children, function(child) {
+            if (child && child.type) {
+                if (child.type.name === "SegmentAction") {
+                    segmentAction = child;
+                } else {
+                    children.push(child);
+                }
+            }
+        });
+
         return (
             <div className={`segmentList ${this.props.className}`}>
+                {
+                    segmentAction &&
+                    <div className="ui small form">
+                        <div className="inline fields">
+                            {segmentAction}
+                        </div>
+                    </div>
+                }
+
                 <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} fetchData={this.props.fetchData}>
                     {this.props.totalSize <= 0 ?
                         <div className="ui icon message">
@@ -40,7 +63,7 @@ class SegmentList extends Component {
                             No data available
                         </div>
                         :
-                        this.props.children
+                        children
                     }
                 </Pagination>
             </div>
@@ -50,5 +73,6 @@ class SegmentList extends Component {
 
 export default {
     List:SegmentList,
-    Item:SegmentItem
+    Item:SegmentItem,
+    Action:SegmentAction
 };

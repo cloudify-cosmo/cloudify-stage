@@ -118,13 +118,15 @@ class GridTable extends Component {
 
         return (
             <div className={`gridTable ${this.props.className}`}>
-                <div className="ui small form">
-                    <div className="inline fields">
-                        {this.props.searchable && <Search/>}
-                        {gridFilters}
-                        {gridAction}
+                { (this.props.searchable || !_.isEmpty(gridFilters) || gridAction) &&
+                    <div className="ui small form">
+                        <div className="inline fields">
+                            {this.props.searchable && <Search/>}
+                            {gridFilters}
+                            {gridAction}
+                        </div>
                     </div>
-                </div>
+                }
 
                 <Pagination totalSize={this.props.totalSize}
                             pageSize={this.props.pageSize}

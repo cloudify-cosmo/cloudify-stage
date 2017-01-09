@@ -9,12 +9,13 @@ export default class OverlayAction extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
-        onClick: PropTypes.func
+        onClick: PropTypes.func,
+        title: PropTypes.string
     };
 
     render () {
         return (
-            <div onClick={this.props.onClick}>{this.props.children}</div>
+            <div onClick={(event)=>{event.stopPropagation(); this.props.onClick(event)}} data-tooltip={this.props.title}>{this.props.children}</div>
         );
     }
 }
