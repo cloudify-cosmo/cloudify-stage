@@ -16,7 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "cloudify-blueprint-topology": "http://gigaspaces-repository-eu.s3.amazonaws.com/org/cloudify3/3.4.0/ga-RELEASE/composer/blueprint-topology.zip",
+    "cloudify-blueprint-topology": "http://gigaspaces-repository-eu.s3.amazonaws.com/org/cloudify3/4.0/ga-RELEASE/composer/blueprint-topology.zip",
     "d3": "~3.5.2"
   }
 }
