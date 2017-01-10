@@ -15,6 +15,7 @@ Stage.addPlugin({
     isReact: true,
     initialConfiguration:
         [
+            {id: "pollingTime", default: 2},
             {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Enter list of comma separated field names (json format)",
              default: '["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Params","Status"]'}
         ],
