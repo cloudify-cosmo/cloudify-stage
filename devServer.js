@@ -10,7 +10,13 @@ new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
     hot: true,
     inline: true,
-    historyApiFallback: true
+    historyApiFallback: true,
+    proxy: {
+        '/sp': {
+            target: 'http://localhost:8088',
+            secure: false
+        }
+    }
 }).listen(3000, 'localhost', function (err, result) {
         if (err) {
             return console.log(err);
