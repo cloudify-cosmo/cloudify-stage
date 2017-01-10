@@ -140,7 +140,7 @@ export default class Manager {
         var urlInServer = `${this._data.version?'/api/'+this._data.version:''}${url}${queryString}`;
 
         let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
-        return `http://${window.location.hostname}:8088/sp/?su=${su}`;
+        return `/sp/?su=${su}`;
     }
 
     getManagerUrl(url,data) {
