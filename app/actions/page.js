@@ -50,13 +50,18 @@ export function updatePageDescription(pageId,newDescription) {
     }
 
 }
-export function selectPage(pageId,isDrilldown) {
+export function selectPage(pageId,isDrilldown,context) {
     return function (dispatch) {
 
         if (!isDrilldown) {
             dispatch(clearContext());
         }
-        dispatch(push('/page/'+pageId));
+
+        var location = {pathname:`/page/${pageId}`};
+        if (!_.isEmpty(context)) {
+            location.query=context;
+        }
+        dispatch(push(location));
     }
 }
 
