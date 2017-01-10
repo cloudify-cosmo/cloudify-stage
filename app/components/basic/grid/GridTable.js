@@ -4,6 +4,8 @@
   
 import React, { Component, PropTypes } from 'react';
 import GridRow from './GridRow';
+import GridRowWrapper from './GridRowWrapper';
+import GridRowExpandable from './GridRowExpandable';
 import GridColumn from './GridColumn';
 import GridData from './GridData';
 import GridAction from './GridAction';
@@ -106,11 +108,22 @@ class GridTable extends Component {
                 if (child.type.name === "GridColumn") {
                     showCols.push(child.props.show);
                     headerColumns.push(child);
-                } else if (child.type && child.type.name === "GridRow") {
+                } else if (child.type.name === "GridRow") {
                     bodyRows.push(React.cloneElement(child, {showCols}));
-                } else if (child.type && child.type.name === "GridAction") {
+                } else if (child.type.name === "GridRowWrapper") {
+                    let rowWrapperChildren = child.props.children;
+                    React.Children.forEach(rowWrapperChildren, function(rowWrapperChild) {
+                        if (rowWrapperChild && rowWrapperChild.type) {
+                            if (rowWrapperChild.type.name === "GridRow") {
+                                bodyRows.push(React.cloneElement(rowWrapperChild, {showCols}));
+                            } else if (rowWrapperChild.type.name === "GridRowExpandable" && rowWrapperChild.props.isExpanded) {
+                                bodyRows.push(React.cloneElement(rowWrapperChild, {numberOfColumns : showCols.length}));
+                            }
+                        }
+                    });
+                } else if (child.type.name === "GridAction") {
                     gridAction = child;
-                } else if (child.type && child.type.name === "GridFilter") {
+                } else if (child.type.name === "GridFilter") {
                     gridFilters.push(child);
                 }
             }
@@ -148,6 +161,8 @@ class GridTable extends Component {
 export default {
     Table:GridTable,
     Row:GridRow,
+    RowExpandable:GridRowExpandable,
+    RowWrapper:GridRowWrapper,
     Column:GridColumn,
     Data:GridData,
     Action:GridAction,
