@@ -42,7 +42,7 @@ export default class EditWidgetModal extends Component {
                   <div className="ui form">
                     {
                         this.props.configDef.map((config)=>{
-                            var currValue = _.get(this.props.config,'[config.id]',config.value || config.default);
+                            var currValue = _.get(this.props.configuration,'['+config.id+']',config.value || config.default);
 
                             return (
                                 <div className="field" key={config.id}>
