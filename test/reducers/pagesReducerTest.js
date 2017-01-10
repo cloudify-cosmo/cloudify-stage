@@ -111,6 +111,41 @@ describe('(Reducer) Pages - drilldown process', () => {
 
             expect(storeActions).to.have.length(expectedActions.length);
         });
+
+        it('Pass drilldown context', () => {
+            var initialState = {
+                templates: {
+                    'tmp1' : {
+                        name: 'tmp1',
+                        widgets: [{name: 'some widget',plugin: 'plugin1',width:1,height:1,x:1,y:1}]
+                    }
+                },
+                manager : {
+                    ip: '1.1.1.1'
+                },
+                conetxt: {},
+                plugins: [{id: 'plugin1'}],
+                pages: [
+                    {id: '0',children: ['1'], name:'page',widgets: [{id:'1',name:'widget1',plugin:'plugin1',drillDownPageId:'1'}]},
+                    {id: '1',parent: '0', name:'tmp1',isDrillDown: true,widgets: [{id:'2',name:'some widget',plugin:'plugin1',width:1,height:1,x:1,y:1}]}
+                ]
+            };
+
+            const store = mockStore(initialState);
+
+            var widget = initialState.pages[0].widgets[0];
+            var defaultTemplate = initialState.templates.tmp1;
+            var plugins = initialState.plugins;
+
+            store.dispatch(drillDownToPage(widget,defaultTemplate,plugins,{contextValue:'kuku'}));
+
+            var storeActions = store.getActions();
+            var routeAction = storeActions[0];
+
+            expect(routeAction.payload.args).to.have.length(1);
+            expect(routeAction.payload.args[0].query.contextValue).to.equal('kuku');
+
+        });
     });
 
     describe('Drilldown to page state',()=>{
