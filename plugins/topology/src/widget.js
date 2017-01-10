@@ -20,6 +20,7 @@ Stage.addPlugin({
     isReact: true,
     hasTemplate: true,
     initialConfiguration: [
+        {id: "pollingTime", default: 2},
         {id: 'enableNodeClick', name: 'Enable node click' ,placeHolder:"true of false", default:"true"},
         {id: 'enableGroupClick', name: 'Enable group click' ,placeHolder:"true of false", default:"true"},
         {id: 'enableZoom', name: 'Enable zoom' ,placeHolder:"true of false", default:"true"},
