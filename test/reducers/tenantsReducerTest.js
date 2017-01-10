@@ -9,7 +9,9 @@ import sinon from 'sinon';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore,applyMiddleware } from 'redux'
-import nock from 'nock';
+
+var fetchMock = require('fetch-mock');
+
 import timeKeeper from 'timekeeper';
 
 import TenantReducer from '../../app/reducers/tenantsReducer.js';
@@ -33,7 +35,7 @@ describe('(Reducer) Tenants', () => {
     };
 
     afterEach(() => {
-        nock.cleanAll()
+        fetchMock.restore();
     });
 
     before(()=>{
@@ -45,9 +47,7 @@ describe('(Reducer) Tenants', () => {
     });
 
     it('creates success action when fetching tenants has been done', () => {
-        nock('http://myhost:8088')
-            .get(/sp*/)
-            .reply(200, {items: [{name:'aaa'},{name:'bbb'},{name:'ccc'}] } );
+        fetchMock.get('*',{items: [{name:'aaa'},{name:'bbb'},{name:'ccc'}] } );
 
         const expectedActions = [
             { type: types.REQ_TENANTS },
@@ -63,9 +63,11 @@ describe('(Reducer) Tenants', () => {
     });
 
     it('creates error action when fetching tenants returns an error', () => {
-        nock('http://myhost:8088')
-            .get(/sp*/)
-            .reply(500,{message: 'Error fetching tenants'});
+        fetchMock
+            .get(/sp*/,{
+                status: 500,
+                body: {message: 'Error fetching tenants'}
+            });
 
         const expectedActions = [
             { type: types.REQ_TENANTS },
@@ -82,9 +84,11 @@ describe('(Reducer) Tenants', () => {
     });
 
     it('Store has an error if fetch tenants produces an error', () => {
-        nock('http://myhost:8088')
-            .get(/sp*/)
-            .reply(500,{message: 'Error fetching tenants'});
+        fetchMock
+            .get(/sp*/,{
+                status: 500,
+                body: {message: 'Error fetching tenants'}
+            });
 
         const store = createStore(TenantReducer,{},applyMiddleware(thunk));
 
@@ -100,9 +104,8 @@ describe('(Reducer) Tenants', () => {
     });
 
     it('store has success and tenants data if fetch tenants is ok', () => {
-        nock('http://myhost:8088')
-            .get(/sp*/)
-            .reply(200, {items: [{name:'aaa'},{name:'bbb'},{name:'ccc'}] } );
+        fetchMock
+            .get(/sp*/,{items: [{name:'aaa'},{name:'bbb'},{name:'ccc'}] } );
 
         const store = createStore(TenantReducer,{},applyMiddleware(thunk));
 
