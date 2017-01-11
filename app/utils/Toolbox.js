@@ -46,7 +46,9 @@ class Toolbox {
         return this._Context;
     }
 
-    refresh () {}
+    refresh() {}
+
+    loading(show) {}
 }
 
 var toolbox = null;
@@ -55,11 +57,13 @@ let createToolbox = (store) =>{
     toolbox = new Toolbox(store);
 };
 
-let getToolbox  = (onRefresh)=>{
+let getToolbox  = (onRefresh, onLoading)=>{
     return new Proxy(toolbox,{
         get: (target, name)=> {
             if (name === 'refresh') {
                 return onRefresh;
+            } else if (name === 'loading') {
+                return onLoading;
             } else {
                 return target[name];
             }

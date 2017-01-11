@@ -3,7 +3,7 @@
  */
 
 import ExecuteModal from './WorkflowParametersModal';
-import DeploymentsCatalog from './DeploymentsCatalog';
+import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 
 import Actions from './actions';
@@ -117,7 +117,7 @@ export default class extends React.Component {
                                      onSelectDeployment={this._selectDeployment.bind(this)}
                                      onMenuAction={this._selectAction.bind(this)}/>
                     :
-                    <DeploymentsCatalog widget={this.props.widget} data={this.props.data}
+                    <DeploymentsSegment widget={this.props.widget} data={this.props.data}
                                        fetchData={this.fetchData.bind(this)}
                                        onSelectDeployment={this._selectDeployment.bind(this)}
                                        onMenuAction={this._selectAction.bind(this)}/>

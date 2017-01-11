@@ -3,9 +3,10 @@
  */
 
 import Actions from './actions';
-import { Component, PropTypes } from 'react';
 
-export default class extends Component {
+let PropTypes = React.PropTypes;
+
+export default class extends React.Component {
 
     constructor(props,context) {
         super(props,context);

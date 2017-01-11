@@ -3,9 +3,10 @@
  */
 
 import MenuAction from './MenuAction';
-import React, { Component, PropTypes } from 'react';
 
-export default class extends Component {
+let PropTypes = React.PropTypes;
+
+export default class extends React.Component {
 
     static propTypes = {
         data: PropTypes.object.isRequired,

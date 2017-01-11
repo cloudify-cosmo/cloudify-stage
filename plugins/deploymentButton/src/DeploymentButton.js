@@ -13,17 +13,20 @@ export default class extends React.Component {
 
         this.state = {
             show: false,
+            loading: false,
             error: null,
             blueprints: {items:[]}
         }
     }
 
     _createDeployment(){
+        this.setState({loading: true});
+
         var actions = new Actions(this.props.toolbox);
         actions.doGetBlueprints().then((blueprints)=>{
-            this.setState({error: null, blueprints, show: true});
+            this.setState({loading: false, error: null, blueprints, show: true});
         }).catch((err)=> {
-            this.setState({error: err.error});
+            this.setState({loading: false, error: err.error});
         });
     }
 
@@ -38,7 +41,7 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.initError}/>
 
-                <button className="ui blue labeled icon button fluid" onClick={this._createDeployment.bind(this)}>
+                <button className={`ui blue labeled icon button fluid ${this.state.loading?'loading':''}`} onClick={this._createDeployment.bind(this)}>
                     <i className="rocket icon"></i>Create new deployment
                 </button>
 

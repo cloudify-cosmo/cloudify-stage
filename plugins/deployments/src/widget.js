@@ -16,7 +16,7 @@ Stage.addPlugin({
             {id: "pollingTime", default: 2},
             {id: "clickToDrillDown",name: "Should click to drilldown", placeHolder: "True of false to click to drill down", default: "true"},
             {id: "blueprintIdFilter",name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by"},
-            {id: "displayStyle",name: "Display style", placeHolder: "Enter 'table' or 'catalog'", default: "table"}
+            {id: "displayStyle",name: "Display style", placeHolder: "Enter 'table' or 'list'", default: "table"}
         ],
     isReact: true,
     pageSize: 5,
