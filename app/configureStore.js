@@ -16,7 +16,7 @@ import initialTemplate from '../templates/initial-template.json';
 
 import {createPageFromInitialTemplate} from './actions/page';
 
-export default (history,templates,plugins) => {
+export default (history,templates,plugins,config) => {
 
     let initialState = StatePersister.load();
 
@@ -24,16 +24,14 @@ export default (history,templates,plugins) => {
     if (!hasInitState) {
         initialState = {
             context: {},
-            manager: {},
-            templates: templates,
-            plugins: plugins
+            manager: {}
         }
-    } else {
-        initialState = Object.assign({},initialState,{
-            templates: templates,
-            plugins: plugins
-        });
     }
+    initialState = Object.assign({},initialState,{
+        templates: templates,
+        plugins: plugins,
+        config: config
+    });
 
     var store = createStore(
         reducers,

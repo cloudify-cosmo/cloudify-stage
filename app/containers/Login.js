@@ -9,9 +9,9 @@ import {login} from '../actions/managers';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        ip:  !state.manager ? '' : state.manager.ip,
-        username:  !state.manager ? '' : state.manager.username,
-        loginError: !state.manager ? '' : state.manager.err
+        ip:  state.manager && state.manager.ip ? state.manager.ip : _.get(state.config,'manager.ip',''),
+        username:  state.manager ? state.manager.username : '',
+        loginError: state.manager ? state.manager.err : ''
     };
 };
 
