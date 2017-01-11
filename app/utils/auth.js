@@ -4,6 +4,7 @@
 
 import fetch from 'isomorphic-fetch';
 import Manager from './Manager';
+import Consts from './consts';
 
 export default class Auth {
 
@@ -20,7 +21,8 @@ export default class Auth {
             {
                 method: 'GET',
                 headers: {
-                    'authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
+                    'authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64'),
+                    tenant: Consts.DEFAULT_TENANT
                 }
             })
             .then(response => {
@@ -90,7 +92,8 @@ export default class Auth {
             {
                 method: 'GET',
                 headers: {
-                    'authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64')
+                    'authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64'),
+                    tenant: Consts.DEFAULT_TENANT
                 }
             })
             .then(response => {
