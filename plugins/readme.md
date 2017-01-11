@@ -69,7 +69,7 @@ pageSize | Integer | - | The initial page size for widgets that supports paginat
 ###Available widget functions
 
 *init*()
-Init is called when the widget definition is loaded, which happens once when the system is loaded. This can be used to define some global stuff, such as classes and objects we are going to use in our plugin definition.
+Init is called when the widget definition is loaded, which happens once when the system is loaded. This can be used to define some global stuff, such as classes and objects we are going to use in our widget definition.
 
 *render*(widget,data,toolbox)
 Render is called each time the widget needs to draw itself.
@@ -103,54 +103,100 @@ definition | The widget definition object as it was passed to defineWidget metho
 The toolbox object gives the widget tools to communicate with the application and with other widgets. It also gives some generic tools that the widget might require.
 
 The toolbox gives access to the following tools:
-* getEventBus - used to listen (register) to events and trigger events.
-* getManager - used to access the connected manager
-* getContext - used to access the applicaton context
 
-It also supports the following functions:
-*drillDown*(widget,defaultTemplate)
-*refresh*()
+*getEventBus*() - used to listen (register) to events and trigger events.
+The event bus is used for a widget to broadcast an event (usually a change it made that will effect others). For example, if a blueprints widget creates a new deployment it needs to let all the other widgets know that the deployment list was changed. The listening widgets will then call 'refresh'
+Event buss supports the following methods:
+
+*on (event, callback, context)
+
+*trigger (event
+
+*off(event,offCallback)
+
+for example:
+
+```javascript
+    componentDidMount() {
+        this.props.toolbox.getEventBus().on('deployments:refresh',this._refreshData,this);
+    }
+
+    componentWillUnmount() {
+        this.props.toolbox.getEventBus().off('deployments:refresh',this._refreshData);
+    }
+
+    _deleteDeployment() {
+        ...
+        actions.doDelete(deploymentToDelete).then(()=>{
+            ...
+            this.props.toolbox.getEventBus().trigger('deployments:refresh');
+        }).catch((err)=>{
+            ...
+        });
+    }
+
+```
+
+*getManager*() - used to access the connected manager
+
+The manager gives access to the manager's rest api. The url is the service url without the /api/vX.X
+
+    doGet(url,params)
+
+    doPost(url,params,data)
+
+    doDelete(url,params,data)
+
+    doPut(url,params,data)
+
+    doUpload(url,params,file,method)
+
+It also exposes a method to only construcgt the URL. It should be used carefully since some request headers needs to be passed to the manager.
+
+    getManagerUrl(url,data)
 
 
+for example:
 
+```javascript
+    return this.toolbox.getManager().doDelete(`/deployments/${blueprint.id}`);
+
+
+    doUpload(blueprintName,blueprintFileName,file) {
+        return this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`,_.isEmpty(blueprintFileName) ? null : {
+            application_file_name: blueprintFileName+'.yaml'
+        },file);
+    }
+
+```
+
+
+*getContext*() - used to access the application context
 A widget context gives access to the application context. Using the context we can pass arguments between widgets, for example when a blueprint is selected, set the context to the selected blueprint, and all the widgets that can filter by blueprint can read this value and filter accordingly.
-Using the context is done by using 'setValue' and 'getValue' of the pluginContext:
+The context supports these methods:
 
  * setValue(key,value)
  * getValue(key) - returns value
 
 
-It gives access to the selected manager's url:
- * getManagerUrl()
+It also supports the following functions:
 
-If we did some actions in the widget that will require fetching the data again (for example we added a record) we can ask the app to refresh only this plugin by calling:
- * refresh()
+*refresh*()
 
-Plugin context also support drilling down to a page.
+If we did some actions in the widget that will require fetching the data again (for example we added a record) we can ask the app to refresh only this widget by calling refresh()
+
+*drillDown*(widget,defaultTemplate,drilldownContext)
+
 Drilling down to a page requires passing the drilldown page template name. Templates will be described in the next section. When a widget is on a page, and drilldown action done (through link click event to a button for example), if its the first time we access this drilldown page, the app will create a new page based on the passed template. Once this page is created the user can edit it like any other page. All next accesses to this page will use this page.
-The drillDown method is defined like so:
-
-drillDown(widget,defaultTemplate)
+Also you can pass a 'drilldownContext' to the drilldown page. This context will be saved on the URL and will be available through the app context. This value will be saved upon refresh, so if a user drilldown to a page, and then refreshes the page, the context will be saved (for example - selected deployment in drilldown deployment page)
 
 for example:
 When selecting a deployment we drilldown to a deployment page. It looks like this:
 
 ```javascript
-    events: [
-        {
-            selector: '.row',
-            event: 'click',
-            fn: (e,widget,context,pluginUtils)=> {
-                // Setting the selected deployment id on the context 
-                var deploymentId = pluginUtils.jQuery(e.currentTarget).data('id');
-                context.setValue('deploymentId',deploymentId);
-
-                // Calling drilldown with this widget (self) and a template called deployment
-                context.drillDown(widget,'deployment');
-            }
-        }
-
-    ],
+    _selectDeployment(item) {
+        this.props.toolbox.drillDown(this.props.widget,'deployment',{deploymentId: item.id});
+    }
 ```
 
 The 'deployment' template looks like this:
@@ -160,7 +206,7 @@ The 'deployment' template looks like this:
   "widgets": [
     {
       "name": "topology",
-      "plugin": "topology",
+      "widget": "topology",
       "width": 12,
       "height": 5,
       "x": 0,
@@ -170,7 +216,7 @@ The 'deployment' template looks like this:
       "name": "CPU Utilization - System",
       "width": 6,
       "height": 4,
-      "plugin": "cpuUtilizationSystem",
+      "widget": "cpuUtilizationSystem",
       "x": 0,
       "y": 5
     },
@@ -178,7 +224,7 @@ The 'deployment' template looks like this:
       "name": "CPU Utilization - User",
       "width": 6,
       "height": 4,
-      "plugin": "cpuUtilizationUser",
+      "widget": "cpuUtilizationUser",
       "x": 6,
       "y": 5
     },
@@ -186,7 +232,7 @@ The 'deployment' template looks like this:
       "name": "Deployment Inputs",
       "width": 5,
       "height": 3,
-      "plugin": "inputs",
+      "widget": "inputs",
       "x": 0,
       "y": 9
     },
@@ -194,7 +240,7 @@ The 'deployment' template looks like this:
       "name": "Deployment Events",
       "width": 7,
       "height": 3,
-      "plugin": "events",
+      "widget": "events",
       "x": 5,
       "y": 9
     }
@@ -223,7 +269,7 @@ Each widget will have the following fields
 field | description
 --- | ---
 name | Widget default name
-plugin | The id of the plugin to use
+widget | The id of the widget to use
 width | The initial width of the widget on the page
 height | The initial height of the widget on the page
 x | The initial x location of the widget on the page
@@ -238,7 +284,7 @@ For example:
   "widgets": [
     {
       "name": "topology",
-      "plugin": "topology",
+      "widget": "topology",
       "width": 12,
       "height": 5,
       "x": 0,
@@ -279,6 +325,14 @@ for example:
     })
 ```
 
+*Lodash*
+
+for example:
+```
+    _.each(items, (item)=>{
+        ...
+    });
+```
 
 ## Widget template
 
