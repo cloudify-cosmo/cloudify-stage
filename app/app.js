@@ -38,6 +38,7 @@ import configureStore  from './configureStore';
 import createRoutes from './routes';
 import PluginLoader from './utils/pluginsLoader';
 import {createToolbox} from './utils/Toolbox';
+import ConfigLoader from './utils/ConfigLoader';
 
 import TemplatesLoader from './utils/templatesLoader';
 
@@ -46,12 +47,14 @@ window.React = React;
 PluginLoader.init();
 Promise.all([
     TemplatesLoader.load(),
-    PluginLoader.load()
+    PluginLoader.load(),
+    ConfigLoader.load()
 ]).then((result)=>{
     var templates = result[0];
     var plugins = result[1];
+    var config = result[2];
 
-    const store = configureStore(browserHistory,templates,plugins);
+    const store = configureStore(browserHistory,templates,plugins,config);
 
     const history = syncHistoryWithStore(browserHistory, store);
 
