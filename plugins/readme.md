@@ -6,8 +6,8 @@ Cloudify UI provides an easy way to add widgets to the system.
 
 A widget consists of several files. 2 are mandatory.
 
-* widget.js - Holds the plugin's definition - mandatory.
-* widget.png - A preview image of the plugin - mandatory.
+* widget.js - Holds the widget's definition - mandatory.
+* widget.png - A preview image of the widget - mandatory.
 * widget.html - A widget template file. This is used only if you want to write a widget without using react (using vaniala js with html template). The template file is optional.
 * widget.css - A css file that the widget uses. This file is optional.
 
@@ -46,16 +46,16 @@ In this approach the filesystem will look like so:
 
 ## Widget definition
 
-Each widget.js file should have one call to a global function called 'Stage.addPlugin'.
+Each widget.js file should have one call to a global function called 'Stage.defineWidget'.
 
 
-###Stage.addPlugin gets a settings object with the following options:
+###Stage.defineWidget gets a settings object with the following options:
 
 option | type | default | description
 --- | --- | --- | ---
-id |  String | - |  *Required* The id of the plugin. Should match the directory that we placed this plugin in 
-name | String | - |  *Required* The display name of this plugin. This name will show in the 'add Widget' dialog, and will also be the default widget name once added to the page.
-description | String | - | An optional description of the plugin. It will be shown in the 'add Widget' dialog below the widget name.
+id |  String | - |  *Required* The id of the widget definition. Should match the directory that we placed this widget in
+name | String | - |  *Required* The display name of this wudget. This name will show in the 'add Widget' dialog, and will also be the default widget name once added to the page.
+description | String | - | An optional description of the widget. It will be shown in the 'add Widget' dialog below the widget name.
 initialWidth | Integer| - | *Required* The default (initial) width of the widget when added to a page
 initialHeight | Integer| - | *Required* The default (initial) height of the widget when added to a page
 color | String | red | one out of : red , orange , yellow, olive, green, teal,blue, violet,purple,pink,brown,grey,black
@@ -66,26 +66,24 @@ initialConfiguration | Array | - | A list of widget configuration options. These
 pageSize | Integer | - | The initial page size for widgets that supports pagination
 
 
-###Available plugin functions
+###Available widget functions
 
-*init*(pluginUtils)
-Init is called when the plugin is loaded, which happens once when the system is loaded. This can be used to define some global stuff, such as classes and objects we are going to use in our plugin definition.
+*init*()
+Init is called when the widget definition is loaded, which happens once when the system is loaded. This can be used to define some global stuff, such as classes and objects we are going to use in our plugin definition.
 
-*render*(widget,data,context,pluginUtils)
-Render is called everytime the widget needs to draw itself. 
-It can be when the page is loaded, when widget data was changed, when context data was changed , when plugin data was fetched, and etc. 
+*render*(widget,data,toolbox)
+Render is called each time the widget needs to draw itself.
+It can be when the page is loaded, when widget data was changed, when context data was changed , when widget data was fetched, and etc.
 
 
 render parameters are:
  
-* The widget object itself (see description in 'widget object' section)
-* The fetched data (either using fetchUrl or fetchData method). The data will be null if fetchData or fetchUrl was not defined, and also untill the data is fetched it will pass null to the render method (if you expect data you can render 'loading' indication in such a case)
-* The context object (see description in the 'Plugin context' section)
-* pluginUtils (see 'Plugin utilities' section) 
- 
- 
-*postRender*(el,plugin,data,context,pluginUtils)
-*fetchData*(plugin,context,pluginUtils)
+* The widget object itself (see description in 'Widget object' section)
+* The fetched data (either using fetchUrl or fetchData method). The data will be null if fetchData or fetchUrl was not defined, and also until the data is fetched it will pass null to the render method (if you expect data you can render 'loading' indication in such a case)
+* The toolbox object (see description in the 'Toolbox object' section)
+
+*postRender*(el,widget,data,toolbox)
+*fetchData*(widget,toolbox, fetchParams)
 
 ###Widget object
 
@@ -94,19 +92,33 @@ Event object has the following attributes
 attribute | description
 --- | ---
 id | The id of the widget (uuid)
-name | The display name of the widget (The plugin name is the default name for the widget, but the user can chagne it)
+name | The display name of the widget (The widget definition name is the default name for the widget, but the user can change it)
 height | The actual height of the widget on the page
 width | The actual width of the widget on the page 
 x | The actual x location of the widget on the page
 y | The actual y location of the widget on the page
-plugin | The plugin object as it was passed to addPlugin method. The only additional field there that the widget can access is the 'template'. The template is fetched from the html and added on the plugin definition.
+definition | The widget definition object as it was passed to defineWidget method. The only additional field there that the widget can access is the 'template'. The template is fetched from the html and added on the widget definition.
 
-###Plugin context
-Plugin context gives access to the application context. Using the context we can pass arguments between widgets, for example when a blueprint is selected, set the context to the selected blueprint, and all the widgets that can filter by blueprint can read this value and filter accordingly.
+###Toolbox object
+The toolbox object gives the widget tools to communicate with the application and with other widgets. It also gives some generic tools that the widget might require.
+
+The toolbox gives access to the following tools:
+* getEventBus - used to listen (register) to events and trigger events.
+* getManager - used to access the connected manager
+* getContext - used to access the applicaton context
+
+It also supports the following functions:
+*drillDown*(widget,defaultTemplate)
+*refresh*()
+
+
+
+A widget context gives access to the application context. Using the context we can pass arguments between widgets, for example when a blueprint is selected, set the context to the selected blueprint, and all the widgets that can filter by blueprint can read this value and filter accordingly.
 Using the context is done by using 'setValue' and 'getValue' of the pluginContext:
- 
+
  * setValue(key,value)
  * getValue(key) - returns value
+
 
 It gives access to the selected manager's url:
  * getManagerUrl()
@@ -237,31 +249,7 @@ For example:
 }
 ```
 
-###Plugin utilities
-
-Plugin utilities gives access to some 3rd party utilities that Cloudify UI supports:
-
-*buildFromTemplate*(html,data) 
-gets the html template and the data for the template and returns a compiled html
-
-for example:
-```javascript
-   return pluginUtils.buildFromTemplate("<div>something</div>",{});
-```
-
-*renderLoading*()
-returns an html string that generates a standard loading. Can be used to generate loading indication incase the data was not fetched yet.
-For example:
-
-```javascript
-    render: function(widget,data,context,pluginUtils) {
-        if (_.isEmpty(data)) {
-            return pluginUtils.renderLoading();
-        }
-
-        return pluginUtils.buildFromTemplate(widget.plugin.template,data);
-    },
-```
+### Additional libraries that are available to a widget
 
 *moment* a date/time parsing utility. [Moment documentation](http://momentjs.com/docs/)
 
@@ -271,20 +259,19 @@ for example:
         var formattedData = Object.assign({},data,{
             items: _.map (data.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: pluginUtils.moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), 
-                    updated_at: pluginUtils.moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
+                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
+                    updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
                 })
             })
         });
-        return pluginUtils.buildFromTemplate(widget.plugin.template,formattedData);
 ```
 
 *jQuery*
 
 for example:
 ```
-    postRender: function(el,widget,data,context,pluginUtils) {
-        pluginUtils.jQuery(el).find('.ui.dropdown').dropdown({
+    postRender: function(el,widget,data,toolbox) {
+        $(el).find('.ui.dropdown').dropdown({
             onChange: (value, text, $choice) => {
                 context.setValue('selectedValue',value);
             }
@@ -297,23 +284,15 @@ for example:
 
 The widget template is an html file written with [lodash template engine](https://lodash.com/docs/4.15.0#template).
  
-Widget template if fetched when the plugin is loaded, and its passed to the render function. To access it use widget.plugin.template.
-To render the template using the built in lodash templates engine use `pluginUtils.buildFromTemplate(widget.plugin.template,data)`, where 'data' is any context you want to pass on to the template.
+Widget template if fetched when the widget definition is loaded, and its passed to the render function. To access it use widget.definition.template.
+To render the template using the built in lodash templates engine use `_.template(widget.definition.template)(data);`, where 'data' is any context you want to pass on to the template.
 For example, a simple render function will look like this
 
 ```javascript
-    render: function(widget,data,context,pluginUtils) {
-        if (!widget.plugin.template) {
+    render: function(widget,data,toolbox) {
+        if (!widget.definition.template) {
             return 'missing template';
         }
-        return pluginUtils.buildFromTemplate(widget.plugin.template,{});
-
+        return _.template(widget.definition.template)();
     }
 ```
-
-## Future features
-
-* Context having levels - widget, page, application
-* Provide dev env for plugin
-* Ability to upload a plugin through the system, and not having to put it in the '/plugin' library
-* Plugin holding more then one widget
