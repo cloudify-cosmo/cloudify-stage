@@ -50,7 +50,7 @@ export function updatePageDescription(pageId,newDescription) {
     }
 
 }
-export function selectPage(pageId,isDrilldown,context) {
+export function selectPage(pageId,isDrilldown,drilldownContext,drilldownPageName) {
     return function (dispatch) {
 
         if (!isDrilldown) {
@@ -58,8 +58,11 @@ export function selectPage(pageId,isDrilldown,context) {
         }
 
         var location = {pathname:`/page/${pageId}`};
-        if (!_.isEmpty(context)) {
-            location.query=context;
+        if (!_.isEmpty(drilldownPageName)){
+            location.pathname +=`/${drilldownPageName}`;
+        }
+        if (!_.isEmpty(drilldownContext)) {
+            location.query=drilldownContext;
         }
         dispatch(push(location));
     }
