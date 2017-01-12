@@ -61,7 +61,9 @@ class Plugin {
             id: "pollingTime",
             name: "Refresh time interval",
             placeHolder: "Enter time interval in seconds",
-            default: 0
+            description: "Data of the widget will be refreshed per provided interval time in seconds",
+            default: 0,
+            type: Stage.Basic.Field.NUMBER_TYPE
         };
 
         let option = _.find(this.initialConfiguration,{id:"pollingTime"});

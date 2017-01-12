@@ -29,8 +29,7 @@ export default class extends React.Component {
     }
 
     _selectDeployment(item) {
-        var drillDownConfig = this.props.widget.configuration.clickToDrillDown;
-        if (drillDownConfig === 'true') {
+        if (this.props.widget.configuration.clickToDrillDown) {
             this.props.toolbox.drillDown(this.props.widget,'deployment',{deploymentId: item.id});
         } else {
             var oldSelectedDeploymentId = this.props.toolbox.getContext().getValue('deploymentId');

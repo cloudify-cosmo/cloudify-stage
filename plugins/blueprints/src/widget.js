@@ -14,7 +14,8 @@ Stage.addPlugin({
     isReact: true,
     initialConfiguration: [
         {id: "pollingTime", default: 2},
-        {id: "displayStyle",name: "Display style", placeHolder: "Enter 'table' or 'catalog'", default: "table"}
+        {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
+            default: "table", type: Stage.Basic.Field.LIST_TYPE}
     ],
     fetchUrl: {
         blueprints: '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',

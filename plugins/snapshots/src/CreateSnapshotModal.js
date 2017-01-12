@@ -58,9 +58,6 @@ export default class extends React.Component {
 
     render() {
         var Modal = Stage.Basic.Modal;
-        var Header = Stage.Basic.ModalHeader;
-        var Body = Stage.Basic.ModalBody;
-        var Footer = Stage.Basic.ModalFooter;
         var ErrorMessage = Stage.Basic.ErrorMessage;
 
         return (
@@ -70,11 +67,11 @@ export default class extends React.Component {
                     Create
                 </button>
 
-                <Modal show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
-                    <Header>
+                <Modal.Frame show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+                    <Modal.Header>
                         <i className="add icon"></i> Create snapshot
-                    </Header>
-                    <Body>
+                    </Modal.Header>
+                    <Modal.Body>
                         <form className="ui form createForm" onSubmit={this._submitCreate.bind(this)} action="">
                             <div className="field">
                                 <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
@@ -84,19 +81,13 @@ export default class extends React.Component {
 
                             <input type='submit' style={{"display": "none"}} ref='submitCreateBtn'/>
                         </form>
-                    </Body>
+                    </Modal.Body>
 
-                    <Footer>
-                        <div className="ui cancel basic button">
-                            <i className="remove icon"></i>
-                            Cancel
-                        </div>
-                        <div className="ui ok green  button">
-                            <i className="add icon"></i>
-                            Create
-                        </div>
-                    </Footer>
-                </Modal>
+                    <Modal.Footer>
+                        <Modal.Cancel/>
+                        <Modal.Approve label="Create" icon="add" className="green"/>
+                    </Modal.Footer>
+                </Modal.Frame>
             </div>
         );
     }

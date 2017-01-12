@@ -10,16 +10,26 @@ export default class EditWidgetModal extends Component {
         configuration: PropTypes.object.isRequired,
         configDef: PropTypes.array.isRequired,
         widget: PropTypes.object.isRequired,
-        onWidgetEdited: PropTypes.func.isRequired
+        showConfig: PropTypes.bool.isRequired,
+        onWidgetEdited: PropTypes.func.isRequired,
+        onShowWidgetConfig: PropTypes.func.isRequired
     };
 
-    _editWidget() {
+    onApprove() {
         // Get the changed configurations
         var config = _.clone(this.props.configuration);
-        $(this.refs.modal).find('.configInput').each((index,input)=>{
+
+        $(this.refs.configForm).find('.fieldInput').each((index,input)=>{
             var $input = $(input);
             var id = $input.data('id');
+            var type = $input.data('type');
             var value = $input.val();
+
+            if (type === Stage.Basic.Field.MULTI_SELECT_LIST_TYPE) {
+                value = _.split(value, ',');
+            } else if (type == Stage.Basic.Field.BOOLEAN_TYPE) {
+                value = $input.is(':checked');
+            }
 
             config[id] = value;
         });
@@ -28,45 +38,48 @@ export default class EditWidgetModal extends Component {
             this.props.onWidgetEdited(config);
         }
 
-        $('#editWidgetModal-'+this.props.widget.id).modal('hide');
+        this.props.onShowWidgetConfig(false);
+        return true;
+    }
+
+    onDeny() {
+        this.props.onShowWidgetConfig(false);
+        return true;
     }
 
     render() {
-        return (
-            <div className="ui large modal" ref='modal' id={'editWidgetModal-'+this.props.widget.id}>
-              <div className="header">
-                Configure Widget
-              </div>
+        var Modal = Stage.Basic.Modal;
+        var Field = Stage.Basic.Field;
 
-              <div className="content">
-                  <div className="ui form">
+        return (
+            <Modal.Frame show={this.props.showConfig} onDeny={this.onDeny.bind(this)}
+                         onApprove={this.onApprove.bind(this)} onVisible={(modal)=>$(modal).find('[data-content]').popup()}>
+                <Modal.Header>Configure Widget</Modal.Header>
+
+                <Modal.Body>
+                    <div className="ui form" ref='configForm'>
                     {
                         this.props.configDef.map((config)=>{
                             var currValue = _.get(this.props.configuration,'['+config.id+']',config.value || config.default);
 
-                            return (
-                                <div className="field" key={config.id}>
-                                    <label>{config.name}</label>
-                                    <div className="ui icon input fluid mini">
-                                        {
-                                            config.icon ?
-                                                <i className={config.icon + " icon"}></i>
-                                                :
-                                                ''
-                                        }
-                                        <input className='configInput' data-id={config.id} type="text" placeholder={config.placeHolder} defaultValue={currValue}/>
-                                    </div>
-                                </div>
-                            );
+                            return <Field key={config.id}
+                                          id={config.id}
+                                          type={config.type}
+                                          placeholder={config.placeHolder}
+                                          label={config.name}
+                                          description={config.description}
+                                          value={currValue}
+                                          icon={config.icon}
+                                          items={config.items}/>
                         })
                     }
-                  </div>
-            </div>
-            <div className="actions">
-                <button className="ui approve button" onClick={this._editWidget.bind(this)}>Save</button>
-                <button className="ui cancel button">Cancel</button>
-            </div>
-        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Modal.Approve/>
+                    <Modal.Cancel/>
+                </Modal.Footer>
+            </Modal.Frame>
         );
     }
 }

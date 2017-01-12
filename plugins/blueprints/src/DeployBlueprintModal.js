@@ -85,69 +85,60 @@ export default class extends React.Component {
     }
     render() {
         var Modal = Stage.Basic.Modal;
-        var Header = Stage.Basic.ModalHeader;
-        var Body = Stage.Basic.ModalBody;
-        var Footer = Stage.Basic.ModalFooter;
         var ErrorMessage = Stage.Basic.ErrorMessage;
 
         var blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
 
         return (
             <div>
-                <Modal show={this.props.show} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
-                    <Header>
+                <Modal.Frame show={this.props.show} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+                    <Modal.Header>
                         <i className="rocket icon"></i> Deploy blueprint {blueprint.id}
-                    </Header>
+                    </Modal.Header>
 
-                    <Body>
-                    <form className="ui form deployForm" onSubmit={this._submitDeploy.bind(this)} action="">
-                        <div className="field">
-                            <input type="text" required name='deploymentName' placeholder="Deployment name"/>
-                        </div>
-
-                        {
-                            blueprint.id
-                            &&
-                            <h4 className="ui dividing header">Deployment inputs</h4>
-                        }
-
-                        {
-                            blueprint.id && _.isEmpty(blueprint.plan.inputs)
-                            &&
-                            <div className="ui visible message">
-                                <p>No inputs available for the blueprint</p>
+                    <Modal.Body>
+                        <form className="ui form deployForm" onSubmit={this._submitDeploy.bind(this)} action="">
+                            <div className="field">
+                                <input type="text" required name='deploymentName' placeholder="Deployment name"/>
                             </div>
-                        }
 
-                        {
-                            _.map(blueprint.plan.inputs, (input, name) => {
-                                return (
-                                    <div className="field" key={name}>
-                                        <label title={input.description || name }>{name}</label>
-                                        <input name='deploymentInput' data-name={name} type="text"
-                                               defaultValue={input.default}/>
-                                    </div>
-                                );
-                            })
-                        }
+                            {
+                                blueprint.id
+                                &&
+                                <h4 className="ui dividing header">Deployment inputs</h4>
+                            }
 
-                        <ErrorMessage error={this.state.error.message} header={this.state.error.header}/>
+                            {
+                                blueprint.id && _.isEmpty(blueprint.plan.inputs)
+                                &&
+                                <div className="ui visible message">
+                                    <p>No inputs available for the blueprint</p>
+                                </div>
+                            }
 
-                        <input type='submit' style={{"display": "none"}} ref='submitDeployBtn'/>
-                    </form>
-                    </Body>
+                            {
+                                _.map(blueprint.plan.inputs, (input, name) => {
+                                    return (
+                                        <div className="field" key={name}>
+                                            <label title={input.description || name }>{name}</label>
+                                            <input name='deploymentInput' data-name={name} type="text"
+                                                   defaultValue={input.default}/>
+                                        </div>
+                                    );
+                                })
+                            }
 
-                    <Footer>
-                        <div className="ui cancel basic button">
-                            <i className="remove icon"></i>
-                            Cancel
-                        </div>
-                        <div className="ui ok green  button">
-                            <i className="rocket icon"></i>
-                            Deploy
-                        </div>
-                    </Footer>
-                </Modal>
+                            <ErrorMessage error={this.state.error.message} header={this.state.error.header}/>
+
+                            <input type='submit' style={{"display": "none"}} ref='submitDeployBtn'/>
+                        </form>
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <Modal.Cancel/>
+                        <Modal.Approve label="Deploy" icon="rocket" className="green"/>
+                    </Modal.Footer>
+                </Modal.Frame>
             </div>
 
         );

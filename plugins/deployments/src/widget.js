@@ -14,9 +14,10 @@ Stage.addPlugin({
     initialConfiguration:
         [
             {id: "pollingTime", default: 2},
-            {id: "clickToDrillDown",name: "Should click to drilldown", placeHolder: "True of false to click to drill down", default: "true"},
-            {id: "blueprintIdFilter",name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by"},
-            {id: "displayStyle",name: "Display style", placeHolder: "Enter 'table' or 'list'", default: "table"}
+            {id: "clickToDrillDown",name: "Should click to drilldown", default: true, type: Stage.Basic.Field.BOOLEAN_TYPE},
+            {id: "blueprintIdFilter",name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by", type: Stage.Basic.Field.STRING_TYPE},
+            {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'List', value:'list'}],
+                default: "table", type: Stage.Basic.Field.LIST_TYPE}
         ],
     isReact: true,
     pageSize: 5,
@@ -47,7 +48,6 @@ Stage.addPlugin({
         return Promise.all([deploymentData, nodeData, nodeInstanceData]).then(function(data) {
                 let deploymentData = data[0];
                 let nodeSize = _.countBy(data[1].items, "deployment_id");
-
                 let nodeInstanceData = _.groupBy(data[2].items, "deployment_id");
 
                 let formattedData = Object.assign({},deploymentData,{

@@ -4,26 +4,27 @@
 
 import React, { Component, PropTypes } from 'react';
 
-import Header from './ModalHeader';
-import Footer from './ModalFooter';
-import Body from './ModalBody';
+import ModalHeader from './ModalHeader';
+import ModalFooter from './ModalFooter';
+import ModalBody from './ModalBody';
+import {ApproveButton, CancelButton} from './ModalButton';
 
-export {Header,Footer,Body};
-
-export default class Modal extends Component {
+class Modal extends Component {
     static propTypes = {
         children: PropTypes.any.isRequired,
         className: PropTypes.string,
         onDeny: PropTypes.func,
         onApprove: PropTypes.func,
+        onVisible: PropTypes.func,
         show: PropTypes.bool,
         loading: PropTypes.bool
     };
 
     static defaultProps = {
         className: '',
-        onDeny: function() {return true;},
-        onApprove: function() {return true;},
+        onDeny: ()=>{return true;},
+        onApprove: ()=>{return true;},
+        onVisible: ()=>{},
         show: false,
         loading: false
     };
@@ -34,12 +35,9 @@ export default class Modal extends Component {
             $(this.refs.modalObj).modal({
                 closable: false,
                 observeChanges: true,
-                onDeny: function () {
-                    return thi$.props.onDeny();
-                },
-                onApprove: function () {
-                    return thi$.props.onApprove();
-                }
+                onDeny: ()=>{ return thi$.props.onDeny() },
+                onApprove: ()=>{ return thi$.props.onApprove() },
+                onVisible: ()=>{ thi$.props.onVisible(this.refs.modalObj) }
             }).modal('show');
         } else {
             //Protection against useless modal initializing -> any .modal() execution including "hide" creates dimmer and rebind the content to it
@@ -73,7 +71,7 @@ export default class Modal extends Component {
         });
 
         return (
-            <div>
+            <div style={{display:'none'}}>
                 <div className={"ui modal "+this.props.className} ref='modalObj'>
                     {modalHeader}
                     {modalBody}
@@ -84,3 +82,11 @@ export default class Modal extends Component {
     }
 }
 
+export default {
+    Frame:Modal,
+    Header:ModalHeader,
+    Body:ModalBody,
+    Footer:ModalFooter,
+    Approve:ApproveButton,
+    Cancel:CancelButton
+};

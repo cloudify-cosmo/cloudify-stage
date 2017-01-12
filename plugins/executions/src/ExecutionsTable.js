@@ -32,29 +32,13 @@ export default class extends React.Component {
     }
 
     render() {
-
-        var fieldsToShowConfig;
-        try {
-            fieldsToShowConfig = JSON.parse(this.props.widget.configuration.fieldsToShow);
-        } catch (e) {
-            console.error('Error parsing fields-to-show configuration for executions table');
-        }
-
-        var fieldsToShow = [];
-        if (fieldsToShowConfig && Array.isArray(fieldsToShowConfig)) {
-            fieldsToShow = fieldsToShowConfig;
-        } else {
-            fieldsToShow = _.find(this.props.widget.plugin.initialConfiguration,{id:'fieldsToShow'}).default || ["Id"];
-        }
-
-
         var ErrorMessage = Stage.Basic.ErrorMessage;
         var Grid = Stage.Basic.Grid;
         var HighlightText = Stage.Basic.HighlightText;
         var Overlay = Stage.Basic.Overlay;
-        var OverlayAction = Stage.Basic.OverlayAction;
-        var OverlayContent = Stage.Basic.OverlayContent;
         var Checkmark = Stage.Basic.Checkmark;
+
+        var fieldsToShow = this.props.widget.configuration.fieldsToShow;
 
         return (
             <div>
@@ -94,14 +78,14 @@ export default class extends React.Component {
                                     <Grid.Data>{item.created_at}</Grid.Data>
                                     <Grid.Data><Checkmark value={item.is_system_workflow}/></Grid.Data>
                                     <Grid.Data>
-                                        <Overlay>
-                                            <OverlayAction>
+                                        <Overlay.Frame>
+                                            <Overlay.Action>
                                                 <i data-overlay-action className="options icon link bordered" title="Execution parameters"></i>
-                                            </OverlayAction>
-                                            <OverlayContent>
+                                            </Overlay.Action>
+                                            <Overlay.Content>
                                                 <HighlightText className='json'>{JSON.stringify(item.parameters, null, 2)}</HighlightText>
-                                            </OverlayContent>
-                                        </Overlay>
+                                            </Overlay.Content>
+                                        </Overlay.Frame>
                                     </Grid.Data>
                                     <Grid.Data>
                                         { _.isEmpty(item.error) ?
@@ -110,17 +94,17 @@ export default class extends React.Component {
                                                 {item.status}
                                             </div>
                                             :
-                                            <Overlay>
-                                                <OverlayAction title="Error details">
+                                            <Overlay.Frame>
+                                                <Overlay.Action title="Error details">
                                                     <i data-overlay-action className="remove circle icon red link"></i>
                                                     <a href="javascript:void(0)">
                                                         {item.status}
                                                     </a>
-                                                </OverlayAction>
-                                                <OverlayContent>
+                                                </Overlay.Action>
+                                                <Overlay.Content>
                                                     <HighlightText className='python'>{item.error}</HighlightText>
-                                                </OverlayContent>
-                                            </Overlay>
+                                                </Overlay.Content>
+                                            </Overlay.Frame>
                                         }
                                     </Grid.Data>
                                 </Grid.Row>

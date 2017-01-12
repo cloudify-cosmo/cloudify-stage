@@ -21,11 +21,11 @@ Stage.addPlugin({
     hasTemplate: true,
     initialConfiguration: [
         {id: "pollingTime", default: 2},
-        {id: 'enableNodeClick', name: 'Enable node click' ,placeHolder:"true of false", default:"true"},
-        {id: 'enableGroupClick', name: 'Enable group click' ,placeHolder:"true of false", default:"true"},
-        {id: 'enableZoom', name: 'Enable zoom' ,placeHolder:"true of false", default:"true"},
-        {id: 'enableDrag', name: 'Enable drag' ,placeHolder:"true of false", default:"true"},
-        {id: 'showToolbar', name: 'Show toolbar' ,placeHolder:"true of false", default:"true"}
+        {id: 'enableNodeClick', name: 'Enable node click', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
+        {id: 'enableGroupClick', name: 'Enable group click', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
+        {id: 'enableZoom', name: 'Enable zoom', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
+        {id: 'enableDrag', name: 'Enable drag', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
+        {id: 'showToolbar', name: 'Show toolbar', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE}
     ],
 
     fetchData: function(plugin,toolbox) {
@@ -41,11 +41,11 @@ Stage.addPlugin({
         }
 
         var topologyConfig = {
-            enableNodeClick: widget.configuration.enableNodeClick === 'true',
-            enableGroupClick: widget.configuration.enableGroupClick === 'true',
-            enableZoom: widget.configuration.enableZoom === 'true',
-            enableDrag: widget.configuration.enableDrag === 'true',
-            showToolbar: widget.configuration.showToolbar === 'true'
+            enableNodeClick: widget.configuration.enableNodeClick,
+            enableGroupClick: widget.configuration.enableGroupClick,
+            enableZoom: widget.configuration.enableZoom,
+            enableDrag: widget.configuration.enableDrag,
+            showToolbar: widget.configuration.showToolbar
         };
 
         var topologyTemplate = _.template(widget.plugin.template)(topologyConfig);
