@@ -13,7 +13,10 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            confirmDelete:false
+            showDeploymentModal: false,
+            blueprint: {},
+            confirmDelete:false,
+            error: null
         }
     }
 
@@ -25,8 +28,8 @@ export default class extends React.Component {
     _createDeployment(item){
         // Get the full blueprint data (including plan for inputs)
         var actions = new Actions(this.props.toolbox);
-        actions.doGetFullBlueprintData(item).then((fullBlueprint)=>{
-            this.props.toolbox.getContext().setValue(this.props.widget.id + 'createDeploy',fullBlueprint);
+        actions.doGetFullBlueprintData(item).then((blueprint)=>{
+            this.setState({error: null, blueprint, showDeploymentModal: true});
         }).catch((err)=> {
             this.setState({error: err.error});
         });
@@ -68,6 +71,10 @@ export default class extends React.Component {
         this.props.toolbox.getEventBus().off('blueprints:refresh',this._refreshData);
     }
 
+    _hideDeploymentModal() {
+        this.setState({showDeploymentModal: false});
+    }
+
     fetchGridData(fetchParams) {
         this.props.toolbox.refresh(fetchParams);
     }
@@ -107,7 +114,10 @@ export default class extends React.Component {
                          onConfirm={this._deleteBlueprint.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
 
-                <DeployModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
+                <DeployModal show={this.state.showDeploymentModal}
+                             blueprint={this.state.blueprint}
+                             onHide={this._hideDeploymentModal.bind(this)}
+                             toolbox={this.props.toolbox}/>
 
             </div>
 
