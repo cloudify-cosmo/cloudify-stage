@@ -49,7 +49,7 @@ export default class Overlay extends Component {
         return (
             <div>
                 {overlayAction}
-                <div className={`ui ${this.props.className} modal`} ref='overlayObj'>
+                <div className={`ui ${this.props.className} overlay modal`} ref='overlayObj'>
                     {overlayContent}
                 </div>
             </div>

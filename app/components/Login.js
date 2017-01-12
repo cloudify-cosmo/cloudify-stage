@@ -12,20 +12,20 @@ export default class Login extends Component {
         loginError: PropTypes.string,
         onLogin: PropTypes.func.isRequired
     };
-    //
+
     constructor(props,context){
         super(props, context);
 
         this.state = {
-            ip: props.ip,
-            username: props.username,
+            ip: props.ip || '',
+            username: props.username || '',
             password: ''
         };
     }
     onSubmit(e) {
         e.preventDefault();
 
-        this.props.onLogin(this.state.ip,this.state.username,this.state.password);
+        this.props.onLogin(this.state.ip, this.state.username, this.state.password);
     }
 
 

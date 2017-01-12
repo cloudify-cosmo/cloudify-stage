@@ -6,6 +6,7 @@ bower_components
 plugins/blueprints/widget.js
 plugins/deploymentNum/widget.js
 plugins/deployments/widget.js
+plugins/deploymentButton/widget.js
 plugins/events/widget.js
 plugins/filter/widget.js
 plugins/githubRepositories/widget.js

@@ -18,5 +18,6 @@
   "filter",
   "outputs",
   "executions",
-  "nodes"
+  "nodes",
+  "deploymentButton"
 ]
