@@ -41,11 +41,7 @@ export default class extends React.Component {
         return (
             <div>
 
-                <Grid.Table fetchData={() => {}}
-                            totalSize={this.props.instances.length}
-                            pageSize={this.props.widget.plugin.pageSize}
-                            selectable={false}
-                            className="nodesInstancesTable">
+                <Grid.Table className="nodesInstancesTable">
 
                     <Grid.Column label="Instance" name="id" width="40%"/>
                     <Grid.Column label="Status" name="state" width="30%"/>

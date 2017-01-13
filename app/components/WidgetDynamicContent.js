@@ -38,16 +38,13 @@ export default class WidgetDynamicContent extends Component {
         return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this));
     }
 
-    _extractParams(url) {
-        const PARAMS_REGEX = /\[params(:(([^,]*,?)*))?]/;
-        let paramsMatch = url.match(PARAMS_REGEX);
-
-        return paramsMatch != null ? paramsMatch[2] : null;
+    _getUrlRegExString(str) {
+        return new RegExp('\\[' + str + ':?(.*)\\]', 'i');
     }
 
     _fetch(url, toolbox) {
 
-        var fetchUrl = _.replace(url,/\[config:(.*)\]/i,(match,configName)=>{
+        var fetchUrl = _.replace(url,this._getUrlRegExString('config'),(match,configName)=>{
             return this.props.widget.configuration ? this.props.widget.configuration[configName] : 'NA';
         });
 
@@ -56,11 +53,14 @@ export default class WidgetDynamicContent extends Component {
             var baseUrl = url.substring('[manager]'.length);
 
             let params = {};
-            let paramsMatch = url.match(/\[params(:(([^,]*,?)*))?]/);
-            if (paramsMatch != null) {
-                let paramsUrlString = paramsMatch[0];
-                let allowedParams = paramsUrlString !== '[params]' ? paramsMatch[2].split(',') : null;
-                params = this._fetchParams(allowedParams);
+            let paramsMatch = this._getUrlRegExString('params').exec(url);
+            if (!_.isNull(paramsMatch)) {
+                let [paramsUrlString, allowedParams] = paramsMatch;
+                params = this._fetchParams();
+                if (allowedParams) {
+                    allowedParams = _.replace(allowedParams, 'gridParams', '_sort,_size,_offset').split(',');
+                    params = _.pick(params, allowedParams);
+                }
                 baseUrl = _.replace(baseUrl, paramsUrlString, '');
             }
 
@@ -70,7 +70,7 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
-    _fetchParams(allowedParams) {
+    _fetchParams() {
         let params = {};
 
         let gridParams = this.fetchParams.gridParams;
@@ -90,8 +90,7 @@ export default class WidgetDynamicContent extends Component {
 
         let filterParams = this.fetchParams.filterParams;
         _.forIn(filterParams, function(value, key) {
-            if (!(typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null) &&
-                (typeof allowedParams == 'undefined' || allowedParams === null || _.indexOf(allowedParams, key) >= 0)) {
+            if (!(typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null)) {
                 params[key] = value;
             }
         });

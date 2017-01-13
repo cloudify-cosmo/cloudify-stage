@@ -38,10 +38,13 @@ class GridTable extends Component {
     };
 
     static defaultProps = {
-        searchable: false,
-        selectable: false,
+        fetchData: ()=>{},
+        totalSize: -1,
+        pageSize: 0,
         sortColumn: "",
         sortAscending: true,
+        searchable: false,
+        selectable: false,
         className: ""
     };
 
@@ -117,7 +120,6 @@ class GridTable extends Component {
                             if (expChild.type.name === "GridRow") {
                                 bodyRows.push(React.cloneElement(expChild, {showCols}));
                             } else if (expChild.type.name === "GridDataExpandable" && child.props.expanded) {
-                                console.debug("child.props.expanded=" + child.props.expanded);
                                 expandableContent.push(React.cloneElement(expChild, {numberOfColumns: showCols.length}));
                             }
                         }
@@ -131,21 +133,6 @@ class GridTable extends Component {
             }
         });
 
-        let pagination = this.props.hasOwnProperty('totalSize');
-
-        let getTable = () =>
-            <table className={`ui very compact table sortable ${this.props.selectable?'selectable':''} ${this.props.className}`} cellSpacing="0" cellPadding="0">
-                <thead><tr>
-                    {headerColumns}
-                </tr></thead>
-                {pagination && this.props.totalSize <= 0 ?
-                    <tbody><tr className="noDataRow"><td colSpan={headerColumns.length} className="center aligned">No data available</td></tr></tbody>
-                    :
-                    <tbody>{bodyRows}</tbody>
-                }
-            </table>;
-
-
         return (
             <div className={`gridTable ${this.props.className}`}>
                 { (this.props.searchable || !_.isEmpty(gridFilters) || gridAction) &&
@@ -158,16 +145,20 @@ class GridTable extends Component {
                     </div>
                 }
 
-                {pagination
-                ?
-                    <Pagination totalSize={this.props.totalSize}
-                                pageSize={this.props.pageSize}
-                                fetchData={this._fetchData.bind(this)} ref="pagination">
-                        {getTable()}
-                    </Pagination>
-                :
-                    getTable()
-                }
+                <Pagination totalSize={this.props.totalSize}
+                            pageSize={this.props.pageSize}
+                            fetchData={this._fetchData.bind(this)} ref="pagination">
+                    <table className={`ui very compact table sortable ${this.props.selectable?'selectable':''} ${this.props.className}`} cellSpacing="0" cellPadding="0">
+                        <thead><tr>
+                            {headerColumns}
+                        </tr></thead>
+                        {this.props.totalSize === 0 ?
+                            <tbody><tr className="noDataRow"><td colSpan={headerColumns.length} className="center aligned">No data available</td></tr></tbody>
+                            :
+                            <tbody>{bodyRows}</tbody>
+                        }
+                    </table>
+                </Pagination>
 
             </div>
         );
