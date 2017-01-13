@@ -105,18 +105,23 @@ export default class extends React.Component {
                                     </Grid.Data>
                                     <Grid.Data>
                                         { _.isEmpty(item.error) ?
-                                            <i className="check circle icon inverted green"></i>
+                                            <div>
+                                                <i className="check circle icon inverted green"></i>
+                                                {item.status}
+                                            </div>
                                             :
                                             <Overlay>
-                                                <OverlayAction>
-                                                    <i data-overlay-action className="remove circle icon red link bordered" title="Error details"></i>
+                                                <OverlayAction title="Error details">
+                                                    <i data-overlay-action className="remove circle icon red link"></i>
+                                                    <a href="javascript:void(0)">
+                                                        {item.status}
+                                                    </a>
                                                 </OverlayAction>
                                                 <OverlayContent>
                                                     <HighlightText className='python'>{item.error}</HighlightText>
                                                 </OverlayContent>
                                             </Overlay>
                                         }
-                                        {item.status}
                                     </Grid.Data>
                                 </Grid.Row>
                             );

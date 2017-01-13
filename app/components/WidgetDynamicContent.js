@@ -35,7 +35,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     _getToolbox () {
-        return getToolbox(this._fetchData.bind(this));
+        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this));
     }
 
     _extractParams(url) {
@@ -107,6 +107,10 @@ export default class WidgetDynamicContent extends Component {
     _afterFetch() {
         this._hideLoading();
         this._startPolling();
+    }
+
+    _loadingIndicator(show) {
+        this.setState({loading: show})
     }
 
     _showLoading() {

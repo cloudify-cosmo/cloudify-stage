@@ -58,16 +58,18 @@ export default class extends React.Component {
         var Footer = Stage.Basic.ModalFooter;
         var ErrorMessage = Stage.Basic.ErrorMessage;
 
+        var workflow = Object.assign({},{name:"", parameters:[]}, this.props.workflow);
+
         return (
             <Modal show={this.props.show} className='executeModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
                 <Header>
-                    <i className="road icon"></i> Execute workflow {this.props.workflow ? this.props.workflow.name : ""}
+                    <i className="road icon"></i> Execute workflow {workflow.name}
                 </Header>
 
                 <Body>
                 <form className="ui form executeForm" onSubmit={this._submitExecute.bind(this)} action="" ref='executeForm'>
-                        {this.props.workflow &&
-                            _.map(this.props.workflow.parameters,(parameter,name)=>{
+                        {
+                            _.map(workflow.parameters,(parameter,name)=>{
                                 return (
                                     <div className="field" key={name}>
                                         <label title={parameter.description || name }>{name}</label>

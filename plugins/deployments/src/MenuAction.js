@@ -19,11 +19,11 @@ export default class extends React.Component {
             <div className="ui icon top right pointing dropdown" ref={(dropdown)=>$(dropdown).dropdown({onChange: this.onDropdownChange.bind(this)})} onClick={(e)=>e.stopPropagation()}>
                 <i className={this.props.bordered?'road icon link bordered':'ellipsis vertical large link icon'}></i>
                 <div className="menu" ref="popupMenu">
-                    <div className="item" data-value="details">Details</div>
-                    <div className="header">Execute workflow</div>
+                    <div className="header"><i className="road icon"></i>Execute workflow</div>
+                    <div className="divider"></div>
                     {
                         this.props.item.workflows.map((workflow)=>{
-                            return <div key={workflow.name} className="item workflow" data-value={workflow.name}>{_.capitalize(_.lowerCase(workflow.name))}</div>
+                            return <div key={workflow.name} className="item workflow" data-value={workflow.name}><span className="indent">{_.capitalize(_.lowerCase(workflow.name))}</span></div>
                         })
                     }
                     <div className="divider"></div>

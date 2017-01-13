@@ -4,14 +4,35 @@
 
 import Actions from './actions';
 
+let PropTypes = React.PropTypes;
+
 export default class extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
         this.state = {
-            error: null,
+            error: {},
             loading: false
+        }
+    }
+
+    static propTypes = {
+        toolbox: PropTypes.object.isRequired,
+        show: PropTypes.bool.isRequired,
+        blueprint: PropTypes.object.isRequired,
+        onHide: PropTypes.func
+    };
+
+    static defaultProps = {
+        onHide: ()=>{}
+    };
+
+    componentWillUpdate(prevProps, prevState) {
+        //same Modal instance is used multiple time so we need to reset states
+        if (this.props.show && prevProps.show != this.props.show) {
+            this.setState({error: {}, loading: false});
+            $("form input:text").val("");
         }
     }
 
@@ -20,11 +41,20 @@ export default class extends React.Component {
         return false;
     }
 
-    _deploy() {
-        var deployItem = this.props.toolbox.getContext().getValue(this.props.widget.id + 'createDeploy');
+    _error(message, header) {
+        return {message, header};
+    }
 
-        if (!deployItem) {
-            this.setState({error: 'Blueprint not selected'});
+    onDeny () {
+        this.props.onHide();
+        return true;
+    }
+
+    _submitDeploy (e) {
+        e.preventDefault();
+
+        if (!this.props.blueprint) {
+            this.setState({error: this._error("Blueprint not selected", "Missing data")});
             return false;
         }
 
@@ -41,28 +71,15 @@ export default class extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doDeploy(deployItem,deploymentId,inputs)
+        actions.doDeploy(this.props.blueprint, deploymentId, inputs)
             .then((/*deployment*/)=> {
                 this.setState({loading: false});
-                this.props.toolbox.getContext().setValue(this.props.widget.id + 'createDeploy',null);
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
+                this.props.onHide();
             })
             .catch((err)=>{
-                this.setState({loading: false, error: err.error});
+                this.setState({loading: false, error: this._error(err.error, "Error deploying blueprint")});
             });
-
-        return false;
-    }
-
-    onDeny () {
-        this.props.toolbox.getContext().setValue(this.props.widget.id + 'createDeploy',null);
-        return true;
-    }
-
-    _submitDeploy (e) {
-        e.preventDefault();
-
-        this._deploy();
 
         return false;
     }
@@ -73,21 +90,13 @@ export default class extends React.Component {
         var Footer = Stage.Basic.ModalFooter;
         var ErrorMessage = Stage.Basic.ErrorMessage;
 
-        var deployItem = this.props.toolbox.getContext().getValue(this.props.widget.id + 'createDeploy');
-        var shouldShow = !_.isEmpty(deployItem);
-        deployItem = Object.assign({},{
-                id: '',
-                plan: {
-                    inputs: {}
-                }
-            },
-            deployItem
-        );
+        var blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
+
         return (
             <div>
-                <Modal show={shouldShow} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+                <Modal show={this.props.show} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                     <Header>
-                        <i className="rocket icon"></i> Deploy blueprint {deployItem.id}
+                        <i className="rocket icon"></i> Deploy blueprint {blueprint.id}
                     </Header>
 
                     <Body>
@@ -97,17 +106,32 @@ export default class extends React.Component {
                         </div>
 
                         {
-                            _.map(deployItem.plan.inputs,(input,name)=>{
+                            blueprint.id
+                            &&
+                            <h4 className="ui dividing header">Deployment inputs</h4>
+                        }
+
+                        {
+                            blueprint.id && _.isEmpty(blueprint.plan.inputs)
+                            &&
+                            <div className="ui visible message">
+                                <p>No inputs available for the blueprint</p>
+                            </div>
+                        }
+
+                        {
+                            _.map(blueprint.plan.inputs, (input, name) => {
                                 return (
                                     <div className="field" key={name}>
                                         <label title={input.description || name }>{name}</label>
-                                        <input name='deploymentInput' data-name={name} type="text" defaultValue={input.default}/>
+                                        <input name='deploymentInput' data-name={name} type="text"
+                                               defaultValue={input.default}/>
                                     </div>
                                 );
                             })
                         }
 
-                        <ErrorMessage error={this.state.error} header="Error deploying blueprint" className="deployFailed"/>
+                        <ErrorMessage error={this.state.error.message} header={this.state.error.header}/>
 
                         <input type='submit' style={{"display": "none"}} ref='submitDeployBtn'/>
                     </form>

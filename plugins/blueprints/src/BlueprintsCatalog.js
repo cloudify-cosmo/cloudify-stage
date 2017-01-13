@@ -119,15 +119,18 @@ export default class BlueprintsCatalog extends React.Component{
 
         return (
             <div>
-                <div style={{padding: '10px 0px'}}>
-                    <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
-                </div>
                 <Segment.List totalSize={this.props.data.total}
                               pageSize={this.props.widget.plugin.pageSize}
                               fetchData={this.props.fetchData}>
+
+                    <Segment.Action>
+                        <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
+                    </Segment.Action>
+
                     <div className="ui grid">
                         {blueprintsRows}
                     </div>
+
                 </Segment.List>
             </div>
         );

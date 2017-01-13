@@ -2,7 +2,7 @@
  * Created by kinneretzin on 07/09/2016.
  */
 
-import DeploymentsTable from './DeploymentsTable';
+import DeploymentsList from './DeploymentsList';
 
 Stage.addPlugin({
     id: "deployments",
@@ -16,7 +16,7 @@ Stage.addPlugin({
             {id: "pollingTime", default: 2},
             {id: "clickToDrillDown",name: "Should click to drilldown", placeHolder: "True of false to click to drill down", default: "true"},
             {id: "blueprintIdFilter",name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by"},
-            {id: "displayComponent",name: "Display component", placeHolder: "Enter new if segment list or old if grid table", default: "new"}
+            {id: "displayStyle",name: "Display style", placeHolder: "Enter 'table' or 'list'", default: "table"}
         ],
     isReact: true,
     pageSize: 5,
@@ -37,16 +37,17 @@ Stage.addPlugin({
         var deploymentIds = deploymentData.then(data=>Promise.resolve([...new Set(data.items.map(item=>item.id))]));
 
         var nodeData = deploymentIds.then(ids=>{
-                    return toolbox.getManager().doGet('/nodes?_include=deployment_id', {deployment_id: ids});
+                    return toolbox.getManager().doGet('/nodes?_include=id,deployment_id', {deployment_id: ids});
                 });
 
         var nodeInstanceData = deploymentIds.then(ids=>{
-                    return toolbox.getManager().doGet('/node-instances?_include=state,deployment_id', {deployment_id: ids});
+                    return toolbox.getManager().doGet('/node-instances?_include=id,state,deployment_id', {deployment_id: ids});
                 });
 
         return Promise.all([deploymentData, nodeData, nodeInstanceData]).then(function(data) {
                 let deploymentData = data[0];
                 let nodeSize = _.countBy(data[1].items, "deployment_id");
+
                 let nodeInstanceData = _.groupBy(data[2].items, "deployment_id");
 
                 let formattedData = Object.assign({},deploymentData,{
@@ -81,7 +82,7 @@ Stage.addPlugin({
         });
 
         return (
-            <DeploymentsTable widget={widget} data={formattedData} toolbox={toolbox}/>
+            <DeploymentsList widget={widget} data={formattedData} toolbox={toolbox}/>
         );
     }
 });

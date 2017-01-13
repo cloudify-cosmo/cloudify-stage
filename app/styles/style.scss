@@ -1,6 +1,11 @@
 body {
 }
 
+a:hover {
+  text-decoration: underline !important;
+  cursor: pointer;
+}
+
 .logo {
   img {
     height: 45px;
@@ -141,16 +146,17 @@ body {
     top: 35px;
     bottom: 15px;
     left: 0px;
-    right: 0;
+    right: 0px;
     overflow: auto;
     padding: 15px;
 
     &.noHeader {
-      top: 15px;
+      top: 25px;
     }
 
     &.noBorder {
       overflow: initial;
+      padding: 0px !important;
     }
   }
 }
@@ -282,23 +288,23 @@ code.hljs {
     height: 50px;
   }
 
-  .actionField {
-    margin-left: auto !important;
-    padding-right: 0px !important;
-  }
+}
 
-  .actionField > button {
+.actionField {
+  margin-left: auto !important;
+  padding-right: 0px !important;
+
+  & > button {
     margin-right: 1em;
   }
 
-  .actionField > button:last-child, .actionField > div:last-child button {
+  & > button:last-child, & > div:last-child button {
     margin-right: 0 !important;
   }
 
-  .actionField > div {
+  & > div {
     display: inline-block;
   }
-
 }
 
 /* Pagination */
@@ -338,9 +344,9 @@ code.hljs {
       height: calc(100% - 2rem);
       position: absolute;
       right: 0;
+      top: 1rem;
       width: 0px;
     }
-
   }
 
   .column.action  {
@@ -367,7 +373,19 @@ code.hljs {
 
 /* Modal */
 
-.ui.modal > .content {
+.ui.modal:not(.overlay) > .content {
   max-height: 350px;
   overflow: auto;
+}
+
+/* Center vertically */
+
+.verticalCenter {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.menu .indent {
+  padding-left: 25px;
 }
