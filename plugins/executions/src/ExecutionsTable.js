@@ -86,7 +86,7 @@ export default class extends React.Component {
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <Grid.Row key={item.id} select={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
+                                <Grid.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
                                     <Grid.Data>{item.blueprint_id}</Grid.Data>
                                     <Grid.Data>{item.deployment_id}</Grid.Data>
                                     <Grid.Data>{item.workflow_id}</Grid.Data>

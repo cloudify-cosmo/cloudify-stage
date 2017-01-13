@@ -59,9 +59,9 @@ export default class extends React.Component {
                     {
                         this.props.data.items.map((node) => {
                             return (
-                                <Grid.RowWrapper key={node.id + node.deployment_id}>
+                                <Grid.RowExpandable key={node.id + node.deployment_id} expanded={node.isSelected}>
 
-                                    <Grid.Row key={node.id + node.deployment_id} select={node.isSelected} onClick={this._selectNode.bind(this, node)}>
+                                    <Grid.Row key={node.id + node.deployment_id} selected={node.isSelected} onClick={this._selectNode.bind(this, node)}>
                                         <Grid.Data><a className='nodeName' href="javascript:void(0)">{node.id}</a></Grid.Data>
                                         <Grid.Data>{node.type}</Grid.Data>
                                         <Grid.Data>{node.blueprint_id}</Grid.Data>
@@ -71,12 +71,12 @@ export default class extends React.Component {
                                         <Grid.Data><div className="ui green horizontal label">{node.numberOfInstances}</div></Grid.Data>
                                     </Grid.Row>
 
-                                    <Grid.RowExpandable key={node.id + node.deployment_id + '_expandableRow'} isExpanded={node.isSelected}>
+                                    <Grid.DataExpandable>
                                         <NodeInstancesTable instances={node.instances} widget={this.props.widget} toolbox={this.props.toolbox}>
                                         </NodeInstancesTable>
-                                    </Grid.RowExpandable>
+                                    </Grid.DataExpandable>
 
-                                </Grid.RowWrapper>
+                                </Grid.RowExpandable>
                             );
                         })
                     }

@@ -34,10 +34,7 @@ export default class extends React.Component {
                     <Body>
                         <div>
                             <h3>Relationships</h3>
-                            <Grid.Table fetchData={() => {}}
-                                        totalSize={instance.relationships.length}
-                                        pageSize={this.props.widget.plugin.pageSize}
-                                        className="nodeInstanceRelationshipsTable">
+                            <Grid.Table className="nodeInstanceRelationshipsTable">
 
                                 <Grid.Column label="Target node" name="target" width="30%"/>
                                 <Grid.Column label="Relationship type" name="relationship" width="40%"/>
@@ -57,10 +54,7 @@ export default class extends React.Component {
                             </Grid.Table>
 
                             <h3>Runtime properties</h3>
-                            <Grid.Table fetchData={() => {}}
-                                        totalSize={Object.keys(instance.runtime_properties).length}
-                                        pageSize={this.props.widget.plugin.pageSize}
-                                        className="nodeInstanceRuntimePropertiesTable">
+                            <Grid.Table className="nodeInstanceRuntimePropertiesTable">
 
                                 <Grid.Column label="Key" name="key" width="50%"/>
                                 <Grid.Column label="Value" name="value" width="50%"/>

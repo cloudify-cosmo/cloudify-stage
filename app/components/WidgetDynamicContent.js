@@ -38,7 +38,15 @@ export default class WidgetDynamicContent extends Component {
         return getToolbox(this._fetchData.bind(this));
     }
 
+    _extractParams(url) {
+        const PARAMS_REGEX = /\[params(:(([^,]*,?)*))?]/;
+        let paramsMatch = url.match(PARAMS_REGEX);
+
+        return paramsMatch != null ? paramsMatch[2] : null;
+    }
+
     _fetch(url, toolbox) {
+
         var fetchUrl = _.replace(url,/\[config:(.*)\]/i,(match,configName)=>{
             return this.props.widget.configuration ? this.props.widget.configuration[configName] : 'NA';
         });
@@ -48,9 +56,12 @@ export default class WidgetDynamicContent extends Component {
             var baseUrl = url.substring('[manager]'.length);
 
             let params = {};
-            if (url.indexOf('[params]') >= 0) {
-                params = this._fetchParams();
-                baseUrl = _.replace(baseUrl, '[params]', "");
+            let paramsMatch = url.match(/\[params(:(([^,]*,?)*))?]/);
+            if (paramsMatch != null) {
+                let paramsUrlString = paramsMatch[0];
+                let allowedParams = paramsUrlString !== '[params]' ? paramsMatch[2].split(',') : null;
+                params = this._fetchParams(allowedParams);
+                baseUrl = _.replace(baseUrl, paramsUrlString, '');
             }
 
             return toolbox.getManager().doGet(baseUrl, params);
@@ -59,7 +70,7 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
-    _fetchParams() {
+    _fetchParams(allowedParams) {
         let params = {};
 
         let gridParams = this.fetchParams.gridParams;
@@ -79,7 +90,8 @@ export default class WidgetDynamicContent extends Component {
 
         let filterParams = this.fetchParams.filterParams;
         _.forIn(filterParams, function(value, key) {
-            if (!(typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null)) {
+            if (!(typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null) &&
+                (typeof allowedParams == 'undefined' || allowedParams === null || _.indexOf(allowedParams, key) >= 0)) {
                 params[key] = value;
             }
         });

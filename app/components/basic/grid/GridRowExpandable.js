@@ -1,31 +1,21 @@
 /**
- * Created by jakubniezgoda on 09/12/2016.
+ * Created by jakubniezgoda on 11/01/2017.
  */
-  
+
 import React, { Component, PropTypes } from 'react';
 
 export default class GridRowExpandable extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
-        className: PropTypes.string,
-        isExpanded: PropTypes.bool,
-        numberOfColumns: PropTypes.number
+        expanded: PropTypes.bool
     };
 
     static defaultProps = {
-        isExpanded: false,
-        numberOfColumns: 0
+        expanded: false
     };
 
     render() {
-        return (
-            <tr>
-                <td className={this.props.className} colSpan={this.props.numberOfColumns}>
-                    {this.props.children}
-                </td>
-            </tr>
-        );
+        return ({});
     }
 }
- 

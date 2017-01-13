@@ -8,13 +8,13 @@ export default class GridRow extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
-        select: PropTypes.bool,
+        selected: PropTypes.bool,
         onClick: PropTypes.func,
         showCols: PropTypes.array
     };
 
     static defaultProps = {
-        select: false,
+        selected: false,
         showCols:[]
     };
 
@@ -32,7 +32,7 @@ export default class GridRow extends Component {
         });
 
         return (
-            <tr className={this.props.select?"active":""} onClick={this.props.onClick}>
+            <tr className={this.props.selected ? "active" : ""} onClick={this.props.onClick}>
                 {children}
             </tr>
         );
