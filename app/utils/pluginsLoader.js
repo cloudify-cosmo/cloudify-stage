@@ -65,7 +65,7 @@ export default class PluginsLoader {
             ComponentToHtmlString: (component)=>{
                 return ReactDOMServer.renderToString(component);
             },
-            GenericConfig: GenericConfig
+            GenericConfig
         };
 
         window.moment = momentImport;

@@ -30,7 +30,7 @@ export default class EditWidgetModal extends Component {
             } else if (type === Stage.Basic.Field.BOOLEAN_TYPE) {
                 value = $input.is(':checked');
             } else if (type === Stage.Basic.Field.NUMBER_LIST_TYPE || type === Stage.Basic.Field.NUMBER_EDITABLE_LIST_TYPE) {
-                value = parseInt(value);
+                value = parseInt(value) || 0;
             }
 
             config[id] = value;

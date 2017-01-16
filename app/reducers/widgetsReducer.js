@@ -23,7 +23,7 @@ let buildConfig = (plugin)=>{
         } else if (config.type == Stage.Basic.Field.BOOLEAN_TYPE) {
             value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
         } else if (config.type === Stage.Basic.Field.NUMBER_LIST_TYPE || config.type === Stage.Basic.Field.NUMBER_EDITABLE_LIST_TYPE) {
-            value = parseInt(value);
+            value = parseInt(value) || 0;
         }
 
         configs[config.id] = value;
