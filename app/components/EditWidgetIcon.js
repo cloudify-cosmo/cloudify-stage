@@ -7,12 +7,12 @@ import React, { Component, PropTypes } from 'react';
 export default class EditWidgetIcon extends Component {
     static propTypes = {
         widgetId: PropTypes.string.isRequired,
-        onShowWidgetConfig: PropTypes.func.isRequired
+        onShowConfig: PropTypes.func.isRequired
     };
 
     render() {
         return (
-            <i className="setting link icon small editWidgetIcon" onClick={(event)=> {event.stopPropagation(); this.props.onShowWidgetConfig(true);}}/>
+            <i className="setting link icon small editWidgetIcon" onClick={(event)=> {event.stopPropagation(); this.props.onShowConfig();}}/>
         );
     }
 }

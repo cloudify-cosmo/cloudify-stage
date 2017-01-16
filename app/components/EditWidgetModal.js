@@ -10,9 +10,9 @@ export default class EditWidgetModal extends Component {
         configuration: PropTypes.object.isRequired,
         configDef: PropTypes.array.isRequired,
         widget: PropTypes.object.isRequired,
-        showConfig: PropTypes.bool.isRequired,
+        show: PropTypes.bool.isRequired,
         onWidgetEdited: PropTypes.func.isRequired,
-        onShowWidgetConfig: PropTypes.func.isRequired
+        onHideConfig: PropTypes.func.isRequired
     };
 
     onApprove() {
@@ -27,7 +27,7 @@ export default class EditWidgetModal extends Component {
 
             if (type === Stage.Basic.Field.MULTI_SELECT_LIST_TYPE) {
                 value = _.split(value, ',');
-            } else if (type == Stage.Basic.Field.BOOLEAN_TYPE) {
+            } else if (type === Stage.Basic.Field.BOOLEAN_TYPE) {
                 value = $input.is(':checked');
             }
 
@@ -38,12 +38,12 @@ export default class EditWidgetModal extends Component {
             this.props.onWidgetEdited(config);
         }
 
-        this.props.onShowWidgetConfig(false);
+        this.props.onHideConfig();
         return true;
     }
 
     onDeny() {
-        this.props.onShowWidgetConfig(false);
+        this.props.onHideConfig();
         return true;
     }
 
@@ -52,7 +52,7 @@ export default class EditWidgetModal extends Component {
         var Field = Stage.Basic.Field;
 
         return (
-            <Modal.Frame show={this.props.showConfig} onDeny={this.onDeny.bind(this)}
+            <Modal.Frame show={this.props.show} onDeny={this.onDeny.bind(this)}
                          onApprove={this.onApprove.bind(this)} onVisible={(modal)=>$(modal).find('[data-content]').popup()}>
                 <Modal.Header>Configure Widget</Modal.Header>
 

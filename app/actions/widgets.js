@@ -39,15 +39,6 @@ export function removeWidget(pageId,widgetId) {
     }
 }
 
-export function showWidgetConfig(pageId, widgetId, showConfig) {
-    return {
-        type: types.SHOW_WIDGET_CONFIG,
-        pageId,
-        widgetId,
-        showConfig
-    }
-}
-
 export function editWidget(pageId, widgetId, configuration) {
     return {
         type: types.EDIT_WIDGET,

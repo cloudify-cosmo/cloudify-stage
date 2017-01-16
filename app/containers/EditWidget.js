@@ -6,7 +6,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import EditWidgetIcon from '../components/EditWidgetIcon';
-import {showWidgetConfig, editWidget} from '../actions/widgets';
+import {editWidget} from '../actions/widgets';
 import EditWidgetModal from '../components/EditWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
@@ -21,23 +21,47 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onShowWidgetConfig: (showConfig) => {
-            dispatch(showWidgetConfig(ownProps.pageId, ownProps.widget.id, showConfig));
-        },
         onWidgetEdited: (configuration) => {
             dispatch(editWidget(ownProps.pageId, ownProps.widget.id, configuration || ownProps.widget.configuration || {}));
         }
     }
 };
 
-let EditWidgetComponent = ({widget, onWidgetEdited, onShowWidgetConfig, configDef, configuration, showConfig}) => {
-    return (
-        <span>
-            <EditWidgetIcon widgetId={widget.id} onShowWidgetConfig={onShowWidgetConfig}/>
-            <EditWidgetModal widget={widget} configDef={configDef} configuration={configuration} onWidgetEdited={onWidgetEdited} showConfig={showConfig} onShowWidgetConfig={onShowWidgetConfig}/>
-        </span>
-    );
-};
+class EditWidgetComponent extends React.Component {
+
+    constructor(props,context) {
+        super(props,context);
+
+        this.state = {
+            showConfig: false
+        }
+    }
+
+    static propTypes = {
+        widget : React.PropTypes.object,
+        onWidgetEdited : React.PropTypes.func,
+        configDef : React.PropTypes.array,
+        configuration : React.PropTypes.object
+    };
+
+    _showConfig() {
+        this.setState({showConfig:true});
+    }
+
+    _hideConfig() {
+        this.setState({showConfig:false});
+    }
+
+    render() {
+        return (
+            <span>
+                <EditWidgetIcon widgetId={this.props.widget.id} onShowConfig={this._showConfig.bind(this)}/>
+                <EditWidgetModal widget={this.props.widget} configDef={this.props.configDef} configuration={this.props.configuration}
+                                 onWidgetEdited={this.props.onWidgetEdited} show={this.state.showConfig} onHideConfig={this._hideConfig.bind(this)}/>
+            </span>
+        );
+    }
+}
 
 const EditWidget = connect(
     mapStateToProps,

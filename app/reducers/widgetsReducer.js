@@ -66,15 +66,6 @@ const widgets = (state = [], action) => {
                 }
                 return widget
             });
-        case types.SHOW_WIDGET_CONFIG:
-            return state.map( (widget) => {
-                if (widget.id === action.widgetId) {
-                    return Object.assign({}, widget, {
-                        showConfig: action.showConfig
-                    })
-                }
-                return widget
-            });
         case types.EDIT_WIDGET:
             return state.map( (widget) => {
                 if (widget.id === action.widgetId) {
