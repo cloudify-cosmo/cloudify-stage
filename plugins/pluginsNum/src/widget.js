@@ -12,7 +12,7 @@ Stage.addPlugin({
     showHeader: false,
     isReact: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 5}
+        Stage.GenericConfig.POLLING_TIME_CONFIG(5)
     ],
     fetchUrl: '[manager]/plugins?_include=id',
 

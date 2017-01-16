@@ -22,8 +22,9 @@ let buildConfig = (plugin)=>{
             value = _.split(value, ',');
         } else if (config.type == Stage.Basic.Field.BOOLEAN_TYPE) {
             value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
+        } else if (config.type === Stage.Basic.Field.NUMBER_LIST_TYPE || config.type === Stage.Basic.Field.NUMBER_EDITABLE_LIST_TYPE) {
+            value = parseInt(value);
         }
-
 
         configs[config.id] = value;
     });

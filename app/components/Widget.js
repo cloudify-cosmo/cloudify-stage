@@ -22,8 +22,16 @@ export default class Widget extends Component {
         manager: PropTypes.object.isRequired,
         onWidgetNameChange: PropTypes.func.isRequired,
         setContextValue: PropTypes.func.isRequired,
-        onWidgetRemoved: PropTypes.func.isRequired
+        onWidgetRemoved: PropTypes.func.isRequired,
+        onWidgetConfigUpdate: PropTypes.func.isRequired
     };
+
+    _widgetConfigUpdate(config) {
+        if (config) {
+            config = Object.assign({}, this.props.widget.configuration, config);
+            this.props.onWidgetConfigUpdate(this.props.pageId, this.props.widget.id, config);
+        }
+    }
 
     render() {
         return (
@@ -67,7 +75,8 @@ export default class Widget extends Component {
                                               templates={this.props.templates}
                                               context={this.props.context}
                                               manager={this.props.manager}
-                                              setContextValue={this.props.setContextValue}/>
+                                              setContextValue={this.props.setContextValue}
+                                              onWidgetConfigUpdate={this._widgetConfigUpdate.bind(this)}/>
                         :
                         <div className='ui segment basic' style={{height:'100%'}}>
                             <div className="ui active inverted dimmer">

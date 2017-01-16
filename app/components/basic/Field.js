@@ -11,7 +11,10 @@ export default class Field extends Component {
     static NUMBER_TYPE = 'number';
     static BOOLEAN_TYPE = 'boolean';
     static LIST_TYPE = 'list';
+    static NUMBER_LIST_TYPE = 'numberList';
     static MULTI_SELECT_LIST_TYPE = 'multiSelectList';
+    static EDITABLE_LIST_TYPE = 'editableList';
+    static NUMBER_EDITABLE_LIST_TYPE = 'numberEditableList';
 
     static propTypes = {
         label: PropTypes.string.isRequired,
@@ -69,46 +72,45 @@ export default class Field extends Component {
                     </div>
                 }
                 {
-                    this.props.type === Field.LIST_TYPE &&
-                    <div className="ui fluid selection dropdown" ref={(dropdown)=>{$(dropdown).dropdown()}}>
-                        <input className="fieldInput" type="hidden" data-id={this.props.id} data-type={this.props.type} value={this.props.value}/>
-                        <i className="dropdown icon"></i>
-                        <div className="default text">{this.props.placeholder}</div>
-                        <div className="menu">
-                            {
-                                this.props.items.map((item)=> {
-                                    if (!_.isObject(item)) {
-                                        item = {name:item, value:item};
-                                    }
-
-                                    return <div className="item" key={item.value} data-value={item.value}>{item.name}</div>
-                                })
-                            }
-                        </div>
-                    </div>
+                    (this.props.type === Field.LIST_TYPE || this.props.type === Field.NUMBER_LIST_TYPE) &&
+                    <DropdownList {...this.props}/>
                 }
                 {
                     this.props.type === Field.MULTI_SELECT_LIST_TYPE &&
-                    <div className="ui fluid multiple search selection dropdown" ref={(dropdown)=>{$(dropdown).dropdown()}}>
-                        <input className="fieldInput" type="hidden" data-id={this.props.id} data-type={this.props.type} value={this.props.value}/>
-                        <i className="dropdown icon"></i>
-                        <div className="default text">{this.props.placeholder}</div>
-                        <div className="menu">
-                            {
-                                this.props.items.map((item)=> {
-                                    if (!_.isObject(item)) {
-                                        item = {name:item, value:item};
-                                    }
-
-                                    return <div className="item" key={item.value} data-value={item.value}>{item.name}</div>
-                                })
-                            }
-                        </div>
-                    </div>
+                    <DropdownList {...this.props} className="multiple"/>
+                }
+                {
+                    (this.props.type === Field.EDITABLE_LIST_TYPE || this.props.type === Field.NUMBER_EDITABLE_LIST_TYPE) &&
+                    <DropdownList {...this.props} className="search" options={{allowAdditions: true}}/>
                 }
 
             </div>
         );
-
     }
+}
+
+function DropdownList(props) {
+    return (
+        <div className={`ui fluid selection dropdown ${props.className}`} ref={(dropdown)=>{$(dropdown).dropdown(props.options)}}>
+            <input className="fieldInput" type="hidden" data-id={props.id} data-type={props.type} value={props.value}/>
+            <i className="dropdown icon"></i>
+            <div className="default text">{props.placeholder}</div>
+            <div className="menu">
+                {
+                    props.items.map((item)=> {
+                        if (!_.isObject(item)) {
+                            item = {name:item, value:item};
+                        }
+
+                        return <div className="item" key={item.value} data-value={item.value}>{item.name}</div>
+                    })
+                }
+            </div>
+        </div>
+    )
+}
+
+DropdownList.defaultProps = {
+    className: "",
+    options: {}
 }

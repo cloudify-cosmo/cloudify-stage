@@ -13,7 +13,8 @@ Stage.addPlugin({
     color : "blue",
     isReact: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 2},
+        Stage.GenericConfig.POLLING_TIME_CONFIG(2),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
             default: "table", type: Stage.Basic.Field.LIST_TYPE}
     ],
@@ -21,7 +22,6 @@ Stage.addPlugin({
         blueprints: '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',
         deployments: '[manager]/deployments?_include=id,blueprint_id'
     },
-    pageSize: 5,
 
     _processData(data,toolbox) {
         var blueprintsData = data.blueprints;

@@ -46,31 +46,11 @@ class Plugin {
 
         this.zIndex = this.keepOnTop ? 5 : 0;
 
-        this.initPollingTime();
-
         if (!this.name) {
             throw new Error('Missing plugin name. Plugin data is :',data);
         }
         if (!this.id) {
             throw new Error('Missing plugin id. Plugin data is :',data);
-        }
-    }
-
-    initPollingTime() {
-        const pollingTimeOption = {
-            id: "pollingTime",
-            name: "Refresh time interval",
-            placeHolder: "Enter time interval in seconds",
-            description: "Data of the widget will be refreshed per provided interval time in seconds",
-            default: 0,
-            type: Stage.Basic.Field.NUMBER_TYPE
-        };
-
-        let option = _.find(this.initialConfiguration,{id:"pollingTime"});
-        if (option) {
-            Object.assign(option, Object.assign({}, pollingTimeOption, option));
-        } else {
-            this.initialConfiguration.unshift(pollingTimeOption);
         }
     }
 }
@@ -84,7 +64,8 @@ export default class PluginsLoader {
             Basic: BasicComponents,
             ComponentToHtmlString: (component)=>{
                 return ReactDOMServer.renderToString(component);
-            }
+            },
+            GenericConfig: GenericConfig
         };
 
         window.moment = momentImport;
@@ -132,4 +113,24 @@ export default class PluginsLoader {
                 console.error(e);
             });
     }
+}
+
+class GenericConfig {
+    static PAGE_SIZE_CONFIG = (pageSize = BasicComponents.Pagination.PAGE_SIZE_LIST[0]) => {
+        return {id: "pageSize",
+                name: "Pagination page size",
+                default: pageSize,
+                items: BasicComponents.Pagination.PAGE_SIZE_LIST,
+                type: BasicComponents.Field.NUMBER_EDITABLE_LIST_TYPE}
+    };
+
+    static POLLING_TIME_CONFIG = (pollingTime = 0) => {
+        return {id: "pollingTime",
+                name: "Refresh time interval",
+                default: pollingTime,
+                placeHolder: "Enter time interval in seconds",
+                description: "Data of the widget will be refreshed per provided interval time in seconds",
+                type: BasicComponents.Field.NUMBER_TYPE}
+    };
+
 }

@@ -12,9 +12,10 @@ Stage.addPlugin({
     initialHeight: 5,
     color : 'blue',
     isReact: true,
-    initialConfiguration: [],
+    initialConfiguration: [
+        Stage.GenericConfig.PAGE_SIZE_CONFIG()
+    ],
     fetchUrl: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships[params]',
-    pageSize: 5,
 
     fetchParams: function(widget, toolbox) {
         return {

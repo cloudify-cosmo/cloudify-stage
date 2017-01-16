@@ -28,7 +28,7 @@ export default class extends React.Component {
 
         return (
             <Segment.List totalSize={this.props.data.total}
-                          pageSize={this.props.widget.plugin.pageSize}
+                          pageSize={this.props.widget.configuration.pageSize}
                           fetchData={this.props.fetchData}>
                 {
                     this.props.data.items.map((item) => {

@@ -31,7 +31,7 @@ export default class BlueprintsTable extends React.Component{
         return (
             <Grid.Table fetchData={this.props.fetchGridData}
                         totalSize={this.props.data.total}
-                        pageSize={this.props.widget.plugin.pageSize}
+                        pageSize={this.props.widget.configuration.pageSize}
                         selectable={true}
                         className="blueprintsTable">
 

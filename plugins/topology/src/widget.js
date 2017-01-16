@@ -20,7 +20,7 @@ Stage.addPlugin({
     isReact: true,
     hasTemplate: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 2},
+        Stage.GenericConfig.POLLING_TIME_CONFIG(2),
         {id: 'enableNodeClick', name: 'Enable node click', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
         {id: 'enableGroupClick', name: 'Enable group click', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
         {id: 'enableZoom', name: 'Enable zoom', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},

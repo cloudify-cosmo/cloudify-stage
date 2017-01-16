@@ -14,7 +14,7 @@ Stage.addPlugin({
     fetchUrl: '[manager]/events',
     isReact: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 2}
+        Stage.GenericConfig.POLLING_TIME_CONFIG(2)
     ],
 
     render: function(widget,data,error,toolbox) {
