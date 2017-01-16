@@ -56,14 +56,6 @@
       "y": 7
     },
     {
-      "name": "CPU Utilization - System",
-      "width": 6,
-      "height": 2,
-      "plugin": "cpuUtilizationSystem",
-      "x": 6,
-      "y": 0
-    },
-    {
       "name": "GitHub repositories list",
       "width": 8,
       "height": 4,

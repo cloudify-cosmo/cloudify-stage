@@ -2,10 +2,16 @@
   "name": "Deploy",
   "widgets": [
     {
+      "name": "deploymentButton",
+      "plugin": "deploymentButton",
+      "x": 0,
+      "y": 0
+    },
+    {
       "name": "filer",
       "plugin": "filter",
       "x": 0,
-      "y": 0,
+      "y": 1,
       "configuration": {
         "filterByExecutions":false
       }
@@ -13,10 +19,13 @@
     {
       "name": "Deployments",
       "width": 12,
-      "height": 8,
+      "height": 9,
       "plugin": "deployments",
       "x": 0,
-      "y": 1
+      "y": 2,
+      "configuration":{
+        "displayStyle":"list"
+      }
     }
   ]
 }
