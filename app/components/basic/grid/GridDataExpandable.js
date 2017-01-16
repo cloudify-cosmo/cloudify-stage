@@ -18,7 +18,7 @@ export default class GridDataExpandable extends Component {
 
     render() {
         return (
-            <tr>
+            <tr className="active">
                 <td className={this.props.className} colSpan={this.props.numberOfColumns}>
                     {this.props.children}
                 </td>

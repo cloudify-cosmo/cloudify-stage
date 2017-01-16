@@ -58,7 +58,7 @@ export default class WidgetDynamicContent extends Component {
                 let [paramsUrlString, allowedParams] = paramsMatch;
                 params = this._fetchParams();
                 if (allowedParams) {
-                    allowedParams = _.replace(allowedParams, 'gridParams', '_sort,_size,_offset').split(',');
+                    allowedParams = allowedParams.split(',');
                     params = _.pick(params, allowedParams);
                 }
                 baseUrl = _.replace(baseUrl, paramsUrlString, '');
