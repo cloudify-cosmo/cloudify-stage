@@ -49,10 +49,13 @@ const mapStateToProps = (state, ownProps) => {
         return w;
     });
     pageData.widgets = widgets;
+    pageData.name = ownProps.pageName || pageData.name;
 
+    var pagesList = buildPagesList(state.pages,pageId);
+    pagesList[0].name = pageData.name;
     return {
         page: pageData,
-        pagesList: buildPagesList(state.pages,pageId),
+        pagesList: pagesList,
         isEditMode: state.config.isEditMode || false
     }
 };

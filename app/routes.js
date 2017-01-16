@@ -45,6 +45,7 @@ export default (store)=> {
         <Route>
             <Route path='/login' component={Login}/>
             <Route path="/" component={Layout} onEnter={isLoggedIn}>
+                <Route path='/page/(:pageId)/(:pageName)' component={Home} onEnter={setDrilldownContext}/>
                 <Route path='/page/(:pageId)' component={Home} onEnter={setDrilldownContext}/>
                 <Route path="404" component={NotFound}/>
                 <IndexRoute component={Home} params={{pageId:0}}/>
