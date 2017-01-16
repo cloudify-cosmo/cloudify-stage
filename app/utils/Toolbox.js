@@ -30,8 +30,8 @@ class Toolbox {
         this.plugins = state.plugins || [];
     }
 
-    drillDown(widget,defaultTemplate,drilldownContext) {
-        this.store.dispatch(drillDownToPage(widget,this.templates[defaultTemplate],this.plugins,drilldownContext));
+    drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName) {
+        this.store.dispatch(drillDownToPage(widget,this.templates[defaultTemplate],this.plugins,drilldownContext,drilldownPageName));
     }
 
     getEventBus (){

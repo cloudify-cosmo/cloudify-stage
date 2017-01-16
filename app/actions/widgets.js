@@ -68,7 +68,7 @@ export function setWidgetDrilldownPage(widgetId,drillDownPageId) {
 
 }
 
-export function drillDownToPage(widget,defaultTemplate,plugins,drilldownContext) {
+export function drillDownToPage(widget,defaultTemplate,plugins,drilldownContext,drilldownPageName) {
 
 
     return function (dispatch) {
@@ -87,6 +87,6 @@ export function drillDownToPage(widget,defaultTemplate,plugins,drilldownContext)
         }
 
 
-        dispatch(selectPage(pageId,true,drilldownContext));
+        dispatch(selectPage(pageId,true,drilldownContext,drilldownPageName));
     }
 }
