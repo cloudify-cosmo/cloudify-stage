@@ -15,7 +15,8 @@ Stage.addPlugin({
     initialConfiguration: [],
     fetchUrl: {
         nodes: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships[params]',
-        nodeInstances: '[manager]/node-instances?_include=id,node_id,deployment_id,state,relationships,runtime_properties[params:deployment_id]'
+        nodeInstances: '[manager]/node-instances?_include=id,node_id,deployment_id,state,relationships,runtime_properties[params:deployment_id]',
+        deployments: '[manager]/deployments?_include=id,groups'
     },
     pageSize: 5,
 
@@ -39,6 +40,8 @@ Stage.addPlugin({
 
         let nodes = data.nodes.items;
         let instances = data.nodeInstances.items;
+        let groups = {};
+        data.deployments.items.forEach((deployment) => groups[deployment.id] = Object.keys(deployment.groups));
 
         let formattedData = Object.assign({}, data.nodes, {
             items: _.map (nodes, (node) => {
@@ -48,12 +51,13 @@ Stage.addPlugin({
                     containedIn: node.host_id,
                     connectedTo: node.relationships.filter((r) => r.type === CONNECTED_TO_RELATIONSHIP)
                                                    .map((r) => r.target_id)
-                                                   .join(','),
+                                                   .join(),
                     numberOfInstances: node.number_of_instances,
                     instances: instances.filter((instance) =>
                                                 instance.node_id === node.id &&
                                                 instance.deployment_id === node.deployment_id),
-                    isSelected: (node.id + node.deployment_id) === SELECTED_NODE_ID
+                    isSelected: (node.id + node.deployment_id) === SELECTED_NODE_ID,
+                    groups: groups[node.deployment_id].join()
                 })
             }),
             total : _.get(data.nodes, 'metadata.pagination.total', 0),

@@ -48,13 +48,15 @@ export default class extends React.Component {
                             selectable={true}
                             className="nodesTable">
 
-                    <Grid.Column label="Name" name="id" width="30%"/>
+                    <Grid.Column label="Name" name="id" width="20%"/>
                     <Grid.Column label="Type" name="type" width="20%"/>
-                    <Grid.Column label="Blueprint" name="blueprintId" width="10%" show={!this.props.data.blueprintId} />
-                    <Grid.Column label="Deployment" name="deploymentId" width="10%" show={!this.props.data.deploymentId} />
+                    <Grid.Column label="Blueprint" name="blueprintId" width="10%" show={_.isEmpty(this.props.data.blueprintId)} />
+                    <Grid.Column label="Deployment" name="deploymentId" width="10%" show={_.isEmpty(this.props.data.deploymentId)} />
                     <Grid.Column label="Contained in" name="containedIn" width="10%"/>
                     <Grid.Column label="Connected to" name="connectedTo" width="10%"/>
                     <Grid.Column label="# Instances" name="numberOfInstances" width="10%"/>
+                    <Grid.Column label="Groups" name="groups" width="10%" show={!_.isEmpty(this.props.data.blueprintId) ||
+                                                                                !_.isEmpty(this.props.data.deploymentId)} />
 
                     {
                         this.props.data.items.map((node) => {
@@ -69,6 +71,7 @@ export default class extends React.Component {
                                         <Grid.Data>{node.containedIn}</Grid.Data>
                                         <Grid.Data>{node.connectedTo}</Grid.Data>
                                         <Grid.Data><div className="ui green horizontal label">{node.numberOfInstances}</div></Grid.Data>
+                                        <Grid.Data>{node.groups}</Grid.Data>
                                     </Grid.Row>
 
                                     <Grid.DataExpandable>
@@ -82,7 +85,6 @@ export default class extends React.Component {
                     }
 
                 </Grid.Table>
-
             </div>
 
         );
