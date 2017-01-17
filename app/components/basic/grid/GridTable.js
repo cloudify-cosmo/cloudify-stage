@@ -13,11 +13,108 @@ import GridFilter from './GridFilter';
 import Pagination from '../pagination/Pagination';
 import Search from './Search';
 
+/**
+ * Grid table component
+ *
+ * @example <caption>Grid table without pagination and with expandable row(s)</caption>
+ * <Grid.Table selectable={true}>
+ *
+ *   <Grid.Column label="Name" name="id" width="40%"/>
+ *   <Grid.Column label="Date" name="date" width="30%"/>
+ *   <Grid.Column width="30%"/>
+ *
+ *   <Grid.Row key="drupal" selected={false} onClick={()=>this.onRowClick(item)}>
+ *       <Grid.Data><a href="javascript:void(0)">Drupal application</a></Grid.Data>
+ *       <Grid.Data>2016-03-04</Grid.Data>
+ *       <Grid.Data>description for portal</Grid.Data>
+ *   </Grid.Row>
+ *
+ *   <Grid.Row key="wordpress" selected={false} onClick={()=>this.onRowClick(item)}>
+ *       <Grid.Data><a href="javascript:void(0)">Wordpress blog</a></Grid.Data>
+ *       <Grid.Data>2016-01-05</Grid.Data>
+ *       <Grid.Data>description for blog</Grid.Data>
+ *   </Grid.Row>
+ *
+ *   <Grid.Row key="joomla" selected={false} onClick={()=>this.onRowClick(item)}>
+ *       <Grid.Data><a href="javascript:void(0)">Joomla website</a></Grid.Data>
+ *       <Grid.Data>2015-08-14</Grid.Data>
+ *       <Grid.Data>description for website</Grid.Data>
+ *   </Grid.Row>
+ *
+ *   <Grid.RowExpandable key="prestashop" expanded={true}>
+ *     <Grid.Row key="prestashop" selected={true} onClick={()=>this.onRowClick(item)}>
+ *       <Grid.Data><a href="javascript:void(0)">Prestashop store</a></Grid.Data>
+ *       <Grid.Data>2017-01-05</Grid.Data>
+ *       <Grid.Data>description for e-commerce solution</Grid.Data>
+ *     </Grid.Row>
+ *     <Grid.DataExpandable>
+ *       additional info when row becomes expanded
+ *     </Grid.DataExpandable>
+ *   </Grid.RowExpandable>
+ *
+ * </Grid.Table>
+ *
+ * @example <caption>Grid table with pagination</caption>
+ *
+ * this.props = {
+ *   fetchData: ...
+ *   data: {
+ *     items: [
+ *       {
+ *         id: ...,
+ *         blueprint_id: ...,
+ *         created_at: ...,
+ *         blueprint_id: ...,
+ *       }
+ *       ...
+ *     ],
+ *     isSelected: ...,
+ *     total: ...
+ *   },
+ *   onSelectDeployment: ...
+ * }
+ *
+ * <Grid.Table fetchData={this.props.fetchData}
+ *             totalSize={this.props.data.total}
+ *             pageSize={this.props.widget.plugin.pageSize}
+ *             selectable={true}
+ *             className="deploymentTable">
+ *
+ *   <Grid.Column label="Name" name="id" width="25%"/>
+ *   <Grid.Column label="Blueprint" name="blueprint_id" width="50%"/>
+ *   <Grid.Column label="Created" name="created_at" width="25%"/>
+ *
+ *   {
+ *     this.props.data.items.map((item)=>{
+ *       return (
+ *         <Grid.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
+ *           <Grid.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></Grid.Data>
+ *           <Grid.Data>{item.blueprint_id}</Grid.Data>
+ *           <Grid.Data>{item.created_at}</Grid.Data>
+ *         </Grid.Row>
+ *       );
+ *     })
+ *   }
+ *
+ * </Grid.Table>
+ */
+
 class GridTable extends Component {
 
+    /**
+     * constructor
+     * @param {object} props
+     * @param {object} context
+     */
     constructor(props,context) {
         super(props,context);
 
+        /**
+         * @type {object}
+         * @property {string} sortColumn column name used for data sorting
+         * @property {boolean} sortAscending true for ascending sort, false for descending sort
+         * @property {string} searchText grid table filtering string
+         */
         this.state = {
             sortColumn: props.sortColumn,
             sortAscending: props.sortAscending,
@@ -25,6 +122,17 @@ class GridTable extends Component {
         }
     }
 
+    /**
+     * propTypes
+     * @property {function} [fetchData=()=>{}] function used to fetch table data
+     * @property {number} [totalSize=-1] total number of rows in table
+     * @property {number} [pageSize=0] number of page
+     * @property {string} [sortColumn=""] column name used for data sorting
+     * @property {boolean} [sortAscending=true] true for ascending sort, false for descending sort
+     * @property {boolean} [searchable=false] if true filtering and searching input to be added
+     * @property {boolean} [selectable=false] if true row can be selected and highlighted
+     * @property {string} [className=""] name of the style class to be added to <table> tag
+     */
     static propTypes = {
         children: PropTypes.any.isRequired,
         fetchData: PropTypes.func,
