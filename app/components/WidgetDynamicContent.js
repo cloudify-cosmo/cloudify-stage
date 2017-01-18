@@ -38,8 +38,13 @@ export default class WidgetDynamicContent extends Component {
         return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this));
     }
 
+    _getUrlRegExString(str) {
+        return new RegExp('\\[' + str + ':?(.*)\\]', 'i');
+    }
+
     _fetch(url, toolbox) {
-        var fetchUrl = _.replace(url,/\[config:(.*)\]/i,(match,configName)=>{
+
+        var fetchUrl = _.replace(url,this._getUrlRegExString('config'),(match,configName)=>{
             return this.props.widget.configuration ? this.props.widget.configuration[configName] : 'NA';
         });
 
@@ -48,9 +53,15 @@ export default class WidgetDynamicContent extends Component {
             var baseUrl = url.substring('[manager]'.length);
 
             let params = {};
-            if (url.indexOf('[params]') >= 0) {
+            let paramsMatch = this._getUrlRegExString('params').exec(url);
+            if (!_.isNull(paramsMatch)) {
+                let [paramsUrlString, allowedParams] = paramsMatch;
                 params = this._fetchParams();
-                baseUrl = _.replace(baseUrl, '[params]', "");
+                if (allowedParams) {
+                    allowedParams = _.replace(allowedParams, 'gridParams', '_sort,_size,_offset').split(',');
+                    params = _.pick(params, allowedParams);
+                }
+                baseUrl = _.replace(baseUrl, paramsUrlString, '');
             }
 
             return toolbox.getManager().doGet(baseUrl, params);

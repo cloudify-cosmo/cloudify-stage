@@ -44,7 +44,7 @@ export default class BlueprintsTable extends React.Component{
                 {
                     this.props.data.items.map((item)=>{
                         return (
-                            <Grid.Row key={item.id} select={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
+                            <Grid.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
                                 <Grid.Data><a className='blueprintName' href="javascript:void(0)">{item.id}</a></Grid.Data>
                                 <Grid.Data>{item.created_at}</Grid.Data>
                                 <Grid.Data>{item.updated_at}</Grid.Data>

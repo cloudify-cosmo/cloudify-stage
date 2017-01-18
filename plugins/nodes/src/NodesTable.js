@@ -2,6 +2,8 @@
  * Created by jakubniezgoda on 03/01/2017.
  */
 
+import NodeInstancesTable from './NodeInstancesTable';
+
 export default class extends React.Component {
     constructor(props,context) {
         super(props,context);
@@ -12,6 +14,12 @@ export default class extends React.Component {
 
     _refreshData() {
         this.props.toolbox.refresh();
+    }
+
+    _selectNode (item){
+        let selectedNodeId = this.props.toolbox.getContext().getValue('nodeId');
+        let clickedNodeId = item.id + item.deployment_id;
+        this.props.toolbox.getContext().setValue('nodeId', clickedNodeId === selectedNodeId ? null : clickedNodeId);
     }
 
     componentDidMount() {
@@ -40,8 +48,8 @@ export default class extends React.Component {
                             selectable={true}
                             className="nodesTable">
 
-                    <Grid.Column label="Type" name="type" width="20%"/>
                     <Grid.Column label="Name" name="id" width="30%"/>
+                    <Grid.Column label="Type" name="type" width="20%"/>
                     <Grid.Column label="Blueprint" name="blueprintId" width="10%" show={!this.props.data.blueprintId} />
                     <Grid.Column label="Deployment" name="deploymentId" width="10%" show={!this.props.data.deploymentId} />
                     <Grid.Column label="Contained in" name="containedIn" width="10%"/>
@@ -49,17 +57,26 @@ export default class extends React.Component {
                     <Grid.Column label="# Instances" name="numberOfInstances" width="10%"/>
 
                     {
-                        this.props.data.items.map((item)=>{
+                        this.props.data.items.map((node) => {
                             return (
-                                <Grid.Row key={item.id + item.deployment_id}>
-                                    <Grid.Data>{item.type}</Grid.Data>
-                                    <Grid.Data><a className='nodeName' href="javascript:void(0)">{item.id}</a></Grid.Data>
-                                    <Grid.Data>{item.blueprint_id}</Grid.Data>
-                                    <Grid.Data>{item.deployment_id}</Grid.Data>
-                                    <Grid.Data>{item.containedIn}</Grid.Data>
-                                    <Grid.Data>{item.connectedTo}</Grid.Data>
-                                    <Grid.Data><div className="ui green horizontal label">{item.numberOfInstances}</div></Grid.Data>
-                                </Grid.Row>
+                                <Grid.RowExpandable key={node.id + node.deployment_id} expanded={node.isSelected}>
+
+                                    <Grid.Row key={node.id + node.deployment_id} selected={node.isSelected} onClick={this._selectNode.bind(this, node)}>
+                                        <Grid.Data><a className='nodeName' href="javascript:void(0)">{node.id}</a></Grid.Data>
+                                        <Grid.Data>{node.type}</Grid.Data>
+                                        <Grid.Data>{node.blueprint_id}</Grid.Data>
+                                        <Grid.Data>{node.deployment_id}</Grid.Data>
+                                        <Grid.Data>{node.containedIn}</Grid.Data>
+                                        <Grid.Data>{node.connectedTo}</Grid.Data>
+                                        <Grid.Data><div className="ui green horizontal label">{node.numberOfInstances}</div></Grid.Data>
+                                    </Grid.Row>
+
+                                    <Grid.DataExpandable>
+                                        <NodeInstancesTable instances={node.instances} widget={this.props.widget} toolbox={this.props.toolbox}>
+                                        </NodeInstancesTable>
+                                    </Grid.DataExpandable>
+
+                                </Grid.RowExpandable>
                             );
                         })
                     }

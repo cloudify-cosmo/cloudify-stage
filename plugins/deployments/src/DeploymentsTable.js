@@ -42,7 +42,7 @@ export default class extends React.Component {
                 {
                     this.props.data.items.map((item)=>{
                         return (
-                            <Grid.Row key={item.id} select={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
+                            <Grid.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
                                 <Grid.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></Grid.Data>
                                 <Grid.Data>{item.blueprint_id}</Grid.Data>
                                 <Grid.Data>{item.created_at}</Grid.Data>

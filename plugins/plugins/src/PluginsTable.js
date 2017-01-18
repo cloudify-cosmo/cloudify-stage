@@ -95,7 +95,7 @@ export default class extends React.Component {
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <Grid.Row key={item.id} select={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
+                                <Grid.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <Grid.Data><a className='pluginName' href="javascript:void(0)">{item.id}</a></Grid.Data>
                                     <Grid.Data>{item.package_name}</Grid.Data>
                                     <Grid.Data>{item.package_version}</Grid.Data>

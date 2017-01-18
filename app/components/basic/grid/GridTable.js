@@ -4,8 +4,10 @@
   
 import React, { Component, PropTypes } from 'react';
 import GridRow from './GridRow';
+import GridRowExpandable from './GridRowExpandable';
 import GridColumn from './GridColumn';
 import GridData from './GridData';
+import GridDataExpandable from './GridDataExpandable';
 import GridAction from './GridAction';
 import GridFilter from './GridFilter';
 import Pagination from '../pagination/Pagination';
@@ -25,8 +27,8 @@ class GridTable extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
-        fetchData: PropTypes.func.isRequired,
-        totalSize: PropTypes.number.isRequired,
+        fetchData: PropTypes.func,
+        totalSize: PropTypes.number,
         pageSize: PropTypes.number,
         sortColumn: PropTypes.string,
         sortAscending: PropTypes.bool,
@@ -36,10 +38,13 @@ class GridTable extends Component {
     };
 
     static defaultProps = {
-        searchable: false,
-        selectable: false,
+        fetchData: ()=>{},
+        totalSize: -1,
+        pageSize: 0,
         sortColumn: "",
         sortAscending: true,
+        searchable: false,
+        selectable: false,
         className: ""
     };
 
@@ -106,11 +111,23 @@ class GridTable extends Component {
                 if (child.type.name === "GridColumn") {
                     showCols.push(child.props.show);
                     headerColumns.push(child);
-                } else if (child.type && child.type.name === "GridRow") {
+                } else if (child.type.name === "GridRow") {
                     bodyRows.push(React.cloneElement(child, {showCols}));
-                } else if (child.type && child.type.name === "GridAction") {
+                } else if (child.type.name === "GridRowExpandable") {
+                    let expandableContent = [];
+                    React.Children.forEach(child.props.children, function(expChild) {
+                        if (expChild && expChild.type) {
+                            if (expChild.type.name === "GridRow") {
+                                bodyRows.push(React.cloneElement(expChild, {showCols}));
+                            } else if (expChild.type.name === "GridDataExpandable" && child.props.expanded) {
+                                expandableContent.push(React.cloneElement(expChild, {numberOfColumns: showCols.length}));
+                            }
+                        }
+                    });
+                    bodyRows.push(expandableContent);
+                } else if (child.type.name === "GridAction") {
                     gridAction = child;
-                } else if (child.type && child.type.name === "GridFilter") {
+                } else if (child.type.name === "GridFilter") {
                     gridFilters.push(child);
                 }
             }
@@ -135,13 +152,14 @@ class GridTable extends Component {
                         <thead><tr>
                             {headerColumns}
                         </tr></thead>
-                        {this.props.totalSize <= 0 ?
+                        {this.props.totalSize === 0 ?
                             <tbody><tr className="noDataRow"><td colSpan={headerColumns.length} className="center aligned">No data available</td></tr></tbody>
-                         :
+                            :
                             <tbody>{bodyRows}</tbody>
                         }
                     </table>
                 </Pagination>
+
             </div>
         );
     }
@@ -150,8 +168,10 @@ class GridTable extends Component {
 export default {
     Table:GridTable,
     Row:GridRow,
+    RowExpandable:GridRowExpandable,
     Column:GridColumn,
     Data:GridData,
+    DataExpandable:GridDataExpandable,
     Action:GridAction,
     Filter:GridFilter
 };
