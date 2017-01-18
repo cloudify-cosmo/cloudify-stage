@@ -24,7 +24,7 @@ describe('(Component) GridTable', () => {
                 {
                     [{k:1}, {k:2}, {k:3, s:true}, {k:4}, {k:5}].map((item)=> {
                         return (
-                            <Table.Row key={item.k} select={item.s} onClick={item.s?selectSpy:null}>
+                            <Table.Row key={item.k} selected={item.s} onClick={item.s?selectSpy:null}>
                                 <Table.Data>Data {item.k}.1</Table.Data>
                                 <Table.Data>Data {item.k}.2</Table.Data>
                                 <Table.Data>Data {item.k}.3</Table.Data>

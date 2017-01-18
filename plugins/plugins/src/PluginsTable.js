@@ -95,7 +95,7 @@ export default class extends React.Component {
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <Table.Row key={item.id} select={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
+                                <Table.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <Table.Data><a className='pluginName' href="javascript:void(0)">{item.id}</a></Table.Data>
                                     <Table.Data>{item.package_name}</Table.Data>
                                     <Table.Data>{item.package_version}</Table.Data>

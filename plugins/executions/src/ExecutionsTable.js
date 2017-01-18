@@ -70,7 +70,7 @@ export default class extends React.Component {
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <Table.Row key={item.id} select={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
+                                <Table.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
                                     <Table.Data>{item.blueprint_id}</Table.Data>
                                     <Table.Data>{item.deployment_id}</Table.Data>
                                     <Table.Data>{item.workflow_id}</Table.Data>
