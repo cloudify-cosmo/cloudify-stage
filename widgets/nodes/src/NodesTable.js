@@ -43,10 +43,10 @@ export default class NodesTable extends React.Component {
                 <ErrorMessage error={this.state.error}/>
 
                 <Table fetchData={this.fetchGridData.bind(this)}
-                            totalSize={this.props.data.total}
-                            pageSize={this.props.widget.configuration.pageSize}
-                            selectable={true}
-                            className="nodesTable">
+                        totalSize={this.props.data.total}
+                        pageSize={this.props.widget.configuration.pageSize}
+                        selectable={true}
+                        className="nodesTable">
 
                     <Table.Column label="Name" name="id" width="30%"/>
                     <Table.Column label="Type" name="type" width="20%"/>

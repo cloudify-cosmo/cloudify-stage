@@ -131,7 +131,7 @@ export default class BlueprintsCatalog extends React.Component{
                         {blueprintsRows}
                     </div>
 
-                </Segment.List>
+                </Segment>
             </div>
         );
     }

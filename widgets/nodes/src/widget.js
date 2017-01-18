@@ -12,7 +12,9 @@ Stage.defineWidget({
     initialHeight: 5,
     color : 'blue',
     isReact: true,
-    initialConfiguration: [],
+    initialConfiguration: [
+        Stage.GenericConfig.PAGE_SIZE_CONFIG()
+    ],
     fetchUrl: {
         nodes: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships[params]',
         nodeInstances: '[manager]/node-instances?_include=id,node_id,deployment_id,state,relationships,runtime_properties[params:deployment_id]'
