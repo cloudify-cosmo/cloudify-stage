@@ -13,6 +13,7 @@ dependencies:
         pwd:
           semantic
     - grunt build
+    - npm list
     - npm install:
         pwd:
           backend
