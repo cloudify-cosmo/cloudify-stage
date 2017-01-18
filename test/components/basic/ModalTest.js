@@ -16,14 +16,14 @@ describe('(Component) Modal', () => {
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Modal.Frame className="testModal">
+            <Modal className="testModal">
                 <Modal.Header>test header</Modal.Header>
                 <Modal.Body><form>test body</form></Modal.Body>
                 <Modal.Footer>
                     <Modal.Cancel label="cancel" icon=""/>
                     <Modal.Approve label="ok" icon="" className="green"/>
                 </Modal.Footer>
-            </Modal.Frame>, { attachTo: div.get(0) }
+            </Modal>, { attachTo: div.get(0) }
         );
     });
 

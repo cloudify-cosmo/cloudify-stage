@@ -7,7 +7,10 @@ import React, { Component, PropTypes } from 'react';
 import OverlayAction from './OverlayAction';
 import OverlayContent from './OverlayContent';
 
-class Overlay extends Component {
+export default class Overlay extends Component {
+
+    static Action = OverlayAction;
+    static Content = OverlayContent;
 
     static propTypes = {
         children: PropTypes.any.isRequired,
@@ -54,9 +57,3 @@ class Overlay extends Component {
         )
     }
 }
-
-export default {
-    Frame:Overlay,
-    Action:OverlayAction,
-    Content:OverlayContent
-};

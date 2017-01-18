@@ -58,7 +58,7 @@ export default class extends React.Component {
         var workflow = Object.assign({},{name:"", parameters:[]}, this.props.workflow);
 
         return (
-            <Modal.Frame show={this.props.show} className='executeModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
+            <Modal show={this.props.show} className='executeModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
                 <Modal.Header>
                     <i className="road icon"></i> Execute workflow {workflow.name}
                 </Modal.Header>
@@ -86,7 +86,7 @@ export default class extends React.Component {
                     <Modal.Cancel/>
                     <Modal.Approve label="Execute" icon="rocket" className="green"/>
                 </Modal.Footer>
-            </Modal.Frame>
+            </Modal>
         );
     }
 };

@@ -11,7 +11,13 @@ import GridFilter from './GridFilter';
 import Pagination from '../pagination/Pagination';
 import Search from './Search';
 
-class GridTable extends Component {
+export default class GridTable extends Component {
+
+    static Row = GridRow;
+    static Column = GridColumn;
+    static Data = GridData;
+    static Action = GridAction;
+    static Filter = GridFilter;
 
     constructor(props,context) {
         super(props,context);
@@ -146,12 +152,3 @@ class GridTable extends Component {
         );
     }
 }
-
-export default {
-    Table:GridTable,
-    Row:GridRow,
-    Column:GridColumn,
-    Data:GridData,
-    Action:GridAction,
-    Filter:GridFilter
-};

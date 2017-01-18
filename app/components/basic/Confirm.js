@@ -23,13 +23,13 @@ export default class Confirm extends Component {
 
     render() {
         return (
-            <Modal.Frame className={this.props.className} onApprove={this.props.onConfirm} onDeny={this.props.onCancel} show={this.props.show}>
+            <Modal className={this.props.className} onApprove={this.props.onConfirm} onDeny={this.props.onCancel} show={this.props.show}>
                 <Modal.Header>{this.props.title}</Modal.Header>
                 <Modal.Footer>
                     <Modal.Cancel label="No" icon=""/>
                     <Modal.Approve label="Yes" className="green" icon=""/>
                 </Modal.Footer>
-            </Modal.Frame>
+            </Modal>
 
         );
     }

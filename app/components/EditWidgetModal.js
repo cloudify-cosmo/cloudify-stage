@@ -52,7 +52,7 @@ export default class EditWidgetModal extends Component {
         var Field = Stage.Basic.Field;
 
         return (
-            <Modal.Frame show={this.props.show} onDeny={this.onDeny.bind(this)}
+            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)}
                          onApprove={this.onApprove.bind(this)} onVisible={(modal)=>$(modal).find('[data-content]').popup()}>
                 <Modal.Header>Configure Widget</Modal.Header>
 
@@ -79,7 +79,7 @@ export default class EditWidgetModal extends Component {
                     <Modal.Approve/>
                     <Modal.Cancel/>
                 </Modal.Footer>
-            </Modal.Frame>
+            </Modal>
         );
     }
 }

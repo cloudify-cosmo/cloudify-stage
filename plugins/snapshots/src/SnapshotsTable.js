@@ -81,47 +81,47 @@ export default class extends React.Component {
     render() {
         var Confirm = Stage.Basic.Confirm;
         var ErrorMessage = Stage.Basic.ErrorMessage;
-        var Grid = Stage.Basic.Grid;
+        var Table = Stage.Basic.Table;
 
         return (
             <div className="snapshotsTableDiv">
                 <ErrorMessage error={this.state.error}/>
 
-                <Grid.Table fetchData={this.fetchGridData.bind(this)}
+                <Table fetchData={this.fetchGridData.bind(this)}
                             totalSize={this.props.data.total}
                             pageSize={this.props.widget.plugin.pageSize}
                             selectable={true}
                             className="snapshotsTable">
 
-                    <Grid.Column label="Id" name="id" width="40%"/>
-                    <Grid.Column label="Created at" name="created_at" width="25%"/>
-                    <Grid.Column label="Status" name="status" width="20%"/>
-                    <Grid.Column width="15%"/>
+                    <Table.Column label="Id" name="id" width="40%"/>
+                    <Table.Column label="Created at" name="created_at" width="25%"/>
+                    <Table.Column label="Status" name="status" width="20%"/>
+                    <Table.Column width="15%"/>
 
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <Grid.Row key={item.id} select={item.isSelected} onClick={this._selectSnapshot.bind(this, item)}>
-                                    <Grid.Data><a className='snapshotName' href="javascript:void(0)">{item.id}</a></Grid.Data>
-                                    <Grid.Data>{item.created_at}</Grid.Data>
-                                    <Grid.Data>{item.status}</Grid.Data>
-                                    <Grid.Data className="center aligned rowActions">
+                                <Table.Row key={item.id} select={item.isSelected} onClick={this._selectSnapshot.bind(this, item)}>
+                                    <Table.Data><a className='snapshotName' href="javascript:void(0)">{item.id}</a></Table.Data>
+                                    <Table.Data>{item.created_at}</Table.Data>
+                                    <Table.Data>{item.status}</Table.Data>
+                                    <Table.Data className="center aligned rowActions">
                                         <i className="undo icon link bordered" title="Restore" onClick={this._restoreSnapshot.bind(this,item)}></i>
                                         <i className="download icon link bordered" title="Download" onClick={this._downloadSnapshot.bind(this,item)}></i>
                                         <i className="trash icon link bordered" title="Delete" onClick={this._deleteSnapshotConfirm.bind(this,item)}></i>
-                                    </Grid.Data>
-                                </Grid.Row>
+                                    </Table.Data>
+                                </Table.Row>
                             );
                         })
                     }
 
-                    <Grid.Action>
+                    <Table.Action>
                         <CreateModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
 
                         <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
-                    </Grid.Action>
+                    </Table.Action>
 
-                </Grid.Table>
+                </Table>
 
                 <Confirm title='Are you sure you want to remove this snapshot?'
                          show={this.state.confirmDelete}

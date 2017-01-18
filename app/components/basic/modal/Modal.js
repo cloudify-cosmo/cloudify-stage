@@ -9,7 +9,14 @@ import ModalFooter from './ModalFooter';
 import ModalBody from './ModalBody';
 import {ApproveButton, CancelButton} from './ModalButton';
 
-class Modal extends Component {
+export default class Modal extends Component {
+
+    static Header = ModalHeader;
+    static Body = ModalBody;
+    static Footer = ModalFooter;
+    static Approve = ApproveButton;
+    static Cancel = CancelButton;
+
     static propTypes = {
         children: PropTypes.any.isRequired,
         className: PropTypes.string,
@@ -81,12 +88,3 @@ class Modal extends Component {
         );
     }
 }
-
-export default {
-    Frame:Modal,
-    Header:ModalHeader,
-    Body:ModalBody,
-    Footer:ModalFooter,
-    Approve:ApproveButton,
-    Cancel:CancelButton
-};

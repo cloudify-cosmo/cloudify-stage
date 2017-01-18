@@ -91,7 +91,7 @@ export default class extends React.Component {
 
         return (
             <div>
-                <Modal.Frame show={this.props.show} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+                <Modal show={this.props.show} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                     <Modal.Header>
                         <i className="rocket icon"></i> Deploy blueprint {blueprint.id}
                     </Modal.Header>
@@ -138,7 +138,7 @@ export default class extends React.Component {
                         <Modal.Cancel/>
                         <Modal.Approve label="Deploy" icon="rocket" className="green"/>
                     </Modal.Footer>
-                </Modal.Frame>
+                </Modal>
             </div>
 
         );
