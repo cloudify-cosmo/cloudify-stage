@@ -3,19 +3,19 @@
   "widgets": [
     {
       "name": "Blueprints List",
-      "plugin": "blueprints",
+      "definition": "blueprints",
       "width": 7,
       "height": 5
     },
     {
       "name": "Deployments",
-      "plugin": "deploymentNum",
+      "definition": "deploymentNum",
       "width": 5,
       "height": 3
     },
     {
       "name": "topology",
-      "plugin": "topology",
+      "definition": "topology",
       "width": 5,
       "height": 4
     }

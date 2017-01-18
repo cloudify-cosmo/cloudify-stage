@@ -3,7 +3,7 @@
   "widgets": [
     {
       "name": "Blueprints Catalog",
-      "plugin": "blueprints",
+      "definition": "blueprints",
       "width": 12,
       "height": 13,
       "x": 0,

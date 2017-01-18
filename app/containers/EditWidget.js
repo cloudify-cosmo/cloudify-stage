@@ -14,7 +14,7 @@ const mapStateToProps = (state, ownProps) => {
         pageId: ownProps.pageId,
         widget: ownProps.widget,
         configuration: ownProps.widget.configuration || {},
-        configDef: ownProps.widget.plugin.initialConfiguration || [],
+        configDef: ownProps.widget.definition.initialConfiguration || [],
         showConfig: ownProps.widget.showConfig || false
     }
 };

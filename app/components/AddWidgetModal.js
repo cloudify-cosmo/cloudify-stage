@@ -10,9 +10,9 @@ import React, { Component, PropTypes } from 'react';
 
 export default class AddWidgetModal extends Component {
     static propTypes = {
-        plugins: PropTypes.array.isRequired,
+        widgetDefinitions: PropTypes.array.isRequired,
         onWidgetAdded: PropTypes.func.isRequired,
-        onPluginInstalled: PropTypes.func.isRequired
+        onWidgetInstalled: PropTypes.func.isRequired
     };
 
     addWidget(widget) {
@@ -24,7 +24,7 @@ export default class AddWidgetModal extends Component {
         super(props, context);
 
         this.state = {
-            filteredPlugins: props.filteredPlugins || props.plugins
+            filteredWidgetDefinitions: props.filteredWidgets || props.widgetDefinitions
         };
     }
 
@@ -34,7 +34,7 @@ export default class AddWidgetModal extends Component {
                 <div className="ui segment basic large">
                     <div className="ui icon input fluid mini">
                         <i className="search icon"></i>
-                        <input type="text" placeholder="Search widgets ..." onChange={(e)=>this.setState({filteredPlugins: this.props.plugins.filter(function (el) {
+                        <input type="text" placeholder="Search widgets ..." onChange={(e)=>this.setState({filteredWidgetDefinitions: this.props.widgetDefinitions.filter(function (el) {
                                                                                                                                                        return el.name.toLowerCase().includes(e.target.value.toLowerCase() || '')})})}/>
                     </div>
 
@@ -42,11 +42,11 @@ export default class AddWidgetModal extends Component {
 
                     <div className="ui items divided widgetsList">
                         {
-                            this.state.filteredPlugins.map(function(widget){
+                            this.state.filteredWidgetDefinitions.map(function(widget){
                                 return (
                                     <div className="item" key={widget.name}>
                                         <div className='ui image small bordered'>
-                                            <img src={'/plugins/'+widget.id+'/widget.png'}/>
+                                            <img src={'/widgets/'+widget.id+'/widget.png'}/>
                                         </div>
                                         <div className="content">
                                             <a className="header">{widget.name}</a>
