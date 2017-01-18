@@ -15,10 +15,10 @@ describe('(Component) Overlay', () => {
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Overlay.Frame className="testOverlay">
+            <Overlay className="testOverlay">
                 <Overlay.Action>icon</Overlay.Action>
                 <Overlay.Content>test content</Overlay.Content>
-            </Overlay.Frame>, { attachTo: div.get(0) }
+            </Overlay>, { attachTo: div.get(0) }
         );
     });
 

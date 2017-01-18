@@ -4,17 +4,27 @@
   
 import React, { Component, PropTypes } from 'react';
 import GridRow from './GridRow';
+import GridRowExpandable from './GridRowExpandable';
 import GridColumn from './GridColumn';
 import GridData from './GridData';
+import GridDataExpandable from './GridDataExpandable';
 import GridAction from './GridAction';
 import GridFilter from './GridFilter';
 import Pagination from '../pagination/Pagination';
 import Search from './Search';
 
-class GridTable extends Component {
+export default class GridTable extends Component {
 
-    constructor(props,context) {
-        super(props,context);
+    static Row = GridRow;
+    static Column = GridColumn;
+    static Data = GridData;
+    static Action = GridAction;
+    static Filter = GridFilter;
+    static RowExpandable = GridRowExpandable;
+    static DataExpandable = GridDataExpandable;
+
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             sortColumn: props.sortColumn,
@@ -25,8 +35,8 @@ class GridTable extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
-        fetchData: PropTypes.func.isRequired,
-        totalSize: PropTypes.number.isRequired,
+        fetchData: PropTypes.func,
+        totalSize: PropTypes.number,
         pageSize: PropTypes.number,
         sortColumn: PropTypes.string,
         sortAscending: PropTypes.bool,
@@ -36,10 +46,14 @@ class GridTable extends Component {
     };
 
     static defaultProps = {
-        searchable: false,
-        selectable: false,
+        fetchData: () => {
+        },
+        totalSize: -1,
+        pageSize: 0,
         sortColumn: "",
         sortAscending: true,
+        searchable: false,
+        selectable: false,
         className: ""
     };
 
@@ -51,9 +65,9 @@ class GridTable extends Component {
 
     getChildContext() {
         return {
-            getSortColumn: ()=> this.state.sortColumn,
-            isSortAscending: ()=> this.state.sortAscending,
-            sortColumn: (name)=> this._sortColumn(name)
+            getSortColumn: () => this.state.sortColumn,
+            isSortAscending: () => this.state.sortAscending,
+            sortColumn: (name) => this._sortColumn(name)
         };
     }
 
@@ -67,7 +81,7 @@ class GridTable extends Component {
         }
 
         this.refs.pagination.reset();
-        this.setState({sortColumn:name, sortAscending:ascending});
+        this.setState({sortColumn: name, sortAscending: ascending});
     }
 
     componentWillReceiveProps(nextProps) {
@@ -101,16 +115,28 @@ class GridTable extends Component {
         var gridFilters = [];
 
         var showCols = [];
-        React.Children.forEach(this.props.children, function(child) {
+        React.Children.forEach(this.props.children, function (child) {
             if (child && child.type) {
                 if (child.type.name === "GridColumn") {
                     showCols.push(child.props.show);
                     headerColumns.push(child);
-                } else if (child.type && child.type.name === "GridRow") {
+                } else if (child.type.name === "GridRow") {
                     bodyRows.push(React.cloneElement(child, {showCols}));
-                } else if (child.type && child.type.name === "GridAction") {
+                } else if (child.type.name === "GridRowExpandable") {
+                    let expandableContent = [];
+                    React.Children.forEach(child.props.children, function (expChild) {
+                        if (expChild && expChild.type) {
+                            if (expChild.type.name === "GridRow") {
+                                bodyRows.push(React.cloneElement(expChild, {showCols}));
+                            } else if (expChild.type.name === "GridDataExpandable" && child.props.expanded) {
+                                expandableContent.push(React.cloneElement(expChild, {numberOfColumns: showCols.length}));
+                            }
+                        }
+                    });
+                    bodyRows.push(expandableContent);
+                } else if (child.type.name === "GridAction") {
                     gridAction = child;
-                } else if (child.type && child.type.name === "GridFilter") {
+                } else if (child.type.name === "GridFilter") {
                     gridFilters.push(child);
                 }
             }
@@ -119,39 +145,39 @@ class GridTable extends Component {
         return (
             <div className={`gridTable ${this.props.className}`}>
                 { (this.props.searchable || !_.isEmpty(gridFilters) || gridAction) &&
-                    <div className="ui small form">
-                        <div className="inline fields">
-                            {this.props.searchable && <Search/>}
-                            {gridFilters}
-                            {gridAction}
-                        </div>
+                <div className="ui small form">
+                    <div className="inline fields">
+                        {this.props.searchable && <Search/>}
+                        {gridFilters}
+                        {gridAction}
                     </div>
+                </div>
                 }
 
                 <Pagination totalSize={this.props.totalSize}
                             pageSize={this.props.pageSize}
                             fetchData={this._fetchData.bind(this)} ref="pagination">
-                    <table className={`ui very compact table sortable ${this.props.selectable?'selectable':''} ${this.props.className}`} cellSpacing="0" cellPadding="0">
-                        <thead><tr>
+                    <table
+                        className={`ui very compact table sortable ${this.props.selectable ? 'selectable' : ''} ${this.props.className}`}
+                        cellSpacing="0" cellPadding="0">
+                        <thead>
+                        <tr>
                             {headerColumns}
-                        </tr></thead>
-                        {this.props.totalSize <= 0 ?
-                            <tbody><tr className="noDataRow"><td colSpan={headerColumns.length} className="center aligned">No data available</td></tr></tbody>
-                         :
+                        </tr>
+                        </thead>
+                        {this.props.totalSize === 0 ?
+                            <tbody>
+                            <tr className="noDataRow">
+                                <td colSpan={headerColumns.length} className="center aligned">No data available</td>
+                            </tr>
+                            </tbody>
+                            :
                             <tbody>{bodyRows}</tbody>
                         }
                     </table>
                 </Pagination>
+
             </div>
         );
     }
 }
-
-export default {
-    Table:GridTable,
-    Row:GridRow,
-    Column:GridColumn,
-    Data:GridData,
-    Action:GridAction,
-    Filter:GridFilter
-};

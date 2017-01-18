@@ -6,7 +6,7 @@ import React from 'react'
 import { shallow , mount} from 'enzyme'
 import {expect} from 'chai';
 import sinon from 'sinon';
-import Grid from '../../../app/components/basic/grid/GridTable';
+import Table from '../../../app/components/basic/grid/GridTable';
 
 describe('(Component) GridTable', () => {
 
@@ -17,22 +17,22 @@ describe('(Component) GridTable', () => {
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Grid.Table fetchData={fetchSpy} pageSize={25} sortColumn="col1" sortAscending={false}>
-                <Grid.Column label="Column one" name="col1" width="60%"/>
-                <Grid.Column label="Column two" width="40%"/>
-                <Grid.Column label="Column three" show={false}/>
+            <Table fetchData={fetchSpy} pageSize={25} sortColumn="col1" sortAscending={false}>
+                <Table.Column label="Column one" name="col1" width="60%"/>
+                <Table.Column label="Column two" width="40%"/>
+                <Table.Column label="Column three" show={false}/>
                 {
                     [{k:1}, {k:2}, {k:3, s:true}, {k:4}, {k:5}].map((item)=> {
                         return (
-                            <Grid.Row key={item.k} select={item.s} onClick={item.s?selectSpy:null}>
-                                <Grid.Data>Data {item.k}.1</Grid.Data>
-                                <Grid.Data>Data {item.k}.2</Grid.Data>
-                                <Grid.Data>Data {item.k}.3</Grid.Data>
-                            </Grid.Row>
+                            <Table.Row key={item.k} selected={item.s} onClick={item.s?selectSpy:null}>
+                                <Table.Data>Data {item.k}.1</Table.Data>
+                                <Table.Data>Data {item.k}.2</Table.Data>
+                                <Table.Data>Data {item.k}.3</Table.Data>
+                            </Table.Row>
                         )
                     })
                 }
-            </Grid.Table>, { attachTo: div.get(0) }
+            </Table>, { attachTo: div.get(0) }
         );
     });
 

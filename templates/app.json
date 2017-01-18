@@ -3,7 +3,7 @@
   "widgets": [
     {
       "name": "Blueprints List",
-      "plugin": "blueprints",
+      "definition": "blueprints",
       "width": 6,
       "height": 5,
       "x": 0,
@@ -16,7 +16,7 @@
       "name": "Deployments",
       "width": 6,
       "height": 5,
-      "plugin": "deployments",
+      "definition": "deployments",
       "x": 6,
       "y": 2,
       "configuration":{
@@ -27,7 +27,7 @@
       "name": "Widget_0",
       "width": 2,
       "height": 2,
-      "plugin": "deploymentNum",
+      "definition": "deploymentNum",
       "x": 0,
       "y": 0
     },
@@ -35,7 +35,7 @@
       "name": "Widget_1",
       "width": 2,
       "height": 2,
-      "plugin": "serversNum",
+      "definition": "serversNum",
       "x": 4,
       "y": 0
     },
@@ -43,7 +43,7 @@
       "name": "Widget_2",
       "width": 2,
       "height": 2,
-      "plugin": "pluginsNum",
+      "definition": "pluginsNum",
       "x": 2,
       "y": 0
     },
@@ -51,7 +51,7 @@
       "name": "Users list",
       "width": 4,
       "height": 4,
-      "plugin": "usersList",
+      "definition": "usersList",
       "x": 0,
       "y": 7
     },
@@ -59,7 +59,7 @@
       "name": "GitHub repositories list",
       "width": 8,
       "height": 4,
-      "plugin": "githubRepositories",
+      "definition": "githubRepositories",
       "x": 4,
       "y": 7
     }

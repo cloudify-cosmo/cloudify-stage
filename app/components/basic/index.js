@@ -10,7 +10,7 @@ import HighlightText from './HighlightText';
 import Overlay from './overlay/Overlay';
 import Checkmark from './Checkmark';
 import EditableLabel from './EditableLabel';
-import Grid from './grid/GridTable';
+import Table from './grid/GridTable';
 import Pagination from './pagination/Pagination';
 import Segment from './segment/SegmentList';
 import Loading from './Loading';
@@ -25,7 +25,7 @@ export {
     HighlightText,
     Overlay,
     Checkmark,
-    Grid,
+    Table,
     Segment,
     Pagination,
     Loading,

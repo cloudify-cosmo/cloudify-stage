@@ -16,7 +16,7 @@ import initialTemplate from '../templates/initial-template.json';
 
 import {createPageFromInitialTemplate} from './actions/page';
 
-export default (history,templates,plugins,config) => {
+export default (history,templates,widgetDefinitions,config) => {
 
     let initialState = StatePersister.load();
 
@@ -28,9 +28,9 @@ export default (history,templates,plugins,config) => {
         }
     }
     initialState = Object.assign({},initialState,{
-        templates: templates,
-        plugins: plugins,
-        config: config
+        templates,
+        widgetDefinitions,
+        config
     });
 
     var store = createStore(
@@ -45,7 +45,7 @@ export default (history,templates,plugins,config) => {
 
     // If needed add the initial pages/widgets from the template
     if (!hasInitState) {
-        store.dispatch(createPageFromInitialTemplate(initialTemplate,templates,plugins));
+        store.dispatch(createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions));
     }
 
     store.subscribe(throttle(()=>{StatePersister.save(store.getState());},1000));

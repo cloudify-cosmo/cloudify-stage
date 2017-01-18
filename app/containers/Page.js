@@ -45,7 +45,7 @@ const mapStateToProps = (state, ownProps) => {
     var pageData = _.clone(_.find(state.pages,{id:pageId}));
     var widgets = _.map(pageData.widgets,(wd)=>{
         var w = _.clone(wd);
-        w.plugin = _.find(state.plugins,{id:w.plugin});
+        w.definition = _.find(state.widgetDefinitions,{id:w.definition});
         return w;
     });
     pageData.widgets = widgets;
