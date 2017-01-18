@@ -28,12 +28,12 @@ export default class Widget extends Component {
     render() {
         return (
             <div className={'widgetItem ui segment '+
-                            (this.props.widget.plugin && !this.props.widget.plugin.showBorder ? 'basic ' : '') +
-                            (this.props.isEditMode && this.props.widget.plugin && !this.props.widget.plugin.showBorder ? 'borderOnHover ' : '') +
-                            (this.props.widget.plugin && this.props.widget.plugin.color && this.props.widget.plugin.showBorder ? this.props.widget.plugin.color : '')
+                            (this.props.widget.definition && !this.props.widget.definition.showBorder ? 'basic ' : '') +
+                            (this.props.isEditMode && this.props.widget.definition && !this.props.widget.definition.showBorder ? 'borderOnHover ' : '') +
+                            (this.props.widget.definition && this.props.widget.definition.color && this.props.widget.definition.showBorder ? this.props.widget.definition.color : '')
                             }>
                 {
-                    this.props.widget.plugin && this.props.widget.plugin.showHeader ?
+                    this.props.widget.definition && this.props.widget.definition.showHeader ?
                         <h5 className='ui header dividing'>
 
                             {
@@ -60,7 +60,7 @@ export default class Widget extends Component {
                         ''
                 }
                 {
-                    (this.props.widget.plugin &&
+                    (this.props.widget.definition &&
                     !_.isEmpty(_.get(this.props,'manager.tenants.selected')) &&
                     !_.get(this.props,'manager.tenants.isFetching'))?
                         <WidgetDynamicContent widget={this.props.widget}

@@ -11,7 +11,7 @@ import AddWidgetModal from '../components/AddWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        plugins: state.plugins,
+        widgetDefinitions: state.widgetDefinitions,
         pageId: ownProps.pageId
     }
 };
@@ -20,21 +20,21 @@ let nameIndex = 0;
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onWidgetAdded: (plugin) => {
-            dispatch(addWidget(ownProps.pageId,plugin.name || 'Widget_'+(nameIndex++),plugin));
+        onWidgetAdded: (widgetDefinition) => {
+            dispatch(addWidget(ownProps.pageId,widgetDefinition.name || 'Widget_'+(nameIndex++),widgetDefinition));
         },
-        onPluginInstalled : ()=> {
+        onWidgetInstalled : ()=> {
             // dispatch
 
         }
     }
 };
 
-let AddWidgetComponent = ({plugins,onWidgetAdded,onPluginInstalled}) => {
+let AddWidgetComponent = ({widgetDefinitions,onWidgetAdded,onWidgetInstalled}) => {
     return (
         <div>
             <AddWidgetButton/>
-            <AddWidgetModal plugins={plugins} onWidgetAdded={onWidgetAdded} onPluginInstalled={onPluginInstalled}/>
+            <AddWidgetModal widgetDefinitions={widgetDefinitions} onWidgetAdded={onWidgetAdded} onWidgetInstalled={onWidgetInstalled}/>
         </div>
     );
 };

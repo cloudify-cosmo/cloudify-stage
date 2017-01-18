@@ -75,7 +75,7 @@ export function removePage(pageId) {
         }
 }
 
-export function createPageFromInitialTemplate(initialTemplate,templates,plugins) {
+export function createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions) {
     return function (dispatch) {
 
         let idIndex = 0;
@@ -90,8 +90,8 @@ export function createPageFromInitialTemplate(initialTemplate,templates,plugins)
             var currId = idIndex.toString();
             dispatch(createPage(template.name,currId));
             _.each(template.widgets,(widget)=>{
-                var plugin = _.find(plugins,{id:widget.plugin});
-                dispatch(addWidget(currId,widget.name,plugin,widget.width,widget.height,widget.x,widget.y,widget.configuration));
+                var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
+                dispatch(addWidget(currId,widget.name,widgetDefinition,widget.width,widget.height,widget.x,widget.y,widget.configuration));
             });
             idIndex++;
         });

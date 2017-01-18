@@ -3,7 +3,7 @@
   "widgets": [
     {
       "name": "topology",
-      "plugin": "topology",
+      "definition": "topology",
       "width": 7,
       "height": 5,
       "x": 0,
@@ -11,25 +11,25 @@
     },
     {
       "name": "Nodes",
-      "plugin": "nodes",
+      "definition": "nodes",
       "width": 5,
       "height": 5,
-      "x": 0,
-      "y": 7
+      "x": 7,
+      "y": 0
     },
     {
       "name": "Deployment Inputs",
-      "width": 5,
+      "width": 6,
       "height": 3,
-      "plugin": "inputs",
+      "definition": "inputs",
       "x": 0,
       "y": 5
     },
     {
       "name": "Deployment Outputs",
-      "width": 5,
+      "width": 6,
       "height": 3,
-      "plugin": "outputs",
+      "definition": "outputs",
       "x": 6,
       "y": 5
     },
@@ -38,7 +38,7 @@
       "name": "Deplyment Events",
       "width": 6,
       "height": 3,
-      "plugin": "events",
+      "definition": "events",
       "x": 0,
       "y": 8
     },
@@ -46,7 +46,7 @@
       "name": "Deplyment Logs",
       "width": 6,
       "height": 3,
-      "plugin": "logs",
+      "definition": "logs",
       "x": 6,
       "y": 8
     }

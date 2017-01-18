@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     grunt.registerTask("prepareModules", "Finds and prepares modules for concatenation.", function() {
 
         // get all module directories
-        grunt.file.expand("plugins/**/src").forEach(function (dir) {
+        grunt.file.expand("widgets/**/src").forEach(function (dir) {
 
 
             // get the current concat object from initConfig
@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 
             // create a subtask for each module, find all src files
             // and combine into a single js file per module
-            browserify.plugins.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
+            browserify.widgets.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
             browserify.dist.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
             //    src: [dir + '/**/*.js'],
             //    dest: destDir+'/widget.js'
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
             // add module subtasks to the concat task in initConfig
             grunt.config.set('browserify', browserify);
 
-            console.log(browserify.plugins.files);
+            console.log(browserify.widgets.files);
         });
     });
 
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
                     debug: true
                 }
             },
-            plugins: {
+            widgets: {
                 files: {
                 },
                 options: {
@@ -57,75 +57,13 @@ module.exports = function(grunt) {
                 options: {
                 }
             }
-        },
-        //babel: {
-        //    plugins: {
-        //        files: [{
-        //            "expand": true,
-        //            "cwd": "plugins/",
-        //            "src": ["*/src/**/*.js"],
-        //            "dest": ".tmp",
-        //            //rename: function (dest,src) {
-        //            //    var pluginLib = src.substring(0,src.indexOf('/src'));
-        //            //    return pluginLib + '/widget-1.js';
-        //            //},
-        //            "ext": ".js",
-        //            extDot: 'first'
-        //        }]
-        //    }
-        //},
-        //concat: {
-        //    // Being built with prepareModules
-        //},
-        //copy: {
-        //    plugins: {
-        //        files: [
-        //            {
-        //                expand: true,
-        //                cwd: '.tmp',
-        //                src: ['*/widget.js'],
-        //                dest: 'plugins',
-        //                filter: 'isFile'
-        //            }
-        //        ]
-        //    }
-        //},
-        //watch: {
-        //    plugins: {
-        //        files: ['plugins/**/src/*.js'],
-        //        //tasks: ['buildPlugins'],
-        //        options: {
-        //            spawn: false
-        //        }
-        //    }
-        //}
+        }
     });
 
-    //grunt.registerTask('buildPlugins',
-    //    [
-    //        'babel:plugins',
-    //        'prepareModules',
-    //        'concat',
-    //        'copy:plugins'
-    //    ]);
-    //
-    //grunt.registerTask('watchPlugins',
-    //    [
-    //        'clean',
-    //        'buildPlugins',
-    //        'watch:plugins'
-    //    ]);
-    //
-    //grunt.registerTask('default',
-    //    [
-    //        'clean',
-    //        'buildPlugins'
-    //    ]);
-
-    grunt.registerTask('plugins',
+    grunt.registerTask('widgets',
         [
             'prepareModules',
-            'browserify:plugins'
+            'browserify:widgets'
         ]);
     grunt.registerTask('build',
         [
