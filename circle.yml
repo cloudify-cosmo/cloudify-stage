@@ -4,6 +4,7 @@ machine:
 dependencies:
   override:
     - npm install
+    - npm update
     - npm install webpack -g
     - npm install bower -g
     - npm install gulp -g
