@@ -27,9 +27,9 @@ export default class extends React.Component {
         var Segment = Stage.Basic.Segment;
 
         return (
-            <Segment.List totalSize={this.props.data.total}
-                          pageSize={this.props.widget.plugin.pageSize}
-                          fetchData={this.props.fetchData}>
+            <Segment totalSize={this.props.data.total}
+                     pageSize={this.props.widget.plugin.pageSize}
+                     fetchData={this.props.fetchData}>
                 {
                     this.props.data.items.map((item) => {
                         return (
@@ -85,7 +85,7 @@ export default class extends React.Component {
                         );
                     })
                 }
-            </Segment.List>
+            </Segment>
         );
     }
 }

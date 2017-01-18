@@ -36,33 +36,33 @@ export default class extends React.Component {
     }
 
     render() {
-        let Grid = Stage.Basic.Grid;
+        let Table = Stage.Basic.Table;
 
         return (
             <div>
 
-                <Grid.Table className="nodesInstancesTable">
+                <Table className="nodesInstancesTable">
 
-                    <Grid.Column label="Instance" name="id" width="40%"/>
-                    <Grid.Column label="Status" name="state" width="30%"/>
-                    <Grid.Column label="Details" name="details" width="30%"/>
+                    <Table.Column label="Instance" name="id" width="40%"/>
+                    <Table.Column label="Status" name="state" width="30%"/>
+                    <Table.Column label="Details" name="details" width="30%"/>
 
                     {
                         this.props.instances.map((instance) => {
                             return (
-                                <Grid.Row key={instance.id}>
-                                    <Grid.Data>{instance.id}</Grid.Data>
-                                    <Grid.Data>{instance.state}</Grid.Data>
-                                    <Grid.Data className="center aligned rowActions">
+                                <Table.Row key={instance.id}>
+                                    <Table.Data>{instance.id}</Table.Data>
+                                    <Table.Data>{instance.state}</Table.Data>
+                                    <Table.Data className="center aligned rowActions">
                                         <i className="table icon link bordered"
                                            onClick={this._showInstanceModal.bind(this, instance)}>
                                         </i>
-                                    </Grid.Data>
-                                </Grid.Row>
+                                    </Table.Data>
+                                </Table.Row>
                             );
                         })
                     }
-                </Grid.Table>
+                </Table>
 
                 <InstanceModal show={this.state.showModal}
                                onClose={this._closeInstanceModal.bind(this)}

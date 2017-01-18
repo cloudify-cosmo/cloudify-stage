@@ -7,7 +7,10 @@ import SegmentItem from './SegmentItem';
 import SegmentAction from './SegmentAction';
 import Pagination from '../pagination/Pagination';
 
-class SegmentList extends Component {
+export default class SegmentList extends Component {
+
+    static Item = SegmentItem;
+    static Action = SegmentAction;
 
     constructor(props,context) {
         super(props,context);
@@ -70,9 +73,3 @@ class SegmentList extends Component {
         );
     }
 }
-
-export default {
-    List:SegmentList,
-    Item:SegmentItem,
-    Action:SegmentAction
-};

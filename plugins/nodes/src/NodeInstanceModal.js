@@ -14,10 +14,7 @@ export default class extends React.Component {
 
     render() {
         let Modal = Stage.Basic.Modal;
-        let Header = Stage.Basic.ModalHeader;
-        let Body = Stage.Basic.ModalBody;
-        let Footer = Stage.Basic.ModalFooter;
-        let Grid = Stage.Basic.Grid;
+        let Table = Stage.Basic.Table;
 
         let instance = this.props.instance;
 
@@ -27,59 +24,59 @@ export default class extends React.Component {
                        className='nodeInstanceModal'
                        onDeny={this.props.onClose}
                        onApprove={this.props.onClose}>
-                    <Header>
+                    <Modal.Header>
                         Node instance {instance.id}
-                    </Header>
+                    </Modal.Header>
 
-                    <Body>
+                    <Modal.Body>
                         <div>
                             <h3>Relationships</h3>
-                            <Grid.Table className="nodeInstanceRelationshipsTable">
+                            <Table className="nodeInstanceRelationshipsTable">
 
-                                <Grid.Column label="Target node" name="target" width="30%"/>
-                                <Grid.Column label="Relationship type" name="relationship" width="40%"/>
-                                <Grid.Column label="Source node" name="source" width="30%"/>
+                                <Table.Column label="Target node" name="target" width="30%"/>
+                                <Table.Column label="Relationship type" name="relationship" width="40%"/>
+                                <Table.Column label="Source node" name="source" width="30%"/>
 
                                 {
                                     instance.relationships.map((r) => {
                                         return (
-                                            <Grid.Row key={r.target_name + r.type + instance.node_id}>
-                                                <Grid.Data>{r.target_name}</Grid.Data>
-                                                <Grid.Data>{r.type}</Grid.Data>
-                                                <Grid.Data>{instance.node_id}</Grid.Data>
-                                            </Grid.Row>
+                                            <Table.Row key={r.target_name + r.type + instance.node_id}>
+                                                <Table.Data>{r.target_name}</Table.Data>
+                                                <Table.Data>{r.type}</Table.Data>
+                                                <Table.Data>{instance.node_id}</Table.Data>
+                                            </Table.Row>
                                         );
                                     })
                                 }
-                            </Grid.Table>
+                            </Table>
 
                             <h3>Runtime properties</h3>
-                            <Grid.Table className="nodeInstanceRuntimePropertiesTable">
+                            <Table.Table className="nodeInstanceRuntimePropertiesTable">
 
-                                <Grid.Column label="Key" name="key" width="50%"/>
-                                <Grid.Column label="Value" name="value" width="50%"/>
+                                <Table.Column label="Key" name="key" width="50%"/>
+                                <Table.Column label="Value" name="value" width="50%"/>
 
                                 {
                                     Object.keys(instance.runtime_properties).map(function (key) {
                                         let value = instance.runtime_properties[key];
                                         return (
-                                            <Grid.Row key={key}>
-                                                <Grid.Data>{key}</Grid.Data>
-                                                <Grid.Data>{value}</Grid.Data>
-                                            </Grid.Row>
+                                            <Table.Row key={key}>
+                                                <Table.Data>{key}</Table.Data>
+                                                <Table.Data>{value}</Table.Data>
+                                            </Table.Row>
                                         );
                                     })
                                 }
 
-                            </Grid.Table>
+                            </Table.Table>
                         </div>
-                    </Body>
+                    </Modal.Body>
 
-                    <Footer>
+                    <Modal.Footer>
                         <div className="ui ok basic button">
                             Close
                         </div>
-                    </Footer>
+                    </Modal.Footer>
                 </Modal>
             </div>
 

@@ -32,78 +32,62 @@ export default class extends React.Component {
     }
 
     render() {
-
-        var fieldsToShowConfig;
-        try {
-            fieldsToShowConfig = JSON.parse(this.props.widget.configuration.fieldsToShow);
-        } catch (e) {
-            console.error('Error parsing fields-to-show configuration for executions table');
-        }
-
-        var fieldsToShow = [];
-        if (fieldsToShowConfig && Array.isArray(fieldsToShowConfig)) {
-            fieldsToShow = fieldsToShowConfig;
-        } else {
-            fieldsToShow = _.find(this.props.widget.plugin.initialConfiguration,{id:'fieldsToShow'}).default || ["Id"];
-        }
-
-
         var ErrorMessage = Stage.Basic.ErrorMessage;
-        var Grid = Stage.Basic.Grid;
+        var Table = Stage.Basic.Table;
         var HighlightText = Stage.Basic.HighlightText;
         var Overlay = Stage.Basic.Overlay;
-        var OverlayAction = Stage.Basic.OverlayAction;
-        var OverlayContent = Stage.Basic.OverlayContent;
         var Checkmark = Stage.Basic.Checkmark;
+
+        var fieldsToShow = this.props.widget.configuration.fieldsToShow;
 
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <Grid.Table fetchData={this.fetchGridData.bind(this)}
+                <Table fetchData={this.fetchGridData.bind(this)}
                             totalSize={this.props.data.total}
                             pageSize={this.props.widget.plugin.pageSize}
                             selectable={true}
                             className="executionsTable">
 
-                    <Grid.Column label="Blueprint" name="blueprint_id" width="20%"
+                    <Table.Column label="Blueprint" name="blueprint_id" width="20%"
                                  show={fieldsToShow.indexOf("Blueprint") >= 0 && !this.props.data.blueprintId}/>
-                    <Grid.Column label="Deployment" name="deployment_id" width="20%"
+                    <Table.Column label="Deployment" name="deployment_id" width="20%"
                                  show={fieldsToShow.indexOf("Deployment") >= 0 && !this.props.data.deploymentId}/>
-                    <Grid.Column label="Workflow" name="workflow_id" width="15%"
+                    <Table.Column label="Workflow" name="workflow_id" width="15%"
                                  show={fieldsToShow.indexOf("Workflow") >= 0}/>
-                    <Grid.Column label="Id" name="id" width="20%"
+                    <Table.Column label="Id" name="id" width="20%"
                                  show={fieldsToShow.indexOf("Id") >= 0}/>
-                    <Grid.Column label="Created" name="created_at" width="10%"
+                    <Table.Column label="Created" name="created_at" width="10%"
                                  show={fieldsToShow.indexOf("Created") >= 0}/>
-                    <Grid.Column label="IsSystem" name="is_system_workflow" width="5%"
+                    <Table.Column label="IsSystem" name="is_system_workflow" width="5%"
                                  show={fieldsToShow.indexOf("IsSystem") >= 0}/>
-                    <Grid.Column label="Params" name="parameters" width="5%"
+                    <Table.Column label="Params" name="parameters" width="5%"
                                  show={fieldsToShow.indexOf("Params") >= 0}/>
-                    <Grid.Column label="Status" width="5%" name="status"
+                    <Table.Column label="Status" width="5%" name="status"
                                  show={fieldsToShow.indexOf("Status") >= 0}/>
 
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <Grid.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
-                                    <Grid.Data>{item.blueprint_id}</Grid.Data>
-                                    <Grid.Data>{item.deployment_id}</Grid.Data>
-                                    <Grid.Data>{item.workflow_id}</Grid.Data>
-                                    <Grid.Data>{item.id}</Grid.Data>
-                                    <Grid.Data>{item.created_at}</Grid.Data>
-                                    <Grid.Data><Checkmark value={item.is_system_workflow}/></Grid.Data>
-                                    <Grid.Data>
+                                <Table.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
+                                    <Table.Data>{item.blueprint_id}</Table.Data>
+                                    <Table.Data>{item.deployment_id}</Table.Data>
+                                    <Table.Data>{item.workflow_id}</Table.Data>
+                                    <Table.Data>{item.id}</Table.Data>
+                                    <Table.Data>{item.created_at}</Table.Data>
+                                    <Table.Data><Checkmark value={item.is_system_workflow}/></Table.Data>
+                                    <Table.Data>
                                         <Overlay>
-                                            <OverlayAction>
+                                            <Overlay.Action>
                                                 <i data-overlay-action className="options icon link bordered" title="Execution parameters"></i>
-                                            </OverlayAction>
-                                            <OverlayContent>
+                                            </Overlay.Action>
+                                            <Overlay.Content>
                                                 <HighlightText className='json'>{JSON.stringify(item.parameters, null, 2)}</HighlightText>
-                                            </OverlayContent>
+                                            </Overlay.Content>
                                         </Overlay>
-                                    </Grid.Data>
-                                    <Grid.Data>
+                                    </Table.Data>
+                                    <Table.Data>
                                         { _.isEmpty(item.error) ?
                                             <div>
                                                 <i className="check circle icon inverted green"></i>
@@ -111,23 +95,23 @@ export default class extends React.Component {
                                             </div>
                                             :
                                             <Overlay>
-                                                <OverlayAction title="Error details">
+                                                <Overlay.Action title="Error details">
                                                     <i data-overlay-action className="remove circle icon red link"></i>
                                                     <a href="javascript:void(0)">
                                                         {item.status}
                                                     </a>
-                                                </OverlayAction>
-                                                <OverlayContent>
+                                                </Overlay.Action>
+                                                <Overlay.Content>
                                                     <HighlightText className='python'>{item.error}</HighlightText>
-                                                </OverlayContent>
+                                                </Overlay.Content>
                                             </Overlay>
                                         }
-                                    </Grid.Data>
-                                </Grid.Row>
+                                    </Table.Data>
+                                </Table.Row>
                             );
                         })
                     }
-                </Grid.Table>
+                </Table>
 
             </div>
         );

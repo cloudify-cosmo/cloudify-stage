@@ -22,7 +22,7 @@ Stage.addPlugin({
     isReact: true,
     initialConfiguration: [
         {id: "pollingTime", default: 5},
-        {id: "FilterByExecutions",name: "Should show execution filter", placeHolder: "True of false if to show execution filter as well", default: "true"}
+        {id: "filterByExecutions",name: "Should show execution filter", default: true, type: Stage.Basic.Field.BOOLEAN_TYPE}
     ],
 
     _processData(blueprintId,deploymentId,executionId,data) {

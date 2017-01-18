@@ -118,20 +118,17 @@ export default class extends React.Component {
 
     render() {
         var Modal = Stage.Basic.Modal;
-        var Header = Stage.Basic.ModalHeader;
-        var Body = Stage.Basic.ModalBody;
-        var Footer = Stage.Basic.ModalFooter;
         var ErrorMessage = Stage.Basic.ErrorMessage;
 
         var blueprints = Object.assign({},{items:[]}, this.props.blueprints);
 
         return (
             <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
-                <Header>
+                <Modal.Header>
                     <i className="rocket icon"></i> Create new deployment
-                </Header>
+                </Modal.Header>
 
-                <Body>
+                <Modal.Body>
                     <form className="ui form deployForm" onSubmit={this._submitDeploy.bind(this)} action="">
                         <div className="field">
                             <input type="text" required name='deploymentName' placeholder="Deployment name"/>
@@ -183,18 +180,12 @@ export default class extends React.Component {
 
                         <input type='submit' style={{"display": "none"}} ref='submitDeployBtn'/>
                     </form>
-                </Body>
+                </Modal.Body>
 
-                <Footer>
-                    <div className="ui cancel basic button">
-                        <i className="remove icon"></i>
-                        Cancel
-                    </div>
-                    <div className="ui ok green  button">
-                        <i className="rocket icon"></i>
-                        Deploy
-                    </div>
-                </Footer>
+                <Modal.Footer>
+                    <Modal.Cancel/>
+                    <Modal.Approve label="Deploy" icon="rocket" className="green"/>
+                </Modal.Footer>
             </Modal>
         );
     }

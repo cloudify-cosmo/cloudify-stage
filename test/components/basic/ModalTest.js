@@ -7,9 +7,6 @@ import {shallow, mount} from 'enzyme'
 import {expect} from 'chai';
 import sinon from 'sinon';
 import Modal from '../../../app/components/basic/modal/Modal';
-import ModalHeader from '../../../app/components/basic/modal/ModalHeader';
-import ModalBody from '../../../app/components/basic/modal/ModalBody';
-import ModalFooter from '../../../app/components/basic/modal/ModalFooter';
 
 describe('(Component) Modal', () => {
 
@@ -20,12 +17,12 @@ describe('(Component) Modal', () => {
 
         wrapper = mount(
             <Modal className="testModal">
-                <ModalHeader>test header</ModalHeader>
-                <ModalBody><form>test body</form></ModalBody>
-                <ModalFooter>
-                    <div className="ui cancel basic button">cancel</div>
-                    <div className="ui ok green button">ok</div>
-                </ModalFooter>
+                <Modal.Header>test header</Modal.Header>
+                <Modal.Body><form>test body</form></Modal.Body>
+                <Modal.Footer>
+                    <Modal.Cancel label="cancel" icon=""/>
+                    <Modal.Approve label="ok" icon="" className="green"/>
+                </Modal.Footer>
             </Modal>, { attachTo: div.get(0) }
         );
     });

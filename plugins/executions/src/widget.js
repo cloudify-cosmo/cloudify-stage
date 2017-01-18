@@ -16,8 +16,9 @@ Stage.addPlugin({
     initialConfiguration:
         [
             {id: "pollingTime", default: 2},
-            {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Enter list of comma separated field names (json format)",
-             default: '["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Params","Status"]'}
+            {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
+                items: ["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Params","Status"],
+                default: 'Blueprint,Deployment,Workflow,Id,Created,IsSystem,Params,Status', type: Stage.Basic.Field.MULTI_SELECT_LIST_TYPE}
         ],
     pageSize: 5,
 

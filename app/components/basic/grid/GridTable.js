@@ -13,10 +13,18 @@ import GridFilter from './GridFilter';
 import Pagination from '../pagination/Pagination';
 import Search from './Search';
 
-class GridTable extends Component {
+export default class GridTable extends Component {
 
-    constructor(props,context) {
-        super(props,context);
+    static Row = GridRow;
+    static Column = GridColumn;
+    static Data = GridData;
+    static Action = GridAction;
+    static Filter = GridFilter;
+    static RowExpandable = GridRowExpandable;
+    static DataExpandable = GridDataExpandable;
+
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             sortColumn: props.sortColumn,
@@ -38,7 +46,8 @@ class GridTable extends Component {
     };
 
     static defaultProps = {
-        fetchData: ()=>{},
+        fetchData: () => {
+        },
         totalSize: -1,
         pageSize: 0,
         sortColumn: "",
@@ -56,9 +65,9 @@ class GridTable extends Component {
 
     getChildContext() {
         return {
-            getSortColumn: ()=> this.state.sortColumn,
-            isSortAscending: ()=> this.state.sortAscending,
-            sortColumn: (name)=> this._sortColumn(name)
+            getSortColumn: () => this.state.sortColumn,
+            isSortAscending: () => this.state.sortAscending,
+            sortColumn: (name) => this._sortColumn(name)
         };
     }
 
@@ -72,7 +81,7 @@ class GridTable extends Component {
         }
 
         this.refs.pagination.reset();
-        this.setState({sortColumn:name, sortAscending:ascending});
+        this.setState({sortColumn: name, sortAscending: ascending});
     }
 
     componentWillReceiveProps(nextProps) {
@@ -106,7 +115,7 @@ class GridTable extends Component {
         var gridFilters = [];
 
         var showCols = [];
-        React.Children.forEach(this.props.children, function(child) {
+        React.Children.forEach(this.props.children, function (child) {
             if (child && child.type) {
                 if (child.type.name === "GridColumn") {
                     showCols.push(child.props.show);
@@ -115,7 +124,7 @@ class GridTable extends Component {
                     bodyRows.push(React.cloneElement(child, {showCols}));
                 } else if (child.type.name === "GridRowExpandable") {
                     let expandableContent = [];
-                    React.Children.forEach(child.props.children, function(expChild) {
+                    React.Children.forEach(child.props.children, function (expChild) {
                         if (expChild && expChild.type) {
                             if (expChild.type.name === "GridRow") {
                                 bodyRows.push(React.cloneElement(expChild, {showCols}));
@@ -136,24 +145,32 @@ class GridTable extends Component {
         return (
             <div className={`gridTable ${this.props.className}`}>
                 { (this.props.searchable || !_.isEmpty(gridFilters) || gridAction) &&
-                    <div className="ui small form">
-                        <div className="inline fields">
-                            {this.props.searchable && <Search/>}
-                            {gridFilters}
-                            {gridAction}
-                        </div>
+                <div className="ui small form">
+                    <div className="inline fields">
+                        {this.props.searchable && <Search/>}
+                        {gridFilters}
+                        {gridAction}
                     </div>
+                </div>
                 }
 
                 <Pagination totalSize={this.props.totalSize}
                             pageSize={this.props.pageSize}
                             fetchData={this._fetchData.bind(this)} ref="pagination">
-                    <table className={`ui very compact table sortable ${this.props.selectable?'selectable':''} ${this.props.className}`} cellSpacing="0" cellPadding="0">
-                        <thead><tr>
+                    <table
+                        className={`ui very compact table sortable ${this.props.selectable ? 'selectable' : ''} ${this.props.className}`}
+                        cellSpacing="0" cellPadding="0">
+                        <thead>
+                        <tr>
                             {headerColumns}
-                        </tr></thead>
+                        </tr>
+                        </thead>
                         {this.props.totalSize === 0 ?
-                            <tbody><tr className="noDataRow"><td colSpan={headerColumns.length} className="center aligned">No data available</td></tr></tbody>
+                            <tbody>
+                            <tr className="noDataRow">
+                                <td colSpan={headerColumns.length} className="center aligned">No data available</td>
+                            </tr>
+                            </tbody>
                             :
                             <tbody>{bodyRows}</tbody>
                         }
@@ -164,14 +181,3 @@ class GridTable extends Component {
         );
     }
 }
-
-export default {
-    Table:GridTable,
-    Row:GridRow,
-    RowExpandable:GridRowExpandable,
-    Column:GridColumn,
-    Data:GridData,
-    DataExpandable:GridDataExpandable,
-    Action:GridAction,
-    Filter:GridFilter
-};

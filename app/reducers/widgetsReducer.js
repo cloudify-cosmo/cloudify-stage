@@ -18,6 +18,13 @@ let buildConfig = (plugin)=>{
 
         var value = config.default && !config.value ? config.default : (_.isUndefined(config.value) ? null : config.value );
 
+        if (config.type == Stage.Basic.Field.MULTI_SELECT_LIST_TYPE) {
+            value = _.split(value, ',');
+        } else if (config.type == Stage.Basic.Field.BOOLEAN_TYPE) {
+            value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
+        }
+
+
         configs[config.id] = value;
     });
 

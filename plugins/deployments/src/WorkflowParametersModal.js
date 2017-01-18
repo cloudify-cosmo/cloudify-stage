@@ -53,21 +53,18 @@ export default class extends React.Component {
 
     render() {
         var Modal = Stage.Basic.Modal;
-        var Header = Stage.Basic.ModalHeader;
-        var Body = Stage.Basic.ModalBody;
-        var Footer = Stage.Basic.ModalFooter;
         var ErrorMessage = Stage.Basic.ErrorMessage;
 
         var workflow = Object.assign({},{name:"", parameters:[]}, this.props.workflow);
 
         return (
             <Modal show={this.props.show} className='executeModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
-                <Header>
+                <Modal.Header>
                     <i className="road icon"></i> Execute workflow {workflow.name}
-                </Header>
+                </Modal.Header>
 
-                <Body>
-                <form className="ui form executeForm" onSubmit={this._submitExecute.bind(this)} action="" ref='executeForm'>
+                <Modal.Body>
+                    <form className="ui form executeForm" onSubmit={this._submitExecute.bind(this)} action="" ref='executeForm'>
                         {
                             _.map(workflow.parameters,(parameter,name)=>{
                                 return (
@@ -83,18 +80,12 @@ export default class extends React.Component {
 
                         <input type='submit' style={{"display": "none"}} ref='submitExecuteBtn'/>
                     </form>
-                </Body>
+                </Modal.Body>
 
-                <Footer>
-                    <div className="ui cancel basic button">
-                        <i className="remove icon"></i>
-                        Cancel
-                    </div>
-                    <div className="ui ok green  button">
-                        <i className="rocket icon"></i>
-                        Execute
-                    </div>
-                </Footer>
+                <Modal.Footer>
+                    <Modal.Cancel/>
+                    <Modal.Approve label="Execute" icon="rocket" className="green"/>
+                </Modal.Footer>
             </Modal>
         );
     }
