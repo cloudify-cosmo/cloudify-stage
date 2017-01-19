@@ -2,7 +2,8 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
-import ExecuteModal from './WorkflowParametersModal';
+import ExecuteModal from './ExecuteModal';
+import UpdateModal from './UpdateModal';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 
@@ -14,9 +15,12 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
+            error: null,
             confirmDelete: false,
             showExecuteModal: false,
-            advancedFilter: false
+            showUpdateModal: false,
+            deployment: {},
+            workflow: {}
         }
     }
 
@@ -65,35 +69,35 @@ export default class extends React.Component {
 
     _selectAction(value, deployment, workflow) {
         if (workflow) {
-            this._showExecuteWorkflowModal(deployment, workflow);
+            this._showExecuteModal(deployment, workflow);
+        } else if (value === "edit") {
+            this._showUpdateModal(deployment);
         } else if (value === "delete") {
             this._deleteDeploymentConfirm(deployment);
         }
     }
 
-    _showExecuteWorkflowModal(deployment,workflow) {
+    _showExecuteModal(deployment,workflow) {
         this.setState({
             showExecuteModal: true,
-            executeDep: deployment,
-            executeWorkflow: workflow
+            deployment,
+            workflow
         });
     }
 
-    _hideExecuteWorkflowModal() {
+    _hideExecuteModal() {
+        this.setState({showExecuteModal: false});
+    }
+
+    _showUpdateModal(deployment) {
         this.setState({
-            showExecuteModal: false,
-            executeDep: null
+            showUpdateModal: true,
+            deployment
         });
     }
 
-    _executeWorkflow(deployment,workflow,params) {
-        var actions = new Actions(this.props.toolbox);
-        actions.doExecute(deployment,workflow,params).then(()=>{
-            this._hideExecuteWorkflowModal();
-            this.props.toolbox.getEventBus().trigger('executions:refresh');
-        }).catch((err)=>{
-            this.setState({error: err.error});
-        })
+    _hideUpdateModal() {
+        this.setState({showUpdateModal: false});
     }
 
     fetchData(fetchParams) {
@@ -129,10 +133,16 @@ export default class extends React.Component {
 
                 <ExecuteModal
                     show={this.state.showExecuteModal}
-                    deployment={this.state.executeDep}
-                    workflow={this.state.executeWorkflow}
-                    onExecute={this._executeWorkflow.bind(this)}
-                    onCancel={this._hideExecuteWorkflowModal.bind(this)}/>
+                    deployment={this.state.deployment}
+                    workflow={this.state.workflow}
+                    onHide={this._hideExecuteModal.bind(this)}
+                    toolbox={this.props.toolbox}/>
+
+                <UpdateModal
+                    show={this.state.showUpdateModal}
+                    deployment={this.state.deployment}
+                    onHide={this._hideUpdateModal.bind(this)}
+                    toolbox={this.props.toolbox}/>
             </div>
 
         );

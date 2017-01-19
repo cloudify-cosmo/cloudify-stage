@@ -18,14 +18,25 @@ export default class ErrorMessage extends Component {
         show: true
     };
 
+    static error(message, header) {
+        return {message, header};
+    }
+
     render() {
-        if (!this.props.error) {
+        if (_.isEmpty(this.props.error)) {
             return null;
         }
 
+        var error = this.props.error;
+        var header = this.props.header;
+        if (!_.isString(this.props.error)) {
+            error = this.props.error.message;
+            header = this.props.error.header;
+        }
+
         return <div className={`ui error message ${this.props.className}`} style={{"display":(this.props.show?"block":"none")}}>
-                    <div className="header">{this.props.header}</div>
-                    <p>{this.props.error}</p>
+                    <div className="header">{header}</div>
+                    <p>{error}</p>
                 </div>
     }
 }

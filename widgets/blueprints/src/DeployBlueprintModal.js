@@ -12,7 +12,7 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            error: {},
+            error: null,
             loading: false
         }
     }
@@ -31,7 +31,7 @@ export default class extends React.Component {
     componentWillUpdate(prevProps, prevState) {
         //same Modal instance is used multiple time so we need to reset states
         if (this.props.show && prevProps.show != this.props.show) {
-            this.setState({error: {}, loading: false});
+            this.setState({error: null, loading: false});
             $("form input:text").val("");
         }
     }
@@ -39,10 +39,6 @@ export default class extends React.Component {
     onApprove () {
         $(this.refs.submitDeployBtn).click();
         return false;
-    }
-
-    _error(message, header) {
-        return {message, header};
     }
 
     onDeny () {
@@ -54,7 +50,7 @@ export default class extends React.Component {
         e.preventDefault();
 
         if (!this.props.blueprint) {
-            this.setState({error: this._error("Blueprint not selected", "Missing data")});
+            this.setState({error: Stage.Basic.ErrorMessage.error("Blueprint not selected", "Missing data")});
             return false;
         }
 
@@ -78,7 +74,7 @@ export default class extends React.Component {
                 this.props.onHide();
             })
             .catch((err)=>{
-                this.setState({loading: false, error: this._error(err.error, "Error deploying blueprint")});
+                this.setState({loading: false, error: err.error});
             });
 
         return false;
@@ -128,7 +124,7 @@ export default class extends React.Component {
                                 })
                             }
 
-                            <ErrorMessage error={this.state.error.message} header={this.state.error.header}/>
+                            <ErrorMessage error={this.state.error}/>
 
                             <input type='submit' style={{"display": "none"}} ref='submitDeployBtn'/>
                         </form>
