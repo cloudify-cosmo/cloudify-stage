@@ -50,13 +50,13 @@ export default class extends React.Component {
 
                     <Grid.Column label="Name" name="id" width="20%"/>
                     <Grid.Column label="Type" name="type" width="20%"/>
-                    <Grid.Column label="Blueprint" name="blueprintId" width="10%" show={_.isEmpty(this.props.data.blueprintId)} />
-                    <Grid.Column label="Deployment" name="deploymentId" width="10%" show={_.isEmpty(this.props.data.deploymentId)} />
-                    <Grid.Column label="Contained in" name="containedIn" width="10%"/>
-                    <Grid.Column label="Connected to" name="connectedTo" width="10%"/>
-                    <Grid.Column label="# Instances" name="numberOfInstances" width="10%"/>
-                    <Grid.Column label="Groups" name="groups" width="10%" show={!_.isEmpty(this.props.data.blueprintId) ||
-                                                                                !_.isEmpty(this.props.data.deploymentId)} />
+                    <Grid.Column label="Blueprint" name="blueprint_id" width="10%" show={_.isEmpty(this.props.data.blueprintId)} />
+                    <Grid.Column label="Deployment" name="deployment_id" width="10%" show={_.isEmpty(this.props.data.deploymentId)} />
+                    <Grid.Column label="Contained in" name="host_id" width="10%"/>
+                    <Grid.Column label="Connected to" width="10%"/>
+                    <Grid.Column label="# Instances" name="number_of_instances" width="10%"/>
+                    <Grid.Column label="Groups" width="10%" show={!_.isEmpty(this.props.data.blueprintId) ||
+                                                                  !_.isEmpty(this.props.data.deploymentId)} />
 
                     {
                         this.props.data.items.map((node) => {
@@ -83,7 +83,6 @@ export default class extends React.Component {
                             );
                         })
                     }
-
                 </Grid.Table>
             </div>
 
