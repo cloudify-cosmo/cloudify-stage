@@ -17,7 +17,7 @@ describe('(Component) SegmentList', () => {
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Segment.List fetchData={fetchSpy} pageSize={25} sortColumn="col1" sortAscending={false}>
+            <Segment fetchData={fetchSpy} pageSize={25} sortColumn="col1" sortAscending={false}>
                 {
                     [{k:1}, {k:2}, {k:3, s:true}, {k:4}, {k:5}].map((item)=> {
                         return (
@@ -27,7 +27,7 @@ describe('(Component) SegmentList', () => {
                         )
                     })
                 }
-            </Segment.List>, { attachTo: div.get(0) }
+            </Segment>, { attachTo: div.get(0) }
         );
     });
 

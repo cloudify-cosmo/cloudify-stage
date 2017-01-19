@@ -31,32 +31,32 @@ describe('(Reducer) Pages - drilldown process', () => {
                 templates: {
                     'tmp1' : {
                         name: 'tmp1',
-                        widgets: [{name: 'some widget',plugin: 'plugin1',width:1,height:1,x:1,y:1}]
+                        widgets: [{name: 'some widget',definition: 'widget1',width:1,height:1,x:1,y:1}]
                     }
                 },
                 manager : {
                     ip: '1.1.1.1'
                 },
                 conetxt: {},
-                plugins: [{id: 'plugin1'}],
+                widgetDefinitions: [{id: 'widget1'}],
                 pages: [
-                    {id: '0',name:'page',widgets: [{id:'1',name:'widget1',plugin:'plugin1'}]}
+                    {id: '0',name:'page',widgets: [{id:'1',name:'widget1',definition:'widget1'}]}
                 ]
             };
             const store = mockStore(initialState);
 
             const expectedActions = [
                 {type: types.CREATE_DRILLDOWN_PAGE, newPageId: '0', name: 'tmp1'},
-                {type: types.ADD_WIDGET, pageId: '0', name: 'some widget', plugin: initialState.plugins[0],width:1,height:1,x:1,y:1,configuration:undefined},
+                {type: types.ADD_WIDGET, pageId: '0', name: 'some widget', widgetDefinition: initialState.widgetDefinitions[0],width:1,height:1,x:1,y:1,configuration:undefined},
                 {type : types.SET_DRILLDOWN_PAGE,widgetId: '1',drillDownPageId: '0'},
                 {type: 'router action'}
             ];
 
             var widget = initialState.pages[0].widgets[0];
             var defaultTemplate = initialState.templates.tmp1;
-            var plugins = initialState.plugins;
+            var widgetDefinitions = initialState.widgetDefinitions;
 
-            store.dispatch(drillDownToPage(widget,defaultTemplate,plugins));
+            store.dispatch(drillDownToPage(widget,defaultTemplate,widgetDefinitions));
 
             var storeActions = store.getActions();
 
@@ -81,17 +81,17 @@ describe('(Reducer) Pages - drilldown process', () => {
                 templates: {
                     'tmp1' : {
                         name: 'tmp1',
-                        widgets: [{name: 'some widget',plugin: 'plugin1',width:1,height:1,x:1,y:1}]
+                        widgets: [{name: 'some widget',definition: 'widget1',width:1,height:1,x:1,y:1}]
                     }
                 },
                 manager : {
                     ip: '1.1.1.1'
                 },
                 conetxt: {},
-                plugins: [{id: 'plugin1'}],
+                widgetDefinitions: [{id: 'widget1'}],
                 pages: [
-                    {id: '0',children: ['1'], name:'page',widgets: [{id:'1',name:'widget1',plugin:'plugin1',drillDownPageId:'1'}]},
-                    {id: '1',parent: '0', name:'tmp1',isDrillDown: true,widgets: [{id:'2',name:'some widget',plugin:'plugin1',width:1,height:1,x:1,y:1}]}
+                    {id: '0',children: ['1'], name:'page',widgets: [{id:'1',name:'widget1',definition:'widget1',drillDownPageId:'1'}]},
+                    {id: '1',parent: '0', name:'tmp1',isDrillDown: true,widgets: [{id:'2',name:'some widget',definition:'widget1',width:1,height:1,x:1,y:1}]}
                 ]
             };
 
@@ -103,9 +103,9 @@ describe('(Reducer) Pages - drilldown process', () => {
 
             var widget = initialState.pages[0].widgets[0];
             var defaultTemplate = initialState.templates.tmp1;
-            var plugins = initialState.plugins;
+            var widgetDefinitions = initialState.widgetDefinitions;
 
-            store.dispatch(drillDownToPage(widget,defaultTemplate,plugins));
+            store.dispatch(drillDownToPage(widget,defaultTemplate,widgetDefinitions));
 
             var storeActions = store.getActions();
 
@@ -117,17 +117,17 @@ describe('(Reducer) Pages - drilldown process', () => {
                 templates: {
                     'tmp1' : {
                         name: 'tmp1',
-                        widgets: [{name: 'some widget',plugin: 'plugin1',width:1,height:1,x:1,y:1}]
+                        widgets: [{name: 'some widget',definition: 'widget1',width:1,height:1,x:1,y:1}]
                     }
                 },
                 manager : {
                     ip: '1.1.1.1'
                 },
                 conetxt: {},
-                plugins: [{id: 'plugin1'}],
+                widgetDefinitions: [{id: 'widget1'}],
                 pages: [
-                    {id: '0',children: ['1'], name:'page',widgets: [{id:'1',name:'widget1',plugin:'plugin1',drillDownPageId:'1'}]},
-                    {id: '1',parent: '0', name:'tmp1',isDrillDown: true,widgets: [{id:'2',name:'some widget',plugin:'plugin1',width:1,height:1,x:1,y:1}]}
+                    {id: '0',children: ['1'], name:'page',widgets: [{id:'1',name:'widget1',definition:'widget1',drillDownPageId:'1'}]},
+                    {id: '1',parent: '0', name:'tmp1',isDrillDown: true,widgets: [{id:'2',name:'some widget',definition:'widget1',width:1,height:1,x:1,y:1}]}
                 ]
             };
 
@@ -135,9 +135,9 @@ describe('(Reducer) Pages - drilldown process', () => {
 
             var widget = initialState.pages[0].widgets[0];
             var defaultTemplate = initialState.templates.tmp1;
-            var plugins = initialState.plugins;
+            var widgetDefinitions = initialState.widgetDefinitions;
 
-            store.dispatch(drillDownToPage(widget,defaultTemplate,plugins,{contextValue:'kuku'}));
+            store.dispatch(drillDownToPage(widget,defaultTemplate,widgetDefinitions,{contextValue:'kuku'}));
 
             var storeActions = store.getActions();
             var routeAction = storeActions[0];
@@ -154,16 +154,16 @@ describe('(Reducer) Pages - drilldown process', () => {
             templates: {
                 'tmp1' : {
                     name: 'tmp1',
-                    widgets: [{name: 'some widget',plugin: 'plugin1',width:1,height:1,x:1,y:1}]
+                    widgets: [{name: 'some widget',definition: 'widget1',width:1,height:1,x:1,y:1}]
                 }
             },
             manager : {
                 ip: '1.1.1.1'
             },
             conetxt: {},
-            plugins: [{id: 'plugin1'}],
+            widgetDefinitions: [{id: 'widget1'}],
             pages: [
-                {id: '0',name:'page',widgets: [{id:'1',name:'widget1',plugin:'plugin1'}]}
+                {id: '0',name:'page',widgets: [{id:'1',name:'widget1',definition:'widget1'}]}
             ]
         };
 
@@ -171,9 +171,9 @@ describe('(Reducer) Pages - drilldown process', () => {
 
         var widget = initialState.pages[0].widgets[0];
         var defaultTemplate = initialState.templates.tmp1;
-        var plugins = initialState.plugins;
+        var widgetDefinitions = initialState.widgetDefinitions;
 
-        store.dispatch(drillDownToPage(widget,defaultTemplate,plugins));
+        store.dispatch(drillDownToPage(widget,defaultTemplate,widgetDefinitions));
 
         var state = store.getState();
         var parentPage = state[0];
@@ -185,12 +185,14 @@ describe('(Reducer) Pages - drilldown process', () => {
         });
 
         it('Drilldown page should have the right template data',()=>{
-            var pageAccordingToTemplate ={name:'tmp1',isDrillDown: true,description:'' ,widgets: [{name:'some widget',plugin:'plugin1',width:1,height:1,x:1,y:1,configuration:{}}]};
-
+            var pageAccordingToTemplate ={name:'tmp1',isDrillDown: true,description:'' ,widgets: [{name:'some widget',definition:'widget1',width:1,height:1,x:1,y:1,configuration:{},pageSize: undefined}]};
             // Set ids data so can compare (i dont want to delete values from the store inorder to compare)
             pageAccordingToTemplate.id = drillDownPage.id;
             pageAccordingToTemplate.parent = parentPage.id;
             pageAccordingToTemplate.widgets[0].id = drillDownPage.widgets[0].id;
+
+            console.log('drill down template: ',pageAccordingToTemplate)
+            console.log('drill down page: ',drillDownPage)
 
             expect(drillDownPage).to.eql(pageAccordingToTemplate);
         });

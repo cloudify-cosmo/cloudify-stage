@@ -5,8 +5,6 @@
 import React, { Component, PropTypes } from 'react';
 
 import Modal from './modal/Modal';
-import Footer from './modal/ModalFooter';
-import Header from './modal/ModalHeader';
 
 export default class Confirm extends Component {
     static propTypes = {
@@ -26,17 +24,11 @@ export default class Confirm extends Component {
     render() {
         return (
             <Modal className={this.props.className} onApprove={this.props.onConfirm} onDeny={this.props.onCancel} show={this.props.show}>
-                <Header>{this.props.title}</Header>
-                <Footer>
-                    <Footer>
-                        <div className="ui cancel basic button">
-                            No
-                        </div>
-                        <div className="ui ok green  button">
-                            Yes
-                        </div>
-                    </Footer>
-                </Footer>
+                <Modal.Header>{this.props.title}</Modal.Header>
+                <Modal.Footer>
+                    <Modal.Cancel label="No" icon=""/>
+                    <Modal.Approve label="Yes" className="green" icon=""/>
+                </Modal.Footer>
             </Modal>
 
         );

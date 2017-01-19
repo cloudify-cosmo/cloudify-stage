@@ -6,8 +6,6 @@ import React from 'react'
 import {shallow, mount} from 'enzyme'
 import {expect} from 'chai';
 import Overlay from '../../../app/components/basic/overlay/Overlay';
-import OverlayAction from '../../../app/components/basic/overlay/OverlayAction';
-import OverlayContent from '../../../app/components/basic/overlay/OverlayContent';
 
 describe('(Component) Overlay', () => {
 
@@ -18,8 +16,8 @@ describe('(Component) Overlay', () => {
 
         wrapper = mount(
             <Overlay className="testOverlay">
-                <OverlayAction>icon</OverlayAction>
-                <OverlayContent>test content</OverlayContent>
+                <Overlay.Action>icon</Overlay.Action>
+                <Overlay.Content>test content</Overlay.Content>
             </Overlay>, { attachTo: div.get(0) }
         );
     });
@@ -33,7 +31,7 @@ describe('(Component) Overlay', () => {
     });
 
     it('shows modal', () => {
-        wrapper.find(OverlayAction).simulate('click');
+        wrapper.find(Overlay.Action).simulate('click');
 
         expect($('.ui.dimmer.active .testOverlay').length > 0).to.be.true;
     });

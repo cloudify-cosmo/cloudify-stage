@@ -13,7 +13,8 @@ export default class Grid extends Component {
     componentDidMount() {
         $(this.refs.grid).gridstack({
             cellHeight: 80,
-            verticalMargin: 10
+            verticalMargin: 10,
+            float: true
         });
 
         $(this.refs.grid).off('change').on('change', (event, items)=> {

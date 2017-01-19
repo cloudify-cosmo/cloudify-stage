@@ -17,7 +17,9 @@ export default class TemplateLoader {
                 data.forEach((template)=>{
                     promises.push(fetch('/templates/'+template+'.json')
                         .then(response => response.json())
-                        .then((templateData=>templates[template] = templateData)));
+                        .then((templateData=>templates[template] = templateData))
+                        .catch(e=>{throw new Error('Error loading template ' +template,e);})
+                    );
                 });
                 return Promise.all(promises);
             })

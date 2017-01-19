@@ -5,7 +5,7 @@
 import { routerReducer} from 'react-router-redux';
 import { combineReducers } from 'redux';
 import pages from './pageReducer';
-import plugins from './pluginsReducer';
+import widgetDefinitions from './widgetDefinitionsReducer';
 import templates from './templatesReducer';
 import context from './contextReducer';
 import manager from './managerReducer';
@@ -14,7 +14,7 @@ import config from './configReducer';
 const rootReducer = combineReducers({
     manager,
     pages,
-    plugins,
+    widgetDefinitions,
     templates,
     context,
     config,

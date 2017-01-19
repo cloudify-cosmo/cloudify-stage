@@ -7,12 +7,12 @@ import * as types from './types';
 import {createDrilldownPage,selectPage} from './page';
 import {v4} from 'node-uuid';
 
-export function addWidget(pageId,name,plugin,width,height,x,y,configuration) {
+export function addWidget(pageId,name,widgetDefinition,width,height,x,y,configuration) {
     return {
         type: types.ADD_WIDGET,
         pageId,
         name,
-        plugin,
+        widgetDefinition,
         width,
         height,
         x,
@@ -68,8 +68,7 @@ export function setWidgetDrilldownPage(widgetId,drillDownPageId) {
 
 }
 
-export function drillDownToPage(widget,defaultTemplate,plugins,drilldownContext) {
-
+export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldownContext,drilldownPageName) {
 
     return function (dispatch) {
 
@@ -78,8 +77,8 @@ export function drillDownToPage(widget,defaultTemplate,plugins,drilldownContext)
             var newPageId = v4();
             dispatch(createDrilldownPage(newPageId,defaultTemplate.name));
             _.each(defaultTemplate.widgets,(widget)=>{
-                var plugin = _.find(plugins,{id:widget.plugin});
-                dispatch(addWidget(newPageId,widget.name,plugin,widget.width,widget.height,widget.x,widget.y));
+                var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
+                dispatch(addWidget(newPageId,widget.name,widgetDefinition,widget.width,widget.height,widget.x,widget.y));
             });
 
             dispatch(setWidgetDrilldownPage(widget.id,newPageId));
@@ -87,6 +86,6 @@ export function drillDownToPage(widget,defaultTemplate,plugins,drilldownContext)
         }
 
 
-        dispatch(selectPage(pageId,true,drilldownContext));
+        dispatch(selectPage(pageId,true,drilldownContext,drilldownPageName));
     }
 }

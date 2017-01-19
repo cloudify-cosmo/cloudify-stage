@@ -2,21 +2,30 @@
   "name": "Deploy",
   "widgets": [
     {
-      "name": "filer",
-      "plugin": "filter",
+      "name": "deploymentButton",
+      "definition": "deploymentButton",
       "x": 0,
-      "y": 0,
+      "y": 0
+    },
+    {
+      "name": "filer",
+      "definition": "filter",
+      "x": 0,
+      "y": 1,
       "configuration": {
-        "FilterByExecutions":"false"
+        "filterByExecutions":false
       }
     },
     {
       "name": "Deployments",
       "width": 12,
-      "height": 8,
-      "plugin": "deployments",
+      "height": 9,
+      "definition": "deployments",
       "x": 0,
-      "y": 1
+      "y": 2,
+      "configuration":{
+        "displayStyle":"list"
+      }
     }
   ]
 }
