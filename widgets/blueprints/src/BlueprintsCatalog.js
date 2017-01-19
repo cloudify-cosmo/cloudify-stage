@@ -32,7 +32,7 @@ export default class BlueprintsCatalog extends React.Component{
         var blueprintsItems =
             this.props.data.items.map((item,index) => {
                 var imageStyle = {
-                    background: 'url(/widgets/blueprints/blueprintImages/bp'+((index%8)+1)+'.png)',
+                    background: 'url(/widgets/blueprints/blueprintImages/bp'+((index%11)+1)+'.png)',
                     backgroundSize: 'contain',
                     position: 'absolute',
                     left: 0,right: 0, top: 0, bottom:0,
