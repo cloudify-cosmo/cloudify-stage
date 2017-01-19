@@ -11,13 +11,14 @@ export default class Home extends Component {
 
     render() {
         var pageId = this.props.params.pageId || "0";
+
         return (
             <div className='main'>
                 <SideBar pageId={pageId}/>
 
                 <div className="page">
                     <div className="ui basic segment">
-                        <Page pageId={pageId}/>
+                        <Page pageId={pageId} pageName={this.props.params.pageName}/>
                     </div>
                 </div>
             </div>

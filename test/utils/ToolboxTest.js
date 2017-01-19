@@ -21,14 +21,14 @@ describe('(Utils) Toolbox', () => {
         templates: {
             'tmp1' : {
                 name: 'tmp1',
-                widgets: [{name: 'some widget',plugin: 'plugin1'}]
+                widgets: [{name: 'some widget',definition: 'widet1g'}]
             }
         },
         manager : {
             ip: '1.1.1.1'
         },
         conetxt: {},
-        plugins: [{id: 'plugin1'}]
+        widgetDefinitions: [{id: 'widget1'}]
     };
 
     const store = mockStore(initialState);

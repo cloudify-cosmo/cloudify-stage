@@ -31,8 +31,8 @@ module.exports = {
              to: 'app/images'}
         ]),
         new CopyWebpackPlugin([
-            { from: 'plugins',
-             to: 'plugins'}
+            { from: 'widgets',
+             to: 'widgets'}
         ]),
         new CopyWebpackPlugin([
             { from: 'templates',

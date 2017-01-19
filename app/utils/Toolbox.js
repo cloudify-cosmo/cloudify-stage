@@ -6,7 +6,7 @@ import 'proxy-polyfill';
 
 import {drillDownToPage} from '../actions/widgets';
 
-import PluginEventBus from './PluginEventBus';
+import EventBus from './EventBus';
 import Context from './Context';
 import Manager from './Manager';
 
@@ -27,15 +27,15 @@ class Toolbox {
         this.templates = state.templates || {};
         this._Manager = new Manager(state.manager || {});
         this._Context = new Context(this.store);
-        this.plugins = state.plugins || [];
+        this.widgetDefinitions = state.widgetDefinitions || [];
     }
 
-    drillDown(widget,defaultTemplate,drilldownContext) {
-        this.store.dispatch(drillDownToPage(widget,this.templates[defaultTemplate],this.plugins,drilldownContext));
+    drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName) {
+        this.store.dispatch(drillDownToPage(widget,this.templates[defaultTemplate],this.widgetDefinitions,drilldownContext,drilldownPageName));
     }
 
     getEventBus (){
-        return PluginEventBus;
+        return EventBus;
     }
 
     getManager() {

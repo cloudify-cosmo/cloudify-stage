@@ -3,43 +3,53 @@
   "widgets": [
     {
       "name": "topology",
-      "plugin": "topology",
-      "width": 12,
+      "definition": "topology",
+      "width": 7,
       "height": 5,
       "x": 0,
       "y": 0
     },
     {
-      "name": "CPU Utilization - System",
-      "width": 6,
-      "height": 4,
-      "plugin": "cpuUtilizationSystem",
-      "x": 0,
-      "y": 5
-    },
-    {
-      "name": "CPU Utilization - User",
-      "width": 6,
-      "height": 4,
-      "plugin": "cpuUtilizationUser",
-      "x": 6,
-      "y": 5
+      "name": "Nodes",
+      "definition": "nodes",
+      "width": 5,
+      "height": 5,
+      "x": 7,
+      "y": 0
     },
     {
       "name": "Deployment Inputs",
-      "width": 5,
+      "width": 6,
       "height": 3,
-      "plugin": "inputs",
+      "definition": "inputs",
       "x": 0,
-      "y": 9
+      "y": 5
     },
     {
-      "name": "Deployment Events",
-      "width": 7,
+      "name": "Deployment Outputs",
+      "width": 6,
       "height": 3,
-      "plugin": "events",
-      "x": 5,
-      "y": 9
+      "definition": "outputs",
+      "x": 6,
+      "y": 5
+    },
+
+    {
+      "name": "Deplyment Events",
+      "width": 6,
+      "height": 3,
+      "definition": "events",
+      "x": 0,
+      "y": 8
+    },
+    {
+      "name": "Deplyment Logs",
+      "width": 6,
+      "height": 3,
+      "definition": "logs",
+      "x": 6,
+      "y": 8
     }
+
   ]
 }

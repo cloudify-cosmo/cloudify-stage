@@ -27,9 +27,9 @@ export default class WidgetDynamicContent extends Component {
         this.fetchDataPromise = null;
         this.mounted = false;
         this.fetchParams = {
-            gridParams: {pageSize: this.props.widget.plugin.pageSize,
-                sortColumn: this.props.widget.plugin.sortColumn,
-                sortAscending: this.props.widget.plugin.sortAscending},
+            gridParams: {pageSize: this.props.widget.definition.pageSize,
+                sortColumn: this.props.widget.definition.sortColumn,
+                sortAscending: this.props.widget.definition.sortAscending},
             filterParams: {}
         };
     }
@@ -181,12 +181,12 @@ export default class WidgetDynamicContent extends Component {
             this.fetchDataPromise.cancel();
         }
 
-        if (this.props.widget.plugin.fetchUrl) {
+        if (this.props.widget.definition.fetchUrl) {
             this._beforeFetch();
 
             var toolbox = this._getToolbox();
 
-            var url = this.props.widget.plugin.fetchUrl;
+            var url = this.props.widget.definition.fetchUrl;
 
             var urls = _.isString(url) ? [url] : _.valuesIn(url);
 
@@ -194,38 +194,38 @@ export default class WidgetDynamicContent extends Component {
 
             this.fetchDataPromise = StageUtils.makeCancelable(Promise.all(fetches));
             this.fetchDataPromise.promise
-                .then((data)=> {
-                    console.log(`Widget '${this.props.widget.name}' data fetched`);
+                    .then((data)=> {
+                        console.log(`Widget '${this.props.widget.name}' data fetched`);
 
-                    var output = data;
-                    if (!_.isString(url)) {
-                        output = {};
-                        let keys = _.keysIn(url);
-                        for (var i=0; i < data.length; i++) {
-                            output[keys[i]] = data[i];
+                        var output = data;
+                        if (!_.isString(url)) {
+                            output = {};
+                            let keys = _.keysIn(url);
+                            for (var i=0; i < data.length; i++) {
+                                output[keys[i]] = data[i];
+                            }
+                        } else {
+                            output = data[0];
                         }
-                    } else {
-                        output = data[0];
-                    }
 
-                    this.setState({data: output, error: null});
-                    this._afterFetch();
-                })
-                .catch((e)=>{
-                    if (e.isCanceled) {
-                        console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
-                        return;
-                    }
-                    console.error(e);
-                    this.setState({error: 'Error fetching widget data'});
-                    this._afterFetch();
-                });
+                        this.setState({data: output, error: null});
+                        this._afterFetch();
+                    })
+                    .catch((e)=>{
+                        if (e.isCanceled) {
+                            console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
+                            return;
+                        }
+                        console.error(e);
+                        this.setState({error: 'Error fetching widget data'});
+                        this._afterFetch();
+                    });
 
-        } else if (this.props.widget.plugin.fetchData && typeof this.props.widget.plugin.fetchData === 'function') {
+        } else if (this.props.widget.definition.fetchData && typeof this.props.widget.definition.fetchData === 'function') {
             this._beforeFetch();
 
             this.fetchDataPromise = StageUtils.makeCancelable(
-                this.props.widget.plugin.fetchData(this.props.widget,this._getToolbox(),this._fetchParams()));
+                                  this.props.widget.definition.fetchData(this.props.widget,this._getToolbox(),this._fetchParams()));
             this.fetchDataPromise.promise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
@@ -265,8 +265,8 @@ export default class WidgetDynamicContent extends Component {
             requiresFetch = true;
         }
 
-        if (this.props.widget.plugin.fetchParams && typeof this.props.widget.plugin.fetchParams === 'function') {
-            let params = this.props.widget.plugin.fetchParams(this.props.widget, this._getToolbox());
+        if (this.props.widget.definition.fetchParams && typeof this.props.widget.definition.fetchParams === 'function') {
+            let params = this.props.widget.definition.fetchParams(this.props.widget, this._getToolbox());
 
             let mergedParams = _.merge({}, this.fetchParams, {filterParams: params});
             if (!_.isEqual(this.fetchParams, mergedParams)) {
@@ -300,9 +300,9 @@ export default class WidgetDynamicContent extends Component {
 
     renderWidget() {
         var widgetHtml = 'Loading...';
-        if (this.props.widget.plugin && this.props.widget.plugin.render) {
+        if (this.props.widget.definition && this.props.widget.definition.render) {
             try {
-                widgetHtml = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._getToolbox());
+                widgetHtml = this.props.widget.definition.render(this.props.widget,this.state.data,this.state.error,this._getToolbox());
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
             }
@@ -312,13 +312,13 @@ export default class WidgetDynamicContent extends Component {
 
     renderReact () {
         var widget = 'Loading...';
-        if (this.props.widget.plugin && this.props.widget.plugin.render) {
+        if (this.props.widget.definition && this.props.widget.definition.render) {
             try {
                 if (this.state.error) {
                     return <ErrorMessage error={this.state.error}/>;
                 }
 
-                widget = this.props.widget.plugin.render(this.props.widget,this.state.data,this.state.error,this._getToolbox());
+                widget = this.props.widget.definition.render(this.props.widget,this.state.data,this.state.error,this._getToolbox());
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
             }
@@ -327,9 +327,9 @@ export default class WidgetDynamicContent extends Component {
     }
 
     attachEvents(container) {
-        if (this.props.widget.plugin && this.props.widget.plugin.events) {
+        if (this.props.widget.definition && this.props.widget.definition.events) {
             try {
-                _.each(this.props.widget.plugin.events,(event)=>{
+                _.each(this.props.widget.definition.events,(event)=>{
                     if (!event || !event.selector || !event.event || !event.fn) {
                         console.warn('Cannot attach event, missing data. Event data is ',event);
                         return;
@@ -342,24 +342,24 @@ export default class WidgetDynamicContent extends Component {
             }
         }
 
-        if (this.props.widget.plugin.postRender) {
-            this.props.widget.plugin.postRender($(container),this.props.widget,this.state.data,this._getToolbox());
+        if (this.props.widget.definition.postRender) {
+            this.props.widget.definition.postRender($(container),this.props.widget,this.state.data,this._getToolbox());
         }
     }
     render() {
         return (
             <div>
-                <div className={`ui ${this.state.loading?'active':''} small inline loader widgetLoader ${this.props.widget.plugin.showHeader?'header':'noheader'}`}></div>
+                <div className={`ui ${this.state.loading?'active':''} small inline loader widgetLoader ${this.props.widget.definition.showHeader?'header':'noheader'}`}></div>
 
                 {
-                    this.props.widget.plugin.isReact ?
-                        <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader ') + (this.props.widget.plugin.showBorder ? '' : ' noBorder ')}>
-                            {this.renderReact()}
-                        </div>
-                        :
-                        <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader')}
-                             dangerouslySetInnerHTML={this.renderWidget()}
-                             ref={(container)=>this.attachEvents(container)}/>
+                    this.props.widget.definition.isReact ?
+                    <div className={'widgetContent' + (this.props.widget.definition.showHeader ? '' : ' noHeader ') + (this.props.widget.definition.showBorder ? '' : ' noBorder ')}>
+                        {this.renderReact()}
+                    </div>
+                    :
+                    <div className={'widgetContent' + (this.props.widget.definition.showHeader ? '' : ' noHeader')}
+                         dangerouslySetInnerHTML={this.renderWidget()}
+                         ref={(container)=>this.attachEvents(container)}/>
                 }
             </div>
         );

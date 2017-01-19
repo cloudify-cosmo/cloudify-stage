@@ -6,17 +6,24 @@
 import * as types from '../actions/types';
 import {v4} from 'node-uuid';
 
-let buildConfig = (plugin)=>{
+let buildConfig = (widgetDefinition)=>{
 
     var configs = {};
 
-    _.each(plugin.initialConfiguration,(config)=>{
+    _.each(widgetDefinition.initialConfiguration,(config)=>{
         if (!config.id) {
-            console.log('Cannot process config for plugin :"'+plugin.name+'" , because it missing an Id ',config);
+            console.log('Cannot process config for widget :"'+widgetDefinition.name+'" , because it missing an Id ',config);
             return;
         }
 
         var value = config.default && !config.value ? config.default : (_.isUndefined(config.value) ? null : config.value );
+
+        if (config.type == Stage.Basic.Field.MULTI_SELECT_LIST_TYPE) {
+            value = _.split(value, ',');
+        } else if (config.type == Stage.Basic.Field.BOOLEAN_TYPE) {
+            value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
+        }
+
 
         configs[config.id] = value;
     });
@@ -31,12 +38,13 @@ const widget = (state = {}, action) => {
             return {
                 id: v4(),
                 name: action.name,
-                width: action.width || action.plugin.initialWidth,
-                height: action.height || action.plugin.initialHeight,
+                width: action.width || action.widgetDefinition.initialWidth,
+                height: action.height || action.widgetDefinition.initialHeight,
                 x: action.x,
                 y: action.y,
-                plugin: action.plugin.id,
-                configuration: Object.assign({},buildConfig(action.plugin),action.configuration)
+                definition: action.widgetDefinition.id,
+                pageSize: action.widgetDefinition.pageSize,
+                configuration: Object.assign({},buildConfig(action.widgetDefinition),action.configuration)
             };
         default:
             return state;
