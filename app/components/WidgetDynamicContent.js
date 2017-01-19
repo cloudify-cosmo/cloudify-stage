@@ -42,6 +42,34 @@ export default class WidgetDynamicContent extends Component {
         return new RegExp('\\[' + str + ':?(.*)\\]', 'i');
     }
 
+    _parseParams(params, paramsString, allowedParams) {
+        if (!_.isEmpty(allowedParams)) {
+            // Convert allowed parameters string (e.g. 'param1 as param1_in_url,param2,param3') to array of strings
+            allowedParams = allowedParams.split(',');
+
+            // Convert user mapping ([params:param1 as param1_in_url, param2 as param2_in_url]
+            // into array { 'param1' : 'param1_in_url', 'param2' : 'param2_in_url'})
+            let urlParamNames = {};
+            allowedParams.forEach((allowedParam) => {
+                let [match, internalParamName, asMapping, urlParamName] = /([^ ]*)( as (.*))?/.exec(allowedParam);
+                urlParamName = !_.isNull(match) && !_.isNull(urlParamName) ? urlParamName : internalParamName;
+                urlParamNames[internalParamName] = urlParamName;
+            });
+
+            // Clean allowed params (remove all ' as param_in_url' strings)
+            allowedParams = allowedParams.map((param) => _.replace(param, / as .*/, (match) => ''));
+
+            // Filter out parameters - leave only allowed in params
+            params = _.pick(params, allowedParams);
+
+            // Replace paramater names with the ones defined by the user
+            params = _.mapKeys(params, function(value, key) {
+                return _.isUndefined(urlParamNames[key]) ? key : urlParamNames[key];
+            });
+        }
+        return params;
+    }
+
     _fetch(url, toolbox) {
 
         var fetchUrl = _.replace(url,this._getUrlRegExString('config'),(match,configName)=>{
@@ -55,13 +83,12 @@ export default class WidgetDynamicContent extends Component {
             let params = {};
             let paramsMatch = this._getUrlRegExString('params').exec(url);
             if (!_.isNull(paramsMatch)) {
-                let [paramsUrlString, allowedParams] = paramsMatch;
                 params = this._fetchParams();
-                if (allowedParams) {
-                    allowedParams = allowedParams.split(',');
-                    params = _.pick(params, allowedParams);
-                }
-                baseUrl = _.replace(baseUrl, paramsUrlString, '');
+
+                let [paramsString, allowedParams] = paramsMatch;
+                params = this._parseParams(params, paramsString, allowedParams);
+
+                baseUrl = _.replace(baseUrl, paramsString, '');
             }
 
             return toolbox.getManager().doGet(baseUrl, params);
@@ -167,38 +194,38 @@ export default class WidgetDynamicContent extends Component {
 
             this.fetchDataPromise = StageUtils.makeCancelable(Promise.all(fetches));
             this.fetchDataPromise.promise
-                    .then((data)=> {
-                        console.log(`Widget '${this.props.widget.name}' data fetched`);
+                .then((data)=> {
+                    console.log(`Widget '${this.props.widget.name}' data fetched`);
 
-                        var output = data;
-                        if (!_.isString(url)) {
-                            output = {};
-                            let keys = _.keysIn(url);
-                            for (var i=0; i < data.length; i++) {
-                                output[keys[i]] = data[i];
-                            }
-                        } else {
-                            output = data[0];
+                    var output = data;
+                    if (!_.isString(url)) {
+                        output = {};
+                        let keys = _.keysIn(url);
+                        for (var i=0; i < data.length; i++) {
+                            output[keys[i]] = data[i];
                         }
+                    } else {
+                        output = data[0];
+                    }
 
-                        this.setState({data: output, error: null});
-                        this._afterFetch();
-                    })
-                    .catch((e)=>{
-                        if (e.isCanceled) {
-                            console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
-                            return;
-                        }
-                        console.error(e);
-                        this.setState({error: 'Error fetching widget data'});
-                        this._afterFetch();
-                    });
+                    this.setState({data: output, error: null});
+                    this._afterFetch();
+                })
+                .catch((e)=>{
+                    if (e.isCanceled) {
+                        console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
+                        return;
+                    }
+                    console.error(e);
+                    this.setState({error: 'Error fetching widget data'});
+                    this._afterFetch();
+                });
 
         } else if (this.props.widget.plugin.fetchData && typeof this.props.widget.plugin.fetchData === 'function') {
             this._beforeFetch();
 
             this.fetchDataPromise = StageUtils.makeCancelable(
-                                  this.props.widget.plugin.fetchData(this.props.widget,this._getToolbox(),this._fetchParams()));
+                this.props.widget.plugin.fetchData(this.props.widget,this._getToolbox(),this._fetchParams()));
             this.fetchDataPromise.promise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
@@ -326,13 +353,13 @@ export default class WidgetDynamicContent extends Component {
 
                 {
                     this.props.widget.plugin.isReact ?
-                    <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader ') + (this.props.widget.plugin.showBorder ? '' : ' noBorder ')}>
-                        {this.renderReact()}
-                    </div>
-                    :
-                    <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader')}
-                         dangerouslySetInnerHTML={this.renderWidget()}
-                         ref={(container)=>this.attachEvents(container)}/>
+                        <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader ') + (this.props.widget.plugin.showBorder ? '' : ' noBorder ')}>
+                            {this.renderReact()}
+                        </div>
+                        :
+                        <div className={'widgetContent' + (this.props.widget.plugin.showHeader ? '' : ' noHeader')}
+                             dangerouslySetInnerHTML={this.renderWidget()}
+                             ref={(container)=>this.attachEvents(container)}/>
                 }
             </div>
         );
