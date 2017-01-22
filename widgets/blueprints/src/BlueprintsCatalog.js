@@ -29,10 +29,29 @@ export default class BlueprintsCatalog extends React.Component{
     render(){
         var Segment = Stage.Basic.Segment;
 
+        var index=0;
         var blueprintsItems =
-            this.props.data.items.map((item,index) => {
+            this.props.data.items.map((item) => {
+                var image;
+                switch(item.id.trim().toLowerCase()){
+                    case "vyatta":
+                        image='bp1.png';
+                        break;
+                    case "quagga":
+                        image='bp2.png';
+                        break;
+                    case "fortigate":
+                        image='bp3.png';
+                        break;
+                    case "clearwater ims":
+                        image='bp4.png';
+                        break;
+                    default:
+                        image='bp'+((index++%8)+5)+'.png';
+                        break;
+                }
                 var imageStyle = {
-                    background: 'url(/widgets/blueprints/blueprintImages/bp'+((index%11)+1)+'.png)',
+                    background: 'url(/widgets/blueprints/blueprintImages/'+image+')',
                     backgroundSize: 'contain',
                     position: 'absolute',
                     left: 0,right: 0, top: 0, bottom:0,
