@@ -14,17 +14,31 @@ Stage.defineWidget({
     isReact: true,
     initialConfiguration: [],
     fetchUrl: {
-        nodes: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships[params]',
+        nodes: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships[params:blueprint_id,deployment_id,gridParams]',
         nodeInstances: '[manager]/node-instances?_include=id,node_id,deployment_id,state,relationships,runtime_properties[params:deployment_id]',
-        deployments: '[manager]/deployments?_include=id,groups[params:blueprint_id,deployment_id as id]'
+        deployments: '[manager]/deployments?_include=id,groups[params:blueprint_id,id]'
     },
     pageSize: 5,
 
     fetchParams: function(widget, toolbox) {
         return {
             deployment_id: toolbox.getContext().getValue('deploymentId'),
-            blueprint_id: toolbox.getContext().getValue('blueprintId')
+            blueprint_id: toolbox.getContext().getValue('blueprintId'),
+            id: toolbox.getContext().getValue('deploymentId')
         }
+    },
+
+    _getGroups: function(deployments) {
+        let groups = {};
+        _.forEach(deployments, (deployment) => {
+            _.forIn(deployment.groups, (group, groupId) => {
+                _.forEach(group.members, (nodeId) => {
+                    groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || [];
+                    groups[nodeId + deployment.id].push(groupId);
+                });
+            });
+        });
+        return groups;
     },
 
     render: function(widget, data, error, toolbox) {
@@ -40,8 +54,7 @@ Stage.defineWidget({
 
         let nodes = data.nodes.items;
         let instances = data.nodeInstances.items;
-        let groups = {};
-        data.deployments.items.forEach((deployment) => groups[deployment.id] = Object.keys(deployment.groups));
+        let groups = this._getGroups(data.deployments.items);
 
         let formattedData = Object.assign({}, data.nodes, {
             items: _.map (nodes, (node) => {
@@ -57,7 +70,9 @@ Stage.defineWidget({
                                                 instance.node_id === node.id &&
                                                 instance.deployment_id === node.deployment_id),
                     isSelected: (node.id + node.deployment_id) === SELECTED_NODE_ID,
-                    groups: groups[node.deployment_id].join()
+                    groups: !_.isNil(groups[node.id + node.deployment_id])
+                            ? groups[node.id + node.deployment_id].join(', ')
+                            : ''
                 })
             }),
             total : _.get(data.nodes, 'metadata.pagination.total', 0),
