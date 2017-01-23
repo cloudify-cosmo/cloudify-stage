@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { push } from 'react-router-redux';
 import Tenants from '../components/Tenants'
 import {getTenants,selectTenant} from '../actions/tenants';
+import {clearContext} from '../actions/context';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -16,10 +17,12 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onLogout: () => {
+            dispatch(clearContext());
             dispatch(push('/login'));
         },
 
         onTenantChange: (newTenant) => {
+            dispatch(clearContext());
             dispatch(selectTenant(newTenant));
         },
 
