@@ -33,8 +33,8 @@ Stage.defineWidget({
         _.forEach(deployments, (deployment) => {
             _.forIn(deployment.groups, (group, groupId) => {
                 _.forEach(group.members, (nodeId) => {
-                    groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || [];
-                    groups[nodeId + deployment.id].push(groupId);
+                    let groupList = groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || [];
+                    groupList.push(groupId);
                 });
             });
         });
@@ -70,9 +70,7 @@ Stage.defineWidget({
                                                 instance.node_id === node.id &&
                                                 instance.deployment_id === node.deployment_id),
                     isSelected: (node.id + node.deployment_id) === SELECTED_NODE_ID,
-                    groups: !_.isNil(groups[node.id + node.deployment_id])
-                            ? groups[node.id + node.deployment_id].join(', ')
-                            : ''
+                    groups: !_.isNil(group = groups[node.id + node.deployment_id]) ? group.join(', ') : ''
                 })
             }),
             total : _.get(data.nodes, 'metadata.pagination.total', 0),
