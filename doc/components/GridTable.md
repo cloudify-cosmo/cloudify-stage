@@ -24,7 +24,6 @@ this.props = {
         id: ...,
         blueprint_id: ...,
         created_at: ...,
-        blueprint_id: ...,
       }
       ...
     ],

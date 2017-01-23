@@ -350,6 +350,6 @@ For example, a simple render function will look like this
         return _.template(widget.definition.template)();
     }
 ```
-## Base components
+## Links
 
-* [GridTable](../app/components/basic/grid/readme.md)
+* [Components documentation](../components/readme.md)
