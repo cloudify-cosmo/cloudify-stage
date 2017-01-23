@@ -1,6 +1,6 @@
-# GridTable component
+# GridTable (Table) component
 
-**GridTable** component enables fetching data using predefined function 
+**Table** component enables fetching data using predefined function 
 and showing tabular data in a simple manner. 
 
 ## Features
@@ -13,7 +13,7 @@ and showing tabular data in a simple manner.
 
 Some of the usage examples are presented below.
 
-### Grid table with pagination
+### Table with pagination
 
 ```ecmascript 6
 this.props = {
@@ -33,70 +33,70 @@ this.props = {
   onSelectDeployment: ...
 }
 
-<Grid.Table fetchData={this.props.fetchData}
-            totalSize={this.props.data.total}
-            pageSize={this.props.widget.plugin.pageSize}
-            selectable={true}
-            className="deploymentTable">
+<Table fetchData={this.props.fetchData}
+       totalSize={this.props.data.total}
+       pageSize={this.props.widget.plugin.pageSize}
+       selectable={true}
+       className="deploymentTable">
 
-  <Grid.Column label="Name" name="id" width="25%"/>
-  <Grid.Column label="Blueprint" name="blueprint_id" width="50%"/>
-  <Grid.Column label="Created" name="created_at" width="25%"/>
+  <Table.Column label="Name" name="id" width="25%"/>
+  <Table.Column label="Blueprint" name="blueprint_id" width="50%"/>
+  <Table.Column label="Created" name="created_at" width="25%"/>
 
   {
     this.props.data.items.map((item)=>{
       return (
-        <Grid.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
-          <Grid.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></Grid.Data>
-          <Grid.Data>{item.blueprint_id}</Grid.Data>
-          <Grid.Data>{item.created_at}</Grid.Data>
-        </Grid.Row>
+        <Table.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
+          <Table.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></Grid.Table>
+          <Table.Data>{item.blueprint_id}</Grid.Table>
+          <Table.Data>{item.created_at}</Grid.Table>
+        </Table.Row>
       );
     })
   }
 
-</Grid.Table>
+</Table>
 ```
 
-### Grid table with expandable row and without pagination
+### Table with expandable row and without pagination
 
 ```ecmascript 6
-<Grid.Table selectable={true}>
+<Table selectable={true}>
 
-  <Grid.Column label="Name" name="id" width="40%"/>
-  <Grid.Column label="Date" name="date" width="30%"/>
-  <Grid.Column width="30%"/>
+  <Table.Column label="Name" name="id" width="40%"/>
+  <Table.Column label="Date" name="date" width="30%"/>
+  <Table.Column width="30%"/>
 
-  <Grid.Row key="drupal" selected={false} onClick={()=>this.onRowClick(item)}>
-      <Grid.Data><a href="javascript:void(0)">Drupal application</a></Grid.Data>
-      <Grid.Data>2016-03-04</Grid.Data>
-      <Grid.Data>description for portal</Grid.Data>
-  </Grid.Row>
+  <Table.Row key="drupal" selected={false} onClick={()=>this.onRowClick(item)}>
+      <Table.Data><a href="javascript:void(0)">Drupal application</a></Table.Data>
+      <Table.Data>2016-03-04</Table.Data>
+      <Table.Data>description for portal</Table.Data>
+  </Table.Row>
 
-  <Grid.Row key="wordpress" selected={false} onClick={()=>this.onRowClick(item)}>
-      <Grid.Data><a href="javascript:void(0)">Wordpress blog</a></Grid.Data>
-      <Grid.Data>2016-01-05</Grid.Data>
-      <Grid.Data>description for blog</Grid.Data>
-  </Grid.Row>
+  <Table.Row key="wordpress" selected={false} onClick={()=>this.onRowClick(item)}>
+      <Table.Data><a href="javascript:void(0)">Wordpress blog</a></Table.Data>
+      <Table.Data>2016-01-05</Table.Data>
+      <Table.Data>description for blog</Table.Data>
+  </Table.Row>
 
-  <Grid.Row key="joomla" selected={false} onClick={()=>this.onRowClick(item)}>
-      <Grid.Data><a href="javascript:void(0)">Joomla website</a></Grid.Data>
-      <Grid.Data>2015-08-14</Grid.Data>
-      <Grid.Data>description for website</Grid.Data>
-  </Grid.Row>
+  <Table.Row key="joomla" selected={false} onClick={()=>this.onRowClick(item)}>
+      <Table.Data><a href="javascript:void(0)">Joomla website</a></Table.Data>
+      <Table.Data>2015-08-14</Table.Data>
+      <Table.Data>description for website</Table.Data>
+  </Table.Row>
 
-  <Grid.RowExpandable key="prestashop" expanded={true}>
-    <Grid.Row key="prestashop" selected={true} onClick={()=>this.onRowClick(item)}>
-      <Grid.Data><a href="javascript:void(0)">Prestashop store</a></Grid.Data>
-      <Grid.Data>2017-01-05</Grid.Data>
-      <Grid.Data>description for e-commerce solution</Grid.Data>
-    </Grid.Row>
-    <Grid.DataExpandable>
+  <Table.RowExpandable key="prestashop" expanded={true}>
+    <Table.Row key="prestashop" selected={true} onClick={()=>this.onRowClick(item)}>
+      <Table.Data><a href="javascript:void(0)">Prestashop store</a></Table.Data>
+      <Table.Data>2017-01-05</Table.Data>
+      <Table.Data>description for e-commerce solution</Table.Data>
+    </Table.Row>
+    <Table.DataExpandable>
       additional info when row becomes expanded
-    </Grid.DataExpandable>
-  </Grid.RowExpandable>
+    </Table.DataExpandable>
+  </Table.RowExpandable>
 
-</Grid.Table>
+</Table>
 ```
 
 ## Configuration
@@ -116,14 +116,14 @@ Name | Type | Attribute | Description
 
 ## Subcomponents
 
-### GridColumn
+### Table.Column (GridColumn)
 
-Defines grid columns, renders \<th\> elements.
+Defines table columns, renders \<th\> elements.
 
 #### Example
 
 ```ecmascript 6
-<Grid.Column label="Name" name="id" width="40%"/>
+<Table.Column label="Name" name="id" width="40%"/>
 ```
 
 #### Props
@@ -137,18 +137,18 @@ Name | Type | Attribute | Description
 
 Children not required.
 
-### GridRow
+### Table.Row (GridRow)
 
-Defines grid rows, renders \<tr\> elements.
+Defines table rows, renders \<tr\> elements.
 
 #### Example
 
 ```ecmascript 6
-<Grid.Row key="joomla" selected={false} onClick={()=>this.onRowClick(item)}>
-  <Grid.Data><a href="javascript:void(0)">Joomla website</a></Grid.Data>
-  <Grid.Data>2015-08-14</Grid.Data>
-  <Grid.Data>description for website</Grid.Data>
-</Grid.Row>
+<Table.Row key="joomla" selected={false} onClick={()=>this.onRowClick(item)}>
+  <Table.Data><a href="javascript:void(0)">Joomla website</a></Table.Data>
+  <Table.Data>2015-08-14</Table.Data>
+  <Table.Data>description for website</Table.Data>
+</Table.Row>
 ```
 
 #### Props
@@ -159,26 +159,26 @@ Name | Type | Attribute | Description
 **onClick** | func | optional | action to be executed on click event 
 **showCols** | array | optional, default: [] | array of column's names to be shown
 
-Children (**GridData** components) required.
+Children (**Table.Data** components) required.
 
-### GridExpandableRow
+### Table.ExpandableRow (GridExpandableRow)
 
-Defines expandable row in grid, two \<tr\> elements are rendered by **GridTable** 
-component from one **GridExpandableRow** component.
+Defines expandable row in grid, two \<tr\> elements are rendered by **Table** 
+component from one **Table.ExpandableRow** component.
 
 #### Example
 
 ```ecmascript 6
-<Grid.RowExpandable key="prestashop" expanded={true}>
-  <Grid.Row key="prestashop" selected={true} onClick={()=>this.onRowClick(item)}>
-    <Grid.Data><a href="javascript:void(0)">Prestashop store</a></Grid.Data>
-    <Grid.Data>2017-01-05</Grid.Data>
-    <Grid.Data>description for e-commerce solution</Grid.Data>
-  </Grid.Row>
-  <Grid.DataExpandable>
+<Table.RowExpandable key="prestashop" expanded={true}>
+  <Table.Row key="prestashop" selected={true} onClick={()=>this.onRowClick(item)}>
+    <Table.Data><a href="javascript:void(0)">Prestashop store</a></Table.Data>
+    <Table.Data>2017-01-05</Table.Data>
+    <Table.Data>description for e-commerce solution</Table.Data>
+  </Table.Row>
+  <Table.DataExpandable>
     additional info when row becomes expanded
-  </Grid.DataExpandable>
-</Grid.RowExpandable>
+  </Table.DataExpandable>
+</Table.RowExpandable>
 ```
 
 #### Props
@@ -187,12 +187,12 @@ Name | Type | Attribute | Description
 ---- | ---- | --------- | -----------
 **expanded** | bool | optional, default: false | if true, then expandable part (GridDataExpandable) of the row will be shown
 
-Children (one **GridRow** and one **GridDataExpandable** component) required.
+Children (one **Table.Row** and one **Table.DataExpandable** component) required.
 
-### GridAction
+### Table.Action (GridAction)
 
 TODO
 
-### GridFilter
+### Table.Filter (GridFilter)
 
 TODO
