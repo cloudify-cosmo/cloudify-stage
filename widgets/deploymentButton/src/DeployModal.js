@@ -12,7 +12,7 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            error: {},
+            error: null,
             loading: false,
             blueprint: this._emptyBlueprint()
         }
@@ -41,7 +41,7 @@ export default class extends React.Component {
     componentWillUpdate(prevProps, prevState) {
         //same Modal instance is used multiple time so we need to reset states
         if (this.props.show && prevProps.show != this.props.show) {
-            this.setState({error: {}, loading: false, blueprint: {id: '', plan: {inputs: {}}}});
+            this.setState({error: null, loading: false, blueprint: {id: '', plan: {inputs: {}}}});
             $("form input:text").val("");
             $("form input:hidden").val("");
         }
@@ -52,22 +52,18 @@ export default class extends React.Component {
         return false;
     }
 
-    _error(message, header) {
-        return {message, header};
-    }
-
     _selectBlueprint(blueprintId){
         if (!_.isEmpty(blueprintId)) {
             this.setState({loading: true});
 
             var actions = new Actions(this.props.toolbox);
             actions.doGetFullBlueprintData(blueprintId).then((blueprint)=>{
-                this.setState({blueprint, error: {}, loading: false});
+                this.setState({blueprint, error: null, loading: false});
             }).catch((err)=> {
-                this.setState({blueprint: this._emptyBlueprint(), loading: false, error: this._error(err.error, "Error fetching data")});
+                this.setState({blueprint: this._emptyBlueprint(), loading: false, error: err.error});
             });
         } else {
-            this.setState({blueprint: this._emptyBlueprint(), error: {}});
+            this.setState({blueprint: this._emptyBlueprint(), error: null});
         }
     }
 
@@ -81,14 +77,11 @@ export default class extends React.Component {
 
         var formObj = $(e.currentTarget);
 
-        // Clear errors
-        this.setState({error: {}});
-
         var deploymentId = formObj.find("input[name=deploymentName]").val();
         var blueprintId = formObj.find("input[name=blueprintId]").val();
 
         if (_.isEmpty(blueprintId)) {
-            this.setState({error: this._error("Please select blueprint from the list", "Missing data")});
+            this.setState({error: Stage.Basic.ErrorMessage.error("Please select blueprint from the list", "Missing data")});
             return false;
         }
 
@@ -110,7 +103,7 @@ export default class extends React.Component {
                 this.props.onHide();
             })
             .catch((err)=>{
-                this.setState({loading: false, error: this._error(err.error, "Error deploying blueprint")});
+                this.setState({loading: false, error: err.error});
             });
 
         return false;
@@ -176,7 +169,7 @@ export default class extends React.Component {
                             })
                         }
 
-                        <ErrorMessage error={this.state.error.message} header={this.state.error.header}/>
+                        <ErrorMessage error={this.state.error}/>
 
                         <input type='submit' style={{"display": "none"}} ref='submitDeployBtn'/>
                     </form>

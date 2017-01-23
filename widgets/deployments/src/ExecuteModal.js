@@ -2,7 +2,11 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
-export default class extends React.Component {
+import Actions from './actions';
+
+let PropTypes = React.PropTypes;
+
+export default class ExecuteModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
@@ -12,12 +16,22 @@ export default class extends React.Component {
         }
     }
 
+    static propTypes = {
+        toolbox: PropTypes.object.isRequired,
+        show: PropTypes.bool.isRequired,
+        deployment: PropTypes.object.isRequired,
+        workflow: PropTypes.object.isRequired,
+        onHide: PropTypes.func.isRequired
+    };
+
     onApprove () {
         $(this.refs.submitExecuteBtn).click();
         return false;
     }
 
-    _execute() {
+    _submitExecute (e) {
+        e.preventDefault();
+
         if (!this.props.deployment || !this.props.workflow) {
             this.setState({error: 'Missing workflow or deployment'});
             return false;
@@ -30,26 +44,21 @@ export default class extends React.Component {
             params[input.data('name')] = input.val();
         });
 
-        this.props.onExecute && this.props.onExecute(this.props.deployment,this.props.workflow,params);
-
+        var actions = new Actions(this.props.toolbox);
+        actions.doExecute(this.props.deployment, this.props.workflow, params).then(()=>{
+            this.props.onHide();
+            this.props.toolbox.getEventBus().trigger('executions:refresh');
+        }).catch((err)=>{
+            this.setState({error: err.error});
+        })
 
         return false;
     }
 
     onDeny () {
-        //this.props.context.setValue(this.props.widget.id + 'createDeploy',null);
-        this.props.onCancel && this.props.onCancel();
+        this.props.onHide();
         return true;
     }
-
-    _submitExecute (e) {
-        e.preventDefault();
-
-        this._execute();
-
-        return false;
-    }
-
 
     render() {
         var Modal = Stage.Basic.Modal;
@@ -76,7 +85,7 @@ export default class extends React.Component {
                             })
                         }
 
-                        <ErrorMessage error={this.state.error} header="Error executing blueprint" className="executeFailed"/>
+                        <ErrorMessage error={this.state.error}/>
 
                         <input type='submit' style={{"display": "none"}} ref='submitExecuteBtn'/>
                     </form>

@@ -10,7 +10,7 @@ export default class extends React.Component {
         super(props, context);
 
         this.state = {
-            createErr: null,
+            error: null,
             show: false,
             loading: false
         }
@@ -39,7 +39,7 @@ export default class extends React.Component {
         var snapshotId = formObj.find("input[name='snapshotId']").val();
 
         // Disable the form
-        this.setState({loading: true, createErr: null});
+        this.setState({loading: true, error: null});
 
         // Call create method
         var actions = new Actions(this.props.toolbox);
@@ -50,7 +50,7 @@ export default class extends React.Component {
                 this.setState({loading: false, show: false});
             })
             .catch((err)=>{
-                this.setState({loading: false, createErr: err.error});
+                this.setState({loading: false, error: err.error});
             });
 
         return false;
@@ -77,7 +77,7 @@ export default class extends React.Component {
                                 <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
                             </div>
 
-                            <ErrorMessage error={this.state.createErr} header="Error creating file" className="createFailed"/>
+                            <ErrorMessage error={this.state.error}/>
 
                             <input type='submit' style={{"display": "none"}} ref='submitCreateBtn'/>
                         </form>

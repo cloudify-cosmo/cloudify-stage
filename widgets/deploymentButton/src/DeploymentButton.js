@@ -39,7 +39,7 @@ export default class extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.initError}/>
+                <ErrorMessage error={this.state.error}/>
 
                 <button className={`ui blue labeled icon button fluid ${this.state.loading?'loading':''}`} onClick={this._createDeployment.bind(this)}>
                     <i className="rocket icon"></i>Create new deployment

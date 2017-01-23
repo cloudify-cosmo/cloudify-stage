@@ -10,10 +10,9 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            uploadErr: null,
+            error: null,
             show: false,
-            loading: false,
-            showErr: false
+            loading: false
         }
     }
 
@@ -47,7 +46,7 @@ export default class extends React.Component {
     componentWillUpdate(prevProps, prevState) {
         //same Modal instance is used multiple time so we need to reset states
         if (this.state.show && prevState.show != this.state.show) {
-            this.setState({showErr:false, uploadErr:null, loading:false});
+            this.setState({error:null, loading:false});
             $("form input:text").val("");
             $("form input:file").val("");
         }
@@ -58,9 +57,6 @@ export default class extends React.Component {
 
         var formObj = $(e.currentTarget);
 
-        // Clear errors
-        this.setState({showErr: false});
-
         // Get the data
         var snapshotId = formObj.find("input[name='snapshotId']").val();
         var snapshotFileUrl = formObj.find("input[name='snapshotFileUrl']").val();
@@ -68,7 +64,7 @@ export default class extends React.Component {
 
         // Check that we have all we need
         if (_.isEmpty(snapshotFileUrl) && !file) {
-            this.setState({showErr: true});
+            this.setState({error: Stage.Basic.ErrorMessage.errot()});
             return false;
         }
 
@@ -104,9 +100,9 @@ export default class extends React.Component {
                         <i className="upload icon"></i> Upload snapshot
                     </Modal.Header>
                     <Modal.Body>
-                        <form className={`ui form uploadForm ${this.state.showErr?"error":""}`} onSubmit={this._submitUpload.bind(this)} action="">
+                        <form className="ui form uploadForm" onSubmit={this._submitUpload.bind(this)} action="">
                             <div className="fields">
-                                <div className={`field nine wide ${this.state.showErr?"error":""}`}>
+                                <div className="field nine wide">
                                     <div className="ui labeled input">
                                         <div className="ui label">
                                             http://
@@ -120,7 +116,7 @@ export default class extends React.Component {
                                         Or
                                     </div>
                                 </div>
-                                <div className={`field eight wide ${this.state.showErr?"error":""}`}>
+                                <div className="field eight wide">
                                     <div className="ui action input">
                                         <input type="text" readOnly='true' value="" className="uploadSnapshotFile" onClick={this._openFileSelection}></input>
                                         <button className="ui icon button uploadSnapshotFile" onClick={this._openFileSelection}>
@@ -135,9 +131,7 @@ export default class extends React.Component {
                                 <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
                             </div>
 
-                            <ErrorMessage error="Please fill in all the required fields" header="Missing data" show={false}/>
-
-                            <ErrorMessage error={this.state.uploadErr} header="Error uploading file" className="uploadFailed"/>
+                            <ErrorMessage error={this.state.error}/>
 
                             <input type='submit' style={{"display": "none"}} ref='submitUploadBtn'/>
                         </form>
