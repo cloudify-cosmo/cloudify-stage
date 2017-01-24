@@ -3,7 +3,7 @@
  */
 
 import 'isomorphic-fetch';
-import StageUtils from './stageUtils';
+import {saveAs} from 'file-saver';
 
 import log from 'loglevel';
 let logger = log.getLogger("Manager");
@@ -100,6 +100,37 @@ export default class Manager {
             }
 
             xhr.send(formData);
+        });
+    }
+
+    doDownload(url, fileName) {
+        let actualUrl = this._buildActualUrl(url, null);
+        logger.debug('Downloading file from url: ' + actualUrl);
+
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            let securityHeaders = this._buildSecurityHeader();
+            let selectedTenant = _.get(this._data, 'tenants.selected', Consts.DEFAULT_TENANT);
+
+            xhr.addEventListener('error', reject);
+            xhr.addEventListener('abort', reject);
+            xhr.addEventListener('load', () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve(saveAs(xhr.response, fileName));
+                } else {
+                    reject({error: 'File downloading error. Url="' + actualUrl + '". StatusCode=' + xhr.status});
+                }
+            });
+
+            xhr.open('get', actualUrl, true);
+            if (securityHeaders) {
+                xhr.setRequestHeader('Authentication-Token', securityHeaders['Authentication-Token']);
+            }
+            if (selectedTenant) {
+                xhr.setRequestHeader('tenant', selectedTenant);
+            }
+            xhr.responseType = 'blob';
+            xhr.send();
         });
     }
 

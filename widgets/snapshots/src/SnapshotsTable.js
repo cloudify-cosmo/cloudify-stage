@@ -44,7 +44,11 @@ export default class extends React.Component {
     _downloadSnapshot(item,event) {
         event.stopPropagation();
 
-        window.open(this.props.toolbox.getManager().getManagerUrl(`/snapshots/${item.id}/archive`));
+        let snapshotDownloadUrl = `/snapshots/${item.id}/archive`;
+        let snapshotCreationDateShort = moment(item.created_at,'DD-MM-YYYY HH:mm').format('YYYYMMDD_HHmm');
+        let snapshotFileName = `${item.id}_${snapshotCreationDateShort}.zip`;
+
+        this.props.toolbox.getManager().doDownload(snapshotDownloadUrl, snapshotFileName);
     }
 
     _deleteSnapshot() {

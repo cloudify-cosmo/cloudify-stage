@@ -32,7 +32,10 @@ export default class extends React.Component {
     _downloadPlugin(item,event) {
         event.stopPropagation();
 
-        window.open(this.props.toolbox.getManager().getManagerUrl(`/plugins/${item.id}/archive`));
+        let pluginDownloadUrl = `/plugins/${item.id}/archive`;
+        let pluginFileName = `${item.package_name}_${item.package_version}.zip`;
+
+        this.props.toolbox.getManager().doDownload(pluginDownloadUrl, pluginFileName);
     }
 
     _deletePlugin() {
