@@ -27,6 +27,7 @@ export default class WidgetDynamicContent extends Component {
         this.pollingTimeout = null;
         this.fetchDataPromise = null;
         this.mounted = false;
+
         this.fetchParams = {
             gridParams: {pageSize: this.props.widget.configuration.pageSize,
                 sortColumn: this.props.widget.configuration.sortColumn,
@@ -43,6 +44,14 @@ export default class WidgetDynamicContent extends Component {
         return new RegExp('\\[' + str + ':?(.*)\\]', 'i');
     }
 
+    _parseParams(params, allowedParams) {
+        if (!_.isEmpty(allowedParams)) {
+            allowedParams = _.replace(allowedParams, 'gridParams', '_sort,_size,_offset').split(',');
+            params = _.pick(params, allowedParams);
+        }
+        return params;
+    }
+
     _fetch(url, toolbox) {
 
         var fetchUrl = _.replace(url,this._getUrlRegExString('config'),(match,configName)=>{
@@ -56,13 +65,12 @@ export default class WidgetDynamicContent extends Component {
             let params = {};
             let paramsMatch = this._getUrlRegExString('params').exec(url);
             if (!_.isNull(paramsMatch)) {
-                let [paramsUrlString, allowedParams] = paramsMatch;
                 params = this._fetchParams();
-                if (allowedParams) {
-                    allowedParams = _.replace(allowedParams, 'gridParams', '_sort,_size,_offset').split(',');
-                    params = _.pick(params, allowedParams);
-                }
-                baseUrl = _.replace(baseUrl, paramsUrlString, '');
+
+                let [paramsString, allowedParams] = paramsMatch;
+                params = this._parseParams(params, allowedParams);
+
+                baseUrl = _.replace(baseUrl, paramsString, '');
             }
 
             return toolbox.getManager().doGet(baseUrl, params);

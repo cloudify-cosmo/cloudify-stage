@@ -20,4 +20,31 @@ export default class {
         });
     }
 
+    doUpdate(deploymentName, applicationFileName, blueprintArchiveUrl, defaultWorkflow,
+             installWorkflow, uninstallWorkflow, workflowId, blueprintArchive, inputs) {
+        var params = {};
+        if (!_.isEmpty(applicationFileName)) {
+            params['application_file_name'] = applicationFileName + ".yaml";
+        }
+        if (!_.isEmpty(blueprintArchiveUrl)) {
+            params['blueprint_archive_url'] = blueprintArchiveUrl;
+        }
+        if (defaultWorkflow) {
+            params['skip_install'] = !installWorkflow;
+            params['skip_uninstall'] = !uninstallWorkflow;
+        } else {
+            params['workflow_id'] = workflowId;
+        }
+
+        var files = {};
+        if (blueprintArchive) {
+            files['blueprint_archive'] = blueprintArchive;
+        }
+        if (inputs) {
+            files['inputs'] = inputs;
+        }
+
+        return this.toolbox.getManager().doUpload(`/deployment-updates/${deploymentName}/update/initiate`, params, files, 'post');
+    }
+
 }

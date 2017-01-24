@@ -10,8 +10,7 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            uploadErr: null,
-            showErr: false,
+            error: null,
             show: false,
             loading: false
         }
@@ -40,7 +39,7 @@ export default class extends React.Component {
     componentWillUpdate(prevProps, prevState) {
         //same Modal instance is used multiple time so we need to reset states
         if (this.state.show && prevState.show != this.state.show) {
-            this.setState({showErr:false, uploadErr:null, loading:false});
+            this.setState({error:null, loading:false});
             $("form input:text").val("");
             $("form input:file").val("");
         }
@@ -58,9 +57,6 @@ export default class extends React.Component {
 
         var formObj = $(e.currentTarget);
 
-        // Clear errors
-        this.setState({showErr: false});
-
         // Get the data
         var blueprintName = formObj.find("input[name='blueprintName']").val();
         var blueprintFileName = formObj.find("input[name='blueprintFileName']").val();
@@ -69,12 +65,7 @@ export default class extends React.Component {
 
         // Check that we have all we need
         if (_.isEmpty(blueprintFileUrl) && !file) {
-            this.setState({showErr: true});
-            return false;
-        }
-
-        if (_.isEmpty(blueprintName)) {
-            this.setState({showErr: true});
+            this.setState({error: Stage.Basic.ErrorMessage.error("Please select blueprint file or url", "Missing data")});
             return false;
         }
 
@@ -83,10 +74,10 @@ export default class extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doUpload(blueprintName, blueprintFileName, file).then(()=>{
-            this.setState({loading: false,show: false});
+            this.setState({loading: false, show: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
-            this.setState({uploadErr: err.error, loading: false});
+            this.setState({error: err.error, loading: false});
         });
 
         return false;
@@ -109,9 +100,9 @@ export default class extends React.Component {
                     </Modal.Header>
 
                     <Modal.Body>
-                        <form className={`ui form uploadForm ${this.state.showErr?"error":""}`} onSubmit={this._submitUpload.bind(this)} action="">
+                        <form className="ui form uploadForm" onSubmit={this._submitUpload.bind(this)} action="">
                             <div className="fields">
-                                <div className={`field nine wide ${this.state.showErr?"error":""}`}>
+                                <div className="field nine wide">
                                     <div className="ui labeled input">
                                         <div className="ui label">
                                             http://
@@ -125,9 +116,10 @@ export default class extends React.Component {
                                         Or
                                     </div>
                                 </div>
-                                <div className={`field eight wide ${this.state.showErr?"error":""}`}>
+                                <div className="field eight wide">
                                     <div className="ui action input">
-                                        <input type="text" readOnly='true' value="" className="uploadBlueprintFile" onClick={this._openFileSelection}></input>
+                                        <input type="text" readOnly='true' value="" className="uploadBlueprintFile"
+                                               placeholder="Select blueprint file" onClick={this._openFileSelection}></input>
                                         <button className="ui icon button uploadBlueprintFile" onClick={this._openFileSelection}>
                                             <i className="attach icon"></i>
                                         </button>
@@ -143,9 +135,7 @@ export default class extends React.Component {
                                 <input type="text" name='blueprintFileName' id='blueprintFileName' placeholder="Blueprint filename e.g. blueprint"/>
                             </div>
 
-                            <ErrorMessage error="Please fill in all the required fields" header="Missing data" show={this.state.showErr}/>
-
-                            <ErrorMessage error={this.state.uploadErr} header="Error uploading file" className="uploadFailed"/>
+                            <ErrorMessage error={this.state.error}/>
 
                             <input type='submit' style={{"display": "none"}} ref='submitUploadBtn'/>
                         </form>

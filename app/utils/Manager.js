@@ -32,7 +32,7 @@ export default class Manager {
         return this._ajaxCall(url,'put',params,data) ;
     }
 
-    doUpload(url,params,file,method) {
+    doUpload(url,params,files,method) {
         var actualUrl = this._buildActualUrl(url,params);
         var securityHeaders = this._buildSecurityHeader();
 
@@ -88,7 +88,18 @@ export default class Manager {
                 xhr.setRequestHeader("tenant",selectedTenant);
             }
 
-            xhr.send(file);
+            var formData = new FormData();
+            if (files) {
+                if (_.isString(files)) {
+                    files = {"upload":files};
+                }
+
+                _.forEach(files, function (value, key) {
+                    formData.append(key, value);
+                });
+            }
+
+            xhr.send(formData);
         });
     }
 

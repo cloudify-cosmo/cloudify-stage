@@ -22,61 +22,56 @@ export default class EventsTable extends React.Component {
         this.props.toolbox.getEventBus().off('events:refresh', this._refreshData);
     }
 
-
-    _selectEvent(item) {
-        var oldSelectedEventId = this.props.toolbox.getContext().getValue('eventId');
-        this.props.toolbox.getContext().setValue('eventId',item.id === oldSelectedEventId ? null : item.id);
+    fetchGridData(fetchParams) {
+        this.props.toolbox.refresh(fetchParams);
     }
-    
-    render() {
-        var ErrorMessage = Stage.Basic.ErrorMessage;
 
-        var filteredColumnsTitles = [];
-        if (!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId) filteredColumnsTitles.push(<th key='blueprintHeader'>Blueprint</th>);
-        if (!this.props.data.deploymentId && !this.props.data.executionId) filteredColumnsTitles.push(<th key='deploymentHeader'>Deployment</th>);
-        if (!this.props.data.executionId ) filteredColumnsTitles.push( <th key='workflowHeader'>Workflow</th>);
+    _selectEvent(eventId) {
+        let selectedEventId = this.props.toolbox.getContext().getValue('eventId');
+        this.props.toolbox.getContext().setValue('eventId', eventId === selectedEventId ? null : eventId);
+    }
+
+    render() {
+        let ErrorMessage = Stage.Basic.ErrorMessage;
+        let Table = Stage.Basic.Table;
 
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <table className="ui very compact table eventsTable">
-                    <thead>
-                    <tr>
-                        {filteredColumnsTitles}
-                        <th>Event Type</th>
-                        <th>Timestamp</th>
-                        <th>Operation</th>
-                        <th>Node Name</th>
-                        <th>Node Id</th>
-                        <th>Message</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <Table fetchData={this.fetchGridData.bind(this)}
+                       totalSize={this.props.data.total}
+                       pageSize={this.props.widget.configuration.pageSize}
+                       className="eventsTable">
+
+                    <Table.Column label="Blueprint" name="context.blueprint_id" width="10%" show={!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId} />
+                    <Table.Column label="Deployment" name="context.deployment_id" width="10%" show={!this.props.data.deploymentId && !this.props.data.executionId} />
+                    <Table.Column label="Workflow" name="context.workflow_id" width="10%" show={!this.props.data.executionId} />
+                    <Table.Column label="Event Type" name="event_type" width="20%"/>
+                    <Table.Column label="Timestamp" name="timestamp" width="10%"/>
+                    <Table.Column label="Operation" name="context.operation" width="10%"/>
+                    <Table.Column label="Node Name" name="context.node_name" width="10%"/>
+                    <Table.Column label="Node Id" name="context.node_id" width="10%"/>
+                    <Table.Column label="Message" name="message.text" width="10%"/>
+
                     {
-                        this.props.data.items.map((item)=>{
-                            var filteredColumns = [];
-
-                            if (!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId) filteredColumns.push(<td key='blueprint'>{item.context.blueprint_id}</td>);
-                            if (!this.props.data.deploymentId && !this.props.data.executionId)filteredColumns.push( <td key='deployment'>{item.context.deployment_id}</td>);
-                            if (!this.props.data.executionId) filteredColumns.push( <td key='workflow'>{item.context.workflow_id}</td>);
-
+                        this.props.data.items.map((item) => {
                             return (
-                                <tr key={item.id} className={'row ' + (item.isSelected ? 'active' : '')} onClick={this._selectEvent.bind(this,item)}>
-                                    {filteredColumns}
-                                    <td>{item.event_type}</td>
-                                    <td>{item.timestamp}</td>
-                                    <td>{item.context.operation}</td>
-                                    <td>{item.context.node_name}</td>
-                                    <td>{item.context.node_id}</td>
-                                    <td>{item.message.text}</td>
-
-                                </tr>
+                                <Table.Row key={item.id} selected={item.isSelected} onClick={this._selectEvent.bind(this, item.id)}>
+                                    <Table.Data>{item.context.blueprint_id}</Table.Data>
+                                    <Table.Data>{item.context.deployment_id}</Table.Data>
+                                    <Table.Data>{item.context.workflow_id}</Table.Data>
+                                    <Table.Data>{item.event_type}</Table.Data>
+                                    <Table.Data>{item.timestamp}</Table.Data>
+                                    <Table.Data>{item.context.operation}</Table.Data>
+                                    <Table.Data>{item.context.node_name}</Table.Data>
+                                    <Table.Data>{item.context.node_id}</Table.Data>
+                                    <Table.Data>{item.message.text}</Table.Data>
+                                </Table.Row>
                             );
                         })
                     }
-                    </tbody>
-                </table>
+                </Table>
             </div>
         );
     }
