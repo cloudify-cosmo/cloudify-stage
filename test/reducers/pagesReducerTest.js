@@ -185,7 +185,7 @@ describe('(Reducer) Pages - drilldown process', () => {
         });
 
         it('Drilldown page should have the right template data',()=>{
-            var pageAccordingToTemplate ={name:'tmp1',isDrillDown: true,description:'' ,widgets: [{name:'some widget',definition:'widget1',width:1,height:1,x:1,y:1,configuration:{},pageSize: undefined}]};
+            var pageAccordingToTemplate ={name:'tmp1',isDrillDown: true,description:'' ,widgets: [{name:'some widget',definition:'widget1',width:1,height:1,x:1,y:1,configuration:{}}]};
             // Set ids data so can compare (i dont want to delete values from the store inorder to compare)
             pageAccordingToTemplate.id = drillDownPage.id;
             pageAccordingToTemplate.parent = parentPage.id;

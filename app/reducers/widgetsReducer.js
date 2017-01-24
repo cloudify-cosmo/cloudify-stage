@@ -44,7 +44,6 @@ const widget = (state = {}, action) => {
                 x: action.x,
                 y: action.y,
                 definition: action.widgetDefinition.id,
-                pageSize: action.widgetDefinition.pageSize,
                 configuration: Object.assign({},buildConfig(action.widgetDefinition),action.configuration)
             };
         default:
