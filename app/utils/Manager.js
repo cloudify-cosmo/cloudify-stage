@@ -103,38 +103,11 @@ export default class Manager {
         });
     }
 
-    doDownload(url, fileName) {
-        let actualUrl = this._buildActualUrl(url, null);
-        logger.debug('Downloading file from url: ' + actualUrl);
-
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            let securityHeaders = this._buildSecurityHeader();
-            let selectedTenant = _.get(this._data, 'tenants.selected', Consts.DEFAULT_TENANT);
-
-            xhr.addEventListener('error', reject);
-            xhr.addEventListener('abort', reject);
-            xhr.addEventListener('load', () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(saveAs(xhr.response, fileName));
-                } else {
-                    reject({error: 'File downloading error. Url="' + actualUrl + '". StatusCode=' + xhr.status});
-                }
-            });
-
-            xhr.open('get', actualUrl, true);
-            if (securityHeaders) {
-                xhr.setRequestHeader('Authentication-Token', securityHeaders['Authentication-Token']);
-            }
-            if (selectedTenant) {
-                xhr.setRequestHeader('tenant', selectedTenant);
-            }
-            xhr.responseType = 'blob';
-            xhr.send();
-        });
+    doDownload(url,fileName) {
+        return this._ajaxCall(url,'get',null,null,fileName);
     }
 
-    _ajaxCall(url,method,params,data) {
+    _ajaxCall(url,method,params,data,fileName) {
         var actualUrl = this._buildActualUrl(url,params);
         var securityHeaders = this._buildSecurityHeader();
 
@@ -149,6 +122,7 @@ export default class Manager {
             method: method,
             headers: headers
         };
+
         if (data) {
             try {
                 options.body = JSON.stringify(data)
@@ -156,9 +130,17 @@ export default class Manager {
                 logger.error('Error stringifying data. URL: '+actualUrl+' data ',data);
             }
         }
-        return fetch(actualUrl,options)
-            .then(this._checkStatus)
-            .then(response=>response.json());
+
+        if (fileName) {
+            return fetch(actualUrl,options)
+                .then(this._checkStatus)
+                .then(response => response.blob())
+                .then(blob => saveAs(blob, fileName));
+        } else {
+            return fetch(actualUrl,options)
+                .then(this._checkStatus)
+                .then(response => response.json());
+        }
     }
 
 
