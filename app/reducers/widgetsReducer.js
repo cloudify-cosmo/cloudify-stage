@@ -22,8 +22,9 @@ let buildConfig = (widgetDefinition)=>{
             value = _.split(value, ',');
         } else if (config.type == Stage.Basic.Field.BOOLEAN_TYPE) {
             value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
+        } else if (config.type === Stage.Basic.Field.NUMBER_LIST_TYPE || config.type === Stage.Basic.Field.NUMBER_EDITABLE_LIST_TYPE) {
+            value = parseInt(value) || 0;
         }
-
 
         configs[config.id] = value;
     });
@@ -43,7 +44,6 @@ const widget = (state = {}, action) => {
                 x: action.x,
                 y: action.y,
                 definition: action.widgetDefinition.id,
-                pageSize: action.widgetDefinition.pageSize,
                 configuration: Object.assign({},buildConfig(action.widgetDefinition),action.configuration)
             };
         default:

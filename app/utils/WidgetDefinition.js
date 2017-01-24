@@ -19,8 +19,6 @@ export default class WidgetDefinition {
 
         this.zIndex = this.keepOnTop ? 5 : 0;
 
-        this.initPollingTime();
-
         if (!this.name) {
             throw new Error('Missing widget name. Widget data is :',data);
         }
@@ -29,21 +27,4 @@ export default class WidgetDefinition {
         }
     }
 
-    initPollingTime() {
-        const pollingTimeOption = {
-            id: "pollingTime",
-            name: "Refresh time interval",
-            placeHolder: "Enter time interval in seconds",
-            description: "Data of the widget will be refreshed per provided interval time in seconds",
-            default: 0,
-            type: Stage.Basic.Field.NUMBER_TYPE
-        };
-
-        let option = _.find(this.initialConfiguration,{id:"pollingTime"});
-        if (option) {
-            Object.assign(option, Object.assign({}, pollingTimeOption, option));
-        } else {
-            this.initialConfiguration.unshift(pollingTimeOption);
-        }
-    }
 }

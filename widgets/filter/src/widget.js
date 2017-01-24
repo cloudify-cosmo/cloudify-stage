@@ -21,7 +21,7 @@ Stage.defineWidget({
     },
     isReact: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 5},
+        Stage.GenericConfig.POLLING_TIME_CONFIG(5),
         {id: "filterByExecutions",name: "Should show execution filter", default: true, type: Stage.Basic.Field.BOOLEAN_TYPE}
     ],
 

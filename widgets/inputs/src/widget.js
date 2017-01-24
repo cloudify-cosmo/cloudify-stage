@@ -13,7 +13,7 @@ Stage.defineWidget({
     color : "teal",
     isReact: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 2}
+        Stage.GenericConfig.POLLING_TIME_CONFIG(2)
     ],
 
     fetchData: function(widget,toolbox) {

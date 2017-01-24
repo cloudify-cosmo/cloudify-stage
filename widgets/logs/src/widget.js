@@ -7,55 +7,47 @@ import LogsTable from './LogsTable';
 Stage.defineWidget({
     id: 'logs',
     name: "Deployment Logs",
-    description: '',
+    description: 'This widget shows Cloudify logs',
     initialWidth: 5,
     initialHeight: 4,
     color: "purple",
-    fetchUrl: '[manager]/events',
+    fetchUrl: '[manager]/events?type=cloudify_log[params]',
     isReact: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 2}
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG()
     ],
 
-    render: function(widget,data,error,toolbox) {
+    fetchParams: function(widget, toolbox) {
+        return {
+            'context.blueprint_id': toolbox.getContext().getValue('blueprintId'),
+            'context.deployment_id': toolbox.getContext().getValue('deploymentId'),
+            'context.execution_id': toolbox.getContext().getValue('executionId')
+        }
+    },
+
+    render: function(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading/>;
         }
 
-        var formattedData = Object.assign({},data,{
-            items: _.filter(data.items,(item)=>{return item.type === 'cloudify_log';}) // Can maybe change to item.level !== undefined
-        });
-        var deploymentId = toolbox.getContext().getValue('deploymentId');
-        var blueprintId = toolbox.getContext().getValue('blueprintId');
-        var executionId = toolbox.getContext().getValue('executionId');
+        const SELECTED_LOG_ID = toolbox.getContext().getValue('logId');
+        const CONTEXT_PARAMS = this.fetchParams(widget, toolbox);
 
-        if (executionId) {
-            formattedData.items = _.filter(formattedData.items, (item)=> {
-                return item.context.execution_id === executionId;
-            });
-        } else if (deploymentId) {
-            formattedData.items = _.filter(formattedData.items,(item)=>{
-                return item.context.deployment_id === deploymentId;
-            });
-        } else if (blueprintId) {
-            formattedData.items = _.filter(formattedData.items,(item)=>{
-                return item.context.blueprint_id === blueprintId;
-            });
-        }
-
-        var index=0;
-        formattedData = Object.assign({},formattedData,{
-            items: _.map (formattedData.items,(item)=>{
-                return Object.assign({},item,{
-                    id: index++,
-                    timestamp: moment(item.timestamp,'YYYY-MM-DD HH:mm:ss.SSS+SSS').format('DD-MM-YYYY HH:mm') //2016-07-20 09:10:53.103+000
+        let formattedData = data;
+        formattedData = Object.assign({}, data, {
+            items: _.map (formattedData.items, (item) => {
+                return Object.assign({}, item, {
+                    id: item.context.execution_id + item['@timestamp'],
+                    timestamp: moment(item.timestamp,'YYYY-MM-DD HH:mm:ss.SSS+SSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103+000
+                    isSelected: (item.context.execution_id + item['@timestamp']) === SELECTED_LOG_ID
                 })
-            })
+            }),
+            total : _.get(data, 'metadata.pagination.total', 0),
+            blueprintId: CONTEXT_PARAMS['context.blueprint_id'],
+            deploymentId: CONTEXT_PARAMS['context.deployment_id'],
+            executionId: CONTEXT_PARAMS['context.execution_id']
         });
-
-        formattedData.blueprintId = blueprintId;
-        formattedData.deploymentId = deploymentId;
-        formattedData.executionId = executionId;
 
         return (
             <LogsTable widget={widget} data={formattedData} toolbox={toolbox}/>

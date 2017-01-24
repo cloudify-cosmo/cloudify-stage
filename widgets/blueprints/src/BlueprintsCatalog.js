@@ -139,7 +139,7 @@ export default class BlueprintsCatalog extends React.Component{
         return (
             <div>
                 <Segment totalSize={this.props.data.total}
-                         pageSize={this.props.widget.pageSize}
+                         pageSize={this.props.widget.configuration.pageSize}
                          fetchData={this.props.fetchData}>
 
                     <Segment.Action>
