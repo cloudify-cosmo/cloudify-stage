@@ -13,7 +13,8 @@ export default class WidgetDynamicContent extends Component {
     static propTypes = {
         widget: PropTypes.object.isRequired,
         templates : PropTypes.object.isRequired,
-        manager: PropTypes.object.isRequired
+        manager: PropTypes.object.isRequired,
+        onWidgetConfigUpdate: PropTypes.func
     };
 
     constructor(props) {
@@ -26,10 +27,11 @@ export default class WidgetDynamicContent extends Component {
         this.pollingTimeout = null;
         this.fetchDataPromise = null;
         this.mounted = false;
+
         this.fetchParams = {
-            gridParams: {pageSize: this.props.widget.definition.pageSize,
-                sortColumn: this.props.widget.definition.sortColumn,
-                sortAscending: this.props.widget.definition.sortAscending},
+            gridParams: {pageSize: this.props.widget.configuration.pageSize,
+                sortColumn: this.props.widget.configuration.sortColumn,
+                sortAscending: this.props.widget.configuration.sortAscending},
             filterParams: {}
         };
     }
@@ -152,9 +154,17 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
+    _updateConfiguration(params) {
+        if (params.gridParams && params.gridParams.pageSize &&
+            params.gridParams.pageSize !== this.props.widget.configuration.pageSize) {
+            this.props.onWidgetConfigUpdate({pageSize: params.gridParams.pageSize});
+        }
+    }
+
     _fetchData(params) {
         if (params) {
             this.fetchParams = _.merge({}, this.fetchParams, params.gridParams ? params : {filterParams: params});
+            this._updateConfiguration(params);
         }
 
         if (this.fetchDataPromise) {

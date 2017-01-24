@@ -14,9 +14,9 @@ Stage.defineWidget({
     fetchUrl: '[manager]/events?type=cloudify_event[params]',
     isReact: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 10}
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG()
     ],
-    pageSize: 5,
 
     fetchParams: function(widget, toolbox) {
         return {

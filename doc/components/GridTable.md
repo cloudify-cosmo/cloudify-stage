@@ -35,7 +35,7 @@ this.props = {
 
 <Table fetchData={this.props.fetchData}
        totalSize={this.props.data.total}
-       pageSize={this.props.widget.plugin.pageSize}
+       pageSize={this.props.widget.configuration.pageSize}
        selectable={true}
        className="deploymentTable">
 

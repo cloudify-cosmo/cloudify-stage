@@ -41,7 +41,7 @@ export default class EventsTable extends React.Component {
 
                 <Table fetchData={this.fetchGridData.bind(this)}
                        totalSize={this.props.data.total}
-                       pageSize={this.props.widget.pageSize}
+                       pageSize={this.props.widget.configuration.pageSize}
                        className="eventsTable">
 
                     <Table.Column label="Blueprint" name="context.blueprint_id" width="10%" show={!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId} />

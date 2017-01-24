@@ -309,9 +309,17 @@ code.hljs {
 
 /* Pagination */
 
-.gridPagination .pagination.menu .item {
-  padding-top: 0.78571429em !important;
-  padding-bottom: 0.78571429em !important;
+.gridPagination {
+
+  .pagination.menu .item {
+    padding-top: 0.78571429em !important;
+    padding-bottom: 0.78571429em !important;
+  }
+
+  .compact.dropdown {
+    min-width: 50px !important;
+  }
+
 }
 
 /* Segment list */

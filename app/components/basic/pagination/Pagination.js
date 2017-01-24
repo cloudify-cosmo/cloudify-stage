@@ -8,6 +8,8 @@ import Paginator from './Paginator';
 
 export default class Pagination extends Component {
 
+    static PAGE_SIZE_LIST = PaginationInfo.pageSizes;
+
     constructor(props,context) {
         super(props,context);
 
@@ -28,11 +30,11 @@ export default class Pagination extends Component {
 
     static defaultProps = {
         totalSize: 0,
-        pageSize: PaginationInfo.pageSizes[0]
+        pageSize: Pagination.PAGE_SIZE_LIST[0]
     };
 
     _changePageSize(size){
-        this.setState({pageSize: parseInt(size), currentPage: 1});
+        this.setState({pageSize: parseInt(size) || Pagination.PAGE_SIZE_LIST[0], currentPage: 1});
     }
 
     _changePage(page){
@@ -81,7 +83,7 @@ export default class Pagination extends Component {
             <div>
                 {this.props.children}
 
-                { this.props.totalSize > PaginationInfo.pageSizes[0] &&
+                { this.props.totalSize > Pagination.PAGE_SIZE_LIST[0] &&
                     <div className="ui two column grid gridPagination">
                         <div className="column">
                             <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}

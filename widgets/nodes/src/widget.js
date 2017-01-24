@@ -12,13 +12,15 @@ Stage.defineWidget({
     initialHeight: 5,
     color : 'blue',
     isReact: true,
-    initialConfiguration: [],
+    initialConfiguration: [
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG()
+    ],
     fetchUrl: {
         nodes: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships[params:blueprint_id,deployment_id,gridParams]',
         nodeInstances: '[manager]/node-instances?_include=id,node_id,deployment_id,state,relationships,runtime_properties[params:deployment_id]',
         deployments: '[manager]/deployments?_include=id,groups[params:blueprint_id,id]'
     },
-    pageSize: 5,
 
     fetchParams: function(widget, toolbox) {
         return {
