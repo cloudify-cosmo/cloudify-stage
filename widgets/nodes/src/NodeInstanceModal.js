@@ -73,9 +73,7 @@ export default class extends React.Component {
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <div className="ui ok basic button">
-                            Close
-                        </div>
+                        <Modal.Approve label="Close" icon="" className="green"/>
                     </Modal.Footer>
                 </Modal>
             </div>
