@@ -12,7 +12,7 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            confirmDelete:false
+            confirmDelete: false
         }
     }
 
@@ -25,7 +25,7 @@ export default class extends React.Component {
         event.stopPropagation();
 
         this.setState({
-            confirmDelete : true,
+            confirmDelete: true,
             item: item
         });
     }
@@ -44,11 +44,9 @@ export default class extends React.Component {
     _downloadSnapshot(item,event) {
         event.stopPropagation();
 
-        let snapshotDownloadUrl = `/snapshots/${item.id}/archive`;
-        let snapshotCreationDateShort = moment(item.created_at,'DD-MM-YYYY HH:mm').format('YYYYMMDD_HHmm');
-        let snapshotFileName = `${item.id}_${snapshotCreationDateShort}.zip`;
-
-        this.props.toolbox.getManager().doDownload(snapshotDownloadUrl, snapshotFileName);
+        let actions = new Actions(this.props.toolbox);
+        actions.doDownload(item)
+               .catch((err) => {this.setState({error: err.error})});
     }
 
     _deleteSnapshot() {

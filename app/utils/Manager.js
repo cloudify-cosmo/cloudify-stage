@@ -143,18 +143,14 @@ export default class Manager {
         }
     }
 
-
     _checkStatus(response) {
         if (response.ok) {
             return response;
         }
 
-        return response.json().then((resJson)=>{
-            if (resJson.message) {
-                return Promise.reject({error: resJson.message});
-            }
-            return Promise.reject({error:response.statusText});
-        });
+        return response.json()
+            .then(resJson => Promise.reject({error: resJson.message || response.statusText}))
+            .catch(() => Promise.reject({error: response.statusText}));
     }
 
     _buildActualUrl(url,data) {

@@ -11,7 +11,7 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            confirmDelete:false
+            confirmDelete: false
         }
     }
 
@@ -24,7 +24,7 @@ export default class extends React.Component {
         event.stopPropagation();
 
         this.setState({
-            confirmDelete : true,
+            confirmDelete: true,
             item: item
         });
     }
@@ -32,10 +32,9 @@ export default class extends React.Component {
     _downloadPlugin(item,event) {
         event.stopPropagation();
 
-        let pluginDownloadUrl = `/plugins/${item.id}/archive`;
-        let pluginFileName = `${item.package_name}_${item.package_version}.zip`;
-
-        this.props.toolbox.getManager().doDownload(pluginDownloadUrl, pluginFileName);
+        let actions = new Actions(this.props.toolbox);
+        actions.doDownload(item)
+               .catch((err) => {this.setState({error: err.error})});
     }
 
     _deletePlugin() {
