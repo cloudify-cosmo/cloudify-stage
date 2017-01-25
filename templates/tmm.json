@@ -1,0 +1,11 @@
+{
+  "name": "Tenant managment",
+  "widgets": [
+    {
+      "name": "Blueprints List",
+      "definition": "blueprints",
+      "width": 7,
+      "height": 5
+    }
+  ]
+}

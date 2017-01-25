@@ -1,0 +1,8 @@
+{
+  "initialTemplate": {
+    "admin" : "initial-template-admin",
+    "user" : "initial-template",
+    "customer" : "initial-template-customer"
+  },
+  "singleManager": false
+}

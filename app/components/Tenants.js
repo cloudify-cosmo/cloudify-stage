@@ -9,16 +9,11 @@ export default class Tenants extends Component {
         manager: PropTypes.object.isRequired,
         onTenantChange: PropTypes.func.isRequired,
         onLogout: PropTypes.func.isRequired,
-        fetchTenants: PropTypes.func.isRequired
 
     };
 
     onTenantSelected(tenant) {
         this.props.onTenantChange(tenant.name);
-    }
-
-    componentWillMount() {
-        this.props.fetchTenants(this.props.manager);
     }
 
     render() {

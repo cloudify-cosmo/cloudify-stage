@@ -40,7 +40,6 @@ export default (store)=> {
         callback();
     };
 
-
     return (
         <Route>
             <Route path='/login' component={Login}/>

@@ -10,7 +10,9 @@ export default class Login extends Component {
         ip: PropTypes.string,
         username: PropTypes.string,
         loginError: PropTypes.string,
-        onLogin: PropTypes.func.isRequired
+        onLogin: PropTypes.func.isRequired,
+        mode: PropTypes.string.isRequired
+
     };
 
     constructor(props,context){
@@ -38,9 +40,12 @@ export default class Login extends Component {
 
                 <div className='loginContainer'>
                     <form className="ui huge form" onSubmit={this.onSubmit.bind(this)}>
-                        <div className="field required">
-                            <input type="text" name="ip" placeholder="Enter Manager IP" required value={this.state.ip} onChange={(e)=>this.setState({ip: e.target.value})}/>
-                        </div>
+                        {
+                            this.props.mode === 'main' &&
+                            <div className="field required">
+                                <input type="text" name="ip" placeholder="Enter Manager IP" required value={this.state.ip} onChange={(e)=>this.setState({ip: e.target.value})}/>
+                            </div>
+                        }
                         <div className="field required">
                             <input type="text" name="username" placeholder="Enter user name" required value={this.state.username} onChange={(e)=>this.setState({username: e.target.value})}/>
                         </div>
