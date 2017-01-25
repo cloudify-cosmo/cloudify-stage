@@ -37,7 +37,7 @@ export function getTenants (manager) {
                 dispatch(recieveTenants(tenants));
             }).catch((err)=>{
                 console.error(err);
-                dispatch(errorTenants(err.error));
+                dispatch(errorTenants(err.message));
             });
     }
 }

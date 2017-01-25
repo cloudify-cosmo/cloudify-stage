@@ -37,7 +37,7 @@ export default class extends React.Component {
         actions.doRestore(item).then(()=>{
             this.props.toolbox.refresh();
         }).catch((err)=>{
-            this.setState({error:err.error});
+            this.setState({error:err.message});
         });
     }
 
@@ -58,7 +58,7 @@ export default class extends React.Component {
             this.setState({confirmDelete: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
-            this.setState({confirmDelete: false, error: err.error});
+            this.setState({confirmDelete: false, error: err.message});
         });
     }
 

@@ -96,7 +96,7 @@ class GenericConfig {
                 name: "Pagination page size",
                 default: pageSize,
                 items: BasicComponents.Pagination.PAGE_SIZE_LIST,
-                type: BasicComponents.Field.NUMBER_EDITABLE_LIST_TYPE}
+                type: BasicComponents.GenericField.NUMBER_EDITABLE_LIST_TYPE}
     };
 
     static POLLING_TIME_CONFIG = (pollingTime = 0) => {
@@ -105,7 +105,7 @@ class GenericConfig {
                 default: pollingTime,
                 placeHolder: "Enter time interval in seconds",
                 description: "Data of the widget will be refreshed per provided interval time in seconds",
-                type: BasicComponents.Field.NUMBER_TYPE}
+                type: BasicComponents.GenericField.NUMBER_TYPE}
     };
 
 }

@@ -14,7 +14,7 @@ Stage.defineWidget({
     isReact: true,
     initialConfiguration: [
         {id: 'fetchUsername', name: 'Fetch with username', placeHolder:"Type username", default:"cloudify-examples",
-            fetch:true, type: Stage.Basic.Field.STRING_TYPE}
+            fetch:true, type: Stage.Basic.GenericField.STRING_TYPE}
     ],
     fetchUrl: 'https://api.github.com/users/[config:fetchUsername]/repos',
     render: function(widget,data,error,toolbox) {

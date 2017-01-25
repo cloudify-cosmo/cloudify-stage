@@ -48,7 +48,7 @@ export default class extends React.Component {
                 this.props.toolbox.getEventBus().trigger('plugins:refresh');
             })
             .catch(err=>{
-                this.setState({confirmDelete: false, error: err.error});
+                this.setState({confirmDelete: false, error: err.message});
             });
     }
 
