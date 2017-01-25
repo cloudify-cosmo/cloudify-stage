@@ -148,9 +148,10 @@ export default class Manager {
             return response;
         }
 
+        let status = (code, message) => `Error ${code}${message ? ': ' + message : ''}`;
         return response.json()
-            .then(resJson => Promise.reject({error: resJson.message || response.statusText}))
-            .catch(() => Promise.reject({error: response.statusText}));
+            .then(resJson => Promise.reject({error: status(resJson.status || response.status, resJson.message || response.statusText)}))
+            .catch(() => Promise.reject({error: status(response.status, response.statusText)}));
     }
 
     _buildActualUrl(url,data) {
