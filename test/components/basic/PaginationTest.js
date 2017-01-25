@@ -27,7 +27,7 @@ describe('(Component) Pagination', () => {
 
         expect(wrapper.find(".gridPagination .dropdown .text")).to.have.text('5');
         let dropdownText = wrapper.find(".gridPagination .selection.dropdown .menu").text();
-        expect(wrapper.find(".gridPagination").childAt(0).text().replace(dropdownText, "") ).to.be.equal("Page size: 5  1 to 5 of 10 entries");
+        expect(wrapper.find(".gridPagination").childAt(0).text().replace(dropdownText, "") ).to.be.equal("Page size: 55102550100  1 to 5 of 10 entries");
     });
 
     it('changes page size', () => {
