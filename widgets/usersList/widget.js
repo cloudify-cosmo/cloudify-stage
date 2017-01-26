@@ -11,6 +11,7 @@ Stage.defineWidget({
     initialHeight: 3,
     color: "orange",
     hasTemplate: true,
+    hasStyle: true,
     render: function(widget,data,error,toolbox) {
 
         if (!widget.definition.template) {
