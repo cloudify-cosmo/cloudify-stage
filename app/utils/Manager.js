@@ -150,16 +150,12 @@ export default class Manager {
             return response;
         }
 
-        let errorMessage = (code, message) => `${code}${message ? ': ' + message : ''}`;
-        let isJsonContentType = (response) => _.isEqual(response.headers.get('content-type'), 'application/json');
-
+        let isJsonContentType = (response) => _.isEqual(_.toLower(response.headers.get('content-type')), 'application/json');
         if (isJsonContentType(response)) {
             return response.json()
-                .then(resJson => Promise.reject({error: errorMessage(resJson.status || response.status,
-                                                                     resJson.message || response.statusText)}))
+                .then(resJson => Promise.reject({error: resJson.message || response.statusText}))
         } else {
-            return Promise.reject({error: errorMessage(response.status,
-                                                       response.statusText)});
+            return Promise.reject({error: response.statusText});
         }
     }
 

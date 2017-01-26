@@ -72,7 +72,7 @@ describe('(Reducer) Tenants', () => {
 
         const expectedActions = [
             { type: types.REQ_TENANTS },
-            { type: types.ERR_TENANTS, error: '500: Error fetching tenants',receivedAt: Date.now()  }
+            { type: types.ERR_TENANTS, error: 'Error fetching tenants',receivedAt: Date.now()  }
         ];
 
         const store = mockStore({});
@@ -98,7 +98,7 @@ describe('(Reducer) Tenants', () => {
             .then(() => { // return of async actions
                 expect(store.getState()).to.eql({
                     isFetching: false,
-                    error: '500: Error fetching tenants',
+                    error: 'Error fetching tenants',
                     items: [],
                     lastUpdated: Date.now()
                 });
