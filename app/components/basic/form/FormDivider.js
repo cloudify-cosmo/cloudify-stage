@@ -1,10 +1,11 @@
 /**
- * Created by pawelposel on 17/11/2016.
+ * Created by pposel on 23/01/2017.
  */
-  
-import React, { Component, PropTypes } from 'react';
 
-export default class GridData extends Component {
+import React, { Component, PropTypes } from 'react';
+import { Form } from 'semantic-ui-react'
+
+export default class FormDivider extends Component {
 
     static propTypes = {
         children: PropTypes.any,
@@ -13,9 +14,9 @@ export default class GridData extends Component {
 
     render() {
         return (
-            <td className={this.props.className}>
+            <h4 className={`ui dividing header ${this.props.className}`}>
                 {this.props.children}
-            </td>
+            </h4>
         );
     }
 }

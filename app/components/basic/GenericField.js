@@ -5,7 +5,7 @@
 
 import React, { Component, PropTypes } from 'react';
 
-export default class Field extends Component {
+export default class GenericField extends Component {
 
     static STRING_TYPE = 'string';
     static NUMBER_TYPE = 'number';
@@ -29,7 +29,7 @@ export default class Field extends Component {
 
     static defaultProps = {
         placeholder: '',
-        type: Field.STRING_TYPE,
+        type: GenericField.STRING_TYPE,
         description: '',
         icon: '',
         value: '',
@@ -47,7 +47,7 @@ export default class Field extends Component {
                 </label>
 
                 {
-                    this.props.type === Field.STRING_TYPE &&
+                    this.props.type === GenericField.STRING_TYPE &&
                     <div className="ui icon input fluid">
                         {this.props.icon && <i className={this.props.icon + " icon"}></i>}
                         <input className="fieldInput" data-id={this.props.id} data-type={this.props.type} type="text"
@@ -55,7 +55,7 @@ export default class Field extends Component {
                     </div>
                 }
                 {
-                    this.props.type === Field.NUMBER_TYPE &&
+                    this.props.type === GenericField.NUMBER_TYPE &&
                     <div className="ui icon input fluid">
                         {this.props.icon && <i className={this.props.icon + " icon"}></i>}
                         <input className="fieldInput" data-id={this.props.id} data-type={this.props.type} type="number"
@@ -63,7 +63,7 @@ export default class Field extends Component {
                     </div>
                 }
                 {
-                    this.props.type === Field.BOOLEAN_TYPE &&
+                    this.props.type === GenericField.BOOLEAN_TYPE &&
                     <div className="ui toggle checkbox" ref={(checkbox)=>{$(checkbox).checkbox()}}>
                         <input className="fieldInput" type="checkbox" data-id={this.props.id} data-type={this.props.type}
                                checked={(_.isBoolean(this.props.value) && this.props.value) ||
@@ -72,15 +72,15 @@ export default class Field extends Component {
                     </div>
                 }
                 {
-                    (this.props.type === Field.LIST_TYPE || this.props.type === Field.NUMBER_LIST_TYPE) &&
+                    (this.props.type === GenericField.LIST_TYPE || this.props.type === GenericField.NUMBER_LIST_TYPE) &&
                     <DropdownList {...this.props}/>
                 }
                 {
-                    this.props.type === Field.MULTI_SELECT_LIST_TYPE &&
+                    this.props.type === GenericField.MULTI_SELECT_LIST_TYPE &&
                     <DropdownList {...this.props} className="multiple"/>
                 }
                 {
-                    (this.props.type === Field.EDITABLE_LIST_TYPE || this.props.type === Field.NUMBER_EDITABLE_LIST_TYPE) &&
+                    (this.props.type === GenericField.EDITABLE_LIST_TYPE || this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE) &&
                     <DropdownList {...this.props} className="search" options={{allowAdditions: true}}/>
                 }
 

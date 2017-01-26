@@ -49,7 +49,7 @@ export default class ExecuteModal extends React.Component {
             this.props.onHide();
             this.props.toolbox.getEventBus().trigger('executions:refresh');
         }).catch((err)=>{
-            this.setState({error: err.error});
+            this.setState({error: err.message});
         })
 
         return false;

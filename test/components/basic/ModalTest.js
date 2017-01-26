@@ -65,7 +65,6 @@ describe('(Component) Modal', () => {
     it('turns on loading mode', () => {
         wrapper.setProps({loading:true});
         expect(wrapper.find("form")).to.have.className('loading');
-        expect(wrapper.find(".ok.button")).to.have.className('loading');
         expect(wrapper.find(".ok.button")).to.have.className('disabled');
         expect($('.testModal .ok.button').attr('disabled')).to.equal('disabled');
     });

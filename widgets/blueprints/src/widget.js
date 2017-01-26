@@ -16,7 +16,7 @@ Stage.defineWidget({
         Stage.GenericConfig.POLLING_TIME_CONFIG(2),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
-            default: "table", type: Stage.Basic.Field.LIST_TYPE}
+            default: "table", type: Stage.Basic.GenericField.LIST_TYPE}
     ],
     fetchUrl: {
         blueprints: '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',

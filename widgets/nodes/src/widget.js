@@ -57,6 +57,7 @@ Stage.defineWidget({
         let nodes = data.nodes.items;
         let instances = data.nodeInstances.items;
         let groups = this._getGroups(data.deployments.items);
+        let group;
 
         let formattedData = Object.assign({}, data.nodes, {
             items: _.map (nodes, (node) => {

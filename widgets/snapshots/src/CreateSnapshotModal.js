@@ -50,7 +50,7 @@ export default class extends React.Component {
                 this.setState({loading: false, show: false});
             })
             .catch((err)=>{
-                this.setState({loading: false, error: err.error});
+                this.setState({loading: false, error: err.message});
             });
 
         return false;

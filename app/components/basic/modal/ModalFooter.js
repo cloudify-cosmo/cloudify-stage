@@ -12,7 +12,7 @@ export default class ModalFooter extends Component {
     _updateLoading(comp) {
         if (comp) {
             if (this.props.loading) {
-                $(comp).find('.button').attr('disabled','disabled').addClass('disabled loading');
+                $(comp).find('.button').attr('disabled','disabled').addClass('disabled');
             } else  {
                 $(comp).find('.button').removeAttr('disabled').removeClass('disabled loading');
             }

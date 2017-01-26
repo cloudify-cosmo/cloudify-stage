@@ -52,14 +52,14 @@ export default class Manager {
                 try {
                     var response = JSON.parse(xhr.responseText);
                     if (response.message) {
-                        reject({error: response.message});
+                        reject({message: response.message});
                     } else {
-                        reject({error: e.message});
+                        reject({message: e.message});
                     }
 
                 } catch (err) {
                     logger.error('Cannot parse upload response',err);
-                    reject({error: e.message});
+                    reject({message: err.message});
                 }
             });
             xhr.addEventListener('load', function(e) {
@@ -68,12 +68,13 @@ export default class Manager {
                 try {
                     var response = JSON.parse(xhr.responseText);
                     if (response.message) {
-                        reject({error: response.message});
+                        reject({message: response.message});
                         return;
                     }
 
                 } catch (err) {
                     logger.error('Cannot parse upload response',err);
+                    reject({message: err.message});
                 }
                 resolve();
             });
@@ -138,9 +139,9 @@ export default class Manager {
 
         return response.json().then((resJson)=>{
             if (resJson.message) {
-                return Promise.reject({error: resJson.message});
+                return Promise.reject({message: resJson.message});
             }
-            return Promise.reject({error:response.statusText});
+            return Promise.reject({message:response.statusText});
         });
     }
 

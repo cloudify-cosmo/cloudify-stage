@@ -59,7 +59,7 @@ export default class extends React.Component {
             this.setState({confirmDelete: false, deleteDep:null});
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
         }).catch((err)=>{
-            this.setState({confirmDelete: false, deleteDep: null, error: err.error});
+            this.setState({confirmDelete: false, deleteDep: null, error: err.message});
         });
     }
 

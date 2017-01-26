@@ -307,6 +307,24 @@ code.hljs {
   }
 }
 
+.dataExpandable-appear {
+  opacity: 0.01;
+}
+
+.dataExpandable-appear.dataExpandable-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.dataExpandable-enter {
+  opacity: 0.01;
+}
+
+.dataExpandable-enter.dataExpandable-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
 /* Pagination */
 
 .gridPagination {

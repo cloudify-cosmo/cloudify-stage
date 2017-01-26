@@ -21,11 +21,11 @@ Stage.defineWidget({
     hasTemplate: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(2),
-        {id: 'enableNodeClick', name: 'Enable node click', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
-        {id: 'enableGroupClick', name: 'Enable group click', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
-        {id: 'enableZoom', name: 'Enable zoom', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
-        {id: 'enableDrag', name: 'Enable drag', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE},
-        {id: 'showToolbar', name: 'Show toolbar', default:true, type: Stage.Basic.Field.BOOLEAN_TYPE}
+        {id: 'enableNodeClick', name: 'Enable node click', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: 'enableGroupClick', name: 'Enable group click', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: 'enableZoom', name: 'Enable zoom', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: 'enableDrag', name: 'Enable drag', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: 'showToolbar', name: 'Show toolbar', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
     ],
 
     fetchData: function(widget,toolbox) {
