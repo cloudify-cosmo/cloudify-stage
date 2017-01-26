@@ -13,10 +13,10 @@ Stage.defineWidget({
     color : "blue",
     isReact: true,
     initialConfiguration: [
-        {id: "pollingTime", default: 30}
+        Stage.GenericConfig.POLLING_TIME_CONFIG(30),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG()
     ],
     fetchUrl: '[manager]/snapshots?_include=id,created_at,status[params]',
-    pageSize: 5,
 
     render: function(widget,data,error,toolbox) {
 

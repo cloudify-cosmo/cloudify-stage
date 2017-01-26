@@ -18,12 +18,13 @@ let buildConfig = (widgetDefinition)=>{
 
         var value = config.default && !config.value ? config.default : (_.isUndefined(config.value) ? null : config.value );
 
-        if (config.type == Stage.Basic.Field.MULTI_SELECT_LIST_TYPE) {
+        if (config.type == Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE) {
             value = _.split(value, ',');
-        } else if (config.type == Stage.Basic.Field.BOOLEAN_TYPE) {
+        } else if (config.type == Stage.Basic.GenericField.BOOLEAN_TYPE) {
             value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
+        } else if (config.type === Stage.Basic.GenericField.NUMBER_LIST_TYPE || config.type === Stage.Basic.GenericField.NUMBER_EDITABLE_LIST_TYPE) {
+            value = parseInt(value) || 0;
         }
-
 
         configs[config.id] = value;
     });
@@ -43,7 +44,6 @@ const widget = (state = {}, action) => {
                 x: action.x,
                 y: action.y,
                 definition: action.widgetDefinition.id,
-                pageSize: action.widgetDefinition.pageSize,
                 configuration: Object.assign({},buildConfig(action.widgetDefinition),action.configuration)
             };
         default:

@@ -13,7 +13,8 @@ export default class WidgetDynamicContent extends Component {
     static propTypes = {
         widget: PropTypes.object.isRequired,
         templates : PropTypes.object.isRequired,
-        manager: PropTypes.object.isRequired
+        manager: PropTypes.object.isRequired,
+        onWidgetConfigUpdate: PropTypes.func
     };
 
     constructor(props) {
@@ -26,10 +27,11 @@ export default class WidgetDynamicContent extends Component {
         this.pollingTimeout = null;
         this.fetchDataPromise = null;
         this.mounted = false;
+
         this.fetchParams = {
-            gridParams: {pageSize: this.props.widget.definition.pageSize,
-                sortColumn: this.props.widget.definition.sortColumn,
-                sortAscending: this.props.widget.definition.sortAscending},
+            gridParams: {pageSize: this.props.widget.configuration.pageSize,
+                sortColumn: this.props.widget.configuration.sortColumn,
+                sortAscending: this.props.widget.configuration.sortAscending},
             filterParams: {}
         };
     }
@@ -40,6 +42,14 @@ export default class WidgetDynamicContent extends Component {
 
     _getUrlRegExString(str) {
         return new RegExp('\\[' + str + ':?(.*)\\]', 'i');
+    }
+
+    _parseParams(params, allowedParams) {
+        if (!_.isEmpty(allowedParams)) {
+            allowedParams = _.replace(allowedParams, 'gridParams', '_sort,_size,_offset').split(',');
+            params = _.pick(params, allowedParams);
+        }
+        return params;
     }
 
     _fetch(url, toolbox) {
@@ -55,13 +65,12 @@ export default class WidgetDynamicContent extends Component {
             let params = {};
             let paramsMatch = this._getUrlRegExString('params').exec(url);
             if (!_.isNull(paramsMatch)) {
-                let [paramsUrlString, allowedParams] = paramsMatch;
                 params = this._fetchParams();
-                if (allowedParams) {
-                    allowedParams = _.replace(allowedParams, 'gridParams', '_sort,_size,_offset').split(',');
-                    params = _.pick(params, allowedParams);
-                }
-                baseUrl = _.replace(baseUrl, paramsUrlString, '');
+
+                let [paramsString, allowedParams] = paramsMatch;
+                params = this._parseParams(params, allowedParams);
+
+                baseUrl = _.replace(baseUrl, paramsString, '');
             }
 
             return toolbox.getManager().doGet(baseUrl, params);
@@ -145,9 +154,17 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
+    _updateConfiguration(params) {
+        if (params.gridParams && params.gridParams.pageSize &&
+            params.gridParams.pageSize !== this.props.widget.configuration.pageSize) {
+            this.props.onWidgetConfigUpdate({pageSize: params.gridParams.pageSize});
+        }
+    }
+
     _fetchData(params) {
         if (params) {
             this.fetchParams = _.merge({}, this.fetchParams, params.gridParams ? params : {filterParams: params});
+            this._updateConfiguration(params);
         }
 
         if (this.fetchDataPromise) {

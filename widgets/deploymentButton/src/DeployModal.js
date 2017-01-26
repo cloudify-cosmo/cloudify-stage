@@ -60,7 +60,7 @@ export default class extends React.Component {
             actions.doGetFullBlueprintData(blueprintId).then((blueprint)=>{
                 this.setState({blueprint, error: null, loading: false});
             }).catch((err)=> {
-                this.setState({blueprint: this._emptyBlueprint(), loading: false, error: err.error});
+                this.setState({blueprint: this._emptyBlueprint(), loading: false, error: err.message});
             });
         } else {
             this.setState({blueprint: this._emptyBlueprint(), error: null});
@@ -103,7 +103,7 @@ export default class extends React.Component {
                 this.props.onHide();
             })
             .catch((err)=>{
-                this.setState({loading: false, error: err.error});
+                this.setState({loading: false, error: err.message});
             });
 
         return false;

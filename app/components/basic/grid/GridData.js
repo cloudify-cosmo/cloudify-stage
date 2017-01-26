@@ -7,7 +7,7 @@ import React, { Component, PropTypes } from 'react';
 export default class GridData extends Component {
 
     static propTypes = {
-        children: PropTypes.any.isRequired,
+        children: PropTypes.any,
         className: PropTypes.string
     };
 
@@ -19,4 +19,3 @@ export default class GridData extends Component {
         );
     }
 }
- 

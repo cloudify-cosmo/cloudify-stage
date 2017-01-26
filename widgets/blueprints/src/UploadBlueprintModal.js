@@ -77,7 +77,7 @@ export default class extends React.Component {
             this.setState({loading: false, show: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
-            this.setState({error: err.error, loading: false});
+            this.setState({error: err.message, loading: false});
         });
 
         return false;

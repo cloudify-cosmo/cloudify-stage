@@ -39,7 +39,8 @@ export default class WidgetDefinitionsLoader {
             Basic: BasicComponents,
             ComponentToHtmlString: (component)=>{
                 return ReactDOMServer.renderToString(component);
-            }
+            },
+            GenericConfig
         };
 
         window.moment = momentImport;
@@ -87,4 +88,24 @@ export default class WidgetDefinitionsLoader {
                 console.error(e);
             });
     }
+}
+
+class GenericConfig {
+    static PAGE_SIZE_CONFIG = (pageSize = BasicComponents.Pagination.PAGE_SIZE_LIST[0]) => {
+        return {id: "pageSize",
+                name: "Pagination page size",
+                default: pageSize,
+                items: BasicComponents.Pagination.PAGE_SIZE_LIST,
+                type: BasicComponents.GenericField.NUMBER_EDITABLE_LIST_TYPE}
+    };
+
+    static POLLING_TIME_CONFIG = (pollingTime = 0) => {
+        return {id: "pollingTime",
+                name: "Refresh time interval",
+                default: pollingTime,
+                placeHolder: "Enter time interval in seconds",
+                description: "Data of the widget will be refreshed per provided interval time in seconds",
+                type: BasicComponents.GenericField.NUMBER_TYPE}
+    };
+
 }

@@ -43,18 +43,21 @@ export default class NodesTable extends React.Component {
                 <ErrorMessage error={this.state.error}/>
 
                 <Table fetchData={this.fetchGridData.bind(this)}
-                            totalSize={this.props.data.total}
-                            pageSize={this.props.widget.pageSize}
-                            selectable={true}
-                            className="nodesTable">
+                       totalSize={this.props.data.total}
+                       pageSize={this.props.widget.configuration.pageSize}
+                       selectable={true}
+                       className="nodesTable">
 
-                    <Table.Column label="Name" name="id" width="30%"/>
+                    <Table.Column label="Name" name="id" width="20%"/>
                     <Table.Column label="Type" name="type" width="20%"/>
-                    <Table.Column label="Blueprint" name="blueprintId" width="10%" show={!this.props.data.blueprintId} />
-                    <Table.Column label="Deployment" name="deploymentId" width="10%" show={!this.props.data.deploymentId} />
-                    <Table.Column label="Contained in" name="containedIn" width="10%"/>
-                    <Table.Column label="Connected to" name="connectedTo" width="10%"/>
-                    <Table.Column label="# Instances" name="numberOfInstances" width="10%"/>
+                    <Table.Column label="Blueprint" name="blueprint_id" width="10%" show={_.isEmpty(this.props.data.blueprintId)} />
+                    <Table.Column label="Deployment" name="deployment_id" width="10%" show={_.isEmpty(this.props.data.deploymentId)} />
+                    <Table.Column label="Contained in" name="host_id" width="10%"/>
+                    <Table.Column label="Connected to" width="10%"/>
+                    <Table.Column label="# Instances" name="number_of_instances" width="10%"/>
+                    <Table.Column label="Groups" width="10%" show={!_.isEmpty(this.props.data.blueprintId) ||
+                                                                   !_.isEmpty(this.props.data.deploymentId)} />
+
                     {
                         this.props.data.items.map((node) => {
                             return (
@@ -68,6 +71,7 @@ export default class NodesTable extends React.Component {
                                         <Table.Data>{node.containedIn}</Table.Data>
                                         <Table.Data>{node.connectedTo}</Table.Data>
                                         <Table.Data><div className="ui green horizontal label">{node.numberOfInstances}</div></Table.Data>
+                                        <Table.Data>{node.groups}</Table.Data>
                                     </Table.Row>
 
                                     <Table.DataExpandable>
@@ -79,9 +83,7 @@ export default class NodesTable extends React.Component {
                             );
                         })
                     }
-
                 </Table>
-
             </div>
 
         );

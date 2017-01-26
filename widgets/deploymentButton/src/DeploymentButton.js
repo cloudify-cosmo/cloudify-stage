@@ -26,7 +26,7 @@ export default class extends React.Component {
         actions.doGetBlueprints().then((blueprints)=>{
             this.setState({loading: false, error: null, blueprints, show: true});
         }).catch((err)=> {
-            this.setState({loading: false, error: err.error});
+            this.setState({loading: false, error: err.message});
         });
     }
 

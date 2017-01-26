@@ -50,7 +50,7 @@ export default class extends React.Component {
                 this.props.toolbox.getEventBus().trigger('plugins:refresh');
             })
             .catch(err=>{
-                this.setState({confirmDelete: false, error: err.error});
+                this.setState({confirmDelete: false, error: err.message});
             });
     }
 
@@ -81,7 +81,7 @@ export default class extends React.Component {
 
                 <Table fetchData={this.fetchGridData.bind(this)}
                             totalSize={this.props.data.total}
-                            pageSize={this.props.widget.pageSize}
+                            pageSize={this.props.widget.configuration.pageSize}
                             selectable={true}
                             className="pluginsTable">
 

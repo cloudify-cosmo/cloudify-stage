@@ -15,12 +15,12 @@ Stage.defineWidget({
     isReact: true,
     initialConfiguration:
         [
-            {id: "pollingTime", default: 2},
+            Stage.GenericConfig.POLLING_TIME_CONFIG(2),
+            Stage.GenericConfig.PAGE_SIZE_CONFIG(),
             {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
                 items: ["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Params","Status"],
-                default: 'Blueprint,Deployment,Workflow,Id,Created,IsSystem,Params,Status', type: Stage.Basic.Field.MULTI_SELECT_LIST_TYPE}
+                default: 'Blueprint,Deployment,Workflow,Id,Created,IsSystem,Params,Status', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE}
         ],
-    pageSize: 5,
 
     fetchParams: function(widget, toolbox) {
         return {

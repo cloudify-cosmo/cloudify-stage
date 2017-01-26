@@ -31,7 +31,7 @@ export default class extends React.Component {
         actions.doGetFullBlueprintData(item).then((blueprint)=>{
             this.setState({error: null, blueprint, showDeploymentModal: true});
         }).catch((err)=> {
-            this.setState({error: err.error});
+            this.setState({error: err.message});
         });
     }
 
@@ -55,7 +55,7 @@ export default class extends React.Component {
                 this.props.toolbox.getEventBus().trigger('blueprints:refresh');
             })
             .catch((err)=>{
-                this.setState({confirmDelete: false, error: err.error});
+                this.setState({confirmDelete: false, error: err.message});
             });
     }
 

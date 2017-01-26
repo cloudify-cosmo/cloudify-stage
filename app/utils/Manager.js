@@ -52,14 +52,14 @@ export default class Manager {
                 try {
                     var response = JSON.parse(xhr.responseText);
                     if (response.message) {
-                        reject({error: response.message});
+                        reject({message: response.message});
                     } else {
-                        reject({error: e.message});
+                        reject({message: e.message});
                     }
 
                 } catch (err) {
                     logger.error('Cannot parse upload response',err);
-                    reject({error: e.message});
+                    reject({message: err.message});
                 }
             });
             xhr.addEventListener('load', function(e) {
@@ -68,14 +68,14 @@ export default class Manager {
                 try {
                     var response = JSON.parse(xhr.responseText);
                     if (response.message) {
-                        reject({error: response.message});
+                        reject({message: response.message});
                         return;
                     }
 
                 } catch (err) {
                     let errorMessage = `Cannot parse upload response: ${err}`;
                     logger.error(errorMessage);
-                    reject({error: errorMessage});
+                    reject({message: errorMessage});
                 }
                 resolve();
             });
@@ -153,9 +153,9 @@ export default class Manager {
         let isJsonContentType = (response) => _.isEqual(_.toLower(response.headers.get('content-type')), 'application/json');
         if (isJsonContentType(response)) {
             return response.json()
-                .then(resJson => Promise.reject({error: resJson.message || response.statusText}))
+                .then(resJson => Promise.reject({message: resJson.message || response.statusText}))
         } else {
-            return Promise.reject({error: response.statusText});
+            return Promise.reject({message: response.statusText});
         }
     }
 

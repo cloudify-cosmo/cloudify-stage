@@ -12,18 +12,35 @@ Stage.defineWidget({
     initialHeight: 5,
     color : 'blue',
     isReact: true,
-    initialConfiguration: [],
+    initialConfiguration: [
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG()
+    ],
     fetchUrl: {
-        nodes: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships[params]',
-        nodeInstances: '[manager]/node-instances?_include=id,node_id,deployment_id,state,relationships,runtime_properties[params:deployment_id]'
+        nodes: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships[params:blueprint_id,deployment_id,gridParams]',
+        nodeInstances: '[manager]/node-instances?_include=id,node_id,deployment_id,state,relationships,runtime_properties[params:deployment_id]',
+        deployments: '[manager]/deployments?_include=id,groups[params:blueprint_id,id]'
     },
-    pageSize: 5,
 
     fetchParams: function(widget, toolbox) {
         return {
             deployment_id: toolbox.getContext().getValue('deploymentId'),
-            blueprint_id: toolbox.getContext().getValue('blueprintId')
+            blueprint_id: toolbox.getContext().getValue('blueprintId'),
+            id: toolbox.getContext().getValue('deploymentId')
         }
+    },
+
+    _getGroups: function(deployments) {
+        let groups = {};
+        _.forEach(deployments, (deployment) => {
+            _.forIn(deployment.groups, (group, groupId) => {
+                _.forEach(group.members, (nodeId) => {
+                    let groupList = groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || [];
+                    groupList.push(groupId);
+                });
+            });
+        });
+        return groups;
     },
 
     render: function(widget, data, error, toolbox) {
@@ -39,21 +56,25 @@ Stage.defineWidget({
 
         let nodes = data.nodes.items;
         let instances = data.nodeInstances.items;
+        let groups = this._getGroups(data.deployments.items);
+        let group;
 
         let formattedData = Object.assign({}, data.nodes, {
             items: _.map (nodes, (node) => {
+                var group;
                 return Object.assign({}, node, {
                     deploymentId: node.deployment_id,
                     blueprintId: node.blueprint_id,
                     containedIn: node.host_id,
                     connectedTo: node.relationships.filter((r) => r.type === CONNECTED_TO_RELATIONSHIP)
                                                    .map((r) => r.target_id)
-                                                   .join(','),
+                                                   .join(),
                     numberOfInstances: node.number_of_instances,
                     instances: instances.filter((instance) =>
                                                 instance.node_id === node.id &&
                                                 instance.deployment_id === node.deployment_id),
-                    isSelected: (node.id + node.deployment_id) === SELECTED_NODE_ID
+                    isSelected: (node.id + node.deployment_id) === SELECTED_NODE_ID,
+                    groups: !_.isNil(group = groups[node.id + node.deployment_id]) ? group.join(', ') : ''
                 })
             }),
             total : _.get(data.nodes, 'metadata.pagination.total', 0),

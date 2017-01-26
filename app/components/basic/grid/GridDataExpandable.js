@@ -3,6 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 export default class GridDataExpandable extends Component {
 
@@ -18,9 +19,17 @@ export default class GridDataExpandable extends Component {
 
     render() {
         return (
-            <tr>
+            <tr className="active">
                 <td className={this.props.className} colSpan={this.props.numberOfColumns}>
-                    {this.props.children}
+                    <ReactCSSTransitionGroup
+                        transitionName="dataExpandable"
+                        transitionAppear={true}
+                        transitionAppearTimeout={500}
+                        transitionEnter={true}
+                        transitionEnterTimeout={500}
+                        transitionLeave={false}>
+                        {this.props.children}
+                    </ReactCSSTransitionGroup>
                 </td>
             </tr>
         );

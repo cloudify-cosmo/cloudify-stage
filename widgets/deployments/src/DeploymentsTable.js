@@ -29,7 +29,7 @@ export default class extends React.Component {
         return (
             <Table fetchData={this.props.fetchData}
                         totalSize={this.props.data.total}
-                        pageSize={this.props.widget.pageSize}
+                        pageSize={this.props.widget.configuration.pageSize}
                         selectable={true}
                         className="deploymentTable">
 

@@ -6,20 +6,26 @@ import Actions from './actions';
 
 let PropTypes = React.PropTypes;
 
+const DEFAULT_WORKFLOW = "default";
+const CUSTOM_WORKFLOW = "custom";
+
 export default class UpdateModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = {
-            error: null,
-            loading: false,
-            defaultWorkflow: true,
-            installWorkflow: true,
-            uninstallWorkflow: true,
-            blueprintFileName: "",
-            inputsFileName: "",
-        }
+        this.state = UpdateModal.initialState;
+    }
+
+    static initialState = {
+        loading: false,
+        runWorkflow: DEFAULT_WORKFLOW,
+        installWorkflow: true,
+        uninstallWorkflow: true,
+        applicationFileName: "",
+        blueprintUrl: "",
+        workflowId: "",
+        errors: {}
     }
 
     static propTypes = {
@@ -29,8 +35,16 @@ export default class UpdateModal extends React.Component {
         onHide: PropTypes.func.isRequired
     };
 
+    componentWillUpdate(prevProps, prevState) {
+        if (this.props.show && prevProps.show != this.props.show) {
+            this.refs.blueprintFile.reset();
+            this.refs.inputsFile.reset();
+            this.setState(UpdateModal.initialState);
+        }
+    }
+
     onApprove () {
-        $(this.refs.submitUpdateBtn).click();
+        this.refs.updateForm.submit();
         return false;
     }
 
@@ -39,87 +53,52 @@ export default class UpdateModal extends React.Component {
         return true;
     }
 
-    componentWillUpdate(prevProps, prevState) {
-        //same Modal instance is used multiple time so we need to reset states
-        if (this.props.show && prevProps.show != this.props.show) {
-            this.setState({error:null, loading:false, defaultWorkflow:true,
-                           installWorkflow:true, uninstallWorkflow:true,
-                           inputsFileName: "", blueprintFileName: ""});
-            $("form input:text").val("");
-            $("form input:file").val("");
-        }
-    }
+    _submitUpload() {
+        let blueprintFile = this.refs.blueprintFile.file();
+        let inputsFile = this.refs.inputsFile.file();
 
-    _openFileSelection(e, selector) {
-        e.preventDefault();
-        $(selector).click();
-        return false;
-    }
-
-    _blueprintFileChanged(e){
-        var fullPathFileName = $(e.currentTarget).val();
-        if (!fullPathFileName) {
-            return;
+        let errors = {};
+        if (_.isEmpty(this.state.blueprintUrl) && !blueprintFile) {
+            errors["blueprintUrl"]="Please select blueprint file or url";
         }
 
-        $('.updateDeploymentModal #blueprintFile').attr('title', fullPathFileName);
-        var filename = fullPathFileName.split('\\').pop();
-        this.setState({blueprintFileName:filename});
-    }
-
-    _inputsFileChanged(e){
-        var fullPathFileName = $(e.currentTarget).val();
-        if (!fullPathFileName) {
-            return;
+        if (this.state.runWorkflow === CUSTOM_WORKFLOW && _.isEmpty(this.state.workflowId)) {
+            errors["workflowId"]="Please provide workflow id";
         }
 
-        $('.updateDeploymentModal #nputsFile').attr('title', fullPathFileName);
-        var filename = fullPathFileName.split('\\').pop();
-        this.setState({inputsFileName:filename});
-    }
-
-    _submitUpload(e) {
-        e.preventDefault();
-
-        var formObj = $(e.currentTarget);
-
-        // Get the data
-        var applicationFileName = formObj.find("#applicationFileName").val();
-        var blueprintUrl = formObj.find("#blueprintUrl").val();
-        var blueprintFile = document.getElementById('blueprintFile').files[0];
-        var inputsFile = document.getElementById('inputsFile').files[0];
-        var workflowId = formObj.find("#workflowId").val();
-
-        if (_.isEmpty(blueprintUrl) && !blueprintFile) {
-            this.setState({error: Stage.Basic.ErrorMessage.error("Please select blueprint file or url", "Missing data")});
+        if (!_.isEmpty(errors)) {
+            this.setState({errors});
             return false;
         }
 
-        if (!this.state.defaultWorkflow && _.isEmpty(workflowId)) {
-            this.setState({error: Stage.Basic.ErrorMessage.error("Please provide Workflow ID", "Missing data")});
-            return false;
-        }
-
-            // Disable the form
+         // Disable the form
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doUpdate(this.props.deployment.id, applicationFileName, blueprintUrl,
-                         this.state.defaultWorkflow, this.state.installWorkflow,
-                         this.state.uninstallWorkflow, workflowId, blueprintFile, inputsFile).then(()=>{
+        actions.doUpdate(this.props.deployment.id,
+                         this.state.applicationFileName,
+                         this.state.blueprintUrl,
+                         this.state.runWorkflow === DEFAULT_WORKFLOW,
+                         this.state.installWorkflow,
+                         this.state.uninstallWorkflow,
+                         this.state.workflowId,
+                         blueprintFile, inputsFile).then(()=>{
             this.setState({loading: false});
             this.props.toolbox.refresh();
             this.props.onHide();
         }).catch((err)=>{
-            this.setState({error: err.error, loading: false});
+            this.setState({errors: {error: err.message}, loading: false});
         });
 
         return false;
     }
 
+    _handleInputChange(proxy, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    }
+
     render() {
-        var Modal = Stage.Basic.Modal;
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {Modal, Form} = Stage.Basic;
 
         return (
             <Modal className="updateDeploymentModal" show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
@@ -128,89 +107,58 @@ export default class UpdateModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Body>
-                    <form className="ui form updateForm" onSubmit={this._submitUpload.bind(this)} action="">
-                        <div className="fields">
-                            <div className="field nine wide">
-                                <div className="ui labeled input">
-                                    <div className="ui label">
-                                        http://
-                                    </div>
-                                    <input type="text" id="blueprintUrl" placeholder="Enter new blueprint url"></input>
-                                </div>
-                            </div>
-
-                            <div className="field one wide" style={{"position":"relative"}}>
+                    <Form onSubmit={this._submitUpload.bind(this)} errors={this.state.errors} ref="updateForm">
+                        <Form.Group>
+                            <Form.Field width="9" error={this.state.errors.blueprintUrl}>
+                                <Form.Input label="http://" placeholder="Enter new blueprint url" name="blueprintUrl"
+                                            value={this.state.blueprintUrl} onChange={this._handleInputChange.bind(this)}/>
+                            </Form.Field>
+                            <Form.Field width="1" style={{position:'relative'}}>
                                 <div className="ui vertical divider">
                                     Or
                                 </div>
-                            </div>
-                            <div className="field eight wide">
-                                <div className="ui action input">
-                                    <input type="text" readOnly='true' value={this.state.blueprintFileName} id="blueprintFileName"
-                                           placeholder="Select new blueprint file" onClick={(e)=>this._openFileSelection(e, '#blueprintFile')}></input>
-                                    <button className="ui icon button" onClick={(e)=>this._openFileSelection(e, '#blueprintFile')}>
-                                        <i className="attach icon"></i>
-                                    </button>
-                                </div>
-                                <input type="file" id="blueprintFile" style={{"display": "none"}} onChange={this._blueprintFileChanged.bind(this)}/>
-                            </div>
-                        </div>
+                            </Form.Field>
+                            <Form.Field width="8" error={this.state.errors.blueprintUrl}>
+                                <Form.File placeholder="Select new blueprint file" name="blueprintFile" ref="blueprintFile"/>
+                            </Form.Field>
+                        </Form.Group>
 
-                        <div className="field">
-                            <div className="ui action input">
-                                <input type="text" readOnly='true' value={this.state.inputsFileName} id="inputsFileName"
-                                       placeholder="Select inputs file" onClick={(e)=>this._openFileSelection(e, '#inputsFile')}></input>
-                                <button className="ui icon button" onClick={(e)=>this._openFileSelection(e, '#inputsFile')}>
-                                    <i className="attach icon"></i>
-                                </button>
-                            </div>
-                            <input type="file" id="inputsFile" style={{"display": "none"}} onChange={this._inputsFileChanged.bind(this)}/>
-                        </div>
+                        <Form.Field>
+                            <Form.File placeholder="Select inputs file" name="inputsFile" ref="inputsFile"/>
+                        </Form.Field>
 
-                        <div className="field">
-                            <input type="text" id='applicationFileName' required placeholder="Blueprint filename e.g. blueprint"/>
-                        </div>
+                        <Form.Field>
+                            <Form.Input name='applicationFileName' placeholder="Blueprint filename e.g. blueprint"
+                                        value={this.state.applicationFileName} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
 
-                        <h4 className="ui dividing header">
-                            <div className='ui radio checkbox'
-                                 ref={(radio)=>$(radio).checkbox({onChecked:()=>this.setState({defaultWorkflow:true})})}>
-                                <label>Run default workflow</label>
-                                <input type="radio" name="runWorkflow" className="hidden" checked={this.state.defaultWorkflow} onChange={()=>{}}/>
-                            </div>
-                        </h4>
+                        <Form.Divider>
+                            <Form.Radio label="Run default workflow" name="runWorkflow" checked={this.state.runWorkflow === DEFAULT_WORKFLOW}
+                                        onChange={this._handleInputChange.bind(this)} value={DEFAULT_WORKFLOW}/>
+                        </Form.Divider>
 
-                        <div className="field">
-                            <div className={`ui checkbox ${this.state.defaultWorkflow?'':'disabled'}`}
-                                 ref={(checkbox)=>$(checkbox).checkbox({onChange:()=>this.setState({installWorkflow: $(checkbox).checkbox("is checked")})})}>
-                                <input type="checkbox" className="hidden" checked={this.state.installWorkflow} onChange={()=>{}}/>
-                                <label>Run install workflow on added nodes</label>
-                            </div>
-                        </div>
+                        <Form.Field>
+                            <Form.Checkbox label="Run install workflow on added nodes"
+                                           name="installWorkflow" disabled={this.state.runWorkflow !== DEFAULT_WORKFLOW}
+                                           checked={this.state.installWorkflow} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
 
-                        <div className="field">
-                            <div className={`ui checkbox ${this.state.defaultWorkflow?'':'disabled'}`}
-                                 ref={(checkbox)=>$(checkbox).checkbox({onChange:()=>this.setState({uninstallWorkflow: $(checkbox).checkbox("is checked")})})}>
-                                <input type="checkbox" className="hidden" checked={this.state.uninstallWorkflow} onChange={()=>{}}/>
-                                <label>Run uninstall workflow on removed nodes</label>
-                            </div>
-                        </div>
+                        <Form.Field>
+                            <Form.Checkbox label="Run uninstall workflow on removed nodes"
+                                           name="uninstallWorkflow" disabled={this.state.runWorkflow !== DEFAULT_WORKFLOW}
+                                           checked={this.state.uninstallWorkflow} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
 
-                        <h4 className="ui dividing header">
-                            <div className='ui radio checkbox'
-                                 ref={(radio)=>$(radio).checkbox({onChecked:()=>this.setState({defaultWorkflow:false})})}>
-                                <label>Run custom workflow</label>
-                                <input type="radio" name="runWorkflow" className="hidden" checked={!this.state.defaultWorkflow} onChange={()=>{}}/>
-                            </div>
-                        </h4>
+                        <Form.Divider>
+                            <Form.Radio label="Run custom workflow" name="runWorkflow" checked={this.state.runWorkflow === CUSTOM_WORKFLOW}
+                                        onChange={this._handleInputChange.bind(this)} value={CUSTOM_WORKFLOW}/>
+                        </Form.Divider>
 
-                        <div className={`field ${this.state.defaultWorkflow?'disabled':''}`}>
-                            <input type="text" id='workflowId' placeholder="Workflow ID"/>
-                        </div>
-
-                        <ErrorMessage error={this.state.error}/>
-
-                        <input type='submit' style={{"display": "none"}} ref='submitUpdateBtn'/>
-                    </form>
+                        <Form.Field error={this.state.errors.workflowId}>
+                            <Form.Input name='workflowId' placeholder="Workflow ID" disabled={this.state.runWorkflow !== CUSTOM_WORKFLOW}
+                                        value={this.state.workflowId} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+                    </Form>
                 </Modal.Body>
 
                 <Modal.Footer>

@@ -17,6 +17,7 @@ export default class extends React.Component {
         let Table = Stage.Basic.Table;
 
         let instance = this.props.instance;
+        let instanceTotalSize = _.size(instance.runtime_properties);
 
         return (
             <div>
@@ -31,7 +32,7 @@ export default class extends React.Component {
                     <Modal.Body>
                         <div>
                             <h3>Relationships</h3>
-                            <Table className="nodeInstanceRelationshipsTable">
+                            <Table className="nodeInstanceRelationshipsTable" totalSize={instance.relationships.length}>
 
                                 <Table.Column label="Target node" name="target" width="30%"/>
                                 <Table.Column label="Relationship type" name="relationship" width="40%"/>
@@ -51,7 +52,7 @@ export default class extends React.Component {
                             </Table>
 
                             <h3>Runtime properties</h3>
-                            <Table className="nodeInstanceRuntimePropertiesTable">
+                            <Table className="nodeInstanceRuntimePropertiesTable" totalSize={instanceTotalSize}>
 
                                 <Table.Column label="Key" name="key" width="50%"/>
                                 <Table.Column label="Value" name="value" width="50%"/>
@@ -73,9 +74,7 @@ export default class extends React.Component {
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <div className="ui ok basic button">
-                            Close
-                        </div>
+                        <Modal.Approve label="Close" icon="" className="green"/>
                     </Modal.Footer>
                 </Modal>
             </div>

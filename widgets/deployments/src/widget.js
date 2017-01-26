@@ -13,14 +13,14 @@ Stage.defineWidget({
     color : "purple",
     initialConfiguration:
         [
-            {id: "pollingTime", default: 2},
-            {id: "clickToDrillDown",name: "Should click to drilldown", default: true, type: Stage.Basic.Field.BOOLEAN_TYPE},
-            {id: "blueprintIdFilter",name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by", type: Stage.Basic.Field.STRING_TYPE},
-            {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'List', value:'list'}],
-                default: "table", type: Stage.Basic.Field.LIST_TYPE}
+            Stage.GenericConfig.POLLING_TIME_CONFIG(2),
+            Stage.GenericConfig.PAGE_SIZE_CONFIG(),
+            {id: "clickToDrillDown", name: "Should click to drilldown", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+            {id: "blueprintIdFilter", name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by", type: Stage.Basic.GenericField.STRING_TYPE},
+            {id: "displayStyle", name: "Display style", items: [{name:'Table', value:'table'}, {name:'List', value:'list'}],
+                default: "table", type: Stage.Basic.GenericField.LIST_TYPE}
         ],
     isReact: true,
-    pageSize: 5,
 
     fetchParams: function(widget, toolbox) {
         var blueprintId = toolbox.getContext().getValue('blueprintId');
