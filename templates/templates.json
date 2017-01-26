@@ -1,8 +1,10 @@
 [
   "app",
   "deploy",
-  "template1",
-  "template2",
   "deployment",
-  "blueprints"
+  "blueprints",
+  "tmm",
+  "initial-template",
+  "initial-template-admin",
+  "initial-template-customer"
 ]

@@ -12,6 +12,7 @@ const tenants = (state = {}, action) => {
                 isFetching: true
             });
         case types.RES_TENANTS:
+        case types.RES_LOGIN:
             var selectedTenant = _.get(action.tenants,'items[0].name',null);
             if (!_.isEmpty(state.selected) && _.find(action.tenants.items,{name:state.selected}) != null) {
                 selectedTenant = state.selected;

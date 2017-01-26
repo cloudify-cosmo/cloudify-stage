@@ -89,18 +89,7 @@ describe('(Component) Tenants', () => {
         expect(wrapper.find('.tenantsMenu .menu .item')).to.have.length(4); // Having 4 items in the dropdown, 3 tenants and one logout
         expect(wrapper.find('.tenantsMenu .menu .item.active.selected')).to.have.length(0);
     });
-
-    it('fetchTenants is called',()=>{
-        var fetchTenants = sinon.spy();
-
-        var mounted = mount(<Tenants manager={manager}
-                                     onTenantChange={()=>{}}
-                                     onLogout={()=>{}}
-                                     fetchTenants={fetchTenants}/>);
-
-        expect(fetchTenants.calledOnce).to.equal(true);
-    });
-
+    
     it('logout is called',()=>{
         var onLogout = sinon.spy();
 

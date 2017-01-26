@@ -3,10 +3,10 @@
  */
 
 import { connect } from 'react-redux'
-import { push } from 'react-router-redux';
 import Tenants from '../components/Tenants'
 import {getTenants,selectTenant} from '../actions/tenants';
 import {clearContext} from '../actions/context';
+import {logout} from '../actions/managers';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -17,17 +17,12 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onLogout: () => {
-            dispatch(clearContext());
-            dispatch(push('/login'));
+            dispatch(logout());
         },
 
         onTenantChange: (newTenant) => {
             dispatch(clearContext());
             dispatch(selectTenant(newTenant));
-        },
-
-        fetchTenants: (manager)=>{
-            dispatch(getTenants(manager));
         }
     }
 };

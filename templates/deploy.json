@@ -1,5 +1,5 @@
 {
-  "name": "Deploy",
+  "name": "Deployments",
   "widgets": [
     {
       "name": "deploymentButton",

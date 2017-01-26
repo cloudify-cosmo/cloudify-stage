@@ -12,13 +12,11 @@ import throttle from 'lodash/throttle';
 
 import reducers from './reducers';
 
-import initialTemplate from '../templates/initial-template.json';
-
 import {createPageFromInitialTemplate} from './actions/page';
 
 export default (history,templates,widgetDefinitions,config) => {
 
-    let initialState = StatePersister.load();
+    let initialState = StatePersister.load(config.mode);
 
     let hasInitState = initialState !== undefined;
     if (!hasInitState) {
@@ -45,10 +43,12 @@ export default (history,templates,widgetDefinitions,config) => {
 
     // If needed add the initial pages/widgets from the template
     if (!hasInitState) {
+        var initialTemplateName = config.app['initialTemplate'][config.mode === 'main' ? 'admin': 'customer'];
+        var initialTemplate = templates[initialTemplateName];
         store.dispatch(createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions));
     }
 
-    store.subscribe(throttle(()=>{StatePersister.save(store.getState());},1000));
+    store.subscribe(throttle(()=>{StatePersister.save(store.getState(),config.mode);},1000));
 
     return store;
 };
