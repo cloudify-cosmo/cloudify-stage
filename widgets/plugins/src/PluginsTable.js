@@ -34,7 +34,7 @@ export default class extends React.Component {
 
         let actions = new Actions(this.props.toolbox);
         actions.doDownload(item)
-               .catch((err) => {this.setState({error: err.error})});
+               .catch((err) => {this.setState({error: err.message})});
     }
 
     _deletePlugin() {
