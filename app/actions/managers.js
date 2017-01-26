@@ -6,6 +6,7 @@ import * as types from './types';
 import Auth from '../utils/auth';
 import { push } from 'react-router-redux';
 import Manager from '../utils/Manager';
+import {clearContext} from './context';
 
 function requestLogin() {
     return {
@@ -51,6 +52,7 @@ export function login (ip,username,password) {
 
 export function logout() {
     return function(dispatch) {
+        dispatch(clearContext());
         dispatch(push('/login'));
     }
 }
