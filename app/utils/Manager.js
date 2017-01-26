@@ -73,7 +73,9 @@ export default class Manager {
                     }
 
                 } catch (err) {
-                    logger.error('Cannot parse upload response',err);
+                    let errorMessage = `Cannot parse upload response: ${err}`;
+                    logger.error(errorMessage);
+                    reject({error: errorMessage});
                 }
                 resolve();
             });
