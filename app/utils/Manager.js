@@ -3,7 +3,7 @@
  */
 
 import 'isomorphic-fetch';
-import StageUtils from './stageUtils';
+import {saveAs} from 'file-saver';
 
 import log from 'loglevel';
 let logger = log.getLogger("Manager");
@@ -73,8 +73,9 @@ export default class Manager {
                     }
 
                 } catch (err) {
-                    logger.error('Cannot parse upload response',err);
-                    reject({message: err.message});
+                    let errorMessage = `Cannot parse upload response: ${err}`;
+                    logger.error(errorMessage);
+                    reject({message: errorMessage});
                 }
                 resolve();
             });
@@ -104,7 +105,11 @@ export default class Manager {
         });
     }
 
-    _ajaxCall(url,method,params,data) {
+    doDownload(url,fileName) {
+        return this._ajaxCall(url,'get',null,null,fileName);
+    }
+
+    _ajaxCall(url,method,params,data,fileName) {
         var actualUrl = this._buildActualUrl(url,params);
         var securityHeaders = this._buildSecurityHeader();
 
@@ -119,6 +124,7 @@ export default class Manager {
             method: method,
             headers: headers
         };
+
         if (data) {
             try {
                 options.body = JSON.stringify(data)
@@ -126,23 +132,31 @@ export default class Manager {
                 logger.error('Error stringifying data. URL: '+actualUrl+' data ',data);
             }
         }
-        return fetch(actualUrl,options)
-            .then(this._checkStatus)
-            .then(response=>response.json());
-    }
 
+        if (fileName) {
+            return fetch(actualUrl,options)
+                .then(this._checkStatus)
+                .then(response => response.blob())
+                .then(blob => saveAs(blob, fileName));
+        } else {
+            return fetch(actualUrl,options)
+                .then(this._checkStatus)
+                .then(response => response.json());
+        }
+    }
 
     _checkStatus(response) {
         if (response.ok) {
             return response;
         }
 
-        return response.json().then((resJson)=>{
-            if (resJson.message) {
-                return Promise.reject({message: resJson.message});
-            }
-            return Promise.reject({message:response.statusText});
-        });
+        let isJsonContentType = (response) => _.isEqual(_.toLower(response.headers.get('content-type')), 'application/json');
+        if (isJsonContentType(response)) {
+            return response.json()
+                .then(resJson => Promise.reject({message: resJson.message || response.statusText}))
+        } else {
+            return Promise.reject({message: response.statusText});
+        }
     }
 
     _buildActualUrl(url,data) {

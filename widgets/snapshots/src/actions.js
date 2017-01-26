@@ -21,6 +21,14 @@ export default class {
         return this.toolbox.getManager().doUpload(`/snapshots/${snapshotId}/archive`,null,file,'put');
     }
 
+    doDownload(snapshot) {
+        let snapshotDownloadUrl = `/snapshots/${snapshot.id}/archive`;
+        let snapshotCreationDateShort = moment(snapshot.created_at,'DD-MM-YYYY HH:mm').format('YYYYMMDD_HHmm');
+        let snapshotFileName = `${snapshot.id}_${snapshotCreationDateShort}.zip`;
+
+        return this.toolbox.getManager().doDownload(snapshotDownloadUrl, snapshotFileName);
+    }
+
     doCreate(snapshotId){
         return this.toolbox.getManager().doPut(`/snapshots/${snapshotId}`,null,{
             snapshot_id:snapshotId
