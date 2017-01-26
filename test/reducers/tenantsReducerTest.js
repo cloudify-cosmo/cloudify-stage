@@ -66,12 +66,13 @@ describe('(Reducer) Tenants', () => {
         fetchMock
             .get(/sp*/,{
                 status: 500,
-                body: {message: 'Error fetching tenants'}
+                body: {message: 'Error fetching tenants'},
+                headers: {'content-type': 'application/json'}
             });
 
         const expectedActions = [
             { type: types.REQ_TENANTS },
-            { type: types.ERR_TENANTS, error: 'Error fetching tenants',receivedAt: Date.now()  }
+            { type: types.ERR_TENANTS, error: '500: Error fetching tenants',receivedAt: Date.now()  }
         ];
 
         const store = mockStore({});
@@ -87,7 +88,8 @@ describe('(Reducer) Tenants', () => {
         fetchMock
             .get(/sp*/,{
                 status: 500,
-                body: {message: 'Error fetching tenants'}
+                body: {message: 'Error fetching tenants'},
+                headers: {'content-type': 'application/json'}
             });
 
         const store = createStore(TenantReducer,{},applyMiddleware(thunk));
@@ -96,7 +98,7 @@ describe('(Reducer) Tenants', () => {
             .then(() => { // return of async actions
                 expect(store.getState()).to.eql({
                     isFetching: false,
-                    error: 'Error fetching tenants',
+                    error: '500: Error fetching tenants',
                     items: [],
                     lastUpdated: Date.now()
                 });

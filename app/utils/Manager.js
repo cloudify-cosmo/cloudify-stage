@@ -148,10 +148,17 @@ export default class Manager {
             return response;
         }
 
-        let status = (code, message) => `Error ${code}${message ? ': ' + message : ''}`;
-        return response.json()
-            .then(resJson => Promise.reject({error: status(resJson.status || response.status, resJson.message || response.statusText)}))
-            .catch(() => Promise.reject({error: status(response.status, response.statusText)}));
+        let errorMessage = (code, message) => `${code}${message ? ': ' + message : ''}`;
+        let isJsonContentType = (response) => _.isEqual(response.headers.get('content-type'), 'application/json');
+
+        if (isJsonContentType(response)) {
+            return response.json()
+                .then(resJson => Promise.reject({error: errorMessage(resJson.status || response.status,
+                                                                     resJson.message || response.statusText)}))
+        } else {
+            return Promise.reject({error: errorMessage(response.status,
+                                                       response.statusText)});
+        }
     }
 
     _buildActualUrl(url,data) {
