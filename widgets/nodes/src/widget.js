@@ -60,6 +60,7 @@ Stage.defineWidget({
 
         let formattedData = Object.assign({}, data.nodes, {
             items: _.map (nodes, (node) => {
+                var group;
                 return Object.assign({}, node, {
                     deploymentId: node.deployment_id,
                     blueprintId: node.blueprint_id,
