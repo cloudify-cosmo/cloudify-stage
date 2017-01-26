@@ -23,10 +23,7 @@ module.exports = {
         ],
         "main.bundle": [
             './app/main.js'
-        ],
-        //"customer.bundle": [
-        //    './app/customer.js'
-        //]
+        ]
     },
     output: {
         path: path.join(__dirname, 'dist'),
@@ -51,18 +48,16 @@ module.exports = {
             { from: 'conf',
                 to: 'conf'}
         ]),
+        new CopyWebpackPlugin([
+            { from: 'logs',
+                to: 'logs'}
+        ]),
         new HtmlWebpackPlugin({
             template: 'app/index.tmpl.html',
             inject: 'body',
             filename: 'index.html',
             chunks: ["main.bundle"]
         }),
-        //new HtmlWebpackPlugin({
-        //    template: 'app/index.tmpl.html',
-        //    inject: 'body',
-        //    filename: 'customer.html',
-        //    chunks: ["customer.bundle"]
-        //}),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),

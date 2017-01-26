@@ -15,7 +15,7 @@ var ServerSettings = {
 
     init: function(){
         this.settings = {
-            mode: 'main'
+            mode: this.MODE_MAIN
         };
 
         var displayUsage = ()=>{

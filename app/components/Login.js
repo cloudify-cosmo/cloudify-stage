@@ -3,6 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import Consts from '../utils/consts';
 
 export default class Login extends Component {
 
@@ -41,7 +42,7 @@ export default class Login extends Component {
                 <div className='loginContainer'>
                     <form className="ui huge form" onSubmit={this.onSubmit.bind(this)}>
                         {
-                            this.props.mode === 'main' &&
+                            this.props.mode === Consts.MODE_MAIN &&
                             <div className="field required">
                                 <input type="text" name="ip" placeholder="Enter Manager IP" required value={this.state.ip} onChange={(e)=>this.setState({ip: e.target.value})}/>
                             </div>

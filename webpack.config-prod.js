@@ -42,6 +42,10 @@ module.exports = {
             { from: 'conf',
                 to: 'conf'}
         ]),
+        new CopyWebpackPlugin([
+            { from: 'logs',
+                to: 'logs'}
+        ]),
         new HtmlWebpackPlugin({
             template: 'app/index.tmpl.html',
             inject: 'body',

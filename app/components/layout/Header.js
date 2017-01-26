@@ -7,6 +7,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux'
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
+import Consts from '../../utils/consts';
 
 export default class Header extends Component {
     static propTypes = {
@@ -29,7 +30,7 @@ export default class Header extends Component {
                 </div>
                 <div className="right menu">
                     {
-                        this.props.mode === 'main' &&
+                        this.props.mode === Consts.MODE_MAIN &&
                         <div className='item managerAndTenants'>
                             <Manager manager={this.props.manager}/>
                             <Tenants manager={this.props.manager}/>
@@ -40,7 +41,7 @@ export default class Header extends Component {
                         <i className="dropdown icon"></i>
 
                         {
-                            this.props.mode === 'main' ?
+                            this.props.mode === Consts.MODE_MAIN ?
                                 <div className="menu">
                                     <div className="item"><i className="settings icon"></i> Configure</div>
                                     <div className="item" onClick={this.toggleEditMode.bind(this)}>
