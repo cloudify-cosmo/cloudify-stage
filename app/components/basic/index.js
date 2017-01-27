@@ -16,11 +16,14 @@ import Segment from './segment/SegmentList';
 import Loading from './Loading';
 import GenericField from './GenericField';
 import Form from './form/Form';
-import Input from './form/FormInput';
-import Radio from './form/FormRadio';
-import Checkbox from './form/FormCheckbox';
-import InputFile from './form/FormFile';
-import Dropdown from './form/FormDropdown';
+import Input from './control/Input';
+import Radio from './control/Radio';
+import Checkbox from './control/Checkbox';
+import InputFile from './control/InputFile';
+import Dropdown from './control/Dropdown';
+import Button from './control/Button';
+import Icon from './Icon';
+import Message from './Message';
 
 export {
     Modal,
@@ -41,5 +44,8 @@ export {
     Radio,
     Checkbox,
     InputFile,
-    Dropdown
+    Dropdown,
+    Button,
+    Icon,
+    Message
 };

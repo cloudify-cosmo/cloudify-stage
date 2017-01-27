@@ -18,10 +18,6 @@ export default class ErrorMessage extends Component {
         show: true
     };
 
-    static error(message, header) {
-        return {message, header};
-    }
-
     render() {
         if (_.isEmpty(this.props.error)) {
             return null;

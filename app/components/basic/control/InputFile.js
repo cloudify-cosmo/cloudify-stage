@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 
-export default class FormFile extends Component {
+export default class InputFile extends Component {
 
     constructor(props,context) {
         super(props,context);
