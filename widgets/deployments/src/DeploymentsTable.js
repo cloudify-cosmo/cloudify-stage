@@ -3,6 +3,7 @@
  */
 
 import MenuAction from './MenuAction';
+import ExecutionStatus from './ExecutionStatus';
 
 let PropTypes = React.PropTypes;
 
@@ -13,6 +14,7 @@ export default class extends React.Component {
         widget: PropTypes.object.isRequired,
         fetchData: PropTypes.func,
         onSelectDeployment: PropTypes.func,
+        onCancelExecution: PropTypes.func,
         onMenuAction: PropTypes.func
 
     };
@@ -20,6 +22,7 @@ export default class extends React.Component {
     static defaultProps = {
         fetchData: ()=>{},
         onSelectDeployment: ()=>{},
+        onCancelExecution: ()=>{},
         onMenuAction: ()=>{}
     };
 
@@ -41,15 +44,29 @@ export default class extends React.Component {
 
                 {
                     this.props.data.items.map((item)=>{
-                        return (
+                        // TODO: Move to common place
+                        const EXECUTION_STATES = [ 'terminated', 'failed', 'cancelled', 'pending', 'started', 'cancelling', 'force_cancelling' ];
+                        const END_EXECUTION_STATES = ['terminated', 'failed', 'cancelled' ];
+                        const ACTIVE_EXECUTION_STATES = _.difference(EXECUTION_STATES, END_EXECUTION_STATES);
 
+                        let activeExecutions = item.executions.filter((execution) => _.includes(ACTIVE_EXECUTION_STATES, execution.status));
+
+                        return (
                             <Table.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
                                 <Table.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></Table.Data>
                                 <Table.Data>{item.blueprint_id}</Table.Data>
                                 <Table.Data>{item.created_at}</Table.Data>
                                 <Table.Data>{item.updated_at}</Table.Data>
                                 <Table.Data className="center aligned rowActions">
-                                    <MenuAction item={item} bordered={true} onSelectAction={this.props.onMenuAction}/>
+                                    {
+                                        _.isEmpty(activeExecutions)
+                                        ?
+                                            <MenuAction item={item} bordered={true} onSelectAction={this.props.onMenuAction}/>
+                                        :
+                                            activeExecutions.map((execution) => {
+                                                return <ExecutionStatus key={execution.id} item={execution} onCancelExecution={this.props.onCancelExecution}/>
+                                            })
+                                    }
                                 </Table.Data>
                             </Table.Row>
                         );

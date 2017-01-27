@@ -63,6 +63,16 @@ export default class extends React.Component {
         });
     }
 
+    _cancelExecution(execution) {
+        let actions = new Actions(this.props.toolbox);
+        actions.doCancel(execution, false)
+            .then(() => {
+                this.props.toolbox.getEventBus().trigger('deployments:refresh');
+                this.props.toolbox.getEventBus().trigger('executions:refresh');
+            })
+            .catch((err) => {this.setState({error: err.message});});
+    }
+
     _refreshData() {
         this.props.toolbox.refresh();
     }
@@ -118,12 +128,14 @@ export default class extends React.Component {
                     <DeploymentsTable widget={this.props.widget} data={this.props.data}
                                      fetchData={this.fetchData.bind(this)}
                                      onSelectDeployment={this._selectDeployment.bind(this)}
-                                     onMenuAction={this._selectAction.bind(this)}/>
+                                     onMenuAction={this._selectAction.bind(this)}
+                                     onCancelExecution={this._cancelExecution.bind(this)}/>
                     :
                     <DeploymentsSegment widget={this.props.widget} data={this.props.data}
                                        fetchData={this.fetchData.bind(this)}
                                        onSelectDeployment={this._selectDeployment.bind(this)}
-                                       onMenuAction={this._selectAction.bind(this)}/>
+                                       onMenuAction={this._selectAction.bind(this)}
+                                       onCancelExecution={this._cancelExecution.bind(this)}/>
                 }
 
                 <Confirm title='Are you sure you want to remove this deployment?'

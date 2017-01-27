@@ -2,6 +2,9 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
+import Actions from './actions';
+import ExecutionStatus from '../../deployments/src/ExecutionStatus';
+
 export default class extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -25,6 +28,16 @@ export default class extends React.Component {
     _selectExecution(item) {
         var oldSelectedExecutionId = this.props.toolbox.getContext().getValue('executionId');
         this.props.toolbox.getContext().setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
+    }
+
+    _cancelExecution(execution) {
+        let actions = new Actions(this.props.toolbox);
+        actions.doCancel(execution, false)
+            .then(() => {
+                this.props.toolbox.getEventBus().trigger('deployments:refresh');
+                this.props.toolbox.getEventBus().trigger('executions:refresh');
+            })
+            .catch((err) => {this.setState({error: err.message});});
     }
 
     fetchGridData(fetchParams) {
@@ -54,7 +67,7 @@ export default class extends React.Component {
                                  show={fieldsToShow.indexOf("Blueprint") >= 0 && !this.props.data.blueprintId}/>
                     <Table.Column label="Deployment" name="deployment_id" width="20%"
                                  show={fieldsToShow.indexOf("Deployment") >= 0 && !this.props.data.deploymentId}/>
-                    <Table.Column label="Workflow" name="workflow_id" width="15%"
+                    <Table.Column label="Workflow" name="workflow_id" width="10%"
                                  show={fieldsToShow.indexOf("Workflow") >= 0}/>
                     <Table.Column label="Id" name="id" width="20%"
                                  show={fieldsToShow.indexOf("Id") >= 0}/>
@@ -64,7 +77,7 @@ export default class extends React.Component {
                                  show={fieldsToShow.indexOf("IsSystem") >= 0}/>
                     <Table.Column label="Params" name="parameters" width="5%"
                                  show={fieldsToShow.indexOf("Params") >= 0}/>
-                    <Table.Column label="Status" width="5%" name="status"
+                    <Table.Column label="Status" width="10%" name="status"
                                  show={fieldsToShow.indexOf("Status") >= 0}/>
 
                     {
@@ -91,15 +104,13 @@ export default class extends React.Component {
                                         { _.isEmpty(item.error) ?
                                             <div>
                                                 <i className="check circle icon inverted green"></i>
-                                                {item.status}
+                                                <ExecutionStatus item={item} showInactive={true} showWorkflowId={false} onCancelExecution={this._cancelExecution.bind(this,item)}/>
                                             </div>
                                             :
                                             <Overlay>
                                                 <Overlay.Action title="Error details">
                                                     <i data-overlay-action className="remove circle icon red link"></i>
-                                                    <a href="javascript:void(0)">
-                                                        {item.status}
-                                                    </a>
+                                                    <ExecutionStatus item={item} showInactive={true} showInactiveAsLink={true} showWorkflowId={false} onCancelExecution={this._cancelExecution.bind(this,item)}/>
                                                 </Overlay.Action>
                                                 <Overlay.Content>
                                                     <HighlightText className='python'>{item.error}</HighlightText>

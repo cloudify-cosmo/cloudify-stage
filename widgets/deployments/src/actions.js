@@ -12,6 +12,13 @@ export default class {
         return this.toolbox.getManager().doDelete(`/deployments/${blueprint.id}`);
     }
 
+    doCancel(execution,force) {
+        return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
+            'deployment_id': execution.deployment_id,
+            'action': force ? 'force-cancel' : 'cancel'
+        });
+    }
+
     doExecute(deployment,workflow,params) {
         return this.toolbox.getManager().doPost('/executions',null,{
             'deployment_id': deployment.id,

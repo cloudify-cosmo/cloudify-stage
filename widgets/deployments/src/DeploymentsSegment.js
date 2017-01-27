@@ -3,6 +3,7 @@
  */
 
 import MenuAction from './MenuAction';
+import ExecutionStatus from './ExecutionStatus';
 
 let PropTypes = React.PropTypes;
 
@@ -13,6 +14,7 @@ export default class extends React.Component {
         widget: PropTypes.object.isRequired,
         fetchData: PropTypes.func,
         onSelectDeployment: PropTypes.func,
+        onCancelExecution: PropTypes.func,
         onMenuAction: PropTypes.func
 
     };
@@ -20,6 +22,7 @@ export default class extends React.Component {
     static defaultProps = {
         fetchData: ()=>{},
         onSelectDeployment: ()=>{},
+        onCancelExecution: ()=>{},
         onMenuAction: ()=>{}
     };
 
@@ -32,6 +35,13 @@ export default class extends React.Component {
                      fetchData={this.props.fetchData}>
                 {
                     this.props.data.items.map((item) => {
+                        // TODO: Move to common place
+                        const EXECUTION_STATES = [ 'terminated', 'failed', 'cancelled', 'pending', 'started', 'cancelling', 'force_cancelling' ];
+                        const END_EXECUTION_STATES = ['terminated', 'failed', 'cancelled' ];
+                        const ACTIVE_EXECUTION_STATES = _.difference(EXECUTION_STATES, END_EXECUTION_STATES);
+
+                        let activeExecutions = item.executions.filter((execution) => _.includes(ACTIVE_EXECUTION_STATES, execution.status));
+
                         return (
                             <Segment.Item key={item.id} select={item.isSelected}
                                           onClick={()=>this.props.onSelectDeployment(item)}>
@@ -79,6 +89,15 @@ export default class extends React.Component {
 
                                     <div className="two wide column action">
                                         <MenuAction item={item} onSelectAction={this.props.onMenuAction}/>
+                                        {
+                                            _.isEmpty(activeExecutions)
+                                            ?
+                                                <MenuAction item={item} bordered={true} onSelectAction={this.props.onMenuAction}/>
+                                            :
+                                                activeExecutions.map((execution) => {
+                                                    return <ExecutionStatus key={execution.id} item={execution} onCancelExecution={this.props.onCancelExecution}/>
+                                                })
+                                        }
                                     </div>
                                 </div>
                             </Segment.Item>
