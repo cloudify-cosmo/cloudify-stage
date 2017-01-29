@@ -18,6 +18,7 @@ const manager = (state = {}, action) => {
                 },
                 err: null,
                 version: action.version,
+                tenants: tenants(state.tenants,action),
                 lastUpdated: action.receivedAt
             });
         case types.ERR_LOGIN:

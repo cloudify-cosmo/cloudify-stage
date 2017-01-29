@@ -22,4 +22,11 @@ export default class {
 
         return this.toolbox.getManager().doUpload(`/plugins`, params, file, 'post');
     }
+
+    doDownload(plugin) {
+        let pluginDownloadUrl = `/plugins/${plugin.id}/archive`;
+        let pluginFileName = `${plugin.package_name}_${plugin.package_version}.zip`;
+
+        return this.toolbox.getManager().doDownload(pluginDownloadUrl, pluginFileName);
+    }
 }

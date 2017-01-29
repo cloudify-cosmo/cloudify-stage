@@ -18,8 +18,8 @@ import _ from 'lodash';
 import './styles/style.scss';
 
 // Import semantic
-import '../semantic/dist/semantic.css';
-import '../semantic/dist/semantic';
+import '../semantic/dist/semantic.min.css';
+import '../semantic/dist/semantic.min';
 
 // Import gridstack
 import '../node_modules/gridstack/dist/gridstack.css';
@@ -35,39 +35,44 @@ import { Router, browserHistory ,useRouterHistory} from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux'
 
 import configureStore  from './configureStore';
-import createRoutes from './routes';
 import WidgetDefinitionsLoader from './utils/widgetDefinitionsLoader';
 import {createToolbox} from './utils/Toolbox';
 import ConfigLoader from './utils/ConfigLoader';
+import createRoutes from './routes';
 
 import TemplatesLoader from './utils/templatesLoader';
 
-window.React = React;
+export default class app{
+    static load (){
+        window.React = React;
 
-WidgetDefinitionsLoader.init();
-Promise.all([
-    TemplatesLoader.load(),
-    WidgetDefinitionsLoader.load(),
-    ConfigLoader.load()
-]).then((result)=>{
-    var templates = result[0];
-    var widgetDefinitions = result[1];
-    var config = result[2];
+        WidgetDefinitionsLoader.init();
 
-    const store = configureStore(browserHistory,templates,widgetDefinitions,config);
+        Promise.all([
+            TemplatesLoader.load(),
+            WidgetDefinitionsLoader.load(),
+            ConfigLoader.load()
+        ]).then((result)=>{
+            var templates = result[0];
+            var widgetDefinitions = result[1];
+            var config = result[2];
 
-    const history = syncHistoryWithStore(browserHistory, store);
+            const store = configureStore(browserHistory,templates,widgetDefinitions,config);
 
-    createToolbox(store);
+            const history = syncHistoryWithStore(browserHistory, store);
+
+            createToolbox(store);
 
 
 //history.listen(location => analyticsService.track(location.pathname))
 
-    ReactDOM.render(
-        <Provider store={store}>
-            <Router history={history} routes={createRoutes(store)} />
-        </Provider>,
-        document.getElementById('app')
-    );
-});
+            ReactDOM.render(
+                <Provider store={store}>
+                    <Router history={history} routes={createRoutes(store)} />
+                </Provider>,
+                document.getElementById('app')
+            );
+        });
+    }
+}
 

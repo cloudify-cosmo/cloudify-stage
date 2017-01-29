@@ -6,11 +6,9 @@ import fetch from 'isomorphic-fetch';
 
 export default class ConfigLoader {
     static load() {
-        return fetch('/conf/manager.json')
+        return fetch('/config')
             .then(response => response.json())
-            .then((manager)=>{
-                return { manager: manager }
-            }).catch((e)=>{
+            .catch((e)=>{
                 console.log('Error fetching configuration file',e);
             });
     }

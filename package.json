@@ -22,6 +22,7 @@
     "extend": "^3.0.0",
     "fetch-mock": "^5.8.1",
     "file-loader": "^0.9.0",
+    "file-saver": "^1.3.3",
     "gridstack": "^0.2.6",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
@@ -114,6 +115,7 @@
     "style-loader": "^0.13.1",
     "timekeeper": "^1.0.0",
     "webpack": "^1.13.2",
+    "webpack-dev-middleware": "^1.9.0",
     "webpack-dev-server": "^1.15.0"
   }
 }

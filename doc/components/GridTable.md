@@ -15,7 +15,7 @@ Some of the usage examples are presented below.
 
 ### Table with pagination
 
-```ecmascript 6
+```javascript
 this.props = {
   fetchData: ...
   data: {
@@ -60,7 +60,7 @@ this.props = {
 
 ### Table with expandable row and without pagination
 
-```ecmascript 6
+```javascript
 <Table selectable={true}>
 
   <Table.Column label="Name" name="id" width="40%"/>
@@ -122,7 +122,7 @@ Defines table columns, renders \<th\> elements.
 
 #### Example
 
-```ecmascript 6
+```javascript
 <Table.Column label="Name" name="id" width="40%"/>
 ```
 
@@ -143,7 +143,7 @@ Defines table rows, renders \<tr\> elements.
 
 #### Example
 
-```ecmascript 6
+```javascript
 <Table.Row key="joomla" selected={false} onClick={()=>this.onRowClick(item)}>
   <Table.Data><a href="javascript:void(0)">Joomla website</a></Table.Data>
   <Table.Data>2015-08-14</Table.Data>
@@ -168,7 +168,7 @@ component from one **Table.ExpandableRow** component.
 
 #### Example
 
-```ecmascript 6
+```javascript
 <Table.RowExpandable key="prestashop" expanded={true}>
   <Table.Row key="prestashop" selected={true} onClick={()=>this.onRowClick(item)}>
     <Table.Data><a href="javascript:void(0)">Prestashop store</a></Table.Data>

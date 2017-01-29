@@ -66,7 +66,8 @@ describe('(Reducer) Tenants', () => {
         fetchMock
             .get(/sp*/,{
                 status: 500,
-                body: {message: 'Error fetching tenants'}
+                body: {message: 'Error fetching tenants'},
+                headers: {'content-type': 'application/json'}
             });
 
         const expectedActions = [
@@ -87,7 +88,8 @@ describe('(Reducer) Tenants', () => {
         fetchMock
             .get(/sp*/,{
                 status: 500,
-                body: {message: 'Error fetching tenants'}
+                body: {message: 'Error fetching tenants'},
+                headers: {'content-type': 'application/json'}
             });
 
         const store = createStore(TenantReducer,{},applyMiddleware(thunk));
