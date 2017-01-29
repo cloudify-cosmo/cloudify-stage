@@ -24,16 +24,16 @@ export default class extends React.Component {
     };
 
     render() {
-        var Segment = Stage.Basic.Segment;
+        var DataSegment = Stage.Basic.DataSegment;
 
         return (
-            <Segment totalSize={this.props.data.total}
+            <DataSegment totalSize={this.props.data.total}
                      pageSize={this.props.widget.configuration.pageSize}
                      fetchData={this.props.fetchData}>
                 {
                     this.props.data.items.map((item) => {
                         return (
-                            <Segment.Item key={item.id} select={item.isSelected}
+                            <DataSegment.Item key={item.id} select={item.isSelected}
                                           onClick={()=>this.props.onSelectDeployment(item)}>
                                 <div className="ui grid">
                                     <div className="four wide center aligned column rightDivider">
@@ -81,11 +81,11 @@ export default class extends React.Component {
                                         <MenuAction item={item} onSelectAction={this.props.onMenuAction}/>
                                     </div>
                                 </div>
-                            </Segment.Item>
+                            </DataSegment.Item>
                         );
                     })
                 }
-            </Segment>
+            </DataSegment>
         );
     }
 }

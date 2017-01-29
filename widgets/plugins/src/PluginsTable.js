@@ -73,52 +73,52 @@ export default class extends React.Component {
     render() {
         var Confirm = Stage.Basic.Confirm;
         var ErrorMessage = Stage.Basic.ErrorMessage;
-        var Table = Stage.Basic.Table;
+        var DataTable = Stage.Basic.DataTable;
 
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <Table fetchData={this.fetchGridData.bind(this)}
+                <DataTable fetchData={this.fetchGridData.bind(this)}
                             totalSize={this.props.data.total}
                             pageSize={this.props.widget.configuration.pageSize}
                             selectable={true}
                             className="pluginsTable">
 
-                    <Table.Column label="Id" name="id" width="20%"/>
-                    <Table.Column label="Package name" name="package_name" width="15%"/>
-                    <Table.Column label="Package version" name="package_version" width="10%"/>
-                    <Table.Column label="Supported platform" name="supported_platform" width="10%"/>
-                    <Table.Column label="Distribution" name="distribution" width="10%"/>
-                    <Table.Column label="Distribute release" name="distribution_release" width="10%"/>
-                    <Table.Column label="Uploaded at" name="uploaded_at" width="15%"/>
-                    <Table.Column width="10%"/>
+                    <DataTable.Column label="Id" name="id" width="20%"/>
+                    <DataTable.Column label="Package name" name="package_name" width="15%"/>
+                    <DataTable.Column label="Package version" name="package_version" width="10%"/>
+                    <DataTable.Column label="Supported platform" name="supported_platform" width="10%"/>
+                    <DataTable.Column label="Distribution" name="distribution" width="10%"/>
+                    <DataTable.Column label="Distribute release" name="distribution_release" width="10%"/>
+                    <DataTable.Column label="Uploaded at" name="uploaded_at" width="15%"/>
+                    <DataTable.Column width="10%"/>
 
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <Table.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
-                                    <Table.Data><a className='pluginName' href="javascript:void(0)">{item.id}</a></Table.Data>
-                                    <Table.Data>{item.package_name}</Table.Data>
-                                    <Table.Data>{item.package_version}</Table.Data>
-                                    <Table.Data>{item.supported_platform}</Table.Data>
-                                    <Table.Data>{item.distribution}</Table.Data>
-                                    <Table.Data>{item.distribution_release}</Table.Data>
-                                    <Table.Data>{item.uploaded_at}</Table.Data>
-                                    <Table.Data className="center aligned rowActions">
+                                <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
+                                    <DataTable.Data><a className='pluginName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
+                                    <DataTable.Data>{item.package_name}</DataTable.Data>
+                                    <DataTable.Data>{item.package_version}</DataTable.Data>
+                                    <DataTable.Data>{item.supported_platform}</DataTable.Data>
+                                    <DataTable.Data>{item.distribution}</DataTable.Data>
+                                    <DataTable.Data>{item.distribution_release}</DataTable.Data>
+                                    <DataTable.Data>{item.uploaded_at}</DataTable.Data>
+                                    <DataTable.Data className="center aligned rowActions">
                                         <i className="download icon link bordered" title="Download" onClick={this._downloadPlugin.bind(this,item)}></i>
                                         <i className="trash icon link bordered" title="Delete" onClick={this._deletePluginConfirm.bind(this,item)}></i>
-                                    </Table.Data>
-                                </Table.Row>
+                                    </DataTable.Data>
+                                </DataTable.Row>
                             );
                         })
                     }
 
-                    <Table.Action>
+                    <DataTable.Action>
                         <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
-                    </Table.Action>
+                    </DataTable.Action>
 
-                </Table>
+                </DataTable>
 
                 <Confirm title='Are you sure you want to remove this plugin?'
                          show={this.state.confirmDelete}
