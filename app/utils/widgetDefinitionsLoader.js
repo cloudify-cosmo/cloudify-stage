@@ -4,6 +4,8 @@
 
 import fetch from 'isomorphic-fetch'
 import ScriptLoader from './scriptLoader';
+import StyleLoader from './StyleLoader';
+
 import {v4} from 'node-uuid';
 var ReactDOMServer = require('react-dom/server');
 
@@ -68,6 +70,9 @@ export default class WidgetDefinitionsLoader {
                                         widgetDefinition.template = widgetHtml;
                                     }
                                 }));
+                    }
+                    if (widgetDefinition.hasStyle) {
+                        promises.push(new StyleLoader('/widgets/'+widgetDefinition.id+'/widget.css').load());
                     }
                 });
                 return Promise.all(promises);
