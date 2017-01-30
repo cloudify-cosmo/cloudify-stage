@@ -63,9 +63,9 @@ export default class extends React.Component {
         });
     }
 
-    _cancelExecution(execution) {
+    _cancelExecution(execution, forceCancel) {
         let actions = new Actions(this.props.toolbox);
-        actions.doCancel(execution, false)
+        actions.doCancel(execution, forceCancel)
             .then(() => {
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.toolbox.getEventBus().trigger('executions:refresh');
@@ -110,6 +110,10 @@ export default class extends React.Component {
         this.setState({showUpdateModal: false});
     }
 
+    _handleError(errorMessage) {
+        this.setState({error: errorMessage});
+    }
+
     fetchData(fetchParams) {
         this.props.toolbox.refresh(fetchParams);
     }
@@ -129,13 +133,15 @@ export default class extends React.Component {
                                      fetchData={this.fetchData.bind(this)}
                                      onSelectDeployment={this._selectDeployment.bind(this)}
                                      onMenuAction={this._selectAction.bind(this)}
-                                     onCancelExecution={this._cancelExecution.bind(this)}/>
+                                     onCancelExecution={this._cancelExecution.bind(this)}
+                                     onError={this._handleError.bind(this)} />
                     :
                     <DeploymentsSegment widget={this.props.widget} data={this.props.data}
                                        fetchData={this.fetchData.bind(this)}
                                        onSelectDeployment={this._selectDeployment.bind(this)}
                                        onMenuAction={this._selectAction.bind(this)}
-                                       onCancelExecution={this._cancelExecution.bind(this)}/>
+                                       onCancelExecution={this._cancelExecution.bind(this)}
+                                       onError={this._handleError.bind(this)} />
                 }
 
                 <Confirm title='Are you sure you want to remove this deployment?'

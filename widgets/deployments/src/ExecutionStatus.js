@@ -6,6 +6,14 @@ let PropTypes = React.PropTypes;
 
 export default class extends React.Component {
 
+    constructor(props,context) {
+        super(props,context);
+
+        this.state = {
+            cancelClicked: false
+        }
+    }
+
     static propTypes = {
         item: PropTypes.object.isRequired,
         onCancelExecution: PropTypes.func.isRequired,
@@ -29,17 +37,32 @@ export default class extends React.Component {
         return _.includes(ACTIVE_EXECUTION_STATES, this.props.item.status);
     }
 
+    _onDropdownChange(value, text, $choice) {
+        this.setState({cancelClicked: true});
+        this.props.onCancelExecution(this.props.item, value === 'force-cancel');
+    }
+
     render () {
         let execution = this.props.item;
 
         if (this._isActive(execution)) {
             let activeExecutionStatus
                 = this.props.showWorkflowId ? execution.workflow_id + ' ' + execution.status : execution.status;
+            let cancelClicked = this.state.cancelClicked;
+
             return (
                 <div className="ui label">
                     <i className="spinner loading icon"></i>
                     {activeExecutionStatus}
-                    <i className="delete icon link" onClick={() => this.props.onCancelExecution(execution)}></i>
+                    <div className={`ui icon top right pointing dropdown ${cancelClicked?'disabled':''}`}
+                         ref={(dropdown) => $(dropdown).dropdown({action: 'hide', onChange: this._onDropdownChange.bind(this)})}
+                         onClick={(event) => event.stopPropagation()}>
+                        <i className={`delete icon link`}></i>
+                        <div className="menu">
+                            <div className="item" data-value="cancel">Cancel</div>
+                            <div className="item" data-value="force-cancel">Force Cancel</div>
+                        </div>
+                    </div>
                 </div>
             )
         } else if (this.props.showInactive) {

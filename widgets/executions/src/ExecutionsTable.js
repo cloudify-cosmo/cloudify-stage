@@ -30,9 +30,9 @@ export default class extends React.Component {
         this.props.toolbox.getContext().setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
     }
 
-    _cancelExecution(execution) {
+    _cancelExecution(execution, forceCancel) {
         let actions = new Actions(this.props.toolbox);
-        actions.doCancel(execution, false)
+        actions.doCancel(execution, forceCancel)
             .then(() => {
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.toolbox.getEventBus().trigger('executions:refresh');

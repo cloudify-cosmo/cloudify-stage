@@ -15,15 +15,16 @@ export default class extends React.Component {
         fetchData: PropTypes.func,
         onSelectDeployment: PropTypes.func,
         onCancelExecution: PropTypes.func,
-        onMenuAction: PropTypes.func
-
+        onMenuAction: PropTypes.func,
+        onError: PropTypes.func
     };
 
     static defaultProps = {
         fetchData: ()=>{},
         onSelectDeployment: ()=>{},
         onCancelExecution: ()=>{},
-        onMenuAction: ()=>{}
+        onMenuAction: ()=>{},
+        onError: ()=>{}
     };
 
     render() {
@@ -63,9 +64,11 @@ export default class extends React.Component {
                                         ?
                                             <MenuAction item={item} bordered={true} onSelectAction={this.props.onMenuAction}/>
                                         :
-                                            activeExecutions.map((execution) => {
-                                                return <ExecutionStatus key={execution.id} item={execution} onCancelExecution={this.props.onCancelExecution}/>
-                                            })
+                                            activeExecutions.size > 1
+                                            ?
+                                                this.props.onError('Internal error: More than one execution is running for ' + item.id + ' deployment')
+                                            :
+                                                <ExecutionStatus key={activeExecutions[0].id} item={activeExecutions[0]} onCancelExecution={this.props.onCancelExecution}/>
                                     }
                                 </Table.Data>
                             </Table.Row>
