@@ -24,7 +24,11 @@ export default class {
             params['snapshot_archive_url'] = snapshotUrl;
         }
 
-        return this.toolbox.getManager().doUpload(`/snapshots/${snapshotId}/archive`, params, file, 'put');
+        if (file) {
+            return this.toolbox.getManager().doUpload(`/snapshots/${snapshotId}/archive`, params, file, 'put');
+        } else {
+            return this.toolbox.getManager().doPut(`/snapshots/${snapshotId}/archive`, params);
+        }
     }
 
     doDownload(snapshot) {

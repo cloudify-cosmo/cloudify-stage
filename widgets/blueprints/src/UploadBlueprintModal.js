@@ -50,6 +50,10 @@ export default class UploadModal extends React.Component {
             errors["blueprintUrl"]="Please select blueprint file or url";
         }
 
+        if (!_.isEmpty(this.state.blueprintUrl) && blueprintFile) {
+            errors["blueprintUrl"]="Either blueprint file or url must be selected, not both";
+        }
+
         if (_.isEmpty(this.state.blueprintName)) {
             errors["blueprintName"]="Please provide blueprint name";
         }

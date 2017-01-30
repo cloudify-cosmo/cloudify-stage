@@ -36,15 +36,19 @@ export default class {
             params['workflow_id'] = workflowId;
         }
 
-        var files = {};
-        if (blueprintArchive) {
-            files['blueprint_archive'] = blueprintArchive;
-        }
-        if (inputs) {
-            files['inputs'] = inputs;
-        }
+        if (blueprintArchive || inputs) {
+            var files = {};
+            if (blueprintArchive) {
+                files['blueprint_archive'] = blueprintArchive;
+            }
+            if (inputs) {
+                files['inputs'] = inputs;
+            }
 
-        return this.toolbox.getManager().doUpload(`/deployment-updates/${deploymentName}/update/initiate`, params, files, 'post');
+            return this.toolbox.getManager().doUpload(`/deployment-updates/${deploymentName}/update/initiate`, params, files, 'post');
+        } else {
+            return this.toolbox.getManager().doPost(`/deployment-updates/${deploymentName}/update/initiate`, params);
+        }
     }
 
 }

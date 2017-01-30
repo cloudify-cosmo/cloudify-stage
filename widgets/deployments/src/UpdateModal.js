@@ -62,6 +62,10 @@ export default class UpdateModal extends React.Component {
             errors["blueprintUrl"]="Please select blueprint file or url";
         }
 
+        if (!_.isEmpty(this.state.blueprintUrl) && blueprintFile) {
+            errors["blueprintUrl"]="Either blueprint file or url must be selected, not both";
+        }
+
         if (this.state.runWorkflow === CUSTOM_WORKFLOW && _.isEmpty(this.state.workflowId)) {
             errors["workflowId"]="Please provide workflow id";
         }

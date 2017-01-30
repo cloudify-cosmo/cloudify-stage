@@ -47,6 +47,10 @@ export default class UploadModal extends React.Component {
             errors["pluginUrl"]="Please select plugin file or url";
         }
 
+        if (!_.isEmpty(this.state.pluginUrl) && pluginFile) {
+            errors["pluginUrl"]="Either plugin file or url must be selected, not both";
+        }
+
         if (!_.isEmpty(errors)) {
             this.setState({errors});
             return false;

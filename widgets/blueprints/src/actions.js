@@ -31,6 +31,11 @@ export default class {
             params['blueprint_archive_url'] = blueprintUrl;
         }
 
-        return this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, params, file);
+        if (file) {
+            return this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, params, file);
+        } else {
+            return this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
+        }
+
     }
 }

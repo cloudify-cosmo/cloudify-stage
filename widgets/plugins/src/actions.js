@@ -20,7 +20,11 @@ export default class {
             params['plugin_archive_url'] = pluginUrl;
         }
 
-        return this.toolbox.getManager().doUpload(`/plugins`, params, file, 'post');
+        if (file) {
+            return this.toolbox.getManager().doUpload(`/plugins`, params, file, 'post');
+        } else {
+            return this.toolbox.getManager().doPost(`/plugins`, params);
+        }
     }
 
     doDownload(plugin) {

@@ -49,6 +49,10 @@ export default class UploadModal extends React.Component {
             errors["snapshotUrl"]="Please select snapshot file or url";
         }
 
+        if (!_.isEmpty(this.state.pluginUrl) && pluginFile) {
+            errors["snapshotUrl"]="Either snapshot file or url must be selected, not both";
+        }
+
         if (_.isEmpty(this.state.snapshotId)) {
             errors["snapshotId"]="Please provide snapshot id";
         }
