@@ -20,7 +20,8 @@ export default class Auth {
                             return {
                                 token: results[0].token,
                                 tenants: results[1].tenants,
-                                version
+                                version,
+                                role: results[0].role
                             }
                         });
                     })
@@ -119,7 +120,7 @@ export default class Auth {
                     return Promise.reject(data);
                 }
 
-                return Promise.resolve({token:data.value});
+                return Promise.resolve({token:data.value, role: data.role});
             })
             .catch((e)=>{
                 console.error(e);

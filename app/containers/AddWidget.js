@@ -8,10 +8,16 @@ import { connect } from 'react-redux'
 import AddWidgetButton from '../components/AddWidgetButton';
 import {addWidget} from '../actions/widgets';
 import AddWidgetModal from '../components/AddWidgetModal';
+import Consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
+    var isUserAdmin = state.manager.auth.role === Consts.ROLE_ADMIN;
+
+    var widgetDefinitions = state.widgetDefinitions.filter((definition)=>{
+        return !definition.isAdmin || isUserAdmin;
+    });
     return {
-        widgetDefinitions: state.widgetDefinitions,
+        widgetDefinitions: widgetDefinitions,
         pageId: ownProps.pageId
     }
 };
