@@ -12,6 +12,7 @@ import InlineEdit from 'react-edit-inline';
 
 import EditWidget from '../containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
+import Consts from '../utils/consts';
 
 export default class Widget extends Component {
     static propTypes = {
@@ -34,6 +35,33 @@ export default class Widget extends Component {
     }
 
     render() {
+
+        if (this.props.manager.auth.role === Consts.ROLE_SUSPEND) {
+            return (
+                <div className='widgetItem ui segment'>
+                    <div className='ui segment basic' style={{height:'100%'}}>
+                        <div className="ui icon message error">
+                            <i className="ban icon"></i>
+                            User is suspended
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        if (this.props.widget.definition.isAdmin && this.props.manager.auth.role !== Consts.ROLE_ADMIN) {
+            return (
+                <div className='widgetItem ui segment'>
+                    <div className='ui segment basic' style={{height:'100%'}}>
+                        <div className="ui icon message error">
+                            <i className="ban icon"></i>
+                            Only admin can access this widget
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <div className={'widgetItem ui segment '+
                             (this.props.widget.definition && !this.props.widget.definition.showBorder ? 'basic ' : '') +

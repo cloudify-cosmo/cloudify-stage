@@ -14,7 +14,7 @@ export default class WidgetDefinition {
         this.initialConfiguration = [];
         this.keepOnTop = false;
         this.hasStyle = false;
-
+        this.isAdmin = false;
 
         // Override defaults with data
         Object.assign(this,data);

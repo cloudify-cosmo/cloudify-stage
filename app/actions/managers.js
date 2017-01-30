@@ -14,11 +14,12 @@ function requestLogin() {
     }
 }
 
-function receiveLogin(ip,username,token,version,tenants) {
+function receiveLogin(ip,username,role,token,version,tenants) {
     return {
         type: types.RES_LOGIN,
         ip,
         username,
+        role,
         token,
         version,
         tenants,
@@ -43,7 +44,7 @@ export function login (ip,username,password) {
 
         return Auth.login(ip,username,password)
                     .then(data => {
-                        dispatch(receiveLogin(ip, username, data.token, data.version,data.tenants));
+                        dispatch(receiveLogin(ip, username, data.role, data.token, data.version,data.tenants));
                         dispatch(push('/'));
                     })
                     .catch(err => dispatch(errorLogin(ip,username,err)));
