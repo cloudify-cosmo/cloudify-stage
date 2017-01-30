@@ -4,18 +4,18 @@
   
 import React, { Component, PropTypes } from 'react';
 
-export default class GridAction extends Component {
+export default class TableFilter extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
+        className: PropTypes.string
     };
 
     render() {
         return (
-            <div className="field actionField">
+            <div className={`field ${this.props.className}`}>
                 {this.props.children}
             </div>
         );
     }
 }
- 

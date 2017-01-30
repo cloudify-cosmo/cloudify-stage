@@ -3,25 +3,25 @@
  */
   
 import React, { Component, PropTypes } from 'react';
-import GridRow from './GridRow';
-import GridRowExpandable from './GridRowExpandable';
-import GridColumn from './GridColumn';
-import GridData from './GridData';
-import GridDataExpandable from './GridDataExpandable';
-import GridAction from './GridAction';
-import GridFilter from './GridFilter';
+import TableRow from './TableRow';
+import TableRowExpandable from './TableRowExpandable';
+import TableColumn from './TableColumn';
+import TableDataCell from './TableDataCell';
+import TableDataExpandable from './TableDataExpandable';
+import TableAction from './TableAction';
+import TableFilter from './TableFilter';
+import TableSearch from './TableSearch';
 import Pagination from '../pagination/Pagination';
-import Search from './Search';
 
 export default class GridTable extends Component {
 
-    static Row = GridRow;
-    static Column = GridColumn;
-    static Data = GridData;
-    static Action = GridAction;
-    static Filter = GridFilter;
-    static RowExpandable = GridRowExpandable;
-    static DataExpandable = GridDataExpandable;
+    static Row = TableRow;
+    static Column = TableColumn;
+    static Data = TableDataCell;
+    static Action = TableAction;
+    static Filter = TableFilter;
+    static RowExpandable = TableRowExpandable;
+    static DataExpandable = TableDataExpandable;
 
     constructor(props, context) {
         super(props, context);
@@ -117,26 +117,26 @@ export default class GridTable extends Component {
         var showCols = [];
         React.Children.forEach(this.props.children, function (child) {
             if (child && child.type) {
-                if (child.type.name === "GridColumn") {
+                if (child.type.name === "TableColumn") {
                     showCols.push(child.props.show);
                     headerColumns.push(child);
-                } else if (child.type.name === "GridRow") {
+                } else if (child.type.name === "TableRow") {
                     bodyRows.push(React.cloneElement(child, {showCols}));
-                } else if (child.type.name === "GridRowExpandable") {
+                } else if (child.type.name === "TableRowExpandable") {
                     let expandableContent = [];
                     React.Children.forEach(child.props.children, function (expChild) {
                         if (expChild && expChild.type) {
-                            if (expChild.type.name === "GridRow") {
+                            if (expChild.type.name === "TableRow") {
                                 bodyRows.push(React.cloneElement(expChild, {showCols}));
-                            } else if (expChild.type.name === "GridDataExpandable" && child.props.expanded) {
+                            } else if (expChild.type.name === "TableDataExpandable" && child.props.expanded) {
                                 expandableContent.push(React.cloneElement(expChild, {numberOfColumns: showCols.length}));
                             }
                         }
                     });
                     bodyRows.push(expandableContent);
-                } else if (child.type.name === "GridAction") {
+                } else if (child.type.name === "TableAction") {
                     gridAction = child;
-                } else if (child.type.name === "GridFilter") {
+                } else if (child.type.name === "TableFilter") {
                     gridFilters.push(child);
                 }
             }
@@ -147,7 +147,7 @@ export default class GridTable extends Component {
                 { (this.props.searchable || !_.isEmpty(gridFilters) || gridAction) &&
                 <div className="ui small form">
                     <div className="inline fields">
-                        {this.props.searchable && <Search/>}
+                        {this.props.searchable && <TableSearch/>}
                         {gridFilters}
                         {gridAction}
                     </div>

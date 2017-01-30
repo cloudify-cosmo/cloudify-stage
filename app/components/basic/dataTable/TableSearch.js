@@ -4,7 +4,7 @@
   
 import React, { Component, PropTypes } from 'react';
 
-export default class Search extends Component {
+export default class TableSearch extends Component {
 
     render() {
         return (

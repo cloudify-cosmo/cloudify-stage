@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-export default class GridDataExpandable extends Component {
+export default class TableDataExpandable extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,

@@ -4,7 +4,7 @@
   
 import React, { Component, PropTypes } from 'react';
 
-export default class GridColumn extends Component {
+export default class TableColumn extends Component {
 
     static propTypes = {
         label: PropTypes.string,

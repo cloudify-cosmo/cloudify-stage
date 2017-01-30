@@ -4,7 +4,7 @@
   
 import React, { Component, PropTypes } from 'react';
 
-export default class GridRow extends Component {
+export default class TableRow extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
@@ -26,7 +26,7 @@ export default class GridRow extends Component {
         let children = [];
         let index = 0;
         React.Children.forEach(this.props.children, (child) => {
-            if (child.type && child.type.name === "GridData" && this._showData(index++)) {
+            if (child.type && child.type.name === "TableDataCell" && this._showData(index++)) {
                 children.push(child);
             }
         });

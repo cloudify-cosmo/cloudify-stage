@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 
-export default class GridRowExpandable extends Component {
+export default class TableRowExpandable extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
