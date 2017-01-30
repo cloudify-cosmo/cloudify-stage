@@ -93,13 +93,10 @@ export default class Manager {
             var formData = new FormData();
 
             if (files) {
-
                 if (_.isArray(files)) {
                     _.forEach(files, function (value, key) {
                         formData.append(key, value);
                     });
-                } else if (_.isString(files)) {
-                    files = {"upload":files};
                 } else {
                     formData = files; // Single file, simply pass it
                 }

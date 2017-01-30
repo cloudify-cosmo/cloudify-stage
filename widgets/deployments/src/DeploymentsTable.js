@@ -24,38 +24,38 @@ export default class extends React.Component {
     };
 
     render() {
-        var Table = Stage.Basic.Table;
+        var DataTable = Stage.Basic.DataTable;
 
         return (
-            <Table fetchData={this.props.fetchData}
+            <DataTable fetchData={this.props.fetchData}
                         totalSize={this.props.data.total}
                         pageSize={this.props.widget.configuration.pageSize}
                         selectable={true}
                         className="deploymentTable">
 
-                <Table.Column label="Name" name="id" width="25%"/>
-                <Table.Column label="Blueprint" name="blueprint_id" width="25%"/>
-                <Table.Column label="Created" name="created_at" width="18%"/>
-                <Table.Column label="Updated" name="updated_at" width="18%"/>
-                <Table.Column width="14%"/>
+                <DataTable.Column label="Name" name="id" width="25%"/>
+                <DataTable.Column label="Blueprint" name="blueprint_id" width="25%"/>
+                <DataTable.Column label="Created" name="created_at" width="18%"/>
+                <DataTable.Column label="Updated" name="updated_at" width="18%"/>
+                <DataTable.Column width="14%"/>
 
                 {
                     this.props.data.items.map((item)=>{
                         return (
 
-                            <Table.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
-                                <Table.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></Table.Data>
-                                <Table.Data>{item.blueprint_id}</Table.Data>
-                                <Table.Data>{item.created_at}</Table.Data>
-                                <Table.Data>{item.updated_at}</Table.Data>
-                                <Table.Data className="center aligned rowActions">
+                            <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
+                                <DataTable.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
+                                <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+                                <DataTable.Data>{item.created_at}</DataTable.Data>
+                                <DataTable.Data>{item.updated_at}</DataTable.Data>
+                                <DataTable.Data className="center aligned rowActions">
                                     <MenuAction item={item} bordered={true} onSelectAction={this.props.onMenuAction}/>
-                                </Table.Data>
-                            </Table.Row>
+                                </DataTable.Data>
+                            </DataTable.Row>
                         );
                     })
                 }
-            </Table>
+            </DataTable>
         );
     }
 }

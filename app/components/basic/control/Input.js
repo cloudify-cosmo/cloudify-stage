@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Input } from 'semantic-ui-react'
 
-export default class FormInput extends Component {
+export default class InputWrapper extends Component {
 
     static propTypes = {
         children: PropTypes.any,

@@ -13,8 +13,18 @@ export default class {
 
     }
 
-    doUpload(file) {
-        return this.toolbox.getManager().doUpload('/plugins',null,file,'post');
+    doUpload(pluginUrl, file) {
+        var params = {};
+
+        if (!_.isEmpty(pluginUrl)) {
+            params['plugin_archive_url'] = pluginUrl;
+        }
+
+        if (file) {
+            return this.toolbox.getManager().doUpload(`/plugins`, params, file, 'post');
+        } else {
+            return this.toolbox.getManager().doPost(`/plugins`, params);
+        }
     }
 
     doDownload(plugin) {
