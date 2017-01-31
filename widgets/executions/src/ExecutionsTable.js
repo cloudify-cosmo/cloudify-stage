@@ -3,7 +3,7 @@
  */
 
 import Actions from './actions';
-import ExecutionStatus from '../../deployments/src/ExecutionStatus';
+import ExecutionStatus from './ExecutionStatus';
 
 export default class extends React.Component {
     constructor(props, context) {
@@ -104,13 +104,13 @@ export default class extends React.Component {
                                         { _.isEmpty(item.error) ?
                                             <div>
                                                 <i className="check circle icon inverted green"></i>
-                                                <ExecutionStatus item={item} showInactive={true} showWorkflowId={false} onCancelExecution={this._cancelExecution.bind(this,item)}/>
+                                                <ExecutionStatus item={item} showInactiveAsLink={false} onCancelExecution={this._cancelExecution.bind(this)}/>
                                             </div>
                                             :
                                             <Overlay>
                                                 <Overlay.Action title="Error details">
                                                     <i data-overlay-action className="remove circle icon red link"></i>
-                                                    <ExecutionStatus item={item} showInactive={true} showInactiveAsLink={true} showWorkflowId={false} onCancelExecution={this._cancelExecution.bind(this,item)}/>
+                                                    <ExecutionStatus item={item} showInactiveAsLink={true} onCancelExecution={this._cancelExecution.bind(this)}/>
                                                 </Overlay.Action>
                                                 <Overlay.Content>
                                                     <HighlightText className='python'>{item.error}</HighlightText>

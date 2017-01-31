@@ -3,7 +3,8 @@
  */
 
 import MenuAction from './MenuAction';
-import ExecutionStatus from './ExecutionStatus';
+import ActiveExecutionStatus from './ActiveExecutionStatus';
+import { isActiveExecution } from './utils';
 
 let PropTypes = React.PropTypes;
 
@@ -45,12 +46,11 @@ export default class extends React.Component {
 
                 {
                     this.props.data.items.map((item)=>{
-                        // TODO: Move to common place
-                        const EXECUTION_STATES = [ 'terminated', 'failed', 'cancelled', 'pending', 'started', 'cancelling', 'force_cancelling' ];
-                        const END_EXECUTION_STATES = ['terminated', 'failed', 'cancelled' ];
-                        const ACTIVE_EXECUTION_STATES = _.difference(EXECUTION_STATES, END_EXECUTION_STATES);
 
-                        let activeExecutions = item.executions.filter((execution) => _.includes(ACTIVE_EXECUTION_STATES, execution.status));
+                        let activeExecutions = item.executions.filter((execution) => isActiveExecution(execution));
+                        if (activeExecutions.size > 1) {
+                            this.props.onError('Internal error: More than one execution is running for \'' + item.id + '\' deployment')
+                        }
 
                         return (
 
@@ -62,14 +62,10 @@ export default class extends React.Component {
                                 <DataTable.Data className="center aligned rowActions">
                                     {
                                         _.isEmpty(activeExecutions)
-                                            ?
-                                            <MenuAction item={item} bordered={true} onSelectAction={this.props.onMenuAction}/>
-                                            :
-                                            activeExecutions.size > 1
-                                                ?
-                                                this.props.onError('Internal error: More than one execution is running for ' + item.id + ' deployment')
-                                                :
-                                                <ExecutionStatus key={activeExecutions[0].id} item={activeExecutions[0]} onCancelExecution={this.props.onCancelExecution}/>
+                                        ?
+                                        <MenuAction item={item} bordered={true} onSelectAction={this.props.onMenuAction}/>
+                                        :
+                                        <ActiveExecutionStatus item={activeExecutions[0]} onCancelExecution={this.props.onCancelExecution}/>
                                     }
                                 </DataTable.Data>
                             </DataTable.Row>
