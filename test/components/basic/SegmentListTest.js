@@ -6,9 +6,9 @@ import React from 'react'
 import { shallow , mount} from 'enzyme'
 import {expect} from 'chai';
 import sinon from 'sinon';
-import Segment from '../../../app/components/basic/segment/SegmentList';
+import DataSegment from '../../../app/components/basic/dataSegment/DataSegment';
 
-describe('(Component) SegmentList', () => {
+describe('(Component) DataSegment', () => {
 
     var wrapper;
     var fetchSpy = sinon.spy();
@@ -17,17 +17,17 @@ describe('(Component) SegmentList', () => {
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Segment fetchData={fetchSpy} pageSize={25} sortColumn="col1" sortAscending={false}>
+            <DataSegment fetchData={fetchSpy} pageSize={25} sortColumn="col1" sortAscending={false}>
                 {
                     [{k:1}, {k:2}, {k:3, s:true}, {k:4}, {k:5}].map((item)=> {
                         return (
-                            <Segment.Item key={item.k} select={item.s} onClick={item.s?selectSpy:null}>
+                            <DataSegment.Item key={item.k} select={item.s} onClick={item.s?selectSpy:null}>
                                 <div>Data {item.k}</div>
-                            </Segment.Item>
+                            </DataSegment.Item>
                         )
                     })
                 }
-            </Segment>, { attachTo: div.get(0) }
+            </DataSegment>, { attachTo: div.get(0) }
         );
     });
 

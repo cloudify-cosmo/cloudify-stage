@@ -4,20 +4,24 @@
 
 import Actions from './actions';
 
-export default class extends React.Component {
+export default class UploadModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = {
-            error: null,
-            show: false,
-            loading: false
-        }
+        this.state = {...UploadModal.initialState, show: false}
+    }
+
+    static initialState = {
+        loading: false,
+        blueprintUrl: "",
+        blueprintName: "",
+        blueprintFileName: "",
+        errors: {}
     }
 
     onApprove () {
-        $(this.refs.submitUploadBtn).click();
+        this.refs.uploadForm.submit();
         return false;
     }
 
@@ -30,42 +34,32 @@ export default class extends React.Component {
         this.setState({show: true});
     }
 
-    _openFileSelection(e) {
-        e.preventDefault();
-        $('#blueprintFile').click();
-        return false;
-    }
-
     componentWillUpdate(prevProps, prevState) {
-        //same Modal instance is used multiple time so we need to reset states
         if (this.state.show && prevState.show != this.state.show) {
-            this.setState({error:null, loading:false});
-            $("form input:text").val("");
-            $("form input:file").val("");
+            this.refs.blueprintFile.reset();
+            this.setState(UploadModal.initialState);
         }
     }
 
-    _uploadFileChanged(e){
-        var fullPathFileName = $(e.currentTarget).val();
-        var filename = fullPathFileName.split('\\').pop();
+    _submitUpload() {
+        let blueprintFile = this.refs.blueprintFile.file();
 
-        $('input.uploadBlueprintFile').val(filename).attr('title',fullPathFileName);
-    }
+        let errors = {};
 
-    _submitUpload(e) {
-        e.preventDefault();
+        if (_.isEmpty(this.state.blueprintUrl) && !blueprintFile) {
+            errors["blueprintUrl"]="Please select blueprint file or url";
+        }
 
-        var formObj = $(e.currentTarget);
+        if (!_.isEmpty(this.state.blueprintUrl) && blueprintFile) {
+            errors["blueprintUrl"]="Either blueprint file or url must be selected, not both";
+        }
 
-        // Get the data
-        var blueprintName = formObj.find("input[name='blueprintName']").val();
-        var blueprintFileName = formObj.find("input[name='blueprintFileName']").val();
-        var blueprintFileUrl = formObj.find("input[name='blueprintFileUrl']").val();
-        var file = document.getElementById('blueprintFile').files[0];
+        if (_.isEmpty(this.state.blueprintName)) {
+            errors["blueprintName"]="Please provide blueprint name";
+        }
 
-        // Check that we have all we need
-        if (_.isEmpty(blueprintFileUrl) && !file) {
-            this.setState({error: Stage.Basic.ErrorMessage.error("Please select blueprint file or url", "Missing data")});
+        if (!_.isEmpty(errors)) {
+            this.setState({errors});
             return false;
         }
 
@@ -73,72 +67,60 @@ export default class extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doUpload(blueprintName, blueprintFileName, file).then(()=>{
+        actions.doUpload(this.state.blueprintName,
+                         this.state.blueprintFileName,
+                         this.state.blueprintUrl,
+                         blueprintFile).then(()=>{
             this.setState({loading: false, show: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
-            this.setState({error: err.message, loading: false});
+            this.setState({errors: {error: err.message}, loading: false});
         });
+    }
 
-        return false;
+    _handleInputChange(proxy, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     render() {
-        var Modal = Stage.Basic.Modal;
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {Modal, Button, Icon, Form} = Stage.Basic;
 
         return (
             <div>
-                <button className="ui labeled icon button uploadBlueprint" onClick={this._showModal.bind(this)}>
-                    <i className="upload icon"></i>
-                    Upload
-                </button>
+                <Button content='Upload' icon='upload' labelPosition='left' onClick={this._showModal.bind(this)}/>
 
                 <Modal show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                     <Modal.Header>
-                        <i className="upload icon"></i> Upload blueprint
+                        <Icon name="upload"/> Upload blueprint
                     </Modal.Header>
 
                     <Modal.Body>
-                        <form className="ui form uploadForm" onSubmit={this._submitUpload.bind(this)} action="">
-                            <div className="fields">
-                                <div className="field nine wide">
-                                    <div className="ui labeled input">
-                                        <div className="ui label">
-                                            http://
-                                        </div>
-                                        <input type="text" name="blueprintFileUrl" placeholder="Enter blueprint url"></input>
-                                    </div>
-                                </div>
-
-                                <div className="field one wide" style={{"position":"relative"}}>
+                        <Form onSubmit={this._submitUpload.bind(this)} errors={this.state.errors} ref="uploadForm">
+                            <Form.Group>
+                                <Form.Field width="9" error={this.state.errors.blueprintUrl}>
+                                    <Form.Input label="http://" placeholder="Enter blueprint url" name="blueprintUrl"
+                                                value={this.state.blueprintUrl} onChange={this._handleInputChange.bind(this)}/>
+                                </Form.Field>
+                                <Form.Field width="1" style={{position:'relative'}}>
                                     <div className="ui vertical divider">
                                         Or
                                     </div>
-                                </div>
-                                <div className="field eight wide">
-                                    <div className="ui action input">
-                                        <input type="text" readOnly='true' value="" className="uploadBlueprintFile"
-                                               placeholder="Select blueprint file" onClick={this._openFileSelection}></input>
-                                        <button className="ui icon button uploadBlueprintFile" onClick={this._openFileSelection}>
-                                            <i className="attach icon"></i>
-                                        </button>
-                                    </div>
-                                    <input type="file" name='blueprintFile' id="blueprintFile" style={{"display": "none"}} onChange={this._uploadFileChanged}/>
-                                </div>
-                            </div>
+                                </Form.Field>
+                                <Form.Field width="8" error={this.state.errors.blueprintUrl}>
+                                    <Form.File placeholder="Select blueprint file" name="blueprintFile" ref="blueprintFile"/>
+                                </Form.Field>
+                            </Form.Group>
 
-                            <div className="field">
-                                <input type="text" name='blueprintName' id='blueprintName' placeholder="Blueprint name" required/>
-                            </div>
-                            <div className="field">
-                                <input type="text" name='blueprintFileName' id='blueprintFileName' placeholder="Blueprint filename e.g. blueprint"/>
-                            </div>
+                            <Form.Field error={this.state.errors.blueprintName}>
+                                <Form.Input name='blueprintName' placeholder="Blueprint name"
+                                            value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
+                            </Form.Field>
 
-                            <ErrorMessage error={this.state.error}/>
-
-                            <input type='submit' style={{"display": "none"}} ref='submitUploadBtn'/>
-                        </form>
+                            <Form.Field>
+                                <Form.Input name='blueprintFileName' placeholder="Blueprint filename e.g. blueprint"
+                                            value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
+                            </Form.Field>
+                        </Form>
                     </Modal.Body>
 
                     <Modal.Footer>

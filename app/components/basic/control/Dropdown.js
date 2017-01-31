@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Dropdown } from 'semantic-ui-react'
 
-export default class FormDropdown extends Component {
+export default class DropdownWrapper extends Component {
 
     static propTypes = {
         additionLabel: PropTypes.string, //Label prefixed to an option added by a user.
@@ -48,6 +48,10 @@ export default class FormDropdown extends Component {
         selection: PropTypes.bool, //A dropdown can be used to select between choices in a form.
         simple: PropTypes.bool, //A simple dropdown can open without Javascript.
         text: PropTypes.string, //The text displayed in the dropdown, usually for the active item.
+    };
+
+    static defaultProps = {
+        selectOnBlur: false
     };
 
     render() {

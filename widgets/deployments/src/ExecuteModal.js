@@ -11,9 +11,12 @@ export default class ExecuteModal extends React.Component {
     constructor(props,context) {
         super(props,context);
 
-        this.state = {
-            error: null
-        }
+        this.state = ExecuteModal.initialState;
+    }
+
+    static initialState = {
+        errors: {},
+        loading: false
     }
 
     static propTypes = {
@@ -24,18 +27,29 @@ export default class ExecuteModal extends React.Component {
         onHide: PropTypes.func.isRequired
     };
 
+    componentWillUpdate(prevProps, prevState) {
+        if (this.props.show && prevProps.show != this.props.show) {
+            this.setState(ExecuteModal.initialState);
+        }
+    }
+
     onApprove () {
-        $(this.refs.submitExecuteBtn).click();
+        this.refs.executeForm.submit();
         return false;
     }
 
-    _submitExecute (e) {
-        e.preventDefault();
+    onDeny () {
+        this.props.onHide();
+        return true;
+    }
 
+    _submitExecute () {
         if (!this.props.deployment || !this.props.workflow) {
-            this.setState({error: 'Missing workflow or deployment'});
+            this.setState({errors: {error: 'Missing workflow or deployment'}});
             return false;
         }
+
+        this.setState({loading: true});
 
         var params = {};
 
@@ -46,49 +60,44 @@ export default class ExecuteModal extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doExecute(this.props.deployment, this.props.workflow, params).then(()=>{
+            this.setState({loading: false});
             this.props.onHide();
             this.props.toolbox.getEventBus().trigger('executions:refresh');
         }).catch((err)=>{
-            this.setState({error: err.message});
+            this.setState({loading: false, errors: {error: err.message}});
         })
-
-        return false;
-    }
-
-    onDeny () {
-        this.props.onHide();
-        return true;
     }
 
     render() {
-        var Modal = Stage.Basic.Modal;
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {Modal, Icon, Form, Message} = Stage.Basic;
 
         var workflow = Object.assign({},{name:"", parameters:[]}, this.props.workflow);
 
         return (
-            <Modal show={this.props.show} className='executeModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
+            <Modal show={this.props.show} loading={this.state.loading} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
                 <Modal.Header>
-                    <i className="road icon"></i> Execute workflow {workflow.name}
+                    <Icon name="road"/> Execute workflow {workflow.name}
                 </Modal.Header>
 
                 <Modal.Body>
-                    <form className="ui form executeForm" onSubmit={this._submitExecute.bind(this)} action="" ref='executeForm'>
+                    <Form onSubmit={this._submitExecute.bind(this)} errors={this.state.errors} ref="executeForm">
+                        {
+                            _.isEmpty(workflow.parameters)
+                            &&
+                            <Message content="No parameters available for the execution"/>
+                        }
+
                         {
                             _.map(workflow.parameters,(parameter,name)=>{
                                 return (
-                                    <div className="field" key={name}>
+                                    <Form.Field key={name}>
                                         <label title={parameter.description || name }>{name}</label>
                                         <input name='executeInput' data-name={name} type="text" defaultValue={parameter.default}/>
-                                    </div>
+                                    </Form.Field>
                                 );
                             })
                         }
-
-                        <ErrorMessage error={this.state.error}/>
-
-                        <input type='submit' style={{"display": "none"}} ref='submitExecuteBtn'/>
-                    </form>
+                    </Form>
                 </Modal.Body>
 
                 <Modal.Footer>

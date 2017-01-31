@@ -17,7 +17,7 @@ module.exports = {
         }
     },
     entry: [
-        './app/app.js'
+        './app/main.js'
     ],
     output: {
         path: path.join(__dirname, 'dist'),
@@ -37,6 +37,14 @@ module.exports = {
         new CopyWebpackPlugin([
             { from: 'templates',
                 to: 'templates'}
+        ]),
+        new CopyWebpackPlugin([
+            { from: 'conf',
+                to: 'conf'}
+        ]),
+        new CopyWebpackPlugin([
+            { from: 'logs',
+                to: 'logs'}
         ]),
         new HtmlWebpackPlugin({
             template: 'app/index.tmpl.html',

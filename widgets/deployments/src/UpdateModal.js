@@ -53,13 +53,17 @@ export default class UpdateModal extends React.Component {
         return true;
     }
 
-    _submitUpload() {
+    _submitUpdate() {
         let blueprintFile = this.refs.blueprintFile.file();
         let inputsFile = this.refs.inputsFile.file();
 
         let errors = {};
         if (_.isEmpty(this.state.blueprintUrl) && !blueprintFile) {
             errors["blueprintUrl"]="Please select blueprint file or url";
+        }
+
+        if (!_.isEmpty(this.state.blueprintUrl) && blueprintFile) {
+            errors["blueprintUrl"]="Either blueprint file or url must be selected, not both";
         }
 
         if (this.state.runWorkflow === CUSTOM_WORKFLOW && _.isEmpty(this.state.workflowId)) {
@@ -89,8 +93,6 @@ export default class UpdateModal extends React.Component {
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
         });
-
-        return false;
     }
 
     _handleInputChange(proxy, field) {
@@ -98,16 +100,16 @@ export default class UpdateModal extends React.Component {
     }
 
     render() {
-        var {Modal, Form} = Stage.Basic;
+        var {Modal, Icon, Form} = Stage.Basic;
 
         return (
-            <Modal className="updateDeploymentModal" show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                 <Modal.Header>
-                    <i className="edit icon"></i> Update deployment {this.props.deployment.id}
+                    <Icon name="edit"/> Update deployment {this.props.deployment.id}
                 </Modal.Header>
 
                 <Modal.Body>
-                    <Form onSubmit={this._submitUpload.bind(this)} errors={this.state.errors} ref="updateForm">
+                    <Form onSubmit={this._submitUpdate.bind(this)} errors={this.state.errors} ref="updateForm">
                         <Form.Group>
                             <Form.Field width="9" error={this.state.errors.blueprintUrl}>
                                 <Form.Input label="http://" placeholder="Enter new blueprint url" name="blueprintUrl"

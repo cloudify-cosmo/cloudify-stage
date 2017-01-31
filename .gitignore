@@ -2,21 +2,6 @@
 dist
 node_modules
 bower_components
+logs/*
 
-widgets/blueprints/widget.js
-widgets/deploymentNum/widget.js
-widgets/deployments/widget.js
-widgets/deploymentButton/widget.js
-widgets/events/widget.js
-widgets/filter/widget.js
-widgets/githubRepositories/widget.js
-widgets/logs/widget.js
-widgets/outputs/widget.js
-widgets/inputs/widget.js
-widgets/plugins/widget.js
-widgets/pluginsNum/widget.js
-widgets/snapshots/widget.js
-widgets/executions/widget.js
-widgets/topology/widget.js
-widgets/serversNum/widget.js
-widgets/nodes/widget.js
+widgets/*/widget.js

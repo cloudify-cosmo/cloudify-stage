@@ -4,20 +4,22 @@
 
 import Actions from './actions';
 
-export default class extends React.Component {
+export default class CreateModal extends React.Component {
 
     constructor(props,context) {
         super(props, context);
 
-        this.state = {
-            error: null,
-            show: false,
-            loading: false
-        }
+        this.state = {...CreateModal.initialState, show: false}
+    }
+
+    static initialState = {
+        loading: false,
+        snapshotId: "",
+        errors: {}
     }
 
     onApprove () {
-        $(this.refs.submitCreateBtn).click();
+        this.refs.createForm.submit();
         return false;
     }
 
@@ -30,57 +32,63 @@ export default class extends React.Component {
         this.setState({show: true});
     }
 
-    _submitCreate(e) {
-        e.preventDefault();
+    componentWillUpdate(prevProps, prevState) {
+        if (this.state.show && prevState.show != this.state.show) {
+            this.setState(CreateModal.initialState);
+        }
+    }
 
-        var formObj = $(e.currentTarget);
+    _submitCreate() {
+        let errors = {};
 
-        // Get the data
-        var snapshotId = formObj.find("input[name='snapshotId']").val();
+        if (_.isEmpty(this.state.snapshotId)) {
+            errors["snapshotId"]="Please provide snapshot id";
+        }
+
+        if (!_.isEmpty(errors)) {
+            this.setState({errors});
+            return false;
+        }
 
         // Disable the form
-        this.setState({loading: true, error: null});
+        this.setState({loading: true});
 
         // Call create method
         var actions = new Actions(this.props.toolbox);
-        actions.doCreate(snapshotId)
-            .then(()=>{
-                this.props.toolbox.getContext().setValue(this.props.widget.id + 'createSnapshot',null);
-                this.props.toolbox.getEventBus().trigger('snapshots:refresh');
-                this.setState({loading: false, show: false});
-            })
-            .catch((err)=>{
-                this.setState({loading: false, error: err.message});
-            });
+        actions.doCreate(this.state.snapshotId).then(()=>{
+            this.props.toolbox.getContext().setValue(this.props.widget.id + 'createSnapshot',null);
+            this.props.toolbox.getEventBus().trigger('snapshots:refresh');
+            this.setState({loading: false, show: false});
+        }).catch((err)=>{
+            this.setState({errors: {error: err.message}, loading: false});
+        });
+    }
 
-        return false;
+    _handleInputChange(proxy, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     render() {
-        var Modal = Stage.Basic.Modal;
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {Modal, Button, Icon, Form} = Stage.Basic;
 
         return (
             <div>
-                <button className="ui labeled icon button createSnapshot" onClick={this._showModal.bind(this)}>
-                    <i className="add icon"></i>
-                    Create
-                </button>
+                <Button content='Create' icon='add' labelPosition='left' onClick={this._showModal.bind(this)}/>
 
                 <Modal show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                     <Modal.Header>
-                        <i className="add icon"></i> Create snapshot
+                        <Icon name="add"/> Create snapshot
                     </Modal.Header>
+
                     <Modal.Body>
-                        <form className="ui form createForm" onSubmit={this._submitCreate.bind(this)} action="">
-                            <div className="field">
-                                <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
-                            </div>
+                        <Form onSubmit={this._submitCreate.bind(this)} errors={this.state.errors} ref="createForm">
 
-                            <ErrorMessage error={this.state.error}/>
+                            <Form.Field error={this.state.errors.snapshotId}>
+                                <Form.Input name='snapshotId' placeholder="Snapshot ID"
+                                            value={this.state.snapshotId} onChange={this._handleInputChange.bind(this)}/>
+                            </Form.Field>
 
-                            <input type='submit' style={{"display": "none"}} ref='submitCreateBtn'/>
-                        </form>
+                        </Form>
                     </Modal.Body>
 
                     <Modal.Footer>

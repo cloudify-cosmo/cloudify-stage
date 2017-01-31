@@ -36,33 +36,33 @@ export default class NodeInstancesTable extends React.Component {
     }
 
     render() {
-        let Table = Stage.Basic.Table;
+        let DataTable = Stage.Basic.DataTable;
 
         return (
             <div>
 
-                <Table className="nodesInstancesTable">
+                <DataTable className="nodesInstancesTable">
 
-                    <Table.Column label="Instance" name="id" width="40%"/>
-                    <Table.Column label="Status" name="state" width="30%"/>
-                    <Table.Column label="Details" name="details" width="30%"/>
+                    <DataTable.Column label="Instance" name="id" width="40%"/>
+                    <DataTable.Column label="Status" name="state" width="30%"/>
+                    <DataTable.Column label="Details" name="details" width="30%"/>
 
                     {
                         this.props.instances.map((instance) => {
                             return (
-                                <Table.Row key={instance.id}>
-                                    <Table.Data>{instance.id}</Table.Data>
-                                    <Table.Data>{instance.state}</Table.Data>
-                                    <Table.Data className="center aligned rowActions">
+                                <DataTable.Row key={instance.id}>
+                                    <DataTable.Data>{instance.id}</DataTable.Data>
+                                    <DataTable.Data>{instance.state}</DataTable.Data>
+                                    <DataTable.Data className="center aligned rowActions">
                                         <i className="table icon link bordered"
                                            onClick={this._showInstanceModal.bind(this, instance)}>
                                         </i>
-                                    </Table.Data>
-                                </Table.Row>
+                                    </DataTable.Data>
+                                </DataTable.Row>
                             );
                         })
                     }
-                </Table>
+                </DataTable>
 
                 <InstanceModal show={this.state.showModal}
                                onClose={this._closeInstanceModal.bind(this)}

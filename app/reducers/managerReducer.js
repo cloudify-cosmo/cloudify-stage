@@ -14,10 +14,12 @@ const manager = (state = {}, action) => {
                 username: action.username,
                 auth: {
                     isSecured : true,
-                    token: action.token
+                    token: action.token,
+                    role: action.role
                 },
                 err: null,
                 version: action.version,
+                tenants: tenants(state.tenants,action),
                 lastUpdated: action.receivedAt
             });
         case types.ERR_LOGIN:
@@ -27,7 +29,8 @@ const manager = (state = {}, action) => {
                 username: action.username,
                 auth: {
                     isSecured : true,
-                    token: action.token
+                    token: null,
+                    role: null
                 },
                 err: action.error,
                 lastUpdated: action.receivedAt

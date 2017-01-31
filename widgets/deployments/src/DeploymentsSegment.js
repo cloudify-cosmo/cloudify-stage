@@ -28,10 +28,10 @@ export default class extends React.Component {
     };
 
     render() {
-        var Segment = Stage.Basic.Segment;
+        var DataSegment = Stage.Basic.DataSegment;
 
         return (
-            <Segment totalSize={this.props.data.total}
+            <DataSegment totalSize={this.props.data.total}
                      pageSize={this.props.widget.configuration.pageSize}
                      fetchData={this.props.fetchData}>
                 {
@@ -44,7 +44,7 @@ export default class extends React.Component {
                         let activeExecutions = item.executions.filter((execution) => _.includes(ACTIVE_EXECUTION_STATES, execution.status));
 
                         return (
-                            <Segment.Item key={item.id} select={item.isSelected}
+                            <DataSegment.Item key={item.id} select={item.isSelected}
                                           onClick={()=>this.props.onSelectDeployment(item)}>
                                 <div className="ui grid">
                                     <div className="four wide center aligned column rightDivider">
@@ -103,11 +103,11 @@ export default class extends React.Component {
                                         }
                                     </div>
                                 </div>
-                            </Segment.Item>
+                            </DataSegment.Item>
                         );
                     })
                 }
-            </Segment>
+            </DataSegment>
         );
     }
 }

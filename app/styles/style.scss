@@ -17,6 +17,7 @@ a:hover {
 .ui.top.menu .right.menu .ui.dropdown.item{
   padding: 5px 10px;
   border-left: none;
+  height: 52px;
 }
 
 .dropDownText
@@ -400,7 +401,7 @@ code.hljs {
 /* Modal */
 
 .ui.modal:not(.overlay) > .content {
-  max-height: 420px;
+  max-height: 480px;
   overflow: auto;
 }
 

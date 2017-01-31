@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 
-export default class FormFile extends Component {
+export default class InputFile extends Component {
 
     constructor(props,context) {
         super(props,context);
@@ -26,9 +26,16 @@ export default class FormFile extends Component {
         return false;
     }
 
+    _resetFileSelection(e) {
+        e.preventDefault();
+        this.reset();
+        return false;
+    }
+
     _fileChanged(e){
         var fullPathFileName = $(e.currentTarget).val();
         if (!fullPathFileName) {
+            this.reset();
             return;
         }
 
@@ -56,6 +63,12 @@ export default class FormFile extends Component {
                     <button className="ui icon button" onClick={this._openFileSelection.bind(this)}>
                         <i className="attach icon"></i>
                     </button>
+                    {
+                        this.state.value &&
+                        <button className="ui icon button" onClick={this._resetFileSelection.bind(this)}>
+                            <i className="remove icon"></i>
+                        </button>
+                    }
                 </div>
 
                 <input type="file" name={this.props.name} style={{"display": "none"}} onChange={this._fileChanged.bind(this)} ref="inputFile"/>

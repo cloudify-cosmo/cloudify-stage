@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Radio } from 'semantic-ui-react'
 
-export default class FormRadio extends Component {
+export default class RadioWrapper extends Component {
 
     static propTypes = {
         checked: PropTypes.bool,

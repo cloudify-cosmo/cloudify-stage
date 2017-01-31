@@ -26,43 +26,43 @@ export default class BlueprintsTable extends React.Component{
     };
 
     render(){
-        var Table = Stage.Basic.Table;
+        var DataTable = Stage.Basic.DataTable;
 
         return (
-            <Table fetchData={this.props.fetchGridData}
+            <DataTable fetchData={this.props.fetchGridData}
                         totalSize={this.props.data.total}
                         pageSize={this.props.widget.configuration.pageSize}
                         selectable={true}
                         className="blueprintsTable">
 
-                <Table.Column label="Name" name="id" width="30%"/>
-                <Table.Column label="Created" name="created_at" width="20%"/>
-                <Table.Column label="Updated" name="updated_at" width="20%"/>
-                <Table.Column label="# Deployments" width="20%"/>
-                <Table.Column width="10%"/>
+                <DataTable.Column label="Name" name="id" width="30%"/>
+                <DataTable.Column label="Created" name="created_at" width="20%"/>
+                <DataTable.Column label="Updated" name="updated_at" width="20%"/>
+                <DataTable.Column label="# Deployments" width="20%"/>
+                <DataTable.Column width="10%"/>
 
                 {
                     this.props.data.items.map((item)=>{
                         return (
-                            <Table.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
-                                <Table.Data><a className='blueprintName' href="javascript:void(0)">{item.id}</a></Table.Data>
-                                <Table.Data>{item.created_at}</Table.Data>
-                                <Table.Data>{item.updated_at}</Table.Data>
-                                <Table.Data><div className="ui green horizontal label">{item.depCount}</div></Table.Data>
-                                <Table.Data className="center aligned rowActions">
+                            <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
+                                <DataTable.Data><a className='blueprintName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
+                                <DataTable.Data>{item.created_at}</DataTable.Data>
+                                <DataTable.Data>{item.updated_at}</DataTable.Data>
+                                <DataTable.Data><div className="ui green horizontal label">{item.depCount}</div></DataTable.Data>
+                                <DataTable.Data className="center aligned rowActions">
                                     <i className="rocket icon link bordered" title="Create deployment" onClick={(event)=>{event.stopPropagation();this.props.onCreateDeployment(item)}}></i>
                                     <i className="trash icon link bordered" title="Delete blueprint" onClick={(event)=>{event.stopPropagation();this.props.onDeleteBlueprint(item)}}></i>
-                                </Table.Data>
-                            </Table.Row>
+                                </DataTable.Data>
+                            </DataTable.Row>
                         );
                     })
                 }
 
-                <Table.Action>
+                <DataTable.Action>
                     <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
-                </Table.Action>
+                </DataTable.Action>
 
-            </Table>
+            </DataTable>
 
         );
     }

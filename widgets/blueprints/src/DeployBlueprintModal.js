@@ -6,15 +6,18 @@ import Actions from './actions';
 
 let PropTypes = React.PropTypes;
 
-export default class extends React.Component {
+export default class DeployModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = {
-            error: null,
-            loading: false
-        }
+        this.state = DeployModal.initialState;
+    }
+
+    static initialState = {
+        loading: false,
+        errors: {},
+        deploymentName: ""
     }
 
     static propTypes = {
@@ -29,15 +32,13 @@ export default class extends React.Component {
     };
 
     componentWillUpdate(prevProps, prevState) {
-        //same Modal instance is used multiple time so we need to reset states
         if (this.props.show && prevProps.show != this.props.show) {
-            this.setState({error: null, loading: false});
-            $("form input:text").val("");
+            this.setState(DeployModal.initialState);
         }
     }
 
     onApprove () {
-        $(this.refs.submitDeployBtn).click();
+        this.refs.deployForm.submit();
         return false;
     }
 
@@ -46,15 +47,16 @@ export default class extends React.Component {
         return true;
     }
 
-    _submitDeploy (e) {
-        e.preventDefault();
+    _submitDeploy() {
+        let errors = {};
 
         if (!this.props.blueprint) {
-            this.setState({error: Stage.Basic.ErrorMessage.error("Blueprint not selected", "Missing data")});
-            return false;
+            errors["error"] = "Blueprint not selected";
         }
 
-        var deploymentId = $('[name=deploymentName]').val();
+        if (_.isEmpty(this.state.deploymentName)) {
+            errors["deploymentName"]="Please provide deployment name";
+        }
 
         var inputs = {};
 
@@ -63,80 +65,78 @@ export default class extends React.Component {
             inputs[input.data('name')] = input.val();
         });
 
+        if (!_.isEmpty(errors)) {
+            this.setState({errors});
+            return false;
+        }
+
         // Disable the form
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doDeploy(this.props.blueprint, deploymentId, inputs)
+        actions.doDeploy(this.props.blueprint, this.state.deploymentName, inputs)
             .then((/*deployment*/)=> {
                 this.setState({loading: false});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.onHide();
             })
             .catch((err)=>{
-                this.setState({loading: false, error: err.message});
+                this.setState({loading: false, errors: {error: err.message}});
             });
-
-        return false;
     }
+
+    _handleInputChange(proxy, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    }
+
     render() {
-        var Modal = Stage.Basic.Modal;
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {Modal, Icon, Form, Message} = Stage.Basic;
 
         var blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
 
         return (
-            <div>
-                <Modal show={this.props.show} className='deploymentModal' onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
-                    <Modal.Header>
-                        <i className="rocket icon"></i> Deploy blueprint {blueprint.id}
-                    </Modal.Header>
+            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+                <Modal.Header>
+                    <Icon name="rocket"/> Deploy blueprint {blueprint.id}
+                </Modal.Header>
 
-                    <Modal.Body>
-                        <form className="ui form deployForm" onSubmit={this._submitDeploy.bind(this)} action="">
-                            <div className="field">
-                                <input type="text" required name='deploymentName' placeholder="Deployment name"/>
-                            </div>
+                <Modal.Body>
+                    <Form onSubmit={this._submitDeploy.bind(this)} errors={this.state.errors} ref="deployForm">
 
-                            {
-                                blueprint.id
-                                &&
-                                <h4 className="ui dividing header">Deployment inputs</h4>
-                            }
+                        <Form.Field error={this.state.errors.deploymentName}>
+                            <Form.Input name='deploymentName' placeholder="Deployment name"
+                                        value={this.state.deploymentName} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
 
-                            {
-                                blueprint.id && _.isEmpty(blueprint.plan.inputs)
-                                &&
-                                <div className="ui visible message">
-                                    <p>No inputs available for the blueprint</p>
-                                </div>
-                            }
+                        {
+                            blueprint.id
+                            &&
+                            <Form.Divider>Deployment inputs</Form.Divider>
+                        }
 
-                            {
-                                _.map(blueprint.plan.inputs, (input, name) => {
-                                    return (
-                                        <div className="field" key={name}>
-                                            <label title={input.description || name }>{name}</label>
-                                            <input name='deploymentInput' data-name={name} type="text"
-                                                   defaultValue={input.default}/>
-                                        </div>
-                                    );
-                                })
-                            }
+                        {
+                            blueprint.id && _.isEmpty(blueprint.plan.inputs)
+                            &&
+                            <Message content="No inputs available for the blueprint"/>
+                        }
+                        {
+                            _.map(blueprint.plan.inputs, (input, name) => {
+                                return (
+                                    <Form.Field key={name}>
+                                        <label title={input.description || name }>{name}</label>
+                                        <input name='deploymentInput' data-name={name} type="text" defaultValue={input.default}/>
+                                    </Form.Field>
+                                );
+                            })
+                        }
+                    </Form>
+                </Modal.Body>
 
-                            <ErrorMessage error={this.state.error}/>
-
-                            <input type='submit' style={{"display": "none"}} ref='submitDeployBtn'/>
-                        </form>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Modal.Cancel/>
-                        <Modal.Approve label="Deploy" icon="rocket" className="green"/>
-                    </Modal.Footer>
-                </Modal>
-            </div>
-
+                <Modal.Footer>
+                    <Modal.Cancel/>
+                    <Modal.Approve label="Deploy" icon="rocket" className="green"/>
+                </Modal.Footer>
+            </Modal>
         );
     }
 };

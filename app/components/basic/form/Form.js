@@ -7,11 +7,12 @@ import { Form, Message } from 'semantic-ui-react'
 import FormField from './FormField'
 import FormGroup from './FormGroup'
 import FormDivider from './FormDivider'
-import FormInput from './FormInput'
-import FormRadio from './FormRadio'
-import FormCheckbox from './FormCheckbox'
-import FormFile from './FormFile'
-import FormDropdown from './FormDropdown'
+import FormInput from '../control/Input'
+import FormRadio from '../control/Radio'
+import FormCheckbox from '../control/Checkbox'
+import FormFile from '../control/InputFile'
+import FormDropdown from '../control/Dropdown'
+import FormButton from '../control/Button'
 
 export default class FormWrapper extends Component {
 
@@ -23,6 +24,7 @@ export default class FormWrapper extends Component {
     static Checkbox = FormCheckbox;
     static File = FormFile;
     static Dropdown = FormDropdown;
+    static Button = FormButton;
 
     static propTypes = {
         children: PropTypes.any,

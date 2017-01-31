@@ -19,5 +19,6 @@
   "outputs",
   "executions",
   "nodes",
-  "deploymentButton"
+  "deploymentButton",
+  "tenants"
 ]

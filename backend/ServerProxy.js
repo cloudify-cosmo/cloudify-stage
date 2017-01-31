@@ -9,6 +9,8 @@ var request = require('request');
 
 var router = express.Router();
 
+var logger = require('log4js').getLogger('ServerProxy');
+
 let  allowAccessOrigin = (req,res,next) => {
     // Setting access control allow origin headers
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -32,10 +34,10 @@ router.get('/',function (req, res,next) {
 
     var serverUrl = req.query.su;
     if (serverUrl) {
-        console.log('Proxying get request to server with url: '+serverUrl);
+        logger.debug('Proxying get request to server with url: '+serverUrl);
         req.pipe(request.get(serverUrl))
             .on('error', function(err) {
-                console.log('Error has occured ',err);
+                logger.error('Error has occured ',err);
                 next(err);
             }).pipe(res);
     } else {
@@ -46,11 +48,11 @@ router.get('/',function (req, res,next) {
 router.put('/',function(req,res,next){
     var serverUrl = req.query.su;
     if (serverUrl) {
-        console.log('Proxying put request to server with url: '+serverUrl);
+        logger.debug('Proxying put request to server with url: '+serverUrl);
 
         req.pipe(request.put(serverUrl))
             .on('error', function(err) {
-                console.log('Error has occured ',err);
+                logger.error('Error has occured ',err);
                 next(err);
             }).pipe(res);
     } else {
@@ -62,11 +64,11 @@ router.put('/',function(req,res,next){
 router.delete('/',function(req,res,next){
     var serverUrl = req.query.su;
     if (serverUrl) {
-        console.log('Proxying delete request to server with url: '+serverUrl);
+        logger.debug('Proxying delete request to server with url: '+serverUrl);
 
         req.pipe(request.delete(serverUrl))
             .on('error', function(err) {
-                console.log('Error has occured ',err);
+                logger.error('Error has occured ',err);
                 next(err);
             }).pipe(res);
     } else {
@@ -77,11 +79,11 @@ router.delete('/',function(req,res,next){
 router.post('/',function(req,res,next){
     var serverUrl = req.query.su;
     if (serverUrl) {
-        console.log('Proxying post request to server with url: '+serverUrl);
+        logger.debug('Proxying post request to server with url: '+serverUrl);
 
         req.pipe(request.post(serverUrl))
             .on('error', function(err) {
-                console.log('Error has occured ',err);
+                logger.error('Error has occured ',err);
                 next(err);
             }).pipe(res);
     } else {

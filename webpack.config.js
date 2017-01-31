@@ -17,10 +17,12 @@ module.exports = {
         }
     },
     entry: {
-        "app.bundle": [
+        "dev": [
             'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
-            'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-            './app/app.js'
+            'webpack/hot/only-dev-server' /// "only" prevents reload on syntax errors
+        ],
+        "main.bundle": [
+            './app/main.js'
         ]
     },
     output: {
@@ -42,10 +44,19 @@ module.exports = {
             { from: 'templates',
                 to: 'templates'}
         ]),
+        new CopyWebpackPlugin([
+            { from: 'conf',
+                to: 'conf'}
+        ]),
+        new CopyWebpackPlugin([
+            { from: 'logs',
+                to: 'logs'}
+        ]),
         new HtmlWebpackPlugin({
             template: 'app/index.tmpl.html',
             inject: 'body',
-            filename: 'index.html'
+            filename: 'index.html',
+            chunks: ["main.bundle"]
         }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),

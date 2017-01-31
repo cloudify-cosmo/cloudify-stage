@@ -3,21 +3,21 @@
  */
 
 export default class StatePersister{
-    static save(state){
+    static save(state,mode){
         try {
             var sState = JSON.stringify({
                 pages: state.pages,
                 manager: state.manager
             });
-            localStorage.setItem('state',sState);
+            localStorage.setItem('state-'+mode,sState);
         } catch(e){
             console.error(e);
         }
     }
 
-    static load(){
+    static load(mode){
         try {
-            var pState = localStorage.getItem('state');
+            var pState = localStorage.getItem('state-'+mode);
             if (pState === null) { return undefined; }
 
             var state = JSON.parse(pState);

@@ -6,6 +6,7 @@ import * as types from './types';
 import Auth from '../utils/auth';
 import { push } from 'react-router-redux';
 import Manager from '../utils/Manager';
+import {clearContext} from './context';
 
 function requestLogin() {
     return {
@@ -13,13 +14,15 @@ function requestLogin() {
     }
 }
 
-function receiveLogin(ip,username,token,version) {
+function receiveLogin(ip,username,role,token,version,tenants) {
     return {
         type: types.RES_LOGIN,
         ip,
         username,
+        role,
         token,
         version,
+        tenants,
         receivedAt: Date.now()
     }
 }
@@ -41,10 +44,17 @@ export function login (ip,username,password) {
 
         return Auth.login(ip,username,password)
                     .then(data => {
-                        dispatch(receiveLogin(ip, username, data.token, data.version));
+                        dispatch(receiveLogin(ip, username, data.role, data.token, data.version,data.tenants));
                         dispatch(push('/'));
                     })
                     .catch(err => dispatch(errorLogin(ip,username,err)));
+    }
+}
+
+export function logout() {
+    return function(dispatch) {
+        dispatch(clearContext());
+        dispatch(push('/login'));
     }
 }
 
