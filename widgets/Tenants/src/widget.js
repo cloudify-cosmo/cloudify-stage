@@ -5,13 +5,17 @@
 import TenantsTable from './TenantsTable';
 
 Stage.defineWidget({
-    id: 'Tenants',
-    name: "Tenants management",
+    id: 'tenants',
+    name: 'Tenants management',
     description: 'This widget shows a list of available tenants, and allow managing them',
     initialWidth: 5,
     initialHeight: 4,
-    color: "green",
-    fetchUrl: '[manager]/tenants',
+    color: 'green',
+    fetchUrl: {
+        tenants: '[manager]/tenants[params]',
+        users: '[manager]/users',
+        userGroups: '[manager]/user-groups',
+    },
     isReact: true,
     isAdmin: true,
     initialConfiguration: [
@@ -26,16 +30,18 @@ Stage.defineWidget({
 
         var selectedTenant = toolbox.getContext().getValue('tenantName');
 
-        let formattedData = data;
-        formattedData = Object.assign({}, data, {
+        let formattedData = data.tenants;
+        formattedData = Object.assign({}, formattedData, {
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
-                    groups: item.groups.join(', '),
-                    users: item.users.join(', '),
+                    groups: item.groups,
+                    users: item.users,
                     isSelected: item.name === selectedTenant
                 })
             }),
-            total : _.get(data, 'metadata.pagination.total', 0)
+            users: _.map (data.users.items, (user) => user.username),
+            userGroups: _.map (data.userGroups.items, (userGroup) => userGroup.name),
+            total : _.get(data.tenants, 'metadata.pagination.total', 0)
         });
 
         return (
