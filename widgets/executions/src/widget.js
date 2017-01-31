@@ -11,7 +11,7 @@ Stage.defineWidget({
     initialWidth: 8,
     initialHeight: 6,
     color : "purple",
-    fetchUrl: '[manager]/executions[params]',
+    fetchUrl: '[manager]/executions?is_system_workflow=false[params]',
     isReact: true,
     initialConfiguration:
         [
@@ -19,13 +19,17 @@ Stage.defineWidget({
             Stage.GenericConfig.PAGE_SIZE_CONFIG(),
             {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
                 items: ["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Params","Status"],
-                default: 'Blueprint,Deployment,Workflow,Id,Created,IsSystem,Params,Status', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE}
+                default: 'Blueprint,Deployment,Workflow,Id,Created,IsSystem,Params,Status', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
+            {id: "showSystemExecutions", name: "Show system executions", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
         ],
 
     fetchParams: function(widget, toolbox) {
         return {
             blueprint_id: toolbox.getContext().getValue('blueprintId'),
-            deployment_id: toolbox.getContext().getValue('deploymentId')
+            deployment_id: toolbox.getContext().getValue('deploymentId'),
+            is_system_workflow: widget.configuration.showSystemExecutions &&
+                                !toolbox.getContext().getValue('blueprintId') &&
+                                !toolbox.getContext().getValue('deploymentId')
         }
     },
 
@@ -51,6 +55,7 @@ Stage.defineWidget({
         let params = this.fetchParams(widget, toolbox);
         formattedData.blueprintId = params.blueprint_id;
         formattedData.deploymentId = params.deployment_id;
+
 
         return (
             <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox}/>
