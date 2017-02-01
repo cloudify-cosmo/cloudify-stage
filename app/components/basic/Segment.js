@@ -5,7 +5,29 @@
 import React, { Component, PropTypes } from 'react';
 import { Segment } from 'semantic-ui-react'
 
+class SegmentGroup extends Component {
+
+    static propTypes = {
+        children: PropTypes.any, //Primary content.
+        className: PropTypes.string, //Additional classes.
+        compact: PropTypes.bool, //A segment may take up only as much space as is necessary.
+        horizontal: PropTypes.bool, //Formats content to be aligned horizontally.
+        piled: PropTypes.bool, //Formatted to look like a pile of pages.
+        raised: PropTypes.bool, //A segment group may be formatted to raise above the page.
+        size: PropTypes.string, //A segment group can have different sizes.
+        stacked: PropTypes.bool //Formatted to show it contains multiple pages.
+    };
+
+    render() {
+        return (
+            <Segment.Group {...this.props}/>
+        );
+    }
+}
+
 export default class SegmentWrapper extends Component {
+
+    static Group = SegmentGroup;
 
     static propTypes = {
         attached: PropTypes.bool, //Attach segment to other content, like a header.

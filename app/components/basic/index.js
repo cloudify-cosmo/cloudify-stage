@@ -26,6 +26,9 @@ import Icon from './Icon';
 import Message from './Message';
 import Segment from './Segment';
 import Accordion from './Accordion';
+import List from './List';
+import Grid from './Grid';
+import Divider from './Divider';
 
 export {
     Modal,
@@ -51,5 +54,8 @@ export {
     Icon,
     Message,
     Segment,
-    Accordion
+    Accordion,
+    List,
+    Grid,
+    Divider
 };

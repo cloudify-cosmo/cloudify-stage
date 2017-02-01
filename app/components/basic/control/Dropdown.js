@@ -5,7 +5,82 @@
 import React, { Component, PropTypes } from 'react';
 import { Dropdown } from 'semantic-ui-react'
 
+class DropdownDivider extends Component {
+
+    static propTypes = {
+        className: PropTypes.string,
+    }
+
+    render() {
+        return (
+            <Dropdown.Divider {...this.props}/>
+        );
+    }
+}
+
+class DropdownHeader extends Component {
+
+    static propTypes = {
+        children: PropTypes.any, //Primary content.
+        className: PropTypes.string, //Additional classes.
+        content: PropTypes.any, //Shorthand for primary content.
+        icon: PropTypes.any //Shorthand for Icon.
+    }
+
+    render() {
+        return (
+            <Dropdown.Header {...this.props}/>
+        );
+    }
+}
+
+class DropdownItem extends Component {
+
+    static propTypes = {
+        active: PropTypes.bool, //Style as the currently chosen item.
+        children: PropTypes.any, //Primary content.
+        className: PropTypes.string, //Additional classes.
+        content: PropTypes.any, //Shorthand for primary content.
+        description: PropTypes.string, //Additional text with less emphasis.
+        disabled: PropTypes.bool, //A dropdown item can be disabled.
+        flag: PropTypes.bool, //Shorthand for Flag.
+        icon: PropTypes.any, //Shorthand for Icon.
+        image: PropTypes.any, //Shorthand for Image.
+        label: PropTypes.any, //Shorthand for Label.
+        onClick: PropTypes.func, //Called on click.
+        selected: PropTypes.bool, //The item currently selected by keyboard shortcut.
+        text: PropTypes.any, //Display text.
+        value: PropTypes.any //Stored value
+    }
+
+    render() {
+        return (
+            <Dropdown.Item {...this.props}/>
+        );
+    }
+}
+
+class DropdownMenu extends Component {
+
+    static propTypes = {
+        children: PropTypes.any, //Primary content.
+        className: PropTypes.string, //Additional classes.
+        scrolling: PropTypes.bool //A dropdown menu can scroll.
+    }
+
+    render() {
+        return (
+            <Dropdown.Menu {...this.props}/>
+        );
+    }
+}
+
 export default class DropdownWrapper extends Component {
+
+    static Divider = DropdownDivider;
+    static Header = DropdownHeader;
+    static Item = DropdownItem;
+    static Menu = DropdownMenu;
 
     static propTypes = {
         additionLabel: PropTypes.string, //Label prefixed to an option added by a user.
@@ -37,10 +112,10 @@ export default class DropdownWrapper extends Component {
         onOpen: PropTypes.func, //Called when an open event happens.
         onSearchChange: PropTypes.func, //Called on search input change.
         open: PropTypes.bool, //Controls whether or not the dropdown menu is displayed.
-        openOnFocus: PropTypes.func, //Whether or not the menu should open when the dropdown is focused.
+        openOnFocus: PropTypes.bool, //Whether or not the menu should open when the dropdown is focused.
         options: PropTypes.any, //Array of Dropdown.Item props e.g. `{ text: '', value: '' }`
         placeholder: PropTypes.string, //Placeholder text.
-        pointing: PropTypes.bool, //A dropdown can be formatted so that its menu is pointing.
+        pointing: PropTypes.any, //A dropdown can be formatted so that its menu is pointing.
         scrolling: PropTypes.bool, //A dropdown can have its menu scroll.
         search: PropTypes.bool, //A selection dropdown can allow a user to search through a large list of choices.
         selectOnBlur: PropTypes.bool, //Define whether the highlighted item should be selected on blur.
@@ -51,7 +126,8 @@ export default class DropdownWrapper extends Component {
     };
 
     static defaultProps = {
-        selectOnBlur: false
+        selectOnBlur: false,
+        openOnFocus: false
     };
 
     render() {

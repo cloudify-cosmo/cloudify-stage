@@ -35,8 +35,8 @@ export default class UpdateModal extends React.Component {
         onHide: PropTypes.func.isRequired
     };
 
-    componentWillUpdate(prevProps, prevState) {
-        if (this.props.show && prevProps.show != this.props.show) {
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.show && nextProps.show) {
             this.refs.blueprintFile.reset();
             this.refs.inputsFile.reset();
             this.setState(UpdateModal.initialState);

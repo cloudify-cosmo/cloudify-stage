@@ -378,7 +378,7 @@ code.hljs {
 
   .column.action  {
 
-    .icon.dropdown {
+    .ui.dropdown {
       position: absolute;
       right: 10px;
     }
@@ -413,6 +413,6 @@ code.hljs {
   transform: translateY(-50%);
 }
 
-.menu .indent {
-  padding-left: 25px;
+.ui.dropdown .menu>.item.indent {
+  padding-left: 30px !important;
 }

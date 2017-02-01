@@ -2,10 +2,15 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
-export default class extends React.Component {
+export default class MenuAction extends React.Component {
 
-    onDropdownChange(value, text, $choice) {
-        if ($choice.hasClass("workflow")) {
+    static EDIT_ACTION='edit';
+    static DELETE_ACTION='delete';
+    static WORKFLOW_ACTION='workflow';
+
+
+    _actionClick(workflowAction, proxy, {value}) {
+        if (workflowAction) {
             var workflow = _.find(this.props.item.workflows,{name: value});
             console.log('selected workflow '+ value,workflow);
             this.props.onSelectAction(value, this.props.item, workflow);
@@ -15,22 +20,24 @@ export default class extends React.Component {
     }
 
     render () {
+        var {Dropdown, Icon} = Stage.Basic;
+
         return (
-            <div className="ui icon top right pointing dropdown" ref={(dropdown)=>$(dropdown).dropdown({onChange: this.onDropdownChange.bind(this)})} onClick={(e)=>e.stopPropagation()}>
-                <i className={this.props.bordered?'road icon link bordered':'ellipsis vertical large link icon'}></i>
-                <div className="menu" ref="popupMenu">
-                    <div className="header"><i className="road icon"></i>Execute workflow</div>
-                    <div className="divider"></div>
+            <Dropdown pointing="top right" icon="content">
+                <Dropdown.Menu>
+                    <Dropdown.Header icon="road" content="Execute workflow"/>
+                    <Dropdown.Divider />
                     {
                         this.props.item.workflows.map((workflow)=>{
-                            return <div key={workflow.name} className="item workflow" data-value={workflow.name}><span className="indent">{_.capitalize(_.lowerCase(workflow.name))}</span></div>
+                            return <Dropdown.Item text={_.capitalize(_.lowerCase(workflow.name))} className="indent"
+                                                  key={workflow.name} value={workflow.name} onClick={this._actionClick.bind(this, true)}/>
                         })
                     }
-                    <div className="divider"></div>
-                    <div className="item" data-value="edit"><i className="edit icon"></i>Edit</div>
-                    <div className="item" data-value="delete"><i className="remove icon"></i>Delete</div>
-                </div>
-            </div>
+                    <Dropdown.Divider />
+                    <Dropdown.Item icon='edit' text='Edit' value={MenuAction.EDIT_ACTION} onClick={this._actionClick.bind(this, false)}/>
+                    <Dropdown.Item icon='trash' text='Delete' value={MenuAction.DELETE_ACTION} onClick={this._actionClick.bind(this, false)} />
+                </Dropdown.Menu>
+            </Dropdown>
         );
     }
 }

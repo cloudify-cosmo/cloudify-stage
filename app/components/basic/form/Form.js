@@ -35,8 +35,13 @@ export default class FormWrapper extends Component {
     };
 
     static fieldNameValue(field) {
-        const value = field.type === 'checkbox' ? field.checked : field.value;
         const name = field.name;
+        const value = field.type === 'checkbox' ? field.checked : field.value;
+
+        if (_.isEmpty(name)) {
+            console.error("Required name attribute is not provided!", field);
+            throw "Required name attribute is not provided!";
+        }
 
         return {[name]: value};
     }
