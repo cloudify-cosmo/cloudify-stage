@@ -104,14 +104,14 @@ export default class extends React.Component {
                     <DeploymentsTable widget={this.props.widget} data={this.props.data}
                                      fetchData={this.fetchData.bind(this)}
                                      onSelectDeployment={this._selectDeployment.bind(this)}
-                                     onMenuAction={this._showModal.bind(this)}/>
+                                     onMenuAction={this._showModal.bind(this)}
                                      onCancelExecution={this._cancelExecution.bind(this)}
                                      onError={this._handleError.bind(this)} />
                     :
                     <DeploymentsSegment widget={this.props.widget} data={this.props.data}
                                        fetchData={this.fetchData.bind(this)}
                                        onSelectDeployment={this._selectDeployment.bind(this)}
-                                       onMenuAction={this._showModal.bind(this)}/>
+                                       onMenuAction={this._showModal.bind(this)}
                                        onCancelExecution={this._cancelExecution.bind(this)}
                                        onError={this._handleError.bind(this)} />
                 }
