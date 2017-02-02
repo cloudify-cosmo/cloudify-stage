@@ -41,13 +41,12 @@ export default class Wrapper extends React.Component {
                  <div className="three wide column">
                      {panels.map(
                          (item, index) =>
-                             <div>
+                             <div key={index}>
                                 <Button
                                     onClick={() => this.handleItemClick(index)}
-                                    key={index}
                                     content={item.title}
                                     fluid={true}
-                                    className={ index == this.state.activePanel ? "blue" : "" }
+                                    className={ index == this.state.activePanel ? "teal" : "" }
                                 ></Button>
                                 <br/>
                              </div>

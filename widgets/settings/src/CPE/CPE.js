@@ -79,17 +79,19 @@ export default class CPE extends React.Component {
 
     render() {
         return (
-<div>
-    <label>Select Site</label>
+            <div>
                 <Form.Group>
-                    <Form.Dropdown name='group'
-                                   selection
-                                   options={siteOptions}
-                                   value={this.state.site}
-                                   onChange={this._handleChange.bind(this)}/>
+                    <Form.Field>
+                        <div>Select Site</div>
+                        <Form.Dropdown name='site'
+                                       selection
+                                       options={siteOptions}
+                                       value={this.state.site}
+                                       onChange={this._handleChange.bind(this)}/>
+                    </Form.Field>
                 </Form.Group>
                 <br/>
-                <Accordion panels={this.panels} />
+                <Accordion styled panels={this.panels} className="fluid" />
 
             </div>
         )
