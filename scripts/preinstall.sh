@@ -7,6 +7,6 @@ npm install grunt-cli -g
 bower install
 grunt build
 cd semantic
-guilp build
+gulp build
 cd ../backend
 npm install
