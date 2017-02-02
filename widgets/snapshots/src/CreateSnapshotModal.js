@@ -33,7 +33,7 @@ export default class CreateModal extends React.Component {
     }
 
     componentWillUpdate(prevProps, prevState) {
-        if (this.state.show && prevState.show != this.state.show) {
+        if (!prevState.show && this.state.show) {
             this.setState(CreateModal.initialState);
         }
     }

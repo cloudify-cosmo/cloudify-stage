@@ -20,5 +20,6 @@
   "executions",
   "nodes",
   "deploymentButton",
-  "tenants"
+  "tenants",
+  "userManagement"
 ]

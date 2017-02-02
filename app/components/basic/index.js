@@ -26,6 +26,9 @@ import Icon from './Icon';
 import Message from './Message';
 import Segment from './Segment';
 import Accordion from './Accordion';
+import List from './List';
+import Grid from './Grid';
+import Divider from './Divider';
 import Label from './Label';
 
 export {
@@ -53,5 +56,8 @@ export {
     Message,
     Segment,
     Accordion,
+    List,
+    Grid,
+    Divider,
     Label
 };

@@ -35,7 +35,7 @@ export default class UploadModal extends React.Component {
     }
 
     componentWillUpdate(prevProps, prevState) {
-        if (this.state.show && prevState.show != this.state.show) {
+        if (!prevState.show && this.state.show) {
             this.refs.blueprintFile.reset();
             this.setState(UploadModal.initialState);
         }

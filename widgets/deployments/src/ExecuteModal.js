@@ -27,8 +27,8 @@ export default class ExecuteModal extends React.Component {
         onHide: PropTypes.func.isRequired
     };
 
-    componentWillUpdate(prevProps, prevState) {
-        if (this.props.show && prevProps.show != this.props.show) {
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.show && nextProps.show) {
             this.setState(ExecuteModal.initialState);
         }
     }

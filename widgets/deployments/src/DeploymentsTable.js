@@ -63,7 +63,7 @@ export default class extends React.Component {
                                     {
                                         _.isEmpty(activeExecutions)
                                         ?
-                                        <MenuAction item={item} bordered={true} onSelectAction={this.props.onMenuAction}/>
+                                        <MenuAction item={item} onSelectAction={this.props.onMenuAction}/>
                                         :
                                         <ActiveExecutionStatus item={activeExecutions[0]} onCancelExecution={this.props.onCancelExecution}/>
                                     }

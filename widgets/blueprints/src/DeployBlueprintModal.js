@@ -31,8 +31,8 @@ export default class DeployModal extends React.Component {
         onHide: ()=>{}
     };
 
-    componentWillUpdate(prevProps, prevState) {
-        if (this.props.show && prevProps.show != this.props.show) {
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.show && nextProps.show) {
             this.setState(DeployModal.initialState);
         }
     }
