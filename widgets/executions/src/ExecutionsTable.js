@@ -2,6 +2,9 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
+import Actions from './actions';
+import ExecutionStatus from './ExecutionStatus';
+
 export default class extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -27,18 +30,24 @@ export default class extends React.Component {
         this.props.toolbox.getContext().setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
     }
 
+    _cancelExecution(execution, forceCancel) {
+        let actions = new Actions(this.props.toolbox);
+        actions.doCancel(execution, forceCancel)
+            .then(() => {
+                this.props.toolbox.getEventBus().trigger('deployments:refresh');
+                this.props.toolbox.getEventBus().trigger('executions:refresh');
+            })
+            .catch((err) => {this.setState({error: err.message});});
+    }
+
     fetchGridData(fetchParams) {
         this.props.toolbox.refresh(fetchParams);
     }
 
     render() {
-        var ErrorMessage = Stage.Basic.ErrorMessage;
-        var DataTable = Stage.Basic.DataTable;
-        var HighlightText = Stage.Basic.HighlightText;
-        var Overlay = Stage.Basic.Overlay;
-        var Checkmark = Stage.Basic.Checkmark;
+        let {ErrorMessage, DataTable, HighlightText, Overlay, Checkmark} = Stage.Basic;
 
-        var fieldsToShow = this.props.widget.configuration.fieldsToShow;
+        let fieldsToShow = this.props.widget.configuration.fieldsToShow;
 
         return (
             <div>
@@ -91,15 +100,13 @@ export default class extends React.Component {
                                         { _.isEmpty(item.error) ?
                                             <div>
                                                 <i className="check circle icon inverted green"></i>
-                                                {item.status}
+                                                <ExecutionStatus item={item} showInactiveAsLink={false} onCancelExecution={this._cancelExecution.bind(this)}/>
                                             </div>
                                             :
                                             <Overlay>
                                                 <Overlay.Action title="Error details">
                                                     <i data-overlay-action className="remove circle icon red link"></i>
-                                                    <a href="javascript:void(0)">
-                                                        {item.status}
-                                                    </a>
+                                                    <ExecutionStatus item={item} showInactiveAsLink={true} onCancelExecution={this._cancelExecution.bind(this)}/>
                                                 </Overlay.Action>
                                                 <Overlay.Content>
                                                     <HighlightText className='python'>{item.error}</HighlightText>
