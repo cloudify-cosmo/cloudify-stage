@@ -45,13 +45,9 @@ export default class extends React.Component {
     }
 
     render() {
-        var ErrorMessage = Stage.Basic.ErrorMessage;
-        var DataTable = Stage.Basic.DataTable;
-        var HighlightText = Stage.Basic.HighlightText;
-        var Overlay = Stage.Basic.Overlay;
-        var Checkmark = Stage.Basic.Checkmark;
+        let {ErrorMessage, DataTable, HighlightText, Overlay, Checkmark} = Stage.Basic;
 
-        var fieldsToShow = this.props.widget.configuration.fieldsToShow;
+        let fieldsToShow = this.props.widget.configuration.fieldsToShow;
 
         return (
             <div>

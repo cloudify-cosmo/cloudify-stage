@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 27/01/2017.
  */
 
-import { isActiveExecution } from './utils';
+import { Constants, isActiveExecution } from './utils';
 
 let PropTypes = React.PropTypes;
 
@@ -24,26 +24,27 @@ export default class extends React.Component {
 
     _onDropdownChange(event, data) {
         this.setState({cancelClicked: true});
-        this.props.onCancelExecution(this.props.item, data.value === 'force-cancel');
+        this.props.onCancelExecution(this.props.item, data.value === Constants.EXECUTION_FORCE_CANCEL_ACTION);
     }
 
     render () {
-        let Dropdown = Stage.Basic.Dropdown;
-        let Label = Stage.Basic.Label;
-        let Icon = Stage.Basic.Icon;
+        let {Dropdown, Label, Icon} = Stage.Basic;
 
         let execution = this.props.item;
 
         if (isActiveExecution(execution)) {
             let activeExecutionStatus = execution.status;
             let cancelClicked = this.state.cancelClicked;
-            let executionCancellationOptions = [{text: 'Cancel', value: 'cancel'}, {text: 'Force Cancel', value: 'force-cancel'}];
+            let executionCancellationOptions = [
+                {text: 'Cancel', value: Constants.EXECUTION_CANCEL_ACTION},
+                {text: 'Force Cancel', value: Constants.EXECUTION_FORCE_CANCEL_ACTION}
+            ];
 
             return (
                 <Label>
                     <Icon name="spinner" loading />
                     {activeExecutionStatus}
-                    <Dropdown disabled={cancelClicked} icon={<Icon name='delete' />} text=' '
+                    <Dropdown disabled={cancelClicked} icon='delete' text=' '
                               options={executionCancellationOptions} onChange={this._onDropdownChange.bind(this)} />
                 </Label>
             )

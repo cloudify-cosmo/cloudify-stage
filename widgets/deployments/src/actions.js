@@ -2,6 +2,7 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
+import { Constants } from './utils';
 
 export default class {
     constructor(toolbox) {
@@ -15,7 +16,7 @@ export default class {
     doCancel(execution,force) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
             'deployment_id': execution.deployment_id,
-            'action': force ? 'force-cancel' : 'cancel'
+            'action': force ? Constants.EXECUTION_FORCE_CANCEL_ACTION : Constants.EXECUTION_CANCEL_ACTION
         });
     }
 
