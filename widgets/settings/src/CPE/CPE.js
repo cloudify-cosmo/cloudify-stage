@@ -89,7 +89,7 @@ export default class CPE extends React.Component {
                                    onChange={this._handleChange.bind(this)}/>
                 </Form.Group>
                 <br/>
-                <Accordion styled={true} panels={this.panels} />
+                <Accordion panels={this.panels} />
 
             </div>
         )

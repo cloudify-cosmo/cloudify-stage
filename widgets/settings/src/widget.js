@@ -2,7 +2,6 @@
  * Created by Alex on 1/23/2017.
  */
 
-
 import Wrapper from './Wrapper';
 
 Stage.defineWidget({
@@ -15,7 +14,6 @@ Stage.defineWidget({
     isReact: true,
 
     render: function(/*widget, data, error, toolbox*/) {
-
         return (
             <Wrapper></Wrapper>
         )
