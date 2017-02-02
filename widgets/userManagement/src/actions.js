@@ -28,6 +28,10 @@ export default class Actions {
         return this.toolbox.getManager().doGet(`/tenants?_include=name`);
     }
 
+    doRemoveFromTenant(username, tenant_name) {
+        return this.toolbox.getManager().doDelete(`/tenants/users`, null, {username, tenant_name});
+    }
+
     doHandleTenants(username, tenantsToAdd, tenantsToDelete) {
         let addActions = _.map(tenantsToAdd,(tenant_name)=> this.toolbox.getManager().doPut(`/tenants/users`, null, {username, tenant_name}));
         let deleteActions = _.map(tenantsToDelete,(tenant_name)=> this.toolbox.getManager().doDelete(`/tenants/users`, null, {username, tenant_name}));
@@ -37,6 +41,10 @@ export default class Actions {
 
     doGetGroups() {
         return this.toolbox.getManager().doGet(`/user-groups?_include=name`);
+    }
+
+    doRemoveFromGroup(username, group_name) {
+        return this.toolbox.getManager().doDelete(`/user-groups/users`, null, {username, group_name});
     }
 
     doHandleGroups(username, groupsToAdd, groupsToDelete) {

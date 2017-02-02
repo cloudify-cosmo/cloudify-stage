@@ -84,6 +84,10 @@ export default class TenantsTable extends React.Component {
         this.setState({showModal: false});
     }
 
+    _handleError(message) {
+        this.setState({error: message});
+    }
+
     _deleteUser() {
         this.props.toolbox.loading(true);
 
@@ -114,8 +118,8 @@ export default class TenantsTable extends React.Component {
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />
                     <DataTable.Column label="Role" name="role" width="15%" />
                     <DataTable.Column label="Is active" name="active" width="10%" />
-                    <DataTable.Column label="Number of groups" width="10%" />
-                    <DataTable.Column label="Number of tenants" width="10%" />
+                    <DataTable.Column label="# Groups" width="10%" />
+                    <DataTable.Column label="# Tenants" width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {
                         this.props.data.items.map((item) => {
@@ -133,7 +137,7 @@ export default class TenantsTable extends React.Component {
                                         </DataTable.Data>
                                     </DataTable.Row>
                                     <DataTable.DataExpandable>
-                                        <UserDetails data={item}/>
+                                        <UserDetails data={item} toolbox={this.props.toolbox} onError={this._handleError.bind(this)}/>
                                     </DataTable.DataExpandable>
                                 </DataTable.RowExpandable>
                             );

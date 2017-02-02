@@ -416,3 +416,11 @@ code.hljs {
 .ui.dropdown .menu>.item.indent {
   padding-left: 30px !important;
 }
+
+.ui.divided.light.list>.item {
+  border-top: 1px solid #F0F0F0;
+}
+
+.ui.divided.light.list>.item:first-child {
+  border-top: none;
+}
