@@ -7,7 +7,7 @@ var log4js = require('log4js');
 let path = require('path');
 var fs = require('fs');
 try {
-    fs.mkdirSync('./logs');
+    fs.mkdirSync(path.resolve(__dirname , "../logs"));
 } catch (e) {
     if (e.code != 'EEXIST') {
         console.error("Could not set up directory, error was: ", e);

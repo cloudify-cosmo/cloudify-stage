@@ -10,7 +10,7 @@
     "lint": "eslint app",
     "beforebuild" : "scripts/preinstall.sh",
     "build" : "webpack --config webpack.config-prod.js --bail",
-    "zip": "tar -cvzf stage.tar.gz dist/** backend/**"
+    "zip": "scripts/createPackage.sh"
   },
   "author": "Kinneret Zin",
   "license": "",
