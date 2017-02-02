@@ -45,10 +45,16 @@ Stage.defineWidget({
                     return toolbox.getManager().doGet('/node-instances?_include=id,state,deployment_id', {deployment_id: ids});
                 });
 
-        return Promise.all([deploymentData, nodeData, nodeInstanceData]).then(function(data) {
+        let executionsData = deploymentIds.then(ids=>{
+            return toolbox.getManager().doGet('/executions?_include=id,workflow_id,status,deployment_id', {deployment_id: ids});
+        });
+
+        return Promise.all([deploymentData, nodeData, nodeInstanceData, executionsData]).then(function(data) {
                 let deploymentData = data[0];
                 let nodeSize = _.countBy(data[1].items, "deployment_id");
                 let nodeInstanceData = _.groupBy(data[2].items, "deployment_id");
+                let executionsData = _.groupBy(data[3].items, "deployment_id");
+                console.log(executionsData);
 
                 let formattedData = Object.assign({},deploymentData,{
                     items: _.map (deploymentData.items,(item)=>{
@@ -56,7 +62,8 @@ Stage.defineWidget({
                             nodeSize: nodeSize[item.id],
                             nodeStates: _.countBy(nodeInstanceData[item.id], "state"),
                             created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
-                            updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm')
+                            updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
+                            executions: executionsData[item.id]
                         })
                     })
                 });

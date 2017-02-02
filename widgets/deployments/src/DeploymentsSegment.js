@@ -3,6 +3,8 @@
  */
 
 import MenuAction from './MenuAction';
+import ActiveExecutionStatus from './ActiveExecutionStatus';
+import { isActiveExecution } from './utils';
 
 let PropTypes = React.PropTypes;
 
@@ -13,14 +15,17 @@ export default class extends React.Component {
         widget: PropTypes.object.isRequired,
         fetchData: PropTypes.func,
         onSelectDeployment: PropTypes.func,
-        onMenuAction: PropTypes.func
-
+        onCancelExecution: PropTypes.func,
+        onMenuAction: PropTypes.func,
+        onError: PropTypes.func
     };
 
     static defaultProps = {
         fetchData: ()=>{},
         onSelectDeployment: ()=>{},
-        onMenuAction: ()=>{}
+        onCancelExecution: ()=>{},
+        onMenuAction: ()=>{},
+        onError: ()=>{}
     };
 
     render() {
@@ -32,6 +37,12 @@ export default class extends React.Component {
                      fetchData={this.props.fetchData}>
                 {
                     this.props.data.items.map((item) => {
+
+                        let activeExecutions = item.executions.filter((execution) => isActiveExecution(execution));
+                        if (activeExecutions.size > 1) {
+                            this.props.onError('Internal error: More than one execution is running for \'' + item.id + '\' deployment')
+                        }
+
                         return (
                             <DataSegment.Item key={item.id} select={item.isSelected}
                                           onClick={()=>this.props.onSelectDeployment(item)}>
@@ -78,7 +89,13 @@ export default class extends React.Component {
                                     </div>
 
                                     <div className="two wide column action">
-                                        <MenuAction item={item} onSelectAction={this.props.onMenuAction}/>
+                                        {
+                                            _.isEmpty(activeExecutions)
+                                            ?
+                                            <MenuAction item={item} onSelectAction={this.props.onMenuAction}/>
+                                            :
+                                            <ActiveExecutionStatus item={activeExecutions[0]} onCancelExecution={this.props.onCancelExecution}/>
+                                        }
                                     </div>
                                 </div>
                             </DataSegment.Item>

@@ -29,6 +29,7 @@ import Accordion from './Accordion';
 import List from './List';
 import Grid from './Grid';
 import Divider from './Divider';
+import Label from './Label';
 
 export {
     Modal,
@@ -57,5 +58,6 @@ export {
     Accordion,
     List,
     Grid,
-    Divider
+    Divider,
+    Label
 };
