@@ -4,27 +4,16 @@ machine:
 dependencies:
   override:
     - npm install
-    - npm install webpack -g
-    - npm install bower -g
-    - npm install gulp -g
-    - npm install grunt-cli -g
-    - bower install
-    - gulp build:
-        pwd:
-          semantic
-    - grunt build
-    - npm install:
-        pwd:
-          backend
+    - npm run beforebuild
 deployment:
   demo-deploy:
     branch: deploy-demo
     commands:
-      - webpack --config webpack.config-prod.js --bail
-      - tar -cvzf stage.tar.gz dist/** backend/**
+      - npm run build
+      - npm run zip
       - scp stage.tar.gz ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com:~
       - cat ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
   webpackall:
     branch: /.*/
     commands:
-      - webpack --config webpack.config-prod.js --bail
+      - npm run build

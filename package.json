@@ -6,8 +6,11 @@
   "scripts": {
     "test": "mocha --require ./test/setup.js -R mocha-pretty-spec-reporter --compilers babel-core/register --recursive \"./test/**/*Test.js\"",
     "devtest": "mocha --require ./test/setup.js -R mocha-pretty-spec-reporter --compilers babel-core/register",
-    "start": "node devServer.js",
-    "lint": "eslint app"
+    "start": "node backend/server.js",
+    "lint": "eslint app",
+    "beforebuild" : "scripts/preinstall.sh",
+    "build" : "webpack --config webpack.config-prod.js --bail",
+    "zip": "scripts/createPackage.sh"
   },
   "author": "Kinneret Zin",
   "license": "",

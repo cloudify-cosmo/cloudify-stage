@@ -5,3 +5,5 @@ bower_components
 logs/*
 
 widgets/*/widget.js
+
+stage.tar.gz
