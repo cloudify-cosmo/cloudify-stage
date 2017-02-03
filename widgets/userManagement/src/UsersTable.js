@@ -103,7 +103,7 @@ export default class TenantsTable extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, DataTable, Checkmark, Icon, Confirm} = Stage.Basic;
+        let {ErrorMessage, DataTable, Checkmark, Label, Confirm} = Stage.Basic;
 
         return (
             <div>
