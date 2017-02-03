@@ -11,7 +11,11 @@ Stage.defineWidget({
     initialWidth: 5,
     initialHeight: 4,
     color: "green",
-    fetchUrl: '[manager]/events?type=cloudify_event[params]',
+    fetchUrl: {
+        events: '[manager]/events?type=cloudify_event[params]',
+        blueprints: '[manager]/blueprints?_include=id',
+        deployments: '[manager]/deployments?_include=id'
+    },
     isReact: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
@@ -34,8 +38,8 @@ Stage.defineWidget({
         const SELECTED_EVENT_ID = toolbox.getContext().getValue('eventId');
         const CONTEXT_PARAMS = this.fetchParams(widget, toolbox);
 
-        let formattedData = data;
-        formattedData = Object.assign({}, data, {
+        let formattedData = data.events;
+        formattedData = Object.assign({}, formattedData, {
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
                     id: item.context.execution_id + item['@timestamp'],
@@ -43,14 +47,15 @@ Stage.defineWidget({
                     isSelected: (item.context.execution_id + item['@timestamp']) === SELECTED_EVENT_ID
                 })
             }),
-            total : _.get(data, 'metadata.pagination.total', 0),
+            total : _.get(formattedData, 'metadata.pagination.total', 0),
             blueprintId: CONTEXT_PARAMS['context.blueprint_id'],
             deploymentId: CONTEXT_PARAMS['context.deployment_id'],
             executionId: CONTEXT_PARAMS['context.execution_id']
         });
 
         return (
-            <EventsTable widget={widget} data={formattedData} toolbox={toolbox}/>
+            <EventsTable widget={widget} data={formattedData} blueprints={data.blueprints}
+                         deployments={data.deployments} toolbox={toolbox}/>
         );
 
     }

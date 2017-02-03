@@ -91,6 +91,7 @@ export default class DropdownWrapper extends Component {
         children: PropTypes.any,
         className: PropTypes.string,
         closeOnBlur: PropTypes.bool, //Whether or not the menu should close when the dropdown is blurred.
+        closeOnChange: PropTypes.bool, //Whether or not the menu should close when a value is selected from the dropdown.
         compact: PropTypes.bool, //A compact dropdown has no minimum width.
         defaultOpen: PropTypes.bool, //Initial value of open.
         defaultSelectedLabel: PropTypes.string, //Currently selected label in multi-select.

@@ -2,7 +2,10 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
+import EventFilter from './EventFilter';
+
 export default class EventsTable extends React.Component {
+
     constructor(props, context) {
         super(props, context);
 
@@ -39,6 +42,8 @@ export default class EventsTable extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error}/>
 
+                <EventFilter toolbox={this.props.toolbox} blueprints={this.props.blueprints}
+                             deployments={this.props.deployments}/>
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                        totalSize={this.props.data.total}
                        pageSize={this.props.widget.configuration.pageSize}

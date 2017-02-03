@@ -13,6 +13,7 @@ import FormCheckbox from '../control/Checkbox'
 import FormFile from '../control/InputFile'
 import FormDropdown from '../control/Dropdown'
 import FormButton from '../control/Button'
+import FormDate from '../control/InputDate'
 
 export default class FormWrapper extends Component {
 
@@ -24,6 +25,7 @@ export default class FormWrapper extends Component {
     static Checkbox = FormCheckbox;
     static File = FormFile;
     static Dropdown = FormDropdown;
+    static InputDate = FormDate;
     static Button = FormButton;
 
     static propTypes = {

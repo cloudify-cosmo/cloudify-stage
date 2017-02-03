@@ -163,7 +163,9 @@ export default class WidgetDynamicContent extends Component {
 
     _fetchData(params) {
         if (params) {
-            this.fetchParams = _.merge({}, this.fetchParams, params.gridParams ? params : {filterParams: params});
+            Object.assign(this.fetchParams.gridParams, params.gridParams);
+            Object.assign(this.fetchParams.filterParams, params.gridParams ? params.filterParams : params);
+
             this._updateConfiguration(params);
         }
 
@@ -258,9 +260,9 @@ export default class WidgetDynamicContent extends Component {
         if (this.props.widget.definition.fetchParams && typeof this.props.widget.definition.fetchParams === 'function') {
             let params = this.props.widget.definition.fetchParams(this.props.widget, this._getToolbox());
 
-            let mergedParams = _.merge({}, this.fetchParams, {filterParams: params});
-            if (!_.isEqual(this.fetchParams, mergedParams)) {
-                this.fetchParams = mergedParams;
+            let mergedParams = Object.assign({}, this.fetchParams.filterParams, params);
+            if (!_.isEqual(this.fetchParams.filterParams, mergedParams)) {
+                this.fetchParams.filterParams = mergedParams;
                 requiresFetch = true;
             }
         }
