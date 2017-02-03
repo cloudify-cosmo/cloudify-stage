@@ -21,5 +21,6 @@
   "nodes",
   "deploymentButton",
   "tenants",
-  "userManagement"
+  "userManagement",
+  "userGroups"
 ]

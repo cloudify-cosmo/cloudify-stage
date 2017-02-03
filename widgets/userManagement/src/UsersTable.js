@@ -94,6 +94,7 @@ export default class TenantsTable extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doDelete(this.state.user.username).then(()=>{
             this._hideModal();
+            this.setState({error: null});
             this.props.toolbox.loading(false);
             this.props.toolbox.refresh();
         }).catch((err)=>{
@@ -103,7 +104,7 @@ export default class TenantsTable extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, DataTable, Checkmark, Icon, Confirm} = Stage.Basic;
+        let {ErrorMessage, DataTable, Checkmark, Label, Confirm} = Stage.Basic;
 
         return (
             <div>
