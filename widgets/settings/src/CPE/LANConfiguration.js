@@ -6,7 +6,7 @@ const { Form } = Stage.Basic;
 import Segment from '../../../../app/components/basic/Segment';
 import Button from '../../../../app/components/basic/control/Button';
 
-import guid from '../guid';
+import _debounceErrorCheck from '../Additional/SharedFunctions';
 
 const privateLAN = [
     {
@@ -102,9 +102,6 @@ const privateLanDefaultValues = {
     }
 };
 
-const ipv4ErrorMessage = ' has to be a proper IPv4 address.';
-const macErrorMessage = ' has to be a proper MAC address';
-
 
 const privateLANDefault = Object.keys(privateLanDefaultValues).map(key => ({ text: key, value: key }) );
 
@@ -113,76 +110,61 @@ export default class LANConfiguration extends React.Component {
     constructor(props, context) {
         super(props, context);
 
-        this.state = {
-            lan_default_private_lan: '',
-            lan_subnet_address: '',
-            lan_subnet_mask: '',
-            lan_default_gateway: '',
+        this.state = this.setupState( props );
+    }
 
-            lan_dhcp_range: '',
-            lan_dhcp_exclude_list: '',
-            lan_static_allocation_mac: '',
-            lan_static_allocation_ip: '',
+    setupState( props ) {
+        let data = props['data-cpe']['LAN'];
 
-            lan_dns_primary: '',
-            lan_dns_pecondary: '',
+        if( data == undefined || data == null ) return {};
 
-            lan_public_subnet_address: '',
-            lan_public_subnet_mask: '',
+        if( Object.keys(data).length === 0 ) {
+            data = {
+                lan_default_private_lan: '',
+                lan_subnet_address: '',
+                lan_subnet_mask: '',
+                lan_default_gateway: '',
 
-            errors: {},
-            errorsTexts: [],
+                lan_dhcp_range: '',
+                lan_dhcp_exclude_list: '',
+                lan_static_allocation_mac: '',
+                lan_static_allocation_ip: '',
+
+                lan_dns_primary: '',
+                lan_dns_pecondary: '',
+
+                lan_public_subnet_address: '',
+                lan_public_subnet_mask: ''
+            }
         }
+
+        data.siteValue = props['data-cpe'].value;
+        data.errors = {};
+        data.errorsTexts = [];
+
+        data.saveData = props['save-data'];
+
+        return data;
     }
 
-    _validateIP(value) {
-        let _ipv4Regex = /((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))/;
-        return _ipv4Regex.test(value);
+    componentWillReceiveProps( nextProps ) {
+       this.setState( this.setupState( nextProps ));
     }
 
-    _validateMAC(value) {
-        let _macRegex = /^(([A-Fa-f0-9]{2}[:]){5}[A-Fa-f0-9]{2}[,]?)+$/;
-        return _macRegex.test(value);
-    }
-
-    _isError(key) {
-        return (this.state.errors[key] !== undefined && this.state.errors[key] === true );
-    }
+    _debounceErrorTimer = null;
 
     _handleChange(proxy, field) {
-
         this.setState(Form.fieldNameValue(field));
-
-        let errors = this.state.errors;
-        if( field['data-validate'] !== undefined ) {
-
-            let className = field['data-validate'] === 'ipv4' ?
-                (this._validateIP(field.value) ? "" : "error") :
-                (this._validateMAC(field.value) ? "" : "error");
-
-            errors[field.name] = {
-                class: field.value === '' ? '' : className,
-                type: field['data-validate'],
-                name: field['data-text']
-            };
-        }
-
-        let errorsTexts = Object.keys(errors).map( key =>
-            errors[key].class === '' ? undefined :
-                ( "Field " + errors[key].name +
-                (errors[key].type === 'ipv4' ? ipv4ErrorMessage :
-                        errors[key].type === 'mac' ? macErrorMessage : ''
-                ))
-        ).filter(x => (typeof x === 'string'));
-
-        this.setState({
-            errors,
-            errorsTexts
-        });
+        if( this._debounceErrorTimer !== null ) clearTimeout( this._debounceErrorTimer);
+        this._debounceErrorTimer = setTimeout(() => _debounceErrorCheck(field, this), 500);
     }
 
     _handleSubmit(data) {
-        console.log(data);
+        console.log('---')
+        console.log( this.state.saveData )
+        console.log('---')
+
+        this.state.saveData( data, this.state.siteValue );
     }
 
     _setDefaultPrivateLAN(proxy, field) {
@@ -205,18 +187,19 @@ export default class LANConfiguration extends React.Component {
     _renderFieldGroup( list ) {
         return list.map(
             (item, index) => (
-                <div key={guid() + index}>
+                <div key={ index } className="column">
                     <Form.Field className={ this._getFieldClass( item.value ) } >
                         <label>{item.text}</label>
                         <Form.Input placeholder={item.text}
                                     name={'lan_' + item.value}
                                     data-text={item.text}
+                                    key={ "input_" + index }
                                     value={this.state['lan_' + item.value]}
                                     onChange={this._handleChange.bind(this)}
                                     data-validate={item.validate}
                         />
                     </Form.Field>
-                    { index !== privateLAN.length-1 && <br/> }
+                    { index !== list.length-1 && <br/> }
                 </div>
             )
         )

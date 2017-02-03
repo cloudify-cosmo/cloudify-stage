@@ -2,8 +2,6 @@
  * Created by jakub on 2/1/17.
  */
 
-import { Accordion, Menu, Container } from 'semantic-ui-react'
-
 import Button from '../../../app/components/basic/control/Button';
 
 import CPE from './CPE/CPE';
@@ -19,7 +17,12 @@ const panels = [{
 }, {
     title: 'VNF',
     content: React.createElement(VNF)
-}];
+}, {
+    title: 'SD-WAN',
+    content: React.createElement(VNF)
+}
+];
+
 
 export default class Wrapper extends React.Component {
 

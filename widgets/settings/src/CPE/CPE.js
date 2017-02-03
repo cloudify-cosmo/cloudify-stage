@@ -2,7 +2,6 @@
  * Created by Alex on 1/24/2017.
  */
 
-import { Segment, Button } from 'semantic-ui-react'
 const { Form } = Stage.Basic;
 import Accordion from '../../../../app/components/basic/Accordion';
 
@@ -11,43 +10,19 @@ import VoiceLANConfiguration from './VoiceLANConfiguration';
 
 const siteOptions = [{
     text: 'Haifa',
-    value: 'haifa'
+    value: '0'
 }, {
     text: 'Tel Aviv',
-    value: 'telaviv'
-}, {
-    text: 'Jerusalem',
-    value: 'jerusalem'
-}, {
-    text: 'Eilat',
-    value: 'eilat'
-}];
-
-const statusRadiobuttons = [{
-    text: 'Active / Active',
-    value: 'active'
-}, {
-    text: 'Active / Standby',
-    value: 'standby'
-}, {
-    text: 'Application Load Balancing',
-    value: 'lb'
-}];
-const groupOptions = [{
-    text: 'App Group 1',
     value: '1'
 }, {
-    text: 'App Group 2',
+    text: 'Jerusalem',
     value: '2'
 }, {
-    text: 'App Group 3',
+    text: 'Eilat',
     value: '3'
-}, {
-    text: 'App Group 4',
-    value: '4'
 }];
 
-
+const CPEs = siteOptions.map( site => ({ site: site.text, value: site.value, LAN: {}, voiceLAN: {} }) );
 
 export default class CPE extends React.Component {
 
@@ -55,27 +30,32 @@ export default class CPE extends React.Component {
         super(props, context);
 
         this.state = {
-            site: "",
-            status: "",
-            group: "",
-            errors: {}
-        }
+            site: 0,
+            CPEs
+        };
     }
 
     _handleChange(proxy, field) {
-        console.log(Form.fieldNameValue(field));
-
         this.setState(Form.fieldNameValue(field));
     }
 
-    _handleSubmit(data) {
-        console.log(data);
-    }
+    _handleLANConfig = function ( lanConfig, index ) {
+        let CPEs = this.state.CPEs;
 
-    panels = [
-        {title: 'LAN Configuration', content: <LANConfiguration/> },
-        {title: 'Voice LAN Configuration', content: <VoiceLANConfiguration/>}
-    ];
+        CPEs[index].LAN = lanConfig;
+
+        console.log( lanConfig )
+        console.log( CPEs )
+
+        this.setState( CPEs );
+    };
+
+    _handleVoiceLANConfig = function ( voiceLANConfig, index ) {
+        let CPEs = this.state.CPEs;
+
+        CPEs[index].voiceLAN = voiceLANConfig;
+        this.setState( CPEs );
+    };
 
     render() {
         return (
@@ -91,7 +71,17 @@ export default class CPE extends React.Component {
                     </Form.Field>
                 </Form.Group>
                 <br/>
-                <Accordion styled panels={this.panels} className="fluid" />
+                <Accordion styled panels={[
+                    {title: 'LAN Configuration',
+                        content: <LANConfiguration
+                        save-data={ this._handleLANConfig.bind(this) }
+                        data-cpe={this.state.CPEs[this.state.site]} /> },
+
+                    {title: 'Voice LAN Configuration',
+                        content: <VoiceLANConfiguration
+                        save-data={ this._handleVoiceLANConfig.bind(this) }
+                        data-cpe={this.state.CPEs[this.state.site]} />}
+                ]} className="fluid" />
 
             </div>
         )
