@@ -7,18 +7,19 @@ import Button from '../../../app/components/basic/control/Button';
 import CPE from './CPE/CPE';
 import ACL from './ACL';
 import VNF from './VNF';
+import SDWAN from './SD-WAN/SDWAN'
 
 const panels = [{
     title: 'CPE',
     content: React.createElement(CPE)
 }, {
+    title: 'SD-WAN',
+    content: React.createElement(SDWAN)
+}, {
     title: 'ACL',
     content: React.createElement(ACL)
 }, {
     title: 'VNF',
-    content: React.createElement(VNF)
-}, {
-    title: 'SD-WAN',
     content: React.createElement(VNF)
 }
 ];

@@ -8,47 +8,7 @@ import Button from '../../../../app/components/basic/control/Button';
 
 import _debounceErrorCheck from '../Additional/SharedFunctions';
 
-const voiceLAN = [
-    {
-        text: 'Subnet Address',
-        value: 'subnet_address',
-        validate: 'ipv4',
-    },
-    {
-        text: 'Subnet Mask',
-        value: 'subnet_mask',
-        validate: 'ipv4',
-    },
-    {
-        text: 'Default Gateway',
-        value: 'default_gateway',
-        validate: 'ipv4',
-    }
-];
-const voiceLANDHCP = [
-    {
-        text: 'DHCP Range',
-        value: 'dhcp_range',
-        validate: 'ipv4',
-    },
-    {
-        text: 'DHCP Exclude',
-        value: 'dhcp_exclude',
-        validate: 'ipv4',
-    }
-];
-const voiceLANStaticAllocation = [
-    {
-        text: 'Static Allocation MAC',
-        value: 'static_allocation_mac',
-        validate: 'mac',
-    },
-    {
-        text: 'Static Allocation IP',
-        value: 'static_allocation_ip',
-        validate: 'ipv4',
-    }
-];
+
 
 export default class VoiceLANConfiguration extends React.Component {
 
@@ -82,6 +42,8 @@ export default class VoiceLANConfiguration extends React.Component {
 
         data.saveData = props['save-data'];
 
+        data.const = props['data-const'];
+
         return data;
     }
 
@@ -98,7 +60,8 @@ export default class VoiceLANConfiguration extends React.Component {
     }
 
     _handleSubmit(data) {
-        this.state.saveData( data, this.state.siteValue );
+        if( this.state.errorsTexts.length == 0 )
+            this.state.saveData( data, this.state.siteValue );
     }
 
     _getFieldClass(id) {
@@ -135,16 +98,16 @@ export default class VoiceLANConfiguration extends React.Component {
                         <Form.Group className="column">
                             <h3>Voice LAN</h3>
 
-                            {this._renderFieldGroup(voiceLAN)}
+                            {this._renderFieldGroup(this.state.const.voiceLAN)}
                         </Form.Group>
 
 
                         <Form.Group className="column">
                             <h3>Voice LAN DHCP</h3>
-                            {this._renderFieldGroup(voiceLANDHCP)}
+                            {this._renderFieldGroup(this.state.const.voiceLANDHCP)}
                             <br/>
                             <div className="ui grid equal width">
-                                {this._renderFieldGroup(voiceLANStaticAllocation)}
+                                {this._renderFieldGroup(this.state.const.voiceLANStaticAllocation)}
                             </div>
                         </Form.Group>
                     </div>

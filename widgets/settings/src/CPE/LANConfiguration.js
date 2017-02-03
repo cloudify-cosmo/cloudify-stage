@@ -8,102 +8,6 @@ import Button from '../../../../app/components/basic/control/Button';
 
 import _debounceErrorCheck from '../Additional/SharedFunctions';
 
-const privateLAN = [
-    {
-        text: 'Subnet Address',
-        value: 'subnet_address',
-        validate: 'ipv4',
-    },
-    {
-        text: 'Subnet Mask',
-        value: 'subnet_mask',
-        validate: 'ipv4',
-    },
-    {
-        text: 'Default Gateway',
-        value: 'default_gateway',
-        validate: 'ipv4',
-    }
-];
-const privateLANDHCP = [
-    {
-        text: 'DHCP Range',
-        value: 'dhcp_range',
-        validate: 'ipv4',
-    },
-    {
-        text: 'DHCP Exclude',
-        value: 'dhcp_exclude',
-        validate: 'ipv4',
-    }
-];
-const privateLANStaticAllocation = [
-    {
-        text: 'Static Allocation MAC',
-        value: 'static_allocation_mac',
-        validate: 'mac',
-    },
-    {
-        text: 'Static Allocation IP',
-        value: 'static_allocation_ip',
-        validate: 'ipv4',
-    }
-];
-const dns = [
-    {
-        text: 'DNS Primary',
-        value: 'dns_primary'
-    },
-    {
-        text: 'DNS Secondary',
-        value: 'dns_secondary'
-    }
-];
-const publicLAN = [
-    {
-        text: 'Subnet address',
-        value: 'public_subnet_adress'
-    },
-    {
-        text: 'Subnet mask',
-        value: 'public_subnet_mask'
-    }
-];
-const privateLanDefaultValues = {
-    '192.168.1.1': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '10.0.1.0': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '255.255.255.0': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '10.0.1.1': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '172.16.1.0': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '172.16.1.1': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    }
-};
-
-
-const privateLANDefault = Object.keys(privateLanDefaultValues).map(key => ({ text: key, value: key }) );
 
 export default class LANConfiguration extends React.Component {
 
@@ -144,6 +48,8 @@ export default class LANConfiguration extends React.Component {
 
         data.saveData = props['save-data'];
 
+        data.const = props['data-const'];
+
         return data;
     }
 
@@ -160,11 +66,8 @@ export default class LANConfiguration extends React.Component {
     }
 
     _handleSubmit(data) {
-        console.log('---')
-        console.log( this.state.saveData )
-        console.log('---')
-
-        this.state.saveData( data, this.state.siteValue );
+        if( this.state.errorsTexts.length == 0 )
+            this.state.saveData( data, this.state.siteValue );
     }
 
     _setDefaultPrivateLAN(proxy, field) {
@@ -173,9 +76,9 @@ export default class LANConfiguration extends React.Component {
         let defaultLAN = field.value;
 
         this.setState( {
-            lan_subnet_address: privateLanDefaultValues[defaultLAN]['subnet_address'],
-            lan_subnet_mask: privateLanDefaultValues[defaultLAN]['subnet_mask'],
-            lan_default_gateway: privateLanDefaultValues[defaultLAN]['default_getaway'],
+            lan_subnet_address: this.state.const.privateLanDefaultValues[defaultLAN]['subnet_address'],
+            lan_subnet_mask: this.state.const.privateLanDefaultValues[defaultLAN]['subnet_mask'],
+            lan_default_gateway: this.state.const.privateLanDefaultValues[defaultLAN]['default_getaway'],
         } );
     }
 
@@ -218,23 +121,23 @@ export default class LANConfiguration extends React.Component {
                                     <label>Set default values</label>
                                     <Form.Dropdown name='lan_default_private_lan'
                                                    selection
-                                                   options={privateLANDefault}
+                                                   options={this.state.const.privateLANDefault}
                                                    value={this.state.lan_default_private_lan}
                                                    onChange={this._setDefaultPrivateLAN.bind(this)}/>
                                 </Form.Field>
                             </div>
                             <br/>
 
-                            {this._renderFieldGroup(privateLAN)}
+                            {this._renderFieldGroup(this.state.const.privateLAN)}
                         </Form.Group>
 
 
                         <Form.Group className="column">
                             <h3>Private LAN DHCP</h3>
-                            {this._renderFieldGroup(privateLANDHCP)}
+                            {this._renderFieldGroup(this.state.const.privateLANDHCP)}
                             <br/>
                             <div className="ui grid equal width">
-                                {this._renderFieldGroup(privateLANStaticAllocation)}
+                                {this._renderFieldGroup(this.state.const.privateLANStaticAllocation)}
                             </div>
                         </Form.Group>
                     </div>
@@ -243,12 +146,12 @@ export default class LANConfiguration extends React.Component {
 
                         <Form.Group className="column">
                             <h3>DNS</h3>
-                            {this._renderFieldGroup(dns)}
+                            {this._renderFieldGroup(this.state.const.dns)}
                         </Form.Group>
 
                         <Form.Group className="column">
                             <h3>Public LAN</h3>
-                            {this._renderFieldGroup(publicLAN)}
+                            {this._renderFieldGroup(this.state.const.publicLAN)}
                         </Form.Group>
 
                     </div>

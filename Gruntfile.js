@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     grunt.registerTask("prepareModules", "Finds and prepares modules for concatenation.", function() {
 
         // get all module directories
-        grunt.file.expand("widgets/settings/src").forEach(function (dir) {
+        grunt.file.expand("widgets/**/src").forEach(function (dir) {
 
 
             // get the current concat object from initConfig

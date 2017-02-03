@@ -22,6 +22,152 @@ const siteOptions = [{
     value: '3'
 }];
 
+/* LAN config consts */
+const privateLAN = [
+    {
+        text: 'Subnet Address',
+        value: 'subnet_address',
+        validate: 'ipv4',
+    },
+    {
+        text: 'Subnet Mask',
+        value: 'subnet_mask',
+        validate: 'ipv4',
+    },
+    {
+        text: 'Default Gateway',
+        value: 'default_gateway',
+        validate: 'ipv4',
+    }
+];
+const privateLANDHCP = [
+    {
+        text: 'DHCP Range',
+        value: 'dhcp_range',
+        validate: 'ipv4',
+    },
+    {
+        text: 'DHCP Exclude',
+        value: 'dhcp_exclude',
+        validate: 'ipv4',
+    }
+];
+const privateLANStaticAllocation = [
+    {
+        text: 'Static Allocation MAC',
+        value: 'static_allocation_mac',
+        validate: 'mac',
+    },
+    {
+        text: 'Static Allocation IP',
+        value: 'static_allocation_ip',
+        validate: 'ipv4',
+    }
+];
+const dns = [
+    {
+        text: 'DNS Primary',
+        value: 'dns_primary'
+    },
+    {
+        text: 'DNS Secondary',
+        value: 'dns_secondary'
+    }
+];
+const publicLAN = [
+    {
+        text: 'Subnet address',
+        value: 'public_subnet_adress'
+    },
+    {
+        text: 'Subnet mask',
+        value: 'public_subnet_mask'
+    }
+];
+const privateLanDefaultValues = {
+    '192.168.1.1': {
+        subnet_address: '127.0.0.1',
+        subnet_mask: '127.0.0.1',
+        default_getaway: '192.168.1.1'
+    },
+    '10.0.1.0': {
+        subnet_address: '127.0.0.1',
+        subnet_mask: '127.0.0.1',
+        default_getaway: '192.168.1.1'
+    },
+    '255.255.255.0': {
+        subnet_address: '127.0.0.1',
+        subnet_mask: '127.0.0.1',
+        default_getaway: '192.168.1.1'
+    },
+    '10.0.1.1': {
+        subnet_address: '127.0.0.1',
+        subnet_mask: '127.0.0.1',
+        default_getaway: '192.168.1.1'
+    },
+    '172.16.1.0': {
+        subnet_address: '127.0.0.1',
+        subnet_mask: '127.0.0.1',
+        default_getaway: '192.168.1.1'
+    },
+    '172.16.1.1': {
+        subnet_address: '127.0.0.1',
+        subnet_mask: '127.0.0.1',
+        default_getaway: '192.168.1.1'
+    }
+};
+
+const privateLANDefault = Object.keys(privateLanDefaultValues).map(key => ({ text: key, value: key }) );
+
+const lanConfig = { privateLAN, privateLANDHCP, privateLANStaticAllocation, publicLAN, dns, privateLANDefault, privateLanDefaultValues };
+
+/* Voice LAN config */
+const voiceLAN = [
+    {
+        text: 'Subnet Address',
+        value: 'subnet_address',
+        validate: 'ipv4',
+    },
+    {
+        text: 'Subnet Mask',
+        value: 'subnet_mask',
+        validate: 'ipv4',
+    },
+    {
+        text: 'Default Gateway',
+        value: 'default_gateway',
+        validate: 'ipv4',
+    }
+];
+const voiceLANDHCP = [
+    {
+        text: 'DHCP Range',
+        value: 'dhcp_range',
+        validate: 'ipv4',
+    },
+    {
+        text: 'DHCP Exclude',
+        value: 'dhcp_exclude',
+        validate: 'ipv4',
+    }
+];
+const voiceLANStaticAllocation = [
+    {
+        text: 'Static Allocation MAC',
+        value: 'static_allocation_mac',
+        validate: 'mac',
+    },
+    {
+        text: 'Static Allocation IP',
+        value: 'static_allocation_ip',
+        validate: 'ipv4',
+    }
+];
+
+const voiceConfig = { voiceLAN, voiceLANDHCP, voiceLANStaticAllocation };
+
+
+
 const CPEs = siteOptions.map( site => ({ site: site.text, value: site.value, LAN: {}, voiceLAN: {} }) );
 
 export default class CPE extends React.Component {
@@ -39,18 +185,15 @@ export default class CPE extends React.Component {
         this.setState(Form.fieldNameValue(field));
     }
 
-    _handleLANConfig = function ( lanConfig, index ) {
+    HandleLANConfig = function ( lanConfig, index ) {
         let CPEs = this.state.CPEs;
 
         CPEs[index].LAN = lanConfig;
 
-        console.log( lanConfig )
-        console.log( CPEs )
-
         this.setState( CPEs );
     };
 
-    _handleVoiceLANConfig = function ( voiceLANConfig, index ) {
+    HandleVoiceLANConfig = function ( voiceLANConfig, index ) {
         let CPEs = this.state.CPEs;
 
         CPEs[index].voiceLAN = voiceLANConfig;
@@ -67,6 +210,7 @@ export default class CPE extends React.Component {
                                        selection
                                        options={siteOptions}
                                        value={this.state.site}
+                                       text={siteOptions[this.state.site].text}
                                        onChange={this._handleChange.bind(this)}/>
                     </Form.Field>
                 </Form.Group>
@@ -74,13 +218,17 @@ export default class CPE extends React.Component {
                 <Accordion styled panels={[
                     {title: 'LAN Configuration',
                         content: <LANConfiguration
-                        save-data={ this._handleLANConfig.bind(this) }
-                        data-cpe={this.state.CPEs[this.state.site]} /> },
+                        save-data={ this.HandleLANConfig.bind(this) }
+                        data-cpe={this.state.CPEs[this.state.site]}
+                        data-const={lanConfig}
+                        /> },
 
                     {title: 'Voice LAN Configuration',
                         content: <VoiceLANConfiguration
-                        save-data={ this._handleVoiceLANConfig.bind(this) }
-                        data-cpe={this.state.CPEs[this.state.site]} />}
+                        save-data={ this.HandleVoiceLANConfig.bind(this) }
+                        data-cpe={this.state.CPEs[this.state.site]}
+                        data-const={voiceConfig}
+                        />}
                 ]} className="fluid" />
 
             </div>
