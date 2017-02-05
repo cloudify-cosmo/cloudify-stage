@@ -1,11 +1,18 @@
 {
-  "name": "Tenant managment",
+  "name": "Tenant Management",
   "widgets": [
     {
-      "name": "Blueprints List",
-      "definition": "blueprints",
-      "width": 7,
-      "height": 5
+      "name": "Tenants Management",
+      "definition": "Tenants",
+      "width": 16,
+      "height": 6
+    },
+    {
+      "name": "User Management",
+      "definition": "userManagement",
+      "width": 16,
+      "height": 6
     }
+
   ]
 }

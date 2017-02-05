@@ -49,7 +49,20 @@ export default class Widget extends Component {
             );
         }
 
-        if (this.props.widget.definition.isAdmin && this.props.manager.auth.role !== Consts.ROLE_ADMIN) {
+        if (!this.props.widget.definition) {
+            return (
+                <div className='widgetItem ui segment'>
+                    <div className='ui segment basic' style={{height:'100%'}}>
+                        <div className="ui icon message error">
+                            <i className="ban icon"></i>
+                            Cannot load widget {this.props.widget.name}. It might not be installed in your env. Please contact administrator.
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        if (this.props.widget.definition && this.props.widget.definition.isAdmin && this.props.manager.auth.role !== Consts.ROLE_ADMIN) {
             return (
                 <div className='widgetItem ui segment'>
                     <div className='ui segment basic' style={{height:'100%'}}>
