@@ -18,7 +18,7 @@ export default class MenuAction extends React.Component {
         return (
             <Dropdown pointing="top right" icon="content">
                 <Dropdown.Menu>
-                    <Dropdown.Item icon='user' text='Add user to group' value={MenuAction.ADD_USER_ACTION} onClick={this._actionClick.bind(this)}/>
+                    <Dropdown.Item icon='users' text='Add user to group' value={MenuAction.ADD_USER_ACTION} onClick={this._actionClick.bind(this)}/>
                     <Dropdown.Item icon='user' text='Add group to tenant' value={MenuAction.ADD_TENANT_ACTION} onClick={this._actionClick.bind(this)}/>
                     <Dropdown.Divider />
                     <Dropdown.Item icon='trash' text='Delete' value={MenuAction.DELETE_ACTION} onClick={this._actionClick.bind(this)}/>

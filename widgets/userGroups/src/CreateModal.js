@@ -44,7 +44,7 @@ export default class CreateModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.groupName)) {
-            errors["groupName"]="Please provide group name";
+            errors['groupName'] = 'Please provide group name';
         }
 
         if (!_.isEmpty(errors)) {
@@ -84,7 +84,7 @@ export default class CreateModal extends React.Component {
 
                     <Modal.Body>
                         <Form onSubmit={this._submitCreate.bind(this)} errors={this.state.errors} ref="createForm">
-                            <Form.Field error={this.state.errors.userGroup}>
+                            <Form.Field error={this.state.errors.groupName}>
                                 <Form.Input name='groupName' placeholder="Group name"
                                             value={this.state.groupName} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>

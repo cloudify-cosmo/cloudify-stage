@@ -86,7 +86,7 @@ export default class UserDetails extends React.Component {
                     }
                 </Segment>
                 <Segment>
-                    <Icon name="user"/>  Tenants
+                    <Icon name="users"/> Tenants
 
                     {
                         !_.isEmpty(this.props.data.tenants)
