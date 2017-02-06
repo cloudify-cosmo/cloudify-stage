@@ -29,13 +29,35 @@ export default class Wrapper extends React.Component {
         this.setState({ activePanel: index });
     };
 
+    handleSDWANUpdate (data, isInterfaces) {
+        console.log(">>> in wrapper ")
+        console.log(data)
+        console.log(">>>")
+
+        let sd_wan_source = this.state.sd_wan_source;
+        if( isInterfaces ) {
+            sd_wan_source.interfaces = data.selectable;
+            sd_wan_source.interfacesSelectedItems = data.selectedItems;
+        }else{
+            console.log("update app")
+            sd_wan_source.applications = data.selectable;
+            sd_wan_source.applicationsSelectedItems = data.selectedItems;
+        }
+        this.setState(sd_wan_source);
+    }
+
     render () {
         const panels = [{
                 title: 'CPE',
-                content: <CPE source={this.state.cpe_source} />
+                content: <CPE
+                    source={this.state.cpe_source}
+                />
             }, {
                 title: 'SD-WAN',
-                content: <SDWAN source={this.state.sd_wan_source}/>
+                content: <SDWAN
+                    source={this.state.sd_wan_source}
+                    callback={ (this.handleSDWANUpdate).bind(this) }
+                />
             }, {
                 title: 'ACL',
                 content: <ACL/>

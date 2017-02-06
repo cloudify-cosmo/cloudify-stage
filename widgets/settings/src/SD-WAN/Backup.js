@@ -56,7 +56,11 @@ export default class Backup extends React.Component {
 
             <br/>
 
-            <SelectableTable source={this.state.source} names={this._names} callback={ (this._callbackFromSelectableTable).bind(this) } only-one />
+            <SelectableTable
+                source={this.state.source}
+                names={this._names}
+                callback={ (this._callbackFromSelectableTable).bind(this) }
+                only-one />
 
             <br/>
 

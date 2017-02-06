@@ -18,7 +18,11 @@ export default class SDWAN extends React.Component {
         this.state = {
             status: ''
         };
+
+        this._callbackToWrapper = props.callback;
     }
+
+    _callbackToWrapper = null;
 
     sdWANRadios = [{
         text: 'Active / Active',
@@ -39,9 +43,11 @@ export default class SDWAN extends React.Component {
     _applications = {};
 
     _callbackFromBackup( data ) {
+        this._callbackToWrapper( data, true );
+    }
 
-
-        console.log(data)
+    _callbackFromApplications( data ) {
+        this._callbackToWrapper( data, false );
     }
 
     render() {
@@ -50,11 +56,12 @@ export default class SDWAN extends React.Component {
             <Backup
                 source={this.props.source.interfaces}
                 selectedItems={ this.props.source.interfacesSelectedItems }
-                callback={ this._callbackFromBackup }
+                callback={ (this._callbackFromBackup).bind(this) }
             ></Backup>,
             <Application
                 source={this.props.source.applications}
                 selectedItems={ this.props.source.applicationsSelectedItems }
+                callback={ (this._callbackFromApplications).bind(this) }
             ></Application>
         ];
 
