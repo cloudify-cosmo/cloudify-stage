@@ -16,7 +16,7 @@ function _validateMAC(value) {
 }
 
 
-export default function _debounceErrorCheck ( field, that ) {
+export default function debounceErrorCheck (field, that ) {
     let errors = that.state.errors;
     if( field['data-validate'] !== undefined ) {
 
@@ -49,5 +49,5 @@ export default function _debounceErrorCheck ( field, that ) {
     });
 }
 
-const ipv4ErrorMessage = ' has to be a proper IPv4 address.';
-const macErrorMessage = ' has to be a proper MAC address';
+const ipv4ErrorMessage = ' has to be IPv4 format.';
+const macErrorMessage = ' has to be MAC format.';

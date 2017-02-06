@@ -15,13 +15,15 @@ export default class Active extends React.Component {
     _DESSCRIPTION = 'This SD-wan mechanism will load balance the traffic equally  between WAN interfaces';
 
     render() {
-        return (<div className="ui segment">
+        return (
+            <div className="ui segment">
             <label>
                 {this._DESSCRIPTION}
             </label>
 
             <br/><br/>
-            <Button positive content='Save'/>
+
+            <Button content='apply' color="blue"/>
         </div>);
     }
 

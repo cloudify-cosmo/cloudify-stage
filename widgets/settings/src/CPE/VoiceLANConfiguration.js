@@ -6,7 +6,7 @@ const { Form } = Stage.Basic;
 import Segment from '../../../../app/components/basic/Segment';
 import Button from '../../../../app/components/basic/control/Button';
 
-import _debounceErrorCheck from '../Additional/SharedFunctions';
+import debounceErrorCheck from './AddressValidation';
 
 
 
@@ -56,7 +56,7 @@ export default class VoiceLANConfiguration extends React.Component {
     _handleChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
         if( this._debounceErrorTimer !== null ) clearTimeout( this._debounceErrorTimer);
-        this._debounceErrorTimer = setTimeout(() => _debounceErrorCheck(field, this), 500);
+        this._debounceErrorTimer = setTimeout(() => debounceErrorCheck(field, this), 500);
     }
 
     _handleSubmit(data) {

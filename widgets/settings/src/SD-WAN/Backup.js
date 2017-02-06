@@ -3,6 +3,7 @@
  */
 
 import Button from '../../../../app/components/basic/control/Button';
+import SelectableTable from './SelectableTable';
 
 export default class Backup extends React.Component {
 
@@ -10,67 +11,42 @@ export default class Backup extends React.Component {
         super(props, context);
 
         this.state = {
-            interfaces: [
-                'LTE',
-                'VDSL',
-                'ADSL'
-            ],
-            selectedInterfaces: [],
-            selectedLeft: null,
-            selectedRight: null
+            source: {
+                selectable: this.props.source,
+                selectedItems: this.props.selectedItems,
+                selectedLeft: [null, null],
+                selectedRight: [null, null]
+            }
         };
+
+        console.log(" call to sdwan: ")
+        console.log( props.callback )
+        this._callbackToSDWAN = props.callback;
     }
+
+    _source = null;
+    _callbackToSDWAN = null;
 
     _DESSCRIPTION = 'This SD-wan mechanism will forward traffic only to the primary interface and if primary interface fails the traffic will be forwarded to the backup interfaces';
 
-    _setSelected( event, index, left ) {
-        if( left === true ) {
-            this.setState({
-                selectedLeft: index,
-                selectedRight: null
-            });
-        } else {
-            this.setState({
-                selectedRight: index,
-                selectedLeft: null
-            });
-        }
+    _callbackFromSelectableTable( data ) {
+        let source = this.state.source;
+        source.selectable = data.selectable;
+        source.selectedItems = data.selectedItems;
+
+        this.setState({
+            source
+        });
+
+        console.log("*** callback")
+        console.log( data )
+        console.log( this.state )
+        console.log("***")
+
+        this._callbackToSDWAN( Object.assign({}, this.state.source) );
     }
 
-    _moveToLeft () {
-        let selectedInterfaces = this.state.selectedInterfaces;
-        let interfaces = this.state.interfaces;
-
-        if( this.state.selectedRight !== null ) {
-            let selected = selectedInterfaces[this.state.selectedRight];
-            interfaces.push(selected);
-            selectedInterfaces = selectedInterfaces.filter( (item, index) => { return index !== this.state.selectedRight } );
-
-            this.setState({
-                interfaces,
-                selectedInterfaces,
-                selectedRight: null
-            })
-        }
-    }
-
-    _moveToRight () {
-
-        let selectedInterfaces = this.state.selectedInterfaces;
-        let interfaces = this.state.interfaces;
-
-        if( this.state.selectedLeft !== null ) {
-            let selected = interfaces[this.state.selectedLeft];
-            selectedInterfaces.push(selected);
-            interfaces = interfaces.filter( (item, index) => { return index !== this.state.selectedLeft } );
-
-            this.setState({
-                interfaces,
-                selectedInterfaces,
-                selectedLeft: null
-            })
-        }
-    }
+    _names = ['Primary', 'Backup'];
 
     render() {
         return (<div className="ui segment">
@@ -78,60 +54,15 @@ export default class Backup extends React.Component {
                 {this._DESSCRIPTION}
             </div>
 
-            <h3>Primary</h3>
-            <div className="ui grid equal width center aligned">
+            <br/>
 
-                <div className="column">
-                    <table className="ui celled table">
-                        <thead><tr><th>All</th></tr></thead>
-                        <tbody>
-                    {
-                        this.state.interfaces.map(
-                            (item, index) => (
-                                <tr key={ index } >
-                                    <td onClick={ (event) => this._setSelected(event, index, true) }
-                                        className={ index === this.state.selectedLeft ? 'warning' : '' }>
-                                        {item}
-                                    </td>
-                                </tr>
-                            ))
-                    }
-                    </tbody></table>
-                </div>
+            <SelectableTable source={this.state.source} names={this._names} callback={ (this._callbackFromSelectableTable).bind(this) } only-one />
 
-                <div className="column">
-                    <Button icon="arrow left"
-                            onClick={ () => this._moveToLeft() }
-                            disabled={ this.state.selectedRight === null }></Button>
-                    <Button icon="arrow right"
-                            onClick={ () => this._moveToRight() }
-                            disabled={ this.state.selectedInterfaces.length > 0 || this.state.selectedLeft === null }
-                            ></Button>
-                </div>
+            <br/>
 
-                <div className="column">
-                    <table className="ui celled table">
-                        <thead><tr><th>Selected</th></tr></thead>
-                        <tbody>
-                    {
-                        this.state.selectedInterfaces.map(
-                            (item, index) => (
-                                <tr key={ index } >
-                                    <td onClick={ (event) => this._setSelected(event, index, false) }
-                                        className={ index === this.state.selectedRight ? 'warning' : '' }>
-                                        {item}
-                                    </td>
-                                </tr>
-                            ))
-                    }
-                    </tbody></table>
-                </div>
-            </div>
-
-            <br/><br/>
-
-            <Button positive content='Save'/>
-        </div>);
+            <Button content='apply' color="blue"/>
+        </div>
+        );
     }
 
 }

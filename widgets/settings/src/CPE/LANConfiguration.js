@@ -6,7 +6,7 @@ const { Form } = Stage.Basic;
 import Segment from '../../../../app/components/basic/Segment';
 import Button from '../../../../app/components/basic/control/Button';
 
-import _debounceErrorCheck from '../Additional/SharedFunctions';
+import debounceErrorCheck from './AddressValidation';
 
 
 export default class LANConfiguration extends React.Component {
@@ -23,6 +23,7 @@ export default class LANConfiguration extends React.Component {
         if( data == undefined || data == null ) return {};
 
         if( Object.keys(data).length === 0 ) {
+            console.log("nullify")
             data = {
                 lan_default_private_lan: '',
                 lan_subnet_address: '',
@@ -46,6 +47,9 @@ export default class LANConfiguration extends React.Component {
         data.errors = {};
         data.errorsTexts = [];
 
+        data.privateLANDefault =  props['data-cpe']['private_lan_default_values'];
+        data.privateLANDefaultOptions = Object.keys(data.privateLANDefault).map(key => ({ text: key, value: key }) );
+
         data.saveData = props['save-data'];
 
         data.const = props['data-const'];
@@ -62,7 +66,7 @@ export default class LANConfiguration extends React.Component {
     _handleChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
         if( this._debounceErrorTimer !== null ) clearTimeout( this._debounceErrorTimer);
-        this._debounceErrorTimer = setTimeout(() => _debounceErrorCheck(field, this), 500);
+        this._debounceErrorTimer = setTimeout(() => debounceErrorCheck(field, this), 500);
     }
 
     _handleSubmit(data) {
@@ -76,15 +80,19 @@ export default class LANConfiguration extends React.Component {
         let defaultLAN = field.value;
 
         this.setState( {
-            lan_subnet_address: this.state.const.privateLanDefaultValues[defaultLAN]['subnet_address'],
-            lan_subnet_mask: this.state.const.privateLanDefaultValues[defaultLAN]['subnet_mask'],
-            lan_default_gateway: this.state.const.privateLanDefaultValues[defaultLAN]['default_getaway'],
+            lan_subnet_address: this.state.privateLANDefault[defaultLAN]['subnet_address'],
+            lan_subnet_mask: this.state.privateLANDefault[defaultLAN]['subnet_mask'],
+            lan_default_gateway: this.state.privateLANDefault[defaultLAN]['default_getaway'],
         } );
     }
 
     _getFieldClass(id) {
         return this.state.errors['lan_' + id] === undefined ? '' :
             this.state.errors['lan_' + id].class;
+    }
+
+    _getIsEditable( value ) {
+        return value !== undefined && value === false;
     }
 
     _renderFieldGroup( list ) {
@@ -100,6 +108,7 @@ export default class LANConfiguration extends React.Component {
                                     value={this.state['lan_' + item.value]}
                                     onChange={this._handleChange.bind(this)}
                                     data-validate={item.validate}
+                                    disabled={ this._getIsEditable(item.editable) }
                         />
                     </Form.Field>
                     { index !== list.length-1 && <br/> }
@@ -121,7 +130,7 @@ export default class LANConfiguration extends React.Component {
                                     <label>Set default values</label>
                                     <Form.Dropdown name='lan_default_private_lan'
                                                    selection
-                                                   options={this.state.const.privateLANDefault}
+                                                   options={this.state.privateLANDefaultOptions}
                                                    value={this.state.lan_default_private_lan}
                                                    onChange={this._setDefaultPrivateLAN.bind(this)}/>
                                 </Form.Field>

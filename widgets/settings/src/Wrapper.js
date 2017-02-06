@@ -7,32 +7,22 @@ import Button from '../../../app/components/basic/control/Button';
 import CPE from './CPE/CPE';
 import ACL from './ACL';
 import VNF from './VNF';
-import SDWAN from './SD-WAN/SDWAN'
-
-const panels = [{
-    title: 'CPE',
-    content: React.createElement(CPE)
-}, {
-    title: 'SD-WAN',
-    content: React.createElement(SDWAN)
-}, {
-    title: 'ACL',
-    content: React.createElement(ACL)
-}, {
-    title: 'VNF',
-    content: React.createElement(VNF)
-}
-];
-
+import SDWAN from './SD-WAN/SDWAN';
+import fetchData from './DataHandler';
 
 export default class Wrapper extends React.Component {
 
     constructor(props, context) {
         super(props, context);
 
+        let fetched = fetchData();
+
         this.state = {
-            activePanel: 0
-        }
+            activePanel: 0,
+
+            cpe_source: fetched.CPE,
+            sd_wan_source: fetched.SD_WAN
+        };
     }
 
     handleItemClick = (index) => {
@@ -40,6 +30,24 @@ export default class Wrapper extends React.Component {
     };
 
     render () {
+        const panels = [{
+                title: 'CPE',
+                content: <CPE source={this.state.cpe_source} />
+            }, {
+                title: 'SD-WAN',
+                content: <SDWAN source={this.state.sd_wan_source}/>
+            }, {
+                title: 'ACL',
+                content: <ACL/>
+            }, {
+                title: 'VAS',
+                content: <VNF/>
+            }, {
+                title: 'SSL VPN',
+                content: <VNF/>
+            }
+        ];
+
         return (
             <div className="ui grid">
                  <div className="three wide column">

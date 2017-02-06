@@ -4,6 +4,7 @@
 
 const { Form } = Stage.Basic;
 import Accordion from '../../../../app/components/basic/Accordion';
+import Button from '../../../../app/components/basic/control/Button';
 
 import Active from './Active';
 import Backup from './Backup';
@@ -16,7 +17,7 @@ export default class SDWAN extends React.Component {
 
         this.state = {
             status: ''
-        }
+        };
     }
 
     sdWANRadios = [{
@@ -31,17 +32,32 @@ export default class SDWAN extends React.Component {
     }];
 
     _handleChange(proxy, field) {
-        console.log(field)
         this.setState(Form.fieldNameValue(field));
     }
 
-    _options = [
-        <Active></Active>,
-        <Backup></Backup>,
-        <Application></Application>
-    ];
+    _backup = {};
+    _applications = {};
+
+    _callbackFromBackup( data ) {
+
+
+        console.log(data)
+    }
 
     render() {
+        let _options = [
+            <Active></Active>,
+            <Backup
+                source={this.props.source.interfaces}
+                selectedItems={ this.props.source.interfacesSelectedItems }
+                callback={ this._callbackFromBackup }
+            ></Backup>,
+            <Application
+                source={this.props.source.applications}
+                selectedItems={ this.props.source.applicationsSelectedItems }
+            ></Application>
+        ];
+
         return (
             <div>
                 <h3>SD-WAN Features</h3>
@@ -63,7 +79,7 @@ export default class SDWAN extends React.Component {
                         )}
 
                         <br/>
-                        { this.state.status !== '' && this._options[ +this.state.status] }
+                        { this.state.status !== '' && _options[ +this.state.status] }
                     </div>
                 </Form.Group>
 

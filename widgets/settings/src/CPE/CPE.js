@@ -8,20 +8,6 @@ import Accordion from '../../../../app/components/basic/Accordion';
 import LANConfiguration from './LANConfiguration';
 import VoiceLANConfiguration from './VoiceLANConfiguration';
 
-const siteOptions = [{
-    text: 'Haifa',
-    value: '0'
-}, {
-    text: 'Tel Aviv',
-    value: '1'
-}, {
-    text: 'Jerusalem',
-    value: '2'
-}, {
-    text: 'Eilat',
-    value: '3'
-}];
-
 /* LAN config consts */
 const privateLAN = [
     {
@@ -77,49 +63,17 @@ const dns = [
 const publicLAN = [
     {
         text: 'Subnet address',
-        value: 'public_subnet_adress'
+        value: 'public_subnet_adress',
+        editable: false
     },
     {
         text: 'Subnet mask',
-        value: 'public_subnet_mask'
+        value: 'public_subnet_mask',
+        editable: false
     }
 ];
-const privateLanDefaultValues = {
-    '192.168.1.1': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '10.0.1.0': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '255.255.255.0': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '10.0.1.1': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '172.16.1.0': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    },
-    '172.16.1.1': {
-        subnet_address: '127.0.0.1',
-        subnet_mask: '127.0.0.1',
-        default_getaway: '192.168.1.1'
-    }
-};
 
-const privateLANDefault = Object.keys(privateLanDefaultValues).map(key => ({ text: key, value: key }) );
-
-const lanConfig = { privateLAN, privateLANDHCP, privateLANStaticAllocation, publicLAN, dns, privateLANDefault, privateLanDefaultValues };
+const lanConfig = { privateLAN, privateLANDHCP, privateLANStaticAllocation, publicLAN, dns };
 
 /* Voice LAN config */
 const voiceLAN = [
@@ -166,10 +120,6 @@ const voiceLANStaticAllocation = [
 
 const voiceConfig = { voiceLAN, voiceLANDHCP, voiceLANStaticAllocation };
 
-
-
-const CPEs = siteOptions.map( site => ({ site: site.text, value: site.value, LAN: {}, voiceLAN: {} }) );
-
 export default class CPE extends React.Component {
 
     constructor(props, context) {
@@ -177,9 +127,13 @@ export default class CPE extends React.Component {
 
         this.state = {
             site: 0,
-            CPEs
+            CPEs: props['source'].fetch
         };
+
+        this._options = props['source'].cpesOptions;
     }
+
+    _options = null;
 
     _handleChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
@@ -187,15 +141,12 @@ export default class CPE extends React.Component {
 
     HandleLANConfig = function ( lanConfig, index ) {
         let CPEs = this.state.CPEs;
-
         CPEs[index].LAN = lanConfig;
-
         this.setState( CPEs );
     };
 
     HandleVoiceLANConfig = function ( voiceLANConfig, index ) {
         let CPEs = this.state.CPEs;
-
         CPEs[index].voiceLAN = voiceLANConfig;
         this.setState( CPEs );
     };
@@ -205,12 +156,12 @@ export default class CPE extends React.Component {
             <div>
                 <Form.Group>
                     <Form.Field>
-                        <div>Select Site</div>
+                        <div>Select CPE</div>
                         <Form.Dropdown name='site'
                                        selection
-                                       options={siteOptions}
+                                       options={this._options}
                                        value={this.state.site}
-                                       text={siteOptions[this.state.site].text}
+                                       text={this._options[this.state.site].text}
                                        onChange={this._handleChange.bind(this)}/>
                     </Form.Field>
                 </Form.Group>
