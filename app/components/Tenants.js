@@ -7,9 +7,7 @@ import React, { Component, PropTypes } from 'react';
 export default class Tenants extends Component {
     static propTypes = {
         manager: PropTypes.object.isRequired,
-        onTenantChange: PropTypes.func.isRequired,
-        onLogout: PropTypes.func.isRequired,
-
+        onTenantChange: PropTypes.func.isRequired
     };
 
     onTenantSelected(tenant) {
@@ -17,33 +15,25 @@ export default class Tenants extends Component {
     }
 
     render() {
-        if (!this.props.manager.tenants || this.props.manager.tenants.isFetching) {
-            return <div className='item ui small active inline loader'></div>
+        let {Dropdown, Loader} = Stage.Basic;
+
+        let tenants = this.props.manager.tenants;
+        if (!tenants || tenants.isFetching) {
+            return <Loader active inverted inline size="small" />
         }
 
-        let selectedTenant = this.props.manager.tenants.selected || _.get(this.props.manager,'tenants.items[0].name');
+        let selectedTenant = tenants.selected || _.get(this.props.manager,'tenants.items[0].name');
         return (
-            <div className="ui inline dropdown tenantsMenu" ref={select=>$(select).dropdown({action: 'hide'})}>
-                <div className="dropDownText text">
-                    {selectedTenant ? selectedTenant : 'No Tenants'}
-                </div>
-                <i className="inverted dropdown icon"></i>
-                <div className="menu">
+            <Dropdown pointing text={selectedTenant ? selectedTenant : 'No Tenants'} className='tenantsMenu configItem'>
+                <Dropdown.Menu>
                     {
-                        this.props.manager.tenants.items.map((tenant)=>{
-                            let isSelected = tenant.name === selectedTenant;
-                            return (
-                                <div key={tenant.name} className={"item "+ (isSelected ? 'active selected' : '') } onClick={this.onTenantSelected.bind(this,tenant)}>
-                                    {tenant.name}
-                                </div>
-                            );
-                        })
+                        tenants.items.map((tenant) =>
+                            <Dropdown.Item key={tenant.name} text={tenant.name} selected={tenant.name === selectedTenant}
+                                           onClick={this.onTenantSelected.bind(this,tenant)} />
+                        )
                     }
-                    <div className='divider'/>
-                    <div className='item logout' onClick={this.props.onLogout}>Logout/switch manager</div>
-                </div>
-            </div>
-
+                </Dropdown.Menu>
+            </Dropdown>
         );
     }
 }

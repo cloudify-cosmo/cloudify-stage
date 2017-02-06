@@ -10,7 +10,6 @@ a:hover {
   img {
     height: 45px;
     margin: 4px;
-    position: absolute;
   }
 }
 
@@ -22,7 +21,6 @@ a:hover {
 
 .dropDownText
 {
-  color: #ffffff;
   display: inline-block;
 }
 
@@ -255,9 +253,12 @@ a:hover {
   }
 }
 
-.ui.menu:not(.vertical) .item.managerAndTenants {
+.ui.menu:not(.vertical) .item.configPanel {
   flex-direction: column;
   align-items: flex-end;
+  &.configItem {
+    margin: 1px 5px;
+  }
 }
 
 .ui.inline.loader.widgetLoader {
