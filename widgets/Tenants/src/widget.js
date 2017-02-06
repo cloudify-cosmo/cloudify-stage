@@ -11,11 +11,7 @@ Stage.defineWidget({
     initialWidth: 5,
     initialHeight: 4,
     color: 'green',
-    fetchUrl: {
-        tenants: '[manager]/tenants[params]',
-        users: '[manager]/users',
-        userGroups: '[manager]/user-groups',
-    },
+    fetchUrl: '[manager]/tenants[params]',
     isReact: true,
     isAdmin: true,
     initialConfiguration: [
@@ -30,7 +26,7 @@ Stage.defineWidget({
 
         var selectedTenant = toolbox.getContext().getValue('tenantName');
 
-        let formattedData = data.tenants;
+        let formattedData = data;
         formattedData = Object.assign({}, formattedData, {
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
@@ -39,9 +35,7 @@ Stage.defineWidget({
                     isSelected: item.name === selectedTenant
                 })
             }),
-            users: _.map (data.users.items, (user) => user.username),
-            userGroups: _.map (data.userGroups.items, (userGroup) => userGroup.name),
-            total : _.get(data.tenants, 'metadata.pagination.total', 0)
+            total : _.get(data, 'metadata.pagination.total', 0)
         });
 
         return (

@@ -12,8 +12,7 @@ export default class GroupsModal extends React.Component {
         super(props,context);
 
         this.state = {
-            ...GroupsModal.initialState,
-            show: false
+            ...GroupsModal.initialState
         }
     }
 
@@ -25,7 +24,7 @@ export default class GroupsModal extends React.Component {
 
     static propTypes = {
         tenant: PropTypes.object.isRequired,
-        userGroups: PropTypes.array.isRequired,
+        userGroups: PropTypes.object.isRequired,
         toolbox: PropTypes.object.isRequired,
         onHide: PropTypes.func
     };
@@ -77,10 +76,10 @@ export default class GroupsModal extends React.Component {
     }
 
     render() {
-        let {Modal, GenericField, Icon, Form} = Stage.Basic;
+        let {Modal, Icon, Form} = Stage.Basic;
 
         let tenant = this.props.tenant;
-        let userGroups = _.map(this.props.userGroups, item => { return {text: item, value: item, key: item} });
+        let userGroups = _.map(this.props.userGroups.items, (userGroup) => { return {text: userGroup.name, value: userGroup.name, key: userGroup.name} });
 
         return (
         <Modal show={this.props.show} loading={this.state.loading} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>

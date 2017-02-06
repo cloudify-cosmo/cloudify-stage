@@ -56,4 +56,12 @@ export default class {
 
         return Promise.all(_.concat(addActions, deleteActions));
     }
+
+    doGetUserGroups() {
+        return this.toolbox.getManager().doGet('/user-groups?_include=name');
+    }
+
+    doGetUsers() {
+        return this.toolbox.getManager().doGet('/users?_include=username');
+    }
 }

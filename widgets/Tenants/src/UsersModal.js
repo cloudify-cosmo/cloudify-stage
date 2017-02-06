@@ -12,8 +12,7 @@ export default class UsersModal extends React.Component {
         super(props,context);
 
         this.state = {
-            ...UsersModal.initialState,
-            show: false
+            ...UsersModal.initialState
         }
     }
 
@@ -25,7 +24,7 @@ export default class UsersModal extends React.Component {
 
     static propTypes = {
         tenant: PropTypes.object.isRequired,
-        users: PropTypes.array.isRequired,
+        users: PropTypes.object.isRequired,
         toolbox: PropTypes.object.isRequired,
         onHide: PropTypes.func
     };
@@ -80,8 +79,7 @@ export default class UsersModal extends React.Component {
         let {Modal, Icon, Form} = Stage.Basic;
 
         let tenant = this.props.tenant;
-
-        let users = _.map(this.props.users, item => { return {text: item, value: item, key: item} });
+        let users = _.map(this.props.users.items, (user) => { return {text: user.username, value: user.username, key: user.username} });
 
         return (
         <Modal show={this.props.show} loading={this.state.loading} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
