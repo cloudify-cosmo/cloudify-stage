@@ -2,8 +2,6 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-import EventFilter from './LogFilter';
-
 export default class LogsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -41,8 +39,6 @@ export default class LogsTable extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <LogFilter toolbox={this.props.toolbox} blueprints={this.props.blueprints}
-                           deployments={this.props.deployments}/>
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                        totalSize={this.props.data.total}
                        pageSize={this.props.widget.configuration.pageSize}

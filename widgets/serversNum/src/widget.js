@@ -7,7 +7,7 @@ Stage.defineWidget({
     name: "Number of servers",
     description: 'Number of servers',
     initialWidth: 2,
-    initialHeight: 2,
+    initialHeight: 8,
     color : "green",
     showHeader: false,
     isReact: true,

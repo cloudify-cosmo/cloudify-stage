@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: 'User group management',
     description: 'This widget shows a list of available user groups and allow managing them',
     initialWidth: 5,
-    initialHeight: 4,
+    initialHeight: 16,
     color: 'violet',
     fetchUrl: '[manager]/user-groups[params]',
     isReact: true,

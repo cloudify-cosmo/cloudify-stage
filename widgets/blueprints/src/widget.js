@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: "Blueprints catalog",
     description: 'Shows a blueprints catalog',
     initialWidth: 8,
-    initialHeight: 5,
+    initialHeight: 20,
     color : "blue",
     isReact: true,
     initialConfiguration: [

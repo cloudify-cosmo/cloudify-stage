@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: 'Deployment Inputs',
     description: 'This widget shows the deployment inputs',
     initialWidth: 8,
-    initialHeight: 4,
+    initialHeight: 16,
     color : "teal",
     isReact: true,
     initialConfiguration: [

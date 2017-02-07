@@ -9,7 +9,7 @@ export default class InputDate extends Component {
     static propTypes = {
         placeholder: PropTypes.string,
         name: PropTypes.string,
-        value: PropTypes.string,
+        value: PropTypes.any,
         onChange: PropTypes.func
     };
 
@@ -21,7 +21,7 @@ export default class InputDate extends Component {
         var self = this;
         $(this.refs.calendarObj).calendar({
             ampm: false,
-            onChange: (date, text)=> self.props.onChange(date, {name: self.props.name, value: text}),
+            onChange: (date, text)=> self.props.onChange(date, {type: "date", name: self.props.name, value: text, date}),
             formatter:{
                 date:(date, settings)=> {
                     if (!date)

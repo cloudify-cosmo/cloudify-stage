@@ -12,6 +12,7 @@
   "inputs",
   "githubRepositories",
   "events",
+  "eventsFilter",
   "plugins",
   "snapshots",
   "logs",

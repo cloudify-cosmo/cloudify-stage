@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: "User management",
     description: 'This widget shows a list of available users and allow managing them',
     initialWidth: 5,
-    initialHeight: 4,
+    initialHeight: 16,
     color: "brown",
     fetchUrl: '[manager]/users[params]',
     isReact: true,
