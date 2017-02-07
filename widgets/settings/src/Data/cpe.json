@@ -98,10 +98,10 @@
       "lan_dhcp_range": "",
       "lan_dhcp_exclude_list": "",
       "lan_static_allocation_mac": "",
-      "lan_static_allocation_ip": "",
+      "lan_static_allocation_ip": "127.0.0.1",
       "lan_dns_primary": "",
       "lan_dns_pecondary": "",
-      "lan_public_subnet_address": "127.0.0.1",
+      "lan_public_subnet_address": "",
       "lan_public_subnet_mask": ""
     },
     "voiceLAN": {

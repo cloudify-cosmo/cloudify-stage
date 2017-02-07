@@ -9,10 +9,21 @@ export default class Active extends React.Component {
     constructor(props, context) {
         super(props, context);
 
-        this.state = {};
+        this.state = {
+            savingData: false
+        };
     }
 
     _DESSCRIPTION = 'This SD-wan mechanism will load balance the traffic equally  between WAN interfaces';
+
+    _saveData(){
+        this.setState( {savingData: true} );
+        setTimeout(function(){
+            this.setState( {savingData: false} );
+        }.bind(this), 400);
+
+        this.props.callback();
+    }
 
     render() {
         return (
@@ -23,7 +34,7 @@ export default class Active extends React.Component {
 
             <br/><br/>
 
-            <Button content='apply' color="blue"/>
+            <Button loading={this.state.savingData} content='apply' color="blue" onClick={this._saveData.bind(this)}/>
         </div>);
     }
 

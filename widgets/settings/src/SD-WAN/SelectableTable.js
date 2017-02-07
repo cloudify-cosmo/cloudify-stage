@@ -43,14 +43,6 @@ export default class SelectableTable extends React.Component {
         });
     }
 
-    componentDidUpdate( ) {
-        console.log('---')
-        console.log( this.state );
-        console.log('---')
-
-       // this._callback( Object.assign({}, this.state) );
-    }
-
     _moveToLeft ( dest ) {
         let selectedItems = this.state.selectedItems;
         let selectable = this.state.selectable;

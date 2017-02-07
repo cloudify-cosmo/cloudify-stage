@@ -16,13 +16,10 @@ export default class SDWAN extends React.Component {
         super(props, context);
 
         this.state = {
-            status: ''
+            status: this.props.source.status,
+            applications: this.props.source.applicationsVisible
         };
-
-        this._callbackToWrapper = props.callback;
     }
-
-    _callbackToWrapper = null;
 
     sdWANRadios = [{
         text: 'Active / Active',
@@ -30,29 +27,39 @@ export default class SDWAN extends React.Component {
     }, {
         text: 'Active / Backup',
         value: '1'
-    }, {
-        text: 'Application',
-        value: '2'
-    }];
+    }
+    ];
 
     _handleChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
+    }
+
+    _handleApplicationChange(proxy, field) {
+        this.setState({applications: field.checked});
     }
 
     _backup = {};
     _applications = {};
 
     _callbackFromBackup( data ) {
-        this._callbackToWrapper( data, true );
+        this.props.callback( data, true );
+        this.props.callbackSettings( "status", this.state.status );
     }
 
     _callbackFromApplications( data ) {
-        this._callbackToWrapper( data, false );
+        this.props.callback( data, false );
+        this.props.callbackSettings( "applicationsVisible", this.state.applications );
+    }
+
+    _callbackFromActive() {
+        this.props.callbackSettings( "status", this.state.status );
     }
 
     render() {
         let _options = [
-            <Active></Active>,
+            <Active
+                callback={this._callbackFromActive.bind(this)}
+            ></Active>,
             <Backup
                 source={this.props.source.interfaces}
                 selectedItems={ this.props.source.interfacesSelectedItems }
@@ -85,8 +92,20 @@ export default class SDWAN extends React.Component {
                             )
                         )}
 
+                        { this.state.status !== ''
+                            && _options[ +this.state.status] }
                         <br/>
-                        { this.state.status !== '' && _options[ +this.state.status] }
+                        { this.state.status == 1 &&
+                            <Form.Field>
+                                <Form.Checkbox name='application'
+                                               label="Applications"
+                                               onChange={this._handleApplicationChange.bind(this)}
+                                               checked={this.state.applications}
+                                />
+                            </Form.Field>
+                        }
+                        { this.state.status == 1 &&
+                            this.state.applications && _options[ 2 ] }
                     </div>
                 </Form.Group>
 

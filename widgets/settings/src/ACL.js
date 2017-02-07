@@ -47,7 +47,6 @@ export default class ACL extends React.Component {
     }
 
     _handleSubmit(data) {
-        console.log(data);
     }
 
     render() {

@@ -63,13 +63,11 @@ const dns = [
 const publicLAN = [
     {
         text: 'Subnet address',
-        value: 'public_subnet_adress',
-        editable: false
+        value: 'public_subnet_address',
     },
     {
         text: 'Subnet mask',
         value: 'public_subnet_mask',
-        editable: false
     }
 ];
 

@@ -19,11 +19,16 @@ let fetchSDWANData = function() {
     let applicationsSelectedItems = [[],[]];
     let interfacesSelectedItems = [[],[]];
 
+    let status = '1';
+    let applicationsVisible = false;
+
     return {
         applications,
         interfaces,
         applicationsSelectedItems,
-        interfacesSelectedItems
+        interfacesSelectedItems,
+        status,
+        applicationsVisible
     };
 };
 

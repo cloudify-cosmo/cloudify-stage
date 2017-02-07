@@ -10,23 +10,21 @@ export default class Backup extends React.Component {
     constructor(props, context) {
         super(props, context);
 
+        let selectedItems = JSON.parse(JSON.stringify(this.props.selectedItems));
+        let selectable = JSON.parse(JSON.stringify(this.props.source));
+
         this.state = {
             source: {
-                selectable: this.props.source,
-                selectedItems: this.props.selectedItems,
+                selectable: selectable,
+                selectedItems: selectedItems,
                 selectedLeft: [null, null],
-                selectedRight: [null, null]
+                selectedRight: [null, null],
+                savingData: false
             }
         };
-
-        console.log(" call to sdwan: ")
-        console.log( props.callback )
-        this._callbackToSDWAN = props.callback;
     }
 
     _source = null;
-    _callbackToSDWAN = null;
-
     _DESSCRIPTION = 'This SD-wan mechanism will forward traffic only to the primary interface and if primary interface fails the traffic will be forwarded to the backup interfaces';
 
     _callbackFromSelectableTable( data ) {
@@ -37,16 +35,18 @@ export default class Backup extends React.Component {
         this.setState({
             source
         });
-
-        console.log("*** callback")
-        console.log( data )
-        console.log( this.state )
-        console.log("***")
-
-        this._callbackToSDWAN( Object.assign({}, this.state.source) );
     }
 
     _names = ['Primary', 'Backup'];
+
+    _saveData() {
+        this.setState( {savingData: true} );
+        setTimeout(function(){
+            this.setState( {savingData: false} );
+        }.bind(this), 400);
+
+        this.props.callback( this.state.source );
+    }
 
     render() {
         return (<div className="ui segment">
@@ -64,7 +64,7 @@ export default class Backup extends React.Component {
 
             <br/>
 
-            <Button content='apply' color="blue"/>
+            <Button loading={this.state.savingData} content='apply' color="blue" onClick={this._saveData.bind(this)}/>
         </div>
         );
     }

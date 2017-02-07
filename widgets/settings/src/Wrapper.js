@@ -30,19 +30,21 @@ export default class Wrapper extends React.Component {
     };
 
     handleSDWANUpdate (data, isInterfaces) {
-        console.log(">>> in wrapper ")
-        console.log(data)
-        console.log(">>>")
-
         let sd_wan_source = this.state.sd_wan_source;
         if( isInterfaces ) {
             sd_wan_source.interfaces = data.selectable;
             sd_wan_source.interfacesSelectedItems = data.selectedItems;
         }else{
-            console.log("update app")
             sd_wan_source.applications = data.selectable;
             sd_wan_source.applicationsSelectedItems = data.selectedItems;
         }
+        this.setState(sd_wan_source);
+    }
+
+    handleSDWANSettings( name, value ) {
+        let sd_wan_source = this.state.sd_wan_source;
+        sd_wan_source[name] = value;
+
         this.setState(sd_wan_source);
     }
 
@@ -57,6 +59,7 @@ export default class Wrapper extends React.Component {
                 content: <SDWAN
                     source={this.state.sd_wan_source}
                     callback={ (this.handleSDWANUpdate).bind(this) }
+                    callbackSettings={ this.handleSDWANSettings.bind(this) }
                 />
             }, {
                 title: 'ACL',

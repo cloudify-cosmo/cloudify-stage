@@ -40,8 +40,6 @@ export default class VoiceLANConfiguration extends React.Component {
         data.errors = {};
         data.errorsTexts = [];
 
-        data.saveData = props['save-data'];
-
         data.const = props['data-const'];
 
         return data;
@@ -60,8 +58,14 @@ export default class VoiceLANConfiguration extends React.Component {
     }
 
     _handleSubmit(data) {
-        if( this.state.errorsTexts.length == 0 )
-            this.state.saveData( data, this.state.siteValue );
+        if( this.state.errorsTexts.length == 0 ){
+            this.props['save-data']( data, this.state.siteValue );
+
+            this.setState({savingData: true});
+            setTimeout(function(){
+                this.setState( {savingData: false} );
+            }.bind(this), 400);
+        }
     }
 
     _getFieldClass(id) {
@@ -115,7 +119,7 @@ export default class VoiceLANConfiguration extends React.Component {
                 </div>
 
                 <br/>
-                <Button positive type='submit'>Save</Button>
+                <Button loading={this.state.savingData} positive type='submit'>Save</Button>
             </Form> );
     }
 

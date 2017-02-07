@@ -23,7 +23,6 @@ export default class LANConfiguration extends React.Component {
         if( data == undefined || data == null ) return {};
 
         if( Object.keys(data).length === 0 ) {
-            console.log("nullify")
             data = {
                 lan_default_private_lan: '',
                 lan_subnet_address: '',
@@ -50,8 +49,6 @@ export default class LANConfiguration extends React.Component {
         data.privateLANDefault =  props['data-cpe']['private_lan_default_values'];
         data.privateLANDefaultOptions = Object.keys(data.privateLANDefault).map(key => ({ text: key, value: key }) );
 
-        data.saveData = props['save-data'];
-
         data.const = props['data-const'];
 
         return data;
@@ -70,8 +67,14 @@ export default class LANConfiguration extends React.Component {
     }
 
     _handleSubmit(data) {
-        if( this.state.errorsTexts.length == 0 )
-            this.state.saveData( data, this.state.siteValue );
+        if( this.state.errorsTexts.length == 0 ){
+            this.props['save-data']( data, this.state.siteValue );
+
+            this.setState({savingData: true});
+            setTimeout(function(){
+                this.setState( {savingData: false} );
+            }.bind(this), 400);
+        }
     }
 
     _setDefaultPrivateLAN(proxy, field) {
@@ -108,7 +111,6 @@ export default class LANConfiguration extends React.Component {
                                     value={this.state['lan_' + item.value]}
                                     onChange={this._handleChange.bind(this)}
                                     data-validate={item.validate}
-                                    disabled={ this._getIsEditable(item.editable) }
                         />
                     </Form.Field>
                     { index !== list.length-1 && <br/> }
@@ -167,7 +169,7 @@ export default class LANConfiguration extends React.Component {
                 </div>
 
             <br/>
-            <Button positive type='submit'>Save</Button>
+            <Button loading={this.state.savingData} positive type='submit'>Save</Button>
         </Form> );
     }
 
