@@ -20,6 +20,7 @@
   "executions",
   "nodes",
   "deploymentButton",
-  "Tenants",
-  "userManagement"
+  "tenants",
+  "userManagement",
+  "userGroups"
 ]
