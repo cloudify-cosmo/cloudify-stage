@@ -1,17 +1,17 @@
 /**
- * Created by kinneretzin on 30/01/2017.
+ * Created by pposel on 30/01/2017.
  */
 
-import TenantsTable from './TenantsTable';
+import UserGroupsTable from './UserGroupsTable';
 
 Stage.defineWidget({
-    id: 'Tenants',
-    name: "Tenants management",
-    description: 'This widget shows a list of available tenants, and allow managing them',
+    id: 'userGroups',
+    name: 'User group management',
+    description: 'This widget shows a list of available user groups and allow managing them',
     initialWidth: 5,
     initialHeight: 4,
-    color: "green",
-    fetchUrl: '[manager]/tenants',
+    color: 'violet',
+    fetchUrl: '[manager]/user-groups[params]',
     isReact: true,
     isAdmin: true,
     initialConfiguration: [
@@ -24,22 +24,22 @@ Stage.defineWidget({
             return <Stage.Basic.Loading/>;
         }
 
-        var selectedTenant = toolbox.getContext().getValue('tenantName');
+        var selectedUserGroup = toolbox.getContext().getValue('userGroup');
 
         let formattedData = data;
         formattedData = Object.assign({}, data, {
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
-                    groups: item.groups.join(', '),
-                    users: item.users.join(', '),
-                    isSelected: item.name === selectedTenant
+                    userCount: item.users.length,
+                    tenantCount: item.tenants.length,
+                    isSelected: item.name === selectedUserGroup
                 })
             }),
             total : _.get(data, 'metadata.pagination.total', 0)
         });
 
         return (
-            <TenantsTable widget={widget} data={formattedData} toolbox={toolbox}/>
+            <UserGroupsTable widget={widget} data={formattedData} toolbox={toolbox}/>
         );
 
     }
