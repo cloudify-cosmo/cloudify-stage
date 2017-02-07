@@ -26,7 +26,7 @@ export default class Application extends React.Component {
     }
 
     _source = null;
-    _DESSCRIPTION = 'This SD-wan mechanism will Forward by default  the traffic in Active-Backup mechanism.';
+    _DESSCRIPTION = 'This SD-wan mechanism will Forward by default the traffic in Active-Backup mechanism.';
 
     _callbackFromSelectableTable( data ) {
         let source = this.state.source;
@@ -62,11 +62,13 @@ export default class Application extends React.Component {
                 <SelectableTable
                     source={this.state.source}
                     names={this._names}
-                    callback={ (this._callbackFromSelectableTable).bind(this)  } />
-
+                    callback={ (this._callbackFromSelectableTable).bind(this)  }
+                    all="Applications"
+                    selected="Selected Applications"
+                />
                 <br/>
 
-                <Button loading={this.state.savingData} content='apply' color="blue" onClick={this._saveData.bind(this)}/>
+                <Button loading={this.state.savingData} content='Apply' color="blue" onClick={this._saveData.bind(this)}/>
             </div>
         );
     }

@@ -34,7 +34,7 @@ export default class Active extends React.Component {
 
             <br/><br/>
 
-            <Button loading={this.state.savingData} content='apply' color="blue" onClick={this._saveData.bind(this)}/>
+            <Button loading={this.state.savingData} content='Apply' color="blue" onClick={this._saveData.bind(this)}/>
         </div>);
     }
 

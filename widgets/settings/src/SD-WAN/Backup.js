@@ -25,7 +25,7 @@ export default class Backup extends React.Component {
     }
 
     _source = null;
-    _DESSCRIPTION = 'This SD-wan mechanism will forward traffic only to the primary interface and if primary interface fails the traffic will be forwarded to the backup interfaces';
+    _DESSCRIPTION = 'This SD-wan mechanism will forward traffic only to the primary interface. If primary interface fails the traffic will be forwarded to the backup interface.';
 
     _callbackFromSelectableTable( data ) {
         let source = this.state.source;
@@ -60,11 +60,14 @@ export default class Backup extends React.Component {
                 source={this.state.source}
                 names={this._names}
                 callback={ (this._callbackFromSelectableTable).bind(this) }
-                only-one />
+                only-one
+                all="Interfaces"
+                selected="Selected interface"
+            />
 
             <br/>
 
-            <Button loading={this.state.savingData} content='apply' color="blue" onClick={this._saveData.bind(this)}/>
+            <Button loading={this.state.savingData} content='Apply' color="blue" onClick={this._saveData.bind(this)}/>
         </div>
         );
     }

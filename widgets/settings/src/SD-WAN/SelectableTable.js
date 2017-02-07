@@ -102,7 +102,7 @@ export default class SelectableTable extends React.Component {
 
                     <div className="column">
                         <table className="ui celled table">
-                            <thead><tr><th>All</th></tr></thead>
+                            <thead><tr><th>{this.props.all}</th></tr></thead>
                             <tbody>
                             {
                                 this.state.selectable.map(
@@ -130,7 +130,7 @@ export default class SelectableTable extends React.Component {
 
                     <div className="column">
                         <table className="ui celled table">
-                            <thead><tr><th>Selected</th></tr></thead>
+                            <thead><tr><th>{this.props.selected}</th></tr></thead>
                             <tbody>
                             {
                                 this.state.selectedItems[dest].map(
