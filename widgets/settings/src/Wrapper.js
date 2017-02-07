@@ -5,8 +5,6 @@
 import Button from '../../../app/components/basic/control/Button';
 
 import CPE from './CPE/CPE';
-import ACL from './ACL';
-import VNF from './VNF';
 import SDWAN from './SD-WAN/SDWAN';
 import fetchData from './DataHandler';
 
@@ -26,6 +24,8 @@ export default class Wrapper extends React.Component {
     }
 
     handleItemClick = (index) => {
+        /* block not available components */
+        if( index > 1 ) return;
         this.setState({ activePanel: index });
     };
 
@@ -63,31 +63,32 @@ export default class Wrapper extends React.Component {
                 />
             }, {
                 title: 'ACL',
-                content: <ACL/>
+                content: <div></div>
             }, {
                 title: 'VAS',
-                content: <VNF/>
+                content: <div></div>
             }, {
                 title: 'SSL VPN',
-                content: <VNF/>
+                content: <div></div>
             }
         ];
 
         return (
             <div className="ui grid">
                  <div className="three wide column">
+                     <div className="ui vertical pointing fluid menu">
                      {panels.map(
                          (item, index) =>
-                             <div key={index}>
-                                <Button
-                                    onClick={() => this.handleItemClick(index)}
-                                    content={item.title}
-                                    fluid={true}
-                                    className={ index == this.state.activePanel ? "teal" : "" }
-                                ></Button>
-                                <br/>
-                             </div>
+                             <a
+                                 className={ (index == this.state.activePanel ? "active item" : "item") + (index > 1 ? " disabled" : "") }
+                                 key={index}
+                                 onClick={() => this.handleItemClick(index)}
+                                 href="#!"
+                             >
+                                 {item.title}
+                             </a>
                      )}
+                     </div>
                  </div>
 
                 <div className="thirteen wide column">

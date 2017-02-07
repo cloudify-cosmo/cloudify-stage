@@ -62,6 +62,7 @@ export default class LANConfiguration extends React.Component {
 
     _handleChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
+
         if( this._debounceErrorTimer !== null ) clearTimeout( this._debounceErrorTimer);
         this._debounceErrorTimer = setTimeout(() => debounceErrorCheck(field, this), 500);
     }
@@ -86,7 +87,12 @@ export default class LANConfiguration extends React.Component {
             lan_subnet_address: this.state.privateLANDefault[defaultLAN]['subnet_address'],
             lan_subnet_mask: this.state.privateLANDefault[defaultLAN]['subnet_mask'],
             lan_default_gateway: this.state.privateLANDefault[defaultLAN]['default_getaway'],
-        } );
+        });
+
+        /* remove any errors on these fields */
+        debounceErrorCheck( {name: 'lan_subnet_address', 'data-validate': 'ipv4', 'value': ''}, this);
+        debounceErrorCheck( {name: 'lan_subnet_mask', 'data-validate': 'ipv4', 'value': ''}, this);
+        debounceErrorCheck( {name: 'lan_default_getaway', 'data-validate': 'ipv4', 'value': ''}, this);
     }
 
     _getFieldClass(id) {
@@ -169,7 +175,7 @@ export default class LANConfiguration extends React.Component {
                 </div>
 
             <br/>
-            <Button loading={this.state.savingData} positive type='submit'>Save</Button>
+            <Button disabled={this.state.errorsTexts.length !== 0} loading={this.state.savingData} positive type='submit'>Save</Button>
         </Form> );
     }
 

@@ -119,7 +119,7 @@ export default class VoiceLANConfiguration extends React.Component {
                 </div>
 
                 <br/>
-                <Button loading={this.state.savingData} positive type='submit'>Save</Button>
+                <Button disabled={this.state.errorsTexts.length !== 0} loading={this.state.savingData} positive type='submit'>Save</Button>
             </Form> );
     }
 
