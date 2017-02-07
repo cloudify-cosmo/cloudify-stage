@@ -12,7 +12,7 @@ deployment:
       - npm run build
       - npm run zip
       - scp stage.tar.gz ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com:~
-      - cat ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
+      - cat scripts/ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
   webpackall:
     branch: /.*/
     commands:
