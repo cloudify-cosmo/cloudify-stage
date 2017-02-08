@@ -3,7 +3,7 @@
   "widgets": [
     {
       "name": "Tenants Management",
-      "definition": "Tenants",
+      "definition": "tenants",
       "width": 16,
       "height": 6
     },
