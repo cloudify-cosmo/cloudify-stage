@@ -9,8 +9,8 @@ export default class {
         this.toolbox = toolbox;
     }
 
-    doDelete(blueprint) {
-        return this.toolbox.getManager().doDelete(`/deployments/${blueprint.id}`);
+    doDelete(deployment) {
+        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`);
     }
 
     doCancel(execution,force) {

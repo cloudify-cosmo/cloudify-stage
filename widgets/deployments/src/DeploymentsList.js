@@ -42,32 +42,33 @@ export default class extends React.Component {
     }
 
     _deleteDeployment() {
-        if (!this.state.deleteDep) {
-            this.setState({error: 'Something went wrong, no deployment was selected for delete'});
+        this._hideModal();
+
+        if (!this.state.deployment) {
+            this._handleError('Something went wrong, no deployment was selected for delete');
             return;
         }
 
         this.props.toolbox.loading(true);
 
         var actions = new Actions(this.props.toolbox);
-        actions.doDelete(this.state.deleteDep).then(()=>{
-            this._hideModal();
+        actions.doDelete(this.state.deployment).then(() => {
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
             this.props.toolbox.loading(false);
-        }).catch((err)=>{
-            this.setState({error: err.message});
+        }).catch((err) => {
+            this._handleError(err.message);
             this.props.toolbox.loading(false);
         });
     }
 
     _cancelExecution(execution, forceCancel) {
         let actions = new Actions(this.props.toolbox);
-        actions.doCancel(execution, forceCancel)
-            .then(() => {
-                this.props.toolbox.getEventBus().trigger('deployments:refresh');
-                this.props.toolbox.getEventBus().trigger('executions:refresh');
-            })
-            .catch((err) => {this.setState({error: err.message});});
+        actions.doCancel(execution, forceCancel).then(() => {
+            this.props.toolbox.getEventBus().trigger('deployments:refresh');
+            this.props.toolbox.getEventBus().trigger('executions:refresh');
+        }).catch((err) => {
+            this._handleError(err.message);
+        });
     }
 
     _refreshData() {
