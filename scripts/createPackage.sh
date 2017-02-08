@@ -10,8 +10,8 @@ mkdir .tmp/cloudify-stage/dist
 mkdir .tmp/cloudify-stage/backend
 mkdir .tmp/cloudify-stage/conf
 
-cp dist/** .tmp/cloudify-stage/dist
-cp backend/** .tmp/cloudify-stage/backend
+cp -r dist/** .tmp/cloudify-stage/dist
+cp -r backend/** .tmp/cloudify-stage/backend
 cp conf/** .tmp/cloudify-stage/conf
 cp scripts/package-template.json .tmp/cloudify-stage
 cd .tmp
