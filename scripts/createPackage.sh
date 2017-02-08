@@ -5,16 +5,17 @@ mkdir .tmp
 # make sure its empty (could exist before)
 rm -R .tmp/**
 
-mkdir .tmp/dist
-mkdir .tmp/backend
-mkdir .tmp/conf
+mkdir .tmp/cloudify-stage
+mkdir .tmp/cloudify-stage/dist
+mkdir .tmp/cloudify-stage/backend
+mkdir .tmp/cloudify-stage/conf
 
-cp dist/** .tmp/dist
-cp backend/** .tmp/backend
-cp conf/** .tmp/conf
-cp scripts/package-template.json .tmp
+cp dist/** .tmp/cloudify-stage/dist
+cp backend/** .tmp/cloudify-stage/backend
+cp conf/** .tmp/cloudify-stage/conf
+cp scripts/package-template.json .tmp/cloudify-stage
 cd .tmp
-mv package-template.json package.json
+mv cloudify-stage/package-template.json cloudify-stage/package.json
 tar -cvzf stage.tar.gz **
 #tar -cvzf stage.tar.gz dist/** backend/** conf/** package.json
 cd ..
