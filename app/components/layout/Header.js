@@ -30,11 +30,11 @@ export default class Header extends Component {
                         isModeMain
                         ?
                         <div className='item configPanel'>
-                            <Manager manager={this.props.manager}/>
-                            <div>
+                            <div className='managerAndTenants'>
+                                <Manager manager={this.props.manager}/>
                                 <Tenants manager={this.props.manager}/>
-                                <Users manager={this.props.manager} showAllOptions={true}/>
                             </div>
+                            <Users manager={this.props.manager} showAllOptions={true}/>
                         </div>
                         :
                         <div className='item configPanel'>

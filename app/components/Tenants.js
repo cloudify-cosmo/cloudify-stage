@@ -24,7 +24,7 @@ export default class Tenants extends Component {
 
         let selectedTenant = tenants.selected || _.get(this.props.manager,'tenants.items[0].name');
         return (
-            <Dropdown pointing text={selectedTenant ? selectedTenant : 'No Tenants'} className='tenantsMenu configItem'>
+            <Dropdown pointing text={selectedTenant ? selectedTenant : 'No Tenants'} className='tenantsMenu'>
                 <Dropdown.Menu>
                     {
                         tenants.items.map((tenant) =>

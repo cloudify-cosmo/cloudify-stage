@@ -30,7 +30,7 @@ export default class Manager extends Component {
 
     render() {
         return (
-            <div className='manager configItem'>
+            <div className='manager'>
                 {this.props.manager.ip}
                 {this.renderStatusIcon(this.props.manager.status)}
             </div>

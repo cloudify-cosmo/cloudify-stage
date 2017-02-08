@@ -254,10 +254,11 @@ a:hover {
 }
 
 .ui.menu:not(.vertical) .item.configPanel {
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-end;
-  &.configItem {
-    margin: 1px 5px;
+  & .managerAndTenants {
+    flex-direction: column;
+    margin-right: 10px;
   }
 }
 
