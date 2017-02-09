@@ -374,6 +374,22 @@ code.hljs {
       top: 1rem;
       width: 0px;
     }
+
+    .bottomDivider {
+      position: relative;
+    }
+
+    .bottomDivider::after {
+      content: "";
+      border-top: 1px solid rgba(34, 36, 38, 0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      width: calc(100% - 2rem);
+      position: absolute;
+      left: 1rem;
+      bottom: 0px;
+      height: 0px;
+    }
+
   }
 
   .column.action  {
@@ -413,6 +429,15 @@ code.hljs {
   transform: translateY(-50%);
 }
 
+.fullHeight {
+
+  height: 100%;
+}
+
+.noPadded {
+  padding: 0px !important;
+}
+
 .ui.dropdown .menu>.item.indent {
   padding-left: 30px !important;
 }
@@ -423,4 +448,33 @@ code.hljs {
 
 .ui.divided.light.list>.item:first-child {
   border-top: none;
+}
+
+/* A href underscore */
+a.underline {
+  text-decoration: none !important;
+  color: inherit;
+
+  &:hover {
+    color: inherit;
+  }
+
+  &::before {
+    backface-visibility: hidden;
+    background-color: inherit;
+    bottom: 1px;
+    content: "";
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: auto;
+    transform: scaleX(0);
+    transition: all 0.2s ease 0s;
+    width: 100%;
+  }
+
+  &:hover::before {
+    background-color: black;
+    transform: scaleX(1);
+  }
 }

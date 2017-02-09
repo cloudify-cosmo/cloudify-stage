@@ -44,7 +44,9 @@ export default class EventsTable extends React.Component {
                        pageSize={this.props.widget.configuration.pageSize}
                        className="eventsTable">
 
-                    <DataTable.Column label="Blueprint" name="context.blueprint_id" width="10%" show={!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId} />
+                    <DataTable.Column label="Blueprint" name="context.blueprint_id" width="10%" show={!this.props.data.blueprintId &&
+                                                                                                      !this.props.data.deploymentId &&
+                                                                                                      !this.props.data.executionId} />
                     <DataTable.Column label="Deployment" name="context.deployment_id" width="10%" show={!this.props.data.deploymentId && !this.props.data.executionId} />
                     <DataTable.Column label="Workflow" name="context.workflow_id" width="10%" show={!this.props.data.executionId} />
                     <DataTable.Column label="Event Type" name="event_type" width="20%"/>

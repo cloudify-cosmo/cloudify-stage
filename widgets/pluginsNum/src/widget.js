@@ -7,7 +7,7 @@ Stage.defineWidget({
     name: "Number of plugins",
     description: 'Number of plugins',
     initialWidth: 2,
-    initialHeight: 2,
+    initialHeight: 8,
     color : "teal",
     showHeader: false,
     isReact: true,

@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: 'Nodes list',
     description: 'This widget shows nodes',
     initialWidth: 6,
-    initialHeight: 5,
+    initialHeight: 20,
     color : 'blue',
     isReact: true,
     initialConfiguration: [

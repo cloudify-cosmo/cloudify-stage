@@ -44,7 +44,7 @@ export default class extends React.Component {
                         }
 
                         return (
-                            <DataSegment.Item key={item.id} select={item.isSelected}
+                            <DataSegment.Item key={item.id} selected={item.isSelected}
                                           onClick={()=>this.props.onSelectDeployment(item)}>
                                 <div className="ui grid">
                                     <div className="four wide center aligned column rightDivider">

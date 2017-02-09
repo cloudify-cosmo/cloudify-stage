@@ -9,7 +9,7 @@ export default class WidgetDefinition {
         this.showHeader = true;
         this.showBorder = true;
         this.initialWidth = 3;
-        this.initialHeight = 3;
+        this.initialHeight = 12;
         this.color = "blue";
         this.initialConfiguration = [];
         this.keepOnTop = false;

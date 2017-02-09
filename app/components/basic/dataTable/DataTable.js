@@ -37,24 +37,27 @@ export default class GridTable extends Component {
         children: PropTypes.any.isRequired,
         fetchData: PropTypes.func,
         totalSize: PropTypes.number,
+        fetchSize: PropTypes.number,
         pageSize: PropTypes.number,
         sortColumn: PropTypes.string,
         sortAscending: PropTypes.bool,
         searchable: PropTypes.bool,
         selectable: PropTypes.bool,
-        className: PropTypes.string
+        className: PropTypes.string,
+        simplePagination: PropTypes.bool
     };
 
     static defaultProps = {
-        fetchData: () => {
-        },
+        fetchData: () => {},
         totalSize: -1,
+        fetchSize: -1,
         pageSize: 0,
         sortColumn: "",
         sortAscending: true,
         searchable: false,
         selectable: false,
-        className: ""
+        className: "",
+        simplePagination: false
     };
 
     static childContextTypes = {
@@ -154,22 +157,22 @@ export default class GridTable extends Component {
                 </div>
                 }
 
-                <Pagination totalSize={this.props.totalSize}
-                            pageSize={this.props.pageSize}
+                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize}
+                            fetchSize={this.props.fetchSize} simple={this.props.simplePagination}
                             fetchData={this._fetchData.bind(this)} ref="pagination">
                     <table
                         className={`ui very compact table sortable ${this.props.selectable ? 'selectable' : ''} ${this.props.className}`}
                         cellSpacing="0" cellPadding="0">
                         <thead>
-                        <tr>
-                            {headerColumns}
-                        </tr>
-                        </thead>
-                        {this.props.totalSize === 0 ?
-                            <tbody>
-                            <tr className="noDataRow">
-                                <td colSpan={headerColumns.length} className="center aligned">No data available</td>
+                            <tr>
+                                {headerColumns}
                             </tr>
+                        </thead>
+                        {this.props.totalSize === 0 || this.props.fetchSize == 0 ?
+                            <tbody>
+                                <tr className="noDataRow">
+                                    <td colSpan={headerColumns.length} className="center aligned">No data available</td>
+                                </tr>
                             </tbody>
                             :
                             <tbody>{bodyRows}</tbody>

@@ -21,7 +21,7 @@ describe('(Component) DataSegment', () => {
                 {
                     [{k:1}, {k:2}, {k:3, s:true}, {k:4}, {k:5}].map((item)=> {
                         return (
-                            <DataSegment.Item key={item.k} select={item.s} onClick={item.s?selectSpy:null}>
+                            <DataSegment.Item key={item.k} selected={item.s} onClick={item.s?selectSpy:null}>
                                 <div>Data {item.k}</div>
                             </DataSegment.Item>
                         )
