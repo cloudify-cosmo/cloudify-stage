@@ -19,24 +19,18 @@ export default class VoiceLANConfiguration extends React.Component {
     }
 
     setupState( props ) {
-        let data = props['data-cpe']['voiceLAN'];
+        let cpeJSONFields = props['data-cpe'];
+        let data = {};
+        /*
+         Convert { "0": {"key":"value"} } to { "key": "value" }
+         */
+        cpeJSONFields.forEach( field => { let keys = Object.keys(field); data[keys[0]] = field[keys[0]]; } );
+
+        data.originalFields = Object.keys( data );
 
         if( data == undefined || data == null ) return {};
 
-        if( Object.keys(data).length === 0 ) {
-            data = {
-                voice_lan_subnet_address: '',
-                voice_lan_subnet_mask: '',
-                voice_lan_default_gateway: '',
-
-                voice_lan_dhcp_range: '',
-                voice_lan_dhcp_exclude_list: '',
-                voice_lan_static_allocation_mac: '',
-                voice_lan_static_allocation_ip: ''
-            };
-        }
-
-        data.siteValue = props['data-cpe'].value;
+        data.siteValue = props['data-site-value'];
         data.errors = {};
         data.errorsTexts = [];
 
@@ -49,17 +43,35 @@ export default class VoiceLANConfiguration extends React.Component {
         this.setState( this.setupState( nextProps ));
     }
 
-    _debounceErrorTimer = null;
-
     _handleChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
         if( this._debounceErrorTimer !== null ) clearTimeout( this._debounceErrorTimer);
-        this._debounceErrorTimer = setTimeout(() => debounceErrorCheck(field, this), 500);
+        this._debounceErrorTimer = setTimeout(() => {
+                const errors = debounceErrorCheck(field, this);
+                if(errors){
+                    this.setState(errors);
+                }
+            },500
+        );
     }
 
     _handleSubmit(data) {
         if( this.state.errorsTexts.length == 0 ){
-            this.props['save-data']( data, this.state.siteValue );
+            let currentValues = this.state;
+            let formatObject = [];
+            let originalFields = this.state.originalFields;
+
+            Object.keys( currentValues )
+                .filter( formElement => {
+                    return originalFields.indexOf(formElement) > -1
+                })
+                .forEach( formElementKey => {
+                    let arrayElement = {};
+                    arrayElement[formElementKey] = currentValues[formElementKey];
+                    formatObject.push(arrayElement);
+                });
+
+            this.props.onDataSave( formatObject, this.state.siteValue );
 
             this.setState({savingData: true});
             setTimeout(function(){
@@ -69,8 +81,8 @@ export default class VoiceLANConfiguration extends React.Component {
     }
 
     _getFieldClass(id) {
-        return this.state.errors['voice_lan_' + id] === undefined ? '' :
-            this.state.errors['voice_lan_' + id].class;
+        return this.state.errors['Voice_LAN_Configuration_' + id] === undefined ? '' :
+            this.state.errors['Voice_LAN_Configuration_' + id].class;
     }
 
     _renderFieldGroup( list ) {
@@ -80,10 +92,10 @@ export default class VoiceLANConfiguration extends React.Component {
                     <Form.Field className={ this._getFieldClass( item.value ) } >
                         <label>{item.text}</label>
                         <Form.Input placeholder={item.text}
-                                    name={'voice_lan_' + item.value}
+                                    name={'Voice_LAN_Configuration_' + item.value}
                                     data-text={item.text}
                                     key={ "input_" + index }
-                                    value={this.state['voice_lan_' + item.value]}
+                                    value={this.state['Voice_LAN_Configuration_' + item.value]}
                                     onChange={this._handleChange.bind(this)}
                                     data-validate={item.validate}
                         />

@@ -43,10 +43,10 @@ export default function debounceErrorCheck (field, that ) {
         }
     ).filter(x => (typeof x === 'string'));
 
-    that.setState({
+    return {
         errors,
         errorsTexts
-    });
+    };
 }
 
 const ipv4ErrorMessage = ' has to be IPv4 format.';

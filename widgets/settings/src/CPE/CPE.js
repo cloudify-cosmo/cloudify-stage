@@ -8,115 +8,8 @@ import Accordion from '../../../../app/components/basic/Accordion';
 import LANConfiguration from './LANConfiguration';
 import VoiceLANConfiguration from './VoiceLANConfiguration';
 
-/* LAN config consts */
-const privateLAN = [
-    {
-        text: 'Subnet Address',
-        value: 'subnet_address',
-        validate: 'ipv4',
-    },
-    {
-        text: 'Subnet Mask',
-        value: 'subnet_mask',
-        validate: 'ipv4',
-    },
-    {
-        text: 'Default Gateway',
-        value: 'default_gateway',
-        validate: 'ipv4',
-    }
-];
-const privateLANDHCP = [
-    {
-        text: 'DHCP Range',
-        value: 'dhcp_range',
-        validate: 'ipv4',
-    },
-    {
-        text: 'DHCP Exclude',
-        value: 'dhcp_exclude',
-        validate: 'ipv4',
-    }
-];
-const privateLANStaticAllocation = [
-    {
-        text: 'Static Allocation MAC',
-        value: 'static_allocation_mac',
-        validate: 'mac',
-    },
-    {
-        text: 'Static Allocation IP',
-        value: 'static_allocation_ip',
-        validate: 'ipv4',
-    }
-];
-const dns = [
-    {
-        text: 'DNS Primary',
-        value: 'dns_primary'
-    },
-    {
-        text: 'DNS Secondary',
-        value: 'dns_secondary'
-    }
-];
-const publicLAN = [
-    {
-        text: 'Subnet address',
-        value: 'public_subnet_address',
-    },
-    {
-        text: 'Subnet mask',
-        value: 'public_subnet_mask',
-    }
-];
-
-const lanConfig = { privateLAN, privateLANDHCP, privateLANStaticAllocation, publicLAN, dns };
-
-/* Voice LAN config */
-const voiceLAN = [
-    {
-        text: 'Subnet Address',
-        value: 'subnet_address',
-        validate: 'ipv4',
-    },
-    {
-        text: 'Subnet Mask',
-        value: 'subnet_mask',
-        validate: 'ipv4',
-    },
-    {
-        text: 'Default Gateway',
-        value: 'default_gateway',
-        validate: 'ipv4',
-    }
-];
-const voiceLANDHCP = [
-    {
-        text: 'DHCP Range',
-        value: 'dhcp_range',
-        validate: 'ipv4',
-    },
-    {
-        text: 'DHCP Exclude',
-        value: 'dhcp_exclude',
-        validate: 'ipv4',
-    }
-];
-const voiceLANStaticAllocation = [
-    {
-        text: 'Static Allocation MAC',
-        value: 'static_allocation_mac',
-        validate: 'mac',
-    },
-    {
-        text: 'Static Allocation IP',
-        value: 'static_allocation_ip',
-        validate: 'ipv4',
-    }
-];
-
-const voiceConfig = { voiceLAN, voiceLANDHCP, voiceLANStaticAllocation };
+import {lanConfig, voiceConfig} from './Definitions';
+import cloneDeep from 'lodash/cloneDeep';
 
 export default class CPE extends React.Component {
 
@@ -125,13 +18,11 @@ export default class CPE extends React.Component {
 
         this.state = {
             site: 0,
-            CPEs: props['source'].fetch
+            CPEs: cloneDeep(props['source'].cpes)
         };
 
         this._options = props['source'].cpesOptions;
     }
-
-    _options = null;
 
     _handleChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
@@ -139,14 +30,16 @@ export default class CPE extends React.Component {
 
     HandleLANConfig = function ( lanConfig, index ) {
         let CPEs = this.state.CPEs;
-        CPEs[index].LAN = lanConfig;
+        CPEs[index]['dynamic']['fields'] = lanConfig;
         this.setState( CPEs );
+        this.props.onUpdateCPE(CPEs);
     };
 
     HandleVoiceLANConfig = function ( voiceLANConfig, index ) {
         let CPEs = this.state.CPEs;
-        CPEs[index].voiceLAN = voiceLANConfig;
+        CPEs[index]['dynamic']['fields'] = voiceLANConfig;
         this.setState( CPEs );
+        this.props.onUpdateCPE(CPEs);
     };
 
     render() {
@@ -167,15 +60,17 @@ export default class CPE extends React.Component {
                 <Accordion styled panels={[
                     {title: 'LAN Configuration',
                         content: <LANConfiguration
-                        save-data={ this.HandleLANConfig.bind(this) }
-                        data-cpe={this.state.CPEs[this.state.site]}
+                        onDataSave={ this.HandleLANConfig.bind(this) }
+                        data-cpe={this.state.CPEs[this.state.site]['dynamic']['fields']}
                         data-const={lanConfig}
+                        data-site-value={this.state.site}
                         /> },
 
                     {title: 'Voice LAN Configuration',
                         content: <VoiceLANConfiguration
-                        save-data={ this.HandleVoiceLANConfig.bind(this) }
-                        data-cpe={this.state.CPEs[this.state.site]}
+                        onDataSave={ this.HandleVoiceLANConfig.bind(this) }
+                        data-cpe={this.state.CPEs[this.state.site]['dynamic']['fields']}
+                        data-site-value={this.state.site}
                         data-const={voiceConfig}
                         />}
                 ]} className="fluid" />

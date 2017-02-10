@@ -10,6 +10,15 @@ import Active from './Active';
 import Backup from './Backup';
 import Application from './Application';
 
+const sdWANRadios = [{
+        text: 'Active / Active',
+        value: '0'
+    }, {
+        text: 'Active / Backup',
+        value: '1'
+    }
+];
+
 export default class SDWAN extends React.Component {
 
     constructor(props, context) {
@@ -21,15 +30,6 @@ export default class SDWAN extends React.Component {
         };
     }
 
-    sdWANRadios = [{
-        text: 'Active / Active',
-        value: '0'
-    }, {
-        text: 'Active / Backup',
-        value: '1'
-    }
-    ];
-
     _handleChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
     }
@@ -38,16 +38,13 @@ export default class SDWAN extends React.Component {
         this.setState({applications: field.checked});
     }
 
-    _backup = {};
-    _applications = {};
-
     _callbackFromBackup( data ) {
-        this.props.callback( data, true );
+        this.props.onUpdateTables( data, true );
         this.props.callbackSettings( "status", this.state.status );
     }
 
     _callbackFromApplications( data ) {
-        this.props.callback( data, false );
+        this.props.onUpdateTables( data, false );
         this.props.callbackSettings( "applicationsVisible", this.state.applications );
     }
 
@@ -58,17 +55,17 @@ export default class SDWAN extends React.Component {
     render() {
         let _options = [
             <Active
-                callback={this._callbackFromActive.bind(this)}
+                onSaveData={this._callbackFromActive.bind(this)}
             ></Active>,
             <Backup
                 source={this.props.source.interfaces}
                 selectedItems={ this.props.source.interfacesSelectedItems }
-                callback={ (this._callbackFromBackup).bind(this) }
+                onSaveData={ (this._callbackFromBackup).bind(this) }
             ></Backup>,
             <Application
                 source={this.props.source.applications}
                 selectedItems={ this.props.source.applicationsSelectedItems }
-                callback={ (this._callbackFromApplications).bind(this) }
+                onSaveData={ (this._callbackFromApplications).bind(this) }
             ></Application>
         ];
 
@@ -78,7 +75,7 @@ export default class SDWAN extends React.Component {
                 <br/>
                 <Form.Group>
                     <div>
-                        {this.sdWANRadios.map(
+                        {sdWANRadios.map(
                             (item, index) => (
                                 <div key={index}>
                                     <Form.Field>
@@ -93,7 +90,7 @@ export default class SDWAN extends React.Component {
                         )}
 
                         { this.state.status !== ''
-                            && _options[ +this.state.status] }
+                            && _options[ this.state.status] }
                         <br/>
                         { this.state.status == 1 &&
                             <Form.Field>

@@ -4,6 +4,8 @@
 
 import Button from '../../../../app/components/basic/control/Button';
 
+const _DESSCRIPTION = 'This SD-wan mechanism will load balance the traffic equally  between WAN interfaces';
+
 export default class Active extends React.Component {
 
     constructor(props, context) {
@@ -14,22 +16,20 @@ export default class Active extends React.Component {
         };
     }
 
-    _DESSCRIPTION = 'This SD-wan mechanism will load balance the traffic equally  between WAN interfaces';
-
     _saveData(){
         this.setState( {savingData: true} );
         setTimeout(function(){
             this.setState( {savingData: false} );
         }.bind(this), 400);
 
-        this.props.callback();
+        this.props.onSaveData();
     }
 
     render() {
         return (
             <div className="ui segment">
             <label>
-                {this._DESSCRIPTION}
+                {_DESSCRIPTION}
             </label>
 
             <br/><br/>

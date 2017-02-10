@@ -5,13 +5,19 @@
 import Button from '../../../../app/components/basic/control/Button';
 import SelectableTable from './SelectableTable';
 
+import cloneDeep from 'lodash/cloneDeep';
+
+const _DESSCRIPTION = 'This SD-wan mechanism will forward traffic only to the primary interface. If primary interface fails the traffic will be forwarded to the backup interface.';
+const _names = ['Primary', 'Backup'];
+
+
 export default class Backup extends React.Component {
 
     constructor(props, context) {
         super(props, context);
 
-        let selectedItems = JSON.parse(JSON.stringify(this.props.selectedItems));
-        let selectable = JSON.parse(JSON.stringify(this.props.source));
+        let selectedItems = cloneDeep(this.props.selectedItems);
+        let selectable = cloneDeep(this.props.source);
 
         this.state = {
             source: {
@@ -24,8 +30,6 @@ export default class Backup extends React.Component {
         };
     }
 
-    _source = null;
-    _DESSCRIPTION = 'This SD-wan mechanism will forward traffic only to the primary interface. If primary interface fails the traffic will be forwarded to the backup interface.';
 
     _callbackFromSelectableTable( data ) {
         let source = this.state.source;
@@ -37,7 +41,6 @@ export default class Backup extends React.Component {
         });
     }
 
-    _names = ['Primary', 'Backup'];
 
     _saveData() {
         this.setState( {savingData: true} );
@@ -45,21 +48,21 @@ export default class Backup extends React.Component {
             this.setState( {savingData: false} );
         }.bind(this), 400);
 
-        this.props.callback( this.state.source );
+        this.props.onSaveData( this.state.source );
     }
 
     render() {
         return (<div className="ui segment">
             <div>
-                {this._DESSCRIPTION}
+                {_DESSCRIPTION}
             </div>
 
             <br/>
 
             <SelectableTable
                 source={this.state.source}
-                names={this._names}
-                callback={ (this._callbackFromSelectableTable).bind(this) }
+                names={_names}
+                onMoveElement={ (this._callbackFromSelectableTable).bind(this) }
                 only-one
                 all="Interfaces"
                 selected="Selected interface"

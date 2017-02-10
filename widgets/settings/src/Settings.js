@@ -8,10 +8,14 @@ import CPE from './CPE/CPE';
 import SDWAN from './SD-WAN/SDWAN';
 import fetchData from './DataHandler';
 
-export default class Wrapper extends React.Component {
+export default class Settings extends React.Component {
 
     constructor(props, context) {
         super(props, context);
+
+        console.log("****")
+        console.log( props.data );
+        console.log("****")
 
         let fetched = fetchData();
 
@@ -22,6 +26,11 @@ export default class Wrapper extends React.Component {
             sd_wan_source: fetched.SD_WAN
         };
     }
+
+    componentWillReceiveProps(props) {
+        console.log( props['data'] )
+    }
+
 
     handleItemClick = (index) => {
         /* block not available components */
@@ -48,17 +57,26 @@ export default class Wrapper extends React.Component {
         this.setState(sd_wan_source);
     }
 
+    handleCPEUpdate( data ) {
+        let cpe_source = this.state.cpe_source;
+        cpe_source.cpes = data;
+        this.setState({
+            cpe_source
+        });
+    }
+
     render () {
         const panels = [{
                 title: 'CPE',
                 content: <CPE
                     source={this.state.cpe_source}
+                    onUpdateCPE={ (this.handleCPEUpdate).bind(this) }
                 />
             }, {
                 title: 'SD-WAN',
                 content: <SDWAN
                     source={this.state.sd_wan_source}
-                    callback={ (this.handleSDWANUpdate).bind(this) }
+                    onUpdateTables={ (this.handleSDWANUpdate).bind(this) }
                     callbackSettings={ this.handleSDWANSettings.bind(this) }
                 />
             }, {
@@ -76,14 +94,14 @@ export default class Wrapper extends React.Component {
         return (
             <div className="ui grid">
                  <div className="three wide column">
-                     <div className="ui vertical pointing fluid menu">
+                     <div className="ui vertical fluid menu">
                      {panels.map(
                          (item, index) =>
                              <a
                                  className={ (index == this.state.activePanel ? "active item" : "item") + (index > 1 ? " disabled" : "") }
                                  key={index}
                                  onClick={() => this.handleItemClick(index)}
-                                 href="#!"
+                                 href="javascript:void(0)"
                              >
                                  {item.title}
                              </a>

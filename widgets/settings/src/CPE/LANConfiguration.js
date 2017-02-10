@@ -8,6 +8,8 @@ import Button from '../../../../app/components/basic/control/Button';
 
 import debounceErrorCheck from './AddressValidation';
 
+const LAN_Configuration_prefix = "LAN_Configuration";
+const Voice_LAN_Configuration_Prefix = "Voice_LAN_Configuration";
 
 export default class LANConfiguration extends React.Component {
 
@@ -18,35 +20,22 @@ export default class LANConfiguration extends React.Component {
     }
 
     setupState( props ) {
-        let data = props['data-cpe']['LAN'];
+        let cpeJSONFields = props['data-cpe'];
+        let data = {};
+        /*
+            Convert { "0": {"key":"value"} } to { "key": "value" }
+         */
+        cpeJSONFields.forEach( field => { let keys = Object.keys(field); data[keys[0]] = field[keys[0]]; } );
+
+        data.originalFields = Object.keys( data );
 
         if( data == undefined || data == null ) return {};
 
-        if( Object.keys(data).length === 0 ) {
-            data = {
-                lan_default_private_lan: '',
-                lan_subnet_address: '',
-                lan_subnet_mask: '',
-                lan_default_gateway: '',
-
-                lan_dhcp_range: '',
-                lan_dhcp_exclude_list: '',
-                lan_static_allocation_mac: '',
-                lan_static_allocation_ip: '',
-
-                lan_dns_primary: '',
-                lan_dns_pecondary: '',
-
-                lan_public_subnet_address: '',
-                lan_public_subnet_mask: ''
-            }
-        }
-
-        data.siteValue = props['data-cpe'].value;
+        data.siteValue = props['data-site-value'];
         data.errors = {};
         data.errorsTexts = [];
 
-        data.privateLANDefault =  props['data-cpe']['private_lan_default_values'];
+        data.privateLANDefault = {}; //props['data-cpe']['private_lan_default_values'];
         data.privateLANDefaultOptions = Object.keys(data.privateLANDefault).map(key => ({ text: key, value: key }) );
 
         data.const = props['data-const'];
@@ -58,18 +47,36 @@ export default class LANConfiguration extends React.Component {
        this.setState( this.setupState( nextProps ));
     }
 
-    _debounceErrorTimer = null;
-
     _handleChange(proxy, field) {
         this.setState(Form.fieldNameValue(field));
 
         if( this._debounceErrorTimer !== null ) clearTimeout( this._debounceErrorTimer);
-        this._debounceErrorTimer = setTimeout(() => debounceErrorCheck(field, this), 500);
+        this._debounceErrorTimer = setTimeout(() => {
+                const errors = debounceErrorCheck(field, this);
+                if(errors){
+                    this.setState(errors);
+                }
+            },500
+        );
     }
 
     _handleSubmit(data) {
         if( this.state.errorsTexts.length == 0 ){
-            this.props['save-data']( data, this.state.siteValue );
+            let currentValues = this.state;
+            let formatObject = [];
+            let originalFields = this.state.originalFields;
+
+            Object.keys( currentValues )
+                .filter( formElement => {
+                    return originalFields.indexOf(formElement) > -1
+                })
+                .forEach( formElementKey => {
+                    let arrayElement = {};
+                    arrayElement[formElementKey] = currentValues[formElementKey];
+                    formatObject.push(arrayElement);
+                });
+
+            this.props.onDataSave( formatObject, this.state.siteValue );
 
             this.setState({savingData: true});
             setTimeout(function(){
@@ -84,20 +91,26 @@ export default class LANConfiguration extends React.Component {
         let defaultLAN = field.value;
 
         this.setState( {
-            lan_subnet_address: this.state.privateLANDefault[defaultLAN]['subnet_address'],
-            lan_subnet_mask: this.state.privateLANDefault[defaultLAN]['subnet_mask'],
-            lan_default_gateway: this.state.privateLANDefault[defaultLAN]['default_getaway'],
+            LAN_Configuration_Private_LAN_Subnet_Address: this.state.privateLANDefault[defaultLAN]['subnet_address'],
+            LAN_Configuration_Private_LAN_Subnet_Mask: this.state.privateLANDefault[defaultLAN]['subnet_mask'],
+            LAN_Configuration_Private_LAN_Default_Gateway: this.state.privateLANDefault[defaultLAN]['default_getaway'],
         });
 
         /* remove any errors on these fields */
-        debounceErrorCheck( {name: 'lan_subnet_address', 'data-validate': 'ipv4', 'value': ''}, this);
-        debounceErrorCheck( {name: 'lan_subnet_mask', 'data-validate': 'ipv4', 'value': ''}, this);
-        debounceErrorCheck( {name: 'lan_default_getaway', 'data-validate': 'ipv4', 'value': ''}, this);
+        const validateDefaultFromCombo = [
+            {name: 'LAN_Configuration_Private_LAN_Subnet_Address', 'data-validate': 'ipv4', 'value': ''},
+            {name: 'LAN_Configuration_Private_LAN_Subnet_Mask', 'data-validate': 'ipv4', 'value': ''},
+            {name: 'LAN_Configuration_Private_LAN_Default_Gateway', 'data-validate': 'ipv4', 'value': ''}];
+
+        validateDefaultFromCombo.forEach(function( validateDefaultValue ){
+            const errors = debounceErrorCheck( validateDefaultValue, this);
+            this.setState(errors);
+        }.bind(this));
     }
 
     _getFieldClass(id) {
-        return this.state.errors['lan_' + id] === undefined ? '' :
-            this.state.errors['lan_' + id].class;
+        return this.state.errors['LAN_Configuration_' + id] === undefined ? '' :
+            this.state.errors['LAN_Configuration_' + id].class;
     }
 
     _getIsEditable( value ) {
@@ -111,10 +124,10 @@ export default class LANConfiguration extends React.Component {
                     <Form.Field className={ this._getFieldClass( item.value ) } >
                         <label>{item.text}</label>
                         <Form.Input placeholder={item.text}
-                                    name={'lan_' + item.value}
+                                    name={'LAN_Configuration_' + item.value}
                                     data-text={item.text}
                                     key={ "input_" + index }
-                                    value={this.state['lan_' + item.value]}
+                                    value={this.state['LAN_Configuration_' + item.value]}
                                     onChange={this._handleChange.bind(this)}
                                     data-validate={item.validate}
                         />

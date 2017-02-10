@@ -1,178 +1,85 @@
 {
-  "0": {
-    "site": "Haifa",
-    "value": "0",
-    "LAN": {
-      "lan_default_private_lan": "",
-      "lan_subnet_address": "",
-      "lan_subnet_mask": "",
-      "lan_default_gateway": "",
-      "lan_dhcp_range": "",
-      "lan_dhcp_exclude_list": "",
-      "lan_static_allocation_mac": "",
-      "lan_static_allocation_ip": "",
-      "lan_dns_primary": "",
-      "lan_dns_pecondary": "",
-      "lan_public_subnet_address": "127.0.0.1",
-      "lan_public_subnet_mask": ""
-    },
-    "voiceLAN": {
-      "voice_lan_subnet_address": "",
-      "voice_lan_subnet_mask": "",
-      "voice_lan_default_gateway": "",
-      "voice_lan_dhcp_range": "",
-      "voice_lan_dhcp_exclude_list": "",
-      "voice_lan_static_allocation_mac": "",
-      "voice_lan_static_allocation_ip": ""
-    },
-    "private_lan_default_values": {
-      "192.168.1.0; 255.255.255.0; 192.168.1.1": {
-        "subnet_address": "192.168.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "192.168.1.1"
-      },
-      "10.0.1.0; 255.255.255.0; 10.0.1.1": {
-        "subnet_address": "10.0.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "10.0.1.1"
-      },
-      "172.16.1.0; 255.255.255.0; 172.16.1.1": {
-        "subnet_address": "172.16.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "172.16.1.1"
-      }
-    }
+  "customer": {
+    "customer_name": "customer1",
+    "customer_type": "small",
+    "description": null,
+    "het_pey": 100,
+    "pm_email": "email1@org.com",
+    "role": "operator",
+    "siebel_customer_id": 1,
+    "status": "active"
   },
-  "1": {
-    "site": "Tel Aviv",
-    "value": "1",
-    "LAN": {
-      "lan_default_private_lan": "",
-      "lan_subnet_address": "",
-      "lan_subnet_mask": "",
-      "lan_default_gateway": "",
-      "lan_dhcp_range": "",
-      "lan_dhcp_exclude_list": "",
-      "lan_static_allocation_mac": "",
-      "lan_static_allocation_ip": "",
-      "lan_dns_primary": "",
-      "lan_dns_pecondary": "",
-      "lan_public_subnet_address": "127.0.0.1",
-      "lan_public_subnet_mask": ""
-    },
-    "voiceLAN": {
-      "voice_lan_subnet_address": "",
-      "voice_lan_subnet_mask": "",
-      "voice_lan_default_gateway": "",
-      "voice_lan_dhcp_range": "",
-      "voice_lan_dhcp_exclude_list": "",
-      "voice_lan_static_allocation_mac": "",
-      "voice_lan_static_allocation_ip": ""
-    },
-    "private_lan_default_values": {
-      "192.168.1.0; 255.255.255.0; 192.168.1.1": {
-        "subnet_address": "192.168.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "192.168.1.1"
-      },
-      "10.0.1.0; 255.255.255.0; 10.0.1.1": {
-        "subnet_address": "10.0.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "10.0.1.1"
-      },
-      "172.16.1.0; 255.255.255.0; 172.16.1.1": {
-        "subnet_address": "172.16.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "172.16.1.1"
-      }
-    }
+  "dynamic": {
+    "fields": [
+
+    ]
   },
-  "2": {
-    "site": "Jerusalem",
-    "value": "2",
-    "LAN": {
-      "lan_default_private_lan": "",
-      "lan_subnet_address": "",
-      "lan_subnet_mask": "",
-      "lan_default_gateway": "",
-      "lan_dhcp_range": "",
-      "lan_dhcp_exclude_list": "",
-      "lan_static_allocation_mac": "",
-      "lan_static_allocation_ip": "127.0.0.1",
-      "lan_dns_primary": "",
-      "lan_dns_pecondary": "",
-      "lan_public_subnet_address": "",
-      "lan_public_subnet_mask": ""
-    },
-    "voiceLAN": {
-      "voice_lan_subnet_address": "",
-      "voice_lan_subnet_mask": "",
-      "voice_lan_default_gateway": "",
-      "voice_lan_dhcp_range": "",
-      "voice_lan_dhcp_exclude_list": "",
-      "voice_lan_static_allocation_mac": "",
-      "voice_lan_static_allocation_ip": ""
-    },
-    "private_lan_default_values": {
-      "192.168.1.0; 255.255.255.0; 192.168.1.1": {
-        "subnet_address": "192.168.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "192.168.1.1"
+  "products": [
+    {
+      "branch": "Tel Aviv1",
+      "children": [],
+      "dynamic": {
+        "fields": [
+            { "LAN_Configuration_Private_LAN_Subnet_Address": "" },
+            { "LAN_Configuration_Private_LAN_Subnet_Mask": "" },
+            { "LAN_Configuration_Private_LAN_Default_Gateway": "" },
+            { "LAN_Configuration_Private_LAN__DHCP_DHCP_Range": "" },
+            { "LAN_Configuration_Private_LAN__DHCP_DHCP_Exclude_list": "" },
+            { "LAN_Configuration_Private_LAN__DHCP_Static_Allocation": "" },
+            { "LAN_Configuration_Private_LAN__DHCP_Static_Allocation": "" },
+            { "LAN_Configuration_Public_LAN_Subnet_Address": "" },
+            { "LAN_Configuration_Public_LAN_Subnet_Mask": "" },
+            { "LAN_Configuration_DNS_DNS_primary": "" },
+            { "LAN_Configuration_DNS_DNS_secondary": "" },
+            { "Voice_LAN_Configuration_Voice_LAN_Subnet_Address": "" },
+            { "Voice_LAN_Configuration_Voice_LAN_Subnet_Mask": "" },
+            { "Voice_LAN_Configuration_Voice_LAN_Default_Gateway": "" },
+            { "Voice_LAN_Configuration_Voice_LAN__DHCP_DHCP_Range": "" },
+            { "Voice_LAN_Configuration_Voice_LAN__DHCP_DHCP_Exclude_list": "" },
+            { "Voice_LAN_Configuration_Voice_LAN__DHCP_Static_Allocation_MAC": "" },
+            { "Voice_LAN_Configuration_Voice_LAN__DHCP_Static_Allocation_IP": "" }
+        ]
       },
-      "10.0.1.0; 255.255.255.0; 10.0.1.1": {
-        "subnet_address": "10.0.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "10.0.1.1"
+      "extra_fields": "{Site=Tel Aviv1}",
+      "parent_asset_id": null,
+      "product_name": "SRX300 updated",
+      "product_serial_id": 1,
+      "product_type": "CPE",
+      "siebel_asset_id": 1,
+      "siebel_customer_id": 1
+    },
+    {
+      "branch": "Jerusalem",
+      "children": [],
+      "dynamic": {
+        "fields": [
+          { "LAN_Configuration_Private_LAN_Subnet_Address": "" },
+          { "LAN_Configuration_Private_LAN_Subnet_Mask": "" },
+          { "LAN_Configuration_Private_LAN_Default_Gateway": "" },
+          { "LAN_Configuration_Private_LAN__DHCP_DHCP_Range": "" },
+          { "LAN_Configuration_Private_LAN__DHCP_DHCP_Exclude_list": "" },
+          { "LAN_Configuration_Private_LAN__DHCP_Static_Allocation": "" },
+          { "LAN_Configuration_Private_LAN__DHCP_Static_Allocation": "" },
+          { "LAN_Configuration_Public_LAN_Subnet_Address": "" },
+          { "LAN_Configuration_Public_LAN_Subnet_Mask": "" },
+          { "LAN_Configuration_DNS_DNS_primary": "" },
+          { "LAN_Configuration_DNS_DNS_secondary": "" },
+          { "Voice_LAN_Configuration_Voice_LAN_Subnet_Address": "" },
+          { "Voice_LAN_Configuration_Voice_LAN_Subnet_Mask": "" },
+          { "Voice_LAN_Configuration_Voice_LAN_Default_Gateway": "" },
+          { "Voice_LAN_Configuration_Voice_LAN__DHCP_DHCP_Range": "" },
+          { "Voice_LAN_Configuration_Voice_LAN__DHCP_DHCP_Exclude_list": "" },
+          { "Voice_LAN_Configuration_Voice_LAN__DHCP_Static_Allocation_MAC": "" },
+          { "Voice_LAN_Configuration_Voice_LAN__DHCP_Static_Allocation_IP": "" }
+        ]
       },
-      "172.16.1.0; 255.255.255.0; 172.16.1.1": {
-        "subnet_address": "172.16.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "172.16.1.1"
-      }
+      "extra_fields": "{Site=Jerusalem}",
+      "parent_asset_id": null,
+      "product_name": "SRX300 updated",
+      "product_serial_id": 1,
+      "product_type": "CPE",
+      "siebel_asset_id": 1,
+      "siebel_customer_id": 1
     }
-  },
-  "3": {
-    "site": "Eilat",
-    "value": "3",
-    "LAN": {
-      "lan_default_private_lan": "",
-      "lan_subnet_address": "",
-      "lan_subnet_mask": "",
-      "lan_default_gateway": "",
-      "lan_dhcp_range": "",
-      "lan_dhcp_exclude_list": "",
-      "lan_static_allocation_mac": "",
-      "lan_static_allocation_ip": "",
-      "lan_dns_primary": "",
-      "lan_dns_pecondary": "",
-      "lan_public_subnet_address": "127.0.0.1",
-      "lan_public_subnet_mask": ""
-    },
-    "voiceLAN": {
-      "voice_lan_subnet_address": "",
-      "voice_lan_subnet_mask": "",
-      "voice_lan_default_gateway": "",
-      "voice_lan_dhcp_range": "",
-      "voice_lan_dhcp_exclude_list": "",
-      "voice_lan_static_allocation_mac": "",
-      "voice_lan_static_allocation_ip": ""
-    },
-    "private_lan_default_values": {
-      "192.168.1.0; 255.255.255.0; 192.168.1.1": {
-        "subnet_address": "192.168.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "192.168.1.1"
-      },
-      "10.0.1.0; 255.255.255.0; 10.0.1.1": {
-        "subnet_address": "10.0.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "10.0.1.1"
-      },
-      "172.16.1.0; 255.255.255.0; 172.16.1.1": {
-        "subnet_address": "172.16.1.0",
-        "subnet_mask": "255.255.255.0",
-        "default_getaway": "172.16.1.1"
-      }
-    }
-  }
+  ]
 }

@@ -7,20 +7,17 @@ import Button from '../../../../app/components/basic/control/Button';
 
 export default class SelectableTable extends React.Component {
 
-    _callback = null;
-    _onlyOne = false;
-
     constructor(props, context) {
         super(props, context);
 
         let source = props['source'];
         let names = props['names'];
 
-        this._callback = props['callback'];
-
         if( props['only-one'] !== undefined ) {
             this._onlyOne = true;
         }
+
+        console.log( source )
 
         source.names = names;
         this.state = source;
@@ -61,7 +58,7 @@ export default class SelectableTable extends React.Component {
             })
         }
 
-        this._callback( Object.assign({}, {
+        this.props['onMoveElement']( Object.assign({}, {
             selectable,
             selectedItems,
             selectedRight
@@ -86,7 +83,7 @@ export default class SelectableTable extends React.Component {
             })
         }
 
-        this._callback( Object.assign({}, {
+        this.props['onMoveElement']( Object.assign({}, {
             selectable,
             selectedItems,
             selectedLeft
