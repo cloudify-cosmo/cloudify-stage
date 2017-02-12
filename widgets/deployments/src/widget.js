@@ -54,7 +54,6 @@ Stage.defineWidget({
                 let nodeSize = _.countBy(data[1].items, "deployment_id");
                 let nodeInstanceData = _.groupBy(data[2].items, "deployment_id");
                 let executionsData = _.groupBy(data[3].items, "deployment_id");
-                console.log(executionsData);
 
                 let formattedData = Object.assign({},deploymentData,{
                     items: _.map (deploymentData.items,(item)=>{

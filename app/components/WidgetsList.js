@@ -24,24 +24,25 @@ export default class WidgetsList extends Component {
 
     render() {
         return (
-        <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
-            {
-                this.props.widgets.map(function(widget){
-                    return (
-                        <GridItem
-                            key={widget.id}
-                            id={widget.id}
-                            x={widget.x} y={widget.y}
-                            height={widget.height}
-                            width={widget.width}
-                            zIndex={widget.definition ? widget.definition.zIndex : undefined}
-                            className='widget'>
-                            <Widget widget={widget} pageId={this.props.pageId}></Widget>
-                        </GridItem>
-                        )
-                },this)
-            }
-        </Grid>
+            <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
+                {
+                    this.props.widgets.map(function(widget){
+                        return (
+                            <GridItem
+                                key={widget.id}
+                                id={widget.id}
+                                x={widget.x} y={widget.y}
+                                height={widget.height}
+                                width={widget.width}
+                                zIndex={widget.definition ? widget.definition.zIndex : undefined}
+                                className='widget'
+                                maximized={widget.maximized}>
+                                <Widget widget={widget} pageId={this.props.pageId}></Widget>
+                            </GridItem>
+                            )
+                    },this)
+                }
+            </Grid>
         );
     }
 }
