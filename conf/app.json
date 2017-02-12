@@ -4,5 +4,12 @@
     "user" : "initial-template",
     "customer" : "initial-template-customer"
   },
-  "singleManager": false
+  "singleManager": false,
+  "whiteLabel": {
+    "enabled": false,
+    "logoUrl": "",
+    "mainColor" : "",
+    "pagesLocation" : "",
+    "headerTextColor" : ""
+  }
 }

@@ -12,7 +12,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         isEditMode: state.config.isEditMode || false,
         manager: state.manager || {},
-        mode: state.config.mode
+        mode: state.config.mode,
+        whiteLabel : state.config.app.whiteLabel
     }
 };
 
