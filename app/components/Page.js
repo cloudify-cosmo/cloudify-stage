@@ -25,7 +25,7 @@ export default class Page extends Component {
     render() {
         var maximizeWidget = _.findIndex(this.props.page.widgets, { 'maximized': true }) >= 0;
 
-        $('body').css({overflow: maximizeWidget?'hidden':'inherit'});
+        $('body').css({overflow: maximizeWidget?'hidden':'inherit'}).scrollTop(0);
 
         return (
             <div className={`${maximizeWidget?'maximizeWidget':''}`}>

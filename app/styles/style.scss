@@ -78,11 +78,11 @@ a:hover {
 
   &.maximize .widgetItem {
     position: fixed;
-    top: 52px;
-    bottom: 0;
-    left: 13rem;
-    right: 0;
-    border-radius: unset;
+    top: 8rem;
+    bottom: 1rem;
+    left: 14rem;
+    right: 1rem;
+    outline: 0;
   }
 }
 

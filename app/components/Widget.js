@@ -120,10 +120,10 @@ export default class Widget extends Component {
                         <div className={`widgetViewButtons ${this.props.widget.maximized?'alwaysOnTop':''}`}>
                             {
                                 this.props.widget.maximized ?
-                                <i className="sign out link icon"
+                                <i className="compress link icon"
                                    onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false)}/>
                                 :
-                                <i className="maximize link icon small"
+                                <i className="expand link icon small"
                                    onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, true)}/>
                             }
                         </div>
