@@ -1,0 +1,16 @@
+{
+  "name": "cloudify-stage-dist",
+  "version": "1.0.0",
+  "description": "Cloudify stage distributed package",
+  "main": "main.bundle.js",
+  "scripts": {
+    "test": "",
+    "start": "node backend/server.js"
+  },
+  "author": "Kinneret Zin",
+  "license": "",
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
