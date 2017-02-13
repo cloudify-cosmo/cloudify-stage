@@ -158,4 +158,7 @@ export default class Auth {
             });
     }
 
+    static isLoggedIn(managerData) {
+        return (managerData && managerData.auth && managerData.auth.token);
+    }
 }

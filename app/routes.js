@@ -10,21 +10,15 @@ import Home from './components/Home';
 import NotFound from './components/NotFound';
 import Login from './containers/Login';
 import {setValue} from './actions/context';
+import Auth from './utils/auth';
 
 export default (store)=> {
     let isLoggedIn = (nextState, replace, callback) => {
-        var state = store.getState();
-        var currentManager = state.manager;
-        if (!currentManager) {
-            console.log('User doesn\'t have any manager, navigating to set manager');
+        if (!Auth.isLoggedIn(store.getState().manager)) {
+            console.log('User is not logged in, navigating to Login screen');
             replace('/login');
-        } else {
-            let auth = currentManager.auth;
-            if (!auth || (auth.isSecured && !auth.token) ) {
-                console.log('Current manager doesnt have any token assigned, navigating to login');
-                replace('/login');
-            }
         }
+
         callback();
     };
 
