@@ -12,12 +12,12 @@ export default class DataFetcher{
         let cpes_data = require('./Data/cpe.json');
         const product_type = "product_type";
 
-        let cpes = cpes_data['products'].filter(
+        let CPEs = cpes_data['products'].filter(
             product => { return product[product_type] === "CPE" }
         );
 
         let index = -1;
-        let cpesOptions = cpes.map( cpe => {
+        let options = CPEs.map( cpe => {
             index++;
             return {
                 text: cpe.branch,
@@ -25,12 +25,35 @@ export default class DataFetcher{
             }});
 
         let CPE = {
-            cpes,
-            cpesOptions
+            CPEs,
+            options
+        };
+
+
+        /*
+               SDWAN
+         */
+        let applications = require('./Data/sdwan_applications.json').applications;
+        let interfaces = require('./Data/sdwan_interfaces.json').interfaces;
+
+        let applicationsSelectedItems = [[],[]];
+        let interfacesSelectedItems = [[],[]];
+
+        let status = '1';
+        let applicationsVisible = false;
+
+        let SDWAN =  {
+            applications,
+            interfaces,
+            applicationsSelectedItems,
+            interfacesSelectedItems,
+            status,
+            applicationsVisible
         };
 
         return Promise.resolve( {
-            CPE
+            CPE,
+            SDWAN
         });
     }
 }

@@ -25,9 +25,16 @@ export default class SDWAN extends React.Component {
         super(props, context);
 
         this.state = {
-            status: this.props.source.status,
-            applications: this.props.source.applicationsVisible
+            status: props.source !== undefined ? props.source.status : false,
+            applications: props.source !== undefined ? props.source.applicationsVisible : false
         };
+    }
+
+    componentWillReceiveProps(props) {
+        this.setState({
+            status: props.source !== undefined ? props.source.status : false,
+            applications: props.source !== undefined ? props.source.applicationsVisible : false
+        })
     }
 
     _handleChange(proxy, field) {
@@ -58,13 +65,13 @@ export default class SDWAN extends React.Component {
                 onSaveData={this._callbackFromActive.bind(this)}
             ></Active>,
             <Backup
-                source={this.props.source.interfaces}
-                selectedItems={ this.props.source.interfacesSelectedItems }
+                source={ this.props.source !== undefined ? this.props.source.interfaces : [] }
+                selectedItems={ this.props.source !== undefined ? this.props.source.interfacesSelectedItems : [] }
                 onSaveData={ (this._callbackFromBackup).bind(this) }
             ></Backup>,
             <Application
-                source={this.props.source.applications}
-                selectedItems={ this.props.source.applicationsSelectedItems }
+                source={ this.props.source !== undefined ? this.props.source.applications : [] }
+                selectedItems={ this.props.source !== undefined ? this.props.source.applicationsSelectedItems : [] }
                 onSaveData={ (this._callbackFromApplications).bind(this) }
             ></Application>
         ];
@@ -97,7 +104,7 @@ export default class SDWAN extends React.Component {
                                 <Form.Checkbox name='application'
                                                label="Applications"
                                                onChange={this._handleApplicationChange.bind(this)}
-                                               checked={this.state.applications}
+                                               checked={ this.props.source !== undefined ? this.state.applications : undefined }
                                 />
                             </Form.Field>
                         }

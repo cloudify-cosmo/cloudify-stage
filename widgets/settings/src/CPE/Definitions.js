@@ -47,21 +47,25 @@ const privateLANStaticAllocation = [
 const dns = [
     {
         text: 'DNS Primary',
-        value: 'DNS_DNS_primary'
+        value: 'DNS_DNS_primary',
+        allocate: true
     },
     {
         text: 'DNS Secondary',
-        value: 'DNS_DNS_secondary'
+        value: 'DNS_DNS_secondary',
+        allocate: true
     }
 ];
 const publicLAN = [
     {
         text: 'Subnet address',
         value: 'Public_LAN_Subnet_Address',
+        allocate: true
     },
     {
         text: 'Subnet mask',
         value: 'Public_LAN_Subnet_Mask',
+        allocate: true
     }
 ];
 
@@ -73,16 +77,19 @@ const voiceLAN = [
         text: 'Subnet Address',
         value: 'Voice_LAN_Subnet_Address',
         validate: 'ipv4',
+        allocate: true
     },
     {
         text: 'Subnet Mask',
         value: 'Voice_LAN_Subnet_Mask',
         validate: 'ipv4',
+        allocate: true
     },
     {
         text: 'Default Gateway',
         value: 'Voice_LAN_Subnet_Default_Gateway',
         validate: 'ipv4',
+        allocate: true
     }
 ];
 const voiceLANDHCP = [

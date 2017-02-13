@@ -2,7 +2,7 @@
  * Created by jakub on 2/9/17.
  */
 
-export default class {
+export default class Actions {
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -19,7 +19,12 @@ export default class {
          }
       */
     allocateFromDataBase( customerId, parentAssetId, fieldName ) {
-        return this.toolbox.getManager().doGet(`/ui/field/allocate/${customer_id}/${parentAssetId}/${fieldName}`);
+        console.log( "*** API CALL ALLOCATE FIELD " + fieldName )
+       // return this.toolbox.getManager().doGet(`/ui/field/allocate/${customerId}/${parentAssetId}/${fieldName}`);
+
+        return new Promise(function(resolve, reject){
+            resolve("1.1.1.1");
+        });
     }
 
     /*
@@ -33,14 +38,25 @@ export default class {
          }
      */
     releaseFromDataBase( customerId, parentAssetId, fieldName ) {
-        return this.toolbox.getManager().doDelete(`/ui/field/release/${customer_id}/${parentAssetId}/${fieldName}`);
+        console.log( "*** API CALL RELEASE FIELD " + fieldName )
+       // return this.toolbox.getManager().doDelete(`/ui/field/release/${customerId}/${parentAssetId}/${fieldName}`);
+
+        return new Promise(function(resolve, reject){
+            resolve("");
+        });
     }
 
+    /*
+
+     */
     updateCPE() {
-
+        console.log( "*** API CALL UPDATE CPE" )
     }
 
-    updateSD_WAN() {
+    /*
 
+     */
+    updateSD_WAN() {
+        console.log( "*** API CALL UPDATE SD-WAN" )
     }
 }

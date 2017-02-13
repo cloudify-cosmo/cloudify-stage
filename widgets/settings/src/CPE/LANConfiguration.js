@@ -5,6 +5,7 @@
 const { Form } = Stage.Basic;
 import Segment from '../../../../app/components/basic/Segment';
 import Button from '../../../../app/components/basic/control/Button';
+import Actions from '../actions';
 
 import debounceErrorCheck from './AddressValidation';
 
@@ -117,20 +118,84 @@ export default class LANConfiguration extends React.Component {
         return value !== undefined && value === false;
     }
 
+    _callAllocate( fieldName ) {
+        const actions = new Actions(this.props.toolbox);
+        const allocateFieldName = 'allocate_' + fieldName;
+        let newValues = {};
+
+        if( this.state[allocateFieldName] === undefined || this.state[allocateFieldName] === false ) {
+            let promise = actions.allocateFromDataBase(
+                0, 0,
+                fieldName
+            );
+
+            promise.then(function(value){
+                newValues[fieldName] = value;
+                newValues[allocateFieldName] = true;
+
+                this.setState(newValues);
+
+                /* remove any errors on these fields */
+                const errors = debounceErrorCheck( {name: fieldName, 'data-validate': '', 'value': ''}, this);
+                this.setState(errors);
+
+            }.bind(this));
+        }else{
+            let promise = actions.releaseFromDataBase(
+                0, 0,
+                fieldName
+            );
+
+            promise.then(function(value){
+                newValues[allocateFieldName] = false;
+
+                this.setState(newValues)
+            }.bind(this));
+        }
+    }
+
+    _checkIfAllocated( name ) {
+        return this.state['allocate_' + 'LAN_Configuration_' + name] === undefined ||
+                this.state['allocate_' + 'LAN_Configuration_' + name] === false;
+    }
+
     _renderFieldGroup( list ) {
         return list.map(
             (item, index) => (
                 <div key={ index } className="column">
                     <Form.Field className={ this._getFieldClass( item.value ) } >
-                        <label>{item.text}</label>
-                        <Form.Input placeholder={item.text}
-                                    name={'LAN_Configuration_' + item.value}
-                                    data-text={item.text}
-                                    key={ "input_" + index }
-                                    value={this.state['LAN_Configuration_' + item.value]}
-                                    onChange={this._handleChange.bind(this)}
-                                    data-validate={item.validate}
-                        />
+                        <div>
+                            <label>{item.text}</label>
+                            {
+                                item.allocate !== undefined &&
+                                    <Button
+                                        type="button"
+                                        size="tiny"
+                                        compact={true}
+                                        floated="right"
+                                        color="blue"
+                                        onClick={ () => this._callAllocate('LAN_Configuration_' + item.value) }
+                                    >
+                                        <i className={ this._checkIfAllocated(item.value) ? 'arrow icon down': 'arrow icon up' }></i>
+                                        {
+                                           this._checkIfAllocated(item.value) ?
+                                                "Allocate" : "Release"
+                                        }
+                                    </Button>
+                            }
+                        </div>
+                        <br/>
+                        <div>
+                            <Form.Input placeholder={item.text}
+                                        name={'LAN_Configuration_' + item.value}
+                                        data-text={item.text}
+                                        key={ "input_" + index }
+                                        value={this.state['LAN_Configuration_' + item.value]}
+                                        onChange={this._handleChange.bind(this)}
+                                        data-validate={item.validate}
+                                        disabled={!this._checkIfAllocated(item.value)}
+                            />
+                        </div>
                     </Form.Field>
                     { index !== list.length-1 && <br/> }
                 </div>
@@ -148,7 +213,9 @@ export default class LANConfiguration extends React.Component {
 
                             <div>
                                 <Form.Field>
-                                    <label>Set default values</label>
+                                    <div>
+                                        <label>Set default values</label>
+                                    </div>
                                     <Form.Dropdown name='lan_default_private_lan'
                                                    selection
                                                    options={this.state.privateLANDefaultOptions}
