@@ -2,14 +2,20 @@
   "name": "Tenant Management",
   "widgets": [
     {
+      "name": "User Management",
+      "definition": "userManagement",
+      "width": 16,
+      "height": 24
+    },
+    {
       "name": "Tenants Management",
       "definition": "tenants",
       "width": 16,
       "height": 24
     },
     {
-      "name": "User Management",
-      "definition": "userManagement",
+      "name": "User Groups Management",
+      "definition": "userGroups",
       "width": 16,
       "height": 24
     }
