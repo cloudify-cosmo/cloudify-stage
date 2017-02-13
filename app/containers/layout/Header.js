@@ -5,6 +5,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {setEditMode} from '../../actions/config';
+import {minimizeWidgets} from '../../actions/widgets';
 import Header from '../../components/layout/Header';
 import {logout} from '../../actions/managers';
 
@@ -20,6 +21,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onWidgetsGridEditModeChange: (isEditMode) => {
+            if (isEditMode) {
+                dispatch(minimizeWidgets());
+            }
             dispatch(setEditMode(isEditMode));
         },
         onLogout: () => {
