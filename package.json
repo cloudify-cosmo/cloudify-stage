@@ -75,7 +75,8 @@
     "require-dot-file": "^0.4.0",
     "run-sequence": "^1.2.2",
     "semantic-ui": "^2.2.4",
-    "semantic-ui-react": "^0.64.3",
+    "semantic-ui-react": "^0.64.7",
+    "semantic-ui-calendar": "^0.0.6",
     "url-loader": "^0.5.7",
     "yamljs": "^0.2.8"
   },

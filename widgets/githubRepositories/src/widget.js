@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: "GitHub repositories list",
     description: 'This widget shows a users\'s repositories',
     initialWidth: 8,
-    initialHeight: 4,
+    initialHeight: 16,
     color: "teal",
     isReact: true,
     initialConfiguration: [

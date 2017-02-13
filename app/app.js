@@ -20,6 +20,8 @@ import './styles/style.scss';
 // Import semantic
 import '../semantic/dist/semantic.min.css';
 import '../semantic/dist/semantic.min';
+import '../node_modules/semantic-ui-calendar/dist/calendar.min.css';
+import '../node_modules/semantic-ui-calendar/dist/calendar';
 
 // Import gridstack
 import '../node_modules/gridstack/dist/gridstack.css';

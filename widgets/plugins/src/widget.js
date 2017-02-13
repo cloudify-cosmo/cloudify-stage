@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: "Plugins list",
     description: 'Plugins list',
     initialWidth: 8,
-    initialHeight: 5,
+    initialHeight: 20,
     color : "blue",
     isReact: true,
     initialConfiguration: [

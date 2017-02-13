@@ -8,7 +8,7 @@ Stage.defineWidget({
     name: "some graph",
     description: 'blah blah blah',
     initialWidth: 8,
-    initialHeight: 4,
+    initialHeight: 16,
     color : "blue",
     hasTemplate: true,
     render: function(widget,data,error,toolbox) {

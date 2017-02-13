@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: 'Tenants management',
     description: 'This widget shows a list of available tenants, and allow managing them',
     initialWidth: 5,
-    initialHeight: 4,
+    initialHeight: 16,
     color: 'green',
     fetchUrl: '[manager]/tenants[params]',
     isReact: true,

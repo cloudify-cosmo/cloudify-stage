@@ -10,7 +10,7 @@ import RoleModal from './RoleModal';
 import TenantModal from './TenantModal';
 import GroupModal from './GroupModal';
 
-export default class TenantsTable extends React.Component {
+export default class UsersTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 

@@ -21,6 +21,7 @@ import Radio from './control/Radio';
 import Checkbox from './control/Checkbox';
 import InputFile from './control/InputFile';
 import Dropdown from './control/Dropdown';
+import InputDate from './control/InputDate';
 import Button from './control/Button';
 import Icon from './Icon';
 import Message from './Message';
@@ -51,6 +52,7 @@ export {
     Checkbox,
     InputFile,
     Dropdown,
+    InputDate,
     Button,
     Icon,
     Message,

@@ -1,51 +1,46 @@
 /**
- * Created by kinneretzin on 07/09/2016.
+ * Created by pposel on 07/02/2017.
  */
 
-import Filter from './Filter';
+import EventFilter from './EventFilter';
 
 Stage.defineWidget({
-    id: 'filter',
-    name: "Filter by blueprint/deployment/execution",
-    description: 'Adds a filter section for blueprints, deployments and execution list',
+    id: 'eventsFilter',
+    name: "Events/logs filter",
+    description: 'Adds a filter section for events and logs',
     initialWidth: 12,
-    initialHeight: 4,
-    color: "yellow",
+    initialHeight: 6,
+    color: "pink",
     showHeader: false,
     showBorder: false,
     keepOnTop: true,
     fetchUrl: {
         blueprints: '[manager]/blueprints?_include=id',
         deployments: '[manager]/deployments?_include=id,blueprint_id',
-        executions: '[manager]/executions?_include=id,blueprint_id,deployment_id,workflow_id'
+        types: '[manager]/events?_include=event_type&type=cloudify_event'
     },
     isReact: true,
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(5),
-        {id: "filterByExecutions",name: "Should show execution filter", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
+        Stage.GenericConfig.POLLING_TIME_CONFIG(5)
     ],
 
-    _processData(blueprintId,deploymentId,executionId,data) {
+    _processData(blueprintId,deploymentId,data) {
         var processedData = Object.assign({},data,{
             blueprintId,
             deploymentId,
-            executionId,
             blueprints: {
                 items: data.blueprints.items
             },
             deployments:{
                 items: data.deployments.items
             },
-            executions: {
-                items: data.executions.items
+            types:{
+                items: _.uniqBy(data.types.items, 'event_type')
             }
         });
 
         if (blueprintId) {
             processedData.deployments.items = _.filter(processedData.deployments.items, {blueprint_id: blueprintId});
-        }
-        if (deploymentId) {
-            processedData.executions.items = _.filter(processedData.executions.items, {deployment_id: deploymentId});
         }
 
         return processedData;
@@ -57,13 +52,11 @@ Stage.defineWidget({
 
         var selectedBlueprint = toolbox.getContext().getValue('blueprintId');
         var selectedDeployment = toolbox.getContext().getValue('deploymentId');
-        var selectedExecution = toolbox.getContext().getValue('executionId');
 
-        var processedData = this._processData(selectedBlueprint,selectedDeployment,selectedExecution,data);
+        var processedData = this._processData(selectedBlueprint,selectedDeployment,data);
 
         return (
-            <Filter widget={widget} data={processedData} toolbox={toolbox}/>
+            <EventFilter data={processedData} toolbox={toolbox}/>
         );
-
     }
 });
