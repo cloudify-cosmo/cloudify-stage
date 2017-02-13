@@ -19,7 +19,7 @@ const manager = (state = {}, action) => {
                 },
                 err: null,
                 version: action.version,
-                tenants: tenants(state.tenants,action),
+                tenants: [],
                 lastUpdated: action.receivedAt,
                 status: null,
                 badStatusCount : 0

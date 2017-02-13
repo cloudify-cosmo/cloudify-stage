@@ -1,15 +1,25 @@
 {
   "initialTemplate": {
-    "admin" : "initial-template-admin",
-    "user" : "initial-template",
-    "customer" : "initial-template-customer"
+    "administrator": "initial-template-admin",
+    "user": "initial-template",
+    "customer": "initial-template-customer"
   },
   "singleManager": false,
   "whiteLabel": {
     "enabled": false,
     "logoUrl": "",
-    "mainColor" : "",
-    "pagesLocation" : "",
-    "headerTextColor" : ""
+    "mainColor": "",
+    "pagesLocation": "",
+    "headerTextColor": ""
+  },
+  "db": {
+    "url": "postgres://localhost:5432/Stage",
+    "options": {
+      "pool" : {
+        "max": 5,
+        "min": 0,
+        "idle": 10000
+      }
+    }
   }
 }
