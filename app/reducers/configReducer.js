@@ -4,9 +4,9 @@ const config = (state = {}, action) => {
     switch (action.type) {
 
         case types.SET_CONFIG_EDIT_MODE:
-            return {
+            return Object.assign({},state,{
                 isEditMode: action.isEditMode
-            };
+            });
         default:
             return state;
     }

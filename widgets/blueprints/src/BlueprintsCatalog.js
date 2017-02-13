@@ -27,7 +27,7 @@ export default class BlueprintsCatalog extends React.Component{
     };
 
     render(){
-        var Segment = Stage.Basic.Segment;
+        var DataSegment = Stage.Basic.DataSegment;
 
         var index=0;
         var blueprintsItems =
@@ -62,7 +62,7 @@ export default class BlueprintsCatalog extends React.Component{
                 return (
                     <div className="column" key={item.id}>
 
-                        <Segment.Item  select={item.isSelected}
+                        <DataSegment.Item  select={item.isSelected}
                                       onClick={()=>this.props.onSelectBlueprint(item)}>
                             <div className="ui grid">
                                 <div className="five wide center aligned column rightDivider">
@@ -109,7 +109,7 @@ export default class BlueprintsCatalog extends React.Component{
                                 </div>
                             </div>
 
-                        </Segment.Item>
+                        </DataSegment.Item>
                     </div>
                 );
             });
@@ -138,19 +138,19 @@ export default class BlueprintsCatalog extends React.Component{
 
         return (
             <div>
-                <Segment totalSize={this.props.data.total}
+                <DataSegment totalSize={this.props.data.total}
                          pageSize={this.props.widget.configuration.pageSize}
                          fetchData={this.props.fetchData}>
 
-                    <Segment.Action>
+                    <DataSegment.Action>
                         <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
-                    </Segment.Action>
+                    </DataSegment.Action>
 
                     <div className="ui grid">
                         {blueprintsRows}
                     </div>
 
-                </Segment>
+                </DataSegment>
             </div>
         );
     }

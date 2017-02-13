@@ -14,7 +14,7 @@ export default class extends React.Component {
 
     render() {
         let Modal = Stage.Basic.Modal;
-        let Table = Stage.Basic.Table;
+        let DataTable = Stage.Basic.DataTable;
 
         let instance = this.props.instance;
         let instanceTotalSize = _.size(instance.runtime_properties);
@@ -32,44 +32,44 @@ export default class extends React.Component {
                     <Modal.Body>
                         <div>
                             <h3>Relationships</h3>
-                            <Table className="nodeInstanceRelationshipsTable" totalSize={instance.relationships.length}>
+                            <DataTable className="nodeInstanceRelationshipsTable" totalSize={instance.relationships.length}>
 
-                                <Table.Column label="Target node" name="target" width="30%"/>
-                                <Table.Column label="Relationship type" name="relationship" width="40%"/>
-                                <Table.Column label="Source node" name="source" width="30%"/>
+                                <DataTable.Column label="Target node" name="target" width="30%"/>
+                                <DataTable.Column label="Relationship type" name="relationship" width="40%"/>
+                                <DataTable.Column label="Source node" name="source" width="30%"/>
 
                                 {
                                     instance.relationships.map((r) => {
                                         return (
-                                            <Table.Row key={r.target_name + r.type + instance.node_id}>
-                                                <Table.Data>{r.target_name}</Table.Data>
-                                                <Table.Data>{r.type}</Table.Data>
-                                                <Table.Data>{instance.node_id}</Table.Data>
-                                            </Table.Row>
+                                            <DataTable.Row key={r.target_name + r.type + instance.node_id}>
+                                                <DataTable.Data>{r.target_name}</DataTable.Data>
+                                                <DataTable.Data>{r.type}</DataTable.Data>
+                                                <DataTable.Data>{instance.node_id}</DataTable.Data>
+                                            </DataTable.Row>
                                         );
                                     })
                                 }
-                            </Table>
+                            </DataTable>
 
                             <h3>Runtime properties</h3>
-                            <Table className="nodeInstanceRuntimePropertiesTable" totalSize={instanceTotalSize}>
+                            <DataTable className="nodeInstanceRuntimePropertiesTable" totalSize={instanceTotalSize}>
 
-                                <Table.Column label="Key" name="key" width="50%"/>
-                                <Table.Column label="Value" name="value" width="50%"/>
+                                <DataTable.Column label="Key" name="key" width="50%"/>
+                                <DataTable.Column label="Value" name="value" width="50%"/>
 
                                 {
                                     Object.keys(instance.runtime_properties).map(function (key) {
                                         let value = instance.runtime_properties[key];
                                         return (
-                                            <Table.Row key={key}>
-                                                <Table.Data>{key}</Table.Data>
-                                                <Table.Data>{value}</Table.Data>
-                                            </Table.Row>
+                                            <DataTable.Row key={key}>
+                                                <DataTable.Data>{key}</DataTable.Data>
+                                                <DataTable.Data>{value}</DataTable.Data>
+                                            </DataTable.Row>
                                         );
                                     })
                                 }
 
-                            </Table>
+                            </DataTable>
                         </div>
                     </Modal.Body>
 

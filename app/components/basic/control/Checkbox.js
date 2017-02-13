@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Checkbox } from 'semantic-ui-react'
 
-export default class FormCheckbox extends Component {
+export default class CheckboxWrapper extends Component {
 
     static propTypes = {
         checked: PropTypes.bool,

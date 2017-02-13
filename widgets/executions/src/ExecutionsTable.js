@@ -33,7 +33,7 @@ export default class extends React.Component {
 
     render() {
         var ErrorMessage = Stage.Basic.ErrorMessage;
-        var Table = Stage.Basic.Table;
+        var DataTable = Stage.Basic.DataTable;
         var HighlightText = Stage.Basic.HighlightText;
         var Overlay = Stage.Basic.Overlay;
         var Checkmark = Stage.Basic.Checkmark;
@@ -44,40 +44,40 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <Table fetchData={this.fetchGridData.bind(this)}
+                <DataTable fetchData={this.fetchGridData.bind(this)}
                             totalSize={this.props.data.total}
                             pageSize={this.props.widget.configuration.pageSize}
                             selectable={true}
                             className="executionsTable">
 
-                    <Table.Column label="Blueprint" name="blueprint_id" width="20%"
+                    <DataTable.Column label="Blueprint" name="blueprint_id" width="20%"
                                  show={fieldsToShow.indexOf("Blueprint") >= 0 && !this.props.data.blueprintId}/>
-                    <Table.Column label="Deployment" name="deployment_id" width="20%"
+                    <DataTable.Column label="Deployment" name="deployment_id" width="20%"
                                  show={fieldsToShow.indexOf("Deployment") >= 0 && !this.props.data.deploymentId}/>
-                    <Table.Column label="Workflow" name="workflow_id" width="15%"
+                    <DataTable.Column label="Workflow" name="workflow_id" width="15%"
                                  show={fieldsToShow.indexOf("Workflow") >= 0}/>
-                    <Table.Column label="Id" name="id" width="20%"
+                    <DataTable.Column label="Id" name="id" width="20%"
                                  show={fieldsToShow.indexOf("Id") >= 0}/>
-                    <Table.Column label="Created" name="created_at" width="10%"
+                    <DataTable.Column label="Created" name="created_at" width="10%"
                                  show={fieldsToShow.indexOf("Created") >= 0}/>
-                    <Table.Column label="IsSystem" name="is_system_workflow" width="5%"
+                    <DataTable.Column label="IsSystem" name="is_system_workflow" width="5%"
                                  show={fieldsToShow.indexOf("IsSystem") >= 0}/>
-                    <Table.Column label="Params" name="parameters" width="5%"
+                    <DataTable.Column label="Params" name="parameters" width="5%"
                                  show={fieldsToShow.indexOf("Params") >= 0}/>
-                    <Table.Column label="Status" width="5%" name="status"
+                    <DataTable.Column label="Status" width="5%" name="status"
                                  show={fieldsToShow.indexOf("Status") >= 0}/>
 
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <Table.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
-                                    <Table.Data>{item.blueprint_id}</Table.Data>
-                                    <Table.Data>{item.deployment_id}</Table.Data>
-                                    <Table.Data>{item.workflow_id}</Table.Data>
-                                    <Table.Data>{item.id}</Table.Data>
-                                    <Table.Data>{item.created_at}</Table.Data>
-                                    <Table.Data><Checkmark value={item.is_system_workflow}/></Table.Data>
-                                    <Table.Data>
+                                <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
+                                    <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+                                    <DataTable.Data>{item.deployment_id}</DataTable.Data>
+                                    <DataTable.Data>{item.workflow_id}</DataTable.Data>
+                                    <DataTable.Data>{item.id}</DataTable.Data>
+                                    <DataTable.Data>{item.created_at}</DataTable.Data>
+                                    <DataTable.Data><Checkmark value={item.is_system_workflow}/></DataTable.Data>
+                                    <DataTable.Data>
                                         <Overlay>
                                             <Overlay.Action>
                                                 <i data-overlay-action className="options icon link bordered" title="Execution parameters"></i>
@@ -86,8 +86,8 @@ export default class extends React.Component {
                                                 <HighlightText className='json'>{JSON.stringify(item.parameters, null, 2)}</HighlightText>
                                             </Overlay.Content>
                                         </Overlay>
-                                    </Table.Data>
-                                    <Table.Data>
+                                    </DataTable.Data>
+                                    <DataTable.Data>
                                         { _.isEmpty(item.error) ?
                                             <div>
                                                 <i className="check circle icon inverted green"></i>
@@ -106,12 +106,12 @@ export default class extends React.Component {
                                                 </Overlay.Content>
                                             </Overlay>
                                         }
-                                    </Table.Data>
-                                </Table.Row>
+                                    </DataTable.Data>
+                                </DataTable.Row>
                             );
                         })
                     }
-                </Table>
+                </DataTable>
 
             </div>
         );

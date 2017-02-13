@@ -6,16 +6,21 @@ import Actions from './actions';
 
 let PropTypes = React.PropTypes;
 
-export default class extends React.Component {
+const EMPTY_BLUEPRINT = {id: '', plan: {inputs: {}}};
+
+export default class DeployModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = {
-            error: null,
-            loading: false,
-            blueprint: this._emptyBlueprint()
-        }
+        this.state = DeployModal.initialState;
+    }
+
+    static initialState = {
+        errors: {},
+        loading: false,
+        blueprint: EMPTY_BLUEPRINT,
+        deploymentName: ""
     }
 
     static propTypes = {
@@ -29,42 +34,15 @@ export default class extends React.Component {
         onHide: ()=>{}
     };
 
-    _emptyBlueprint() {
-        return {
-            id: '',
-            plan: {
-                inputs: {}
-            }
-        }
-    }
-
     componentWillUpdate(prevProps, prevState) {
-        //same Modal instance is used multiple time so we need to reset states
         if (this.props.show && prevProps.show != this.props.show) {
-            this.setState({error: null, loading: false, blueprint: {id: '', plan: {inputs: {}}}});
-            $("form input:text").val("");
-            $("form input:hidden").val("");
+            this.setState(DeployModal.initialState);
         }
     }
 
     onApprove () {
-        $(this.refs.submitDeployBtn).click();
+        this.refs.deployForm.submit();
         return false;
-    }
-
-    _selectBlueprint(blueprintId){
-        if (!_.isEmpty(blueprintId)) {
-            this.setState({loading: true});
-
-            var actions = new Actions(this.props.toolbox);
-            actions.doGetFullBlueprintData(blueprintId).then((blueprint)=>{
-                this.setState({blueprint, error: null, loading: false});
-            }).catch((err)=> {
-                this.setState({blueprint: this._emptyBlueprint(), loading: false, error: err.message});
-            });
-        } else {
-            this.setState({blueprint: this._emptyBlueprint(), error: null});
-        }
     }
 
     onDeny () {
@@ -72,17 +50,34 @@ export default class extends React.Component {
         return true;
     }
 
-    _submitDeploy (e) {
-        e.preventDefault();
+    _selectBlueprint(proxy, data){
+        if (!_.isEmpty(data.value)) {
+            this.setState({loading: true});
 
-        var formObj = $(e.currentTarget);
+            var actions = new Actions(this.props.toolbox);
+            actions.doGetFullBlueprintData(data.value).then((blueprint)=>{
+                this.setState({blueprint, errors: {}, loading: false});
+            }).catch((err)=> {
+                this.setState({blueprint: EMPTY_BLUEPRINT, loading: false, errors: {error: err.message}});
+            });
+        } else {
+            this.setState({blueprint: EMPTY_BLUEPRINT, errors: {}});
+        }
+    }
 
-        var deploymentId = formObj.find("input[name=deploymentName]").val();
-        var blueprintId = formObj.find("input[name=blueprintId]").val();
+    _handleInputChange(proxy, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    }
 
-        if (_.isEmpty(blueprintId)) {
-            this.setState({error: Stage.Basic.ErrorMessage.error("Please select blueprint from the list", "Missing data")});
-            return false;
+    _submitDeploy () {
+        let errors = {};
+
+        if (_.isEmpty(this.state.deploymentName)) {
+            errors["deploymentName"]="Please provide deployment name";
+        }
+
+        if (_.isEmpty(this.state.blueprint.id)) {
+            errors["blueprintName"]="Please select blueprint from the list";
         }
 
         var inputs = {};
@@ -92,87 +87,75 @@ export default class extends React.Component {
             inputs[input.data('name')] = input.val();
         });
 
+        if (!_.isEmpty(errors)) {
+            this.setState({errors});
+            return false;
+        }
+
         // Disable the form
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doDeploy(blueprintId,deploymentId,inputs)
+        actions.doDeploy(this.state.blueprint.id, this.state.deploymentName, inputs)
             .then((/*deployment*/)=> {
                 this.setState({loading: false});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.onHide();
             })
             .catch((err)=>{
-                this.setState({loading: false, error: err.message});
+                this.setState({loading: false, errors: {error: err.message}});
             });
-
-        return false;
     }
 
     render() {
-        var Modal = Stage.Basic.Modal;
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {Modal, Icon, Form, Message} = Stage.Basic;
 
-        var blueprints = Object.assign({},{items:[]}, this.props.blueprints);
+        let blueprints = Object.assign({},{items:[]}, this.props.blueprints);
+        let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
 
         return (
             <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                 <Modal.Header>
-                    <i className="rocket icon"></i> Create new deployment
+                    <Icon name="rocket"/> Create new deployment
                 </Modal.Header>
 
                 <Modal.Body>
-                    <form className="ui form deployForm" onSubmit={this._submitDeploy.bind(this)} action="">
-                        <div className="field">
-                            <input type="text" required name='deploymentName' placeholder="Deployment name"/>
-                        </div>
+                    <Form onSubmit={this._submitDeploy.bind(this)} errors={this.state.errors} ref="deployForm">
 
-                        <div className="field">
-                            <div className="ui search selection dropdown" ref={(select)=>$(select).dropdown({onChange: this._selectBlueprint.bind(this)})}>
-                                <input type="hidden" name="blueprintId" value={this.state.blueprint.id}/>
-                                <i className="dropdown icon"></i>
-                                <div className="default text">Select Blueprint</div>
-                                <div className="menu">
-                                    <div className='item' data-value="">Select Blueprint</div>
-                                    {
-                                        blueprints.items.map((blueprint)=>{
-                                            return <div key={blueprint.id} className="item" data-value={blueprint.id}>{blueprint.id}</div>;
-                                        })
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                        <Form.Field error={this.state.errors.deploymentName}>
+                            <Form.Input name='deploymentName' placeholder="Deployment name"
+                                        value={this.state.deploymentName} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+
+                        <Form.Field error={this.state.errors.blueprintName}>
+                            <Form.Dropdown search selection value={this.state.blueprint.id} placeholder="Select Blueprint"
+                                           name="blueprintName" options={options} onChange={this._selectBlueprint.bind(this)}/>
+                        </Form.Field>
 
                         {
                             this.state.blueprint.id
                             &&
-                            <h4 className="ui dividing header">Deployment inputs</h4>
+                            <Form.Divider>Deployment inputs</Form.Divider>
                         }
 
                         {
                             this.state.blueprint.id && _.isEmpty(this.state.blueprint.plan.inputs)
                             &&
-                            <div className="ui visible message">
-                                <p>No inputs available for the selected blueprint</p>
-                            </div>
+                            <Message content="No inputs available for the selected blueprint"/>
                         }
 
                         {
                             _.map(this.state.blueprint.plan.inputs, (input, name) => {
                                 return (
-                                    <div className="field" key={name}>
+                                    <Form.Field key={name}>
                                         <label title={input.description || name }>{name}</label>
                                         <input name='deploymentInput' data-name={name} type="text"
                                                defaultValue={input.default}/>
-                                    </div>
+                                    </Form.Field>
                                 );
                             })
                         }
-
-                        <ErrorMessage error={this.state.error}/>
-
-                        <input type='submit' style={{"display": "none"}} ref='submitDeployBtn'/>
-                    </form>
+                    </Form>
                 </Modal.Body>
 
                 <Modal.Footer>

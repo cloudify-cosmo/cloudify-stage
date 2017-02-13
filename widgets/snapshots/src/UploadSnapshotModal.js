@@ -4,20 +4,23 @@
 
 import Actions from './actions';
 
-export default class extends React.Component {
+export default class UploadModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = {
-            error: null,
-            show: false,
-            loading: false
-        }
+        this.state = {...UploadModal.initialState, show: false}
+    }
+
+    static initialState = {
+        loading: false,
+        snapshotUrl: "",
+        snapshotId: "",
+        errors: {}
     }
 
     onApprove () {
-        $(this.refs.submitUploadBtn).click();
+        this.refs.uploadForm.submit();
         return false;
     }
 
@@ -30,41 +33,32 @@ export default class extends React.Component {
         this.setState({show: true});
     }
 
-    _openFileSelection(e) {
-        e.preventDefault();
-        $('#snapshotFile').click();
-        return false;
-    }
-
-    _uploadFileChanged(e){
-        var fullPathFileName = $(e.currentTarget).val();
-        var filename = fullPathFileName.split('\\').pop();
-
-        $('input.uploadSnapshotFile').val(filename).attr('title',fullPathFileName);
-    }
-
     componentWillUpdate(prevProps, prevState) {
-        //same Modal instance is used multiple time so we need to reset states
         if (this.state.show && prevState.show != this.state.show) {
-            this.setState({error:null, loading:false});
-            $("form input:text").val("");
-            $("form input:file").val("");
+            this.refs.snapshotFile.reset();
+            this.setState(UploadModal.initialState);
         }
     }
 
-    _submitUpload(e) {
-        e.preventDefault();
+    _submitUpload() {
+        let snapshotFile = this.refs.snapshotFile.file();
 
-        var formObj = $(e.currentTarget);
+        let errors = {};
 
-        // Get the data
-        var snapshotId = formObj.find("input[name='snapshotId']").val();
-        var snapshotFileUrl = formObj.find("input[name='snapshotFileUrl']").val();
-        var file = document.getElementById('snapshotFile').files[0];
+        if (_.isEmpty(this.state.snapshotUrl) && !snapshotFile) {
+            errors["snapshotUrl"]="Please select snapshot file or url";
+        }
 
-        // Check that we have all we need
-        if (_.isEmpty(snapshotFileUrl) && !file) {
-            this.setState({error: Stage.Basic.ErrorMessage.errot()});
+        if (!_.isEmpty(this.state.pluginUrl) && pluginFile) {
+            errors["snapshotUrl"]="Either snapshot file or url must be selected, not both";
+        }
+
+        if (_.isEmpty(this.state.snapshotId)) {
+            errors["snapshotId"]="Please provide snapshot id";
+        }
+
+        if (!_.isEmpty(errors)) {
+            this.setState({errors});
             return false;
         }
 
@@ -72,69 +66,52 @@ export default class extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doUpload(snapshotId,file)
-            .then(()=>{
-                this.setState({loading: false, show: false});
-                this.props.toolbox.refresh();
-            })
-            .catch(err=>{
-                this.setState({loading: false, uploadErr: err.message});
-            });
+        actions.doUpload(this.state.snapshotUrl, this.state.snapshotId, snapshotFile).then(()=>{
+            this.setState({loading: false, show: false});
+            this.props.toolbox.refresh();
+        }).catch(err=>{
+            this.setState({errors: {error: err.message}, loading: false});
+        });
+    }
 
-        return false;
+    _handleInputChange(proxy, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     render() {
-        var Modal = Stage.Basic.Modal;
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {Modal, Button, Icon, Form} = Stage.Basic;
 
         return (
             <div>
-                <button className="ui labeled icon button uploadSnapshot" onClick={this._showModal.bind(this)}>
-                    <i className="upload icon"></i>
-                    Upload
-                </button>
+                <Button content='Upload' icon='upload' labelPosition='left' onClick={this._showModal.bind(this)}/>
 
                 <Modal show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                     <Modal.Header>
-                        <i className="upload icon"></i> Upload snapshot
+                        <Icon name="upload"/> Upload snapshot
                     </Modal.Header>
-                    <Modal.Body>
-                        <form className="ui form uploadForm" onSubmit={this._submitUpload.bind(this)} action="">
-                            <div className="fields">
-                                <div className="field nine wide">
-                                    <div className="ui labeled input">
-                                        <div className="ui label">
-                                            http://
-                                        </div>
-                                        <input type="text" name='snapshotFileUrl' placeholder="Enter snapshot url"></input>
-                                    </div>
-                                </div>
 
-                                <div className="field one wide" style={{"position":"relative"}}>
+                    <Modal.Body>
+                        <Form onSubmit={this._submitUpload.bind(this)} errors={this.state.errors} ref="uploadForm">
+                            <Form.Group>
+                                <Form.Field width="9" error={this.state.errors.snapshotUrl}>
+                                    <Form.Input label="http://" placeholder="Enter snapshot url" name="snapshotUrl"
+                                                value={this.state.snapshotUrl} onChange={this._handleInputChange.bind(this)}/>
+                                </Form.Field>
+                                <Form.Field width="1" style={{position:'relative'}}>
                                     <div className="ui vertical divider">
                                         Or
                                     </div>
-                                </div>
-                                <div className="field eight wide">
-                                    <div className="ui action input">
-                                        <input type="text" readOnly='true' value="" className="uploadSnapshotFile" onClick={this._openFileSelection}></input>
-                                        <button className="ui icon button uploadSnapshotFile" onClick={this._openFileSelection}>
-                                            <i className="attach icon"></i>
-                                        </button>
-                                    </div>
-                                    <input type="file" name='snapshotFile' id="snapshotFile" style={{"display": "none"}} onChange={this._uploadFileChanged}/>
-                                </div>
-                            </div>
+                                </Form.Field>
+                                <Form.Field width="8" error={this.state.errors.snapshotUrl}>
+                                    <Form.File placeholder="Select snapshot file" name="snapshotFile" ref="snapshotFile"/>
+                                </Form.Field>
+                            </Form.Group>
 
-                            <div className="field">
-                                <input type="text" name='snapshotId' id='snapshotId' placeholder="Snapshot ID" required/>
-                            </div>
-
-                            <ErrorMessage error={this.state.error}/>
-
-                            <input type='submit' style={{"display": "none"}} ref='submitUploadBtn'/>
-                        </form>
+                            <Form.Field error={this.state.errors.snapshotId}>
+                                <Form.Input name='snapshotId' placeholder="Snapshot ID"
+                                            value={this.state.snapshotId} onChange={this._handleInputChange.bind(this)}/>
+                            </Form.Field>
+                        </Form>
                     </Modal.Body>
 
                     <Modal.Footer>

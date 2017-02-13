@@ -1,3 +1,3 @@
 #Components
 
-* [GridTable](GridTable.md)
+* [DataTable](DataTable.md)

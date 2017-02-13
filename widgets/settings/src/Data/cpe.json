@@ -1,0 +1,85 @@
+{
+  "customer": {
+    "customer_name": "customer1",
+    "customer_type": "small",
+    "description": null,
+    "het_pey": 100,
+    "pm_email": "email1@org.com",
+    "role": "operator",
+    "siebel_customer_id": 1,
+    "status": "active"
+  },
+  "dynamic": {
+    "fields": [
+
+    ]
+  },
+  "products": [
+    {
+      "branch": "Tel Aviv1",
+      "children": [],
+      "dynamic": {
+        "fields": [
+            { "LAN_Configuration_Private_LAN_Subnet_Address": "" },
+            { "LAN_Configuration_Private_LAN_Subnet_Mask": "" },
+            { "LAN_Configuration_Private_LAN_Default_Gateway": "" },
+            { "LAN_Configuration_Private_LAN__DHCP_DHCP_Range": "" },
+            { "LAN_Configuration_Private_LAN__DHCP_DHCP_Exclude_list": "" },
+            { "LAN_Configuration_Private_LAN__DHCP_Static_Allocation": "" },
+            { "LAN_Configuration_Private_LAN__DHCP_Static_Allocation": "" },
+            { "LAN_Configuration_Public_LAN_Subnet_Address": "" },
+            { "LAN_Configuration_Public_LAN_Subnet_Mask": "" },
+            { "LAN_Configuration_DNS_DNS_primary": "" },
+            { "LAN_Configuration_DNS_DNS_secondary": "" },
+            { "Voice_LAN_Configuration_Voice_LAN_Subnet_Address": "" },
+            { "Voice_LAN_Configuration_Voice_LAN_Subnet_Mask": "" },
+            { "Voice_LAN_Configuration_Voice_LAN_Default_Gateway": "" },
+            { "Voice_LAN_Configuration_Voice_LAN__DHCP_DHCP_Range": "" },
+            { "Voice_LAN_Configuration_Voice_LAN__DHCP_DHCP_Exclude_list": "" },
+            { "Voice_LAN_Configuration_Voice_LAN__DHCP_Static_Allocation_MAC": "" },
+            { "Voice_LAN_Configuration_Voice_LAN__DHCP_Static_Allocation_IP": "" }
+        ]
+      },
+      "extra_fields": "{Site=Tel Aviv1}",
+      "parent_asset_id": null,
+      "product_name": "SRX300 updated",
+      "product_serial_id": 1,
+      "product_type": "CPE",
+      "siebel_asset_id": 1,
+      "siebel_customer_id": 1
+    },
+    {
+      "branch": "Jerusalem",
+      "children": [],
+      "dynamic": {
+        "fields": [
+          { "LAN_Configuration_Private_LAN_Subnet_Address": "" },
+          { "LAN_Configuration_Private_LAN_Subnet_Mask": "" },
+          { "LAN_Configuration_Private_LAN_Default_Gateway": "" },
+          { "LAN_Configuration_Private_LAN__DHCP_DHCP_Range": "" },
+          { "LAN_Configuration_Private_LAN__DHCP_DHCP_Exclude_list": "" },
+          { "LAN_Configuration_Private_LAN__DHCP_Static_Allocation": "" },
+          { "LAN_Configuration_Private_LAN__DHCP_Static_Allocation": "" },
+          { "LAN_Configuration_Public_LAN_Subnet_Address": "" },
+          { "LAN_Configuration_Public_LAN_Subnet_Mask": "" },
+          { "LAN_Configuration_DNS_DNS_primary": "" },
+          { "LAN_Configuration_DNS_DNS_secondary": "" },
+          { "Voice_LAN_Configuration_Voice_LAN_Subnet_Address": "" },
+          { "Voice_LAN_Configuration_Voice_LAN_Subnet_Mask": "" },
+          { "Voice_LAN_Configuration_Voice_LAN_Default_Gateway": "" },
+          { "Voice_LAN_Configuration_Voice_LAN__DHCP_DHCP_Range": "" },
+          { "Voice_LAN_Configuration_Voice_LAN__DHCP_DHCP_Exclude_list": "" },
+          { "Voice_LAN_Configuration_Voice_LAN__DHCP_Static_Allocation_MAC": "" },
+          { "Voice_LAN_Configuration_Voice_LAN__DHCP_Static_Allocation_IP": "" }
+        ]
+      },
+      "extra_fields": "{Site=Jerusalem}",
+      "parent_asset_id": null,
+      "product_name": "SRX300 updated",
+      "product_serial_id": 1,
+      "product_type": "CPE",
+      "siebel_asset_id": 1,
+      "siebel_customer_id": 1
+    }
+  ]
+}

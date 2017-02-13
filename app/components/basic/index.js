@@ -10,17 +10,22 @@ import HighlightText from './HighlightText';
 import Overlay from './overlay/Overlay';
 import Checkmark from './Checkmark';
 import EditableLabel from './EditableLabel';
-import Table from './grid/GridTable';
+import DataTable from './dataTable/DataTable';
 import Pagination from './pagination/Pagination';
-import Segment from './segment/SegmentList';
+import DataSegment from './dataSegment/DataSegment';
 import Loading from './Loading';
 import GenericField from './GenericField';
 import Form from './form/Form';
-import Input from './form/FormInput';
-import Radio from './form/FormRadio';
-import Checkbox from './form/FormCheckbox';
-import InputFile from './form/FormFile';
-import Dropdown from './form/FormDropdown';
+import Input from './control/Input';
+import Radio from './control/Radio';
+import Checkbox from './control/Checkbox';
+import InputFile from './control/InputFile';
+import Dropdown from './control/Dropdown';
+import Button from './control/Button';
+import Icon from './Icon';
+import Message from './Message';
+import Segment from './Segment';
+import Accordion from './Accordion';
 
 export {
     Modal,
@@ -31,8 +36,8 @@ export {
     HighlightText,
     Overlay,
     Checkmark,
-    Table,
-    Segment,
+    DataTable,
+    DataSegment,
     Pagination,
     Loading,
     GenericField,
@@ -41,5 +46,10 @@ export {
     Radio,
     Checkbox,
     InputFile,
-    Dropdown
+    Dropdown,
+    Button,
+    Icon,
+    Message,
+    Segment,
+    Accordion
 };

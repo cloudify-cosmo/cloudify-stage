@@ -6,9 +6,9 @@ import React from 'react'
 import { shallow , mount} from 'enzyme'
 import {expect} from 'chai';
 import sinon from 'sinon';
-import Table from '../../../app/components/basic/grid/GridTable';
+import DataTable from '../../../app/components/basic/dataTable/DataTable';
 
-describe('(Component) GridTable', () => {
+describe('(Component) DataTable', () => {
 
     var wrapper;
     var fetchSpy = sinon.spy();
@@ -17,22 +17,22 @@ describe('(Component) GridTable', () => {
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Table fetchData={fetchSpy} pageSize={25} sortColumn="col1" sortAscending={false}>
-                <Table.Column label="Column one" name="col1" width="60%"/>
-                <Table.Column label="Column two" width="40%"/>
-                <Table.Column label="Column three" show={false}/>
+            <DataTable fetchData={fetchSpy} pageSize={25} sortColumn="col1" sortAscending={false}>
+                <DataTable.Column label="Column one" name="col1" width="60%"/>
+                <DataTable.Column label="Column two" width="40%"/>
+                <DataTable.Column label="Column three" show={false}/>
                 {
                     [{k:1}, {k:2}, {k:3, s:true}, {k:4}, {k:5}].map((item)=> {
                         return (
-                            <Table.Row key={item.k} selected={item.s} onClick={item.s?selectSpy:null}>
-                                <Table.Data>Data {item.k}.1</Table.Data>
-                                <Table.Data>Data {item.k}.2</Table.Data>
-                                <Table.Data>Data {item.k}.3</Table.Data>
-                            </Table.Row>
+                            <DataTable.Row key={item.k} selected={item.s} onClick={item.s?selectSpy:null}>
+                                <DataTable.Data>Data {item.k}.1</DataTable.Data>
+                                <DataTable.Data>Data {item.k}.2</DataTable.Data>
+                                <DataTable.Data>Data {item.k}.3</DataTable.Data>
+                            </DataTable.Row>
                         )
                     })
                 }
-            </Table>, { attachTo: div.get(0) }
+            </DataTable>, { attachTo: div.get(0) }
         );
     });
 

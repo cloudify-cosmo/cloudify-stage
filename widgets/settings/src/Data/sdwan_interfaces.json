@@ -1,0 +1,7 @@
+{
+  "interfaces": [
+    "LTE",
+    "VDSL",
+    "ADSL"
+  ]
+}
