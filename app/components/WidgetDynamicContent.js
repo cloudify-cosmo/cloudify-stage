@@ -4,6 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import StageUtils from '../utils/stageUtils';
+import EventBus from '../utils/EventBus';
 import {getToolbox} from '../utils/Toolbox';
 
 import {ErrorMessage} from './basic'
@@ -135,12 +136,16 @@ export default class WidgetDynamicContent extends Component {
 
     _stopPolling() {
         clearTimeout(this.pollingTimeout);
+
+        if (this.fetchDataPromise) {
+            this.fetchDataPromise.cancel();
+        }
     }
 
     _startPolling() {
         this._stopPolling();
 
-        let interval = this.props.widget.configuration['pollingTime'] || 0;
+        let interval = this.props.widget.configuration.pollingTime || 0;
         try {
             interval = Number.isInteger(interval) ? interval : parseInt(interval);
         } catch (e){
@@ -267,10 +272,15 @@ export default class WidgetDynamicContent extends Component {
         if (requiresFetch) {
             this._fetchData();
         }
+
+
     }
 
     // In component will mount fetch the data if needed
     componentDidMount() {
+        EventBus.on("onWindowFocus", this._startPolling, this);
+        EventBus.on("onWindowBlur", this._stopPolling, this);
+
         this.mounted = true;
 
         console.log(`Widget '${this.props.widget.name}' mounted`);
@@ -278,12 +288,13 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentWillUnmount() {
+        EventBus.off("onWindowFocus", this._startPolling);
+        EventBus.off("onWindowBlur", this._stopPolling);
+
         this.mounted = false;
 
         this._stopPolling();
-        if (this.fetchDataPromise) {
-            this.fetchDataPromise.cancel();
-        }
+
         console.log(`Widget '${this.props.widget.name}' unmounts`);
     }
 

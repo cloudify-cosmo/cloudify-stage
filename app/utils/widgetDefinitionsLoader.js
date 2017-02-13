@@ -5,6 +5,7 @@
 import fetch from 'isomorphic-fetch'
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
+import EventBus from './EventBus';
 
 import {v4} from 'node-uuid';
 var ReactDOMServer = require('react-dom/server');
@@ -46,6 +47,9 @@ export default class WidgetDefinitionsLoader {
         };
 
         window.moment = momentImport;
+
+        $(window).focus(()=>EventBus.trigger("onWindowFocus"));
+        $(window).blur(()=>EventBus.trigger("onWindowBlur"));
     }
 
     static load() {
