@@ -164,8 +164,8 @@ export default class DeployModal extends React.Component {
                                         </label>
                                         {
                                             !_.isNil(input.default)
-                                            ? <Popup trigger={formInput()}
-                                                     content={'Default: ' + this._stringify(input.default)}
+                                            ? <Popup trigger={formInput()} header="Default value"
+                                                     content={this._stringify(input.default)}
                                                      positioning='top right' wide />
                                             : formInput()
                                         }
