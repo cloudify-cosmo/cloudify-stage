@@ -9,17 +9,6 @@ export default class Manager extends Component {
         manager: PropTypes.object.isRequired
     };
 
-    componentWillMount() {
-        if (_.get(this.props.manager,'tenants.selected')) {
-            this.props.fetchManagerStatus(this.props.manager);
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (_.get(prevProps.manager,'tenants.selected') !== _.get(this.props.manager,'tenants.selected')) {
-            this.props.fetchManagerStatus(this.props.manager);
-        }
-    }
 
     renderStatusIcon(status) {
         if (!status) return <i className="circle icon statusIcon"/>;

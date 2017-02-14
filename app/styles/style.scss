@@ -69,6 +69,23 @@ a:hover {
   overflow-y: initial;
 }
 
+.maximizeWidget .grid-stack-item.widget {
+  display: none;
+
+  &.maximize {
+    display: block;
+  }
+
+  &.maximize .widgetItem {
+    position: fixed;
+    top: 8rem;
+    bottom: 1rem;
+    left: 14rem;
+    right: 1rem;
+    outline: 0;
+  }
+}
+
 .pageMenuItem {
 }
 
@@ -102,15 +119,19 @@ a:hover {
 
 .widget {
 
-  .widgetEditButtons {
+  .widgetEditButtons, .widgetViewButtons {
     position: absolute;
     top: 0px;
     right : 0px;
     display: none;
   }
 
+  .widgetViewButtons.alwaysOnTop {
+    display: block;
+  }
+
   &:hover {
-    .widgetEditButtons{
+    .widgetEditButtons, .widgetViewButtons{
       display: block;
     }
 
@@ -267,7 +288,7 @@ a:hover {
   display: none;
 
   &.header {
-    right: 12px;
+    right: 20px;
     top: 4px;
   }
 

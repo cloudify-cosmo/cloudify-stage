@@ -48,6 +48,21 @@ export function editWidget(pageId, widgetId, configuration) {
     }
 }
 
+export function maximizeWidget(pageId,widgetId,maximized) {
+    return {
+        type: types.MAXIMIZE_WIDGET,
+        pageId,
+        widgetId,
+        maximized
+    }
+}
+
+export function minimizeWidgets() {
+    return {
+        type: types.MINIMIZE_WIDGETS
+    }
+}
+
 export function changeWidgetGridData(pageId,widgetId,gridData) {
     return {
         type: types.CHANGE_WIDGET_GRID_DATA,

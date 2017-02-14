@@ -23,5 +23,6 @@
   "deploymentButton",
   "tenants",
   "userManagement",
-  "userGroups"
+  "userGroups",
+  "buttonLink"
 ]

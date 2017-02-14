@@ -17,7 +17,7 @@ export default class Tenants extends Component {
     }
 
     render() {
-        if (!this.props.manager.tenants || this.props.manager.tenants.isFetching) {
+        if (!this.props.manager.tenants || !this.props.manager.tenants.items || this.props.manager.tenants.isFetching) {
             return <div className='item ui small active inline loader'></div>
         }
 

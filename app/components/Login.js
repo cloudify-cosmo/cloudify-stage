@@ -12,7 +12,8 @@ export default class Login extends Component {
         username: PropTypes.string,
         loginError: PropTypes.string,
         onLogin: PropTypes.func.isRequired,
-        mode: PropTypes.string.isRequired
+        mode: PropTypes.string.isRequired,
+        whiteLabel: PropTypes.object
 
     };
 
@@ -32,11 +33,20 @@ export default class Login extends Component {
     }
 
 
+    setStyle (container) {
+        var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
+        if (isWhiteLabelEnabled) {
+            $(container).attr('style','background-color: '+this.props.whiteLabel.mainColor +' !important')
+        }
+    }
+
     render() {
+
+        var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
         return (
-            <div className='loginPage ui segment basic inverted teal'>
+            <div className='loginPage ui segment basic inverted teal' ref={this.setStyle.bind(this)}>
                 <div className="logo">
-                    <img src="/app/images/Cloudify-logo.png"></img>
+                    <img src={isWhiteLabelEnabled ? this.props.whiteLabel.logoUrl : "/app/images/Cloudify-logo.png"}></img>
                 </div>
 
                 <div className='loginContainer'>

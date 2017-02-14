@@ -24,6 +24,7 @@ export default class Widget extends Component {
         onWidgetNameChange: PropTypes.func.isRequired,
         setContextValue: PropTypes.func.isRequired,
         onWidgetRemoved: PropTypes.func.isRequired,
+        onWidgetMaximize: PropTypes.func.isRequired,
         onWidgetConfigUpdate: PropTypes.func.isRequired
     };
 
@@ -34,11 +35,23 @@ export default class Widget extends Component {
         }
     }
 
+    _onKeyDown(event) {
+        if (event.keyCode === 27) {
+            this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false);
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.widget.maximized) {
+            $(this.refs.widgetItem).focus();
+        }
+    }
+
     render() {
 
         if (this.props.manager.auth.role === Consts.ROLE_SUSPEND) {
             return (
-                <div className='widgetItem ui segment'>
+                <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className='widgetItem ui segment'>
                     <div className='ui segment basic' style={{height:'100%'}}>
                         <div className="ui icon message error">
                             <i className="ban icon"></i>
@@ -51,7 +64,7 @@ export default class Widget extends Component {
 
         if (!this.props.widget.definition) {
             return (
-                <div className='widgetItem ui segment'>
+                <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className='widgetItem ui segment'>
                     <div className='ui segment basic' style={{height:'100%'}}>
                         <div className="ui icon message error">
                             <i className="ban icon"></i>
@@ -76,28 +89,25 @@ export default class Widget extends Component {
         }
 
         return (
-            <div className={'widgetItem ui segment '+
-                            (this.props.widget.definition && !this.props.widget.definition.showBorder ? 'basic ' : '') +
-                            (this.props.isEditMode && this.props.widget.definition && !this.props.widget.definition.showBorder ? 'borderOnHover ' : '') +
-                            (this.props.widget.definition && this.props.widget.definition.color && this.props.widget.definition.showBorder ? this.props.widget.definition.color : '')
+            <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className={`widgetItem ui segment
+                            ${this.props.widget.definition && !this.props.widget.definition.showBorder ? 'basic' : ''}
+                            ${this.props.isEditMode && this.props.widget.definition && !this.props.widget.definition.showBorder ? 'borderOnHover ' : ''}
+                            ${this.props.widget.definition && this.props.widget.definition.color && this.props.widget.definition.showBorder ? this.props.widget.definition.color : ''}`
                             }>
                 {
-                    this.props.widget.definition && this.props.widget.definition.showHeader ?
-                        <h5 className='ui header dividing'>
-
-                            {
-                                this.props.isEditMode ?
-                                <InlineEdit
-                                    text={this.props.widget.name}
-                                    change={data=>this.props.onWidgetNameChange(this.props.pageId,this.props.widget.id,data.name)}
-                                    paramName="name"
-                                    />
-                                :
-                                    <label>{this.props.widget.name}</label>
-                                }
-                        </h5>
-                        :
-                        ''
+                    this.props.widget.definition && this.props.widget.definition.showHeader &&
+                    <h5 className='ui header dividing'>
+                        {
+                            this.props.isEditMode ?
+                            <InlineEdit
+                                text={this.props.widget.name}
+                                change={data=>this.props.onWidgetNameChange(this.props.pageId,this.props.widget.id,data.name)}
+                                paramName="name"
+                                />
+                            :
+                                <label>{this.props.widget.name}</label>
+                            }
+                    </h5>
                 }
                 {
                     this.props.isEditMode ?
@@ -106,7 +116,17 @@ export default class Widget extends Component {
                             <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                         </div>
                         :
-                        ''
+                        this.props.widget.definition.showHeader &&
+                        <div className={`widgetViewButtons ${this.props.widget.maximized?'alwaysOnTop':''}`}>
+                            {
+                                this.props.widget.maximized ?
+                                <i className="compress link icon"
+                                   onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false)}/>
+                                :
+                                <i className="expand link icon small"
+                                   onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, true)}/>
+                            }
+                        </div>
                 }
                 {
                     (this.props.widget.definition &&

@@ -20,7 +20,24 @@ const manager = (state = {}, action) => {
                 err: null,
                 version: action.version,
                 tenants: tenants(state.tenants,action),
-                lastUpdated: action.receivedAt
+                lastUpdated: action.receivedAt,
+                status: null,
+                badStatusCount : 0
+            });
+        case types.LOGOUT:
+            return Object.assign({}, state, {
+                isLoggingIn: false,
+                auth: {
+                    isSecured : true,
+                    token: null,
+                    role: null
+                },
+                err: action.error,
+                version: null,
+                tenants: {},
+                lastUpdated: action.receivedAt,
+                status: null,
+                badStatusCount : 0
             });
         case types.ERR_LOGIN:
             return Object.assign({}, state, {
@@ -32,13 +49,18 @@ const manager = (state = {}, action) => {
                     token: null,
                     role: null
                 },
-                err: action.error,
-                lastUpdated: action.receivedAt
+                err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
+                version: null,
+                tenants: {},
+                lastUpdated: action.receivedAt,
+                status: null,
+                badStatusCount : 0
             });
 
         case types.SET_MANAGER_STATUS:
             return Object.assign({}, state, {
-                status: action.status
+                status: action.status,
+                badStatusCount: action.status === 'Error' ? state.badStatusCount +1 : 0
             });
         case types.REQ_TENANTS:
         case types.RES_TENANTS:
