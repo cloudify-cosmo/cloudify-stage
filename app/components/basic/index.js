@@ -32,6 +32,7 @@ import Grid from './Grid';
 import Divider from './Divider';
 import Label from './Label';
 import Loader from './Loader';
+import { Popup } from 'semantic-ui-react';
 
 export {
     Modal,
@@ -63,5 +64,6 @@ export {
     Grid,
     Divider,
     Label,
-    Loader
+    Loader,
+    Popup
 };

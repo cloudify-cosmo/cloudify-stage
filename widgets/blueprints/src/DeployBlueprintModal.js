@@ -39,8 +39,7 @@ export default class DeployModal extends React.Component {
             let deploymentInputs = {};
 
             _.forEach(nextProps.blueprint.plan.inputs,
-                      (inputObj, inputName) =>
-                          deploymentInputs[inputName] = this._getStringValue(inputObj.default));
+                      (inputObj, inputName) => deploymentInputs[inputName] = '');
             this.setState({...DeployModal.initialState, deploymentInputs});
         }
     }
@@ -66,11 +65,18 @@ export default class DeployModal extends React.Component {
             errors["deploymentName"]="Please provide deployment name";
         }
 
-        _.forEach(this.state.deploymentInputs, (inputValue, inputName) => {
+        let deploymentInputs = {};
+        _.forEach(this.props.blueprint.plan.inputs, (inputObj, inputName) => {
+            let inputValue = this.state.deploymentInputs[inputName];
             if (_.isEmpty(inputValue)) {
-                errors[inputName] = `Please provide ${inputName}`;
+                if (_.isNil(inputObj.default)) {
+                    errors[inputName] = `Please provide ${inputName}`;
+                }
+            } else {
+                deploymentInputs[inputName] = inputValue;
             }
-        })
+        });
+        console.log(deploymentInputs);
 
         if (!_.isEmpty(errors)) {
             this.setState({errors});
@@ -81,7 +87,7 @@ export default class DeployModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doDeploy(this.props.blueprint, this.state.deploymentName, this.state.deploymentInputs)
+        actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs)
             .then((/*deployment*/)=> {
                 this.setState({loading: false});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -99,10 +105,9 @@ export default class DeployModal extends React.Component {
         } else {
             this.setState(fieldNameValue);
         }
-
     }
 
-    _getStringValue(object) {
+    _stringify(object) {
         if (_.isObject(object) || _.isArray(object) || _.isBoolean(object)) {
             return JSON.stringify(object);
         } else {
@@ -111,7 +116,7 @@ export default class DeployModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message} = Stage.Basic;
+        var {Modal, Icon, Form, Message, Popup} = Stage.Basic;
 
         var blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
 
@@ -126,6 +131,7 @@ export default class DeployModal extends React.Component {
 
                         <Form.Field error={this.state.errors.deploymentName}>
                             <Form.Input name='deploymentName' placeholder="Deployment name"
+                                        labelPosition='right' label='mandatory'
                                         value={this.state.deploymentName} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
@@ -142,11 +148,22 @@ export default class DeployModal extends React.Component {
                         }
                         {
                             _.map(blueprint.plan.inputs, (input, name) => {
+                                let formInput = (presence) =>
+                                    <Form.Input name={name} placeholder={input.description}
+                                                labelPosition='right' label={presence}
+                                                value={this.state.deploymentInputs[name]}
+                                                onChange={this._handleInputChange.bind(this)}
+                                                className={DeployModal.DEPLOYMENT_INPUT_CLASSNAME} />
                                 return (
                                     <Form.Field key={name} error={this.state.errors[name]}>
                                         <label>{name}</label>
-                                        <Form.Input name={name} placeholder={input.description} className={DeployModal.DEPLOYMENT_INPUT_CLASSNAME}
-                                                    value={this.state.deploymentInputs[name]} onChange={this._handleInputChange.bind(this)}/>
+                                        {
+                                            !_.isNil(input.default)
+                                                ? <Popup trigger={formInput('optional')}
+                                                         content={'Default: ' + this._stringify(input.default)}
+                                                         positioning='top right' wide />
+                                                : formInput('mandatory')
+                                        }
                                     </Form.Field>
                                 );
                             })
