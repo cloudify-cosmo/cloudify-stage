@@ -37,7 +37,7 @@ export default class Users extends Component {
                     <Dropdown.Menu>
                         <Dropdown.Item icon='settings' text='Configure' value='configure'
                                        onClick={this.props.onConfigure}/>
-                        <Dropdown.Item icon='configure' selected={this.props.isEditMode}
+                        <Dropdown.Item icon='configure' selected={this.props.isEditMode} active={this.props.isEditMode}
                                        text={this.props.isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
                                        value='editMode' onClick={this.onEditModeClick.bind(this)}/>
                         <Dropdown.Divider />

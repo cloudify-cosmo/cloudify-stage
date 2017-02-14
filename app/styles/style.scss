@@ -280,6 +280,10 @@ a:hover {
   & .managerAndTenants {
     flex-direction: column;
     margin-right: 10px;
+    text-align: right;
+    & .tenantsMenu {
+      margin-right: 5px;
+    }
   }
 }
 
