@@ -131,7 +131,6 @@ export default class DeployModal extends React.Component {
 
                         <Form.Field error={this.state.errors.deploymentName}>
                             <Form.Input name='deploymentName' placeholder="Deployment name"
-                                        labelPosition='right' label='mandatory'
                                         value={this.state.deploymentName} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
@@ -148,21 +147,27 @@ export default class DeployModal extends React.Component {
                         }
                         {
                             _.map(blueprint.plan.inputs, (input, name) => {
-                                let formInput = (presence) =>
+                                let formInput = () =>
                                     <Form.Input name={name} placeholder={input.description}
-                                                labelPosition='right' label={presence}
                                                 value={this.state.deploymentInputs[name]}
                                                 onChange={this._handleInputChange.bind(this)}
                                                 className={DeployModal.DEPLOYMENT_INPUT_CLASSNAME} />
                                 return (
                                     <Form.Field key={name} error={this.state.errors[name]}>
-                                        <label>{name}</label>
+                                        <label>
+                                            {name}&nbsp;
+                                            {
+                                                _.isNil(input.default)
+                                                ? <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
+                                                : null
+                                            }
+                                        </label>
                                         {
                                             !_.isNil(input.default)
-                                                ? <Popup trigger={formInput('optional')}
-                                                         content={'Default: ' + this._stringify(input.default)}
-                                                         positioning='top right' wide />
-                                                : formInput('mandatory')
+                                            ? <Popup trigger={formInput()}
+                                                     content={'Default: ' + this._stringify(input.default)}
+                                                     positioning='top right' wide />
+                                            : formInput()
                                         }
                                     </Form.Field>
                                 );
