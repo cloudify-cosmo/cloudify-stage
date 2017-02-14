@@ -3,7 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
-import Dropdown from '../control/Dropdown';
+import { Dropdown } from 'semantic-ui-react'
 
 export default class PaginationInfo extends Component {
 

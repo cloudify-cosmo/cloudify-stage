@@ -47,9 +47,6 @@ export default class WidgetDefinitionsLoader {
         };
 
         window.moment = momentImport;
-
-        $(window).focus(()=>EventBus.trigger("onWindowFocus"));
-        $(window).blur(()=>EventBus.trigger("onWindowBlur"));
     }
 
     static load() {

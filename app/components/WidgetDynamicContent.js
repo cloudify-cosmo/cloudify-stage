@@ -272,14 +272,12 @@ export default class WidgetDynamicContent extends Component {
         if (requiresFetch) {
             this._fetchData();
         }
-
-
     }
 
     // In component will mount fetch the data if needed
     componentDidMount() {
-        EventBus.on("onWindowFocus", this._startPolling, this);
-        EventBus.on("onWindowBlur", this._stopPolling, this);
+        $(window).on("focus", this._startPolling.bind(this));
+        $(window).on("blur", this._stopPolling.bind(this));
 
         this.mounted = true;
 
@@ -288,8 +286,8 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentWillUnmount() {
-        EventBus.off("onWindowFocus", this._startPolling);
-        EventBus.off("onWindowBlur", this._stopPolling);
+        $(window).off("focus", this._startPolling.bind(this));
+        $(window).off("blur", this._stopPolling.bind(this));
 
         this.mounted = false;
 
