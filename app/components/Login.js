@@ -44,7 +44,7 @@ export default class Login extends Component {
 
         var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
         return (
-            <div className='loginPage ui segment basic inverted teal' ref={this.setStyle}>
+            <div className='loginPage ui segment basic inverted teal' ref={this.setStyle.bind(this)}>
                 <div className="logo">
                     <img src={isWhiteLabelEnabled ? this.props.whiteLabel.logoUrl : "/app/images/Cloudify-logo.png"}></img>
                 </div>
