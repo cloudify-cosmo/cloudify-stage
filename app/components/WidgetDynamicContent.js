@@ -4,7 +4,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import StageUtils from '../utils/stageUtils';
-import EventBus from '../utils/EventBus';
 import {getToolbox} from '../utils/Toolbox';
 
 import {ErrorMessage} from './basic'
