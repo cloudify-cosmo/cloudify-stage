@@ -8,7 +8,7 @@ Stage.defineWidget({
     name: "CPU Utilization - User",
     description: 'blah blah blah',
     initialWidth: 8,
-    initialHeight: 4,
+    initialHeight: 20,
     color : "purple",
     hasTemplate: true,
     render: function(widget,data,error,toolbox) {

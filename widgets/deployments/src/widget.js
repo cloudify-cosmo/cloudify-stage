@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: 'Blueprint deployments',
     description: 'blah blah blah',
     initialWidth: 8,
-    initialHeight: 6,
+    initialHeight: 24,
     color : "purple",
     initialConfiguration:
         [

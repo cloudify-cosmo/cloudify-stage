@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: "Snapshots list",
     description: 'Snapshots list',
     initialWidth: 4,
-    initialHeight: 4,
+    initialHeight: 16,
     color : "blue",
     isReact: true,
     initialConfiguration: [

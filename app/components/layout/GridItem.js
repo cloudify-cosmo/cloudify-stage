@@ -14,7 +14,8 @@ export default class GridItem extends Component {
         zIndex: PropTypes.number,
         className: PropTypes.string,
         onItemAdded: PropTypes.func,
-        onItemRemoved: PropTypes.func
+        onItemRemoved: PropTypes.func,
+        maximized: PropTypes.bool
     };
 
     static defaultProps = {
@@ -23,7 +24,8 @@ export default class GridItem extends Component {
         width: 1,
         height: 1,
         zIndex: undefined,
-        className: ''
+        className: '',
+        maximized: false
     };
 
     componentDidMount() {
@@ -46,7 +48,7 @@ export default class GridItem extends Component {
     render() {
         return (
             <div id={this.props.id} ref='item'
-                 className={'grid-stack-item '+this.props.className}
+                 className={`grid-stack-item ${this.props.maximized?'maximize':''} ${this.props.className}`}
                  data-gs-auto-position={!(this.props.x !== undefined && this.props.y !== undefined)}
                  data-gs-x={this.props.x}
                  data-gs-y={this.props.y}

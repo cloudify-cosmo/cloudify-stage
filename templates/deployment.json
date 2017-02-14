@@ -5,7 +5,7 @@
       "name": "topology",
       "definition": "topology",
       "width": 7,
-      "height": 5,
+      "height": 20,
       "x": 0,
       "y": 0
     },
@@ -13,42 +13,42 @@
       "name": "Nodes",
       "definition": "nodes",
       "width": 5,
-      "height": 5,
+      "height": 20,
       "x": 7,
       "y": 0
     },
     {
       "name": "Deployment Inputs",
       "width": 6,
-      "height": 3,
+      "height": 12,
       "definition": "inputs",
       "x": 0,
-      "y": 5
+      "y": 20
     },
     {
       "name": "Deployment Outputs",
       "width": 6,
-      "height": 3,
+      "height": 12,
       "definition": "outputs",
       "x": 6,
-      "y": 5
+      "y": 20
     },
 
     {
       "name": "Deployment Events",
       "width": 6,
-      "height": 3,
+      "height": 12,
       "definition": "events",
       "x": 0,
-      "y": 8
+      "y": 32
     },
     {
       "name": "Deployment Logs",
       "width": 6,
-      "height": 3,
+      "height": 12,
       "definition": "logs",
       "x": 6,
-      "y": 8
+      "y": 32
     }
 
   ]

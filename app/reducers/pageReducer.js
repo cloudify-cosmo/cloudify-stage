@@ -65,6 +65,7 @@ const pages = (state = [], action) => {
         case types.RENAME_WIDGET:
         case types.CHANGE_WIDGET_GRID_DATA:
         case types.EDIT_WIDGET:
+        case types.MAXIMIZE_WIDGET:
         case types.REMOVE_WIDGET:
             return state.map( (page) => {
                 if (page.id === action.pageId) {
@@ -73,6 +74,12 @@ const pages = (state = [], action) => {
                     })
                 }
                 return page
+            });
+        case types.MINIMIZE_WIDGETS:
+            return state.map( (page) => {
+                return Object.assign({}, page, {
+                    widgets: widgets(page.widgets,action)
+                })
             });
         case types.REMOVE_PAGE:
             var removeIndex = _.findIndex(state,{id:action.pageId});

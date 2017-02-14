@@ -76,6 +76,24 @@ const widgets = (state = [], action) => {
                 }
                 return widget
             });
+        case types.MAXIMIZE_WIDGET:
+            return state.map( (widget) => {
+                if (widget.id === action.widgetId) {
+                    return Object.assign({}, widget, {
+                        maximized: action.maximized
+                    })
+                }
+                return widget
+            });
+        case types.MINIMIZE_WIDGETS:
+            return state.map( (widget) => {
+                if (widget.maximized) {
+                    return Object.assign({}, widget, {
+                        maximized: false
+                    })
+                }
+                return widget
+            });
         case types.CHANGE_WIDGET_GRID_DATA:
             return state.map( (widget) => {
                 if (widget.id === action.widgetId) {

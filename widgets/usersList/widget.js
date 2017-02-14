@@ -8,7 +8,7 @@ Stage.defineWidget({
     name: "Users list",
     description: 'blah blah blah',
     initialWidth: 4,
-    initialHeight: 3,
+    initialHeight: 12,
     color: "orange",
     hasTemplate: true,
     hasStyle: true,

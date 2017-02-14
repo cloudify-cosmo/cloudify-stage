@@ -20,6 +20,8 @@ import './styles/style.scss';
 // Import semantic
 import '../semantic/dist/semantic.min.css';
 import '../semantic/dist/semantic.min';
+import '../node_modules/semantic-ui-calendar/dist/calendar.min.css';
+import '../node_modules/semantic-ui-calendar/dist/calendar';
 
 // Import gridstack
 import '../node_modules/gridstack/dist/gridstack.css';
@@ -42,13 +44,18 @@ import createRoutes from './routes';
 
 import TemplatesLoader from './utils/templatesLoader';
 
+import Auth from './utils/auth';
+import {getTenants} from './actions/tenants';
+
+import StatusPoller from './utils/StatusPoller';
+
 export default class app{
     static load (){
         window.React = React;
 
         WidgetDefinitionsLoader.init();
 
-        Promise.all([
+        return Promise.all([
             TemplatesLoader.load(),
             WidgetDefinitionsLoader.load(),
             ConfigLoader.load()
@@ -59,20 +66,46 @@ export default class app{
 
             const store = configureStore(browserHistory,templates,widgetDefinitions,config);
 
-            const history = syncHistoryWithStore(browserHistory, store);
-
             createToolbox(store);
 
+            StatusPoller.create(store);
 
-//history.listen(location => analyticsService.track(location.pathname))
+            return store;
 
-            ReactDOM.render(
-                <Provider store={store}>
-                    <Router history={history} routes={createRoutes(store)} />
-                </Provider>,
-                document.getElementById('app')
-            );
         });
+    }
+
+    static initIfLoggedIn(store) {
+        var managerData = store.getState().manager
+        if (Auth.isLoggedIn(managerData)) {
+
+            console.log('User is logged in upon startup, starting polling and fetching tenants');
+
+            // Start status timer
+            StatusPoller.getPoller().start();
+
+            // Fetch tenants
+            return store.dispatch(getTenants(store.getState().manager)).then(()=>store).catch((e)=>{
+                console.error('Error re-fetching tenants information',e);
+            });
+
+        } else {
+            return Promise.resolve(store);
+        }
+
+    }
+
+    static start (store) {
+//history.listen(location => analyticsService.track(location.pathname))
+        const history = syncHistoryWithStore(browserHistory, store);
+
+        ReactDOM.render(
+            <Provider store={store}>
+                <Router history={history} routes={createRoutes(store)} />
+            </Provider>,
+            document.getElementById('app')
+        );
+
     }
 }
 

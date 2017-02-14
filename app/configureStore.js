@@ -31,6 +31,10 @@ export default (history,templates,widgetDefinitions,config) => {
         config
     });
 
+    // Clear login error if has any
+    initialState.manager.err = null;
+
+
     var store = createStore(
         reducers,
         initialState,

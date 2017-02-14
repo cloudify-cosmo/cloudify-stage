@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: "Filter by blueprint/deployment/execution",
     description: 'Adds a filter section for blueprints, deployments and execution list',
     initialWidth: 12,
-    initialHeight: 1,
+    initialHeight: 4,
     color: "yellow",
     showHeader: false,
     showBorder: false,

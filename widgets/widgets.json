@@ -12,6 +12,7 @@
   "inputs",
   "githubRepositories",
   "events",
+  "eventsFilter",
   "plugins",
   "snapshots",
   "logs",
@@ -22,5 +23,6 @@
   "deploymentButton",
   "tenants",
   "userManagement",
-  "userGroups"
+  "userGroups",
+  "buttonLink"
 ]

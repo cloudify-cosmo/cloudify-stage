@@ -4,4 +4,4 @@
 
 import app from './app';
 
-app.load();
+app.load().then(app.initIfLoggedIn).then(app.start);

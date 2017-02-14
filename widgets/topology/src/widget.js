@@ -15,7 +15,7 @@ Stage.defineWidget({
     name: "Topology",
     description: 'Shows topology (blueprint or deployment)',
     initialWidth: 8,
-    initialHeight: 4,
+    initialHeight: 16,
     color: "yellow",
     isReact: true,
     hasTemplate: true,

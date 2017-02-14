@@ -18,7 +18,7 @@ export default class Tenants extends Component {
         let {Dropdown, Loader} = Stage.Basic;
 
         let tenants = this.props.manager.tenants;
-        if (!tenants || tenants.isFetching) {
+        if (!tenants || !tenants.items || tenants.isFetching) {
             return <Loader active inverted inline size="small" />
         }
 
@@ -29,6 +29,7 @@ export default class Tenants extends Component {
                     {
                         tenants.items.map((tenant) =>
                             <Dropdown.Item key={tenant.name} text={tenant.name} selected={tenant.name === selectedTenant}
+                                           active={tenant.name === selectedTenant}
                                            onClick={this.onTenantSelected.bind(this,tenant)} />
                         )
                     }

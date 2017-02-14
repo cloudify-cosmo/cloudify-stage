@@ -5,9 +5,9 @@
       "name": "Blueprints List",
       "definition": "blueprints",
       "width": 6,
-      "height": 5,
+      "height": 20,
       "x": 0,
-      "y": 2,
+      "y": 8,
       "configuration":{
         "displayStyle":"table"
       }
@@ -15,10 +15,10 @@
     {
       "name": "Deployments",
       "width": 6,
-      "height": 5,
+      "height": 20,
       "definition": "deployments",
       "x": 6,
-      "y": 2,
+      "y": 8,
       "configuration":{
         "displayStyle":"table"
       }
@@ -26,7 +26,7 @@
     {
       "name": "Widget_0",
       "width": 2,
-      "height": 2,
+      "height": 8,
       "definition": "deploymentNum",
       "x": 0,
       "y": 0
@@ -34,7 +34,7 @@
     {
       "name": "Widget_1",
       "width": 2,
-      "height": 2,
+      "height": 8,
       "definition": "serversNum",
       "x": 4,
       "y": 0
@@ -42,7 +42,7 @@
     {
       "name": "Widget_2",
       "width": 2,
-      "height": 2,
+      "height": 8,
       "definition": "pluginsNum",
       "x": 2,
       "y": 0
@@ -50,18 +50,18 @@
     {
       "name": "Users list",
       "width": 4,
-      "height": 4,
+      "height": 16,
       "definition": "usersList",
       "x": 0,
-      "y": 7
+      "y": 28
     },
     {
       "name": "GitHub repositories list",
       "width": 8,
-      "height": 4,
+      "height": 16,
       "definition": "githubRepositories",
       "x": 4,
-      "y": 7
+      "y": 28
     }
   ]
 }

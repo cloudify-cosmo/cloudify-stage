@@ -9,7 +9,8 @@ import Header from '../../components/layout/Header';
 const mapStateToProps = (state, ownProps) => {
     return {
         manager: state.manager || {},
-        mode: state.config.mode
+        mode: state.config.mode,
+        whiteLabel : state.config.app.whiteLabel
     }
 };
 

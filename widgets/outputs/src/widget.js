@@ -5,7 +5,7 @@ Stage.defineWidget({
     name: "Deployment Outputs",
     description: 'This widget shows the deployment outputs',
     initialWidth: 8,
-    initialHeight: 5,
+    initialHeight: 20,
     color : "blue",
     isReact: true,
     initialConfiguration: [

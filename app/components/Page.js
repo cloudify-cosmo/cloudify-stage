@@ -23,8 +23,12 @@ export default class Page extends Component {
         };
 
     render() {
+        var maximizeWidget = _.findIndex(this.props.page.widgets, { 'maximized': true }) >= 0;
+
+        $('body').css({overflow: maximizeWidget?'hidden':'inherit'}).scrollTop(0);
+
         return (
-            <div className="">
+            <div className={`${maximizeWidget?'maximizeWidget':''}`}>
                 <Breadcrumbs pagesList={this.props.pagesList} onPageNameChange={this.props.onPageNameChange} isEditMode={this.props.isEditMode} onPageSelected={this.props.onPageSelected} onPageRemoved={this.props.onPageRemoved}/>
 
                 <div>
