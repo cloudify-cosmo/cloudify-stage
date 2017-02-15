@@ -24,8 +24,8 @@ export default class Users extends Component {
 
         const userMenuTrigger = (
             <span>
-                <Icon name='user' />
                 {this.props.manager.username}
+                <Icon name='user' />
             </span>
         )
 

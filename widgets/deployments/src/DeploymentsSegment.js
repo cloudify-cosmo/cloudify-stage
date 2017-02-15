@@ -64,26 +64,22 @@ export default class extends React.Component {
                                     </div>
                                     <div className="four wide column">
                                         <h5 className="ui icon header">Nodes ({item.nodeSize})</h5>
-                                        <div className="ui five column grid">
+                                        <div className="ui four column grid">
                                             <div className="column center aligned">
-                                                <NodeState icon="spinner" title="uninitialized"
-                                                           value={item.nodeStates.uninitialized}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="plus" title="created"
-                                                           value={item.nodeStates.created}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="remove" title="deleted"
-                                                           value={item.nodeStates.deleted}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="warning" title="stopped"
-                                                           value={item.nodeStates.stopped}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="checkmark" title="started"
+                                                <NodeState icon="checkmark" title="running" color="green"
                                                            value={item.nodeStates.started}/>
+                                            </div>
+                                            <div className="column center aligned">
+                                                <NodeState icon="spinner" title="in progress" color="yellow"
+                                                           value={_.add(item.nodeStates.uninitialized, item.nodeStates.created)}/>
+                                            </div>
+                                            <div className="column center aligned">
+                                                <NodeState icon="exclamation" title="warning" color="orange"
+                                                           value={0}/>
+                                            </div>
+                                            <div className="column center aligned">
+                                                <NodeState icon="remove" title="error" color="red"
+                                                           value={_.add(item.nodeStates.deleted, item.nodeStates.stopped)}/>
                                             </div>
                                         </div>
                                     </div>
@@ -109,11 +105,11 @@ export default class extends React.Component {
 
 function NodeState(props) {
     return (
-        <div className="ui compact segments nodeState" data-title={_.capitalize(props.title)} data-content={`${props.value?props.value:0} node instances has been ${props.title}`} ref={(popup)=>{$(popup).popup()}}>
-            <div className="ui segment orange inverted">
+        <div className="ui compact segments nodeState" data-title={_.capitalize(props.title)} data-content={`${props.value?props.value:0} node instances in '${props.title}' state`} ref={(popup)=>{$(popup).popup()}}>
+            <div className={`ui segment ${props.color} inverted`}>
                 <i className={`${props.icon} icon`}></i>
             </div>
-            <div className="ui segment orange tertiary inverted">{props.value?props.value:0}</div>
+            <div className={`ui segment ${props.color} tertiary inverted`}>{props.value?props.value:0}</div>
         </div>
     )
 }
