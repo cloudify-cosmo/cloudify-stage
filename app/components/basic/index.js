@@ -31,6 +31,7 @@ import List from './List';
 import Grid from './Grid';
 import Divider from './Divider';
 import Label from './Label';
+import Graphs from './graphs';
 import Loader from './Loader';
 import { Popup } from 'semantic-ui-react';
 
@@ -64,6 +65,7 @@ export {
     Grid,
     Divider,
     Label,
+    Graphs,
     Loader,
     Popup
 };
