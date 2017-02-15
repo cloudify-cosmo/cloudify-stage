@@ -11,10 +11,10 @@ export default class Manager extends Component {
 
 
     renderStatusIcon(status) {
-        if (!status) return <i className="circle icon statusIcon"/>;
-        if (status === 'running') return <i className="circle icon green statusIcon"/>;
-        return <i className="circle icon red statusIcon"/>;
+        let {Icon} = Stage.Basic;
+        return <Icon name='circle' color={status ? (status === 'running' ? 'green' : 'red') : '' } className='statusIcon'/>;
     }
+
     render() {
         return (
             <div className='manager'>
