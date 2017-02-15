@@ -39,7 +39,7 @@ describe('(Component) Manager', () => {
         manager.status = undefined;
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
-        expect(wrapper.find(Icon).getNode().props.color).to.equal(''); // Empty icon
+        expect(wrapper.find(Icon).getNode().props.color).to.equal('grey'); // Empty icon
     });
 
 });
