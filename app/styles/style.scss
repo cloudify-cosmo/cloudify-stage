@@ -10,7 +10,6 @@ a:hover {
   img {
     height: 45px;
     margin: 4px;
-    position: absolute;
   }
 }
 
@@ -22,7 +21,6 @@ a:hover {
 
 .dropDownText
 {
-  color: #ffffff;
   display: inline-block;
 }
 
@@ -276,9 +274,17 @@ a:hover {
   }
 }
 
-.ui.menu:not(.vertical) .item.managerAndTenants {
-  flex-direction: column;
+.ui.menu:not(.vertical) .item.configPanel {
+  flex-direction: row;
   align-items: flex-end;
+  & .managerAndTenants {
+    flex-direction: column;
+    margin-right: 10px;
+    text-align: right;
+    & .tenantsMenu {
+      margin-right: 5px;
+    }
+  }
 }
 
 .ui.inline.loader.widgetLoader {
@@ -446,6 +452,9 @@ code.hljs {
   border-top: none;
 }
 
+.superscripted {
+  vertical-align: super;
+}
 
 .gaugeContainer {
   width: 100%;

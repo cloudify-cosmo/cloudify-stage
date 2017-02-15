@@ -115,8 +115,8 @@ export default class TenantsTable extends React.Component {
                            className="tenantsTable">
 
                     <DataTable.Column label="Name" name="name" width="30%" />
-                    <DataTable.Column label="# Groups" name="groups" width="30%" />
-                    <DataTable.Column label="# Users" name="users" width="30%" />
+                    <DataTable.Column label="# Groups" width="30%" />
+                    <DataTable.Column label="# Users" width="30%" />
                     <DataTable.Column width="10%" />
 
                     {

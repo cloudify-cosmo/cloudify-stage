@@ -16,6 +16,10 @@ export default class Manager {
         this._data = managerData;
     }
 
+    getSelectedTenant() {
+        return _.get(this,'_data.tenants.selected', null);
+    }
+
     doGet(url,params) {
         return this._ajaxCall(url,'get',params) ;
     }
