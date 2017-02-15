@@ -2,6 +2,8 @@
  * Created by pposel on 07/02/2017.
  */
 
+const GITHUB_API="https://api.github.com";
+
 export default class {
 
     constructor(toolbox, username, password) {
@@ -17,11 +19,11 @@ export default class {
     }
 
     doGetRepos(params) {
-        return this.toolbox.getExternal(this.credentials).doGet(`https://api.github.com/users/${this.username}/repos`, params);
+        return this.toolbox.getExternal(this.credentials).doGet(`${GITHUB_API}/users/${this.username}/repos`, params);
     }
 
     doGetRepoTree(repo) {
-        return this.toolbox.getExternal(this.credentials).doGet(`https://api.github.com/repos/${this.username}/${repo}/git/trees/master`);
+        return this.toolbox.getExternal(this.credentials).doGet(`${GITHUB_API}/repos/${this.username}/${repo}/git/trees/master`);
     }
 
     doUpload(blueprintName, blueprintFileName, blueprintUrl) {

@@ -1,5 +1,5 @@
 /**
- * Created by kinneretzin on 22/11/2016.
+ * Created by pposel on 09/02/2017.
  */
 
 import 'isomorphic-fetch';

@@ -3,6 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
+import { Menu } from 'semantic-ui-react'
 
 const PAGER_POSITIONS = 5;
 
@@ -35,45 +36,37 @@ export default class Paginator extends Component {
         var pagerElements = [];
         for (var i = begin; i <= end; i++) {
             if (begin>1 && pageCount > PAGER_POSITIONS && i==begin) {
-                pagerElements.push(<a key={i} className={`item`}
-                                      onClick={() => this.props.onPageChange(1)}>1</a>);
+                pagerElements.push(<Menu.Item key={i} content="1" onClick={() => this.props.onPageChange(1)}/>);
                 if (begin>2) {
-                    pagerElements.push(<a key={i + 1} className='item disabled'>...</a>);
+                    pagerElements.push(<Menu.Item key={i + 1} content="..." className='disabled'/>);
                 } else {
-                    pagerElements.push(<a key={i + 1} className={`item`}
-                                          onClick={() => this.props.onPageChange(2)}>2</a>);
+                    pagerElements.push(<Menu.Item key={i+1} content="2" onClick={() => this.props.onPageChange(2)}/>);
                 }
             } else if (end < pageCount && i==end) {
                 if (end < pageCount - 1) {
-                    pagerElements.push(<a key={i + 1} className='item disabled'>...</a>);
+                    pagerElements.push(<Menu.Item key={i + 1} content="..." className='disabled'/>);
                 } else {
-                    pagerElements.push(<a key={i + 1} className={`item`}
-                                          onClick={() => this.props.onPageChange(pageCount - 1)}>{pageCount - 1}</a>);
+                    pagerElements.push(<Menu.Item key={i+1} content={pageCount - 1} onClick={() => this.props.onPageChange(pageCount - 1)}/>);
                 }
-                pagerElements.push(<a key={i + 2} className={`item`}
-                                      onClick={() => this.props.onPageChange(pageCount)}>{pageCount}</a>);
+                pagerElements.push(<Menu.Item key={i+2} content={pageCount} onClick={() => this.props.onPageChange(pageCount)}/>);
             } else {
                 (function(index, self){
-                    pagerElements.push(<a key={index + 1} className={`item ${self.props.currentPage == index ? 'active' : ''}`}
-                                      onClick={() => self.props.onPageChange(index)}>{index}</a>);
+                    pagerElements.push(<Menu.Item key={index+1} active={self.props.currentPage == index} content={index}
+                                                  onClick={() => self.props.onPageChange(index)}/>);
                 })(i, this);
             }
         }
 
         return (
-            <div className="ui right floated small pagination menu">
-                <a className={`icon item ${prevPageDisabled?'disabled':''}`}
-                   onClick={()=>{if (!prevPageDisabled) this.props.onPageChange(this.props.currentPage - 1)}}>
-                    <i className="link angle left icon"></i>
-                </a>
+            <Menu pagination floated="right" size="small">
+                <Menu.Item icon="angle left" link className={prevPageDisabled?'disabled':''}
+                           onClick={()=>{if (!prevPageDisabled) this.props.onPageChange(this.props.currentPage - 1)}} />
 
                 {pagerElements}
 
-                <a className={`icon item ${nextPageDisabled?'disabled':''}`}
-                   onClick={()=>{if (!nextPageDisabled) this.props.onPageChange(this.props.currentPage + 1)}}>
-                    <i className="link angle right icon"></i>
-                </a>
-            </div>
+                <Menu.Item icon="angle right" link className={nextPageDisabled?'disabled':''}
+                           onClick={()=>{if (!nextPageDisabled) this.props.onPageChange(this.props.currentPage + 1)}} />
+            </Menu>
         );
     }
 }

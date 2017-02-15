@@ -31,7 +31,7 @@ import List from './List';
 import Grid from './Grid';
 import Divider from './Divider';
 import Label from './Label';
-import Image from './Image';
+import { Menu, Image } from 'semantic-ui-react'
 
 export {
     Modal,
@@ -63,5 +63,6 @@ export {
     Grid,
     Divider,
     Label,
-    Image
+    Image,
+    Menu
 };
