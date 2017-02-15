@@ -64,6 +64,10 @@ export default class extends React.Component {
         });
     }
 
+    _isSnapshotUseful(snapshot) {
+        return snapshot.status === 'created' || snapshot.status === 'uploaded';
+    }
+
     _refreshData() {
         this.props.toolbox.refresh();
     }
@@ -81,9 +85,7 @@ export default class extends React.Component {
     }
 
     render() {
-        var Confirm = Stage.Basic.Confirm;
-        var ErrorMessage = Stage.Basic.ErrorMessage;
-        var DataTable = Stage.Basic.DataTable;
+        let {Confirm, ErrorMessage, DataTable, Icon} = Stage.Basic;
 
         return (
             <div className="snapshotsTableDiv">
@@ -102,15 +104,18 @@ export default class extends React.Component {
 
                     {
                         this.props.data.items.map((item)=>{
+                            let isSnapshotUseful = this._isSnapshotUseful(item);
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectSnapshot.bind(this, item)}>
                                     <DataTable.Data><a className='snapshotName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
                                     <DataTable.Data>{item.status}</DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
-                                        <i className="undo icon link bordered" title="Restore" onClick={this._restoreSnapshot.bind(this,item)}></i>
-                                        <i className="download icon link bordered" title="Download" onClick={this._downloadSnapshot.bind(this,item)}></i>
-                                        <i className="trash icon link bordered" title="Delete" onClick={this._deleteSnapshotConfirm.bind(this,item)}></i>
+                                        <Icon name='undo' title="Restore" bordered disabled={!isSnapshotUseful} link={isSnapshotUseful}
+                                              onClick={isSnapshotUseful ? this._restoreSnapshot.bind(this,item) : ()=>{}} />
+                                        <Icon name='download' title="Download" bordered disabled={!isSnapshotUseful} link={isSnapshotUseful}
+                                              onClick={isSnapshotUseful ? this._downloadSnapshot.bind(this,item) : ()=>{}} />
+                                        <Icon name='trash' link bordered title="Delete" onClick={this._deleteSnapshotConfirm.bind(this,item)} />
                                     </DataTable.Data>
                                 </DataTable.Row>
                             );
