@@ -445,3 +445,30 @@ code.hljs {
 .ui.divided.light.list>.item:first-child {
   border-top: none;
 }
+
+
+.gaugeContainer {
+  width: 100%;
+  height: 100%;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .backgroundColor {
+    fill: #A4A4A4;
+  }
+
+  .okColor {
+    fill: #269FA9;
+  }
+
+  .lowColor {
+    fill: #FF2832;
+  }
+
+  .highColor {
+    fill: #23804D;
+  }
+}

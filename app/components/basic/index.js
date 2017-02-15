@@ -31,6 +31,7 @@ import List from './List';
 import Grid from './Grid';
 import Divider from './Divider';
 import Label from './Label';
+import Graphs from './graphs';
 
 export {
     Modal,
@@ -61,5 +62,6 @@ export {
     List,
     Grid,
     Divider,
-    Label
+    Label,
+    Graphs
 };
