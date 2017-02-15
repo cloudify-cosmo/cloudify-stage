@@ -5,9 +5,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PagesList from '../components/PagesList';
-import {selectPage} from '../actions/page';
-import { push } from 'react-router-redux';
-import {removePage} from '../actions/page';
+import {selectPage, removePage, reorderPage} from '../actions/page';
 
 const findSelectedRootPage = (pages,selectedPageId) => {
     var pagesMap = _.keyBy(pages,'id');
@@ -46,6 +44,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onPageRemoved: (page) => {
             dispatch(removePage(page.id));
+        },
+        onPageReorder: (pageIndex, newPageIndex) => {
+            dispatch(reorderPage(pageIndex, newPageIndex));
         }
     }
 };
