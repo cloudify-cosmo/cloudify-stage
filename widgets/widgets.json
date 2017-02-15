@@ -24,5 +24,6 @@
   "tenants",
   "userManagement",
   "userGroups",
-  "buttonLink"
+  "buttonLink",
+  "GaugeTest"
 ]

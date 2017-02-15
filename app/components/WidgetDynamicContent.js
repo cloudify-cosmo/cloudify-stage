@@ -149,12 +149,16 @@ export default class WidgetDynamicContent extends Component {
 
     _stopPolling() {
         clearTimeout(this.pollingTimeout);
+
+        if (this.fetchDataPromise) {
+            this.fetchDataPromise.cancel();
+        }
     }
 
     _startPolling() {
         this._stopPolling();
 
-        let interval = this.props.widget.configuration['pollingTime'] || 0;
+        let interval = this.props.widget.configuration.pollingTime || 0;
         try {
             interval = Number.isInteger(interval) ? interval : parseInt(interval);
         } catch (e){
@@ -301,6 +305,9 @@ export default class WidgetDynamicContent extends Component {
 
     // In component will mount fetch the data if needed
     componentDidMount() {
+        $(window).on("focus", this._startPolling.bind(this));
+        $(window).on("blur", this._stopPolling.bind(this));
+
         this.mounted = true;
 
         console.log(`Widget '${this.props.widget.name}' mounted`);
@@ -310,12 +317,13 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentWillUnmount() {
+        $(window).off("focus", this._startPolling.bind(this));
+        $(window).off("blur", this._stopPolling.bind(this));
+
         this.mounted = false;
 
         this._stopPolling();
-        if (this.fetchDataPromise) {
-            this.fetchDataPromise.cancel();
-        }
+
         console.log(`Widget '${this.props.widget.name}' unmounts`);
     }
 

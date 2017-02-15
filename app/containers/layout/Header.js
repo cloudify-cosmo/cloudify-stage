@@ -4,39 +4,23 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {setEditMode} from '../../actions/config';
-import {minimizeWidgets} from '../../actions/widgets';
 import Header from '../../components/layout/Header';
-import {logout} from '../../actions/managers';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isEditMode: state.config.isEditMode || false,
         manager: state.manager || {},
         mode: state.config.mode,
         whiteLabel : state.config.app.whiteLabel
     }
 };
 
-
 const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        onWidgetsGridEditModeChange: (isEditMode) => {
-            if (isEditMode) {
-                dispatch(minimizeWidgets());
-            }
-            dispatch(setEditMode(isEditMode));
-        },
-        onLogout: () => {
-            dispatch(logout());
-        }
-    }
+    return {}
 };
 
 const HeaderW = connect(
     mapStateToProps,
     mapDispatchToProps
 )(Header);
-
 
 export default HeaderW

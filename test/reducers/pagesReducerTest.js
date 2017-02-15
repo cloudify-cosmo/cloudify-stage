@@ -191,9 +191,6 @@ describe('(Reducer) Pages - drilldown process', () => {
             pageAccordingToTemplate.parent = parentPage.id;
             pageAccordingToTemplate.widgets[0].id = drillDownPage.widgets[0].id;
 
-            console.log('drill down template: ',pageAccordingToTemplate)
-            console.log('drill down page: ',drillDownPage)
-
             expect(drillDownPage).to.eql(pageAccordingToTemplate);
         });
 

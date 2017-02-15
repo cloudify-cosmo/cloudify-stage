@@ -16,22 +16,11 @@ import DataSegment from './dataSegment/DataSegment';
 import Loading from './Loading';
 import GenericField from './GenericField';
 import Form from './form/Form';
-import Input from './control/Input';
-import Radio from './control/Radio';
-import Checkbox from './control/Checkbox';
-import InputFile from './control/InputFile';
-import Dropdown from './control/Dropdown';
-import InputDate from './control/InputDate';
-import Button from './control/Button';
-import Icon from './Icon';
-import Message from './Message';
-import Segment from './Segment';
-import Accordion from './Accordion';
-import List from './List';
-import Grid from './Grid';
-import Divider from './Divider';
-import Label from './Label';
-import { Menu, Image } from 'semantic-ui-react'
+import InputFile from './InputFile';
+import InputDate from './InputDate';
+import { Input, Radio, Checkbox, Dropdown, Button, Icon, Message, Loader,
+         Segment, Accordion, List, Grid, Divider, Label, Popup, Menu, Image } from 'semantic-ui-react'
+import Graphs from './graphs';
 
 export {
     Modal,
@@ -63,6 +52,9 @@ export {
     Grid,
     Divider,
     Label,
+    Graphs,
+    Loader,
+    Popup,
     Image,
     Menu
 };
