@@ -3,7 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import '../../node_modules/jquery-ui/ui/widgets/sortable';
+import 'jquery-ui/ui/widgets/sortable';
 
 export default class PagesList extends Component {
 
