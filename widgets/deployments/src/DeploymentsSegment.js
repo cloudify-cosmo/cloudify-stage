@@ -70,7 +70,7 @@ export default class extends React.Component {
                                                            value={item.nodeStates.started}/>
                                             </div>
                                             <div className="column center aligned">
-                                                <NodeState icon="spinner" title="in progress" state="uninitialized and created" color="yellow"
+                                                <NodeState icon="spinner" title="in progress" state="uninitialized or created" color="yellow"
                                                            value={_.add(item.nodeStates.uninitialized, item.nodeStates.created)}/>
                                             </div>
                                             <div className="column center aligned">
@@ -78,7 +78,7 @@ export default class extends React.Component {
                                                            value={0}/>
                                             </div>
                                             <div className="column center aligned">
-                                                <NodeState icon="remove" title="error" state="deleted and stopped" color="red"
+                                                <NodeState icon="remove" title="error" state="deleted or stopped" color="red"
                                                            value={_.add(item.nodeStates.deleted, item.nodeStates.stopped)}/>
                                             </div>
                                         </div>
