@@ -107,7 +107,7 @@ function NodeState(props) {
     let { Segment, Icon, Popup } = Stage.Basic;
     let value = props.value ? props.value : 0;
     let disabled = value === 0;
-    let color = disabled ? 'gray' : props.color;
+    let color = disabled ? 'grey' : props.color;
 
     return (
         <Popup header={_.capitalize(props.title)}
