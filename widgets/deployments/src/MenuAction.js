@@ -23,7 +23,7 @@ export default class MenuAction extends React.Component {
         var {Dropdown, Icon} = Stage.Basic;
 
         return (
-            <Dropdown pointing="top right" icon="content">
+            <Dropdown pointing="top right" icon="content" className="menuAction">
                 <Dropdown.Menu>
                     <Dropdown.Header icon="road" content="Execute workflow"/>
                     <Dropdown.Divider />

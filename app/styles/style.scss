@@ -383,7 +383,7 @@ code.hljs {
     box-shadow: none !important;
 
     .nodeState .segment {
-      padding: 2px 15px !important;
+      padding: 2px 0px !important;
     }
 
     .nodeState .icon {
@@ -408,7 +408,7 @@ code.hljs {
 
   .column.action  {
 
-    .ui.dropdown {
+    .ui.dropdown.menuAction {
       position: absolute;
       right: 10px;
     }
