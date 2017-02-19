@@ -29,7 +29,7 @@ export default class extends React.Component {
     };
 
     render() {
-        var DataSegment = Stage.Basic.DataSegment;
+        let { DataSegment } = Stage.Basic;
 
         return (
             <DataSegment totalSize={this.props.data.total}
@@ -64,26 +64,22 @@ export default class extends React.Component {
                                     </div>
                                     <div className="four wide column">
                                         <h5 className="ui icon header">Nodes ({item.nodeSize})</h5>
-                                        <div className="ui five column grid">
+                                        <div className="ui four column grid">
                                             <div className="column center aligned">
-                                                <NodeState icon="spinner" title="uninitialized"
-                                                           value={item.nodeStates.uninitialized}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="plus" title="created"
-                                                           value={item.nodeStates.created}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="remove" title="deleted"
-                                                           value={item.nodeStates.deleted}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="warning" title="stopped"
-                                                           value={item.nodeStates.stopped}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="checkmark" title="started"
+                                                <NodeState icon="checkmark" title="running" state="started" color="green"
                                                            value={item.nodeStates.started}/>
+                                            </div>
+                                            <div className="column center aligned">
+                                                <NodeState icon="spinner" title="in progress" state="uninitialized or created" color="yellow"
+                                                           value={_.add(item.nodeStates.uninitialized, item.nodeStates.created)}/>
+                                            </div>
+                                            <div className="column center aligned">
+                                                <NodeState icon="exclamation" title="warning" state="undefined" color="orange"
+                                                           value={0}/>
+                                            </div>
+                                            <div className="column center aligned">
+                                                <NodeState icon="remove" title="error" state="deleted or stopped" color="red"
+                                                           value={_.add(item.nodeStates.deleted, item.nodeStates.stopped)}/>
                                             </div>
                                         </div>
                                     </div>
@@ -108,12 +104,24 @@ export default class extends React.Component {
 }
 
 function NodeState(props) {
+    let { Segment, Icon, Popup } = Stage.Basic;
+    let value = props.value ? props.value : 0;
+    let disabled = value === 0;
+    let color = disabled ? 'grey' : props.color;
+
     return (
-        <div className="ui compact segments nodeState" data-title={_.capitalize(props.title)} data-content={`${props.value?props.value:0} node instances has been ${props.title}`} ref={(popup)=>{$(popup).popup()}}>
-            <div className="ui segment orange inverted">
-                <i className={`${props.icon} icon`}></i>
-            </div>
-            <div className="ui segment orange tertiary inverted">{props.value?props.value:0}</div>
-        </div>
+        <Popup header={_.capitalize(props.title)}
+               content={`${value} node instances in ${props.state} state`}
+               trigger={
+                   <Segment.Group className='nodeState' disabled={disabled}>
+                       <Segment color={color} disabled={disabled} inverted>
+                           <Icon name={props.icon} />
+                       </Segment>
+                       <Segment color={color} disabled={disabled} tertiary inverted>
+                           {value}
+                       </Segment>
+                   </Segment.Group>
+               }
+        />
     )
 }

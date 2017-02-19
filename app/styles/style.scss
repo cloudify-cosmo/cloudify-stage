@@ -255,6 +255,7 @@ a:hover {
   .icon.statusIcon {
     line-height: 18px;
     margin-right: 0px;
+    margin-left: 7px;
   }
 }
 .tenantsMenu {
@@ -268,9 +269,11 @@ a:hover {
     margin: 0 0 0 0.5em !important;
     opacity: 0.5 !important;
   }
+}
 
-  &.ui.dropdown > .text > .icon.statusIcon {
-    margin-left: 5px;
+.usersMenu {
+  .dropdown.icon {
+    margin: 0 0 0 0.4em !important;
   }
 }
 
@@ -380,7 +383,7 @@ code.hljs {
     box-shadow: none !important;
 
     .nodeState .segment {
-      padding: 2px 15px !important;
+      padding: 2px 0px !important;
     }
 
     .nodeState .icon {
@@ -405,7 +408,7 @@ code.hljs {
 
   .column.action  {
 
-    .ui.dropdown {
+    .ui.dropdown.menuAction {
       position: absolute;
       right: 10px;
     }
