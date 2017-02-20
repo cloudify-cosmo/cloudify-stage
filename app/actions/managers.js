@@ -76,10 +76,11 @@ export function logout(err) {
     }
 }
 
-function setStatus(status) {
+export function setStatus(status, maintenance) {
     return {
         type: types.SET_MANAGER_STATUS,
         status,
+        maintenance,
         receivedAt: Date.now()
     }
 }
@@ -87,9 +88,9 @@ function setStatus(status) {
 export function getStatus (manager) {
     var managerAccessor = new Manager(manager);
     return function(dispatch) {
-        return managerAccessor.doGet('/status')
+        return Promise.all([managerAccessor.doGet('/status'), managerAccessor.doGet('/maintenance')])
             .then((data)=>{
-                dispatch(setStatus(data.status));
+                dispatch(setStatus(data[0].status, data[1].status));
             }).catch((err)=>{
                 console.error(err);
                 dispatch(setStatus('Error'));

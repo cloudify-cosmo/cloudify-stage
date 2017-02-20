@@ -44,7 +44,8 @@ export default class extends React.Component {
                 <Label>
                     <Icon name="spinner" loading />
                     {activeExecutionStatus}
-                    <Dropdown disabled={cancelClicked} icon='delete' text=' '
+                    <Dropdown disabled={cancelClicked} icon='delete' text=' ' pointing="bottom right"
+                              selectOnBlur={false} openOnFocus={false}
                               options={executionCancellationOptions} onChange={this._onDropdownChange.bind(this)} />
                 </Label>
             )

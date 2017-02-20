@@ -4,7 +4,6 @@
 
 import MenuAction from './MenuAction';
 import ActiveExecutionStatus from './ActiveExecutionStatus';
-import { isActiveExecution } from './utils';
 
 let PropTypes = React.PropTypes;
 
@@ -37,12 +36,6 @@ export default class extends React.Component {
                      fetchData={this.props.fetchData}>
                 {
                     this.props.data.items.map((item) => {
-
-                        let activeExecutions = item.executions.filter((execution) => isActiveExecution(execution));
-                        if (activeExecutions.size > 1) {
-                            this.props.onError('Internal error: More than one execution is running for \'' + item.id + '\' deployment')
-                        }
-
                         return (
                             <DataSegment.Item key={item.id} select={item.isSelected}
                                           onClick={()=>this.props.onSelectDeployment(item)}>
@@ -90,11 +83,11 @@ export default class extends React.Component {
 
                                     <div className="two wide column action">
                                         {
-                                            _.isEmpty(activeExecutions)
+                                            _.isEmpty(item.executions)
                                             ?
                                             <MenuAction item={item} onSelectAction={this.props.onMenuAction}/>
                                             :
-                                            <ActiveExecutionStatus item={activeExecutions[0]} onCancelExecution={this.props.onCancelExecution}/>
+                                            <ActiveExecutionStatus item={item.executions[0]} onCancelExecution={this.props.onCancelExecution}/>
                                         }
                                     </div>
                                 </div>

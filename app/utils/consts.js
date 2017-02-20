@@ -8,5 +8,9 @@ export default {
     MODE_CUSTOMER: 'customer',
     ROLE_ADMIN: 'administrator',
     ROLE_USER: 'user',
-    ROLE_SUSPEND : 'suspended'
+    ROLE_SUSPEND : 'suspended',
+    MANAGER_RUNNING: 'running',
+    MAINTENANCE_ACTIVATING: 'activating',
+    MAINTENANCE_ACTIVATED: 'activated',
+    MAINTENANCE_DEACTIVATED: 'deactivated'
 };

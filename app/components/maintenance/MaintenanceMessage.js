@@ -1,0 +1,43 @@
+/**
+ * Created by pposel on 16/02/2017.
+ */
+
+import { connect } from 'react-redux'
+import React, { Component, PropTypes } from 'react';
+import Consts from '../../utils/consts';
+
+class MaintenanceMessage extends Component {
+
+    static propTypes = {
+        manager: PropTypes.object.isRequired
+    };
+
+    render() {
+        if (this.props.manager.status !== Consts.MANAGER_RUNNING ||
+            this.props.manager.maintenance === Consts.MAINTENANCE_DEACTIVATED) {
+            return null;
+        }
+
+        return (
+            <div className="ui yellow small message maintenance">
+                Server is in maintenance mode, some actions will not be available
+            </div>
+        );
+    }
+}
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        manager: ownProps.manager
+    }
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+    }
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MaintenanceMessage);

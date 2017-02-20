@@ -29,6 +29,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onLogout: () => {
             dispatch(logout());
         },
+        onMaintenance: ownProps.onMaintenance
     }
 };
 

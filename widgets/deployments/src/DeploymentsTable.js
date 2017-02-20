@@ -4,7 +4,6 @@
 
 import MenuAction from './MenuAction';
 import ActiveExecutionStatus from './ActiveExecutionStatus';
-import { isActiveExecution } from './utils';
 
 let PropTypes = React.PropTypes;
 
@@ -47,11 +46,6 @@ export default class extends React.Component {
                 {
                     this.props.data.items.map((item)=>{
 
-                        let activeExecutions = item.executions.filter((execution) => isActiveExecution(execution));
-                        if (activeExecutions.size > 1) {
-                            this.props.onError('Internal error: More than one execution is running for \'' + item.id + '\' deployment')
-                        }
-
                         return (
 
                             <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
@@ -61,11 +55,11 @@ export default class extends React.Component {
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
                                     {
-                                        _.isEmpty(activeExecutions)
+                                        _.isEmpty(item.executions)
                                         ?
                                         <MenuAction item={item} onSelectAction={this.props.onMenuAction}/>
                                         :
-                                        <ActiveExecutionStatus item={activeExecutions[0]} onCancelExecution={this.props.onCancelExecution}/>
+                                        <ActiveExecutionStatus item={item.executions[0]} onCancelExecution={this.props.onCancelExecution}/>
                                     }
                                 </DataTable.Data>
                             </DataTable.Row>

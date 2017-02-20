@@ -60,6 +60,7 @@ const manager = (state = {}, action) => {
         case types.SET_MANAGER_STATUS:
             return Object.assign({}, state, {
                 status: action.status,
+                maintenance: action.maintenance,
                 badStatusCount: action.status === 'Error' ? state.badStatusCount +1 : 0
             });
         case types.REQ_TENANTS:
