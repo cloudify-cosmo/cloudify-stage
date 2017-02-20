@@ -114,8 +114,10 @@ const pages = (state = [], action) => {
             });
         case types.REORDER_PAGE:
             var pageIndex = action.pageIndex, newPageIndex = action.newPageIndex;
-
             var realPageIndex = 0, realNewPageIndex = 0;
+
+            state = Object.assign({},state);
+
             _.each(state,(p)=>{
                 if (!p.isDrillDown) {
                     pageIndex--;
