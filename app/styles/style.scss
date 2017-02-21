@@ -114,6 +114,17 @@ a:hover {
   line-height: 1.5;
 }
 
+.pages {
+
+  .ui-sortable-helper {
+    background-color: rgba(255,255,255,0.4) !important;
+  }
+
+  .ui-sortable-placeholder {
+    height: 40px !important;
+  }
+
+}
 
 .widget {
 

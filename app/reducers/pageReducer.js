@@ -54,6 +54,7 @@ const page = (state = {}, action) => {
 };
 
 const pages = (state = [], action) => {
+
     switch (action.type) {
         case types.ADD_PAGE:
         case types.CREATE_DRILLDOWN_PAGE:
@@ -111,6 +112,31 @@ const pages = (state = [], action) => {
             return state.map( (p) => {
                 return page(p,action);
             });
+        case types.REORDER_PAGE:
+            var pageIndex = action.pageIndex, newPageIndex = action.newPageIndex;
+            var realPageIndex = 0, realNewPageIndex = 0;
+
+            state = Object.assign({},state);
+
+            _.each(state,(p)=>{
+                if (!p.isDrillDown) {
+                    pageIndex--;
+                    newPageIndex--;
+                }
+
+                if (pageIndex >= 0) {
+                    realPageIndex++;
+                }
+
+                if (newPageIndex >= 0) {
+                    realNewPageIndex++;
+                }
+            });
+
+            var removed = state.splice(realPageIndex, 1)[0];
+            state.splice(realNewPageIndex, 0, removed);
+
+            return state;
         default:
             return state;
     }

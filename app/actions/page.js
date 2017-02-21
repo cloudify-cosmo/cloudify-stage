@@ -98,3 +98,10 @@ export function createPageFromInitialTemplate(initialTemplate,templates,widgetDe
     }
 }
 
+export function reorderPage(pageIndex,newPageIndex) {
+    return {
+        type: types.REORDER_PAGE,
+        pageIndex,
+        newPageIndex
+    }
+}
