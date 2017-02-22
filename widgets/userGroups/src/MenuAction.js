@@ -8,22 +8,24 @@ export default class MenuAction extends React.Component {
     static ADD_TENANT_ACTION='tenant';
     static DELETE_ACTION='delete';
 
-    _actionClick(proxy, {value}) {
-        this.props.onSelectAction(value, this.props.item);
+    _actionClick(proxy, {name}) {
+        this.props.onSelectAction(name, this.props.item);
     }
 
     render () {
-        var {Dropdown, Icon} = Stage.Basic;
+        var {PopupMenu, Menu} = Stage.Basic;
 
         return (
-            <Dropdown pointing="top right" icon="content">
-                <Dropdown.Menu>
-                    <Dropdown.Item icon='users' text='Add user to group' value={MenuAction.ADD_USER_ACTION} onClick={this._actionClick.bind(this)}/>
-                    <Dropdown.Item icon='user' text='Add group to tenant' value={MenuAction.ADD_TENANT_ACTION} onClick={this._actionClick.bind(this)}/>
-                    <Dropdown.Divider />
-                    <Dropdown.Item icon='trash' text='Delete' value={MenuAction.DELETE_ACTION} onClick={this._actionClick.bind(this)}/>
-                </Dropdown.Menu>
-            </Dropdown>
+            <PopupMenu>
+                <Menu pointing vertical>
+                    <Menu.Item icon='users' content='Add user to group' name={MenuAction.ADD_USER_ACTION}
+                               onClick={this._actionClick.bind(this)}/>
+                    <Menu.Item icon='user' content='Add group to tenant' name={MenuAction.ADD_TENANT_ACTION}
+                               onClick={this._actionClick.bind(this)}/>
+                    <Menu.Item icon='trash' content='Delete' name={MenuAction.DELETE_ACTION}
+                               onClick={this._actionClick.bind(this)}/>
+                </Menu>
+            </PopupMenu>
         );
     }
 }

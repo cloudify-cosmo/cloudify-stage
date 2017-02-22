@@ -73,21 +73,24 @@ export default class EventFilter extends React.Component {
                     <Form.Field>
                         <Form.Dropdown placeholder='Blueprints' fluid multiple search selection options={blueprintOptions}
                                        name="blueprintId" renderLabel={this._renderLabel.bind(this)} closeOnChange
+                                       selectOnBlur={false} openOnFocus={false}
                                        value={this.state.blueprintId} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
                         <Form.Dropdown placeholder='Deployments' fluid multiple search selection options={deploymentOptions}
                                        name="deploymentId" renderLabel={this._renderLabel.bind(this)} closeOnChange
+                                       selectOnBlur={false} openOnFocus={false}
                                        value={this.state.deploymentId} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
                         <Form.Dropdown placeholder='Log Levels' fluid multiple search selection options={logOptions}
-                                       name="logLevel" closeOnChange
+                                       name="logLevel" closeOnChange selectOnBlur={false} openOnFocus={false}
                                        value={this.state.logLevel} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
                         <Form.Dropdown placeholder='Event Types' fluid multiple search selection options={typeOptions}
                                        name="eventType" renderLabel={this._renderLabel.bind(this)} closeOnChange
+                                       selectOnBlur={false} openOnFocus={false}
                                        value={this.state.eventType} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>

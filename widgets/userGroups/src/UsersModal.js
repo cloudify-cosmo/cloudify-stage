@@ -73,6 +73,7 @@ export default class UsersModal extends React.Component {
                     <Form onSubmit={this._submitUsers.bind(this)} errors={this.state.errors} ref="usersForm">
                         <Form.Field>
                             <Form.Dropdown placeholder='Users' multiple search selection options={options} name="users"
+                                           selectOnBlur={false} openOnFocus={false}
                                            value={this.state.users} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                     </Form>

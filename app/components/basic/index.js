@@ -19,9 +19,10 @@ import Form from './form/Form';
 import InputFile from './InputFile';
 import InputDate from './InputDate';
 import { Input, Radio, Checkbox, Dropdown, Button, Icon, Message,
-         Segment, Accordion, List, Grid, Divider, Label, Popup } from 'semantic-ui-react'
+         Segment, Accordion, List, Grid, Divider, Label, Popup, Menu } from 'semantic-ui-react'
 import Graphs from './graphs';
 import Loader from './Loader';
+import PopupMenu from './PopupMenu';
 
 export {
     Modal,
@@ -55,5 +56,7 @@ export {
     Label,
     Graphs,
     Loader,
-    Popup
+    Popup,
+    Menu,
+    PopupMenu
 };

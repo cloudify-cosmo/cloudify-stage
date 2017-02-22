@@ -84,6 +84,7 @@ export default class RoleModal extends React.Component {
                     <Form onSubmit={this._submitRole.bind(this)} errors={this.state.errors} ref="roleForm">
                         <Form.Field error={this.state.errors.role}>
                             <Form.Dropdown selection name='role' placeholder="Role" options={roleOptions}
+                                           selectOnBlur={false} openOnFocus={false}
                                            value={this.state.role} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                     </Form>

@@ -10,25 +10,28 @@ export default class MenuAction extends React.Component {
     static ADD_GROUP_ACTION='group';
     static DELETE_ACTION='delete';
 
-    _actionClick(proxy, {value}) {
-        this.props.onSelectAction(value, this.props.item);
+    _actionClick(proxy, {name}) {
+        this.props.onSelectAction(name, this.props.item);
     }
 
     render () {
-        var {Dropdown, Icon} = Stage.Basic;
+        var {PopupMenu, Menu} = Stage.Basic;
 
         return (
-            <Dropdown pointing="top right" icon="content">
-                <Dropdown.Menu>
-                    <Dropdown.Item icon='lock' text='Set password' value={MenuAction.SET_PASSWORD_ACTION} onClick={this._actionClick.bind(this)}/>
-                    <Dropdown.Item icon='male' text='Set role' value={MenuAction.SET_ROLE_ACTION} onClick={this._actionClick.bind(this)} />
-                    <Dropdown.Divider />
-                    <Dropdown.Item icon='users' text='Add to group' value={MenuAction.ADD_GROUP_ACTION} onClick={this._actionClick.bind(this)}/>
-                    <Dropdown.Item icon='user' text='Add to tenant' value={MenuAction.ADD_TENANT_ACTION} onClick={this._actionClick.bind(this)}/>
-                    <Dropdown.Divider />
-                    <Dropdown.Item icon='trash' text='Delete' value={MenuAction.DELETE_ACTION} onClick={this._actionClick.bind(this)}/>
-                </Dropdown.Menu>
-            </Dropdown>
+            <PopupMenu>
+                <Menu pointing vertical>
+                    <Menu.Item icon='lock' content='Set password' name={MenuAction.SET_PASSWORD_ACTION}
+                               onClick={this._actionClick.bind(this)}/>
+                    <Menu.Item icon='male' content='Set role' name={MenuAction.SET_ROLE_ACTION}
+                               onClick={this._actionClick.bind(this)}/>
+                    <Menu.Item icon='users' content='Add to group' name={MenuAction.ADD_GROUP_ACTION}
+                               onClick={this._actionClick.bind(this)}/>
+                    <Menu.Item icon='user' content='Add to tenant' name={MenuAction.ADD_TENANT_ACTION}
+                               onClick={this._actionClick.bind(this)}/>
+                    <Menu.Item icon='trash' content='Delete' name={MenuAction.DELETE_ACTION}
+                               onClick={this._actionClick.bind(this)}/>
+                </Menu>
+            </PopupMenu>
         );
     }
 }

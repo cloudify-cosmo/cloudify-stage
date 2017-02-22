@@ -15,28 +15,24 @@ export default class MenuAction extends React.Component {
         onSelectAction: PropTypes.func.isRequired
     };
 
-    _onDropdownChange(event, data) {
-        this.props.onSelectAction(data.value, this.props.tenant);
+    _onDropdownChange(event, {name}) {
+        this.props.onSelectAction(name, this.props.tenant);
     }
 
     render () {
-        let Dropdown = Stage.Basic.Dropdown;
+        let {PopupMenu, Menu} = Stage.Basic;
 
         return (
-            <Dropdown pointing="top right" icon="content">
-                <Dropdown.Menu>
-                    <Dropdown.Item icon='user' text='Edit users'
-                                   value={MenuAction.EDIT_USERS_ACTION}
-                                   onClick={this._onDropdownChange.bind(this)}/>
-                    <Dropdown.Item icon='users' text='Edit user groups'
-                                   value={MenuAction.EDIT_USER_GROUPS_ACTION}
-                                   onClick={this._onDropdownChange.bind(this)}/>
-                    <Dropdown.Divider />
-                    <Dropdown.Item icon='trash' text='Delete'
-                                   value={MenuAction.DELETE_TENANT_ACTION}
-                                   onClick={this._onDropdownChange.bind(this)}/>
-                </Dropdown.Menu>
-            </Dropdown>
+            <PopupMenu>
+                <Menu pointing vertical>
+                    <Menu.Item icon='user' content='Edit users' name={MenuAction.EDIT_USERS_ACTION}
+                               onClick={this._onDropdownChange.bind(this)}/>
+                    <Menu.Item icon='users' content='Edit user groups' name={MenuAction.EDIT_USER_GROUPS_ACTION}
+                               onClick={this._onDropdownChange.bind(this)}/>
+                    <Menu.Item icon='trash' content='Delete' name={MenuAction.DELETE_TENANT_ACTION}
+                               onClick={this._onDropdownChange.bind(this)}/>
+                </Menu>
+            </PopupMenu>
         )
     }
 }
