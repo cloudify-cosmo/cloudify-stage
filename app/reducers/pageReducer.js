@@ -116,7 +116,7 @@ const pages = (state = [], action) => {
             var pageIndex = action.pageIndex, newPageIndex = action.newPageIndex;
             var realPageIndex = 0, realNewPageIndex = 0;
 
-            state = Object.assign({},state);
+            state = state.slice(0);
 
             _.each(state,(p)=>{
                 if (!p.isDrillDown) {
