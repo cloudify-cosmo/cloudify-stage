@@ -24,9 +24,15 @@ export default class PagesList extends Component {
             start: (event, ui)=>this.pageIndex = ui.item.index(),
             update: (event, ui)=>this.props.onPageReorder(this.pageIndex, ui.item.index())
         });
+
+        this._enableReorderInEditMode();
     }
 
     componentDidUpdate(prevProps, prevState) {
+        this._enableReorderInEditMode();
+    }
+
+    _enableReorderInEditMode() {
         if (this.props.isEditMode) {
             if ($(this.refs.pages).sortable( "option", "disabled" )) {
                 $(this.refs.pages).sortable("enable");
