@@ -22,6 +22,7 @@ import { Input, Radio, Checkbox, Dropdown, Button, Icon, Message,
          Segment, Accordion, List, Grid, Divider, Label, Popup } from 'semantic-ui-react'
 import Graphs from './graphs';
 import Loader from './Loader';
+import NodesTree from './NodesTree';
 
 export {
     Modal,
@@ -55,5 +56,6 @@ export {
     Label,
     Graphs,
     Loader,
-    Popup
+    Popup,
+    NodesTree
 };
