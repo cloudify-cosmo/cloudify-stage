@@ -7,8 +7,8 @@ import React, { Component, PropTypes } from 'react';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
-import MaintenanceMessage from '../maintenance/MaintenanceMessage';
-import MaintenanceMode from '../maintenance/MaintenanceMode';
+import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
+import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {

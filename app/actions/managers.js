@@ -97,3 +97,50 @@ export function getStatus (manager) {
             });
     }
 }
+
+export function switchMaintenance(manager, activate) {
+    var managerAccessor = new Manager(manager);
+    return function(dispatch) {
+        return managerAccessor.doPost(`/maintenance/${activate?'activate':'deactivate'}`)
+            .then((data)=>{
+                dispatch(setStatus(manager.status, data.status));
+            });
+    }
+}
+
+export function setActiveExecutions(activeExecutions) {
+    return {
+        type: types.SET_ACTIVE_EXECUTIONS,
+        activeExecutions
+    }
+}
+
+export function getActiveExecutions(manager) {
+    var managerAccessor = new Manager(manager);
+    return function(dispatch) {
+        return managerAccessor.doGet('/executions?_include=id,workflow_id,status,deployment_id',
+                                     {status: ['pending', 'started', 'cancelling', 'force_cancelling']})
+            .then((data)=>{
+                dispatch(setActiveExecutions(data));
+            });
+    }
+}
+
+export function cancelExecution(execution, action) {
+    return {
+        type: types.CANCEL_EXECUTION,
+        execution,
+        action
+    }
+}
+
+export function doCancelExecution(manager, execution, action) {
+    var managerAccessor = new Manager(manager);
+    return function(dispatch) {
+        return managerAccessor.doPost(`/executions/${execution.id}`, null,
+                                      {deployment_id: execution.deployment_id, action})
+            .then(()=>{
+                dispatch(cancelExecution(execution, action));
+            });
+    }
+}

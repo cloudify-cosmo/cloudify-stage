@@ -2,11 +2,10 @@
  * Created by pposel on 16/02/2017.
  */
 
-import { connect } from 'react-redux'
 import React, { Component, PropTypes } from 'react';
 import Consts from '../../utils/consts';
 
-class MaintenanceMessage extends Component {
+export default class MaintenanceMessage extends Component {
 
     static propTypes = {
         manager: PropTypes.object.isRequired
@@ -25,19 +24,3 @@ class MaintenanceMessage extends Component {
         );
     }
 }
-
-const mapStateToProps = (state, ownProps) => {
-    return {
-        manager: ownProps.manager
-    }
-};
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-    }
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(MaintenanceMessage);

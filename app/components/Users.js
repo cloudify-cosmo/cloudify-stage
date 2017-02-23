@@ -31,7 +31,7 @@ export default class Users extends Component {
         )
 
         return (
-            <Dropdown pointing icon="dropdown" trigger={userMenuTrigger} className='usersMenu'>
+            <Dropdown pointing="top right" icon="dropdown" trigger={userMenuTrigger} className='usersMenu'>
                 {
                     this.props.showAllOptions
                     ?

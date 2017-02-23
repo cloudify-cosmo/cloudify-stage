@@ -2,17 +2,14 @@
  * Created by pposel on 16/02/2017.
  */
 import React, {Component, PropTypes} from "react";
-import {setStatus} from "../../actions/managers";
 import Consts from "../../utils/consts";
 import {Modal, Icon, ErrorMessage, DataTable, Checkmark} from "../basic/index";
-import Actions from "./actions";
 import ExecutionStatus from "./ExecutionStatus";
 import StageUtils from "../../utils/stageUtils";
-import { connect } from 'react-redux';
 
 const POLLING_INTERVAL = 2000;
 
-class MaintenanceMode extends Component {
+export default class MaintenanceMode extends Component {
 
     constructor(props,context) {
         super(props,context);
@@ -24,13 +21,20 @@ class MaintenanceMode extends Component {
     static initialState = {
         loading: false,
         error: "",
-        activeExecutions : {}
     }
 
     static propTypes = {
         show: PropTypes.bool.isRequired,
         manager: PropTypes.object.isRequired,
+        activeExecutions: PropTypes.object,
         onHide: PropTypes.func.isRequired,
+        onMaintenanceActivate: PropTypes.func.isRequired,
+        onMaintenanceDeactivate: PropTypes.func.isRequired,
+        onFetchActiveExecutions: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        activeExecutions: {}
     };
 
     componentWillReceiveProps(nextProps) {
@@ -41,6 +45,7 @@ class MaintenanceMode extends Component {
         } else if (this.props.show && !nextProps.show) {
             console.log("Stop polling maintenance data");
             this._stopPolling();
+            this.props.onClose();
         }
     }
 
@@ -49,12 +54,9 @@ class MaintenanceMode extends Component {
             return;
         }
 
-        var actions = new Actions(this.props.manager);
-        this.fetchDataPromise = StageUtils.makeCancelable(actions.doGetActiveExecutions());
+        this.fetchDataPromise = StageUtils.makeCancelable(this.props.onFetchActiveExecutions());
         this.fetchDataPromise.promise.then((data)=>{
             console.log("Maintenance data fetched");
-
-            this.setState({activeExecutions:data});
             this._startPolling();
         }).catch((err)=>{
             this.setState({error:err.message});
@@ -98,31 +100,27 @@ class MaintenanceMode extends Component {
     }
 
     _activate() {
-        var actions = new Actions(this.props.manager);
-        actions.doActivateMaintenance().then((data)=>{
-            this.setState({loading:false});
+        this.props.onMaintenanceActivate().then(()=>{
+            this.setState({error:"", loading:false});
             this.props.onHide();
-            this.props.onMaintenanceChange(data.status);
         }).catch((err)=>{
             this.setState({error:err.message, loading:false});
         });
     }
 
     _deactivate() {
-        var actions = new Actions(this.props.manager);
-        actions.doDeactivateMaintenance().then((data)=>{
-            this.setState({loading:false});
+        this.props.onMaintenanceDeactivate().then(()=>{
+            this.setState({error:"", loading:false});
             this.props.onHide();
-            this.props.onMaintenanceChange(data.status);
         }).catch((err)=>{
             this.setState({error:err.message, loading:false});
         });
     }
 
     _cancelExecution(execution, action) {
-        let actions = new Actions(this.props.manager);
-        actions.doCancelExecution(execution, action).then(() => {
+        this.props.onCancelExecution(execution, action).then(() => {
             this._loadPendingExecutions();
+            this.setState({error:""});
         }).catch((err) => {
             this.setState({error:err.message});
         });
@@ -144,11 +142,11 @@ class MaintenanceMode extends Component {
                 </Modal.Header>
 
                 {
-                    (this.state.error || !_.isEmpty(this.state.activeExecutions.items)) ?
+                    (this.state.error || !_.isEmpty(this.props.activeExecutions.items)) ?
                     <Modal.Body>
                         <ErrorMessage error={this.state.error}/>
 
-                        {!_.isEmpty(this.state.activeExecutions.items) &&
+                        {!_.isEmpty(this.props.activeExecutions.items) &&
                             <DataTable>
                                 <DataTable.Column label="Blueprint" width="20%"/>
                                 <DataTable.Column label="Deployment" width="20%"/>
@@ -158,7 +156,7 @@ class MaintenanceMode extends Component {
                                 <DataTable.Column label="Status" width="15%"/>
 
                                 {
-                                    this.state.activeExecutions.items.map((item) => {
+                                    this.props.activeExecutions.items.map((item) => {
                                         return (
                                             <DataTable.Row key={item.id}>
                                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
@@ -188,24 +186,3 @@ class MaintenanceMode extends Component {
         )
     }
 }
-
-const mapStateToProps = (state, ownProps) => {
-    return {
-        manager: ownProps.manager,
-        show: ownProps.show,
-        onHide: ownProps.onHide
-    }
-};
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        onMaintenanceChange: (status) => {
-            dispatch(setStatus(ownProps.manager.status, status));
-        }
-    }
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(MaintenanceMode);
