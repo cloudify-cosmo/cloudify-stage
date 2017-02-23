@@ -417,12 +417,9 @@ code.hljs {
     }
   }
 
-  .column.action  {
-
-    .ui.dropdown.menuAction {
-      position: absolute;
-      right: 10px;
-    }
+  .menuAction {
+    position: absolute;
+    right: 10px;
   }
 
   .ui.icon.header {
@@ -438,6 +435,24 @@ code.hljs {
     }
   }
 }
+
+/* Popup Menu */
+
+.popupMenu {
+  padding: 0 !important;
+
+  .ui.menu {
+    border: none !important;
+    width: inherit !important;
+    min-width: 12rem;
+  }
+
+  .ui.menu a:hover {
+    text-decoration: none !important;
+  }
+
+}
+
 
 /* Modal */
 

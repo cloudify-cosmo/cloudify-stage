@@ -18,10 +18,11 @@ import GenericField from './GenericField';
 import Form from './form/Form';
 import InputFile from './InputFile';
 import InputDate from './InputDate';
-import { Input, Radio, Checkbox, Dropdown, Button, Icon, Message,
-         Segment, Accordion, List, Grid, Divider, Label, Popup } from 'semantic-ui-react'
+import { Input, Radio, Checkbox, Button, Icon, Message,
+         Segment, Accordion, List, Grid, Divider, Label, Popup, Menu, Loader} from 'semantic-ui-react'
 import Graphs from './graphs';
-import Loader from './Loader';
+import PopupMenu from './PopupMenu';
+import Dropdown from './Dropdown';
 import NodesTree from './NodesTree';
 
 export {
@@ -57,5 +58,7 @@ export {
     Graphs,
     Loader,
     Popup,
+    Menu,
+    PopupMenu,
     NodesTree
 };
