@@ -2,11 +2,11 @@
  * Created by Alex on 22/02/2017.
  */
 
-import 'rc-tree/assets/index.css';
-import React, { PropTypes } from 'react';
+import '../../../node_modules/rc-tree/assets/index.css';
+import React, { Component, PropTypes } from 'react';
 import Tree, { TreeNode } from 'rc-tree';
 
-export default class NodesTree extends React.Component {
+export default class NodesTree extends Component {
 
     constructor(props, context) {
         super(props, context);
@@ -51,8 +51,8 @@ export default class NodesTree extends React.Component {
         onDrop: PropTypes.func,
         onDragEnd: PropTypes.func,
 
-        className: '',
-        prefixCls: '',
+        className: PropTypes.string,
+        prefixCls: PropTypes.string,
         showIcon: PropTypes.bool,
         showLine: PropTypes.bool,
 
@@ -159,4 +159,3 @@ export default class NodesTree extends React.Component {
                <Stage.Basic.Loading/>;
     }
 }
-
