@@ -23,6 +23,7 @@ import { Input, Radio, Checkbox, Button, Icon, Message,
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
 import Dropdown from './Dropdown';
+import NodesTree from './NodesTree';
 
 export {
     Modal,
@@ -58,5 +59,6 @@ export {
     Loader,
     Popup,
     Menu,
-    PopupMenu
+    PopupMenu,
+    NodesTree
 };

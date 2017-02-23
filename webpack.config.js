@@ -44,6 +44,10 @@ module.exports = {
             { from: 'templates',
                 to: 'templates'}
         ]),
+        new CopyWebpackPlugin([
+            { from: 'app/style.css',
+                to: 'style.css'}
+        ]),
         new HtmlWebpackPlugin({
             template: 'app/index.tmpl.html',
             inject: 'body',
