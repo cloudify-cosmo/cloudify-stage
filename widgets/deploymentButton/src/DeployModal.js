@@ -129,7 +129,6 @@ export default class DeployModal extends React.Component {
 
                         <Form.Field error={this.state.errors.blueprintName}>
                             <Form.Dropdown search selection value={this.state.blueprint.id} placeholder="Select Blueprint"
-                                           selectOnBlur={false} openOnFocus={false}
                                            name="blueprintName" options={options} onChange={this._selectBlueprint.bind(this)}/>
                         </Form.Field>
 

@@ -73,7 +73,6 @@ export default class TenantModal extends React.Component {
                     <Form onSubmit={this._submitTenant.bind(this)} errors={this.state.errors} ref="tenantForm">
                         <Form.Field>
                             <Form.Dropdown placeholder='Tenants' multiple search selection options={options} name="tenants"
-                                           selectOnBlur={false} openOnFocus={false}
                                            value={this.state.tenants} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                     </Form>
