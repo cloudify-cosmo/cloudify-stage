@@ -127,7 +127,7 @@ export default class CreateModal extends React.Component {
 
                             <Form.Field error={this.state.errors.role}>
                                 <Form.Dropdown selection name='role' placeholder="Role" options={roleOptions}
-                                            value={this.state.role} onChange={this._handleInputChange.bind(this)}/>
+                                               value={this.state.role} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
 
                         </Form>

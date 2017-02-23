@@ -2,8 +2,8 @@
 set -x
 forever list
 forever stopall
-rm -R stage
-mkdir stage
+rm -R cloudify-stage
+mkdir cloudify-stage
 tar -zxvf stage.tar.gz
 rm stage.tar.gz
 cd cloudify-stage/backend

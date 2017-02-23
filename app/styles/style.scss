@@ -16,7 +16,7 @@ a:hover {
 .ui.top.menu .right.menu .ui.dropdown.item{
   padding: 5px 10px;
   border-left: none;
-  height: 52px;
+  height: 55px;
 }
 
 .dropDownText
@@ -30,11 +30,11 @@ a:hover {
   right: 0;
   bottom: 0;
   //bottom: 30px;
-  top: 52px;
+  top: 55px;
 
   .ui.left.menu.sidebar {
     z-index: 0;
-    top: 52px;
+    top: 55px;
     //height: auto !important;
     //bottom: 29px;
   }
@@ -114,6 +114,17 @@ a:hover {
   line-height: 1.5;
 }
 
+.pages {
+
+  .ui-sortable-helper {
+    background-color: rgba(255,255,255,0.4) !important;
+  }
+
+  .ui-sortable-placeholder {
+    height: 40px !important;
+  }
+
+}
 
 .widget {
 
@@ -209,15 +220,19 @@ a:hover {
   }
 }
 
+.loginPage {
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
-.configManager.ui.segment , .loginPage.ui.segment {
+.configManager.ui.segment, .loginPage.ui.segment {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
 
-  .configManagerContainer,.loginContainer {
+  .configManagerContainer, .loginContainer {
     margin: auto;
     width: 400px;
     height: 170px;
@@ -255,6 +270,7 @@ a:hover {
   .icon.statusIcon {
     line-height: 18px;
     margin-right: 0px;
+    margin-left: 7px;
   }
 }
 .tenantsMenu {
@@ -268,9 +284,11 @@ a:hover {
     margin: 0 0 0 0.5em !important;
     opacity: 0.5 !important;
   }
+}
 
-  &.ui.dropdown > .text > .icon.statusIcon {
-    margin-left: 5px;
+.usersMenu {
+  .dropdown.icon {
+    margin: 0 0 0 0.4em !important;
   }
 }
 
@@ -380,7 +398,7 @@ code.hljs {
     box-shadow: none !important;
 
     .nodeState .segment {
-      padding: 2px 15px !important;
+      padding: 2px 0px !important;
     }
 
     .nodeState .icon {
@@ -419,12 +437,9 @@ code.hljs {
 
   }
 
-  .column.action  {
-
-    .ui.dropdown {
-      position: absolute;
-      right: 10px;
-    }
+  .menuAction {
+    position: absolute;
+    right: 10px;
   }
 
   .ui.icon.header {
@@ -440,6 +455,24 @@ code.hljs {
     }
   }
 }
+
+/* Popup Menu */
+
+.popupMenu {
+  padding: 0 !important;
+
+  .ui.menu {
+    border: none !important;
+    width: inherit !important;
+    min-width: 12rem;
+  }
+
+  .ui.menu a:hover {
+    text-decoration: none !important;
+  }
+
+}
+
 
 /* Modal */
 
@@ -534,4 +567,17 @@ a.underline {
   .highColor {
     fill: #23804D;
   }
+}
+
+/* Maintenance mode */
+
+.ui.maintenance.message {
+  float: right;
+  position: fixed;
+  z-index: 1000;
+  top: 14px;
+  left: 13rem;
+  margin: 0px;
+  padding: 5px 20px;
+  box-shadow: none !important;
 }

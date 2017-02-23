@@ -8,36 +8,39 @@ export default class MenuAction extends React.Component {
     static DELETE_ACTION='delete';
     static WORKFLOW_ACTION='workflow';
 
-
-    _actionClick(workflowAction, proxy, {value}) {
+    _actionClick(workflowAction, proxy, {name}) {
         if (workflowAction) {
-            var workflow = _.find(this.props.item.workflows,{name: value});
-            console.log('selected workflow '+ value,workflow);
-            this.props.onSelectAction(value, this.props.item, workflow);
+            var workflow = _.find(this.props.item.workflows,{name});
+            console.log('selected workflow '+ name,workflow);
+            this.props.onSelectAction(name, this.props.item, workflow);
         } else {
-            this.props.onSelectAction(value, this.props.item);
+            this.props.onSelectAction(name, this.props.item);
         }
     }
 
     render () {
-        var {Dropdown, Icon} = Stage.Basic;
+        var {PopupMenu, Menu} = Stage.Basic;
 
         return (
-            <Dropdown pointing="top right" icon="content">
-                <Dropdown.Menu>
-                    <Dropdown.Header icon="road" content="Execute workflow"/>
-                    <Dropdown.Divider />
-                    {
-                        this.props.item.workflows.map((workflow)=>{
-                            return <Dropdown.Item text={_.capitalize(_.lowerCase(workflow.name))} className="indent"
-                                                  key={workflow.name} value={workflow.name} onClick={this._actionClick.bind(this, true)}/>
-                        })
-                    }
-                    <Dropdown.Divider />
-                    <Dropdown.Item icon='edit' text='Edit' value={MenuAction.EDIT_ACTION} onClick={this._actionClick.bind(this, false)}/>
-                    <Dropdown.Item icon='trash' text='Delete' value={MenuAction.DELETE_ACTION} onClick={this._actionClick.bind(this, false)} />
-                </Dropdown.Menu>
-            </Dropdown>
+            <PopupMenu className="menuAction">
+                <Menu pointing vertical>
+                    <Menu.Item header>Execute workflow
+                        <Menu.Menu>
+                            {
+                                this.props.item.workflows.map((workflow) => {
+                                    return <Menu.Item name={workflow.name} onClick={this._actionClick.bind(this, true)} key={workflow.name}>
+                                                {_.capitalize(_.lowerCase(workflow.name))}
+                                           </Menu.Item>
+                                })
+                            }
+                        </Menu.Menu>
+                    </Menu.Item>
+                    <Menu.Item icon='edit' content='Edit' name={MenuAction.EDIT_ACTION}
+                                   onClick={this._actionClick.bind(this, false)}/>
+                    <Menu.Item icon='trash' content='Delete' name={MenuAction.DELETE_ACTION}
+                                   onClick={this._actionClick.bind(this, false)}/>
+                </Menu>
+            </PopupMenu>
         );
     }
 }

@@ -4,13 +4,22 @@
 
 
 import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux'
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
+import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
+import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {
+
+    constructor(props,context) {
+        super(props,context);
+
+        this.state = {
+            showMaintenanceModal: false
+        }
+    }
 
     static propTypes = {
         manager: PropTypes.any.isRequired,
@@ -50,13 +59,18 @@ export default class Header extends Component {
                                 <Manager manager={this.props.manager}/>
                                 <Tenants manager={this.props.manager}/>
                             </div>
-                            <Users manager={this.props.manager} showAllOptions={true}/>
+                            <Users manager={this.props.manager} showAllOptions={true}
+                                   onMaintenance={()=> this.setState({showMaintenanceModal: true})}/>
                         </div>
                         :
                         <div className='item configPanel'>
                             <Users manager={this.props.manager} showAllOptions={false}/>
                         </div>
                     }
+
+                    <MaintenanceMessage manager={this.props.manager}/>
+                    <MaintenanceMode manager={this.props.manager} show={this.state.showMaintenanceModal}
+                                     onHide={()=> this.setState({showMaintenanceModal: false})}/>
                 </div>
             </div>
         );

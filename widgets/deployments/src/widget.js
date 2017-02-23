@@ -46,7 +46,8 @@ Stage.defineWidget({
                 });
 
         let executionsData = deploymentIds.then(ids=>{
-            return toolbox.getManager().doGet('/executions?_include=id,workflow_id,status,deployment_id', {deployment_id: ids});
+            return toolbox.getManager().doGet('/executions?_include=id,workflow_id,status,deployment_id',
+                                {deployment_id: ids, status: ['pending', 'started', 'cancelling', 'force_cancelling']});
         });
 
         return Promise.all([deploymentData, nodeData, nodeInstanceData, executionsData]).then(function(data) {

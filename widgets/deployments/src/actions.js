@@ -2,8 +2,6 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
-import { Constants } from './utils';
-
 export default class {
     constructor(toolbox) {
         this.toolbox = toolbox;
@@ -13,10 +11,10 @@ export default class {
         return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`);
     }
 
-    doCancel(execution,force) {
+    doCancel(execution,action) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
             'deployment_id': execution.deployment_id,
-            'action': force ? Constants.EXECUTION_FORCE_CANCEL_ACTION : Constants.EXECUTION_CANCEL_ACTION
+            'action': action
         });
     }
 

@@ -21,8 +21,12 @@ export default class extends React.Component {
     }
 
     _selectBlueprint (item){
-        var oldSelectedBlueprintId = this.props.toolbox.getContext().getValue('blueprintId');
-        this.props.toolbox.getContext().setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);
+        if (this.props.widget.configuration.clickToDrillDown) {
+            this.props.toolbox.drillDown(this.props.widget,'blueprint',{blueprintId: item.id}, item.id);
+        } else {
+            var oldSelectedBlueprintId = this.props.toolbox.getContext().getValue('blueprintId');
+            this.props.toolbox.getContext().setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);
+        }
     }
 
     _createDeployment(item){
@@ -49,13 +53,13 @@ export default class extends React.Component {
         }
 
         var actions = new Actions(this.props.toolbox);
+        this.setState({confirmDelete: false});
         actions.doDelete(this.state.item)
             .then(()=> {
-                this.setState({confirmDelete: false});
                 this.props.toolbox.getEventBus().trigger('blueprints:refresh');
             })
             .catch((err)=>{
-                this.setState({confirmDelete: false, error: err.message});
+                this.setState({error: err.message});
             });
     }
 

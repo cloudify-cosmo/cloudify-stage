@@ -23,9 +23,12 @@ export default class {
 
     doUpload(blueprintName, blueprintFileName, blueprintUrl, file) {
         var params = {};
+        const YAML_EXTENSION = '.yaml';
 
         if (!_.isEmpty(blueprintFileName)) {
-            params['application_file_name'] = blueprintFileName + ".yaml";
+            params['application_file_name'] = _.endsWith(blueprintFileName, YAML_EXTENSION)
+                                              ? blueprintFileName
+                                              : blueprintFileName + YAML_EXTENSION;
         }
         if (!_.isEmpty(blueprintUrl)) {
             params['blueprint_archive_url'] = blueprintUrl;

@@ -3,13 +3,14 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import { Form, Message, Input as FormInput, Radio as FormRadio,
-         Checkbox as FormCheckbox, Button as FormButton, Dropdown as FormDropdown } from 'semantic-ui-react'
+import {Form, Message, Input as FormInput, Radio as FormRadio,
+         Checkbox as FormCheckbox, Button as FormButton} from 'semantic-ui-react'
 import FormField from './FormField'
 import FormGroup from './FormGroup'
 import FormDivider from './FormDivider'
 import FormFile from '../InputFile'
 import FormDate from '../InputDate'
+import FormDropdown from '../Dropdown'
 
 export default class FormWrapper extends Component {
 

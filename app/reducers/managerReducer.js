@@ -60,6 +60,7 @@ const manager = (state = {}, action) => {
         case types.SET_MANAGER_STATUS:
             return Object.assign({}, state, {
                 status: action.status,
+                maintenance: action.maintenance,
                 badStatusCount: action.status === 'Error' ? state.badStatusCount +1 : 0
             });
         case types.REQ_TENANTS:
@@ -68,6 +69,15 @@ const manager = (state = {}, action) => {
         case types.SELECT_TENANT:
             return Object.assign({},state,{
                 tenants: tenants(state.tenants,action)
+            });
+        case types.SET_ACTIVE_EXECUTIONS:
+            return Object.assign({},state,{
+                activeExecutions: action.activeExecutions ? action.activeExecutions : {}
+            });
+        case types.CANCEL_EXECUTION:
+            return Object.assign({},state,{
+                cancelExecution: action.execution,
+                cancelAction: action.action
             });
         default:
             return state;
