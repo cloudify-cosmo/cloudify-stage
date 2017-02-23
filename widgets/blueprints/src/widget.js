@@ -15,6 +15,7 @@ Stage.defineWidget({
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(2),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
+        {id: "clickToDrillDown", name: "Should click to drilldown", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
             default: "table", type: Stage.Basic.GenericField.LIST_TYPE}
     ],

@@ -9,7 +9,7 @@ import Layout from './components/layout/Layout';
 import Home from './components/Home';
 import NotFound from './components/NotFound';
 import Login from './containers/Login';
-import {setValue} from './actions/context';
+import {setValue,clearContext} from './actions/context';
 import Auth from './utils/auth';
 
 export default (store)=> {
@@ -23,6 +23,17 @@ export default (store)=> {
     };
 
     let setDrilldownContext = (nextState,replace,callback)=>{
+        // If the page is a main page, not a drilldown, we should clear the context before hand.
+        // This is inorder to solve a 'back' bug that if a context is set when drilling down to a page and the user clicks
+        // 'back' button, the context will be saved although we exited the drill-down page and dont require the context anymore.
+        var pages = store.getState().pages;
+        var selectedPage = nextState.params.pageId;
+
+        if (!_.find(pages,{id:selectedPage}).isDrillDown) {
+            // Clear context
+            store.dispatch(clearContext());
+        }
+
         var contextParams = nextState.location.query;
 
         if (!_.isEmpty(contextParams)){

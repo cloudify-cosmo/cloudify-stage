@@ -1,0 +1,39 @@
+{
+  "name": "Blueprint",
+  "widgets": [
+    {
+      "name": "topology",
+      "definition": "topology",
+      "width": 7,
+      "height": 20,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "Deployments",
+      "width": 5,
+      "height": 20,
+      "definition": "deployments",
+      "x": 7,
+      "y": 0,
+      "configuration":{
+        "displayStyle":"table"
+      }
+    },
+    {
+      "name": "Blueprint Inputs",
+      "width": 6,
+      "height": 12,
+      "definition": "inputs",
+      "x": 0,
+      "y": 20
+    },
+    {
+      "name": "Blueprint Outputs",
+      "width": 6,
+      "height": 12,
+      "definition": "outputs",
+      "x": 6,
+      "y": 20
+    }]
+}
