@@ -2,7 +2,7 @@
  * Created by Alex on 22/02/2017.
  */
 
-import '../../../node_modules/rc-tree/assets/index.css';
+import 'rc-tree/assets/index.css';
 import React, { Component, PropTypes } from 'react';
 import Tree, { TreeNode } from 'rc-tree';
 
@@ -92,7 +92,7 @@ export default class NodesTree extends Component {
         onDragEnd: () => true,
 
         className: '',
-        prefixCls: '',
+        prefixCls: 'rc-tree',
         showIcon: false,
         showLine: true,
 
