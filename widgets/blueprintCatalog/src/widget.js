@@ -27,10 +27,6 @@ Stage.defineWidget({
 
     ],
 
-    initActions: function(widget,toolbox,params) {
-        return new Actions(toolbox, widget.configuration.username, widget.configuration.password);
-    },
-
     mapGridParams: function(gridParams) {
         return {
             page: gridParams.currentPage,
@@ -38,7 +34,9 @@ Stage.defineWidget({
         }
     },
 
-    fetchData: function(widget, toolbox, params, actions) {
+    fetchData: function(widget, toolbox, params) {
+        var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password);
+
         return actions.doGetRepos(params).then(repos => {
             var fetches = _.map(repos,
                 repo => actions.doGetRepoTree(repo.name)
@@ -49,7 +47,7 @@ Stage.defineWidget({
         });
     },
 
-    render: function(widget, data, error, toolbox, actions) {
+    render: function(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading/>;
         }
@@ -69,6 +67,8 @@ Stage.defineWidget({
                 })
             })
         });
+
+        var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password);
 
         return (
             <RepositoryList widget={widget} data={formattedData} toolbox={toolbox} actions={actions}/>

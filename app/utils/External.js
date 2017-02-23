@@ -10,8 +10,8 @@ let logger = log.getLogger("External");
 
 export default class External {
 
-    constructor(basicAuth) {
-        this._basicAuth = basicAuth;
+    constructor(data) {
+        this._data = data;
     }
 
     doGet(url,params) {
@@ -30,14 +30,15 @@ export default class External {
         return this._ajaxCall(url,'put',params,data) ;
     }
 
-    _ajaxCall(url,method,params,data,fileName) {
-        var actualUrl = this._buildActualUrl(url,params);
-        logger.debug(method+' data. URL: '+url);
+    doDownload(url,fileName) {
+        return this._ajaxCall(url,'get',null,null,fileName);
+    }
 
-        var headers = {"Content-Type": "application/json"};
-        if (this._basicAuth) {
-            headers = Object.assign(headers, {"Authorization": `Basic ${this._basicAuth}`});
-        };
+    _ajaxCall(url,method,params,data,fileName) {
+        var actualUrl = this._buildActualUrl(url, params);
+        logger.debug(method + ' data. URL: ' + url);
+
+        var headers = this._buildHeaders();
 
         var options = {
             method: method,
@@ -78,9 +79,18 @@ export default class External {
         }
     }
 
-    _buildActualUrl(url,data) {
+    _buildActualUrl(url, data) {
         var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data, true) : '';
         return `${url}${queryString}`;
+    }
+
+    _buildHeaders() {
+        var headers = {"Content-Type": "application/json"};
+        if (this._data && this._data.basicAuth) {
+            headers = Object.assign(headers, {"Authorization": `Basic ${this._data.basicAuth}`});
+        };
+
+        return headers;
     }
 
 }

@@ -54,7 +54,7 @@ export default class UploadModal extends React.Component {
                                     UPLOAD_URL(this.props.actions.getUsername(), this.props.files.repo)
         ).then(()=>{
             this.setState({loading: false});
-            this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('blueprints:refresh');
             this.props.onHide();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});

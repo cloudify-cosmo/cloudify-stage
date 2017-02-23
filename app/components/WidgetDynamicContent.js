@@ -233,7 +233,7 @@ export default class WidgetDynamicContent extends Component {
             this._beforeFetch();
 
             this.fetchDataPromise = StageUtils.makeCancelable(
-                                  this.props.widget.definition.fetchData(this.props.widget,this._getToolbox(),this._fetchParams(), this._getActions()));
+                                  this.props.widget.definition.fetchData(this.props.widget,this._getToolbox(),this._fetchParams()));
             this.fetchDataPromise.promise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
@@ -284,7 +284,7 @@ export default class WidgetDynamicContent extends Component {
 
     _processFetchParams() {
         if (this.props.widget.definition.fetchParams && typeof this.props.widget.definition.fetchParams === 'function') {
-            let params = this.props.widget.definition.fetchParams(this.props.widget, this._getToolbox(), this._getActions());
+            let params = this.props.widget.definition.fetchParams(this.props.widget, this._getToolbox());
 
             if (!_.isEqual(this.fetchParams.filterParams, params)) {
                 this.fetchParams.filterParams = params;
@@ -293,14 +293,6 @@ export default class WidgetDynamicContent extends Component {
         }
 
         return false;
-    }
-
-    _getActions() {
-        if (this.props.widget.definition && this.props.widget.definition.initActions) {
-            return this.props.widget.definition.initActions(this.props.widget, this._getToolbox());
-        } else {
-            return undefined;
-        }
     }
 
     // In component will mount fetch the data if needed
@@ -331,7 +323,7 @@ export default class WidgetDynamicContent extends Component {
         var widgetHtml = 'Loading...';
         if (this.props.widget.definition && this.props.widget.definition.render) {
             try {
-                widgetHtml = this.props.widget.definition.render(this.props.widget,this.state.data,this.state.error,this._getToolbox(), this._getActions());
+                widgetHtml = this.props.widget.definition.render(this.props.widget,this.state.data,this.state.error,this._getToolbox());
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
             }
@@ -347,7 +339,7 @@ export default class WidgetDynamicContent extends Component {
                     return <ErrorMessage error={this.state.error}/>;
                 }
 
-                widget = this.props.widget.definition.render(this.props.widget,this.state.data,this.state.error,this._getToolbox(), this._getActions());
+                widget = this.props.widget.definition.render(this.props.widget,this.state.data,this.state.error,this._getToolbox());
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
             }
@@ -372,7 +364,7 @@ export default class WidgetDynamicContent extends Component {
         }
 
         if (this.props.widget.definition.postRender) {
-            this.props.widget.definition.postRender($(container),this.props.widget,this.state.data,this._getToolbox(),this._getActions());
+            this.props.widget.definition.postRender($(container),this.props.widget,this.state.data,this._getToolbox());
         }
     }
     render() {
