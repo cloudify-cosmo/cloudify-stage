@@ -8,8 +8,9 @@ import Login from '../components/Login';
 import {login} from '../actions/managers';
 
 const mapStateToProps = (state, ownProps) => {
+    var ip = _.get(state.config,'manager.ip');
     return {
-        ip:  state.manager && state.manager.ip ? state.manager.ip : _.get(state.config,'manager.ip',''),
+        ip:  _.isEmpty(ip) ? window.location.hostname : ip,
         username:  state.manager ? state.manager.username : '',
         loginError: state.manager ? state.manager.err : '',
         mode: state.config.mode,
