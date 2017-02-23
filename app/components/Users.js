@@ -12,7 +12,8 @@ export default class Users extends Component {
         isEditMode: PropTypes.bool.isRequired,
         onEditModeChange: PropTypes.func.isRequired,
         onConfigure: PropTypes.func.isRequired,
-        onLogout: PropTypes.func.isRequired
+        onLogout: PropTypes.func.isRequired,
+        onMaintenance: PropTypes.func
     };
 
     onEditModeClick() {
@@ -30,11 +31,14 @@ export default class Users extends Component {
         )
 
         return (
-            <Dropdown pointing icon="dropdown" trigger={userMenuTrigger} className='usersMenu'>
+            <Dropdown pointing="top right" icon="dropdown" trigger={userMenuTrigger} className='usersMenu'>
                 {
                     this.props.showAllOptions
                     ?
                     <Dropdown.Menu>
+                        <Dropdown.Item icon='doctor' text='Maintenance Mode' value='maintenance'
+                                       onClick={this.props.onMaintenance}/>
+                        <Dropdown.Divider />
                         <Dropdown.Item icon='settings' text='Configure' value='configure'
                                        onClick={this.props.onConfigure}/>
                         <Dropdown.Item icon='configure' selected={this.props.isEditMode} active={this.props.isEditMode}

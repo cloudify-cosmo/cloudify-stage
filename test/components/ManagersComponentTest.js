@@ -16,6 +16,7 @@ describe('(Component) Manager', () => {
 
     beforeEach(() => {
         manager = {
+            maintenance: "deactivated"
         };
 
         wrapper = mount(<Manager manager={manager}/>);
@@ -40,6 +41,22 @@ describe('(Component) Manager', () => {
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
         expect(wrapper.find(Icon).getNode().props.color).to.equal('grey'); // Empty icon
+    });
+
+    it('renders manager component with activated maintenance ',()=>{
+        manager.status = 'running';
+        manager.maintenance = "activated";
+        wrapper.setProps({manager: manager});
+        expect(wrapper).to.have.length(1); // Showing manager component
+        expect(wrapper.find(Icon).getNode().props.color).to.equal('yellow'); // Yellow icon
+    });
+
+    it('renders manager component with activated maintenance and unavailable status',()=>{
+        manager.status = 'not-running';
+        manager.maintenance = "activated";
+        wrapper.setProps({manager: manager});
+        expect(wrapper).to.have.length(1); // Showing manager component
+        expect(wrapper.find(Icon).getNode().props.color).to.equal('red'); // Red icon
     });
 
 });

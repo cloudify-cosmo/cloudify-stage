@@ -514,3 +514,16 @@ code.hljs {
     fill: #23804D;
   }
 }
+
+/* Maintenance mode */
+
+.ui.maintenance.message {
+  float: right;
+  position: fixed;
+  z-index: 1000;
+  top: 14px;
+  left: 13rem;
+  margin: 0px;
+  padding: 5px 20px;
+  box-shadow: none !important;
+}
