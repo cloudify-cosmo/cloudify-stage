@@ -120,6 +120,9 @@ export default class DeployModal extends React.Component {
 
         var blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
 
+        let deploymentInputs = _.sortBy(_.map(blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
+                                        [(input => !_.isNil(input.default)), 'name']);
+
         return (
             <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                 <Modal.Header>
@@ -141,21 +144,21 @@ export default class DeployModal extends React.Component {
                         }
 
                         {
-                            blueprint.id && _.isEmpty(blueprint.plan.inputs)
+                            blueprint.id && _.isEmpty(deploymentInputs)
                             &&
                             <Message content="No inputs available for the blueprint"/>
                         }
                         {
-                            _.map(blueprint.plan.inputs, (input, name) => {
+                            _.map(deploymentInputs, (input) => {
                                 let formInput = () =>
-                                    <Form.Input name={name} placeholder={input.description}
-                                                value={this.state.deploymentInputs[name]}
+                                    <Form.Input name={input.name} placeholder={input.description}
+                                                value={this.state.deploymentInputs[input.name]}
                                                 onChange={this._handleInputChange.bind(this)}
                                                 className={DeployModal.DEPLOYMENT_INPUT_CLASSNAME} />
                                 return (
-                                    <Form.Field key={name} error={this.state.errors[name]}>
+                                    <Form.Field key={input.name} error={this.state.errors[input.name]}>
                                         <label>
-                                            {name}&nbsp;
+                                            {input.name}&nbsp;
                                             {
                                                 _.isNil(input.default)
                                                 ? <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
