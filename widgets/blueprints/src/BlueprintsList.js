@@ -49,13 +49,13 @@ export default class extends React.Component {
         }
 
         var actions = new Actions(this.props.toolbox);
+        this.setState({confirmDelete: false});
         actions.doDelete(this.state.item)
             .then(()=> {
-                this.setState({confirmDelete: false});
                 this.props.toolbox.getEventBus().trigger('blueprints:refresh');
             })
             .catch((err)=>{
-                this.setState({confirmDelete: false, error: err.message});
+                this.setState({error: err.message});
             });
     }
 
