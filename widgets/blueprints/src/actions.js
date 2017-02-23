@@ -25,7 +25,8 @@ export default class {
         var params = {};
 
         if (!_.isEmpty(blueprintFileName)) {
-            params['application_file_name'] = blueprintFileName + ".yaml";
+            params['application_file_name'] = blueprintFileName
+                                            + _.endsWith(blueprintFileName, '.yaml') ? '' : '.yaml';
         }
         if (!_.isEmpty(blueprintUrl)) {
             params['blueprint_archive_url'] = blueprintUrl;
