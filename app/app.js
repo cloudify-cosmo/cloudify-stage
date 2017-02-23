@@ -98,12 +98,14 @@ export default class app{
     static start (store) {
 //history.listen(location => analyticsService.track(location.pathname))
         const history = syncHistoryWithStore(browserHistory, store);
+        let closeSplashScreen = () => $('div#splash').fadeOut('slow', () => $('div#splash').removeClass('active'));
 
         ReactDOM.render(
             <Provider store={store}>
                 <Router history={history} routes={createRoutes(store)} />
             </Provider>,
-            document.getElementById('app')
+            document.getElementById('app'),
+            closeSplashScreen
         );
 
     }
