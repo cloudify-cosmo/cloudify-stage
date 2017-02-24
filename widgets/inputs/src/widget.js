@@ -26,20 +26,31 @@ Stage.defineWidget({
         return Promise.resolve({inputs:{}});
     },
 
+    _stringifyInputs: function(inputs) {
+        return _.map(inputs, (value, name) => {
+            let stringifiedValue = '';
+            try {
+                stringifiedValue = JSON.stringify(value);
+            } catch (e) {
+                console.error(`Cannot parse input value for '${name}'. `, e);
+            }
+            return ({name: name, value: stringifiedValue});
+        });
+    },
+
     render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading/>;
         }
 
+        let inputs = this._stringifyInputs(data.inputs);
         let formattedData = Object.assign({},data,{
-            items: Object.keys(data.inputs).map(function(key) {
-                return {name: key, value: data.inputs[key]};
-                }),
+            items: inputs,
             deploymentId : toolbox.getContext().getValue('deploymentId')
         });
 
         return (
-            <InputsTable data={formattedData} toolbox={toolbox}/>
+            <InputsTable data={formattedData} toolbox={toolbox} widget={widget} />
         );
     }
 });

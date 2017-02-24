@@ -23,14 +23,14 @@ Stage.defineWidget({
     },
 
     _stringifyOutputs: function(outputs) {
-        return _.map(outputs, (value, key) => {
+        return _.map(outputs, (value, name) => {
             let stringifiedValue = '';
             try {
                 stringifiedValue = JSON.stringify(value);
             } catch (e) {
-                console.error(`Cannot parse output value for '${key}'. `, e);
+                console.error(`Cannot parse output value for '${name}'. `, e);
             }
-            return ({id: key, value: stringifiedValue});
+            return ({name: name, value: stringifiedValue});
         });
     },
 
@@ -41,8 +41,7 @@ Stage.defineWidget({
         let outputs = this._stringifyOutputs(data.outputs);
         let formattedData = Object.assign({}, {
             items: outputs,
-            deploymentId: toolbox.getContext().getValue('deploymentId'),
-            total: outputs.length
+            deploymentId: toolbox.getContext().getValue('deploymentId')
         });
 
         return (
