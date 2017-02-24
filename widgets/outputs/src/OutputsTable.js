@@ -24,39 +24,30 @@ export default class extends React.Component {
     }
 
     render() {
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {ErrorMessage, DataTable} = Stage.Basic;
+        let outputs = this.props.data.items;
 
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <table className="ui very compact table outputsTable">
-                    <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        this.props.data.items.map((item)=>{
-                            var value = '';
-                            try {
-                                value = JSON.stringify(item.value);
-                            } catch (e) {
-                                console.error('cannot parse output value',e);
-                            }
+                <DataTable totalSize={this.props.data.total}
+                           pageSize={this.props.widget.configuration.pageSize}
+                           className="outputsTable">
 
-                            return (
-                                <tr key={item.id}>
-                                    <td>{item.description}</td>
-                                    <td>{value}</td>
-                                </tr>
-                            );
-                        })
+                    <DataTable.Column label="Name" width="30%"/>
+                    <DataTable.Column label="Value" width="70%"/>
+
+                    {
+                        outputs.map((output) =>
+                            <DataTable.Row key={output.id}>
+                                <DataTable.Data>{output.id}</DataTable.Data>
+                                <DataTable.Data>{output.value}</DataTable.Data>
+                            </DataTable.Row>
+                        )
                     }
-                    </tbody>
-                </table>
+                </DataTable>
+
             </div>
 
         );
