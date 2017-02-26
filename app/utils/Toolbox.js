@@ -9,6 +9,7 @@ import {drillDownToPage} from '../actions/widgets';
 import EventBus from './EventBus';
 import Context from './Context';
 import Manager from './Manager';
+import External from './External';
 
 class Toolbox {
     constructor (store) {
@@ -40,6 +41,10 @@ class Toolbox {
 
     getManager() {
         return this._Manager;
+    }
+
+    getExternal(basicAuth) {
+        return new External(basicAuth);
     }
 
     getContext() {

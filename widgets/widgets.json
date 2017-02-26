@@ -10,7 +10,7 @@
   "cpuUtilizationSystem",
   "cpuUtilizationUser",
   "inputs",
-  "githubRepositories",
+  "blueprintCatalog",
   "events",
   "eventsFilter",
   "plugins",

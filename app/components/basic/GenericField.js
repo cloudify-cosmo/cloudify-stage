@@ -8,6 +8,7 @@ import React, { Component, PropTypes } from 'react';
 export default class GenericField extends Component {
 
     static STRING_TYPE = 'string';
+    static PASSWORD_TYPE = 'password';
     static NUMBER_TYPE = 'number';
     static BOOLEAN_TYPE = 'boolean';
     static LIST_TYPE = 'list';
@@ -47,18 +48,13 @@ export default class GenericField extends Component {
                 </label>
 
                 {
-                    this.props.type === GenericField.STRING_TYPE &&
+                    (this.props.type === GenericField.STRING_TYPE ||
+                     this.props.type === GenericField.NUMBER_TYPE ||
+                     this.props.type === GenericField.PASSWORD_TYPE) &&
                     <div className="ui icon input fluid">
                         {this.props.icon && <i className={this.props.icon + " icon"}></i>}
-                        <input className="fieldInput" data-id={this.props.id} data-type={this.props.type} type="text"
-                               placeholder={this.props.placeholder} defaultValue={this.props.value}/>
-                    </div>
-                }
-                {
-                    this.props.type === GenericField.NUMBER_TYPE &&
-                    <div className="ui icon input fluid">
-                        {this.props.icon && <i className={this.props.icon + " icon"}></i>}
-                        <input className="fieldInput" data-id={this.props.id} data-type={this.props.type} type="number"
+                        <input className="fieldInput" data-id={this.props.id} data-type={this.props.type}
+                               type={this.props.type === GenericField.STRING_TYPE?'text':this.props.type}
                                placeholder={this.props.placeholder} defaultValue={this.props.value}/>
                     </div>
                 }
@@ -91,7 +87,7 @@ export default class GenericField extends Component {
 
 function DropdownList(props) {
     return (
-        <div className={`ui fluid selection dropdown ${props.className}`} ref={(dropdown)=>{$(dropdown).dropdown(props.options)}}>
+        <div className={`ui fluid selection dropdown ${props.className}`} ref={(dropdown)=>{$(dropdown).dropdown({...props.options, showOnFocus: false})}}>
             <input className="fieldInput" type="hidden" data-id={props.id} data-type={props.type} value={props.value}/>
             <i className="dropdown icon"></i>
             <div className="default text">{props.placeholder}</div>

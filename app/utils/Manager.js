@@ -9,31 +9,16 @@ import log from 'loglevel';
 let logger = log.getLogger("Manager");
 
 import Consts from './consts';
+import External from './External';
 
-export default class Manager {
+export default class Manager extends External {
 
     constructor(managerData) {
-        this._data = managerData;
+        super(managerData);
     }
 
     getSelectedTenant() {
         return _.get(this,'_data.tenants.selected', null);
-    }
-
-    doGet(url,params) {
-        return this._ajaxCall(url,'get',params) ;
-    }
-
-    doPost(url,params,data){
-        return this._ajaxCall(url,'post',params,data) ;
-    }
-
-    doDelete(url,params,data){
-        return this._ajaxCall(url,'delete',params,data) ;
-    }
-
-    doPut(url,params,data) {
-        return this._ajaxCall(url,'put',params,data) ;
     }
 
     doUpload(url,params,files,method) {
@@ -110,58 +95,8 @@ export default class Manager {
         });
     }
 
-    doDownload(url,fileName) {
-        return this._ajaxCall(url,'get',null,null,fileName);
-    }
-
-    _ajaxCall(url,method,params,data,fileName) {
-        var actualUrl = this._buildActualUrl(url,params);
-        var securityHeaders = this._buildSecurityHeader();
-
-        logger.debug(method+' data. URL: '+url);
-
-        var headers = Object.assign({
-            "Content-Type": "application/json",
-            tenant: _.get(this._data,'tenants.selected',Consts.DEFAULT_TENANT)
-        },securityHeaders);
-
-        var options = {
-            method: method,
-            headers: headers
-        };
-
-        if (data) {
-            try {
-                options.body = JSON.stringify(data)
-            } catch (e) {
-                logger.error('Error stringifying data. URL: '+actualUrl+' data ',data);
-            }
-        }
-
-        if (fileName) {
-            return fetch(actualUrl,options)
-                .then(this._checkStatus)
-                .then(response => response.blob())
-                .then(blob => saveAs(blob, fileName));
-        } else {
-            return fetch(actualUrl,options)
-                .then(this._checkStatus)
-                .then(response => response.json());
-        }
-    }
-
-    _checkStatus(response) {
-        if (response.ok) {
-            return response;
-        }
-
-        let isJsonContentType = (response) => _.isEqual(_.toLower(response.headers.get('content-type')), 'application/json');
-        if (isJsonContentType(response)) {
-            return response.json()
-                .then(resJson => Promise.reject({message: resJson.message || response.statusText}))
-        } else {
-            return Promise.reject({message: response.statusText});
-        }
+    getManagerUrl(url,data) {
+        return this._buildActualUrl(url,data);
     }
 
     _buildActualUrl(url,data) {
@@ -172,12 +107,20 @@ export default class Manager {
         return `/sp/?su=${su}`;
     }
 
-    getManagerUrl(url,data) {
-        return this._buildActualUrl(url,data);
-    }
-
     _buildSecurityHeader(){
         var auth = this._data.auth;
         return (auth.isSecured && auth.token ? {"Authentication-Token": auth.token} : undefined);
     }
+
+    _buildHeaders() {
+        var securityHeaders = this._buildSecurityHeader();
+
+        var headers = Object.assign({
+            "Content-Type": "application/json",
+            tenant: _.get(this._data,'tenants.selected',Consts.DEFAULT_TENANT)
+        },securityHeaders);
+
+        return headers;
+    }
+
 }
