@@ -28,34 +28,28 @@ export default class extends React.Component {
     }
 
     render() {
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {ErrorMessage, DataTable} = Stage.Basic;
+        let inputs = this.props.data.items;
 
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <table className="ui very compact table outputsTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        this.props.data.items.map((item)=>{
-                            return (
-                                <tr key={item.name}>
-                                    <td>{item.name}</td>
-                                    <td>{item.value}</td>
-                                </tr>
-                            );
-                        })
-                    }
-                    </tbody>
-                </table>
-            </div>
+                <DataTable className="inputsTable">
 
+                    <DataTable.Column label="Name" width="30%"/>
+                    <DataTable.Column label="Value" width="70%"/>
+
+                    {
+                        inputs.map((input) =>
+                            <DataTable.Row key={input.name}>
+                                <DataTable.Data>{input.name}</DataTable.Data>
+                                <DataTable.Data>{input.value}</DataTable.Data>
+                            </DataTable.Row>
+                        )
+                    }
+                </DataTable>
+            </div>
         );
     }
 };
