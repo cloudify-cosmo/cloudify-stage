@@ -7,7 +7,7 @@ import SegmentItem from './SegmentItem';
 import SegmentAction from './SegmentAction';
 import Pagination from '../pagination/Pagination';
 
-export default class SegmentList extends Component {
+export default class DataSegment extends Component {
 
     static Item = SegmentItem;
     static Action = SegmentAction;
@@ -19,13 +19,20 @@ export default class SegmentList extends Component {
     static propTypes = {
         children: PropTypes.any.isRequired,
         fetchData: PropTypes.func.isRequired,
-        totalSize: PropTypes.number.isRequired,
+        totalSize: PropTypes.number,
+        fetchSize: PropTypes.number,
         pageSize: PropTypes.number,
+        simplePagination: PropTypes.bool,
         className: PropTypes.string
     };
 
     static defaultProps = {
-        className: ""
+        className: "",
+        fetchData: () => {},
+        totalSize: -1,
+        fetchSize: -1,
+        pageSize: 0,
+        simplePagination: false
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -59,8 +66,9 @@ export default class SegmentList extends Component {
                     </div>
                 }
 
-                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} fetchData={this.props.fetchData}>
-                    {this.props.totalSize <= 0 ?
+                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} fetchData={this.props.fetchData}
+                            fetchSize={this.props.fetchSize} simple={this.props.simplePagination}>
+                    {this.props.totalSize == 0 || this.props.fetchSize == 0 ?
                         <div className="ui icon message">
                             <i className="ban icon"></i>
                             No data available

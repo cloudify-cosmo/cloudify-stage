@@ -62,7 +62,7 @@ export default class BlueprintsCatalog extends React.Component{
                 return (
                     <div className="column" key={item.id}>
 
-                        <DataSegment.Item  select={item.isSelected}
+                        <DataSegment.Item selected={item.isSelected}
                                       onClick={()=>this.props.onSelectBlueprint(item)}>
                             <div className="ui grid">
                                 <div className="five wide center aligned column rightDivider">

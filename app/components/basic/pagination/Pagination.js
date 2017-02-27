@@ -5,6 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import PaginationInfo from './PaginationInfo';
 import Paginator from './Paginator';
+import SimplePaginator from './SimplePaginator';
 
 export default class Pagination extends Component {
 
@@ -25,11 +26,15 @@ export default class Pagination extends Component {
         children: PropTypes.any.isRequired,
         fetchData: PropTypes.func.isRequired,
         pageSize: PropTypes.number.isRequired,
-        totalSize: PropTypes.number.isRequired
+        totalSize: PropTypes.number,
+        fetchSize: PropTypes.number,
+        simple: PropTypes.bool
     };
 
     static defaultProps = {
         totalSize: 0,
+        fetchSize: 0,
+        simple: false,
         pageSize: Pagination.PAGE_SIZE_LIST[0]
     };
 
@@ -42,7 +47,7 @@ export default class Pagination extends Component {
     }
 
     reset() {
-        this.disableStateUpdate  = true;
+        this.disableStateUpdate = true;
         this._changePage(1);
     }
 
@@ -62,9 +67,11 @@ export default class Pagination extends Component {
             changedProps.pageSize = nextProps.pageSize;
         }
 
-        let pageCount = Math.ceil(nextProps.totalSize/nextProps.pageSize);
-        if (this.state.currentPage > pageCount) {
-            changedProps.currentPage = 1;
+        if (!this.props.simple) {
+            let pageCount = Math.ceil(nextProps.totalSize / nextProps.pageSize);
+            if (this.state.currentPage > pageCount) {
+                changedProps.currentPage = 1;
+            }
         }
 
         if (!_.isEmpty(changedProps)) {
@@ -83,16 +90,26 @@ export default class Pagination extends Component {
             <div>
                 {this.props.children}
 
-                { this.props.totalSize > Pagination.PAGE_SIZE_LIST[0] &&
+                { (this.props.totalSize > Pagination.PAGE_SIZE_LIST[0] ||
+                  (this.props.simple && !(this.state.currentPage == 1 && this.props.fetchSize < Pagination.PAGE_SIZE_LIST[0]))) &&
                     <div className="ui two column grid gridPagination">
                         <div className="column">
                             <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                            totalSize={this.props.totalSize}
+                                            totalSize={this.props.totalSize} simple={this.props.simple}
+                                            fetchSize={this.props.fetchSize}
                                             onPageSizeChange={this._changePageSize.bind(this)}/>
                         </div>
                         <div className="right aligned column">
-                            <Paginator currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                       totalSize={this.props.totalSize} onPageChange={this._changePage.bind(this)}/>
+                            {
+                                this.props.simple &&
+                                <SimplePaginator currentPage={this.state.currentPage} pageSize={this.state.pageSize}
+                                           fetchSize={this.props.fetchSize} onPageChange={this._changePage.bind(this)}/>
+                            }
+                            {
+                                !this.props.simple &&
+                                <Paginator currentPage={this.state.currentPage} pageSize={this.state.pageSize}
+                                           totalSize={this.props.totalSize}a onPageChange={this._changePage.bind(this)}/>
+                            }
                         </div>
                     </div>
                 }

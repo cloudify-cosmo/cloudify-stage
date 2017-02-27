@@ -31,7 +31,7 @@ describe('(Component) Pagination', () => {
         //remove concatenated options values either from <select> and corresponding <divs> elements
         infoText = infoText.replace(dropdownText, "").replace(dropdownText, "");
 
-        expect(infoText.replace(dropdownText, "").replace(dropdownText, "")).to.be.equal("Page size: 5  1 to 5 of 10 entries");
+        expect(infoText.replace(dropdownText, "").replace(dropdownText, "")).to.be.equal("Page size: 5  1 to 5 of 10 entries");
     });
 
     it('changes page size', () => {

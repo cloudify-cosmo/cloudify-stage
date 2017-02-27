@@ -57,10 +57,10 @@
       "y": 28
     },
     {
-      "name": "GitHub repositories list",
+      "name": "Blueprint catalog",
       "width": 8,
       "height": 16,
-      "definition": "githubRepositories",
+      "definition": "blueprintCatalog",
       "x": 4,
       "y": 28
     }

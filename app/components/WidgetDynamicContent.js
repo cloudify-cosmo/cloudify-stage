@@ -29,9 +29,12 @@ export default class WidgetDynamicContent extends Component {
         this.mounted = false;
 
         this.fetchParams = {
-            gridParams: {pageSize: this.props.widget.configuration.pageSize,
+            gridParams: {
+                currentPage: 1,
+                pageSize: this.props.widget.configuration.pageSize,
                 sortColumn: this.props.widget.configuration.sortColumn,
-                sortAscending: this.props.widget.configuration.sortAscending},
+                sortAscending: this.props.widget.configuration.sortAscending
+            },
             filterParams: {}
         };
     }
@@ -80,10 +83,28 @@ export default class WidgetDynamicContent extends Component {
     }
 
     _fetchParams() {
+        let params = this._mapGridParams(this.fetchParams.gridParams);
+
+        let filterParams = this.fetchParams.filterParams;
+        _.forIn(filterParams, function(value, key) {
+            if (!(typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null)) {
+                params[key] = value;
+            }
+        });
+
+        return params;
+    }
+
+    _mapGridParams(gridParams) {
         let params = {};
 
-        let gridParams = this.fetchParams.gridParams;
-        if (gridParams) {
+        if (_.isEmpty(gridParams)) {
+            return params;
+        }
+
+        if (this.props.widget.definition && this.props.widget.definition.mapGridParams) {
+            params = this.props.widget.definition.mapGridParams(gridParams);
+        } else {
             if (gridParams.sortColumn) {
                 params._sort = `${gridParams.sortAscending?'':'-'}${gridParams.sortColumn}`;
             }
@@ -96,13 +117,6 @@ export default class WidgetDynamicContent extends Component {
                 params._offset=(gridParams.currentPage-1)*gridParams.pageSize;
             }
         }
-
-        let filterParams = this.fetchParams.filterParams;
-        _.forIn(filterParams, function(value, key) {
-            if (!(typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null)) {
-                params[key] = value;
-            }
-        });
 
         return params;
     }
@@ -259,18 +273,26 @@ export default class WidgetDynamicContent extends Component {
             requiresFetch = true;
         }
 
-        if (this.props.widget.definition.fetchParams && typeof this.props.widget.definition.fetchParams === 'function') {
-            let params = this.props.widget.definition.fetchParams(this.props.widget, this._getToolbox());
-
-            if (!_.isEqual(this.fetchParams.filterParams, params)) {
-                this.fetchParams.filterParams = params;
-                requiresFetch = true;
-            }
+        if ( this._processFetchParams() ) {
+            requiresFetch = true;
         }
 
         if (requiresFetch) {
             this._fetchData();
         }
+    }
+
+    _processFetchParams() {
+        if (this.props.widget.definition.fetchParams && typeof this.props.widget.definition.fetchParams === 'function') {
+            let params = this.props.widget.definition.fetchParams(this.props.widget, this._getToolbox());
+
+            if (!_.isEqual(this.fetchParams.filterParams, params)) {
+                this.fetchParams.filterParams = params;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // In component will mount fetch the data if needed
@@ -281,6 +303,8 @@ export default class WidgetDynamicContent extends Component {
         this.mounted = true;
 
         console.log(`Widget '${this.props.widget.name}' mounted`);
+
+        this._processFetchParams();
         this._fetchData();
     }
 

@@ -8,17 +8,19 @@ export default class SegmentItem extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
-        select: PropTypes.bool,
-        onClick: PropTypes.func
+        selected: PropTypes.bool,
+        onClick: PropTypes.func,
+        className: PropTypes.string
     };
 
     static defaultProps = {
-        select: false
+        selected: false,
+        className: ""
     };
 
     render() {
         return (
-            <div className={`ui ${this.props.select?'secondary inverted':''} segment`} onClick={this.props.onClick}>
+            <div className={`ui ${this.props.selected?'secondary inverted':''} segment ${this.props.className}`} onClick={this.props.onClick}>
                 {this.props.children}
             </div>
         );

@@ -6,6 +6,8 @@
 var log4js = require('log4js');
 let path = require('path');
 var fs = require('fs');
+
+// Make sure that log library exists
 try {
     fs.mkdirSync(path.resolve(__dirname , "../logs"));
 } catch (e) {
@@ -17,9 +19,15 @@ try {
 
 log4js.configure(path.resolve(__dirname , "../conf/log4jsConfig.json"));
 
+// Initialize the DB connection
+var db = require('./db/Connection');
+
+
 var express = require('express');
+var bodyParser = require('body-parser');
 var ServerSettings = require('./serverSettings');
-var ServerProxy = require('./ServerProxy');
+var ServerProxy = require('./routes/ServerProxy');
+var UserApp = require('./routes/UserApp');
 var config = require('./config');
 
 var logger = log4js.getLogger('Server');
@@ -31,8 +39,26 @@ logger.info('Server started in mode '+ServerSettings.settings.mode);
 var app = express();
 
 app.use(express.static(path.resolve(__dirname , "../dist"),{index: 'index.html'}));
+app.use(bodyParser.json());
 
+// For dev purposes
+app.use((req,res,next) => {
+    // Setting access control allow origin headers
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,authorization,authentication-token,tenant');
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    next();
+});
+
+// Routes
 app.use('/sp',ServerProxy);
+app.use('/ua',UserApp);
 app.use('/config',function(req,res){
     res.send(config.get(ServerSettings.settings.mode));
 });
@@ -42,6 +68,9 @@ app.get('*',function (request, response){
     response.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
 });
 
-app.listen(8088, function () {
-    console.log('Stage runs on port 8088!');
+// Sync db tables (make sure they exist)
+db.sequelize.sync().then(function() {
+    app.listen(8088, function () {
+        console.log('Stage runs on port 8088!');
+    });
 });

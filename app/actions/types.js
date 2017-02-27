@@ -3,6 +3,7 @@
  */
 
 export const ADD_PAGE = 'ADD_PAGE';
+export const SET_PAGES = 'SET_PAGES';
 export const CREATE_DRILLDOWN_PAGE = 'CREATE_DRILLDOWN_PAGE';
 export const ADD_WIDGET = 'ADD_WIDGET';
 

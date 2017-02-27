@@ -137,6 +137,9 @@ const pages = (state = [], action) => {
             state.splice(realNewPageIndex, 0, removed);
 
             return state;
+        case types.SET_PAGES:
+            // Replace all the pages data (when reading user pages from db)
+            return action.pages;
         default:
             return state;
     }

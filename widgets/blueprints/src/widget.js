@@ -6,8 +6,8 @@ import BlueprintsList from './BlueprintsList';
 
 Stage.defineWidget({
     id: "blueprints",
-    name: "Blueprints catalog",
-    description: 'Shows a blueprints catalog',
+    name: "Blueprints",
+    description: 'Shows blueprint list',
     initialWidth: 8,
     initialHeight: 20,
     color : "blue",

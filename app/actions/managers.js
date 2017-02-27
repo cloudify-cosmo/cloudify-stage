@@ -8,8 +8,6 @@ import { push } from 'react-router-redux';
 import Manager from '../utils/Manager';
 import {clearContext} from './context';
 
-import StatusPoller from '../utils/StatusPoller';
-
 function requestLogin() {
     return {
         type: types.REQ_LOGIN
@@ -43,16 +41,12 @@ export function login (ip,username,password) {
     return function (dispatch) {
 
         // Just to make sure
-        StatusPoller.getPoller().stop();
-
         dispatch(requestLogin());
 
         return Auth.login(ip,username,password)
                     .then(data => {
                         dispatch(receiveLogin(ip, username, data.role, data.token, data.version,data.tenants));
                         dispatch(push('/'));
-
-                        StatusPoller.getPoller().start();
                     })
                     .catch(err => dispatch(errorLogin(ip,username,err)));
     }
@@ -68,8 +62,6 @@ function doLogout(err) {
 }
 export function logout(err) {
     return function(dispatch) {
-        StatusPoller.getPoller().stop();
-
         dispatch(clearContext());
         dispatch(doLogout(err));
         dispatch(push('/login'));
