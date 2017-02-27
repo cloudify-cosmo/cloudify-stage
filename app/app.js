@@ -48,6 +48,7 @@ import Auth from './utils/auth';
 import {getTenants} from './actions/tenants';
 
 import StatusPoller from './utils/StatusPoller';
+import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
 
 export default class app{
     static load (){
@@ -69,30 +70,11 @@ export default class app{
             createToolbox(store);
 
             StatusPoller.create(store);
+            UserAppDataAutoSaver.create(store);
 
             return store;
 
         });
-    }
-
-    static initIfLoggedIn(store) {
-        var managerData = store.getState().manager
-        if (Auth.isLoggedIn(managerData)) {
-
-            console.log('User is logged in upon startup, starting polling and fetching tenants');
-
-            // Start status timer
-            StatusPoller.getPoller().start();
-
-            // Fetch tenants
-            return store.dispatch(getTenants(store.getState().manager)).then(()=>store).catch((e)=>{
-                console.error('Error re-fetching tenants information',e);
-            });
-
-        } else {
-            return Promise.resolve(store);
-        }
-
     }
 
     static start (store) {

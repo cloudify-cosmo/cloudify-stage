@@ -11,20 +11,17 @@ export default class Auth {
     static login(managerIp,username,password) {
 
         return this._getApiVersion(managerIp,username,password)
-                    .then((version)=>{
-                        return Promise.all([
-                            this._getLoginToken(managerIp,username,password,version),
-                            this._getTenants(managerIp,username,password,version)
-                        ])
-                        .then(results=>{
-                            return {
-                                token: results[0].token,
-                                tenants: results[1].tenants,
-                                version,
-                                role: results[0].role
-                            }
-                        });
-                    })
+                .then((version)=> {
+                    return this._getLoginToken(managerIp, username, password, version);
+                })
+                .then(data=>{
+                    return {
+                        token: data.token,
+                        version: data.version,
+                        role: data.role
+                    }
+                });
+
     }
 
     static _getApiVersion(managerIp,username,password) {
@@ -120,42 +117,13 @@ export default class Auth {
                     return Promise.reject(data);
                 }
 
-                return Promise.resolve({token:data.value, role: data.role});
+                return Promise.resolve({token:data.value, role: data.role, version: version});
             })
             .catch((e)=>{
                 console.error(e);
                 return Promise.reject(e.message);
             });
 
-    }
-
-    static _getTenants(managerIp,username,password,version) {
-        return fetch(new Manager({ip:managerIp, version}).getManagerUrl("/tenants"),
-            {
-                method: 'GET',
-                headers: {
-                    'authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64'),
-                    tenant: Consts.DEFAULT_TENANT
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw Error(response.statusText);
-                }
-
-                return response.json();
-            })
-            .then((data)=> {
-                if (data.error_code) {
-                    return Promise.reject(data);
-                }
-
-                return Promise.resolve({tenants: data});
-            })
-            .catch((e)=>{
-                console.error(e);
-                return Promise.reject(e.message);
-            });
     }
 
     static isLoggedIn(managerData) {

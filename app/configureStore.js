@@ -33,6 +33,7 @@ export default (history,templates,widgetDefinitions,config) => {
 
     // Clear login error if has any
     initialState.manager.err = null;
+    initialState.manager.isLoggingIn = false;
 
 
     var store = createStore(
@@ -52,6 +53,8 @@ export default (history,templates,widgetDefinitions,config) => {
         store.dispatch(createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions));
     }
 
+
+    // This saves the manager data in the local storage. This is good for when a user refreshes the page we can know if he is logged in or not, and save his login info - ip, username
     store.subscribe(throttle(()=>{StatePersister.save(store.getState(),config.mode);},1000));
 
     return store;

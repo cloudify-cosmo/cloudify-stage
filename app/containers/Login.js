@@ -12,6 +12,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         ip:  _.isEmpty(ip) ? window.location.hostname : ip,
         username:  state.manager ? state.manager.username : '',
+        isLoggingIn: state.manager.isLoggingIn,
         loginError: state.manager ? state.manager.err : '',
         mode: state.config.mode,
         whiteLabel : state.config.app.whiteLabel

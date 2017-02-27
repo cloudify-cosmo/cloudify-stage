@@ -10,8 +10,13 @@
   "author": "",
   "license": "",
   "dependencies": {
+    "body-parser": "^1.16.1",
     "express": "^4.14.0",
+    "lodash": "^4.17.4",
     "log4js": "^1.1.0",
-    "request": "^2.79.0"
+    "pg": "^6.1.2",
+    "pg-hstore": "^2.3.2",
+    "request": "^2.79.0",
+    "sequelize": "^3.30.2"
   }
 }

@@ -6,7 +6,6 @@ export default class StatePersister{
     static save(state,mode){
         try {
             var sState = JSON.stringify({
-                pages: state.pages,
                 manager: state.manager
             });
             localStorage.setItem('state-'+mode,sState);
@@ -22,7 +21,6 @@ export default class StatePersister{
 
             var state = JSON.parse(pState);
             return {
-                pages: state.pages,
                 manager: state.manager
             };
         } catch (e) {
