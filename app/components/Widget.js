@@ -52,6 +52,13 @@ export default class Widget extends Component {
         if (this.props.manager.auth.role === Consts.ROLE_SUSPEND) {
             return (
                 <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className='widgetItem ui segment'>
+                    {
+                        this.props.isEditMode &&
+                        <div className='widgetEditButtons'>
+                            <i className="remove link icon small"
+                               onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
+                        </div>
+                    }
                     <div className='ui segment basic' style={{height:'100%'}}>
                         <div className="ui icon message error">
                             <i className="ban icon"></i>
@@ -85,6 +92,13 @@ export default class Widget extends Component {
         if (this.props.widget.definition && this.props.widget.definition.isAdmin && this.props.manager.auth.role !== Consts.ROLE_ADMIN) {
             return (
                 <div className='widgetItem ui segment'>
+                    {
+                        this.props.isEditMode &&
+                        <div className='widgetEditButtons'>
+                            <i className="remove link icon small"
+                               onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
+                        </div>
+                    }
                     <div className='ui segment basic' style={{height:'100%'}}>
                         <div className="ui icon message error">
                             <i className="ban icon"></i>

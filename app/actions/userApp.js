@@ -22,12 +22,7 @@ export function saveUserAppData (ip,username,role,appData) {
         var data = {appData , version: CURRENT_APP_DATA_VERSION};
 
         var external = new External();
-        return external.doPost(`/ua/${ip}/${username}/${role}`,null,data)
-            .then((response)=>{
-            if (!response.ok) {
-                return Promise.reject(response.statusText);
-            }
-        });
+        return external.doPost(`/ua/${ip}/${username}/${role}`,null,data);
     }
 }
 
@@ -36,7 +31,6 @@ export function loadOrCreateUserAppData (manager,config,templates,widgetDefiniti
 
         var external = new External();
         return external.doGet(`/ua/${manager.ip}/${manager.username}/${manager.auth.role}`)
-//            .then(response => response.json())
             .then(userApp=>{
                 if (userApp &&
                     userApp.appDataVersion === CURRENT_APP_DATA_VERSION &&
