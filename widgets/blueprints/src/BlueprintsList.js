@@ -84,7 +84,6 @@ export default class extends React.Component {
     }
 
     render() {
-        var Confirm = Stage.Basic.Confirm;
         var ErrorMessage = Stage.Basic.ErrorMessage;
 
         var shouldShowTable = this.props.widget.configuration['displayStyle'] === 'table';

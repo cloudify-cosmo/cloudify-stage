@@ -12,5 +12,6 @@ export default {
     MANAGER_RUNNING: 'running',
     MAINTENANCE_ACTIVATING: 'activating',
     MAINTENANCE_ACTIVATED: 'activated',
-    MAINTENANCE_DEACTIVATED: 'deactivated'
+    MAINTENANCE_DEACTIVATED: 'deactivated',
+    DEFAULT_INITIAL_TEMPLATE: 'initial-template'
 };
