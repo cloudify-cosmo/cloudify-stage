@@ -5,6 +5,7 @@
 import * as types from './types';
 import fetch from 'isomorphic-fetch';
 import {createPageFromInitialTemplate} from './page';
+import External from '../utils/External';
 
 const  CURRENT_APP_DATA_VERSION = 1;
 
@@ -20,25 +21,16 @@ export function saveUserAppData (ip,username,role,appData) {
     return function(dispatch) {
         var data = {appData , version: CURRENT_APP_DATA_VERSION};
 
-        return fetch(`/ua/${ip}/${username}/${role}`,{
-            method:'post',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body : JSON.stringify(data)
-        }).then((response)=>{
-            if (!response.ok) {
-                return Promise.reject(response.statusText);
-            }
-        });
+        var external = new External();
+        return external.doPost(`/ua/${ip}/${username}/${role}`,null,data);
     }
 }
 
 export function loadOrCreateUserAppData (manager,config,templates,widgetDefinitions) {
     return function(dispatch,getState) {
 
-        return fetch(`/ua/${manager.ip}/${manager.username}/${manager.auth.role}`)
-            .then(response => response.json())
+        var external = new External();
+        return external.doGet(`/ua/${manager.ip}/${manager.username}/${manager.auth.role}`)
             .then(userApp=>{
                 if (userApp &&
                     userApp.appDataVersion === CURRENT_APP_DATA_VERSION &&
