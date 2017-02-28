@@ -76,7 +76,6 @@ export default class DeployModal extends React.Component {
                 deploymentInputs[inputName] = inputValue;
             }
         });
-        console.log(deploymentInputs);
 
         if (!_.isEmpty(errors)) {
             this.setState({errors});
@@ -118,8 +117,7 @@ export default class DeployModal extends React.Component {
     render() {
         var {Modal, Icon, Form, Message, Popup} = Stage.Basic;
 
-        var blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
-
+        let blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
         let deploymentInputs = _.sortBy(_.map(blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
                                         [(input => !_.isNil(input.default)), 'name']);
 
