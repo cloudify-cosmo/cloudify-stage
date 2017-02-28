@@ -26,7 +26,7 @@ function _load(managerData,store) {
             var state = store.getState();
             if (state.manager.tenants.items.length === 0) {
                 console.log('User is not attached to any tenant, cannot login');
-                return reject('User is not attached to any tennat, cannot login');
+                return reject('User is not attached to any tenant, cannot login');
             }
 
             //// Stopping the auto saver , cause the loadOrCreateUserAppData creates a page initiating alot of state change, and at the end it saves the data. So no need
