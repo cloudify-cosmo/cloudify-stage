@@ -10,8 +10,10 @@ import templates from './templatesReducer';
 import context from './contextReducer';
 import manager from './managerReducer';
 import config from './configReducer';
+import app from './appReducer';
 
 const rootReducer = combineReducers({
+    app,
     manager,
     pages,
     widgetDefinitions,
