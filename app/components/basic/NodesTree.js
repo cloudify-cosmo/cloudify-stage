@@ -117,43 +117,7 @@ export default class NodesTree extends Component {
         };
 
         return this.state.treeData.length ?
-               <Tree
-                   autoExpandParent={this.props.autoExpandParent}
-                   defaultExpandAll={this.props.defaultExpandAll}
-                   expandedKeys={this.state.expandedKeys}
-                   defaultExpandedKeys={this.props.defaultExpandedKeys}
-                   onExpand={this.props.onExpand}
-
-                   checkable={this.props.checkable}
-                   checkStrictly={this.props.checkStrictly}
-                   checkedKeys={this.state.checkedKeys}
-                   defaultCheckedKeys={this.props.defaultCheckedKeys}
-                   onCheck={this.props.onCheck}
-
-                   selectable={this.props.selectable}
-                   multiple={this.props.multiple}
-                   selectedKeys={this.state.selectedKeys}
-                   defaultSelectedKeys={this.props.defaultSelectedKeys}
-                   onSelect={this.props.onSelect}
-
-                   draggable={this.props.draggable}
-                   onDragStart={this.props.onDragStart}
-                   onDragEnter={this.props.onDragEnter}
-                   onDragOver={this.props.onDragOver}
-                   onDragLeave={this.props.onDragLeave}
-                   onDrop={this.props.onDrop}
-                   onDragEnd={this.props.onDragEnd}
-
-                   className={this.props.className}
-                   prefixCls={this.props.prefixCls}
-                   showIcon={this.props.showIcon}
-                   showLine={this.props.showLine}
-
-                   onMouseEnter={this.props.onMouseEnter}
-                   onMouseLeave={this.props.onMouseLeave}
-
-                   onRightClick={this.props.onRightClick}
-               >
+               <Tree {...this.props}>
                    {loop(this.state.treeData)}
                </Tree> :
                <Stage.Basic.Loading/>;
