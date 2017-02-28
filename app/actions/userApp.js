@@ -5,6 +5,7 @@
 import * as types from './types';
 import fetch from 'isomorphic-fetch';
 import {createPageFromInitialTemplate} from './page';
+import Consts from '../utils/consts';
 
 const  CURRENT_APP_DATA_VERSION = 1;
 
@@ -34,6 +35,19 @@ export function saveUserAppData (ip,username,role,appData) {
     }
 }
 
+export function resetTemplate(manager,config,templates,widgetDefinitions){
+    return function(dispatch) {
+        // First clear the pages
+        dispatch(setPages([]));
+
+        // Need to create from initial template
+        var initialTemplateName = config.app['initialTemplate'][config.mode === Consts.MODE_CUSTOMER ? Consts.MODE_CUSTOMER: manager.auth.role] || Consts.DEFAULT_INITIAL_TEMPLATE;
+        var initialTemplate = templates[initialTemplateName];
+        dispatch(createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions));
+
+    }
+}
+
 export function loadOrCreateUserAppData (manager,config,templates,widgetDefinitions) {
     return function(dispatch,getState) {
 
@@ -45,13 +59,7 @@ export function loadOrCreateUserAppData (manager,config,templates,widgetDefiniti
                     userApp.appData.pages && userApp.appData.pages.length > 0) {
                     dispatch(setPages(userApp.appData.pages));
                 } else {
-                    // First clear the pages
-                    dispatch(setPages([]));
-
-                    // Need to create from initial template
-                    var initialTemplateName = config.app['initialTemplate'][config.mode === 'customer' ? 'customer': manager.auth.role] || 'initial-template';
-                    var initialTemplate = templates[initialTemplateName];
-                    dispatch(createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions));
+                    dispatch(resetTemplate(manager,config,templates,widgetDefinitions));
 
                     var data = { pages: getState().pages};
                     return dispatch(saveUserAppData(manager.ip,manager.username,manager.auth.role,data));
