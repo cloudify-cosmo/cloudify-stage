@@ -8,98 +8,13 @@ import Tree, { TreeNode } from 'rc-tree';
 
 export default class NodesTree extends Component {
 
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = {
-            treeData: props.treeData,
-            expandedKeys: props.expandedKeys,
-            checkedKeys: props.checkedKeys,
-            selectedKeys: props.selectedKeys
-        };
-    }
-
-    static propTypes = {
-        treeData: PropTypes.oneOfType([
-            PropTypes.object,
-            PropTypes.arrayOf(PropTypes.object)
-        ]),
-
-        autoExpandParent: PropTypes.bool,
-        defaultExpandAll: PropTypes.bool,
-        expandedKeys: PropTypes.arrayOf(PropTypes.string),
-        defaultExpandedKeys: PropTypes.arrayOf(PropTypes.string),
-        onExpand: PropTypes.func,
-
-        checkable: PropTypes.bool,
-        checkStrictly: PropTypes.bool,
-        checkedKeys: PropTypes.arrayOf(PropTypes.string),
-        defaultCheckedKeys: PropTypes.arrayOf(PropTypes.string),
-        onCheck: PropTypes.func,
-
-        selectable: PropTypes.bool,
-        multiple: PropTypes.bool,
-        selectedKeys: PropTypes.arrayOf(PropTypes.string),
-        defaultSelectedKeys: PropTypes.arrayOf(PropTypes.string),
-        onSelect: PropTypes.func,
-
-        draggable: PropTypes.bool,
-        onDragStart: PropTypes.func,
-        onDragEnter: PropTypes.func,
-        onDragOver: PropTypes.func,
-        onDragLeave: PropTypes.func,
-        onDrop: PropTypes.func,
-        onDragEnd: PropTypes.func,
-
-        className: PropTypes.string,
-        prefixCls: PropTypes.string,
-        showIcon: PropTypes.bool,
-        showLine: PropTypes.bool,
-
-        onMouseEnter: PropTypes.func,
-        onMouseLeave: PropTypes.func,
-
-        onRightClick: PropTypes.func
-    };
+    static propTypes = Tree.propTypes;
 
     static defaultProps = {
         treeData: [],
-
-        autoExpandParent: true,
-        defaultExpandAll: false,
-        expandedKeys: [],
-        defaultExpandedKeys: [],
-        onExpand: () => true,
-
-        checkable: false,
-        checkStrictly: false,
-        checkedKeys: [],
-        defaultCheckedKeys: [],
-        onCheck: () => true,
-
         selectable: false,
-        multiple: false,
-        selectedKeys: [],
-        defaultSelectedKeys: [],
-        onSelect: () => true,
-
-        draggable: false,
-        onDragStart: () => true,
-        onDragEnter: () => true,
-        onDragOver: () => true,
-        onDragLeave: () => true,
-        onDrop: () => true,
-        onDragEnd: () => true,
-
-        className: '',
-        prefixCls: 'rc-tree',
         showIcon: false,
-        showLine: true,
-
-        onMouseEnter: () => true,
-        onMouseLeave: () => true,
-
-        onRightClick: () => true
+        showLine: true
     };
 
     render() {
@@ -116,9 +31,9 @@ export default class NodesTree extends Component {
             });
         };
 
-        return this.state.treeData.length ?
+        return this.props.treeData.length ?
                <Tree {...this.props}>
-                   {loop(this.state.treeData)}
+                   {loop(this.props.treeData)}
                </Tree> :
                <Stage.Basic.Loading/>;
     }
