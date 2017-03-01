@@ -113,6 +113,11 @@ export default class extends React.Component {
 
                 }
 
+                <Confirm title='Are you sure you want to remove this blueprint?'
+                         show={this.state.confirmDelete}
+                         onConfirm={this._deleteBlueprint.bind(this)}
+                         onCancel={()=>this.setState({confirmDelete : false})} />
+
                 <DeployModal show={this.state.showDeploymentModal}
                              blueprint={this.state.blueprint}
                              onHide={this._hideDeploymentModal.bind(this)}
