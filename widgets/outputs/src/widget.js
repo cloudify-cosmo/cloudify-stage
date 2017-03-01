@@ -14,34 +14,69 @@ Stage.defineWidget({
 
     fetchData: function(widget,toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId');
+        let blueprintId = toolbox.getContext().getValue('blueprintId');
+        let _stringify = this._stringify;
 
         if (deploymentId) {
-            return toolbox.getManager().doGet(`/deployments/${deploymentId}/outputs`)
-                .then(data=>Promise.resolve({outputs: _.get(data, 'outputs', {})}));
+            let deploymentOutputsPromise = toolbox.getManager().doGet(`/deployments/${deploymentId}/outputs`);
+            let deploymentPromise = toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=outputs`);
+
+            return Promise.all([deploymentOutputsPromise, deploymentPromise])
+                          .then(data => {
+                let deploymentOutputs = _.get(data[0], 'outputs', {});
+                let deployment = _.get(data[1], 'outputs', {});
+                return Promise.resolve({
+                    outputs: _.map(deployment, (outputObject, outputName) => (
+                        {
+                            name: outputName,
+                            value: _stringify(deploymentOutputs[outputName]),
+                            description: outputObject.description || ''
+                        })
+                    )
+                });
+            });
         }
-        return Promise.resolve({outputs:{}});
+
+        if (blueprintId) {
+            return toolbox.getManager().doGet(`/blueprints/${blueprintId}?_include=plan`)
+                .then(data => {
+                    let blueprintOutputs = _.get(data, 'plan.outputs', {});
+                    return Promise.resolve({
+                        outputs: _.map(blueprintOutputs, (outputObject, outputName) => (
+                            {
+                                name: outputName,
+                                value: _stringify(outputObject.value),
+                                description: outputObject.description || ''
+                            })
+                        )
+                    })
+                })
+        };
+
+        return Promise.resolve({outputs:[]});
     },
 
-    _stringifyOutputs: function(outputs) {
-        return _.map(outputs, (value, name) => {
-            let stringifiedValue = '';
-            try {
-                stringifiedValue = JSON.stringify(value);
-            } catch (e) {
-                console.error(`Cannot parse output value for '${name}'. `, e);
-            }
-            return ({name: name, value: stringifiedValue});
-        });
+    _stringify: function(value) {
+        let stringifiedValue = '';
+
+        try {
+            stringifiedValue = JSON.stringify(value);
+        } catch (e) {
+            console.error(`Cannot parse value '${value}'. `, e);
+        }
+
+        return stringifiedValue;
     },
 
     render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading/>;
         }
-        let outputs = this._stringifyOutputs(data.outputs);
+
         let formattedData = Object.assign({}, {
-            items: outputs,
-            deploymentId: toolbox.getContext().getValue('deploymentId')
+            items: data.outputs,
+            deploymentId: toolbox.getContext().getValue('deploymentId'),
+            blueprintId: toolbox.getContext().getValue('blueprintId')
         });
 
         return (

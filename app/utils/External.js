@@ -70,8 +70,8 @@ export default class External {
             return response;
         }
 
-        let isJsonContentType = (response) => _.isEqual(_.toLower(response.headers.get('content-type')), 'application/json');
-        if (isJsonContentType(response)) {
+        var contentType = _.toLower(response.headers.get('content-type'));
+        if (contentType.indexOf('application/json') >= 0) {
             return response.json()
                 .then(resJson => Promise.reject({message: resJson.message || response.statusText}))
         } else {

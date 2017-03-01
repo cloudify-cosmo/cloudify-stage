@@ -18,15 +18,15 @@ export default class extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.data.deploymentId !== prevProps.data.deploymentId) {
+        if (this.props.data.deploymentId !== prevProps.data.deploymentId ||
+            this.props.data.blueprintId !== prevProps.data.blueprintId) {
             this._refreshData();
         }
     }
 
     render() {
-        var {ErrorMessage, DataTable} = Stage.Basic;
+        var {ErrorMessage, DataTable, Popup} = Stage.Basic;
         let outputs = this.props.data.items;
-
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
@@ -35,19 +35,24 @@ export default class extends React.Component {
 
                     <DataTable.Column label="Name" width="30%"/>
                     <DataTable.Column label="Value" width="70%"/>
-
                     {
                         outputs.map((output) =>
                             <DataTable.Row key={output.name}>
-                                <DataTable.Data>{output.name}</DataTable.Data>
+                                <DataTable.Data>
+                                    {
+                                        !_.isEmpty(output.description)
+                                        ? <Popup trigger={<div>{output.name}</div>}
+                                                 content={output.description}
+                                                 positioning='top left' wide/>
+                                        : output.name
+                                    }
+                                </DataTable.Data>
                                 <DataTable.Data>{output.value}</DataTable.Data>
                             </DataTable.Row>
                         )
                     }
                 </DataTable>
-
             </div>
-
         );
     }
 };

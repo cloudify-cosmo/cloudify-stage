@@ -5,6 +5,7 @@
 import fetch from 'isomorphic-fetch';
 import Manager from './Manager';
 import Consts from './consts';
+import External from './External';
 
 export default class Auth {
 
@@ -26,21 +27,8 @@ export default class Auth {
 
     static _getApiVersion(managerIp,username,password) {
 
-        return fetch(new Manager({ip:managerIp}).getManagerUrl("/version"),
-            {
-                method: 'GET',
-                headers: {
-                    'authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64'),
-                    tenant: Consts.DEFAULT_TENANT
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw Error(response.statusText);
-                }
-
-                return response.json();
-            })
+        var external = new External({basicAuth : btoa(`${username}:${password}`)});
+        return external.doGet(new Manager({ip:managerIp}).getManagerUrl("/version"))
             .then((data)=> {
                 if (data.error_code) {
                     return Promise.reject(data);
@@ -97,21 +85,8 @@ export default class Auth {
 
     static _getLoginToken(managerIp,username,password,version) {
 
-        return fetch(new Manager({ip:managerIp, version}).getManagerUrl("/tokens"),
-            {
-                method: 'GET',
-                headers: {
-                    'authorization': 'Basic ' + new Buffer(username + ':' + password).toString('base64'),
-                    tenant: Consts.DEFAULT_TENANT
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw Error(response.statusText);
-                }
-
-                return response.json();
-            })
+        var external = new External({basicAuth : btoa(`${username}:${password}`)});
+        return external.doGet(new Manager({ip:managerIp}).getManagerUrl("/tokens"))
             .then((data)=> {
                 if (data.error_code) {
                     return Promise.reject(data);
