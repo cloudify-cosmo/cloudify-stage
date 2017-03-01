@@ -581,3 +581,9 @@ a.underline {
   padding: 5px 20px;
   box-shadow: none !important;
 }
+
+/* NodesTree */
+
+.nodes-tree li .rc-tree-node-content-wrapper {
+  display: inline !important;
+}

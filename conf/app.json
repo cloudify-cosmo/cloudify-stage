@@ -15,7 +15,7 @@
   "db": {
     "url": "postgres://localhost:5432/Stage",
     "options": {
-      "pool" : {
+      "pool": {
         "max": 5,
         "min": 0,
         "idle": 10000
@@ -24,10 +24,11 @@
   },
   "proxy": {
     "timeouts": {
-      "get" : 10000,
-      "post" : 30000,
-      "put" : 30000,
-      "delete" : 10000
+      "get": 10000,
+      "post": 30000,
+      "put": 30000,
+      "delete": 10000
     }
-  }
+  },
+  "blueprintsArchiveDir": "/blueprintsArchive"
 }

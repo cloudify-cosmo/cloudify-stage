@@ -29,6 +29,7 @@ var ServerSettings = require('./serverSettings');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
 var config = require('./config');
+var BlueprintsRouter = require('./blueprints/blueprintsRouter');
 
 var logger = log4js.getLogger('Server');
 
@@ -56,9 +57,15 @@ app.use((req,res,next) => {
     next();
 });
 
+app.use(function (req, res, next) {
+    res.contentType('application/json');
+    next();
+});
+
 // Routes
 app.use('/sp',ServerProxy);
 app.use('/ua',UserApp);
+app.use('/blueprints',BlueprintsRouter);
 app.use('/config',function(req,res){
     res.send(config.get(ServerSettings.settings.mode));
 });
@@ -73,4 +80,11 @@ db.sequelize.sync().then(function() {
     app.listen(8088, function () {
         console.log('Stage runs on port 8088!');
     });
+});
+
+
+//Error handling
+app.use(function(err, req, res, next) {
+    logger.error('Error has occured ', err);
+    res.status(err.status || 404).send({message: err.message || err});
 });

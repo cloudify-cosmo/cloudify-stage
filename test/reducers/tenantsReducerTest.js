@@ -47,7 +47,7 @@ describe('(Reducer) Tenants', () => {
     });
 
     it('creates success action when fetching tenants has been done', () => {
-        fetchMock.get('*',{items: [{name:'aaa'},{name:'bbb'},{name:'ccc'}] } );
+        fetchMock.get('*',{body:{items: [{name:'aaa'},{name:'bbb'},{name:'ccc'}] }, headers:{'content-type':'application/json'}});
 
         const expectedActions = [
             { type: types.REQ_TENANTS },
@@ -107,7 +107,7 @@ describe('(Reducer) Tenants', () => {
 
     it('store has success and tenants data if fetch tenants is ok', () => {
         fetchMock
-            .get(/sp*/,{items: [{name:'aaa'},{name:'bbb'},{name:'ccc'}] } );
+            .get(/sp*/,{body:{items: [{name:'aaa'},{name:'bbb'},{name:'ccc'}] }, headers:{'content-type':'application/json'}} );
 
         const store = createStore(TenantReducer,{},applyMiddleware(thunk));
 
