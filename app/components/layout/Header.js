@@ -59,7 +59,8 @@ export default class Header extends Component {
                                 <Manager manager={this.props.manager}/>
                                 <Tenants manager={this.props.manager}/>
                             </div>
-                            <Users manager={this.props.manager} showAllOptions={true}
+                            <Users manager={this.props.manager}
+                                   showAllOptions={true}
                                    onMaintenance={()=> this.setState({showMaintenanceModal: true})}/>
                         </div>
                         :

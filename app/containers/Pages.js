@@ -7,9 +7,7 @@ import { connect } from 'react-redux';
 import PagesList from '../components/PagesList';
 import {selectPage, removePage, reorderPage} from '../actions/page';
 
-const findSelectedRootPage = (pages,selectedPageId) => {
-    var pagesMap = _.keyBy(pages,'id');
-
+const findSelectedRootPage = (pagesMap,selectedPageId) => {
     var _r = (page) => {
         if (!page.parent) {
             return page.id;
@@ -18,18 +16,13 @@ const findSelectedRootPage = (pages,selectedPageId) => {
     };
 
     return _r(pagesMap[selectedPageId]);
-
 };
 
 const mapStateToProps = (state, ownProps) => {
     var pagesMap = _.keyBy(state.pages,'id');
     var page = pagesMap[ownProps.pageId];
-    var pageId = "0";
-    if (page)
-    {
-        pageId = page.id;
-    }
-    var selected = findSelectedRootPage(state.pages,pageId);
+    var pageId = page? page.id : "0";
+    var selected = state.pages && state.pages.length > 0 ? findSelectedRootPage(pagesMap,pageId) : null;
 
     return {
         pages: state.pages,

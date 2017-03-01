@@ -62,7 +62,10 @@
       "height": 16,
       "definition": "blueprintCatalog",
       "x": 4,
-      "y": 28
+      "y": 28,
+      "configuration":{
+        "displayStyle":"table"
+      }
     }
   ]
 }
