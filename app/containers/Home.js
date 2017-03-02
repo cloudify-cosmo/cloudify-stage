@@ -8,7 +8,7 @@ import Home from '../components/Home';
 import {clearContext,setValue} from '../actions/context';
 
 const mapStateToProps = (state, ownProps) => {
-    var selectedPageId = ownProps.params.pageId;
+    var selectedPageId = ownProps.params.pageId || "0";
     var pages = state.pages;
 
     return {
