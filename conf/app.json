@@ -30,5 +30,11 @@
       "delete": 10000
     }
   },
+  "influx": {
+    "port": 8086,
+    "user" : "root",
+    "password" : "root",
+    "database": "cloudify"
+  },
   "extractedSourcesDir": "/extractedSources"
 }
