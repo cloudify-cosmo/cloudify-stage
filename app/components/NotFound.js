@@ -6,12 +6,20 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 export default class NotFound extends Component {
+
     render () {
+        var {Message, Label} = Stage.Basic;
+
         return (
-            <div className='container text-center'>
-                <h1>This is a demo 404 page!</h1>
-                <hr />
-                <Link to='/'>Back To Home View</Link>
+            <div className='coloredContainer'>
+
+                <div className="ui raised very padded text container segment center aligned segment404">
+                    <h2 className="ui header"><Label horizontal size="massive" color="blue">404</Label> Page Not Found</h2>
+                    <p>We are sorry, but the page you are looking for doesn't exist.</p>
+                    <p></p>
+                    <Link to='/'>Go to the Homepage</Link>
+                </div>
+
             </div>
         );
     }
