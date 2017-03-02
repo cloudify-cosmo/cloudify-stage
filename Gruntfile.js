@@ -7,12 +7,11 @@ module.exports = function(grunt) {
 
     grunt.registerTask("prepareModules", "Finds and prepares modules for concatenation.", function() {
 
+        // get the current concat object from initConfig
+        var browserify = grunt.config.get('browserify') || {};
+
         // get all module directories
         grunt.file.expand("widgets/**/src").forEach(function (dir) {
-
-
-            // get the current concat object from initConfig
-            var browserify = grunt.config.get('browserify') || {};
 
             var destDir = dir.substr(0,dir.lastIndexOf('/src'));
 
@@ -21,17 +20,19 @@ module.exports = function(grunt) {
 
             // create a subtask for each module, find all src files
             // and combine into a single js file per module
-            browserify.widgets.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
-            browserify.dist.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
-            //    src: [dir + '/**/*.js'],
-            //    dest: destDir+'/widget.js'
-            //};
-
-            // add module subtasks to the concat task in initConfig
-            grunt.config.set('browserify', browserify);
-
-            console.log(browserify.widgets.files);
+            if (dirName === 'common') {
+                browserify.widgets.files[destDir+'/common.js'] = [dir + '/**/*.js'];
+                browserify.dist.files[destDir+'/common.js'] = [dir + '/**/*.js'];
+            } else {
+                browserify.widgets.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
+                browserify.dist.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
+            }
         });
+
+        // add module subtasks to the concat task in initConfig
+        grunt.config.set('browserify', browserify);
+        console.log('browserify files:' ,browserify.widgets.files);
+        
     });
 
     grunt.initConfig({

@@ -2,8 +2,10 @@
 dist
 node_modules
 bower_components
-logs
+/logs
+/backedn/logs
 
-widgets/*/widget.js
+/widgets/*/widget.js
 
 stage.tar.gz
+/widgets/common/common.js
