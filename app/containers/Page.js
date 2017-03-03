@@ -37,11 +37,8 @@ const buildPagesList = (pages,selectedPageId) => {
 const mapStateToProps = (state, ownProps) => {
     var pagesMap = _.keyBy(state.pages,'id');
     var page = pagesMap[ownProps.pageId];
-    var pageId = "0";
-    if (page)
-    {
-        pageId = page.id;
-    }
+    var pageId = page ? page.id : "0";
+
     var pageData = _.clone(_.find(state.pages,{id:pageId}));
     var widgets = _.map(pageData.widgets,(wd)=>{
         var w = _.clone(wd);

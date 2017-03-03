@@ -8,9 +8,18 @@ import Login from '../components/Login';
 import {login} from '../actions/managers';
 
 const mapStateToProps = (state, ownProps) => {
-    var ip = _.get(state.config,'manager.ip');
+    var configIp = _.get(state.config,'manager.ip'); // Default Ip via configuration
+    var savedIp = state.manager.ip; // Saved ip (user last logged in to this ip)
+    var ip = savedIp; // First attempt to use the saved ip
+    if (_.isEmpty(ip)) {
+        ip = configIp; // If its empty use config ip
+    }
+    if (_.isEmpty(ip)) {
+        ip = window.location.hostname; // If this is empty too, grab the same ip as the UI (installed on manager machine by default)
+    }
+
     return {
-        ip:  _.isEmpty(ip) ? window.location.hostname : ip,
+        ip:  ip,
         username:  state.manager ? state.manager.username : '',
         isLoggingIn: state.manager.isLoggingIn,
         loginError: state.manager ? state.manager.err : '',

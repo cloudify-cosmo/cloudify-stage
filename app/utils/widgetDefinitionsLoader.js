@@ -42,17 +42,24 @@ export default class WidgetDefinitionsLoader {
             ComponentToHtmlString: (component)=>{
                 return ReactDOMServer.renderToString(component);
             },
-            GenericConfig
+            GenericConfig,
+            Common: [],
+            defineCommon: (def) =>{
+                Stage.Common[def.name] = def.common;
+            }
         };
 
         window.moment = momentImport;
     }
 
-    static load() {
 
-        return fetch('/widgets/widgets.json')
-            .then(response => response.json())
-            .then((data)=> {
+    static load() {
+        return Promise.all([
+                    new ScriptLoader('/widgets/common/common.js').load(), // Commons has to load before the widgets
+                    fetch('/widgets/widgets.json').then(response => response.json()) // We can load the list of widgets in the meanwhile
+                ])
+            .then((results)=> {
+                var data = results[1]; // widgets data
                 var promises = [];
                 data.forEach((widgetName)=>{
                     promises.push(new ScriptLoader('/widgets/'+widgetName+'/widget.js').load());

@@ -9,6 +9,26 @@ import Page from '../containers/Page';
 
 export default class Home extends Component {
 
+    componentWillMount() {
+        this._handleContext(this.props.selectedPage,this.props.contextParams);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.pageId !== this.props.pageId) {
+            this._handleContext(nextProps.selectedPage,nextProps.contextParams);
+        }
+    }
+
+    _handleContext(selectedPage,contextParams) {
+        if (!selectedPage.isDrillDown) {
+            this.props.onClearContext();
+        }
+
+        _.each(contextParams,(value,key)=>{
+            this.props.onSetContextValue(key,value);
+        });
+    }
+
     render() {
         var pageId = this.props.params.pageId || "0";
 
