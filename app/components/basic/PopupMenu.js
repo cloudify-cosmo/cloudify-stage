@@ -5,7 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import {Popup, Icon} from './index';
 
-export default class MenuAction extends Component {
+export default class PopupMenu extends Component {
 
     constructor(props,context) {
         super(props,context);
@@ -18,10 +18,11 @@ export default class MenuAction extends Component {
     static propTypes = {
         className: PropTypes.string,
         children: PropTypes.any.isRequired,
+        trigger: PropTypes.any
     };
 
     render () {
-        var trigger = <Icon link name="content" className={this.props.className} onClick={(e)=>{e.stopPropagation();}}/>;
+        let trigger = this.props.trigger || <Icon link name="content" className={this.props.className} onClick={(e)=>{e.stopPropagation();}}/>;
 
         return (
             <Popup trigger={trigger} on='click' positioning="bottom right" className="popupMenu" offset={12}

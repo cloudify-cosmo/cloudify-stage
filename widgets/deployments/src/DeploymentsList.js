@@ -3,12 +3,12 @@
  */
 
 import MenuAction from './MenuAction';
-import ExecuteModal from './ExecuteModal';
-import UpdateModal from './UpdateModal';
+import ExecuteModal from '../../common/ExecuteDeploymentModal';
+import UpdateModal from '../../common/UpdateDeploymentModal';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 
-import Actions from './actions';
+import Actions from '../../common/deploymentActions';
 
 export default class extends React.Component {
 
