@@ -25,8 +25,10 @@ export default class extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, DataTable, Popup} = Stage.Basic;
+        var {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
+        let {JsonUtils} = Stage.Common;
         let outputs = this.props.data.items;
+
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
@@ -47,7 +49,11 @@ export default class extends React.Component {
                                         : output.name
                                     }
                                 </DataTable.Data>
-                                <DataTable.Data>{output.value}</DataTable.Data>
+                                <DataTable.Data>
+                                    <Popup trigger={<div>{JsonUtils.stringify(output.value, false)}</div>}
+                                           content={<HighlightText className='json'>{JsonUtils.stringify(output.value, true)}</HighlightText>}
+                                           positioning='top left' wide/>
+                                </DataTable.Data>
                             </DataTable.Row>
                         )
                     }

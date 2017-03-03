@@ -19,7 +19,6 @@ Stage.defineWidget({
     fetchData: function(widget,toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId');
         let blueprintId = toolbox.getContext().getValue('blueprintId');
-        let _stringify = this._stringify;
 
         if (deploymentId) {
             let deploymentInputsPromise = toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=blueprint_id,inputs`)
@@ -33,7 +32,7 @@ Stage.defineWidget({
                         inputs: _.map(deploymentInputs, (inputObject, inputName) => (
                             {
                                 name: inputName,
-                                value: _stringify(inputObject),
+                                value: inputObject,
                                 description: blueprintsInputs[inputName].description || ''
                             })
                         )
@@ -49,7 +48,7 @@ Stage.defineWidget({
                         inputs: _.map(deploymentInputs, (inputObject, inputName) => (
                             {
                                 name: inputName,
-                                value: _stringify(inputObject.default),
+                                value: inputObject.default,
                                 description: inputObject.description || ''
                             })
                         )
@@ -58,18 +57,6 @@ Stage.defineWidget({
         };
 
         return Promise.resolve({inputs:[]});
-    },
-
-    _stringify: function(value) {
-        let stringifiedValue = '';
-
-        try {
-            stringifiedValue = JSON.stringify(value);
-        } catch (e) {
-            console.error(`Cannot parse value '${value}'. `, e);
-        }
-
-        return stringifiedValue;
     },
 
     render: function(widget,data,error,toolbox) {
