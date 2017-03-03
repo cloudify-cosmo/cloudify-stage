@@ -19,6 +19,10 @@ class BlueprintActions {
         return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`);
     }
 
+    doDeleteById(blueprintId) {
+        return this.doDelete({id: blueprintId});
+    }
+
     doDeploy(blueprint, deploymentId, inputs) {
         return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`,null,{
             'blueprint_id': blueprint.id,
