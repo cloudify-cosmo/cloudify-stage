@@ -13,6 +13,6 @@ class actions {
 }
 
 Stage.defineCommon({
-    name: 'BlueprintActions',
+    name: 'CommonActions',
     common: actions
 });
