@@ -67,7 +67,9 @@ export default class AddWidgetModal extends Component {
                         }
                     </div>
 
-                    <button className="fluid ui button">Install new widget</button>
+                    {
+                        //<button className="fluid ui button">Install new widget</button>
+                    }
                 </div>
             </div>
         );
