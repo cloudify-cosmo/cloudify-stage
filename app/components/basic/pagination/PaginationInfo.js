@@ -12,8 +12,13 @@ export default class PaginationInfo extends Component {
         pageSize: PropTypes.number.isRequired,
         totalSize: PropTypes.number,
         onPageSizeChange: PropTypes.func.isRequired,
-        fetchSize: PropTypes.number,
-        simple: PropTypes.bool,
+        fetchSize: PropTypes.number
+    };
+
+    static defaultProps = {
+        currentPage: 1,
+        totalSize: -1,
+        fetchSize: -1
     };
 
     static pageSizes = [5, 10, 25, 50, 100];
@@ -23,14 +28,13 @@ export default class PaginationInfo extends Component {
     }
 
     render() {
-        if ((!this.props.simple && this.props.totalSize <= 0) ||
-            (this.props.simple && this.props.currentPage == 1 && this.props.fetchSize < PaginationInfo.pageSizes[0])) {
+        if (this.props.totalSize <= 0 && this.props.fetchSize <= 0 && this.props.currentPage == 1) {
             return null;
         }
 
         let start = (this.props.currentPage-1)*this.props.pageSize + 1;
-        let stop = this.props.simple ? start + this.props.fetchSize - 1 :
-                                       Math.min(start + this.props.pageSize - 1, this.props.totalSize);
+        let stop = this.props.totalSize > 0 ? Math.min(start + this.props.pageSize - 1, this.props.totalSize)
+                                            : start + this.props.fetchSize - 1;
 
         if (start > stop) {
             start = stop;
@@ -51,7 +55,7 @@ export default class PaginationInfo extends Component {
                 &nbsp;&nbsp;{start} to {stop}
 
                 {
-                    !this.props.simple &&
+                    this.props.totalSize > 0 &&
                     <span>&nbsp;of {this.props.totalSize} entries</span>
                 }
 

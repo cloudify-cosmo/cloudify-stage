@@ -14,27 +14,27 @@ export default class External {
         this._data = data;
     }
 
-    doGet(url,params) {
-        return this._ajaxCall(url,'get',params) ;
+    doGet(url,params,res) {
+        return this._ajaxCall(url,'get',params,null,res) ;
     }
 
-    doPost(url,params,data){
-        return this._ajaxCall(url,'post',params,data) ;
+    doPost(url,params,data,res){
+        return this._ajaxCall(url,'post',params,data,res) ;
     }
 
-    doDelete(url,params,data){
-        return this._ajaxCall(url,'delete',params,data) ;
+    doDelete(url,params,data,res){
+        return this._ajaxCall(url,'delete',params,data,res) ;
     }
 
-    doPut(url,params,data) {
-        return this._ajaxCall(url,'put',params,data) ;
+    doPut(url,params,data,res) {
+        return this._ajaxCall(url,'put',params,data,res) ;
     }
 
     doDownload(url,fileName) {
-        return this._ajaxCall(url,'get',null,null,fileName);
+        return this._ajaxCall(url,'get',null,null,null,fileName);
     }
 
-    _ajaxCall(url,method,params,data,fileName) {
+    _ajaxCall(url,method,params,data,res,fileName) {
         var actualUrl = this._buildActualUrl(url, params);
         logger.debug(method + ' data. URL: ' + url);
 
@@ -61,7 +61,7 @@ export default class External {
         } else {
             return fetch(actualUrl, options)
                 .then(this._checkStatus)
-                .then(response => response.json());
+                .then(response => res ? response : response.json());
         }
     }
 

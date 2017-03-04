@@ -27,7 +27,7 @@ export default class extends React.Component {
             <DataTable fetchData={this.props.fetchData}
                        pageSize={this.props.widget.configuration.pageSize}
                        fetchSize={this.props.data.items.length}
-                       simplePagination={true}
+                       totalSize={this.props.data.total}
                        selectable={true}>
 
                 <DataTable.Column label="Name" width="30%"/>
