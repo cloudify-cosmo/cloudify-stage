@@ -24,7 +24,7 @@ router.post('/:ip/:username/:role',function (req, res,next) {
     db.UserApp
         .findOrCreate({ where: {managerIp: req.params.ip, username: req.params.username, role: req.params.role,mode: ServerSettings.settings.mode}, defaults: {appData: {},appDataVersion:req.body.version}})
         .spread(function(userApp, created) {
-            userApp.update({ appData: req.body.appData}, {fields: ['appData']}).then(function(ua) {
+            userApp.update({ appData: req.body.appData,appDataVersion:req.body.version}, {fields: ['appData','appDataVersion']}).then(function(ua) {
                 res.send(ua);
             })
         })
