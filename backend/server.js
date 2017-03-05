@@ -24,7 +24,6 @@ var db = require('./db/Connection');
 
 
 var express = require('express');
-var bodyParser = require('body-parser');
 var ServerSettings = require('./serverSettings');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
@@ -39,7 +38,6 @@ logger.info('Server started in mode '+ServerSettings.settings.mode);
 var app = express();
 
 app.use(express.static(path.resolve(__dirname , "../dist"),{index: 'index.html'}));
-app.use(bodyParser.json());
 
 // For dev purposes
 app.use((req,res,next) => {

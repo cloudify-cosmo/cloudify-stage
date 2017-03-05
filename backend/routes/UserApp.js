@@ -5,9 +5,12 @@ var express = require('express');
 var request = require('request');
 var db = require('../db/Connection');
 var router = express.Router();
+var bodyParser = require('body-parser');
 
 var logger = require('log4js').getLogger('UserAppRouter');
 var ServerSettings = require('../serverSettings');
+
+router.use(bodyParser.json());
 
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
