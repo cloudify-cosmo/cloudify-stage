@@ -94,7 +94,7 @@ export default class UploadModal extends React.Component {
                         <Form onSubmit={this._submitUpload.bind(this)} errors={this.state.errors} ref="uploadForm">
                             <Form.Group>
                                 <Form.Field width="9" error={this.state.errors.snapshotUrl}>
-                                    <Form.Input label="http://" placeholder="Enter snapshot url" name="snapshotUrl"
+                                    <Form.Input label="URL" placeholder="Enter snapshot url" name="snapshotUrl"
                                                 value={this.state.snapshotUrl} onChange={this._handleInputChange.bind(this)}/>
                                 </Form.Field>
                                 <Form.Field width="1" style={{position:'relative'}}>
