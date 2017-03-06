@@ -85,6 +85,10 @@ const widget = (state = {}, action) => {
 const widgets = (state = [], action) => {
     switch (action.type) {
         case types.ADD_WIDGET:
+            if (!action.widgetDefinition) {
+                return state;
+            }
+
             return [
                 ...state,
                 widget(undefined, action)
