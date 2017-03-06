@@ -7,7 +7,7 @@ import { Menu } from 'semantic-ui-react'
 
 const PAGER_POSITIONS = 4;
 
-export default class Paginator extends Component {
+export default class FetchSizePaginator extends Component {
 
     static propTypes = {
         currentPage: PropTypes.number.isRequired,
@@ -17,7 +17,7 @@ export default class Paginator extends Component {
     };
 
     render() {
-        if (this.props.currentPage <= 1 && this.props.fetchSize <  this.props.pageSize) {
+        if (this.props.currentPage <= 1 && this.props.fetchSize < this.props.pageSize) {
             return null;
         }
 
