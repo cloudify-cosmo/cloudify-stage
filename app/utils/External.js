@@ -67,6 +67,7 @@ export default class External {
                       return contentType.indexOf('application/json') >= 0 ? response.json() : response.text();
                     } else {
                       return response;
+                    }
                 })
         }
     }
