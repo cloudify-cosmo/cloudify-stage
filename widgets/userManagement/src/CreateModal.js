@@ -136,6 +136,7 @@ export default class CreateModal extends React.Component {
                     <Modal.Footer>
                         <Modal.Cancel/>
                         <Modal.Approve label="Add" icon="add user" className="green"/>
+
                     </Modal.Footer>
                 </Modal>
             </div>

@@ -88,7 +88,8 @@ export default class UploadModal extends React.Component {
                             </Form.Field>
 
                             <Form.Field>
-                                <Form.Dropdown placeholder='Blueprint filename' search selection options={options} name="blueprintFileName"
+                                <Form.Dropdown placeholder='Blueprint filename' search selection options={options}
+                                               name="blueprintFileName"
                                                value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
                         </Form>

@@ -7,7 +7,7 @@ import { Menu } from 'semantic-ui-react'
 
 const PAGER_POSITIONS = 5;
 
-export default class Paginator extends Component {
+export default class TotalSizePaginator extends Component {
 
     static propTypes = {
         currentPage: PropTypes.number.isRequired,

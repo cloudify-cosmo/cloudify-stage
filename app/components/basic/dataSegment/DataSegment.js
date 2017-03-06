@@ -22,7 +22,6 @@ export default class DataSegment extends Component {
         totalSize: PropTypes.number,
         fetchSize: PropTypes.number,
         pageSize: PropTypes.number,
-        simplePagination: PropTypes.bool,
         className: PropTypes.string
     };
 
@@ -31,14 +30,17 @@ export default class DataSegment extends Component {
         fetchData: () => {},
         totalSize: -1,
         fetchSize: -1,
-        pageSize: 0,
-        simplePagination: false
+        pageSize: 0
     };
 
     componentDidUpdate(prevProps, prevState) {
         if (!_.isEqual(this.state, prevState)) {
-            this.props.fetchData({gridParams: {...this.state}});
+            this._fetchData();
         }
+    }
+
+    _fetchData() {
+        this.props.fetchData({gridParams: Object.assign({}, this.state, this.refs.pagination.state)});
     }
 
     render() {
@@ -66,12 +68,17 @@ export default class DataSegment extends Component {
                     </div>
                 }
 
-                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} fetchData={this.props.fetchData}
-                            fetchSize={this.props.fetchSize} simple={this.props.simplePagination}>
-                    {this.props.totalSize == 0 || this.props.fetchSize == 0 ?
+                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize}
+                            fetchData={this._fetchData.bind(this)} fetchSize={this.props.fetchSize} ref="pagination">
+                    {this.props.totalSize <= 0 && this.props.fetchSize <= 0 &&
+                     (this.props.totalSize === 0 || this.props.fetchSize === 0) ?
                         <div className="ui icon message">
                             <i className="ban icon"></i>
-                            No data available
+                            {this.props.fetchSize === 0 && this.refs.pagination && this.refs.pagination.state.currentPage > 1 ?
+                                <span>No more data available</span>
+                                :
+                                <span>No data available</span>
+                            }
                         </div>
                         :
                         children

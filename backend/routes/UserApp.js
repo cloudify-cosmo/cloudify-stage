@@ -5,9 +5,12 @@ var express = require('express');
 var request = require('request');
 var db = require('../db/Connection');
 var router = express.Router();
+var bodyParser = require('body-parser');
 
 var logger = require('log4js').getLogger('UserAppRouter');
 var ServerSettings = require('../serverSettings');
+
+router.use(bodyParser.json());
 
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
@@ -24,7 +27,7 @@ router.post('/:ip/:username/:role',function (req, res,next) {
     db.UserApp
         .findOrCreate({ where: {managerIp: req.params.ip, username: req.params.username, role: req.params.role,mode: ServerSettings.settings.mode}, defaults: {appData: {},appDataVersion:req.body.version}})
         .spread(function(userApp, created) {
-            userApp.update({ appData: req.body.appData}, {fields: ['appData']}).then(function(ua) {
+            userApp.update({ appData: req.body.appData,appDataVersion:req.body.version}, {fields: ['appData','appDataVersion']}).then(function(ua) {
                 res.send(ua);
             })
         })
