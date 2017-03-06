@@ -37,13 +37,16 @@ Stage.defineWidget({
     fetchData: function(widget, toolbox, params) {
         var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password);
 
-        return actions.doGetRepos(params).then(repos => {
+        return actions.doGetRepos(params).then(data => {
+            var repos = data[0];
+            var total = data[1];
+
             var fetches = _.map(repos,
                 repo => actions.doGetRepoTree(repo.name)
                                .then(tree => { return _.findIndex(tree.tree, {"path":BLUEPRINT_IMAGE_FILENAME})<0?
                                                Promise.resolve(Object.assign(repo, {image_url:DEFUALT_IMAGE})):
                                                Promise.resolve(Object.assign(repo, {image_url:GITHUB_BLUEPRINT_IMAGE_URL(actions.getUsername(), repo.name)}))}));
-            return Promise.all(fetches).then((data)=>Promise.resolve({items:data}));
+            return Promise.all(fetches).then((items)=>Promise.resolve({items, total}));
         });
     },
 

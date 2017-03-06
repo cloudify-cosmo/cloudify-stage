@@ -43,8 +43,7 @@ export default class GridTable extends Component {
         sortAscending: PropTypes.bool,
         searchable: PropTypes.bool,
         selectable: PropTypes.bool,
-        className: PropTypes.string,
-        simplePagination: PropTypes.bool
+        className: PropTypes.string
     };
 
     static defaultProps = {
@@ -56,8 +55,7 @@ export default class GridTable extends Component {
         sortAscending: true,
         searchable: false,
         selectable: false,
-        className: "",
-        simplePagination: false
+        className: ""
     };
 
     static childContextTypes = {
@@ -158,8 +156,7 @@ export default class GridTable extends Component {
                 }
 
                 <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize}
-                            fetchSize={this.props.fetchSize} simple={this.props.simplePagination}
-                            fetchData={this._fetchData.bind(this)} ref="pagination">
+                            fetchSize={this.props.fetchSize} fetchData={this._fetchData.bind(this)} ref="pagination">
                     <table
                         className={`ui very compact table sortable ${this.props.selectable ? 'selectable' : ''} ${this.props.className}`}
                         cellSpacing="0" cellPadding="0">
@@ -168,10 +165,17 @@ export default class GridTable extends Component {
                                 {headerColumns}
                             </tr>
                         </thead>
-                        {this.props.totalSize === 0 || this.props.fetchSize == 0 ?
+                        {this.props.totalSize <= 0 && this.props.fetchSize <= 0 &&
+                         (this.props.totalSize === 0 || this.props.fetchSize === 0) ?
                             <tbody>
                                 <tr className="noDataRow">
-                                    <td colSpan={headerColumns.length} className="center aligned">No data available</td>
+                                    <td colSpan={headerColumns.length} className="center aligned">
+                                    {this.props.fetchSize === 0 && this.refs.pagination && this.refs.pagination.state.currentPage > 1 ?
+                                        <span>No more data available</span>
+                                        :
+                                        <span>No data available</span>
+                                    }
+                                    </td>
                                 </tr>
                             </tbody>
                             :
