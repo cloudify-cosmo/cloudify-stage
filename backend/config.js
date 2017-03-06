@@ -5,6 +5,7 @@
 var app = require('../conf/app.json');
 var manager = require('../conf/manager.json');
 var customer = require('../conf/customer.json');
+var widgets = require('../conf/widgets.json');
 var ServerSettings = require('./serverSettings');
 
 module.exports = {
@@ -12,7 +13,8 @@ module.exports = {
         var config = {
             app: app,
             manager: manager,
-            mode: mode
+            mode: mode,
+            widgets: widgets
         };
 
         if (mode === ServerSettings.MODE_CUSTOMER) {

@@ -28,6 +28,7 @@ describe('(Utils) Toolbox', () => {
             ip: '1.1.1.1'
         },
         conetxt: {},
+        config: {},
         widgetDefinitions: [{id: 'widget1'}]
     };
 

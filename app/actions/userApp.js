@@ -7,8 +7,9 @@ import fetch from 'isomorphic-fetch';
 import {createPageFromInitialTemplate} from './page';
 import External from '../utils/External';
 import Consts from '../utils/consts';
+import { push } from 'react-router-redux';
 
-const  CURRENT_APP_DATA_VERSION = 1;
+const  CURRENT_APP_DATA_VERSION = 2;
 
 function setPages(pages) {
     return {
@@ -36,7 +37,7 @@ export function resetTemplate(manager,config,templates,widgetDefinitions){
         var initialTemplateName = config.app['initialTemplate'][config.mode === Consts.MODE_CUSTOMER ? Consts.MODE_CUSTOMER: manager.auth.role] || Consts.DEFAULT_INITIAL_TEMPLATE;
         var initialTemplate = templates[initialTemplateName];
         dispatch(createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions));
-
+        dispatch(push('/'));
     }
 }
 

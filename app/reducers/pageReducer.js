@@ -26,7 +26,7 @@ const page = (state = {}, action) => {
                 widgets: []
             };
 
-        case types.SET_DRILLDOWN_PAGE:
+        case types.ADD_DRILLDOWN_PAGE:
             var pageData = Object.assign({},state,{
                 widgets: widgets(state.widgets,action)
             });
@@ -97,7 +97,7 @@ const pages = (state = [], action) => {
                 }
                 return p
             });
-        case types.SET_DRILLDOWN_PAGE:
+        case types.ADD_DRILLDOWN_PAGE:
             // Add drilldown page to children list of this page, and drilldown page parent id
             var parentPageId = null;
             _.each(state,(p)=>{

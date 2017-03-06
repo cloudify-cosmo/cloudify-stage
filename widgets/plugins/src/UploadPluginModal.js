@@ -89,7 +89,7 @@ export default class UploadModal extends React.Component {
 
                             <Form.Group>
                                 <Form.Field width="9" error={this.state.errors.pluginUrl}>
-                                    <Form.Input label="http://" placeholder="Enter plugin url" name="pluginUrl"
+                                    <Form.Input label="URL" placeholder="Enter plugin url" name="pluginUrl"
                                                 value={this.state.pluginUrl} onChange={this._handleInputChange.bind(this)}/>
                                 </Form.Field>
                                 <Form.Field width="1" style={{position:'relative'}}>

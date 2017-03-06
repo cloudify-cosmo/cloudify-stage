@@ -74,11 +74,12 @@ export function changeWidgetGridData(pageId,widgetId,gridData) {
 
 }
 
-export function setWidgetDrilldownPage(widgetId,drillDownPageId) {
+export function addWidgetDrilldownPage(widgetId,drillDownName,drillDownPageId) {
     return {
-        type : types.SET_DRILLDOWN_PAGE,
+        type : types.ADD_DRILLDOWN_PAGE,
         widgetId,
-        drillDownPageId
+        drillDownPageId,
+        drillDownName
     }
 
 }
@@ -87,16 +88,16 @@ export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldo
 
     return function (dispatch) {
 
-        var pageId =  widget.drillDownPageId;
+        var pageId =  widget.drillDownPages[defaultTemplate.name];
         if (!pageId) {
             var newPageId = v4();
             dispatch(createDrilldownPage(newPageId,defaultTemplate.name));
             _.each(defaultTemplate.widgets,(widget)=>{
                 var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
-                dispatch(addWidget(newPageId,widget.name,widgetDefinition,widget.width,widget.height,widget.x,widget.y));
+                dispatch(addWidget(newPageId,widget.name,widgetDefinition,widget.width,widget.height,widget.x,widget.y,widget.configuration));
             });
 
-            dispatch(setWidgetDrilldownPage(widget.id,newPageId));
+            dispatch(addWidgetDrilldownPage(widget.id,defaultTemplate.name,newPageId));
             pageId = newPageId;
         }
 
