@@ -112,7 +112,7 @@ export default class UpdateModal extends React.Component {
                     <Form onSubmit={this._submitUpdate.bind(this)} errors={this.state.errors} ref="updateForm">
                         <Form.Group>
                             <Form.Field width="9" error={this.state.errors.blueprintUrl}>
-                                <Form.Input label="http://" placeholder="Enter new blueprint url" name="blueprintUrl"
+                                <Form.Input label="URL" placeholder="Enter new blueprint url" name="blueprintUrl"
                                             value={this.state.blueprintUrl} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
                             <Form.Field width="1" style={{position:'relative'}}>

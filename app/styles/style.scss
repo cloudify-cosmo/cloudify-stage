@@ -192,6 +192,20 @@ a:hover {
   }
 }
 
+.coloredContainer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 4rem;
+  bottom: 0;
+  background-color: #39b9d4;
+
+  .ui.text.container.segment404 {
+    max-width: 600px !important;
+    top: 170px;
+  }
+}
+
 .uploadSnapshot {
   float: right;
 }
