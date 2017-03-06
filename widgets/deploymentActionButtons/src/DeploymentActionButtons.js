@@ -78,7 +78,7 @@ export default class DeploymentActionButtons extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, Button, Confirm, PopupMenu, Menu} = Stage.Basic;
+        let {ErrorMessage, Button, Confirm, PopupMenu, Popup, Menu} = Stage.Basic;
         let {ExecuteDeploymentModal, UpdateDeploymentModal} = Stage.Common;
         let deploymentId = this.props.deploymentId;
 
@@ -86,11 +86,14 @@ export default class DeploymentActionButtons extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <PopupMenu className="workflowAction" disabled={!deploymentId}
-                           trigger={<Button className="labeled icon" color="teal" icon="content"
-                                            onClick={this._getDeploymentAndShowModal.bind(this, deploymentId, null)}
-                                            disabled={!deploymentId} content="Execute workflow"
-                                            loading={this.state.loading} />}>
+                <PopupMenu className="workflowAction" disabled={!deploymentId}>
+                    <Popup.Trigger>
+                        <Button className="labeled icon" color="teal" icon="content"
+                                onClick={this._getDeploymentAndShowModal.bind(this, deploymentId, null)}
+                                disabled={!deploymentId} content="Execute workflow"
+                                loading={this.state.loading} />
+                    </Popup.Trigger>
+                    
                     <Menu vertical>
                         {
                             _.map(this.state.deployment.workflows, (workflow) =>
