@@ -19,8 +19,8 @@
     "request": "^2.79.0",
     "sequelize": "^3.30.2",
     "sanitize-filename": "^1.6.1",
-    "decompress": "guy-mograbi-at-gigaspaces/decompress#master",
-    "unzip": "^0.1.11",
-    "fs-extra": "^2.0.0"
+    "decompress": "^4.0.0",
+    "fs-extra": "^2.0.0",
+    "pify": "^2.3.0"
   }
 }

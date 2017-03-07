@@ -504,7 +504,6 @@ code.hljs {
 }
 
 .fullHeight {
-
   height: 100%;
 }
 
@@ -600,4 +599,21 @@ a.underline {
 
 .nodes-tree li .rc-tree-node-content-wrapper {
   display: inline !important;
+}
+
+/* Splitter */
+
+.widgetContent {
+  .splitter-layout {
+    top: 1rem;
+    bottom: 0;
+    left: 1rem;
+    right: 1rem;
+    width: inherit;
+    height: inherit;
+
+    &>.layout-splitter {
+      background-color: #eee;
+    }
+  }
 }

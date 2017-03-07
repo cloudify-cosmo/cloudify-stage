@@ -8,14 +8,25 @@ export default class BlueprintSources extends React.Component {
     constructor(props,context) {
         super(props,context);
 
-        this.state = {
-            content: "",
-            type: "json"
+        this.state = BlueprintSources.initialState;
+    }
+
+    static initialState = {
+        content: "",
+        filename: "",
+        error: "",
+        type: "json"
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.data !== nextProps.data ) {
+            this.setState(BlueprintSources.initialState);
         }
     }
 
     _selectFile(selectedKeys, info) {
         if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.props.children)) {
+            this.setState({content:"", filename:""});
             return;
         }
 
@@ -38,16 +49,15 @@ export default class BlueprintSources extends React.Component {
 
             this.props.toolbox.loading(false);
 
-            this.setState({content:data, type, error: ""});
-            this.refs.contentOverlay.show();
+            this.setState({content:data, filename:info.node.props.title.props.children[1], type, error: ""});
         }).catch(err => {
-            this.setState({error: err.message});
+            this.setState({error: err.message, content:"", filename:""});
             this.props.toolbox.loading(false);
         });
     }
 
     render() {
-        var {NodesTree, Message, Label, Overlay, HighlightText, ErrorMessage, Icon} = Stage.Basic;
+        var {NodesTree, Message, Label, Overlay, HighlightText, ErrorMessage, Icon, SplitterLayout} = Stage.Basic;
 
         const loop = data => {
             return data.map(item => {
@@ -69,17 +79,31 @@ export default class BlueprintSources extends React.Component {
                 <ErrorMessage error={this.state.error}/>
 
                 {this.props.data.blueprintId ?
-                    <div>
-                        <NodesTree showLine selectable defaultExpandAll onSelect={this._selectFile.bind(this)}>
-                            <NodesTree.Node title={<Label color='purple' horizontal>{this.props.data.blueprintId}</Label>} key="0">
-                                {loop(this.props.data.tree.children)}
-                            </NodesTree.Node>
-                        </NodesTree>
-
-                        <Overlay ref="contentOverlay">
-                            <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
-                        </Overlay>
-                    </div>
+                    <SplitterLayout>
+                        <div>
+                            <NodesTree showLine selectable defaultExpandAll onSelect={this._selectFile.bind(this)}>
+                                <NodesTree.Node title={<Label color='purple' horizontal>{this.props.data.blueprintId}</Label>} key="0">
+                                    {loop(this.props.data.tree.children)}
+                                </NodesTree.Node>
+                            </NodesTree>
+                        </div>
+                        {this.state.content ?
+                            <div className="alignHeighlight">
+                                <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
+                                <Label attached='top right' size="small">
+                                    <Icon name="maximize" link
+                                          onClick={()=> this.refs.contentOverlay.show()}/>{this.state.filename}
+                                </Label>
+                                <Overlay ref="contentOverlay">
+                                    <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
+                                </Overlay>
+                            </div>
+                            :
+                            <div className="verticalCenter centeredIcon">
+                                <Icon name="file outline" size="big" color="grey"/>
+                            </div>
+                        }
+                    </SplitterLayout>
                     :
                     <div>
                         <Message content="Please select blueprint to display source files" info/>

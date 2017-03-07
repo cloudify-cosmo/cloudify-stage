@@ -13,7 +13,7 @@
     "headerTextColor": ""
   },
   "db": {
-    "url": "postgres://localhost:5432/Stage",
+    "url": "postgres://postgres:postgres@localhost:5433/postgres",
     "options": {
       "pool": {
         "max": 5,
@@ -30,5 +30,5 @@
       "delete": 10000
     }
   },
-  "blueprintsArchiveDir": "/blueprintsArchive"
+  "extractedSourcesDir": "/extractedSources"
 }

@@ -24,6 +24,7 @@ import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
 import Dropdown from './Dropdown';
 import NodesTree from './NodesTree';
+import SplitterLayout from 'react-splitter-layout';
 
 export {
     Modal,
@@ -61,5 +62,6 @@ export {
     Image,
     Menu,
     PopupMenu,
-    NodesTree
+    NodesTree,
+    SplitterLayout
 };

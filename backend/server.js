@@ -28,7 +28,7 @@ var ServerSettings = require('./serverSettings');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
 var config = require('./config');
-var BlueprintsRouter = require('./blueprints/blueprintsRouter');
+var BlueprintsRouter = require('./routes/SourceBrowser');
 
 var logger = log4js.getLogger('Server');
 
@@ -52,11 +52,6 @@ app.use((req,res,next) => {
     // to the API (e.g. in case you use sessions)
     res.setHeader('Access-Control-Allow-Credentials', true);
 
-    next();
-});
-
-app.use(function (req, res, next) {
-    res.contentType('application/json');
     next();
 });
 
