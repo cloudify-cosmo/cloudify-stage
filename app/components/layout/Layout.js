@@ -6,10 +6,10 @@
 import React, { Component, PropTypes } from 'react';
 
 import Header from '../../containers/layout/Header';
-import {Loading} from '../basic';
 
 import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 
 export default class Layout extends Component {
     static propTypes = {
@@ -39,19 +39,16 @@ export default class Layout extends Component {
     render() {
 
         if (this.props.isLoading) {
-            return (
-                <div className='loadingPage ui segment basic'>
-                    <Loading/>
-                </div>
-            );
+            SplashLoadingScreen.turnOn();
+            return null;
         }
 
+        SplashLoadingScreen.turnOff();
         return (
             <div>
                 <Header />
                 {this.props.children}
             </div>
         );
-
     }
 }
