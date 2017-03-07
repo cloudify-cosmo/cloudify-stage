@@ -24,7 +24,7 @@ new WebpackDevServer(webpack(config), {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/blueprints': {
+        '/source': {
             target: 'http://localhost:8088',
             secure: false
         }

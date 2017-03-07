@@ -50,9 +50,7 @@ router.get('/browse', function(req, res, next) {
         var archiveUrl = decodeURIComponent(su);
         logger.debug('download archive from url', archiveUrl);
 
-        req.pipe(request.get(archiveUrl)).on('error', function (err) {
-                next(err);
-            }).on('response', function (response) {
+        req.pipe(request.get(archiveUrl)).on('error', next).on('response', function (response) {
                 var cd = response.headers['content-disposition'];
 
                 var stream = SourceHandler.browseArchiveTree(lastUpdate, cd, function (err, tree) {

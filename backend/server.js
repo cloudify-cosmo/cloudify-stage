@@ -28,7 +28,7 @@ var ServerSettings = require('./serverSettings');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
 var config = require('./config');
-var BlueprintsRouter = require('./routes/SourceBrowser');
+var SourceBrowser = require('./routes/SourceBrowser');
 
 var logger = log4js.getLogger('Server');
 
@@ -58,7 +58,7 @@ app.use((req,res,next) => {
 // Routes
 app.use('/sp',ServerProxy);
 app.use('/ua',UserApp);
-app.use('/blueprints',BlueprintsRouter);
+app.use('/source',SourceBrowser);
 app.use('/config',function(req,res){
     res.send(config.get(ServerSettings.settings.mode));
 });
