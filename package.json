@@ -121,6 +121,7 @@
     "timekeeper": "^1.0.0",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.9.0",
-    "webpack-dev-server": "^1.15.0"
+    "webpack-dev-server": "^1.15.0",
+    "react-splitter-layout": "^0.2.1"
   }
 }

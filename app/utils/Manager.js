@@ -100,11 +100,25 @@ export default class Manager extends External {
     }
 
     _buildActualUrl(url,data) {
-        var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data, true) : '';
-        var urlInServer = `${this._data.version?'/api/'+this._data.version:''}${url}${queryString}`;
+        let index = url.indexOf('[manager]');
+        if (index >= 0) {
+            let managerUrl = url.substring(index + '[manager]'.length);
+            var urlInServer = `${this._data.version?'/api/'+this._data.version:''}${managerUrl}`;
+            let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
 
-        let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
-        return `/sp/?su=${su}`;
+            url = url.substring(0, index);
+
+            data = Object.assign({}, data, {su});
+            var queryString =  (url.indexOf("?") > 0?(_.endsWith(url, "?")?"":"&"):"?") + $.param(data, true);
+
+            return url + queryString;
+        } else {
+            var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data, true) : '';
+            var urlInServer = `${this._data.version?'/api/'+this._data.version:''}${url}${queryString}`;
+
+            let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
+            return `/sp/?su=${su}`;
+        }
     }
 
     _buildSecurityHeader(){
