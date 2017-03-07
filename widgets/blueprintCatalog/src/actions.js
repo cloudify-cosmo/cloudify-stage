@@ -20,8 +20,9 @@ export default class {
 
     doGetRepos(params) {
         return this.toolbox.getExternal(this.credentials)
-            .doGet(`${GITHUB_API}/users/${this.username}/repos`, params, true)
+            .doGet(`${GITHUB_API}/users/${this.username}/repos`, params, false)
             .then(response=>{
+
                 var link = response.headers.get("link");
 
                 var total = 0;
