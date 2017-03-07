@@ -71,7 +71,7 @@ pipeline {
 
         failure {
           mail(from: "jenkins-master-on-aws@gigaspaces.com",
-               to: "limor@gigaspaces.com",
+               to: "kinneret@gigaspaces.com",
                subject: "UI build failed!",
                body: "For more information see the build log.")
         }
