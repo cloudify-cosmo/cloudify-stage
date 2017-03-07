@@ -2,13 +2,25 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
-export default class {
+class DeploymentActions {
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
 
+    doGet(deployment) {
+        return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`);
+    }
+
+    doGetById(deploymentId) {
+        return this.doGet({id: deploymentId});
+    }
+
     doDelete(deployment) {
         return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`);
+    }
+
+    doDeleteById(deploymentId) {
+        return this.doDelete({id: deploymentId});
     }
 
     doCancel(execution,action) {
@@ -58,3 +70,8 @@ export default class {
     }
 
 }
+
+Stage.defineCommon({
+    name: 'DeploymentActions',
+    common: DeploymentActions
+});

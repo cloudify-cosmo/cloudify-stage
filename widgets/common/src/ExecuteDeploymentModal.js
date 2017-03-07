@@ -2,16 +2,14 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
-import Actions from './actions';
-
 let PropTypes = React.PropTypes;
 
-export default class ExecuteModal extends React.Component {
+export default class ExecuteDeploymentModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = ExecuteModal.initialState;
+        this.state = ExecuteDeploymentModal.initialState;
     }
 
     static initialState = {
@@ -29,7 +27,7 @@ export default class ExecuteModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.show && nextProps.show) {
-            this.setState(ExecuteModal.initialState);
+            this.setState(ExecuteDeploymentModal.initialState);
         }
     }
 
@@ -58,7 +56,7 @@ export default class ExecuteModal extends React.Component {
             params[input.data('name')] = input.val();
         });
 
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions.doExecute(this.props.deployment, this.props.workflow, params).then(()=>{
             this.setState({loading: false});
             this.props.onHide();
@@ -108,3 +106,8 @@ export default class ExecuteModal extends React.Component {
         );
     }
 };
+
+Stage.defineCommon({
+    name: 'ExecuteDeploymentModal',
+    common: ExecuteDeploymentModal
+});

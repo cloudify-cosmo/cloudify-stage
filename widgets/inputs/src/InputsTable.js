@@ -29,7 +29,8 @@ export default class extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, DataTable, Popup} = Stage.Basic;
+        let {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
+        let {JsonUtils} = Stage.Common;
         let inputs = this.props.data.items;
 
         return (
@@ -47,13 +48,19 @@ export default class extends React.Component {
                                 <DataTable.Data>
                                     {
                                         !_.isEmpty(input.description)
-                                        ? <Popup trigger={<div>{input.name}</div>}
-                                                 content={input.description}
-                                                 positioning='top left' wide/>
+                                        ? <Popup positioning='top left' wide>
+                                              <Popup.Trigger>{input.name}</Popup.Trigger>
+                                              {input.description}
+                                          </Popup>
                                         : input.name
                                     }
                                 </DataTable.Data>
-                                <DataTable.Data>{input.value}</DataTable.Data>
+                                <DataTable.Data>
+                                    <Popup positioning='top left' wide>
+                                        <Popup.Trigger>{JsonUtils.stringify(input.value, false)}</Popup.Trigger>
+                                        <HighlightText className='json'>{JsonUtils.stringify(input.value, true)}</HighlightText>
+                                    </Popup>
+                                </DataTable.Data>
                             </DataTable.Row>
                         )
                     }

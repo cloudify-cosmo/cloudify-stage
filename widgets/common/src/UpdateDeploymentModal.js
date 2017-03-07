@@ -2,19 +2,17 @@
  * Created by pposel on 18/01/2017.
  */
 
-import Actions from './actions';
-
 let PropTypes = React.PropTypes;
 
 const DEFAULT_WORKFLOW = "default";
 const CUSTOM_WORKFLOW = "custom";
 
-export default class UpdateModal extends React.Component {
+export default class UpdateDeploymentModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = UpdateModal.initialState;
+        this.state = UpdateDeploymentModal.initialState;
     }
 
     static initialState = {
@@ -39,7 +37,7 @@ export default class UpdateModal extends React.Component {
         if (!this.props.show && nextProps.show) {
             this.refs.blueprintFile.reset();
             this.refs.inputsFile.reset();
-            this.setState(UpdateModal.initialState);
+            this.setState(UpdateDeploymentModal.initialState);
         }
     }
 
@@ -78,7 +76,7 @@ export default class UpdateModal extends React.Component {
          // Disable the form
         this.setState({loading: true});
 
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions.doUpdate(this.props.deployment.id,
                          this.state.applicationFileName,
                          this.state.blueprintUrl,
@@ -171,3 +169,8 @@ export default class UpdateModal extends React.Component {
         );
     }
 };
+
+Stage.defineCommon({
+    name: 'UpdateDeploymentModal',
+    common: UpdateDeploymentModal
+});

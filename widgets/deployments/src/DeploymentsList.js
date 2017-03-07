@@ -3,12 +3,8 @@
  */
 
 import MenuAction from './MenuAction';
-import ExecuteModal from './ExecuteModal';
-import UpdateModal from './UpdateModal';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
-
-import Actions from './actions';
 
 export default class extends React.Component {
 
@@ -51,7 +47,7 @@ export default class extends React.Component {
 
         this.props.toolbox.loading(true);
 
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions.doDelete(this.state.deployment).then(() => {
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
             this.props.toolbox.loading(false);
@@ -62,7 +58,7 @@ export default class extends React.Component {
     }
 
     _cancelExecution(execution, forceCancel) {
-        let actions = new Actions(this.props.toolbox);
+        let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions.doCancel(execution, forceCancel).then(() => {
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
             this.props.toolbox.getEventBus().trigger('executions:refresh');
@@ -93,8 +89,8 @@ export default class extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, Confirm} = Stage.Basic;
-
+        let {ErrorMessage, Confirm} = Stage.Basic;
+        let {ExecuteDeploymentModal, UpdateDeploymentModal} = Stage.Common;
         let showTableComponent = this.props.widget.configuration['displayStyle'] === 'table';
 
         return (
@@ -122,14 +118,14 @@ export default class extends React.Component {
                          onConfirm={this._deleteDeployment.bind(this)}
                          onCancel={this._hideModal.bind(this)} />
 
-                <ExecuteModal
+                <ExecuteDeploymentModal
                     show={this.state.modalType === MenuAction.WORKFLOW_ACTION && this.state.showModal}
                     deployment={this.state.deployment}
                     workflow={this.state.workflow}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
-                <UpdateModal
+                <UpdateDeploymentModal
                     show={this.state.modalType === MenuAction.EDIT_ACTION && this.state.showModal}
                     deployment={this.state.deployment}
                     onHide={this._hideModal.bind(this)}
