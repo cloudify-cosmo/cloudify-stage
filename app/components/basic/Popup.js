@@ -8,11 +8,11 @@ import { Popup } from 'semantic-ui-react';
 class Wrapper extends Component {
 
     static propTypes = {
-        children: PropTypes.object.isRequired
+        children: PropTypes.any.isRequired
     };
 
     render() {
-        return (<div>{this.props.children}</div>);
+        return (null);
     }
 }
 
@@ -29,7 +29,7 @@ export default class PopupWrapper extends Component {
 
         React.Children.forEach(this.props.children, function (child) {
             if (child.type && child.type.name === "Wrapper") {
-                trigger = child.props.children;
+                trigger = <div>{child.props.children}</div>;
                 children = _.without(props.children, child);
             }
         });
