@@ -35,7 +35,7 @@ router.get('/',function (req, res,next) {
         logger.debug('Proxying get request to server with url: '+serverUrl);
         req.pipe(request.get(serverUrl,{timeout: config.app.proxy.timeouts.get}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
     } else {
-        res.status(404).send({message: 'no server url passed'});
+        next('no server url passed');
     }
 });
 
@@ -46,7 +46,7 @@ router.put('/',function(req,res,next){
 
         req.pipe(request.put(serverUrl,{timeout: config.app.proxy.timeouts.put}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
     } else {
-        res.status(404).send({message: 'no server url passed'});
+        next('no server url passed');
     }
 
 });
@@ -58,7 +58,7 @@ router.delete('/',function(req,res,next){
 
         req.pipe(request.delete(serverUrl,{timeout: config.app.proxy.timeouts.delete}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
     } else {
-        res.status(404).send({message: 'no server url passed'});
+        next('no server url passed');
     }
 
 });
@@ -69,7 +69,7 @@ router.post('/',function(req,res,next){
 
         req.pipe(request.post(serverUrl,{timeout: config.app.proxy.timeouts.post}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
     } else {
-        res.status(404).send({message: 'no server url passed'});
+        next('no server url passed');
     }
 
 });

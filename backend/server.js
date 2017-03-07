@@ -28,6 +28,7 @@ var ServerSettings = require('./serverSettings');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
 var config = require('./config');
+var SourceBrowser = require('./routes/SourceBrowser');
 
 var logger = log4js.getLogger('Server');
 
@@ -57,6 +58,7 @@ app.use((req,res,next) => {
 // Routes
 app.use('/sp',ServerProxy);
 app.use('/ua',UserApp);
+app.use('/source',SourceBrowser);
 app.use('/config',function(req,res){
     res.send(config.get(ServerSettings.settings.mode));
 });
@@ -71,4 +73,11 @@ db.sequelize.sync().then(function() {
     app.listen(8088, function () {
         console.log('Stage runs on port 8088!');
     });
+});
+
+
+//Error handling
+app.use(function(err, req, res, next) {
+    logger.error('Error has occured ', err);
+    res.status(err.status || 404).send({message: err.message || err});
 });

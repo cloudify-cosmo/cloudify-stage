@@ -3,11 +3,19 @@
   "widgets": [
     {
       "name": "topology",
+      "definition": "deploymentActionButtons",
+      "width": 7,
+      "height": 5,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "name": "topology",
       "definition": "topology",
       "width": 7,
       "height": 20,
       "x": 0,
-      "y": 0
+      "y": 5
     },
     {
       "name": "Nodes",
@@ -15,7 +23,7 @@
       "width": 5,
       "height": 20,
       "x": 7,
-      "y": 0
+      "y": 5
     },
     {
       "name": "Deployment Inputs",
@@ -23,7 +31,7 @@
       "height": 12,
       "definition": "inputs",
       "x": 0,
-      "y": 20
+      "y": 25
     },
     {
       "name": "Deployment Outputs",
@@ -31,7 +39,7 @@
       "height": 12,
       "definition": "outputs",
       "x": 6,
-      "y": 20
+      "y": 25
     },
 
     {
@@ -40,7 +48,7 @@
       "height": 12,
       "definition": "events",
       "x": 0,
-      "y": 32
+      "y": 37
     },
     {
       "name": "Deployment Logs",
@@ -48,7 +56,7 @@
       "height": 12,
       "definition": "logs",
       "x": 6,
-      "y": 32
+      "y": 37
     }
 
   ]

@@ -1,0 +1,12 @@
+.treeIcon {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.centeredIcon {
+    text-align: center;
+}
+
+.alignHeighlight > pre {
+    margin-top: 2rem;
+    margin-bottom: 0rem;
+}

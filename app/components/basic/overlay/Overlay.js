@@ -14,7 +14,7 @@ export default class Overlay extends Component {
 
     static propTypes = {
         children: PropTypes.any.isRequired,
-        className: PropTypes.string
+        className: PropTypes.string,
     };
 
     static defaultProps = {
@@ -28,7 +28,7 @@ export default class Overlay extends Component {
             .remove();
     }
 
-    _showOverlay() {
+    show() {
         $(this.refs.overlayObj)
             .modal({observeChanges: true})
             .modal("show");
@@ -37,13 +37,16 @@ export default class Overlay extends Component {
     render() {
         var overlayAction = null;
         var overlayContent = null;
+        var otherChildren = [];
 
         var self = this;
         React.Children.forEach(this.props.children, function(child,index) {
             if (child.type && child.type.name === "OverlayAction") {
-                overlayAction = React.cloneElement(child, {onClick:self._showOverlay.bind(self)});
+                overlayAction = React.cloneElement(child, {onClick:self.show.bind(self)});
             } else if (child.type && child.type.name === "OverlayContent") {
                 overlayContent = child;
+            } else {
+                otherChildren.push(child);
             }
         });
 
@@ -52,6 +55,7 @@ export default class Overlay extends Component {
                 {overlayAction}
                 <div className={`ui ${this.props.className} overlay modal`} ref='overlayObj'>
                     {overlayContent}
+                    {otherChildren}
                 </div>
             </div>
         )

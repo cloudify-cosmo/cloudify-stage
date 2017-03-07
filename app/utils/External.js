@@ -61,7 +61,14 @@ export default class External {
         } else {
             return fetch(actualUrl, options)
                 .then(this._checkStatus)
-                .then(response => parseResponse ? response.json() : response);
+                .then(response => {
+                    if (parseResponse) {              
+                      var contentType = _.toLower(response.headers.get('content-type'));
+                      return contentType.indexOf('application/json') >= 0 ? response.json() : response.text();
+                    } else {
+                      return response;
+                    }
+                })
         }
     }
 

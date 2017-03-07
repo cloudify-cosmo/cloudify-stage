@@ -25,6 +25,7 @@
   "userManagement",
   "userGroups",
   "buttonLink",
+  "blueprintSources",
   "GaugeTest",
   "deploymentActionButtons",
   "blueprintActionButtons"

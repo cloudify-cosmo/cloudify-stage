@@ -23,6 +23,10 @@ new WebpackDevServer(webpack(config), {
         '/ua': {
             target: 'http://localhost:8088',
             secure: false
+        },
+        '/source': {
+            target: 'http://localhost:8088',
+            secure: false
         }
 
     }
