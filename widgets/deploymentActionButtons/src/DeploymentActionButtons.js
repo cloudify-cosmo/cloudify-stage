@@ -19,30 +19,23 @@ export default class DeploymentActionButtons extends React.Component {
             modalType: '',
             deployment: DeploymentActionButtons.EMPTY_DEPLOYMENT,
             workflow: DeploymentActionButtons.EMPTY_WORKFLOW,
-            loading: false,
             error: null
         }
     }
 
     _deleteDeployment() {
-        this.setState({loading: true});
+        this.props.toolbox.loading(true);
         let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions.doDeleteById(this.props.deploymentId).then(() => {
-            this.setState({loading: false, error: null});
+            this.setState({error: null});
             this._hideModal();
+            this.props.toolbox.loading(false);
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
         }).catch((err) => {
-            this.setState({loading: false, error: err.message});
+            this.setState({error: err.message});
             this._hideModal();
+            this.props.toolbox.loading(false);
         });
-    }
-
-    _showDeleteDeploymentModal() {
-        this._showModal(DeploymentActionButtons.DELETE_ACTION);
-    }
-
-    _showUpdateDeploymentModal() {
-        this._getDeploymentAndShowModal(this.props.deploymentId, DeploymentActionButtons.EDIT_ACTION);
     }
 
     _showExecuteWorkflowModal(workflow) {
@@ -62,18 +55,17 @@ export default class DeploymentActionButtons extends React.Component {
         return this.state.modalType === type && this.state.showModal;
     }
 
-    _getDeploymentAndShowModal(deploymentId, modalType) {
-        this.setState({loading: true});
-        if (!_.isEmpty(deploymentId)) {
+    componentWillReceiveProps(nextProps) {
+        if (this.props.deploymentId !== nextProps.deploymentId) {
+            this.props.toolbox.loading(true);
             let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-            actions.doGetById(deploymentId).then((deployment) => {
-                this.setState({loading: false, deployment});
-                this._showModal(modalType);
+            actions.doGetById(nextProps.deploymentId).then((deployment) => {
+                this.props.toolbox.loading(false);
+                this.setState({error: null, deployment});
             }).catch((err) => {
-                this.setState({loading: false, error: err.message});
+                this.props.toolbox.loading(false);
+                this.setState({error: err.message});
             });
-        } else {
-            this.setState({loading: false});
         }
     }
 
@@ -89,9 +81,7 @@ export default class DeploymentActionButtons extends React.Component {
                 <PopupMenu className="workflowAction" disabled={!deploymentId}>
                     <Popup.Trigger>
                         <Button className="labeled icon" color="teal" icon="content"
-                                onClick={this._getDeploymentAndShowModal.bind(this, deploymentId, null)}
-                                disabled={!deploymentId} content="Execute workflow"
-                                loading={this.state.loading} />
+                                disabled={!deploymentId} content="Execute workflow" />
                     </Popup.Trigger>
                     
                     <Menu vertical>
@@ -104,12 +94,12 @@ export default class DeploymentActionButtons extends React.Component {
                     </Menu>
                 </PopupMenu>
 
-                <Button className="labeled icon" color="teal" icon="edit" disabled={!deploymentId} loading={this.state.loading}
-                        onClick={this._showUpdateDeploymentModal.bind(this)}
+                <Button className="labeled icon" color="teal" icon="edit" disabled={!deploymentId}
+                        onClick={this._showModal.bind(this, DeploymentActionButtons.EDIT_ACTION)}
                         content="Update deployment"/>
 
                 <Button className="labeled icon" color="teal" icon="trash" disabled={!deploymentId}
-                        onClick={this._showDeleteDeploymentModal.bind(this)}
+                        onClick={this._showModal.bind(this, DeploymentActionButtons.DELETE_ACTION)}
                         content="Delete deployment"/>
 
                 <Confirm title={`Are you sure you want to remove deployment ${this.props.deploymentId}?`}
