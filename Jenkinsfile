@@ -1,6 +1,6 @@
 pipeline {
     triggers {
-            pollSCM('*/5 * * * *')
+            pollSCM('H/15 * * * *')
     }
     agent { label 'web-ui-04888827' }
 
