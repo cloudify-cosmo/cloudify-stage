@@ -2,7 +2,7 @@
  * Created by kinneretzin on 29/11/2016.
  */
 
-export default class {
+class BlueprintActions {
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -10,8 +10,17 @@ export default class {
     doGetFullBlueprintData(blueprint) {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprint.id}`);
     }
+
+    doGetFullBlueprintDataById(blueprintId) {
+        return this.doGetFullBlueprintData({id: blueprintId});
+    }
+
     doDelete(blueprint) {
         return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`);
+    }
+
+    doDeleteById(blueprintId) {
+        return this.doDelete({id: blueprintId});
     }
 
     doDeploy(blueprint, deploymentId, inputs) {
@@ -42,3 +51,8 @@ export default class {
 
     }
 }
+
+Stage.defineCommon({
+    name: 'BlueprintActions',
+    common: BlueprintActions
+});
