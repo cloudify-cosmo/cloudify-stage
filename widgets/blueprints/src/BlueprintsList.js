@@ -2,8 +2,6 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
-import DeployModal from './DeployBlueprintModal';
-import Actions from './actions';
 import BlueprintsTable from './BlueprintsTable';
 import BlueprintsCatalog from './BlueprintsCatalog';
 
@@ -31,7 +29,7 @@ export default class extends React.Component {
 
     _createDeployment(item){
         // Get the full blueprint data (including plan for inputs)
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions.doGetFullBlueprintData(item).then((blueprint)=>{
             this.setState({error: null, blueprint, showDeploymentModal: true});
         }).catch((err)=> {
@@ -52,7 +50,7 @@ export default class extends React.Component {
             return;
         }
 
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         this.setState({confirmDelete: false});
         actions.doDelete(this.state.item)
             .then(()=> {
@@ -84,7 +82,8 @@ export default class extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, Confirm}  = Stage.Basic;
+        let {ErrorMessage, Confirm} = Stage.Basic;
+        let DeployModal = Stage.Common.DeployBlueprintModal;
 
         var shouldShowTable = this.props.widget.configuration['displayStyle'] === 'table';
 

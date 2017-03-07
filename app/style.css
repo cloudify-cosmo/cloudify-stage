@@ -4,7 +4,7 @@ html {
 *, :after, :before {
     box-sizing: inherit;
 }
-div#splash.active {
+div#splash {
     position: absolute;
     left: 0;
     right: 0;
@@ -14,11 +14,11 @@ div#splash.active {
     background-color: #39b9d4 !important;
     color: #ffffff !important;
 }
-div#splash.active div#logo {
+div#splash div#logo {
     top: 0;
     left: 0;
 }
-div#splash.active div#logo img {
+div#splash div#logo img {
     height: 45px;
     margin: 4px;
 }

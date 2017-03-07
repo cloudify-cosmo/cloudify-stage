@@ -29,7 +29,7 @@ Stage.defineWidget({
                     outputs: _.map(deployment, (outputObject, outputName) => (
                         {
                             name: outputName,
-                            value: _stringify(deploymentOutputs[outputName]),
+                            value: deploymentOutputs[outputName],
                             description: outputObject.description || ''
                         })
                     )
@@ -45,7 +45,7 @@ Stage.defineWidget({
                         outputs: _.map(blueprintOutputs, (outputObject, outputName) => (
                             {
                                 name: outputName,
-                                value: _stringify(outputObject.value),
+                                value: outputObject.value,
                                 description: outputObject.description || ''
                             })
                         )
@@ -54,18 +54,6 @@ Stage.defineWidget({
         };
 
         return Promise.resolve({outputs:[]});
-    },
-
-    _stringify: function(value) {
-        let stringifiedValue = '';
-
-        try {
-            stringifiedValue = JSON.stringify(value);
-        } catch (e) {
-            console.error(`Cannot parse value '${value}'. `, e);
-        }
-
-        return stringifiedValue;
     },
 
     render: function(widget,data,error,toolbox) {

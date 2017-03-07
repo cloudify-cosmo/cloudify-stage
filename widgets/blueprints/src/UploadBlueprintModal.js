@@ -2,8 +2,6 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
-import Actions from './actions';
-
 export default class UploadModal extends React.Component {
 
     constructor(props,context) {
@@ -66,7 +64,7 @@ export default class UploadModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions.doUpload(this.state.blueprintName,
                          this.state.blueprintFileName,
                          this.state.blueprintUrl,
