@@ -44,11 +44,9 @@ import createRoutes from './routes';
 
 import TemplatesLoader from './utils/templatesLoader';
 
-import Auth from './utils/auth';
-import {getTenants} from './actions/tenants';
-
 import StatusPoller from './utils/StatusPoller';
 import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
+import SplashLoadingScreen from './utils/SplashLoadingScreen';
 
 export default class app{
     static load (){
@@ -80,14 +78,13 @@ export default class app{
     static start (store) {
 //history.listen(location => analyticsService.track(location.pathname))
         const history = syncHistoryWithStore(browserHistory, store);
-        let closeSplashScreen = () => $('div#splash').fadeOut('slow', () => $('div#splash').removeClass('active'));
 
         ReactDOM.render(
             <Provider store={store}>
                 <Router history={history} routes={createRoutes(store)} />
             </Provider>,
             document.getElementById('app'),
-            closeSplashScreen
+            SplashLoadingScreen.turnOff
         );
 
     }
