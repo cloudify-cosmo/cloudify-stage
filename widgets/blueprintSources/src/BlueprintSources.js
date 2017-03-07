@@ -90,9 +90,8 @@ export default class BlueprintSources extends React.Component {
                         {this.state.content ?
                             <div className="alignHighlight">
                                 <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
-                                <Label attached='top right' size="small">
-                                    <Icon name="maximize" link
-                                          onClick={()=> this.refs.contentOverlay.show()}/>{this.state.filename}
+                                <Label attached='top right' size="small" onClick={()=> this.refs.contentOverlay.show()}>
+                                    <Icon name="maximize" link/>{this.state.filename}
                                 </Label>
                                 <Overlay ref="contentOverlay">
                                     <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
