@@ -43,11 +43,12 @@ export default class Users extends Component {
 
         var adminElements = [];
         if (this.props.showAllOptions && this.props.manager.auth.role === Consts.ROLE_ADMIN) {
-            adminElements.push(<Dropdown.Item icon='doctor' text='Maintenance Mode' value='maintenance'
-                                    onClick={this.props.onMaintenance}/>);
-            adminElements.push(<Dropdown.Divider />);
-            adminElements.push(<Dropdown.Item icon='settings' text='Configure' value='configure'
-                                              onClick={this.props.onConfigure}/>);
+            adminElements.push(<Dropdown.Item   key='maitenance'
+                                                icon='doctor' text='Maintenance Mode' value='maintenance'
+                                                onClick={this.props.onMaintenance}/>);
+            adminElements.push(<Dropdown.Divider key='devider'/>);
+            adminElements.push(<Dropdown.Item    key='configure' icon='settings' text='Configure' value='configure'
+                                                 onClick={this.props.onConfigure}/>);
         }
 
         return (
