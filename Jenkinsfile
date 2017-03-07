@@ -70,11 +70,11 @@ pipeline {
         }
 
         failure {
-          mail(from: "jenkins-master-on-aws@gigaspaces.com",
-               to: "kinneret@gigaspaces.com, limor@gigaspaces.com",
-               subject: "UI build failed!",
-               body: "For more information see the build log.")
-          emailextrecipients([[$class: 'FirstFailingBuildSuspectsRecipientProvider']])
+          //mail(from: "jenkins-master-on-aws@gigaspaces.com",
+          //     to: "kinneret@gigaspaces.com, limor@gigaspaces.com",
+          //     subject: "UI build failed!",
+          //     body: "For more information see the build log.")
+          emailext attachLog: true, body: 'For more information see the build log.', recipientProviders: [[$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: 'UI build failed!', to: 'kinneret@gigaspaces.com,limor@gigaspaces.com'
         }
       }
 
