@@ -2,16 +2,14 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
-import Actions from './actions';
-
 let PropTypes = React.PropTypes;
 
-export default class DeployModal extends React.Component {
+export default class DeployBlueprintModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = DeployModal.initialState;
+        this.state = DeployBlueprintModal.initialState;
     }
 
     static DEPLOYMENT_INPUT_CLASSNAME = 'deploymentInput';
@@ -40,7 +38,7 @@ export default class DeployModal extends React.Component {
 
             _.forEach(nextProps.blueprint.plan.inputs,
                       (inputObj, inputName) => deploymentInputs[inputName] = '');
-            this.setState({...DeployModal.initialState, deploymentInputs});
+            this.setState({...DeployBlueprintModal.initialState, deploymentInputs});
         }
     }
 
@@ -85,7 +83,7 @@ export default class DeployModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs)
             .then((/*deployment*/)=> {
                 this.setState({loading: false});
@@ -99,7 +97,7 @@ export default class DeployModal extends React.Component {
 
     _handleInputChange(proxy, field) {
         let fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
-        if (field.className === DeployModal.DEPLOYMENT_INPUT_CLASSNAME) {
+        if (field.className === DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME) {
             this.setState({deploymentInputs: {...this.state.deploymentInputs, ...fieldNameValue}});
         } else {
             this.setState(fieldNameValue);
@@ -152,7 +150,7 @@ export default class DeployModal extends React.Component {
                                     <Form.Input name={input.name} placeholder={input.description}
                                                 value={this.state.deploymentInputs[input.name]}
                                                 onChange={this._handleInputChange.bind(this)}
-                                                className={DeployModal.DEPLOYMENT_INPUT_CLASSNAME} />
+                                                className={DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME} />
                                 return (
                                     <Form.Field key={input.name} error={this.state.errors[input.name]}>
                                         <label>
@@ -185,3 +183,8 @@ export default class DeployModal extends React.Component {
         );
     }
 };
+
+Stage.defineCommon({
+    name: 'DeployBlueprintModal',
+    common: DeployBlueprintModal
+});
