@@ -13,7 +13,7 @@
     "headerTextColor": ""
   },
   "db": {
-    "url": "postgres://postgres:postgres@localhost:5433/postgres",
+    "url": "postgres://localhost:5432/Stage",
     "options": {
       "pool": {
         "max": 5,
