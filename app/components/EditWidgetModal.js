@@ -61,7 +61,7 @@ export default class EditWidgetModal extends Component {
                 <Modal.Body>
                     <div className="ui form" ref='configForm'>
                         {
-                            this.props.configDef.map((config)=>{
+                            this.props.configDef.filter((config) => !config.hidden).map((config)=>{
                                 var currValue = _.get(this.props.configuration,'['+config.id+']',config.value || config.default);
 
                                 return <GenericField key={config.id}

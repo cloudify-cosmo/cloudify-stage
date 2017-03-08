@@ -112,6 +112,8 @@ export default class TenantsTable extends React.Component {
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                            totalSize={data.total}
                            pageSize={this.props.widget.configuration.pageSize}
+                           sortColumn={this.props.widget.configuration.sortColumn}
+                           sortAscending={this.props.widget.configuration.sortAscending}
                            className="tenantsTable">
 
                     <DataTable.Column label="Name" name="name" width="30%" />

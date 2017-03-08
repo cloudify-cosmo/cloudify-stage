@@ -26,6 +26,8 @@ export default class extends React.Component {
         return (
             <DataTable fetchData={this.props.fetchData}
                        pageSize={this.props.widget.configuration.pageSize}
+                       sortColumn={this.props.widget.configuration.sortColumn}
+                       sortAscending={this.props.widget.configuration.sortAscending}
                        fetchSize={this.props.data.items.length}
                        totalSize={this.props.data.total}
                        selectable={true}>

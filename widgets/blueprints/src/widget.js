@@ -17,7 +17,9 @@ Stage.defineWidget({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {id: "clickToDrillDown", name: "Should click to drilldown", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
-            default: "table", type: Stage.Basic.GenericField.LIST_TYPE}
+            default: "table", type: Stage.Basic.GenericField.LIST_TYPE},
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
     fetchUrl: {
         blueprints: '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',
