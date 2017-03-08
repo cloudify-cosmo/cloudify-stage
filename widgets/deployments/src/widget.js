@@ -61,8 +61,8 @@ Stage.defineWidget({
                         return Object.assign({},item,{
                             nodeSize: nodeSize[item.id],
                             nodeStates: _.countBy(nodeInstanceData[item.id], "state"),
-                            created_at: Stage.Common.TimeUtils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
-                            updated_at: Stage.Common.TimeUtils.formatTimestamp(item.updated_at),
+                            created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
+                            updated_at: Stage.Utils.formatTimestamp(item.updated_at),
                             executions: executionsData[item.id]
                         })
                     })

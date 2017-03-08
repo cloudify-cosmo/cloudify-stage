@@ -63,8 +63,8 @@ Stage.defineWidget({
                     name: item.name,
                     description: item.description,
                     url: item.url,
-                    created_at: Stage.Common.TimeUtils.formatTimestamp(item.created_at),
-                    updated_at: Stage.Common.TimeUtils.formatTimestamp(item.updated_at),
+                    created_at: Stage.Utils.formatTimestamp(item.created_at),
+                    updated_at: Stage.Utils.formatTimestamp(item.updated_at),
                     image_url: item.image_url,
                     isSelected: selectedCatalogId === item.id
                 })
