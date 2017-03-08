@@ -7,7 +7,7 @@ export default class BlueprintActionButtons extends React.Component {
     static DEPLOY_ACTION = 'deploy';
     static DELETE_ACTION = 'delete';
 
-    static EMPTY_BLUEPRINT = {id: ''};
+    static EMPTY_BLUEPRINT = {id: '', plan: {inputs: {}}};
 
     constructor(props,context) {
         super(props,context);
@@ -16,6 +16,7 @@ export default class BlueprintActionButtons extends React.Component {
             showModal: false,
             modalType: '',
             blueprint: BlueprintActionButtons.EMPTY_BLUEPRINT,
+            loading: false,
             error: null
         }
     }
@@ -34,31 +35,43 @@ export default class BlueprintActionButtons extends React.Component {
 
     _deleteBlueprint() {
         this.props.toolbox.loading(true);
+        this.setState({loading: true});
         let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions.doDeleteById(this.props.blueprintId).then(()=> {
             this.props.toolbox.getEventBus().trigger('blueprints:refresh');
-            this.setState({error: null});
+            this.setState({loading: false, error: null});
             this._hideModal();
             this.props.toolbox.loading(false);
         }).catch((err)=>{
-            this.setState({error: err.message});
+            this.setState({loading: false, error: err.message});
             this._hideModal();
             this.props.toolbox.loading(false);
         });
         return false;
     }
 
+    _fetchBlueprint(blueprintId) {
+        this.props.toolbox.loading(true);
+        this.setState({loading: true});
+        let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        actions.doGetFullBlueprintDataById(blueprintId).then((blueprint) => {
+            this.props.toolbox.loading(false);
+            this.setState({loading: false, error: null, blueprint});
+        }).catch((err) => {
+            this.props.toolbox.loading(false);
+            this.setState({loading: false, error: err.message, blueprint: BlueprintActionButtons.EMPTY_BLUEPRINT});
+        });
+    }
+
+    componentWillMount() {
+        if (!_.isEmpty(this.props.blueprintId)) {
+            this._fetchBlueprint(this.props.blueprintId);
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
-        if (this.props.blueprintId !== nextProps.blueprintId) {
-            this.props.toolbox.loading(true);
-            let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-            actions.doGetFullBlueprintDataById(nextProps.blueprintId).then((blueprint) => {
-                this.props.toolbox.loading(false);
-                this.setState({error: null, blueprint});
-            }).catch((err) => {
-                this.props.toolbox.loading(false);
-                this.setState({error: err.message, blueprint: BlueprintActionButtons.EMPTY_BLUEPRINT});
-            });
+        if (!_.isEmpty(nextProps.blueprintId) && nextProps.blueprintId !== this.props.blueprintId) {
+            this._fetchBlueprint(nextProps.blueprintId);
         }
     }
 
@@ -72,11 +85,11 @@ export default class BlueprintActionButtons extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <Button className="labeled icon" color="teal" icon="rocket" disabled={!blueprintId}
+                <Button className="labeled icon" color="teal" icon="rocket" disabled={_.isEmpty(blueprintId) || this.state.loading}
                         onClick={this._showModal.bind(this, BlueprintActionButtons.DEPLOY_ACTION)}
                         content="Create deployment"/>
 
-                <Button className="labeled icon" color="teal" icon="trash" disabled={!blueprintId}
+                <Button className="labeled icon" color="teal" icon="trash" disabled={_.isEmpty(blueprintId) || this.state.loading}
                         onClick={this._showModal.bind(this, BlueprintActionButtons.DELETE_ACTION)}
                         content="Delete blueprint"/>
 
