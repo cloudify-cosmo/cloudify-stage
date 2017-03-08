@@ -10,7 +10,12 @@ const app = (state = {loading:true}, action) => {
         case types.SET_APP_LOADING:
             return {
                 loading: action.isLoading
-            }
+            };
+        case types.RES_LOGIN:
+        case types.LOGOUT:
+            return {
+                loading: true
+            };
         default:
             return state;
     }

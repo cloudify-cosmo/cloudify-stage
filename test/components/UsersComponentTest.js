@@ -26,6 +26,7 @@ describe('(Component) Users', () => {
          wrapper = mount(<Users manager={manager}
                                 showAllOptions={true}
                                 isEditMode={false}
+                                canEditTheUi={true}
                                 onEditModeChange={()=>{}}
                                 onConfigure={()=>{}}
                                 onResetTemplate={()=>{}}
