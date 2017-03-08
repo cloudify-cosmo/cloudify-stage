@@ -13,7 +13,7 @@
     "headerTextColor": ""
   },
   "db": {
-    "url": "postgres://cloudify:cloudify@localhost:5432/Stage",
+    "url": "postgres://cloudify:cloudify@localhost:5432/stage",
     "options": {
       "pool": {
         "max": 5,

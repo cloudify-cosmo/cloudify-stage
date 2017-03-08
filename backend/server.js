@@ -71,8 +71,10 @@ app.get('*',function (request, response){
 // Sync db tables (make sure they exist)
 db.sequelize.sync().then(function() {
     app.listen(8088, function () {
-        console.log('Stage runs on port 8088!');
+        logger.info('Stage runs on port 8088!');
     });
+}).catch((e)=>{
+    logger.error('Error connecting to DB',e);
 });
 
 
