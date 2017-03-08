@@ -1,6 +1,6 @@
 {
   "initialTemplate": {
-    "administrator": "initial-template-admin",
+    "admin": "initial-template-admin",
     "user": "initial-template",
     "customer": "initial-template-customer"
   },
