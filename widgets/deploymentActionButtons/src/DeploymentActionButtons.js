@@ -57,28 +57,20 @@ export default class DeploymentActionButtons extends React.Component {
         return this.state.modalType === type && this.state.showModal;
     }
 
-    _fetchDeployment(deploymentId) {
-        this.props.toolbox.loading(true);
-        this.setState({loading: true});
-        let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-        actions.doGetById(deploymentId).then((deployment) => {
-            this.props.toolbox.loading(false);
-            this.setState({loading: false, error: null, deployment});
-        }).catch((err) => {
-            this.props.toolbox.loading(false);
-            this.setState({loading: false, error: err.message, deployment: DeploymentActionButtons.EMPTY_DEPLOYMENT});
-        });
-    }
-
-    componentWillMount() {
-        if (!_.isEmpty(this.props.deploymentId)) {
-            this._fetchDeployment(this.props.deploymentId);
-        }
-    }
-    
     componentWillReceiveProps(nextProps) {
         if (!_.isEmpty(nextProps.deploymentId) && nextProps.deploymentId !== this.props.deploymentId) {
-            this._fetchDeployment(nextProps.deploymentId);
+            this.props.toolbox.loading(true);
+            this.setState({loading: true});
+            let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+            actions.doGetById(nextProps.deploymentId).then((deployment) => {
+                this.props.toolbox.loading(false);
+                this.setState({loading: false, error: null, deployment});
+            }).catch((err) => {
+                this.props.toolbox.loading(false);
+                this.setState({loading: false, error: err.message, deployment: DeploymentActionButtons.EMPTY_DEPLOYMENT});
+            });
+        } else if (nextProps.data !== this.props.data) {
+            this.setState({deployment: nextProps.data});
         }
     }
 
@@ -115,7 +107,7 @@ export default class DeploymentActionButtons extends React.Component {
                         onClick={this._showModal.bind(this, DeploymentActionButtons.DELETE_ACTION)}
                         content="Delete deployment"/>
 
-                <Confirm title={`Are you sure you want to remove deployment ${this.props.deploymentId}?`}
+                <Confirm title={`Are you sure you want to remove deployment ${deploymentId}?`}
                          show={this._isShowModal(DeploymentActionButtons.DELETE_ACTION)}
                          onConfirm={this._deleteDeployment.bind(this)}
                          onCancel={this._hideModal.bind(this)} />

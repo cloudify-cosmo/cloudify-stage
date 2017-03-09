@@ -50,28 +50,20 @@ export default class BlueprintActionButtons extends React.Component {
         return false;
     }
 
-    _fetchBlueprint(blueprintId) {
-        this.props.toolbox.loading(true);
-        this.setState({loading: true});
-        let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions.doGetFullBlueprintDataById(blueprintId).then((blueprint) => {
-            this.props.toolbox.loading(false);
-            this.setState({loading: false, error: null, blueprint});
-        }).catch((err) => {
-            this.props.toolbox.loading(false);
-            this.setState({loading: false, error: err.message, blueprint: BlueprintActionButtons.EMPTY_BLUEPRINT});
-        });
-    }
-
-    componentWillMount() {
-        if (!_.isEmpty(this.props.blueprintId)) {
-            this._fetchBlueprint(this.props.blueprintId);
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
         if (!_.isEmpty(nextProps.blueprintId) && nextProps.blueprintId !== this.props.blueprintId) {
-            this._fetchBlueprint(nextProps.blueprintId);
+            this.props.toolbox.loading(true);
+            this.setState({loading: true});
+            let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+            actions.doGetFullBlueprintDataById(nextProps.blueprintId).then((blueprint) => {
+                this.props.toolbox.loading(false);
+                this.setState({loading: false, error: null, blueprint});
+            }).catch((err) => {
+                this.props.toolbox.loading(false);
+                this.setState({loading: false, error: err.message, blueprint: BlueprintActionButtons.EMPTY_BLUEPRINT});
+            });
+        } else if (nextProps.data !== this.props.data) {
+            this.setState({blueprint: nextProps.data});
         }
     }
 
