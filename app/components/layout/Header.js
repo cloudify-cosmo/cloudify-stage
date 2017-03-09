@@ -9,7 +9,7 @@ import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
 import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
-import ConfigureModal from '../../containers/configureModal';
+import ConfigureModal from '../../containers/ConfigureModal';
 
 import Consts from '../../utils/consts';
 
