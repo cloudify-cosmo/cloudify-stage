@@ -30,10 +30,12 @@ export default class BlueprintsTable extends React.Component{
 
         return (
             <DataTable fetchData={this.props.fetchGridData}
-                        totalSize={this.props.data.total}
-                        pageSize={this.props.widget.configuration.pageSize}
-                        selectable={true}
-                        className="blueprintsTable">
+                       totalSize={this.props.data.total}
+                       pageSize={this.props.widget.configuration.pageSize}
+                       sortColumn={this.props.widget.configuration.sortColumn}
+                       sortAscending={this.props.widget.configuration.sortAscending}
+                       selectable={true}
+                       className="blueprintsTable">
 
                 <DataTable.Column label="Name" name="id" width="30%"/>
                 <DataTable.Column label="Created" name="created_at" width="20%"/>

@@ -122,4 +122,15 @@ class GenericConfig {
                 type: BasicComponents.GenericField.NUMBER_TYPE}
     };
 
+    static SORT_COLUMN_CONFIG = (sortColumn) => {
+        return {id: 'sortColumn',
+                default: sortColumn,
+                hidden: true}
+    };
+
+    static SORT_ASCENDING_CONFIG = (sortAscending) => {
+        return {id: 'sortAscending',
+                default: sortAscending,
+                hidden: true}
+    };
 }

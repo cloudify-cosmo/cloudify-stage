@@ -54,10 +54,12 @@ export default class extends React.Component {
                 <ErrorMessage error={this.state.error}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
-                            totalSize={this.props.data.total}
-                            pageSize={this.props.widget.configuration.pageSize}
-                            selectable={true}
-                            className="executionsTable">
+                           totalSize={this.props.data.total}
+                           pageSize={this.props.widget.configuration.pageSize}
+                           sortColumn={this.props.widget.configuration.sortColumn}
+                           sortAscending={this.props.widget.configuration.sortAscending}
+                           selectable={true}
+                           className="executionsTable">
 
                     <DataTable.Column label="Blueprint" name="blueprint_id" width="20%"
                                  show={fieldsToShow.indexOf("Blueprint") >= 0 && !this.props.data.blueprintId}/>

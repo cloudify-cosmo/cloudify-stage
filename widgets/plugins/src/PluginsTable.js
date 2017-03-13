@@ -80,10 +80,12 @@ export default class extends React.Component {
                 <ErrorMessage error={this.state.error}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
-                            totalSize={this.props.data.total}
-                            pageSize={this.props.widget.configuration.pageSize}
-                            selectable={true}
-                            className="pluginsTable">
+                           totalSize={this.props.data.total}
+                           pageSize={this.props.widget.configuration.pageSize}
+                           sortColumn={this.props.widget.configuration.sortColumn}
+                           sortAscending={this.props.widget.configuration.sortAscending}
+                           selectable={true}
+                           className="pluginsTable">
 
                     <DataTable.Column label="Id" name="id" width="20%"/>
                     <DataTable.Column label="Package name" name="package_name" width="15%"/>

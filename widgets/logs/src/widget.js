@@ -15,7 +15,9 @@ Stage.defineWidget({
     isReact: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
-        Stage.GenericConfig.PAGE_SIZE_CONFIG()
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('timestamp'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
 
     fetchParams: function(widget, toolbox) {
