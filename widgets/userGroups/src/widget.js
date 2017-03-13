@@ -11,12 +11,14 @@ Stage.defineWidget({
     initialWidth: 5,
     initialHeight: 16,
     color: 'violet',
-    fetchUrl: '[manager]/user-groups[params]',
+    fetchUrl: '[manager]/user-groups?_get_data=true[params]',
     isReact: true,
     isAdmin: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(30),
-        Stage.GenericConfig.PAGE_SIZE_CONFIG()
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('name'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
     render: function(widget, data, error, toolbox) {
