@@ -1,6 +1,6 @@
 {
   "initialTemplate": {
-    "administrator": "initial-template-admin",
+    "admin": "initial-template-admin",
     "user": "initial-template",
     "customer": "initial-template-customer"
   },
@@ -13,7 +13,7 @@
     "headerTextColor": ""
   },
   "db": {
-    "url": "postgres://localhost:5432/Stage",
+    "url": "postgres://cloudify:cloudify@localhost:5432/stage",
     "options": {
       "pool": {
         "max": 5,

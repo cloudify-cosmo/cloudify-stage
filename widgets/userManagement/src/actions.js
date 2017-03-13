@@ -5,7 +5,7 @@
 export default class Actions {
 
     static USER_ROLE = "user";
-    static ADMIN_ROLE = "administrator";
+    static ADMIN_ROLE = "admin";
     static SUSPENDED_ROLE = "suspended";
 
     constructor(toolbox) {

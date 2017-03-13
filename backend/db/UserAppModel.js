@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
         username: { type: DataTypes.STRING, allowNull: false},
         appDataVersion: {type: DataTypes.INTEGER, allowNull: false},
         mode: {type: DataTypes.ENUM, values: ['customer','main'], allowNull: false, default: 'main'},
-        role: {type: DataTypes.ENUM, values: ['administrator','user'], allowNull: false, default: 'user'},
+        role: {type: DataTypes.ENUM, values: ['admin','user'], allowNull: false, default: 'user'},
         appData: { type: DataTypes.JSON,allowNull: false}
 
         },{
