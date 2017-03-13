@@ -6,7 +6,11 @@
     text-align: center;
 }
 
-.alignHeighlight > pre {
+.alignHighlight > .label {
+    cursor: pointer;
+}
+
+.alignHighlight > pre {
     margin-top: 2rem;
     margin-bottom: 0rem;
 }

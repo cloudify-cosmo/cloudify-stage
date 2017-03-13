@@ -8,6 +8,10 @@ export default class {
         this.toolbox = toolbox;
     }
 
+    doGetBlueprintId(deploymentId) {
+        return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,blueprint_id`);
+    }
+
     doGetBlueprintDetails(blueprintId) {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}?_include=updated_at`);
     }

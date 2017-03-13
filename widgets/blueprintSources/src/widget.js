@@ -15,29 +15,42 @@ Stage.defineWidget({
     isReact: true,
     hasStyle: true,
     initialConfiguration: [
+        {id: "contentPaneWidth", name: "Content pane initial width in %", default: 65, type: Stage.Basic.GenericField.NUMBER_TYPE}
     ],
 
     fetchParams: function(widget, toolbox) {
         var blueprintId = toolbox.getContext().getValue('blueprintId');
+        var deploymentId = toolbox.getContext().getValue('deploymentId');
+
         return {
-            blueprint_id: blueprintId
+            blueprint_id: blueprintId,
+            deployment_id: deploymentId
         }
     },
 
     fetchData: function(widget, toolbox, params) {
-        var blueprintId = params.blueprint_id;
+        var actions = new Actions(toolbox);
 
-        if (blueprintId) {
-            var actions = new Actions(toolbox);
-            return actions.doGetBlueprintDetails(blueprintId).then(data => {
-                var lastUpdate = moment(data.updated_at, 'YYYY-MM-DD HH:mm:ss.SSSSS').format('DDMMYYYYHHmm');
-                return actions.doGetFilesTree(blueprintId, lastUpdate).then(tree => {
-                    return {tree, blueprintId}
-                });
-            });
-        } else {
-            return Promise.resolve({tree:{}});
+        var blueprintId = params.blueprint_id;
+        var deploymentId = params.deployment_id;
+
+        var promise = Promise.resolve({blueprint_id: blueprintId});
+        if (!blueprintId && deploymentId) {
+            promise = actions.doGetBlueprintId(deploymentId);
         }
+
+        return promise.then(({blueprint_id})=>{
+            blueprintId = blueprint_id;
+
+            if (blueprintId) {
+                return actions.doGetBlueprintDetails(blueprintId).then(data => {
+                    var lastUpdate = moment(data.updated_at, 'YYYY-MM-DD HH:mm:ss.SSSSS').format('DDMMYYYYHHmm');
+                    return actions.doGetFilesTree(blueprintId, lastUpdate).then(tree => Promise.resolve({tree, blueprintId}));
+                });
+            } else {
+                return Promise.resolve({tree:{}});
+            }
+        });
     },
 
     render: function(widget,data,error,toolbox) {

@@ -29,7 +29,9 @@ export default class EditWidgetModal extends Component {
                 value = _.split(value, ',');
             } else if (type === Stage.Basic.GenericField.BOOLEAN_TYPE) {
                 value = $input.is(':checked');
-            } else if (type === Stage.Basic.GenericField.NUMBER_LIST_TYPE || type === Stage.Basic.GenericField.NUMBER_EDITABLE_LIST_TYPE) {
+            } else if (type === Stage.Basic.GenericField.NUMBER_TYPE ||
+                       type === Stage.Basic.GenericField.NUMBER_LIST_TYPE ||
+                       type === Stage.Basic.GenericField.NUMBER_EDITABLE_LIST_TYPE) {
                 value = parseInt(value) || 0;
             }
 

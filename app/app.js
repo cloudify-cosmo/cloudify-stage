@@ -28,7 +28,7 @@ import '../node_modules/gridstack/dist/gridstack.css';
 import '../node_modules/gridstack/dist/gridstack.js';
 
 // Import highlight
-import '../node_modules/highlight.js/styles/github.css';
+import '../node_modules/highlight.js/styles/xcode.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
