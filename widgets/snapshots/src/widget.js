@@ -14,7 +14,9 @@ Stage.defineWidget({
     isReact: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(30),
-        Stage.GenericConfig.PAGE_SIZE_CONFIG()
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
     fetchUrl: '[manager]/snapshots?_include=id,created_at,status[params]',
 
@@ -28,7 +30,7 @@ Stage.defineWidget({
         var formattedData = Object.assign({},data,{
             items: _.map (data.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
                     isSelected: selectedSnapshot === item.id
                 })
             })

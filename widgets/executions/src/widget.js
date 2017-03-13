@@ -20,7 +20,9 @@ Stage.defineWidget({
             {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
                 items: ["Blueprint","Deployment","Workflow","Id","Created","IsSystem","Params","Status"],
                 default: 'Blueprint,Deployment,Workflow,Id,Created,IsSystem,Params,Status', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
-            {id: "showSystemExecutions", name: "Show system executions", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
+            {id: "showSystemExecutions", name: "Show system executions", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+            Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
+            Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
         ],
 
     fetchParams: function(widget, toolbox) {
@@ -45,7 +47,7 @@ Stage.defineWidget({
         formattedData = Object.assign({},formattedData,{
             items: _.map (formattedData.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
                     isSelected: item.id === selectedExecution
                 })
             })

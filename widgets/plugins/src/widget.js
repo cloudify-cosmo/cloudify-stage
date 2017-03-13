@@ -28,7 +28,7 @@ Stage.defineWidget({
         var formattedData = Object.assign({},data,{
             items: _.map (data.items,(item)=>{
                 return Object.assign({},item,{
-                    uploaded_at: moment(item.uploaded_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
+                    uploaded_at: Stage.Utils.formatTimestamp(item.uploaded_at), //2016-07-20 09:10:53.103579
                     isSelected: selectedPlugin === item.id
                 })
             })

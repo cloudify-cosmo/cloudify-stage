@@ -17,7 +17,9 @@ Stage.defineWidget({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {id: "clickToDrillDown", name: "Should click to drilldown", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
-            default: "table", type: Stage.Basic.GenericField.LIST_TYPE}
+            default: "table", type: Stage.Basic.GenericField.LIST_TYPE},
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
     fetchUrl: {
         blueprints: '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',
@@ -38,8 +40,8 @@ Stage.defineWidget({
         var formattedData = Object.assign({},blueprintsData,{
             items: _.map (blueprintsData.items,(item)=>{
                 return Object.assign({},item,{
-                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
-                    updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
+                    created_at: Stage.Utils.formatTimestamp(item.created_at),
+                    updated_at: Stage.Utils.formatTimestamp(item.updated_at),
                     isSelected: selectedBlueprint === item.id
                 })
             }),

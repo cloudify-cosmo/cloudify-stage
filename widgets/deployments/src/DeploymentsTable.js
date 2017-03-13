@@ -32,10 +32,12 @@ export default class extends React.Component {
 
         return (
             <DataTable fetchData={this.props.fetchData}
-                        totalSize={this.props.data.total}
-                        pageSize={this.props.widget.configuration.pageSize}
-                        selectable={true}
-                        className="deploymentTable">
+                       totalSize={this.props.data.total}
+                       pageSize={this.props.widget.configuration.pageSize}
+                       sortColumn={this.props.widget.configuration.sortColumn}
+                       sortAscending={this.props.widget.configuration.sortAscending}
+                       selectable={true}
+                       className="deploymentTable">
 
                 <DataTable.Column label="Name" name="id" width="25%"/>
                 <DataTable.Column label="Blueprint" name="blueprint_id" width="25%"/>

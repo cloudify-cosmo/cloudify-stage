@@ -18,7 +18,9 @@ Stage.defineWidget({
             {id: "clickToDrillDown", name: "Should click to drilldown", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
             {id: "blueprintIdFilter", name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by", type: Stage.Basic.GenericField.STRING_TYPE},
             {id: "displayStyle", name: "Display style", items: [{name:'Table', value:'table'}, {name:'List', value:'list'}],
-                default: "table", type: Stage.Basic.GenericField.LIST_TYPE}
+                default: "table", type: Stage.Basic.GenericField.LIST_TYPE},
+            Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
+            Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
         ],
     isReact: true,
 
@@ -61,8 +63,8 @@ Stage.defineWidget({
                         return Object.assign({},item,{
                             nodeSize: nodeSize[item.id],
                             nodeStates: _.countBy(nodeInstanceData[item.id], "state"),
-                            created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103579
-                            updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'),
+                            created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
+                            updated_at: Stage.Utils.formatTimestamp(item.updated_at),
                             executions: executionsData[item.id]
                         })
                     })

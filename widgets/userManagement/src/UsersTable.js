@@ -111,9 +111,11 @@ export default class UsersTable extends React.Component {
                 <ErrorMessage error={this.state.error}/>
 
                 <DataTable fetchData={this.fetchData.bind(this)}
-                       totalSize={this.props.data.total}
-                       pageSize={this.props.widget.configuration.pageSize}
-                       className="usersTable">
+                           totalSize={this.props.data.total}
+                           pageSize={this.props.widget.configuration.pageSize}
+                           sortColumn={this.props.widget.configuration.sortColumn}
+                           sortAscending={this.props.widget.configuration.sortAscending}
+                           className="usersTable">
 
                     <DataTable.Column label="Username" name="username" width="32%" />
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />

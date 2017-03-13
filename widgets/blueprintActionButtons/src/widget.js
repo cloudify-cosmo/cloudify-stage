@@ -15,10 +15,30 @@ Stage.defineWidget({
     initialConfiguration: [],
     isReact: true,
 
-    render: function(widget,data,error,toolbox) {
+    fetchData: function(widget,toolbox) {
         let blueprintId = toolbox.getContext().getValue('blueprintId');
+
+        if (!_.isEmpty(blueprintId)) {
+            toolbox.loading(true);
+            return toolbox.getManager().doGet(`/blueprints/${blueprintId}`)
+                .then(blueprint => {
+                    toolbox.loading(false);
+                    return Promise.resolve(blueprint);
+                });
+        }
+
+        return Promise.resolve(BlueprintActionButtons.EMPTY_BLUEPRINT);
+    },
+
+    fetchParams: function(widget, toolbox) {
+        let blueprintId = toolbox.getContext().getValue('blueprintId');
+
+        return {blueprint_id: blueprintId};
+    },
+
+    render: function(widget,data,error,toolbox) {
         return (
-            <BlueprintActionButtons blueprintId={blueprintId} widget={widget} toolbox={toolbox} />
+            <BlueprintActionButtons blueprint={data} widget={widget} toolbox={toolbox} />
         );
     }
 });

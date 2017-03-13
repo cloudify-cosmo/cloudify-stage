@@ -40,9 +40,11 @@ export default class LogsTable extends React.Component {
                 <ErrorMessage error={this.state.error}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
-                       totalSize={this.props.data.total}
-                       pageSize={this.props.widget.configuration.pageSize}
-                       className="logsTable">
+                           totalSize={this.props.data.total}
+                           pageSize={this.props.widget.configuration.pageSize}
+                           sortColumn={this.props.widget.configuration.sortColumn}
+                           sortAscending={this.props.widget.configuration.sortAscending}
+                           className="logsTable">
 
                     <DataTable.Column label="Blueprint" name="context.blueprint_id" width="10%" show={!this.props.data.blueprintId && !this.props.data.deploymentId && !this.props.data.executionId} />
                     <DataTable.Column label="Deployment" name="context.deployment_id" width="10%" show={!this.props.data.deploymentId && !this.props.data.executionId} />

@@ -11,16 +11,8 @@ class DeploymentActions {
         return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`);
     }
 
-    doGetById(deploymentId) {
-        return this.doGet({id: deploymentId});
-    }
-
     doDelete(deployment) {
         return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`);
-    }
-
-    doDeleteById(deploymentId) {
-        return this.doDelete({id: deploymentId});
     }
 
     doCancel(execution,action) {

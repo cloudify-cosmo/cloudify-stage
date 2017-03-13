@@ -15,7 +15,9 @@ Stage.defineWidget({
     isReact: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
-        Stage.GenericConfig.PAGE_SIZE_CONFIG()
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('timestamp'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
 
     fetchParams: function(widget, toolbox) {
@@ -70,7 +72,7 @@ Stage.defineWidget({
             items: _.map (data.items, (item) => {
                 return Object.assign({}, item, {
                     id: item.context.execution_id + item['@timestamp'],
-                    timestamp: moment(item.timestamp,'YYYY-MM-DD HH:mm:ss.SSS+SSS').format('DD-MM-YYYY HH:mm'), //2016-07-20 09:10:53.103+000
+                    timestamp: Stage.Utils.formatTimestamp(item.timestamp), //2016-07-20 09:10:53.103+000
                     isSelected: (item.context.execution_id + item['@timestamp']) === SELECTED_LOG_ID
                 })
             }),

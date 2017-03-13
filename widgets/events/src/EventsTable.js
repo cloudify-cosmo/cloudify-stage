@@ -41,9 +41,11 @@ export default class EventsTable extends React.Component {
                 <ErrorMessage error={this.state.error}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
-                       totalSize={this.props.data.total}
-                       pageSize={this.props.widget.configuration.pageSize}
-                       className="eventsTable">
+                           totalSize={this.props.data.total}
+                           pageSize={this.props.widget.configuration.pageSize}
+                           sortColumn={this.props.widget.configuration.sortColumn}
+                           sortAscending={this.props.widget.configuration.sortAscending}
+                           className="eventsTable">
 
                     <DataTable.Column label="Blueprint" name="context.blueprint_id" width="10%" show={!this.props.data.blueprintId &&
                                                                                                       !this.props.data.deploymentId &&

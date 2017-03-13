@@ -23,8 +23,9 @@ Stage.defineWidget({
         {id: 'username', name: 'Fetch with username', placeHolder:"Type username", default:"cloudify-examples", type: Stage.Basic.GenericField.STRING_TYPE},
         {id: 'password', name: 'Optional password', placeHolder:"Type password", default:"", type: Stage.Basic.GenericField.PASSWORD_TYPE},
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
-             default: "catalog", type: Stage.Basic.GenericField.LIST_TYPE}
-
+             default: "catalog", type: Stage.Basic.GenericField.LIST_TYPE},
+        Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
+        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
 
     mapGridParams: function(gridParams) {
@@ -63,8 +64,8 @@ Stage.defineWidget({
                     name: item.name,
                     description: item.description,
                     url: item.url,
-                    created_at: moment(item.created_at,'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY HH:mm'),
-                    updated_at: moment(item.updated_at,'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY HH:mm'),
+                    created_at: Stage.Utils.formatTimestamp(item.created_at),
+                    updated_at: Stage.Utils.formatTimestamp(item.updated_at),
                     image_url: item.image_url,
                     isSelected: selectedCatalogId === item.id
                 })

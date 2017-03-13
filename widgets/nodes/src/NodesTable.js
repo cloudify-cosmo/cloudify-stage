@@ -45,6 +45,8 @@ export default class NodesTable extends React.Component {
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                        totalSize={this.props.data.total}
                        pageSize={this.props.widget.configuration.pageSize}
+                       sortColumn={this.props.widget.configuration.sortColumn}
+                       sortAscending={this.props.widget.configuration.sortAscending}
                        selectable={true}
                        className="nodesTable">
 
