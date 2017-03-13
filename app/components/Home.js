@@ -20,6 +20,10 @@ export default class Home extends Component {
     }
 
     _handleContext(selectedPage,contextParams) {
+        if (!selectedPage) {
+            this.props.navigateTo404();
+            return;
+        }
         if (!selectedPage.isDrillDown) {
             this.props.onClearContext();
         }
