@@ -90,7 +90,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                                 return (
                                     <Form.Field key={name}>
                                         <label title={parameter.description || name }>{name}</label>
-                                        <input name='executeInput' data-name={name} type="text" defaultValue={parameter.default}/>
+                                        <input name='executeInput' data-name={name} type="text"
+                                               defaultValue={Stage.Common.JsonUtils.stringify(parameter.default)}/>
                                     </Form.Field>
                                 );
                             })

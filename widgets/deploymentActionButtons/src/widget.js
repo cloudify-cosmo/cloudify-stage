@@ -6,7 +6,7 @@ import DeploymentActionButtons from './DeploymentActionButtons';
 
 Stage.defineWidget({
     id: 'deploymentActionButtons',
-    name: 'Deployment actions buttons',
+    name: 'Deployment action buttons',
     description: 'Provides set of action buttons for deployment',
     initialWidth: 8,
     initialHeight: 5,
@@ -15,10 +15,30 @@ Stage.defineWidget({
     initialConfiguration: [],
     isReact: true,
 
-    render: function(widget,data,error,toolbox) {
+    fetchData: function(widget,toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId');
+
+        if (!_.isEmpty(deploymentId)) {
+            toolbox.loading(true);
+            return toolbox.getManager().doGet(`/deployments/${deploymentId}`)
+                .then(deployment => {
+                    toolbox.loading(false);
+                    return Promise.resolve(deployment);
+                });
+        }
+
+        return Promise.resolve(DeploymentActionButtons.EMPTY_DEPLOYMENT);
+    },
+
+    fetchParams: function(widget, toolbox) {
+        let deploymentId = toolbox.getContext().getValue('deploymentId');
+
+        return {deployment_id: deploymentId};
+    },
+
+    render: function(widget,data,error,toolbox) {
         return (
-            <DeploymentActionButtons deploymentId={deploymentId} widget={widget} toolbox={toolbox} />
+            <DeploymentActionButtons deployment={data} widget={widget} toolbox={toolbox} />
         );
     }
 
