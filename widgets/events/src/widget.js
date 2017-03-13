@@ -23,12 +23,12 @@ Stage.defineWidget({
     fetchParams: function(widget, toolbox) {
         var params = {};
 
-        let deploymentId = toolbox.getContext().getValue('event_deploymentId');
+        let deploymentId = toolbox.getContext().getValue('deploymentId') || toolbox.getContext().getValue('event_deploymentId');
         if (!_.isEmpty(deploymentId)) {
             params.deployment_id = deploymentId;
         }
 
-        let blueprintId = toolbox.getContext().getValue('event_blueprintId');
+        let blueprintId = toolbox.getContext().getValue('blueprintId') || toolbox.getContext().getValue('event_blueprintId');
         if (!_.isEmpty(blueprintId)) {
             params.blueprint_id = blueprintId;
         }
