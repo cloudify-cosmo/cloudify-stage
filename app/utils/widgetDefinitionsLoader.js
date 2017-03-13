@@ -17,6 +17,7 @@ import '../../bower_components/cloudify-blueprint-topology/dist/styles/blueprint
 import '../../bower_components/cloudify-blueprint-topology/dist/scripts/blueprint-topology-tpls.js';
 
 import * as BasicComponents from '../components/basic';
+import StageUtils from './stageUtils';
 
 import WidgetDefinition from './WidgetDefinition';
 var widgetDefinitions = [];
@@ -46,7 +47,8 @@ export default class WidgetDefinitionsLoader {
             Common: [],
             defineCommon: (def) =>{
                 Stage.Common[def.name] = def.common;
-            }
+            },
+            Utils: StageUtils
         };
 
         window.moment = momentImport;

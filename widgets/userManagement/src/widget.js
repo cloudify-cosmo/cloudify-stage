@@ -30,7 +30,7 @@ Stage.defineWidget({
         formattedData = Object.assign({}, data, {
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
-                    last_login_at: item.last_login_at?moment(item.last_login_at,'YYYY-MM-DD HH:mm:ss.SSSSS').format('DD-MM-YYYY HH:mm'):"",
+                    last_login_at: item.last_login_at?Stage.Utils.formatTimestamp(item.last_login_at):"",
                     groupCount: item.groups.length,
                     tenantCount: item.tenants.length,
                     isSelected: item.username === selectedUser
