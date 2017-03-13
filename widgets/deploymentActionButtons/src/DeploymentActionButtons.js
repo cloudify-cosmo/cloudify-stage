@@ -17,7 +17,6 @@ export default class DeploymentActionButtons extends React.Component {
         this.state = {
             showModal: false,
             modalType: '',
-            deployment: DeploymentActionButtons.EMPTY_DEPLOYMENT,
             workflow: DeploymentActionButtons.EMPTY_WORKFLOW,
             loading: false,
             error: null
@@ -28,7 +27,7 @@ export default class DeploymentActionButtons extends React.Component {
         this.props.toolbox.loading(true);
         this.setState({loading: true});
         let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-        actions.doDeleteById(this.props.deploymentId).then(() => {
+        actions.doDelete(this.props.deployment).then(() => {
             this.setState({loading: false, error: null});
             this._hideModal();
             this.props.toolbox.loading(false);
@@ -57,27 +56,10 @@ export default class DeploymentActionButtons extends React.Component {
         return this.state.modalType === type && this.state.showModal;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!_.isEmpty(nextProps.deploymentId) && nextProps.deploymentId !== this.props.deploymentId) {
-            this.props.toolbox.loading(true);
-            this.setState({loading: true});
-            let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-            actions.doGetById(nextProps.deploymentId).then((deployment) => {
-                this.props.toolbox.loading(false);
-                this.setState({loading: false, error: null, deployment});
-            }).catch((err) => {
-                this.props.toolbox.loading(false);
-                this.setState({loading: false, error: err.message, deployment: DeploymentActionButtons.EMPTY_DEPLOYMENT});
-            });
-        } else if (nextProps.data !== this.props.data) {
-            this.setState({deployment: nextProps.data});
-        }
-    }
-
     render() {
         let {ErrorMessage, Button, Confirm, PopupMenu, Popup, Menu} = Stage.Basic;
         let {ExecuteDeploymentModal, UpdateDeploymentModal} = Stage.Common;
-        let deploymentId = this.props.deploymentId;
+        let deploymentId = this.props.deployment.id;
 
         return (
             <div>
@@ -91,7 +73,7 @@ export default class DeploymentActionButtons extends React.Component {
                     
                     <Menu vertical>
                         {
-                            _.map(this.state.deployment.workflows, (workflow) =>
+                            _.map(this.props.deployment.workflows, (workflow) =>
                                 <Menu.Item name={_.capitalize(_.lowerCase(workflow.name))} key={workflow.name}
                                            onClick={this._showExecuteWorkflowModal.bind(this, workflow)} />
                             )
@@ -114,14 +96,14 @@ export default class DeploymentActionButtons extends React.Component {
 
                 <ExecuteDeploymentModal
                     show={this._isShowModal(DeploymentActionButtons.WORKFLOW_ACTION)}
-                    deployment={this.state.deployment}
+                    deployment={this.props.deployment}
                     workflow={this.state.workflow}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
                 <UpdateDeploymentModal
                     show={this._isShowModal(DeploymentActionButtons.EDIT_ACTION)}
-                    deployment={this.state.deployment}
+                    deployment={this.props.deployment}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 

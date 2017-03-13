@@ -11,16 +11,8 @@ class BlueprintActions {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprint.id}`);
     }
 
-    doGetFullBlueprintDataById(blueprintId) {
-        return this.doGetFullBlueprintData({id: blueprintId});
-    }
-
     doDelete(blueprint) {
         return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`);
-    }
-
-    doDeleteById(blueprintId) {
-        return this.doDelete({id: blueprintId});
     }
 
     doDeploy(blueprint, deploymentId, inputs) {

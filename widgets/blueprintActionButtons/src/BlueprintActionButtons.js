@@ -15,7 +15,6 @@ export default class BlueprintActionButtons extends React.Component {
         this.state = {
             showModal: false,
             modalType: '',
-            blueprint: BlueprintActionButtons.EMPTY_BLUEPRINT,
             loading: false,
             error: null
         }
@@ -37,7 +36,7 @@ export default class BlueprintActionButtons extends React.Component {
         this.props.toolbox.loading(true);
         this.setState({loading: true});
         let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions.doDeleteById(this.props.blueprintId).then(()=> {
+        actions.doDelete(this.props.blueprint).then(()=> {
             this.props.toolbox.getEventBus().trigger('blueprints:refresh');
             this.setState({loading: false, error: null});
             this._hideModal();
@@ -50,28 +49,11 @@ export default class BlueprintActionButtons extends React.Component {
         return false;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!_.isEmpty(nextProps.blueprintId) && nextProps.blueprintId !== this.props.blueprintId) {
-            this.props.toolbox.loading(true);
-            this.setState({loading: true});
-            let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-            actions.doGetFullBlueprintDataById(nextProps.blueprintId).then((blueprint) => {
-                this.props.toolbox.loading(false);
-                this.setState({loading: false, error: null, blueprint});
-            }).catch((err) => {
-                this.props.toolbox.loading(false);
-                this.setState({loading: false, error: err.message, blueprint: BlueprintActionButtons.EMPTY_BLUEPRINT});
-            });
-        } else if (nextProps.data !== this.props.data) {
-            this.setState({blueprint: nextProps.data});
-        }
-    }
-
     render() {
         let {ErrorMessage, Button, Confirm} = Stage.Basic;
         let {DeployBlueprintModal} = Stage.Common;
 
-        let blueprintId = this.props.blueprintId;
+        let blueprintId = this.props.blueprint.id;
 
         return (
             <div>
@@ -86,7 +68,7 @@ export default class BlueprintActionButtons extends React.Component {
                         content="Delete blueprint"/>
 
                 <DeployBlueprintModal show={this._isShowModal(BlueprintActionButtons.DEPLOY_ACTION)}
-                                      blueprint={this.state.blueprint}
+                                      blueprint={this.props.blueprint}
                                       onHide={this._hideModal.bind(this)}
                                       toolbox={this.props.toolbox}/>
 

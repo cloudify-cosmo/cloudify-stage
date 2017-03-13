@@ -3,7 +3,7 @@
  */
 
 class JsonUtils {
-    static stringify(value, indented) {
+    static stringify(value, indented = false) {
         let stringifiedValue = '';
 
         try {

@@ -19,17 +19,26 @@ Stage.defineWidget({
         let blueprintId = toolbox.getContext().getValue('blueprintId');
 
         if (!_.isEmpty(blueprintId)) {
+            toolbox.loading(true);
             return toolbox.getManager().doGet(`/blueprints/${blueprintId}`)
-                .then(blueprint => Promise.resolve(blueprint));
+                .then(blueprint => {
+                    toolbox.loading(false);
+                    return Promise.resolve(blueprint);
+                });
         }
 
         return Promise.resolve(BlueprintActionButtons.EMPTY_BLUEPRINT);
     },
 
-    render: function(widget,data,error,toolbox) {
+    fetchParams: function(widget, toolbox) {
         let blueprintId = toolbox.getContext().getValue('blueprintId');
+
+        return {blueprint_id: blueprintId};
+    },
+
+    render: function(widget,data,error,toolbox) {
         return (
-            <BlueprintActionButtons blueprintId={blueprintId} data={data} widget={widget} toolbox={toolbox} />
+            <BlueprintActionButtons blueprint={data} widget={widget} toolbox={toolbox} />
         );
     }
 });

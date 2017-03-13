@@ -19,17 +19,26 @@ Stage.defineWidget({
         let deploymentId = toolbox.getContext().getValue('deploymentId');
 
         if (!_.isEmpty(deploymentId)) {
+            toolbox.loading(true);
             return toolbox.getManager().doGet(`/deployments/${deploymentId}`)
-                .then(deployment => Promise.resolve(deployment));
+                .then(deployment => {
+                    toolbox.loading(false);
+                    return Promise.resolve(deployment);
+                });
         }
 
         return Promise.resolve(DeploymentActionButtons.EMPTY_DEPLOYMENT);
     },
 
-    render: function(widget,data,error,toolbox) {
+    fetchParams: function(widget, toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId');
+
+        return {deployment_id: deploymentId};
+    },
+
+    render: function(widget,data,error,toolbox) {
         return (
-            <DeploymentActionButtons deploymentId={deploymentId} data={data} widget={widget} toolbox={toolbox} />
+            <DeploymentActionButtons deployment={data} widget={widget} toolbox={toolbox} />
         );
     }
 
