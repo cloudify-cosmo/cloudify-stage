@@ -79,7 +79,7 @@ export default class BlueprintSources extends React.Component {
                 <ErrorMessage error={this.state.error}/>
 
                 {this.props.data.blueprintId ?
-                    <SplitterLayout>
+                    <SplitterLayout primaryIndex={0} percentage secondaryInitialSize={this.props.widget.configuration.contentPaneWidth}>
                         <div>
                             <NodesTree showLine selectable defaultExpandAll onSelect={this._selectFile.bind(this)}>
                                 <NodesTree.Node title={<Label color='purple' horizontal>{this.props.data.blueprintId}</Label>} key="0">
@@ -88,11 +88,10 @@ export default class BlueprintSources extends React.Component {
                             </NodesTree>
                         </div>
                         {this.state.content ?
-                            <div className="alignHeighlight">
+                            <div className="alignHighlight">
                                 <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
-                                <Label attached='top right' size="small">
-                                    <Icon name="maximize" link
-                                          onClick={()=> this.refs.contentOverlay.show()}/>{this.state.filename}
+                                <Label attached='top right' size="small" onClick={()=> this.refs.contentOverlay.show()}>
+                                    <Icon name="maximize" link/>{this.state.filename}
                                 </Label>
                                 <Overlay ref="contentOverlay">
                                     <HighlightText className={this.state.type}>{this.state.content}</HighlightText>

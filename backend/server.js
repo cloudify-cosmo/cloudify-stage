@@ -28,6 +28,7 @@ var ServerSettings = require('./serverSettings');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
 var BlueprintAdditions = require('./routes/BlueprintAdditions');
+var Monitoring = require('./routes/Monitoring');
 var config = require('./config');
 var SourceBrowser = require('./routes/SourceBrowser');
 
@@ -40,6 +41,7 @@ logger.info('Server started in mode '+ServerSettings.settings.mode);
 var app = express();
 
 app.use(express.static(path.resolve(__dirname , "../dist"),{index: 'index.html'}));
+app.use(log4js.connectLogger(log4js.getLogger("http"), { level: 'INFO'}));
 
 // For dev purposes
 app.use((req,res,next) => {
@@ -61,6 +63,7 @@ app.use('/sp',ServerProxy);
 app.use('/ua',UserApp);
 app.use('/source',SourceBrowser);
 app.use('/blueprints',BlueprintAdditions);
+app.use('/monitor',Monitoring);
 app.use('/config',function(req,res){
     res.send(config.get(ServerSettings.settings.mode));
 });

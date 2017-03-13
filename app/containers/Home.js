@@ -6,6 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Home from '../components/Home';
 import {clearContext,setValue} from '../actions/context';
+import { push } from 'react-router-redux';
 
 const mapStateToProps = (state, ownProps) => {
     var selectedPageId = ownProps.params.pageId || "0";
@@ -25,6 +26,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onSetContextValue: (key,value)=>{
             dispatch(setValue(key,value));
+        },
+        navigateTo404: () =>{
+            dispatch(push('/404'));
         }
     }
 };

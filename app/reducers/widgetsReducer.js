@@ -22,7 +22,9 @@ let buildConfig = (widgetDefinition)=>{
             value = _.split(value, ',');
         } else if (config.type == Stage.Basic.GenericField.BOOLEAN_TYPE) {
             value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
-        } else if (config.type === Stage.Basic.GenericField.NUMBER_LIST_TYPE || config.type === Stage.Basic.GenericField.NUMBER_EDITABLE_LIST_TYPE) {
+        } else if (config.type === Stage.Basic.GenericField.NUMBER_TYPE ||
+                   config.type === Stage.Basic.GenericField.NUMBER_LIST_TYPE ||
+                   config.type === Stage.Basic.GenericField.NUMBER_EDITABLE_LIST_TYPE) {
             value = parseInt(value) || 0;
         }
 

@@ -1,0 +1,13 @@
+{
+  "name": "Plugins",
+  "widgets": [
+    {
+      "name": "Plugins",
+      "definition": "plugins",
+      "width": 12,
+      "height": 20,
+      "x": 0,
+      "y": 0
+    }
+  ]
+}
