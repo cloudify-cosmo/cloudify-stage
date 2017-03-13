@@ -5,9 +5,7 @@
 import RepositoryList from './RepositoryList';
 import Actions from './actions';
 
-const BLUEPRINT_IMAGE_FILENAME = "blueprint.png";
-const GITHUB_BLUEPRINT_IMAGE_URL = (user,repo)=>`https://raw.githubusercontent.com/${user}/${repo}/master/${BLUEPRINT_IMAGE_FILENAME}`;
-const DEFUALT_IMAGE = "/widgets/blueprintCatalog/images/Cloudify-logo.png"
+const DEFUALT_IMAGE = "/widgets/blueprintCatalog/images/logo.png"
 
 Stage.defineWidget({
     id: 'blueprintCatalog',
@@ -42,11 +40,8 @@ Stage.defineWidget({
             var repos = data[0];
             var total = data[1];
 
-            var fetches = _.map(repos,
-                repo => actions.doGetRepoTree(repo.name)
-                               .then(tree => { return _.findIndex(tree.tree, {"path":BLUEPRINT_IMAGE_FILENAME})<0?
-                                               Promise.resolve(Object.assign(repo, {image_url:DEFUALT_IMAGE})):
-                                               Promise.resolve(Object.assign(repo, {image_url:GITHUB_BLUEPRINT_IMAGE_URL(actions.getUsername(), repo.name)}))}));
+            var fetches = _.map(repos, repo => actions.doFindImage(repo.name, DEFUALT_IMAGE)
+                               .then(imageUrl=>Promise.resolve(Object.assign(repo, {image_url:imageUrl}))));
             return Promise.all(fetches).then((items)=>Promise.resolve({items, total}));
         });
     },

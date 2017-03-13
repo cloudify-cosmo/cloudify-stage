@@ -30,7 +30,7 @@ Stage.defineWidget({
         if (blueprintId) {
             var actions = new Actions(toolbox);
             return actions.doGetBlueprintDetails(blueprintId).then(data => {
-                var lastUpdate = moment(data.updated_at, 'YYYY-MM-DD HH:mm:ss.SSSSS').format('DDMMYYYYHHmm');
+                var lastUpdate = Stage.Utils.formatTimestamp(data.updated_at);
                 return actions.doGetFilesTree(blueprintId, lastUpdate).then(tree => {
                     return {tree, blueprintId}
                 });

@@ -15,6 +15,7 @@ export default class UploadModal extends React.Component {
         blueprintUrl: "",
         blueprintName: "",
         blueprintFileName: "",
+        imageUrl: "",
         errors: {}
     }
 
@@ -35,6 +36,7 @@ export default class UploadModal extends React.Component {
     componentWillUpdate(prevProps, prevState) {
         if (!prevState.show && this.state.show) {
             this.refs.blueprintFile.reset();
+            this.refs.imageFile.reset();
             this.setState(UploadModal.initialState);
         }
     }
@@ -68,7 +70,9 @@ export default class UploadModal extends React.Component {
         actions.doUpload(this.state.blueprintName,
                          this.state.blueprintFileName,
                          this.state.blueprintUrl,
-                         blueprintFile).then(()=>{
+                         blueprintFile,
+                         this.state.imageUrl,
+                         this.refs.imageFile.file()).then(()=>{
             this.setState({loading: false, show: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
@@ -118,6 +122,21 @@ export default class UploadModal extends React.Component {
                                 <Form.Input name='blueprintFileName' placeholder="Blueprint filename e.g. blueprint"
                                             value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
+
+                            <Form.Group>
+                                <Form.Field width="9" error={this.state.errors.imageUrl}>
+                                    <Form.Input label="URL" placeholder="Enter image url" name="imageUrl"
+                                                value={this.state.imageUrl} onChange={this._handleInputChange.bind(this)}/>
+                                </Form.Field>
+                                <Form.Field width="1" style={{position:'relative'}}>
+                                    <div className="ui vertical divider">
+                                        Or
+                                    </div>
+                                </Form.Field>
+                                <Form.Field width="8" error={this.state.errors.imageUrl}>
+                                    <Form.File placeholder="Select image file" name="imageFile" ref="imageFile"/>
+                                </Form.Field>
+                            </Form.Group>
                         </Form>
                     </Modal.Body>
 
