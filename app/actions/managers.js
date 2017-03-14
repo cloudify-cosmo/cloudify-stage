@@ -68,11 +68,12 @@ export function logout(err) {
     }
 }
 
-export function setStatus(status, maintenance) {
+export function setStatus(status, maintenance, services) {
     return {
         type: types.SET_MANAGER_STATUS,
         status,
         maintenance,
+        services,
         receivedAt: Date.now()
     }
 }
@@ -82,7 +83,8 @@ export function getStatus (manager) {
     return function(dispatch) {
         return Promise.all([managerAccessor.doGet('/status'), managerAccessor.doGet('/maintenance')])
             .then((data)=>{
-                dispatch(setStatus(data[0].status, data[1].status));
+                var services = _.filter(data[0].services, item => !_.isEmpty(item.instances));
+                dispatch(setStatus(data[0].status, data[1].status, services));
             }).catch((err)=>{
                 console.error(err);
                 dispatch(setStatus('Error'));
@@ -95,7 +97,7 @@ export function switchMaintenance(manager, activate) {
     return function(dispatch) {
         return managerAccessor.doPost(`/maintenance/${activate?'activate':'deactivate'}`)
             .then((data)=>{
-                dispatch(setStatus(manager.status, data.status));
+                dispatch(setStatus(manager.status, data.status, manager.services));
             });
     }
 }

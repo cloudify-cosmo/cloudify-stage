@@ -14,8 +14,9 @@ export default class Tenants extends Component {
         this.props.onTenantChange(tenant.name);
     }
 
+
     render() {
-        let {Dropdown, Loader} = Stage.Basic;
+        let {Dropdown, Loader, Icon} = Stage.Basic;
 
         let tenants = this.props.manager.tenants;
         if (!tenants || !tenants.items || tenants.isFetching) {
@@ -23,8 +24,16 @@ export default class Tenants extends Component {
         }
 
         let selectedTenant = tenants.selected || _.get(this.props.manager,'tenants.items[0].name');
+
+        const tenantMenuTrigger = (
+            <span>
+                <Icon name="male" circular size="small"/>
+                <span>{selectedTenant ? selectedTenant : 'No Tenants'}</span>
+            </span>
+        )
+
         return (
-            <Dropdown pointing text={selectedTenant ? selectedTenant : 'No Tenants'} className='tenantsMenu'>
+            <Dropdown pointing="top right" trigger={tenantMenuTrigger} className='tenantsMenu'>
                 <Dropdown.Menu>
                     {
                         tenants.items.map((tenant) =>

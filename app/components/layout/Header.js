@@ -2,7 +2,6 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-
 import React, { Component, PropTypes } from 'react';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
@@ -50,29 +49,33 @@ export default class Header extends Component {
                 <div className="logo">
                     <img src={isWhiteLabelEnabled ? this.props.whiteLabel.logoUrl : "/app/images/Cloudify-logo.png"}></img>
                 </div>
-                <div className="right menu">
-                    {
-                        isModeMain
-                        ?
-                        <div className='item configPanel'>
-                            <div className='managerAndTenants'>
-                                <Manager manager={this.props.manager}/>
-                                <Tenants manager={this.props.manager}/>
-                            </div>
+                {
+                    isModeMain
+                    ?
+                    <div className="right menu">
+                        <div className='item'>
+                            <Manager manager={this.props.manager}/>
+                        </div>
+                        <div className='ui dropdown item'>
+                            <Tenants manager={this.props.manager}/>
+                        </div>
+                        <div className='ui dropdown item'>
                             <Users manager={this.props.manager}
                                    showAllOptions={true}
                                    onMaintenance={()=> this.setState({showMaintenanceModal: true})}/>
                         </div>
-                        :
-                        <div className='item configPanel'>
+                    </div>
+                    :
+                    <div className="right menu">
+                        <div className='ui dropdown item'>
                             <Users manager={this.props.manager} showAllOptions={false}/>
                         </div>
-                    }
+                    </div>
+                }
 
-                    <MaintenanceMessage manager={this.props.manager}/>
-                    <MaintenanceMode manager={this.props.manager} show={this.state.showMaintenanceModal}
-                                     onHide={()=> this.setState({showMaintenanceModal: false})}/>
-                </div>
+                <MaintenanceMessage manager={this.props.manager}/>
+                <MaintenanceMode manager={this.props.manager} show={this.state.showMaintenanceModal}
+                                 onHide={()=> this.setState({showMaintenanceModal: false})}/>
             </div>
         );
     }

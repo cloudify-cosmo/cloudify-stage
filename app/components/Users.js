@@ -35,14 +35,14 @@ export default class Users extends Component {
 
         const userMenuTrigger = (
             <span>
+                <Icon name='user' circular/>
                 {this.props.manager.username}
-                <Icon name='user' />
             </span>
         )
 
         return (
             <div>
-                <Dropdown pointing="top right" icon="dropdown" trigger={userMenuTrigger} className='usersMenu'>
+                <Dropdown pointing="top right" trigger={userMenuTrigger} className='usersMenu'>
                     {
                         this.props.showAllOptions
                         ?
@@ -50,7 +50,7 @@ export default class Users extends Component {
                             <Dropdown.Item icon='doctor' text='Maintenance Mode' value='maintenance'
                                            onClick={this.props.onMaintenance}/>
                             <Dropdown.Divider />
-                            <Dropdown.Item icon='settings' text='Configure' value='configure'
+                            <Dropdown.Item icon='options' text='Configure' value='configure'
                                            onClick={this.props.onConfigure}/>
                             <Dropdown.Item icon='undo' text='Reset' value='reset' title='Reset application screens'
                                            onClick={()=>this.setState({showConfirm: true})}/>
