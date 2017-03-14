@@ -19,7 +19,7 @@ describe('(Component) Users', () => {
          manager = {
              username: 'admin',
              auth: {
-                 role: 'administrator'
+                 role: 'admin'
              }
          };
 
