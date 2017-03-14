@@ -2,12 +2,15 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
+
 import React, { Component, PropTypes } from 'react';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
 import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
+import ConfigureModal from '../../containers/ConfigureModal';
+
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {
@@ -16,14 +19,15 @@ export default class Header extends Component {
         super(props,context);
 
         this.state = {
-            showMaintenanceModal: false
+            showMaintenanceModal: false,
+            showConfigureModal: false
         }
     }
 
     static propTypes = {
         manager: PropTypes.any.isRequired,
         mode: PropTypes.string.isRequired,
-        whiteLabel : PropTypes.object,
+        whiteLabel : PropTypes.object
     };
 
     setStyle (container) {
@@ -62,7 +66,8 @@ export default class Header extends Component {
                         <div className='ui dropdown item'>
                             <Users manager={this.props.manager}
                                    showAllOptions={true}
-                                   onMaintenance={()=> this.setState({showMaintenanceModal: true})}/>
+                                   onMaintenance={()=> this.setState({showMaintenanceModal: true})}
+                                   onConfigure={()=> this.setState({showConfigureModal: true})}/>
                         </div>
                     </div>
                     :
@@ -76,6 +81,8 @@ export default class Header extends Component {
                 <MaintenanceMessage manager={this.props.manager}/>
                 <MaintenanceMode manager={this.props.manager} show={this.state.showMaintenanceModal}
                                  onHide={()=> this.setState({showMaintenanceModal: false})}/>
+                <ConfigureModal show={this.state.showConfigureModal}
+                                onHide={()=> this.setState({showConfigureModal: false})}/>
             </div>
         );
     }

@@ -321,6 +321,10 @@ a:hover {
   }
 }
 
+.managerMenu:hover {
+  cursor: default;
+}
+
 .ui.menu:not(.vertical) .item.configPanel {
   flex-direction: row;
   align-items: flex-end;
