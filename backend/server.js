@@ -28,8 +28,9 @@ var ServerSettings = require('./serverSettings');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
 var Monitoring = require('./routes/Monitoring');
-var config = require('./config');
+var clientConfig = require('./routes/ClientConfig');
 var SourceBrowser = require('./routes/SourceBrowser');
+var config = require('./config');
 
 var logger = log4js.getLogger('Server');
 
@@ -62,8 +63,9 @@ app.use('/sp',ServerProxy);
 app.use('/ua',UserApp);
 app.use('/source',SourceBrowser);
 app.use('/monitor',Monitoring);
+app.use('/clientConfig',clientConfig);
 app.use('/config',function(req,res){
-    res.send(config.get(ServerSettings.settings.mode));
+    res.send(config.getForClient(ServerSettings.settings.mode));
 });
 
 // BrowserHistory code
