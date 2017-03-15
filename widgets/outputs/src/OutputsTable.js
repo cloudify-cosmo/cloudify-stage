@@ -5,6 +5,12 @@ export default class extends React.Component {
         this.state = {};
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.data, nextProps.data);
+    }
+
     _refreshData() {
         this.props.toolbox.refresh();
     }
@@ -25,7 +31,7 @@ export default class extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
+        var {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
         let outputs = this.props.data.items;
 
@@ -33,22 +39,20 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <DataTable className="outputsTable">
+                <DataTable className="outputsTable" noDataAvailable={_.isEmpty(outputs)}>
 
-                    <DataTable.Column label="Name" width="30%"/>
-                    <DataTable.Column label="Value" width="70%"/>
+                    <DataTable.Column label="Name" width="35%"/>
+                    <DataTable.Column label="Value" width="65%"/>
                     {
                         outputs.map((output) =>
                             <DataTable.Row key={output.name}>
                                 <DataTable.Data>
-                                    {
-                                        !_.isEmpty(output.description)
-                                        ? <Popup positioning='top left' wide>
-                                              <Popup.Trigger>{output.name}</Popup.Trigger>
-                                              {output.description}
-                                          </Popup>
-                                        : output.name
-                                    }
+                                    <Header size="tiny">
+                                        {output.name}
+                                        <Header.Subheader>
+                                            {output.description}
+                                        </Header.Subheader>
+                                    </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     <Popup positioning='top left' wide>

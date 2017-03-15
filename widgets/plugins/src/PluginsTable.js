@@ -15,6 +15,12 @@ export default class extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.data, nextProps.data);
+    }
+
     _selectPlugin (item){
         var oldSelectedPluginId = this.props.toolbox.getContext().getValue('pluginId');
         this.props.toolbox.getContext().setValue('pluginId',item.id === oldSelectedPluginId ? null : item.id);

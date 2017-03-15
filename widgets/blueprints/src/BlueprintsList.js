@@ -5,7 +5,7 @@
 import BlueprintsTable from './BlueprintsTable';
 import BlueprintsCatalog from './BlueprintsCatalog';
 
-export default class extends React.Component {
+export default class BlueprintList extends React.Component {
 
     constructor(props,context) {
         super(props,context);
@@ -16,6 +16,12 @@ export default class extends React.Component {
             confirmDelete:false,
             error: null
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.data, nextProps.data);
     }
 
     _selectBlueprint (item){

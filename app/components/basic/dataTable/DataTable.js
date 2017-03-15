@@ -43,7 +43,8 @@ export default class GridTable extends Component {
         sortAscending: PropTypes.bool,
         searchable: PropTypes.bool,
         selectable: PropTypes.bool,
-        className: PropTypes.string
+        className: PropTypes.string,
+        noDataAvailable: PropTypes.bool
     };
 
     static defaultProps = {
@@ -55,7 +56,8 @@ export default class GridTable extends Component {
         sortAscending: true,
         searchable: false,
         selectable: false,
-        className: ""
+        className: "",
+        noDataAvailable: false
     };
 
     static childContextTypes = {
@@ -165,8 +167,8 @@ export default class GridTable extends Component {
                                 {headerColumns}
                             </tr>
                         </thead>
-                        {this.props.totalSize <= 0 && this.props.fetchSize <= 0 &&
-                         (this.props.totalSize === 0 || this.props.fetchSize === 0) ?
+                        {this.props.noDataAvailable || (this.props.totalSize <= 0 && this.props.fetchSize <= 0 &&
+                         (this.props.totalSize === 0 || this.props.fetchSize === 0)) ?
                             <tbody>
                                 <tr className="noDataRow">
                                     <td colSpan={headerColumns.length} className="center aligned">

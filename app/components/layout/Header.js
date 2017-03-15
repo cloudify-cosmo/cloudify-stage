@@ -30,6 +30,10 @@ export default class Header extends Component {
         whiteLabel : PropTypes.object
     };
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props.manager, nextProps.manager);
+    }
+
     setStyle (container) {
         var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
         if (isWhiteLabelEnabled) {
