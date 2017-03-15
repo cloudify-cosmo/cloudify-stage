@@ -12,7 +12,8 @@ class BlueprintActions {
     }
 
     doDelete(blueprint) {
-        return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`);
+        return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`)
+            .then(()=>this.doDeleteImage(blueprint.id));
     }
 
     doDeploy(blueprint, deploymentId, inputs) {
@@ -22,7 +23,7 @@ class BlueprintActions {
         });
     }
 
-    doUpload(blueprintName, blueprintFileName, blueprintUrl, file) {
+    doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image) {
         var params = {};
         const YAML_EXTENSION = '.yaml';
 
@@ -35,13 +36,33 @@ class BlueprintActions {
             params['blueprint_archive_url'] = blueprintUrl;
         }
 
+        var promise;
         if (file) {
-            return this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, params, file);
+            promise = this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, params, file);
         } else {
-            return this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
+            promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
         }
 
+        return promise.then(()=> this.doUploadImage(blueprintName, imageUrl, image));
     }
+
+    doUploadImage(blueprintId, imageUrl, image) {
+        if (_.isEmpty(imageUrl) && !image) {
+            return Promise.resolve();
+        }
+
+        var params = {imageUrl};
+        if (image) {
+            return this.toolbox.getExternal().doUpload(`/blueprints/image/${blueprintId}`, params, image, "post");
+        } else {
+            return this.toolbox.getExternal().doPost(`/blueprints/image/${blueprintId}`, params);
+        }
+    }
+
+    doDeleteImage(blueprintId) {
+        return this.toolbox.getExternal().doDelete(`/blueprints/image/${blueprintId}`);
+    }
+
 }
 
 Stage.defineCommon({

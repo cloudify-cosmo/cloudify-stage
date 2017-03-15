@@ -28,11 +28,14 @@ new WebpackDevServer(webpack(config), {
             target: 'http://localhost:8088',
             secure: false
         },
+        '/blueprints': {
+            target: 'http://localhost:8088',
+            secure: false
+        },
         '/clientConfig': {
             target: 'http://localhost:8088',
             secure: false
         }
-
     }
 }).listen(3000, 'localhost', function (err, result) {
         if (err) {

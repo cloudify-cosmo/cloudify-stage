@@ -27,6 +27,7 @@ var express = require('express');
 var ServerSettings = require('./serverSettings');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
+var BlueprintAdditions = require('./routes/BlueprintAdditions');
 var Monitoring = require('./routes/Monitoring');
 var clientConfig = require('./routes/ClientConfig');
 var SourceBrowser = require('./routes/SourceBrowser');
@@ -62,6 +63,7 @@ app.use((req,res,next) => {
 app.use('/sp',ServerProxy);
 app.use('/ua',UserApp);
 app.use('/source',SourceBrowser);
+app.use('/blueprints',BlueprintAdditions);
 app.use('/monitor',Monitoring);
 app.use('/clientConfig',clientConfig);
 app.use('/config',function(req,res){
