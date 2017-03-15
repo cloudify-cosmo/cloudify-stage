@@ -4,6 +4,8 @@
 
 import React, { Component, PropTypes } from 'react';
 import Consts from '../utils/consts';
+import Services from './Services';
+import {Icon, Popup} from './basic/index';
 
 export default class Manager extends Component {
     static propTypes = {
@@ -14,16 +16,19 @@ export default class Manager extends Component {
         var color = status ? (status === Consts.MANAGER_RUNNING ?
                     (maintenance !== Consts.MAINTENANCE_DEACTIVATED ? 'yellow' : 'green') : 'red') : 'grey';
 
-        let {Icon} = Stage.Basic;
-        return <Icon name='circle' color={color} className='statusIcon'/>;
+        return <Icon name='signal' circular inverted size="small" color={color} className='statusIcon'/>;
     }
 
     render() {
         return (
-            <div className='manager'>
-                {this.props.manager.ip}
-                {this.renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
-            </div>
+            <Popup wide hoverable>
+                <Popup.Trigger><div className="managerMenu">
+                    {this.renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
+                    <span>{this.props.manager.ip}</span>
+                </div></Popup.Trigger>
+
+                <Services services={this.props.manager.services}/>
+            </Popup>
         );
     }
 }

@@ -46,7 +46,7 @@ describe('(Component) Tenants', () => {
 
         expect(wrapper.find('div.loader')).to.have.length(0); // Loader not existing
         expect(wrapper.find('.dropdown.tenantsMenu')).to.have.length(1); // Showing the tenants menu
-        expect(wrapper.find('.dropdown.tenantsMenu .text').text()).to.equal('No Tenants'); // Showing 'No Tenants' text
+        expect(wrapper.find('.dropdown.tenantsMenu > span > span').text()).to.equal('No Tenants'); // Showing 'No Tenants' text
         expect(wrapper.find('.tenantsMenu .menu .item')).to.have.length(0); // No options in dropdown
     });
 
@@ -57,7 +57,7 @@ describe('(Component) Tenants', () => {
 
         expect(wrapper.find('div.loader')).to.have.length(0); // Loader not existing
         expect(wrapper.find('.dropdown.tenantsMenu')).to.have.length(1); // Showing the tenatns menu
-        expect(wrapper.find('.dropdown.tenantsMenu .text').text()).to.equal('aaa'); // Showing the default tenant (first one) if no 'selected one was stated'
+        expect(wrapper.find('.dropdown.tenantsMenu > span > span').text()).to.equal('aaa'); // Showing the default tenant (first one) if no 'selected one was stated'
         expect(wrapper.find('.tenantsMenu .menu .item')).to.have.length(3); // Having 3 items in the dropdown
         expect(wrapper.find('.tenantsMenu .menu .item.selected').text()).to.equal('aaa'); // Selected marked in the dropdown as the first value
     });
@@ -70,7 +70,7 @@ describe('(Component) Tenants', () => {
 
         expect(wrapper.find('div.loader')).to.have.length(0); // Loader not existing
         expect(wrapper.find('.dropdown.tenantsMenu')).to.have.length(1); // Showing the tenants menu
-        expect(wrapper.find('.dropdown.tenantsMenu .text').text()).to.equal('bbb'); // Showing the default tenant (first one) if no 'selected one was stated'
+        expect(wrapper.find('.dropdown.tenantsMenu > span > span').text()).to.equal('bbb'); // Showing the default tenant (first one) if no 'selected one was stated'
         expect(wrapper.find('.tenantsMenu .menu .item')).to.have.length(3); // Having 3 items in the dropdown
         expect(wrapper.find('.tenantsMenu .menu .item.selected').text()).to.equal('bbb'); // Selected marked in the dropdown as the first value
     });
@@ -83,7 +83,7 @@ describe('(Component) Tenants', () => {
 
         expect(wrapper.find('div.loader')).to.have.length(0); // Loader not existing
         expect(wrapper.find('.dropdown.tenantsMenu')).to.have.length(1); // Showing the tenatns menu
-        expect(wrapper.find('.dropdown.tenantsMenu .text').text()).to.equal('abc'); // Showing the default tenant (first one) if no 'selected one was stated'
+        expect(wrapper.find('.dropdown.tenantsMenu > span > span').text()).to.equal('abc'); // Showing the default tenant (first one) if no 'selected one was stated'
         expect(wrapper.find('.tenantsMenu .menu .item')).to.have.length(3); // Having 3 items in the dropdown
         expect(wrapper.find('.tenantsMenu .menu .item.selected')).to.have.length(0);
     });

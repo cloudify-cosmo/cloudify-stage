@@ -43,7 +43,7 @@ describe('(Component) Users', () => {
         expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Maintenance Mode'); // Having Maintenance Mode option
         expect(wrapper.find(Dropdown.Item).get(0).props.icon).to.equal('doctor'); // Having doctor icon for Maintenance Mode option
         expect(wrapper.find(Dropdown.Item).get(1).props.text).to.equal('Configure'); // Having Configure option
-        expect(wrapper.find(Dropdown.Item).get(1).props.icon).to.equal('settings'); // Having settings icon for Configure option
+        expect(wrapper.find(Dropdown.Item).get(1).props.icon).to.equal('options'); // Having settings icon for Configure option
         expect(wrapper.find(Dropdown.Item).get(2).props.text).to.equal('Reset'); // Having Edit Mode option
         expect(wrapper.find(Dropdown.Item).get(2).props.icon).to.equal('undo'); // Having configure icon for Edit Mode option
         expect(wrapper.find(Dropdown.Item).get(3).props.text).to.equal('Edit Mode'); // Having Edit Mode option

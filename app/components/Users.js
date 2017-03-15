@@ -37,8 +37,8 @@ export default class Users extends Component {
 
         const userMenuTrigger = (
             <span>
+                <Icon name='user' circular/>
                 {this.props.manager.username}
-                <Icon name='user' />
             </span>
         );
 
@@ -48,13 +48,13 @@ export default class Users extends Component {
                                                 icon='doctor' text='Maintenance Mode' value='maintenance'
                                                 onClick={this.props.onMaintenance}/>);
             adminElements.push(<Dropdown.Divider key='divider'/>);
-            adminElements.push(<Dropdown.Item    key='configure' icon='settings' text='Configure' value='configure'
+            adminElements.push(<Dropdown.Item    key='configure' icon='options' text='Configure' value='configure'
                                                  onClick={this.props.onConfigure}/>);
         }
 
         return (
             <div>
-                <Dropdown pointing="top right" icon="dropdown" trigger={userMenuTrigger} className='usersMenu'>
+                <Dropdown pointing="top right" trigger={userMenuTrigger} className='usersMenu'>
                     {
                         this.props.showAllOptions
                         ?
