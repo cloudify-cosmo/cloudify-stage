@@ -32,7 +32,7 @@ const manager = (state = {}, action) => {
                     token: null,
                     role: null
                 },
-                err: action.error,
+                err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
                 version: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,

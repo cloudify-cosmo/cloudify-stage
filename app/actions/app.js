@@ -2,6 +2,7 @@
 import * as types from './types';
 
 import {getTenants} from './tenants';
+import {getClientConfig} from './clientConfig';
 import {loadOrCreateUserAppData} from './userApp';
 
 export function setAppLoading(isLoading) {
@@ -22,7 +23,10 @@ export function intialPageLoad() {
                 return Promise.reject('User is not attached to any tennat, cannot login');
             }
 
-            return dispatch(loadOrCreateUserAppData(state.manager,state.config,state.templates,state.widgetDefinitions))
+            return Promise.all([
+                    dispatch(getClientConfig()),
+                    dispatch(loadOrCreateUserAppData(state.manager,state.config,state.templates,state.widgetDefinitions))
+                ])
                 .then(()=>{
                     dispatch(setAppLoading(false));
                     return Promise.resolve();

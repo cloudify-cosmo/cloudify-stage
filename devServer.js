@@ -31,6 +31,10 @@ new WebpackDevServer(webpack(config), {
         '/blueprints': {
             target: 'http://localhost:8088',
             secure: false
+        },
+        '/clientConfig': {
+            target: 'http://localhost:8088',
+            secure: false
         }
     }
 }).listen(3000, 'localhost', function (err, result) {

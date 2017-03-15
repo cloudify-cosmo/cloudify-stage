@@ -8,6 +8,15 @@ const config = (state = {}, action) => {
             return Object.assign({},state,{
                 isEditMode: action.isEditMode
             });
+        case types.SET_CLIENT_CONFIG:
+            return Object.assign({},state,{
+                clientConfig: action.config
+            });
+        case types.LOGOUT:
+            return Object.assign({},state,{
+                clientConfig: null,
+                isEditMode: false
+            });
         default:
             return state;
     }

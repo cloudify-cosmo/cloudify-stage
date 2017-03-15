@@ -140,6 +140,10 @@ const pages = (state = [], action) => {
         case types.SET_PAGES:
             // Replace all the pages data (when reading user pages from db)
             return action.pages;
+        // Clear the pages when logging in & out (after login we fetch those)
+        case types.RES_LOGIN:
+        case types.LOGOUT:
+            return [];
         default:
             return state;
     }

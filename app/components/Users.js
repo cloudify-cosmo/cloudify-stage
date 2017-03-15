@@ -4,6 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import {Confirm} from './basic';
+import Consts from '../utils/consts';
 
 export default class Users extends Component {
 
@@ -11,6 +12,7 @@ export default class Users extends Component {
         manager: PropTypes.object.isRequired,
         showAllOptions: PropTypes.bool.isRequired,
         isEditMode: PropTypes.bool.isRequired,
+        canEditTheUi: PropTypes.bool.isRequired,
         onEditModeChange: PropTypes.func.isRequired,
         onConfigure: PropTypes.func.isRequired,
         onLogout: PropTypes.func.isRequired,
@@ -38,7 +40,17 @@ export default class Users extends Component {
                 {this.props.manager.username}
                 <Icon name='user' />
             </span>
-        )
+        );
+
+        var adminElements = [];
+        if (this.props.showAllOptions && this.props.manager.auth.role === Consts.ROLE_ADMIN) {
+            adminElements.push(<Dropdown.Item   key='maintenance'
+                                                icon='doctor' text='Maintenance Mode' value='maintenance'
+                                                onClick={this.props.onMaintenance}/>);
+            adminElements.push(<Dropdown.Divider key='divider'/>);
+            adminElements.push(<Dropdown.Item    key='configure' icon='settings' text='Configure' value='configure'
+                                                 onClick={this.props.onConfigure}/>);
+        }
 
         return (
             <div>
@@ -47,16 +59,16 @@ export default class Users extends Component {
                         this.props.showAllOptions
                         ?
                         <Dropdown.Menu>
-                            <Dropdown.Item icon='doctor' text='Maintenance Mode' value='maintenance'
-                                           onClick={this.props.onMaintenance}/>
-                            <Dropdown.Divider />
-                            <Dropdown.Item icon='settings' text='Configure' value='configure'
-                                           onClick={this.props.onConfigure}/>
+                            {adminElements}
                             <Dropdown.Item icon='undo' text='Reset' value='reset' title='Reset application screens'
                                            onClick={()=>this.setState({showConfirm: true})}/>
-                            <Dropdown.Item icon='configure' selected={this.props.isEditMode} active={this.props.isEditMode}
-                                           text={this.props.isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
-                                           value='editMode' onClick={this.onEditModeClick.bind(this)}/>
+
+                            {
+                                this.props.canEditTheUi &&
+                                <Dropdown.Item icon='configure' selected={this.props.isEditMode} active={this.props.isEditMode}
+                                               text={this.props.isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
+                                               value='editMode' onClick={this.onEditModeClick.bind(this)}/>
+                            }
                             <Dropdown.Divider />
                             <Dropdown.Item icon='log out' text='Logout' value='logout'
                                            onClick={this.props.onLogout}/>

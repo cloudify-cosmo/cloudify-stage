@@ -17,14 +17,19 @@ describe('(Component) Users', () => {
 
     beforeEach(() => {
          manager = {
-             username: 'admin'
+             username: 'admin',
+             auth: {
+                 role: 'admin'
+             }
          };
 
          wrapper = mount(<Users manager={manager}
                                 showAllOptions={true}
                                 isEditMode={false}
+                                canEditTheUi={true}
                                 onEditModeChange={()=>{}}
                                 onConfigure={()=>{}}
+                                onResetTemplate={()=>{}}
                                 onLogout={()=>{}}/>);
     });
 
