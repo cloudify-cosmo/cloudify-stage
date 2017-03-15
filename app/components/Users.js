@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import {Confirm} from './basic';
-import Consts from '../utils/consts'
+import Consts from '../utils/consts';
 
 export default class Users extends Component {
 
@@ -12,6 +12,7 @@ export default class Users extends Component {
         manager: PropTypes.object.isRequired,
         showAllOptions: PropTypes.bool.isRequired,
         isEditMode: PropTypes.bool.isRequired,
+        canEditTheUi: PropTypes.bool.isRequired,
         onEditModeChange: PropTypes.func.isRequired,
         onConfigure: PropTypes.func.isRequired,
         onLogout: PropTypes.func.isRequired,
