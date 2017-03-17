@@ -21,6 +21,10 @@ export default class Manager extends External {
         return _.get(this,'_data.tenants.selected', null);
     }
 
+    getIp() {
+        return _.get(this,'_data.ip', null);
+    }
+
     doUpload(url,params,files,method) {
         var actualUrl = this._buildActualUrl(url,params);
         var securityHeaders = this._buildSecurityHeader();

@@ -27,6 +27,10 @@ new WebpackDevServer(webpack(config), {
         '/source': {
             target: 'http://localhost:8088',
             secure: false
+        },
+        '/monitor': {
+            target: 'http://localhost:8088',
+            secure: false
         }
 
     }

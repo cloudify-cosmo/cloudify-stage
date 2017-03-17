@@ -3,7 +3,11 @@
  */
 
 import Gauge from './Gauge';
+import Graph from './Graph';
+import RechartGraph from './RechartGraph';
 
 export default {
-    Gauge
+    Gauge,
+    Graph,
+    RechartGraph
 }
