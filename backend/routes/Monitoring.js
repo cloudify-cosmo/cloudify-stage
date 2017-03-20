@@ -89,18 +89,6 @@ router.get('/byMetric/:managerIp/:deploymentId/:metric',function(req,res,next){
 
     logger.debug('Query: ',query);
 
-    var memData = require('./exampleData').DATA_MEMORY;
-    var cpuData = require('./exampleData').DATA_CPU;
-    var metric = req.params.metric;
-    if (metric === 'cpu_total_system') {
-        res.send(cpuData);
-    } else if (metric === 'memory_MemFree') {
-        res.send(memData);
-    } else {
-        res.status(500).send({message: 'metric not available'});
-    }
-
-    /*
     getClient(req.params.managerIp)
         .query(query, function(err,response){
             if (err) {
@@ -110,7 +98,6 @@ router.get('/byMetric/:managerIp/:deploymentId/:metric',function(req,res,next){
                 res.send(response);
             }
         } );
-    */
 });
 
 router.get('/query/:managerIp',function (req, res,next) {

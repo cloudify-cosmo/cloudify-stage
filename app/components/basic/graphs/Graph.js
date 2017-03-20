@@ -1,81 +1,64 @@
 /**
- * Created by jakubniezgoda on 13/03/2017.
+ * Created by jakubniezgoda on 16/03/2017.
  */
 
 import React, { Component, PropTypes } from 'react';
-import { Charts, ChartContainer, ChartRow, Resizable, YAxis, LineChart, BarChart } from 'react-timeseries-charts';
-import { TimeSeries, TimeRange } from 'pondjs';
+import {LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 
 export default class Graph extends Component {
-    constructor(props,context) {
-        super(props,context);
-
-        this.state = {
-            tracker: null,
-            width: 0,
-            height: 200,
-        }
-    };
 
     static propTypes = {
-        data: PropTypes.object.isRequired,
+        data: PropTypes.array.isRequired,
         type: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
-        column: PropTypes.string.isRequired,
-        min: PropTypes.number,
-        max: PropTypes.number
+        yDataKey: PropTypes.string.isRequired,
+        xDataKey: PropTypes.string,
+        label: PropTypes.string
     };
 
     static defaultProps = {
-
+        xDataKey: Graph.DEFAULT_X_DATA_KEY
     };
 
+    static DEFAULT_X_DATA_KEY = 'time';
     static LINE_CHART_TYPE = 'line';
     static BAR_CHART_TYPE = 'bar';
 
-    componentDidMount() {
-        let elementResizeDetector = require('element-resize-detector')();
-        let _this = this;
-
-        elementResizeDetector.listenTo(this.refs.container, (element) => {
-            _this.setState({
-                width: element.offsetWidth
-            })
-        });
-    }
-
-    handleTrackerChanged(t) {
-        this.setState({tracker: t});
-    }
-
     render () {
-        let timeseries = new TimeSeries(this.props.data);
-        let min = _.isEmpty(this.props.min) ? timeseries.min(this.props.column) : this.props.min;
-        let max = _.isEmpty(this.props.max) ? timeseries.max(this.props.column) : this.props.max;
+        const MARGIN = {top: 5, right: 30, left: 20, bottom: 5};
+        const COLOR = "#8884d8";
+        const INTERPOLATION_TYPE = "monotone";
+        const STROKE_DASHARRAY = "3 3";
 
-        let {Label} = Stage.Basic;
+        let label = this.props.label || this.props.yDataKey;
 
         return (
-            <div ref="container">
+            <ResponsiveContainer width="100%" height="100%">
                 {
-                    !_.isNull(this.state.tracker) ? <Label>{_.toString(moment(this.state.tracker).format("YYYY-MM-DD HH:mm:ss"))}</Label> : <Label>No tracker</Label>
+                    this.props.type == Graph.LINE_CHART_TYPE
+                    ?
+                        <LineChart data={this.props.data}
+                                   margin={MARGIN}>
+                            <XAxis dataKey={this.props.xDataKey} />
+                            <YAxis />
+                            <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
+                            <Tooltip />
+                            <Legend />
+                            <Line isAnimationActive={false} name={label} type={INTERPOLATION_TYPE}
+                                  dataKey={this.props.yDataKey} stroke={COLOR} />
+                        </LineChart>
+                    :
+                        <BarChart data={this.props.data}
+                                  margin={MARGIN}>
+                            <XAxis dataKey={this.props.xDataKey} />
+                            <YAxis />
+                            <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
+                            <Tooltip />
+                            <Legend />
+                            <Bar isAnimationActive={false} name={label}
+                                 dataKey={this.props.yDataKey} fill={COLOR} />
+                        </BarChart>
                 }
-                <ChartContainer timeRange={timeseries.timerange()}
-                                /*trackerPosition={this.state.tracker}
-                                onTrackerChanged={this.handleTrackerChanged.bind(this)}*/
-                                width={this.state.width}>
-                    <ChartRow height={this.state.height}>
-                        <YAxis id={this.props.column} label={this.props.label} min={min} max={max} width="50" type="linear"/>
-                        <Charts>
-                            {
-                                this.props.type === Graph.LINE_CHART_TYPE
-                                ? <LineChart axis={this.props.column} columns={[this.props.column]} series={timeseries}/>
-                                : <BarChart axis={this.props.column} spacing={1} columns={[this.props.column]} series={timeseries}/>
-                            }
-                        </Charts>
-                    </ChartRow>
-                </ChartContainer>
-            </div>
+            </ResponsiveContainer>
         );
     }
 };
