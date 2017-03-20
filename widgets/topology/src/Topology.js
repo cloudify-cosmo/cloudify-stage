@@ -17,6 +17,13 @@ export default class Topology extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.data, nextProps.data)
+            || !_.isEqual(this.props.template, nextProps.template);
+    }
+
     componentDidMount() {
 
         angularAppManager.start(this.refs.topologyContainer,'topologyApp');

@@ -5,13 +5,25 @@
       "name": "Blueprints Catalog",
       "definition": "blueprintCatalog",
       "width": 12,
-      "height": 52,
+      "height": 39,
       "x": 0,
       "y": 0,
       "configuration":{
         "displayStyle":"catalog"
       }
+    },
+    {
+      "name": "Blueprints",
+      "definition": "blueprints",
+      "width": 12,
+      "height": 39,
+      "x": 0,
+      "y": 39,
+      "configuration":{
+        "displayStyle":"catalog"
+      }
     }
+
 
   ]
 }

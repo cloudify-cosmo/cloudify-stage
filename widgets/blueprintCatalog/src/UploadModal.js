@@ -2,8 +2,6 @@
  * Created by pposel on 07/02/2017.
  */
 
-const UPLOAD_URL = (user,repo)=>`https://api.github.com/repos/${user}/${repo}/zipball/master`;
-
 export default class UploadModal extends React.Component {
 
     constructor(props,context) {
@@ -51,7 +49,7 @@ export default class UploadModal extends React.Component {
 
         this.props.actions.doUpload(this.state.blueprintName,
                                     this.state.blueprintFileName,
-                                    UPLOAD_URL(this.props.actions.getUsername(), this.props.files.repo)
+                                    this.props.files.repo
         ).then(()=>{
             this.setState({loading: false});
             this.props.toolbox.getEventBus().trigger('blueprints:refresh');

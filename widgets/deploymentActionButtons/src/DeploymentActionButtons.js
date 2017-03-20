@@ -23,6 +23,12 @@ export default class DeploymentActionButtons extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.deployment, nextProps.deployment);
+    }
+
     _deleteDeployment() {
         this.props.toolbox.loading(true);
         this.setState({loading: true});

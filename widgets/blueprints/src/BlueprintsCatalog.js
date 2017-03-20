@@ -27,90 +27,56 @@ export default class BlueprintsCatalog extends React.Component{
     };
 
     render(){
-        var DataSegment = Stage.Basic.DataSegment;
+        var {DataSegment, Grid, Image, Button, Label} = Stage.Basic;
 
         var index=0;
         var blueprintsItems =
             this.props.data.items.map((item) => {
-                var image;
-                switch(item.id.trim().toLowerCase()){
-                    case "vyatta":
-                        image='bp1.png';
-                        break;
-                    case "quagga":
-                        image='bp2.png';
-                        break;
-                    case "fortigate":
-                        image='bp3.png';
-                        break;
-                    case "clearwater ims":
-                        image='bp4.png';
-                        break;
-                    default:
-                        image='bp'+((index++%8)+5)+'.png';
-                        break;
-                }
-                var imageStyle = {
-                    background: 'url(/widgets/blueprints/blueprintImages/'+image+')',
-                    backgroundSize: 'contain',
-                    position: 'absolute',
-                    left: 0,right: 0, top: 0, bottom:0,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: '50%',
-                    margin: '5px'
-                };
                 return (
-                    <div className="column" key={item.id}>
+                    <Grid.Column key={item.id}>
 
-                        <DataSegment.Item selected={item.isSelected}
-                                      onClick={()=>this.props.onSelectBlueprint(item)}>
-                            <div className="ui grid">
-                                <div className="five wide center aligned column rightDivider">
-                                    <div style={imageStyle}/>
-                                </div>
-                                <div className="eleven wide column">
-                                    <h3><a className='blueprintName' href="javascript:void(0)">{item.id}</a></h3>
+                        <DataSegment.Item selected={item.isSelected} className="fullHeight"
+                                          onClick={(event)=>{event.stopPropagation(); this.props.onSelectBlueprint(item)}}>
+                            <Grid>
+                                <Grid.Row className="bottomDivider">
+                                    <Grid.Column width="4"><Image src={`/blueprints/image/${item.id}`} centered={true}/></Grid.Column>
+                                    <Grid.Column width="12">
+                                        <h3 className="ui icon header verticalCenter">
+                                            <a className="underline" href="javascript:void(0)">{item.id}</a>
+                                        </h3>
+                                    </Grid.Column>
+                                </Grid.Row>
 
-                                    <div className='ui grid'>
-                                        <div className='two column row'>
-                                            <div className='column'>Created</div>
-                                            <div className='column'>{item.created_at}</div>
-                                        </div>
-                                        <div className='two column row'>
-                                            <div className='column'>Updated</div>
-                                            <div className='column'>{item.updated_at}</div>
-                                        </div>
-                                        <div className='two column row'>
-                                            <div className='column'># Deployments</div>
-                                            <div className='column'><div className="ui green horizontal label">{item.depCount}</div></div>
-                                        </div>
+                                <Grid.Row className="noPadded">
+                                    <Grid.Column width="7"><h5 className="ui icon header">Created</h5></Grid.Column>
+                                    <Grid.Column width="9">{item.created_at}</Grid.Column>
+                                </Grid.Row>
 
-                                        <div className='row'>
-                                            <div className='ui grid column'>
+                                <Grid.Row className="noPadded">
+                                    <Grid.Column width="7"><h5 className="ui icon header">Updated</h5></Grid.Column>
+                                    <Grid.Column width="9">{item.updated_at}</Grid.Column>
+                                </Grid.Row>
 
-                                                <div className='eight wide column left floated '>
-                                                    <button className="ui labeled icon button " onClick={(event)=>{event.stopPropagation();this.props.onCreateDeployment(item)}}>
-                                                        <i className="rocket icon"></i>
-                                                        Deploy
-                                                    </button>
-                                                </div>
-                                                <div className='eight wide column right floated right aligned'>
-                                                    <h3 style={{lineHeight: '40px',textDecoration: 'underline'}}>
-                                                        <a className='' href="javascript:void(0)" onClick={(event)=>{event.stopPropagation();this.props.onDeleteBlueprint(item)}}>
-                                                            <i className="trash icon link"></i>
-                                                            Delete
-                                                        </a>
-                                                    </h3>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <Grid.Row className="noPadded">
+                                    <Grid.Column width="7"><h5 className="ui icon header"># Deployments</h5></Grid.Column>
+                                    <Grid.Column width="9"><Label color="green" horizontal>{item.depCount}</Label></Grid.Column>
+                                </Grid.Row>
+                            </Grid>
 
-                                </div>
-                            </div>
-
+                            <Grid.Column width="16">
+                                <div style={{height:"50px"}}></div>
+                            </Grid.Column>
                         </DataSegment.Item>
-                    </div>
+
+                        <div className="actionButtons">
+                            <Button icon="trash" content="Delete" className="icon" basic
+                                    onClick={(event)=>{event.stopPropagation(); this.props.onDeleteBlueprint(item)}}/>
+
+                            <Button icon="rocket" content="Deploy" className="labeled icon"
+                                    onClick={(event)=>{event.stopPropagation(); this.props.onCreateDeployment(item)}}/>
+                        </div>
+
+                    </Grid.Column>
                 );
             });
 
@@ -140,15 +106,15 @@ export default class BlueprintsCatalog extends React.Component{
             <div>
                 <DataSegment totalSize={this.props.data.total}
                          pageSize={this.props.widget.configuration.pageSize}
-                         fetchData={this.props.fetchData}>
+                         fetchData={this.props.fetchData} className="blueprintCatalog">
 
                     <DataSegment.Action>
                         <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
                     </DataSegment.Action>
 
-                    <div className="ui grid">
+                    <Grid>
                         {blueprintsRows}
-                    </div>
+                    </Grid>
 
                 </DataSegment>
             </div>

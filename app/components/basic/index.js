@@ -18,7 +18,7 @@ import GenericField from './GenericField';
 import Form from './form/Form';
 import InputFile from './InputFile';
 import InputDate from './InputDate';
-import { Input, Radio, Checkbox, Button, Icon, Message,
+import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header,
          Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image} from 'semantic-ui-react'
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
@@ -64,5 +64,7 @@ export {
     Menu,
     PopupMenu,
     NodesTree,
-    SplitterLayout
+    SplitterLayout,
+    Table,
+    Header
 };

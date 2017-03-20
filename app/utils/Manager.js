@@ -3,7 +3,6 @@
  */
 
 import 'isomorphic-fetch';
-import {saveAs} from 'file-saver';
 
 import log from 'loglevel';
 let logger = log.getLogger("Manager");
@@ -23,80 +22,6 @@ export default class Manager extends External {
 
     getIp() {
         return _.get(this,'_data.ip', null);
-    }
-
-    doUpload(url,params,files,method) {
-        var actualUrl = this._buildActualUrl(url,params);
-        var securityHeaders = this._buildSecurityHeader();
-
-        logger.debug('Uploading file for url: '+url);
-
-        return new Promise((resolve,reject)=>{
-            // Call upload method
-            var xhr = new XMLHttpRequest();
-            (xhr.upload || xhr).addEventListener('progress', function(e) {
-                var done = e.position || e.loaded;
-                var total = e.totalSize || e.total;
-                logger.debug('xhr progress: ' + Math.round(done/total*100) + '%');
-            });
-            xhr.addEventListener("error", function(e){
-                logger.error('xhr upload error', e, this.responseText);
-
-                try {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.message) {
-                        reject({message: response.message});
-                    } else {
-                        reject({message: e.message});
-                    }
-
-                } catch (err) {
-                    logger.error('Cannot parse upload response',err);
-                    reject({message: err.message});
-                }
-            });
-            xhr.addEventListener('load', function(e) {
-                logger.debug('xhr upload complete', e, this.responseText);
-
-                try {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.message) {
-                        reject({message: response.message});
-                        return;
-                    }
-
-                } catch (err) {
-                    let errorMessage = `Cannot parse upload response: ${err}`;
-                    logger.error(errorMessage);
-                    reject({message: errorMessage});
-                }
-                resolve();
-            });
-
-            xhr.open(method || 'put',actualUrl);
-            if (securityHeaders) {
-                xhr.setRequestHeader("Authentication-Token", securityHeaders["Authentication-Token"]);
-            }
-
-            var selectedTenant = _.get(this._data,'tenants.selected',Consts.DEFAULT_TENANT);
-            if (selectedTenant) {
-                xhr.setRequestHeader("tenant",selectedTenant);
-            }
-
-            var formData = new FormData();
-
-            if (files) {
-                if (_.isArray(files)) {
-                    _.forEach(files, function (value, key) {
-                        formData.append(key, value);
-                    });
-                } else {
-                    formData = files; // Single file, simply pass it
-                }
-            }
-
-            xhr.send(formData);
-        });
     }
 
     getManagerUrl(url,data) {
@@ -134,7 +59,6 @@ export default class Manager extends External {
         var securityHeaders = this._buildSecurityHeader();
 
         var headers = Object.assign({
-            "Content-Type": "application/json",
             tenant: _.get(this._data,'tenants.selected',Consts.DEFAULT_TENANT)
         },securityHeaders);
 

@@ -34,11 +34,81 @@ export default class External {
         return this._ajaxCall(url,'get',null,null,null,fileName);
     }
 
+    doUpload(url,params,files,method) {
+        var actualUrl = this._buildActualUrl(url,params);
+
+        logger.debug('Uploading file for url: '+url);
+
+        return new Promise((resolve,reject)=>{
+            // Call upload method
+            var xhr = new XMLHttpRequest();
+            (xhr.upload || xhr).addEventListener('progress', function(e) {
+                var done = e.position || e.loaded;
+                var total = e.totalSize || e.total;
+                logger.debug('xhr progress: ' + Math.round(done/total*100) + '%');
+            });
+            xhr.addEventListener("error", function(e){
+                logger.error('xhr upload error', e, this.responseText);
+
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.message) {
+                        reject({message: response.message});
+                    } else {
+                        reject({message: e.message});
+                    }
+
+                } catch (err) {
+                    logger.error('Cannot parse upload response',err);
+                    reject({message: err.message});
+                }
+            });
+            xhr.addEventListener('load', function(e) {
+                logger.debug('xhr upload complete', e, this.responseText);
+
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.message) {
+                        reject({message: response.message});
+                        return;
+                    }
+
+                } catch (err) {
+                    let errorMessage = `Cannot parse upload response: ${err}`;
+                    logger.error(errorMessage);
+                    reject({message: errorMessage});
+                }
+                resolve();
+            });
+
+            xhr.open(method || 'put',actualUrl);
+
+            var headers = this._buildHeaders();
+            _.forIn(headers, function(value, key) {
+                xhr.setRequestHeader(key, value);
+            });
+
+            var formData = new FormData();
+
+            if (files) {
+                if (_.isArray(files)) {
+                    _.forEach(files, function (value, key) {
+                        formData.append(key, value);
+                    });
+                } else {
+                    formData = files; // Single file, simply pass it
+                }
+            }
+
+            xhr.send(formData);
+        });
+    }
+
     _ajaxCall(url,method,params,data,parseResponse=true,fileName) {
         var actualUrl = this._buildActualUrl(url, params);
         logger.debug(method + ' data. URL: ' + url);
 
-        var headers = this._buildHeaders();
+        var headers = Object.assign(this._buildHeaders(), this._contentType());
 
         var options = {
             method: method,
@@ -91,8 +161,12 @@ export default class External {
         return `${url}${queryString}`;
     }
 
+    _contentType() {
+        return {"content-type": "application/json"};
+    }
+
     _buildHeaders() {
-        var headers = {"Content-Type": "application/json"};
+        var headers = {};
         if (this._data && this._data.basicAuth) {
             headers = Object.assign(headers, {"Authorization": `Basic ${this._data.basicAuth}`});
         };

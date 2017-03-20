@@ -43,5 +43,13 @@
       "definition": "outputs",
       "x": 6,
       "y": 25
+    },
+    {
+      "name": "Blueprint sources",
+      "width": 12,
+      "height": 40,
+      "definition": "blueprintSources",
+      "x": 0,
+      "y": 37
     }]
 }

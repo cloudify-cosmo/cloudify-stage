@@ -22,6 +22,11 @@ export default class Page extends Component {
         isEditMode: PropTypes.bool.isRequired
         };
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props.page, nextProps.page)
+            || this.props.isEditMode !== nextProps.isEditMode;
+    }
+
     render() {
         var maximizeWidget = _.findIndex(this.props.page.widgets, { 'maximized': true }) >= 0;
 

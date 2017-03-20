@@ -301,22 +301,33 @@ a:hover {
 }
 
 .usersMenu {
+  margin-top: 4px;
+
   .dropdown.icon {
     margin: 0 0 0 0.4em !important;
   }
 }
 
+.tenantsMenu, .managerMenu {
+  margin-top: 5px;
+
+  .dropdown.icon {
+    margin: 0 0 0 0.4em !important;
+    vertical-align: middle;
+  }
+
+  i + span {
+    vertical-align: middle;
+  }
+}
+
+.managerMenu:hover {
+  cursor: default;
+}
+
 .ui.menu:not(.vertical) .item.configPanel {
   flex-direction: row;
   align-items: flex-end;
-  & .managerAndTenants {
-    flex-direction: column;
-    margin-right: 10px;
-    text-align: right;
-    & .tenantsMenu {
-      margin-right: 5px;
-    }
-  }
 }
 
 .ui.inline.loader.widgetLoader {

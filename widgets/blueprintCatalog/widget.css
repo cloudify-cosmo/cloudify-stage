@@ -1,5 +1,5 @@
 .uploadButton {
-    position: absolute;
-    bottom: 15px;
+    position: absolute !important;
+    bottom: 1rem;
     right: 10px;
 }
