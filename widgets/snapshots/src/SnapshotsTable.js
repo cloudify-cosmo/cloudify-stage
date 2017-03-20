@@ -16,6 +16,12 @@ export default class extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.data, nextProps.data);
+    }
+
     _selectSnapshot (item){
         var oldSelectedSnapshotId = this.props.toolbox.getContext().getValue('snapshotId');
         this.props.toolbox.getContext().setValue('snapshotId',item.id === oldSelectedSnapshotId ? null : item.id);

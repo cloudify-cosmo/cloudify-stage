@@ -20,6 +20,12 @@ export default class EventFilter extends React.Component {
         logLevel: []
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.data, nextProps.data);
+    }
+
     _renderLabel(data, index, defaultLabelProps) {
         return _.truncate(data.text, {'length': 10});
     }

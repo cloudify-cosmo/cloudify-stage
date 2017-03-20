@@ -13,6 +13,12 @@ export default class extends React.Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.data, nextProps.data);
+    }
+
     _refreshData() {
         this.props.toolbox.refresh();
     }

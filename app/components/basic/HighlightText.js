@@ -8,7 +8,7 @@ import Highlight from 'react-highlight';
 export default class HighlightText extends Component {
 
     static propTypes = {
-        children: PropTypes.any.isRequired,
+        children: PropTypes.any,
         className: PropTypes.string
     };
 

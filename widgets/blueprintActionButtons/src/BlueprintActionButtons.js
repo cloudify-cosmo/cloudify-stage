@@ -20,6 +20,12 @@ export default class BlueprintActionButtons extends React.Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.blueprint, nextProps.blueprint);
+    }
+
     _showModal(type) {
         this.setState({modalType: type, showModal: true});
     }

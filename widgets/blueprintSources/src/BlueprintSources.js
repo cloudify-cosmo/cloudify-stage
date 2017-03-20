@@ -18,6 +18,12 @@ export default class BlueprintSources extends React.Component {
         type: "json"
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.data, nextProps.data);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (this.props.data !== nextProps.data ) {
             this.setState(BlueprintSources.initialState);

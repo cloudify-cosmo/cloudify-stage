@@ -15,7 +15,8 @@ export default class Grid extends Component {
             cellHeight: 10,
             verticalMargin: 10,
             float: true,
-            animate: true
+            animate: true,
+            disableResize: !this.props.isEditMode
         });
 
         $(this.refs.grid).off('change').on('change', (event, items)=> {

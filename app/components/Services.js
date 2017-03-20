@@ -8,7 +8,11 @@ import {Table, Icon, Header} from './basic/index';
 export default class Services extends Component {
 
     static propTypes = {
-        services: PropTypes.array.isRequired
+        services: PropTypes.array
+    };
+
+    static defaultProps = {
+        services: []
     };
 
     render() {

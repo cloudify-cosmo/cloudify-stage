@@ -9,6 +9,12 @@ export default class extends React.Component {
         this.state = {};
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.widget !== nextProps.widget
+            || this.state != nextState
+            || !_.isEqual(this.props.data, nextProps.data);
+    }
+
     _refreshData() {
         this.props.toolbox.refresh();
     }
@@ -29,7 +35,7 @@ export default class extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
+        let {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
         let inputs = this.props.data.items;
 
@@ -37,23 +43,21 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <DataTable className="inputsTable">
+                <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)}>
 
-                    <DataTable.Column label="Name" width="30%"/>
-                    <DataTable.Column label="Value" width="70%"/>
+                    <DataTable.Column label="Name" width="35%"/>
+                    <DataTable.Column label="Value" width="65%"/>
 
                     {
                         inputs.map((input) =>
                             <DataTable.Row key={input.name}>
                                 <DataTable.Data>
-                                    {
-                                        !_.isEmpty(input.description)
-                                        ? <Popup positioning='top left' wide>
-                                              <Popup.Trigger>{input.name}</Popup.Trigger>
-                                              {input.description}
-                                          </Popup>
-                                        : input.name
-                                    }
+                                    <Header size="tiny">
+                                        {input.name}
+                                        <Header.Subheader>
+                                            {input.description}
+                                        </Header.Subheader>
+                                    </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     <Popup positioning='top left' wide>
