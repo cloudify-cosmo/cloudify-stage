@@ -42,6 +42,8 @@ export default class Modal extends Component {
             $(this.refs.modalObj).modal({
                 closable: false,
                 observeChanges: true,
+                onShow: ()=>$('body').css({overflow: 'hidden'}),
+                onHide: ()=>$('body').css({overflow: 'inherit'}),
                 onDeny: ()=>{ return thi$.props.onDeny() },
                 onApprove: ()=>{ return thi$.props.onApprove() },
                 onVisible: ()=>{ thi$.props.onVisible(this.refs.modalObj) }

@@ -30,8 +30,10 @@ export default class Overlay extends Component {
 
     show() {
         $(this.refs.overlayObj)
-            .modal({observeChanges: true})
-            .modal("show");
+            .modal({observeChanges: true,
+                    onShow: ()=>$('body').css({overflow: 'hidden'}),
+                    onHide: ()=>$('body').css({overflow: 'inherit'})
+            }).modal("show");
     }
 
     render() {

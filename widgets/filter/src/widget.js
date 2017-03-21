@@ -13,7 +13,6 @@ Stage.defineWidget({
     color: "yellow",
     showHeader: false,
     showBorder: false,
-    keepOnTop: true,
     fetchUrl: {
         blueprints: '[manager]/blueprints?_include=id',
         deployments: '[manager]/deployments?_include=id,blueprint_id',

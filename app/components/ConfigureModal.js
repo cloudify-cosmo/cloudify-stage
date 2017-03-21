@@ -10,14 +10,15 @@ export default class ConfigureModal extends Component {
     constructor(props,context) {
         super(props,context);
 
-        this.state = {
-            loading: false,
-            canUserEdit: false
-        }
+        this.state = ConfigureModal.initialState(props);
     }
 
-    static initialState = {
-    }
+    static initialState = (props) => {
+        return {
+            loading: false,
+            canUserEdit: props.config.canUserEdit
+        }
+    };
 
     static propTypes = {
         show: PropTypes.bool.isRequired,
@@ -27,13 +28,15 @@ export default class ConfigureModal extends Component {
     static defaultProps = {
     };
 
-    onApprove () {
-        var canUserEditInputValue = $($(this.refs.configForm).find('.fieldInput')[0]).is(':checked');
+    componentWillReceiveProps(nextProps) {
+        this.setState(ConfigureModal.initialState(nextProps));
+    }
 
-        this.props.onSave({canUserEdit: canUserEditInputValue})
+    onApprove () {
+        this.props.onSave({canUserEdit: this.state.canUserEdit})
             .then(this.props.onHide)
             .catch((err)=>{
-                    this.setState({error: err});
+                    this.setState({error: err.message});
                 });
         return false;
     }
@@ -43,13 +46,13 @@ export default class ConfigureModal extends Component {
         return true;
     }
 
-    render() {
+    _handleInputChange(proxy, field) {
+        this.setState(Form.fieldNameValue(field));
+    }
 
+    render() {
         return (
-            <Modal show={this.props.show}
-                   onDeny={this.onDeny.bind(this)}
-                   onApprove={this.onApprove.bind(this)}
-                   onVisible={(modal)=>$(modal).find('[data-content]').popup()}
+            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}
                    loading={this.state.loading}>
                 <Modal.Header>
                     Configure UI properties
@@ -57,14 +60,14 @@ export default class ConfigureModal extends Component {
                 <Modal.Body>
                     <ErrorMessage error={this.state.error}/>
 
-                    <div className="ui form" ref='configForm'>
-                        <GenericField ref='canUserEditInput'
-                                      label='Can regular user edit his own screens?'
-                                      id='canUserEdit'
+                    <Form>
+                        <GenericField label='Can regular user edit his own screens?'
+                                      name='canUserEdit'
                                       type={GenericField.BOOLEAN_TYPE}
                                       description='Check this if you want to allow users (non admin) to edit their own screens in the UI (move to edit mode)'
-                                      value={this.props.config.canUserEdit}/>
-                    </div>
+                                      value={this.state.canUserEdit}
+                                      onChange={this._handleInputChange.bind(this)}/>
+                    </Form>
 
                 </Modal.Body>
 

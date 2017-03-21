@@ -24,7 +24,7 @@ export default class PopupMenu extends Component {
         let trigger = <Icon link name="content" className={this.props.className} onClick={(e)=>{e.stopPropagation();}}/>;
 
         return (
-            <Popup trigger={trigger} on='click' positioning="bottom right" className="popupMenu" offset={12}
+            <Popup trigger={trigger} on='click' position="bottom right" className="popupMenu" offset={12}
                    open={this.state.opened}
                    onClose={()=>this.setState({opened: false})}
                    onOpen={()=>this.setState({opened: true})}

@@ -18,17 +18,7 @@ let buildConfig = (widgetDefinition)=>{
 
         var value = config.default && !config.value ? config.default : (_.isUndefined(config.value) ? null : config.value );
 
-        if (config.type == Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE) {
-            value = _.split(value, ',');
-        } else if (config.type == Stage.Basic.GenericField.BOOLEAN_TYPE) {
-            value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
-        } else if (config.type === Stage.Basic.GenericField.NUMBER_TYPE ||
-                   config.type === Stage.Basic.GenericField.NUMBER_LIST_TYPE ||
-                   config.type === Stage.Basic.GenericField.NUMBER_EDITABLE_LIST_TYPE) {
-            value = parseInt(value) || 0;
-        }
-
-        configs[config.id] = value;
+        configs[config.id] = Stage.Basic.GenericField.formatValue(config.type, value);
     });
 
     return configs;

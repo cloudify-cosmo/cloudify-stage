@@ -522,6 +522,11 @@ code.hljs {
   padding: 0px !important;
 }
 
+.dropdownPortal {
+  z-index: 100000 !important;
+  visibility: hidden !important;
+}
+
 .ui.dropdown .menu>.item.indent {
   padding-left: 30px !important;
 }

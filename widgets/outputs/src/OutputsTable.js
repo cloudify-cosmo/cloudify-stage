@@ -55,10 +55,13 @@ export default class extends React.Component {
                                     </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    <Popup positioning='top left' wide>
-                                        <Popup.Trigger>{JsonUtils.stringify(output.value, false)}</Popup.Trigger>
-                                        <HighlightText className='json'>{JsonUtils.stringify(output.value, true)}</HighlightText>
-                                    </Popup>
+                                    {output.value &&
+                                        <Popup position='top left' wide>
+                                            <Popup.Trigger><span>{JsonUtils.stringify(output.value, false)}</span></Popup.Trigger>
+                                            <HighlightText
+                                                className='json'>{JsonUtils.stringify(output.value, true)}</HighlightText>
+                                        </Popup>
+                                    }
                                 </DataTable.Data>
                             </DataTable.Row>
                         )

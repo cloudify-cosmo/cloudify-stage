@@ -32,13 +32,8 @@ export default class Filter extends React.Component {
         this.props.toolbox.getEventBus().off('executions:refresh', this._refreshData);
     }
 
-
-    //_selectEvent(item) {
-    //    var oldSelectedEventId = this.props.context.getValue('eventId');
-    //    this.props.context.setValue('eventId',item.id === oldSelectedEventId ? null : item.id);
-    //}
-
-    _selectBlueprint(blueprintId){ //value,text,$choise) {
+    _selectBlueprint(proxy, field){
+        var blueprintId = field.value;
         if (_.isEmpty(blueprintId)) {
             blueprintId = null;
         }
@@ -63,7 +58,8 @@ export default class Filter extends React.Component {
         this.props.toolbox.getContext().setValue('blueprintId',blueprintId);
     }
 
-    _selectDeployment(deploymentId) {
+    _selectDeployment(proxy, field) {
+        var deploymentId = field.value;
         if (_.isEmpty(deploymentId)) {
             deploymentId = null;
         }
@@ -78,7 +74,8 @@ export default class Filter extends React.Component {
 
     }
 
-    _selectExecution(executionId) {
+    _selectExecution(proxy, field) {
+        var executionId = field.value;
         if (_.isEmpty(executionId)) {
             executionId = null;
         }
@@ -86,69 +83,45 @@ export default class Filter extends React.Component {
     }
 
     render() {
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        var {ErrorMessage, Dropdown, Form} = Stage.Basic;
+
+        let blueprintOptions = _.map(this.props.data.blueprints.items, blueprint => {
+            return { text: blueprint.id, value: blueprint.id }
+        });
+        let deploymentOptions = _.map(this.props.data.deployments.items, deployment => {
+            return { text: deployment.id, value: deployment.id }
+        });
+
+        let executionOptions = [];
+        if (this.props.widget.configuration.filterByExecutions) {
+            executionOptions = _.map(this.props.data.executions.items, execution => {
+                return {text: execution.id + '-' + execution.workflow_id, value: execution.id}
+            });
+        }
 
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <div className="ui equal width form">
-                    <div className='fields'>
-                        <div className='field'>
-                            <div className="ui search selection dropdown" ref={(select)=>$(select).dropdown({onChange: this._selectBlueprint.bind(this)})}>
-                                <input type="hidden" name="blueprint" value={this.props.data.blueprintId || ''}/>
-                                <i className="dropdown icon"></i>
-                                <div className="default text">Select Blueprint</div>
-                                <div className="menu">
-                                    <div className='item' data-value="">Select Blueprint</div>
-                                    {
-                                        this.props.data.blueprints.items.map((blueprint)=>{
-                                            return <div key={blueprint.id} className="item" data-value={blueprint.id}>{blueprint.id}</div>;
-                                        })
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div className='field'>
-                            <div className="ui search selection dropdown" ref={(select)=>$(select).dropdown({onChange: this._selectDeployment.bind(this)})}>
-                                <input type="hidden" name="deployment" value={this.props.data.deploymentId || ''}/>
-                                <i className="dropdown icon"></i>
-                                <div className="default text">Select Deployment</div>
-                                <div className="menu">
-                                    <div className='item' data-value="">Select Deployment</div>
-                                    {
-                                        this.props.data.deployments.items.map((deployment)=>{
-                                            return <div key={deployment.id} className="item" data-value={deployment.id}>{deployment.id}</div>;
-                                        })
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                <Form>
+                    <Form.Group widths='equal'>
+                        <Form.Field>
+                            <Form.Dropdown search selection value={this.props.data.blueprintId || ''} placeholder="Select Blueprint"
+                                           options={blueprintOptions} onChange={this._selectBlueprint.bind(this)}/>
+                        </Form.Field>
+                        <Form.Field>
+                            <Form.Dropdown search selection value={this.props.data.deploymentId || ''} placeholder="Select Deployment"
+                                           options={deploymentOptions} onChange={this._selectDeployment.bind(this)}/>
+                        </Form.Field>
                         {
                             this.props.widget.configuration.filterByExecutions &&
-                            <div className='field'>
-                                <div className="ui search selection dropdown" ref={(select)=>$(select).dropdown({onChange: this._selectExecution.bind(this)})}>
-                                    <input type="hidden" name="deployment" value={this.props.data.executionId || ''}/>
-                                    <i className="dropdown icon"></i>
-                                    <div className="default text">Select Execution</div>
-                                    <div className="menu">
-                                        <div className='item default' data-value="">Select Execution</div>
-                                        {
-                                            this.props.data.executions.items.map((execution)=>{
-                                                return <div key={execution.id} className="item" data-value={execution.id}>{execution.id + '-' + execution.workflow_id}</div>;
-                                            })
-                                        }
-                                    </div>
-                                </div>
-                            </div>
+                            <Form.Field>
+                                <Form.Dropdown search selection value={this.props.data.executionId || ''} placeholder="Select Execution"
+                                               options={executionOptions} onChange={this._selectExecution.bind(this)}/>
+                            </Form.Field>
                         }
-
-                    </div>
-                </div>
-
-
-
-
+                    </Form.Group>
+                </Form>
             </div>
         );
     }

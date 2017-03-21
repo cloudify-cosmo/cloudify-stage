@@ -165,7 +165,7 @@ export default class DeployBlueprintModal extends React.Component {
                                             !_.isNil(input.default)
                                             ? <Popup trigger={formInput()} header="Default value"
                                                      content={this._stringify(input.default)}
-                                                     positioning='top right' wide />
+                                                     position='top right' wide />
                                             : formInput()
                                         }
                                     </Form.Field>
