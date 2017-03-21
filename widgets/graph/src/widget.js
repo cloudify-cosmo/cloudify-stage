@@ -6,7 +6,7 @@ import InfluxActions from './InfluxActions';
 
 Stage.defineWidget({
     id: 'graph',
-    name: 'Graph',
+    name: 'Deployment metric graph',
     description: 'Display graph with deployment metric data',
     initialWidth: 8,
     initialHeight: 8,
