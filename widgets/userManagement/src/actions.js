@@ -6,7 +6,6 @@ export default class Actions {
 
     static USER_ROLE = "user";
     static ADMIN_ROLE = "admin";
-    static SUSPENDED_ROLE = "suspended";
 
     constructor(toolbox) {
         this.toolbox = toolbox;
@@ -56,6 +55,14 @@ export default class Actions {
 
     doDelete(username) {
         return this.toolbox.getManager().doDelete(`/users/${username}`);
+    }
+
+    doActiavte(username) {
+        return this.toolbox.getManager().doPost(`/users/active/${username}`,null, {action: "activate"} );
+    }
+
+    doDeactiavte(username) {
+        return this.toolbox.getManager().doPost(`/users/active/${username}`,null, {action: "deactivate"} );
     }
 
 }

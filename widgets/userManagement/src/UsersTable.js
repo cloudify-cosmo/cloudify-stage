@@ -75,6 +75,10 @@ export default class UsersTable extends React.Component {
             this._getAvailableTenants(value, user);
         } else if (value === MenuAction.ADD_GROUP_ACTION) {
             this._getAvailableGroups(value, user);
+        } else if (value === MenuAction.ACTIVATE_ACTION) {
+            this._activateUser(user);
+        } else if (value === MenuAction.DEACTIVATE_ACTION) {
+            this._deactivateUser(user);
         } else {
             this.setState({user, modalType: value, showModal: true});
         }
@@ -103,6 +107,35 @@ export default class UsersTable extends React.Component {
         });
     }
 
+    _activateUser(user) {
+        this.props.toolbox.loading(true);
+
+        var actions = new Actions(this.props.toolbox);
+        actions.doActiavte(user.username).then(()=>{
+            this.setState({error: null});
+            this.props.toolbox.loading(false);
+            this.props.toolbox.refresh();
+        }).catch((err)=>{
+            this.setState({error: err.message});
+            this.props.toolbox.loading(false);
+        });
+
+    }
+
+    _deactivateUser(user) {
+        this.props.toolbox.loading(true);
+
+        var actions = new Actions(this.props.toolbox);
+        actions.doDeactiavte(user.username).then(()=>{
+            this.setState({error: null});
+            this.props.toolbox.loading(false);
+            this.props.toolbox.refresh();
+        }).catch((err)=>{
+            this.setState({error: err.message});
+            this.props.toolbox.loading(false);
+        });
+
+    }
     render() {
         let {ErrorMessage, DataTable, Checkmark, Label, Confirm} = Stage.Basic;
 
