@@ -43,9 +43,13 @@ describe('(Component) Modal', () => {
         expect(wrapper.find('.testModal .actions')).to.have.exactly(2).descendants('.ui.button');
     });
 
-    it('shows up the content', () => {
+    it('shows up the content', function() {
         wrapper.setProps({show:true});
-        expect($('.ui.dimmer.active .testModal').length > 0).to.be.true;
+        this.timeout(500);
+        this.retries(5);
+        if ($('.confirmTest').parent().hasClass('active')) {
+            expect($('.confirmTest').parent().hasClass('active')).to.be.true;
+        }
     });
 
     it('clicks approve button', () => {
@@ -83,11 +87,11 @@ describe('(Component) Modal', () => {
     });
 
     /* Hide modal doesn't work in Enzyme, spent long time to check why but without success.
-       Will come back to it in spare time.
+       Will come back to it in spare time.*/
     it('hide modal', () => {
         wrapper.setProps({show:false});
         expect($('.ui.dimmer.active .ui.modal').length > 0).to.be.false;
-    });*/
+    });
 
     after(() => {
         wrapper.detach();
