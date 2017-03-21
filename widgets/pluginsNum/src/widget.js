@@ -14,7 +14,7 @@ Stage.defineWidget({
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5)
     ],
-    fetchUrl: '[manager]/plugins?_include=id',
+    fetchUrl: '[manager]/plugins?_include=id&_size=1',
 
     render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
