@@ -3,7 +3,6 @@
  */
 
 import 'isomorphic-fetch';
-import {saveAs} from 'file-saver';
 
 import log from 'loglevel';
 let logger = log.getLogger("Manager");
@@ -19,6 +18,10 @@ export default class Manager extends External {
 
     getSelectedTenant() {
         return _.get(this,'_data.tenants.selected', null);
+    }
+
+    getIp() {
+        return _.get(this,'_data.ip', null);
     }
 
     getManagerUrl(url,data) {

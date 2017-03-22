@@ -30,10 +30,13 @@ describe('(Component) Overlay', () => {
         expect(wrapper.find('.testOverlay .content')).to.have.text('test content');
     });
 
-    it('shows modal', () => {
+    it('shows modal', function() {
         wrapper.find(Overlay.Action).simulate('click');
-
-        expect($('.ui.dimmer.active .testOverlay').length > 0).to.be.true;
+        this.timeout(500);
+        this.retries(5);
+        if ($('.testOverlay').parent().hasClass('active')) {
+            expect($('.testOverlay').parent().hasClass('active')).to.be.true;
+        }
     });
 
     it('unmounts', () => {
