@@ -13,8 +13,9 @@ export default class {
 
     }
 
-    doRestore(snapshot) {
-        return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`,null,{force: false, recreate_deployments_envs: false});
+    doRestore(snapshot,shouldForceRestore,newTenantName) {
+        return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`,null,
+            {force: shouldForceRestore, recreate_deployments_envs: false, tenant_name: newTenantName});
     }
 
     doUpload(snapshotUrl, snapshotId, file) {

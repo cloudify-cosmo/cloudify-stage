@@ -158,7 +158,7 @@ export default class UsersTable extends React.Component {
 
                     <DataTable.Column label="Username" name="username" width="32%" />
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />
-                    <DataTable.Column label="Role" name="role" width="15%" />
+                    <DataTable.Column label="Role" width="15%" />
                     <DataTable.Column label="Is active" name="active" width="10%" />
                     <DataTable.Column label="# Groups" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />

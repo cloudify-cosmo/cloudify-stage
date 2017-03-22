@@ -3,6 +3,7 @@
  */
 import UploadModal from './UploadSnapshotModal';
 import CreateModal from './CreateSnapshotModal';
+import RestoreModal from './RestoreSnapshotModal.js';
 
 import Actions from './actions';
 
@@ -12,7 +13,9 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            confirmDelete: false
+            confirmDelete: false,
+            showRestore: false,
+            item: {}
         }
     }
 
@@ -39,11 +42,9 @@ export default class extends React.Component {
     _restoreSnapshot(item,event) {
         event.stopPropagation();
 
-        var actions = new Actions(this.props.toolbox);
-        actions.doRestore(item).then(()=>{
-            this.props.toolbox.refresh();
-        }).catch((err)=>{
-            this.setState({error:err.message});
+        this.setState({
+            showRestore: true,
+            item: item
         });
     }
 
@@ -137,6 +138,11 @@ export default class extends React.Component {
                     </DataTable.Action>
 
                 </DataTable>
+
+                <RestoreModal show={this.state.showRestore}
+                              onHide={()=>this.setState({showRestore : false})}
+                              toolbox={this.props.toolbox}
+                              snapshot={this.state.item}/>
 
                 <Confirm title='Are you sure you want to remove this snapshot?'
                          show={this.state.confirmDelete}
