@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 15/03/2017.
  */
 
-import InfluxActions from './InfluxActions';
-
 Stage.defineWidget({
     id: 'graph',
     name: 'Deployment metric graph',
@@ -32,7 +30,7 @@ Stage.defineWidget({
     _prepareData: function(data, xDataKey, yDataKey) {
         const TIME_FORMAT = "HH:mm:ss";
         return _.map(data, (element) => ({
-            [xDataKey]: moment(element[0]).format(TIME_FORMAT),
+            [xDataKey]: Stage.Utils.formatTimestamp(element[0], TIME_FORMAT, null),
             [yDataKey]: element[1]
         }));
     },
@@ -46,7 +44,7 @@ Stage.defineWidget({
 
     fetchData: function(widget, toolbox, params) {
         let query = widget.configuration.query;
-        let actions = new InfluxActions(toolbox);
+        let actions = new Stage.Common.InfluxActions(toolbox);
 
         if (!_.isEmpty(query)) {
             return actions.doRunQuery(query).then((data) => Promise.resolve(data))

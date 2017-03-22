@@ -7,6 +7,10 @@ import {LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Le
 
 export default class Graph extends Component {
 
+    static DEFAULT_X_DATA_KEY = 'time';
+    static LINE_CHART_TYPE = 'line';
+    static BAR_CHART_TYPE = 'bar';
+
     static propTypes = {
         data: PropTypes.array.isRequired,
         type: PropTypes.string.isRequired,
@@ -18,10 +22,6 @@ export default class Graph extends Component {
     static defaultProps = {
         xDataKey: Graph.DEFAULT_X_DATA_KEY
     };
-
-    static DEFAULT_X_DATA_KEY = 'time';
-    static LINE_CHART_TYPE = 'line';
-    static BAR_CHART_TYPE = 'bar';
 
     render () {
         const MARGIN = {top: 5, right: 30, left: 20, bottom: 5};
