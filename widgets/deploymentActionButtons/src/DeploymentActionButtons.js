@@ -71,7 +71,7 @@ export default class DeploymentActionButtons extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error}/>
 
-                <PopupMenu className="workflowAction" disabled={_.isEmpty(deploymentId) || this.state.loading}>
+                <PopupMenu className="workflowAction" position="bottom center" offset={0}>
                     <Popup.Trigger>
                         <Button className="labeled icon" color="teal" icon="content"
                                 disabled={_.isEmpty(deploymentId) || this.state.loading} content="Execute workflow" />

@@ -8,7 +8,7 @@ import { Popup } from 'semantic-ui-react';
 class Wrapper extends Component {
 
     static propTypes = {
-        children: PropTypes.any,
+        children: PropTypes.any
     };
 
     render() {

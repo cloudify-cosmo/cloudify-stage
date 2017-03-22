@@ -28,9 +28,13 @@ describe('(Component) Confirm', () => {
         expect(wrapper.find('.confirmTest .header')).to.have.text('test title');
     });
 
-    it('shows up', () => {
+    it('shows up', function () {
         wrapper.setProps({show:true});
-        expect($('.ui.dimmer.active .confirmTest').length > 0).to.be.true;
+        this.timeout(500);
+        this.retries(5);
+        if ($('.confirmTest').parent().hasClass('active')) {
+            expect($('.confirmTest').parent().hasClass('active')).to.be.true;
+        }
     });
 
     it('clicks ok button', function(done) {

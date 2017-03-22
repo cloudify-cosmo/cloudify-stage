@@ -88,6 +88,7 @@ router.get('/byMetric/:managerIp/:deploymentId/:metric',function(req,res,next){
                 'where time > '+fromTime+' and time < '+toTime+' group by time('+timeGrouping+')  order asc';
 
     logger.debug('Query: ',query);
+
     getClient(req.params.managerIp)
         .query(query, function(err,response){
             if (err) {

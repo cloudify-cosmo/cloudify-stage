@@ -3,7 +3,9 @@
  */
 
 import Gauge from './Gauge';
+import Graph from './Graph';
 
 export default {
-    Gauge
+    Gauge,
+    Graph
 }

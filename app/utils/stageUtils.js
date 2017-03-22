@@ -24,7 +24,7 @@ export default class StageUtils {
         };
     };
 
-    static formatTimestamp(timestamp, pattern='DD-MM-YYYY HH:mm') {
-        return moment(timestamp, 'YYYY-MM-DD HH:mm:ss').format(pattern);
+    static formatTimestamp(timestamp, outputPattern='DD-MM-YYYY HH:mm', inputPattern='YYYY-MM-DD HH:mm:ss') {
+        return moment(timestamp, inputPattern).format(outputPattern);
     }
 }

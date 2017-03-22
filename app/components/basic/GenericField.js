@@ -42,7 +42,7 @@ export default class GenericField extends Component {
         if (type === GenericField.MULTI_SELECT_LIST_TYPE) {
             value = _.split(value, ',');
         } else if (type === GenericField.BOOLEAN_TYPE) {
-            value = field.checked;
+            value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
         } else if (type === GenericField.NUMBER_TYPE ||
             type === GenericField.NUMBER_LIST_TYPE ||
             type === GenericField.NUMBER_EDITABLE_LIST_TYPE) {

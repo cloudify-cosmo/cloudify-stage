@@ -68,8 +68,7 @@ export default class RoleModal extends React.Component {
 
         let roleOptions = [
             {text: Actions.USER_ROLE, value: Actions.USER_ROLE},
-            {text: Actions.ADMIN_ROLE, value: Actions.ADMIN_ROLE},
-            {text: Actions.SUSPENDED_ROLE, value: Actions.SUSPENDED_ROLE}
+            {text: Actions.ADMIN_ROLE, value: Actions.ADMIN_ROLE}
         ];
 
         var user = Object.assign({},{username:""}, this.props.user);

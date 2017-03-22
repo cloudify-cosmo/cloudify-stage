@@ -232,8 +232,15 @@ export default class WidgetDynamicContent extends Component {
         } else if (this.props.widget.definition.fetchData && typeof this.props.widget.definition.fetchData === 'function') {
             this._beforeFetch();
 
-            this.fetchDataPromise = StageUtils.makeCancelable(
-                                  this.props.widget.definition.fetchData(this.props.widget,this._getToolbox(),this._fetchParams()));
+            var fetchDataPromise;
+            try {
+                fetchDataPromise = this.props.widget.definition.fetchData(this.props.widget,this._getToolbox(),this._fetchParams());
+            } catch (e) {
+                this.setState({error: 'Error fetching widget data'});
+                return;
+            }
+
+            this.fetchDataPromise = StageUtils.makeCancelable(fetchDataPromise);
             this.fetchDataPromise.promise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
@@ -284,7 +291,14 @@ export default class WidgetDynamicContent extends Component {
 
     _processFetchParams() {
         if (this.props.widget.definition.fetchParams && typeof this.props.widget.definition.fetchParams === 'function') {
-            let params = this.props.widget.definition.fetchParams(this.props.widget, this._getToolbox());
+            let params;
+            try {
+                params = this.props.widget.definition.fetchParams(this.props.widget, this._getToolbox());
+            } catch (e) {
+                console.error('Error fetchin params', e);
+                this.setState({error: 'Error fetching widget data'});
+                return false;
+            }
 
             if (!_.isEqual(this.fetchParams.filterParams, params)) {
                 this.fetchParams.filterParams = params;
@@ -342,6 +356,7 @@ export default class WidgetDynamicContent extends Component {
                 widget = this.props.widget.definition.render(this.props.widget,this.state.data,this.state.error,this._getToolbox());
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
+                return <ErrorMessage error={`Error rendering widget: ${e.message}`}/>;
             }
         }
         return widget;
