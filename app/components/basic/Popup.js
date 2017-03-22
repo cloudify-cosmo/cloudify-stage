@@ -29,7 +29,7 @@ export default class PopupWrapper extends Component {
 
         React.Children.forEach(this.props.children, function (child) {
             if (child.type && child.type.name === "Wrapper") {
-                trigger = <div>{child.props.children}</div>;
+                trigger = <span>{child.props.children}</span>;
                 children = _.without(props.children, child);
             }
         });
