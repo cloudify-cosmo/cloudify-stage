@@ -57,11 +57,11 @@ export default class Actions {
         return this.toolbox.getManager().doDelete(`/users/${username}`);
     }
 
-    doActiavte(username) {
+    doActivate(username) {
         return this.toolbox.getManager().doPost(`/users/active/${username}`,null, {action: "activate"} );
     }
 
-    doDeactiavte(username) {
+    doDeactivate(username) {
         return this.toolbox.getManager().doPost(`/users/active/${username}`,null, {action: "deactivate"} );
     }
 

@@ -111,7 +111,7 @@ export default class UsersTable extends React.Component {
         this.props.toolbox.loading(true);
 
         var actions = new Actions(this.props.toolbox);
-        actions.doActiavte(user.username).then(()=>{
+        actions.doActivate(user.username).then(()=>{
             this.setState({error: null});
             this.props.toolbox.loading(false);
             this.props.toolbox.refresh();
@@ -126,7 +126,7 @@ export default class UsersTable extends React.Component {
         this.props.toolbox.loading(true);
 
         var actions = new Actions(this.props.toolbox);
-        actions.doDeactiavte(user.username).then(()=>{
+        actions.doDeactivate(user.username).then(()=>{
             this.setState({error: null});
             this.props.toolbox.loading(false);
             this.props.toolbox.refresh();
