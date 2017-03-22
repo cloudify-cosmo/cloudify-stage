@@ -12,14 +12,11 @@ export default class WidgetDefinition {
         this.initialHeight = 12;
         this.color = "blue";
         this.initialConfiguration = [];
-        this.keepOnTop = false;
         this.hasStyle = false;
         this.isAdmin = false;
 
         // Override defaults with data
         Object.assign(this,data);
-
-        this.zIndex = this.keepOnTop ? 5 : 0;
 
         if (!this.name) {
             throw new Error('Missing widget name. Widget data is :',data);

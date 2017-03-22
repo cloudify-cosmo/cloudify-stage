@@ -18,12 +18,12 @@ export default class PopupMenu extends Component {
     static propTypes = {
         className: PropTypes.string,
         children: PropTypes.any.isRequired,
-        positioning: PropTypes.string,
+        position: PropTypes.string,
         offset: PropTypes.number
     };
 
     static defaultProps = {
-        positioning: "bottom right",
+        position: "bottom right",
         offset: 12
     }
 
@@ -31,7 +31,7 @@ export default class PopupMenu extends Component {
         let trigger = <Icon link name="content" className={this.props.className} onClick={(e)=>{e.stopPropagation();}}/>;
 
         return (
-            <Popup trigger={trigger} on='click' positioning={this.props.positioning} className="popupMenu" offset={this.props.offset}
+            <Popup trigger={trigger} on='click' position={this.props.position} className="popupMenu" offset={this.props.offset}
                    open={this.state.opened}
                    onClose={()=>this.setState({opened: false})}
                    onOpen={()=>this.setState({opened: true})}

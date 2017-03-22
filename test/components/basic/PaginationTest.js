@@ -26,8 +26,9 @@ describe('(Component) Pagination', () => {
         wrapper.setProps({pageSize:5});
 
         expect(wrapper.find(".gridPagination .dropdown .text")).to.have.text('5');
-        let dropdownText = wrapper.find(".gridPagination .selection.dropdown .menu").text();
+        let dropdownText = wrapper.find(".gridPagination select").text();
         let infoText = wrapper.find(".gridPagination").childAt(0).text();
+
         //remove concatenated options values either from <select> and corresponding <divs> elements
         infoText = infoText.replace(dropdownText, "").replace(dropdownText, "");
 

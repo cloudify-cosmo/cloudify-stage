@@ -34,7 +34,6 @@ export default class WidgetsList extends Component {
                                 x={widget.x} y={widget.y}
                                 height={widget.height}
                                 width={widget.width}
-                                zIndex={widget.definition ? widget.definition.zIndex : undefined}
                                 className='widget'
                                 maximized={widget.maximized}>
                                 <Widget widget={widget} pageId={this.props.pageId}></Widget>

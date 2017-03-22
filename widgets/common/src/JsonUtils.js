@@ -4,15 +4,18 @@
 
 class JsonUtils {
     static stringify(value, indented = false) {
-        let stringifiedValue = '';
+        if (_.isEmpty(value)) {
+            return "";
+        }
 
+        let stringifiedValue = value;
         try {
             stringifiedValue = JSON.stringify(value, null, indented ? 2 : 0);
         } catch (e) {
             console.error(`Cannot parse value '${value}'. `, e);
         }
 
-        return stringifiedValue;
+        return _.trim(stringifiedValue, '"');
     }
 }
 

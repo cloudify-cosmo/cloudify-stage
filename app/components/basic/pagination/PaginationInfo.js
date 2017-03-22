@@ -3,7 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
-import { Dropdown } from 'semantic-ui-react'
+import { Dropdown } from '../index'
 
 export default class PaginationInfo extends Component {
 
@@ -50,8 +50,7 @@ export default class PaginationInfo extends Component {
                 Page size:&nbsp;
 
                 <Dropdown compact search selection allowAdditions value={this.props.pageSize} additionLabel="Set "
-                          closeOnBlur={false}
-                          options={options} onChange={this._handleChange.bind(this)} className="upward"/>
+                          options={options} onChange={this._handleChange.bind(this)} />
 
                 &nbsp;&nbsp;{start} to {stop}
 

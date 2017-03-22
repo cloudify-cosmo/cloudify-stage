@@ -11,7 +11,6 @@ export default class GridItem extends Component {
         y: PropTypes.number,
         width : PropTypes.number,
         height: PropTypes.number,
-        zIndex: PropTypes.number,
         className: PropTypes.string,
         onItemAdded: PropTypes.func,
         onItemRemoved: PropTypes.func,
@@ -23,7 +22,6 @@ export default class GridItem extends Component {
         y: undefined,
         width: 1,
         height: 1,
-        zIndex: undefined,
         className: '',
         maximized: false
     };
@@ -39,11 +37,6 @@ export default class GridItem extends Component {
             this.props.onItemRemoved(this.props.id);
         }
     }
-    componentDidUpdate() {
-        if (this.props.zIndex) {
-            $(this.refs.item).css('z-index',this.props.zIndex);
-        }
-    }
 
     render() {
         return (
@@ -53,8 +46,7 @@ export default class GridItem extends Component {
                  data-gs-x={this.props.x}
                  data-gs-y={this.props.y}
                  data-gs-width={this.props.width}
-                 data-gs-height={this.props.height}
-                 style={this.props.zIndex? {"zIndex":this.props.zIndex}:{}}>
+                 data-gs-height={this.props.height}>
 
                 <div className='grid-stack-item-content'>
                     {this.props.children}
