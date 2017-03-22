@@ -49,26 +49,6 @@ export default class Widget extends Component {
 
     render() {
 
-        if (this.props.manager.auth.role === Consts.ROLE_SUSPEND) {
-            return (
-                <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className='widgetItem ui segment'>
-                    {
-                        this.props.isEditMode &&
-                        <div className='widgetEditButtons'>
-                            <i className="remove link icon small"
-                               onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
-                        </div>
-                    }
-                    <div className='ui segment basic' style={{height:'100%'}}>
-                        <div className="ui icon message error">
-                            <i className="ban icon"></i>
-                            User is suspended
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
         if (!this.props.widget.definition) {
             return (
                 <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className='widgetItem ui segment'>
