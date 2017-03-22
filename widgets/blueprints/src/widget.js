@@ -22,9 +22,44 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
-    fetchUrl: {
-        blueprints: '[manager]/blueprints?_include=id,updated_at,created_at,description[params]',
-        deployments: '[manager]/deployments?_include=id,blueprint_id'
+
+    fetchData(widget,toolbox,params) {
+        var result = {};
+        return toolbox.getManager().doGet('/blueprints?_include=id,updated_at,created_at,description',params)
+            .then(data=>{
+                result.blueprints = data;
+                var blueprintIds = data.items.map(item=>item.id);
+
+                return this._fetchDeploymentData(toolbox,blueprintIds,{items:[]},0);
+            })
+            .then(data=>{
+                result.deployments = data;
+                return result;
+            });
+    },
+
+    /**
+     * We need to grab the deployment full data to group by blueprint id. I minimize the list according to blueprint Id but that is sometimes not enough.
+     * The manager limits the max fetch to 1000 so in case of 1 blueprint with 2000 deployments, it wont work. It will attempt to fetch 2000 and will fail because
+     * its over the max size.
+     * So this is a fix specifically here (although it can happen in other places for example deployment instances having size over 1000... ) but this case actaully happened.
+     * This method basicaly fetches teh full data in pages, and return only after it got all the data.
+     */
+    _fetchDeploymentData(toolbox,blueprintIds,fullData,size) {
+
+        var pr = toolbox.getManager().doGet(`/deployments?_include=id,blueprint_id&_size=1000&_offset=${size}`,{blueprint_id: blueprintIds});
+
+        return pr.then(data=>{
+            size += data.items.length;
+            fullData.items = _.concat(fullData.items,data.items);
+            var total = _.get(data, "metadata.pagination.total");
+
+            if (total > size) {
+                return this._fetchDeploymentData(toolbox,blueprintIds,fullData,size);
+            } else {
+                return fullData;
+            }
+        });
     },
 
     _processData(data,toolbox) {
