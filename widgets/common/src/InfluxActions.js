@@ -10,13 +10,13 @@ class InfluxActions {
 
     doGetMetric(deploymentId, metric, from, to, timeGroup) {
         let params = _.isEmpty(from) && _.isEmpty(to) && _.isEmpty(timeGroup) ? null : {};
-        if (from) {
+        if (!_.isEmpty(from)) {
             params['from'] = from;
         }
-        if (to) {
+        if (!_.isEmpty(to)) {
             params['to'] = to;
         }
-        if (timeGroup) {
+        if (!_.isEmpty(timeGroup)) {
             params['timeGroup'] = timeGroup;
         }
 

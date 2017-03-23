@@ -28,5 +28,6 @@
   "blueprintSources",
   "GaugeTest",
   "deploymentActionButtons",
-  "blueprintActionButtons"
+  "blueprintActionButtons",
+  "timeFilter"
 ]

@@ -30,6 +30,8 @@ export default class Grid extends Component {
                 this.itemIds.push(child.props.id);
             }
         });
+
+        this.toggleWidgetListEditMode(this.props.isEditMode);
     }
 
     _saveChangedItems(items) {
