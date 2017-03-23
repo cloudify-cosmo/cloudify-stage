@@ -65,7 +65,7 @@ app.use('/sp',ServerProxy);
 app.use('/ua',UserApp);
 app.use('/applications',Applications);
 app.use('/source',SourceBrowser);
-app.use('/blueprints',BlueprintAdditions);
+app.use('/ba',BlueprintAdditions);
 app.use('/monitor',Monitoring);
 app.use('/clientConfig',clientConfig);
 app.use('/config',function(req,res){
