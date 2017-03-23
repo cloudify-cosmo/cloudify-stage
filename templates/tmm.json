@@ -4,20 +4,20 @@
     {
       "name": "User Management",
       "definition": "userManagement",
-      "width": 16,
-      "height": 24
+      "width": 12,
+      "height": 20
     },
     {
       "name": "Tenants Management",
       "definition": "tenants",
-      "width": 16,
-      "height": 24
+      "width": 12,
+      "height": 20
     },
     {
       "name": "User Groups Management",
       "definition": "userGroups",
-      "width": 16,
-      "height": 24
+      "width": 12,
+      "height": 20
     }
   ]
 }

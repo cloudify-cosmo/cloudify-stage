@@ -26,21 +26,10 @@
       "y": 0
     },
     {
-      "name": "Deployments",
-      "width": 12,
-      "height": 24,
-      "definition": "deployments",
-      "x": 6,
-      "y": 8,
-      "configuration":{
-        "displayStyle":"list"
-      }
-    },
-    {
       "name": "filer",
       "definition": "filter",
       "x": 0,
-      "y": 32,
+      "y": 8,
       "configuration": {
         "filterByExecutions":false
       }
@@ -51,7 +40,25 @@
       "height": 25,
       "definition": "executions",
       "x": 0,
-      "y": 36
+      "y": 12
+    },
+    {
+      "name": "Events",
+      "width": 6,
+      "height": 25,
+      "definition": "events",
+      "x": 0,
+      "y": 37
+    },
+    {
+      "name": "Logs",
+      "width": 6,
+      "height": 25,
+      "definition": "logs",
+      "x": 6,
+      "y": 37
     }
+
+
   ]
 }
