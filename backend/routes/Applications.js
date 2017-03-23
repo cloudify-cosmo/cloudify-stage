@@ -19,14 +19,14 @@ router.get('/', (req, res, next) => {
 
 router.get('/:application', (req, res, next) => {
     db.Application
-        .findOne({ where: { id: req.params.id } })
+        .findOne({ where: { id: req.params.application } })
         .then(application => { res.send(application) })
         .catch(next);
 });
 
 router.post('/:application', (req, res, next) => {
     db.Application
-        .findOrCreate({ where: { id: req.params.id } })
+        .findOrCreate({ where: { id: req.params.application } })
         .spread(application => {
             application
                 .update(
@@ -42,7 +42,7 @@ router.post('/:application', (req, res, next) => {
 
 router.delete('/:application', (req, res, next) => {
     db.Application
-        .destroy({ where: { id: req.params.id } })
+        .destroy({ where: { id: req.params.application } })
         .then(status => { res.send(status) })
         .catch(next);
 });
