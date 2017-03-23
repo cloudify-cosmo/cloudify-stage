@@ -9,7 +9,7 @@ import External from '../utils/External';
 import Consts from '../utils/consts';
 import { push } from 'react-router-redux';
 
-const  CURRENT_APP_DATA_VERSION = 2;
+const  CURRENT_APP_DATA_VERSION = 3;
 
 function setPages(pages) {
     return {

@@ -6,7 +6,7 @@ import ExecutionsTable from './ExecutionsTable';
 
 Stage.defineWidget({
     id: "executions",
-    name: 'Deployment executions',
+    name: 'Executions',
     description: 'This widget shows the deployment executions',
     initialWidth: 8,
     initialHeight: 24,

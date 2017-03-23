@@ -6,7 +6,7 @@ import LogsTable from './LogsTable';
 
 Stage.defineWidget({
     id: 'logs',
-    name: "Deployment Logs",
+    name: "Logs",
     description: 'This widget shows Cloudify logs',
     initialWidth: 5,
     initialHeight: 16,

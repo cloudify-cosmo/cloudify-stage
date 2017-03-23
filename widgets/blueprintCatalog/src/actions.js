@@ -66,7 +66,7 @@ export default class Actions {
 
         return this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params)
             .then(()=>this.doFindImage(repo))
-            .then(imageUrl=> imageUrl ? this.toolbox.getExternal().doPost(`/blueprints/image/${blueprintName}`, {imageUrl}) : Promise.resolve());
+            .then(imageUrl=> imageUrl ? this.toolbox.getExternal().doPost(`/ba/image/${blueprintName}`, {imageUrl}) : Promise.resolve());
     }
 
     doFindImage(repo, defaultImage) {

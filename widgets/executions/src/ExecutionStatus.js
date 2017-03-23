@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 27/01/2017.
  */
 
-import { Constants, isActiveExecution } from './utils';
-
 let PropTypes = React.PropTypes;
 
 export default class extends React.Component {
@@ -22,31 +20,33 @@ export default class extends React.Component {
         showInactiveAsLink: PropTypes.bool.isRequired
     };
 
-    _onDropdownChange(event, data) {
+    _actionClick(event, {name}) {
         this.setState({cancelClicked: true});
-        this.props.onCancelExecution(this.props.item, data.value === Constants.EXECUTION_FORCE_CANCEL_ACTION);
+        this.props.onCancelExecution(this.props.item, name === Stage.Common.ExecutionUtils.FORCE_CANCEL_ACTION);
     }
 
     render () {
-        let {Dropdown, Label, Icon} = Stage.Basic;
+        let {PopupMenu, Menu, Label, Icon} = Stage.Basic;
+        let {ExecutionUtils} = Stage.Common;
 
         let execution = this.props.item;
 
-        if (isActiveExecution(execution)) {
+        if (ExecutionUtils.isActiveExecution(execution)) {
             let activeExecutionStatus = execution.status;
             let cancelClicked = this.state.cancelClicked;
-            let executionCancellationOptions = [
-                {text: 'Cancel', value: Constants.EXECUTION_CANCEL_ACTION},
-                {text: 'Force Cancel', value: Constants.EXECUTION_FORCE_CANCEL_ACTION}
-            ];
 
             return (
                 <Label>
                     <Icon name="spinner" loading />
                     {activeExecutionStatus}
-                    <Dropdown disabled={cancelClicked} icon='delete' text=' ' pointing="bottom right"
-                              selectOnBlur={false} openOnFocus={false}
-                              options={executionCancellationOptions} onChange={this._onDropdownChange.bind(this)} />
+                    <PopupMenu disabled={cancelClicked} icon='delete' >
+                        <Menu pointing vertical>
+                            <Menu.Item content='Cancel' name={ExecutionUtils.CANCEL_ACTION}
+                                       onClick={this._actionClick.bind(this)}/>
+                            <Menu.Item content='Force Cancel' name={ExecutionUtils.FORCE_CANCEL_ACTION}
+                                       onClick={this._actionClick.bind(this)}/>
+                        </Menu>
+                    </PopupMenu>
                 </Label>
             )
         } else {

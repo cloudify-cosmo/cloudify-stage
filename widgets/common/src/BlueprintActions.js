@@ -53,14 +53,14 @@ class BlueprintActions {
 
         var params = {imageUrl};
         if (image) {
-            return this.toolbox.getExternal().doUpload(`/blueprints/image/${blueprintId}`, params, image, "post");
+            return this.toolbox.getExternal().doUpload(`/ba/image/${blueprintId}`, params, image, "post");
         } else {
-            return this.toolbox.getExternal().doPost(`/blueprints/image/${blueprintId}`, params);
+            return this.toolbox.getExternal().doPost(`/ba/image/${blueprintId}`, params);
         }
     }
 
     doDeleteImage(blueprintId) {
-        return this.toolbox.getExternal().doDelete(`/blueprints/image/${blueprintId}`);
+        return this.toolbox.getExternal().doDelete(`/ba/image/${blueprintId}`);
     }
 
 }

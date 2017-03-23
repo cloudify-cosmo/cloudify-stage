@@ -5,10 +5,7 @@
   "deploymentNum",
   "serversNum",
   "pluginsNum",
-  "usersList",
   "graph",
-  "cpuUtilizationSystem",
-  "cpuUtilizationUser",
   "inputs",
   "blueprintCatalog",
   "events",
@@ -26,7 +23,6 @@
   "userGroups",
   "buttonLink",
   "blueprintSources",
-  "GaugeTest",
   "deploymentActionButtons",
   "blueprintActionButtons",
   "timeFilter"
