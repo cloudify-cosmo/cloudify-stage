@@ -18,7 +18,7 @@ export default class InputDate extends Component {
     static defaultProps = {
         onChange: ()=>{},
         minDate: null,
-        maxDate: new Date()
+        maxDate: null
     };
 
     _refreshCalendar(params) {
@@ -50,10 +50,10 @@ export default class InputDate extends Component {
         {
             let params = {};
             if (moment(nextProps.minDate).isValid()) {
-                params['minDate'] = nextProps.minDate;
+                params.minDate = nextProps.minDate;
             }
             if (moment(nextProps.maxDate).isValid()) {
-                params['maxDate'] = nextProps.maxDate;
+                params.maxDate = nextProps.maxDate;
             }
             if (!_.isEmpty(params)) {
                 this._refreshCalendar(params);

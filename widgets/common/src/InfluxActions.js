@@ -9,15 +9,15 @@ class InfluxActions {
     }
 
     doGetMetric(deploymentId, metric, from, to, timeGroup) {
-        let params = _.isEmpty(from) && _.isEmpty(to) && _.isEmpty(timeGroup) ? null : {};
+        let params = {};
         if (!_.isEmpty(from)) {
-            params['from'] = from;
+            params.from = from;
         }
         if (!_.isEmpty(to)) {
-            params['to'] = to;
+            params.to = to;
         }
         if (!_.isEmpty(timeGroup)) {
-            params['timeGroup'] = timeGroup;
+            params.timeGroup = timeGroup;
         }
 
         return this.toolbox.getExternal().doGet(`/monitor/byMetric/${this.managerIp}/${deploymentId}/${metric}`, params);

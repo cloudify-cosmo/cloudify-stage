@@ -8,7 +8,7 @@ export default class TimeFilter extends React.Component {
         super(props,context);
 
         this.state = TimeFilter.initialState;
-        this.dirty = {};
+        this._initVars();
     }
 
     static MAX_RESOLUTION_VALUE = 1000;
@@ -26,47 +26,46 @@ export default class TimeFilter extends React.Component {
     static initialState = {
         start: '',
         end: '',
-        startDate: null,
-        endDate: new Date(),
         resolution: 1,
         unit: 'm'
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.widget !== nextProps.widget
-            || this.state != nextState
-            || !_.isEqual(this.props.data, nextProps.data);
+            || this.state != nextState;
     }
 
     componentDidMount() {
         this._resetFilter();
     }
 
-    _handleInputChange(proxy, field) {
-        if (field.name === 'resolution' && (field.value < TimeFilter.MIN_RESOLUTION_VALUE || field.value > TimeFilter.MAX_RESOLUTION_VALUE)) {
-            return;
-        }
-        this.props.toolbox.getContext().setValue(`time_${field.name}`, field.type==='date'?field.date:field.value);
-
-        this.dirty[field.name] = !_.isEmpty(field.value);
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
-
-        if (field.type === 'date') {
-            this.setState({[`${field.name}Date`]: field.date});
-        }
+    _initVars() {
+        this.dirty = false;
+        this.startDate = null;
+        this.endDate = null;
+        this.currentDate = new Date();
     }
 
-    _isDirty() {
-        var res = false;
-        _.forEach(this.dirty, function(value, key) {
-            res = res || value;
-        });
+    _handleResolutionChange(proxy, field) {
+        if (field.value < TimeFilter.MIN_RESOLUTION_VALUE || field.value > TimeFilter.MAX_RESOLUTION_VALUE) {
+            return;
+        }
+        this._handleInputChange(proxy, field);
+    }
 
-        return res;
+    _handleDateChange(proxy, field) {
+        this[`${field.name}Date`] = field.date;
+        this._handleInputChange(proxy, field);
+    }
+
+    _handleInputChange(proxy, field) {
+        this.props.toolbox.getContext().setValue(`time_${field.name}`, field.type==='date'?field.date:field.value);
+        this.dirty = this.dirty || !_.isEmpty(field.value);
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     _resetFilter() {
-        this.dirty = {};
+        this._initVars();
         this.setState(TimeFilter.initialState);
 
         _.forIn(TimeFilter.initialState, (value, key) => {
@@ -85,23 +84,23 @@ export default class TimeFilter extends React.Component {
                 <Form.Group inline widths="3">
                     <Form.Field>
                         <Form.InputDate fluid placeholder='Time Start' name="start"
-                                        maxDate={this.state.endDate}
-                                        value={this.state.start} onChange={this._handleInputChange.bind(this)}/>
+                                        maxDate={this.endDate}
+                                        value={this.state.start} onChange={this._handleDateChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
                         <Form.InputDate fluid placeholder='Time End' name="end"
-                                        minDate={this.state.startDate}
-                                        value={this.state.end} onChange={this._handleInputChange.bind(this)}/>
+                                        minDate={this.startDate} maxDate={this.currentDate}
+                                        value={this.state.end} onChange={this._handleDateChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
-                        <Button disabled={!this._isDirty()} icon="remove" basic floated="right"
+                        <Button disabled={!this.dirty} icon="remove" basic floated="right"
                                 onClick={this._resetFilter.bind(this)}/>
                     </Form.Field>
                 </Form.Group>
                 <Form.Group inline widths="3">
                     <Form.Field>
                         <Form.Input fluid type='number' name="resolution" label='Time Resolution'
-                                    value={this.state.resolution} onChange={this._handleInputChange.bind(this)} />
+                                    value={this.state.resolution} onChange={this._handleResolutionChange.bind(this)} />
                     </Form.Field>
                     <Form.Field>
                         <Form.Dropdown fluid options={TimeFilter.TIME_RESOLUTION_UNITS} name="unit" search selection
