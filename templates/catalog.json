@@ -1,9 +1,9 @@
 {
-  "name": "Local Blueprints",
+  "name": "Blueprints catalog",
   "widgets": [
     {
-      "name": "Blueprints",
-      "definition": "blueprints",
+      "name": "Blueprints Catalog",
+      "definition": "blueprintCatalog",
       "width": 12,
       "height": 39,
       "x": 0,
