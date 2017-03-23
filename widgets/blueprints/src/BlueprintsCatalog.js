@@ -39,7 +39,7 @@ export default class BlueprintsCatalog extends React.Component{
                                           onClick={(event)=>{event.stopPropagation(); this.props.onSelectBlueprint(item)}}>
                             <Grid>
                                 <Grid.Row className="bottomDivider">
-                                    <Grid.Column width="4"><Image src={`/blueprints/image/${item.id}`} centered={true}/></Grid.Column>
+                                    <Grid.Column width="4"><Image src={`/ba/image/${item.id}`} centered={true}/></Grid.Column>
                                     <Grid.Column width="12">
                                         <h3 className="ui icon header verticalCenter">
                                             <a className="underline" href="javascript:void(0)">{item.id}</a>
