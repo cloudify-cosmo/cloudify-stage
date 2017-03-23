@@ -7,10 +7,10 @@ import React, { Component, PropTypes } from 'react';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
+import {Confirm} from '../basic';
 import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
 import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
 import ConfigureModal from '../../containers/ConfigureModal';
-
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {
@@ -20,18 +20,20 @@ export default class Header extends Component {
 
         this.state = {
             showMaintenanceModal: false,
-            showConfigureModal: false
+            showConfigureModal: false,
+            showResetConfirm: false
         }
     }
 
     static propTypes = {
         manager: PropTypes.any.isRequired,
         mode: PropTypes.string.isRequired,
-        whiteLabel : PropTypes.object
+        whiteLabel : PropTypes.object,
+        onResetTemplate: PropTypes.func.isRequired
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.manager, nextProps.manager);
+        return !_.isEqual(this.props.manager, nextProps.manager) || this.state != nextState;
     }
 
     setStyle (container) {
@@ -64,21 +66,18 @@ export default class Header extends Component {
                         <div className='item'>
                             <Manager manager={this.props.manager}/>
                         </div>
-                        <div className='ui dropdown item'>
-                            <Tenants manager={this.props.manager}/>
-                        </div>
-                        <div className='ui dropdown item'>
-                            <Users manager={this.props.manager}
-                                   showAllOptions={true}
-                                   onMaintenance={()=> this.setState({showMaintenanceModal: true})}
-                                   onConfigure={()=> this.setState({showConfigureModal: true})}/>
-                        </div>
+
+                        <Tenants manager={this.props.manager}/>
+
+                        <Users manager={this.props.manager}
+                               showAllOptions={true}
+                               onMaintenance={()=> this.setState({showMaintenanceModal: true})}
+                               onConfigure={()=> this.setState({showConfigureModal: true})}
+                               onReset={()=> this.setState({showResetConfirm: true})}/>
                     </div>
                     :
                     <div className="right menu">
-                        <div className='ui dropdown item'>
-                            <Users manager={this.props.manager} showAllOptions={false}/>
-                        </div>
+                        <Users manager={this.props.manager} showAllOptions={false}/>
                     </div>
                 }
 
@@ -87,6 +86,10 @@ export default class Header extends Component {
                                  onHide={()=> this.setState({showMaintenanceModal: false})}/>
                 <ConfigureModal show={this.state.showConfigureModal}
                                 onHide={()=> this.setState({showConfigureModal: false})}/>
+                <Confirm title={`Are you sure you want to reset application screens to default?`}
+                         show={this.state.showResetConfirm}
+                         onConfirm={()=>{this.setState({showResetConfirm: false}); this.props.onResetTemplate()}}
+                         onCancel={()=>this.setState({showResetConfirm: false})} />
             </div>
         );
     }

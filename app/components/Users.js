@@ -3,7 +3,6 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Confirm} from './basic';
 import Consts from '../utils/consts';
 
 export default class Users extends Component {
@@ -17,16 +16,8 @@ export default class Users extends Component {
         onConfigure: PropTypes.func.isRequired,
         onLogout: PropTypes.func.isRequired,
         onMaintenance: PropTypes.func,
-        onResetTemplate: PropTypes.func.isRequired
+        onReset: PropTypes.func.isRequired
     };
-
-    constructor(props,context) {
-        super(props,context);
-
-        this.state = {
-            showConfirm: false
-        }
-    }
 
     onEditModeClick() {
         this.props.onEditModeChange(!this.props.isEditMode);
@@ -53,15 +44,14 @@ export default class Users extends Component {
         }
 
         return (
-            <div>
-                <Dropdown pointing="top right" trigger={userMenuTrigger} className='usersMenu'>
+                <Dropdown item trigger={userMenuTrigger} className='usersMenu' scrolling>
                     {
                         this.props.showAllOptions
                         ?
                         <Dropdown.Menu>
                             {adminElements}
                             <Dropdown.Item icon='undo' text='Reset' value='reset' title='Reset application screens'
-                                           onClick={()=>this.setState({showConfirm: true})}/>
+                                           onClick={this.props.onReset}/>
 
                             {
                                 this.props.canEditTheUi &&
@@ -80,11 +70,6 @@ export default class Users extends Component {
                         </Dropdown.Menu>
                     }
                 </Dropdown>
-                <Confirm title={`Are you sure you want to reset application screens to default?`}
-                         show={this.state.showConfirm}
-                         onConfirm={()=>{this.setState({showConfirm: false}); this.props.onResetTemplate()}}
-                         onCancel={()=>this.setState({showConfirm: false})} />
-            </div>
         );
     }
 }
