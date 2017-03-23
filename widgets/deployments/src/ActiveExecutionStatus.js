@@ -4,9 +4,6 @@
 
 let PropTypes = React.PropTypes;
 
-const EXECUTION_CANCEL_ACTION = 'cancel';
-const EXECUTION_FORCE_CANCEL_ACTION = 'force-cancel';
-
 export default class ActiveExecutionStatus extends React.Component {
 
     constructor(props,context) {
@@ -22,30 +19,31 @@ export default class ActiveExecutionStatus extends React.Component {
         onCancelExecution: PropTypes.func.isRequired
     };
 
-
-    _onDropdownChange(event, data) {
+    _actionClick(event, {name}) {
         this.setState({cancelClicked: true});
-        this.props.onCancelExecution(this.props.item, data.value);
+        this.props.onCancelExecution(this.props.item, name);
     }
 
     render () {
-        let {Dropdown, Label, Icon} = Stage.Basic;
+        let {PopupMenu, Menu, Label, Icon} = Stage.Basic;
+        let {ExecutionUtils} = Stage.Common;
 
         let execution = this.props.item;
         let activeExecutionStatus = execution.workflow_id + ' ' + execution.status;
         let cancelClicked = this.state.cancelClicked;
-        let executionCancellationOptions = [
-            {text: 'Cancel', value: EXECUTION_CANCEL_ACTION},
-            {text: 'Force Cancel', value: EXECUTION_FORCE_CANCEL_ACTION}
-        ];
 
         return (
             <Label>
                 <Icon name="spinner" loading />
                 {activeExecutionStatus}
-                <Dropdown disabled={cancelClicked} icon='delete' text=' ' pointing="bottom right"
-                          selectOnBlur={false} openOnFocus={false}
-                          options={executionCancellationOptions} onChange={this._onDropdownChange.bind(this)} />
+                <PopupMenu disabled={cancelClicked} icon='delete' >
+                    <Menu pointing vertical>
+                        <Menu.Item content='Cancel' name={ExecutionUtils.CANCEL_ACTION}
+                                   onClick={this._actionClick.bind(this)}/>
+                        <Menu.Item content='Force Cancel' name={ExecutionUtils.FORCE_CANCEL_ACTION}
+                                   onClick={this._actionClick.bind(this)}/>
+                    </Menu>
+                </PopupMenu>
             </Label>
         )
     }
