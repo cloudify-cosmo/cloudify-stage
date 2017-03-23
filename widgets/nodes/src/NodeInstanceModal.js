@@ -13,8 +13,8 @@ export default class extends React.Component {
     }
 
     render() {
-        let Modal = Stage.Basic.Modal;
-        let DataTable = Stage.Basic.DataTable;
+        let {Modal, DataTable, HighlightText} = Stage.Basic;
+        let {JsonUtils} = Stage.Common;
 
         let instance = this.props.instance;
         let instanceTotalSize = _.size(instance.runtime_properties);
@@ -63,7 +63,17 @@ export default class extends React.Component {
                                         return (
                                             <DataTable.Row key={key}>
                                                 <DataTable.Data>{key}</DataTable.Data>
-                                                <DataTable.Data>{value}</DataTable.Data>
+                                                <DataTable.Data>
+                                                    {
+                                                        _.isObject(value)
+                                                        ?
+                                                            <HighlightText className='json'>
+                                                                {JsonUtils.stringify(value, true)}
+                                                            </HighlightText>
+                                                        :
+                                                            value
+                                                    }
+                                                </DataTable.Data>
                                             </DataTable.Row>
                                         );
                                     })
