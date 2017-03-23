@@ -61,7 +61,7 @@ export default class DeployModal extends React.Component {
             actions.doGetFullBlueprintData(data.value).then((blueprint)=>{
                 let deploymentInputs = {};
                 _.forEach(blueprint.plan.inputs, (inputObj, inputName) => deploymentInputs[inputName] = '');
-                this.setState({...DeployModal.initialState, deploymentInputs, blueprint, errors: {}, loading: false});
+                this.setState({deploymentInputs, blueprint, errors: {}, loading: false});
             }).catch((err)=> {
                 this.setState({blueprint: EMPTY_BLUEPRINT, loading: false, errors: {error: err.message}});
             });
