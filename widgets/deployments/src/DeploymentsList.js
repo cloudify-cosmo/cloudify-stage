@@ -63,9 +63,9 @@ export default class extends React.Component {
         });
     }
 
-    _cancelExecution(execution, forceCancel) {
-        let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-        actions.doCancel(execution, forceCancel).then(() => {
+    _cancelExecution(execution, action) {
+        let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
+        actions.doCancel(execution, action).then(() => {
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
             this.props.toolbox.getEventBus().trigger('executions:refresh');
         }).catch((err) => {

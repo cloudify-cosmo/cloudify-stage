@@ -2,9 +2,6 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-import Actions from './actions';
-import ExecutionStatus from './ExecutionStatus';
-
 export default class extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -36,9 +33,9 @@ export default class extends React.Component {
         this.props.toolbox.getContext().setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
     }
 
-    _cancelExecution(execution, forceCancel) {
-        let actions = new Actions(this.props.toolbox);
-        actions.doCancel(execution, forceCancel)
+    _cancelExecution(execution, action) {
+        let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
+        actions.doCancel(execution, action)
             .then(() => {
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.toolbox.getEventBus().trigger('executions:refresh');
@@ -52,6 +49,7 @@ export default class extends React.Component {
 
     render() {
         let {ErrorMessage, DataTable, HighlightText, Overlay, Checkmark} = Stage.Basic;
+        let {ExecutionStatus} = Stage.Common;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
 
