@@ -73,5 +73,16 @@ router.post('/',function(req,res,next){
     }
 
 });
+router.patch('/',function(req,res,next){
+    var serverUrl = req.query.su;
+    if (serverUrl) {
+        logger.debug('Proxying patch request to server with url: '+serverUrl);
+
+        req.pipe(request.patch(serverUrl,{timeout: config.app.proxy.timeouts.post}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
+    } else {
+        next('no server url passed');
+    }
+
+});
 
 module.exports = router;
