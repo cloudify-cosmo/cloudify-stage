@@ -13,11 +13,20 @@ Stage.defineWidget({
     color: "yellow",
     showHeader: false,
     showBorder: false,
-    fetchUrl: {
-        blueprints: '[manager]/blueprints?_include=id',
-        deployments: '[manager]/deployments?_include=id,blueprint_id',
-        executions: '[manager]/executions?_include=id,blueprint_id,deployment_id,workflow_id'
+    fetchData:(widget,toolbox,params)=>{
+        return Promise.all([
+            toolbox.getManager().doGetFull('/blueprints?_include=id'),
+            toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id'),
+            widget..configuration.filterByExecutions ? toolbox.getManager().doGetFull('/executions?_include=id,blueprint_id,deployment_id,workflow_id') : Promise.resolve({})
+        ]).then(results=>{
+            return {
+                blueprints: results[0],
+                deployments : results[1],
+                executions: results[2]
+            }
+        });
     },
+
     isReact: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5),
