@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 
 import SideBar from '../containers/SideBar';
 import Page from '../containers/Page';
+import MaintenanceModePageMessage from './maintenance/MaintenanceModePageMessage';
 
 export default class Home extends Component {
 
@@ -36,6 +37,9 @@ export default class Home extends Component {
     render() {
         var pageId = this.props.params.pageId || "0";
 
+        if (this.props.isMaintenance) {
+            return <MaintenanceModePageMessage/>
+        }
         return (
             <div className='main'>
                 <SideBar pageId={pageId}/>

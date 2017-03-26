@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Home from '../components/Home';
 import {clearContext,setValue} from '../actions/context';
 import { push } from 'react-router-redux';
+import Consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
     var selectedPageId = ownProps.params.pageId || "0";
@@ -15,7 +16,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         selectedPage : _.find(pages,{id:selectedPageId}),
         pageId: selectedPageId,
-        contextParams: ownProps.location.query
+        contextParams: ownProps.location.query,
+        isMaintenance : state.manager.maintenance === Consts.MAINTENANCE_ACTIVATED
     };
 };
 
