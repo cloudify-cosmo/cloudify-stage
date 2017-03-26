@@ -4,7 +4,7 @@
 
 let PropTypes = React.PropTypes;
 
-export default class extends React.Component {
+export default class ExecutionStatus extends React.Component {
 
     constructor(props,context) {
         super(props,context);
@@ -22,7 +22,7 @@ export default class extends React.Component {
 
     _actionClick(event, {name}) {
         this.setState({cancelClicked: true});
-        this.props.onCancelExecution(this.props.item, name === Stage.Common.ExecutionUtils.FORCE_CANCEL_ACTION);
+        this.props.onCancelExecution(this.props.item, name);
     }
 
     render () {
@@ -58,3 +58,8 @@ export default class extends React.Component {
         }
     }
 }
+
+Stage.defineCommon({
+    name: 'ExecutionStatus',
+    common: ExecutionStatus
+});
