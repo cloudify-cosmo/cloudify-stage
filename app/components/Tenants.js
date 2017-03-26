@@ -33,7 +33,7 @@ export default class Tenants extends Component {
         )
 
         return (
-            <Dropdown pointing="top right" trigger={tenantMenuTrigger} className='tenantsMenu'>
+            <Dropdown item className='tenantsMenu' trigger={tenantMenuTrigger} scrolling>
                 <Dropdown.Menu>
                     {
                         tenants.items.map((tenant) =>
