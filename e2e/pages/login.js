@@ -11,6 +11,8 @@ module.exports = {
         usernameField: 'input[name="username"]',
         passwordField: 'input[name="password"]',
         submitButton: 'button[type="submit"]',
-        tenantsDropdownText : 'div.tenantsMenu .dropDownText'
+        tenantsDropdownText : 'div.tenantsMenu',
+        managerData: '.managerMenu',
+        errorMessage: '.error.message'
     }
 };

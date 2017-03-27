@@ -3,19 +3,37 @@
  */
 
 module.exports = {
-    'Login test': function (client) {
+    'Successful login test': function (client) {
 
         var page = client.page.login();
 
         page.navigate()
             .waitForElementVisible('@ipField', 2000)
-            .setValue('@ipField', '185.98.150.115')
+            .clearValue('@ipField')
+            .setValue('@ipField', '10.239.3.79')
             .setValue('@usernameField', 'admin')
-            .setValue('@passwordField', 'NcM2YizuzatJ')
+            .setValue('@passwordField', 'admin')
             .click('@submitButton')
-            .waitForElementVisible('@tenantsDropdownText',5000)
-            .assert.containsText('@tenantsDropdownText', 'default_tenant');
+            .waitForElementVisible('@managerData',5000)
+            .assert.containsText('@managerData', '10.239.3.79')
+            .assert.containsText('@tenantsDropdownText','default_tenant');
 
         client.end();
+    },
+    'Failed login test': function (client) {
+
+        var page = client.page.login();
+
+        page.navigate()
+            .waitForElementVisible('@ipField', 2000)
+            .clearValue('@ipField')
+            .setValue('@ipField', '10.239.3.79')
+            .setValue('@usernameField', 'admin')
+            .setValue('@passwordField', 'a')
+            .click('@submitButton')
+            .waitForElementVisible('@errorMessage',5000)
+            .assert.containsText('@errorMessage', 'User unauthorized');
+        client.end();
     }
+
 };

@@ -112,11 +112,8 @@
     "load-grunt-tasks": "^3.5.2",
     "mocha": "^3.1.2",
     "mocha-pretty-spec-reporter": "latest",
-<<<<<<< HEAD
-=======
     "nightwatch": "^0.9.11",
     "nock": "^9.0.2",
->>>>>>> added nightwatch and first 'login' test
     "node-sass": "^3.8.0",
     "react-addons-test-utils": "^15.3.0",
     "react-edit-inline": "^1.0.7",
