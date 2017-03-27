@@ -6,7 +6,6 @@ import React, { Component, PropTypes } from 'react';
 
 import SideBar from '../containers/SideBar';
 import Page from '../containers/Page';
-import MaintenanceModePageMessage from './maintenance/MaintenanceModePageMessage';
 
 export default class Home extends Component {
 
@@ -17,6 +16,12 @@ export default class Home extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.pageId !== this.props.pageId) {
             this._handleContext(nextProps.selectedPage,nextProps.contextParams);
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.props.isMaintenance) {
+            this.props.navigateToMaintenancePage();
         }
     }
 
@@ -37,9 +42,6 @@ export default class Home extends Component {
     render() {
         var pageId = this.props.params.pageId || "0";
 
-        if (this.props.isMaintenance) {
-            return <MaintenanceModePageMessage/>
-        }
         return (
             <div className='main'>
                 <SideBar pageId={pageId}/>

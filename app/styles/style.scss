@@ -234,19 +234,19 @@ a:hover {
   }
 }
 
-.loginPage {
+.loginPage,.maintenancePage {
   margin: 0 !important;
   padding: 0 !important;
 }
 
-.configManager.ui.segment, .loginPage.ui.segment, .loadingPage.ui.segment {
+.configManager.ui.segment, .loginPage.ui.segment, .loadingPage.ui.segment,.maintenancePage.ui.segment {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
 
-  .configManagerContainer, .loginContainer {
+  .configManagerContainer, .loginContainer,.maintenanceContainer {
     margin: auto;
     width: 400px;
     height: 170px;
@@ -255,6 +255,10 @@ a:hover {
     right: 0;
     top: 0;
     bottom: 0;
+  }
+
+  .maintenanceContainer {
+    height: 220px;
   }
 
   button {

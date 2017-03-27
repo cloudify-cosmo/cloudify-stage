@@ -31,6 +31,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         navigateTo404: () =>{
             dispatch(push('/404'));
+        },
+        navigateToMaintenancePage: () =>{
+            dispatch(push('/maintenance'));
         }
     }
 };

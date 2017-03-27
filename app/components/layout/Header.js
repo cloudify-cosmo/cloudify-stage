@@ -82,7 +82,7 @@ export default class Header extends Component {
                 }
 
                 <MaintenanceMessage manager={this.props.manager}/>
-                <MaintenanceMode manager={this.props.manager} show={this.state.showMaintenanceModal}
+                <MaintenanceMode show={this.state.showMaintenanceModal}
                                  onHide={()=> this.setState({showMaintenanceModal: false})}/>
                 <ConfigureModal show={this.state.showConfigureModal}
                                 onHide={()=> this.setState({showConfigureModal: false})}/>
