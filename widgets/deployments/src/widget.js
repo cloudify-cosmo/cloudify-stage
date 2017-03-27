@@ -65,7 +65,8 @@ Stage.defineWidget({
                             nodeStates: _.countBy(nodeInstanceData[item.id], "state"),
                             created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
                             updated_at: Stage.Utils.formatTimestamp(item.updated_at),
-                            executions: executionsData[item.id]
+                            executions: executionsData[item.id],
+                            workflows: _.sortBy(item.workflows,['name'])
                         })
                     })
                 });
