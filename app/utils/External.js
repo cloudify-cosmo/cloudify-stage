@@ -138,7 +138,7 @@ export default class External {
                     } else {
                       return response;
                     }
-                })
+                });
         }
     }
 
@@ -147,13 +147,16 @@ export default class External {
             return response;
         }
 
-        var contentType = _.toLower(response.headers.get('content-type'));
-        if (contentType.indexOf('application/json') >= 0) {
-            return response.json()
-                .then(resJson => Promise.reject({message: resJson.message || response.statusText}))
-        } else {
-            return Promise.reject({message: response.statusText});
-        }
+        // Ignoreing content type and trying to parse the json response. Some errors do send json body but not the right content type (like 400 bad request)
+        return response.text()
+            .then(resText=>{
+                try {
+                    var resJson = JSON.parse(resText);
+                    return Promise.reject({message: resJson.message || response.statusText});
+                } catch (e) {
+                    return Promise.reject({message: response.statusText});
+                }
+            });
     }
 
     _buildActualUrl(url, data) {
