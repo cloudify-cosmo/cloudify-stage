@@ -26,5 +26,6 @@
   "topology",
   "userGroups",
   "timeFilter",
-  "userManagement"
+  "userManagement",
+  "HAManagement"
 ]
