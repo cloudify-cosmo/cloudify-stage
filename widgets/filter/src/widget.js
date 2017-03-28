@@ -17,7 +17,7 @@ Stage.defineWidget({
         return Promise.all([
             toolbox.getManager().doGetFull('/blueprints?_include=id'),
             toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id'),
-            widget..configuration.filterByExecutions ? toolbox.getManager().doGetFull('/executions?_include=id,blueprint_id,deployment_id,workflow_id') : Promise.resolve({})
+            widget.configuration.filterByExecutions ? toolbox.getManager().doGetFull('/executions?_include=id,blueprint_id,deployment_id,workflow_id') : Promise.resolve({})
         ]).then(results=>{
             return {
                 blueprints: results[0],
