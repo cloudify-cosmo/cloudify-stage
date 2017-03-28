@@ -19,6 +19,12 @@ export default class Home extends Component {
         }
     }
 
+    componentDidUpdate() {
+        if (this.props.isMaintenance) {
+            this.props.navigateToMaintenancePage();
+        }
+    }
+
     _handleContext(selectedPage,contextParams) {
         if (!selectedPage) {
             this.props.navigateTo404();
