@@ -59,7 +59,7 @@ export default class EditWidgetModal extends Component {
 
     _handleInputChange(proxy, field) {
         var name = field.name;
-        var value = Stage.Basic.GenericField.formatValue(field.genericType, field.value);
+        var value = Stage.Basic.GenericField.formatValue(field.genericType, field.genericType === Stage.Basic.GenericField.BOOLEAN_TYPE ? field.checked : field.value);
 
         this.setState({fields: Object.assign({}, this.state.fields, {[name]: value})});
     }
