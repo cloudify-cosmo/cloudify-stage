@@ -23,7 +23,11 @@ Stage.defineWidget({
             return toolbox.getManager().doGet(`/deployments/${deploymentId}`)
                 .then(deployment => {
                     toolbox.loading(false);
-                    return Promise.resolve(deployment);
+
+                    var dep = Object.assign({},deployment,{
+                        workflows: _.sortBy(deployment.workflows,['name'])
+                    });
+                    return Promise.resolve(dep);
                 });
         }
 
