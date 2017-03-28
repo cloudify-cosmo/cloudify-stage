@@ -13,10 +13,18 @@ Stage.defineWidget({
     color: "pink",
     showHeader: false,
     showBorder: false,
-    fetchUrl: {
-        blueprints: '[manager]/blueprints?_include=id',
-        deployments: '[manager]/deployments?_include=id,blueprint_id',
-        types: '[manager]/events?_include=event_type&type=cloudify_event'
+    fetchData:(widget,toolbox,params)=>{
+        return Promise.all([
+            toolbox.getManager().doGetFull('/blueprints?_include=id'),
+            toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id'),
+            toolbox.getManager().doGetFull('/events?_include=event_type&type=cloudify_event')
+        ]).then(results=>{
+            return {
+                blueprints: results[0],
+                deployments : results[1],
+                types: results[2]
+            }
+        });
     },
     isReact: true,
     initialConfiguration: [
