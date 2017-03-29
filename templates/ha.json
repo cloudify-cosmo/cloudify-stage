@@ -1,0 +1,13 @@
+{
+  "name": "High Availability Management",
+  "widgets": [
+    {
+      "name": "Cluster management",
+      "definition": "HAManagement",
+      "width": 12,
+      "height": 24,
+      "x": 0,
+      "y": 0
+    }
+  ]
+}

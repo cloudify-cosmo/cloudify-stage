@@ -13,6 +13,7 @@
   "executions",
   "filter",
   "graph",
+  "HAManagement",
   "inputs",
   "logs",
   "nodes",
