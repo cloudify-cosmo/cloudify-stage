@@ -36,11 +36,11 @@ Stage.defineWidget({
 
         let messageText = toolbox.getContext().getValue('event_messageText');
         if (!_.isEmpty(messageText)) {
-            params.message_text = messageText;
+            params.message = messageText;
         }
 
         let logLevel = toolbox.getContext().getValue('event_logLevel');
-        if (!_.isEmpty(logLevel)) {
+        if (!_.isEmpty(logLevel) && widget.configuration.showLogs) {
             params.level = logLevel;
         }
 
@@ -77,7 +77,7 @@ Stage.defineWidget({
         let blueprintId = CONTEXT_PARAMS['blueprint_id'], deploymentId = CONTEXT_PARAMS['deployment_id'];
         let formattedData = Object.assign({}, data, {
             items: _.map (data.items, (item) => {
-                var id = item.context.execution_id + item['@timestamp'];
+                var id = item.execution_id + item.timestamp;
                 return Object.assign({}, item, {
                     id: id,
                     timestamp: Stage.Utils.formatTimestamp(item.timestamp),
