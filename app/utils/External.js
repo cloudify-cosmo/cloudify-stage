@@ -30,6 +30,10 @@ export default class External {
         return this._ajaxCall(url,'put',params,data,parseResponse) ;
     }
 
+    doPatch(url,params,data,parseResponse) {
+        return this._ajaxCall(url,'patch',params,data,parseResponse) ;
+    }
+
     doDownload(url,fileName) {
         return this._ajaxCall(url,'get',null,null,null,fileName);
     }
