@@ -50,7 +50,7 @@ class Toolbox {
 
     // This is sometimes needed inorder to join a different manager (for cluster joining for example)
     getNewManager(ip) {
-        return new Manager({ip,version:'v3'});
+        return new Manager({ip,apiVersion:'v3'});
     }
 
     getContext() {
