@@ -108,6 +108,7 @@ export default class UsersTable extends React.Component {
             this.props.toolbox.loading(false);
             this.props.toolbox.refresh();
         }).catch((err)=>{
+            this._hideModal();
             this.setState({error: err.message});
             this.props.toolbox.loading(false);
         });
