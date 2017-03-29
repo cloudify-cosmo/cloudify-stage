@@ -14,20 +14,20 @@ export default class External {
         this._data = data;
     }
 
-    doGet(url,params,parseResponse) {
-        return this._ajaxCall(url,'get',params,null,parseResponse) ;
+    doGet(url,params,parseResponse,headers) {
+        return this._ajaxCall(url,'get',params,null,parseResponse,headers) ;
     }
 
-    doPost(url,params,data,parseResponse){
-        return this._ajaxCall(url,'post',params,data,parseResponse) ;
+    doPost(url,params,data,parseResponse,headers){
+        return this._ajaxCall(url,'post',params,data,parseResponse,headers) ;
     }
 
-    doDelete(url,params,data,parseResponse){
-        return this._ajaxCall(url,'delete',params,data,parseResponse) ;
+    doDelete(url,params,data,parseResponse,headers){
+        return this._ajaxCall(url,'delete',params,data,parseResponse,headers) ;
     }
 
-    doPut(url,params,data,parseResponse) {
-        return this._ajaxCall(url,'put',params,data,parseResponse) ;
+    doPut(url,params,data,parseResponse,headers) {
+        return this._ajaxCall(url,'put',params,data,parseResponse,headers) ;
     }
 
     doPatch(url,params,data,parseResponse) {
@@ -35,7 +35,7 @@ export default class External {
     }
 
     doDownload(url,fileName) {
-        return this._ajaxCall(url,'get',null,null,null,fileName);
+        return this._ajaxCall(url,'get',null,null,null,null,fileName);
     }
 
     doUpload(url,params,files,method) {
@@ -108,11 +108,11 @@ export default class External {
         });
     }
 
-    _ajaxCall(url,method,params,data,parseResponse=true,fileName) {
+    _ajaxCall(url,method,params,data,parseResponse=true,userHeaders={},fileName=null) {
         var actualUrl = this._buildActualUrl(url, params);
         logger.debug(method + ' data. URL: ' + url);
 
-        var headers = Object.assign(this._buildHeaders(), this._contentType());
+        var headers = Object.assign(this._buildHeaders(), this._contentType(),userHeaders);
 
         var options = {
             method: method,

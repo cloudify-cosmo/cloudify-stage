@@ -12,5 +12,6 @@
   "plugins",
   "adminDash",
   "catalog",
-  "secret"
+  "secret",
+  "ha"
 ]
