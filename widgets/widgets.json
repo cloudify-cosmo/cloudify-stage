@@ -23,6 +23,7 @@
   "serversNum",
   "snapshots",
   "tenants",
+  "timeFilter",
   "topology",
   "userGroups",
   "userManagement"

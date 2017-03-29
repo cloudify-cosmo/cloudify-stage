@@ -10,14 +10,18 @@ export default class InputDate extends Component {
         placeholder: PropTypes.string,
         name: PropTypes.string,
         value: PropTypes.any,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        minDate: PropTypes.object,
+        maxDate: PropTypes.object
     };
 
     static defaultProps = {
-        onChange: ()=>{}
+        onChange: ()=>{},
+        minDate: null,
+        maxDate: null
     };
 
-    componentDidMount() {
+    _refreshCalendar(params) {
         var self = this;
         $(this.refs.calendarObj).calendar({
             ampm: false,
@@ -29,8 +33,32 @@ export default class InputDate extends Component {
 
                     return moment(date).format("DD-MM-YYYY");
                 }
-            }
+            },
+            minDate: self.props.minDate,
+            maxDate: self.props.maxDate,
+            ...params
         });
+    }
+
+    componentDidMount() {
+        this._refreshCalendar();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.minDate !== this.props.minDate ||
+            nextProps.maxDate !== this.props.maxDate)
+        {
+            let params = {};
+            if (moment(nextProps.minDate).isValid()) {
+                params.minDate = nextProps.minDate;
+            }
+            if (moment(nextProps.maxDate).isValid()) {
+                params.maxDate = nextProps.maxDate;
+            }
+            if (!_.isEmpty(params)) {
+                this._refreshCalendar(params);
+            }
+        }
     }
 
     render() {
