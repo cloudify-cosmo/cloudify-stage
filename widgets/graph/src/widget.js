@@ -6,11 +6,12 @@ Stage.defineWidget({
     id: 'graph',
     name: 'Deployment metric graph',
     description: 'Display graph with deployment metric data',
-    initialWidth: 8,
-    initialHeight: 8,
+    initialWidth: 6,
+    initialHeight: 20,
     showHeader: true,
     showBorder: true,
     isReact: true,
+    color: "blue",
     initialConfiguration: [
         {id: "deploymentId", name: "Deployment ID", placeHolder: "If not set, then will be taken from context", default: "", type: Stage.Basic.GenericField.STRING_TYPE},
         {id: "metric", name: "Metric", placeHolder: "Metric data to be presented on the graph", default: "memory_MemFree", type: Stage.Basic.GenericField.LIST_TYPE,
@@ -29,17 +30,39 @@ Stage.defineWidget({
 
     _prepareData: function(data, xDataKey, yDataKey) {
         const TIME_FORMAT = "HH:mm:ss";
-        return _.map(data, (element) => ({
+        const MAX_NUMBER_OF_POINTS = 500;
+
+        // Data optimization (show no more than MAX_NUMBER_OF_POINTS points on the graph)
+        if (data.length > MAX_NUMBER_OF_POINTS) {
+            let optimizedData = [];
+            let delta = parseFloat(data.length / MAX_NUMBER_OF_POINTS);
+            for (let i = 0; i < data.length; i = i + delta) {
+                optimizedData.push(data[Math.floor(i)]);
+            }
+            data = optimizedData;
+        }
+
+        // Convert data to recharts format
+        data = _.map(data, (element) => ({
             [xDataKey]: Stage.Utils.formatTimestamp(element[0], TIME_FORMAT, null),
             [yDataKey]: element[1]
         }));
-    },
 
+        return data;
+    },
 
     fetchParams: function(widget, toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId') || widget.configuration.deploymentId;
 
-        return { deploymentId };
+        let timeStart = toolbox.getContext().getValue('time_start');
+        timeStart = timeStart ? `${moment(timeStart).unix()}s` : widget.configuration.from;
+
+        let timeEnd = toolbox.getContext().getValue('time_end');
+        timeEnd = timeEnd ? `${moment(timeEnd).unix()}s` : widget.configuration.to;
+
+        let timeGroup = `${toolbox.getContext().getValue('time_resolution')}${toolbox.getContext().getValue('time_unit')}`;
+
+        return { deploymentId, timeStart, timeEnd, timeGroup };
     },
 
     fetchData: function(widget, toolbox, params) {
@@ -52,9 +75,10 @@ Stage.defineWidget({
             let deploymentId = params.deploymentId;
             let metric = widget.configuration.metric;
             if (!_.isEmpty(deploymentId) && !_.isEmpty(metric)) {
-                let from = widget.configuration.from;
-                let to = widget.configuration.to;
-                return actions.doGetMetric(deploymentId, metric, from, to).then((data) => Promise.resolve(data))
+                let from = params.timeStart;
+                let to = params.timeEnd;
+                let timeGroup = params.timeGroup;
+                return actions.doGetMetric(deploymentId, metric, from, to, timeGroup).then((data) => Promise.resolve(data))
             } else {
                 return Promise.resolve({});
             }

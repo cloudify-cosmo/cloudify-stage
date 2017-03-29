@@ -25,5 +25,6 @@
   "tenants",
   "topology",
   "userGroups",
+  "timeFilter",
   "userManagement"
 ]

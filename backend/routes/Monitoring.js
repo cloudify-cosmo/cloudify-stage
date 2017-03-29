@@ -84,7 +84,7 @@ router.get('/byMetric/:managerIp/:deploymentId/:metric',function(req,res,next){
     var toTime = req.query.to || 'now()';
     var timeGrouping = req.query.timeGroup || 10;
 
-    var query = 'select  mean(value) from /'+req.params.deploymentId+'\\..*\\.'+req.params.metric+'/  ' +
+    var query = 'select mean(value) from /'+req.params.deploymentId+'\\..*\\.'+req.params.metric+'/  ' +
                 'where time > '+fromTime+' and time < '+toTime+' group by time('+timeGrouping+')  order asc';
 
     logger.debug('Query: ',query);
