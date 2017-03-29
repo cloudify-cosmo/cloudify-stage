@@ -12,6 +12,7 @@ Stage.defineWidget({
     initialHeight: 25,
     color: "green",
     isReact: true,
+    isAdmin: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
