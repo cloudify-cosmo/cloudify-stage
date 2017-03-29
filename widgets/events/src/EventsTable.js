@@ -52,37 +52,37 @@ export default class EventsTable extends React.Component {
                            sortAscending={this.props.widget.configuration.sortAscending}
                            className="eventsTable">
 
-                    <DataTable.Column label="Blueprint" name="context.blueprint_id" width="10%" show={!this.props.data.blueprintId &&
+                    <DataTable.Column label="Blueprint" name="blueprint_id" width="10%" show={!this.props.data.blueprintId &&
                                                                                                       !this.props.data.deploymentId &&
                                                                                                       !this.props.data.executionId} />
-                    <DataTable.Column label="Deployment" name="context.deployment_id" width="10%" show={!this.props.data.deploymentId && !this.props.data.executionId} />
-                    <DataTable.Column label="Workflow" name="context.workflow_id" width="10%" show={!this.props.data.executionId} />
+                    <DataTable.Column label="Deployment" name="deployment_id" width="10%" show={!this.props.data.deploymentId && !this.props.data.executionId} />
+                    <DataTable.Column label="Workflow" name="workflow_id" width="10%" show={!this.props.data.executionId} />
                     <DataTable.Column label="Event Type" name="event_type" width={this.props.widget.configuration.showLogs ? '10%': '20%'}/>
                     <DataTable.Column label="Log Level" name="level" width="10%" show={this.props.widget.configuration.showLogs}/>
                     <DataTable.Column label="Timestamp" name="timestamp" width="10%"/>
-                    <DataTable.Column label="Operation" name="context.operation" width="10%"/>
-                    <DataTable.Column label="Node Name" name="context.node_name" width="10%"/>
-                    <DataTable.Column label="Node Id" name="context.node_id" width="10%"/>
-                    <DataTable.Column label="Message" name="message.text" width="10%"/>
+                    <DataTable.Column label="Operation" name="operation" width="10%"/>
+                    <DataTable.Column label="Node Name" name="node_name" width="10%"/>
+                    <DataTable.Column label="Node Id" name="node_instance_id" width="10%"/>
+                    <DataTable.Column label="Message" name="message" width="10%"/>
 
                     {
                         this.props.data.items.map((item) => {
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectEvent.bind(this, item.id)}>
-                                    <DataTable.Data>{item.context.blueprint_id}</DataTable.Data>
-                                    <DataTable.Data>{item.context.deployment_id}</DataTable.Data>
-                                    <DataTable.Data>{item.context.workflow_id}</DataTable.Data>
+                                    <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+                                    <DataTable.Data>{item.deployment_id}</DataTable.Data>
+                                    <DataTable.Data>{item.workflow_id}</DataTable.Data>
                                     <DataTable.Data>{item.event_type}</DataTable.Data>
                                     <DataTable.Data>{item.level}</DataTable.Data>
                                     <DataTable.Data>{item.timestamp}</DataTable.Data>
-                                    <DataTable.Data>{item.context.operation}</DataTable.Data>
-                                    <DataTable.Data>{item.context.node_name}</DataTable.Data>
-                                    <DataTable.Data>{item.context.node_id}</DataTable.Data>
+                                    <DataTable.Data>{item.operation}</DataTable.Data>
+                                    <DataTable.Data>{item.node_name}</DataTable.Data>
+                                    <DataTable.Data>{item.node_instance_id}</DataTable.Data>
                                     <DataTable.Data>
-                                        {item.message.text &&
+                                        {item.message &&
                                             <Popup position='top left' wide>
-                                                <Popup.Trigger><span>{item.message.text}</span></Popup.Trigger>
-                                                <HighlightText>{item.message.text}</HighlightText>
+                                                <Popup.Trigger><span>{item.message}</span></Popup.Trigger>
+                                                <HighlightText>{item.message}</HighlightText>
                                             </Popup>
                                         }
                                     </DataTable.Data>

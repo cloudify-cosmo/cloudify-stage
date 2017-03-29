@@ -35,17 +35,12 @@ Stage.defineWidget({
 
         let messageText = toolbox.getContext().getValue('event_messageText');
         if (!_.isEmpty(messageText)) {
-            params.message_text = messageText;
+            params.message = messageText;
         }
 
         let logLevel = toolbox.getContext().getValue('event_logLevel');
         if (!_.isEmpty(logLevel)) {
             params.level = logLevel;
-        }
-
-        let eventType = toolbox.getContext().getValue('event_eventType');
-        if (!_.isEmpty(eventType)) {
-            params.event_type = eventType;
         }
 
         let timeStart = toolbox.getContext().getValue('event_timeStart');
@@ -70,10 +65,11 @@ Stage.defineWidget({
         let blueprintId = CONTEXT_PARAMS['blueprint_id'], deploymentId = CONTEXT_PARAMS['deployment_id'];
         var formattedData = Object.assign({}, data, {
             items: _.map (data.items, (item) => {
+                var id = item.execution_id + item.timestamp;
                 return Object.assign({}, item, {
-                    id: item.context.execution_id + item['@timestamp'],
+                    id: id,
                     timestamp: Stage.Utils.formatTimestamp(item.timestamp),
-                    isSelected: (item.context.execution_id + item['@timestamp']) === SELECTED_LOG_ID
+                    isSelected: id === SELECTED_LOG_ID
                 })
             }),
             total : _.get(data, 'metadata.pagination.total', 0),
