@@ -13,6 +13,7 @@
   "executions",
   "filter",
   "graph",
+  "HAManagement",
   "inputs",
   "logs",
   "nodes",
@@ -23,9 +24,8 @@
   "serversNum",
   "snapshots",
   "tenants",
+  "timeFilter",
   "topology",
   "userGroups",
-  "timeFilter",
-  "userManagement",
-  "HAManagement"
+  "userManagement"
 ]
