@@ -56,8 +56,8 @@ export default class ClusterManagement extends React.Component {
 
                 {
                     isClusterInitialized ?
-                    <h3><Icon name='checkmark' color='green'/> Cluster Is initializes</h3> :
-                    <h3>Cluster is Not Initialize</h3>
+                    <h3><Icon name='checkmark' color='green'/> Cluster Is initialized</h3> :
+                    <h3>Cluster is Not Initialized</h3>
                 }
 
                 {

@@ -60,7 +60,7 @@ export default class ClusterNodesList extends React.Component {
                            sortAscending={this.props.widget.configuration.sortAscending}
                            className="nodesTable">
 
-                    <DataTable.Column label="name" name="name" width="25%"/>
+                    <DataTable.Column label="Name" name="name" width="25%"/>
                     <DataTable.Column label="Host IP" name="host_ip" width="20%"/>
                     <DataTable.Column label="Initialized" name="initialized" width="10%"/>
                     <DataTable.Column label="Is master" name="master" width="10%"/>
