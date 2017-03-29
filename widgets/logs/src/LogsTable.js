@@ -38,8 +38,7 @@ export default class LogsTable extends React.Component {
     }
 
     render() {
-        let ErrorMessage = Stage.Basic.ErrorMessage;
-        let DataTable = Stage.Basic.DataTable;
+        let {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
 
         return (
             <div>
@@ -74,7 +73,14 @@ export default class LogsTable extends React.Component {
                                     <DataTable.Data>{item.context.operation}</DataTable.Data>
                                     <DataTable.Data>{item.context.node_name}</DataTable.Data>
                                     <DataTable.Data>{item.context.node_id}</DataTable.Data>
-                                    <DataTable.Data>{item.message.text}</DataTable.Data>
+                                    <DataTable.Data>
+                                        {item.message.text &&
+                                        <Popup position='top left' wide>
+                                            <Popup.Trigger><span>{item.message.text}</span></Popup.Trigger>
+                                            <HighlightText>{item.message.text}</HighlightText>
+                                        </Popup>
+                                        }
+                                    </DataTable.Data>
                                 </DataTable.Row>
                             );
                         })

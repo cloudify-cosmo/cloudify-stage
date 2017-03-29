@@ -37,6 +37,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onPageRemoved: (page) => {
             dispatch(removePage(page.id));
+
+            // If user removes current page, then navigate to home page
+            if (ownProps.pageId === page.id) {
+                dispatch(selectPage(0,false));
+            }
         },
         onPageReorder: (pageIndex, newPageIndex) => {
             dispatch(reorderPage(pageIndex, newPageIndex));

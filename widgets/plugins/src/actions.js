@@ -9,7 +9,7 @@ export default class {
     }
 
     doDelete(plugin) {
-        return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`);
+        return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`,null,{force:true});
 
     }
 

@@ -65,4 +65,24 @@ export default class Manager extends External {
         return headers;
     }
 
+    doGetFull(url,params={},parseResponse=true,fullData = {items:[]}, size = 0) {
+        params._size = 1000;
+        params._offset = size;
+
+        var pr = this.doGet(url,params,parseResponse);
+
+        return pr.then(data=>{
+            size += data.items.length;
+            fullData.items = _.concat(fullData.items,data.items);
+            var total = _.get(data, "metadata.pagination.total");
+
+            if (total > size) {
+                return this.doGetFull(url,params,parseResponse,fullData,size);
+            } else {
+                return fullData;
+            }
+        });
+
+    }
+
 }

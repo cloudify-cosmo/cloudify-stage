@@ -6,6 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Login from '../components/Login';
 import {login} from '../actions/managers';
+import Consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
     var configIp = _.get(state.config,'manager.ip'); // Default Ip via configuration
@@ -24,6 +25,7 @@ const mapStateToProps = (state, ownProps) => {
         isLoggingIn: state.manager.isLoggingIn,
         loginError: state.manager ? state.manager.err : '',
         mode: state.config.mode,
+        shouldShowIpField: state.config.mode === Consts.MODE_MAIN && !_.get(state.config, 'app.singleManager',false),
         whiteLabel : state.config.app.whiteLabel
     };
 };

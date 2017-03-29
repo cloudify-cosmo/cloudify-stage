@@ -1,0 +1,40 @@
+{
+    "src_folders" : ["e2e/tests"],
+    "output_folder" : "./reports",
+    "live_output" : true,
+    "parallel_process_delay" : 1500,
+    "page_objects_path" : "e2e/pages",
+
+    "selenium" : {
+        "start_process" : true,
+        "server_path" : "./e2e/bin/selenium-server-standalone-3.0.1.jar",
+        "host": "127.0.0.1",
+        "port" : 4444,
+        "cli_args" : {
+            "webdriver.chrome.driver" : "./e2e/bin/chromedriver"
+        }
+    },
+
+    "test_settings" : {
+        "default" : {
+            "launch_url" : "http://localhost:8088",
+            "silent" : true,
+            "selenium_port": 4444,
+            "selenium_host": "localhost",
+            "screenshots" : {
+                "enabled" : false,
+                "path" : "./screenshots"
+            },
+            "desiredCapabilities": {
+                "browserName": "chrome",
+                "marionette": true
+            }
+        },
+
+        "chrome" : {
+            "desiredCapabilities" : {
+                "browserName" : "chrome"
+            }
+        }
+    }
+}

@@ -4,7 +4,6 @@
 import React, {Component, PropTypes} from "react";
 import Consts from "../../utils/consts";
 import {Modal, Icon, ErrorMessage, DataTable, Checkmark} from "../basic/index";
-import ExecutionStatus from "./ExecutionStatus";
 import StageUtils from "../../utils/stageUtils";
 
 const POLLING_INTERVAL = 2000;
@@ -165,7 +164,7 @@ export default class MaintenanceMode extends Component {
                                                 <DataTable.Data>{item.id}</DataTable.Data>
                                                 <DataTable.Data><Checkmark value={item.is_system_workflow}/></DataTable.Data>
                                                 <DataTable.Data>
-                                                    <ExecutionStatus item={item} onCancelExecution={this._cancelExecution.bind(this)}/>
+                                                    <Stage.Common.ExecutionStatus item={item} onCancelExecution={this._cancelExecution.bind(this)}/>
                                                 </DataTable.Data>
                                             </DataTable.Row>
                                         );

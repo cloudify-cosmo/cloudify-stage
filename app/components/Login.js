@@ -4,6 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import Consts from '../utils/consts';
+import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 export default class Login extends Component {
 
@@ -12,7 +13,7 @@ export default class Login extends Component {
         username: PropTypes.string,
         loginError: PropTypes.string,
         onLogin: PropTypes.func.isRequired,
-        mode: PropTypes.string.isRequired,
+        shouldShowIpField: PropTypes.bool.isRequired,
         isLoggingIn: PropTypes.bool.isRequired,
         whiteLabel: PropTypes.object
 
@@ -43,6 +44,7 @@ export default class Login extends Component {
     }
 
     render() {
+        SplashLoadingScreen.turnOff();
 
         var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
         return (
@@ -54,7 +56,7 @@ export default class Login extends Component {
                 <div className='loginContainer'>
                     <form className="ui huge form" onSubmit={this.onSubmit.bind(this)}>
                         {
-                            this.props.mode === Consts.MODE_MAIN &&
+                            this.props.shouldShowIpField &&
                             <div className="field required">
                                 <input type="text" name="ip" placeholder="Enter Manager IP" required value={this.state.ip} onChange={(e)=>this.setState({ip: e.target.value})}/>
                             </div>

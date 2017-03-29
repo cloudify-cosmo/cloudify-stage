@@ -7,7 +7,7 @@ import {switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExe
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        manager: ownProps.manager,
+        manager: state.manager,
         show: ownProps.show,
         onHide: ownProps.onHide,
         activeExecutions: state.manager.activeExecutions
@@ -16,17 +16,17 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onMaintenanceActivate: () => {
-            return dispatch(switchMaintenance(ownProps.manager, true));
+        onMaintenanceActivate: (manager) => {
+            return dispatch(switchMaintenance(manager, true));
         },
-        onMaintenanceDeactivate: () => {
-            return dispatch(switchMaintenance(ownProps.manager, false));
+        onMaintenanceDeactivate: (manager) => {
+            return dispatch(switchMaintenance(manager, false));
         },
-        onFetchActiveExecutions: () => {
-            return dispatch(getActiveExecutions(ownProps.manager));
+        onFetchActiveExecutions: (manager) => {
+            return dispatch(getActiveExecutions(manager));
         },
-        onCancelExecution: (execution, action) => {
-            return dispatch(doCancelExecution(ownProps.manager, execution, action));
+        onCancelExecution: (manager,execution, action) => {
+            return dispatch(doCancelExecution(manager, execution, action));
         },
         onClose: () => {
             return dispatch(setActiveExecutions({}));
@@ -34,7 +34,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 };
 
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+    return Object.assign({}, stateProps, ownProps, dispatchProps, {
+        onMaintenanceActivate: ()=>dispatchProps.onMaintenanceActivate(stateProps.manager),
+        onMaintenanceDeactivate: ()=>dispatchProps.onMaintenanceDeactivate(stateProps.manager),
+        onFetchActiveExecutions: ()=>dispatchProps.onFetchActiveExecutions(stateProps.manager),
+        onCancelExecution: (execution, action)=>dispatchProps.onCancelExecution(stateProps.manager,execution, action)
+    });
+}
+
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
+    mergeProps
 )(MaintenanceMode);

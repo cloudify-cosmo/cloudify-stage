@@ -39,8 +39,7 @@ export default class EventsTable extends React.Component {
     }
 
     render() {
-        let ErrorMessage = Stage.Basic.ErrorMessage;
-        let DataTable = Stage.Basic.DataTable;
+        let {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
 
         return (
             <div>
@@ -58,7 +57,8 @@ export default class EventsTable extends React.Component {
                                                                                                       !this.props.data.executionId} />
                     <DataTable.Column label="Deployment" name="context.deployment_id" width="10%" show={!this.props.data.deploymentId && !this.props.data.executionId} />
                     <DataTable.Column label="Workflow" name="context.workflow_id" width="10%" show={!this.props.data.executionId} />
-                    <DataTable.Column label="Event Type" name="event_type" width="20%"/>
+                    <DataTable.Column label="Event Type" name="event_type" width={this.props.widget.configuration.showLogs ? '10%': '20%'}/>
+                    <DataTable.Column label="Log Level" name="level" width="10%" show={this.props.widget.configuration.showLogs}/>
                     <DataTable.Column label="Timestamp" name="timestamp" width="10%"/>
                     <DataTable.Column label="Operation" name="context.operation" width="10%"/>
                     <DataTable.Column label="Node Name" name="context.node_name" width="10%"/>
@@ -73,11 +73,19 @@ export default class EventsTable extends React.Component {
                                     <DataTable.Data>{item.context.deployment_id}</DataTable.Data>
                                     <DataTable.Data>{item.context.workflow_id}</DataTable.Data>
                                     <DataTable.Data>{item.event_type}</DataTable.Data>
+                                    <DataTable.Data>{item.level}</DataTable.Data>
                                     <DataTable.Data>{item.timestamp}</DataTable.Data>
                                     <DataTable.Data>{item.context.operation}</DataTable.Data>
                                     <DataTable.Data>{item.context.node_name}</DataTable.Data>
                                     <DataTable.Data>{item.context.node_id}</DataTable.Data>
-                                    <DataTable.Data>{item.message.text}</DataTable.Data>
+                                    <DataTable.Data>
+                                        {item.message.text &&
+                                            <Popup position='top left' wide>
+                                                <Popup.Trigger><span>{item.message.text}</span></Popup.Trigger>
+                                                <HighlightText>{item.message.text}</HighlightText>
+                                            </Popup>
+                                        }
+                                    </DataTable.Data>
                                 </DataTable.Row>
                             );
                         })

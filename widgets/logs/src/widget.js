@@ -14,7 +14,7 @@ Stage.defineWidget({
     fetchUrl: '[manager]/events?type=cloudify_log[params]',
     isReact: true,
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        Stage.GenericConfig.POLLING_TIME_CONFIG(2),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         Stage.GenericConfig.SORT_COLUMN_CONFIG('timestamp'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
@@ -23,12 +23,12 @@ Stage.defineWidget({
     fetchParams: function(widget, toolbox) {
         var params = {};
 
-        let deploymentId = toolbox.getContext().getValue('event_deploymentId');
+        let deploymentId = toolbox.getContext().getValue('deploymentId') || toolbox.getContext().getValue('event_deploymentId');
         if (!_.isEmpty(deploymentId)) {
             params.deployment_id = deploymentId;
         }
 
-        let blueprintId = toolbox.getContext().getValue('event_blueprintId');
+        let blueprintId = toolbox.getContext().getValue('blueprintId') || toolbox.getContext().getValue('event_blueprintId');
         if (!_.isEmpty(blueprintId)) {
             params.blueprint_id = blueprintId;
         }
@@ -72,13 +72,13 @@ Stage.defineWidget({
             items: _.map (data.items, (item) => {
                 return Object.assign({}, item, {
                     id: item.context.execution_id + item['@timestamp'],
-                    timestamp: Stage.Utils.formatTimestamp(item.timestamp), //2016-07-20 09:10:53.103+000
+                    timestamp: Stage.Utils.formatTimestamp(item.timestamp),
                     isSelected: (item.context.execution_id + item['@timestamp']) === SELECTED_LOG_ID
                 })
             }),
             total : _.get(data, 'metadata.pagination.total', 0),
-            blueprintId: (blueprintId && blueprintId.length == 1 ? blueprintId : ""),
-            deploymentId: (deploymentId && deploymentId.length == 1 ? deploymentId : "")
+            blueprintId: (blueprintId && !_.isArray(blueprintId) ? blueprintId : ""),
+            deploymentId: (deploymentId && !_.isArray(deploymentId) ? deploymentId : "")
         });
 
         return (
