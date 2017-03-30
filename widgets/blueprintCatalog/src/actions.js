@@ -9,9 +9,10 @@ const UPLOAD_URL = (user,repo)=>`https://api.github.com/repos/${user}/${repo}/zi
 
 export default class Actions {
 
-    constructor(toolbox, username, password) {
+    constructor(toolbox, username, password, filter) {
         this.toolbox = toolbox;
         this.username = username;
+        this.filter = filter;
         if (password) {
             this.credentials = btoa(`${username}:${password}`);
         }
@@ -23,32 +24,8 @@ export default class Actions {
 
     doGetRepos(params) {
         return this.toolbox.getExternal(this.credentials)
-            .doGet(`${GITHUB_API}/users/${this.username}/repos`, params, false)
-            .then(response=>{
-
-                var link = response.headers.get("link");
-
-                var total = 0;
-                if (link) {
-                    const reg = /page=([0-9]+)&per_page=([0-9]+)>; rel="([a-z]+)"/g;
-
-                    var page = 0, per_page = 0, match;
-                    while (match = reg.exec(link)) {
-                        if (match[3] === "last") {
-                            page = parseInt(match[1]);
-                            per_page = parseInt(match[2]);
-                            break;
-                        } else if (match[3] === "prev") {
-                            page = parseInt(match[1]) + 1;
-                            per_page = parseInt(match[2]);
-                        }
-                    }
-
-                    total = page * per_page;
-                }
-
-                return Promise.all([response.json(), Promise.resolve(total)]);
-            });
+            .doGet(`${GITHUB_API}/search/repositories?q=user:${this.username} ${this.filter}`, params, false)
+            .then(response => Promise.resolve(response.json()));
     }
 
     doGetRepoTree(repo) {
