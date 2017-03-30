@@ -9,7 +9,9 @@
       "x": 0,
       "y": 0,
       "configuration":{
-        "displayStyle":"catalog"
+        "displayStyle":"catalog",
+        "username":"cloudify-examples",
+        "filter":"blueprint in:name NOT local"
       }
     }
   ]
