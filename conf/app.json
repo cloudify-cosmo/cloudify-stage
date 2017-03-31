@@ -10,7 +10,9 @@
     "logoUrl": "",
     "mainColor": "",
     "pagesLocation": "",
-    "headerTextColor": ""
+    "headerTextColor": "",
+    "loginPageHeader": "",
+    "loginPageText": ""
   },
   "db": {
     "url": "postgres://cloudify:cloudify@localhost:5432/stage",
