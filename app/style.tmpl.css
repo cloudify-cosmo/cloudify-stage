@@ -11,8 +11,8 @@ div#splash {
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-color: #39b9d4 !important;
-    color: #ffffff !important;
+    background-color: {mainColor} !important;
+    color: {headerTextColor} !important;
 }
 div#splash div#logo {
     top: 0;

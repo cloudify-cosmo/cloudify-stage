@@ -4,6 +4,7 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
+var whiteLabel = require('./conf/app.json').whiteLabel;
 
 module.exports = {
     context: path.join(__dirname),
@@ -38,7 +39,18 @@ module.exports = {
             { from: 'templates',
                 to: 'templates'}
         ]),
+        new CopyWebpackPlugin([
+            { from: 'app/style.tmpl.css',
+                to: 'style.css',
+                transform: function(content, path) {
+                    return content.toString()
+                        .replace('{mainColor}', whiteLabel.enabled && whiteLabel.mainColor || '#39b9d4')
+                        .replace('{headerTextColor}', whiteLabel.enabled && whiteLabel.headerTextColor || '#ffffff');
+                }
+            }
+        ]),
         new HtmlWebpackPlugin({
+            logoUrl: whiteLabel.enabled && whiteLabel.logoUrl || '/app/images/Cloudify-logo.png',
             template: 'app/index.tmpl.html',
             inject: 'body',
             filename: 'index.html'
