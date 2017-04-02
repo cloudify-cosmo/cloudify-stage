@@ -12,12 +12,16 @@ module.exports = {
             selector: '.managerMenu',
             elements: {
                 ip: 'span',
-                statusIcon: 'i.signal'
+                statusIcon: 'i.signal',
+                statusIconGreen: 'i.signal.green'
             }
         }
     },
 
     elements: {
-        tenantsDropdownText : 'div.tenantsMenu'
+        tenantsDropdownText : 'div.tenantsMenu',
+        statusesTitle: 'table.servicesData tr th',
+        statusesName: 'table.servicesData tr td',
+        statusesDesc : 'table.servicesData tr td div.sub.header'
     }
 };
