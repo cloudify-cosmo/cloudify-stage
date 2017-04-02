@@ -15,6 +15,21 @@ module.exports = {
                 statusIcon: 'i.signal',
                 statusIconGreen: 'i.signal.green'
             }
+        },
+        tenants: {
+            selector: '.tenantsMenu',
+            elements: {
+                tenantName: 'span',
+                tenantsDropdownMenu: '.menu',
+                tenantsDropdownMenuItem: '.menu .item span'
+            }
+        },
+        userMenu: {
+            selector : '.usersMenu',
+            elements: {
+                userName: 'span',
+                userDropdownMenu : '.menu'
+            }
         }
     },
 
