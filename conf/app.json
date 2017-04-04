@@ -7,10 +7,12 @@
   "singleManager": false,
   "whiteLabel": {
     "enabled": false,
-    "logoUrl": "",
-    "mainColor": "",
+    "logoUrl": "/app/images/Cloudify-icon.png",
+    "mainColor": "black",
     "pagesLocation": "",
-    "headerTextColor": ""
+    "headerTextColor": "white",
+    "loginPageHeader": "",
+    "loginPageText": ""
   },
   "db": {
     "url": "postgres://cloudify:cloudify@localhost:5432/stage",

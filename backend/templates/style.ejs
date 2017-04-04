@@ -4,31 +4,44 @@ html {
 *, :after, :before {
     box-sizing: inherit;
 }
-div#splash {
+div.splashPage {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-color: #39b9d4 !important;
-    color: #ffffff !important;
 }
-div#splash div#logo {
+div.splashPage,
+div.headerBar .right.menu > .item,
+div.headerBar .right.menu > .item .dropdown > .dropDownText,
+div.headerBar .right.menu > .item .dropdown .icon {
+    color: <%= headerTextColor %> !important;
+}
+div.splashPage,
+div.loginPage,
+div.headerBar {
+    background-color: <%= mainColor %> !important;
+}
+div.splashPage div.logo,
+div.loginPage div.logo,
+div.headerBar div.logo {
     top: 0;
     left: 0;
-}
-div#splash div#logo img {
     height: 45px;
+    width: 50%;
     margin: 4px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url("<%= logoUrl %>");
 }
-div#splash.active div#loader,
-div#splash.active div#loader:after {
+div.splashPage.active div#loader,
+div.splashPage.active div#loader:after {
     border-radius: 50%;
     width: 10em;
     height: 10em;
 }
-div#splash.active div#loader {
+div.splashPage.active div#loader {
     margin: 10px auto;
     top: 35%;
     transform: translateY(-35%);

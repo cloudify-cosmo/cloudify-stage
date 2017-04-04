@@ -20,7 +20,7 @@ export function intialPageLoad() {
             if (getState().manager.tenants.items.length === 0) {
                 console.log('User is not attached to any tenant, cannot login');
                 dispatch(setAppLoading(false));
-                return Promise.reject('User is not attached to any tennat, cannot login');
+                return Promise.reject('User is not attached to any tenant, cannot login');
             }
 
             return Promise.all([
