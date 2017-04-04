@@ -10,7 +10,7 @@
     "logoUrl": "/app/images/Cloudify-icon.png",
     "mainColor": "black",
     "pagesLocation": "",
-    "headerTextColor": "white"
+    "headerTextColor": "white",
     "loginPageHeader": "",
     "loginPageText": ""
   },

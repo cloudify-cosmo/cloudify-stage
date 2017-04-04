@@ -52,7 +52,7 @@ export default class Login extends Component {
                         isHeaderTextPresent &&
                         <div className="loginHeader">
                             {loginPageHeader && <h2>{loginPageHeader}</h2>}
-                            {loginPageText && <span>{loginPageText}</span>}
+                            {loginPageText && <p>{loginPageText}</p>}
                         </div>
                     }
 
