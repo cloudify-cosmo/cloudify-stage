@@ -20,6 +20,7 @@ Stage.defineWidget({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {id: 'username', name: 'Fetch with username', placeHolder:"Type username", default:"cloudify-examples", type: Stage.Basic.GenericField.STRING_TYPE},
         {id: 'password', name: 'Optional password', placeHolder:"Type password", default:"", type: Stage.Basic.GenericField.PASSWORD_TYPE},
+        {id: 'filter', name: 'Optional blueprints filter', placeHolder:"Type filter for GitHub repositories", default:"blueprint in:name NOT local", type: Stage.Basic.GenericField.STRING_TYPE},
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
              default: "catalog", type: Stage.Basic.GenericField.LIST_TYPE},
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
@@ -34,11 +35,11 @@ Stage.defineWidget({
     },
 
     fetchData: function(widget, toolbox, params) {
-        var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password);
+        var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password, widget.configuration.filter);
 
         return actions.doGetRepos(params).then(data => {
-            var repos = data[0];
-            var total = data[1];
+            var repos = data.items;
+            var total = data.total_count;
 
             var fetches = _.map(repos, repo => actions.doFindImage(repo.name, DEFUALT_IMAGE)
                                .then(imageUrl=>Promise.resolve(Object.assign(repo, {image_url:imageUrl}))));
