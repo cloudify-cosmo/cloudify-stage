@@ -6,11 +6,11 @@
   },
   "singleManager": false,
   "whiteLabel": {
-    "enabled": true,
+    "enabled": false,
     "logoUrl": "/app/images/Cloudify-icon.png",
-    "mainColor": "blue",
+    "mainColor": "black",
     "pagesLocation": "",
-    "headerTextColor": "red"
+    "headerTextColor": "white"
   },
   "db": {
     "url": "postgres://cloudify:cloudify@localhost:5432/stage",
