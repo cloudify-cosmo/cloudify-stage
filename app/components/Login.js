@@ -38,12 +38,24 @@ export default class Login extends Component {
         SplashLoadingScreen.turnOff();
 
         var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
+        let loginPageHeader = _.get(this.props,'whiteLabel.loginPageHeader');
+        let loginPageText = _.get(this.props,'whiteLabel.loginPageText');
+        let isHeaderTextPresent = isWhiteLabelEnabled && (loginPageHeader || loginPageText);
         return (
             <div className='loginPage ui segment basic inverted'>
                 <div className="logo">
                 </div>
 
                 <div className='loginContainer'>
+
+                    {
+                        isHeaderTextPresent &&
+                        <div className="loginHeader">
+                            {loginPageHeader && <h2>{loginPageHeader}</h2>}
+                            {loginPageText && <p>{loginPageText}</p>}
+                        </div>
+                    }
+
                     <form className="ui huge form" onSubmit={this.onSubmit.bind(this)}>
                         {
                             this.props.shouldShowIpField &&
