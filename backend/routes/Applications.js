@@ -4,12 +4,12 @@
 
 'use strict';
 
-const bodyParser = require('body-parser');
-const express = require('express');
-const router = express.Router();
+var bodyParser = require('body-parser');
+var express = require('express');
+var router = express.Router();
 
-const logger = require('log4js').getLogger('Applications');
-const db = require('../db/Connection');
+var logger = require('log4js').getLogger('Applications');
+var db = require('../db/Connection');
 
 router.use(bodyParser.json());
 
@@ -28,7 +28,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    const { name, status, isPrivate, extras } = req.body;
+    var name = req.body.name, status = req.body.status, isPrivate = req.body.isPrivate, extras = req.body.extras;
 
     db.Application
         .findOrCreate({ where: { name } })
@@ -41,7 +41,7 @@ router.post('/', (req, res, next) => {
 });
 
 router.post('/:id', (req, res, next) => {
-    const { name, status, isPrivate, extras } = req.body;
+    var name = req.body.name, status = req.body.status, isPrivate = req.body.isPrivate, extras = req.body.extras;
 
     db.Application
         .findOrCreate({ where: { id: req.params.id } })
