@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 06/13/2017.
  */
 
-const SPLASH_DIV = $('div#splash');
+const SPLASH_DIV = $('div.splashPage');
 const ACTIVE_CLASS = 'active';
 const FADE_OUT_SPEED = 'slow';
 

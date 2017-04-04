@@ -18,7 +18,8 @@ const manager = (state = {}, action) => {
                     role: action.role
                 },
                 err: null,
-                version: action.version,
+                apiVersion: action.apiVersion,
+                serverVersion: action.serverVersion,
                 tenants: [],
                 lastUpdated: action.receivedAt,
                 status: null,
@@ -33,7 +34,8 @@ const manager = (state = {}, action) => {
                     role: null
                 },
                 err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
-                version: null,
+                apiVersion: null,
+                serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
                 status: null,
@@ -50,7 +52,8 @@ const manager = (state = {}, action) => {
                     role: null
                 },
                 err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
-                version: null,
+                apiVersion: null,
+                serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
                 status: null,
