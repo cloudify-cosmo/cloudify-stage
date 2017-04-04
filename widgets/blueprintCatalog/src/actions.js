@@ -2,19 +2,15 @@
  * Created by pposel on 07/02/2017.
  */
 
-const GITHUB_API="https://api.github.com";
 const BLUEPRINT_IMAGE_FILENAME = "blueprint.png";
-const GITHUB_BLUEPRINT_IMAGE_URL = (user,repo)=>`https://raw.githubusercontent.com/${user}/${repo}/master/${BLUEPRINT_IMAGE_FILENAME}`;
+const GITHUB_BLUEPRINT_IMAGE_URL = (user,repo)=>`/github/content/${user}/${repo}/master/${BLUEPRINT_IMAGE_FILENAME}`;
 const UPLOAD_URL = (user,repo)=>`https://api.github.com/repos/${user}/${repo}/zipball/master`;
 
 export default class Actions {
 
-    constructor(toolbox, username, password) {
+    constructor(toolbox, username) {
         this.toolbox = toolbox;
         this.username = username;
-        if (password) {
-            this.credentials = btoa(`${username}:${password}`);
-        }
     }
 
     getUsername() {
@@ -22,8 +18,8 @@ export default class Actions {
     }
 
     doGetRepos(params) {
-        return this.toolbox.getExternal(this.credentials)
-            .doGet(`${GITHUB_API}/users/${this.username}/repos`, params, false)
+        return this.toolbox.getExternal()
+            .doGet(`/github/users/${this.username}/repos`, params, false)
             .then(response=>{
 
                 var link = response.headers.get("link");
@@ -52,7 +48,7 @@ export default class Actions {
     }
 
     doGetRepoTree(repo) {
-        return this.toolbox.getExternal(this.credentials).doGet(`${GITHUB_API}/repos/${this.username}/${repo}/git/trees/master`);
+        return this.toolbox.getExternal().doGet(`/github/repos/${this.username}/${repo}/git/trees/master`);
     }
 
     doUpload(blueprintName, blueprintFileName, repo) {

@@ -39,6 +39,10 @@ new WebpackDevServer(webpack(config), {
         '/monitor': {
             target: 'http://localhost:8088',
             secure: false
+        },
+        '/github': {
+            target: 'http://localhost:8088',
+            secure: false
         }
     }
 }).listen(3000, 'localhost', function (err, result) {

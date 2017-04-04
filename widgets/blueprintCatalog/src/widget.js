@@ -19,7 +19,6 @@ Stage.defineWidget({
     initialConfiguration: [
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {id: 'username', name: 'Fetch with username', placeHolder:"Type username", default:"cloudify-examples", type: Stage.Basic.GenericField.STRING_TYPE},
-        {id: 'password', name: 'Optional password', placeHolder:"Type password", default:"", type: Stage.Basic.GenericField.PASSWORD_TYPE},
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
              default: "catalog", type: Stage.Basic.GenericField.LIST_TYPE},
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
@@ -34,7 +33,7 @@ Stage.defineWidget({
     },
 
     fetchData: function(widget, toolbox, params) {
-        var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password);
+        var actions = new Actions(toolbox, widget.configuration.username);
 
         return actions.doGetRepos(params).then(data => {
             var repos = data[0];

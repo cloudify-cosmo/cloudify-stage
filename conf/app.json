@@ -36,5 +36,9 @@
     "password" : "root",
     "database": "cloudify"
   },
+  "github": {
+    "username": "cloudify-examples@gigaspaces.com",
+    "password": "C10udify-5xamples"
+  },
   "extractedSourcesDir": "/extractedSources"
 }
