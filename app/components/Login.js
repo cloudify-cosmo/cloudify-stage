@@ -3,7 +3,6 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import Consts from '../utils/consts';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 export default class Login extends Component {
@@ -35,22 +34,13 @@ export default class Login extends Component {
         this.props.onLogin(this.state.ip, this.state.username, this.state.password);
     }
 
-
-    setStyle (container) {
-        var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
-        if (isWhiteLabelEnabled) {
-            $(container).attr('style','background-color: '+this.props.whiteLabel.mainColor +' !important')
-        }
-    }
-
     render() {
         SplashLoadingScreen.turnOff();
 
         var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
         return (
-            <div className='loginPage ui segment basic inverted teal' ref={this.setStyle.bind(this)}>
+            <div className='loginPage ui segment basic inverted'>
                 <div className="logo">
-                    <img src={isWhiteLabelEnabled ? this.props.whiteLabel.logoUrl : "/app/images/Cloudify-logo.png"}></img>
                 </div>
 
                 <div className='loginContainer'>
