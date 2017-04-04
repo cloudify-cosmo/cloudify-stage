@@ -25,7 +25,8 @@ const mapStateToProps = (state, ownProps) => {
         isLoggingIn: state.manager.isLoggingIn,
         loginError: state.manager ? state.manager.err : '',
         mode: state.config.mode,
-        shouldShowIpField: state.config.mode === Consts.MODE_MAIN && !_.get(state.config, 'app.singleManager',false)
+        shouldShowIpField: state.config.mode === Consts.MODE_MAIN && !_.get(state.config, 'app.singleManager',false),
+        whiteLabel : state.config.app.whiteLabel
     };
 };
 

@@ -3,7 +3,6 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import Consts from '../utils/consts';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 export default class Login extends Component {
@@ -14,7 +13,8 @@ export default class Login extends Component {
         loginError: PropTypes.string,
         onLogin: PropTypes.func.isRequired,
         shouldShowIpField: PropTypes.bool.isRequired,
-        isLoggingIn: PropTypes.bool.isRequired
+        isLoggingIn: PropTypes.bool.isRequired,
+        whiteLabel: PropTypes.object
 
     };
 
@@ -37,6 +37,7 @@ export default class Login extends Component {
     render() {
         SplashLoadingScreen.turnOff();
 
+        var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
         return (
             <div className='loginPage ui segment basic inverted'>
                 <div className="logo">
