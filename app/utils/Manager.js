@@ -5,7 +5,6 @@
 import 'isomorphic-fetch';
 
 import log from 'loglevel';
-let logger = log.getLogger("Manager");
 
 import Consts from './consts';
 import External from './External';
@@ -32,7 +31,7 @@ export default class Manager extends External {
         let index = url.indexOf('[manager]');
         if (index >= 0) {
             let managerUrl = url.substring(index + '[manager]'.length);
-            var urlInServer = `${this._data.version?'/api/'+this._data.version:''}${managerUrl}`;
+            var urlInServer = `${this._data.apiVersion?'/api/'+this._data.apiVersion:''}${managerUrl}`;
             let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
 
             url = url.substring(0, index);
@@ -43,7 +42,7 @@ export default class Manager extends External {
             return url + queryString;
         } else {
             var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data, true) : '';
-            var urlInServer = `${this._data.version?'/api/'+this._data.version:''}${url}${queryString}`;
+            var urlInServer = `${this._data.apiVersion?'/api/'+this._data.apiVersion:''}${url}${queryString}`;
 
             let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
             return `/sp/?su=${su}`;
