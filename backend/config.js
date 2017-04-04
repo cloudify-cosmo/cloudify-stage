@@ -29,8 +29,7 @@ module.exports = {
         // For client only get from app config the relevant part (and not send passwords and shit)
         config.app = {
             initialTemplate: config.app.initialTemplate,
-            singleManager: config.app.singleManager,
-            whiteLabel : config.app.whiteLabel
+            singleManager: config.app.singleManager
         };
         return config;
     }

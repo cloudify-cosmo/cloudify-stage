@@ -12,7 +12,6 @@ const mapStateToProps = (state, ownProps) => {
     return {
         manager: state.manager || {},
         mode: state.config.mode,
-        whiteLabel : state.config.app.whiteLabel,
         config: state.config,
         templates: state.templates,
         widgetDefinitions: state.widgetDefinitions

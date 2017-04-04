@@ -32,6 +32,7 @@ var BlueprintAdditions = require('./routes/BlueprintAdditions');
 var Monitoring = require('./routes/Monitoring');
 var clientConfig = require('./routes/ClientConfig');
 var SourceBrowser = require('./routes/SourceBrowser');
+var Style = require('./routes/Style');
 var config = require('./config');
 
 var logger = log4js.getLogger('Server');
@@ -67,6 +68,7 @@ app.use('/applications',Applications);
 app.use('/source',SourceBrowser);
 app.use('/ba',BlueprintAdditions);
 app.use('/monitor',Monitoring);
+app.use('/style',Style);
 app.use('/clientConfig',clientConfig);
 app.use('/config',function(req,res){
     res.send(config.getForClient(ServerSettings.settings.mode));
