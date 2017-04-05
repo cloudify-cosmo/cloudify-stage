@@ -40,6 +40,10 @@ new WebpackDevServer(webpack(config), {
             target: 'http://localhost:8088',
             secure: false
         },
+        '/github': {
+            target: 'http://localhost:8088',
+            secure: false
+        },
         '/style': {
             target: 'http://localhost:8088',
             secure: false
