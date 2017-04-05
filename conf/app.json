@@ -38,5 +38,9 @@
     "password" : "root",
     "database": "cloudify"
   },
+  "github": {
+    "username": "***REMOVED***",
+    "password": "***REMOVED***"
+  },
   "extractedSourcesDir": "/extractedSources"
 }

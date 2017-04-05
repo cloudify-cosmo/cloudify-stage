@@ -5,7 +5,7 @@
 import RepositoryList from './RepositoryList';
 import Actions from './actions';
 
-const DEFUALT_IMAGE = "/widgets/blueprintCatalog/images/logo.png"
+const DEFUALT_IMAGE = "/widgets/blueprintCatalog/images/logo.png";
 
 Stage.defineWidget({
     id: 'blueprintCatalog',
@@ -19,7 +19,6 @@ Stage.defineWidget({
     initialConfiguration: [
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {id: 'username', name: 'Fetch with username', placeHolder:"Type username", default:"cloudify-examples", type: Stage.Basic.GenericField.STRING_TYPE},
-        {id: 'password', name: 'Optional password', placeHolder:"Type password", default:"", type: Stage.Basic.GenericField.PASSWORD_TYPE},
         {id: 'filter', name: 'Optional blueprints filter', placeHolder:"Type filter for GitHub repositories", default:"blueprint in:name NOT local", type: Stage.Basic.GenericField.STRING_TYPE},
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
              default: "catalog", type: Stage.Basic.GenericField.LIST_TYPE},
@@ -35,7 +34,7 @@ Stage.defineWidget({
     },
 
     fetchData: function(widget, toolbox, params) {
-        var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password, widget.configuration.filter);
+        var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.filter);
 
         return actions.doGetRepos(params).then(data => {
             var repos = data.items;

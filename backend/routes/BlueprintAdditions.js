@@ -5,12 +5,9 @@ var express = require('express');
 var request = require('request');
 var db = require('../db/Connection');
 var router = express.Router();
-    var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 var path = require('path');
 var _ = require('lodash');
-
-var logger = require('log4js').getLogger('BlueprintAdditionsRouter');
-var ServerSettings = require('../serverSettings');
 
 router.use(bodyParser.raw({
     limit: '1mb',
