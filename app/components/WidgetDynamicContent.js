@@ -8,117 +8,31 @@ import {getToolbox} from '../utils/Toolbox';
 
 import {ErrorMessage} from './basic'
 import fetch from 'isomorphic-fetch';
+import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 
 export default class WidgetDynamicContent extends Component {
     static propTypes = {
         widget: PropTypes.object.isRequired,
         templates : PropTypes.object.isRequired,
         manager: PropTypes.object.isRequired,
-        onWidgetConfigUpdate: PropTypes.func
+        data: PropTypes.object.isRequired,
+        onWidgetConfigUpdate: PropTypes.func,
+        fetchWidgetData: PropTypes.func.isRequired
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            data: {},
             loading: false
         };
         this.loadingTimeout = null;
         this.pollingTimeout = null;
         this.fetchDataPromise = null;
         this.mounted = false;
-
-        this.fetchParams = {
-            gridParams: {
-                currentPage: 1,
-                pageSize: this.props.widget.configuration.pageSize,
-                sortColumn: this.props.widget.configuration.sortColumn,
-                sortAscending: this.props.widget.configuration.sortAscending
-            },
-            filterParams: {}
-        };
     }
 
     _getToolbox () {
         return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this));
-    }
-
-    _getUrlRegExString(str) {
-        return new RegExp('\\[' + str + ':?(.*)\\]', 'i');
-    }
-
-    _parseParams(params, allowedParams) {
-        if (!_.isEmpty(allowedParams)) {
-            allowedParams = _.replace(allowedParams, 'gridParams', '_sort,_size,_offset').split(',');
-            params = _.pick(params, allowedParams);
-        }
-        return params;
-    }
-
-    _fetch(url, toolbox) {
-
-        var fetchUrl = _.replace(url,this._getUrlRegExString('config'),(match,configName)=>{
-            return this.props.widget.configuration ? this.props.widget.configuration[configName] : 'NA';
-        });
-
-        // Only add auth token if we access the manager
-        if (url.indexOf('[manager]') >= 0) {
-            var baseUrl = url.substring('[manager]'.length);
-
-            let params = {};
-            let paramsMatch = this._getUrlRegExString('params').exec(url);
-            if (!_.isNull(paramsMatch)) {
-                params = this._fetchParams();
-
-                let [paramsString, allowedParams] = paramsMatch;
-                params = this._parseParams(params, allowedParams);
-
-                baseUrl = _.replace(baseUrl, paramsString, '');
-            }
-
-            return toolbox.getManager().doGet(baseUrl, params);
-        } else {
-            return fetch(fetchUrl).then(response => response.json())
-        }
-    }
-
-    _fetchParams() {
-        let params = this._mapGridParams(this.fetchParams.gridParams);
-
-        let filterParams = this.fetchParams.filterParams;
-        _.forIn(filterParams, function(value, key) {
-            if (!(typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null)) {
-                params[key] = value;
-            }
-        });
-
-        return params;
-    }
-
-    _mapGridParams(gridParams) {
-        let params = {};
-
-        if (_.isEmpty(gridParams)) {
-            return params;
-        }
-
-        if (this.props.widget.definition && this.props.widget.definition.mapGridParams) {
-            params = this.props.widget.definition.mapGridParams(gridParams);
-        } else {
-            if (gridParams.sortColumn) {
-                params._sort = `${gridParams.sortAscending?'':'-'}${gridParams.sortColumn}`;
-            }
-
-            if (gridParams.pageSize) {
-                params._size=gridParams.pageSize;
-            }
-
-            if (gridParams.currentPage) {
-                params._offset=(gridParams.currentPage-1)*gridParams.pageSize;
-            }
-        }
-
-        return params;
     }
 
     _beforeFetch() {
@@ -181,7 +95,7 @@ export default class WidgetDynamicContent extends Component {
 
     _fetchData(params) {
         if (params) {
-            Object.assign(this.fetchParams.gridParams, params.gridParams);
+            this._paramsHandler.updateGridParams(params.gridParams);
             this._updateConfiguration(params);
         }
 
@@ -189,62 +103,17 @@ export default class WidgetDynamicContent extends Component {
             this.fetchDataPromise.cancel();
         }
 
-        if (this.props.widget.definition.fetchUrl) {
+        if (this.props.widget.definition.fetchUrl || _.isFunction(this.props.widget.definition.fetchData)) {
             this._beforeFetch();
 
-            var toolbox = this._getToolbox();
 
-            var url = this.props.widget.definition.fetchUrl;
+            var promises = this.props.fetchWidgetData(this.props.widget,this._getToolbox(),this._paramsHandler);
 
-            var urls = _.isString(url) ? [url] : _.valuesIn(url);
+            this.fetchDataPromise = promises[0];
 
-            var fetches = _.map(urls,(url)=> this._fetch(url, toolbox));
-
-            this.fetchDataPromise = StageUtils.makeCancelable(Promise.all(fetches));
-            this.fetchDataPromise.promise
-                    .then((data)=> {
-                        console.log(`Widget '${this.props.widget.name}' data fetched`);
-
-                        var output = data;
-                        if (!_.isString(url)) {
-                            output = {};
-                            let keys = _.keysIn(url);
-                            for (var i=0; i < data.length; i++) {
-                                output[keys[i]] = data[i];
-                            }
-                        } else {
-                            output = data[0];
-                        }
-
-                        this.setState({data: output, error: null});
-                        this._afterFetch();
-                    })
-                    .catch((e)=>{
-                        if (e.isCanceled) {
-                            console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
-                            return;
-                        }
-                        console.error(e);
-                        this.setState({error: 'Error fetching widget data'});
-                        this._afterFetch();
-                    });
-
-        } else if (this.props.widget.definition.fetchData && typeof this.props.widget.definition.fetchData === 'function') {
-            this._beforeFetch();
-
-            var fetchDataPromise;
-            try {
-                fetchDataPromise = this.props.widget.definition.fetchData(this.props.widget,this._getToolbox(),this._fetchParams());
-            } catch (e) {
-                this.setState({error: 'Error fetching widget data'});
-                return;
-            }
-
-            this.fetchDataPromise = StageUtils.makeCancelable(fetchDataPromise);
-            this.fetchDataPromise.promise
+            promises[1]
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
-                    this.setState({data: data,error: null});
                     this._afterFetch();
                 })
                 .catch((e)=>{
@@ -252,8 +121,6 @@ export default class WidgetDynamicContent extends Component {
                         console.log(`Widget '${this.props.widget.name}' data fetch canceled`);
                         return;
                     }
-                    console.error(e);
-                    this.setState({error: 'Error fetching widget data'});
                     this._afterFetch();
                 });
         }
@@ -280,33 +147,13 @@ export default class WidgetDynamicContent extends Component {
             requiresFetch = true;
         }
 
-        if ( this._processFetchParams() ) {
+        if (this._paramsHandler.updateFetchParams()) {
             requiresFetch = true;
         }
 
         if (requiresFetch) {
             this._fetchData();
         }
-    }
-
-    _processFetchParams() {
-        if (this.props.widget.definition.fetchParams && typeof this.props.widget.definition.fetchParams === 'function') {
-            let params;
-            try {
-                params = this.props.widget.definition.fetchParams(this.props.widget, this._getToolbox());
-            } catch (e) {
-                console.error('Error fetchin params', e);
-                this.setState({error: 'Error fetching widget data'});
-                return false;
-            }
-
-            if (!_.isEqual(this.fetchParams.filterParams, params)) {
-                this.fetchParams.filterParams = params;
-                return true;
-            }
-        }
-
-        return false;
     }
 
     // In component will mount fetch the data if needed
@@ -318,7 +165,8 @@ export default class WidgetDynamicContent extends Component {
 
         console.log(`Widget '${this.props.widget.name}' mounted`);
 
-        this._processFetchParams();
+        //this._processFetchParams();
+        this._paramsHandler = new WidgetParamsHandler(this.props.widget,this._getToolbox());
         this._fetchData();
     }
 
@@ -337,7 +185,7 @@ export default class WidgetDynamicContent extends Component {
         var widgetHtml = 'Loading...';
         if (this.props.widget.definition && this.props.widget.definition.render) {
             try {
-                widgetHtml = this.props.widget.definition.render(this.props.widget,this.state.data,this.state.error,this._getToolbox());
+                widgetHtml = this.props.widget.definition.render(this.props.widget,this.props.data.data,this.props.data.error,this._getToolbox());
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
             }
@@ -349,11 +197,11 @@ export default class WidgetDynamicContent extends Component {
         var widget = 'Loading...';
         if (this.props.widget.definition && this.props.widget.definition.render) {
             try {
-                if (this.state.error) {
-                    return <ErrorMessage error={this.state.error}/>;
+                if (this.props.data.error) {
+                    return <ErrorMessage error={this.props.data.error}/>;
                 }
 
-                widget = this.props.widget.definition.render(this.props.widget,this.state.data,this.state.error,this._getToolbox());
+                widget = this.props.widget.definition.render(this.props.widget,this.props.data.data,this.props.data.error,this._getToolbox());
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
                 return <ErrorMessage error={`Error rendering widget: ${e.message}`}/>;
@@ -379,7 +227,7 @@ export default class WidgetDynamicContent extends Component {
         }
 
         if (this.props.widget.definition.postRender) {
-            this.props.widget.definition.postRender($(container),this.props.widget,this.state.data,this._getToolbox());
+            this.props.widget.definition.postRender($(container),this.props.widget,this.props.data.data,this._getToolbox());
         }
     }
     render() {

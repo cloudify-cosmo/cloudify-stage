@@ -38,7 +38,7 @@ module.exports = {
             .waitForElementVisible('@userDropdownMenu', 2000)
             .assert.containsText('.usersMenu .menu .item:nth-child(1) span','Reset')
             .assert.containsText('.usersMenu .menu .item:nth-child(2) span','Edit Mode')
-            // divider is 6th
+            // divider is 3rd
             .assert.containsText('.usersMenu .menu .item:nth-child(4) span','Logout');
 
 

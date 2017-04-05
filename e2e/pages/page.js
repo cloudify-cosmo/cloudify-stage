@@ -28,7 +28,24 @@ module.exports = {
             selector : '.usersMenu',
             elements: {
                 userName: 'span',
-                userDropdownMenu : '.menu'
+                userDropdownMenu : '.menu',
+                editModeItem : '.usersMenu .menu .item:nth-child(5)'
+            }
+        },
+        sidebar: {
+            selector : '.sidebar',
+            elements: {
+                addPageButton: '.addButtonContainer button'
+            }
+        },
+        page: {
+            selector: '.page',
+            elements: {
+                addWidgetButton: '.addWidgetBtn',
+                firstWidget: '.widget',
+                firstWidgetRemoveIcon: '.widget .widgetEditButtons i.remove.link.icon.small',
+                firstWidgetConfigureIcon: '.widget .widgetEditButtons .editWidgetIcon',
+                firstWidgetResizeHandle: '.widget .ui-resizable-handle'
             }
         }
     },

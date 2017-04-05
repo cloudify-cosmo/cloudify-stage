@@ -11,6 +11,7 @@ import context from './contextReducer';
 import manager from './managerReducer';
 import config from './configReducer';
 import app from './appReducer';
+import widgetData from './widgetDataReducer';
 
 const rootReducer = combineReducers({
     app,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
     templates,
     context,
     config,
+    widgetData,
     routing: routerReducer
 });
 
