@@ -4,7 +4,7 @@
 
 import 'isomorphic-fetch';
 import {saveAs} from 'file-saver';
-import MessageResolver from "./MessageResolver";
+import StageUtils from './stageUtils';
 
 import log from 'loglevel';
 let logger = log.getLogger("External");
@@ -158,7 +158,7 @@ export default class External {
                 try {
                     var resJson = JSON.parse(resText);
 
-                    var message = MessageResolver.resolve(resJson.message);
+                    var message = StageUtils.resolveMessage(resJson.message);
 
                     return Promise.reject({message: message || response.statusText});
                 } catch (e) {
