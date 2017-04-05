@@ -49,6 +49,7 @@ describe('(Reducer) Pages - drilldown process', () => {
                 {type: types.CREATE_DRILLDOWN_PAGE, newPageId: '0', name: 'tmp1'},
                 {type: types.ADD_WIDGET, pageId: '0', name: 'some widget', widgetDefinition: initialState.widgetDefinitions[0],width:1,height:1,x:1,y:1,configuration:undefined},
                 {type : types.ADD_DRILLDOWN_PAGE,widgetId: '1',drillDownPageId: '0',drillDownName:'tmp1'},
+                {type: types.WIDGET_DATA_CLEAR},
                 {type: 'router action'}
             ];
 
@@ -98,6 +99,7 @@ describe('(Reducer) Pages - drilldown process', () => {
             const store = mockStore(initialState);
 
             const expectedActions = [
+                {type: types.WIDGET_DATA_CLEAR},
                 {type: 'router action'}
             ];
 
@@ -140,7 +142,7 @@ describe('(Reducer) Pages - drilldown process', () => {
             store.dispatch(drillDownToPage(widget,defaultTemplate,widgetDefinitions,{contextValue:'kuku'}));
 
             var storeActions = store.getActions();
-            var routeAction = storeActions[0];
+            var routeAction = storeActions[1];
 
             expect(routeAction.payload.args).to.have.length(1);
             expect(routeAction.payload.args[0].query.contextValue).to.equal('kuku');
