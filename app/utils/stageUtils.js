@@ -27,4 +27,29 @@ export default class StageUtils {
     static formatTimestamp(timestamp, outputPattern='DD-MM-YYYY HH:mm', inputPattern='YYYY-MM-DD HH:mm:ss') {
         return moment(timestamp, inputPattern).format(outputPattern);
     }
+
+    /**
+     * Replace all occurrences of <Tag attr1="value1" attr1="value2" ...> to "tag value1 value2 ..."
+     * @param message
+     * @returns {*}
+     */
+    static resolveMessage(message) {
+        var tagPattern = /<(\w+)[^<]*>/;
+        var attrPattern = /\w+=[',",`](\w+)[',",`]/g;
+
+        var matchedTag, matchedAttr, sentence = "";
+        while (matchedTag = tagPattern.exec(message)) {
+            var tag = matchedTag[0];
+            var sentence = matchedTag[1].toLowerCase();
+
+            while (matchedAttr = attrPattern.exec(tag)) {
+                sentence += " " + matchedAttr[1];
+            }
+
+            message = message.replace(tag, sentence);
+        }
+
+        return message;
+    }
+
 }

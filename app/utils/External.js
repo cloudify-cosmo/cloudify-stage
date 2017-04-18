@@ -4,6 +4,7 @@
 
 import 'isomorphic-fetch';
 import {saveAs} from 'file-saver';
+import StageUtils from './stageUtils';
 
 import log from 'loglevel';
 let logger = log.getLogger("External");
@@ -156,8 +157,12 @@ export default class External {
             .then(resText=>{
                 try {
                     var resJson = JSON.parse(resText);
-                    return Promise.reject({message: resJson.message || response.statusText});
+
+                    var message = StageUtils.resolveMessage(resJson.message);
+
+                    return Promise.reject({message: message || response.statusText});
                 } catch (e) {
+                    logger.error(e);
                     return Promise.reject({message: response.statusText});
                 }
             });
@@ -180,5 +185,4 @@ export default class External {
 
         return headers;
     }
-
 }
