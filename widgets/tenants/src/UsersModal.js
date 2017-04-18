@@ -90,7 +90,7 @@ export default class UsersModal extends React.Component {
             <Modal.Body>
                 <Form onSubmit={this._updateTenant.bind(this)} errors={this.state.errors} ref="editForm">
                     <Form.Field>
-                        <Form.Dropdown placeholder='Users' multiple search selection options={users} name="users"
+                        <Form.Dropdown placeholder='Users' multiple selection options={users} name="users"
                                        value={this.state.users} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                 </Form>

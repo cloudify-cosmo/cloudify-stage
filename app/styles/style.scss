@@ -361,6 +361,10 @@ code.hljs {
   background: white;
 }
 
+.ui.popup code.hljs {
+  white-space: pre-wrap;
+}
+
 /* Grid table */
 .gridTable {
 

@@ -90,7 +90,7 @@ export default class GroupsModal extends React.Component {
             <Modal.Body>
                 <Form onSubmit={this._updateTenant.bind(this)} errors={this.state.errors} ref="editForm">
                     <Form.Field>
-                        <Form.Dropdown placeholder='Groups' multiple search selection options={userGroups} name="userGroups"
+                        <Form.Dropdown placeholder='Groups' multiple selection options={userGroups} name="userGroups"
                                        value={this.state.userGroups} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                 </Form>
