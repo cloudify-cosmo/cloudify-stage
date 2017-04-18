@@ -83,14 +83,18 @@ export default class Filter extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, Dropdown, Form} = Stage.Basic;
+        var {ErrorMessage, Form} = Stage.Basic;
+        const EMPTY_OPTION = {text:'', value:''};
 
         let blueprintOptions = _.map(this.props.data.blueprints.items, blueprint => {
             return { text: blueprint.id, value: blueprint.id }
         });
+        blueprintOptions.unshift(EMPTY_OPTION);
+
         let deploymentOptions = _.map(this.props.data.deployments.items, deployment => {
             return { text: deployment.id, value: deployment.id }
         });
+        deploymentOptions.unshift(EMPTY_OPTION);
 
         let executionOptions = [];
         if (this.props.widget.configuration.filterByExecutions) {
@@ -98,6 +102,7 @@ export default class Filter extends React.Component {
                 return {text: execution.id + '-' + execution.workflow_id, value: execution.id}
             });
         }
+        executionOptions.unshift(EMPTY_OPTION);
 
         return (
             <div>
