@@ -85,7 +85,8 @@ export default class EditWidgetModal extends Component {
                                               icon={config.icon}
                                               items={config.items}
                                               value={this.state.fields[config.id]}
-                                              onChange={this._handleInputChange.bind(this)}/>
+                                              onChange={this._handleInputChange.bind(this)}
+                                              max={config.max || null} min={config.min || null} />
                             })
                         }
 
