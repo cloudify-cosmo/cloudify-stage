@@ -89,6 +89,7 @@ export default class DeployModal extends React.Component {
 
     _submitDeploy () {
         let errors = {};
+        const EMPTY_STRING = '""';
 
         if (_.isEmpty(this.state.deploymentName)) {
             errors["deploymentName"]="Please provide deployment name";
@@ -105,6 +106,8 @@ export default class DeployModal extends React.Component {
                 if (_.isNil(inputObj.default)) {
                     errors[inputName] = `Please provide ${inputName}`;
                 }
+            } else if (inputValue === EMPTY_STRING) {
+                deploymentInputs[inputName] = '';
             } else {
                 deploymentInputs[inputName] = inputValue;
             }
@@ -161,7 +164,14 @@ export default class DeployModal extends React.Component {
                         {
                             this.state.blueprint.id
                             &&
-                            <Form.Divider>Deployment inputs</Form.Divider>
+                            <Form.Divider>
+                                <Header size="tiny">
+                                    Deployment inputs
+                                    <Header.Subheader>
+                                        Use "" for an empty string
+                                    </Header.Subheader>
+                                </Header>
+                            </Form.Divider>
                         }
 
                         {
