@@ -63,7 +63,7 @@ export default class extends React.Component {
                                                            value={item.nodeStates.started}/>
                                             </div>
                                             <div className="column center aligned">
-                                                <NodeState icon="spinner" title="in progress" state="uninitialized or created" color="yellow"
+                                                <NodeState icon="spinner" title="in progress" state="uninitialized or created" color="darkyellow"
                                                            value={_.add(item.nodeStates.uninitialized, item.nodeStates.created)}/>
                                             </div>
                                             <div className="column center aligned">
@@ -99,19 +99,18 @@ export default class extends React.Component {
 function NodeState(props) {
     let { Segment, Icon, Popup } = Stage.Basic;
     let value = props.value ? props.value : 0;
-    //let disabled = value === 0;
-    let disabled = false;
-    //let color = disabled ? 'grey' : props.color;
+    let disabled = value === 0;
+    let color = disabled ? 'grey' : props.color;
 
     return (
         <Popup header={_.capitalize(props.title)}
                content={`${value} node instances in ${props.state} state`}
                trigger={
                    <Segment.Group className='nodeState' disabled={disabled}>
-                       <Segment color={props.color} disabled={disabled} inverted>
+                       <Segment color={color} disabled={disabled} inverted>
                            <Icon name={props.icon} />
                        </Segment>
-                       <Segment color={props.color} disabled={disabled} tertiary inverted>
+                       <Segment color={color} disabled={disabled} tertiary inverted>
                            {value}
                        </Segment>
                    </Segment.Group>
