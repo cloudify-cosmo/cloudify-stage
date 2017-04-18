@@ -11,17 +11,6 @@ export default class TimeFilter extends React.Component {
         this._initVars();
     }
 
-    static MAX_RESOLUTION_VALUE = 1000;
-    static MIN_RESOLUTION_VALUE = 1;
-    static TIME_RESOLUTION_UNITS = [
-        {text: 'microseconds', value: 'u'},
-        {text: 'milliseconds', value: 'ms'},
-        {text: 'seconds', value: 's'},
-        {text: 'minutes', value: 'm'},
-        {text: 'hours', value: 'h'},
-        {text: 'days', value: 'd'},
-        {text: 'weeks', value: 'w'}
-    ];
 
     static initialState = {
         start: '',
@@ -44,13 +33,6 @@ export default class TimeFilter extends React.Component {
         this.startDate = null;
         this.endDate = null;
         this.currentDate = new Date();
-    }
-
-    _handleResolutionChange(proxy, field) {
-        if (field.value < TimeFilter.MIN_RESOLUTION_VALUE || field.value > TimeFilter.MAX_RESOLUTION_VALUE) {
-            return;
-        }
-        this._handleInputChange(proxy, field);
     }
 
     _handleDateChange(proxy, field) {
@@ -100,10 +82,12 @@ export default class TimeFilter extends React.Component {
                 <Form.Group inline widths="3">
                     <Form.Field>
                         <Form.Input fluid type='number' name="resolution" label='Time Resolution'
-                                    value={this.state.resolution} onChange={this._handleResolutionChange.bind(this)} />
+                                    max={Stage.Common.TimeConsts.MAX_TIME_RESOLUTION_VALUE}
+                                    min={Stage.Common.TimeConsts.MIN_TIME_RESOLUTION_VALUE}
+                                    value={this.state.resolution} onChange={this._handleInputChange.bind(this)} />
                     </Form.Field>
                     <Form.Field>
-                        <Form.Dropdown fluid options={TimeFilter.TIME_RESOLUTION_UNITS} name="unit" search selection
+                        <Form.Dropdown fluid options={Stage.Common.TimeConsts.TIME_RESOLUTION_UNITS} name="unit" search selection
                                        value={this.state.unit} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                 </Form.Group>

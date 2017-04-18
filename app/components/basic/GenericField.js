@@ -62,7 +62,9 @@ export default class GenericField extends Component {
             field = <Input icon={this.props.icon} iconPosition={this.props.icon?'left':undefined} name={this.props.name}
                            type={this.props.type === GenericField.STRING_TYPE?'text':this.props.type}
                            placeholder={this.props.placeholder} value={this.props.value === null ? "" : this.props.value}
-                           onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}/>;
+                           onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}
+                           max={this.props.type === GenericField.NUMBER_TYPE?this.props.max:null}
+                           min={this.props.type === GenericField.NUMBER_TYPE?this.props.min:null}/>;
 
         } else if (this.props.type === GenericField.BOOLEAN_TYPE) {
 
