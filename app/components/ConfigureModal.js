@@ -61,7 +61,7 @@ export default class ConfigureModal extends Component {
                     <ErrorMessage error={this.state.error}/>
 
                     <Form>
-                        <GenericField label='Can regular user edit his own screens?'
+                        <GenericField label='Can users edit their own screens?'
                                       name='canUserEdit'
                                       type={GenericField.BOOLEAN_TYPE}
                                       description='Check this if you want to allow users (non admin) to edit their own screens in the UI (move to edit mode)'
