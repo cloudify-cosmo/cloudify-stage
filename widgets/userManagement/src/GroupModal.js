@@ -72,7 +72,7 @@ export default class GroupModal extends React.Component {
                 <Modal.Body>
                     <Form onSubmit={this._submitGroup.bind(this)} errors={this.state.errors} ref="groupForm">
                         <Form.Field>
-                            <Form.Dropdown placeholder='Groups' multiple search selection options={options} name="groups"
+                            <Form.Dropdown placeholder='Groups' multiple selection options={options} name="groups"
                                            value={this.state.groups} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                     </Form>

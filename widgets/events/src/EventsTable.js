@@ -40,6 +40,7 @@ export default class EventsTable extends React.Component {
 
     render() {
         let {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
+        let {JsonUtils} = Stage.Common;
 
         return (
             <div>
@@ -80,9 +81,9 @@ export default class EventsTable extends React.Component {
                                     <DataTable.Data>{item.node_instance_id}</DataTable.Data>
                                     <DataTable.Data>
                                         {item.message &&
-                                            <Popup position='top left' wide>
-                                                <Popup.Trigger><span>{item.message}</span></Popup.Trigger>
-                                                <HighlightText>{item.message}</HighlightText>
+                                            <Popup position='top left' hoverable wide="very">
+                                                <Popup.Trigger><span>{JsonUtils.stringify(item.message, false)}</span></Popup.Trigger>
+                                                <HighlightText>{JsonUtils.stringify(item.message, true)}</HighlightText>
                                             </Popup>
                                         }
                                     </DataTable.Data>
