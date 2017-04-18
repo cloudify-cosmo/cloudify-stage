@@ -54,6 +54,7 @@ export default class DeployBlueprintModal extends React.Component {
 
     _submitDeploy() {
         let errors = {};
+        const EMPTY_STRING = '""';
 
         if (!this.props.blueprint) {
             errors["error"] = "Blueprint not selected";
@@ -70,6 +71,8 @@ export default class DeployBlueprintModal extends React.Component {
                 if (_.isNil(inputObj.default)) {
                     errors[inputName] = `Please provide ${inputName}`;
                 }
+            } else if (inputValue === EMPTY_STRING) {
+                deploymentInputs[inputName] = '';
             } else {
                 deploymentInputs[inputName] = inputValue;
             }
@@ -113,7 +116,7 @@ export default class DeployBlueprintModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message, Popup} = Stage.Basic;
+        var {Modal, Icon, Form, Message, Popup, Header} = Stage.Basic;
 
         let blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
         let deploymentInputs = _.sortBy(_.map(blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
@@ -136,7 +139,14 @@ export default class DeployBlueprintModal extends React.Component {
                         {
                             blueprint.id
                             &&
-                            <Form.Divider>Deployment inputs</Form.Divider>
+                            <Form.Divider>
+                                <Header size="tiny">
+                                    Deployment inputs
+                                    <Header.Subheader>
+                                        Use "" for an empty string
+                                    </Header.Subheader>
+                                </Header>
+                            </Form.Divider>
                         }
 
                         {

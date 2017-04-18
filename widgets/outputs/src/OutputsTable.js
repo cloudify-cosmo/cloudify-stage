@@ -34,6 +34,7 @@ export default class extends React.Component {
         var {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
         let outputs = this.props.data.items;
+        let compareNames = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
 
         return (
             <div>
@@ -44,7 +45,7 @@ export default class extends React.Component {
                     <DataTable.Column label="Name" width="35%"/>
                     <DataTable.Column label="Value" width="65%"/>
                     {
-                        outputs.map((output) =>
+                        outputs.sort(compareNames).map((output) =>
                             <DataTable.Row key={output.name}>
                                 <DataTable.Data>
                                     <Header size="tiny">
