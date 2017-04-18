@@ -15,7 +15,8 @@ const widgetData = (state=[], action) => {
                         id: action.widgetId,
                         data: {},
                         loading: true,
-                        canceled: false
+                        canceled: false,
+                        error: null
                     }
                 ]
             } else {

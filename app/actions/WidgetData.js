@@ -3,7 +3,6 @@
  */
 
 import * as types from './types';
-//import External from '../utils/External';
 import WidgetDataFetcher from '../utils/widgetDataFetcher';
 import StageUtils from '../utils/stageUtils';
 
@@ -69,7 +68,10 @@ export function fetchWidgetData(widget,toolbox,paramsHandler) {
                     throw e;
                 });
 
-            return [cancelablePromise,waitForPromise];
+            return {
+                cancelablePromise,
+                waitForPromise
+            };
         }
     }
 }

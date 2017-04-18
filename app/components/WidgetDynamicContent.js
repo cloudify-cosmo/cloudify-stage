@@ -109,9 +109,9 @@ export default class WidgetDynamicContent extends Component {
 
             var promises = this.props.fetchWidgetData(this.props.widget,this._getToolbox(),this._paramsHandler);
 
-            this.fetchDataPromise = promises[0];
+            this.fetchDataPromise = promises.cancelablePromise;
 
-            promises[1]
+            promises.waitForPromise
                 .then((data)=> {
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
                     this._afterFetch();
@@ -165,7 +165,6 @@ export default class WidgetDynamicContent extends Component {
 
         console.log(`Widget '${this.props.widget.name}' mounted`);
 
-        //this._processFetchParams();
         this._paramsHandler = new WidgetParamsHandler(this.props.widget,this._getToolbox());
         this._fetchData();
     }
