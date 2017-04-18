@@ -8,6 +8,7 @@ import { push } from 'react-router-redux';
 import {v4} from 'node-uuid';
 import {clearContext} from './context';
 import {addWidget} from './widgets';
+import {clearWidgetsData} from './WidgetData';
 
 export function createPage(name, newPageId) {
     return {
@@ -52,6 +53,9 @@ export function updatePageDescription(pageId,newDescription) {
 }
 export function selectPage(pageId,isDrilldown,drilldownContext,drilldownPageName) {
     return function (dispatch) {
+
+        // Clear the widgets data since there is no point in saving data for widgets that are not in view
+        dispatch(clearWidgetsData());
 
         if (!isDrilldown) {
             dispatch(clearContext());

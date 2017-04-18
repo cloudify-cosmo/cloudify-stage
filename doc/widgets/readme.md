@@ -1,8 +1,8 @@
-#How to write a widget
+# How to write a widget
 
 Cloudify UI provides an easy way to add widgets to the system.
 
-##Widget file structure
+## Widget file structure
 
 A widget consists of several files. 2 are mandatory.
 
