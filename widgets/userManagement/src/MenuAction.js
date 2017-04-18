@@ -6,8 +6,8 @@ export default class MenuAction extends React.Component {
 
     static SET_PASSWORD_ACTION='password';
     static SET_ROLE_ACTION='role';
-    static ADD_TENANT_ACTION='tenant';
-    static ADD_GROUP_ACTION='group';
+    static EDIT_TENANTS_ACTION='tenants';
+    static EDIT_GROUPS_ACTION='groups';
     static DELETE_ACTION='delete';
     static DEACTIVATE_ACTION = 'deactivate';
     static ACTIVATE_ACTION = 'activate';
@@ -35,9 +35,9 @@ export default class MenuAction extends React.Component {
                                onClick={this._actionClick.bind(this)}/>
                     <Menu.Item icon='male' content='Set role' name={MenuAction.SET_ROLE_ACTION}
                                onClick={this._actionClick.bind(this)}/>
-                    <Menu.Item icon='users' content='Add to group' name={MenuAction.ADD_GROUP_ACTION}
+                    <Menu.Item icon='users' content="Edit user's groups" name={MenuAction.EDIT_GROUPS_ACTION}
                                onClick={this._actionClick.bind(this)}/>
-                    <Menu.Item icon='user' content='Add to tenant' name={MenuAction.ADD_TENANT_ACTION}
+                    <Menu.Item icon='user' content="Edit user's tenants" name={MenuAction.EDIT_TENANTS_ACTION}
                                onClick={this._actionClick.bind(this)}/>
                     <Menu.Item icon='trash' content='Delete' name={MenuAction.DELETE_ACTION}
                                onClick={this._actionClick.bind(this)}/>

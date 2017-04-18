@@ -66,7 +66,7 @@ export default class GroupModal extends React.Component {
         return (
             <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
                 <Modal.Header>
-                    <Icon name="user"/> Add {user.username} to group
+                    <Icon name="user"/> Edit user groups for {user.username}
                 </Modal.Header>
 
                 <Modal.Body>

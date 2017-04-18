@@ -75,9 +75,9 @@ export default class UserGroupsTable extends React.Component {
     }
 
     _showModal(value, group) {
-        if (value === MenuAction.ADD_TENANT_ACTION) {
+        if (value === MenuAction.EDIT_TENANTS_ACTION) {
             this._getAvailableTenants(value, group);
-        } else if (value === MenuAction.ADD_USER_ACTION) {
+        } else if (value === MenuAction.EDIT_USERS_ACTION) {
             this._getAvailableUsers(value, group);
         } else {
             this.setState({group, modalType: value, showModal: true});
@@ -153,14 +153,14 @@ export default class UserGroupsTable extends React.Component {
                 </DataTable>
 
                 <UsersModal
-                    show={this.state.modalType === MenuAction.ADD_USER_ACTION && this.state.showModal}
+                    show={this.state.modalType === MenuAction.EDIT_USERS_ACTION && this.state.showModal}
                     group={this.state.group}
                     users={this.state.users}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
                 <TenantsModal
-                    show={this.state.modalType === MenuAction.ADD_TENANT_ACTION && this.state.showModal}
+                    show={this.state.modalType === MenuAction.EDIT_TENANTS_ACTION && this.state.showModal}
                     group={this.state.group}
                     tenants={this.state.tenants}
                     onHide={this._hideModal.bind(this)}
