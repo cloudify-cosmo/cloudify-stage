@@ -17,7 +17,7 @@ export default class Services extends Component {
 
     render() {
         return (
-            <Table celled basic='very' collapsing>
+            <Table celled basic='very' collapsing className='servicesData'>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell colSpan='2'>

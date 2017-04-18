@@ -2,15 +2,17 @@
  * Created by kinneretzin on 27/03/2017.
  */
 
-module.exports =  function(client) {
+var Config = require('../config.json');
+
+module.exports =  function(client,asUser) {
     var page = client.page.login();
 
     return page.navigate()
         .waitForElementVisible('@ipField', 2000)
         .clearValue('@ipField')
-        .setValue('@ipField', '10.239.3.79')
-        .setValue('@usernameField', 'admin')
-        .setValue('@passwordField', 'admin')
+        .setValue('@ipField', Config.managerIp)
+        .setValue('@usernameField', asUser ? Config.user : Config.admin)
+        .setValue('@passwordField', asUser ? Config.pass: Config.adminPass)
         .click('@submitButton')
         .waitForElementVisible('@managerData',5000);
 }

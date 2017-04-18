@@ -1,3 +1,3 @@
-#Components
+# Components
 
 * [DataTable](DataTable.md)
