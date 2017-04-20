@@ -19,24 +19,24 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
-        show: PropTypes.bool.isRequired,
+        open: PropTypes.bool.isRequired,
         deployment: PropTypes.object.isRequired,
         workflow: PropTypes.object.isRequired,
         onHide: PropTypes.func.isRequired
     };
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.show && nextProps.show) {
+        if (!this.props.open && nextProps.open) {
             this.setState(ExecuteDeploymentModal.initialState);
         }
     }
 
     onApprove () {
-        this.refs.executeForm.submit();
+        this._submitExecute();
         return false;
     }
 
-    onDeny () {
+    onCancel () {
         this.props.onHide();
         return true;
     }
@@ -67,18 +67,18 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message} = Stage.Basic;
+        var {Modal, Icon, Form, Message, ApproveButton, CancelButton} = Stage.Basic;
 
         var workflow = Object.assign({},{name:"", parameters:[]}, this.props.workflow);
 
         return (
-            <Modal show={this.props.show} loading={this.state.loading} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
+            <Modal open={this.props.open}>
                 <Modal.Header>
                     <Icon name="road"/> Execute workflow {workflow.name}
                 </Modal.Header>
 
-                <Modal.Body>
-                    <Form onSubmit={this._submitExecute.bind(this)} errors={this.state.errors} ref="executeForm">
+                <Modal.Content>
+                    <Form loading={this.state.loading} errors={this.state.errors}>
                         {
                             _.isEmpty(workflow.parameters)
                             &&
@@ -97,12 +97,12 @@ export default class ExecuteDeploymentModal extends React.Component {
                             })
                         }
                     </Form>
-                </Modal.Body>
+                </Modal.Content>
 
-                <Modal.Footer>
-                    <Modal.Cancel/>
-                    <Modal.Approve label="Execute" icon="rocket" className="green"/>
-                </Modal.Footer>
+                <Modal.Actions>
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Execute" icon="rocket" color="green"/>
+                </Modal.Actions>
             </Modal>
         );
     }

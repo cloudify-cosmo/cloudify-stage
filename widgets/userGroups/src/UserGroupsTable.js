@@ -153,14 +153,14 @@ export default class UserGroupsTable extends React.Component {
                 </DataTable>
 
                 <UsersModal
-                    show={this.state.modalType === MenuAction.EDIT_USERS_ACTION && this.state.showModal}
+                    open={this.state.modalType === MenuAction.EDIT_USERS_ACTION && this.state.showModal}
                     group={this.state.group}
                     users={this.state.users}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
                 <TenantsModal
-                    show={this.state.modalType === MenuAction.EDIT_TENANTS_ACTION && this.state.showModal}
+                    open={this.state.modalType === MenuAction.EDIT_TENANTS_ACTION && this.state.showModal}
                     group={this.state.group}
                     tenants={this.state.tenants}
                     onHide={this._hideModal.bind(this)}

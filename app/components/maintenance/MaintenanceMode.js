@@ -3,7 +3,7 @@
  */
 import React, {Component, PropTypes} from "react";
 import Consts from "../../utils/consts";
-import {Modal, Icon, ErrorMessage, DataTable, Checkmark} from "../basic/index";
+import {Modal, Icon, ErrorMessage, DataTable, Checkmark, ApproveButton, CancelButton} from "../basic/index";
 import StageUtils from "../../utils/stageUtils";
 
 const POLLING_INTERVAL = 2000;
@@ -128,8 +128,7 @@ export default class MaintenanceMode extends Component {
     render() {
 
         return (
-            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}
-                   loading={this.state.loading}>
+            <Modal open={this.props.show}>
                 <Modal.Header>
                     <Icon name="doctor"/>
                     {
@@ -142,7 +141,7 @@ export default class MaintenanceMode extends Component {
 
                 {
                     (this.state.error || !_.isEmpty(this.props.activeExecutions.items)) ?
-                    <Modal.Body>
+                    <Modal.Content>
                         <ErrorMessage error={this.state.error}/>
 
                         {!_.isEmpty(this.props.activeExecutions.items) &&
@@ -173,14 +172,14 @@ export default class MaintenanceMode extends Component {
                             </DataTable>
                         }
 
-                    </Modal.Body> : ""
+                    </Modal.Content> : ""
                 }
 
 
-                <Modal.Footer>
-                    <Modal.Cancel label="No"/>
-                    <Modal.Approve label="Yes" icon="doctor" className="green"/>
-                </Modal.Footer>
+                <Modal.Actions>
+                    <CancelButton onClick={this.onDeny.bind(this)} content="No" disabled={this.state.loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} content="Yes" icon="doctor" color="green" disabled={this.state.loading} />
+                </Modal.Actions>
             </Modal>
         )
     }

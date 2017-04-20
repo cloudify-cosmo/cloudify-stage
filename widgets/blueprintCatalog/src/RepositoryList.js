@@ -86,7 +86,7 @@ export default class extends React.Component {
 
                 }
 
-                <UploadModal show={this.state.showModal}
+                <UploadModal open={this.state.showModal}
                              files={this.state.files}
                              onHide={this._hideModal.bind(this)}
                              toolbox={this.props.toolbox}

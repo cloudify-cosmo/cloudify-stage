@@ -23,7 +23,7 @@ export default class UpdateModal extends React.Component {
     static propTypes = {
         secret: PropTypes.object.isRequired,
         toolbox: PropTypes.object.isRequired,
-        show: PropTypes.bool.isRequired,
+        open: PropTypes.bool.isRequired,
         onHide: PropTypes.func
     };
 
@@ -32,17 +32,17 @@ export default class UpdateModal extends React.Component {
     };
 
     onApprove () {
-        this.refs.updateForm.submit();
+        this._updateSecret();
         return false;
     }
 
-    onDeny () {
+    onCancel () {
         this.props.onHide();
         return true;
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.show && nextProps.show) {
+        if (!this.props.open && nextProps.open) {
             this.setState({...UpdateModal.initialState, loading: true});
 
             let actions = new Actions(this.props.toolbox);
@@ -84,28 +84,28 @@ export default class UpdateModal extends React.Component {
     }
 
     render() {
-        let {Modal, Icon, Form} = Stage.Basic;
+        let {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
 
         return (
             <div>
-                <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+                <Modal open={this.props.open}>
                     <Modal.Header>
                         <Icon name='edit' /> Update secret {this.props.secret.key}
                     </Modal.Header>
 
-                    <Modal.Body>
-                        <Form onSubmit={this._updateSecret.bind(this)} errors={this.state.errors} ref='updateForm'>
+                    <Modal.Content>
+                        <Form loading={this.state.loading} errors={this.state.errors}>
                             <Form.Field error={this.state.errors.secretValue}>
                                 <Form.Input name='secretValue' placeholder='Secret value'
                                             value={this.state.secretValue} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
                         </Form>
-                    </Modal.Body>
+                    </Modal.Content>
 
-                    <Modal.Footer>
-                        <Modal.Cancel/>
-                        <Modal.Approve label="Update" icon='edit' className="green"/>
-                    </Modal.Footer>
+                    <Modal.Actions>
+                        <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                        <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Update" icon='edit' color="green"/>
+                    </Modal.Actions>
                 </Modal>
             </div>
         );

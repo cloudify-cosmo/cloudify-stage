@@ -17,17 +17,17 @@ export default class UploadModal extends React.Component {
     }
 
     onApprove () {
-        this.refs.uploadForm.submit();
+        this._submitUpload()
         return false;
     }
 
-    onDeny () {
+    onCancel () {
         this.props.onHide();
         return true;
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.show && nextProps.show) {
+        if (!this.props.open && nextProps.open) {
             this.setState(UploadModal.initialState);
         }
     }
@@ -64,7 +64,7 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form} = Stage.Basic;
+        var {Modal, CancelButton, ApproveButton, Icon, Form} = Stage.Basic;
 
         var files = Object.assign({},{tree:[], repo:""}, this.props.files);
         files.tree = _.filter(files.tree, x => x.type === "blob" && x.path.endsWith(".yaml"));
@@ -73,13 +73,13 @@ export default class UploadModal extends React.Component {
 
         return (
             <div>
-                <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+                <Modal open={this.props.open}>
                     <Modal.Header>
                         <Icon name="upload"/> Upload blueprint from {files.repo}
                     </Modal.Header>
 
-                    <Modal.Body>
-                        <Form onSubmit={this._submitUpload.bind(this)} errors={this.state.errors} ref="uploadForm">
+                    <Modal.Content>
+                        <Form loading={this.state.loading} errors={this.state.errors}>
                             <Form.Field error={this.state.errors.blueprintName}>
                                 <Form.Input name='blueprintName' placeholder="Blueprint name"
                                             value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
@@ -91,12 +91,12 @@ export default class UploadModal extends React.Component {
                                                value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
                         </Form>
-                    </Modal.Body>
+                    </Modal.Content>
 
-                    <Modal.Footer>
-                        <Modal.Cancel/>
-                        <Modal.Approve label="Upload" icon="upload" className="green"/>
-                    </Modal.Footer>
+                    <Modal.Actions>
+                        <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                        <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Upload" icon="upload" color="green"/>
+                    </Modal.Actions>
                 </Modal>
             </div>
         );

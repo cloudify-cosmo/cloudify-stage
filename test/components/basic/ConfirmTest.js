@@ -3,20 +3,22 @@
  */
 
 import React from 'react'
-import {shallow, mount} from 'enzyme'
+import {mount} from 'enzyme'
 import {expect} from 'chai';
 import sinon from 'sinon';
-import Confirm from '../../../app/components/basic/Confirm';
+import {Confirm} from '../../../app/components/basic';
 
 describe('(Component) Confirm', () => {
 
     var wrapper;
+    global.requestAnimationFrame = () => {};
+    global.cancelAnimationFrame = () => {};
 
     before(() => {
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Confirm title="test title" className="confirmTest"></Confirm>, { attachTo: div.get(0) }
+            <Confirm content='test title' />, { attachTo: div.get(0) }
         );
     });
 
@@ -24,38 +26,31 @@ describe('(Component) Confirm', () => {
         expect(wrapper).to.exist;
     });
 
-    it('renders title', () => {
-        expect(wrapper.find('.confirmTest .header')).to.have.text('test title');
-    });
-
     it('shows up', function () {
-        wrapper.setProps({show:true});
-        this.timeout(500);
-        this.retries(5);
-        if ($('.confirmTest').parent().hasClass('active')) {
-            expect($('.confirmTest').parent().hasClass('active')).to.be.true;
-        }
+        wrapper.setProps({open:true});
+        expect($('.confirmModal').parent().hasClass('active')).to.be.true;
+        expect($('.confirmModal .content').text()).to.be.equal('test title');
     });
 
     it('clicks ok button', function(done) {
         this.timeout(10000);
         var cb = sinon.spy();
-        wrapper.setProps({onConfirm:cb});
-        $(".confirmTest .ok").trigger( "click" );
+        wrapper.setProps({onConfirm:cb, onCancel:()=>{}});
+        $('.confirmModal .actions .ui.button.primary').trigger( 'click' );
         expect(cb).to.have.been.calledOnce;
         done();
     });
 
     it('clicks cancel button', () => {
         var cb = sinon.spy();
-        wrapper.setProps({onCancel:cb});
-        $(".confirmTest .cancel").trigger( "click" );
+        wrapper.setProps({onCancel:cb, onConfirm:()=>{}});
+        $('.confirmModal .actions .ui.button').trigger( 'click' );
         expect(cb).to.have.been.calledOnce;
     });
 
     it('unmounts', () => {
         wrapper.unmount();
-        expect($('.ui.dimmer .confirmTest').length > 0).to.be.false;
+        expect($('.ui.dimmer .confirmModal').length > 0).to.be.false;
     });
 
     after(() => {

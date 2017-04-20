@@ -139,13 +139,13 @@ export default class extends React.Component {
 
                 </DataTable>
 
-                <RestoreModal show={this.state.showRestore}
+                <RestoreModal open={this.state.showRestore}
                               onHide={()=>this.setState({showRestore : false})}
                               toolbox={this.props.toolbox}
                               snapshot={this.state.item}/>
 
-                <Confirm title='Are you sure you want to remove this snapshot?'
-                         show={this.state.confirmDelete}
+                <Confirm content='Are you sure you want to remove this snapshot?'
+                         open={this.state.confirmDelete}
                          onConfirm={this._deleteSnapshot.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
 

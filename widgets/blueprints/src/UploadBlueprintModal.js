@@ -7,7 +7,7 @@ export default class UploadModal extends React.Component {
     constructor(props,context) {
         super(props,context);
 
-        this.state = {...UploadModal.initialState, show: false}
+        this.state = {...UploadModal.initialState, open: false}
     }
 
     static initialState = {
@@ -20,23 +20,19 @@ export default class UploadModal extends React.Component {
     }
 
     onApprove () {
-        this.refs.uploadForm.submit();
+        this._submitUpload();
         return false;
     }
 
-    onDeny () {
-        this.setState({show: false});
+    onCancel () {
+        this.setState({open: false});
         return true;
     }
 
-    _showModal() {
-        this.setState({show: true});
-    }
-
     componentWillUpdate(prevProps, prevState) {
-        if (!prevState.show && this.state.show) {
-            this.refs.blueprintFile.reset();
-            this.refs.imageFile.reset();
+        if (!prevState.open && this.state.open) {
+            this.refs.blueprintFile && this.refs.blueprintFile.reset();
+            this.refs.imageFile && this.refs.imageFile.reset();
             this.setState(UploadModal.initialState);
         }
     }
@@ -73,7 +69,7 @@ export default class UploadModal extends React.Component {
                          blueprintFile,
                          this.state.imageUrl,
                          this.refs.imageFile.file()).then(()=>{
-            this.setState({loading: false, show: false});
+            this.setState({loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
@@ -85,19 +81,18 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form} = Stage.Basic;
+        var {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        const uploadButton = <Button content='Upload' icon='upload' labelPosition='left' />;
 
         return (
             <div>
-                <Button content='Upload' icon='upload' labelPosition='left' onClick={this._showModal.bind(this)}/>
-
-                <Modal show={this.state.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+                <Modal trigger={uploadButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
                     <Modal.Header>
                         <Icon name="upload"/> Upload blueprint
                     </Modal.Header>
 
-                    <Modal.Body>
-                        <Form onSubmit={this._submitUpload.bind(this)} errors={this.state.errors} ref="uploadForm">
+                    <Modal.Content>
+                        <Form loading={this.state.loading} errors={this.state.errors}>
                             <Form.Group>
                                 <Form.Field width="9" error={this.state.errors.blueprintUrl}>
                                     <Form.Input label="URL" placeholder="Enter blueprint url" name="blueprintUrl"
@@ -138,12 +133,12 @@ export default class UploadModal extends React.Component {
                                 </Form.Field>
                             </Form.Group>
                         </Form>
-                    </Modal.Body>
+                    </Modal.Content>
 
-                    <Modal.Footer>
-                        <Modal.Cancel/>
-                        <Modal.Approve label="Upload" icon="upload" className="green"/>
-                    </Modal.Footer>
+                    <Modal.Actions>
+                        <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                        <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Upload" icon="upload" color="green"/>
+                    </Modal.Actions>
                 </Modal>
             </div>
         );

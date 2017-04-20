@@ -78,12 +78,12 @@ export default class ClusterManagement extends React.Component {
 
 
                 <CreateClusterModal toolbox={this.props.toolbox}
-                                    show={this.state.showCreate}
+                                    open={this.state.showCreate}
                                     onHide={()=>this.setState({showCreate : false})}
                                     />
                 <JoinClusterModal toolbox={this.props.toolbox}
-                                    show={this.state.showJoin}
-                                    onHide={()=>this.setState({showJoin : false})}
+                                  open={this.state.showJoin}
+                                  onHide={()=>this.setState({showJoin : false})}
                     />
 
             </div>

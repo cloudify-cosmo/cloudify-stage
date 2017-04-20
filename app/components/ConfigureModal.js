@@ -3,7 +3,7 @@
  */
 
 import React, {Component, PropTypes} from "react";
-import {Modal, ErrorMessage, GenericField, Form} from "./basic";
+import {Modal, ErrorMessage, GenericField, Form, ApproveButton, CancelButton} from "./basic";
 
 export default class ConfigureModal extends Component {
 
@@ -52,15 +52,14 @@ export default class ConfigureModal extends Component {
 
     render() {
         return (
-            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}
-                   loading={this.state.loading}>
+            <Modal open={this.props.show}>
                 <Modal.Header>
                     Configure UI properties
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Content>
                     <ErrorMessage error={this.state.error}/>
 
-                    <Form>
+                    <Form loading={this.state.loading}>
                         <GenericField label='Can users edit their own screens?'
                                       name='canUserEdit'
                                       type={GenericField.BOOLEAN_TYPE}
@@ -68,13 +67,12 @@ export default class ConfigureModal extends Component {
                                       value={this.state.canUserEdit}
                                       onChange={this._handleInputChange.bind(this)}/>
                     </Form>
+                </Modal.Content>
 
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Modal.Cancel label="Cancel"/>
-                    <Modal.Approve label="Save" className="green"/>
-                </Modal.Footer>
+                <Modal.Actions>
+                    <CancelButton onClick={this.onDeny.bind(this)} disabled={this.state.loading} />
+                    <ApproveButton content="Save" color="green" onClick={this.onApprove.bind(this)} disabled={this.state.loading} />
+                </Modal.Actions>
             </Modal>
         )
     }

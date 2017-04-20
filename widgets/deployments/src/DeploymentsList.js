@@ -119,20 +119,20 @@ export default class extends React.Component {
                                        onError={this._handleError.bind(this)} />
                 }
 
-                <Confirm title={`Are you sure you want to remove deployment ${this.state.deployment.id}?`}
-                         show={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
+                <Confirm content={`Are you sure you want to remove deployment ${this.state.deployment.id}?`}
+                         open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
                          onConfirm={this._deleteDeployment.bind(this)}
                          onCancel={this._hideModal.bind(this)} />
 
                 <ExecuteDeploymentModal
-                    show={this.state.modalType === MenuAction.WORKFLOW_ACTION && this.state.showModal}
+                    open={this.state.modalType === MenuAction.WORKFLOW_ACTION && this.state.showModal}
                     deployment={this.state.deployment}
                     workflow={this.state.workflow}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
                 <UpdateDeploymentModal
-                    show={this.state.modalType === MenuAction.EDIT_ACTION && this.state.showModal}
+                    open={this.state.modalType === MenuAction.EDIT_ACTION && this.state.showModal}
                     deployment={this.state.deployment}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
