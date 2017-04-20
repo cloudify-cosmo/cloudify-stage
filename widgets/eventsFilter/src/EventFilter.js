@@ -11,13 +11,16 @@ export default class EventFilter extends React.Component {
     }
 
     static initialState = {
-        blueprintId: [],
-        deploymentId: [],
-        eventType: [],
-        timeStart: "",
-        timeEnd: "",
-        messageText: "",
-        logLevel: []
+        fields: {
+            blueprintId: [],
+            deploymentId: [],
+            eventType: [],
+            timeRange: "",
+            timeStart: "",
+            timeEnd: "",
+            messageText: "",
+            logLevel: []
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -26,15 +29,30 @@ export default class EventFilter extends React.Component {
             || !_.isEqual(this.props.data, nextProps.data);
     }
 
+    componentDidMount() {
+        this._resetFilter();
+    }
+
     _renderLabel(data, index, defaultLabelProps) {
         return _.truncate(data.text, {'length': 10});
     }
 
-    _handleInputChange(proxy, field) {
-        this.props.toolbox.getContext().setValue(`event_${field.name}`, field.type==='date'?field.date:field.value);
+    _updateFieldState(fieldName, fieldValue) {
+        let fields = this.state.fields;
+        fields[fieldName] = fieldValue;
+        this.setState({fields});
+    }
 
+    _handleInputChange(proxy, field) {
         this.dirty[field.name] = !_.isEmpty(field.value);
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+
+        if (field.name === 'timeRange') {
+            this._updateFieldState('timeStart', field.startDate);
+            this._updateFieldState('timeEnd', field.endDate);
+        }
+        this._updateFieldState(field.name, field.value);
+
+        this.props.toolbox.getContext().setValue('eventFilter', this.state.fields);
     }
 
     _isDirty() {
@@ -48,12 +66,10 @@ export default class EventFilter extends React.Component {
 
     _resetFilter() {
         this.dirty = {};
-        this.setState(EventFilter.initialState);
 
-        var params = {};
-        _.forIn(EventFilter.initialState, (value, key) => {
-            this.props.toolbox.getContext().setValue(`event_${key}`,value);
-        });
+        let fields = Object.assign({}, EventFilter.initialState.fields);
+        this.setState({fields});
+        this.props.toolbox.getContext().setValue('eventFilter', fields);
 
         this.props.toolbox.getEventBus().trigger('events:refresh');
         this.props.toolbox.getEventBus().trigger('logs:refresh');
@@ -75,26 +91,20 @@ export default class EventFilter extends React.Component {
 
         return (
             <Form size="small">
-                <Form.Group inline widths="5">
+                <Form.Group inline widths="4">
                     <Form.Field>
                         <Form.Dropdown placeholder='Blueprints' fluid multiple search selection options={blueprintOptions}
                                        name="blueprintId" renderLabel={this._renderLabel.bind(this)} closeOnChange
-                                       value={this.state.blueprintId} onChange={this._handleInputChange.bind(this)}/>
+                                       value={this.state.fields.blueprintId} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
                         <Form.Dropdown placeholder='Deployments' fluid multiple search selection options={deploymentOptions}
                                        name="deploymentId" renderLabel={this._renderLabel.bind(this)} closeOnChange
-                                       value={this.state.deploymentId} onChange={this._handleInputChange.bind(this)}/>
+                                       value={this.state.fields.deploymentId} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
-                        <Form.Dropdown placeholder='Log Levels' fluid multiple search selection options={logOptions}
-                                       name="logLevel" closeOnChange
-                                       value={this.state.logLevel} onChange={this._handleInputChange.bind(this)}/>
-                    </Form.Field>
-                    <Form.Field>
-                        <Form.Dropdown placeholder='Event Types' fluid multiple search selection options={typeOptions}
-                                       name="eventType" renderLabel={this._renderLabel.bind(this)} closeOnChange
-                                       value={this.state.eventType} onChange={this._handleInputChange.bind(this)}/>
+                        <Form.InputDateRange fluid placeholder='Time Range' name="timeRange"
+                                             value={this.state.fields.timeRange} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
                         {
@@ -103,18 +113,20 @@ export default class EventFilter extends React.Component {
                         }
                     </Form.Field>
                 </Form.Group>
-                <Form.Group inline widths="5">
+                <Form.Group inline widths="4">
                     <Form.Field>
-                        <Form.InputDate placeholder='Time Start' name="timeStart"
-                                        value={this.state.timeStart} onChange={this._handleInputChange.bind(this)}/>
+                        <Form.Dropdown placeholder='Log Levels' fluid multiple search selection options={logOptions}
+                                       name="logLevel" closeOnChange
+                                       value={this.state.fields.logLevel} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
-                        <Form.InputDate placeholder='Time End' name="timeEnd"
-                                        value={this.state.timeEnd} onChange={this._handleInputChange.bind(this)}/>
+                        <Form.Dropdown placeholder='Event Types' fluid multiple search selection options={typeOptions}
+                                       name="eventType" renderLabel={this._renderLabel.bind(this)} closeOnChange
+                                       value={this.state.fields.eventType} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
                         <Form.Input placeholder='Message Text' fluid name="messageText"
-                                    value={this.state.messageText} onChange={this._handleInputChange.bind(this)}/>
+                                    value={this.state.fields.messageText} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                 </Form.Group>
             </Form>

@@ -10,6 +10,7 @@ import FormGroup from './FormGroup'
 import FormDivider from './FormDivider'
 import FormFile from '../InputFile'
 import FormDate from '../InputDate'
+import FormDateRange from '../InputDateRange'
 import FormDropdown from '../Dropdown'
 
 export default class FormWrapper extends Component {
@@ -24,6 +25,7 @@ export default class FormWrapper extends Component {
     static File = FormFile;
     static Dropdown = FormDropdown;
     static InputDate = FormDate;
+    static InputDateRange = FormDateRange;
     static Button = FormButton;
 
     static propTypes = {

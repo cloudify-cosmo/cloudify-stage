@@ -258,12 +258,14 @@ a:hover {
   }
 
   .loginContainer {
-    display: table;
-
     .loginHeader {
       text-align: center;
       margin-bottom: 30px;
     }
+  }
+
+  .loginContainerExtended {
+    height: 400px;
   }
 
   .maintenanceContainer {
