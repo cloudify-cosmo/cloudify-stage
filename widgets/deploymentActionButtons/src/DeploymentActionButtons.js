@@ -95,20 +95,20 @@ export default class DeploymentActionButtons extends React.Component {
                         onClick={this._showModal.bind(this, DeploymentActionButtons.DELETE_ACTION)}
                         content="Delete deployment"/>
 
-                <Confirm title={`Are you sure you want to remove deployment ${deploymentId}?`}
-                         show={this._isShowModal(DeploymentActionButtons.DELETE_ACTION)}
+                <Confirm content={`Are you sure you want to remove deployment ${deploymentId}?`}
+                         open={this._isShowModal(DeploymentActionButtons.DELETE_ACTION)}
                          onConfirm={this._deleteDeployment.bind(this)}
                          onCancel={this._hideModal.bind(this)} />
 
                 <ExecuteDeploymentModal
-                    show={this._isShowModal(DeploymentActionButtons.WORKFLOW_ACTION)}
+                    open={this._isShowModal(DeploymentActionButtons.WORKFLOW_ACTION)}
                     deployment={this.props.deployment}
                     workflow={this.state.workflow}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
                 <UpdateDeploymentModal
-                    show={this._isShowModal(DeploymentActionButtons.EDIT_ACTION)}
+                    open={this._isShowModal(DeploymentActionButtons.EDIT_ACTION)}
                     deployment={this.props.deployment}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>

@@ -21,7 +21,7 @@ export default class CreateClusterModal extends React.Component {
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
-        show: PropTypes.bool.isRequired,
+        open: PropTypes.bool.isRequired,
         onHide: PropTypes.func
     };
 
@@ -30,17 +30,17 @@ export default class CreateClusterModal extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.show && nextProps.show) {
+        if (!this.props.open && nextProps.open) {
             this.setState(CreateClusterModal.initialState);
         }
     }
 
     onApprove () {
-        this.refs.createClusterForm.submit();
+        this._submitCreateCluster();
         return false;
     }
 
-    onDeny () {
+    onCancel () {
         this.props.onHide();
         return true;
     }
@@ -66,16 +66,16 @@ export default class CreateClusterModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form} = Stage.Basic;
+        var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
 
         return (
-            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+            <Modal open={this.props.open}>
                 <Modal.Header>
                     Create Cluster
                 </Modal.Header>
 
-                <Modal.Body>
-                    <Form onSubmit={this._submitCreateCluster.bind(this)} errors={this.state.errors} ref="createClusterForm">
+                <Modal.Content>
+                    <Form loading={this.state.loading} errors={this.state.errors}>
 
                         <h2>
                             <Icon name='warning sign'/>
@@ -90,12 +90,12 @@ export default class CreateClusterModal extends React.Component {
                         </Form.Field>
 
                     </Form>
-                </Modal.Body>
+                </Modal.Content>
 
-                <Modal.Footer>
-                    <Modal.Cancel/>
-                    <Modal.Approve label="Create Cluster" className="green"/>
-                </Modal.Footer>
+                <Modal.Actions>
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Create Cluster" color="green"/>
+                </Modal.Actions>
             </Modal>
         );
     }

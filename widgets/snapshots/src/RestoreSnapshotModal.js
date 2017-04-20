@@ -10,7 +10,7 @@ export default class RestoreSnapshotModal extends React.Component {
     constructor(props,context) {
         super(props, context);
 
-        this.state = {...RestoreSnapshotModal.initialState, show: false}
+        this.state = {...RestoreSnapshotModal.initialState, open: false}
     }
 
     static initialState = {
@@ -35,14 +35,14 @@ export default class RestoreSnapshotModal extends React.Component {
         return false;
     }
 
-    onDeny () {
+    onCancel () {
         this.props.onHide();
         return true;
     }
 
 
     componentWillUpdate(prevProps, prevState) {
-        if (!prevState.show && this.state.show) {
+        if (!prevState.open && this.state.open) {
             this.setState(RestoreSnapshotModal.initialState);
         }
     }
@@ -78,16 +78,16 @@ export default class RestoreSnapshotModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form} = Stage.Basic;
+        var {Modal, ApproveButton, CancelButton, Icon, Form} = Stage.Basic;
 
         return (
-            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+            <Modal open={this.props.open}>
                 <Modal.Header>
                     <Icon name="undo"/> Restore snapshot
                 </Modal.Header>
 
-                <Modal.Body>
-                    <Form onSubmit={this._submitRestore.bind(this)} errors={this.state.errors} ref="restoreForm">
+                <Modal.Content>
+                    <Form loading={this.state.loading} errors={this.state.errors}>
 
                         <Form.Field>
                             <Form.Checkbox toggle
@@ -117,12 +117,12 @@ export default class RestoreSnapshotModal extends React.Component {
                         </Form.Field>
 
                     </Form>
-                </Modal.Body>
+                </Modal.Content>
 
-                <Modal.Footer>
-                    <Modal.Cancel/>
-                    <Modal.Approve label="Restore" icon="undo" className="green"/>
-                </Modal.Footer>
+                <Modal.Actions>
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Restore" icon="undo" color="green"/>
+                </Modal.Actions>
             </Modal>
         );
     }

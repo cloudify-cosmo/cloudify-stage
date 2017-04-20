@@ -28,25 +28,25 @@ export default class UpdateDeploymentModal extends React.Component {
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
-        show: PropTypes.bool.isRequired,
+        open: PropTypes.bool.isRequired,
         deployment: PropTypes.object.isRequired,
         onHide: PropTypes.func.isRequired
     };
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.show && nextProps.show) {
-            this.refs.blueprintFile.reset();
-            this.refs.inputsFile.reset();
+        if (!this.props.open && nextProps.open) {
+            this.refs.blueprintFile && this.refs.blueprintFile.reset();
+            this.refs.inputsFile && this.refs.inputsFile.reset();
             this.setState(UpdateDeploymentModal.initialState);
         }
     }
 
     onApprove () {
-        this.refs.updateForm.submit();
+        this._submitUpdate();
         return false;
     }
 
-    onDeny () {
+    onCancel () {
         this.props.onHide();
         return true;
     }
@@ -98,16 +98,16 @@ export default class UpdateDeploymentModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form} = Stage.Basic;
+        var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
 
         return (
-            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+            <Modal open={this.props.open}>
                 <Modal.Header>
                     <Icon name="edit"/> Update deployment {this.props.deployment.id}
                 </Modal.Header>
 
-                <Modal.Body>
-                    <Form onSubmit={this._submitUpdate.bind(this)} errors={this.state.errors} ref="updateForm">
+                <Modal.Content>
+                    <Form loading={this.state.loading} errors={this.state.errors}>
                         <Form.Group>
                             <Form.Field width="9" error={this.state.errors.blueprintUrl}>
                                 <Form.Input label="URL" placeholder="Enter new blueprint url" name="blueprintUrl"
@@ -159,12 +159,12 @@ export default class UpdateDeploymentModal extends React.Component {
                                         value={this.state.workflowId} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                     </Form>
-                </Modal.Body>
+                </Modal.Content>
 
-                <Modal.Footer>
-                    <Modal.Cancel/>
-                    <Modal.Approve label="Update" icon="edit" className="green"/>
-                </Modal.Footer>
+                <Modal.Actions>
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Update" icon="edit" color="green" />
+                </Modal.Actions>
             </Modal>
         );
     }

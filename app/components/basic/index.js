@@ -2,7 +2,7 @@
  * Created by kinneretzin on 06/10/2016.
  */
 
-import Modal from './modal/Modal';
+import { ApproveButton, CancelButton } from './modal/ModalButtons';
 import Confirm from './Confirm';
 import KeyIndicator from './KeyIndicator';
 import ErrorMessage from './ErrorMessage';
@@ -20,7 +20,7 @@ import InputFile from './InputFile';
 import InputDate from './InputDate';
 import InputDateRange from './InputDateRange';
 import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header,
-         Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image} from 'semantic-ui-react'
+         Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal } from 'semantic-ui-react'
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
 import Dropdown from './Dropdown';
@@ -68,5 +68,7 @@ export {
     SplitterLayout,
     Table,
     Header,
+    ApproveButton,
+    CancelButton,
     InputDateRange
 };

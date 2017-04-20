@@ -12,7 +12,7 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            show: false,
+            open: false,
             loading: false,
             error: null,
             blueprints: {items:[]}
@@ -24,14 +24,14 @@ export default class extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doGetBlueprints().then((blueprints)=>{
-            this.setState({loading: false, error: null, blueprints, show: true});
+            this.setState({loading: false, error: null, blueprints, open: true});
         }).catch((err)=> {
             this.setState({loading: false, error: err.message});
         });
     }
 
     _hideModal () {
-        this.setState({show: false});
+        this.setState({open: false});
     }
 
     render() {
@@ -45,7 +45,7 @@ export default class extends React.Component {
                     <i className="rocket icon"></i>Create new deployment
                 </button>
 
-                <DeployModal show={this.state.show} blueprints={this.state.blueprints} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
+                <DeployModal open={this.state.open} blueprints={this.state.blueprints} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
             </div>
         );
     }

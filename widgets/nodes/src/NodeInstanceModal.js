@@ -13,7 +13,7 @@ export default class extends React.Component {
     }
 
     render() {
-        let {Modal, DataTable, HighlightText} = Stage.Basic;
+        let {Modal, DataTable, HighlightText, ApproveButton} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         let instance = this.props.instance;
@@ -21,15 +21,12 @@ export default class extends React.Component {
 
         return (
             <div>
-                <Modal show={this.props.show}
-                       className='nodeInstanceModal'
-                       onDeny={this.props.onClose}
-                       onApprove={this.props.onClose}>
+                <Modal open={this.props.open} className='nodeInstanceModal'>
                     <Modal.Header>
                         Node instance {instance.id}
                     </Modal.Header>
 
-                    <Modal.Body>
+                    <Modal.Content>
                         <div>
                             <h3>Relationships</h3>
                             <DataTable className="nodeInstanceRelationshipsTable" totalSize={instance.relationships.length}>
@@ -81,11 +78,11 @@ export default class extends React.Component {
 
                             </DataTable>
                         </div>
-                    </Modal.Body>
+                    </Modal.Content>
 
-                    <Modal.Footer>
-                        <Modal.Approve label="Close" icon="" className="green"/>
-                    </Modal.Footer>
+                    <Modal.Actions>
+                        <ApproveButton onClick={this.props.onClose} content="Close" icon="" color="green"/>
+                    </Modal.Actions>
                 </Modal>
             </div>
 

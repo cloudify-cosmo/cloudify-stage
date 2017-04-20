@@ -23,7 +23,7 @@ export default class DeployBlueprintModal extends React.Component {
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
-        show: PropTypes.bool.isRequired,
+        open: PropTypes.bool.isRequired,
         blueprint: PropTypes.object.isRequired,
         onHide: PropTypes.func
     };
@@ -33,7 +33,7 @@ export default class DeployBlueprintModal extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.show && nextProps.show) {
+        if (!this.props.open && nextProps.open) {
             let deploymentInputs = {};
 
             _.forEach(nextProps.blueprint.plan.inputs,
@@ -43,11 +43,11 @@ export default class DeployBlueprintModal extends React.Component {
     }
 
     onApprove () {
-        this.refs.deployForm.submit();
+        this._submitDeploy();
         return false;
     }
 
-    onDeny () {
+    onCancel () {
         this.props.onHide();
         return true;
     }
@@ -116,20 +116,20 @@ export default class DeployBlueprintModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message, Popup, Header} = Stage.Basic;
+        var {Modal, Icon, Form, Message, Popup, Header, ApproveButton, CancelButton} = Stage.Basic;
 
         let blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
         let deploymentInputs = _.sortBy(_.map(blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
                                         [(input => !_.isNil(input.default)), 'name']);
 
         return (
-            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+            <Modal open={this.props.open}>
                 <Modal.Header>
                     <Icon name="rocket"/> Deploy blueprint {blueprint.id}
                 </Modal.Header>
 
-                <Modal.Body>
-                    <Form onSubmit={this._submitDeploy.bind(this)} errors={this.state.errors} ref="deployForm">
+                <Modal.Content>
+                    <Form loading={this.state.loading} errors={this.state.errors}>
 
                         <Form.Field error={this.state.errors.deploymentName}>
                             <Form.Input name='deploymentName' placeholder="Deployment name"
@@ -183,12 +183,12 @@ export default class DeployBlueprintModal extends React.Component {
                             })
                         }
                     </Form>
-                </Modal.Body>
+                </Modal.Content>
 
-                <Modal.Footer>
-                    <Modal.Cancel/>
-                    <Modal.Approve label="Deploy" icon="rocket" className="green"/>
-                </Modal.Footer>
+                <Modal.Actions>
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Deploy" icon="rocket" color="green"/>
+                </Modal.Actions>
             </Modal>
         );
     }

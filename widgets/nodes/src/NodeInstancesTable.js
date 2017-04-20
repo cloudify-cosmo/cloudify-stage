@@ -64,7 +64,7 @@ export default class NodeInstancesTable extends React.Component {
                     }
                 </DataTable>
 
-                <InstanceModal show={this.state.showModal}
+                <InstanceModal open={this.state.showModal}
                                onClose={this._closeInstanceModal.bind(this)}
                                widget={this.props.widget}
                                instance={this.state.instance}/>

@@ -148,13 +148,13 @@ export default class SecretsTable extends React.Component {
 
                 </DataTable>
 
-                <DeleteModal title={`Are you sure you want to delete secret '${this.state.secret.key}'?`}
-                             show={this.state.modalType === SecretsTable.DELETE_SECRET_ACTION && this.state.showModal}
+                <DeleteModal content={`Are you sure you want to delete secret '${this.state.secret.key}'?`}
+                             open={this.state.modalType === SecretsTable.DELETE_SECRET_ACTION && this.state.showModal}
                              onConfirm={this._deleteSecret.bind(this)}
                              onCancel={this._hideModal.bind(this)}/>
 
                 <UpdateModal toolbox={this.props.toolbox}
-                             show={this.state.modalType === SecretsTable.UPDATE_SECRET_ACTION && this.state.showModal}
+                             open={this.state.modalType === SecretsTable.UPDATE_SECRET_ACTION && this.state.showModal}
                              onHide={this._hideModal.bind(this)}
                              secret={this.state.secret} />
             </div>

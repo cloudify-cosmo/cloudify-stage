@@ -128,8 +128,8 @@ export default class extends React.Component {
 
                 </DataTable>
 
-                <Confirm title='Are you sure you want to remove this plugin?'
-                         show={this.state.confirmDelete}
+                <Confirm content='Are you sure you want to remove this plugin?'
+                         open={this.state.confirmDelete}
                          onConfirm={this._deletePlugin.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
             </div>

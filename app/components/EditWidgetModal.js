@@ -65,14 +65,14 @@ export default class EditWidgetModal extends Component {
     }
 
     render() {
-        var {Modal, GenericField, Form,Message} = Stage.Basic;
+        var {Modal, ApproveButton, CancelButton, GenericField, Form, Message} = Stage.Basic;
 
         return (
-            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)}>
+            <Modal open={this.props.show}>
 
                 <Modal.Header>Configure Widget</Modal.Header>
 
-                <Modal.Body>
+                <Modal.Content>
                     <Form>
                         {
                             this.props.configDef.filter((config) => !config.hidden).map((config)=>{
@@ -94,11 +94,12 @@ export default class EditWidgetModal extends Component {
                             <Message>No configuration available for this widget</Message>
                         }
                     </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Modal.Approve/>
-                    <Modal.Cancel/>
-                </Modal.Footer>
+                </Modal.Content>
+
+                <Modal.Actions>
+                    <ApproveButton onClick={this.onApprove.bind(this)}/>
+                    <CancelButton onClick={this.onDeny.bind(this)} />
+                </Modal.Actions>
             </Modal>
         );
     }

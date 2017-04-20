@@ -155,18 +155,18 @@ export default class TenantsTable extends React.Component {
                 </DataTable>
 
 
-                <DeleteModal title={`Are you sure you want to delete tenant '${this.state.tenant.name}'?`}
-                             show={this.state.modalType === MenuAction.DELETE_TENANT_ACTION && this.state.showModal}
+                <DeleteModal content={`Are you sure you want to delete tenant '${this.state.tenant.name}'?`}
+                             open={this.state.modalType === MenuAction.DELETE_TENANT_ACTION && this.state.showModal}
                              onConfirm={this._deleteTenant.bind(this)}
                              onCancel={this._hideModal.bind(this)}/>
 
                 <UsersModal widget={this.props.widget} toolbox={this.props.toolbox}
-                            show={this.state.modalType === MenuAction.EDIT_USERS_ACTION && this.state.showModal}
+                            open={this.state.modalType === MenuAction.EDIT_USERS_ACTION && this.state.showModal}
                             onHide={this._hideModal.bind(this)}
                             tenant={this.state.tenant} users={this.state.users}/>
 
                 <GroupsModal widget={this.props.widget} toolbox={this.props.toolbox}
-                             show={this.state.modalType === MenuAction.EDIT_USER_GROUPS_ACTION && this.state.showModal}
+                             open={this.state.modalType === MenuAction.EDIT_USER_GROUPS_ACTION && this.state.showModal}
                              onHide={this._hideModal.bind(this)}
                              tenant={this.state.tenant} userGroups={this.state.userGroups}/>
             </div>

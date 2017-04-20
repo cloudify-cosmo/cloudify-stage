@@ -19,17 +19,17 @@ export default class UsersModal extends React.Component {
     }
 
     onApprove () {
-        this.refs.usersForm.submit();
+        this._submitUsers();
         return false;
     }
 
-    onDeny () {
+    onCancel () {
         this.props.onHide();
         return true;
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.show && nextProps.show) {
+        if (!this.props.open && nextProps.open) {
             this.setState({...UsersModal.initialState, users: nextProps.group.users});
         }
     }
@@ -56,7 +56,7 @@ export default class UsersModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form} = Stage.Basic;
+        var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
 
         var group = Object.assign({},{name:''}, this.props.group);
         var users = Object.assign({},{items:[]}, this.props.users);
@@ -64,24 +64,24 @@ export default class UsersModal extends React.Component {
         var options = _.map(users.items, item => { return {text: item.username, value: item.username, key: item.username} });
 
         return (
-            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+            <Modal open={this.props.open}>
                 <Modal.Header>
                     <Icon name="user"/> Add users to group {group.name}
                 </Modal.Header>
 
-                <Modal.Body>
-                    <Form onSubmit={this._submitUsers.bind(this)} errors={this.state.errors} ref="usersForm">
+                <Modal.Content>
+                    <Form loading={this.state.loading} errors={this.state.errors}>
                         <Form.Field>
                             <Form.Dropdown placeholder='Users' multiple selection options={options} name="users"
                                            value={this.state.users} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                     </Form>
-                </Modal.Body>
+                </Modal.Content>
 
-                <Modal.Footer>
-                    <Modal.Cancel/>
-                    <Modal.Approve label="Save" icon="user" className="green"/>
-                </Modal.Footer>
+                <Modal.Actions>
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} icon="user" color="green"/>
+                </Modal.Actions>
             </Modal>
         );
     }

@@ -88,8 +88,8 @@ export default class ClusterNodesList extends React.Component {
                 </DataTable>
 
 
-                <Confirm title='This action is irreversible. Separating from the cluster will leave the Cloudify Manager instance unusable.Are you sure?'
-                         show={this.state.confirmDelete}
+                <Confirm content='This action is irreversible. Separating from the cluster will leave the Cloudify Manager instance unusable.Are you sure?'
+                         open={this.state.confirmDelete}
                          onConfirm={this._removeFromCluster.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
 

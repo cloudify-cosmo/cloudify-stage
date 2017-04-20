@@ -28,7 +28,7 @@ export default class DeployModal extends React.Component {
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
-        show: PropTypes.bool.isRequired,
+        open: PropTypes.bool.isRequired,
         blueprints: PropTypes.object.isRequired,
         onHide: PropTypes.func
     };
@@ -38,17 +38,17 @@ export default class DeployModal extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.show && nextProps.show) {
+        if (!this.props.open && nextProps.open) {
             this.setState(DeployModal.initialState);
         }
     }
 
     onApprove () {
-        this.refs.deployForm.submit();
+        this._submitDeploy();
         return false;
     }
 
-    onDeny () {
+    onCancel () {
         this.props.onHide();
         return true;
     }
@@ -134,7 +134,7 @@ export default class DeployModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message, Popup} = Stage.Basic;
+        var {Modal, Icon, Form, Message, Popup, ApproveButton, CancelButton} = Stage.Basic;
 
         let blueprints = Object.assign({},{items:[]}, this.props.blueprints);
         let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -143,13 +143,13 @@ export default class DeployModal extends React.Component {
                                         [(input => !_.isNil(input.default)), 'name']);
 
         return (
-            <Modal show={this.props.show} onDeny={this.onDeny.bind(this)} onApprove={this.onApprove.bind(this)} loading={this.state.loading}>
+            <Modal open={this.props.open}>
                 <Modal.Header>
                     <Icon name="rocket"/> Create new deployment
                 </Modal.Header>
 
-                <Modal.Body>
-                    <Form onSubmit={this._submitDeploy.bind(this)} errors={this.state.errors} ref="deployForm">
+                <Modal.Content>
+                    <Form loading={this.state.loading} errors={this.state.errors}>
 
                         <Form.Field error={this.state.errors.deploymentName}>
                             <Form.Input name='deploymentName' placeholder="Deployment name"
@@ -209,12 +209,12 @@ export default class DeployModal extends React.Component {
                             })
                         }
                     </Form>
-                </Modal.Body>
+                </Modal.Content>
 
-                <Modal.Footer>
-                    <Modal.Cancel/>
-                    <Modal.Approve label="Deploy" icon="rocket" className="green"/>
-                </Modal.Footer>
+                <Modal.Actions>
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Deploy" icon="rocket" className="green"/>
+                </Modal.Actions>
             </Modal>
         );
     }

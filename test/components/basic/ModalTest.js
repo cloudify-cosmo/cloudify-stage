@@ -6,23 +6,28 @@ import React from 'react'
 import {shallow, mount} from 'enzyme'
 import {expect} from 'chai';
 import sinon from 'sinon';
-import Modal from '../../../app/components/basic/modal/Modal';
+import {Modal} from 'semantic-ui-react';
+import {CancelButton, ApproveButton} from '../../../app/components/basic/modal/ModalButtons';
 
 describe('(Component) Modal', () => {
 
     var wrapper;
+    global.requestAnimationFrame = () => {};
+    global.cancelAnimationFrame = () => {};
+    var approveCallback = sinon.spy();
+    var cancelCallback = sinon.spy();
 
     before(() => {
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Modal className="testModal">
+            <Modal className='testModal' open>
                 <Modal.Header>test header</Modal.Header>
-                <Modal.Body><form>test body</form></Modal.Body>
-                <Modal.Footer>
-                    <Modal.Cancel label="cancel" icon=""/>
-                    <Modal.Approve label="ok" icon="" className="green"/>
-                </Modal.Footer>
+                <Modal.Content><form>test body</form></Modal.Content>
+                <Modal.Actions>
+                    <CancelButton onClick={cancelCallback} />
+                    <ApproveButton onClick={approveCallback} color='green'/>
+                </Modal.Actions>
             </Modal>, { attachTo: div.get(0) }
         );
     });
@@ -31,20 +36,8 @@ describe('(Component) Modal', () => {
         expect(wrapper).to.exist;
     });
 
-    it('renders header', () => {
-        expect(wrapper.find('.testModal .header')).to.have.text('test header');
-    });
-
-    it('renders body', () => {
-        expect(wrapper.find('.testModal .content')).to.have.exactly(1).descendants('form');
-    });
-
-    it('renders footer', () => {
-        expect(wrapper.find('.testModal .actions')).to.have.exactly(2).descendants('.ui.button');
-    });
-
-    it('shows up the content', function() {
-        wrapper.setProps({show:true});
+    it('shows up modal', function() {
+        wrapper.setProps({open:true});
         this.timeout(500);
         this.retries(5);
         if ($('.confirmTest').parent().hasClass('active')) {
@@ -52,33 +45,26 @@ describe('(Component) Modal', () => {
         }
     });
 
+    it('renders header', () => {
+        expect($('.testModal .header').text()).to.be.equal('test header');
+    });
+
+    it('renders content', () => {
+        expect($('.testModal .content')).to.exist;
+    });
+
+    it('renders actions', () => {
+        expect($('.testModal .actions')).to.exist;
+    });
+
     it('clicks approve button', () => {
-        var cb = sinon.spy();
-        wrapper.setProps({onApprove:cb});
-        $(".testModal .ok").trigger( "click" );
-        expect(cb).to.have.been.calledOnce;
+        $('.testModal .actions .button.ok').trigger( 'click' );
+        expect(approveCallback).to.have.been.calledOnce;
     });
 
-    it('clicks deny button', () => {
-        var cb = sinon.spy();
-        wrapper.setProps({onDeny:cb});
-        $(".testModal .cancel").trigger( "click" );
-        expect(cb).to.have.been.calledOnce;
-    });
-
-    it('turns on loading mode', () => {
-        wrapper.setProps({loading:true});
-        expect(wrapper.find("form")).to.have.className('loading');
-        expect(wrapper.find(".ok.button")).to.have.className('disabled');
-        expect($('.testModal .ok.button').attr('disabled')).to.equal('disabled');
-    });
-
-    it('turns off loading mode', () => {
-        wrapper.setProps({loading:false});
-        expect(wrapper.find("form")).to.not.have.className('loading');
-        expect(wrapper.find(".ok.button")).to.not.have.className('loading');
-        expect(wrapper.find(".ok.button")).to.not.have.className('disabled');
-        expect($('.testModal .ok.button').attr('disabled')).to.be.empty;
+    it('clicks cancel button', () => {
+        $('.testModal .actions .button.cancel').trigger( 'click' );
+        expect(cancelCallback).to.have.been.calledOnce;
     });
 
     it('unmounts', () => {
@@ -89,7 +75,7 @@ describe('(Component) Modal', () => {
     /* Hide modal doesn't work in Enzyme, spent long time to check why but without success.
        Will come back to it in spare time.*/
     it('hide modal', () => {
-        wrapper.setProps({show:false});
+        wrapper.setProps({open:false});
         expect($('.ui.dimmer.active .ui.modal').length > 0).to.be.false;
     });
 
