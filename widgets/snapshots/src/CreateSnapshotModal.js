@@ -15,6 +15,8 @@ export default class CreateModal extends React.Component {
     static initialState = {
         loading: false,
         snapshotId: "",
+        includeMetrics: false,
+        includeCredentials: false,
         errors: {}
     }
 
@@ -43,6 +45,12 @@ export default class CreateModal extends React.Component {
 
         if (_.isEmpty(this.state.snapshotId)) {
             errors["snapshotId"]="Please provide snapshot id";
+        } else {
+            const URL_SAFE_CHARACTERS_RE = /^[0-9a-zA-Z\$\-\_\.\+\!\*\'\(\)\,]+$/;
+            if (!URL_SAFE_CHARACTERS_RE.test(this.state.snapshotId)) {
+                errors["snapshotId"] = "Please use safe characters. Letters, digits and the following " +
+                                       "special characters $-_.+!*'(), are allowed";
+            }
         }
 
         if (!_.isEmpty(errors)) {
@@ -55,7 +63,7 @@ export default class CreateModal extends React.Component {
 
         // Call create method
         var actions = new Actions(this.props.toolbox);
-        actions.doCreate(this.state.snapshotId).then(()=>{
+        actions.doCreate(this.state.snapshotId, this.state.includeMetrics, this.state.includeCredentials).then(()=>{
             this.props.toolbox.getContext().setValue(this.props.widget.id + 'createSnapshot',null);
             this.props.toolbox.getEventBus().trigger('snapshots:refresh');
             this.setState({loading: false, show: false});
@@ -88,6 +96,15 @@ export default class CreateModal extends React.Component {
                                             value={this.state.snapshotId} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
 
+                            <Form.Field>
+                                <Form.Checkbox label="Include metrics stored in InfluxDB" name="includeMetrics"
+                                               checked={this.state.includeMetrics} onChange={this._handleInputChange.bind(this)}/>
+                            </Form.Field>
+
+                            <Form.Field>
+                                <Form.Checkbox label="Include agent SSH keys (including those specified in uploaded blueprints)" name="includeCredentials"
+                                               checked={this.state.includeCredentials} onChange={this._handleInputChange.bind(this)}/>
+                            </Form.Field>
                         </Form>
                     </Modal.Body>
 
