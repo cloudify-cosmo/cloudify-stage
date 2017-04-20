@@ -63,7 +63,7 @@ export default class extends React.Component {
                                                            value={item.nodeStates.started}/>
                                             </div>
                                             <div className="column center aligned">
-                                                <NodeState icon="spinner" title="in progress" state="uninitialized or created" color="darkyellow"
+                                                <NodeState icon="spinner" title="in progress" state="uninitialized or created" color="yellow"
                                                            value={_.add(item.nodeStates.uninitialized, item.nodeStates.created)}/>
                                             </div>
                                             <div className="column center aligned">
