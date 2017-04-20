@@ -35,8 +35,11 @@ a:hover {
   .ui.left.menu.sidebar {
     z-index: 0;
     top: 55px;
-    //height: auto !important;
-    //bottom: 29px;
+    height: calc(100% - 55px) !important;
+  }
+
+  .ui.left.menu.sidebar.editSideBar {
+    height: calc(100% - 109px) !important;
   }
 
   .page {
@@ -49,17 +52,16 @@ a:hover {
     }
   }
 
-  .ui.segment.addButtonContainer {
-    position: absolute;
-    bottom: 45px;
-    left: 0;
-    right: 0;
-  }
-
-
   .ui.breadcrumb .section:not(.active) {
     cursor: pointer;
   }
+}
+
+.ui.segment.addPageContainer {
+  position:fixed;
+  left: 0px;
+  bottom: 0px;
+  width: 13rem;
 }
 
 .grid-stack > .grid-stack-item.widget > .grid-stack-item-content {
