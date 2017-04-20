@@ -516,6 +516,13 @@ code.hljs {
     text-decoration: none !important;
   }
 
+  .ui.vertical.menu .menu .item {
+    color: black;
+  }
+
+  .ui.vertical.menu .menu .item:hover {
+    background: rgba(0,0,0,.03);
+  }
 }
 
 
