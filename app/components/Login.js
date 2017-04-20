@@ -46,7 +46,7 @@ export default class Login extends Component {
                 <div className="logo">
                 </div>
 
-                <div className='loginContainer'>
+                <div className={`loginContainer ${isHeaderTextPresent?'loginContainerExtended':''}`} >
 
                     {
                         isHeaderTextPresent &&

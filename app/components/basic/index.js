@@ -18,6 +18,7 @@ import GenericField from './GenericField';
 import Form from './form/Form';
 import InputFile from './InputFile';
 import InputDate from './InputDate';
+import InputDateRange from './InputDateRange';
 import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header,
          Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image} from 'semantic-ui-react'
 import Graphs from './graphs';
@@ -66,5 +67,6 @@ export {
     NodesTree,
     SplitterLayout,
     Table,
-    Header
+    Header,
+    InputDateRange
 };

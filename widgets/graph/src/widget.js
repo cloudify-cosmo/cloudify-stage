@@ -58,14 +58,16 @@ Stage.defineWidget({
     fetchParams: function(widget, toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId') || widget.configuration.deploymentId;
 
-        let timeStart = toolbox.getContext().getValue('time_start');
+        let timeFilter = toolbox.getContext().getValue('timeFilter');
+
+        let timeStart = timeFilter && timeFilter.start;
         timeStart = timeStart ? `${moment(timeStart).unix()}s` : widget.configuration.from;
 
-        let timeEnd = toolbox.getContext().getValue('time_end');
+        let timeEnd = timeFilter && timeFilter.end;
         timeEnd = timeEnd ? `${moment(timeEnd).unix()}s` : widget.configuration.to;
 
-        let timeResolutionValue = toolbox.getContext().getValue('time_resolution');
-        let timeResolutionUnit = toolbox.getContext().getValue('time_unit');
+        let timeResolutionValue = timeFilter && timeFilter.resolution;
+        let timeResolutionUnit = timeFilter && timeFilter.unit;
         let timeGroup = timeResolutionValue && timeResolutionUnit
             ? `${timeResolutionValue}${timeResolutionUnit}`
             : `${widget.configuration.resolution}${widget.configuration.unit}`;

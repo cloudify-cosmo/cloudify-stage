@@ -24,36 +24,38 @@ Stage.defineWidget({
     fetchParams: function(widget, toolbox) {
         var params = {};
 
-        let deploymentId = toolbox.getContext().getValue('deploymentId') || toolbox.getContext().getValue('event_deploymentId');
+        let eventFilter = toolbox.getContext().getValue('eventFilter');
+
+        let deploymentId = toolbox.getContext().getValue('deploymentId') || eventFilter && eventFilter.deploymentId;
         if (!_.isEmpty(deploymentId)) {
             params.deployment_id = deploymentId;
         }
 
-        let blueprintId = toolbox.getContext().getValue('blueprintId') || toolbox.getContext().getValue('event_blueprintId');
+        let blueprintId = toolbox.getContext().getValue('blueprintId') || eventFilter && eventFilter.blueprintId;
         if (!_.isEmpty(blueprintId)) {
             params.blueprint_id = blueprintId;
         }
 
-        let messageText = toolbox.getContext().getValue('event_messageText');
+        let messageText = eventFilter && eventFilter.messageText;
         if (!_.isEmpty(messageText)) {
             params.message = messageText;
         }
 
-        let logLevel = toolbox.getContext().getValue('event_logLevel');
+        let logLevel = eventFilter && eventFilter.logLevel;
         if (!_.isEmpty(logLevel) && widget.configuration.showLogs) {
             params.level = logLevel;
         }
 
-        let eventType = toolbox.getContext().getValue('event_eventType');
+        let eventType = eventFilter && eventFilter.eventType;
         if (!_.isEmpty(eventType)) {
             params.event_type = eventType;
         }
 
-        let timeStart = toolbox.getContext().getValue('event_timeStart');
-        let timeEnd = toolbox.getContext().getValue('event_timeEnd');
+        let timeStart = eventFilter && eventFilter.timeStart;
+        let timeEnd = eventFilter && eventFilter.timeEnd;
         if (timeStart || timeEnd) {
-            timeStart = timeStart?timeStart.toISOString():"";
-            timeEnd = timeEnd?timeEnd.toISOString():"";
+            timeStart = timeStart?timeStart.utc().toISOString():"";
+            timeEnd = timeEnd?timeEnd.utc().toISOString():"";
             params._range = `@timestamp,${timeStart},${timeEnd}`;
         }
 
