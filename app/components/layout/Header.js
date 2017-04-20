@@ -69,8 +69,8 @@ export default class Header extends Component {
                                  onHide={()=> this.setState({showMaintenanceModal: false})}/>
                 <ConfigureModal show={this.state.showConfigureModal}
                                 onHide={()=> this.setState({showConfigureModal: false})}/>
-                <Confirm title={`Are you sure you want to reset application screens to default?`}
-                         show={this.state.showResetConfirm}
+                <Confirm content={`Are you sure you want to reset application screens to default?`}
+                         open={this.state.showResetConfirm}
                          onConfirm={()=>{this.setState({showResetConfirm: false}); this.props.onResetTemplate()}}
                          onCancel={()=>this.setState({showResetConfirm: false})} />
             </div>

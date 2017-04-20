@@ -41,6 +41,10 @@ Stage.defineWidget({
     },
 
     render: function(widget,data,error,toolbox) {
+        if (_.isEmpty(data)) {
+            return <Stage.Basic.Loading/>;
+        }
+
         return (
             <DeploymentActionButtons deployment={data} widget={widget} toolbox={toolbox} />
         );

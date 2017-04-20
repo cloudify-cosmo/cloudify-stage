@@ -21,7 +21,7 @@ export default class WidgetDataFetcher {
             var output = data;
             if (!_.isString(this._widget.definition.fetchUrl)) {
                 output = {};
-                let keys = _.keysIn(url);
+                let keys = _.keysIn(this._widget.definition.fetchUrl);
                 for (var i=0; i < data.length; i++) {
                     output[keys[i]] = data[i];
                 }
