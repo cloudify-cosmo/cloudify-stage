@@ -113,6 +113,26 @@ export default class WidgetDynamicContent extends Component {
 
             promises.waitForPromise
                 .then((data)=> {
+
+                    //Fixes sort issue - add grid params to metadata to cheat shouldComponentUpdate
+                    if (data) {
+                        var metadata = [];
+                        if (data.metadata) {
+                            metadata = [data.metadata];
+                        } else {
+                            //Check for multiple fetches
+                            metadata = _.filter(data, item => {
+                                if (item.metadata) {
+                                    return item.metadata;
+                                }
+                            });
+                        }
+
+                        _.each(metadata, item => {
+                            item.gridParams = this._paramsHandler.getGridParams();
+                        });
+                    }
+
                     console.log(`Widget '${this.props.widget.name}' data fetched`);
                     this._afterFetch();
                 })
@@ -193,20 +213,19 @@ export default class WidgetDynamicContent extends Component {
     }
 
     renderReact () {
-        var widget = 'Loading...';
+        if (this.state.error) {
+            return <ErrorMessage error={this.state.error}/>;
+        }
+
         if (this.props.widget.definition && this.props.widget.definition.render) {
             try {
-                if (this.props.data.error) {
-                    return <ErrorMessage error={this.props.data.error}/>;
-                }
-
-                widget = this.props.widget.definition.render(this.props.widget,this.props.data.data,this.props.data.error,this._getToolbox());
+                return this.props.widget.definition.render(this.props.widget,this.props.data.data,this.props.data.error,this._getToolbox());
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
                 return <ErrorMessage error={`Error rendering widget: ${e.message}`}/>;
             }
         }
-        return widget;
+        return <div/>;
     }
 
     attachEvents(container) {
@@ -229,6 +248,7 @@ export default class WidgetDynamicContent extends Component {
             this.props.widget.definition.postRender($(container),this.props.widget,this.props.data.data,this._getToolbox());
         }
     }
+
     render() {
         return (
             <div>

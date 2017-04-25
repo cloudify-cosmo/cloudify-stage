@@ -13,7 +13,7 @@ import TableFilter from './TableFilter';
 import TableSearch from './TableSearch';
 import Pagination from '../pagination/Pagination';
 
-export default class GridTable extends Component {
+export default class DataTable extends Component {
 
     static Row = TableRow;
     static Column = TableColumn;

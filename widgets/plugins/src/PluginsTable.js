@@ -94,12 +94,13 @@ export default class extends React.Component {
                            className="pluginsTable">
 
                     <DataTable.Column label="Id" name="id" width="20%"/>
-                    <DataTable.Column label="Package name" name="package_name" width="15%"/>
+                    <DataTable.Column label="Package name" name="package_name" width="10%"/>
                     <DataTable.Column label="Package version" name="package_version" width="10%"/>
                     <DataTable.Column label="Supported platform" name="supported_platform" width="10%"/>
                     <DataTable.Column label="Distribution" name="distribution" width="10%"/>
                     <DataTable.Column label="Distribute release" name="distribution_release" width="10%"/>
-                    <DataTable.Column label="Uploaded at" name="uploaded_at" width="15%"/>
+                    <DataTable.Column label="Uploaded at" name="uploaded_at" width="10%"/>
+                    <DataTable.Column label="Creator" name='created_by' width="10%"/>
                     <DataTable.Column width="10%"/>
 
                     {
@@ -113,6 +114,7 @@ export default class extends React.Component {
                                     <DataTable.Data>{item.distribution}</DataTable.Data>
                                     <DataTable.Data>{item.distribution_release}</DataTable.Data>
                                     <DataTable.Data>{item.uploaded_at}</DataTable.Data>
+                                    <DataTable.Data>{item.created_by}</DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
                                         <i className="download icon link bordered" title="Download" onClick={this._downloadPlugin.bind(this,item)}></i>
                                         <i className="trash icon link bordered" title="Delete" onClick={this._deletePluginConfirm.bind(this,item)}></i>

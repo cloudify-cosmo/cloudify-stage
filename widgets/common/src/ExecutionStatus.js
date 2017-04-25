@@ -17,7 +17,7 @@ export default class ExecutionStatus extends React.Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
         onCancelExecution: PropTypes.func.isRequired,
-        showInactiveAsLink: PropTypes.bool.isRequired
+        showInactiveAsLink: PropTypes.bool
     };
 
     _actionClick(event, {name}) {

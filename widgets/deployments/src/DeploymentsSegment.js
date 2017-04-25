@@ -40,7 +40,7 @@ export default class extends React.Component {
                             <DataSegment.Item key={item.id} selected={item.isSelected}
                                           onClick={()=>this.props.onSelectDeployment(item)}>
                                 <div className="ui grid">
-                                    <div className="four wide center aligned column rightDivider">
+                                    <div className="three wide center aligned column rightDivider">
                                         <h3 className="ui icon header verticalCenter">{item.id}</h3>
                                     </div>
                                     <div className="two wide column">
@@ -54,6 +54,10 @@ export default class extends React.Component {
                                     <div className="two wide column">
                                         <h5 className="ui icon header">Updated</h5>
                                         <p>{item.updated_at}</p>
+                                    </div>
+                                    <div className="two wide column">
+                                        <h5 className="ui icon header">Creator</h5>
+                                        <p>{item.created_by}</p>
                                     </div>
                                     <div className="four wide column">
                                         <h5 className="ui icon header">Nodes ({item.nodeSize})</h5>
@@ -77,7 +81,7 @@ export default class extends React.Component {
                                         </div>
                                     </div>
 
-                                    <div className="two wide column action">
+                                    <div className="column action">
                                         {
                                             _.isEmpty(item.executions)
                                             ?

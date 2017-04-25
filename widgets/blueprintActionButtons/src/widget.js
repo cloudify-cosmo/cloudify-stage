@@ -37,6 +37,11 @@ Stage.defineWidget({
     },
 
     render: function(widget,data,error,toolbox) {
+        if (_.isEmpty(data)) {
+            return <Stage.Basic.Loading/>;
+        }
+
+
         return (
             <BlueprintActionButtons blueprint={data} widget={widget} toolbox={toolbox} />
         );
