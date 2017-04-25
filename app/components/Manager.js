@@ -24,7 +24,7 @@ export default class Manager extends Component {
             <Popup wide hoverable>
                 <Popup.Trigger><div className="managerMenu">
                     {this.renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
-                    <span>{this.props.manager.ip} (v{this.props.manager.serverVersion})</span>
+                    <span>{this.props.manager.ip} <span className="managerVersion">(v{this.props.manager.serverVersion})</span></span>
                 </div></Popup.Trigger>
 
                 <Services services={this.props.manager.services}/>

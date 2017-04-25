@@ -17,12 +17,12 @@ export default class SideBar extends Component {
     render() {
         return (
             <div>
-                <div className={`ui visible left vertical sidebar menu small inverted ${this.props.isEditMode?'editSideBar':''}`}>
+                <div className={`ui visible left vertical sidebar menu small basic ${this.props.isEditMode?'editSideBar':''}`}>
                     <Pages pageId={this.props.pageId} isEditMode={this.props.isEditMode}/>
                 </div>
                 {
                     this.props.isEditMode &&
-                    <div className="ui center aligned basic segment inverted addPageContainer">
+                    <div className="ui center aligned basic segment addPageContainer">
                         <AddPageButton/>
                     </div>
                 }
