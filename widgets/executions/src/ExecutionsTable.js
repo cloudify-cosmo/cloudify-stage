@@ -71,10 +71,12 @@ export default class extends React.Component {
                                  show={fieldsToShow.indexOf("Deployment") >= 0 && !this.props.data.deploymentId}/>
                     <DataTable.Column label="Workflow" name="workflow_id" width="15%"
                                  show={fieldsToShow.indexOf("Workflow") >= 0}/>
-                    <DataTable.Column label="Id" name="id" width="20%"
+                    <DataTable.Column label="Id" name="id" width="15%"
                                  show={fieldsToShow.indexOf("Id") >= 0}/>
                     <DataTable.Column label="Created" name="created_at" width="10%"
                                  show={fieldsToShow.indexOf("Created") >= 0}/>
+                    <DataTable.Column label="Creator" name='created_by' width="5%"
+                                      show={fieldsToShow.indexOf("Creator") >= 0}/>
                     <DataTable.Column label="IsSystem" name="is_system_workflow" width="5%"
                                  show={fieldsToShow.indexOf("IsSystem") >= 0}/>
                     <DataTable.Column label="Params" name="parameters" width="5%"
@@ -91,6 +93,7 @@ export default class extends React.Component {
                                     <DataTable.Data>{item.workflow_id}</DataTable.Data>
                                     <DataTable.Data>{item.id}</DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
+                                    <DataTable.Data>{item.created_by}</DataTable.Data>
                                     <DataTable.Data><Checkmark value={item.is_system_workflow}/></DataTable.Data>
                                     <DataTable.Data>
                                         <Overlay>

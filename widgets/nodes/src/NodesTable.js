@@ -60,9 +60,10 @@ export default class NodesTable extends React.Component {
                     <DataTable.Column label="Type" name="type" width="20%"/>
                     <DataTable.Column label="Blueprint" name="blueprint_id" width="10%" show={_.isEmpty(this.props.data.blueprintId)} />
                     <DataTable.Column label="Deployment" name="deployment_id" width="10%" show={_.isEmpty(this.props.data.deploymentId)} />
-                    <DataTable.Column label="Contained in" name="host_id" width="10%"/>
-                    <DataTable.Column label="Connected to" width="10%"/>
-                    <DataTable.Column label="# Instances" name="number_of_instances" width="10%"/>
+                    <DataTable.Column label="Contained in" name="host_id" width="7%"/>
+                    <DataTable.Column label="Connected to" width="7%"/>
+                    <DataTable.Column label="Creator" name='created_by' width="7%"/>
+                    <DataTable.Column label="# Instances" name="number_of_instances" width="9%"/>
                     <DataTable.Column label="Groups" width="10%" show={!_.isEmpty(this.props.data.blueprintId) ||
                                                                    !_.isEmpty(this.props.data.deploymentId)} />
 
@@ -78,6 +79,7 @@ export default class NodesTable extends React.Component {
                                         <DataTable.Data>{node.deployment_id}</DataTable.Data>
                                         <DataTable.Data>{node.containedIn}</DataTable.Data>
                                         <DataTable.Data>{node.connectedTo}</DataTable.Data>
+                                        <DataTable.Data>{node.created_by}</DataTable.Data>
                                         <DataTable.Data><div className="ui green horizontal label">{node.numberOfInstances}</div></DataTable.Data>
                                         <DataTable.Data>{node.groups}</DataTable.Data>
                                     </DataTable.Row>

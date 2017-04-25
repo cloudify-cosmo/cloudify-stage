@@ -41,9 +41,10 @@ export default class extends React.Component {
 
                 <DataTable.Column label="Name" name="id" width="25%"/>
                 <DataTable.Column label="Blueprint" name="blueprint_id" width="25%"/>
-                <DataTable.Column label="Created" name="created_at" width="18%"/>
-                <DataTable.Column label="Updated" name="updated_at" width="18%"/>
-                <DataTable.Column width="14%"/>
+                <DataTable.Column label="Created" name="created_at" width="15%"/>
+                <DataTable.Column label="Updated" name="updated_at" width="15%"/>
+                <DataTable.Column label="Creator" name='created_by' width="10%"/>
+                <DataTable.Column width="10%"/>
 
                 {
                     this.props.data.items.map((item)=>{
@@ -55,6 +56,7 @@ export default class extends React.Component {
                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
+                                <DataTable.Data>{item.created_by}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
                                     {
                                         _.isEmpty(item.executions)

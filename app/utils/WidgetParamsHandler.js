@@ -113,4 +113,8 @@ export default class WidgetParamsHandler {
 
         return params;
     }
+
+    getGridParams() {
+        return this.fetchParams.gridParams;
+    }
 }

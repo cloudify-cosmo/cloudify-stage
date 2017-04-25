@@ -79,7 +79,7 @@ Stage.defineWidget({
         let blueprintId = CONTEXT_PARAMS['blueprint_id'], deploymentId = CONTEXT_PARAMS['deployment_id'];
         let formattedData = Object.assign({}, data, {
             items: _.map (data.items, (item) => {
-                var id = item.execution_id + item.timestamp;
+                var id = item.execution_id + item.message + item.timestamp;
                 return Object.assign({}, item, {
                     id: id,
                     timestamp: Stage.Utils.formatTimestamp(item.timestamp),

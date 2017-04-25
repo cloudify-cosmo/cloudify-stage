@@ -19,7 +19,7 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
-    fetchUrl: '[manager]/snapshots?_include=id,created_at,status[params]',
+    fetchUrl: '[manager]/snapshots?_include=id,created_at,status,created_by[params]',
 
     render: function(widget,data,error,toolbox) {
 

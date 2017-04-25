@@ -38,9 +38,10 @@ export default class BlueprintsTable extends React.Component{
                        className="blueprintsTable">
 
                 <DataTable.Column label="Name" name="id" width="30%"/>
-                <DataTable.Column label="Created" name="created_at" width="20%"/>
-                <DataTable.Column label="Updated" name="updated_at" width="20%"/>
-                <DataTable.Column label="# Deployments" width="20%"/>
+                <DataTable.Column label="Created" name="created_at" width="15%"/>
+                <DataTable.Column label="Updated" name="updated_at" width="15%"/>
+                <DataTable.Column label="Creator" name='created_by' width="15%"/>
+                <DataTable.Column label="# Deployments" width="15%"/>
                 <DataTable.Column width="10%"/>
 
                 {
@@ -50,6 +51,7 @@ export default class BlueprintsTable extends React.Component{
                                 <DataTable.Data><Image src={`/ba/image/${item.id}`} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
+                                <DataTable.Data>{item.created_by}</DataTable.Data>
                                 <DataTable.Data><div className="ui green horizontal label">{item.depCount}</div></DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
                                     <i className="rocket icon link bordered" title="Create deployment" onClick={(event)=>{event.stopPropagation();this.props.onCreateDeployment(item)}}></i>

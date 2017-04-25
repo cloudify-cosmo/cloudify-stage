@@ -58,9 +58,14 @@ export default class BlueprintsCatalog extends React.Component{
                                 </Grid.Row>
 
                                 <Grid.Row className="noPadded">
+                                    <Grid.Column width="7"><h5 className="ui icon header">Creator</h5></Grid.Column>
+                                    <Grid.Column width="9">{item.created_by}</Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row className="noPadded">
                                     <Grid.Column width="7"><h5 className="ui icon header"># Deployments</h5></Grid.Column>
                                     <Grid.Column width="9"><Label color="green" horizontal>{item.depCount}</Label></Grid.Column>
                                 </Grid.Row>
+
                             </Grid>
 
                             <Grid.Column width="16">
