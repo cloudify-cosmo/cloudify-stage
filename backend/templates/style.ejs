@@ -78,3 +78,21 @@ div.splashPage.active div#loader {
         transform: rotate(360deg);
     }
 }
+
+.main .sidebar.ui.left.menu{
+  background-color: <%= sidebarColor %>;
+}
+
+.main .sidebar.ui.menu .item {
+  color: <%= sidebarTextColor %>;
+}
+
+.main .sidebar.ui.vertical.menu .active.item,
+.main .sidebar.ui.menu .link.item:hover{
+  background-color: <%= sideBarHoverActiveColor %>;
+  color: <%= sidebarTextColor %>;
+}
+
+.main .addPageContainer.ui.basic.segment {
+    background-color: <%= sidebarColor %>;
+}

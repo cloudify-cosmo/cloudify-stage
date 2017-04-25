@@ -1,3 +1,4 @@
+
 body {
 }
 
@@ -32,10 +33,13 @@ a:hover {
   //bottom: 30px;
   top: 55px;
 
-  .ui.left.menu.sidebar {
-    z-index: 0;
-    top: 55px;
-    height: calc(100% - 55px) !important;
+
+  .sidebar {
+    &.ui.left.menu{
+      z-index: 0;
+      top: 55px;
+      height: calc(100% - 55px) !important;
+    }
   }
 
   .ui.left.menu.sidebar.editSideBar {
@@ -332,6 +336,10 @@ a:hover {
   i + span {
     vertical-align: middle;
   }
+}
+
+.managerVersion {
+  font-size: 0.8em;
 }
 
 .managerMenu:hover {

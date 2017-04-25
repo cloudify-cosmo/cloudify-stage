@@ -8,7 +8,7 @@ Stage.defineWidget({
     description: 'Number of deployments',
     initialWidth: 2,
     initialHeight: 8,
-    color : "violet",
+    color : "green",
     showHeader: false,
     isReact: true,
     initialConfiguration: [
