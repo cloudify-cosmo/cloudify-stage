@@ -63,6 +63,26 @@ export default class extends React.Component {
         });
     }
 
+    _forceDeleteDeployment() {
+        this._hideModal();
+
+        if (!this.state.deployment) {
+            this._handleError('Something went wrong, no deployment was selected for delete');
+            return;
+        }
+
+        this.props.toolbox.loading(true);
+
+        var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        actions.doForceDelete(this.state.deployment).then(() => {
+            this.props.toolbox.getEventBus().trigger('deployments:refresh');
+            this.props.toolbox.loading(false);
+        }).catch((err) => {
+            this._handleError(err.message);
+            this.props.toolbox.loading(false);
+        });
+    }
+
     _cancelExecution(execution, action) {
         let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
         actions.doCancel(execution, action).then(() => {
@@ -122,6 +142,13 @@ export default class extends React.Component {
                 <Confirm content={`Are you sure you want to remove deployment ${this.state.deployment.id}?`}
                          open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
                          onConfirm={this._deleteDeployment.bind(this)}
+                         onCancel={this._hideModal.bind(this)} />
+
+                <Confirm content={`Its recommended to first run uninstall to stop the live nodes, and then run delete.
+                                   Force delete will ignore any existing live nodes.
+                                   Are you sure you want to ignore the live nodes and delete the deployment ${this.state.deployment.id}?`}
+                         open={this.state.modalType === MenuAction.FORCE_DELETE_ACTION && this.state.showModal}
+                         onConfirm={this._forceDeleteDeployment.bind(this)}
                          onCancel={this._hideModal.bind(this)} />
 
                 <ExecuteDeploymentModal
