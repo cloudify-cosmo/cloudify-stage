@@ -15,6 +15,10 @@ class DeploymentActions {
         return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`);
     }
 
+    doForceDelete(deployment) {
+        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`, {ignore_live_nodes: 'true'});
+    }
+
     doCancel(execution,action) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
             'deployment_id': execution.deployment_id,

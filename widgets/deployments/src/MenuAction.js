@@ -6,6 +6,7 @@ export default class MenuAction extends React.Component {
 
     static EDIT_ACTION='edit';
     static DELETE_ACTION='delete';
+    static FORCE_DELETE_ACTION='forceDelete';
     static WORKFLOW_ACTION='workflow';
 
     _actionClick(workflowAction, proxy, {name}) {
@@ -37,8 +38,10 @@ export default class MenuAction extends React.Component {
                     </Menu.Item>
                     <Menu.Item icon='edit' content='Edit' name={MenuAction.EDIT_ACTION}
                                    onClick={this._actionClick.bind(this, false)}/>
-                    <Menu.Item icon='trash' content='Delete' name={MenuAction.DELETE_ACTION}
+                    <Menu.Item icon='trash outline' content='Delete' name={MenuAction.DELETE_ACTION}
                                    onClick={this._actionClick.bind(this, false)}/>
+                    <Menu.Item icon='trash' content='Force Delete' name={MenuAction.FORCE_DELETE_ACTION}
+                               onClick={this._actionClick.bind(this, false)}/>
                 </Menu>
             </PopupMenu>
         );
