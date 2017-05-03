@@ -4,7 +4,7 @@
     "user": "initial-template",
     "customer": "initial-template-customer"
   },
-  "singleManager": false,
+  "singleManager": true,
   "whiteLabel": {
     "enabled": false,
     "logoUrl": "/app/images/Cloudify-icon.png",

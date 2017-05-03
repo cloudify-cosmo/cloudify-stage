@@ -5,24 +5,30 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "db-migrate": "node migration up",
+    "db-migrate-status": "node migration status",
+    "db-migrate-reset": "node migration reset",
+    "db-migrate-down-to": "node migration downTo"
   },
   "author": "",
   "license": "",
   "dependencies": {
     "body-parser": "^1.16.1",
-    "express": "^4.14.0",
+    "decompress": "^4.0.0",
     "ejs": "^2.5.6",
+    "express": "^4.14.0",
+    "fs-extra": "^2.0.0",
     "influx": "^3.5.0",
     "lodash": "^4.17.4",
     "log4js": "^1.1.0",
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
+    "pify": "^2.3.0",
     "request": "^2.79.0",
-    "sequelize": "^3.30.2",
     "sanitize-filename": "^1.6.1",
-    "decompress": "^4.0.0",
-    "fs-extra": "^2.0.0",
-    "pify": "^2.3.0"
+    "sequelize": "^3.30.2",
+    "sequelize-cli": "^2.7.0",
+    "umzug": "^1.12.0"
   }
 }
