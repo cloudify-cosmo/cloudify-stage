@@ -78,7 +78,6 @@ export default class app{
     }
 
     static start (store) {
-//history.listen(location => analyticsService.track(location.pathname))
         const history = syncHistoryWithStore(browserHistory, store);
 
         ReactDOM.render(
