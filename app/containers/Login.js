@@ -10,11 +10,18 @@ import Consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
     var configIp = _.get(state.config,'manager.ip'); // Default Ip via configuration
-    var savedIp = state.manager.ip; // Saved ip (user last logged in to this ip)
-    var ip = savedIp; // First attempt to use the saved ip
-    if (_.isEmpty(ip)) {
-        ip = configIp; // If its empty use config ip
+
+    var ip;
+    if (_.get(state.config,'app.singleManager')) {
+        ip = configIp;
+    } else {
+        var savedIp = state.manager.ip; // Saved ip (user last logged in to this ip)
+        ip = savedIp; // First attempt to use the saved ip
+        if (_.isEmpty(ip)) {
+            ip = configIp; // If its empty use config ip
+        }
     }
+
     if (_.isEmpty(ip)) {
         ip = window.location.hostname; // If this is empty too, grab the same ip as the UI (installed on manager machine by default)
     }
