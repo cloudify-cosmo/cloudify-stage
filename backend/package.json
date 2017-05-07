@@ -8,6 +8,7 @@
     "start": "node server.js",
     "db-migrate": "node migration up",
     "db-migrate-status": "node migration status",
+    "db-migrate-current" : "node migration current",
     "db-migrate-reset": "node migration reset",
     "db-migrate-down-to": "node migration downTo"
   },
