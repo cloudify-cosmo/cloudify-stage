@@ -16,9 +16,11 @@ var options = _.assign({
             min: 0,
             idle: 10000
         },
-        logging: function(message) {
+        logging: false
+
+        /*function(message) {
             logger.debug(message);
-        }
+        }*/
     },config.app.db.options);
 
 var sequelize = new Sequelize(config.app.db.url,options);

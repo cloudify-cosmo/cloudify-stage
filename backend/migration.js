@@ -83,6 +83,13 @@ function cmdMigrate() {
     return umzug.up();
 }
 
+function getCurrMigration() {
+    return umzug.executed()
+        .then((executed) => {
+            return Promise.resolve(executed.length > 0 ? executed[0].file : '<NO_MIGRATIONS>');
+        });
+}
+
 
 function cmdDownTo(migrationName) {
     if (!migrationName || migrationName === '') {
@@ -114,51 +121,67 @@ function cmdReset() {
     return umzug.down({ to: 0 });
 }
 
-const cmd = process.argv[2].trim();
-var executedCmd;
+function handleCommand(cmd) {
+    var executedCmd;
 
-logger.info(`${ cmd.toUpperCase() } BEGIN`);
+    logger.info(`${ cmd.toUpperCase() } BEGIN`);
 
-switch(cmd) {
-    case 'status':
-        executedCmd = cmdStatus();
-        break;
+    switch(cmd) {
+        case 'status':
+            executedCmd = cmdStatus();
+            break;
 
-    case 'up':
-    case 'migrate':
-        executedCmd = cmdMigrate();
-        break;
+        case 'up':
+        case 'migrate':
+            executedCmd = cmdMigrate();
+            break;
 
-    case 'downTo':
-        var downToMigration = process.argv[3].trim();
-        executedCmd = cmdDownTo(downToMigration);
-        break;
+        case 'downTo':
+            var downToMigration = process.argv[3].trim();
+            executedCmd = cmdDownTo(downToMigration);
+            break;
 
-    case 'reset':
-        executedCmd = cmdReset();
-        break;
-    default:
-        logger.error(`invalid cmd: ${ cmd }`);
-        process.exit(1);
+        case 'reset':
+            executedCmd = cmdReset();
+            break;
+        default:
+            logger.error(`invalid cmd: ${ cmd }`);
+            process.exit(1);
+    }
+
+    executedCmd
+        .then((result) => {
+            const doneStr = `${ cmd.toUpperCase() } DONE`;
+            logger.info(doneStr);
+            logger.info("=".repeat(doneStr.length));
+        })
+        .catch(err => {
+            const errorStr = `${ cmd.toUpperCase() } ERROR`;
+            logger.error(errorStr);
+            logger.error("=".repeat(errorStr.length));
+            logger.error(err);
+            logger.error("=".repeat(errorStr.length));
+        })
+        .then(() => {
+            if (cmd !== 'status' && cmd !== 'reset-hard') {
+                return cmdStatus()
+            }
+            return Promise.resolve();
+        })
+        .then(() => process.exit(0));
 }
 
-executedCmd
-    .then((result) => {
-        const doneStr = `${ cmd.toUpperCase() } DONE`;
-        logger.info(doneStr);
-        logger.info("=".repeat(doneStr.length));
-    })
-    .catch(err => {
-        const errorStr = `${ cmd.toUpperCase() } ERROR`;
-        logger.error(errorStr);
-        logger.error("=".repeat(errorStr.length));
-        logger.error(err);
-        logger.error("=".repeat(errorStr.length));
-    })
-    .then(() => {
-        if (cmd !== 'status' && cmd !== 'reset-hard') {
-            return cmdStatus()
-        }
-        return Promise.resolve();
-    })
-    .then(() => process.exit(0));
+
+const cmd = process.argv[2].trim();
+
+// Make an exception because we dont want all the printout around it
+if (cmd === 'current') {
+    getCurrMigration()
+        .then(current => {
+            console.log(current);
+            process.exit(0)
+        });
+} else {
+    handleCommand(cmd);
+}
+
