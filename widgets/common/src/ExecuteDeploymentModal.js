@@ -9,12 +9,21 @@ export default class ExecuteDeploymentModal extends React.Component {
     constructor(props,context) {
         super(props,context);
 
-        this.state = ExecuteDeploymentModal.initialState;
+        this.state = ExecuteDeploymentModal.initialState(props);
     }
 
-    static initialState = {
-        errors: {},
-        loading: false
+    static initialState = (props) => {
+
+        var params = {};
+        _.each(props.workflow.parameters,(param, name)=>{
+            params[name] = Stage.Common.JsonUtils.stringify(param.default);
+        })
+
+        return {
+            errors: {},
+            loading: false,
+            params
+        }
     }
 
     static propTypes = {
@@ -27,7 +36,7 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            this.setState(ExecuteDeploymentModal.initialState);
+            this.setState(ExecuteDeploymentModal.initialState(this.props));
         }
     }
 
@@ -49,15 +58,8 @@ export default class ExecuteDeploymentModal extends React.Component {
 
         this.setState({loading: true});
 
-        var params = {};
-
-        $(this.refs.executeForm).find('[name=executeInput]').each((index,input)=>{
-            var input = $(input);
-            params[input.data('name')] = input.val();
-        });
-
         var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-        actions.doExecute(this.props.deployment, this.props.workflow, params).then(()=>{
+        actions.doExecute(this.props.deployment, this.props.workflow, this.state.params).then(()=>{
             this.setState({loading: false});
             this.props.onHide();
             this.props.toolbox.getEventBus().trigger('executions:refresh');
@@ -66,8 +68,12 @@ export default class ExecuteDeploymentModal extends React.Component {
         })
     }
 
+    handleInputChange(event, field) {
+        this.setState({params: {...this.state.params, ...Stage.Basic.Form.fieldNameValue(field)}});
+    }
+
     render() {
-        var {Modal, Icon, Form, Message, ApproveButton, CancelButton} = Stage.Basic;
+        var {Modal, Icon, Form, Message, Input, ApproveButton, CancelButton} = Stage.Basic;
 
         var workflow = Object.assign({},{name:"", parameters:[]}, this.props.workflow);
 
@@ -90,8 +96,7 @@ export default class ExecuteDeploymentModal extends React.Component {
                                 return (
                                     <Form.Field key={name}>
                                         <label title={parameter.description || name }>{name}</label>
-                                        <input name='executeInput' data-name={name} type="text"
-                                               defaultValue={Stage.Common.JsonUtils.stringify(parameter.default)}/>
+                                        <Input name={name} value={this.state.params[name]} onChange={this.handleInputChange.bind(this)}/>
                                     </Form.Field>
                                 );
                             })
