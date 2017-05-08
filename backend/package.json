@@ -10,7 +10,8 @@
     "db-migrate-status": "node migration status",
     "db-migrate-current" : "node migration current",
     "db-migrate-reset": "node migration reset",
-    "db-migrate-down-to": "node migration downTo"
+    "db-migrate-down-to": "node migration downTo",
+    "db-migrate-clear": "node migration clear"
   },
   "author": "",
   "license": "",
