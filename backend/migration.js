@@ -5,6 +5,7 @@
 const path = require('path');
 var db = require('./db/Connection');
 var Umzug = require('umzug');
+var _ = require('lodash');
 
 var logger = require('log4js').getLogger('DBMigration');
 var sequelize = db.sequelize;
@@ -121,6 +122,21 @@ function cmdReset() {
     return umzug.down({ to: 0 });
 }
 
+function cmdClear() {
+    return sequelize.getQueryInterface().showAllTables().then(function(tableNames) {
+        var promises = [];
+        _.each(tableNames,function(tableName){
+            if (tableName !== 'SequelizeMeta') {
+                logger.info('Clearing table '+tableName);
+                promises.push(sequelize.query("truncate \"" + tableName+"\""));
+            }
+        });
+
+        return Promise.all(promises);
+    });
+}
+
+
 function handleCommand(cmd) {
     var executedCmd;
 
@@ -143,6 +159,9 @@ function handleCommand(cmd) {
 
         case 'reset':
             executedCmd = cmdReset();
+            break;
+        case 'clear':
+            executedCmd = cmdClear();
             break;
         default:
             logger.error(`invalid cmd: ${ cmd }`);
