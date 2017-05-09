@@ -31,7 +31,7 @@ export default class RestoreSnapshotModal extends React.Component {
     };
 
     onApprove () {
-        this.refs.restoreForm.submit();
+        this._submitRestore();
         return false;
     }
 
