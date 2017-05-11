@@ -4,7 +4,7 @@
 
 import { connect } from 'react-redux'
 import Tenants from '../components/Tenants'
-import {selectTenant} from '../actions/tenants';
+import {selectTenant, getTenants} from '../actions/tenants';
 import {clearContext} from '../actions/context';
 
 const mapStateToProps = (state, ownProps) => {
@@ -18,6 +18,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onTenantChange: (newTenant) => {
             dispatch(clearContext());
             dispatch(selectTenant(newTenant));
+        },
+
+        onTenantsRefresh: () => {
+            dispatch(getTenants(ownProps.manager));
         }
     }
 };

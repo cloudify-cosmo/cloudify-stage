@@ -3,17 +3,22 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import EventBus from '../utils/EventBus';
 
 export default class Tenants extends Component {
     static propTypes = {
         manager: PropTypes.object.isRequired,
-        onTenantChange: PropTypes.func.isRequired
+        onTenantChange: PropTypes.func.isRequired,
+        onTenantsRefresh: PropTypes.func.isRequired
     };
+
+    componentDidMount() {
+        EventBus.on('menu.tenants:refresh',this.props.onTenantsRefresh,this);
+    }
 
     onTenantSelected(tenant) {
         this.props.onTenantChange(tenant.name);
     }
-
 
     render() {
         let {Dropdown, Loader, Icon} = Stage.Basic;
