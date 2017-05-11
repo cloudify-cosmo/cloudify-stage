@@ -52,7 +52,10 @@ export function updatePageDescription(pageId,newDescription) {
 
 }
 export function selectPage(pageId,isDrilldown,drilldownContext,drilldownPageName) {
-    return function (dispatch) {
+    return function (dispatch,getState) {
+
+        var state = getState();
+        var dContext = state.drilldownContext || [];
 
         // Clear the widgets data since there is no point in saving data for widgets that are not in view
         dispatch(clearWidgetsData());
@@ -65,9 +68,20 @@ export function selectPage(pageId,isDrilldown,drilldownContext,drilldownPageName
         if (!_.isEmpty(drilldownPageName)){
             location.pathname +=`/${drilldownPageName}`;
         }
-        if (!_.isEmpty(drilldownContext)) {
-            location.query=drilldownContext;
+
+        if (isDrilldown) {
+            location.query =
+            {
+                c : JSON.stringify([
+                    ...dContext,
+                    {
+                        context: drilldownContext || {},
+                        pageName: drilldownPageName
+                    }
+                ])
+            };
         }
+
         dispatch(push(location));
     }
 }

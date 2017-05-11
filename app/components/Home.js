@@ -30,13 +30,18 @@ export default class Home extends Component {
             this.props.navigateTo404();
             return;
         }
-        if (!selectedPage.isDrillDown) {
-            this.props.onClearContext();
-        }
-
-        _.each(contextParams,(value,key)=>{
-            this.props.onSetContextValue(key,value);
+        // Always clear the context. Whatever is relevant to the drilldown should be passed as drilldown context
+        this.props.onClearContext();
+        
+        // Go over all the drilldown context and set it all (from top down)
+        _.each(contextParams,cp=>{
+            _.each(cp.context,(value,key)=>{
+                this.props.onSetContextValue(key,value);
+            });
         });
+
+        this.props.onSetDrilldownContext(contextParams);
+
     }
 
     render() {
