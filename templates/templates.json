@@ -8,10 +8,9 @@
   "initial-template",
   "initial-template-admin",
   "initial-template-customer",
-  "pluginsnapshots",
+  "systemResources",
   "plugins",
   "adminDash",
   "catalog",
-  "secret",
   "ha"
 ]

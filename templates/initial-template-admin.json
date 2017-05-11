@@ -4,7 +4,6 @@
   "blueprints",
   "deploy",
   "tmm",
-  "secret",
   "ha",
-  "pluginsnapshots"
+  "systemResources"
 ]
