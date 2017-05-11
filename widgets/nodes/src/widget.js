@@ -14,7 +14,10 @@ Stage.defineWidget({
     isReact: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
-        Stage.GenericConfig.PAGE_SIZE_CONFIG()
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
+        {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
+            items: ["Name","Type","Blueprint","Deployment","Contained in","Connected to","Host","Creator","# Instances","Groups"],
+            default: 'Name,Type,Blueprint,Deployment,Contained in,Connected to,Host,Creator,# Instances,Groups', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE}
     ],
     fetchUrl: {
         nodes: '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,number_of_instances,host_id,relationships,created_by[params:blueprint_id,deployment_id,gridParams]',
