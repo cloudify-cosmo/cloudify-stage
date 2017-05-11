@@ -14,7 +14,7 @@ Stage.defineWidget({
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5)
     ],
-    fetchUrl: '[manager]/node-instances?_include=id&_sort=deployment_id&_size=1',
+    fetchUrl: '[manager]/node-instances?state=started&_include=id&_sort=deployment_id&_size=1',
 
     render: function(widget,data,error,toolbox) {
         if (_.isEmpty(data)) {
@@ -25,7 +25,7 @@ Stage.defineWidget({
         let KeyIndicator = Stage.Basic.KeyIndicator;
 
         return (
-            <KeyIndicator title="Servers" icon="server" number={num}/>
+            <KeyIndicator title="Nodes" icon="server" number={num}/>
         );
     }
 });
