@@ -81,7 +81,7 @@ export default class extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <ApproveButton onClick={this.props.onClose} content="Close" icon="" color="green"/>
+                        <ApproveButton onClick={this.props.onClose} content="Close" color="green"/>
                     </Modal.Actions>
                 </Modal>
             </div>

@@ -44,6 +44,8 @@ export default class NodesTable extends React.Component {
         let ErrorMessage = Stage.Basic.ErrorMessage;
         let DataTable = Stage.Basic.DataTable;
 
+        let fieldsToShow = this.props.widget.configuration.fieldsToShow;
+
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
@@ -56,16 +58,26 @@ export default class NodesTable extends React.Component {
                        selectable={true}
                        className="nodesTable">
 
-                    <DataTable.Column label="Name" name="id" width="20%"/>
-                    <DataTable.Column label="Type" name="type" width="20%"/>
-                    <DataTable.Column label="Blueprint" name="blueprint_id" width="10%" show={_.isEmpty(this.props.data.blueprintId)} />
-                    <DataTable.Column label="Deployment" name="deployment_id" width="10%" show={_.isEmpty(this.props.data.deploymentId)} />
-                    <DataTable.Column label="Contained in" name="host_id" width="7%"/>
-                    <DataTable.Column label="Connected to" width="7%"/>
-                    <DataTable.Column label="Creator" name='created_by' width="7%"/>
-                    <DataTable.Column label="# Instances" name="number_of_instances" width="9%"/>
-                    <DataTable.Column label="Groups" width="10%" show={!_.isEmpty(this.props.data.blueprintId) ||
-                                                                   !_.isEmpty(this.props.data.deploymentId)} />
+                    <DataTable.Column label="Name" name="id" width="20%"
+                                      show={fieldsToShow.indexOf("Name") >= 0}/>
+                    <DataTable.Column label="Type" name="type" width="20%"
+                                      show={fieldsToShow.indexOf("Type") >= 0}/>
+                    <DataTable.Column label="Blueprint" name="blueprint_id" width="10%"
+                                      show={fieldsToShow.indexOf("Blueprint") >= 0 && _.isEmpty(this.props.data.blueprintId)} />
+                    <DataTable.Column label="Deployment" name="deployment_id" width="10%"
+                                      show={fieldsToShow.indexOf("Deployment") >= 0 && _.isEmpty(this.props.data.deploymentId)} />
+                    <DataTable.Column label="Contained in" name="host_id" width="7%"
+                                      show={fieldsToShow.indexOf("Contained in") >= 0}/>
+                    <DataTable.Column label="Connected to" width="7%"
+                                      show={fieldsToShow.indexOf("Connected to") >= 0}/>
+                    <DataTable.Column label="Host" name='host_id' width="7%"
+                                      show={fieldsToShow.indexOf("Host") >= 0}/>
+                    <DataTable.Column label="Creator" name='created_by' width="7%"
+                                      show={fieldsToShow.indexOf("Creator") >= 0}/>
+                    <DataTable.Column label="# Instances" name="number_of_instances" width="9%"
+                                      show={fieldsToShow.indexOf("# Instances") >= 0}/>
+                    <DataTable.Column label="Groups" width="10%"
+                                      show={fieldsToShow.indexOf("Groups") >= 0 && (!_.isEmpty(this.props.data.blueprintId) || !_.isEmpty(this.props.data.deploymentId))} />
 
                     {
                         this.props.data.items.map((node) => {
@@ -79,6 +91,7 @@ export default class NodesTable extends React.Component {
                                         <DataTable.Data>{node.deployment_id}</DataTable.Data>
                                         <DataTable.Data>{node.containedIn}</DataTable.Data>
                                         <DataTable.Data>{node.connectedTo}</DataTable.Data>
+                                        <DataTable.Data>{node.host_id}</DataTable.Data>
                                         <DataTable.Data>{node.created_by}</DataTable.Data>
                                         <DataTable.Data><div className="ui green horizontal label">{node.numberOfInstances}</div></DataTable.Data>
                                         <DataTable.Data>{node.groups}</DataTable.Data>
