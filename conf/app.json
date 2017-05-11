@@ -38,7 +38,8 @@
     "port": 8086,
     "user" : "root",
     "password" : "root",
-    "database": "cloudify"
+    "database": "cloudify",
+    "timeout": 30000
   },
   "github": {
     "username": "***REMOVED***",

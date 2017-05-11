@@ -16,7 +16,8 @@ function getClient(managerIp) {
         port: config.app.influx.port,
         username: config.app.influx.user,
         password: config.app.influx.password,
-        database: config.app.influx.database
+        database: config.app.influx.database,
+        timeout: config.app.influx.timeout
     };
 
     logger.debug('Connecting to influx using ', options);

@@ -213,8 +213,8 @@ export default class WidgetDynamicContent extends Component {
     }
 
     renderReact () {
-        if (this.state.error) {
-            return <ErrorMessage error={this.state.error}/>;
+        if (this.props.data.error) {
+            return <ErrorMessage error={this.props.data.error} header="An unexpected error occurred"/>;
         }
 
         if (this.props.widget.definition && this.props.widget.definition.render) {
