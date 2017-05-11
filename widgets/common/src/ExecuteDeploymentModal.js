@@ -36,7 +36,7 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            this.setState(ExecuteDeploymentModal.initialState(this.props));
+            this.setState(ExecuteDeploymentModal.initialState(nextProps));
         }
     }
 
