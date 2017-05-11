@@ -37,7 +37,8 @@ describe('(Reducer) Pages - drilldown process', () => {
                 manager : {
                     ip: '1.1.1.1'
                 },
-                conetxt: {},
+                context: {},
+                drilldownContext: [],
                 widgetDefinitions: [{id: 'widget1'}],
                 pages: [
                     {id: '0',name:'page',widgets: [{id:'1',name:'widget1',definition:'widget1',drillDownPages:{}}]}
@@ -88,7 +89,8 @@ describe('(Reducer) Pages - drilldown process', () => {
                 manager : {
                     ip: '1.1.1.1'
                 },
-                conetxt: {},
+                context: {},
+                drilldownContext: [],
                 widgetDefinitions: [{id: 'widget1'}],
                 pages: [
                     {id: '0',children: ['1'], name:'page',widgets: [{id:'1',name:'widget1',definition:'widget1',drillDownPages:{'tmp1':'1'}}]},
@@ -125,7 +127,8 @@ describe('(Reducer) Pages - drilldown process', () => {
                 manager : {
                     ip: '1.1.1.1'
                 },
-                conetxt: {},
+                context: {},
+                drilldownContext: [],
                 widgetDefinitions: [{id: 'widget1'}],
                 pages: [
                     {id: '0',children: ['1'], name:'page',widgets: [{id:'1',name:'widget1',definition:'widget1',drillDownPages:{'tmp1':'1'}}]},
@@ -145,7 +148,7 @@ describe('(Reducer) Pages - drilldown process', () => {
             var routeAction = storeActions[1];
 
             expect(routeAction.payload.args).to.have.length(1);
-            expect(routeAction.payload.args[0].query.contextValue).to.equal('kuku');
+            expect(routeAction.payload.args[0].query.c).to.equal('[{"context":{"contextValue":"kuku"}}]');
 
         });
     });
@@ -162,7 +165,8 @@ describe('(Reducer) Pages - drilldown process', () => {
             manager: {
                 ip: '1.1.1.1'
             },
-            conetxt: {},
+            context: {},
+            drilldownContext: [],
             widgetDefinitions: [{id: 'widget1'}],
             pages: [
                 {
@@ -242,7 +246,8 @@ describe('(Reducer) Pages - drilldown process', () => {
             manager : {
                 ip: '1.1.1.1'
             },
-            conetxt: {},
+            context: {},
+            drilldownContext: [],
             widgetDefinitions: [{id: 'widget1'}],
             pages: [
                 {id: '0',name:'page',widgets: [{id:'1',name:'widget1',definition:'widget1',drillDownPages:{}}]}

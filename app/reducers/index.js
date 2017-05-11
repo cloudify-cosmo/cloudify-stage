@@ -12,6 +12,7 @@ import manager from './managerReducer';
 import config from './configReducer';
 import app from './appReducer';
 import widgetData from './widgetDataReducer';
+import drilldownContext from './drilldownContextReducer';
 
 const rootReducer = combineReducers({
     app,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
     widgetDefinitions,
     templates,
     context,
+    drilldownContext,
     config,
     widgetData,
     routing: routerReducer
