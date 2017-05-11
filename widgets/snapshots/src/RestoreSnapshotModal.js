@@ -67,6 +67,7 @@ export default class RestoreSnapshotModal extends React.Component {
             this.setState({loading: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('snapshots:refresh');
+            this.props.toolbox.getEventBus().trigger('menu.tenants:refresh');
             this.props.onHide();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});

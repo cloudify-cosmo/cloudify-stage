@@ -53,6 +53,7 @@ export default class CreateModal extends React.Component {
         actions.doCreate(this.state.tenantName).then((tenant)=>{
             this.setState({loading: false, open: false});
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('menu.tenants:refresh');
         }).catch((err)=> {
             this.setState({errors: {error: err.message}, loading: false});
         });
