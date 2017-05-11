@@ -30,7 +30,6 @@ export default class EditableLabel extends Component {
                     className={this.props.className +' '+ (_.isEmpty(this.props.text) ? 'editPlaceholder' : '')}
                     change={(data)=>this.props.onEditDone(data.text)}
                     paramName="text"
-                    minLength={0}
                     />
             );
         } else {
