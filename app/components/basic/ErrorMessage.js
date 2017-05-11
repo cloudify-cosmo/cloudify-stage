@@ -15,7 +15,8 @@ export default class ErrorMessage extends Component {
 
     static defaultProps = {
         header: 'Error Occured',
-        show: true
+        show: true,
+        className: ""
     };
 
     render() {
@@ -27,7 +28,10 @@ export default class ErrorMessage extends Component {
         var header = this.props.header;
         if (!_.isString(this.props.error)) {
             error = this.props.error.message;
-            header = this.props.error.header;
+
+            if (!header) {
+                header = this.props.error.header;
+            }
         }
 
         return <div className={`ui error message ${this.props.className}`} style={{"display":(this.props.show?"block":"none")}}>

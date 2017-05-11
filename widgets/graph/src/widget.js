@@ -58,16 +58,16 @@ Stage.defineWidget({
     fetchParams: function(widget, toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId') || widget.configuration.deploymentId;
 
-        let timeFilter = toolbox.getContext().getValue('timeFilter');
+        let timeFilter = toolbox.getContext().getValue('timeFilter') || {};
 
-        let timeStart = timeFilter && timeFilter.start;
+        let timeStart = timeFilter.start;
         timeStart = timeStart ? `${moment(timeStart).unix()}s` : widget.configuration.from;
 
-        let timeEnd = timeFilter && timeFilter.end;
+        let timeEnd = timeFilter.end;
         timeEnd = timeEnd ? `${moment(timeEnd).unix()}s` : widget.configuration.to;
 
-        let timeResolutionValue = timeFilter && timeFilter.resolution;
-        let timeResolutionUnit = timeFilter && timeFilter.unit;
+        let timeResolutionValue = timeFilter.resolution;
+        let timeResolutionUnit = timeFilter.unit;
         let timeGroup = timeResolutionValue && timeResolutionUnit
             ? `${timeResolutionValue}${timeResolutionUnit}`
             : `${widget.configuration.resolution}${widget.configuration.unit}`;
@@ -80,7 +80,7 @@ Stage.defineWidget({
         let actions = new Stage.Common.InfluxActions(toolbox);
 
         if (!_.isEmpty(query)) {
-            return actions.doRunQuery(query).then((data) => Promise.resolve(data))
+            return actions.doRunQuery(query).then((data) => Promise.resolve({metrics: data}))
         } else {
             let deploymentId = params.deploymentId;
             let metric = widget.configuration.metric;
@@ -88,9 +88,9 @@ Stage.defineWidget({
                 let from = params.timeStart;
                 let to = params.timeEnd;
                 let timeGroup = params.timeGroup;
-                return actions.doGetMetric(deploymentId, metric, from, to, timeGroup).then((data) => Promise.resolve(data))
+                return actions.doGetMetric(deploymentId, metric, from, to, timeGroup).then((data) => Promise.resolve({metrics: data}))
             } else {
-                return Promise.resolve({});
+                return Promise.resolve({metrics: []});
             }
         }
     },
@@ -115,7 +115,7 @@ Stage.defineWidget({
         let {Graph} = Stage.Basic.Graphs;
         let label = widget.configuration.label;
         let type = widget.configuration.type;
-        let preparedData = this._prepareData(data[0].points, Graph.DEFAULT_X_DATA_KEY, metric);
+        let preparedData = this._prepareData(data.metrics[0].points, Graph.DEFAULT_X_DATA_KEY, metric);
 
         return (
             <Graph yDataKey={metric} data={preparedData} label={label} type={type} />
