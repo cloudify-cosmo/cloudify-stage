@@ -2,7 +2,7 @@ pipeline {
     triggers {
             pollSCM('H/15 * * * *')
     }
-    agent { label 'web-ui-04888827' }
+    agent { label 'web-ui' }
 
     stages {
         stage('Clean') {
