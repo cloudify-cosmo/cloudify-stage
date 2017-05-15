@@ -23,6 +23,10 @@ export default class Manager extends External {
         return _.get(this,'_data.ip', null);
     }
 
+    getCurrentUsername() {
+        return _.get(this,'_data.username', null);
+    }
+
     getManagerUrl(url,data) {
         return this._buildActualUrl(url,data);
     }
