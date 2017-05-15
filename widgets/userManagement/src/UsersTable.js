@@ -83,8 +83,8 @@ export default class UsersTable extends React.Component {
             this._getAvailableGroups(value, user);
         } else if (value === MenuAction.ACTIVATE_ACTION) {
             this._activateUser(user);
-        } else if (value === MenuAction.DEACTIVATE_ACTION) {
-            this._deactivateUser(user);
+        } else if (value === MenuAction.DEACTIVATE_ACTION && !this._isCurrentUser(user)) {
+             this._deactivateUser(user);
         } else {
             this.setState({user, modalType: value, showModal: true});
         }
@@ -96,6 +96,10 @@ export default class UsersTable extends React.Component {
 
     _handleError(message) {
         this.setState({error: message});
+    }
+
+    _isCurrentUser(user) {
+        return this.props.toolbox.getManager().getCurrentUsername() === user.username;
     }
 
     _deleteUser() {
@@ -136,13 +140,17 @@ export default class UsersTable extends React.Component {
         actions.doDeactivate(user.username).then(()=>{
             this.setState({error: null});
             this.props.toolbox.loading(false);
-            this.props.toolbox.refresh();
+            if (this._isCurrentUser(user)) {
+                this.props.toolbox.getEventBus().trigger('menu.users:logout');
+            } else {
+                this.props.toolbox.refresh();
+            }
         }).catch((err)=>{
             this.setState({error: err.message});
             this.props.toolbox.loading(false);
         });
-
     }
+
     render() {
         let {ErrorMessage, DataTable, Checkmark, Label, Confirm} = Stage.Basic;
 
@@ -220,6 +228,11 @@ export default class UsersTable extends React.Component {
                 <Confirm content={`Are you sure you want to remove user ${this.state.user.username}?`}
                          open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
                          onConfirm={this._deleteUser.bind(this)}
+                         onCancel={this._hideModal.bind(this)} />
+
+                <Confirm content='Are you sure you want to deactivate current user and log out?'
+                         open={this.state.modalType === MenuAction.DEACTIVATE_ACTION && this.state.showModal}
+                         onConfirm={this._deactivateUser.bind(this, this.state.user)}
                          onCancel={this._hideModal.bind(this)} />
 
             </div>

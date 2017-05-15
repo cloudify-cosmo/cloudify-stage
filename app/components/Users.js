@@ -4,6 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import Consts from '../utils/consts';
+import EventBus from '../utils/EventBus';
 
 export default class Users extends Component {
 
@@ -18,6 +19,10 @@ export default class Users extends Component {
         onMaintenance: PropTypes.func,
         onReset: PropTypes.func.isRequired
     };
+
+    componentDidMount() {
+        EventBus.on('menu.users:logout',this.props.onLogout,this);
+    }
 
     onEditModeClick() {
         this.props.onEditModeChange(!this.props.isEditMode);
