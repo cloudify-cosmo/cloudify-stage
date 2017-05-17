@@ -111,7 +111,7 @@ export default class WidgetDynamicContent extends Component {
 
             this.fetchDataPromise = promises.cancelablePromise;
 
-            promises.waitForPromise
+            return promises.waitForPromise
                 .then((data)=> {
 
                     //Fixes sort issue - add grid params to metadata to cheat shouldComponentUpdate
@@ -144,6 +144,8 @@ export default class WidgetDynamicContent extends Component {
                     this._afterFetch();
                 });
         }
+
+        return Promise.resolve();
     }
 
     componentDidUpdate(prevProps, prevState) {

@@ -105,14 +105,6 @@ export default class WidgetDefinitionsLoader {
 }
 
 class GenericConfig {
-    static PAGE_SIZE_CONFIG = (pageSize = BasicComponents.Pagination.PAGE_SIZE_LIST[0]) => {
-        return {id: "pageSize",
-                name: "Pagination page size",
-                default: pageSize,
-                items: BasicComponents.Pagination.PAGE_SIZE_LIST,
-                type: BasicComponents.GenericField.NUMBER_EDITABLE_LIST_TYPE}
-    };
-
     static POLLING_TIME_CONFIG = (pollingTime = 0) => {
         return {id: "pollingTime",
                 name: "Refresh time interval",
@@ -120,6 +112,12 @@ class GenericConfig {
                 placeHolder: "Enter time interval in seconds",
                 description: "Data of the widget will be refreshed per provided interval time in seconds",
                 type: BasicComponents.GenericField.NUMBER_TYPE}
+    };
+
+    static PAGE_SIZE_CONFIG = (pageSize = BasicComponents.Pagination.PAGE_SIZE_LIST(5)[0]) => {
+        return {id: "pageSize",
+                default: pageSize,
+                hidden: true}
     };
 
     static SORT_COLUMN_CONFIG = (sortColumn) => {

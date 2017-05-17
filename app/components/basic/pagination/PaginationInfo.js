@@ -12,16 +12,18 @@ export default class PaginationInfo extends Component {
         pageSize: PropTypes.number.isRequired,
         totalSize: PropTypes.number,
         onPageSizeChange: PropTypes.func.isRequired,
-        fetchSize: PropTypes.number
+        fetchSize: PropTypes.number,
+        sizeMultiplier: PropTypes.number
     };
 
     static defaultProps = {
         currentPage: 1,
         totalSize: -1,
-        fetchSize: -1
+        fetchSize: -1,
+        sizeMultiplier: 5
     };
 
-    static pageSizes = [5, 10, 25, 50, 100];
+    static pageSizes = (multiplier) => [1, 2, 3, 5, 10].map(item => multiplier * item);
 
     _handleChange(e, { value }) {
         this.props.onPageSizeChange(value);
@@ -40,8 +42,10 @@ export default class PaginationInfo extends Component {
             start = stop;
         }
 
-        let options = _.map(PaginationInfo.pageSizes, item => { return {text: item, value: item} });
-        if (_.indexOf(PaginationInfo.pageSizes, this.props.pageSize) < 0) {
+        var pageSizes = PaginationInfo.pageSizes(this.props.sizeMultiplier);
+
+        let options = _.map(pageSizes, item => { return {text: item, value: item} });
+        if (_.indexOf(pageSizes, this.props.pageSize) < 0) {
             options.unshift({text: this.props.pageSize, value: this.props.pageSize});
         }
 

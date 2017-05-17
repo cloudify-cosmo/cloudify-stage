@@ -42,7 +42,7 @@ export default class extends React.Component {
     }
 
     _fetchData(fetchParams) {
-        this.props.toolbox.refresh(fetchParams);
+        return this.props.toolbox.refresh(fetchParams);
     }
 
     _showModal(repo) {

@@ -40,7 +40,7 @@ export default class UserGroupsTable extends React.Component {
     }
 
     fetchData(fetchParams) {
-        this.props.toolbox.refresh(fetchParams);
+        return this.props.toolbox.refresh(fetchParams);
     }
 
     _selectUserGroup(userGroup) {

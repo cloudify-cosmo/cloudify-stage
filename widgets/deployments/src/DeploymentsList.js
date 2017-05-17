@@ -111,7 +111,7 @@ export default class extends React.Component {
     }
 
     fetchData(fetchParams) {
-        this.props.toolbox.refresh(fetchParams);
+        return this.props.toolbox.refresh(fetchParams);
     }
 
     render() {

@@ -44,11 +44,12 @@ export default class DataTable extends Component {
         searchable: PropTypes.bool,
         selectable: PropTypes.bool,
         className: PropTypes.string,
-        noDataAvailable: PropTypes.bool
+        noDataAvailable: PropTypes.bool,
+        sizeMultiplier: PropTypes.number
     };
 
     static defaultProps = {
-        fetchData: () => {},
+        fetchData: () => Promise.resolve(),
         totalSize: -1,
         fetchSize: -1,
         pageSize: 0,
@@ -57,7 +58,8 @@ export default class DataTable extends Component {
         searchable: false,
         selectable: false,
         className: "",
-        noDataAvailable: false
+        noDataAvailable: false,
+        sizeMultiplier: 5
     };
 
     static childContextTypes = {
@@ -83,8 +85,11 @@ export default class DataTable extends Component {
             ascending = true;
         }
 
-        this.refs.pagination.reset();
-        this.setState({sortColumn: name, sortAscending: ascending});
+        var fetchData = {sortColumn: name, sortAscending: ascending, currentPage: 1};
+        (this._fetchData(fetchData) || Promise.resolve()).then(() => {
+            this.setState(fetchData)
+            this.refs.pagination.reset();
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -101,14 +106,8 @@ export default class DataTable extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (!_.isEqual(this.state, prevState)) {
-            this._fetchData();
-        }
-    }
-
-    _fetchData() {
-        this.props.fetchData({gridParams: Object.assign({}, this.state, this.refs.pagination.state)});
+    _fetchData(fetchParams) {
+        return this.props.fetchData({gridParams: fetchParams});
     }
 
     render() {
@@ -120,26 +119,26 @@ export default class DataTable extends Component {
         var showCols = [];
         React.Children.forEach(this.props.children, function (child) {
             if (child && child.type) {
-                if (child.type.name === "TableColumn") {
+                if (child.type === TableColumn) {
                     showCols.push(child.props.show);
                     headerColumns.push(child);
-                } else if (child.type.name === "TableRow") {
+                } else if (child.type === TableRow) {
                     bodyRows.push(React.cloneElement(child, {showCols}));
-                } else if (child.type.name === "TableRowExpandable") {
+                } else if (child.type === TableRowExpandable) {
                     let expandableContent = [];
                     React.Children.forEach(child.props.children, function (expChild) {
                         if (expChild && expChild.type) {
-                            if (expChild.type.name === "TableRow") {
+                            if (expChild.type === TableRow) {
                                 bodyRows.push(React.cloneElement(expChild, {showCols}));
-                            } else if (expChild.type.name === "TableDataExpandable" && child.props.expanded) {
+                            } else if (expChild.type === TableDataExpandable && child.props.expanded) {
                                 expandableContent.push(React.cloneElement(expChild, {numberOfColumns: showCols.length}));
                             }
                         }
                     });
                     bodyRows.push(expandableContent);
-                } else if (child.type.name === "TableAction") {
+                } else if (child.type === TableAction) {
                     gridAction = child;
-                } else if (child.type.name === "TableFilter") {
+                } else if (child.type === TableFilter) {
                     gridFilters.push(child);
                 }
             }
@@ -157,7 +156,7 @@ export default class DataTable extends Component {
                 </div>
                 }
 
-                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize}
+                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} sizeMultiplier={this.props.sizeMultiplier}
                             fetchSize={this.props.fetchSize} fetchData={this._fetchData.bind(this)} ref="pagination">
                     <table
                         className={`ui very compact table sortable ${this.props.selectable ? 'selectable' : ''} ${this.props.className}`}

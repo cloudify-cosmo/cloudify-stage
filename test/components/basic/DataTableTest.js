@@ -11,7 +11,7 @@ import DataTable from '../../../app/components/basic/dataTable/DataTable';
 describe('(Component) DataTable', () => {
 
     var wrapper;
-    var fetchSpy = sinon.spy();
+    var fetchSpy = sinon.spy(() => Promise.resolve());
     var selectSpy = sinon.spy();
     before(()=>{
         let div = $('<div />').appendTo('body');
@@ -92,15 +92,23 @@ describe('(Component) DataTable', () => {
         expect(wrapper.find(".gridTable i.search")).to.have.length(1);
     });
 
-    it('sorts column on click', () => {
-        wrapper.find(".gridTable thead tr").childAt(0).simulate('click');
-        expect(fetchSpy).to.have.been.calledOnce;
-        sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 1, pageSize: 25, searchText: "", sortAscending: true, sortColumn: "col1"}});
-        fetchSpy.reset();
+    it('sorts column on click up', (done) => {
+        var fetchSpy = sinon.spy(()=>done());
+        wrapper.setProps({fetchData:fetchSpy});
 
         wrapper.find(".gridTable thead tr").childAt(0).simulate('click');
         expect(fetchSpy).to.have.been.calledOnce;
-        sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 1, pageSize: 25, searchText: "", sortAscending: false, sortColumn: "col1"}});
+        sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 1, sortAscending: true, sortColumn: "col1"}});
+        fetchSpy.reset();
+    });
+
+    it('sorts column on click down', (done) => {
+        var fetchSpy = sinon.spy(()=>done());
+        wrapper.setProps({fetchData:fetchSpy});
+
+        wrapper.find(".gridTable thead tr").childAt(0).simulate('click');
+        expect(fetchSpy).to.have.been.calledOnce;
+        sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 1, sortAscending: false, sortColumn: "col1"}});
         fetchSpy.reset();
     });
 

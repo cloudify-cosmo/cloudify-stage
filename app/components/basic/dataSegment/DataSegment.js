@@ -22,7 +22,8 @@ export default class DataSegment extends Component {
         totalSize: PropTypes.number,
         fetchSize: PropTypes.number,
         pageSize: PropTypes.number,
-        className: PropTypes.string
+        className: PropTypes.string,
+        sizeMultiplier: PropTypes.number
     };
 
     static defaultProps = {
@@ -30,7 +31,8 @@ export default class DataSegment extends Component {
         fetchData: () => {},
         totalSize: -1,
         fetchSize: -1,
-        pageSize: 0
+        pageSize: 0,
+        sizeMultiplier: 3
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -39,8 +41,8 @@ export default class DataSegment extends Component {
         }
     }
 
-    _fetchData() {
-        this.props.fetchData({gridParams: Object.assign({}, this.state, this.refs.pagination.state)});
+    _fetchData(fetchParams) {
+        return this.props.fetchData({gridParams: Object.assign({}, this.state, fetchParams)});
     }
 
     render() {
@@ -49,7 +51,7 @@ export default class DataSegment extends Component {
 
         React.Children.forEach(this.props.children, function(child) {
             if (child && child.type) {
-                if (child.type.name === "SegmentAction") {
+                if (child.type === SegmentAction) {
                     segmentAction = child;
                 } else {
                     children.push(child);
@@ -68,7 +70,7 @@ export default class DataSegment extends Component {
                     </div>
                 }
 
-                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize}
+                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} sizeMultiplier={this.props.sizeMultiplier}
                             fetchData={this._fetchData.bind(this)} fetchSize={this.props.fetchSize} ref="pagination">
                     {this.props.totalSize <= 0 && this.props.fetchSize <= 0 &&
                      (this.props.totalSize === 0 || this.props.fetchSize === 0) ?

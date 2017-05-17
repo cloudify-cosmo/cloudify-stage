@@ -88,7 +88,7 @@ export default class extends React.Component {
     }
 
     fetchGridData(fetchParams) {
-        this.props.toolbox.refresh(fetchParams);
+        return this.props.toolbox.refresh(fetchParams);
     }
 
     render() {

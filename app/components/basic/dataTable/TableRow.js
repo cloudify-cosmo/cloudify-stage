@@ -3,6 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
+import TableDataCell from "./TableDataCell";
 
 export default class TableRow extends Component {
 
@@ -26,7 +27,7 @@ export default class TableRow extends Component {
         let children = [];
         let index = 0;
         React.Children.forEach(this.props.children, (child) => {
-            if (child.type && child.type.name === "TableDataCell" && this._showData(index++)) {
+            if (child.type && child.type === TableDataCell && this._showData(index++)) {
                 children.push(child);
             }
         });

@@ -35,11 +35,14 @@ describe('(Component) Pagination', () => {
         expect(infoText.replace(dropdownText, "").replace(dropdownText, "")).to.be.equal("Page size: 5  1 to 5 of 10 entries");
     });
 
-    it('changes page size', () => {
-        $(".gridPagination .selection.dropdown").dropdown("set value", "5");
+    it('changes page size', (done) => {
+        var fetchSpy = sinon.spy(()=>done());
+        wrapper.setProps({fetchData:fetchSpy});
+
+        $(".gridPagination .selection.dropdown").dropdown("set value", "4");
         expect(fetchSpy).to.have.been.calledOnce;
-        sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 1, pageSize: 5}});
-        expect(wrapper.find(".gridPagination .dropdown .text")).to.have.text('5');
+        sinon.assert.calledWith(fetchSpy, {currentPage: 1, pageSize: 4});
+        expect(wrapper.find(".gridPagination .dropdown .text")).to.have.text('4');
         fetchSpy.reset();
     });
 
@@ -93,7 +96,10 @@ describe('(Component) Pagination', () => {
         expect(page7).to.not.have.className('disabled');
     });
 
-    it('selects next page', () => {
+    it('selects next page', (done) => {
+        var fetchSpy = sinon.spy(()=>done());
+        wrapper.setProps({fetchData:fetchSpy});
+
         const pagination = wrapper.find(".pagination");
         pagination.childAt(2).simulate('click');
         expect(fetchSpy).to.have.been.calledOnce;
@@ -123,7 +129,10 @@ describe('(Component) Pagination', () => {
         expect(page7).to.not.have.className('disabled');
     });
 
-    it('changes pages by arrows', () => {
+    it('changes pages by arrows', (done) => {
+        var fetchSpy = sinon.spy(()=>done());
+        wrapper.setProps({fetchData:fetchSpy});
+
         const pagination = wrapper.find(".pagination");
 
         pagination.childAt(7).simulate('click');
@@ -155,8 +164,9 @@ describe('(Component) Pagination', () => {
         expect(page2).to.have.className('active');
     });
 
-    it('changes pages to middle position', () => {
-        wrapper.setProps({totalSize:36});
+    it('changes pages to middle position', (done) => {
+        var fetchSpy = sinon.spy(()=>done());
+        wrapper.setProps({fetchData:fetchSpy, totalSize:36});
 
         const pagination = wrapper.find(".pagination");
 
