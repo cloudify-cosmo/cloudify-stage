@@ -15,7 +15,7 @@ export default class ClusterNodesList extends React.Component {
     }
 
     fetchData(fetchParams) {
-        this.props.toolbox.refresh(fetchParams);
+        return this.props.toolbox.refresh(fetchParams);
     }
 
     _deleteNodeConfirm (item,event) {

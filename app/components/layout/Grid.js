@@ -3,6 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import GridItem from "./GridItem";
 
 export default class Grid extends Component {
     static propTypes = {
@@ -26,7 +27,7 @@ export default class Grid extends Component {
 
         this.itemIds = [];
         _.each(this.props.children,(child)=>{
-            if (child.type && child.type.name === 'GridItem') {
+            if (child.type && child.type === GridItem) {
                 this.itemIds.push(child.props.id);
             }
         });
@@ -91,7 +92,7 @@ export default class Grid extends Component {
 
         var gridItems = [];
         _.each(this.props.children,(child)=>{
-            if (child.type && child.type.name === 'GridItem') {
+            if (child.type && child.type === GridItem) {
                 var gridItem = React.cloneElement(child,{onItemAdded: this._itemAdded.bind(this),onItemRemoved: this._itemRemoved.bind(this)})
                 gridItems.push(gridItem);
             } else {

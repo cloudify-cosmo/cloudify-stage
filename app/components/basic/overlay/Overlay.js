@@ -43,9 +43,9 @@ export default class Overlay extends Component {
 
         var self = this;
         React.Children.forEach(this.props.children, function(child,index) {
-            if (child.type && child.type.name === "OverlayAction") {
+            if (child.type && child.type === OverlayAction) {
                 overlayAction = React.cloneElement(child, {onClick:self.show.bind(self)});
-            } else if (child.type && child.type.name === "OverlayContent") {
+            } else if (child.type && child.type === OverlayContent) {
                 overlayContent = child;
             } else {
                 otherChildren.push(child);

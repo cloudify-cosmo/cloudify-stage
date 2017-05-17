@@ -27,35 +27,29 @@ export default class Pagination extends Component {
         fetchData: PropTypes.func.isRequired,
         pageSize: PropTypes.number.isRequired,
         totalSize: PropTypes.number,
-        fetchSize: PropTypes.number
+        fetchSize: PropTypes.number,
+        sizeMultiplier: PropTypes.number
     };
 
     static defaultProps = {
         totalSize: 0,
         fetchSize: 0,
-        pageSize: Pagination.PAGE_SIZE_LIST[0]
+        sizeMultiplier: 5,
+        pageSize: Pagination.PAGE_SIZE_LIST(5)[0]
     };
 
     _changePageSize(size){
-        this.setState({pageSize: parseInt(size) || Pagination.PAGE_SIZE_LIST[0], currentPage: 1});
+        var fetchParams = {pageSize: parseInt(size) || Pagination.PAGE_SIZE_LIST(this.props.sizeMultiplier)[0], currentPage: 1};
+        (this.props.fetchData(fetchParams) || Promise.resolve()).then(() => this.setState(fetchParams));
     }
 
     _changePage(page){
-        this.setState({currentPage: page});
+        var fetchParams = {currentPage: page, pageSize: this.state.pageSize};
+        (this.props.fetchData(fetchParams) || Promise.resolve()).then(() => this.setState(fetchParams));
     }
 
-    reset() {
-        this.disableStateUpdate = true;
-        this._changePage(1);
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.disableStateUpdate) {
-            this.disableStateUpdate = false;
-            return false;
-        }
-
-        return true;
+    reset(){
+        this.setState({currentPage: 1});
     }
 
     componentWillReceiveProps(nextProps) {
@@ -77,23 +71,17 @@ export default class Pagination extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (!_.isEqual(this.state, prevState)) {
-            this.props.fetchData({gridParams: {...this.state}});
-        }
-    }
-
     render() {
         return (
             <div>
                 {this.props.children}
 
-                { (this.props.totalSize > Pagination.PAGE_SIZE_LIST[0] || this.props.fetchSize > 0 || this.state.currentPage > 1) &&
+                { (this.props.totalSize > Pagination.PAGE_SIZE_LIST(this.props.sizeMultiplier)[0] || this.props.fetchSize > 0 || this.state.currentPage > 1) &&
                     <div className="ui two column grid gridPagination">
                         <div className="column">
                             <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}
                                             totalSize={this.props.totalSize} fetchSize={this.props.fetchSize}
-                                            onPageSizeChange={this._changePageSize.bind(this)}/>
+                                            onPageSizeChange={this._changePageSize.bind(this)} sizeMultiplier={this.props.sizeMultiplier}/>
                         </div>
                         <div className="right aligned column">
                             {

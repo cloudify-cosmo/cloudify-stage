@@ -42,7 +42,7 @@ export default class UsersTable extends React.Component {
     }
 
     fetchData(fetchParams) {
-        this.props.toolbox.refresh(fetchParams);
+        return this.props.toolbox.refresh(fetchParams);
     }
 
     _selectUser(userName) {
