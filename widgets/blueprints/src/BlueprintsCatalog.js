@@ -27,7 +27,7 @@ export default class BlueprintsCatalog extends React.Component{
     };
 
     render(){
-        var {DataSegment, Grid, Image, Button, Label} = Stage.Basic;
+        var {DataSegment, Grid, Image, Button, Label, PrivateMarker} = Stage.Basic;
 
         var index=0;
         var blueprintsItems =
@@ -44,6 +44,7 @@ export default class BlueprintsCatalog extends React.Component{
                                         <h3 className="ui icon header verticalCenter">
                                             <a className="underline" href="javascript:void(0)">{item.id}</a>
                                         </h3>
+                                        <PrivateMarker show={item.private_resource} title="Private resource" className="rightFloated"/>
                                     </Grid.Column>
                                 </Grid.Row>
 

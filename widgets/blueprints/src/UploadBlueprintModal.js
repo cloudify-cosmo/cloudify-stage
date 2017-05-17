@@ -16,6 +16,7 @@ export default class UploadModal extends React.Component {
         blueprintName: "",
         blueprintFileName: "",
         imageUrl: "",
+        privateResource: false,
         errors: {}
     }
 
@@ -68,7 +69,8 @@ export default class UploadModal extends React.Component {
                          this.state.blueprintUrl,
                          blueprintFile,
                          this.state.imageUrl,
-                         this.refs.imageFile.file()).then(()=>{
+                         this.refs.imageFile.file(),
+                         this.state.privateResource).then(()=>{
             this.setState({loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
@@ -81,7 +83,7 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, PrivateField} = Stage.Basic;
         const uploadButton = <Button content='Upload' icon='upload' labelPosition='left' />;
 
         return (
@@ -89,6 +91,8 @@ export default class UploadModal extends React.Component {
                 <Modal trigger={uploadButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
                     <Modal.Header>
                         <Icon name="upload"/> Upload blueprint
+                        <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"
+                                 onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
                     </Modal.Header>
 
                     <Modal.Content>
