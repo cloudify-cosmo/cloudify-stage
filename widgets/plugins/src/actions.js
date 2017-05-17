@@ -13,8 +13,8 @@ export default class {
 
     }
 
-    doUpload(pluginUrl, file) {
-        var params = {};
+    doUpload(pluginUrl, file, privateResource=false) {
+        var params = {private_resource: privateResource};
 
         if (!_.isEmpty(pluginUrl)) {
             params['plugin_archive_url'] = pluginUrl;

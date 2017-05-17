@@ -27,6 +27,8 @@ import Dropdown from './Dropdown';
 import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
+import PrivateField from './PrivateField';
+import PrivateMarker from './PrivateMarker';
 
 export {
     Modal,
@@ -70,5 +72,7 @@ export {
     Header,
     ApproveButton,
     CancelButton,
-    InputDateRange
+    InputDateRange,
+    PrivateField,
+    PrivateMarker
 };

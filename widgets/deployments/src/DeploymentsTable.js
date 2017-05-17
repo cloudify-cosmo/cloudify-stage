@@ -28,7 +28,7 @@ export default class extends React.Component {
     };
 
     render() {
-        var DataTable = Stage.Basic.DataTable;
+        var {DataTable, PrivateMarker} = Stage.Basic;
 
         return (
             <DataTable fetchData={this.props.fetchData}
@@ -52,7 +52,9 @@ export default class extends React.Component {
                         return (
 
                             <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
-                                <DataTable.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
+                                <DataTable.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a>
+                                    <PrivateMarker show={item.private_resource} title="Private resource"/>
+                                </DataTable.Data>
                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>

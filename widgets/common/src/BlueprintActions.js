@@ -16,15 +16,15 @@ class BlueprintActions {
             .then(()=>this.doDeleteImage(blueprint.id));
     }
 
-    doDeploy(blueprint, deploymentId, inputs) {
-        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`,null,{
+    doDeploy(blueprint, deploymentId, inputs, privateResource=false) {
+        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`,{private_resource:privateResource},{
             'blueprint_id': blueprint.id,
             inputs
         });
     }
 
-    doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image) {
-        var params = {};
+    doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, privateResource=false) {
+        var params = {private_resource: privateResource};
         const YAML_EXTENSION = '.yaml';
 
         if (!_.isEmpty(blueprintFileName)) {

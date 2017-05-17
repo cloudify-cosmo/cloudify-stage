@@ -18,7 +18,8 @@ export default class DeployBlueprintModal extends React.Component {
         loading: false,
         errors: {},
         deploymentName: '',
-        deploymentInputs: []
+        deploymentInputs: [],
+        privateResource: false
     }
 
     static propTypes = {
@@ -87,7 +88,7 @@ export default class DeployBlueprintModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs)
+        actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs, this.state.privateResource)
             .then((/*deployment*/)=> {
                 this.setState({loading: false});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -116,7 +117,7 @@ export default class DeployBlueprintModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message, Popup, Header, ApproveButton, CancelButton} = Stage.Basic;
+        var {Modal, Icon, Form, Message, Popup, Header, ApproveButton, CancelButton, PrivateField} = Stage.Basic;
 
         let blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
         let deploymentInputs = _.sortBy(_.map(blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
@@ -126,6 +127,8 @@ export default class DeployBlueprintModal extends React.Component {
             <Modal open={this.props.open}>
                 <Modal.Header>
                     <Icon name="rocket"/> Deploy blueprint {blueprint.id}
+                    <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"
+                             onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
                 </Modal.Header>
 
                 <Modal.Content>

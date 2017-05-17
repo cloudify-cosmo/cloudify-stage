@@ -15,8 +15,8 @@ export default class {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}`);
     }
 
-    doDeploy(blueprintId,deploymentId,inputs) {
-        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`,null,{
+    doDeploy(blueprintId,deploymentId,inputs,privateResource=false) {
+        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`,{private_resource: privateResource},{
             'blueprint_id': blueprintId,
             inputs
         });

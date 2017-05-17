@@ -25,7 +25,7 @@ Stage.defineWidget({
 
     fetchData(widget,toolbox,params) {
         var result = {};
-        return toolbox.getManager().doGet('/blueprints?_include=id,updated_at,created_at,description,created_by',params)
+        return toolbox.getManager().doGet('/blueprints?_include=id,updated_at,created_at,description,created_by,private_resource',params)
             .then(data=>{
                 result.blueprints = data;
                 var blueprintIds = data.items.map(item=>item.id);

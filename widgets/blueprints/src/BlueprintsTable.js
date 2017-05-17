@@ -26,7 +26,7 @@ export default class BlueprintsTable extends React.Component{
     };
 
     render(){
-        var {DataTable, Image} = Stage.Basic;
+        var {DataTable, Image, PrivateMarker} = Stage.Basic;
 
         return (
             <DataTable fetchData={this.props.fetchGridData}
@@ -48,7 +48,10 @@ export default class BlueprintsTable extends React.Component{
                     this.props.data.items.map((item)=>{
                         return (
                             <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
-                                <DataTable.Data><Image src={`/ba/image/${item.id}`} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
+                                <DataTable.Data>
+                                    <Image src={`/ba/image/${item.id}`} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
+                                    <PrivateMarker show={item.private_resource} title="Private resource"/>
+                                </DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data>{item.created_by}</DataTable.Data>

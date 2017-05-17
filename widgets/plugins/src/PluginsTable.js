@@ -77,9 +77,7 @@ export default class extends React.Component {
     }
 
     render() {
-        var Confirm = Stage.Basic.Confirm;
-        var ErrorMessage = Stage.Basic.ErrorMessage;
-        var DataTable = Stage.Basic.DataTable;
+        var {Confirm, ErrorMessage, DataTable, PrivateMarker} = Stage.Basic;
 
         return (
             <div>
@@ -107,7 +105,9 @@ export default class extends React.Component {
                         this.props.data.items.map((item)=>{
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
-                                    <DataTable.Data><a className='pluginName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
+                                    <DataTable.Data><a className='pluginName' href="javascript:void(0)">{item.id}</a>
+                                        <PrivateMarker show={item.private_resource} title="Private resource"/>
+                                    </DataTable.Data>
                                     <DataTable.Data>{item.package_name}</DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>
                                     <DataTable.Data>{item.supported_platform}</DataTable.Data>
