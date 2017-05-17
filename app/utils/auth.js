@@ -42,14 +42,13 @@ export default class Auth {
                     (0 - 3.2.1] -> v1
                     (3.2.1 - 3.3.1] -> v2
                     (3.3.1 - 3.4.x] -> v2.1
-                    (3.4.x - 4.0.x] -> v3
+                    (3.4.x - ...] -> v3
                 */
 
                 const mapping = [
-                    {left: "0.0.0", right: "3.2.1", apiVersion: "v1"},
-                    {left: "3.2.1", right: "3.3.1", apiVersion: "v2"},
-                    {left: "3.3.1", right: "3.4.100", apiVersion: "v2.1"},
-                    {left: "3.4.100", right: "4.0.100", apiVersion: "v3"},
+                    {startServerVersion: "3.4.0", apiVersion: "v2.1"},
+                    {startServerVersion: "4.0.0", apiVersion: "v3"},
+                    {startServerVersion: "4.1.0", apiVersion: "v3.1"}
                 ];
 
                 function _fill(v) {
@@ -63,10 +62,9 @@ export default class Auth {
 
                 let verNum = _number(serverVersion);
                 let apiVer = null;
-                _.each(mapping,m=>{
-                    let leftNum = _number(m.left);
-                    let rightNum = _number(m.right);
-                    if (verNum > leftNum && verNum <= rightNum) {
+                _.eachRight(mapping,m=>{
+                    let startNum = _number(m.startServerVersion);
+                    if (verNum >= startNum) {
                         apiVer = m.apiVersion;
                         return false;
                     }
