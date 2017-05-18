@@ -15,6 +15,8 @@ export default class Topology extends React.Component {
         this.state = {
             initialized : props.data !== null && props.data !== undefined
         }
+
+        this.isMouseOver = false;
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -100,6 +102,28 @@ export default class Topology extends React.Component {
             }
         }
     }
+
+
+
+    _releaseScroller () {
+        this.isMouseOver = true;
+        $(this.refs.glass).addClass('unlocked');
+    }
+
+    _timerReleaseScroller() {
+        this.isMouseOver = true;
+        setTimeout(()=>{
+            if (this.isMouseOver) {
+                this._releaseScroller();
+            }
+        },3000);
+    }
+
+    _reactivateScroller () {
+        this.isMouseOver = false;
+        $(this.refs.glass).removeClass('unlocked');
+    }
+
     render () {
         // Not render the directive incase initialized is false
         if (!this.state.initialized) {
@@ -107,7 +131,11 @@ export default class Topology extends React.Component {
         }
 
         return (
-            <div ref='topologyParentContainer'>
+            <div ref='topologyParentContainer'
+                 onClick={this._releaseScroller.bind(this)}
+                 onMouseEnter={this._timerReleaseScroller.bind(this)}
+                 onMouseLeave={this._reactivateScroller.bind(this)}>
+                <div className='scrollGlass' ref='glass'><span className='message'>Click to release scroller</span></div>
                 <div ref='topologyContainer' dangerouslySetInnerHTML={{__html: this.props.template }}></div>
             </div>
         );
