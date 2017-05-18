@@ -17,17 +17,9 @@ router.get('/browse/file', function(req, res, next) {
         return next('no file path passed [path]');
     }
 
-    try {
-        SourceHandler.browseArchiveFile(path, function (err, content) {
-            if (err) {
-                next(err);
-            } else {
-                res.contentType('application/text').send(content);
-            }
-        });
-    } catch(err) {
-        next(err);
-    }
+    SourceHandler.browseArchiveFile(path)
+        .then(content => res.contentType('application/text').send(content))
+        .catch(next);
 });
 
 router.get('/browse', function(req, res, next) {
@@ -46,26 +38,20 @@ router.get('/browse', function(req, res, next) {
         return next(errors.join());
     }
 
-    try {
-        var archiveUrl = decodeURIComponent(su);
-        logger.debug('download archive from url', archiveUrl);
+    SourceHandler.browseArchiveTree(req, su, lastUpdate)
+        .then(data => res.send(data))
+        .catch(next);
+});
 
-        req.pipe(request.get(archiveUrl)).on('error', next).on('response', function (response) {
-                var cd = response.headers['content-disposition'];
+router.put('/list/yaml', function (req, res, next) {
+    var promise = req.query.url ?
+        SourceHandler.saveDataFromUrl(req.query.url)
+        :
+        SourceHandler.saveMultipartData(req);
 
-                var stream = SourceHandler.browseArchiveTree(lastUpdate, cd, function (err, tree) {
-                    if (err) {
-                        next(err);
-                    } else {
-                        res.contentType('application/json').send(tree);
-                    }
-                });
-
-                response.pipe(stream);
-        });
-    } catch(err) {
-        return next(err);
-    }
+    promise.then(data => SourceHandler.listYamlFiles(data.archiveFolder, data.archiveFile))
+        .then(data => res.send(data))
+        .catch(next);
 });
 
 module.exports = router;

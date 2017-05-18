@@ -83,7 +83,7 @@ export default class External {
                     logger.error(errorMessage);
                     reject({message: errorMessage});
                 }
-                resolve();
+                resolve(response);
             });
 
             xhr.open(method || 'put',actualUrl);
@@ -96,12 +96,12 @@ export default class External {
             var formData = new FormData();
 
             if (files) {
-                if (_.isArray(files)) {
+                if (files instanceof File) {
+                    formData = files; // Single file, simply pass it
+                } else {
                     _.forEach(files, function (value, key) {
                         formData.append(key, value);
                     });
-                } else {
-                    formData = files; // Single file, simply pass it
                 }
             }
 

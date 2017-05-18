@@ -15,8 +15,8 @@ export default class UploadModal extends React.Component {
     static initialState = {
         loading: false,
         pluginUrl: "",
-        privateResource: false,
-        errors: {}
+        errors: {},
+        privateResource: false
     }
 
     onApprove () {
@@ -87,7 +87,8 @@ export default class UploadModal extends React.Component {
                         <Form.Group>
                             <Form.Field width="9" error={this.state.errors.pluginUrl}>
                                 <Form.Input label="URL" placeholder="Enter plugin url" name="pluginUrl"
-                                            value={this.state.pluginUrl} onChange={this._handleInputChange.bind(this)}/>
+                                            value={this.state.pluginUrl} onChange={this._handleInputChange.bind(this)}
+                                            onBlur={()=>this.state.pluginUrl ? this.refs.pluginFile.reset() : ""}/>
                             </Form.Field>
                             <Form.Field width="1" style={{position:'relative'}}>
                                 <div className="ui vertical divider">
@@ -95,7 +96,9 @@ export default class UploadModal extends React.Component {
                                 </div>
                             </Form.Field>
                             <Form.Field width="8" error={this.state.errors.pluginUrl}>
-                                <Form.File placeholder="Select plugin file" name="pluginFile" ref="pluginFile"/>
+                                <Form.File placeholder="Select plugin file" name="pluginFile" ref="pluginFile"
+                                           onChange={(file)=>file ? this.setState({pluginUrl: ""}) : ""}/>
+
                             </Form.Field>
                         </Form.Group>
 

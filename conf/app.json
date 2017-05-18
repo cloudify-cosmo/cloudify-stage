@@ -45,5 +45,8 @@
     "username": "cloudify-examples@gigaspaces.com",
     "password": "C10udify-5xamples"
   },
-  "extractedSourcesDir": "/extractedSources"
+  "source": {
+    "browseSourcesDir": "/cloudifyBrowseSources",
+    "lookupYamlsDir": "/cloudifyLookupYamls"
+  }
 }
