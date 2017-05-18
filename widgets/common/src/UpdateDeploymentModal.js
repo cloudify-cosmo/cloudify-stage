@@ -23,7 +23,10 @@ export default class UpdateDeploymentModal extends React.Component {
         applicationFileName: "",
         blueprintUrl: "",
         workflowId: "",
-        errors: {}
+        errors: {},
+        urlLoading: false,
+        fileLoading: false,
+        yamlFiles: []
     }
 
     static propTypes = {
@@ -97,8 +100,43 @@ export default class UpdateDeploymentModal extends React.Component {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
+    _onBlueprintUrlBlur() {
+        if (!this.state.blueprintUrl) {
+            this.setState({yamlFiles: [], errors: {}});
+            return;
+        }
+
+        this.setState({urlLoading: true});
+        this.refs.blueprintFile.reset();
+
+        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        actions.doListYamlFiles(this.state.blueprintUrl).then((yamlFiles)=>{
+            this.setState({yamlFiles, errors: {}, urlLoading: false});
+        }).catch((err)=>{
+            this.setState({errors: {error: err.message}, urlLoading: false});
+        });
+    }
+
+    _onBlueprintFileChange(file) {
+        if (!file) {
+            this.setState({yamlFiles: [], errors: {}});
+            return;
+        }
+
+        this.setState({fileLoading: true, blueprintUrl: ""});
+
+        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        actions.doListYamlFiles(null, file).then((yamlFiles)=>{
+            this.setState({yamlFiles, errors: {}, fileLoading: false});
+        }).catch((err)=>{
+            this.setState({errors: {error: err.message}, fileLoading: false});
+        });
+    }
+
     render() {
         var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+
+        var options = _.map(this.state.yamlFiles, item => { return {text: item, value: item} });
 
         return (
             <Modal open={this.props.open}>
@@ -111,7 +149,9 @@ export default class UpdateDeploymentModal extends React.Component {
                         <Form.Group>
                             <Form.Field width="9" error={this.state.errors.blueprintUrl}>
                                 <Form.Input label="URL" placeholder="Enter new blueprint url" name="blueprintUrl"
-                                            value={this.state.blueprintUrl} onChange={this._handleInputChange.bind(this)}/>
+                                            value={this.state.blueprintUrl} onChange={this._handleInputChange.bind(this)}
+                                            onBlur={this._onBlueprintUrlBlur.bind(this)} loading={this.state.urlLoading}
+                                            icon={this.state.urlLoading?'search':false} disabled={this.state.urlLoading}/>
                             </Form.Field>
                             <Form.Field width="1" style={{position:'relative'}}>
                                 <div className="ui vertical divider">
@@ -119,7 +159,9 @@ export default class UpdateDeploymentModal extends React.Component {
                                 </div>
                             </Form.Field>
                             <Form.Field width="8" error={this.state.errors.blueprintUrl}>
-                                <Form.File placeholder="Select new blueprint file" name="blueprintFile" ref="blueprintFile"/>
+                                <Form.File placeholder="Select new blueprint file" name="blueprintFile" ref="blueprintFile"
+                                           onChange={this._onBlueprintFileChange.bind(this)} loading={this.state.fileLoading}
+                                           disabled={this.state.fileLoading}/>
                             </Form.Field>
                         </Form.Group>
 
@@ -128,8 +170,8 @@ export default class UpdateDeploymentModal extends React.Component {
                         </Form.Field>
 
                         <Form.Field>
-                            <Form.Input name='applicationFileName' placeholder="Blueprint filename e.g. blueprint"
-                                        value={this.state.applicationFileName} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.Dropdown placeholder='Blueprint filename' search selection options={options} name="applicationFileName"
+                                           value={this.state.applicationFileName} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
                         <Form.Divider>

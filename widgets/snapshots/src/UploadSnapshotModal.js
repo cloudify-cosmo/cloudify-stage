@@ -92,7 +92,9 @@ export default class UploadModal extends React.Component {
                         <Form.Group>
                             <Form.Field width="9" error={this.state.errors.snapshotUrl}>
                                 <Form.Input label="URL" placeholder="Enter snapshot url" name="snapshotUrl"
-                                            value={this.state.snapshotUrl} onChange={this._handleInputChange.bind(this)}/>
+                                            value={this.state.snapshotUrl} onChange={this._handleInputChange.bind(this)}
+                                            onBlur={()=>this.state.snapshotUrl ? this.refs.snapshotFile.reset() : ""}/>
+
                             </Form.Field>
                             <Form.Field width="1" style={{position:'relative'}}>
                                 <div className="ui vertical divider">
@@ -100,7 +102,9 @@ export default class UploadModal extends React.Component {
                                 </div>
                             </Form.Field>
                             <Form.Field width="8" error={this.state.errors.snapshotUrl}>
-                                <Form.File placeholder="Select snapshot file" name="snapshotFile" ref="snapshotFile"/>
+                                <Form.File placeholder="Select snapshot file" name="snapshotFile" ref="snapshotFile"
+                                           onChange={(file)=>file ? this.setState({snapshotUrl: ""}) : ""}/>
+
                             </Form.Field>
                         </Form.Group>
 

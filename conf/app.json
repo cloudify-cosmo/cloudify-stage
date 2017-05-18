@@ -45,5 +45,8 @@
     "username": "***REMOVED***",
     "password": "***REMOVED***"
   },
-  "extractedSourcesDir": "/extractedSources"
+  "source": {
+    "browseSourcesDir": "/cloudifyBrowseSources",
+    "lookupYamlsDir": "/cloudifyLookupYamls"
+  }
 }

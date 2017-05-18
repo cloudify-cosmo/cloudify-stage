@@ -25,12 +25,9 @@ class BlueprintActions {
 
     doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, privateResource=false) {
         var params = {private_resource: privateResource};
-        const YAML_EXTENSION = '.yaml';
 
         if (!_.isEmpty(blueprintFileName)) {
-            params['application_file_name'] = _.endsWith(blueprintFileName, YAML_EXTENSION)
-                                              ? blueprintFileName
-                                              : blueprintFileName + YAML_EXTENSION;
+            params['application_file_name'] = blueprintFileName;
         }
         if (!_.isEmpty(blueprintUrl)) {
             params['blueprint_archive_url'] = blueprintUrl;
@@ -44,6 +41,14 @@ class BlueprintActions {
         }
 
         return promise.then(()=> this.doUploadImage(blueprintName, imageUrl, image));
+    }
+
+    doListYamlFiles(blueprintUrl, file) {
+        if (file) {
+            return this.toolbox.getExternal().doUpload('/source/list/yaml', null, {archive: file});
+        } else {
+            return this.toolbox.getExternal().doPut('/source/list/yaml', {url: blueprintUrl});
+        }
     }
 
     doUploadImage(blueprintId, imageUrl, image) {

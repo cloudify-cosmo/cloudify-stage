@@ -1,7 +1,7 @@
 /**
  * Created by pposel on 23/01/2017.
  */
-
+import {Button} from 'semantic-ui-react'
 import React, { Component, PropTypes } from 'react';
 
 export default class InputFile extends Component {
@@ -17,8 +17,15 @@ export default class InputFile extends Component {
 
     static propTypes = {
         placeholder: PropTypes.string,
-        name: PropTypes.string
+        name: PropTypes.string,
+        onChange: PropTypes.func,
+        loading: PropTypes.bool,
+        disabled: PropTypes.bool
     };
+
+    static defaultProps = {
+        onChange: () => {}
+    }
 
     _openFileSelection(e) {
         e.preventDefault();
@@ -41,6 +48,7 @@ export default class InputFile extends Component {
 
         var filename = fullPathFileName.split('\\').pop();
         this.setState({value: filename, title: fullPathFileName});
+        this.props.onChange(this.file(), filename);
     }
 
     file() {
@@ -50,24 +58,22 @@ export default class InputFile extends Component {
     reset() {
         $(this.refs.inputFile).val("");
         this.setState({value: "", title: ""});
+        this.props.onChange(null, "");
     }
 
     render() {
         return (
             <div>
-                <div className="ui action input">
+                <div className={`ui action input ${this.props.disabled?'disabled':''}`}>
                     <input type="text" readOnly='true' value={this.state.value} title={this.state.title}
                            name={"fileName" + this.props.name} placeholder={this.props.placeholder}
                            onClick={this._openFileSelection.bind(this)}/>
 
-                    <button className="ui icon button" onClick={this._openFileSelection.bind(this)}>
-                        <i className="attach icon"></i>
-                    </button>
+
+                    <Button icon="attach" loading={this.props.loading} onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled}/>
                     {
                         this.state.value &&
-                        <button className="ui icon button" onClick={this._resetFileSelection.bind(this)}>
-                            <i className="remove icon"></i>
-                        </button>
+                        <Button icon="remove" onClick={this._resetFileSelection.bind(this)} disabled={this.props.disabled}/>
                     }
                 </div>
 
