@@ -1,0 +1,30 @@
+.scrollGlass {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    bottom: 10px;
+    right: 10px;
+
+    z-index: 19;
+}
+
+.scrollGlass.unlocked {
+    z-index: 0;
+}
+.scrollGlass .message {
+    display: none;
+    position: absolute;
+    top: 50%;
+    font-size: 30px;
+    text-align: center;
+    width: 100%;
+    color: white;
+}
+
+.scrollGlass:hover {
+    background-color: black;
+    opacity: 0.1;
+}
+.scrollGlass:hover .message {
+    display: block;
+}
