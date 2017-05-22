@@ -16,7 +16,7 @@ export default class SideBar extends Component {
 
     render() {
         return (
-            <div>
+            <div className='sidebarContainer'>
                 <div className={`ui visible left vertical sidebar menu small basic ${this.props.isEditMode?'editSideBar':''}`}>
                     <Pages pageId={this.props.pageId} isEditMode={this.props.isEditMode}/>
                 </div>
