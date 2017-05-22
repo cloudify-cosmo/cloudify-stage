@@ -8,9 +8,7 @@ module.exports =  function(client,asUser) {
     var page = client.page.login();
 
     return page.navigate()
-        .waitForElementVisible('@ipField', 2000)
-        .clearValue('@ipField')
-        .setValue('@ipField', Config.managerIp)
+        .waitForElementVisible('@usernameField', 2000)
         .setValue('@usernameField', asUser ? Config.user : Config.admin)
         .setValue('@passwordField', asUser ? Config.pass: Config.adminPass)
         .click('@submitButton')

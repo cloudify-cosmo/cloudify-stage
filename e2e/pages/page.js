@@ -33,9 +33,9 @@ module.exports = {
             }
         },
         sidebar: {
-            selector : '.sidebar',
+            selector : '.sidebarContainer',
             elements: {
-                addPageButton: '.addButtonContainer button'
+                addPageButton: '.addPageContainer button'
             }
         },
         page: {
