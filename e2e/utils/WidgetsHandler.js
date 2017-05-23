@@ -30,7 +30,10 @@ module.exports =  {
         page.section.sidebar
             .click('@addPageButton');
 
-        return client.pause(2000); // waiting to move to the new page
+        // waiting to move to the new page.
+        // There is no specific selector because we are always in a page, and in theory we can be in Page_0 and the
+        // new page that will be created is in Page_0 as well (happens in tests all the time because the index resets each session)
+        return client.pause(2000);
     },
 
     addWidget: function(client,widgetId) {
@@ -44,7 +47,10 @@ module.exports =  {
         client
             .click('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button');
 
-        return client.pause(2000); // waiting to move to the new page
+        // Waiting to move to the new widget to be added. Since i cannot be sure if the widget is indeed added by selector
+        // (That same widget could be on the page so my wait for element to be visible will imediatly return true) i prefer to
+        // either wait or let the widget test itself wait for the desired element (maybe it needs to wait for a data fetching or something like this)
+        return client.pause(500);
     },
 
     removeLastPage : function(client) {
@@ -52,9 +58,6 @@ module.exports =  {
 
         page.section.sidebar
             .click('@lastPageRemoveButton');
-
-        return client.pause(2000); // waiting to move to the new page
-
     },
 
     prepareTestWidget: function(client,widgetId) {
