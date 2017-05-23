@@ -20,15 +20,23 @@ export default class Manager extends Component {
     }
 
     render() {
-        return (
-            <Popup wide hoverable>
-                <Popup.Trigger><div className="managerMenu">
-                    {this.renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
-                    <span>{this.props.manager.ip} <span className="managerVersion">(v{this.props.manager.serverVersion})</span></span>
-                </div></Popup.Trigger>
+        let userRole = _.get(this.props.manager, 'auth.role', 'user');
 
-                <Services services={this.props.manager.services}/>
-            </Popup>
+        let managerInfo = () =>
+            <div className="managerMenu">
+                {this.renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
+                <span>{this.props.manager.ip} <span className="managerVersion">(v{this.props.manager.serverVersion})</span></span>
+            </div>;
+
+        return (
+            userRole === 'admin'
+            ?
+                <Popup wide hoverable>
+                    <Popup.Trigger>{managerInfo()}</Popup.Trigger>
+                    <Services services={this.props.manager.services}/>
+                </Popup>
+            :
+                managerInfo()
         );
     }
 }
