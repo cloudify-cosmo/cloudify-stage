@@ -8,7 +8,7 @@
     "devtest": "mocha --require ./test/setup.js -R mocha-pretty-spec-reporter --compilers babel-core/register",
     "start": "node backend/server.js",
     "lint": "eslint app",
-    "e2e": "nightwatch -c ./e2e/nightwatch.json",
+    "e2e": "nightwatch -c ./e2e/nightwatch.conf.js",
     "beforebuild": "scripts/preinstall.sh",
     "build": "webpack --config webpack.config-prod.js --bail",
     "zip": "scripts/createPackage.sh"
