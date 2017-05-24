@@ -44,7 +44,7 @@ export default class AddWidgetModal extends Component {
                         {
                             this.state.filteredWidgetDefinitions.map(function(widget){
                                 return (
-                                    <div className="item" key={widget.name}>
+                                    <div className="item" key={widget.id} data-id={widget.id}>
                                         <div className='ui image small bordered'>
                                             <img src={'/widgets/'+widget.id+'/widget.png'}/>
                                         </div>
