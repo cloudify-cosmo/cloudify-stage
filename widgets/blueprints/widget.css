@@ -1,7 +1,3 @@
-.blueprintCatalog .bottomDivider + div {
-    padding-top: 1rem  !important;
-}
-
 .blueprintCatalog .actionButtons {
     position: absolute !important;
     bottom: 1rem;
