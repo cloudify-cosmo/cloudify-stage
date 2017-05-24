@@ -33,9 +33,11 @@ module.exports = {
             }
         },
         sidebar: {
-            selector : '.sidebar',
+            selector : '.sidebarContainer',
             elements: {
-                addPageButton: '.addButtonContainer button'
+                addPageButton: '.addPageContainer button',
+                lastPage: '.pages .item:last-child',
+                lastPageRemoveButton : '.pages .item:last-child .pageRemoveButton'
             }
         },
         page: {
@@ -43,9 +45,16 @@ module.exports = {
             elements: {
                 addWidgetButton: '.addWidgetBtn',
                 firstWidget: '.widget',
+                firstWidgetName: '.widget h5.header span',
                 firstWidgetRemoveIcon: '.widget .widgetEditButtons i.remove.link.icon.small',
                 firstWidgetConfigureIcon: '.widget .widgetEditButtons .editWidgetIcon',
                 firstWidgetResizeHandle: '.widget .ui-resizable-handle'
+            }
+        },
+        addWidgetModal: {
+            selector: '.addWidgetModal',
+            elements: {
+                searchInput : 'input'
             }
         }
     },

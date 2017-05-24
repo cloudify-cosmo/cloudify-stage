@@ -10,9 +10,7 @@ module.exports = {
         var page = client.page.login();
 
         page.navigate()
-            .waitForElementVisible('@ipField', 2000)
-            .clearValue('@ipField')
-            .setValue('@ipField', Config.managerIp)
+            .waitForElementVisible('@usernameField', 2000)
             .setValue('@usernameField', Config.admin)
             .setValue('@passwordField', Config.adminPass)
             .click('@submitButton')
@@ -27,9 +25,7 @@ module.exports = {
         var page = client.page.login();
 
         page.navigate()
-            .waitForElementVisible('@ipField', 2000)
-            .clearValue('@ipField')
-            .setValue('@ipField', Config.managerIp)
+            .waitForElementVisible('@usernameField', 2000)
             .setValue('@usernameField', Config.user)
             .setValue('@passwordField', Config.pass + 'a')
             .click('@submitButton')
