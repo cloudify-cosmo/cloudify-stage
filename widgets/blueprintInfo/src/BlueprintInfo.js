@@ -35,7 +35,7 @@ export default class BlueprintInfo extends React.Component {
                         <Grid.Column width="4"><Image src={`/ba/image/${blueprint.id}`} centered={true}/></Grid.Column>
                         <Grid.Column width="12">
                             <h3 className="ui icon header verticalCenter">
-                                <a className="underline" href="javascript:void(0)">{blueprint.id}</a>
+                                <a className="underline blueprintInfoName" href="javascript:void(0)">{blueprint.id}</a>
                             </h3>
                             <PrivateMarker show={blueprint.private_resource} title="Private resource" className="rightFloated"/>
                         </Grid.Column>

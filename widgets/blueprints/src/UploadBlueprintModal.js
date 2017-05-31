@@ -116,13 +116,14 @@ export default class UploadModal extends React.Component {
 
     render() {
         var {Modal, Button, Icon, Form, ApproveButton, CancelButton, PrivateField} = Stage.Basic;
-        const uploadButton = <Button content='Upload' icon='upload' labelPosition='left' />;
+        const uploadButton = <Button content='Upload' icon='upload' labelPosition='left' className="uploadBlueprintButton"/>;
 
         var options = _.map(this.state.yamlFiles, item => { return {text: item, value: item} });
 
         return (
             <div>
-                <Modal trigger={uploadButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
+                <Modal trigger={uploadButton} open={this.state.open} onOpen={()=>this.setState({open:true})}
+                       onClose={()=>this.setState({open:false})} className="uploadBlueprintModal">
                     <Modal.Header>
                         <Icon name="upload"/> Upload blueprint
                         <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"

@@ -112,17 +112,17 @@ export default class Filter extends React.Component {
                     <Form.Group widths='equal'>
                         <Form.Field>
                             <Form.Dropdown search selection value={this.props.data.blueprintId || ''} placeholder="Select Blueprint"
-                                           options={blueprintOptions} onChange={this._selectBlueprint.bind(this)}/>
+                                           options={blueprintOptions} onChange={this._selectBlueprint.bind(this)} id="blueprintFilterField"/>
                         </Form.Field>
                         <Form.Field>
                             <Form.Dropdown search selection value={this.props.data.deploymentId || ''} placeholder="Select Deployment"
-                                           options={deploymentOptions} onChange={this._selectDeployment.bind(this)}/>
+                                           options={deploymentOptions} onChange={this._selectDeployment.bind(this)} id="deploymentFilterField"/>
                         </Form.Field>
                         {
                             this.props.widget.configuration.filterByExecutions &&
                             <Form.Field>
                                 <Form.Dropdown search selection value={this.props.data.executionId || ''} placeholder="Select Execution"
-                                               options={executionOptions} onChange={this._selectExecution.bind(this)}/>
+                                               options={executionOptions} onChange={this._selectExecution.bind(this)} id="executionFilterField"/>
                             </Form.Field>
                         }
                     </Form.Group>
