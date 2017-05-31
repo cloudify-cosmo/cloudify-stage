@@ -40,11 +40,11 @@ export default class Users extends Component {
 
         var adminElements = [];
         if (this.props.showAllOptions && this.props.manager.auth.role === Consts.ROLE_ADMIN) {
-            adminElements.push(<Dropdown.Item   key='maintenance'
+            adminElements.push(<Dropdown.Item   key='maintenance' id='maintenanceMenuItem'
                                                 icon='doctor' text='Maintenance Mode' value='maintenance'
                                                 onClick={this.props.onMaintenance}/>);
             adminElements.push(<Dropdown.Divider key='divider'/>);
-            adminElements.push(<Dropdown.Item    key='configure' icon='options' text='Configure' value='configure'
+            adminElements.push(<Dropdown.Item    key='configure' id='configureMenuItem' icon='options' text='Configure' value='configure'
                                                  onClick={this.props.onConfigure}/>);
         }
 
@@ -56,21 +56,21 @@ export default class Users extends Component {
                         <Dropdown.Menu>
                             {adminElements}
                             <Dropdown.Item icon='undo' text='Reset' value='reset' title='Reset application screens'
-                                           onClick={this.props.onReset}/>
+                                           onClick={this.props.onReset} id='resetMenuItem'/>
 
                             {
                                 this.props.canEditTheUi &&
                                 <Dropdown.Item icon='configure' selected={this.props.isEditMode} active={this.props.isEditMode}
-                                               text={this.props.isEditMode ? 'Exit Edit Mode' : 'Edit Mode'}
+                                               text={this.props.isEditMode ? 'Exit Edit Mode' : 'Edit Mode'} id='editModeMenuItem'
                                                value='editMode' onClick={this.onEditModeClick.bind(this)}/>
                             }
                             <Dropdown.Divider />
-                            <Dropdown.Item icon='log out' text='Logout' value='logout'
+                            <Dropdown.Item icon='log out' text='Logout' value='logout' id='logoutMenuItem'
                                            onClick={this.props.onLogout}/>
                         </Dropdown.Menu>
                         :
                         <Dropdown.Menu>
-                            <Dropdown.Item icon='log out' text='Logout' value='logout'
+                            <Dropdown.Item icon='log out' text='Logout' value='logout' id='logoutMenuItem'
                                            onClick={this.props.onLogout}/>
                         </Dropdown.Menu>
                     }

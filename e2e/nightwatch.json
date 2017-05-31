@@ -4,7 +4,8 @@
     "live_output" : true,
     "parallel_process_delay" : 1500,
     "page_objects_path" : "e2e/pages",
-
+    "custom_commands_path" : "e2e/commands",
+    "globals_path" : "e2e/globals.js",
     "selenium" : {
         "start_process" : true,
         "server_path" : "./e2e/bin/selenium-server-standalone-3.0.1.jar",
@@ -17,7 +18,7 @@
 
     "test_settings" : {
         "default" : {
-            "launch_url" : "http://localhost:8088",
+            "launch_url" : "http://localhost:3000",
             "silent" : true,
             "selenium_port": 4444,
             "selenium_host": "localhost",
@@ -25,6 +26,7 @@
                 "enabled" : false,
                 "path" : "./screenshots"
             },
+            "end_session_on_fail" : true,
             "desiredCapabilities": {
                 "browserName": "chrome",
                 "marionette": true

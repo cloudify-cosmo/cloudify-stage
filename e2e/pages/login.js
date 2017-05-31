@@ -12,6 +12,7 @@ module.exports = {
         submitButton: 'button[type="submit"]',
         tenantsDropdownText : 'div.tenantsMenu',
         managerData: '.managerMenu',
-        errorMessage: '.error.message'
+        errorMessage: '.error.message',
+        splashPage: 'div.splashPage'
     }
 };

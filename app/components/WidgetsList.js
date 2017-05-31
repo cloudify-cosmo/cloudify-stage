@@ -34,7 +34,7 @@ export default class WidgetsList extends Component {
                                 x={widget.x} y={widget.y}
                                 height={widget.height}
                                 width={widget.width}
-                                className='widget'
+                                className={`widget ${widget.definition.id}Widget`}
                                 maximized={widget.maximized}>
                                 <Widget widget={widget} pageId={this.props.pageId}></Widget>
                             </GridItem>
