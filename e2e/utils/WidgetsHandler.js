@@ -6,29 +6,33 @@ var Config = require('../config.json');
 
 module.exports =  {
     moveToEditMode : function(client) {
-        var page = client.page.page();
+        var section = client.page.page().section.userMenu;
 
-        return page.section.userMenu
-            .click('@userName')
+        section.click('@userName')
             .waitForElementVisible('@userDropdownMenu', 2000)
-            .click('@editModeItem');
+            .getText('@editModeMenuItem', result => {
+                if (result.value === section.props.editModeLabel) {
+                    section.click('@editModeMenuItem');
+                }
+            });
     },
 
     moveOutOfEditMode: function(client) {
-        var page = client.page.page();
+        var section = client.page.page().section.userMenu;
 
-        return page.section.userMenu
-            .click('@userName')
+        return section.click('@userName')
             .waitForElementVisible('@userDropdownMenu', 2000)
-            .click('@editModeItem');
-
+            .getText('@editModeMenuItem', result => {
+                if (result.value === section.props.exitModeLabel) {
+                    section.click('@editModeMenuItem');
+                }
+            });
     },
 
     addPage: function(client) {
-        var page = client.page.page();
+        var section = client.page.page().section.sidebar;
 
-        page.section.sidebar
-            .click('@addPageButton');
+        section.click('@addPageButton');
 
         // waiting to move to the new page.
         // There is no specific selector because we are always in a page, and in theory we can be in Page_0 and the
@@ -39,29 +43,34 @@ module.exports =  {
     addWidget: function(client,widgetId) {
         var page = client.page.page();
 
-        page.section.page
-            .click('@addWidgetButton');
+        return page.section.page.isWidgetPresent(widgetId, result => {
+            if (!result.value) {
+                console.log("-- adding " + widgetId + " widget");
 
-        client.pause(1000); // Wait for modal to open
+                page.section.page.click('@addWidgetButton');
 
-        client
-            .click('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button');
+                client.pause(1000); // Wait for modal to open
 
-        // Waiting to move to the new widget to be added. Since i cannot be sure if the widget is indeed added by selector
-        // (That same widget could be on the page so my wait for element to be visible will imediatly return true) i prefer to
-        // either wait or let the widget test itself wait for the desired element (maybe it needs to wait for a data fetching or something like this)
-        return client.pause(500);
+                page.section.addWidgetModal.addWidget(widgetId);
+            }
+        });
     },
 
     removeLastPage : function(client) {
-        var page = client.page.page();
+        var section = client.page.page().section.sidebar;
 
-        page.section.sidebar
-            .click('@lastPageRemoveButton');
+        return section.getText("@lastPage", function(result) {
+            if (result.value === section.props.lastPageLabel) {
+                section.moveToElement('@lastPageRemoveButton', 10, 10)
+                    .waitForElementVisible('@lastPageRemoveButton')
+                    .click('@lastPageRemoveButton');
+            }
+        });
     },
 
     prepareTestWidget: function(client,widgetId) {
         this.moveToEditMode(client);
+        this.removeLastPage(client);
         this.addPage(client);
         this.addWidget(client,widgetId);
         this.moveOutOfEditMode(client);

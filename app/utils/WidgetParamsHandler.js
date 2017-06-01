@@ -23,6 +23,10 @@ export default class WidgetParamsHandler {
         this._runFetchParamsIfNeeded();
     }
 
+    update(widget) {
+        this._widget = widget;
+    }
+
     buildParamsToSend(userRequestedParams) {
 
         // Map grid params to params

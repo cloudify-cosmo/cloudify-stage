@@ -1,5 +1,9 @@
-.uploadButton {
+.repositoryCatalog .uploadButton {
     position: absolute !important;
     bottom: 1rem;
     right: 10px;
+}
+
+.repositoryCatalog .bottomDivider {
+    margin-bottom: 0 !important;
 }

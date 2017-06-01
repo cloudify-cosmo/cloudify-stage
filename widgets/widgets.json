@@ -27,5 +27,6 @@
   "timeFilter",
   "topology",
   "userGroups",
-  "userManagement"
+  "userManagement",
+  "blueprintInfo"
 ]

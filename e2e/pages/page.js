@@ -29,7 +29,11 @@ module.exports = {
             elements: {
                 userName: 'span',
                 userDropdownMenu : '.menu',
-                editModeItem : '.usersMenu .menu .item:nth-child(5)'
+                editModeMenuItem : '#editModeMenuItem'
+            },
+            props: {
+                editModeLabel: "Edit Mode",
+                exitModeLabel: "Exit Edit Mode"
             }
         },
         sidebar: {
@@ -38,6 +42,9 @@ module.exports = {
                 addPageButton: '.addPageContainer button',
                 lastPage: '.pages .item:last-child',
                 lastPageRemoveButton : '.pages .item:last-child .pageRemoveButton'
+            },
+            props: {
+                lastPageLabel: "Page_0"
             }
         },
         page: {
@@ -49,13 +56,26 @@ module.exports = {
                 firstWidgetRemoveIcon: '.widget .widgetEditButtons i.remove.link.icon.small',
                 firstWidgetConfigureIcon: '.widget .widgetEditButtons .editWidgetIcon',
                 firstWidgetResizeHandle: '.widget .ui-resizable-handle'
-            }
+            },
+            commands: [{
+                isWidgetPresent: function(widgetId, callback) {
+                    return this.isPresent('.widget.' + widgetId + "Widget", callback);
+                }
+            }]
         },
         addWidgetModal: {
             selector: '.addWidgetModal',
             elements: {
                 searchInput : 'input'
-            }
+            },
+            commands: [{
+                addWidget: function(widgetId) {
+                    return this.waitForElementPresent('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button')
+                        .click('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button')
+                        .waitForElementNotVisible('.addWidgetModal')
+                        .waitForElementPresent('.widget.' + widgetId + "Widget");
+                }
+            }]
         }
     },
 

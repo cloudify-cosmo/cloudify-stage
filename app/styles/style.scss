@@ -459,37 +459,6 @@ code.hljs {
     .nodeState .icon {
       margin-right: 0px;
     }
-
-    .rightDivider {
-      position: relative;
-    }
-
-    .rightDivider::after {
-      content: "";
-      border-left: 1px solid rgba(34, 36, 38, 0.15);
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-      height: calc(100% - 2rem);
-      position: absolute;
-      right: 0;
-      top: 1rem;
-      width: 0px;
-    }
-
-    .bottomDivider {
-      position: relative;
-    }
-
-    .bottomDivider::after {
-      content: "";
-      border-top: 1px solid rgba(34, 36, 38, 0.15);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      width: calc(100% - 2rem);
-      position: absolute;
-      left: 1rem;
-      bottom: 0px;
-      height: 0px;
-    }
-
   }
 
   .menuAction {
@@ -509,6 +478,41 @@ code.hljs {
       margin-bottom:0px;
     }
   }
+}
+
+.ui.grid {
+
+  .rightDivider {
+    position: relative;
+  }
+
+  .rightDivider::after {
+    content: "";
+    border-left: 1px solid rgba(34, 36, 38, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    height: calc(100% - 2rem);
+    position: absolute;
+    right: 0;
+    top: 1rem;
+    width: 0px;
+  }
+
+  .bottomDivider {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  .bottomDivider::after {
+    content: "";
+    border-top: 1px solid rgba(34, 36, 38, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    width: calc(100% - 2rem);
+    position: absolute;
+    left: 1rem;
+    bottom: 0px;
+    height: 0px;
+  }
+
 }
 
 /* Popup Menu */
