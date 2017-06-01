@@ -3,12 +3,10 @@
  */
 
 exports.command = function(selector, callback) {
-    this.element('css selector', selector, result => {
+    return this.element('css selector', selector, result => {
         if (callback) {
             result.value = !!(result.value && result.value.ELEMENT);
             callback(result);
         }
     });
-
-    return this;
 };
