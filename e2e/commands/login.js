@@ -4,14 +4,13 @@
 
 var Config = require('../config.json');
 
-module.exports =  function(client,asUser) {
-    var page = client.page.login();
-
-    return page.navigate()
-        .waitForElementVisible('@usernameField', 2000)
+exports.command =  function(asUser) {
+    return this.page.login()
+        .navigate()
+        .waitForElementVisible('@usernameField')
         .setValue('@usernameField', asUser ? Config.user : Config.admin)
         .setValue('@passwordField', asUser ? Config.pass: Config.adminPass)
-        .waitForElementNotVisible('@splashPage', 1000)
+        .waitForElementNotVisible('@splashPage')
         .click('@submitButton')
-        .waitForElementVisible('@managerData',5000);
+        .waitForElementVisible('@managerData');
 }

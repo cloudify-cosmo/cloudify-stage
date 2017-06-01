@@ -6,31 +6,29 @@ var Config = require('../config.json');
 
 module.exports = {
     'Successful login test': function (client) {
-
-        var page = client.page.login();
-
-        page.navigate()
-            .waitForElementVisible('@usernameField', 2000)
+        client.page.login()
+            .navigate()
+            .waitForElementVisible('@usernameField')
             .setValue('@usernameField', Config.admin)
             .setValue('@passwordField', Config.adminPass)
             .click('@submitButton')
-            .waitForElementVisible('@managerData',5000)
+            .waitForElementVisible('@managerData')
             .assert.containsText('@managerData', Config.managerIp)
             .assert.containsText('@tenantsDropdownText','default_tenant');
 
         client.end();
     },
+
     'Failed login test': function (client) {
-
-        var page = client.page.login();
-
-        page.navigate()
-            .waitForElementVisible('@usernameField', 2000)
+        client.page.login()
+            .navigate()
+            .waitForElementVisible('@usernameField')
             .setValue('@usernameField', Config.user)
             .setValue('@passwordField', Config.pass + 'a')
             .click('@submitButton')
-            .waitForElementVisible('@errorMessage',5000)
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', 'User unauthorized');
+
         client.end();
     }
 

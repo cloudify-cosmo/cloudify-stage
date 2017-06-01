@@ -69,7 +69,7 @@ module.exports = {
                 searchInput : 'input'
             },
             commands: [{
-                addWidget: function(widgetId) {
+                clickAddWidget: function(widgetId) {
                     return this.waitForElementPresent('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button')
                         .click('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button')
                         .waitForElementNotVisible('.addWidgetModal')
