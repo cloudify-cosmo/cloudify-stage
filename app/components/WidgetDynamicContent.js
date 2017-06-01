@@ -159,6 +159,8 @@ export default class WidgetDynamicContent extends Component {
                 var oldConfig = prevProps.widget.configuration[confName];
 
                 if (oldConfig !== config) {
+                    this._paramsHandler.update(this.props.widget);
+
                     requiresFetch = true;
                     return false;
                 }

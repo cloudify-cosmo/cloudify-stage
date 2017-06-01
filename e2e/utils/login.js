@@ -11,6 +11,7 @@ module.exports =  function(client,asUser) {
         .waitForElementVisible('@usernameField', 2000)
         .setValue('@usernameField', asUser ? Config.user : Config.admin)
         .setValue('@passwordField', asUser ? Config.pass: Config.adminPass)
+        .waitForElementNotVisible('@splashPage', 1000)
         .click('@submitButton')
         .waitForElementVisible('@managerData',5000);
 }
