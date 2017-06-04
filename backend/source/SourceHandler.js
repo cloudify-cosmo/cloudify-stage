@@ -62,7 +62,12 @@ module.exports = (function() {
 
     function browseArchiveFile(path) {
         return new Promise((resolve, reject) => {
+            if (!_checkPrefix(browseSourcesDir, path)) {
+                return reject('Wrong path');
+            }
+
             var absolutePath = pathlib.join(browseSourcesDir, path);
+
             fs.readFile(absolutePath, 'utf-8', (err, data) => {
                 if (err) {
                     return reject(err);
@@ -115,6 +120,13 @@ module.exports = (function() {
             });
     }
 
+    function _checkPrefix(prefix, candidate) {
+        var absPrefix = pathlib.resolve(prefix) + pathlib.sep;
+        var absCandidate = pathlib.resolve(candidate) + pathlib.sep;
+
+        return absCandidate.substring(0, absPrefix.length) === absPrefix;
+    }
+
     function _fetchFromUrl(archiveUrl, resolve, reject, options) {
         archiveUrl = decodeURIComponent(archiveUrl.trim());
 
@@ -131,7 +143,7 @@ module.exports = (function() {
 
                     var archiveExt = ['tar', 'bz2', 'gz', 'zip'].find(function(ext) {
                         return _.includes(urlExt, ext);
-                    })
+                    });
 
                     if (archiveExt) {
                         archiveFile = "archive." + archiveExt;
