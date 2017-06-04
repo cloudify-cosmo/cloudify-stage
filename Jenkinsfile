@@ -7,8 +7,8 @@ pipeline {
     stages {
         stage('Clean') {
             steps {
-                sh '''sudo npm cache clean
-                  bower cache clean
+                sh '''#sudo npm cache clean
+                  #bower cache clean
                   sudo chown jenkins:jenkins -R ../*'''
                 step([$class: 'WsCleanup'])
             }
