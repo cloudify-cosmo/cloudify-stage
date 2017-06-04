@@ -3,7 +3,7 @@
  */
 
 import BlueprintInfo from './BlueprintInfo';
-import Actions from './Actions';
+import Actions from './actions';
 
 Stage.defineWidget({
     id: 'blueprintInfo',
