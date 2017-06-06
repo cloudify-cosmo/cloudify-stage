@@ -79,7 +79,9 @@ Stage.defineWidget({
         let blueprintId = CONTEXT_PARAMS['blueprint_id'], deploymentId = CONTEXT_PARAMS['deployment_id'];
         let formattedData = Object.assign({}, data, {
             items: _.map (data.items, (item) => {
-                var id = item.execution_id + item.message + item.timestamp;
+                let id = Stage.Utils.getMD5(item.node_instance_id + item.operation + item.blueprint_id + item.timestamp +
+                                            item.message + item.level + item.node_name + item.workflow_id +
+                                            item.reported_timestamp + item.deployment_id + item.type + item.execution_id);
                 return Object.assign({}, item, {
                     id: id,
                     timestamp: Stage.Utils.formatTimestamp(item.timestamp),

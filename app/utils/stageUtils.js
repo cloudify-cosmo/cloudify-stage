@@ -2,6 +2,8 @@
  * Created by pawelposel on 09/11/2016.
  */
 
+import md5 from 'blueimp-md5';
+
 export default class StageUtils {
 
     static makeCancelable(promise) {
@@ -52,4 +54,7 @@ export default class StageUtils {
         return message;
     }
 
+    static getMD5(str) {
+        return md5(str);
+    }
 }
