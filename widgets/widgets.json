@@ -17,6 +17,7 @@
   "inputs",
   "logs",
   "nodes",
+  "nodesStats",
   "outputs",
   "plugins",
   "pluginsNum",

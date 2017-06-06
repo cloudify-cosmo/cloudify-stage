@@ -4,8 +4,10 @@
 
 import Gauge from './Gauge';
 import Graph from './Graph';
+import PieGraph from './PieGraph';
 
 export default {
     Gauge,
-    Graph
+    Graph,
+    PieGraph
 }
