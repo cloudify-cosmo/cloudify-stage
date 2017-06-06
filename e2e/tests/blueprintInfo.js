@@ -10,15 +10,13 @@ module.exports = {
     },
 
     'No blueprint selected': function (client) {
-        client.page.blueprintInfo()
-            .section.noData
+        client.page.blueprintInfo().section.noData
             .assert.containsText('@message', "No blueprint selected");
     },
 
     'Show blueprint info': function (client) {
         client.selectBlueprint()
-            .page.blueprintInfo()
-            .section.info
+            .page.blueprintInfo().section.info
             .waitForElementPresent('@blueprintName')
             .assert.containsText('@blueprintName', client.page.blueprints().props.testBlueprint);
     },

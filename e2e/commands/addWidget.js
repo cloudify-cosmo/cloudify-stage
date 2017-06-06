@@ -5,7 +5,7 @@
 exports.command = function(widgetId) {
     var page = this.page.page();
 
-    return page.section.page.isWidgetPresent(widgetId, result => {
+    return this.isWidgetPresent(widgetId, result => {
         if (!result.value) {
             console.log("-- adding " + widgetId + " widget");
 

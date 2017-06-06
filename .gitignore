@@ -13,3 +13,5 @@ stage.tar.gz
 reports
 selenium-debug.log
 tests_output
+
+/e2e/screenshots

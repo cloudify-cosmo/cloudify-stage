@@ -3,8 +3,7 @@
  */
 
 exports.command = function() {
-    this.page.page()
-        .section.sidebar
+    this.page.page().section.sidebar
         .click('@addPageButton');
 
     return this.pause(2000);

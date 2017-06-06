@@ -4,56 +4,55 @@
 
 var pathlib = require("path");
 
-exports.command = function(name) {
-    if (!name) {
-        name = this.page.blueprints().props.testBlueprint;
+exports.command = function(blueprintName) {
+    if (!blueprintName) {
+        blueprintName = this.page.blueprints().props.testBlueprint;
     }
 
     var blueprintExists = false;
 
-    var page = this.page.page().section.page;
-    page.isWidgetPresent("filter", result => {
-        console.log("-- adding " + name + " blueprint - check if already presented");
+    this.isWidgetPresent(this.page.filter().props.widgetId, result => {
+        console.log("-- adding " + blueprintName + " blueprint - check if already presented");
 
         if (!result.value) {
             this.moveToEditMode()
-                .addWidget("filter")
+                .addWidget(this.page.filter().props.widgetId)
                 .moveOutOfEditMode();
         }
 
         this.page.filter()
-            .isBlueprintPresent(name, result => {
+            .isBlueprintPresent(blueprintName, result => {
                 blueprintExists = result.value;
-                console.log("-- adding " + name + " blueprint - presented: " + blueprintExists)
+                console.log("-- adding " + blueprintName + " blueprint - presented: " + blueprintExists)
             })
     });
 
     return this.perform(() => {
+        var blueprints = this.page.blueprints();
+
         if (!blueprintExists) {
-            page.isWidgetPresent("blueprints", result => {
-                console.log("-- adding " + name + " blueprint - upload blueprint");
+            this.isWidgetPresent(blueprints.props.widgetId, result => {
+                console.log("-- adding " + blueprintName + " blueprint - upload blueprint");
 
                 if (!result.value) {
                     this.moveToEditMode()
-                        .addWidget("blueprints")
+                        .addWidget(blueprints.props.widgetId)
                         .moveOutOfEditMode();
                 }
 
-                var blueprintsWidget = this.page.blueprints();
-
-                blueprintsWidget.waitForElementVisible('@uploadButton')
+                blueprints.waitForElementVisible('@uploadButton')
                     .click('@uploadButton');
 
-                blueprintsWidget.section.uploadModal
+                blueprints.section.uploadModal
                     .waitForElementVisible('@okButton')
-                    .setValue('@blueprintName', name)
-                    .setValue('@blueprintFile', pathlib.resolve('e2e/resources/' + name + '.zip'))
+                    .setValue('@blueprintName', blueprintName)
+                    .setValue('@blueprintFile', pathlib.resolve('e2e/resources/' + blueprintName + '.zip'))
                     .click('@okButton');
 
-                blueprintsWidget.waitForElementNotPresent('@uploadModal', 10000);
+                blueprints.waitForElementNotPresent('@uploadModal', 10000);
 
                 this.page.filter()
-                    .waitForBlueprintPresent(name);
+                    .waitForBlueprintPresent(blueprintName);
             });
         }
     });

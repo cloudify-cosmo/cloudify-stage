@@ -29,8 +29,7 @@ module.exports = {
         client.login()
             .moveToEditMode()
             .addPage()
-            .page.page()
-            .section.sidebar
+            .page.page().section.sidebar
             .waitForElementVisible('@lastPage')
             .assert.containsText('@lastPage', 'Page_0')
             .removeLastPage();
@@ -43,8 +42,7 @@ module.exports = {
             .moveToEditMode()
             .addPage()
             .addWidget('blueprints')
-            .page.page()
-            .section.page
+            .page.page().section.page
             .waitForElementVisible('@firstWidget')
             .assert.containsText('@firstWidgetName','Blueprints').removeLastPage()
             .moveOutOfEditMode();
