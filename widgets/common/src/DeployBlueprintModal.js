@@ -124,7 +124,7 @@ export default class DeployBlueprintModal extends React.Component {
                                         [(input => !_.isNil(input.default)), 'name']);
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} className="deployBlueprintModal">
                 <Modal.Header>
                     <Icon name="rocket"/> Deploy blueprint {blueprint.id}
                     <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"

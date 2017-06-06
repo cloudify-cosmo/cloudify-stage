@@ -5,8 +5,7 @@
 module.exports = {
     'Admin user menu': function (client) {
         client.login()
-            .page.page()
-            .section.userMenu
+            .page.page().section.userMenu
             .assert.containsText('@userName', 'admin')
             .click('@userName')
             .waitForElementVisible('@userDropdownMenu')
@@ -23,8 +22,7 @@ module.exports = {
 
     'Regular user menu': function (client) {
         client.login(true)
-            .page.page()
-            .section.userMenu
+            .page.page().section.userMenu
             .assert.containsText('@userName', 'user1')
             .click('@userName')
             .waitForElementVisible('@userDropdownMenu')

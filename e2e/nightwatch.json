@@ -23,8 +23,10 @@
             "selenium_port": 4444,
             "selenium_host": "localhost",
             "screenshots" : {
-                "enabled" : false,
-                "path" : "./screenshots"
+                "enabled" : true,
+                "path" : "e2e/screenshots",
+                "on_failure": true,
+                "on_error": true
             },
             "end_session_on_fail" : true,
             "desiredCapabilities": {
@@ -34,7 +36,10 @@
         },
 
         "dev" : {
-            "launch_url" : "http://localhost:3000"
+            "launch_url" : "http://localhost:3000",
+            "screenshots" : {
+                "enabled" : false
+            }
         }
     }
 }

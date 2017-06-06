@@ -11,6 +11,7 @@ module.exports = {
             .waitForElementVisible('@usernameField')
             .setValue('@usernameField', Config.admin)
             .setValue('@passwordField', Config.adminPass)
+            .waitForElementVisible('@submitButton')
             .click('@submitButton')
             .waitForElementVisible('@managerData')
             .assert.containsText('@managerData', Config.managerIp)

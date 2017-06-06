@@ -2,15 +2,11 @@
  * Created by pawelposel on 2017-05-31.
  */
 
-exports.command = function(blueprintName) {
-    if (!blueprintName) {
-        blueprintName = this.page.blueprints().props.testBlueprint;
-    }
-
+exports.command = function(deploymentName) {
     var filter = this.page.filter();
 
     return this.isWidgetPresent(filter.props.widgetId, result => {
-            console.log("-- selecting " + blueprintName + " blueprint");
+            console.log("-- selecting " + deploymentName + " deployment");
 
             if (!result.value) {
                 this.moveToEditMode()
@@ -18,6 +14,6 @@ exports.command = function(blueprintName) {
                     .moveOutOfEditMode();
             }
 
-            filter.setValue('@blueprintSearch', [blueprintName, this.Keys.ENTER]);
+            filter.setValue('@deploymentSearch', [deploymentName, this.Keys.ENTER]);
         });
 };

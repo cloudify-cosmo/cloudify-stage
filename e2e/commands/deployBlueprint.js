@@ -2,7 +2,7 @@
  * Created by pawelposel on 2017-05-31.
  */
 
-exports.command = function(blueprintName) {
+exports.command = function(deploymentName, inputs, blueprintName) {
     if (!blueprintName) {
         blueprintName = this.page.blueprints().props.testBlueprint;
     }
@@ -10,7 +10,7 @@ exports.command = function(blueprintName) {
     var blueprintActionButtons = this.page.blueprintActionButtons();
 
     return this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
-            console.log("-- removing " + blueprintName + " blueprint");
+            console.log("-- deploying " + blueprintName + " blueprint");
 
             if (!result.value) {
                 this.moveToEditMode()
@@ -21,15 +21,20 @@ exports.command = function(blueprintName) {
             this.selectBlueprint(blueprintName);
 
             blueprintActionButtons.section.buttons
-                .waitForElementNotPresent('@deleteButtonDisabled')
-                .click('@deleteBlueprintButton');
+                .waitForElementNotPresent('@createButtonDisabled')
+                .click('@createDeploymentButton');
 
-            blueprintActionButtons.section.removeConfirm
+            var deployments = this.page.deployments();
+
+            deployments.section.deployModal
                 .waitForElementVisible('@okButton')
-                .click('@okButton')
-                .waitForElementNotPresent('@okButton');
+                .setValue('@deploymentName', deploymentName)
+                .setInputsValue(inputs)
+                .click('@okButton');
+
+            deployments.waitForElementNotPresent('@deployModal', 10000);
 
             this.page.filter()
-                .waitForBlueprintNotPresent(blueprintName);
+                .waitForDeploymentPresent(deploymentName);
         });
 };

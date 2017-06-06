@@ -25,13 +25,12 @@ module.exports = {
             }
         }
     },
-
     elements: {
         uploadButton: '.blueprintsWidget .uploadBlueprintButton',
         uploadModal: '.uploadBlueprintModal'
     },
-
     props: {
+        widgetId: "blueprints",
         testBlueprint: "blueprint"
     }
 

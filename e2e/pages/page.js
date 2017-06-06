@@ -56,12 +56,7 @@ module.exports = {
                 firstWidgetRemoveIcon: '.widget .widgetEditButtons i.remove.link.icon.small',
                 firstWidgetConfigureIcon: '.widget .widgetEditButtons .editWidgetIcon',
                 firstWidgetResizeHandle: '.widget .ui-resizable-handle'
-            },
-            commands: [{
-                isWidgetPresent: function(widgetId, callback) {
-                    return this.isPresent('.widget.' + widgetId + "Widget", callback);
-                }
-            }]
+            }
         },
         addWidgetModal: {
             selector: '.addWidgetModal',

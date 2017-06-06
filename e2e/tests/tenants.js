@@ -5,8 +5,7 @@
 module.exports = {
     'Tenants list': function (client) {
         client.login()
-            .page.page()
-            .section.tenants
+            .page.page().section.tenants
             .assert.containsText('@tenantName', 'default_tenant')
             .click('@tenantName')
             .waitForElementVisible('@tenantsDropdownMenu')

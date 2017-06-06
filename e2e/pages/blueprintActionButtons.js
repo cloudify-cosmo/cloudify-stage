@@ -9,6 +9,7 @@ module.exports = {
             selector: '.blueprintActionButtonsWidget',
             elements: {
                 createDeploymentButton: '#createDeploymentButton',
+                createButtonDisabled: '#createDeploymentButton.disabled',
                 deleteBlueprintButton: '#deleteBlueprintButton',
                 deleteButtonDisabled: '#deleteBlueprintButton.disabled',
             }
@@ -20,6 +21,8 @@ module.exports = {
                 okButton: '.ui.primary.button'
             }
         }
+    },
+    props: {
+        widgetId: "blueprintActionButtons"
     }
-
 };
