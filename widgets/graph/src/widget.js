@@ -13,6 +13,7 @@ Stage.defineWidget({
     isReact: true,
     color: "blue",
     initialConfiguration: [
+        Stage.GenericConfig.POLLING_TIME_CONFIG(5),
         {id: "deploymentId", name: "Deployment ID", placeHolder: "If not set, then will be taken from context", default: "", type: Stage.Basic.GenericField.STRING_TYPE},
         {id: "metric", name: "Metric", placeHolder: "Metric data to be presented on the graph", default: "memory_MemFree", type: Stage.Basic.GenericField.LIST_TYPE,
          items: [{name: "cpu_total_system", value: "cpu_total_system"}, {name: "cpu_total_user", value: "cpu_total_user"},
