@@ -14,8 +14,9 @@ export default class Topology extends React.Component {
         // We use this property to clear the angular directive (inorder to destroy the application)
         this.state = {
             initialized : props.data !== null && props.data !== undefined
-        }
+        };
 
+        this.topologyData = null;
         this.isMouseOver = false;
     }
 
@@ -33,6 +34,32 @@ export default class Topology extends React.Component {
 
         // Set the first time data
         angularAppManager.fireEvent('updateData',this.props.data);
+
+        // Register event listeners for integration between topology and nodes widgets
+
+        // - update of nodes widget after selection of node in topology widget
+        angularAppManager.listenToEvent('topology::nodeWasSelected', this._setNodeId, this);
+
+        // - update of topology widget after selection of node in nodes widget
+        angularAppManager.listenToEvent('topology::dataUpdated', this._storeTopologyNodes, this);
+        this.props.toolbox.getEventBus().on('topology:selectNode', this._selectNode, this);
+    }
+
+    _selectNode(nodeId) {
+        if (this.topologyNodes) {
+            let nodeSelected = _.find(this.topologyNodes, (topologyNode) => topologyNode.name === nodeId);
+            angularAppManager.fireEvent('topology::nodeSelected', nodeSelected);
+        }
+    }
+
+    _setNodeId(event, nodeId) {
+        if (this.props.data.deploymentId) {
+            this.props.toolbox.getContext().setValue('nodeId', nodeId + this.props.data.deploymentId);
+        }
+    }
+
+    _storeTopologyNodes(event, topologyData) {
+        this.topologyNodes = topologyData.nodes;
     }
 
     _setStyle() {
@@ -126,6 +153,7 @@ export default class Topology extends React.Component {
 
     render () {
         // Not render the directive incase initialized is false
+        console.debug(this.props.data);
         if (!this.state.initialized) {
             return <Stage.Basic.Loading/>;
         }

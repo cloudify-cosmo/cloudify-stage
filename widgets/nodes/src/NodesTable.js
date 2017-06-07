@@ -26,6 +26,7 @@ export default class NodesTable extends React.Component {
         let selectedNodeId = this.props.toolbox.getContext().getValue('nodeId');
         let clickedNodeId = item.id + item.deployment_id;
         this.props.toolbox.getContext().setValue('nodeId', clickedNodeId === selectedNodeId ? null : clickedNodeId);
+        this.props.toolbox.getEventBus().trigger('topology:selectNode', item.id);
     }
 
     componentDidMount() {

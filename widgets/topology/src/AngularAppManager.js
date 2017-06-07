@@ -37,4 +37,10 @@ export default class AngularAppManager{
             this.$rootScope.$broadcast(eventName,data);
         }
     }
+
+    listenToEvent(eventName,callback,context) {
+        if (this.app && this.$rootScope) {
+            this.$rootScope.$on(eventName, angular.bind(context, callback));
+        }
+    }
 }
