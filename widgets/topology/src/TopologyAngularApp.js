@@ -70,6 +70,11 @@ angular
 
         $scope.$on('updateData',(event,newData)=>{
             $scope.dataUpdated(newData);
+            $rootScope.$broadcast('topology::dataUpdated', $scope.topologyData);
         });
+
+        $scope.onNodeSelected = (node) => {
+            $rootScope.$broadcast('topology::nodeWasSelected', node.name);
+        };
     }]);
 
