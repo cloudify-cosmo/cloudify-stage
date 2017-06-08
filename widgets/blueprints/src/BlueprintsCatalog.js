@@ -35,7 +35,7 @@ export default class BlueprintsCatalog extends React.Component{
                 return (
                     <Grid.Column key={item.id}>
 
-                        <DataSegment.Item selected={item.isSelected} className="fullHeight"
+                        <DataSegment.Item selected={item.isSelected} className={`fullHeight ${item.id}`}
                                           onClick={(event)=>{event.stopPropagation(); this.props.onSelectBlueprint(item)}}>
                             <Grid>
                                 <Grid.Row className="bottomDivider">

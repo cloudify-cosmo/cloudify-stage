@@ -5,16 +5,16 @@
 var Config =require('../config.json');
 
 module.exports = {
-    'Manger IP and status': function (client) {
+    'Manager IP and status': function (client) {
         client.login();
 
         var page = client.page.page();
 
         page.section.managerData
-            .assert.containsText('@ip', Config.managerIp)
             .waitForElementPresent('@statusIconGreen')
+            .clickElement('@version')
+            .assert.containsText('@ip', Config.managerIp)
             .assert.cssClassPresent('@statusIcon','green')
-            .moveToElement('@ip', 10, 10);
 
         page.waitForElementVisible('@statusesTitle')
             .assert.containsText('@statusesTitle','Server Services Status')

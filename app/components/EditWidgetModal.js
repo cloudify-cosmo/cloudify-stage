@@ -68,7 +68,7 @@ export default class EditWidgetModal extends Component {
         var {Modal, ApproveButton, CancelButton, GenericField, Form, Message} = Stage.Basic;
 
         return (
-            <Modal open={this.props.show}>
+            <Modal open={this.props.show} className='editWidgetModal'>
 
                 <Modal.Header>Configure Widget</Modal.Header>
 

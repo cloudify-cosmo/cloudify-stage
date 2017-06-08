@@ -6,7 +6,7 @@ exports.command = function(deploymentName) {
     var deploymentActionButtons = this.page.deploymentActionButtons();
 
     return this.isWidgetPresent(deploymentActionButtons.props.widgetId, result => {
-            console.log("-- removing " + deploymentName + " deployment");
+            this.log("removing", deploymentName, "deployment");
 
             if (!result.value) {
                 this.moveToEditMode()
@@ -18,11 +18,10 @@ exports.command = function(deploymentName) {
 
             deploymentActionButtons.section.buttons
                 .waitForElementNotPresent('@deleteButtonDisabled')
-                .click('@deleteDeploymentButton');
+                .clickElement('@deleteDeploymentButton');
 
             deploymentActionButtons.section.removeConfirm
-                .waitForElementVisible('@okButton')
-                .click('@okButton')
+                .clickElement('@okButton')
                 .waitForElementNotPresent('@okButton');
 
             this.page.filter()

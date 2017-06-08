@@ -27,6 +27,7 @@ export default class BlueprintsTable extends React.Component{
 
     render(){
         var {DataTable, Image, PrivateMarker} = Stage.Basic;
+        let tableName = 'blueprintsTable';
 
         return (
             <DataTable fetchData={this.props.fetchGridData}
@@ -35,7 +36,7 @@ export default class BlueprintsTable extends React.Component{
                        sortColumn={this.props.widget.configuration.sortColumn}
                        sortAscending={this.props.widget.configuration.sortAscending}
                        selectable={true}
-                       className="blueprintsTable">
+                       className={tableName}>
 
                 <DataTable.Column label="Name" name="id" width="30%"/>
                 <DataTable.Column label="Created" name="created_at" width="15%"/>
@@ -47,7 +48,7 @@ export default class BlueprintsTable extends React.Component{
                 {
                     this.props.data.items.map((item)=>{
                         return (
-                            <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
+                            <DataTable.Row id={`${tableName}_${item.id}`} key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
                                 <DataTable.Data>
                                     <Image src={`/ba/image/${item.id}`} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
                                     <PrivateMarker show={item.private_resource} title="Private resource"/>

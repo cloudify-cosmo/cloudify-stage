@@ -10,7 +10,7 @@ exports.command = function(deploymentName, inputs, blueprintName) {
     var blueprintActionButtons = this.page.blueprintActionButtons();
 
     return this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
-            console.log("-- deploying " + blueprintName + " blueprint");
+            this.log("deploying", blueprintName, "blueprint");
 
             if (!result.value) {
                 this.moveToEditMode()
@@ -22,7 +22,7 @@ exports.command = function(deploymentName, inputs, blueprintName) {
 
             blueprintActionButtons.section.buttons
                 .waitForElementNotPresent('@createButtonDisabled')
-                .click('@createDeploymentButton');
+                .clickElement('@createDeploymentButton');
 
             var deployments = this.page.deployments();
 
@@ -30,7 +30,7 @@ exports.command = function(deploymentName, inputs, blueprintName) {
                 .waitForElementVisible('@okButton')
                 .setValue('@deploymentName', deploymentName)
                 .setInputsValue(inputs)
-                .click('@okButton');
+                .clickElement('@okButton');
 
             deployments.waitForElementNotPresent('@deployModal', 10000);
 

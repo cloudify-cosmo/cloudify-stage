@@ -12,7 +12,7 @@ exports.command = function(blueprintName) {
     var blueprintExists = false;
 
     this.isWidgetPresent(this.page.filter().props.widgetId, result => {
-        console.log("-- adding " + blueprintName + " blueprint - check if already presented");
+        this.log("adding", blueprintName, "blueprint - check if already presented");
 
         if (!result.value) {
             this.moveToEditMode()
@@ -23,7 +23,7 @@ exports.command = function(blueprintName) {
         this.page.filter()
             .isBlueprintPresent(blueprintName, result => {
                 blueprintExists = result.value;
-                console.log("-- adding " + blueprintName + " blueprint - presented: " + blueprintExists)
+                this.log("adding", blueprintName, "blueprint - presented:", blueprintExists)
             })
     });
 
@@ -32,7 +32,7 @@ exports.command = function(blueprintName) {
 
         if (!blueprintExists) {
             this.isWidgetPresent(blueprints.props.widgetId, result => {
-                console.log("-- adding " + blueprintName + " blueprint - upload blueprint");
+                this.log("adding", blueprintName, "blueprint - upload blueprint");
 
                 if (!result.value) {
                     this.moveToEditMode()
@@ -40,14 +40,13 @@ exports.command = function(blueprintName) {
                         .moveOutOfEditMode();
                 }
 
-                blueprints.waitForElementVisible('@uploadButton')
-                    .click('@uploadButton');
+                blueprints.clickElement('@uploadButton');
 
                 blueprints.section.uploadModal
                     .waitForElementVisible('@okButton')
                     .setValue('@blueprintName', blueprintName)
                     .setValue('@blueprintFile', pathlib.resolve('e2e/resources/' + blueprintName + '.zip'))
-                    .click('@okButton');
+                    .clickElement('@okButton');
 
                 blueprints.waitForElementNotPresent('@uploadModal', 10000);
 
