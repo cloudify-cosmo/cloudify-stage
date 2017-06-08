@@ -79,8 +79,10 @@ export default class UserGroupsTable extends React.Component {
             this._getAvailableTenants(value, group);
         } else if (value === MenuAction.EDIT_USERS_ACTION) {
             this._getAvailableUsers(value, group);
-        } else {
+        } else if (value === MenuAction.DELETE_ACTION) {
             this.setState({group, modalType: value, showModal: true});
+        } else {
+            this.setState({error: `Internal error: Unknown action ('${value}') cannot be handled.`});
         }
     }
 
@@ -166,8 +168,8 @@ export default class UserGroupsTable extends React.Component {
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
-                <Confirm title={`Are you sure you want to remove group ${this.state.group.name}?`}
-                         show={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
+                <Confirm content={`Are you sure you want to remove group ${this.state.group.name}?`}
+                         open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
                          onConfirm={this._deleteUserGroup.bind(this)}
                          onCancel={this._hideModal.bind(this)} />
 
