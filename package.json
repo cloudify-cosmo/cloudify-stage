@@ -8,6 +8,7 @@
     "devtest": "mocha --require ./test/setup.js -R mocha-pretty-spec-reporter --compilers babel-core/register",
     "start": "node backend/server.js",
     "lint": "eslint app",
+    "deve2e": "nightwatch -c ./e2e/nightwatch.conf.js --env dev",
     "e2e": "nightwatch -c ./e2e/nightwatch.conf.js",
     "beforebuild": "scripts/preinstall.sh",
     "build": "webpack --config webpack.config-prod.js --bail",

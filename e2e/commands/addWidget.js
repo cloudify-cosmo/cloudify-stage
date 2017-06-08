@@ -7,10 +7,10 @@ exports.command = function(widgetId) {
 
     return this.isWidgetPresent(widgetId, result => {
         if (!result.value) {
-            console.log("-- adding " + widgetId + " widget");
+            this.log("adding", widgetId, "widget");
 
             page.section.page
-                .click('@addWidgetButton');
+                .clickElement('@addWidgetButton');
 
             this.pause(1000); // Wait for modal to open
 

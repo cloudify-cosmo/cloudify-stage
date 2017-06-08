@@ -10,7 +10,7 @@ exports.command = function(blueprintName) {
     var blueprintActionButtons = this.page.blueprintActionButtons();
 
     return this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
-            console.log("-- removing " + blueprintName + " blueprint");
+            this.log("removing", blueprintName, "blueprint");
 
             if (!result.value) {
                 this.moveToEditMode()
@@ -22,11 +22,10 @@ exports.command = function(blueprintName) {
 
             blueprintActionButtons.section.buttons
                 .waitForElementNotPresent('@deleteButtonDisabled')
-                .click('@deleteBlueprintButton');
+                .clickElement('@deleteBlueprintButton');
 
             blueprintActionButtons.section.removeConfirm
-                .waitForElementVisible('@okButton')
-                .click('@okButton')
+                .clickElement('@okButton')
                 .waitForElementNotPresent('@okButton');
 
             this.page.filter()

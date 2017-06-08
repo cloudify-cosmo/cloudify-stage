@@ -8,11 +8,12 @@ module.exports = {
     'Successful login test': function (client) {
         client.page.login()
             .navigate()
+            .waitForElementNotVisible('@splashPage')
             .waitForElementVisible('@usernameField')
             .setValue('@usernameField', Config.admin)
             .setValue('@passwordField', Config.adminPass)
-            .waitForElementVisible('@submitButton')
-            .click('@submitButton')
+            .clickElement('@submitButton')
+            .waitForElementNotVisible('@splashPage')
             .waitForElementVisible('@managerData')
             .assert.containsText('@managerData', Config.managerIp)
             .assert.containsText('@tenantsDropdownText','default_tenant');
@@ -23,10 +24,11 @@ module.exports = {
     'Failed login test': function (client) {
         client.page.login()
             .navigate()
+            .waitForElementNotVisible('@splashPage')
             .waitForElementVisible('@usernameField')
             .setValue('@usernameField', Config.user)
             .setValue('@passwordField', Config.pass + 'a')
-            .click('@submitButton')
+            .clickElement('@submitButton')
             .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', 'User unauthorized');
 

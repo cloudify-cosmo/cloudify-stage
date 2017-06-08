@@ -7,7 +7,7 @@ module.exports = {
         client.login()
             .page.page().section.tenants
             .assert.containsText('@tenantName', 'default_tenant')
-            .click('@tenantName')
+            .clickElement('@tenantName')
             .waitForElementVisible('@tenantsDropdownMenu')
             .assert.containsText('@tenantsDropdownMenuItem','default_tenant');
 

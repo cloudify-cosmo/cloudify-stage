@@ -12,6 +12,7 @@ module.exports = {
             selector: '.managerMenu',
             elements: {
                 ip: 'span',
+                version: 'span.managerVersion',
                 statusIcon: 'i.signal',
                 statusIconGreen: 'i.signal.green'
             }
@@ -27,7 +28,7 @@ module.exports = {
         userMenu: {
             selector : '.usersMenu',
             elements: {
-                userName: 'span',
+                userName: 'span:first-child',
                 userDropdownMenu : '.menu',
                 editModeMenuItem : '#editModeMenuItem'
             },
@@ -51,11 +52,11 @@ module.exports = {
             selector: '.page',
             elements: {
                 addWidgetButton: '.addWidgetBtn',
-                firstWidget: '.widget',
-                firstWidgetName: '.widget h5.header span',
-                firstWidgetRemoveIcon: '.widget .widgetEditButtons i.remove.link.icon.small',
-                firstWidgetConfigureIcon: '.widget .widgetEditButtons .editWidgetIcon',
-                firstWidgetResizeHandle: '.widget .ui-resizable-handle'
+                firstWidget: '.widget:first-child',
+                firstWidgetName: '.widget:first-child h5.header span',
+                firstWidgetRemoveIcon: '.widget:first-child .widgetEditButtons i.remove.link.icon.small',
+                firstWidgetConfigureIcon: '.widget:first-child .widgetEditButtons .editWidgetIcon',
+                firstWidgetResizeHandle: '.widget:first-child .ui-resizable-handle'
             }
         },
         addWidgetModal: {
@@ -65,8 +66,7 @@ module.exports = {
             },
             commands: [{
                 clickAddWidget: function(widgetId) {
-                    return this.waitForElementPresent('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button')
-                        .click('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button')
+                    return this.clickElement('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button')
                         .waitForElementNotVisible('.addWidgetModal')
                         .waitForElementPresent('.widget.' + widgetId + "Widget");
                 }
@@ -78,6 +78,8 @@ module.exports = {
         tenantsDropdownText : 'div.tenantsMenu',
         statusesTitle: 'table.servicesData tr th',
         statusesName: 'table.servicesData tr td',
-        statusesDesc : 'table.servicesData tr td div.sub.header'
+        statusesDesc : 'table.servicesData tr td div.sub.header',
+        breadcrumb: '.breadcrumbLineHeight',
+        pageTitle: '.pageTitle'
     }
 };

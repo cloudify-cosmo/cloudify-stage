@@ -94,7 +94,7 @@ export default class DropdownWrapper extends Dropdown {
 
         return (
             <Portal open={open} className={classes}>
-                <DropdownMenu {...ariaOptions} className={menuClasses} style={style}>
+                <DropdownMenu {...ariaOptions} className={`${menuClasses} ${name}`} style={style}>
                     {createShorthand(DropdownHeader, val => ({ content: val }), header)}
                     {this.renderOptions()}
                 </DropdownMenu>

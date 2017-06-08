@@ -4,7 +4,7 @@
 
 exports.command = function() {
     this.page.page().section.sidebar
-        .click('@addPageButton');
+        .clickElement('@addPageButton');
 
     return this.pause(2000);
 };

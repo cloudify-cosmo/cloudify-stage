@@ -7,7 +7,7 @@ module.exports = {
         client.login()
             .page.page().section.userMenu
             .assert.containsText('@userName', 'admin')
-            .click('@userName')
+            .clickElement('@userName')
             .waitForElementVisible('@userDropdownMenu')
             .assert.containsText('.usersMenu .menu .item:nth-child(1) span','Maintenance Mode')
             // divider is 2nd
@@ -24,7 +24,7 @@ module.exports = {
         client.login(true)
             .page.page().section.userMenu
             .assert.containsText('@userName', 'user1')
-            .click('@userName')
+            .clickElement('@userName')
             .waitForElementVisible('@userDropdownMenu')
             .assert.containsText('.usersMenu .menu .item:nth-child(1) span','Reset')
             .assert.containsText('.usersMenu .menu .item:nth-child(2) span','Edit Mode')

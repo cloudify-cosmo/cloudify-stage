@@ -33,7 +33,7 @@ export default class TableRow extends Component {
         });
 
         return (
-            <tr className={this.props.selected ? "active" : ""} onClick={this.props.onClick}>
+            <tr id={this.props.id} className={this.props.selected ? "active" : ""} onClick={this.props.onClick}>
                 {children}
             </tr>
         );

@@ -99,7 +99,7 @@ export default class GenericField extends Component {
         }
 
         return (
-            <Form.Field>
+            <Form.Field className={this.props.name}>
                 <label>{this.props.label}&nbsp;
                     {
                         this.props.description &&
