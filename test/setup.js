@@ -21,6 +21,13 @@ Object.keys(document.defaultView).forEach((property) => {
 global.$ = global.jQuery = global.window.$ = global.window.jQuery = $(window);
 global._ = _;
 
+require('angular/angular');
+require('angular-mocks');
+
+global.angular = window.angular;
+global.inject = global.angular.mock.inject;
+global.ngModule = global.angular.mock.module;
+
 chai.use(require('chai-enzyme')());
 chai.use(require('sinon-chai'));
 

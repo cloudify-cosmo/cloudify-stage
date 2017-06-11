@@ -51,7 +51,7 @@ a:hover {
 
     .ui.labeled.icon.button.addWidgetBtn {
       position: absolute;
-      top: 10px;
+      top: 2rem;
       right: 15px;
     }
   }
@@ -237,6 +237,11 @@ a:hover {
   .widgetsList {
     max-height: 435px;
     overflow: auto;
+    padding-top: 5px;
+  }
+
+  .widgetsList .selectWidgetButton {
+    margin-right:10px !important;
   }
 }
 

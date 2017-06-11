@@ -6,6 +6,8 @@
 import * as types from './types';
 import {createDrilldownPage,selectPage} from './page';
 import {v4} from 'node-uuid';
+import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
+import External from '../utils/External';
 
 export function addWidget(pageId,name,widgetDefinition,width,height,x,y,configuration) {
     return {
@@ -103,5 +105,55 @@ export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldo
 
 
         dispatch(selectPage(pageId,true,drilldownContext,drilldownPageName));
+    }
+}
+
+export function setInstallWidget(widgetDefinitions) {
+    return {
+        type: types.INSTALL_WIDGET,
+        widgetDefinitions
+    };
+}
+
+export function installWidget(widgetFile, widgetUrl) {
+    return function(dispatch,getState) {
+        return widgetDefinitionLoader.install(widgetFile, widgetUrl, getState().manager.username)
+            .then(widgetDefinitions => dispatch(setInstallWidget(widgetDefinitions)));
+    }
+}
+
+export function setUninstallWidget(widgetId) {
+    return {
+        type: types.UNINSTALL_WIDGET,
+        widgetId
+    };
+}
+
+export function uninstallWidget(widgetId) {
+    return function(dispatch,getState) {
+        return widgetDefinitionLoader.uninstall(widgetId)
+            .then(() => dispatch(setUninstallWidget(widgetId)));
+    }
+}
+
+export function setUpdateWidget(widgetDefinitions, widgetId) {
+    return {
+        type: types.UPDATE_WIDGET,
+        widgetDefinitions,
+        widgetId
+    };
+}
+
+export function updateWidget(widgetId, widgetFile, widgetUrl) {
+    return function(dispatch,getState) {
+        return widgetDefinitionLoader.update(widgetId, widgetFile, widgetUrl)
+            .then(widgetDefinitions => dispatch(setUpdateWidget(widgetDefinitions, widgetId)));
+    }
+}
+
+export function checkIfWidgetIsUsed(widgetId) {
+    return function(dispatch) {
+        var external = new External();
+        return external.doGet(`/widgets/${widgetId}/used`);
     }
 }

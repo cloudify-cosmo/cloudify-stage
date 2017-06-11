@@ -27,6 +27,7 @@ export default class WidgetsList extends Component {
             <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
                 {
                     this.props.widgets.map(function(widget){
+                        var widgetDefId = (widget.definition || {}).id;
                         return (
                             <GridItem
                                 key={widget.id}
@@ -34,7 +35,7 @@ export default class WidgetsList extends Component {
                                 x={widget.x} y={widget.y}
                                 height={widget.height}
                                 width={widget.width}
-                                className={`widget ${widget.definition.id}Widget`}
+                                className={`widget ${widgetDefId}Widget`}
                                 maximized={widget.maximized}>
                                 <Widget widget={widget} pageId={this.props.pageId}></Widget>
                             </GridItem>

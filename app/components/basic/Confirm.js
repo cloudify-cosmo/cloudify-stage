@@ -8,6 +8,10 @@ import { Confirm } from 'semantic-ui-react';
 
 export default class ConfirmWrapper extends Component {
 
+    static defaultProps = {
+        className: ""
+    };
+
     render() {
         const {confirmButton, cancelButton, className, ...rest} = this.props;
 

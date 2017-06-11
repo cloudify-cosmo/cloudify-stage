@@ -29,10 +29,8 @@ export default class FormWrapper extends Component {
     static Button = FormButton;
 
     static propTypes = {
-        children: PropTypes.any,
-        className: PropTypes.string,
+        ...Form.propTypes,
         errors: PropTypes.any,
-        loading: PropTypes.bool,
         onSubmit: PropTypes.func
     };
 

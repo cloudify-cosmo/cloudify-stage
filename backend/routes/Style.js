@@ -6,10 +6,10 @@ var express = require('express');
 var path = require('path');
 var fs = require('fs');
 var ejs = require('ejs');
+var config = require('../config').get();
 
 var router = express.Router();
 
-var configuration = require('../../conf/app.json');
 var styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
 
 var DEFAULT_MAIN_COLOR = '#000069';
@@ -28,7 +28,7 @@ function shadeColor(color, percent) {
 }
 
 router.get('/', function(req, res, next) {
-    var whiteLabel = configuration.whiteLabel;
+    var whiteLabel = config.app.whiteLabel;
     var stylesheetTemplate = fs.readFileSync(styleTemplateFile, 'utf8');
 
     var stylesheet = ejs.render(stylesheetTemplate, {

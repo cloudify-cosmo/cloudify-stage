@@ -49,5 +49,10 @@
   "source": {
     "browseSourcesDir": "/cloudifyBrowseSources",
     "lookupYamlsDir": "/cloudifyLookupYamls"
+  },
+  "widgets": {
+    "ignoreFolders": ["common"],
+    "tempDir": "cloudifyWidgets",
+    "requiredFiles" : ["widget.js", "widget.png"]
   }
 }

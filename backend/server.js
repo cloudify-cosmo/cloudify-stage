@@ -37,6 +37,7 @@ var clientConfig = require('./routes/ClientConfig');
 var SourceBrowser = require('./routes/SourceBrowser');
 var GitHub = require('./routes/GitHub');
 var Style = require('./routes/Style');
+var Widgets = require('./routes/Widgets');
 var config = require('./config');
 
 var logger = log4js.getLogger('Server');
@@ -73,6 +74,7 @@ app.use('/source',SourceBrowser);
 app.use('/ba',BlueprintAdditions);
 app.use('/monitor',Monitoring);
 app.use('/style',Style);
+app.use('/widgets',Widgets);
 app.use('/clientConfig',clientConfig);
 app.use('/github',GitHub);
 app.use('/config',function(req,res){

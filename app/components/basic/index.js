@@ -19,7 +19,7 @@ import Form from './form/Form';
 import InputFile from './InputFile';
 import InputDate from './InputDate';
 import InputDateRange from './InputDateRange';
-import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header,
+import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item,
          Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal } from 'semantic-ui-react'
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
@@ -70,6 +70,7 @@ export {
     SplitterLayout,
     Table,
     Header,
+    Item,
     ApproveButton,
     CancelButton,
     InputDateRange,
