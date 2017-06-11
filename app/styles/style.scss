@@ -565,6 +565,14 @@ code.hljs {
   transform: translateY(-50%);
 }
 
+.alignCenter {
+  text-align: center !important;
+}
+
+.noWrap {
+  white-space: nowrap !important;
+}
+
 .fullHeight {
   height: 100%;
 }
