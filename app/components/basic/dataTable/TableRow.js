@@ -11,12 +11,14 @@ export default class TableRow extends Component {
         children: PropTypes.any.isRequired,
         selected: PropTypes.bool,
         onClick: PropTypes.func,
-        showCols: PropTypes.array
+        showCols: PropTypes.array,
+        className: PropTypes.string
     };
 
     static defaultProps = {
         selected: false,
-        showCols:[]
+        showCols:[],
+        className: ""
     };
 
     _showData(index) {
@@ -33,7 +35,7 @@ export default class TableRow extends Component {
         });
 
         return (
-            <tr id={this.props.id} className={this.props.selected ? "active" : ""} onClick={this.props.onClick}>
+            <tr id={this.props.id} className={`${this.props.selected ? "active" : ""} ${this.props.className}`} onClick={this.props.onClick}>
                 {children}
             </tr>
         );

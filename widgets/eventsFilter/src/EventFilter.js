@@ -1,6 +1,10 @@
 
 const LOG_LEVELS = ['debug', 'info', 'warning', 'error', 'critical'];
 
+const EVENT_TYPE = "cloudify_event";
+const LOG_TYPE = "cloudify_log";
+const TYPES = [{text: "", value: ""}, {text: "Logs", value: LOG_TYPE}, {text: "Events", value: EVENT_TYPE}];
+
 export default class EventFilter extends React.Component {
 
     constructor(props,context) {
@@ -8,6 +12,8 @@ export default class EventFilter extends React.Component {
 
         this.state = EventFilter.initialState;
         this.dirty = {};
+
+        this.actions = new Stage.Common.EventActions();
     }
 
     static initialState = {
@@ -18,6 +24,7 @@ export default class EventFilter extends React.Component {
             timeRange: "",
             timeStart: "",
             timeEnd: "",
+            type: "",
             messageText: "",
             logLevel: []
         }
@@ -34,7 +41,7 @@ export default class EventFilter extends React.Component {
     }
 
     _renderLabel(data, index, defaultLabelProps) {
-        return _.truncate(data.text, {'length': 10});
+        return _.truncate(data.text, {'length': 30});
     }
 
     _updateFieldState(fieldName, fieldValue) {
@@ -75,6 +82,10 @@ export default class EventFilter extends React.Component {
         this.props.toolbox.getEventBus().trigger('logs:refresh');
     }
 
+    _isTypeSet(type) {
+        return !this.state.fields.type || this.state.fields.type === type;
+    }
+
     render () {
         let {Form, Button, Icon} = Stage.Basic;
 
@@ -84,14 +95,19 @@ export default class EventFilter extends React.Component {
         let deployments = Object.assign({}, {items:[]}, this.props.data.deployments);
         let deploymentOptions = _.map(deployments.items, item => { return {text: item.id, value: item.id} });
 
-        let types = Object.assign({}, {items:[]}, this.props.data.types);
-        let typeOptions = _.map(types.items, item => { return {text: item.event_type, value: item.event_type} });
+        let eventTypes = Object.assign({}, {items:[]}, this.props.data.eventTypes);
+        let typeOptions = _.map(eventTypes.items, item => { return {text: this.actions.getEventDef(item.event_type).text, value: item.event_type} });
 
         let logOptions = _.map(LOG_LEVELS, item => { return {text: _.capitalize(item), value: item} });
 
         return (
             <Form size="small">
                 <Form.Group inline widths="4">
+                    <Form.Field>
+                        <Form.Dropdown placeholder='Type' fluid selection options={TYPES}
+                                       name="type" closeOnChange
+                                       value={this.state.fields.type} onChange={this._handleInputChange.bind(this)}/>
+                    </Form.Field>
                     <Form.Field>
                         <Form.Dropdown placeholder='Blueprints' fluid multiple search selection options={blueprintOptions}
                                        name="blueprintId" renderLabel={this._renderLabel.bind(this)} closeOnChange
@@ -103,10 +119,6 @@ export default class EventFilter extends React.Component {
                                        value={this.state.fields.deploymentId} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <Form.Field>
-                        <Form.InputDateRange fluid placeholder='Time Range' name="timeRange"
-                                             value={this.state.fields.timeRange} onChange={this._handleInputChange.bind(this)}/>
-                    </Form.Field>
-                    <Form.Field>
                         {
                             this._isDirty() &&
                             <Button icon="remove" basic onClick={this._resetFilter.bind(this)}/>
@@ -114,19 +126,29 @@ export default class EventFilter extends React.Component {
                     </Form.Field>
                 </Form.Group>
                 <Form.Group inline widths="4">
-                    <Form.Field>
-                        <Form.Dropdown placeholder='Log Levels' fluid multiple search selection options={logOptions}
-                                       name="logLevel" closeOnChange
-                                       value={this.state.fields.logLevel} onChange={this._handleInputChange.bind(this)}/>
-                    </Form.Field>
+                    {this._isTypeSet(EVENT_TYPE) &&
                     <Form.Field>
                         <Form.Dropdown placeholder='Event Types' fluid multiple search selection options={typeOptions}
                                        name="eventType" renderLabel={this._renderLabel.bind(this)} closeOnChange
-                                       value={this.state.fields.eventType} onChange={this._handleInputChange.bind(this)}/>
+                                       value={this.state.fields.eventType}
+                                       onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
+                    }
+                    {this._isTypeSet(LOG_TYPE) &&
+                    <Form.Field>
+                        <Form.Dropdown placeholder='Log Levels' fluid multiple search selection options={logOptions}
+                                       name="logLevel" closeOnChange
+                                       value={this.state.fields.logLevel}
+                                       onChange={this._handleInputChange.bind(this)}/>
+                    </Form.Field>
+                    }
                     <Form.Field>
                         <Form.Input placeholder='Message Text' fluid name="messageText"
                                     value={this.state.fields.messageText} onChange={this._handleInputChange.bind(this)}/>
+                    </Form.Field>
+                    <Form.Field>
+                        <Form.InputDateRange fluid placeholder='Time Range' name="timeRange"
+                                             value={this.state.fields.timeRange} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                 </Form.Group>
             </Form>

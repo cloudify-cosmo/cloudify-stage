@@ -14,6 +14,7 @@ import 'd3';
 import momentImport from 'moment';
 
 import '../../bower_components/cloudify-blueprint-topology/dist/styles/blueprint-topology.css';
+import '../../bower_components/cloudify-blueprint-topology/dist/fonts/gigaspaces/style.css';
 import '../../bower_components/cloudify-blueprint-topology/dist/scripts/blueprint-topology-tpls.js';
 
 import * as BasicComponents from '../components/basic';

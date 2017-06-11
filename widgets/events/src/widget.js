@@ -6,63 +6,66 @@ import EventsTable from './EventsTable';
 
 Stage.defineWidget({
     id: 'events',
-    name: "Events",
-    description: 'This widget shows Cloudify events',
-    initialWidth: 5,
-    initialHeight: 16,
+    name: "Events/logs",
+    description: 'This widget shows Cloudify events/logs',
+    initialWidth: 12,
+    initialHeight: 18,
     color: "green",
     fetchUrl: '[manager]/events[params]',
     isReact: true,
+    hasStyle: true,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(2),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         Stage.GenericConfig.SORT_COLUMN_CONFIG('timestamp'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
-        {id: "showLogs",name: "Should show logs as well", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
+        {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
+            items: ["Icon","Timestamp","Type","Blueprint","Deployment","Workflow","Operation","Node Name","Node Id","Message"],
+            default: 'Icon,Timestamp,Type,Blueprint,Deployment,Workflow,Operation,Node Name,Node Id,Message',
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
+        {id: "colorLogs", name: "Color message based on type", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
     ],
 
     fetchParams: function(widget, toolbox) {
         var params = {};
 
-        let eventFilter = toolbox.getContext().getValue('eventFilter');
+        let eventFilter = toolbox.getContext().getValue('eventFilter') || {};
 
-        let deploymentId = toolbox.getContext().getValue('deploymentId') || eventFilter && eventFilter.deploymentId;
+        let deploymentId = toolbox.getContext().getValue('deploymentId') || eventFilter.deploymentId;
         if (!_.isEmpty(deploymentId)) {
             params.deployment_id = deploymentId;
         }
 
-        let blueprintId = toolbox.getContext().getValue('blueprintId') || eventFilter && eventFilter.blueprintId;
+        let blueprintId = toolbox.getContext().getValue('blueprintId') || eventFilter.blueprintId;
         if (!_.isEmpty(blueprintId)) {
             params.blueprint_id = blueprintId;
         }
 
-        let messageText = eventFilter && eventFilter.messageText;
+        let messageText = eventFilter.messageText;
         if (!_.isEmpty(messageText)) {
             params.message = messageText;
         }
 
-        let logLevel = eventFilter && eventFilter.logLevel;
-        if (!_.isEmpty(logLevel) && widget.configuration.showLogs) {
+        let logLevel = eventFilter.logLevel;
+        if (!_.isEmpty(logLevel)) {
             params.level = logLevel;
         }
 
-        let eventType = eventFilter && eventFilter.eventType;
+        let eventType = eventFilter.eventType;
         if (!_.isEmpty(eventType)) {
             params.event_type = eventType;
         }
 
-        let timeStart = eventFilter && eventFilter.timeStart;
-        let timeEnd = eventFilter && eventFilter.timeEnd;
+        let timeStart = eventFilter.timeStart;
+        let timeEnd = eventFilter.timeEnd;
         if (timeStart || timeEnd) {
             timeStart = timeStart?timeStart.utc().toISOString():"";
             timeEnd = timeEnd?timeEnd.utc().toISOString():"";
             params._range = `@timestamp,${timeStart},${timeEnd}`;
         }
 
+        params.type = eventFilter.type;
 
-        if (!widget.configuration.showLogs) {
-            params.type='cloudify_event';
-        }
         return params;
     },
 
@@ -76,7 +79,12 @@ Stage.defineWidget({
 
         const CONTEXT_PARAMS = this.fetchParams(widget, toolbox);
 
-        let blueprintId = CONTEXT_PARAMS['blueprint_id'], deploymentId = CONTEXT_PARAMS['deployment_id'];
+        let blueprintId = CONTEXT_PARAMS.blueprint_id
+        let deploymentId = CONTEXT_PARAMS.deployment_id;
+
+        blueprintId = _.isArray(blueprintId) ? (blueprintId.length === 1 ? blueprintId[0] : "") : "";
+        deploymentId = _.isArray(deploymentId) ? (deploymentId.length === 1 ? deploymentId[0] : "") : "";
+
         let formattedData = Object.assign({}, data, {
             items: _.map (data.items, (item) => {
                 let id = Stage.Utils.getMD5(item.node_instance_id + item.operation + item.blueprint_id + item.timestamp +
@@ -89,8 +97,9 @@ Stage.defineWidget({
                 })
             }),
             total : _.get(data, 'metadata.pagination.total', 0),
-            blueprintId: (blueprintId && !_.isArray(blueprintId) ? blueprintId : ""),
-            deploymentId: (deploymentId && !_.isArray(deploymentId)? deploymentId : "")
+            blueprintId,
+            deploymentId,
+            type: CONTEXT_PARAMS.type
         });
 
         return (

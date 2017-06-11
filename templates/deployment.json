@@ -51,19 +51,11 @@
     },
 
     {
-      "name": "Deployment Events",
-      "width": 6,
+      "name": "Deployment Events/Logs",
+      "width": 12,
       "height": 24,
       "definition": "events",
       "x": 0,
-      "y": 95
-    },
-    {
-      "name": "Deployment Logs",
-      "width": 6,
-      "height": 24,
-      "definition": "logs",
-      "x": 6,
       "y": 95
     },
     {

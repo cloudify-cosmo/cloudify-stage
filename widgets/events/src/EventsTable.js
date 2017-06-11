@@ -2,6 +2,9 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
+const EVENT_TYPE = "cloudify_event";
+const LOG_TYPE = "cloudify_log";
+
 export default class EventsTable extends React.Component {
 
     constructor(props, context) {
@@ -9,6 +12,8 @@ export default class EventsTable extends React.Component {
 
         this.state = {
         }
+
+        this.actions = new Stage.Common.EventActions();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -42,6 +47,9 @@ export default class EventsTable extends React.Component {
         let {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
+        let fieldsToShow = this.props.widget.configuration.fieldsToShow;
+        let colorLogs = this.props.widget.configuration.colorLogs;
+
         return (
             <div>
                 <ErrorMessage error={this.state.error}/>
@@ -53,29 +61,31 @@ export default class EventsTable extends React.Component {
                            sortAscending={this.props.widget.configuration.sortAscending}
                            className="eventsTable">
 
-                    <DataTable.Column label="Blueprint" name="blueprint_id" width="10%" show={!this.props.data.blueprintId &&
-                                                                                                      !this.props.data.deploymentId &&
-                                                                                                      !this.props.data.executionId} />
-                    <DataTable.Column label="Deployment" name="deployment_id" width="10%" show={!this.props.data.deploymentId && !this.props.data.executionId} />
-                    <DataTable.Column label="Workflow" name="workflow_id" width="10%" show={!this.props.data.executionId} />
-                    <DataTable.Column label="Event Type" name="event_type" width={this.props.widget.configuration.showLogs ? '10%': '20%'}/>
-                    <DataTable.Column label="Log Level" name="level" width="10%" show={this.props.widget.configuration.showLogs}/>
-                    <DataTable.Column label="Timestamp" name="timestamp" width="10%"/>
-                    <DataTable.Column label="Operation" name="operation" width="10%"/>
-                    <DataTable.Column label="Node Name" name="node_name" width="10%"/>
-                    <DataTable.Column label="Node Id" name="node_instance_id" width="10%"/>
-                    <DataTable.Column label="Message" name="message" width="10%"/>
+                    <DataTable.Column label="" width="40px" show={fieldsToShow.indexOf("Icon") >= 0}/>
+                    <DataTable.Column label="Timestamp" width="10%" show={fieldsToShow.indexOf("Timestamp") >= 0}/>
+                    <DataTable.Column label="Type" show={fieldsToShow.indexOf("Type") >= 0}/>
+                    <DataTable.Column label="Blueprint" show={!this.props.data.blueprintId && !this.props.data.deploymentId &&
+                                            !this.props.data.executionId && fieldsToShow.indexOf("Blueprint") >= 0} />
+                    <DataTable.Column label="Deployment" show={!this.props.data.deploymentId && !this.props.data.executionId &&
+                                            fieldsToShow.indexOf("Deployment") >= 0} />
+                    <DataTable.Column label="Workflow" show={!this.props.data.executionId && fieldsToShow.indexOf("Workflow") >= 0} />
+                    <DataTable.Column label="Operation" show={fieldsToShow.indexOf("Operation") >= 0}/>
+                    <DataTable.Column label="Node Name" show={fieldsToShow.indexOf("Node Name") >= 0}/>
+                    <DataTable.Column label="Node Id" show={fieldsToShow.indexOf("Node Id") >= 0}/>
+                    <DataTable.Column label="Message" show={fieldsToShow.indexOf("Message") >= 0}/>
 
                     {
-                        this.props.data.items.map((item) => {
+                        this.props.data.items.map((item, index) => {
+                            var event = this.actions.getEventDef(item.event_type || item.level);
+
                             return (
-                                <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectEvent.bind(this, item.id)}>
+                                <DataTable.Row key={item.id + index} selected={item.isSelected} onClick={this._selectEvent.bind(this, item.id)} className={colorLogs ? `${event.class}` : ""}>
+                                    <DataTable.Data className="alignCenter"><i className={`eventsType ${event.icon}`}></i></DataTable.Data>
+                                    <DataTable.Data className="alignCenter noWrap">{item.timestamp}</DataTable.Data>
+                                    <DataTable.Data>{event.text}</DataTable.Data>
                                     <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                     <DataTable.Data>{item.deployment_id}</DataTable.Data>
                                     <DataTable.Data>{item.workflow_id}</DataTable.Data>
-                                    <DataTable.Data>{item.event_type}</DataTable.Data>
-                                    <DataTable.Data>{item.level}</DataTable.Data>
-                                    <DataTable.Data>{item.timestamp}</DataTable.Data>
                                     <DataTable.Data>{item.operation}</DataTable.Data>
                                     <DataTable.Data>{item.node_name}</DataTable.Data>
                                     <DataTable.Data>{item.node_instance_id}</DataTable.Data>

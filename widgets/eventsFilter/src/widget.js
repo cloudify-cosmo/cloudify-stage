@@ -17,7 +17,7 @@ Stage.defineWidget({
         return Promise.all([
             toolbox.getManager().doGetFull('/blueprints?_include=id'),
             toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id'),
-            toolbox.getManager().doGetFull('/events?_include=event_type&type=cloudify_event')
+            toolbox.getManager().doGetFull('/events?_include=event_type')
         ]).then(results=>{
             return {
                 blueprints: results[0],
@@ -41,7 +41,7 @@ Stage.defineWidget({
             deployments:{
                 items: data.deployments.items
             },
-            types:{
+            eventTypes:{
                 items: _.uniqBy(data.types.items, 'event_type')
             }
         });

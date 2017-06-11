@@ -1,0 +1,46 @@
+.eventsType {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: 36px;
+    height: 28px;
+    font-size: 24px;
+    color: #2c4b68;
+}
+
+.eventsType.icon-gs-policy-failed:before { color: #d64b34; }
+.eventsType.icon-gs-policy-success:before { color: #9abc2e; }
+.eventsType.icon-gs-task-failed:before { color: #d64b34; }
+.eventsType.icon-gs-task-retried:before { color: #f9b71b; }
+.eventsType.icon-gs-task-sent:before { color: #049cdb; }
+.eventsType.icon-gs-task-success:before { color: #9abc2e; }
+.eventsType.icon-gs-workflow-cancelled:before { color: #d64b34; }
+.eventsType.icon-gs-workflow-failed:before { color: #d64b34; }
+.eventsType.icon-gs-workflow-success:before { color: #9abc2e; }
+.eventsType.gs-icon-logs:before { color: #049cdb; }
+
+
+.eventsTable [class^="icon-gs-"], .eventsTable [class*=" icon-gs-"] {
+    font-family: 'gigaspaces' !important;
+}
+
+.eventsType.icon {
+    margin: 0px;
+}
+
+.ui.table td.row-error, .ui.table tr.row-error {
+    box-shadow: 0 0 0 #FFA3A3 inset;
+    background: #FFD6D6 !important;
+    color: #7F1E1E !important;
+}
+
+.ui.table td.row-debug, .ui.table tr.row-debug {
+    box-shadow: 0 0 0 #A3C2FF inset;
+    background: #D5FFFF !important;
+    color: #245396 !important;
+}
+
+.ui.table td.row-warning, .ui.table tr.row-warning {
+    box-shadow: 0 0 0 #FFFFA3 inset;
+    background: #FFFFD6 !important;
+    color: #68681A !important;
+}
