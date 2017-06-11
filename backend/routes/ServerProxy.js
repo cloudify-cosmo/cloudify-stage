@@ -24,65 +24,28 @@ function _errorHandler(res,err) {
     }
 }
 
+function buildManagerUrl(req,res,next) {
+    var serverUrl = req.query.su;
+    if (serverUrl) {
+        req.su=    config.manager.protocol + '://' + config.manager.ip + ':' + config.manager.port + serverUrl;
+        logger.debug('Proxying '+req.method+' request to server with url: '+req.su);
+        next();
+    } else {
+        next('no server url passed');
+    }
+}
+
+function proxyRequest(req,res,next) {
+    req.pipe(request[req.method.toLowerCase()](
+                req.su,
+                {timeout: config.app.proxy.timeouts.get})
+        .on('error',function(err){_errorHandler(res,err)}))
+        .pipe(res);
+}
+
 /**
- * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
+ * End point to get a request from the server. Assuming it has a url parameter 'su' - is the manager path
  */
-router.get('/',function (req, res,next) {
-
-
-    var serverUrl = req.query.su;
-    if (serverUrl) {
-        logger.debug('Proxying get request to server with url: '+serverUrl);
-        req.pipe(request.get(serverUrl,{timeout: config.app.proxy.timeouts.get}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
-    } else {
-        next('no server url passed');
-    }
-});
-
-router.put('/',function(req,res,next){
-    var serverUrl = req.query.su;
-    if (serverUrl) {
-        logger.debug('Proxying put request to server with url: '+serverUrl);
-
-        req.pipe(request.put(serverUrl,{timeout: config.app.proxy.timeouts.put}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
-    } else {
-        next('no server url passed');
-    }
-
-});
-
-router.delete('/',function(req,res,next){
-    var serverUrl = req.query.su;
-    if (serverUrl) {
-        logger.debug('Proxying delete request to server with url: '+serverUrl);
-
-        req.pipe(request.delete(serverUrl,{timeout: config.app.proxy.timeouts.delete}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
-    } else {
-        next('no server url passed');
-    }
-
-});
-router.post('/',function(req,res,next){
-    var serverUrl = req.query.su;
-    if (serverUrl) {
-        logger.debug('Proxying post request to server with url: '+serverUrl);
-
-        req.pipe(request.post(serverUrl,{timeout: config.app.proxy.timeouts.post}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
-    } else {
-        next('no server url passed');
-    }
-
-});
-router.patch('/',function(req,res,next){
-    var serverUrl = req.query.su;
-    if (serverUrl) {
-        logger.debug('Proxying patch request to server with url: '+serverUrl);
-
-        req.pipe(request.patch(serverUrl,{timeout: config.app.proxy.timeouts.post}).on('error',function(err){_errorHandler(res,err)})).pipe(res);
-    } else {
-        next('no server url passed');
-    }
-
-});
+router.all('/',buildManagerUrl,proxyRequest);
 
 module.exports = router;

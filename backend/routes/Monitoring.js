@@ -10,9 +10,9 @@ var _ = require('lodash');
 var router = express.Router();
 var logger = require('log4js').getLogger('MonitoringRouter');
 
-function getClient(managerIp) {
+function getClient() {
     var options = {
-        host: managerIp,
+        host: config.app.influx.ip,
         port: config.app.influx.port,
         username: config.app.influx.user,
         password: config.app.influx.password,
@@ -55,8 +55,8 @@ function getClient(managerIp) {
  *
  * So we parse out only the metric (after the last dot)
  */
-router.get('/metrics/:managerIp/:deploymentId',function (req, res,next) {
-    getClient(req.params.managerIp)
+router.get('/metrics/:deploymentId',function (req, res,next) {
+    getClient()
         .query('list series /'+req.params.deploymentId+'..*/i', function(err,response){
             if (err) {
                 logger.error('Error connecting to influxDB', err);
@@ -80,7 +80,7 @@ router.get('/metrics/:managerIp/:deploymentId',function (req, res,next) {
  *    to - the to time
  *    timeGroup - group the results by time
  */
-router.get('/byMetric/:managerIp/:deploymentId/:metric',function(req,res,next){
+router.get('/byMetric/:deploymentId/:metric',function(req,res,next){
     var fromTime = req.query.from ||  'now() - 15m';
     var toTime = req.query.to || 'now()';
     var timeGrouping = req.query.timeGroup || 10;
@@ -90,7 +90,7 @@ router.get('/byMetric/:managerIp/:deploymentId/:metric',function(req,res,next){
 
     logger.debug('Query: ',query);
 
-    getClient(req.params.managerIp)
+    getClient()
         .query(query, function(err,response){
             if (err) {
                 logger.error('Error connecting to influxDB', err);
@@ -101,9 +101,9 @@ router.get('/byMetric/:managerIp/:deploymentId/:metric',function(req,res,next){
         } );
 });
 
-router.get('/query/:managerIp',function (req, res,next) {
+router.get('/query',function (req, res,next) {
     logger.debug('Running query',req.query.q);
-    getClient(req.params.managerIp)
+    getClient()
         .query(req.query.q, function(err,results){
             if (err) {
                 logger.error('Error connecting to influxDB', err);

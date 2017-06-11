@@ -32,6 +32,9 @@ module.exports = {
             singleManager: config.app.singleManager,
             whiteLabel : config.app.whiteLabel
         };
+        config.manager = {
+            ip : config.manager.ip
+        };
         return config;
     }
 };
