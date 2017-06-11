@@ -44,7 +44,7 @@
     },
     {
       "name": "Events/Logs",
-      "width": 6,
+      "width": 12,
       "height": 25,
       "definition": "events",
       "x": 0,
