@@ -5,7 +5,6 @@
 class InfluxActions {
     constructor(toolbox) {
         this.toolbox = toolbox;
-        this.managerIp = toolbox.getManager().getIp();
     }
 
     doGetMetric(deploymentId, metric, from, to, timeGroup) {
@@ -20,15 +19,15 @@ class InfluxActions {
             params.timeGroup = timeGroup;
         }
 
-        return this.toolbox.getExternal().doGet(`/monitor/byMetric/${this.managerIp}/${deploymentId}/${metric}`, params);
+        return this.toolbox.getExternal().doGet(`/monitor/byMetric/${deploymentId}/${metric}`, params);
     }
 
     doGetMetrics(deploymentId) {
-        return this.toolbox.getExternal().doGet(`/monitor/metrics/${this.managerIp}/${deploymentId}`);
+        return this.toolbox.getExternal().doGet(`/monitor/metrics/${deploymentId}`);
     }
 
     doRunQuery(query) {
-        return this.toolbox.getExternal().doGet(`/monitor/query/${this.managerIp}`, {q: query});
+        return this.toolbox.getExternal().doGet(`/monitor/query`, {q: query});
     }
 }
 

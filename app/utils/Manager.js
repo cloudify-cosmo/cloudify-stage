@@ -36,11 +36,10 @@ export default class Manager extends External {
         if (index >= 0) {
             let managerUrl = url.substring(index + '[manager]'.length);
             var urlInServer = `${this._data.apiVersion?'/api/'+this._data.apiVersion:''}${managerUrl}`;
-            let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
 
             url = url.substring(0, index);
 
-            data = Object.assign({}, data, {su});
+            data = Object.assign({}, data, {su:urlInServer});
             var queryString =  (url.indexOf("?") > 0?(_.endsWith(url, "?")?"":"&"):"?") + $.param(data, true);
 
             return url + queryString;
@@ -48,8 +47,7 @@ export default class Manager extends External {
             var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data, true) : '';
             var urlInServer = `${this._data.apiVersion?'/api/'+this._data.apiVersion:''}${url}${queryString}`;
 
-            let su = encodeURIComponent(`http://${this._data.ip}${urlInServer}`);
-            return `/sp/?su=${su}`;
+            return `/sp/?su=${urlInServer}`;
         }
     }
 

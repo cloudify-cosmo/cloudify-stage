@@ -13,6 +13,7 @@ Stage.defineWidget({
     initialHeight: 14,
     color: "orange",
     isReact: true,
+
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(2),
         {id: "blueprintId", name: "Blueprint ID", placeHolder: "Enter the blueprint id you wish to show info", type: Stage.Basic.GenericField.STRING_TYPE}
