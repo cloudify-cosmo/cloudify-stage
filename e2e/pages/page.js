@@ -56,21 +56,61 @@ module.exports = {
                 firstWidgetName: '.widget:first-child h5.header span',
                 firstWidgetRemoveIcon: '.widget:first-child .widgetEditButtons i.remove.link.icon.small',
                 firstWidgetConfigureIcon: '.widget:first-child .widgetEditButtons .editWidgetIcon',
-                firstWidgetResizeHandle: '.widget:first-child .ui-resizable-handle'
+                firstWidgetResizeHandle: '.widget:first-child .ui-resizable-handle',
+                testWidgetContent: '.widget.testWidgetWidget .widgetContent .statistic .label'
+            },
+            props: {
+                testWidgetLabel: 'DEPLOYMENTS'
             }
         },
         addWidgetModal: {
             selector: '.addWidgetModal',
             elements: {
-                searchInput : 'input'
+                searchInput : 'input',
+                installWidgetBtn: '#installWidgetBtn',
+                removeWidgetButton: '.widgetsList .item[data-id="testWidget"] .removeWidgetButton',
+                updateWidgetButton: '.widgetsList .item[data-id="testWidget"] .updateWidgetButton'
+
             },
             commands: [{
                 clickAddWidget: function(widgetId) {
-                    return this.clickElement('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .extra .button')
-                        .waitForElementNotVisible('.addWidgetModal')
+                    return this.clickElement('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .selectWidgetButton')
+                        .waitForElementNotPresent('.addWidgetModal')
                         .waitForElementPresent('.widget.' + widgetId + "Widget");
+                },
+
+                isWidgetInstalled: function(widgetId, callback) {
+                    return this.isPresent('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .selectWidgetButton', callback);
                 }
             }]
+        },
+        installWidgetModal : {
+            selector: '.installWidgetModal',
+            elements: {
+                urlField: 'input[name="widgetUrl"]',
+                fileField: 'input[name="widgetFile"]',
+                okButton: '.ui.green.button',
+                cancelButton: '.ui.basic.button',
+                errorMessage: '.ui.error.message'
+            },
+            props: {
+                emptyFieldsError: 'Please select widget file or url',
+                invalidURIError: 'Invalid URI "test"',
+                bothFieldsError: 'Either widget file or url must be selected, not both',
+                incorrectFilesError: 'The following files are required for widget registration: widget.js, widget.png',
+                widgetAlreadyInstalledError: 'Widget testWidget is already installed'
+            }
+        },
+        removeWidgetConfirm: {
+            selector: '.removeWidgetConfirm',
+            elements: {
+                okButton: '.ui.primary.button',
+                cancelButton: '.ui.button',
+                widgetIsUsedLabel: '.ui.basic.segment h5'
+            },
+            props: {
+                widgetIsUsed: 'Widget is currently used by:'
+            }
         }
     },
 

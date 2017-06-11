@@ -43,10 +43,7 @@ Stage.defineWidget({
             blueprintId = blueprint_id;
 
             if (blueprintId) {
-                return actions.doGetBlueprintDetails(blueprintId).then(data => {
-                    var lastUpdate = Stage.Utils.formatTimestamp(data.updated_at, 'DDMMYYYYHHmm');
-                    return actions.doGetFilesTree(blueprintId, lastUpdate).then(tree => Promise.resolve({tree, blueprintId}));
-                });
+                return actions.doGetFilesTree(blueprintId).then(tree => Promise.resolve({tree, blueprintId}));
             } else {
                 return Promise.resolve({tree:{}});
             }

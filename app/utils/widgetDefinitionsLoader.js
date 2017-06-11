@@ -3,13 +3,15 @@
  */
 
 import fetch from 'isomorphic-fetch'
+import External from './External'
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
 
 import {v4} from 'node-uuid';
 var ReactDOMServer = require('react-dom/server');
 
-import 'angular';
+import 'angular/angular';
+
 import 'd3';
 import momentImport from 'moment';
 
@@ -38,7 +40,7 @@ export default class WidgetDefinitionsLoader {
     static init() {
         window.Stage = {
             defineWidget: (widgetDefinition)=> {
-                widgetDefinitions.push(new WidgetDefinition(widgetDefinition));
+                widgetDefinitions.push(new WidgetDefinition({...widgetDefinition, id: document.currentScript.id}));
             },
             Basic: BasicComponents,
             ComponentToHtmlString: (component)=>{
@@ -55,54 +57,133 @@ export default class WidgetDefinitionsLoader {
         window.moment = momentImport;
     }
 
+    static _loadWidgets() {
+        console.log("Load widgets");
 
-    static load() {
+        var external = new External();
         return Promise.all([
-                    new ScriptLoader('/widgets/common/common.js').load(), // Commons has to load before the widgets
-                    fetch('/widgets/widgets.json').then(response => response.json()) // We can load the list of widgets in the meanwhile
-                ])
+                new ScriptLoader('/widgets/common/common.js').load(), // Commons has to load before the widgets
+                external.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
+            ])
             .then((results)=> {
                 var data = results[1]; // widgets data
                 var promises = [];
-                data.forEach((widgetName)=>{
-                    promises.push(new ScriptLoader('/widgets/'+widgetName+'/widget.js').load());
+                data.forEach((item)=>{
+                    promises.push(WidgetDefinitionsLoader._loadWidget(item.id, false));
                 });
-                return Promise.all(promises);
-            })
-            .then(()=> {
-                var promises = [];
-                widgetDefinitions.forEach((widgetDefinition)=> {
-                    if (widgetDefinition.hasTemplate) {
-                        promises.push(
-                            fetchWidgetTemplate('/widgets/' + widgetDefinition.id + '/widget.html')
-                                .then((widgetHtml)=> {
-                                    if (widgetHtml) {
-                                        widgetDefinition.template = widgetHtml;
-                                    }
-                                }));
-                    }
-                    if (widgetDefinition.hasStyle) {
-                        promises.push(new StyleLoader('/widgets/'+widgetDefinition.id+'/widget.css').load());
-                    }
-                });
-                return Promise.all(promises);
-            })
-            .then(()=> {
-                _.each(widgetDefinitions,w=>{
-                    if (w.init && typeof w.init === 'function') {
-                        w.init();
-                    }
-                })
-            })
-            .then(()=> {
-                var loadedWidgetDefinitions = _.clone(widgetDefinitions);
-                widgetDefinitions = []; // Clear for next time
-                return loadedWidgetDefinitions;
-            })
-            .catch((e)=>{
-                console.error(e);
+
+                var output = _.keyBy(data, 'id');
+                return Promise.all(promises).then(() => output);
             });
     }
+
+    static _loadWidget(id, rejectOnError) {
+        return new ScriptLoader(`/widgets/${id}/widget.js`).load(id, rejectOnError);
+    }
+
+    static _loadWidgetsResources(widgets) {
+        console.log("Load widgets resources");
+
+        var promises = [];
+        widgetDefinitions.forEach((widgetDefinition)=> {
+            //Mark system widgets to protect against uninstalling
+            widgetDefinition.isCustom = widgets[widgetDefinition.id].isCustom;
+
+            if (widgetDefinition.hasTemplate) {
+                promises.push(
+                    fetchWidgetTemplate(`/widgets/${widgetDefinition.id}/widget.html`)
+                        .then((widgetHtml)=> {
+                            if (widgetHtml) {
+                                widgetDefinition.template = widgetHtml;
+                            }
+                        }));
+            }
+            if (widgetDefinition.hasStyle) {
+                promises.push(new StyleLoader(`/widgets/${widgetDefinition.id}/widget.css`).load());
+            }
+        });
+
+        return Promise.all(promises);
+    }
+
+    static _initWidgets() {
+        console.log("Init widgets");
+
+        _.each(widgetDefinitions,w=>{
+            if (w.init && typeof w.init === 'function') {
+                w.init();
+            }
+        })
+
+        var loadedWidgetDefinitions = _.sortBy(widgetDefinitions, ['name']);
+        widgetDefinitions = []; // Clear for next time
+
+        return Promise.resolve(loadedWidgetDefinitions);
+    }
+
+    static load() {
+        return WidgetDefinitionsLoader._loadWidgets()
+            .then((widgets) => WidgetDefinitionsLoader._loadWidgetsResources(widgets))
+            .then(() => WidgetDefinitionsLoader._initWidgets())
+            .catch((e)=>{
+                console.error(e);
+                widgetDefinitions = []; // Clear for next time
+            });
+    }
+
+    static _installWidget(widgetFile, widgetUrl, username) {
+        var external = new External();
+
+        if (widgetUrl) {
+            console.log("Install widget from url", widgetUrl);
+            return external.doPut(`/widgets/install`,{url: widgetUrl, username});
+        } else {
+            console.log("Install widget from file");
+            return external.doUpload(`/widgets/install`,{username},{widget:widgetFile});
+        }
+    }
+
+    static _updateWidget(widgetId, widgetFile, widgetUrl) {
+        var external = new External();
+
+        if (widgetUrl) {
+            console.log("Update widget " + widgetId + " from url", widgetUrl);
+            return external.doPut(`/widgets/update`,{url: widgetUrl, id: widgetId});
+        } else {
+            console.log("Update widget " + widgetId + " from file");
+            return external.doUpload(`/widgets/update`,{id: widgetId},{widget:widgetFile});
+        }
+    }
+
+    static install(widgetFile, widgetUrl, username) {
+        return WidgetDefinitionsLoader._installWidget(widgetFile, widgetUrl, username)
+            .then(data => WidgetDefinitionsLoader._loadWidget(data.id, true)
+                .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([data], 'id'))))
+            .then(() => WidgetDefinitionsLoader._initWidgets())
+            .catch(err => {
+                widgetDefinitions = []; // Clear for next time
+                console.error(err);
+                throw err;
+            })
+    }
+
+    static update(widgetId, widgetFile, widgetUrl) {
+        return WidgetDefinitionsLoader._updateWidget(widgetId, widgetFile, widgetUrl)
+            .then(data => WidgetDefinitionsLoader._loadWidget(data.id, true)
+                .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([data], 'id'))))
+            .then(() => WidgetDefinitionsLoader._initWidgets())
+            .catch(err => {
+                widgetDefinitions = []; // Clear for next time
+                console.error(err);
+                throw err;
+            })
+    }
+
+    static uninstall(widgetId) {
+        var external = new External();
+        return external.doDelete(`/widgets/${widgetId}`)
+    }
+
 }
 
 class GenericConfig {

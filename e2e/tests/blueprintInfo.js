@@ -22,7 +22,7 @@ module.exports = {
     },
 
     after(client) {
-        client.end();
+        client.removeLastPage().end();
     }
 };
 

@@ -2,8 +2,6 @@
  * Created by pawelposel on 2017-05-31.
  */
 
-var pathlib = require("path");
-
 exports.command = function(blueprintName) {
     if (!blueprintName) {
         blueprintName = this.page.blueprints().props.testBlueprint;
@@ -45,7 +43,7 @@ exports.command = function(blueprintName) {
                 blueprints.section.uploadModal
                     .waitForElementVisible('@okButton')
                     .setValue('@blueprintName', blueprintName)
-                    .setValue('@blueprintFile', pathlib.resolve('e2e/resources/' + blueprintName + '.zip'))
+                    .setValue('@blueprintFile', this.page.resources().props.blueprint(blueprintName))
                     .clickElement('@okButton');
 
                 blueprints.waitForElementNotPresent('@uploadModal', 10000);

@@ -1,77 +1,168 @@
 /**
- * Created by kinneretzin on 08/09/2016.
- */
-
-/**
  * Created by kinneretzin on 01/09/2016.
  */
 
 import React, { Component, PropTypes } from 'react';
+import {Input, Segment, Divider, Image, Item, Button, DataTable, Modal, Confirm, ErrorMessage} from "./basic/index"
+import InstallWidgetModal from "./InstallWidgetModal"
 
 export default class AddWidgetModal extends Component {
-    static propTypes = {
-        widgetDefinitions: PropTypes.array.isRequired,
-        onWidgetAdded: PropTypes.func.isRequired,
-        onWidgetInstalled: PropTypes.func.isRequired
-    };
-
-    addWidget(widget) {
-        this.props.onWidgetAdded(widget);
-        $('.addWidgetModal').modal('hide');
-    }
 
     constructor(props,context){
         super(props, context);
 
         this.state = {
-            filteredWidgetDefinitions: props.filteredWidgets || props.widgetDefinitions
+            ...AddWidgetModal.initialState(props),
+            open: false
         };
     }
 
+    static initialState = (props) => {
+        return {
+            filteredWidgetDefinitions: props.widgetDefinitions,
+            search: "",
+            showConfirm : false,
+            widget: {},
+            usedByList: []
+        }
+    };
+
+    static propTypes = {
+        widgetDefinitions: PropTypes.array.isRequired,
+        onWidgetAdded: PropTypes.func.isRequired,
+        onWidgetInstalled: PropTypes.func.isRequired,
+        onWidgetUninstalled: PropTypes.func.isRequired,
+        onWidgetUpdated: PropTypes.func.isRequired,
+        onWidgetUsed: PropTypes.func.isRequired
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (!_.isEqual(this.props.widgetDefinitions, nextProps.widgetDefinitions)) {
+            this.setState(AddWidgetModal.initialState(nextProps))
+        }
+    }
+
+    _openModal() {
+        this.setState({...AddWidgetModal.initialState(this.props), open: true});
+    }
+
+    _closeModal() {
+        this.setState({open: false});
+    }
+
+    _addWidget(widget) {
+        this._closeModal();
+        this.props.onWidgetAdded(widget);
+    }
+
+    _confirmRemove(widget) {
+        this.props.onWidgetUsed(widget.id).then(usedByList => {
+            this.setState({widget, usedByList, showConfirm:true})
+        }).catch(err => {
+            this.setState({error: err.message});
+        });
+    }
+
+    _uninstallWidget() {
+        this.setState({showConfirm:false});
+        this.props.onWidgetUninstalled(this.state.widget.id);
+    }
+
+    _updateWidget(widget, widgetFile, widgetUrl) {
+        return this.props.onWidgetUpdated(widget.id, widgetFile, widgetUrl);
+    }
+
+    _filterWidgets(proxy, field) {
+        var filtered = this.props.widgetDefinitions.filter(
+            el=>el.name.toLowerCase().includes(field.value.toLowerCase() || '')
+        );
+
+        this.setState({search: field.value, filteredWidgetDefinitions: filtered});
+    }
+
     render() {
-        return (
-            <div className="ui modal addWidgetModal">
-                <div className="ui segment basic large">
-                    <div className="ui icon input fluid mini">
-                        <i className="search icon"></i>
-                        <input type="text" placeholder="Search widgets ..." onChange={(e)=>this.setState({filteredWidgetDefinitions: this.props.widgetDefinitions.filter(function (el) {
-                                                                                                                                                       return el.name.toLowerCase().includes(e.target.value.toLowerCase() || '')})})}/>
-                    </div>
+        const addWidgetBtn = <Button labelPosition='left' icon="plus" size="tiny" color="teal"
+                                        basic content='Add Widget' className="addWidgetBtn"/>;
 
-                    <div className="ui divider"></div>
+        const installWidgetBtn = <Button fluid content="Install new widget" id="installWidgetBtn"/>;
 
-                    <div className="ui items divided widgetsList">
-                        {
-                            this.state.filteredWidgetDefinitions.map(function(widget){
-                                return (
-                                    <div className="item" key={widget.id} data-id={widget.id}>
-                                        <div className='ui image small bordered'>
-                                            <img src={'/widgets/'+widget.id+'/widget.png'}/>
-                                        </div>
-                                        <div className="content">
-                                            <a className="header">{widget.name}</a>
-                                            <div className="meta">
-                                                <span>{widget.description}</span>
-                                            </div>
-                                            <div className="description">
-                                            </div>
-                                            <div className="extra">
-                                                <div className="ui right floated secondary button small" onClick={this.addWidget.bind(this,widget)}>
-                                                    Add
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            },this)
-                        }
-                    </div>
+        const updateWidgetBtn = <Button floated='left' size="small" compact basic content="Update" className="updateWidgetButton"/>;
 
-                    {
-                        //Removed for the time being
-                        //<button className="fluid ui button">Install new widget</button>
+        const confirmContent = !_.isEmpty(this.state.usedByList) ?
+            (<Segment basic>
+                <h5>Widget is currently used by:</h5>
+
+                <DataTable>
+                <DataTable.Column label="Username"/>
+                <DataTable.Column label="Manager IP"/>
+
+                {
+                    this.state.usedByList.map((item) => {
+                        return (
+                            <DataTable.Row key={item.username + item.managerIp}>
+                                <DataTable.Data>{item.username}</DataTable.Data>
+                                <DataTable.Data>{item.managerIp}</DataTable.Data>
+                            </DataTable.Row>
+                        );
                     }
-                </div>
+                )}
+            </DataTable></Segment>) : "";
+
+        return (
+            <div>
+                <Modal trigger={addWidgetBtn} className="addWidgetModal" open={this.state.open}
+                       onOpen={this._openModal.bind(this)} onClose={this._closeModal.bind(this)}>
+                    <Segment basic size="large">
+                        <ErrorMessage error={this.state.error}/>
+
+                        <Input icon='search' fluid size="mini" placeholder='Search widgets ...'
+                               onChange={this._filterWidgets.bind(this)} value={this.state.search}/>
+    
+                        <Divider/>
+    
+                        <Item.Group divided className="widgetsList">
+                            {
+                                this.state.filteredWidgetDefinitions.map(function(widget){
+                                    return (
+                                        <Item key={widget.id} data-id={widget.id}>
+                                            <Image as="div" size="small" bordered
+                                                   src={`/widgets/${widget.id}/widget.png`}/>
+                                            <Item.Content>
+                                                <Item.Header as='a'>{widget.name}</Item.Header>
+                                                <Item.Meta>{widget.description}</Item.Meta>
+                                                <Item.Description></Item.Description>
+                                                <Item.Extra>
+                                                    {widget.isCustom &&
+                                                        <div>
+                                                            <InstallWidgetModal onWidgetInstalled={this._updateWidget.bind(this,widget)}
+                                                                                trigger={updateWidgetBtn} buttonLabel="Update Widget"
+                                                                                header="Update widget definition"/>
+
+                                                            <Button floated='left' size="small" compact basic content="Remove"
+                                                                    onClick={this._confirmRemove.bind(this,widget)} className="removeWidgetButton"/>
+                                                        </div>
+                                                    }
+                                                    <Button floated='right' secondary size="small" content="Add"
+                                                            onClick={this._addWidget.bind(this,widget)} className="selectWidgetButton"/>
+                                                </Item.Extra>
+                                            </Item.Content>
+                                        </Item>
+                                    );
+                                },this)
+                            }
+                        </Item.Group>
+    
+                        <InstallWidgetModal onWidgetInstalled={this.props.onWidgetInstalled} trigger={installWidgetBtn}
+                                            header="Install new widget" buttonLabel="Install Widget"/>
+                    </Segment>
+                </Modal>
+
+                <Confirm open={this.state.showConfirm}
+                         onCancel={()=>this.setState({showConfirm:false})}
+                         onConfirm={this._uninstallWidget.bind(this)}
+                         header={`Are you sure to remove widget ${this.state.widget.name}?`}
+                         content={confirmContent} className="removeWidgetConfirm"/>
+
             </div>
         );
     }
