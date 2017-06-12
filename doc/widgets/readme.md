@@ -49,7 +49,7 @@ In this approach the filesystem will look like so:
 Each widget.js file should have one call to a global function called 'Stage.defineWidget'.
 
 
-###Stage.defineWidget gets a settings object with the following options:
+### Stage.defineWidget gets a settings object with the following options:
 
 option | type | default | description
 --- | --- | --- | ---
@@ -66,7 +66,7 @@ initialConfiguration | Array | - | A list of widget configuration options. These
 pageSize | Integer | - | The initial page size for widgets that supports pagination
 
 
-###Available widget functions
+### Available widget functions
 
 *init*()
 Init is called when the widget definition is loaded, which happens once when the system is loaded. This can be used to define some global stuff, such as classes and objects we are going to use in our widget definition.
@@ -85,7 +85,7 @@ render parameters are:
 *postRender*(el,widget,data,toolbox)
 *fetchData*(widget,toolbox, fetchParams)
 
-###Widget object
+### Widget object
 
 Event object has the following attributes
 
@@ -99,7 +99,7 @@ x | The actual x location of the widget on the page
 y | The actual y location of the widget on the page
 definition | The widget definition object as it was passed to defineWidget method. The only additional field there that the widget can access is the 'template'. The template is fetched from the html and added on the widget definition.
 
-###Toolbox object
+### Toolbox object
 The toolbox object gives the widget tools to communicate with the application and with other widgets. It also gives some generic tools that the widget might require.
 
 The toolbox gives access to the following tools:
@@ -248,7 +248,7 @@ The 'deployment' template looks like this:
 }
 ```
 
-###Drilldown page templates
+### Drilldown page templates
 Drill down page templates are defined in the '/templates' library.
 
 The library looks liks this:
