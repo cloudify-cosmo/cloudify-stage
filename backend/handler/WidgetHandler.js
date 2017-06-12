@@ -29,8 +29,8 @@ module.exports = (function() {
     }
 
     function _getInstalledWidgets() {
-        return fs.readdirSync(widgetsFolder)
-            .filter(dir => fs.lstatSync(pathlib.join(widgetsFolder, dir)).isDirectory()
+        return fs.readdirSync(pathlib.resolve(widgetsFolder))
+            .filter(dir => fs.lstatSync(pathlib.resolve(widgetsFolder, dir)).isDirectory()
             && _.indexOf(config.app.widgets.ignoreFolders, dir) < 0);
     }
 
@@ -78,7 +78,7 @@ module.exports = (function() {
         logger.debug('installing widget files to the target path', pathlib.resolve(widgetsFolder));
         logger.debug('widget temp path', tempPath);
 
-        var installPath = pathlib.join(widgetsFolder, widgetId);
+        var installPath = pathlib.resolve(widgetsFolder, widgetId);
 
         return new Promise((resolve, reject) => {
             fs.removeSync(installPath);
@@ -120,7 +120,7 @@ module.exports = (function() {
                     .then((tempPath) => _installFiles(widgetId, tempPath))
                     .then(() => _persistData(widgetId, username))
                     .then(() => {
-                        var widgetPath = pathlib.join(widgetsFolder, widgetId);
+                        var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
 
                         logger.info('New widget installed');
                         logger.info('Widget id: ', widgetId);
@@ -153,7 +153,7 @@ module.exports = (function() {
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then(tempPath => _installFiles(widgetId, tempPath))
                     .then(() => {
-                        var widgetPath = pathlib.join(widgetsFolder, widgetId);
+                        var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
 
                         logger.info('Widget updated');
                         logger.info('Widget id: ', widgetId);
