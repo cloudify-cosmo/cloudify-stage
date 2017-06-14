@@ -13,7 +13,12 @@ var ArchiveHelper = require('./ArchiveHelper');
 
 var logger = require('log4js').getLogger('widgets');
 
+//TODO: Temporary solution, the approach needs to be think over thoroughly
 var widgetsFolder = "../widgets";
+if (!fs.existsSync(widgetsFolder)) {
+    widgetsFolder = "../dist/widgets";
+}
+
 var widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
 
 module.exports = (function() {
