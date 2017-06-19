@@ -38,7 +38,7 @@ function buildManagerUrl(req,res,next) {
 function proxyRequest(req,res,next) {
     req.pipe(request[req.method.toLowerCase()](
                 req.su,
-                {timeout: config.app.proxy.timeouts.get})
+                {timeout: config.app.proxy.timeouts[req.method.toLowerCase()]})
         .on('error',function(err){_errorHandler(res,err)}))
         .pipe(res);
 }
