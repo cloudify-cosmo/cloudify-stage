@@ -78,7 +78,7 @@ export default class ExecuteDeploymentModal extends React.Component {
         var workflow = Object.assign({},{name:"", parameters:[]}, this.props.workflow);
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} className="executeWorkflowModal">
                 <Modal.Header>
                     <Icon name="road"/> Execute workflow {workflow.name}
                 </Modal.Header>

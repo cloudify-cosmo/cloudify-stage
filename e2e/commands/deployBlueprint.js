@@ -7,34 +7,53 @@ exports.command = function(deploymentName, inputs, blueprintName) {
         blueprintName = this.page.blueprints().props.testBlueprint;
     }
 
-    var blueprintActionButtons = this.page.blueprintActionButtons();
+    var deploymentExists = false;
 
-    return this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
-            this.log("deploying", blueprintName, "blueprint");
+    this.isWidgetPresent(this.page.filter().props.widgetId, result => {
+        this.log("deploying", deploymentName, "from", blueprintName, "blueprint - check if already presented");
 
-            if (!result.value) {
-                this.moveToEditMode()
-                    .addWidget(blueprintActionButtons.props.widgetId)
-                    .moveOutOfEditMode();
-            }
+        if (!result.value) {
+            this.moveToEditMode()
+                .addWidget(this.page.filter().props.widgetId)
+                .moveOutOfEditMode();
+        }
 
-            this.selectBlueprint(blueprintName);
+        this.page.filter()
+            .isDeploymentPresent(deploymentName, result => {
+                deploymentExists = result.value;
+                this.log("deploying", deploymentName, "from", blueprintName, "blueprint - presented:", deploymentExists)
+            })
+    });
+    return this.perform(() => {
+        if (!deploymentExists) {
+            var blueprintActionButtons = this.page.blueprintActionButtons();
+            this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
+                this.log("deploying", blueprintName, "blueprint");
 
-            blueprintActionButtons.section.buttons
-                .waitForElementNotPresent('@createButtonDisabled')
-                .clickElement('@createDeploymentButton');
+                if (!result.value) {
+                    this.moveToEditMode()
+                        .addWidget(blueprintActionButtons.props.widgetId)
+                        .moveOutOfEditMode();
+                }
 
-            var deployments = this.page.deployments();
+                this.selectBlueprint(blueprintName);
 
-            deployments.section.deployModal
-                .waitForElementVisible('@okButton')
-                .setValue('@deploymentName', deploymentName)
-                .setInputsValue(inputs)
-                .clickElement('@okButton');
+                blueprintActionButtons.section.buttons
+                    .waitForElementNotPresent('@createButtonDisabled')
+                    .waitForElementNotVisible('@widgetLoader')
+                    .clickElement('@createDeploymentButton');
 
-            deployments.waitForElementNotPresent('@deployModal', 10000);
+                var blueprints = this.page.blueprints();
+                inputs['deploymentName'] = deploymentName;
+                blueprints.section.deployBlueprintModal
+                    .fillIn(inputs)
+                    .clickDeploy();
 
-            this.page.filter()
-                .waitForDeploymentPresent(deploymentName);
-        });
+                this.page.filter()
+                    .waitForDeploymentPresent(deploymentName);
+            });
+        } else {
+            this.log("not deploying", blueprintName, "blueprint,", deploymentName, "deployment already exists");
+        }
+    });
 };

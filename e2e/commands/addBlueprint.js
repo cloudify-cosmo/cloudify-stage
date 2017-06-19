@@ -2,7 +2,7 @@
  * Created by pawelposel on 2017-05-31.
  */
 
-exports.command = function(blueprintName) {
+exports.command = function(blueprintName, blueprintYamlFile = 'blueprint.yaml') {
     if (!blueprintName) {
         blueprintName = this.page.blueprints().props.testBlueprint;
     }
@@ -40,10 +40,14 @@ exports.command = function(blueprintName) {
 
                 blueprints.clickElement('@uploadButton');
 
+                let blueprintYamlFileOptionElement = `select[name="blueprintFileName"] option[value="${blueprintYamlFile}"]`;
+                let blueprintYamlFileDropdownSelector = blueprints.section.uploadModal.elements.blueprintYamlFile.selector;
                 blueprints.section.uploadModal
                     .waitForElementVisible('@okButton')
                     .setValue('@blueprintName', blueprintName)
                     .setValue('@blueprintFile', this.page.resources().props.blueprint(blueprintName))
+                    .waitForElementPresent(blueprintYamlFileOptionElement)
+                    .selectOptionInDropdown(blueprintYamlFileDropdownSelector, blueprintYamlFile)
                     .clickElement('@okButton');
 
                 blueprints.waitForElementNotPresent('@uploadModal', 10000);

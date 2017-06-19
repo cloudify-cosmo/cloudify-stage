@@ -38,7 +38,7 @@ class DeploymentActions {
              installWorkflow, uninstallWorkflow, workflowId, blueprintArchive, inputs) {
         var params = {};
         if (!_.isEmpty(applicationFileName)) {
-            params['application_file_name'] = applicationFileName + ".yaml";
+            params['application_file_name'] = applicationFileName;
         }
         if (!_.isEmpty(blueprintArchiveUrl)) {
             params['blueprint_archive_url'] = blueprintArchiveUrl;

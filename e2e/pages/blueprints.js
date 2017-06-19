@@ -75,15 +75,14 @@ module.exports = {
                 blueprintYamlFile: '.content input[name="blueprintFileName-search"]',
                 imageUrl: '.content input[name="imageUrl"]',
                 imageFile: '.content input[name="fileNameimageFile"]',
-                uploadButton: '.actions button.ok',
+                okButton: '.actions button.ok',
                 cancelButton: '.actions button.cancel',
                 errorMessage: 'ui error message'
             },
             commands: [
                 {
-                    fillIn: function(blueprintFile, blueprintName, blueprintYamlFile) {
-                        let dropdownElementName = 'blueprintFileName';
-                        let blueprintFileOptionElement = `select[name="${dropdownElementName}"] option[value="${blueprintYamlFile}"]`
+                    fillIn: function(blueprintFile, blueprintName, blueprintYamlFile = 'blueprint.yaml') {
+                        let blueprintFileOptionElement = `select[name="blueprintFileName"] option[value="${blueprintYamlFile}"]`;
                         return this
                             .waitForElementVisible(this.selector)
                             .setValue('@blueprintFile',  blueprintFile)
@@ -94,7 +93,7 @@ module.exports = {
                     },
                     clickUpload: function() {
                         return this
-                            .clickElement('@uploadButton')
+                            .clickElement('@okButton')
                             .waitForElementNotPresent(this.selector);
                     }
                 }
@@ -191,12 +190,13 @@ module.exports = {
         }
     },
     elements: {
-        header: 'h5.header',
-        uploadButton: '.blueprintsWidget .uploadBlueprintButton',
+        header: 'div.blueprintsWidget h5.header',
+        loader: 'div.blueprintsWidget div.widgetLoader',
+        uploadButton: 'div.blueprintsWidget .uploadBlueprintButton',
         uploadModal: '.uploadBlueprintModal',
-        editWidgetButton: '.widgetEditButtons i.editWidgetIcon',
-        removeWidgetButton: '.widgetEditButtons i.remove',
-        expandWidgetButton: '.widgetViewButtons i.expand'
+        editWidgetButton: 'div.blueprintsWidget .widgetEditButtons i.editWidgetIcon',
+        removeWidgetButton: 'div.blueprintsWidget .widgetEditButtons i.remove',
+        expandWidgetButton: 'div.blueprintsWidget .widgetViewButtons i.expand'
     },
     props: {
         widgetId: "blueprints",
@@ -208,6 +208,7 @@ module.exports = {
             configureWidget: function () {
                 this.moveToEditMode()
                     .waitForElementPresent('@header')
+                    .waitForElementNotVisible('@loader', 20000)
                     .moveToElement('@header', 5, 5)
                     .clickElement('@editWidgetButton')
                 return this;
