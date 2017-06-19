@@ -139,7 +139,7 @@ export default class UpdateDeploymentModal extends React.Component {
         var options = _.map(this.state.yamlFiles, item => { return {text: item, value: item} });
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} className="updateDeploymentModal">
                 <Modal.Header>
                     <Icon name="edit"/> Update deployment {this.props.deployment.id}
                 </Modal.Header>

@@ -37,7 +37,7 @@ export default class extends React.Component {
                 {
                     this.props.data.items.map((item) => {
                         return (
-                            <DataSegment.Item key={item.id} selected={item.isSelected}
+                            <DataSegment.Item key={item.id} selected={item.isSelected} className={item.id}
                                           onClick={()=>this.props.onSelectDeployment(item)}>
                                 <div className="ui grid">
                                     <div className="three wide center aligned column rightDivider">

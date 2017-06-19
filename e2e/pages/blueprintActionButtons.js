@@ -8,6 +8,7 @@ module.exports = {
         buttons: {
             selector: '.blueprintActionButtonsWidget',
             elements: {
+                widgetLoader: '.widgetLoader',
                 createDeploymentButton: '#createDeploymentButton',
                 createButtonDisabled: '#createDeploymentButton.disabled',
                 deleteBlueprintButton: '#deleteBlueprintButton',

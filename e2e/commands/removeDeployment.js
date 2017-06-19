@@ -18,6 +18,7 @@ exports.command = function(deploymentName) {
 
             deploymentActionButtons.section.buttons
                 .waitForElementNotPresent('@deleteButtonDisabled')
+                .waitForElementNotVisible('@widgetLoader')
                 .clickElement('@deleteDeploymentButton');
 
             deploymentActionButtons.section.removeConfirm

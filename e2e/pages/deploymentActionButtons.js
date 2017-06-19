@@ -8,6 +8,7 @@ module.exports = {
         buttons: {
             selector: '.deploymentActionButtonsWidget',
             elements: {
+                widgetLoader: '.widgetLoader',
                 executeWorkflowButton: '#executeWorkflowButton',
                 executeButtonDisabled: '#executeWorkflowButton.disabled',
                 updateDeploymentButton: '#updateDeploymentButton',

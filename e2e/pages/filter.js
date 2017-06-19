@@ -11,6 +11,9 @@ module.exports = {
         isBlueprintPresent: function(blueprint, callback) {
             return this.isPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]', callback);
         },
+        isDeploymentPresent: function(deployment, callback) {
+            return this.isPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]', callback);
+        },
         waitForBlueprintPresent: function(blueprint) {
             return this.waitForElementPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]', 10000);
         },
