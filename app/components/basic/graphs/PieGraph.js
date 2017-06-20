@@ -5,6 +5,37 @@
 import React, { Component, PropTypes } from 'react';
 import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
 
+/**
+ * PieGraph component to present data in form of pie chart
+ *
+ * Data is array in the following format:
+ * ```
+ * [
+ *     {
+ *          name: <string name of pie section 1, eg. 'Apples'>,
+ *          color: <HTML color value 1, eg. '#45dd22'>,
+ *          value: <numeric value of section 1, eg. 5>
+ *     },
+ *     {
+ *          name: <string name of pie section 2, eg. 'Oranges'>,
+ *          color: <HTML color value 2, eg. '#45dd22'>,
+ *          value: <numeric value of section 2, eg. 10>
+ *     },
+ *     ...
+ * ]
+ * ```
+ *
+ * @example
+ *
+ * let formattedData = [
+ *      {name: 'Started',     color: '#21ba45', value: 2},
+ *      {name: 'In progress', color: '#fbbd08', value: 5},
+ *      {name: 'Warning',     color: '#f2711c', value: 3},
+ *      {name: 'Error',       color: '#db2828', value: 8}
+ * ];
+ *
+ * return (<PieGraph widget={widget} data={formattedData} toolbox={toolbox} />);
+ */
 export default class PieGraph extends Component {
     constructor(props,context) {
         super(props,context);
@@ -13,8 +44,16 @@ export default class PieGraph extends Component {
         };
     }
 
+    /**
+     * propTypes
+     * @property {object} widget Widget object
+     * @property {array} data graph input data
+     * @property {object} toolbox Toolbox object
+     */
     static propTypes = {
-        data: PropTypes.array.isRequired
+        widget: PropTypes.object.isRequired,
+        data: PropTypes.array.isRequired,
+        toolbox: PropTypes.object.isRequired
     };
 
     shouldComponentUpdate(nextProps, nextState) {

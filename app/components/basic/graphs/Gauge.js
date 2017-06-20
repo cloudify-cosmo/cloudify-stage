@@ -8,7 +8,24 @@ function deg2rad(deg) {
     return deg * Math.PI / 180;
 }
 
+/**
+ * Gauge component to present value in graphical form
+ *
+ * @example
+ * <Gauge value={12} min={0} max={20} high={15} low={3} />
+ */
 export default class Gauge extends Component {
+
+    /**
+     * propTypes
+     * @property {number} value actual value to be marked on the gauge
+     * @property {number} min minimal value to be presented
+     * @property {number} max maximum value to be presented
+     * @property {number} [high] value above which the colour of the gauge bar changes to green
+     * @property {number} [low] value below which the colour of the gauge bar changes to red
+     * @property {number} [minAngle=-90] minimum angle of the gauge chart, associated with minimum value
+     * @property {number} [maxAngle=90] maximum angle of the gauge chart, associated with maximum value
+     */
     static propTypes = {
         value: PropTypes.number.isRequired,
         min : PropTypes.number.isRequired,
@@ -23,7 +40,6 @@ export default class Gauge extends Component {
         minAngle: -90,
         maxAngle: 90
     };
-
 
     _buildProps (svgComponent) {
         var width = svgComponent.clientWidth;
@@ -73,9 +89,8 @@ export default class Gauge extends Component {
             textSize,
             tickTextSize
         }
-
-
     }
+
     componentDidMount() {
         this._initGauge(this.refs.svg);
         $(window).resize(()=>this._initGauge(this.refs.svg));
