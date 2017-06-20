@@ -8,12 +8,15 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var path = require('path');
 var _ = require('lodash');
+var AuthMiddleware = require('./AuthMiddleware');
 
 router.use(bodyParser.raw({
     limit: '1mb',
     type: 'image/*'
 }));
 
+//This path returns image resource so there is no point to secure that
+// (if yes all credentials should be passed in the query string)
 router.get('/image/:blueprint',function (req, res, next) {
     db.BlueprintAdditions
         .findOne({ where: {blueprintId: req.params.blueprint} }).then(function(additions) {
@@ -32,7 +35,7 @@ router.get('/image/:blueprint',function (req, res, next) {
         .catch(next);
 });
 
-router.post('/image/:blueprint',function (req, res, next) {
+router.post('/image/:blueprint',AuthMiddleware,function (req, res, next) {
     db.BlueprintAdditions
         .findOrCreate({ where: {blueprintId: req.params.blueprint}})
         .spread(function(blueprintAdditions, created) {
@@ -44,7 +47,7 @@ router.post('/image/:blueprint',function (req, res, next) {
         .catch(next);
 });
 
-router.delete('/image/:blueprint',function (req, res, next) {
+router.delete('/image/:blueprint',AuthMiddleware,function (req, res, next) {
     db.BlueprintAdditions
         .destroy({ where: {blueprintId: req.params.blueprint} }).then(function(deletedRecord) {
             res.end(JSON.stringify({status:"ok"}));

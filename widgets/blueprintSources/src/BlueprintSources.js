@@ -82,8 +82,6 @@ export default class BlueprintSources extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
-
                 {this.props.data.blueprintId ?
                     <SplitterLayout primaryIndex={0} percentage secondaryInitialSize={this.props.widget.configuration.contentPaneWidth}>
                         <div>
@@ -114,6 +112,8 @@ export default class BlueprintSources extends React.Component {
                         <Message content="Please select blueprint to display source files" info/>
                     </div>
                 }
+
+                <ErrorMessage error={this.state.error}/>
             </div>
         );
     }

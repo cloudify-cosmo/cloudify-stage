@@ -4,6 +4,7 @@
 
 import fetch from 'isomorphic-fetch'
 import External from './External'
+import Internal from './Internal'
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
 
@@ -131,32 +132,32 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    static _installWidget(widgetFile, widgetUrl, username) {
-        var external = new External();
+    static _installWidget(widgetFile, widgetUrl, manager) {
+        var internal = new Internal(manager);
 
         if (widgetUrl) {
             console.log("Install widget from url", widgetUrl);
-            return external.doPut(`/widgets/install`,{url: widgetUrl, username});
+            return internal.doPut(`/widgets/install`,{url: widgetUrl, username: manager.username});
         } else {
             console.log("Install widget from file");
-            return external.doUpload(`/widgets/install`,{username},{widget:widgetFile});
+            return internal.doUpload(`/widgets/install`,{username: manager.username},{widget:widgetFile});
         }
     }
 
-    static _updateWidget(widgetId, widgetFile, widgetUrl) {
-        var external = new External();
+    static _updateWidget(widgetId, widgetFile, widgetUrl, manager) {
+        var internal = new Internal(manager);
 
         if (widgetUrl) {
             console.log("Update widget " + widgetId + " from url", widgetUrl);
-            return external.doPut(`/widgets/update`,{url: widgetUrl, id: widgetId});
+            return internal.doPut(`/widgets/update`,{url: widgetUrl, id: widgetId});
         } else {
             console.log("Update widget " + widgetId + " from file");
-            return external.doUpload(`/widgets/update`,{id: widgetId},{widget:widgetFile});
+            return internal.doUpload(`/widgets/update`,{id: widgetId},{widget:widgetFile});
         }
     }
 
-    static install(widgetFile, widgetUrl, username) {
-        return WidgetDefinitionsLoader._installWidget(widgetFile, widgetUrl, username)
+    static install(widgetFile, widgetUrl, manager) {
+        return WidgetDefinitionsLoader._installWidget(widgetFile, widgetUrl, manager)
             .then(data => WidgetDefinitionsLoader._loadWidget(data.id, true)
                 .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([data], 'id'))))
             .then(() => WidgetDefinitionsLoader._initWidgets())
@@ -167,8 +168,8 @@ export default class WidgetDefinitionsLoader {
             })
     }
 
-    static update(widgetId, widgetFile, widgetUrl) {
-        return WidgetDefinitionsLoader._updateWidget(widgetId, widgetFile, widgetUrl)
+    static update(widgetId, widgetFile, widgetUrl, manager) {
+        return WidgetDefinitionsLoader._updateWidget(widgetId, widgetFile, widgetUrl, manager)
             .then(data => WidgetDefinitionsLoader._loadWidget(data.id, true)
                 .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([data], 'id'))))
             .then(() => WidgetDefinitionsLoader._initWidgets())
@@ -179,9 +180,9 @@ export default class WidgetDefinitionsLoader {
             })
     }
 
-    static uninstall(widgetId) {
-        var external = new External();
-        return external.doDelete(`/widgets/${widgetId}`)
+    static uninstall(widgetId, manager) {
+        var internal = new Internal(manager);
+        return internal.doDelete(`/widgets/${widgetId}`)
     }
 
 }

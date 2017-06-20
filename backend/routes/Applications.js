@@ -6,11 +6,13 @@
 
 var bodyParser = require('body-parser');
 var express = require('express');
-var router = express.Router();
+var AuthMiddleware = require('./AuthMiddleware');
 
+var router = express.Router();
 var logger = require('log4js').getLogger('Applications');
 var db = require('../db/Connection');
 
+router.use(AuthMiddleware);
 router.use(bodyParser.json());
 
 router.get('/', (req, res, next) => {

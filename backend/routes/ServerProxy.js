@@ -27,7 +27,7 @@ function _errorHandler(res,err) {
 function buildManagerUrl(req,res,next) {
     var serverUrl = req.query.su;
     if (serverUrl) {
-        req.su=    config.manager.protocol + '://' + config.manager.ip + ':' + config.manager.port + serverUrl;
+        req.su = config.managerUrl + serverUrl;
         logger.debug('Proxying '+req.method+' request to server with url: '+req.su);
         next();
     } else {

@@ -10,6 +10,7 @@ import EventBus from './EventBus';
 import Context from './Context';
 import Manager from './Manager';
 import External from './External';
+import Internal from './Internal';
 
 class Toolbox {
     constructor (store) {
@@ -27,6 +28,7 @@ class Toolbox {
         var state = this.store.getState();
         this.templates = state.templates || {};
         this._Manager = new Manager(state.manager || {});
+        this._Internal = new Internal(state.manager || {});
         this._Context = new Context(this.store);
         this.widgetDefinitions = state.widgetDefinitions || [];
         this._widgetsConfig = state.config.widgets;
@@ -42,6 +44,10 @@ class Toolbox {
 
     getManager() {
         return this._Manager;
+    }
+
+    getInternal() {
+        return this._Internal;
     }
 
     getExternal(basicAuth) {

@@ -23,7 +23,7 @@ export default class UserAppDataAutoSaver {
             if (this._isActive && this._hasDataChanged(state) && this._validData(state)) {
                 this._initFromStore();
 
-                this._store.dispatch(saveUserAppData(this._ip,this._username,this._role,{pages: this._pages}));
+                this._store.dispatch(saveUserAppData(state.manager,{pages: this._pages}));
             }
         });
     }

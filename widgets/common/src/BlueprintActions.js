@@ -45,9 +45,9 @@ class BlueprintActions {
 
     doListYamlFiles(blueprintUrl, file) {
         if (file) {
-            return this.toolbox.getExternal().doUpload('/source/list/yaml', null, {archive: file});
+            return this.toolbox.getInternal().doUpload('/source/list/yaml', null, {archive: file});
         } else {
-            return this.toolbox.getExternal().doPut('/source/list/yaml', {url: blueprintUrl});
+            return this.toolbox.getInternal().doPut('/source/list/yaml', {url: blueprintUrl});
         }
     }
 
@@ -58,14 +58,14 @@ class BlueprintActions {
 
         var params = {imageUrl};
         if (image) {
-            return this.toolbox.getExternal().doUpload(`/ba/image/${blueprintId}`, params, image, "post");
+            return this.toolbox.getInternal().doUpload(`/ba/image/${blueprintId}`, params, image, "post");
         } else {
-            return this.toolbox.getExternal().doPost(`/ba/image/${blueprintId}`, params);
+            return this.toolbox.getInternal().doPost(`/ba/image/${blueprintId}`, params);
         }
     }
 
     doDeleteImage(blueprintId) {
-        return this.toolbox.getExternal().doDelete(`/ba/image/${blueprintId}`);
+        return this.toolbox.getInternal().doDelete(`/ba/image/${blueprintId}`);
     }
 
 }

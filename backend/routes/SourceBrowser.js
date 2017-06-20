@@ -6,9 +6,12 @@
 var express = require('express');
 var request = require('request');
 var SourceHandler = require('../handler/SourceHandler');
+var AuthMiddleware = require('./AuthMiddleware');
 
 var logger = require('log4js').getLogger('sourceBrowser');
 var router = express.Router();
+
+router.use(AuthMiddleware);
 
 router.get('/browse/file', function(req, res, next) {
     var path = req.query.path;
@@ -22,18 +25,8 @@ router.get('/browse/file', function(req, res, next) {
         .catch(next);
 });
 
-router.get('/browse', function(req, res, next) {
-    var su = req.query.su;
-
-    var errors = [];
-    if (!su) {
-        errors.push('no server url passed [su]');
-    }
-    if (errors.length > 0) {
-        return next(errors.join());
-    }
-
-    SourceHandler.browseArchiveTree(req, su)
+router.get('/browse/:blueprintId/archive/:version', function(req, res, next) {
+    SourceHandler.browseArchiveTree(req, req.params.blueprintId, req.params.version)
         .then(data => res.send(data))
         .catch(next);
 });

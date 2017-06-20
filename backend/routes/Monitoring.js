@@ -6,9 +6,12 @@ var express = require('express');
 var influx = require('influx');
 var config = require('../config').get();
 var _ = require('lodash');
+var AuthMiddleware = require('./AuthMiddleware');
 
 var router = express.Router();
 var logger = require('log4js').getLogger('MonitoringRouter');
+
+router.use(AuthMiddleware);
 
 function getClient() {
     var options = {
