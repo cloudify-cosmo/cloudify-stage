@@ -1,0 +1,20 @@
+{
+  "source": "./app/components/basic",
+  "destination": "./doc/components/basic",
+  "undocumentIdentifier": false,
+  "experimentalProposal": {
+    "classProperties": true,
+    "objectRestSpread": true,
+    "decorators": true,
+    "doExpressions": true,
+    "functionBind": true,
+    "asyncGenerators": true,
+    "exportExtensions": true,
+    "dynamicImport": true
+  },
+  "title": "Cloudify UI",
+  "index": "./doc/index.md",
+  "manual": {
+    "usage": ["./doc/widgets/readme.md"]
+  }
+}
