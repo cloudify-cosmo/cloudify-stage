@@ -2,21 +2,12 @@
  * Created by kinneretzin on 22/11/2016.
  */
 
-import 'isomorphic-fetch';
+import Internal from './Internal';
 
-import log from 'loglevel';
-
-import Consts from './consts';
-import External from './External';
-
-export default class Manager extends External {
+export default class Manager extends Internal {
 
     constructor(managerData) {
         super(managerData);
-    }
-
-    getSelectedTenant() {
-        return _.get(this,'_data.tenants.selected', null);
     }
 
     getIp() {
@@ -29,6 +20,14 @@ export default class Manager extends External {
 
     getManagerUrl(url,data) {
         return this._buildActualUrl(url,data);
+    }
+
+    getApiVersion() {
+        return this._data.apiVersion;
+    }
+
+    getSelectedTenant() {
+        return _.get(this,'_data.tenants.selected', null);
     }
 
     _buildActualUrl(url,data) {
@@ -51,21 +50,6 @@ export default class Manager extends External {
         }
     }
 
-    _buildSecurityHeader(){
-        var auth = this._data.auth;
-        return (auth.isSecured && auth.token ? {"Authentication-Token": auth.token} : undefined);
-    }
-
-    _buildHeaders() {
-        var securityHeaders = this._buildSecurityHeader();
-
-        var headers = Object.assign({
-            tenant: _.get(this._data,'tenants.selected',Consts.DEFAULT_TENANT)
-        },securityHeaders);
-
-        return headers;
-    }
-
     doGetFull(url,params={},parseResponse=true,fullData = {items:[]}, size = 0) {
         params._size = 1000;
         params._offset = size;
@@ -85,5 +69,4 @@ export default class Manager extends External {
         });
 
     }
-
 }

@@ -7,7 +7,7 @@ import * as types from './types';
 import {createDrilldownPage,selectPage} from './page';
 import {v4} from 'node-uuid';
 import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
-import External from '../utils/External';
+import Internal from '../utils/Internal';
 
 export function addWidget(pageId,name,widgetDefinition,width,height,x,y,configuration) {
     return {
@@ -117,7 +117,7 @@ export function setInstallWidget(widgetDefinitions) {
 
 export function installWidget(widgetFile, widgetUrl) {
     return function(dispatch,getState) {
-        return widgetDefinitionLoader.install(widgetFile, widgetUrl, getState().manager.username)
+        return widgetDefinitionLoader.install(widgetFile, widgetUrl, getState().manager)
             .then(widgetDefinitions => dispatch(setInstallWidget(widgetDefinitions)));
     }
 }
@@ -131,7 +131,7 @@ export function setUninstallWidget(widgetId) {
 
 export function uninstallWidget(widgetId) {
     return function(dispatch,getState) {
-        return widgetDefinitionLoader.uninstall(widgetId)
+        return widgetDefinitionLoader.uninstall(widgetId, getState().manager)
             .then(() => dispatch(setUninstallWidget(widgetId)));
     }
 }
@@ -146,14 +146,14 @@ export function setUpdateWidget(widgetDefinitions, widgetId) {
 
 export function updateWidget(widgetId, widgetFile, widgetUrl) {
     return function(dispatch,getState) {
-        return widgetDefinitionLoader.update(widgetId, widgetFile, widgetUrl)
+        return widgetDefinitionLoader.update(widgetId, widgetFile, widgetUrl, getState().manager)
             .then(widgetDefinitions => dispatch(setUpdateWidget(widgetDefinitions, widgetId)));
     }
 }
 
 export function checkIfWidgetIsUsed(widgetId) {
-    return function(dispatch) {
-        var external = new External();
-        return external.doGet(`/widgets/${widgetId}/used`);
+    return function(dispatch,getState) {
+        var internal = new Internal(getState().manager);
+        return internal.doGet(`/widgets/${widgetId}/used`);
     }
 }

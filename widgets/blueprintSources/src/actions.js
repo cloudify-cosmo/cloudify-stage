@@ -13,11 +13,12 @@ export default class {
     }
 
     doGetFilesTree(blueprintId) {
-        return this.toolbox.getManager().doGet(`/source/browse?[manager]/blueprints/${blueprintId}/archive`);
+        var version = this.toolbox.getManager().getApiVersion();
+        return this.toolbox.getInternal().doGet(`/source/browse/${blueprintId}/archive/${version}`);
     }
 
     doGetFileContent(path) {
-        return this.toolbox.getExternal().doGet("/source/browse/file",{path});
+        return this.toolbox.getInternal().doGet("/source/browse/file",{path});
     }
 
 }

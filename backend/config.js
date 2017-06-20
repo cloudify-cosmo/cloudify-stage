@@ -21,6 +21,8 @@ module.exports = {
             config.customer = customer;
         }
 
+        config.managerUrl = manager.protocol + '://' + manager.ip + ':' + manager.port;
+
         return config;
     },
 

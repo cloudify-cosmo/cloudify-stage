@@ -178,11 +178,17 @@ export default class External {
     }
 
     _buildHeaders() {
+        if (!this._data) {
+            return {};
+        }
+
         var headers = {};
-        if (this._data && this._data.basicAuth) {
-            headers = Object.assign(headers, {"Authorization": `Basic ${this._data.basicAuth}`});
-        };
+        if (this._data.basicAuth) {
+            headers["Authorization"] = `Basic ${this._data.basicAuth}`;
+        }
 
         return headers;
     }
+
+
 }

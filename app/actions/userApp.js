@@ -5,7 +5,7 @@
 import * as types from './types';
 import fetch from 'isomorphic-fetch';
 import {createPageFromInitialTemplate} from './page';
-import External from '../utils/External';
+import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 import { push } from 'react-router-redux';
 
@@ -19,12 +19,12 @@ function setPages(pages) {
     }
 }
 
-export function saveUserAppData (ip,username,role,appData) {
+export function saveUserAppData (manager, appData) {
     return function(dispatch) {
         var data = {appData , version: CURRENT_APP_DATA_VERSION};
 
-        var external = new External();
-        return external.doPost(`/ua/${ip}/${username}/${role}`,null,data);
+        var internal = new Internal(manager);
+        return internal.doPost(`/ua/${manager.username}/${manager.auth.role}`,null,data);
     }
 }
 
@@ -44,8 +44,8 @@ export function resetTemplate(manager,config,templates,widgetDefinitions){
 export function loadOrCreateUserAppData (manager,config,templates,widgetDefinitions) {
     return function(dispatch,getState) {
 
-        var external = new External();
-        return external.doGet(`/ua/${manager.ip}/${manager.username}/${manager.auth.role}`)
+        var internal = new Internal(manager);
+        return internal.doGet(`/ua/${manager.username}/${manager.auth.role}`)
             .then(userApp=>{
                 if (userApp &&
                     userApp.appDataVersion === CURRENT_APP_DATA_VERSION &&
@@ -55,7 +55,7 @@ export function loadOrCreateUserAppData (manager,config,templates,widgetDefiniti
                     dispatch(resetTemplate(manager,config,templates,widgetDefinitions));
 
                     var data = { pages: getState().pages};
-                    return dispatch(saveUserAppData(manager.ip,manager.username,manager.auth.role,data));
+                    return dispatch(saveUserAppData(manager, data));
                 }
             });
     }

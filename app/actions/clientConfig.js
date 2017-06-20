@@ -3,7 +3,7 @@
  */
 
 import * as types from './types';
-import External from '../utils/External';
+import Internal from '../utils/Internal';
 
 function setClientConfig(config) {
     return {
@@ -13,12 +13,10 @@ function setClientConfig(config) {
     }
 }
 
-
 export function getClientConfig() {
     return function(dispatch,getState) {
-        var ip = getState().manager.ip;
-        var external = new External();
-        return external.doGet(`/clientConfig/${ip}`).then(response=>{
+        var internal = new Internal(getState().manager);
+        return internal.doGet(`/clientConfig`).then(response=>{
             dispatch(setClientConfig(response.config))
         });
     }
@@ -26,9 +24,8 @@ export function getClientConfig() {
 
 export function saveClientConfig(config) {
     return function(dispatch,getState) {
-        var ip = getState().manager.ip;
-        var external = new External();
-        return external.doPost(`/clientConfig/${ip}`,null,config).then(response=>{
+        var internal = new Internal(getState().manager);
+        return internal.doPost(`/clientConfig`,null,config).then(response=>{
             dispatch(setClientConfig(response.config))
         });
     }

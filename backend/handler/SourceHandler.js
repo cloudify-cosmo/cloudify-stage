@@ -17,7 +17,10 @@ var lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir)
 
 module.exports = (function() {
 
-    function browseArchiveTree(req, archiveUrl) {
+    function browseArchiveTree(req, blueprintId, version) {
+        var archiveUrl = config.managerUrl + "/api/" + version + "/blueprints/" + req.params.blueprintId + "/archive";
+        logger.debug('download archive from url', archiveUrl);
+
         var archiveFolder = pathlib.join(browseSourcesDir, "source" + Date.now());
         return ArchiveHelper.removeOldExtracts(browseSourcesDir)
             .then(() => ArchiveHelper.saveDataFromUrl(archiveUrl, archiveFolder, req))
@@ -32,11 +35,11 @@ module.exports = (function() {
 
     function browseArchiveFile(path) {
         return new Promise((resolve, reject) => {
-            if (!_checkPrefix(browseSourcesDir, path)) {
+            var absolutePath = pathlib.resolve(browseSourcesDir, path);
+            if (!_checkPrefix(absolutePath, browseSourcesDir)) {
                 return reject('Wrong path');
             }
 
-            var absolutePath = pathlib.join(browseSourcesDir, path);
             fs.readFile(absolutePath, 'utf-8', (err, data) => {
                 if (err) {
                     return reject(err);
@@ -47,12 +50,10 @@ module.exports = (function() {
         });
     }
 
-    function _checkPrefix(prefix, candidate) {
-        var absPrefix = pathlib.resolve(prefix) + pathlib.sep;
-        var absCandidate = pathlib.resolve(candidate) + pathlib.sep;
-
-        return absCandidate.substring(0, absPrefix.length) === absPrefix;
+    function _checkPrefix(absCandidate, absPrefix) {
+        return absCandidate.substring(0, absPrefix.length) === absPrefix
     }
+
 
     function _saveMultipartData(req) {
         var targetPath = pathlib.join(lookupYamlsDir, "archive" + Date.now());

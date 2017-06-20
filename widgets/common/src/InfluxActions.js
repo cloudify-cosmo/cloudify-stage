@@ -19,15 +19,15 @@ class InfluxActions {
             params.timeGroup = timeGroup;
         }
 
-        return this.toolbox.getExternal().doGet(`/monitor/byMetric/${deploymentId}/${metric}`, params);
+        return this.toolbox.getInternal().doGet(`/monitor/byMetric/${deploymentId}/${metric}`, params);
     }
 
     doGetMetrics(deploymentId) {
-        return this.toolbox.getExternal().doGet(`/monitor/metrics/${deploymentId}`);
+        return this.toolbox.getInternal().doGet(`/monitor/metrics/${deploymentId}`);
     }
 
     doRunQuery(query) {
-        return this.toolbox.getExternal().doGet(`/monitor/query`, {q: query});
+        return this.toolbox.getInternal().doGet(`/monitor/query`, {q: query});
     }
 }
 

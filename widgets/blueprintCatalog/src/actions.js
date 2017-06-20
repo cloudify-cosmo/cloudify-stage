@@ -19,13 +19,13 @@ export default class Actions {
     }
 
     doGetRepos(params) {
-        return this.toolbox.getExternal()
+        return this.toolbox.getInternal()
             .doGet(`/github/search/repositories?q=user:${this.username} ${this.filter}`, params, false)
             .then(response => Promise.resolve(response.json()));
     }
 
     doGetRepoTree(repo) {
-        return this.toolbox.getExternal().doGet(`/github/repos/${this.username}/${repo}/git/trees/master`);
+        return this.toolbox.getInternal().doGet(`/github/repos/${this.username}/${repo}/git/trees/master`);
     }
 
     doUpload(blueprintName, blueprintFileName, repo, privateResource=false) {
@@ -37,7 +37,7 @@ export default class Actions {
 
         return this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params)
             .then(()=>this.doFindImage(repo))
-            .then(imageUrl=> imageUrl ? this.toolbox.getExternal().doPost(`/ba/image/${blueprintName}`, {imageUrl}) : Promise.resolve());
+            .then(imageUrl=> imageUrl ? this.toolbox.getInternal().doPost(`/ba/image/${blueprintName}`, {imageUrl}) : Promise.resolve());
     }
 
     doFindImage(repo, defaultImage) {
