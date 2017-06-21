@@ -11,6 +11,7 @@
     "doc": "esdoc -c ./esdoc.json",
     "deve2e": "nightwatch -c ./e2e/nightwatch.conf.js --env dev",
     "e2e": "nightwatch -c ./e2e/nightwatch.conf.js",
+    "e2ev": "nightwatch -c ./e2e/nightwatch.conf.js --verbose",
     "beforebuild": "scripts/preinstall.sh",
     "build": "webpack --config webpack.config-prod.js --bail",
     "zip": "scripts/createPackage.sh"
