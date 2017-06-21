@@ -5,9 +5,9 @@
 import ClusterManagement from './ClusterManagement';
 
 Stage.defineWidget({
-    id: 'HAManagement',
-    name: "High Availability management",
-    description: 'HA cluster management including - start/join cluster, list nodes in cluster',
+    id: 'highAvailability',
+    name: "High Availability",
+    description: 'List nodes in High Availability cluster',
     initialWidth: 12,
     initialHeight: 25,
     color: "green",
@@ -44,10 +44,9 @@ Stage.defineWidget({
             return <Stage.Basic.Loading/>;
         }
 
-        console.log(data);
         return (
             <ClusterManagement widget={widget} data={data} toolbox={toolbox}/>
         );
-
     }
+
 });

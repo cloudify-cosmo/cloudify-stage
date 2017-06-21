@@ -3,7 +3,7 @@
   "widgets": [
     {
       "name": "Cluster management",
-      "definition": "HAManagement",
+      "definition": "highAvailability",
       "width": 12,
       "height": 24,
       "x": 0,
