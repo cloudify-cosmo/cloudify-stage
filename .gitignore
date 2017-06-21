@@ -15,3 +15,4 @@ selenium-debug.log
 tests_output
 
 /e2e/screenshots
+/doc/components

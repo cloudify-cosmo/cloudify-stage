@@ -6,7 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
 
 /**
- * PieGraph component to present data in form of pie chart
+ * PieGraph is a component to present data in form of pie chart
  *
  * Data is array in the following format:
  * ```
@@ -25,8 +25,11 @@ import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
  * ]
  * ```
  *
- * @example
+ * ## Usage
  *
+ * ![PieGraph](manual/asset/graphs/PieGraph_0.png)
+ *
+ * ```
  * let formattedData = [
  *      {name: 'Started',     color: '#21ba45', value: 2},
  *      {name: 'In progress', color: '#fbbd08', value: 5},
@@ -35,6 +38,7 @@ import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
  * ];
  *
  * return (<PieGraph widget={widget} data={formattedData} toolbox={toolbox} />);
+ * ```
  */
 export default class PieGraph extends Component {
     constructor(props,context) {
@@ -47,7 +51,7 @@ export default class PieGraph extends Component {
     /**
      * propTypes
      * @property {object} widget Widget object
-     * @property {array} data graph input data
+     * @property {object[]} data graph input data
      * @property {object} toolbox Toolbox object
      */
     static propTypes = {
