@@ -16,6 +16,7 @@ module.exports = (function(settings) {
         seleniumHost = seleniumHost.trim();
         console.log('Using selenium host: '+seleniumHost);
         settings.test_settings.default.selenium_host = seleniumHost;
+        settings.selenium.start_process = false;
     }
     return settings;
 })(require('./nightwatch.json'));
