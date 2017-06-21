@@ -4,11 +4,18 @@ module.exports = (function(settings) {
         settings.selenium.cli_args['webdriver.chrome.driver']  = "./e2e/bin/chromedriver.exe";
     }
 
-    var managerUrl = process.env.MANAGER_URL;
+    var managerUrl = process.env.STAGE_E2E_MANAGER_URL;
     if (managerUrl) {
         managerUrl = managerUrl.trim();
         console.log('Connecting to manager: '+managerUrl);
         settings.test_settings.default.launch_url = 'http://'+managerUrl;
+    }
+
+    var seleniumHost = process.env.STAGE_E2E_SELENIUM_HOST;
+    if (seleniumHost) {
+        seleniumHost = seleniumHost.trim();
+        console.log('Using selenium host: '+seleniumHost);
+        settings.test_settings.default.selenium_host = seleniumHost;
     }
     return settings;
 })(require('./nightwatch.json'));
