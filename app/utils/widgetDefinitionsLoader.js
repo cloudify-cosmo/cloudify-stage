@@ -159,6 +159,20 @@ export default class WidgetDefinitionsLoader {
     static install(widgetFile, widgetUrl, manager) {
         return WidgetDefinitionsLoader._installWidget(widgetFile, widgetUrl, manager)
             .then(data => WidgetDefinitionsLoader._loadWidget(data.id, true)
+                .then(() => {
+                    var error = "";
+                    if (_.isEmpty(widgetDefinitions)) {
+                        error = 'Widget not properly initialized. Please check if widget.js is correctly defined.';
+                    } else if (widgetDefinitions.length > 1) {
+                        error = 'Only single widget should be defined within widget.js';
+                    };
+
+                    if (error) {
+                        return WidgetDefinitionsLoader.uninstall(data.id).then(() => { throw new Error(error) });
+                    };
+
+                    return Promise.resolve();
+                })
                 .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([data], 'id'))))
             .then(() => WidgetDefinitionsLoader._initWidgets())
             .catch(err => {
