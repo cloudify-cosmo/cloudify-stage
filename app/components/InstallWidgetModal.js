@@ -3,7 +3,8 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Input, InputFile, Icon, Button, Divider, Form, Modal} from "./basic/index"
+import {Input, InputFile, Icon, Button, Divider, Form, Modal, Message} from "./basic/index"
+import EventBus from '../utils/EventBus';
 
 export default class InstallWidgetModal extends Component {
 
@@ -17,7 +18,8 @@ export default class InstallWidgetModal extends Component {
         open: false,
         loading: false,
         widgetUrl: "",
-        errors: {}
+        errors: {},
+        scriptError: ""
     }
 
     static propTypes = {
@@ -45,17 +47,20 @@ export default class InstallWidgetModal extends Component {
         }
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors});
+            this.setState({errors, scriptError: ""});
             return false;
         }
 
-        this.setState({loading: true});
+        this.setState({loading: true, errors: {}, scriptError: ""});
 
+        EventBus.on('window:error', this._showScriptError, this);
         this.props.onWidgetInstalled(widgetFile, this.state.widgetUrl)
             .then(()=>{
+                EventBus.off('window:error', this._showScriptError);
                 this.setState({loading: false, open: false});
             })
             .catch((err)=>{
+                EventBus.off('window:error', this._showScriptError);
                 this.setState({errors: {error: err.message}, loading: false});
             });
     }
@@ -66,6 +71,10 @@ export default class InstallWidgetModal extends Component {
 
     _closeModal() {
         this.setState({open: false});
+    }
+
+    _showScriptError(message, source, lineno, colno) {
+        this.setState({scriptError: `${message} (${source}:${lineno}:${colno})`});
     }
 
     _handleInputChange(proxy, field) {
@@ -92,6 +101,8 @@ export default class InstallWidgetModal extends Component {
                             </Form.Field>
                         </Form.Group>
                     </Form>
+
+                    {this.state.scriptError && <Message error>{this.state.scriptError}</Message>}
                 </Modal.Content>
                 <Modal.Actions>
                     <Button icon='remove' basic content='Cancel' onClick={this._closeModal.bind(this)}/>

@@ -42,6 +42,7 @@ import configureStore  from './configureStore';
 import WidgetDefinitionsLoader from './utils/widgetDefinitionsLoader';
 import {createToolbox} from './utils/Toolbox';
 import ConfigLoader from './utils/ConfigLoader';
+import EventBus from './utils/EventBus';
 import createRoutes from './routes';
 
 import TemplatesLoader from './utils/templatesLoader';
@@ -53,6 +54,10 @@ import SplashLoadingScreen from './utils/SplashLoadingScreen';
 export default class app{
     static load (){
         window.React = React;
+
+        window.onerror = function (message, source, lineno, colno, error) {
+            EventBus.trigger('window:error', message, source, lineno, colno, error);
+        };
 
         WidgetDefinitionsLoader.init();
 

@@ -150,6 +150,8 @@ export default class AddWidgetModal extends Component {
                                     );
                                 },this)
                             }
+
+                            {_.isEmpty(this.state.filteredWidgetDefinitions) && <Item className="alignCenter" content="No widgets available"/>}
                         </Item.Group>
     
                         <InstallWidgetModal onWidgetInstalled={this.props.onWidgetInstalled} trigger={installWidgetBtn}
