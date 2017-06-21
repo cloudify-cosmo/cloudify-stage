@@ -15,6 +15,7 @@
   "title": "Cloudify UI",
   "index": "./doc/index.md",
   "manual": {
-    "usage": ["./doc/widgets/readme.md"]
+    "usage": ["./doc/widgets/readme.md"],
+    "asset": "./doc/asset"
   }
 }

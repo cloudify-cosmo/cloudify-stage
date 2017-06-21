@@ -1,3 +1,0 @@
-# Components
-
-* [DataTable](DataTable.md)

@@ -7,7 +7,7 @@ import {LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Le
 
 
 /**
- * Graph component to present data in form of line or bar chart
+ * Graph is a component to present data in form of line or bar chart
  *
  * Data is array in the following format:
  * ```
@@ -24,17 +24,37 @@ import {LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Le
  * ]
  * ```
  *
- * @example
+ * ## Usage
  *
- * let data = [
+ * ### Bar chart
+ * ![Graph 0](manual/asset/graphs/Graph_0.png)
+ *
+ * ```
+ * let data1 = [
  *      {name: 'Oranges', value: 300},
  *      {name: 'Apples', value: 100},
  *      {name: 'Grapes', value: 80},
  *      {name: 'Pineapples', value: 40},
  *      {name: 'Watermelons', value: 30}
  * ];
+ * return (<Graph xDataKey='name' yDataKey='value' data={data1} label='Number of fruits' type={Graph.BAR_CHART_TYPE} />);
+ * ```
  *
- * return (<Graph xDataKey='name' yDataKey='value' data={data} label='Number of fruits' type={Graph.BAR_CHART_TYPE} />);
+ * ### Line chart
+ * ![Graph 1](manual/asset/graphs/Graph_1.png)
+ *
+ * ```
+ * let data2 = [
+ *      {time: '17:30', value: 1},
+ *      {time: '17:40', value: 2},
+ *      {time: '17:50', value: 1},
+ *      {time: '18:00', value: 3},
+ *      {time: '18:10', value: 5},
+ *      {time: '18:20', value: 8},
+ *      {time: '18:30', value: 5}
+ * ];
+ * return (<Graph yDataKey='value' data={data2} label='CPU load' type={Graph.LINE_CHART_TYPE} />);
+ * ```
  */
 export default class Graph extends Component {
 
@@ -53,7 +73,7 @@ export default class Graph extends Component {
 
     /**
      * propTypes
-     * @property {array} data graph input data
+     * @property {object[]} data graph input data
      * @property {string} type graph chart type ({@link Graph.LINE_CHART_TYPE} or {@link Graph.BAR_CHART_TYPE})
      * @property {string} yDataKey Y-axis key name, must match key in data object
      * @property {string} [xDataKey=Graph.DEFAULT_X_DATA_KEY] X-axis key name, must match key in data object
