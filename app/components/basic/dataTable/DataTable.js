@@ -13,14 +13,207 @@ import TableFilter from './TableFilter';
 import TableSearch from './TableSearch';
 import Pagination from '../pagination/Pagination';
 
+/**
+ * DataTable component enables fetching data using predefined function and showing tabular data in a simple manner.
+ *
+ * ## Features
+ * - data pagination
+ * - selectable rows
+ * - expandable rows
+ * - data sorting by columns
+ *
+ * ## Usage
+ *
+ * ### DataTable with pagination
+ *
+ * ![DataTable](manual/asset/dataTable/DataTable_0.png)
+ * ```
+ * this.props = {
+ *      fetchData: ...
+ *      data: {
+ *          items: [
+ *              {
+ *                  id: ...,
+ *                  blueprint_id: ...,
+ *                  created_at: ...,
+ *                  isSelected: ...
+ *              }
+ *              ...
+ *          ],
+ *          total: ...
+ *      },
+ *      onSelectDeployment: ...
+ * }
+ *
+ * <DataTable fetchData={this.props.fetchData}
+ *            totalSize={this.props.data.total}
+ *            pageSize={this.props.widget.configuration.pageSize}
+ *            selectable={true}
+ *            className="deploymentTable">
+ *
+ *      <DataTable.Column label="Name" name="id" width="25%"/>
+ *      <DataTable.Column label="Blueprint" name="blueprint_id" width="50%"/>
+ *      <DataTable.Column label="Created" name="created_at" width="25%"/>
+ *
+ *      {
+ *          this.props.data.items.map((item)=>{
+ *              return (
+ *                  <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
+ *                      <DataTable.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
+ *                      <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+ *                      <DataTable.Data>{item.created_at}</DataTable.Data>
+ *                  </DataTable.Row>
+ *              );
+ *          })
+ *      }
+ *
+ * </DataTable>
+ * ```
+ *
+ * ### DataTable with action bar
+ *
+ * ![DataTable](manual/asset/dataTable/DataTable_1.png)
+ * ```
+ * <DataTable fetchData={this.props.fetchGridData}
+ *      totalSize={this.props.data.total}
+ *      pageSize={this.props.widget.configuration.pageSize}
+ *      sortColumn={this.props.widget.configuration.sortColumn}
+ *      sortAscending={this.props.widget.configuration.sortAscending}
+ *      selectable={true}>
+ *
+ *      <DataTable.Column label="Name" name="id" width="30%"/>
+ *      <DataTable.Column label="Created" name="created_at" width="15%"/>
+ *      <DataTable.Column label="Updated" name="updated_at" width="15%"/>
+ *      <DataTable.Column label="Creator" name='created_by' width="15%"/>
+ *      <DataTable.Column label="# Deployments" width="15%"/>
+ *      <DataTable.Column width="10%"/>
+ *
+ *      {
+ *          this.props.data.items.map((item)=>{
+ *              return (
+ *                  <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
+ *                      <DataTable.Data>{item.created_at}</DataTable.Data>
+ *                      <DataTable.Data>{item.updated_at}</DataTable.Data>
+ *                      <DataTable.Data>{item.created_by}</DataTable.Data>
+ *                      <DataTable.Data><div className="ui green horizontal label">{item.depCount}</div></DataTable.Data>
+ *                      <DataTable.Data className="center aligned rowActions">
+ *                          <i className="rocket icon link bordered" title="Create deployment" onClick={(event)=>{event.stopPropagation();this.props.onCreateDeployment(item)}}></i>
+ *                          <i className="trash icon link bordered" title="Delete blueprint" onClick={(event)=>{event.stopPropagation();this.props.onDeleteBlueprint(item)}}></i>
+ *                      </DataTable.Data>
+ *                  </DataTable.Row>
+ *              );
+ *          })
+ *      }
+ *
+ *      <DataTable.Action>
+ *          <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
+ *      </DataTable.Action>
+ *
+ *  </DataTable>
+ * ```
+ *
+ * ### DataTable with expandable row and without pagination
+ *
+ * ![DataTable](manual/asset/dataTable/DataTable_2.png)
+ * ```
+ * <DataTable selectable={true}>
+ *
+ *      <DataTable.Column label="Name" name="id" width="40%"/>
+ *      <DataTable.Column label="Date" name="date" width="30%"/>
+ *      <DataTable.Column width="30%"/>
+ *
+ *      <DataTable.Row key="drupal" selected={false} onClick={()=>this.onRowClick(item)}>
+ *          <DataTable.Data><a href="javascript:void(0)">Drupal application</a></DataTable.Data>
+ *          <DataTable.Data>2016-03-04</DataTable.Data>
+ *          <DataTable.Data>description for portal</DataTable.Data>
+ *      </DataTable.Row>
+ *
+ *      <DataTable.Row key="wordpress" selected={false} onClick={()=>this.onRowClick(item)}>
+ *          <DataTable.Data><a href="javascript:void(0)">Wordpress blog</a></DataTable.Data>
+ *          <DataTable.Data>2016-01-05</DataTable.Data>
+ *          <DataTable.Data>description for blog</DataTable.Data>
+ *      </DataTable.Row>
+ *
+ *      <DataTable.Row key="joomla" selected={false} onClick={()=>this.onRowClick(item)}>
+ *          <DataTable.Data><a href="javascript:void(0)">Joomla website</a></DataTable.Data>
+ *          <DataTable.Data>2015-08-14</DataTable.Data>
+ *          <DataTable.Data>description for website</DataTable.Data>
+ *      </DataTable.Row>
+ *
+ *      <DataTable.RowExpandable key="prestashop" expanded={true}>
+ *          <DataTable.Row key="prestashop" selected={true} onClick={()=>this.onRowClick(item)}>
+ *              <DataTable.Data><a href="javascript:void(0)">Prestashop store</a></DataTable.Data>
+ *              <DataTable.Data>2017-01-05</DataTable.Data>
+ *              <DataTable.Data>description for e-commerce solution</DataTable.Data>
+ *          </DataTable.Row>
+ *          <DataTable.DataExpandable>
+ *              additional info when row becomes expanded
+ *          </DataTable.DataExpandable>
+ *      </DataTable.RowExpandable>
+ *
+ * </DataTable>
+ * ```
+ * ### No data available if total size is 0 or noDataAvailable prop is set
+ *
+ * ![DataTable](manual/asset/dataTable/DataTable_3.png)
+ * ```
+ * <DataTable noDataAvailable={this.props.data.items.length == 0}>
+ *      <DataTable.Column label="Name" name="id" width="25%"/>
+ *      <DataTable.Column label="Blueprint" name="blueprint_id" width="50%"/>
+ *      <DataTable.Column label="Created" name="created_at" width="25%"/>
+ *
+ *      {
+ *          this.props.data.items.map((item)=>{
+ *              return (
+ *                  <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
+ *                      <DataTable.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a></DataTable.Data>
+ *                      <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+ *                      <DataTable.Data>{item.created_at}</DataTable.Data>
+ *                  </DataTable.Row>
+ *              );
+ *          })
+ *      }
+ *
+ * </DataTable>
+ * ```
+ * ### Show search field
+ *
+ * ![DataTable](manual/asset/dataTable/DataTable_4.png)
+ * ```
+ * <DataTable searchable>
+ *      ...
+ * </DataTable>
+ * ```
+ */
 export default class DataTable extends Component {
 
+    /**
+     * Data row, see {@link TableRow}
+     */
     static Row = TableRow;
+    /**
+     * Header column, see {@link TableColumn}
+     */
     static Column = TableColumn;
+    /**
+     * Data column, see {@link TableDataCell}
+     */
     static Data = TableDataCell;
+    /**
+     * Table action, see {@link TableAction}
+     */
     static Action = TableAction;
+    /**
+     * Table filter, see {@link TableFilter}
+     */
     static Filter = TableFilter;
+    /**
+     * Expandable row, see {@link TableRowExpandable}
+     */
     static RowExpandable = TableRowExpandable;
+    /**
+     * Expandable data, see {@link TableDataExpandable}
+     */
     static DataExpandable = TableDataExpandable;
 
     constructor(props, context) {
@@ -33,6 +226,22 @@ export default class DataTable extends Component {
         }
     }
 
+    /**
+     * @property {object[]} children - table content
+     * @property {function} [fetchData] - used to fetch table data
+     * @property {number} [totalSize=-1] - total number of rows in table, if not specified pagination will not be set. It is used to calculate pagination pages.
+     * @property {function} [fetchSize=-1] - if total number is unknown size of fetched data can be provided.
+     * Pagination pages will be added dynamically until fetchSize is not equal to page size
+     * @property {number} [pageSize=0] - number of displayed rows on page
+     * @property {string} [sortColumn=] - column name used for data sorting
+     * @property {string} [sortAscending=true] - true for ascending sort, false for descending sort
+     * @property {boolean} [searchable=false] - if true filtering and searching input to be added
+     * @property {boolean} [selectable=false] - if true row can be selected and highlighted
+     * @property {string} [className=] - name of the style class to be added
+     * @property {boolean} [noDataAvailable=false] - if true no data available message is shown
+     * @property {number} [sizeMultiplier=5] - param related to pagination.
+     * List of page sizes is generated as multiplication of basic fixed values [1, 2, 3, 5, 10] by this param
+     */
     static propTypes = {
         children: PropTypes.any.isRequired,
         fetchData: PropTypes.func,

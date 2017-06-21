@@ -5,8 +5,16 @@
 import React, { Component, PropTypes } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
+/**
+ * Defines content of expandable row in data table. See {@link TableRowExpandable}
+ */
 export default class TableDataExpandable extends Component {
 
+    /**
+     * @property {object[]} children - expandable row content
+     * @property {string} [className] - name of the style class to be added
+     * @property {number} [numberOfColumns=0] - number of columns to be spanned
+     */
     static propTypes = {
         children: PropTypes.any.isRequired,
         className: PropTypes.string,
