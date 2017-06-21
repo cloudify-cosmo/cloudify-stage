@@ -6,6 +6,21 @@ import React, { Component } from 'react';
 
 import { Confirm } from 'semantic-ui-react';
 
+/**
+ * Confirm is a wrapper component to present simple Yes/No confirmation modal window.
+ *
+ * It wraps [Semantic UI-React's Confirm component](https://react.semantic-ui.com/addons/confirm),
+ * so all properties of that component (eg. content, header, ...) can be used here.
+ *
+ * ## Usage
+ * ![Confirm](manual/asset/modals/Confirm_0.png)
+ * ```
+ * <Confirm content='Are you sure you want to remove this blueprint?'
+ *          open={true}
+ *          onConfirm={()=>{}}
+ *          onCancel={()=>{}} />
+ * ```
+ */
 export default class ConfirmWrapper extends Component {
 
     static defaultProps = {
