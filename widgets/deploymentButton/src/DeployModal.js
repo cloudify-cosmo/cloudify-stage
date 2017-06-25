@@ -24,7 +24,8 @@ export default class DeployModal extends React.Component {
         blueprint: EMPTY_BLUEPRINT,
         deploymentName: '',
         deploymentInputs: [],
-        privateResource: false
+        privateResource: false,
+        skipPluginsValidation: false
     }
 
     static propTypes = {
@@ -123,7 +124,7 @@ export default class DeployModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doDeploy(this.state.blueprint.id, this.state.deploymentName, deploymentInputs, this.state.privateResource)
+        actions.doDeploy(this.state.blueprint.id, this.state.deploymentName, deploymentInputs, this.state.privateResource, this.state.skipPluginsValidation)
             .then((/*deployment*/)=> {
                 this.setState({loading: false});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -210,6 +211,16 @@ export default class DeployModal extends React.Component {
                                     </Form.Field>
                                 );
                             })
+                        }
+                        <Form.Field>
+                            <Form.Checkbox toggle
+                                           label="Skip plugins validation"
+                                           name='skipPluginsValidation'
+                                           checked={this.state.skipPluginsValidation}
+                                           onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+                        {
+                            this.state.skipPluginsValidation && <Message>The recommended path is uploading plugins as wagons to Cloudify. This option is designed for plugin development and advanced users only.</Message>
                         }
                     </Form>
                 </Modal.Content>

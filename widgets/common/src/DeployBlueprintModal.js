@@ -19,7 +19,8 @@ export default class DeployBlueprintModal extends React.Component {
         errors: {},
         deploymentName: '',
         deploymentInputs: [],
-        privateResource: false
+        privateResource: false,
+        skipPluginsValidation: false
     }
 
     static propTypes = {
@@ -88,7 +89,7 @@ export default class DeployBlueprintModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs, this.state.privateResource)
+        actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs, this.state.privateResource, this.state.skipPluginsValidation)
             .then((/*deployment*/)=> {
                 this.setState({loading: false});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -136,7 +137,8 @@ export default class DeployBlueprintModal extends React.Component {
 
                         <Form.Field error={this.state.errors.deploymentName}>
                             <Form.Input name='deploymentName' placeholder="Deployment name"
-                                        value={this.state.deploymentName} onChange={this._handleInputChange.bind(this)}/>
+                                        value={this.state.deploymentName}
+                                        onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
                         {
@@ -184,6 +186,17 @@ export default class DeployBlueprintModal extends React.Component {
                                     </Form.Field>
                                 );
                             })
+                        }
+                        <Form.Field>
+                            <Form.Checkbox toggle
+                                           label="Skip plugins validation"
+                                           name='skipPluginsValidation'
+                                           checked={this.state.skipPluginsValidation}
+                                           onChange={this._handleInputChange.bind(this)}
+                            />
+                        </Form.Field>
+                        {
+                            this.state.skipPluginsValidation && <Message>The recommended path is uploading plugins as wagons to Cloudify. This option is designed for plugin development and advanced users only.</Message>
                         }
                     </Form>
                 </Modal.Content>
