@@ -16,10 +16,11 @@ class BlueprintActions {
             .then(()=>this.doDeleteImage(blueprint.id));
     }
 
-    doDeploy(blueprint, deploymentId, inputs, privateResource=false) {
-        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`,{private_resource:privateResource},{
+    doDeploy(blueprint, deploymentId, inputs, privateResource=false, skipPluginsValidation=false) {
+        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`,{private_resource:privateResource}, {
             'blueprint_id': blueprint.id,
-            inputs
+            inputs,
+            skip_plugins_validation:skipPluginsValidation
         });
     }
 
