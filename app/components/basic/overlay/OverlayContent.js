@@ -5,8 +5,16 @@
  
 import React, { Component, PropTypes } from 'react';
 
+/**
+ * OverlayContent is integral part of {@link Overlay} component.
+ * @see Overlay
+ */
 export default class OverlayContent extends Component {
 
+    /**
+     * propTypes
+     * @property {object[]} children primary content
+     */
     static propTypes = {
         children: PropTypes.any.isRequired
     };

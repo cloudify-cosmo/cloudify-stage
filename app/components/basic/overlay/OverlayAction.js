@@ -4,9 +4,20 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import Popup from '../Popup';
 
+/**
+ * OverlayAction is integral part of {@link Overlay} component.
+ * @see Overlay
+ */
 export default class OverlayAction extends Component {
 
+    /**
+     * propTypes
+     * @property {object[]} children primary content
+     * @property {function} [onClick] function to be called on click action
+     * @property {string} [title] text to be displayed in popup on mouseover action
+     */
     static propTypes = {
         children: PropTypes.any.isRequired,
         onClick: PropTypes.func,
@@ -15,7 +26,20 @@ export default class OverlayAction extends Component {
 
     render () {
         return (
-            <div onClick={(event)=>{event.stopPropagation(); this.props.onClick(event)}} data-tooltip={this.props.title}>{this.props.children}</div>
+            <div onClick={(event)=>{event.stopPropagation(); this.props.onClick(event)}}>
+                {
+                    this.props.title
+                    ?
+                        <Popup position='top left' wide>
+                            <Popup.Trigger>
+                                <div>{this.props.children}</div>
+                            </Popup.Trigger>
+                            <span>{this.props.title}</span>
+                        </Popup>
+                    :
+                        this.props.children
+                }
+            </div>
         );
     }
 }
