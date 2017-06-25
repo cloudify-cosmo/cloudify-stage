@@ -13,21 +13,121 @@ import FormDate from '../InputDate'
 import FormDateRange from '../InputDateRange'
 import FormDropdown from '../Dropdown'
 
+/**
+ * Form is a component to present HTML forms
+ *
+ * Form is customized version of [Semantic UI-React's Form component](https://react.semantic-ui.com/collections/form),
+ * so all properties of that component can be used here.
+ *
+ * errors prop can be just a string containing error message or an object with the following syntax:
+ * ```
+ * {
+ *      field1: 'errorMessage1',
+ *      field2: 'errorMessage2',
+ *      ...
+ * }
+ * ```
+ *
+ * ## Usage
+ * ### Form before submission (no errors: _.isEmpty(this.state.errors))
+ * ![Form](manual/asset/form/Form_0.png)
+ *
+ * ### Form after submission (with errors: !_.isEmpty(this.state.errors))
+ * ![Form](manual/asset/form/Form_1.png)
+ *
+ * ```
+ * <Form onSubmit={this._submitCreate.bind(this)} errors={this.state.errors} ref="createForm">
+ *   <Form.Field error={this.state.errors.username}>
+ *     <Form.Input name='username' placeholder="Username"
+ *                 value={this.state.username} onChange={this._handleInputChange.bind(this)}/>
+ *   </Form.Field>
+ *
+ *   <Form.Field error={this.state.errors.password}>
+ *     <Form.Input name='password' placeholder="Password" type="password"
+ *                 value={this.state.password} onChange={this._handleInputChange.bind(this)}/>
+ *   </Form.Field>
+ *
+ *   <Form.Field error={this.state.errors.confirmPassword}>
+ *     <Form.Input name='confirmPassword' placeholder="Confirm password" type="password"
+ *                 value={this.state.confirmPassword} onChange={this._handleInputChange.bind(this)}/>
+ *   </Form.Field>
+ *
+ *   <Form.Field error={this.state.errors.role}>
+ *     <Form.Dropdown selection name='role' placeholder="Role" options={roleOptions}
+ *                    value={this.state.role} onChange={this._handleInputChange.bind(this)}/>
+ *   </Form.Field>
+ * </Form>
+ * ```
+ *
+ */
 export default class FormWrapper extends Component {
 
+    /**
+     * Form field, see {@link FormField}
+     */
     static Field = FormField;
+
+    /**
+     * Form group, see {@link FormGroup}
+     */
     static Group = FormGroup;
+
+    /**
+     * Form divider, see {@link FormDivider}
+     */
     static Divider = FormDivider;
+
+    /**
+     * Form input, see [Input](https://react.semantic-ui.com/elements/input)
+     */
+
     static Input = FormInput;
+
+    /**
+     * Form text area input, see [TextArea](https://react.semantic-ui.com/addons/text-area)
+     */
     static TextArea = TextArea;
+
+    /**
+     * Form radio button, see [Input](https://react.semantic-ui.com/addons/radio)
+     */
     static Radio = FormRadio;
+
+    /**
+     * Form checkbox input, see [Checkbox](https://react.semantic-ui.com/modules/checkbox)
+     */
     static Checkbox = FormCheckbox;
+
+    /**
+     * Form file input, see {@link InputFile}
+     */
     static File = FormFile;
+
+    /**
+     * Dropdown field, see {@link Dropdown}
+     */
     static Dropdown = FormDropdown;
+
+    /**
+     * Form date input, see {@link InputDate}
+     */
     static InputDate = FormDate;
+
+    /**
+     * Form date range input, see {@link InputDateRange}
+     */
     static InputDateRange = FormDateRange;
+
+    /**
+     * Form checkbox input, see [Button](https://react.semantic-ui.com/elements/button)
+     */
     static Button = FormButton;
 
+    /**
+     * propTypes
+     * @property {object} [errors] string wiht error message or object with fields error messages (syntax described above)
+     * @property {function} [onSubmit] function called on form submission
+     */
     static propTypes = {
         ...Form.propTypes,
         errors: PropTypes.any,

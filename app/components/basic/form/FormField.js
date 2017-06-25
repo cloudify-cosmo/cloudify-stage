@@ -5,15 +5,35 @@
 import React, { Component, PropTypes } from 'react';
 import { Form } from 'semantic-ui-react'
 
+/**
+ * FormField is a component to present field and is used in {@link FormWrapper} component
+ *
+ * FormField is a wrapper for [Semantic UI-React's Form.Field component](https://react.semantic-ui.com/collections/form),
+ * so all properties of that component can be used here.
+ *
+ * ## Usage
+ * ### FormField with no error
+ * ![FormField](manual/asset/form/FormField_0.png)
+ *
+ * ### FormField with error
+ * ![FormField](manual/asset/form/FormField_1.png)
+ *
+ * ```
+ * <Form onSubmit={this._createTenant.bind(this)} errors={this.state.errors} ref='createForm'>
+ *   <Form.Field error={this.state.errors.tenantName}>
+ *     <Form.Input name='tenantName' placeholder='Tenant name'
+ *                 value={this.state.tenantName} onChange={this._handleInputChange.bind(this)}/>
+ *   </Form.Field>
+ * </Form>
+ * ```
+ */
 export default class FormField extends Component {
-
+    /**
+     * propTypes
+     * @property {boolean} [error] error indicator (true - field has error, false - field has no errors)
+     */
     static propTypes = {
-        children: PropTypes.any,
-        className: PropTypes.string,
-        width: PropTypes.any, //A field can specify its width in grid columns
-        error: PropTypes.any, //Individual fields may display an error state
-        disabled: PropTypes.bool,
-        label: PropTypes.string
+        error: PropTypes.any
     };
 
     render() {
