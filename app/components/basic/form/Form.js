@@ -9,7 +9,6 @@ import FormField from './FormField'
 import FormGroup from './FormGroup'
 import FormDivider from './FormDivider'
 import FormFile from '../InputFile'
-import FormDate from '../InputDate'
 import FormDateRange from '../InputDateRange'
 import FormDropdown from '../Dropdown'
 
@@ -107,11 +106,6 @@ export default class FormWrapper extends Component {
      * Dropdown field, see {@link Dropdown}
      */
     static Dropdown = FormDropdown;
-
-    /**
-     * Form date input, see {@link InputDate}
-     */
-    static InputDate = FormDate;
 
     /**
      * Form date range input, see {@link InputDateRange}

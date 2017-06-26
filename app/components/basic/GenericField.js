@@ -5,18 +5,137 @@
 import React, { Component, PropTypes } from 'react';
 import {Icon, Popup, Input, Checkbox, Dropdown, Form} from './index'
 
+/**
+ * GenericField is a generic component which can be used as different input fields in {@link FormWrapper} component
+ *
+ * It is used widely in widget coniguration modal. Constant values used for defining field type are described below.
+ *
+ * ## Usage
+ *
+ * ### String input field
+ * ![GenericField](manual/asset/form/GenericField_1.png)
+ * ```
+ * <GenericField name="stringTest" type={GenericField.STRING_TYPE}
+ *               label="STRING_TYPE" icon="rocket" placeholder="Write text..." />
+ * ```
+ *
+ * ### Password input field
+ * ![GenericField](manual/asset/form/GenericField_2.png)
+ * ```
+ * <GenericField name="passwordTest" type={GenericField.PASSWORD_TYPE}
+ *               label="PASSWORD_TYPE" icon="key" value="" />
+ * ```
+ *
+ * ### Number input field
+ * ![GenericField](manual/asset/form/GenericField_3.png)
+ * ```
+ * <GenericField name="numberTest" type={GenericField.NUMBER_TYPE}
+ *               label="NUMBER_TYPE" value="5" min={1} max={10} />
+ * ```
+ *
+ * ### Boolean input field
+ * ![GenericField](manual/asset/form/GenericField_4.png)
+ * ```
+ * <GenericField name="booleanTest" type={GenericField.BOOLEAN_TYPE}
+ *               label="BOOLEAN_TYPE" value="true" />
+ * ```
+ *
+ * ### List input field
+ * ![GenericField](manual/asset/form/GenericField_5.png)
+ * ```
+ * <GenericField name="listTest" type={GenericField.LIST_TYPE}
+ *               label="LIST_TYPE" items={['a','b','c']} value='b' />
+ * ```
+ *
+ * ### Number list input field
+ * ![GenericField](manual/asset/form/GenericField_6.png)
+ * ```
+ * <GenericField name="numberListTest" type={GenericField.NUMBER_LIST_TYPE}
+ *               label="NUMBER_LIST_TYPE" items={[1,2,3]} value={2} />
+ * ```
+ *
+ * ### Multi select list input field
+ * ![GenericField](manual/asset/form/GenericField_7.png)
+ * ```
+ * <GenericField name="multiSelectListTest" type={GenericField.MULTI_SELECT_LIST_TYPE}
+ *               label="MULTI_SELECT_LIST_TYPE" value={[2,3,4]} items={[1,2,3,{value:4, name:'four'}, {value:5, name:'five'}]} />
+ * ```
+ *
+ * ### Editable list input field
+ * ![GenericField](manual/asset/form/GenericField_8.png)
+ * ```
+ * <GenericField name="editableListTest" type={GenericField.EDITABLE_LIST_TYPE}
+ *               label="EDITABLE_LIST_TYPE" value='b' items={['a','b','c']}/>
+ * ```
+ *
+ * ### Editable number list input field
+ * ![GenericField](manual/asset/form/GenericField_9.png)
+ * ```
+ * <GenericField name="numberEditableListTest" type={GenericField.NUMBER_EDITABLE_LIST_TYPE}
+ *               label="NUMBER_EDITABLE_LIST_TYPE" items={[1,2,3]} value={2}/>
+ * ```
+ */
 export default class GenericField extends Component {
 
+    /**
+     * alphanumeric input field
+     */
     static STRING_TYPE = 'string';
+
+    /**
+     * password input field
+     */
     static PASSWORD_TYPE = 'password';
+
+    /**
+     * numeric input field
+     */
     static NUMBER_TYPE = 'number';
+
+    /**
+     * two-state input field
+     */
     static BOOLEAN_TYPE = 'boolean';
+
+    /**
+     * dropdown alphanumeric list field
+     */
     static LIST_TYPE = 'list';
+
+    /**
+     * dropdown numeric list field
+     */
     static NUMBER_LIST_TYPE = 'numberList';
+
+    /**
+     * dropdown multiselection list
+     */
     static MULTI_SELECT_LIST_TYPE = 'multiSelectList';
+
+    /**
+     * dropdown editable list
+     */
     static EDITABLE_LIST_TYPE = 'editableList';
+
+    /**
+     * dropdown editable numeric list
+     */
     static NUMBER_EDITABLE_LIST_TYPE = 'numberEditableList';
 
+    /**
+     * propTypes
+     * @property {string} label field's label to show above the field
+     * @property {string} name name of the input field
+     * @property {string} [placeholder=''] specifies a short hint that describes the expected value of an input field
+     * @property {string} [type=GenericField.STRING_TYPE] specifies type of the field
+     * @property {string} [icon] additional icon in right side of the input field
+     * @property {string} [description=''] fields description showed in popup when user hovers field
+     * @property {object} [value=''] specifies the value of an <input> element
+     * @property {object[]} [items=[]] list of items (only for list fields)
+     * @property {function} [onChange=()=>{}] function called on input value change
+     * @property {number} [max=0] maximal value (valid only when type is set to {@link GenericField.NUMBER_TYPE})
+     * @property {number} [min=0] minimal value (valid only when type is set to {@link GenericField.NUMBER_TYPE})
+     */
     static propTypes = {
         label: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
@@ -26,7 +145,9 @@ export default class GenericField extends Component {
         description: PropTypes.string,
         value: PropTypes.any,
         items: PropTypes.array,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        max: PropTypes.number,
+        min: PropTypes.number
     };
 
     static defaultProps = {
@@ -35,7 +156,9 @@ export default class GenericField extends Component {
         description: '',
         value: '',
         items: [],
-        onChange: ()=>{}
+        onChange: ()=>{},
+        max: 0,
+        min: 0
     };
 
     static formatValue(type, value) {

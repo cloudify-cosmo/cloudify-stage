@@ -4,6 +4,21 @@
 import {Button} from 'semantic-ui-react'
 import React, { Component, PropTypes } from 'react';
 
+/**
+ * InputFile is a component showing file input field
+ *
+ * ## Usage
+ * ![InputFile](manual/asset/form/InputFile_0.png)
+ *
+ * ```
+ * <Form errors={this.state.errors} ref="installForm" loading={this.state.loading}>
+ *   <Form.Field width="8" error={this.state.errors.widgetUrl}>
+ *     <Form.File placeholder="Select widget file" name="widgetFile" ref="widgetFile"/>
+ *   </Form.Field>
+ * </Form>
+ * ```
+ *
+ */
 export default class InputFile extends Component {
 
     constructor(props,context) {
@@ -15,16 +30,28 @@ export default class InputFile extends Component {
         }
     }
 
+    /**
+     * propTypes
+     * @property {string} [name] name of the field appended to 'fileName' string
+     * @property {string} [placeholder=''] specifies a short hint that describes the expected input
+     * @property {function} [onChange=(function () {});] function called on file change
+     * @property {boolean} [loading=false] if set to true opening file selector will be disabled
+     * @property {boolean} [disabled=false] if set to true component will be disabled
+     */
     static propTypes = {
-        placeholder: PropTypes.string,
         name: PropTypes.string,
+        placeholder: PropTypes.string,
         onChange: PropTypes.func,
         loading: PropTypes.bool,
         disabled: PropTypes.bool
     };
 
     static defaultProps = {
-        onChange: () => {}
+        name: '',
+        placeholder: '',
+        onChange: () => {},
+        loading: false,
+        disabled: false
     }
 
     _openFileSelection(e) {
