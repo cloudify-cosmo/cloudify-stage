@@ -17,7 +17,6 @@ import Loading from './Loading';
 import GenericField from './GenericField';
 import Form from './form/Form';
 import InputFile from './InputFile';
-import InputDate from './InputDate';
 import InputDateRange from './InputDateRange';
 import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item,
          Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal } from 'semantic-ui-react'
@@ -50,7 +49,6 @@ export {
     Checkbox,
     InputFile,
     Dropdown,
-    InputDate,
     Button,
     Icon,
     Message,

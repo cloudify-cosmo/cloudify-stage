@@ -4,8 +4,34 @@
 
 import React, { Component, PropTypes } from 'react';
 
+/**
+ * InputDateRange is a component showing input field with two calendars to define date range
+ *
+ * This component is based on [Date Range Picker for Semantic UI](https://github.com/BreadMaker/semantic-ui-daterangepicker)
+ *
+ * ## Usage
+ *
+ * ![InputDateRange](manual/asset/form/InputDateRange_0.png)
+ *
+ * ```
+ * <Form.Field>
+ *   <Form.InputDateRange fluid placeholder='Time Range' name="range"
+ *                        value={this.state.fields.range} onChange={this._handleTimeRangeChange.bind(this)}/>
+ * </Form.Field>
+ * ```
+ *
+ */
 export default class InputDateRange extends Component {
 
+    /**
+     * propTypes
+     * @property {string} name name of the input field
+     * @property {string} [placeholder=''] specifies a short hint that describes the expected value of an input field
+     * @property {object} [value=''] specifies the value of an <input> element
+     * @property {function} [onChange=(function () {});] function called on input value change
+     * @property {object} [minDate=null] the earliest date a user may select
+     * @property {object} [maxDate=null] the latest date a user may select
+     */
     static propTypes = {
         name: PropTypes.string.isRequired,
         placeholder: PropTypes.string,
@@ -16,6 +42,8 @@ export default class InputDateRange extends Component {
     };
 
     static defaultProps = {
+        placeholder: '',
+        value: '',
         onChange: ()=>{},
         minDate: null,
         maxDate: null

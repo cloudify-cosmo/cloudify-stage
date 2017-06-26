@@ -16,17 +16,23 @@ function deg2rad(deg) {
  * ### Gauge with default angles
  * ![Gauge 0](manual/asset/graphs/Gauge_0.png)
  *
- * `<Gauge value={10} min={0} max={20} high={15} low={5} />`
+ * ```
+ * <Gauge value={10} min={0} max={20} high={15} low={5} />
+ * ```
  *
  * ### Gauge with defined angles and value below low marker
  * ![Gauge 1](manual/asset/graphs/Gauge_1.png)
  *
- * `<Gauge minAngle={-90} maxAngle={0} value={3} min={0} max={20} high={15} low={5} />`
+ * ```
+ * <Gauge minAngle={-90} maxAngle={0} value={3} min={0} max={20} high={15} low={5} />
+ * ```
  *
  * ### Gauge with defined angles and value above high marker
  * ![Gauge 2](manual/asset/graphs/Gauge_2.png)
  *
- * `<Gauge minAngle={-45} maxAngle={90} value={18} min={0} max={20} high={15} low={5} />`
+ * ```
+ * <Gauge minAngle={-45} maxAngle={90} value={18} min={0} max={20} high={15} low={5} />
+ * ```
  *
  */
 export default class Gauge extends Component {
