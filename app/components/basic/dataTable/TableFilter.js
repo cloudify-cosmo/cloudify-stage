@@ -3,6 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
+import {Form} from 'semantic-ui-react';
 
 /**
  * Defines filter bar including filter fields which are displayed above the table
@@ -39,9 +40,9 @@ export default class TableFilter extends Component {
 
     render() {
         return (
-            <div className={`field ${this.props.className}`}>
+            <Form.Field className={this.props.className}>
                 {this.props.children}
-            </div>
+            </Form.Field>
         );
     }
 }

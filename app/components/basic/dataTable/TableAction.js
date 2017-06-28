@@ -3,6 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
+import {Form} from 'semantic-ui-react';
 
 /**
  * Defines action bar including buttons which are displayed above the table
@@ -32,9 +33,9 @@ export default class TableAction extends Component {
 
     render() {
         return (
-            <div className="field actionField">
+            <Form.Field className="actionField">
                 {this.props.children}
-            </div>
+            </Form.Field>
         );
     }
 }
