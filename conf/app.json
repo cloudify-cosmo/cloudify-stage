@@ -54,5 +54,8 @@
     "ignoreFolders": ["common"],
     "tempDir": "cloudifyWidgets",
     "requiredFiles" : ["widget.js", "widget.png"]
+  },
+  "ssl": {
+    "ca": "/etc/cloudify/ssl/cloudify_internal_cert.pem"
   }
 }

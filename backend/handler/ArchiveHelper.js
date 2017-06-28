@@ -47,13 +47,20 @@ module.exports = (function() {
         });
     }
 
-    function saveDataFromUrl(archiveUrl, targetDir, req) {
+    function saveDataFromUrl(archiveUrl, targetDir, req, caFile) {
         return new Promise((resolve, reject) => {
             archiveUrl = decodeURIComponent(archiveUrl.trim());
 
             logger.debug('fetching file from url', archiveUrl);
 
-            var getRequest = request.get(archiveUrl, {headers: {'User-Agent': 'Cloudify'}})
+            var options = {headers: {'User-Agent': 'Cloudify'}};
+            if (caFile) {
+                options.agentOptions = {
+                    ca: caFile
+                };
+            }
+            
+            var getRequest = request.get(archiveUrl, options)
                 .on('error', reject)
                 .on('response', function (response) {
                     var archiveFile = _extractFilename(response.headers['content-disposition']);

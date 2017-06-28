@@ -3,9 +3,6 @@
  * Created by kinneretzin on 05/12/2016.
  */
 
-// Enable self signed certificates by default
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 var log4js = require('log4js');
 let path = require('path');
 var fs = require('fs');

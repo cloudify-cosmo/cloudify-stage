@@ -7,10 +7,21 @@
 var express = require('express');
 var request = require('request');
 var config = require('../config').get();
-
 var router = express.Router();
 
 var logger = require('log4js').getLogger('ServerProxy');
+var fs = require('fs');
+var _ = require('lodash');
+
+var caFile =  null;
+
+try {
+    caFile = _.get(config,'app.ssl.ca') ? fs.readFileSync(config.app.ssl.ca) : null;
+} catch (e) {
+    console.error("Could not setup ssl ca, error loading file.", e);
+    process.exit(1);
+}
+
 
 function _errorHandler(res,err) {
     var isTimeout = err.code === 'ETIMEDOUT';
@@ -36,9 +47,20 @@ function buildManagerUrl(req,res,next) {
 }
 
 function proxyRequest(req,res,next) {
+    var options = {
+        timeout: config.app.proxy.timeouts[req.method.toLowerCase()]
+    };
+
+    if (caFile) {
+        options.agentOptions = {
+            ca: caFile
+        };
+    }
+
     req.pipe(request[req.method.toLowerCase()](
-                req.su,
-                {timeout: config.app.proxy.timeouts[req.method.toLowerCase()]})
+            req.su,
+            options
+        )
         .on('error',function(err){_errorHandler(res,err)}))
         .pipe(res);
 }
