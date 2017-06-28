@@ -16,6 +16,27 @@ class Wrapper extends Component {
     }
 }
 
+/**
+ * Popup is a component which wraps [Popup](https://react.semantic-ui.com/modules/popup) used to
+ * display additional information popup.
+ *
+ * See [Popup](https://react.semantic-ui.com/modules/popup) component from Semantic-UI-React for details about props.
+ *
+ * ## Usage
+ * ```
+ * <Popup>
+ *   <Popup.Trigger><Label icon="comment">Popup trigger</Label></Popup.Trigger>
+ *   <div>Popup content</div>
+ * </Popup>
+ * ```
+ *
+ * ### Popup - closed (only popup trigger)
+ * ![Popup](manual/asset/Popup_0.png)
+ *
+ * ### Popup - opened (mouse over trigger)
+ * ![Popup](manual/asset/Popup_1.png)
+ *
+ */
 export default class PopupWrapper extends Component {
 
     static Trigger = Wrapper;

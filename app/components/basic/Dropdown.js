@@ -7,6 +7,28 @@ import { Dropdown, DropdownMenu, DropdownHeader } from 'semantic-ui-react'
 import { createShorthand, useKeyOnly, useKeyOrValueAndKey, isBrowser } from '../../../node_modules/semantic-ui-react/dist/commonjs/lib';
 import Portal from '../../../node_modules/semantic-ui-react/dist/commonjs/addons/Portal';
 
+/**
+ * Dropdown is a component which extends [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework
+ * and wraps it with use of [Portal](https://react.semantic-ui.com/addons/portal) component from Semantic-UI-React framework.
+ *
+ * See [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework for details about props and usage details.
+ *
+ * ## Usage
+ * ```
+ * let options = [
+ *   {text: 'Option 1', value: 'option1'},
+ *   {text: 'Option 2', value: 'option2'},
+ *   {text: 'Option 3', value: 'option3'}
+ * ];
+ * <Dropdown search selection options={options} value={options[0].value}/>
+ * ```
+ *
+ * ### Dropdown - closed
+ * ![Dropdown_0](manual/asset/Dropdown_0.png)
+ *
+ * ### Dropdown - opened (after click)
+ * ![Dropdown_1](manual/asset/Dropdown_1.png)
+ */
 export default class DropdownWrapper extends Dropdown {
 
     computePopupStyle() {

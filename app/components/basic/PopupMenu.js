@@ -5,6 +5,22 @@
 import React, { Component, PropTypes } from 'react';
 import {Popup, Icon} from './index';
 
+/**
+ * PopupMenu is a component which uses [Popup](https://react.semantic-ui.com/modules/popup) component to create
+ * dropdown menu triggered by [Icon](https://react.semantic-ui.com/elements/icon) button.
+ *
+ * ## Usage
+ * ![PopupMenu](manual/asset/PopupMenu.png)
+ * ```
+ * <PopupMenu>
+ *     <Menu pointing vertical>
+ *         <Menu.Item icon='users' content="Edit group's users" name='users' />
+ *         <Menu.Item icon='user' content="Edit group's tenants" name='tenants' />
+ *         <Menu.Item icon='trash' content='Delete' name='delete' />
+ *     </Menu>
+ * </PopupMenu>
+ * ```
+ */
 export default class PopupMenu extends Component {
 
     constructor(props,context) {
@@ -15,6 +31,15 @@ export default class PopupMenu extends Component {
         }
     }
 
+    /**
+     * propTypes
+     * @property {object[]} children primary content
+     * @property {string} [className=''] additional CSS classes to be applied to popup trigger
+     * @property {string} [position='bottom right'] position for the popover.
+     * @property {number} [offset=12] horizontal offset in pixels to be applied to popup
+     * @property {string} [icon='content'] popup trigger icon name (see [Icon](https://react.semantic-ui.com/elements/icon))
+     * @property {boolean} [disabled=false] specifies if trigger shall be disabled
+     */
     static propTypes = {
         className: PropTypes.string,
         children: PropTypes.any.isRequired,
@@ -25,6 +50,7 @@ export default class PopupMenu extends Component {
     };
 
     static defaultProps = {
+        className: '',
         position: 'bottom right',
         offset: 12,
         icon: 'content',
