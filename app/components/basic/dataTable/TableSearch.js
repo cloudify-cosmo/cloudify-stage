@@ -2,19 +2,16 @@
  * Created by pawelposel on 17/11/2016.
  */
   
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import {Form} from 'semantic-ui-react';
 
 export default class TableSearch extends Component {
 
     render() {
         return (
-            <div className="field">
-                <div className="ui icon input">
-                    <input type="text" placeholder="Search..."/>
-                        <i className="search icon"/>
-                </div>
-            </div>
+            <Form.Field>
+                <Form.Input icon="search" placeholder="Search..." />
+            </Form.Field>
         );
     }
 }
- 

@@ -28,7 +28,7 @@ export default class extends React.Component {
     };
 
     render() {
-        let {DataSegment, Icon, PrivateMarker} = Stage.Basic;
+        let {DataSegment, PrivateMarker} = Stage.Basic;
 
         return (
             <DataSegment totalSize={this.props.data.total}

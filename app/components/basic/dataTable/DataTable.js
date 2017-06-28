@@ -3,6 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
+import {Form} from 'semantic-ui-react';
 import TableRow from './TableRow';
 import TableRowExpandable from './TableRowExpandable';
 import TableColumn from './TableColumn';
@@ -356,13 +357,13 @@ export default class DataTable extends Component {
         return (
             <div className={`gridTable ${this.props.className}`}>
                 { (this.props.searchable || !_.isEmpty(gridFilters) || gridAction) &&
-                <div className="ui small form">
-                    <div className="inline fields">
+                <Form size="small" as="div">
+                    <Form.Group inline>
                         {this.props.searchable && <TableSearch/>}
                         {gridFilters}
                         {gridAction}
-                    </div>
-                </div>
+                    </Form.Group>
+                </Form>
                 }
 
                 <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} sizeMultiplier={this.props.sizeMultiplier}
