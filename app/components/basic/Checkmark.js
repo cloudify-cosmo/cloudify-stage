@@ -3,9 +3,26 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import { Checkbox } from 'semantic-ui-react'
 
+/**
+ * Checkmark component shows a simple checkbox (read only)
+ *
+ * ## Usage
+ *
+ * ### Checkmark (checked/unchecked)
+ *
+ * ![Checkmark](manual/asset/checkmark/Checkmark_0.png)
+ * ```
+ * <Checkmark value={true} />
+ * <Checkmark value={false} />
+ *```
+ */
 export default class Checkmark extends Component {
 
+    /**
+     * @property {boolean} value=true If true the component will be marked as checked
+     */
     static propTypes = {
         value: PropTypes.bool.isRequired
     };
@@ -16,10 +33,7 @@ export default class Checkmark extends Component {
 
     render() {
         return (
-            this.props.value ?
-            <i className="checkmark box icon grey" title="Yes"/>
-            :
-            <i className="square outline icon grey" title="No"/>
+            <Checkbox title={this.props.value ? 'Yes' : 'No'} checked={this.props.value} readOnly/>
         );
     }
 }
