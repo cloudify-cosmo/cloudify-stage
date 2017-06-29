@@ -11,6 +11,12 @@
       "configuration":{
         "displayStyle":"catalog"
       }
+    },
+    {
+      "name": "Composer link",
+      "definition": "composerLink",
+      "x": 0,
+      "y": 40
     }
   ]
 }
