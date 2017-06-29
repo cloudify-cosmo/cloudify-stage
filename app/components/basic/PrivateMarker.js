@@ -22,12 +22,18 @@ export default class PrivateMarker extends Component {
     /**
      * @property {boolean} [show='false'] If 'true' the component will be displayed
      * @property {string} [title=''] Tooltip text when mouse is over the component
-     * @property {string} [className=] Name of the style class to be added
+     * @property {string} [className=''] Name of the style class to be added
      */
     static propTypes = {
         show: PropTypes.bool,
         title: PropTypes.string,
         className: PropTypes.string
+    };
+
+    static defaultProps = {
+        show: false,
+        title: '',
+        className: ''
     };
 
     render() {

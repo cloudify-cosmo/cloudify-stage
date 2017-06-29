@@ -33,9 +33,9 @@ export default class EditableLabel extends Component {
     /**
      * @property {string} [text=''] Label's default value
      * @property {string} [placeholder=''] Label's value if text {@link EditableLabel.text} value is not set
-     * @property {string} [className=] - Name of the style class to be added
+     * @property {string} [className=''] - Name of the style class to be added
      * @property {boolean} [isEditEnable=true] If 'true' make the label editable
-     * @property {function} [onEditDone] Function to call when value has changed (returns label's text as attribute)
+     * @property {function} [onEditDone=()=>{}] Function to call when value has changed (returns label's text as attribute)
      */
     static propTypes = {
         text: PropTypes.string,
@@ -49,7 +49,8 @@ export default class EditableLabel extends Component {
         text: '',
         placeholder: '',
         isEditEnable: true,
-        onEditDone : () => {}
+        onEditDone : () => {},
+        className: ''
     };
 
     render() {
