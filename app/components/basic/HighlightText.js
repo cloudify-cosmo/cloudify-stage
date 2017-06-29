@@ -45,7 +45,7 @@ export default class HighlightText extends Component {
 
     /**
      * @property {object[]} [children] Text to be displayed
-     * @property {string} [className=] Language name (used for code highlighting)
+     * @property {string} [className=''] Language name (used for code highlighting)
      */
     static propTypes = {
         children: PropTypes.any,
@@ -53,7 +53,7 @@ export default class HighlightText extends Component {
     };
 
     static defaultProps = {
-        className: null,
+        className: '',
     };
 
     render() {

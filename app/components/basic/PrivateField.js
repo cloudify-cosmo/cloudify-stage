@@ -31,15 +31,22 @@ export default class PrivateField extends Component {
     /**
      * @property {boolean} [lock='false'] If 'true' the icon will change to a red padlock (locked).
      * When 'false' the icon shows a black padlock (open)
-     * @property {function} The function that will be called when clicked
+     * @property {function} [onClick=()=>{}] The function that will be called when clicked
      * @property {string} [title=''] Tooltip text when mouse is over the component
-     * @property {string} [className=] Name of the style class to be added
+     * @property {string} [className=''] Name of the style class to be added
      */
     static propTypes = {
         lock: PropTypes.bool,
         onClick: PropTypes.func,
         title: PropTypes.string,
         className: PropTypes.string
+    };
+
+    static defaultProps = {
+        lock: false,
+        onClick: () => {},
+        title: '',
+        className: ''
     };
 
     render() {

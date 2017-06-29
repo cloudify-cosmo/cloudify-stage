@@ -22,9 +22,9 @@ import { Icon, Statistic } from 'semantic-ui-react'
 export default class KeyIndicator extends Component {
 
     /**
-     * @property {string} title='Not defined' Label appearing at the bottom of the component
-     * @property {string} icon='warning circle' Name of the [icon](https://react.semantic-ui.com/elements/icon) to be displayed
-     * @property {number} number=0 Numerical value to be displayed
+     * @property {string} title Label appearing at the bottom of the component
+     * @property {string} icon Name of the [icon](https://react.semantic-ui.com/elements/icon) to be displayed
+     * @property {number} number Numerical value to be displayed
      */
     static propTypes = {
         title: PropTypes.string.isRequired,
@@ -33,9 +33,6 @@ export default class KeyIndicator extends Component {
     };
 
     static defaultProps = {
-        title: 'Not defined',
-        icon: 'warning circle',
-        number: 0
     };
 
     render() {

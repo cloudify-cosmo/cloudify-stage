@@ -3,15 +3,16 @@
  */
 
 import React from 'react'
-import { shallow , mount} from 'enzyme'
+import {mount} from 'enzyme'
 import {expect} from 'chai';
 import KeyIndicator from '../../../app/components/basic/KeyIndicator';
+import { Statistic, Icon } from 'semantic-ui-react';
 
 describe('(Component) KeyIndicator', () => {
 
     var wrapper;
     before(()=>{
-        wrapper = shallow(<KeyIndicator title="test title" icon="rocket" number={10}/>);
+        wrapper = mount(<KeyIndicator title="test title" icon="rocket" number={10}/>);
     });
 
     it('renders...', () => {
@@ -19,15 +20,15 @@ describe('(Component) KeyIndicator', () => {
     });
 
     it('renders header',()=>{
-        expect(wrapper.find('.keyIndicator .label')).to.have.text('test title');
+        expect(wrapper.find(Statistic.Label)).to.have.text('test title');
     });
 
     it('renders number',()=>{
-        expect(wrapper.find('.keyIndicator .value').text().trim()).to.equal('10');
+        expect(wrapper.find(Statistic.Value).text().trim()).to.equal('10');
     });
 
     it('renders icon',()=>{
-        expect(wrapper.find('.keyIndicator i.icon')).to.have.className('rocket');
+        expect(wrapper.find(Icon)).to.have.className('rocket');
     });
 
 });
