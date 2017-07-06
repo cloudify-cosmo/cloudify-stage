@@ -14,7 +14,7 @@ Stage.defineWidget({
     isReact: true,
 
     render: function(widget,data,error,toolbox) {
-        const composerUrl = `${location.protocol}//${location.hostname}:3000`;
+        const composerUrl = `${location.protocol}//${location.hostname}:8443`;
 
         return (
             <Button className="labeled icon" color="blue" fluid icon="external"
