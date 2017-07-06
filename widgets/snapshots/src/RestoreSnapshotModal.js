@@ -17,8 +17,7 @@ export default class RestoreSnapshotModal extends React.Component {
         loading: false,
         errors: {},
         isFromTenantlessEnv : false,
-        shouldForceRestore: false,
-        newTenantName: ''
+        shouldForceRestore: false
     }
 
     static propTypes = {
@@ -50,10 +49,6 @@ export default class RestoreSnapshotModal extends React.Component {
     _submitRestore() {
         let errors = {};
 
-        if (this.state.isFromTenantlessEnv && _.isEmpty(this.state.newTenantName)) {
-            errors["newTenantName"]="Please provide a new tenant name";
-        }
-
         if (!_.isEmpty(errors)) {
             this.setState({errors});
             return false;
@@ -63,7 +58,7 @@ export default class RestoreSnapshotModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doRestore(this.props.snapshot,this.state.shouldForceRestore,this.state.newTenantName).then(()=>{
+        actions.doRestore(this.props.snapshot,this.state.shouldForceRestore).then(()=>{
             this.setState({loading: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('snapshots:refresh');
@@ -79,7 +74,7 @@ export default class RestoreSnapshotModal extends React.Component {
     }
 
     render() {
-        var {Modal, ApproveButton, CancelButton, Icon, Form} = Stage.Basic;
+        var {Modal, ApproveButton, CancelButton, Icon, Form, Message} = Stage.Basic;
 
         return (
             <Modal open={this.props.open}>
@@ -98,16 +93,13 @@ export default class RestoreSnapshotModal extends React.Component {
                                            onChange={this._handleFieldChange.bind(this)}/>
                         </Form.Field>
 
-
                         {
                             this.state.isFromTenantlessEnv &&
-                            <Form.Field error={this.state.errors.newTenantName}>
-                                <Form.Input  placeholder="Enter new tenant name for this snapshot to be restored to"
-                                             name='newTenantName'
-                                             required
-                                             value={this.state.newTenantName}
-                                             onChange={this._handleFieldChange.bind(this)}/>
-                            </Form.Field>
+                            <Message>
+                                When restoring from a tenant-less environment, the selected tenant must be a new one.
+                                Please make sure you created a new tenant and selected it before restoring this snapshot.
+                            </Message>
+
                         }
                         <Form.Field>
                             <Form.Checkbox toggle
