@@ -32,7 +32,7 @@ export default class Checkmark extends Component {
 
     render() {
         return (
-            <Icon name={this.props.value ? 'checkmark box' : 'square outline'}/>
+            <Icon title={this.props.value ? 'Yes' : 'No'} name={this.props.value ? 'checkmark box' : 'square outline'}/>
         );
     }
 }
