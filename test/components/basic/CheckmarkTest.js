@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { shallow , mount} from 'enzyme'
+import {mount} from 'enzyme'
 import {expect} from 'chai';
 import Checkmark from '../../../app/components/basic/Checkmark';
 
@@ -11,7 +11,7 @@ describe('(Component) Checkmark', () => {
 
     var wrapper;
     before(()=>{
-        wrapper = shallow(<Checkmark value={true}/>);
+        wrapper = mount(<Checkmark value={true}/>);
     });
 
     it('renders...', () => {
@@ -23,7 +23,7 @@ describe('(Component) Checkmark', () => {
     });
 
     it('shows square icon for false value',()=>{
-        var wrapper = shallow(<Checkmark value={false}/>);
+        var wrapper = mount(<Checkmark value={false}/>);
         expect(wrapper.find('i.square.outline.icon')).to.exist;
     });
 
