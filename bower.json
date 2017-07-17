@@ -16,7 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "cloudify-blueprint-topology": "http://gigaspaces-repository-eu.s3.amazonaws.com/cloudify/4.1.0/m2-build/cloudify-blueprint-topology-4.1.0-m2.zip",
+    "cloudify-blueprint-topology": "http://gigaspaces-repository-eu.s3.amazonaws.com/cloudify/4.1.0/ga-build/cloudify-blueprint-topology-4.1.0-ga.zip",
     "d3": "~3.5.2"
   }
 }
