@@ -128,7 +128,7 @@ The drillDown method is defined like so:
 drillDown(widget,defaultTemplate)
 
 for example:
-When selecting a deployment we drilldown to a deployment page. It looks like this:
+When selecting a deployment we drill down to a deployment page. It looks like this:
 
 ```javascript
     events: [

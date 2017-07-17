@@ -191,7 +191,7 @@ Drilling down to a page requires passing the drilldown page template name. Templ
 Also you can pass a 'drilldownContext' to the drilldown page. This context will be saved on the URL and will be available through the app context. This value will be saved upon refresh, so if a user drilldown to a page, and then refreshes the page, the context will be saved (for example - selected deployment in drilldown deployment page)
 
 for example:
-When selecting a deployment we drilldown to a deployment page. It looks like this:
+When selecting a deployment we drill down to a deployment page. It looks like this:
 
 ```javascript
     _selectDeployment(item) {
