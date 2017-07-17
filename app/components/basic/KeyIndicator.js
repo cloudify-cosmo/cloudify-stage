@@ -10,6 +10,9 @@ import { Icon, Statistic } from 'semantic-ui-react'
  *
  * List of available icons can be found [here](https://react.semantic-ui.com/elements/icon)
  *
+ * ## Access
+ * `Stage.Basic.KeyIndicator`
+ *
  * ## Usage
  *
  * ### KeyIndicator (User Stars)

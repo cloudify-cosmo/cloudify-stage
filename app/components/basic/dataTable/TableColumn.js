@@ -6,6 +6,10 @@ import React, { Component, PropTypes } from 'react';
 
 /**
  * Defines table columns, renders <th> elements.
+ *
+ * ## Access
+ * `Stage.Basic.DataTable.Column`
+ *
  * ## Usage
  *
  * ```

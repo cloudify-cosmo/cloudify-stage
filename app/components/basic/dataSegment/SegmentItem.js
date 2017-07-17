@@ -9,6 +9,8 @@ import {Segment} from 'semantic-ui-react';
 /**
  * SegmentItem is a component showing content item for {@link DataSegment} component
  *
+ * ## Access
+ * `Stage.Basic.DataSegment.Item`
  *
  * ## Usage
  *

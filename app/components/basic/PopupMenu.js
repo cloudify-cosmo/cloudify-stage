@@ -9,6 +9,9 @@ import {Popup, Icon} from './index';
  * PopupMenu is a component which uses [Popup](https://react.semantic-ui.com/modules/popup) component to create
  * dropdown menu triggered by [Icon](https://react.semantic-ui.com/elements/icon) button.
  *
+ * ## Access
+ * `Stage.Basic.PopupMenu`
+ *
  * ## Usage
  * ![PopupMenu](manual/asset/PopupMenu.png)
  * ```

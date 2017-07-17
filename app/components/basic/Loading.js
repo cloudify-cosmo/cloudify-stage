@@ -9,6 +9,9 @@ import { Segment, Dimmer, Loader } from 'semantic-ui-react';
  * Loading is a component which uses [Loader](https://react.semantic-ui.com/elements/loader) component from Semantic-UI-React
  * to display loader in center of parent component.
  *
+ * ## Access
+ * `Stage.Basic.Loading`
+ *
  * ## Usage
  * ![Loading](manual/asset/Loading_0.png)
  * ```

@@ -11,6 +11,9 @@ import { Form } from 'semantic-ui-react'
  * FormField is a wrapper for [Semantic UI-React's Form.Field component](https://react.semantic-ui.com/collections/form),
  * so all properties of that component can be used here.
  *
+ * ## Access
+ * `Stage.Basic.Form.Field`
+ *
  * ## Usage
  * ### FormField with no error
  * ![FormField](manual/asset/form/FormField_0.png)

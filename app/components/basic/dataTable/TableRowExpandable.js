@@ -6,6 +6,10 @@ import React, { Component, PropTypes } from 'react';
 
 /**
  * Defines expandable row in data table. Two <tr> elements are rendered by DataTable component from one DataTable.ExpandableRow component.
+ *
+ * ## Access
+ * `Stage.Basic.DataTable.RowExpandable`
+ *
  * ## Usage
  * ```
  * <DataTable.RowExpandable key="prestashop" expanded={true}>

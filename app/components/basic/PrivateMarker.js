@@ -8,6 +8,9 @@ import {Icon} from 'semantic-ui-react'
 /**
  * PrivateMarker - a simple red padlock icon with a show/hide switch
  *
+ * ## Access
+ * `Stage.Basic.PrivateMarker`
+ *
  * ## Usage
  *
  * ### PrivateMarker (show)

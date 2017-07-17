@@ -11,6 +11,9 @@ import Tree, { TreeNode } from 'rc-tree';
  *
  * See [rc-tree](http://react-component.github.io/tree/) component for details about props and detailed usage information.
  *
+ * ## Access
+ * `Stage.Basic.NodesTree`
+ *
  * ## Usage
  *
  * ### Simple example

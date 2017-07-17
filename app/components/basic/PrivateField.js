@@ -11,6 +11,9 @@ import {Icon} from 'semantic-ui-react'
  * The component accepts a callback function for onClick event making it possible to change
  * the component's state by user interaction.
  *
+ * ## Access
+ * `Stage.Basic.PrivateField`
+ *
  * ## Usage
  *
  * ### PrivateField (locked)

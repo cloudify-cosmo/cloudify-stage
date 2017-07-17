@@ -9,6 +9,9 @@ import React, { Component, PropTypes } from 'react';
  *
  * This component is based on [Date Range Picker for Semantic UI](https://github.com/BreadMaker/semantic-ui-daterangepicker)
  *
+ * ## Access
+ * `Stage.Basic.Form.InputDateRange`
+ *
  * ## Usage
  *
  * ![InputDateRange](manual/asset/form/InputDateRange_0.png)

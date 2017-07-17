@@ -7,7 +7,9 @@ import React, { Component, PropTypes } from 'react';
 
 /**
  * OverlayContent is integral part of {@link Overlay} component.
- * @see Overlay
+ *
+ * ## Access
+ * `Stage.Basic.Overlay.Content`
  */
 export default class OverlayContent extends Component {
 

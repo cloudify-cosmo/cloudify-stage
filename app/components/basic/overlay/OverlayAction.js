@@ -8,7 +8,9 @@ import Popup from '../Popup';
 
 /**
  * OverlayAction is integral part of {@link Overlay} component.
- * @see Overlay
+ *
+ * ## Access
+ * `Stage.Basic.Overlay.Action`
  */
 export default class OverlayAction extends Component {
 

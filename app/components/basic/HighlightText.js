@@ -18,6 +18,9 @@ import Highlight from 'react-highlight';
  * - Python
  * - Bash
  *
+ * ## Access
+ * `Stage.Basic.HighlightText`
+ *
  * ## Usage
  *
  * ### HighlightText (JavaScript)

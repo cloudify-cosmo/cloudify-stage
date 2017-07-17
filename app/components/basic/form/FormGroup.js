@@ -11,6 +11,9 @@ import { Form } from 'semantic-ui-react'
  * FormGroup is a wrapper for [Semantic UI-React's Form.Group component](https://react.semantic-ui.com/collections/form),
  * so all properties of that component can be used here.
  *
+ * ## Access
+ * `Stage.Basic.Form.Group`
+ *
  * ## Usage
  *
  * ![FormGroup](manual/asset/form/FormGroup_0.png)

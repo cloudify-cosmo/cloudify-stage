@@ -10,6 +10,9 @@ import {Icon, Popup, Input, Checkbox, Dropdown, Form} from '../index'
  *
  * It is used widely in widget coniguration modal. Constant values used for defining field type are described below.
  *
+ * ## Access
+ * `Stage.Basic.Form.GenericField`
+ *
  * ## Usage
  *
  * ### String input field

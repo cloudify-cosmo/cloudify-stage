@@ -7,6 +7,10 @@ import {Form} from 'semantic-ui-react';
 
 /**
  * Defines action bar including buttons which are displayed above the table
+ *
+ * ## Access
+ * `Stage.Basic.DataTable.Action`
+ *
  * ## Usage
  *
  * ![TableAction](manual/asset/dataTable/TableAction_0.png)

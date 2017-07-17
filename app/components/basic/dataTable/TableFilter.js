@@ -7,6 +7,10 @@ import {Form} from 'semantic-ui-react';
 
 /**
  * Defines filter bar including filter fields which are displayed above the table
+ *
+ * ## Access
+ * `Stage.Basic.DataTable.Filter`
+ *
  * ## Usage
  *
  * ![TableFilter](manual/asset/dataTable/TableFilter_0.png)

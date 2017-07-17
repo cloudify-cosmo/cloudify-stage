@@ -22,6 +22,9 @@ class Wrapper extends Component {
  *
  * See [Popup](https://react.semantic-ui.com/modules/popup) component from Semantic-UI-React for details about props.
  *
+ * ## Access
+ * `Stage.Basic.Popup`
+ *
  * ## Usage
  * ```
  * <Popup>
