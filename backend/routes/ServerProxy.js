@@ -27,12 +27,12 @@ function _errorHandler(res,err) {
     var isTimeout = err.code === 'ETIMEDOUT';
     var isConnTimeout = err.connect;
 
-    logger.error(isConnTimeout ? 'Manager is not available' : ( isTimeout ? 'Request timed out' : err.message), err);
-    if (isConnTimeout) {
-        res.status(500).send({message: isConnTimeout ? 'Manager is not available' : ( isTimeout ? 'Request timed out' : err.message)});
-    } else { // If its not a connection timeout, then headers might have already been sent, so cannot send body. Just set the status code and end the request.
-        res.status(500).end();
-    }
+    var exMsg = isConnTimeout ?
+                'Manager is not available' :
+                ( isTimeout ? 'Request timed out' : 'An unexpected error has occurred: ' + err.message);
+
+    logger.error(exMsg, err);
+    res.status(500).send({message: exMsg});
 }
 
 function buildManagerUrl(req,res,next) {

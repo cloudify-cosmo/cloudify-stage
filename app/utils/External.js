@@ -53,35 +53,34 @@ export default class External {
                 logger.debug('xhr progress: ' + Math.round(done/total*100) + '%');
             });
             xhr.addEventListener("error", function(e){
-                logger.error('xhr upload error', e, this.responseText);
+                logger.error('xhr upload error', e, xhr.responseText);
 
                 try {
                     var response = JSON.parse(xhr.responseText);
                     if (response.message) {
-                        reject({message: response.message});
+                        reject({message: StageUtils.resolveMessage(response.message)});
                     } else {
                         reject({message: e.message});
                     }
-
                 } catch (err) {
-                    logger.error('Cannot parse upload response',err);
-                    reject({message: err.message});
+                    logger.error('Cannot parse upload error', err, xhr.responseText);
+                    reject({message: xhr.responseText || err.message});
                 }
             });
             xhr.addEventListener('load', function(e) {
-                logger.debug('xhr upload complete', e, this.responseText);
+                logger.debug('xhr upload complete', e, xhr.responseText);
 
                 try {
                     var response = JSON.parse(xhr.responseText);
                     if (response.message) {
-                        reject({message: response.message});
+                        logger.error('xhr upload error', e, xhr.responseText);
+
+                        reject({message: StageUtils.resolveMessage(response.message)});
                         return;
                     }
-
                 } catch (err) {
-                    let errorMessage = `Cannot parse upload response: ${err}`;
-                    logger.error(errorMessage);
-                    reject({message: errorMessage});
+                    logger.error('Cannot parse upload response', err, xhr.responseText);
+                    reject({message: xhr.responseText || err.message});
                 }
                 resolve(response);
             });
