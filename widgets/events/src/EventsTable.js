@@ -2,9 +2,6 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
-const EVENT_TYPE = "cloudify_event";
-const LOG_TYPE = "cloudify_log";
-
 export default class EventsTable extends React.Component {
 
     constructor(props, context) {
@@ -15,6 +12,8 @@ export default class EventsTable extends React.Component {
 
         this.actions = new Stage.Common.EventActions();
     }
+
+    static MAX_MESSAGE_LENGTH = 200;
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.widget !== nextProps.widget
@@ -49,6 +48,7 @@ export default class EventsTable extends React.Component {
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
         let colorLogs = this.props.widget.configuration.colorLogs;
+        let maxMessageLength = this.props.widget.configuration.maxMessageLength || EventsTable.MAX_MESSAGE_LENGTH;
 
         return (
             <div>
@@ -76,10 +76,13 @@ export default class EventsTable extends React.Component {
 
                     {
                         this.props.data.items.map((item, index) => {
-                            var event = this.actions.getEventDef(item.event_type || item.level);
+                            let event = this.actions.getEventDef(item.event_type || item.level);
+                            let rowClassName = 'verticalAlignTop' + (colorLogs ? ` ${event.class}` : '');
+                            const TRUNCATE_OPTIONS = {'length': maxMessageLength};
 
                             return (
-                                <DataTable.Row key={item.id + index} selected={item.isSelected} onClick={this._selectEvent.bind(this, item.id)} className={colorLogs ? `${event.class}` : ""}>
+                                <DataTable.Row key={item.id + index} selected={item.isSelected}
+                                               onClick={this._selectEvent.bind(this, item.id)} className={rowClassName}>
                                     <DataTable.Data className="alignCenter"><i className={`eventsType ${event.icon}`}></i></DataTable.Data>
                                     <DataTable.Data className="alignCenter noWrap">{item.timestamp}</DataTable.Data>
                                     <DataTable.Data>{event.text}</DataTable.Data>
@@ -92,7 +95,13 @@ export default class EventsTable extends React.Component {
                                     <DataTable.Data>
                                         {item.message &&
                                             <Popup position='top left' hoverable wide="very">
-                                                <Popup.Trigger><span>{JsonUtils.stringify(item.message, false)}</span></Popup.Trigger>
+                                                <Popup.Trigger>
+                                                    <span>
+                                                        {
+                                                            _.truncate(JsonUtils.stringify(item.message, false), TRUNCATE_OPTIONS)
+                                                        }
+                                                    </span>
+                                                </Popup.Trigger>
                                                 <HighlightText>{JsonUtils.stringify(item.message, true)}</HighlightText>
                                             </Popup>
                                         }
