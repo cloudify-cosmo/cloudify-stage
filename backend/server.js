@@ -3,25 +3,17 @@
  * Created by kinneretzin on 05/12/2016.
  */
 
-var log4js = require('log4js');
 let path = require('path');
 var fs = require('fs');
 
-// Make sure that log library exists
-try {
-    fs.mkdirSync(path.resolve(__dirname , "../logs"));
-} catch (e) {
-    if (e.code != 'EEXIST') {
-        console.error("Could not set up directory, error was: ", e);
-        process.exit(1);
-    }
-}
-
-log4js.configure(path.resolve(__dirname , "../conf/log4jsConfig.json"));
+// Initialize log4js
+var log4js = require('log4js');
+var log4jsConfig = require('../conf/log4jsConfig.json');
+var LoggerHandler = require('./handler/LoggerHandler');
+LoggerHandler.init(log4jsConfig);
 
 // Initialize the DB connection
 var db = require('./db/Connection');
-
 
 var express = require('express');
 var ServerSettings = require('./serverSettings');
