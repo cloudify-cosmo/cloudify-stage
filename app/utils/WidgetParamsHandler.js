@@ -110,7 +110,7 @@ export default class WidgetParamsHandler {
                 params._size=this.fetchParams.gridParams.pageSize;
             }
 
-            if (this.fetchParams.gridParams.currentPage) {
+            if (this.fetchParams.gridParams.currentPage && this.fetchParams.gridParams.pageSize) {
                 params._offset=(this.fetchParams.gridParams.currentPage-1)*this.fetchParams.gridParams.pageSize;
             }
         }
