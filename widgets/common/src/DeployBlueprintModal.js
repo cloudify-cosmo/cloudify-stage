@@ -187,7 +187,7 @@ export default class DeployBlueprintModal extends React.Component {
                                 );
                             })
                         }
-                        <Form.Field>
+                        <Form.Field className='skipPluginsValidationCheckbox'>
                             <Form.Checkbox toggle
                                            label="Skip plugins validation"
                                            name='skipPluginsValidation'

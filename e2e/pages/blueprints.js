@@ -119,6 +119,9 @@ module.exports = {
                                 }));
                         return this;
                     },
+                    setSkipValidation: function(value) {
+                        return this.setCheckbox('.content .field.skipPluginsValidationCheckbox', value);
+                    },
                     clickDeploy: function() {
                         return this
                             .clickElement('@deployButton')

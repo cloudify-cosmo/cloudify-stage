@@ -4,15 +4,17 @@
 
 module.exports = {
     elements: {
-        blueprintSearch: '.filterWidget #blueprintFilterField input.search',
-        deploymentSearch: '.filterWidget #deploymentFilterField input.search'
+        blueprintSearch: '.filterWidget #blueprintFilterField',
+        deploymentSearch: '.filterWidget #deploymentFilterField',
     },
     commands: [{
         isBlueprintPresent: function(blueprint, callback) {
-            return this.isPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]', callback);
+            return this.waitForElementPresent(".filterWidget #blueprintFilterField select")
+                       .isPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]', callback);
         },
         isDeploymentPresent: function(deployment, callback) {
-            return this.isPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]', callback);
+            return this.waitForElementPresent(".filterWidget #deploymentFilterField select")
+                       .isPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]', callback);
         },
         waitForBlueprintPresent: function(blueprint) {
             return this.waitForElementPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]', 10000);

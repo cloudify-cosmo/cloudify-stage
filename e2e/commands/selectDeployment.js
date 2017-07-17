@@ -14,6 +14,6 @@ exports.command = function(deploymentName) {
                     .moveOutOfEditMode();
             }
 
-            filter.setValue('@deploymentSearch', [deploymentName, this.Keys.ENTER]);
+            filter.selectOptionInDropdown('@deploymentSearch', deploymentName);
         });
 };

@@ -7,28 +7,10 @@ exports.command = function(blueprintName, blueprintYamlFile = 'blueprint.yaml') 
         blueprintName = this.page.blueprints().props.testBlueprint;
     }
 
-    var blueprintExists = false;
-
-    this.isWidgetPresent(this.page.filter().props.widgetId, result => {
-        this.log("adding", blueprintName, "blueprint - check if already presented");
-
+    return this.isBlueprintExist(blueprintName, result => {
         if (!result.value) {
-            this.moveToEditMode()
-                .addWidget(this.page.filter().props.widgetId)
-                .moveOutOfEditMode();
-        }
+            var blueprints = this.page.blueprints();
 
-        this.page.filter()
-            .isBlueprintPresent(blueprintName, result => {
-                blueprintExists = result.value;
-                this.log("adding", blueprintName, "blueprint - presented:", blueprintExists)
-            })
-    });
-
-    return this.perform(() => {
-        var blueprints = this.page.blueprints();
-
-        if (!blueprintExists) {
             this.isWidgetPresent(blueprints.props.widgetId, result => {
                 this.log("adding", blueprintName, "blueprint - upload blueprint");
 
@@ -55,6 +37,8 @@ exports.command = function(blueprintName, blueprintYamlFile = 'blueprint.yaml') 
                 this.page.filter()
                     .waitForBlueprintPresent(blueprintName);
             });
+        } else {
+            this.log("not adding", blueprintName, "blueprint, it already exists");
         }
     });
 };

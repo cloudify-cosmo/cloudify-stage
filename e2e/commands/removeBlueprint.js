@@ -7,28 +7,34 @@ exports.command = function(blueprintName) {
         blueprintName = this.page.blueprints().props.testBlueprint;
     }
 
-    var blueprintActionButtons = this.page.blueprintActionButtons();
+    return this.isBlueprintExist(blueprintName, result => {
+        if (result.value) {
+            var blueprintActionButtons = this.page.blueprintActionButtons();
 
-    return this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
-            this.log("removing", blueprintName, "blueprint");
+            this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
+                this.log("removing", blueprintName, "blueprint");
 
-            if (!result.value) {
-                this.moveToEditMode()
-                    .addWidget(blueprintActionButtons.props.widgetId)
-                    .moveOutOfEditMode();
-            }
+                if (!result.value) {
+                    this.moveToEditMode()
+                        .addWidget(blueprintActionButtons.props.widgetId)
+                        .moveOutOfEditMode();
+                }
 
-            this.selectBlueprint(blueprintName);
+                this.selectBlueprint(blueprintName);
 
-            blueprintActionButtons.section.buttons
-                .waitForElementNotPresent('@deleteButtonDisabled')
-                .clickElement('@deleteBlueprintButton');
+                blueprintActionButtons.section.buttons
+                    .waitForElementNotPresent('@deleteButtonDisabled')
+                    .clickElement('@deleteBlueprintButton');
 
-            blueprintActionButtons.section.removeConfirm
-                .clickElement('@okButton')
-                .waitForElementNotPresent('@okButton');
+                blueprintActionButtons.section.removeConfirm
+                    .clickElement('@okButton')
+                    .waitForElementNotPresent('@okButton');
 
-            this.page.filter()
-                .waitForBlueprintNotPresent(blueprintName);
-        });
+                this.page.filter()
+                    .waitForBlueprintNotPresent(blueprintName);
+            });
+        } else {
+            this.log("not removing", blueprintName, "blueprint, it doesn't exist");
+        }
+    });
 };
