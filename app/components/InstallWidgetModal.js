@@ -3,7 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Input, InputFile, Icon, Button, Divider, Form, Modal, Message} from "./basic/index"
+import {Icon, Button, Divider, Form, Modal, Message} from "./basic/index"
 import EventBus from '../utils/EventBus';
 
 export default class InstallWidgetModal extends Component {

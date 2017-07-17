@@ -8,8 +8,8 @@ import {Form, Message, Input as FormInput, TextArea, Radio as FormRadio,
 import FormField from './FormField'
 import FormGroup from './FormGroup'
 import FormDivider from './FormDivider'
-import FormFile from '../InputFile'
-import FormDateRange from '../InputDateRange'
+import FormFile from './InputFile'
+import FormDateRange from './InputDateRange'
 import FormDropdown from '../Dropdown'
 
 /**

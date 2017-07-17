@@ -5,7 +5,7 @@
 import React from 'react'
 import { shallow , mount} from 'enzyme'
 import {expect} from 'chai';
-import GenericField from '../../../app/components/basic/GenericField';
+import GenericField from '../../../app/components/basic/form/GenericField';
 
 describe('(Component) Field', () => {
 
