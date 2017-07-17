@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import {LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
-
+let d3Format = require("d3-format");
 
 /**
  * Graph is a component to present data in form of line or bar chart
@@ -76,19 +76,23 @@ export default class Graph extends Component {
      * @property {object[]} data graph input data
      * @property {string} type graph chart type ({@link Graph.LINE_CHART_TYPE} or {@link Graph.BAR_CHART_TYPE})
      * @property {string} yDataKey Y-axis key name, must match key in data object
+     * @property {string} [yDataUnit=''] Y-axis unit, shown on the left side of the graph
      * @property {string} [xDataKey=Graph.DEFAULT_X_DATA_KEY] X-axis key name, must match key in data object
-     * @property {string} label graph label
+     * @property {string} [label=this.props.yDataKey] graph label, shown under the graph
      */
     static propTypes = {
         data: PropTypes.array.isRequired,
         type: PropTypes.string.isRequired,
         yDataKey: PropTypes.string.isRequired,
+        yDataUnit: PropTypes.string,
         xDataKey: PropTypes.string,
         label: PropTypes.string
     };
 
     static defaultProps = {
-        xDataKey: Graph.DEFAULT_X_DATA_KEY
+        yDataUnit: '',
+        xDataKey: Graph.DEFAULT_X_DATA_KEY,
+        label: ''
     };
 
     render () {
@@ -97,7 +101,20 @@ export default class Graph extends Component {
         const INTERPOLATION_TYPE = "monotone";
         const STROKE_DASHARRAY = "3 3";
 
+        let valueFormatter = d3Format.format('.3s');
         let label = this.props.label || this.props.yDataKey;
+
+        // Code copied from re-charts GitHub, see: https://github.com/recharts/recharts/issues/184
+        const AxisLabel = ({ vertical, x, y, width, height, children }) => {
+            const CX = vertical ? x : x + (width / 2);
+            const CY = vertical ? (height / 2) + y : y + height;
+            const ROTATION = vertical ? `270 ${CX} ${CY}` : 0;
+            return (
+                <text x={CX} y={CY} transform={`rotate(${ROTATION})`} textAnchor="middle">
+                    {children}
+                </text>
+            );
+        };
 
         return (
             <ResponsiveContainer width="100%" height="100%">
@@ -107,9 +124,9 @@ export default class Graph extends Component {
                         <LineChart data={this.props.data}
                                    margin={MARGIN}>
                             <XAxis dataKey={this.props.xDataKey} />
-                            <YAxis />
+                            <YAxis tickFormatter={valueFormatter} label={<AxisLabel vertical>{this.props.yDataUnit}</AxisLabel>} />
                             <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
-                            <Tooltip />
+                            <Tooltip formatter={valueFormatter} />
                             <Legend />
                             <Line isAnimationActive={false} name={label} type={INTERPOLATION_TYPE}
                                   dataKey={this.props.yDataKey} stroke={COLOR} />
@@ -118,9 +135,9 @@ export default class Graph extends Component {
                         <BarChart data={this.props.data}
                                   margin={MARGIN}>
                             <XAxis dataKey={this.props.xDataKey} />
-                            <YAxis />
+                            <YAxis tickFormatter={valueFormatter} label={<AxisLabel vertical>{this.props.yDataUnit}</AxisLabel>} />
                             <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
-                            <Tooltip />
+                            <Tooltip formatter={valueFormatter} />
                             <Legend />
                             <Bar isAnimationActive={false} name={label}
                                  dataKey={this.props.yDataKey} fill={COLOR} />

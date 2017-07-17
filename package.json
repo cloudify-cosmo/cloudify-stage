@@ -24,6 +24,7 @@
     "blueimp-md5": "^2.7.0",
     "better-console": "^0.2.4",
     "d3": "~3.5.2",
+    "d3-format": "^1.2.0",
     "datatables.net": "^1.10.12",
     "datatables.net-dt": "^1.10.12",
     "del": "^2.2.2",
