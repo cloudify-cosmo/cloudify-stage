@@ -41,6 +41,10 @@ export default class BlueprintInfo extends React.Component {
                         </Grid.Column>
                     </Grid.Row>
 
+                    <Grid.Column width="16">
+                        {blueprint.description}
+                    </Grid.Column>
+
                     <Grid.Row className="noPadded">
                         <Grid.Column width="7"><h5 className="ui icon header">Created</h5></Grid.Column>
                         <Grid.Column width="9">{blueprint.created_at}</Grid.Column>
