@@ -3,7 +3,6 @@ machine:
     version: 4.4.5
 dependencies:
   override:
-    - npm install
     - npm run beforebuild
 deployment:
   demo-deploy:
