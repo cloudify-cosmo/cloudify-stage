@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 
-import { Confirm } from 'semantic-ui-react';
+import { Confirm as ConfirmSemanticUiReact } from 'semantic-ui-react';
 
 /**
  * Confirm is a wrapper component to present simple Yes/No confirmation modal window.
@@ -21,7 +21,7 @@ import { Confirm } from 'semantic-ui-react';
  *          onCancel={()=>{}} />
  * ```
  */
-export default class ConfirmWrapper extends Component {
+export default class Confirm extends Component {
 
     static defaultProps = {
         className: ""
@@ -31,9 +31,9 @@ export default class ConfirmWrapper extends Component {
         const {confirmButton, cancelButton, className, ...rest} = this.props;
 
         return (
-            <Confirm {...rest} confirmButton={confirmButton?confirmButton:'Yes'}
-                               cancelButton={cancelButton?cancelButton:'No'}
-                               className={`confirmModal ${className}`}/>
+            <ConfirmSemanticUiReact {...rest} confirmButton={confirmButton?confirmButton:'Yes'}
+                                    cancelButton={cancelButton?cancelButton:'No'}
+                                    className={`confirmModal ${className}`}/>
         );
     }
 }

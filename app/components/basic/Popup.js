@@ -3,7 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import { Popup } from 'semantic-ui-react';
+import { Popup as PopupSemanticUiReact } from 'semantic-ui-react';
 
 class Wrapper extends Component {
 
@@ -37,11 +37,11 @@ class Wrapper extends Component {
  * ![Popup](manual/asset/Popup_1.png)
  *
  */
-export default class PopupWrapper extends Component {
+export default class Popup extends Component {
 
     static Trigger = Wrapper;
-    static Content = Popup.Content;
-    static Header = Popup.Header;
+    static Content = PopupSemanticUiReact.Content;
+    static Header = PopupSemanticUiReact.Header;
 
     static propTypes = Popup.propTypes;
 
@@ -58,9 +58,9 @@ export default class PopupWrapper extends Component {
         });
 
         return (
-            <Popup {...this.props} trigger={trigger}>
+            <PopupSemanticUiReact {...this.props} trigger={trigger}>
                 {children}
-            </Popup>
+            </PopupSemanticUiReact>
         );
     }
 }

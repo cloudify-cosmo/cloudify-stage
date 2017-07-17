@@ -22,6 +22,7 @@ import '../../bower_components/cloudify-blueprint-topology/dist/scripts/blueprin
 
 import * as BasicComponents from '../components/basic';
 import StageUtils from './stageUtils';
+import Pagination from '../components/basic/pagination/Pagination';
 
 import WidgetDefinition from './WidgetDefinition';
 var widgetDefinitions = [];
@@ -211,7 +212,7 @@ class GenericConfig {
                 type: BasicComponents.GenericField.NUMBER_TYPE}
     };
 
-    static PAGE_SIZE_CONFIG = (pageSize = BasicComponents.Pagination.PAGE_SIZE_LIST(5)[0]) => {
+    static PAGE_SIZE_CONFIG = (pageSize = Pagination.PAGE_SIZE_LIST(5)[0]) => {
         return {id: "pageSize",
                 default: pageSize,
                 hidden: true}

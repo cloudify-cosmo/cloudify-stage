@@ -3,7 +3,7 @@
  */
 
 import React, { Component, PropTypes, Children, cloneElement } from 'react';
-import { Dropdown, DropdownMenu, DropdownHeader } from 'semantic-ui-react'
+import { Dropdown as DropdownSemanticUiReact, DropdownMenu, DropdownHeader } from 'semantic-ui-react'
 import { createShorthand, useKeyOnly, useKeyOrValueAndKey, isBrowser } from '../../../node_modules/semantic-ui-react/dist/commonjs/lib';
 import Portal from '../../../node_modules/semantic-ui-react/dist/commonjs/addons/Portal';
 
@@ -29,7 +29,7 @@ import Portal from '../../../node_modules/semantic-ui-react/dist/commonjs/addons
  * ### Dropdown - opened (after click)
  * ![Dropdown_1](manual/asset/Dropdown_1.png)
  */
-export default class DropdownWrapper extends Dropdown {
+export default class Dropdown extends DropdownSemanticUiReact {
 
     computePopupStyle() {
         var coords = this.ref.getBoundingClientRect();
@@ -126,5 +126,5 @@ export default class DropdownWrapper extends Dropdown {
 
 }
 
-DropdownWrapper.defaultProps = Object.assign({}, Dropdown.defaultProps,
+Dropdown.defaultProps = Object.assign({}, Dropdown.defaultProps,
                                             {selectOnBlur: false, openOnFocus: false, closeOnBlur: false});

@@ -3,7 +3,7 @@
  */
 
 import { ApproveButton, CancelButton } from './modal/ModalButtons';
-import Confirm from './Confirm';
+import Confirm from './modal/Confirm';
 import KeyIndicator from './KeyIndicator';
 import ErrorMessage from './ErrorMessage';
 import HighlightText from './HighlightText';
@@ -11,13 +11,10 @@ import Overlay from './overlay/Overlay';
 import Checkmark from './Checkmark';
 import EditableLabel from './EditableLabel';
 import DataTable from './dataTable/DataTable';
-import Pagination from './pagination/Pagination';
 import DataSegment from './dataSegment/DataSegment';
 import Loading from './Loading';
-import GenericField from './GenericField';
+import GenericField from './form/GenericField';
 import Form from './form/Form';
-import InputFile from './InputFile';
-import InputDateRange from './InputDateRange';
 import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item,
          Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal } from 'semantic-ui-react'
 import Graphs from './graphs';
@@ -29,49 +26,47 @@ import Popup from './Popup';
 import PrivateField from './PrivateField';
 import PrivateMarker from './PrivateMarker';
 
+
 export {
-    Modal,
-    Confirm,
-    EditableLabel,
-    KeyIndicator,
-    ErrorMessage,
-    HighlightText,
-    Overlay,
-    Checkmark,
-    DataTable,
-    DataSegment,
-    Pagination,
-    Loading,
-    GenericField,
-    Form,
-    Input,
-    Radio,
-    Checkbox,
-    InputFile,
-    Dropdown,
-    Button,
-    Icon,
-    Message,
-    Segment,
     Accordion,
-    List,
-    Grid,
-    Divider,
-    Label,
-    Graphs,
-    Loader,
-    Popup,
-    Image,
-    Menu,
-    PopupMenu,
-    NodesTree,
-    SplitterLayout,
-    Table,
-    Header,
-    Item,
     ApproveButton,
+    Button,
     CancelButton,
-    InputDateRange,
+    Checkbox,
+    Checkmark,
+    Confirm,
+    DataSegment,
+    DataTable,
+    Divider,
+    Dropdown,
+    EditableLabel,
+    ErrorMessage,
+    Form,
+    GenericField,
+    Graphs,
+    Grid,
+    Header,
+    HighlightText,
+    Icon,
+    Image,
+    Input,
+    Item,
+    KeyIndicator,
+    Label,
+    List,
+    Loader,
+    Loading,
+    Menu,
+    Message,
+    Modal,
+    NodesTree,
+    Overlay,
+    Popup,
+    PopupMenu,
     PrivateField,
-    PrivateMarker
+    PrivateMarker,
+    Radio,
+    Segment,
+    SplitterLayout,
+    Table
 };

@@ -3,7 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Icon, Popup, Input, Checkbox, Dropdown, Form} from './index'
+import {Icon, Popup, Input, Checkbox, Dropdown, Form} from '../index'
 
 /**
  * GenericField is a generic component which can be used as different input fields in {@link FormWrapper} component

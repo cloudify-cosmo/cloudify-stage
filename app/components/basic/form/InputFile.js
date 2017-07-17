@@ -1,4 +1,4 @@
-/**
+    /**
  * Created by pposel on 23/01/2017.
  */
 import {Button} from 'semantic-ui-react'
