@@ -60,7 +60,7 @@ export default class ExecuteDeploymentModal extends React.Component {
 
         var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions.doExecute(this.props.deployment, this.props.workflow, this.state.params).then(()=>{
-            this.setState({loading: false});
+            this.setState({loading: false, errors: {}});
             this.props.onHide();
             this.props.toolbox.getEventBus().trigger('executions:refresh');
         }).catch((err)=>{
@@ -84,7 +84,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}>
+                    <Form loading={this.state.loading} errors={this.state.errors}
+                          onErrorsDismiss={() => this.setState({errors: {}})}>
                         {
                             _.isEmpty(workflow.parameters)
                             &&

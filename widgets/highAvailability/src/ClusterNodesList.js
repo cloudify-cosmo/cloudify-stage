@@ -19,7 +19,7 @@ export default class ClusterNodesList extends React.Component {
         let {DataTable,Checkmark,ErrorMessage} = Stage.Basic;
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
                 <h4> Nodes</h4>
                 <DataTable fetchData={this.fetchData.bind(this)}
                            totalSize={this.props.nodes.total}

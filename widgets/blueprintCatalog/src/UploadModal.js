@@ -53,7 +53,7 @@ export default class UploadModal extends React.Component {
                                     this.props.files.repo,
                                     this.state.privateResource
         ).then(()=>{
-            this.setState({loading: false});
+            this.setState({errors: {}, loading: false});
             this.props.toolbox.getEventBus().trigger('blueprints:refresh');
             this.props.onHide();
         }).catch((err)=>{
@@ -83,7 +83,8 @@ export default class UploadModal extends React.Component {
                     </Modal.Header>
 
                     <Modal.Content>
-                        <Form loading={this.state.loading} errors={this.state.errors}>
+                        <Form loading={this.state.loading} errors={this.state.errors}
+                              onErrorsDismiss={() => this.setState({errors: {}})}>
                             <Form.Field error={this.state.errors.blueprintName}>
                                 <Form.Input name='blueprintName' placeholder="Blueprint name"
                                             value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>

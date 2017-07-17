@@ -7,6 +7,7 @@ export default class Filter extends React.Component {
         super(props, context);
 
         this.state = {
+            error: null
         }
     }
 
@@ -106,7 +107,7 @@ export default class Filter extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 <Form>
                     <Form.Group widths='equal'>

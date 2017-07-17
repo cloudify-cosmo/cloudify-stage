@@ -97,7 +97,7 @@ export default class SecretsTable extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                            totalSize={data.total}

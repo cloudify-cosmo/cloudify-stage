@@ -49,7 +49,7 @@ export default class extends React.Component {
         this.props.toolbox.loading(true);
 
         this.props.actions.doGetRepoTree(repo).then((files)=>{
-            this.setState({files: {...files, repo}, showModal: true});
+            this.setState({error: null, files: {...files, repo}, showModal: true});
             this.props.toolbox.loading(false);
         }).catch((err)=> {
             this.setState({error: err.message});
@@ -66,7 +66,7 @@ export default class extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 {
                     this.props.widget.configuration.displayStyle === 'table' ?

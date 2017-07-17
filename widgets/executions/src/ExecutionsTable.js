@@ -7,6 +7,7 @@ export default class extends React.Component {
         super(props, context);
 
         this.state = {
+            error: null
         };
     }
 
@@ -37,6 +38,7 @@ export default class extends React.Component {
         let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
         actions.doCancel(execution, action)
             .then(() => {
+                this.setState({error: null});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.toolbox.getEventBus().trigger('executions:refresh');
             })
@@ -55,7 +57,7 @@ export default class extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                            totalSize={this.props.data.total}

@@ -75,7 +75,7 @@ export default class CreateModal extends React.Component {
                          this.state.password,
                          this.state.role
         ).then(()=>{
-            this.setState({loading: false, open: false});
+            this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
@@ -103,7 +103,8 @@ export default class CreateModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}>
+                    <Form loading={this.state.loading} errors={this.state.errors}
+                          onErrorsDismiss={() => this.setState({errors: {}})}>
                         <Form.Field error={this.state.errors.username}>
                             <Form.Input name='username' placeholder="Username"
                                         value={this.state.username} onChange={this._handleInputChange.bind(this)}/>

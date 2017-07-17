@@ -74,7 +74,7 @@ export default class UploadModal extends React.Component {
                          this.state.imageUrl,
                          this.refs.imageFile.file(),
                          this.state.privateResource).then(()=>{
-            this.setState({loading: false, open: false});
+            this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
@@ -131,7 +131,8 @@ export default class UploadModal extends React.Component {
                     </Modal.Header>
 
                     <Modal.Content>
-                        <Form loading={this.state.loading} errors={this.state.errors}>
+                        <Form loading={this.state.loading} errors={this.state.errors}
+                              onErrorsDismiss={() => this.setState({errors: {}})}>
                             <Form.Group>
                                 <Form.Field width="9" error={this.state.errors.blueprintUrl}>
                                     <Form.Input label="URL" placeholder="Enter blueprint url" name="blueprintUrl"

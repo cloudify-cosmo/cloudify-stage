@@ -2,7 +2,9 @@ export default class extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-        this.state = {};
+        this.state = {
+            error: null
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -38,7 +40,7 @@ export default class extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 <DataTable className="outputsTable" noDataAvailable={_.isEmpty(outputs)}>
 

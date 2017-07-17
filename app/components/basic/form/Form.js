@@ -3,8 +3,9 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Form, Message, Input as FormInput, TextArea, Radio as FormRadio,
+import {Form, Input as FormInput, TextArea, Radio as FormRadio,
          Checkbox as FormCheckbox, Button as FormButton} from 'semantic-ui-react'
+import ErrorMessage from '../ErrorMessage'
 import FormField from './FormField'
 import FormGroup from './FormGroup'
 import FormDivider from './FormDivider'
@@ -120,12 +121,20 @@ export default class FormWrapper extends Component {
     /**
      * propTypes
      * @property {object} [errors] string wiht error message or object with fields error messages (syntax described above)
-     * @property {function} [onSubmit] function called on form submission
+     * @property {function} [onSubmit=()=>{}] function called on form submission
+     * @property {function} [onErrorsDismiss=()=>{}] function called when errors are dismissed (see {@link ErrorMessage})
      */
     static propTypes = {
         ...Form.propTypes,
         errors: PropTypes.any,
-        onSubmit: PropTypes.func
+        onSubmit: PropTypes.func,
+        onErrorsDismiss: PropTypes.func
+    };
+
+    static defaultProps = {
+        errors: null,
+        onSubmit: () => {},
+        onErrorsDismiss: () => {}
     };
 
     static fieldNameValue(field) {
@@ -151,7 +160,7 @@ export default class FormWrapper extends Component {
     }
 
     render() {
-        let { errors, ...rest } = this.props;
+        let { errors, onErrorsDismiss, ...rest } = this.props;
 
         if (_.isString(errors)) {
             errors = [errors];
@@ -163,7 +172,7 @@ export default class FormWrapper extends Component {
             <Form {...rest} onSubmit={this._handleSubmit.bind(this)} error={!_.isEmpty(errors)}>
                 {this.props.children}
 
-                <Message error list={errors}/>
+                <ErrorMessage header="Errors in the form" error={errors} onDismiss={this.props.onErrorsDismiss}/>
 
                 <input type='submit' name="submitFormBtn" style={{"display": "none"}} ref='submitFormBtn'/>
             </Form>

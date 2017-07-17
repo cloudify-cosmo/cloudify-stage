@@ -61,7 +61,7 @@ export default class PasswordModal extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doSetPassword(this.props.user.username, this.state.password).then(()=>{
-            this.setState({loading: false});
+            this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.onHide();
         }).catch((err)=>{
@@ -85,7 +85,8 @@ export default class PasswordModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}>
+                    <Form loading={this.state.loading} errors={this.state.errors}
+                          onErrorsDismiss={() => this.setState({errors: {}})}>
                         <Form.Field error={this.state.errors.password}>
                             <Form.Input name='password' placeholder="Password" type="password"
                                         value={this.state.password} onChange={this._handleInputChange.bind(this)}/>

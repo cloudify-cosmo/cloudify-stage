@@ -60,6 +60,7 @@ export default class BlueprintList extends React.Component {
         this.setState({confirmDelete: false});
         actions.doDelete(this.state.item)
             .then(()=> {
+                this.setState({error: null});
                 this.props.toolbox.getEventBus().trigger('blueprints:refresh');
             })
             .catch((err)=>{
@@ -95,7 +96,7 @@ export default class BlueprintList extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 {
                     shouldShowTable ?
