@@ -23,6 +23,9 @@ import Pagination from '../pagination/Pagination';
  * - expandable rows
  * - data sorting by columns
  *
+ * ## Access
+ * `Stage.Basic.DataTable`
+ *
  * ## Usage
  *
  * ### DataTable with pagination

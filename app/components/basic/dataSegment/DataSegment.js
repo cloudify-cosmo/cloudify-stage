@@ -13,6 +13,9 @@ import {Message, Form, Icon} from 'semantic-ui-react';
  *
  * It delivers alternative way of presenting fetched data to {@link DataTable}.
  *
+ * ## Access
+ * `Stage.Basic.DataSegment`
+ *
  * ## Features
  * - data pagination
  * - selectable segments

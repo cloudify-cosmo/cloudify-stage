@@ -12,6 +12,9 @@ import { Confirm as ConfirmSemanticUiReact } from 'semantic-ui-react';
  * It wraps [Semantic UI-React's Confirm component](https://react.semantic-ui.com/addons/confirm),
  * so all properties of that component (eg. content, header, ...) can be used here.
  *
+ * ## Access
+ * `Stage.Basic.Confirm`
+ *
  * ## Usage
  * ![Confirm](manual/asset/modals/Confirm_0.png)
  * ```

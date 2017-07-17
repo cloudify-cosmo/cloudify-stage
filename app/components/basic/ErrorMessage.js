@@ -9,6 +9,9 @@ import { Message } from 'semantic-ui-react';
  * ErrorMessage is a component which uses [Message](https://react.semantic-ui.com/elements/message) component from Semantic-UI-React
  * to display error message.
  *
+ * ## Access
+ * `Stage.Basic.ErrorMessage`
+ *
  * ## Usage
  * ### Single error message
  * ![ErrorMessage](manual/asset/ErrorMessage_0.png)

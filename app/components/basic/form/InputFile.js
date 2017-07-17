@@ -7,6 +7,9 @@ import React, { Component, PropTypes } from 'react';
 /**
  * InputFile is a component showing file input field
  *
+ * ## Access
+ * `Stage.Basic.Form.File`
+ *
  * ## Usage
  * ![InputFile](manual/asset/form/InputFile_0.png)
  *

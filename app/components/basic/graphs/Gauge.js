@@ -11,6 +11,9 @@ function deg2rad(deg) {
 /**
  * Gauge is a component to present value in graphical form
  *
+ * ## Access
+ * `Stage.Basic.Graphs.Gauge`
+ *
  * ## Usage
  *
  * ### Gauge with default angles

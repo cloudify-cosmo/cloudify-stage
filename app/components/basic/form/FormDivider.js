@@ -7,6 +7,8 @@ import React, { Component, PropTypes } from 'react';
 /**
  * FormDivider is a component to divide form fields using horizontal line in Form component
  *
+ * ## Access
+ * `Stage.Basic.Form.Divider`
  *
  * ## Usage
  *

@@ -8,6 +8,8 @@ import {Form} from 'semantic-ui-react';
 /**
  * SegmentAction is a component showing action bar including buttons displayed above the segments
  *
+ * ## Access
+ * `Stage.Basic.DataSegment.Action`
  *
  * ## Usage
  *

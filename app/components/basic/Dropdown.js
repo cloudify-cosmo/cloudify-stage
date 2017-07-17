@@ -13,6 +13,9 @@ import Portal from '../../../node_modules/semantic-ui-react/dist/commonjs/addons
  *
  * See [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework for details about props and usage details.
  *
+ * ## Access
+ * `Stage.Basic.Form.Dropdown` or `Stage.Basic.Dropdown`
+ *
  * ## Usage
  * ```
  * let options = [

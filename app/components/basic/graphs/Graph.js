@@ -24,6 +24,9 @@ let d3Format = require("d3-format");
  * ]
  * ```
  *
+ * ## Access
+ * `Stage.Basic.Graphs.Graph`
+ *
  * ## Usage
  *
  * ### Bar chart

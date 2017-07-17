@@ -25,6 +25,9 @@ import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
  * ]
  * ```
  *
+ * ## Access
+ * `Stage.Basic.Graphs.PieGraph`
+ *
  * ## Usage
  *
  * ![PieGraph](manual/asset/graphs/PieGraph_0.png)

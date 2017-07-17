@@ -8,6 +8,9 @@ import { Icon } from 'semantic-ui-react'
 /**
  * Checkmark component shows a simple checkbox (read only)
  *
+ * ## Access
+ * `Stage.Basic.Checkmark`
+ *
  * ## Usage
  *
  * ### Checkmark (checked/unchecked)

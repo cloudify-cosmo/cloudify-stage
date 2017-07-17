@@ -7,6 +7,10 @@ import TableDataCell from "./TableDataCell";
 
 /**
  * Defines table rows, renders <tr> elements.
+ *
+ * ## Access
+ * `Stage.Basic.DataTable.Row`
+ *
  * ## Usage
  *
  * ```

@@ -14,6 +14,9 @@ import OverlayContent from './OverlayContent';
  *
  * Overlay trigger is defined inside {@link OverlayAction} component.
  *
+ * ## Access
+ * `Stage.Basic.Overlay`
+ *
  * ## Usage
  * ### Overlay hidden (only trigger visible) *
  * ![Overlay](manual/asset/overlay/Overlay_0.png)

@@ -7,6 +7,9 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 /**
  * Defines content of expandable row in data table. See {@link TableRowExpandable}
+ *
+ * ## Access
+ * `Stage.Basic.DataTable.DataExpandable`
  */
 export default class TableDataExpandable extends Component {
 

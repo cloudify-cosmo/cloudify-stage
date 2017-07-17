@@ -9,6 +9,9 @@ import { Button } from 'semantic-ui-react';
  * ApproveButton is customized version of [Semantic UI-React's Button component](https://react.semantic-ui.com/elements/button),
  * so all properties of that component (eg. onClick, disabled, ...) can be used here.
  *
+ * ## Access
+ * `Stage.Basic.ApproveButton`
+ *
  * ## Usage
  * ![ApproveButton](manual/asset/modals/ApproveButton_0.png)
  * ```
@@ -47,6 +50,9 @@ export class ApproveButton extends Component {
  *
  * CancelButton is customized version of [Semantic UI-React's Button component](https://react.semantic-ui.com/elements/button),
  * so all properties of that component (eg. onClick, disabled, ...) can be used here.
+ *
+ * ## Access
+ * `Stage.Basic.CancelButton`
  *
  * ## Usage
  * ![CancelButton](manual/asset/modals/CancelButton_0.png)
