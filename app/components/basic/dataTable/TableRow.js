@@ -37,7 +37,7 @@ export default class TableRow extends Component {
     static defaultProps = {
         selected: false,
         showCols:[],
-        className: ""
+        className: ''
     };
 
     _showData(index) {
@@ -45,6 +45,7 @@ export default class TableRow extends Component {
     }
 
     render() {
+        let className = this.props.className + (_.isFunction(this.props.onClick) ? ' clickable' : '') + (this.props.selected ? ' active' : '');
         let children = [];
         let index = 0;
         React.Children.forEach(this.props.children, (child) => {
@@ -54,7 +55,7 @@ export default class TableRow extends Component {
         });
 
         return (
-            <tr id={this.props.id} className={`${this.props.selected ? "active" : ""} ${this.props.className}`} onClick={this.props.onClick}>
+            <tr id={this.props.id} className={className} onClick={this.props.onClick}>
                 {children}
             </tr>
         );

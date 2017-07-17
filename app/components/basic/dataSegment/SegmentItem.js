@@ -54,13 +54,13 @@ export default class SegmentItem extends Component {
 
     static defaultProps = {
         selected: false,
-        onClick: ()=>{},
-        className: ""
+        className: ''
     };
 
     render() {
+        let className = this.props.className + (_.isFunction(this.props.onClick) ? ' clickable' : '');
         return (
-            <Segment secondary={this.props.selected} inverted={this.props.selected} className={this.props.className} onClick={this.props.onClick}>
+            <Segment secondary={this.props.selected} inverted={this.props.selected} className={className} onClick={this.props.onClick}>
                 {this.props.children}
             </Segment>
         );
