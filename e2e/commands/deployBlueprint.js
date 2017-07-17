@@ -7,25 +7,8 @@ exports.command = function(deploymentName, inputs, blueprintName) {
         blueprintName = this.page.blueprints().props.testBlueprint;
     }
 
-    var deploymentExists = false;
-
-    this.isWidgetPresent(this.page.filter().props.widgetId, result => {
-        this.log("deploying", deploymentName, "from", blueprintName, "blueprint - check if already presented");
-
+    this.isDeploymentExist(deploymentName, result => {
         if (!result.value) {
-            this.moveToEditMode()
-                .addWidget(this.page.filter().props.widgetId)
-                .moveOutOfEditMode();
-        }
-
-        this.page.filter()
-            .isDeploymentPresent(deploymentName, result => {
-                deploymentExists = result.value;
-                this.log("deploying", deploymentName, "from", blueprintName, "blueprint - presented:", deploymentExists)
-            })
-    });
-    return this.perform(() => {
-        if (!deploymentExists) {
             var blueprintActionButtons = this.page.blueprintActionButtons();
             this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
                 this.log("deploying", blueprintName, "blueprint");

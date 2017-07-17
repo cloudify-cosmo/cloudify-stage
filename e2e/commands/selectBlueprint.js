@@ -18,6 +18,6 @@ exports.command = function(blueprintName) {
                     .moveOutOfEditMode();
             }
 
-            filter.setValue('@blueprintSearch', [blueprintName, this.Keys.ENTER]);
+            filter.selectOptionInDropdown('@blueprintSearch', blueprintName);
         });
 };

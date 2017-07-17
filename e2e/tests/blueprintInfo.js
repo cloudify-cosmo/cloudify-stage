@@ -5,7 +5,7 @@
 module.exports = {
     before(client) {
         client.login()
-            .prepareTestWidget('blueprintInfo')
+            .prepareTestWidget(client.page.blueprintInfo().props.widgetId)
             .addBlueprint();
     },
 

@@ -45,21 +45,21 @@ module.exports = {
             .setValue('@urlField', "test")
             .click('@okButton');
 
-        client.pause(1000);
+        client.pause(2000);
 
         page.section.installWidgetModal
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError)
             .setValue('@fileField', client.page.resources().props.blankFile)
             .click('@okButton');
 
-        client.pause(1000);
+        client.pause(2000);
 
         page.section.installWidgetModal
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.bothFieldsError)
             .resetValue('@urlField')
             .click('@okButton');
 
-        client.pause(1000);
+        client.pause(2000);
 
         page.section.installWidgetModal
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.incorrectFilesError)
@@ -123,6 +123,7 @@ module.exports = {
             .waitForElementPresent('@okButton')
             .setValue('@fileField', client.page.resources().props.testWidget)
             .click('@okButton')
+            .waitForElementNotPresent('@loader')
             .waitForElementPresent('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.widgetAlreadyInstalledError)
             .click('@cancelButton')

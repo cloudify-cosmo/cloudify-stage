@@ -14,7 +14,7 @@ module.exports = {
         const BLUEPRINT_INPUTS = {};
 
         client.login()
-            .prepareTestWidget('deployments')
+            .prepareTestWidget(client.page.deployments().props.widgetId)
             .addBlueprint(BLUEPRINT_NAME, BLUEPRINT_YAML_FILENAME)
             .deployBlueprint(DEPLOYMENT_NAME, BLUEPRINT_INPUTS, BLUEPRINT_NAME);
     },
@@ -100,10 +100,15 @@ module.exports = {
 
         page.section.deploymentsTable
             .checkIfDeploymentRemoved(DEPLOYMENT_NAME);
+
+        //Fix strange issue in the filter when deployment is removed
+        client.page.filter().selectOptionInDropdown('@deploymentSearch', "");
     },
 
     after(client) {
-        client.removeBlueprint(BLUEPRINT_NAME)
+        client
+            .removeDeployment(DEPLOYMENT_NAME)
+            .removeBlueprint(BLUEPRINT_NAME)
             .end();
     }
 };

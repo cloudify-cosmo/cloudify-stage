@@ -5,22 +5,21 @@
 let path = require('path');
 let fs = require('fs');
 
-const BLUEPRINT_NAME = 'TestBlueprint';
-const BLUEPRINT_ARCHIVE_FILENAME = 'blueprint.zip';
-const BLUEPRINT_FILENAME = 'openstack-blueprint.yaml';
-let blueprintArchiveFilePath = path.resolve(__dirname + '/../resources/' + BLUEPRINT_ARCHIVE_FILENAME);
+const BLUEPRINT_NAME = 'TestBlueprint123';
+const BLUEPRINT_FILENAME = 'singlehost-blueprint.yaml';
 
 module.exports = {
 
     before : function(client) {
-        const BLUEPRINT_WIDGET_ID = 'blueprints';
-
         client.log('Setting up...')
             .login()
-            .prepareTestWidget(BLUEPRINT_WIDGET_ID);
+            .removeBlueprint(BLUEPRINT_NAME)
+            .prepareTestWidget(client.page.blueprints().props.widgetId);
     },
 
     'Blueprint upload': function (client) {
+        let blueprintArchiveFilePath = client.page.resources().props.blueprint(client.page.blueprints().props.testBlueprint);
+
         let page = client.page.blueprints();
 
         page.log('Verification of blueprint archive file...')
@@ -76,16 +75,12 @@ module.exports = {
     },
 
     'Blueprint deploy': function (client) {
-        const DEPLOYMENT_NAME = 'TestDeployment';
+        const DEPLOYMENT_NAME = 'TestDeployment123';
         const BLUEPRINT_INPUTS = {
             deploymentName: DEPLOYMENT_NAME,
-            agent_user: 'user',
-            flavor: 'smelly',
-            floating_network_id: 'ID',
-            image: 'blackandwhite',
-            key_pair_name: 'key',
-            network_name: 'spider',
-            private_key_path : '/path/to/key'
+            agent_private_key_path: 'agentpath',
+            agent_user: 'agentuser',
+            server_ip: 'IP'
         }
 
         let page = client.page.blueprints();
@@ -95,6 +90,7 @@ module.exports = {
                 .clickDeploy(BLUEPRINT_NAME)
             .parent.section.deployBlueprintModal
                 .fillIn(BLUEPRINT_INPUTS)
+                .setSkipValidation(true)
                 .clickDeploy();
         client.pause(2000); // FIXME: waiting for blueprints table to be updated, looking for better way than pause
 

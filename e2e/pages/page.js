@@ -91,7 +91,8 @@ module.exports = {
                 fileField: 'input[name="widgetFile"]',
                 okButton: '.ui.green.button',
                 cancelButton: '.ui.basic.button',
-                errorMessage: '.ui.error.message'
+                errorMessage: '.ui.error.message',
+                loader: '.ui.loading'
             },
             props: {
                 emptyFieldsError: 'Please select widget file or url',
