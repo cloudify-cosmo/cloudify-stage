@@ -19,7 +19,7 @@ export default class Layout extends Component {
     };
 
     componentDidMount() {
-        console.log('First time logging in , fetching shit');
+        console.log('First time logging in , fetching stuff');
 
         this.props.intialPageLoad()
             .then(()=>{
