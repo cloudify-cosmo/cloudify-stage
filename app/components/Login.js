@@ -64,7 +64,7 @@ export default class Login extends Component {
                             </div>
                         }
                         <div className="field required">
-                            <input type="text" name="username" placeholder="Enter user name" required value={this.state.username} onChange={(e)=>this.setState({username: e.target.value})}/>
+                            <input type="text" name="username" placeholder="Enter user name" required autoFocus value={this.state.username} onChange={(e)=>this.setState({username: e.target.value})}/>
                         </div>
                         <div className="field required">
                             <input type="password" name="password" placeholder="Enter user password" required value={this.state.password} onChange={(e)=>this.setState({password: e.target.value})}/>
