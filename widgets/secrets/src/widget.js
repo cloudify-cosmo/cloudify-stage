@@ -13,7 +13,7 @@ Stage.defineWidget({
     color: 'red',
     fetchUrl: '[manager]/secrets[params]',
     isReact: true,
-    isAdmin: true,
+    isAdmin: false,
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
