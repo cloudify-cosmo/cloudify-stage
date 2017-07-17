@@ -23,7 +23,8 @@ Stage.defineWidget({
             items: ["Icon","Timestamp","Type","Blueprint","Deployment","Workflow","Operation","Node Name","Node Id","Message"],
             default: 'Icon,Timestamp,Type,Blueprint,Deployment,Workflow,Operation,Node Name,Node Id,Message',
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
-        {id: "colorLogs", name: "Color message based on type", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
+        {id: "colorLogs", name: "Color message based on type", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: "maxMessageLength", name: "Maximum message length before truncation", default: EventsTable.MAX_MESSAGE_LENGTH, type: Stage.Basic.GenericField.NUMBER_TYPE, min: 10}
     ],
 
     fetchParams: function(widget, toolbox) {
@@ -103,7 +104,7 @@ Stage.defineWidget({
         });
 
         return (
-            <EventsTable widget={widget} data={formattedData} toolbox={toolbox}/>
+            <EventsTable widget={widget} data={formattedData} toolbox={toolbox} />
         );
 
     }
