@@ -13,7 +13,11 @@ export default class Actions {
     }
 
     doGetBlueprintDetails(blueprintId) {
-        return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}?_include=id,updated_at,created_at,description,created_by,private_resource`);
+        return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}?_include=id,updated_at,created_at,description,created_by,private_resource,main_file_name`);
+    }
+
+    doGetBlueprintDeployments(blueprintId) {
+        return this.toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id',{blueprint_id: blueprintId});
     }
 
 }

@@ -38,11 +38,12 @@ export default class BlueprintsTable extends React.Component{
                        selectable={true}
                        className={tableName}>
 
-                <DataTable.Column label="Name" name="id" width="30%"/>
+                <DataTable.Column label="Name" name="id" width="20%"/>
                 <DataTable.Column label="Created" name="created_at" width="15%"/>
                 <DataTable.Column label="Updated" name="updated_at" width="15%"/>
                 <DataTable.Column label="Creator" name='created_by' width="15%"/>
-                <DataTable.Column label="# Deployments" width="15%"/>
+                <DataTable.Column label="Main Blueprint File" name='main_file_name' width="15%"/>
+                <DataTable.Column label="# Deployments" width="10%"/>
                 <DataTable.Column width="10%"/>
 
                 {
@@ -56,6 +57,7 @@ export default class BlueprintsTable extends React.Component{
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data>{item.created_by}</DataTable.Data>
+                                <DataTable.Data>{item.main_file_name}</DataTable.Data>
                                 <DataTable.Data><div className="ui green horizontal label">{item.depCount}</div></DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
                                     <i className="rocket icon link bordered" title="Create deployment" onClick={(event)=>{event.stopPropagation();this.props.onCreateDeployment(item)}}></i>

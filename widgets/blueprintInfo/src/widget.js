@@ -48,8 +48,14 @@ Stage.defineWidget({
 
             if (blueprintId) {
                 return actions.doGetBlueprintDetails(blueprintId).then(data => {
-                    return {...data, created_at: Stage.Utils.formatTimestamp(data.created_at),
-                                     updated_at: Stage.Utils.formatTimestamp(data.updated_at)}
+                    return actions.doGetBlueprintDeployments(blueprintId).then(deps => {
+                        return {
+                            ...data,
+                            created_at: Stage.Utils.formatTimestamp(data.created_at),
+                            updated_at: Stage.Utils.formatTimestamp(data.updated_at),
+                            deployments: deps.items.length
+                        }
+                    });
                 });
             } else {
                 return Promise.resolve({id:""});
