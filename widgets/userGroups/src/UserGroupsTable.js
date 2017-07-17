@@ -13,6 +13,7 @@ export default class UserGroupsTable extends React.Component {
         super(props, context);
 
         this.state = {
+            error: null,
             showModal: false,
             modalType: '',
             group: {},
@@ -53,7 +54,7 @@ export default class UserGroupsTable extends React.Component {
 
         let actions = new Actions(this.props.toolbox);
         actions.doGetTenants().then((tenants)=>{
-            this.setState({group, tenants, modalType: value, showModal: true});
+            this.setState({error: null, group, tenants, modalType: value, showModal: true});
             this.props.toolbox.loading(false);
         }).catch((err)=> {
             this.setState({error: err.message});
@@ -66,7 +67,7 @@ export default class UserGroupsTable extends React.Component {
 
         let actions = new Actions(this.props.toolbox);
         actions.doGetUsers().then((users)=>{
-            this.setState({group, users, modalType: value, showModal: true});
+            this.setState({error: null, group, users, modalType: value, showModal: true});
             this.props.toolbox.loading(false);
         }).catch((err)=> {
             this.setState({error: err.message});
@@ -115,7 +116,7 @@ export default class UserGroupsTable extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 <DataTable fetchData={this.fetchData.bind(this)}
                            totalSize={this.props.data.total}

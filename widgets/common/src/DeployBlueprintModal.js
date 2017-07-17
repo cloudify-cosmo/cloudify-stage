@@ -91,7 +91,7 @@ export default class DeployBlueprintModal extends React.Component {
         var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs, this.state.privateResource, this.state.skipPluginsValidation)
             .then((/*deployment*/)=> {
-                this.setState({loading: false});
+                this.setState({loading: false, errors: {}});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.onHide();
             })
@@ -133,7 +133,8 @@ export default class DeployBlueprintModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}>
+                    <Form loading={this.state.loading} errors={this.state.errors}
+                          onErrorsDismiss={() => this.setState({errors: {}})}>
 
                         <Form.Field error={this.state.errors.deploymentName}>
                             <Form.Input name='deploymentName' placeholder="Deployment name"

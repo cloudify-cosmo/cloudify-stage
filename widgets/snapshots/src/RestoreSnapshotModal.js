@@ -59,7 +59,7 @@ export default class RestoreSnapshotModal extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doRestore(this.props.snapshot,this.state.shouldForceRestore).then(()=>{
-            this.setState({loading: false});
+            this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('snapshots:refresh');
             this.props.toolbox.getEventBus().trigger('menu.tenants:refresh');
@@ -83,7 +83,8 @@ export default class RestoreSnapshotModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}>
+                    <Form loading={this.state.loading} errors={this.state.errors}
+                          onErrorsDismiss={() => this.setState({errors: {}})}>
 
                         <Form.Field>
                             <Form.Checkbox toggle

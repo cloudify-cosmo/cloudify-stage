@@ -28,7 +28,7 @@ export default class BlueprintInfo extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 <Grid>
                     <Grid.Row className="bottomDivider">

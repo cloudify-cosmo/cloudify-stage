@@ -51,7 +51,7 @@ export default class RoleModal extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doSetRole(this.props.user.username, this.state.role).then(()=>{
-            this.setState({loading: false});
+            this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.onHide();
         }).catch((err)=>{
@@ -80,7 +80,8 @@ export default class RoleModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}>
+                    <Form loading={this.state.loading} errors={this.state.errors}
+                          onErrorsDismiss={() => this.setState({errors: {}})}>
                         <Form.Field error={this.state.errors.role}>
                             <Form.Dropdown selection name='role' placeholder="Role" options={roleOptions}
                                            value={this.state.role} onChange={this._handleInputChange.bind(this)}/>

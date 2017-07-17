@@ -70,7 +70,7 @@ export default class TenantsTable extends React.Component {
 
         let actions = new Actions(this.props.toolbox);
         actions.doGetUsers().then((users)=>{
-            this.setState({tenant, users, modalType: value, showModal: true});
+            this.setState({error: null, tenant, users, modalType: value, showModal: true});
             this.props.toolbox.loading(false);
         }).catch((err)=> {
             this.setState({error: err.message});
@@ -83,7 +83,7 @@ export default class TenantsTable extends React.Component {
 
         let actions = new Actions(this.props.toolbox);
         actions.doGetUserGroups().then((userGroups)=>{
-            this.setState({tenant, userGroups, modalType: value, showModal: true});
+            this.setState({error: null, tenant, userGroups, modalType: value, showModal: true});
             this.props.toolbox.loading(false);
         }).catch((err)=> {
             this.setState({error: err.message});
@@ -114,7 +114,7 @@ export default class TenantsTable extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                            totalSize={data.total}

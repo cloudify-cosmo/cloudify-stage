@@ -11,6 +11,7 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
+            error: null,
             confirmDelete: false
         }
     }
@@ -40,6 +41,7 @@ export default class extends React.Component {
 
         let actions = new Actions(this.props.toolbox);
         actions.doDownload(item)
+               .then(() => {this.setState({error: null})})
                .catch((err) => {this.setState({error: err.message})});
     }
 
@@ -52,7 +54,7 @@ export default class extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doDelete(this.state.item)
             .then(()=> {
-                this.setState({confirmDelete: false});
+                this.setState({confirmDelete: false, error: null});
                 this.props.toolbox.getEventBus().trigger('plugins:refresh');
             })
             .catch(err=>{
@@ -81,7 +83,7 @@ export default class extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                            totalSize={this.props.data.total}

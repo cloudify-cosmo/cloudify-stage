@@ -63,7 +63,7 @@ export default class BlueprintActionButtons extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
 
                 <Button className="labeled icon" color="teal" icon="rocket" disabled={_.isEmpty(blueprintId) || this.state.loading}
                         onClick={this._showModal.bind(this, BlueprintActionButtons.DEPLOY_ACTION)}

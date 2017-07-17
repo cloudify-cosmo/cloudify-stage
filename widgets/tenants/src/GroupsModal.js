@@ -63,7 +63,7 @@ export default class GroupsModal extends React.Component {
 
         let actions = new Actions(this.props.toolbox);
         actions.doHandleUserGroups(this.props.tenant.name, userGroupsToAdd, userGroupsToRemove).then(()=>{
-            this.setState({loading: false});
+            this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.onHide();
         }).catch((err)=>{
@@ -88,7 +88,8 @@ export default class GroupsModal extends React.Component {
             </Modal.Header>
 
             <Modal.Content>
-                <Form loading={this.state.loading} errors={this.state.errors}>
+                <Form loading={this.state.loading} errors={this.state.errors}
+                      onErrorsDismiss={() => this.setState({errors: {}})}>
                     <Form.Field>
                         <Form.Dropdown placeholder='Groups' multiple selection options={userGroups} name="userGroups"
                                        value={this.state.userGroups} onChange={this._handleInputChange.bind(this)}/>

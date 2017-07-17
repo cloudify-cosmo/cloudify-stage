@@ -9,6 +9,7 @@ export default class ClusterManagement extends React.Component {
         super(props, context);
 
         this.state = {
+            error: null
         }
     }
 
@@ -36,7 +37,7 @@ export default class ClusterManagement extends React.Component {
         var isClusterInitialized = this.props.data.state.initialized;
         return (
             <div>
-                <ErrorMessage error={this.state.error || this.props.data.error}/>
+                <ErrorMessage error={this.state.error || this.props.data.error} onDismiss={() => this.setState({error: null})} />
 
                 {
                     isClusterInitialized ?

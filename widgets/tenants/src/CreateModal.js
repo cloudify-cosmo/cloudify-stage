@@ -51,7 +51,7 @@ export default class CreateModal extends React.Component {
 
         let actions = new Actions(this.props.toolbox);
         actions.doCreate(this.state.tenantName).then((tenant)=>{
-            this.setState({loading: false, open: false});
+            this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('menu.tenants:refresh');
         }).catch((err)=> {
@@ -74,7 +74,8 @@ export default class CreateModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}>
+                    <Form loading={this.state.loading} errors={this.state.errors}
+                          onErrorsDismiss={() => this.setState({errors: {}})}>
                         <Form.Field error={this.state.errors.tenantName}>
                             <Form.Input name='tenantName' placeholder='Tenant name'
                                         value={this.state.tenantName} onChange={this._handleInputChange.bind(this)}/>

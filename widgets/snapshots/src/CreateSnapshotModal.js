@@ -63,7 +63,7 @@ export default class CreateModal extends React.Component {
         actions.doCreate(this.state.snapshotId, this.state.includeMetrics, this.state.includeCredentials, this.state.privateResource).then(()=>{
             this.props.toolbox.getContext().setValue(this.props.widget.id + 'createSnapshot',null);
             this.props.toolbox.getEventBus().trigger('snapshots:refresh');
-            this.setState({loading: false, open: false});
+            this.setState({errors: {}, loading: false, open: false});
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
         });
@@ -86,7 +86,8 @@ export default class CreateModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}>
+                    <Form loading={this.state.loading} errors={this.state.errors}
+                          onErrorsDismiss={() => this.setState({errors: {}})}>
 
                         <Form.Field error={this.state.errors.snapshotId}>
                             <Form.Input name='snapshotId' placeholder="Snapshot ID"
