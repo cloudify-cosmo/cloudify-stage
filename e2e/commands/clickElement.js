@@ -5,5 +5,5 @@
 exports.command = function(selector) {
     return this
         .waitForElementVisible(selector)
-        .click(selector, (result) => this.log('Clicked element', result.status === 0 ? 'successfully.' : 'with no success.'));
+        .click(selector, (result) => this.log('Clicked element', result.status === 0 ? 'successfully.' : 'with no success. error - '+result.value.message));
 };
