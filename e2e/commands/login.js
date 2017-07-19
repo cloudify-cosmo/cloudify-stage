@@ -12,5 +12,6 @@ exports.command =  function(asUser) {
         .setValue('@usernameField', asUser ? Config.user : Config.admin)
         .setValue('@passwordField', asUser ? Config.pass: Config.adminPass)
         .clickElement('@submitButton')
+        .waitForElementNotVisible('@splashPage')
         .waitForElementVisible('@managerData');
 }

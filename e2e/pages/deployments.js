@@ -152,6 +152,7 @@ module.exports = {
             selector: '.updateDeploymentModal',
             elements: {
                 blueprintFile: '.content input[name="blueprintFile"]',
+                blueprintUrl: '.content input[name="blueprintUrl"]',
                 blueprintInputsFile: '.content input[name="inputsFile"]',
                 blueprintYamlFile: '.content input[name="applicationFileName-search"]',
                 updateButton: '.actions button.button.ok',
@@ -159,13 +160,14 @@ module.exports = {
             },
             commands: [
                 {
-                    fillIn: function(blueprintName, blueprintYamlFile = 'blueprint.yaml') {
+                    fillIn: function(blueprintUrl, blueprintYamlFile = 'blueprint.yaml') {
                         let blueprintFileOptionElement = `select[name="applicationFileName"] option[value="${blueprintYamlFile}"]`;
-                        var pathlib = require("path");
+                        // var pathlib = require("path");
                         return this
                             .waitForElementVisible(this.selector)
-                            .setValue('@blueprintFile', pathlib.resolve('e2e/resources/' + blueprintName + '.zip'))
-                            .setValue('@blueprintInputsFile', pathlib.resolve('e2e/resources/' + blueprintName + 'Inputs.yaml'))
+                            .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB])
+                            // TODO: Make inputs.yaml file accessible from the server
+                            // .setValue('@blueprintInputsFile', pathlib.resolve('e2e/resources/' + blueprintName + 'Inputs.yaml'))
                             .waitForElementPresent(blueprintFileOptionElement)
                             .selectOptionInDropdown(this.elements.blueprintYamlFile.selector, blueprintYamlFile);
                     },
