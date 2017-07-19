@@ -4,6 +4,7 @@
 
 const DEPLOYMENT_NAME = 'nodecellar0';
 const BLUEPRINT_NAME = 'nodecellar';
+const BLUEPRINT_URL = 'https://github.com/cloudify-cosmo/cloudify-nodecellar-example/archive/master.zip';
 const BLUEPRINT_YAML_FILENAME = 'local-blueprint.yaml';
 const WORKFLOW_VERIFICATION_TIMEOUT = 20000;
 
@@ -15,7 +16,7 @@ module.exports = {
 
         client.login()
             .prepareTestWidget(client.page.deployments().props.widgetId)
-            .addBlueprint(BLUEPRINT_NAME, BLUEPRINT_YAML_FILENAME)
+            .addBlueprint(BLUEPRINT_NAME, BLUEPRINT_URL, BLUEPRINT_YAML_FILENAME)
             .deployBlueprint(DEPLOYMENT_NAME, BLUEPRINT_INPUTS, BLUEPRINT_NAME);
     },
 
@@ -83,7 +84,7 @@ module.exports = {
             .checkIfDeploymentPresent(DEPLOYMENT_NAME)
             .clickEdit(DEPLOYMENT_NAME);
         page.section.updateDeploymentModal
-            .fillIn(BLUEPRINT_NAME, BLUEPRINT_YAML_FILENAME)
+            .fillIn(BLUEPRINT_URL, BLUEPRINT_YAML_FILENAME)
             .clickUpdate();
 
         // TODO: Add verification?
