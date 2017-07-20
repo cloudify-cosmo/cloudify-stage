@@ -3,7 +3,9 @@ pipeline {
             pollSCM('H/15 * * * *')
     }
     agent { label 'web-ui' }
-
+    parameters {
+        string(name: 'branch', defaultValue: 'master', description: 'Branch name')
+    }
     stages {
         stage('Clean') {
             steps {
