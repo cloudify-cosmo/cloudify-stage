@@ -8,6 +8,17 @@ var customer = require('../conf/customer.json');
 var widgets = require('../conf/widgets.json');
 var ServerSettings = require('./serverSettings');
 
+var me = null;
+try {
+    me = require('../conf/me.json');
+} catch(err) {
+    if (err.code !== "MODULE_NOT_FOUND") {
+        throw err;
+    }
+}
+var _ = require('lodash');
+
+
 module.exports = {
     get: function(mode) {
         var config = {
@@ -20,6 +31,8 @@ module.exports = {
         if (mode === ServerSettings.MODE_CUSTOMER) {
             config.customer = customer;
         }
+
+        _.merge(config, me);
 
         config.managerUrl = manager.protocol + '://' + manager.ip + ':' + manager.port;
 

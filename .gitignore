@@ -16,3 +16,4 @@ tests_output
 
 /e2e/screenshots
 /doc/components
+/conf/me.json

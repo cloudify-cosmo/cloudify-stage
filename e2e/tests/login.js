@@ -2,7 +2,7 @@
  * Created by kinneretzin on 25/12/2016.
  */
 
-var Config = require('../config.json');
+var Config = require('../config');
 
 module.exports = {
     'Successful login test': function (client) {
