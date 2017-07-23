@@ -84,7 +84,7 @@ export default class EventsTable extends React.Component {
                             return (
                                 <DataTable.Row key={item.id + index} selected={item.isSelected}
                                                onClick={this._selectEvent.bind(this, item.id)} className={rowClassName}>
-                                    <DataTable.Data className="alignCenter"><i className={`eventsType ${event.icon}`}></i></DataTable.Data>
+                                    <DataTable.Data className="alignCenter"><i className={`eventsType ${event.icon}`} title={event.text}></i></DataTable.Data>
                                     <DataTable.Data className="alignCenter noWrap">{item.timestamp}</DataTable.Data>
                                     <DataTable.Data>{event.text}</DataTable.Data>
                                     <DataTable.Data>{item.blueprint_id}</DataTable.Data>
