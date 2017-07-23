@@ -21,7 +21,7 @@ export default class extends React.Component{
     };
 
     render(){
-        var {DataSegment, Grid, Image, Button} = Stage.Basic;
+        var {DataSegment, Grid, Image, Button, Header} = Stage.Basic;
 
         var index=0;
         var catalogItems =
@@ -32,11 +32,9 @@ export default class extends React.Component{
                         <DataSegment.Item selected={item.isSelected} onClick={(event)=>{event.stopPropagation(); this.props.onSelect(item)}} className="fullHeight">
                             <Grid>
                                 <Grid.Row className="bottomDivider">
-                                    <Grid.Column width="4"><Image src={item.image_url} centered={true}/></Grid.Column>
-                                    <Grid.Column width="12">
-                                        <h3 className="ui icon header verticalCenter">
-                                            <a className="underline" href={item.html_url} target="_blank">{item.name}</a>
-                                        </h3>
+                                    <Grid.Column width="16">
+                                        <Image src={item.image_url}/>
+                                        <Header><a href={item.html_url} target="_blank">{item.name}</a></Header>
                                     </Grid.Column>
                                 </Grid.Row>
 

@@ -27,7 +27,7 @@ export default class BlueprintsCatalog extends React.Component{
     };
 
     render(){
-        var {DataSegment, Grid, Image, Button, Label, PrivateMarker} = Stage.Basic;
+        var {DataSegment, Grid, Image, Button, Label, PrivateMarker, Header} = Stage.Basic;
 
         var index=0;
         var blueprintsItems =
@@ -39,11 +39,9 @@ export default class BlueprintsCatalog extends React.Component{
                                           onClick={(event)=>{event.stopPropagation(); this.props.onSelectBlueprint(item)}}>
                             <Grid>
                                 <Grid.Row className="bottomDivider">
-                                    <Grid.Column width="4"><Image src={`/ba/image/${item.id}`} centered={true}/></Grid.Column>
-                                    <Grid.Column width="12">
-                                        <h3 className="ui icon header verticalCenter">
-                                            <a className="underline" href="javascript:void(0)">{item.id}</a>
-                                        </h3>
+                                    <Grid.Column width="16">
+                                        <Image src={`/ba/image/${item.id}`}/>
+                                        <Header><a href="javascript:void(0)">{item.id}</a></Header>
                                         <PrivateMarker show={item.private_resource} title="Private resource" className="rightFloated"/>
                                     </Grid.Column>
                                 </Grid.Row>

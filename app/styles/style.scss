@@ -483,6 +483,28 @@ code.hljs {
       margin-bottom:0px;
     }
   }
+
+  .row.bottomDivider {
+
+    img {
+      width: auto;
+      max-width: 150px !important;
+      height: 70px;
+      display: inline-block;
+    }
+
+    .ui.header {
+      margin-left: 2rem;
+      margin-top: auto !important;
+      vertical-align: middle !important;
+      display: inline-block;
+      max-width: calc(100% - 150px);
+
+      a {
+        color: inherit;
+      }
+    }
+  }
 }
 
 .ui.grid {
