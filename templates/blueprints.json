@@ -9,7 +9,8 @@
       "x": 0,
       "y": 0,
       "configuration":{
-        "displayStyle":"catalog"
+        "displayStyle":"catalog",
+        "pageSize": 6
       }
     },
     {
