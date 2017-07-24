@@ -5,6 +5,8 @@
 import 'proxy-polyfill';
 
 import {drillDownToPage} from '../actions/widgets';
+import {selectHomePage, selectParentPage} from '../actions/page';
+
 
 import EventBus from './EventBus';
 import Context from './Context';
@@ -36,6 +38,14 @@ class Toolbox {
 
     drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName) {
         this.store.dispatch(drillDownToPage(widget,this.templates[defaultTemplate],this.widgetDefinitions,drilldownContext,drilldownPageName));
+    }
+
+    goToHomePage() {
+        this.store.dispatch(selectHomePage());
+    }
+
+    goToParentPage() {
+        this.store.dispatch(selectParentPage(this._currentPageId()));
     }
 
     getEventBus (){
@@ -70,6 +80,8 @@ class Toolbox {
     refresh() {}
 
     loading(show) {}
+
+    _currentPageId() {return "";}
 }
 
 var toolbox = null;
@@ -78,13 +90,15 @@ let createToolbox = (store) =>{
     toolbox = new Toolbox(store);
 };
 
-let getToolbox  = (onRefresh, onLoading)=>{
+let getToolbox  = (onRefresh, onLoading, getCurrentPageId)=>{
     return new Proxy(toolbox,{
         get: (target, name)=> {
             if (name === 'refresh') {
                 return onRefresh;
             } else if (name === 'loading') {
                 return onLoading;
+            } else if (name === '_currentPageId') {
+                return getCurrentPageId;
             } else {
                 return target[name];
             }

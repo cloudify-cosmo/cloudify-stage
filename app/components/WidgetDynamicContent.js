@@ -17,7 +17,8 @@ export default class WidgetDynamicContent extends Component {
         manager: PropTypes.object.isRequired,
         data: PropTypes.object.isRequired,
         onWidgetConfigUpdate: PropTypes.func,
-        fetchWidgetData: PropTypes.func.isRequired
+        fetchWidgetData: PropTypes.func.isRequired,
+        pageId: PropTypes.string.isRequired
     };
 
     constructor(props) {
@@ -32,7 +33,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     _getToolbox () {
-        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this));
+        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this), this._getCurrentPageId.bind(this));
     }
 
     _beforeFetch() {
@@ -59,6 +60,10 @@ export default class WidgetDynamicContent extends Component {
         if (this.state.loading) {
             this.setState({loading: false});
         }
+    }
+
+    _getCurrentPageId() {
+        return this.props.pageId;
     }
 
     _stopPolling() {

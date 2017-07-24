@@ -10,3 +10,9 @@ export function setDrilldownContext(drilldownContext){
         drilldownContext
     }
 }
+
+export function popDrilldownContext() {
+    return {
+        type: types.POP_DRILLDOWN_CONTEXT
+    };
+}
