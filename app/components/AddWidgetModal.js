@@ -3,8 +3,8 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Input, Segment, Divider, Image, Item, Button, DataTable, Modal, Confirm, ErrorMessage} from "./basic/index"
-import InstallWidgetModal from "./InstallWidgetModal"
+import {Input, Segment, Divider, Item, Button, DataTable, Modal, Confirm, ErrorMessage, Icon, Checkbox} from "./basic/index";
+import InstallWidgetModal from "./InstallWidgetModal";
 
 export default class AddWidgetModal extends Component {
 
@@ -13,7 +13,8 @@ export default class AddWidgetModal extends Component {
 
         this.state = {
             ...AddWidgetModal.initialState(props),
-            open: false
+            open: false,
+            widgetsToAdd: []
         };
     }
 
@@ -50,12 +51,26 @@ export default class AddWidgetModal extends Component {
         this.setState({open: false});
     }
 
-    _addWidget(widget) {
+    _addWidgets() {
+        this.state.widgetsToAdd.forEach(widget => {this.props.onWidgetAdded(widget)});
+        this.setState({...this.state, widgetsToAdd: []});
         this._closeModal();
-        this.props.onWidgetAdded(widget);
     }
 
-    _confirmRemove(widget) {
+    _toggleWidgetInstall(widget) {
+        let index = this.state.widgetsToAdd.indexOf(widget);
+        if (index > -1){
+            this.state.widgetsToAdd.splice(index, 1);
+            this.setState({widgetsToAdd: this.state.widgetsToAdd});
+        } else {
+            var updatedWidgetsToAdd = this.state.widgetsToAdd;
+            updatedWidgetsToAdd.push(widget);
+            this.setState({widgetsToAdd: updatedWidgetsToAdd});
+        }
+    }
+
+    _confirmRemove(event, widget) {
+        event.stopPropagation();
         this.props.onWidgetUsed(widget.id).then(usedByList => {
             this.setState({widget, usedByList, showConfirm:true})
         }).catch(err => {
@@ -84,9 +99,16 @@ export default class AddWidgetModal extends Component {
         const addWidgetBtn = <Button labelPosition='left' icon="plus" size="tiny" color="teal"
                                         basic content='Add Widget' className="addWidgetBtn"/>;
 
-        const installWidgetBtn = <Button fluid content="Install new widget" id="installWidgetBtn"/>;
+        const installWidgetBtn = <Button animated="vertical" id="installWidgetBtn" onClick={()=> {}}>
+                                    <Button.Content visible>Install new widget</Button.Content>
+                                    <Button.Content hidden>
+                                        <Icon name="folder open" />
+                                    </Button.Content>
+                                </Button>;
 
-        const updateWidgetBtn = <Button floated='left' size="small" compact basic content="Update" className="updateWidgetButton"/>;
+        const updateWidgetBtn = <Button floated='left' size="small" compact basic content="Update"
+                                        className="updateWidgetButton"
+                                        onClick={(e) => e.stopPropagation()}/>;
 
         const confirmContent = !_.isEmpty(this.state.usedByList) ?
             (<Segment basic>
@@ -124,9 +146,10 @@ export default class AddWidgetModal extends Component {
                             {
                                 this.state.filteredWidgetDefinitions.map(function(widget){
                                     return (
-                                        <Item key={widget.id} data-id={widget.id}>
-                                            <Image as="div" size="small" bordered
-                                                   src={`/widgets/${widget.id}/widget.png`}/>
+                                        <Item key={widget.id} data-id={widget.id} onClick={()=>{this._toggleWidgetInstall(widget)}}>
+                                            <Checkbox className="addWidgetCheckbox" readOnly={true} title="Add widget to page"
+                                                      checked={this.state.widgetsToAdd.includes(widget)}/>
+                                            <Item.Image as="div" size="small" bordered src={`/widgets/${widget.id}/widget.png`}/>
                                             <Item.Content>
                                                 <Item.Header as='a'>{widget.name}</Item.Header>
                                                 <Item.Meta>{widget.description}</Item.Meta>
@@ -139,11 +162,9 @@ export default class AddWidgetModal extends Component {
                                                                                 header="Update widget definition"/>
 
                                                             <Button floated='left' size="small" compact basic content="Remove"
-                                                                    onClick={this._confirmRemove.bind(this,widget)} className="removeWidgetButton"/>
+                                                                    onClick={(e) => this._confirmRemove(e, widget)} className="removeWidgetButton"/>
                                                         </div>
                                                     }
-                                                    <Button floated='right' secondary size="small" content="Add"
-                                                            onClick={this._addWidget.bind(this,widget)} className="selectWidgetButton"/>
                                                 </Item.Extra>
                                             </Item.Content>
                                         </Item>
@@ -153,9 +174,20 @@ export default class AddWidgetModal extends Component {
 
                             {_.isEmpty(this.state.filteredWidgetDefinitions) && <Item className="alignCenter" content="No widgets available"/>}
                         </Item.Group>
-    
-                        <InstallWidgetModal onWidgetInstalled={this.props.onWidgetInstalled} trigger={installWidgetBtn}
-                                            header="Install new widget" buttonLabel="Install Widget"/>
+
+                        <Button.Group widths='2'>
+                            <Button animated="vertical" id="addWidgetsBtn" onClick={() => {this._addWidgets()}} color="green"
+                                    disabled={this.state.widgetsToAdd.length === 0}>
+                                <Button.Content visible>Add selected widgets ({this.state.widgetsToAdd.length})</Button.Content>
+                                <Button.Content hidden>
+                                    <Icon name="check" />
+                                </Button.Content>
+                            </Button>
+
+
+                            <InstallWidgetModal onWidgetInstalled={this.props.onWidgetInstalled} trigger={installWidgetBtn}
+                                                header="Install new widget" buttonLabel="Install Widget"/>
+                        </Button.Group>
                     </Segment>
                 </Modal>
 

@@ -243,6 +243,15 @@ a:hover {
   .widgetsList .selectWidgetButton {
     margin-right:10px !important;
   }
+
+// Force it to be v-centered
+  .addWidgetCheckbox {
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 20px;
+  }
 }
 
 .loginPage,.maintenancePage {
