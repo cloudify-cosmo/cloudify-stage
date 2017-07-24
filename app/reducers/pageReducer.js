@@ -46,7 +46,8 @@ const page = (state = {}, action) => {
             });
         case types.RENAME_PAGE:
             return Object.assign({}, state, {
-                name: action.name
+                name: action.name,
+                id: action.newPageId
             });
         default:
             return state;

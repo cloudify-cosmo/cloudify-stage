@@ -21,7 +21,8 @@ const findSelectedRootPage = (pagesMap,selectedPageId) => {
 const mapStateToProps = (state, ownProps) => {
     var pagesMap = _.keyBy(state.pages,'id');
     var page = pagesMap[ownProps.pageId];
-    var pageId = page? page.id : "0";
+    var homePageId = state.pages[0].id;
+    var pageId = page ? page.id : homePageId;
     var selected = state.pages && state.pages.length > 0 ? findSelectedRootPage(pagesMap,pageId) : null;
 
     return {
@@ -40,7 +41,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
             // If user removes current page, then navigate to home page
             if (ownProps.pageId === page.id) {
-                dispatch(selectPage(0,false));
+                dispatch(selectPage(ownProps.homePageId,false));
             }
         },
         onPageReorder: (pageIndex, newPageIndex) => {

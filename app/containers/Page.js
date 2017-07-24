@@ -5,7 +5,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Page from '../components/Page';
-import {renamePage} from '../actions/page';
+import {changePageName} from '../actions/page';
 import {selectPage} from '../actions/page';
 import {removePage} from '../actions/page';
 import {updatePageDescription} from '../actions/page';
@@ -18,9 +18,8 @@ const buildPagesList = (pages,drilldownContextArray,selectedPageId) => {
     var index = drilldownContextArray.length-1;
 
     var _r = (page) => {
-        if (!page)
-        {
-            page = pagesMap["0"];
+        if (!page) {
+            page = pages[0];
         }
         var pageDrilldownContext = index>=0 ? drilldownContextArray[index--] : {};
         pagesList.push(Object.assign({},page,{name:pageDrilldownContext.pageName || page.name, context:pageDrilldownContext.context}));
@@ -39,7 +38,8 @@ const buildPagesList = (pages,drilldownContextArray,selectedPageId) => {
 const mapStateToProps = (state, ownProps) => {
     var pagesMap = _.keyBy(state.pages,'id');
     var page = pagesMap[ownProps.pageId];
-    var pageId = page ? page.id : "0";
+    var homePageId = state.pages[0].id;
+    var pageId = page ? page.id : homePageId;
 
     var pageData = _.clone(_.find(state.pages,{id:pageId}));
     var widgets = _.map(pageData.widgets,(wd)=>{
@@ -60,8 +60,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onPageNameChange: (pageId,newName)=> {
-            dispatch(renamePage(pageId,newName));
+        onPageNameChange: (page,newName)=> {
+            dispatch(changePageName(page,newName));
         },
         onPageDescriptionChange: (pageId,newDescription)=> {
             dispatch(updatePageDescription(pageId,newDescription));
