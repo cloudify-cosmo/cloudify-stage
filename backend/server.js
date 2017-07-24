@@ -6,9 +6,11 @@
 let path = require('path');
 var fs = require('fs');
 
+var config = require('./config');
+
 // Initialize log4js
 var log4js = require('log4js');
-var log4jsConfig = require('../conf/log4jsConfig.json');
+var log4jsConfig = config.get().log4jsConfig;
 var LoggerHandler = require('./handler/LoggerHandler');
 LoggerHandler.init(log4jsConfig);
 
@@ -27,7 +29,6 @@ var SourceBrowser = require('./routes/SourceBrowser');
 var GitHub = require('./routes/GitHub');
 var Style = require('./routes/Style');
 var Widgets = require('./routes/Widgets');
-var config = require('./config');
 
 var logger = log4js.getLogger('Server');
 
