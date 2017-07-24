@@ -48,9 +48,9 @@ In this approach the filesystem will look like so:
 Each widget.js file should have only one call to a global function called *Stage.defineWidget*.
 This function takes one argument - an object which contains structured widget definition.
 
-### Example 
+### Example
 
-The following code demonstrates how easy it is to create a simple widget. 
+The following code demonstrates how easy it is to create a simple widget.
 You can copy this code and put it in a *widget.js* file to produce a fully working widget (refer to the previous paragraph for file structure guidelines).
 
 ```javascript
@@ -90,10 +90,10 @@ description | String | - | An optional description of the widget. It will be sho
 initialWidth | Integer| - | The default (initial) width of the widget when added to a page
 initialHeight | Integer| - | The default (initial) height of the widget when added to a page
 color | String | red | one out of : red , orange , yellow, olive, green, teal,blue, violet,purple,pink,brown,grey,black
-showHeader | Boolean| true | If we should show a widget header or not. If an header is not shown the user cannot change the widget name (which is only visible in the header) 
+showHeader | Boolean| true | If we should show a widget header or not. If an header is not shown the user cannot change the widget name (which is only visible in the header)
 isReact | Boolean| false | You should set this to true to write a React widget
 fetchUrl | String or Object | - | If fetchUrl exists, the data from this URL will be fetched by the application and passed to the render and postRender methods. If you want to fetch multiple URLs, you need to pass an object where the key is a name you pick for this data, and value is the URL. *Important* the render will be called once before the data is fetched (to allow showing loading or partial data) and once the data is fetched.
-initialConfiguration | Array | - | A list of widget configuration options. These options will appear when clicking 'configure' icon on the widget in edit mode. It can also be accessed in the widget to determine the current selected configuration. 
+initialConfiguration | Array | - | A list of widget configuration options. These options will appear when clicking 'configure' icon on the widget in edit mode. It can also be accessed in the widget to determine the current selected configuration.
 pageSize | Integer | - | The initial page size for widgets that supports pagination
 
 **Note:** initialConfiguration supports 4 generic pre-made config fields (see *fetchUrl* for example):
@@ -130,7 +130,7 @@ fetchUrl: {
 // ...
 render: function(widget,data,error,toolbox) {
     let nodes = data.nodes.items;
-    let deployments = data.nodeInstances.items; 
+    let deployments = data.nodeInstances.items;
     //...
 }
 ```
@@ -148,7 +148,7 @@ fetchUrl: '[manager]/executions?is_system_workflow=false[params]'
       This mode is **exclusive** - parameters not specified explicitly will be skipped.
       When using selective param picking (`[params:param_name]`) you can use a pre-defined `gridParams` tag to include all pagination parameters (_size, _offset_, _sort) instead of specifying explicitly  each of the three.
 
-##### fetchUrl - Inclusive params 
+##### fetchUrl - Inclusive params
 
 The following example illustrates *fetchUrl* with both tokens along with resulting URL:
 
@@ -179,7 +179,7 @@ endpoint name | nodes? | Remaining part of the REST endpoint address
 generic params | &_sort=-column_name&_size=5&_offset=0 | Parameters that were implicitly added to request. These parameters are inferred from the GenericConfig objects in initialConfiguration and are responsible for pagination of the results. It is possible to omit them by explicitly specifying param names to be used like so [params:my-param]. Alternatively, gridParams (sort, size, offset) can be simply removed from *initialConfiguration*.
 custom params | &sampleFuncParam=dummy | Custom parameters can be defined in *fetchParams()* function. Each custom parameter must be returned as a property of an Object returned by *fetchParams()* function.
 
-##### fetchUrl - Exclusive params 
+##### fetchUrl - Exclusive params
 
 The same URL, this time with explicit param names (and the `gridParams` tag):
 
@@ -218,7 +218,7 @@ Some for widget appearance manipulation and some to manage the data available to
 It can be when the page is loaded, when widget data was changed, when context data was changed, when widget data was fetched, and etc.
 
 render parameters are:
- 
+
 * The widget object itself (see description in 'Widget object' section below)
 * The fetched data (either using fetchUrl or fetchData method). The data will be null if fetchData or fetchUrl was not defined, and also until the data is fetched it will pass null to the render method (if you expect data you can render 'loading' indication in such a case)
 * The toolbox object (see description in the 'Toolbox object' section)
@@ -301,7 +301,7 @@ Stage.defineWidget({
 
         if (_.isEmpty(data)) // Make sure the data is already fetched, if not show a loading spinner
             return (<Loading message='Loading data...'></Loading>)
-        else 
+        else
             return (
                 <div>
                     <p>confItem value: {widget.configuration.confText}</p>
@@ -313,7 +313,7 @@ Stage.defineWidget({
 ```
 
 The above widget prints will display two lines containing the strings defined in the data sources: "Conf text" and "Fetched Text".
-Please note how the widget makes sure data has been loaded has completed before rendering it. 
+Please note how the widget makes sure data has been loaded has completed before rendering it.
 Skipping this check would result in an error in browser console.
 
 initialConfiguration, as the name suggests is only used if there are no user defined values for these properties.
@@ -324,7 +324,7 @@ Moreover, please remember to remove and re-add the widget to the dashboard if ch
 
 #### postRender(el, widget, data, toolbox)
 **Non-React widgets only.**
-PostRender is called immediately after the widget has been made visible in the UI. 
+PostRender is called immediately after the widget has been made visible in the UI.
 This function has access to the same objects as the *render* function with one addition - the `el` object containing a reference to the widget's container (parent) object.
 
 
@@ -346,7 +346,7 @@ With this in mind, the following example would not work:
 ```javascript
 // THIS WILL NOT WORK
 fetchData(widget, toolbox, fetchParams){ return 10; }
-render(widget,data,toolbox){ 
+render(widget,data,toolbox){
     return (
         <div>
             {data}  // This will produce a runtime error
@@ -359,7 +359,7 @@ Instead, you can return the `int` value as a property of the object like so:
 
 ```javascript
 fetchData(widget, toolbox, fetchParams){ return {myInt: 10}; }
-render(widget,data,toolbox) { 
+render(widget,data,toolbox) {
     return (
         <div>
             {data.myInt}  // OK
@@ -372,7 +372,7 @@ render(widget,data,toolbox) {
 - toolbox reference,
 - fetchParams (equal to `[params]` in *fetchUrl*)
 
-**Note**: *fetchUrl* and *fetchData()* are mutually exclusive, that is if you define fetchUrl in your widget, then *fetchData()* definition will be ignored. 
+**Note**: *fetchUrl* and *fetchData()* are mutually exclusive, that is if you define fetchUrl in your widget, then *fetchData()* definition will be ignored.
 
 ##### Widget object
 
@@ -383,7 +383,7 @@ attribute | description
 id | The id of the widget (uuid)
 name | The display name of the widget (The widget definition name is the default name for the widget, but the user can change it)
 height | The actual height of the widget on the page
-width | The actual width of the widget on the page 
+width | The actual width of the widget on the page
 x | The actual x location of the widget on the page
 y | The actual y location of the widget on the page
 definition | The widget definition object as it was passed to defineWidget method. The only additional field there that the widget can access is the 'template'. The template is fetched from the html and added on the widget definition.
@@ -438,7 +438,7 @@ Returns manager object. Used to read current manager's properties. Available cal
  - getSelectedTenant()
  - doGetFull(url, params, parseResponse, fullData, size)
 
-###### getExternal() 
+###### getExternal()
 
 Provides access to connected manager's rest api. The URL is the service URL without the /api/vX.X
 
@@ -478,7 +478,7 @@ Same as *getExternal*() but on a secured connection. All headers are appended wi
 
 Returns a manager object connected on the specified IP. May be needed in order to join a different manager (eg. for cluster joining).
 
-###### getContext() 
+###### getContext()
 
 A widget context gives access to the application context. Using the context we can pass arguments between widgets, for example when a blueprint is selected, set the context to the selected blueprint, and all the widgets that can filter by blueprint can read this value and filter accordingly.
 The context supports these methods:
@@ -497,6 +497,14 @@ If we did some actions in the widget that will require fetching the data again (
 ###### loading(boolean)
 
 Will show/hide a loading spinner in widget header. **Not allowed in render() and postRender()** methods as it changes store's state leading to render() and postRender() re-run.
+
+###### goToHomePage()
+
+Redirection to the home page.
+
+###### goToParentPage()
+
+Redirection to the parent page if exists. Can be used mostly by drilldown pages to return to the parent one.
 
 ###### drillDown(widget,defaultTemplate,drilldownContext)
 
@@ -570,13 +578,13 @@ The library looks like this:
       template1.json
       template2.json
       ...
-      templates.json     
+      templates.json
 ```
 
 The templates.json contains a list of the available templates (temporary until we'll have a server that will handle this).
 Each template file contains one page template configuration.
 
-template configuration has a name which is the default page name, and list of widgets. 
+template configuration has a name which is the default page name, and list of widgets.
 Each widget will have the following fields
 
 field | description
@@ -650,7 +658,7 @@ for example:
 ## Widget template
 
 The widget template is an html file written with [lodash template engine](https://lodash.com/docs/4.15.0#template).
- 
+
 Widget template if fetched when the widget definition is loaded, and its passed to the render function. To access it use widget.definition.template.
 To render the template using the built in lodash templates engine use `_.template(widget.definition.template)(data);`, where 'data' is any context you want to pass on to the template.
 For example, a simple render function will look like this:

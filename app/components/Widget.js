@@ -142,7 +142,8 @@ export default class Widget extends Component {
                                               data={this.props.widgetData}
                                               setContextValue={this.props.setContextValue}
                                               onWidgetConfigUpdate={this._widgetConfigUpdate.bind(this)}
-                                              fetchWidgetData={this.props.fetchWidgetData}/>
+                                              fetchWidgetData={this.props.fetchWidgetData}
+                                              pageId={this.props.pageId}/>
                         :
                         <div className='ui segment basic' style={{height:'100%'}}>
                             <div className="ui active inverted dimmer">

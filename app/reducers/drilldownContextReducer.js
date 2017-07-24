@@ -9,6 +9,10 @@ const drillDownContext = (state = [], action) => {
     switch (action.type) {
         case types.SET_DRILLDOWN_CONTEXT:
             return action.drilldownContext;
+        case types.POP_DRILLDOWN_CONTEXT:
+            var newState = [...state];
+            newState.pop()
+            return newState;
         default:
             return state;
     }

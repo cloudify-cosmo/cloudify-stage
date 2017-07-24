@@ -7,6 +7,7 @@ import * as types from './types';
 import { push } from 'react-router-redux';
 import {v4} from 'node-uuid';
 import {clearContext} from './context';
+import {popDrilldownContext} from './drilldownContext';
 import {addWidget} from './widgets';
 import {clearWidgetsData} from './WidgetData';
 
@@ -93,21 +94,22 @@ export function selectPage(pageId,isDrilldown,drilldownContext,drilldownPageName
         }
 
         var location = {pathname:`/page/${pageId}`};
-            if (!_.isEmpty(drilldownPageName)){
+        if (!_.isEmpty(drilldownPageName)){
             location.pathname +=`/${drilldownPageName}`;
         }
 
         if (isDrilldown) {
-            location.query =
-            {
-                c : JSON.stringify([
+            if (drilldownPageName || drilldownContext) {
+                dContext = [
                     ...dContext,
                     {
                         context: drilldownContext || {},
                         pageName: drilldownPageName
                     }
-                ])
-            };
+                ];
+            }
+
+            location.query = {c : JSON.stringify(dContext)};
         }
 
         dispatch(push(location));
@@ -147,5 +149,26 @@ export function reorderPage(pageIndex,newPageIndex) {
         type: types.REORDER_PAGE,
         pageIndex,
         newPageIndex
+    }
+}
+
+export function selectHomePage() {
+    return function (dispatch,getState) {
+        var homePageId = getState().pages[0].id;
+
+        dispatch(selectPage(homePageId));
+    }
+}
+
+export function selectParentPage(pageId) {
+    return function (dispatch,getState) {
+        var state = getState();
+        var page = _.find(state.pages, {'id': pageId});
+
+        if (page && page.isDrillDown && page.parent) {
+            var parentPage = _.find(state.pages, {'id': page.parent});
+            dispatch(popDrilldownContext());
+            dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
+        }
     }
 }
