@@ -14,8 +14,7 @@ exports.command = function(widgetId) {
 
             this.pause(1000); // Wait for modal to open
 
-            page.section.addWidgetModal
-                .clickAddWidget(widgetId);
+            page.section.addWidgetModal.selectAndAddWidget(widgetId);
         }
     });
 };

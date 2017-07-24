@@ -73,10 +73,13 @@ module.exports = {
 
             },
             commands: [{
-                clickAddWidget: function(widgetId) {
-                    return this.clickElement('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .selectWidgetButton')
+                selectAndAddWidget: function(widgetId) {
+                    this.clickElement('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .addWidgetCheckbox')
+                        .waitForElementPresent('.item[data-id="'+widgetId+'"] .addWidgetCheckbox.checked.checkbox');
+
+                    return this.clickElement('#addWidgetsBtn')
                         .waitForElementNotPresent('.addWidgetModal')
-                        .waitForElementPresent('.widget.' + widgetId + "Widget");
+                        .waitForElementPresent('.widget.' + widgetId + 'Widget');
                 },
 
                 isWidgetInstalled: function(widgetId, callback) {
