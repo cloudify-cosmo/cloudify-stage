@@ -45,6 +45,13 @@ export default class PagesList extends Component {
     }
 
     render() {
+        var pageCount = 0;
+        this.props.pages.map(p => {
+           if (!p.isDrillDown) {
+               pageCount++;
+           }
+        });
+
         return (
             <div className="pages" ref="pages">
                 {
@@ -52,7 +59,7 @@ export default class PagesList extends Component {
                         return <div key={page.id} className={'item link ' + (this.props.selected === page.id ? 'active' : '') + ' pageMenuItem'} onClick={(event) => {event.stopPropagation(); this.props.onPageSelected(page);} }>
                         {page.name}
                         {
-                            this.props.isEditMode && page.id != "0" ?
+                            this.props.isEditMode && pageCount > 1 ?
                                 <i className="remove link icon small pageRemoveButton" onClick={(event) => {event.stopPropagation(); this.props.onPageRemoved(page)}}/>
                             :
                             ''

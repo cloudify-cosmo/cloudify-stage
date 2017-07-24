@@ -27,7 +27,7 @@ export default class Breadcrumbs extends Component {
                         placeHolder='You must fill a page name'
                         className='section active pageTitle'
                         isEditEnable={this.props.isEditMode}
-                        onEditDone={(newName)=>this.props.onPageNameChange(p.id,newName)}
+                        onEditDone={(newName)=>this.props.onPageNameChange(p,newName)}
                         />
                 );
             }

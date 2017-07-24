@@ -8,8 +8,10 @@ import SideBar from '../components/SideBar';
 
 
 const mapStateToProps = (state, ownProps) => {
-return {
-        pageId:     ownProps.pageId || "0",
+    var homePageId = state.pages[0].id;
+    return {
+        homePageId,
+        pageId:     ownProps.pageId || homePageId,
         isEditMode: state.config.isEditMode || false
     }
 };

@@ -90,9 +90,11 @@ export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldo
 
     return function (dispatch) {
 
-        var pageId =  widget.drillDownPages[defaultTemplate.name];
+        var pageId = widget.drillDownPages[defaultTemplate.name];
         if (!pageId) {
-            var newPageId = v4();
+            var currentPage = _.replace(window.location.pathname, "/page/", "");
+            var newPageId = _.snakeCase(currentPage + " " + defaultTemplate.name);
+
             dispatch(createDrilldownPage(newPageId,defaultTemplate.name));
             _.each(defaultTemplate.widgets,(widget)=>{
                 var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
@@ -102,7 +104,6 @@ export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldo
             dispatch(addWidgetDrilldownPage(widget.id,defaultTemplate.name,newPageId));
             pageId = newPageId;
         }
-
 
         dispatch(selectPage(pageId,true,drilldownContext,drilldownPageName));
     }

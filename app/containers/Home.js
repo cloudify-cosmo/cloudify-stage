@@ -11,8 +11,9 @@ import { push } from 'react-router-redux';
 import Consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
-    var selectedPageId = ownProps.params.pageId || "0";
     var pages = state.pages;
+    var homePageId = pages[0].id;
+    var selectedPageId = ownProps.params.pageId || homePageId;
 
     var context = ownProps.location.query.c ? JSON.parse(ownProps.location.query.c) : [];
 

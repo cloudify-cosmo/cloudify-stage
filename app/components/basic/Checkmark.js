@@ -27,7 +27,7 @@ export default class Checkmark extends Component {
      * @property {boolean} value If true the component will be marked as checked
      */
     static propTypes = {
-        value: PropTypes.bool.isRequired
+        value: PropTypes.bool
     };
 
     static defaultProps = {

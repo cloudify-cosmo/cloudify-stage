@@ -45,7 +45,7 @@ export default class Home extends Component {
     }
 
     render() {
-        var pageId = this.props.params.pageId || "0";
+        var pageId = this.props.pageId;
 
         return (
             <div className='main'>

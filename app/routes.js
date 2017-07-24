@@ -54,10 +54,10 @@ export default (store)=> {
             <Route path='/login' component={Login}/>
             <Route path='/maintenance' component={MaintenanceMode} onEnter={isInMaintenanceMode}/>
             <Route path="/" component={Layout} onEnter={isLoggedIn}>
-                <Route path='/page/(:pageId)/(:pageName)' component={Home}/>
                 <Route path='/page/(:pageId)' component={Home}/>
+                <Route path='/page/(:pageId)/(:pageName)' component={Home}/>
                 <Route path="404" component={NotFound}/>
-                <IndexRoute component={Home} params={{pageId:0}}/>
+                <IndexRoute component={Home}/>
                 <Redirect from="*" to="404"/>
             </Route>
         </Route>
