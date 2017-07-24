@@ -2,34 +2,47 @@
  * Created by kinneretzin on 10/11/2016.
  */
 
-import fetch from 'isomorphic-fetch';
 import Manager from './Manager';
-import Consts from './consts';
 import External from './External';
 
 export default class Auth {
 
     static login(managerIp,username,password) {
-
         return this._getApiVersion(managerIp,username,password)
                 .then((versions)=> {
-                    return this._getLoginToken(managerIp, username, password, versions.apiVersion, versions.serverVersion);
+                    return Promise.all([
+                        this._getLoginToken(managerIp, username, password, versions.apiVersion),
+                        this._getTenants(managerIp, username, password, versions.apiVersion),
+                        versions.serverVersion
+                    ]);
                 })
-                .then(data=>{
+                .then(results =>{
+                    var tenants = results[1].tenants;
+                    /* validate user has at least 1 tenant */
+                    if(!tenants.items || tenants.items.length < 1) {
+                        return Promise.reject('User has no tenants');
+                    }
                     return {
-                        token: data.token,
-                        apiVersion: data.apiVersion,
-                        serverVersion: data.serverVersion,
-                        role: data.role
+                        token: results[0].token,
+                        apiVersion: results[0].apiVersion,
+                        serverVersion: results[2],
+                        role: results[0].role,
+                        tenants: tenants
                     }
                 });
+    }
 
+    static isLoggedIn(managerData){
+        return !!(managerData && managerData.auth && managerData.auth.token);
+    }
+
+    static _doExternalGet(username, password, managerIp, url, apiVersion){
+        var external = new External({basicAuth: btoa(`${username}:${password}`)});
+        return external.doGet(new Manager({ip:managerIp, apiVersion}).getManagerUrl(url));
     }
 
     static _getApiVersion(managerIp,username,password) {
-
-        var external = new External({basicAuth : btoa(`${username}:${password}`)});
-        return external.doGet(new Manager({ip:managerIp}).getManagerUrl("/version"))
+        return this._doExternalGet(username, password, managerIp, '/version')
             .then((data)=> {
                 if (data.error_code) {
                     return Promise.reject(data);
@@ -82,16 +95,14 @@ export default class Auth {
             });
     }
 
-    static _getLoginToken(managerIp,username,password,apiVersion,serverVersion) {
-
-        var external = new External({basicAuth : btoa(`${username}:${password}`)});
-        return external.doGet(new Manager({ip:managerIp}).getManagerUrl("/tokens"))
+    static _getLoginToken(managerIp, username, password, apiVersion){
+        return this._doExternalGet(username, password, managerIp, '/tokens', apiVersion)
             .then((data)=> {
                 if (data.error_code) {
                     return Promise.reject(data);
                 }
 
-                return Promise.resolve({token: data.value, role: data.role, apiVersion, serverVersion});
+                return Promise.resolve({token: data.value, role: data.role, apiVersion});
             })
             .catch((e)=>{
                 console.error(e);
@@ -100,7 +111,18 @@ export default class Auth {
 
     }
 
-    static isLoggedIn(managerData) {
-        return (managerData && managerData.auth && managerData.auth.token);
+    static _getTenants(managerIp, username, password, apiVersion){
+        return this._doExternalGet(username, password, managerIp, '/tenants', apiVersion)
+            .then((data)=> {
+                if (data.error_code) {
+                    return Promise.reject(data);
+                }
+
+                return Promise.resolve({tenants: data});
+            })
+            .catch((e)=>{
+                console.error(e);
+                return Promise.reject(e.message);
+            });
     }
 }
