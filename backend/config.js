@@ -6,6 +6,7 @@ var app = require('../conf/app.json');
 var manager = require('../conf/manager.json');
 var customer = require('../conf/customer.json');
 var widgets = require('../conf/widgets.json');
+var log4jsConfig = require('../conf/log4jsConfig.json');
 var ServerSettings = require('./serverSettings');
 
 var me = null;
@@ -25,7 +26,8 @@ module.exports = {
             app: app,
             manager: manager,
             mode: mode,
-            widgets: widgets
+            widgets: widgets,
+            log4jsConfig: log4jsConfig
         };
 
         if (mode === ServerSettings.MODE_CUSTOMER) {
@@ -42,14 +44,23 @@ module.exports = {
     getForClient: function(mode) {
         var config = this.get(mode);
         // For client only get from app config the relevant part (and not send passwords and shit)
-        config.app = {
-            initialTemplate: config.app.initialTemplate,
-            singleManager: config.app.singleManager,
-            whiteLabel : config.app.whiteLabel
+        var clientConfig = {
+            app: {
+                initialTemplate: config.app.initialTemplate,
+                singleManager: config.app.singleManager,
+                whiteLabel : config.app.whiteLabel
+            },
+            manager: {
+                ip: config.manager.ip
+            },
+            mode: config.mode,
+            widgets: config.widgets
         };
-        config.manager = {
-            ip : config.manager.ip
-        };
-        return config;
+
+        if(config.customer){
+            clientConfig.customer = config.customer;
+        }
+
+        return clientConfig;
     }
 };
