@@ -41,7 +41,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onLogin: (ip,username,password)=> {
             dispatch(login(ip,username,password));
-            //dispatch(push('/'));
         }
     }
 };

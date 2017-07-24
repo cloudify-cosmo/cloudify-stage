@@ -40,10 +40,7 @@ function errorLogin(ip,username,err) {
 
 export function login (ip,username,password) {
     return function (dispatch) {
-
-        // Just to make sure
         dispatch(requestLogin());
-
         return Auth.login(ip,username,password)
                     .then(data => {
                         dispatch(receiveLogin(ip, username, data.role, data.token, data.apiVersion, data.serverVersion, data.tenants));
@@ -52,7 +49,6 @@ export function login (ip,username,password) {
                     .catch(err => dispatch(errorLogin(ip,username,err)));
     }
 }
-
 
 function doLogout(err) {
     return {
