@@ -8,17 +8,12 @@ import Internal from './Internal'
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
 
-import {v4} from 'node-uuid';
 var ReactDOMServer = require('react-dom/server');
-
-import 'angular/angular';
 
 import 'd3';
 import momentImport from 'moment';
 
-import '../../bower_components/cloudify-blueprint-topology/dist/styles/blueprint-topology.css';
-import '../../bower_components/cloudify-blueprint-topology/dist/fonts/gigaspaces/style.css';
-import '../../bower_components/cloudify-blueprint-topology/dist/scripts/blueprint-topology-tpls.js';
+import 'cloudify-blueprint-topology';
 
 import * as BasicComponents from '../components/basic';
 import StageUtils from './stageUtils';

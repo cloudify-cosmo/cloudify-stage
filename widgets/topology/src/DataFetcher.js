@@ -5,7 +5,7 @@
 export default class DataFetcher{
     static fetch(toolbox,blueprintId,deploymentId) {
         if (_.isEmpty(deploymentId) && _.isEmpty(blueprintId)) {
-            return Promise.resolve({});
+            return Promise.resolve({data:{}});
         }
 
         if (deploymentId) {
