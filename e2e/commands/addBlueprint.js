@@ -2,9 +2,14 @@
  * Created by pawelposel on 2017-05-31.
  */
 
-exports.command = function(blueprintName, blueprintYamlFile = 'blueprint.yaml') {
+exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile = 'blueprint.yaml') {
+    let api = this;
+
     if (!blueprintName) {
         blueprintName = this.page.blueprints().props.testBlueprint;
+    }
+    if (!blueprintUrl) {
+        blueprintUrl = this.page.blueprints().props.testBlueprintUrl;
     }
 
     return this.isBlueprintExist(blueprintName, result => {
@@ -27,7 +32,7 @@ exports.command = function(blueprintName, blueprintYamlFile = 'blueprint.yaml') 
                 blueprints.section.uploadModal
                     .waitForElementVisible('@okButton')
                     .setValue('@blueprintName', blueprintName)
-                    .setValue('@blueprintFile', this.page.resources().props.blueprint(blueprintName))
+                    .setValue('@blueprintUrl', [blueprintUrl, api.Keys.TAB])
                     .waitForElementPresent(blueprintYamlFileOptionElement)
                     .selectOptionInDropdown(blueprintYamlFileDropdownSelector, blueprintYamlFile)
                     .clickElement('@okButton');

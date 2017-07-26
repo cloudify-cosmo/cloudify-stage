@@ -13,13 +13,13 @@ module.exports = {
         page.section.managerData
             .waitForElementPresent('@statusIconGreen')
             .clickElement('@version')
-            .assert.containsText('@ip', Config.managerIp)
+            .assert.containsText('@ip', Config.managerVersion)
             .assert.cssClassPresent('@statusIcon','green')
 
         page.waitForElementVisible('@statusesTitle')
             .assert.containsText('@statusesTitle','Server Services Status')
-            .assert.containsText('@statusesName','InfluxDB')
-            .assert.containsText('@statusesDesc','InfluxDB Service');
+            .assert.containsText('@statusesName','Cloudify Composer')
+            .assert.containsText('@statusesDesc','Cloudify Composer Service');
 
         client.end();
     }

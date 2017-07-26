@@ -18,16 +18,13 @@ module.exports = {
     },
 
     'Blueprint upload': function (client) {
-        let blueprintArchiveFilePath = client.page.resources().props.blueprint(client.page.blueprints().props.testBlueprint);
+        let blueprintUrl = client.page.blueprints().props.testBlueprintUrl;
 
         let page = client.page.blueprints();
 
-        page.log('Verification of blueprint archive file...')
-            .assert.equal(fs.existsSync(blueprintArchiveFilePath), true, 'Blueprint archive file exists - ' + blueprintArchiveFilePath);
-
         page.clickElement('@uploadButton');
         page.section.uploadModal
-            .fillIn(blueprintArchiveFilePath, BLUEPRINT_NAME, BLUEPRINT_FILENAME)
+            .fillIn(blueprintUrl, BLUEPRINT_NAME, BLUEPRINT_FILENAME)
             .clickUpload();
         page.section.blueprintsTable
             .checkIfBlueprintPresent(BLUEPRINT_NAME);

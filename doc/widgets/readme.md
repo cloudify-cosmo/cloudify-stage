@@ -671,6 +671,3 @@ For example, a simple render function will look like this:
         return _.template(widget.definition.template)();
     }
 ```
-## Links
-
-* [Components documentation](../components/readme.md)
