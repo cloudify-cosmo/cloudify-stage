@@ -19,6 +19,8 @@ module.exports = {
     },
 
     'Regular user menu': function (client) {
+        // TODO: Test is working only when user 'user1' exists and is associated with at least one tenant.
+        //       To be fixed. Necessary to ensure that 'user1' exists and has at least one tenant assigned.
         client.login(true)
             .page.page().section.userMenu
             .assert.containsText('@userName', 'user1')
