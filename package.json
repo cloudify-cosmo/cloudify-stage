@@ -19,7 +19,6 @@
   "author": "Kinneret Zin",
   "license": "",
   "dependencies": {
-    "angular": "~1.5.8",
     "babel-polyfill": "^6.13.0",
     "blueimp-md5": "^2.7.0",
     "better-console": "^0.2.4",
@@ -89,10 +88,10 @@
     "semantic-ui-daterangepicker": "^1.3.21",
     "semantic-ui-react": "^0.67.1",
     "url-loader": "^0.5.7",
-    "yamljs": "^0.2.8"
+    "yamljs": "^0.2.8",
+    "cloudify-blueprint-topology": "http://gigaspaces-repository-eu.s3.amazonaws.com/cloudify/4.2.0/.dev1-build/cloudify-blueprint-topology-4.2.0-.dev1.tar"
   },
   "devDependencies": {
-    "angular-mocks": "~1.5.8",
     "babel-core": "^6.14.0",
     "babel-eslint": "^7.2.2",
     "babel-loader": "^6.2.5",

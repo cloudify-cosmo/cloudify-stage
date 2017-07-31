@@ -7,6 +7,7 @@
 import jsdom from 'jsdom';
 import _ from 'lodash';
 import $ from 'jquery';
+import d3 from 'd3';
 import chai from 'chai';
 
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
@@ -20,13 +21,7 @@ Object.keys(document.defaultView).forEach((property) => {
 
 global.$ = global.jQuery = global.window.$ = global.window.jQuery = $(window);
 global._ = _;
-
-require('angular/angular');
-require('angular-mocks');
-
-global.angular = window.angular;
-global.inject = global.angular.mock.inject;
-global.ngModule = global.angular.mock.module;
+global.d3 = d3;
 
 chai.use(require('chai-enzyme')());
 chai.use(require('sinon-chai'));
