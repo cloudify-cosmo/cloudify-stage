@@ -60,8 +60,18 @@ export default class ExecuteDeploymentModal extends React.Component {
 
         this.setState({loading: true});
 
+        // Attempt to parse params to json
+        var paramsJson = {};
+        _.map(this.state.params, (param,name) => {
+            paramsJson[name] = Stage.Common.JsonUtils.stringToJson((param));
+        });
+
+        // Note that this.setState() is asynchronous and we cannot be sure that
+        // the state changes before we call doExecute
+        this.setState({params: paramsJson});
+
         var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-        actions.doExecute(this.props.deployment, this.props.workflow, this.state.params).then(()=>{
+        actions.doExecute(this.props.deployment, this.props.workflow, paramsJson).then(()=>{
             this.setState({loading: false, errors: {}});
             this.props.onHide();
             this.props.toolbox.getEventBus().trigger('executions:refresh');

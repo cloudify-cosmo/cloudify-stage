@@ -17,6 +17,17 @@ class JsonUtils {
 
         return _.trim(stringifiedValue, '"');
     }
+
+    // Attempts to parse string to json.
+    // Returns original value if failed
+    static stringToJson(value) {
+        try{
+            return JSON.parse(value);
+        } catch (err) {
+            return value;
+        }
+    }
+
 }
 
 Stage.defineCommon({
