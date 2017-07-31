@@ -7,7 +7,7 @@
 import jsdom from 'jsdom';
 import _ from 'lodash';
 import $ from 'jquery';
-import d3 from "d3";
+import d3 from 'd3';
 import chai from 'chai';
 
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
