@@ -62,18 +62,18 @@ export default class EventsTable extends React.Component {
                            sortAscending={this.props.widget.configuration.sortAscending}
                            className="eventsTable">
 
-                    <DataTable.Column label="" width="40px" show={fieldsToShow.indexOf("Icon") >= 0}/>
-                    <DataTable.Column label="Timestamp" width="10%" show={fieldsToShow.indexOf("Timestamp") >= 0}/>
-                    <DataTable.Column label="Type" show={fieldsToShow.indexOf("Type") >= 0}/>
+                    <DataTable.Column label="" width="40px" show={fieldsToShow.indexOf('Icon') >= 0}/>
+                    <DataTable.Column label="Timestamp" width="10%" show={fieldsToShow.indexOf('Timestamp') >= 0}/>
+                    <DataTable.Column label="Type" show={fieldsToShow.indexOf('Type') >= 0}/>
                     <DataTable.Column label="Blueprint" show={!this.props.data.blueprintId && !this.props.data.deploymentId &&
-                                            !this.props.data.executionId && fieldsToShow.indexOf("Blueprint") >= 0} />
+                                            !this.props.data.executionId && fieldsToShow.indexOf('Blueprint') >= 0} />
                     <DataTable.Column label="Deployment" show={!this.props.data.deploymentId && !this.props.data.executionId &&
-                                            fieldsToShow.indexOf("Deployment") >= 0} />
-                    <DataTable.Column label="Workflow" show={!this.props.data.executionId && fieldsToShow.indexOf("Workflow") >= 0} />
-                    <DataTable.Column label="Operation" show={fieldsToShow.indexOf("Operation") >= 0}/>
-                    <DataTable.Column label="Node Name" show={fieldsToShow.indexOf("Node Name") >= 0}/>
-                    <DataTable.Column label="Node Id" show={fieldsToShow.indexOf("Node Id") >= 0}/>
-                    <DataTable.Column label="Message" show={fieldsToShow.indexOf("Message") >= 0}/>
+                                            fieldsToShow.indexOf('Deployment') >= 0} />
+                    <DataTable.Column label="Workflow" show={!this.props.data.executionId && fieldsToShow.indexOf('Workflow') >= 0} />
+                    <DataTable.Column label="Operation" show={fieldsToShow.indexOf('Operation') >= 0}/>
+                    <DataTable.Column label="Node Name" show={fieldsToShow.indexOf('Node Name') >= 0}/>
+                    <DataTable.Column label="Node Id" show={fieldsToShow.indexOf('Node Id') >= 0}/>
+                    <DataTable.Column label="Message" show={fieldsToShow.indexOf('Message') >= 0}/>
 
                     {
                         this.props.data.items.map((item, index) => {

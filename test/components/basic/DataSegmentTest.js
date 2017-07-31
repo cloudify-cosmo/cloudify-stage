@@ -38,23 +38,23 @@ describe('(Component) DataSegment', () => {
     it('renders no data message if empty', () => {
         wrapper.setProps({totalSize:0});
 
-        expect(wrapper.find(".segmentList .icon.message")).to.have.length(1);
-        expect(wrapper.find(".segmentList .icon.message")).to.have.text('No data available');
-        expect(wrapper.find(".segmentList .gridPagination")).to.have.length(0);
+        expect(wrapper.find('.segmentList .icon.message')).to.have.length(1);
+        expect(wrapper.find('.segmentList .icon.message')).to.have.text('No data available');
+        expect(wrapper.find('.segmentList .gridPagination')).to.have.length(0);
     });
 
     it('renders data rows', () => {
         wrapper.setProps({totalSize:5});
-        expect(wrapper.find(".segmentList .segment")).to.have.length(5);
+        expect(wrapper.find('.segmentList .segment')).to.have.length(5);
     });
 
     it('renders selected row', () => {
-        expect(wrapper.find(".segmentList .secondary.inverted.segment")).to.have.length(1);
-        expect(wrapper.find(".segmentList .secondary.inverted.segment").childAt(0)).to.have.text('Data 3');
+        expect(wrapper.find('.segmentList .secondary.inverted.segment')).to.have.length(1);
+        expect(wrapper.find('.segmentList .secondary.inverted.segment').childAt(0)).to.have.text('Data 3');
     });
 
     it('clicks selected row', () => {
-        wrapper.find(".segmentList .secondary.inverted.segment").simulate('click');
+        wrapper.find('.segmentList .secondary.inverted.segment').simulate('click');
         expect(selectSpy).to.have.been.calledOnce;
         selectSpy.reset();
     });

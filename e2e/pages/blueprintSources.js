@@ -28,8 +28,8 @@ module.exports = {
         fullScreen: '.ui.dimmer .overlay code span.hljs-attr:nth-child(1)'
     },
     props: {
-        widgetId: "blueprintSources",
-        blueprintYaml: "blueprint.yaml",
-        blueprintSnippet: "tosca_definitions_version:"
+        widgetId: 'blueprintSources',
+        blueprintYaml: 'blueprint.yaml',
+        blueprintSnippet: 'tosca_definitions_version:'
     }
 };

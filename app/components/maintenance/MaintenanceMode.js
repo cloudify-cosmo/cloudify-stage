@@ -1,10 +1,10 @@
 /**
  * Created by pposel on 16/02/2017.
  */
-import React, {Component, PropTypes} from "react";
-import Consts from "../../utils/consts";
-import {Modal, Icon, ErrorMessage, DataTable, Checkmark, ApproveButton, CancelButton} from "../basic/index";
-import StageUtils from "../../utils/stageUtils";
+import React, {Component, PropTypes} from 'react';
+import Consts from '../../utils/consts';
+import {Modal, Icon, ErrorMessage, DataTable, Checkmark, ApproveButton, CancelButton} from '../basic/index';
+import StageUtils from '../../utils/stageUtils';
 
 const POLLING_INTERVAL = 2000;
 
@@ -19,7 +19,7 @@ export default class MaintenanceMode extends Component {
 
     static initialState = {
         loading: false,
-        error: "",
+        error: '',
     }
 
     static propTypes = {
@@ -42,7 +42,7 @@ export default class MaintenanceMode extends Component {
 
             this._loadPendingExecutions();
         } else if (this.props.show && !nextProps.show) {
-            console.log("Stop polling maintenance data");
+            console.log('Stop polling maintenance data');
             this._stopPolling();
             this.props.onClose();
         }
@@ -55,7 +55,7 @@ export default class MaintenanceMode extends Component {
 
         this.fetchDataPromise = StageUtils.makeCancelable(this.props.onFetchActiveExecutions());
         this.fetchDataPromise.promise.then((data)=>{
-            console.log("Maintenance data fetched");
+            console.log('Maintenance data fetched');
             this._startPolling();
         }).catch((err)=>{
             this.setState({error:err.message});
@@ -100,7 +100,7 @@ export default class MaintenanceMode extends Component {
 
     _activate() {
         this.props.onMaintenanceActivate().then(()=>{
-            this.setState({error:"", loading:false});
+            this.setState({error:'', loading:false});
             this.props.onHide();
         }).catch((err)=>{
             this.setState({error:err.message, loading:false});
@@ -109,7 +109,7 @@ export default class MaintenanceMode extends Component {
 
     _deactivate() {
         this.props.onMaintenanceDeactivate().then(()=>{
-            this.setState({error:"", loading:false});
+            this.setState({error:'', loading:false});
             this.props.onHide();
         }).catch((err)=>{
             this.setState({error:err.message, loading:false});
@@ -119,7 +119,7 @@ export default class MaintenanceMode extends Component {
     _cancelExecution(execution, action) {
         this.props.onCancelExecution(execution, action).then(() => {
             this._loadPendingExecutions();
-            this.setState({error:""});
+            this.setState({error:''});
         }).catch((err) => {
             this.setState({error:err.message});
         });
@@ -172,7 +172,7 @@ export default class MaintenanceMode extends Component {
                             </DataTable>
                         }
 
-                    </Modal.Content> : ""
+                    </Modal.Content> : ''
                 }
 
 

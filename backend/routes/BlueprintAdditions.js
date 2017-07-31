@@ -22,14 +22,14 @@ router.get('/image/:blueprint',function (req, res, next) {
         .findOne({ where: {blueprintId: req.params.blueprint} }).then(function(additions) {
             if (additions) {
                 if (additions.image) {
-                    res.contentType("image/*").send(additions.image);
+                    res.contentType('image/*').send(additions.image);
                 } else if (additions.imageUrl) {
                     res.redirect(additions.imageUrl);
                 } else {
-                    res.contentType("image/png").sendFile(path.resolve(__dirname, "../images/logo.png"));
+                    res.contentType('image/png').sendFile(path.resolve(__dirname, '../images/logo.png'));
                 }
             } else {
-                res.contentType("image/png").sendFile(path.resolve(__dirname, "../images/logo.png"));
+                res.contentType('image/png').sendFile(path.resolve(__dirname, '../images/logo.png'));
             }
         })
         .catch(next);
@@ -41,7 +41,7 @@ router.post('/image/:blueprint',AuthMiddleware,function (req, res, next) {
         .spread(function(blueprintAdditions, created) {
             blueprintAdditions.update({ image: _.isEmpty(req.body)?null:req.body, imageUrl: req.query.imageUrl},
                 {fields: ['image', 'imageUrl']}).then(function() {
-                    res.end(JSON.stringify({status:"ok"}));
+                    res.end(JSON.stringify({status:'ok'}));
             })
         })
         .catch(next);
@@ -50,7 +50,7 @@ router.post('/image/:blueprint',AuthMiddleware,function (req, res, next) {
 router.delete('/image/:blueprint',AuthMiddleware,function (req, res, next) {
     db.BlueprintAdditions
         .destroy({ where: {blueprintId: req.params.blueprint} }).then(function(deletedRecord) {
-            res.end(JSON.stringify({status:"ok"}));
+            res.end(JSON.stringify({status:'ok'}));
         })
         .catch(next);
 });

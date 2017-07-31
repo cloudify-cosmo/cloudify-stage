@@ -59,7 +59,7 @@ class BlueprintActions {
 
         var params = {imageUrl};
         if (image) {
-            return this.toolbox.getInternal().doUpload(`/ba/image/${blueprintId}`, params, image, "post");
+            return this.toolbox.getInternal().doUpload(`/ba/image/${blueprintId}`, params, image, 'post');
         } else {
             return this.toolbox.getInternal().doPost(`/ba/image/${blueprintId}`, params);
         }

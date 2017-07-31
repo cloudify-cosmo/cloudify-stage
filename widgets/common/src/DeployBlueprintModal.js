@@ -59,11 +59,11 @@ export default class DeployBlueprintModal extends React.Component {
         const EMPTY_STRING = '""';
 
         if (!this.props.blueprint) {
-            errors["error"] = "Blueprint not selected";
+            errors['error'] = 'Blueprint not selected';
         }
 
         if (_.isEmpty(this.state.deploymentName)) {
-            errors["deploymentName"]="Please provide deployment name";
+            errors['deploymentName']='Please provide deployment name';
         }
 
         let deploymentInputs = {};

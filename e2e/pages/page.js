@@ -33,8 +33,8 @@ module.exports = {
                 editModeMenuItem : '#editModeMenuItem'
             },
             props: {
-                editModeLabel: "Edit Mode",
-                exitModeLabel: "Exit Edit Mode"
+                editModeLabel: 'Edit Mode',
+                exitModeLabel: 'Exit Edit Mode'
             }
         },
         sidebar: {
@@ -45,7 +45,7 @@ module.exports = {
                 lastPageRemoveButton : '.pages .item:last-child .pageRemoveButton'
             },
             props: {
-                lastPageLabel: "Page_0"
+                lastPageLabel: 'Page_0'
             }
         },
         page: {

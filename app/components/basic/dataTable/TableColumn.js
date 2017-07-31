@@ -32,7 +32,7 @@ export default class TableColumn extends Component {
     };
 
     static defaultProps = {
-        width: "",
+        width: '',
         show: true
     };
 
@@ -49,11 +49,11 @@ export default class TableColumn extends Component {
     }
 
     _className() {
-        let cssClass = this.props.name ? "" : "disabled";
+        let cssClass = this.props.name ? '' : 'disabled';
 
         if (this.context.getSortColumn() === this.props.name) {
-            cssClass += " sorted";
-            cssClass += this.context.isSortAscending() ? " ascending" : " descending ";
+            cssClass += ' sorted';
+            cssClass += this.context.isSortAscending() ? ' ascending' : ' descending ';
         }
 
         return cssClass;

@@ -15,10 +15,10 @@ export default class CreateModal extends React.Component {
     static initialState = {
         open: false,
         loading: false,
-        username: "",
-        password: "",
-        confirmPassword: "",
-        role: "",
+        username: '',
+        password: '',
+        confirmPassword: '',
+        role: '',
         errors: {}
     }
 
@@ -42,24 +42,24 @@ export default class CreateModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.username)) {
-            errors["username"]="Please provide username";
+            errors['username']='Please provide username';
         }
 
         if (_.isEmpty(this.state.password)) {
-            errors["password"]="Please provide user password";
+            errors['password']='Please provide user password';
         }
 
         if (_.isEmpty(this.state.confirmPassword)) {
-            errors["confirmPassword"]="Please provide password confirmation";
+            errors['confirmPassword']='Please provide password confirmation';
         }
 
         if (!_.isEmpty(this.state.password) && !_.isEmpty(this.state.confirmPassword) &&
             this.state.password !== this.state.confirmPassword) {
-            errors["confirmPassword"]="Passwords do not match";
+            errors['confirmPassword']='Passwords do not match';
         }
 
         if (_.isEmpty(this.state.role)) {
-            errors["role"]="Please provide user role";
+            errors['role']='Please provide user role';
         }
 
         if (!_.isEmpty(errors)) {

@@ -18,7 +18,7 @@ module.exports = (function() {
     function saveMultipartData(req, targetDir, multipartId) {
         var storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                logger.debug("saving file on disk", file);
+                logger.debug('saving file on disk', file);
 
                 var archiveFolder = _.isFunction(targetDir) ? targetDir(file.originalname) : targetDir;
 
@@ -40,7 +40,7 @@ module.exports = (function() {
                 if (err) {
                     reject(err);
                 } else {
-                    logger.debug("archive saved from multipart data, archiveFolder:", req.archiveFolder, "archiveFile:", req.archiveFile);
+                    logger.debug('archive saved from multipart data, archiveFolder:', req.archiveFolder, 'archiveFile:', req.archiveFile);
                     resolve({archiveFolder: req.archiveFolder, archiveFile: req.archiveFile});
                 }
             })
@@ -78,7 +78,7 @@ module.exports = (function() {
                         if (archiveExt) {
                             archiveFile = details.base;
                         } else {
-                            return reject("Unable to determine filename from url " + archiveUrl);
+                            return reject('Unable to determine filename from url ' + archiveUrl);
                         }
 
                         logger.debug('filename build from url', archiveFile);
@@ -96,7 +96,7 @@ module.exports = (function() {
                     response.pipe(fs.createWriteStream(archivePath)
                         .on('error', reject)
                         .on('close', function () {
-                            logger.debug("archive saved, archivePath:", archivePath);
+                            logger.debug('archive saved, archivePath:', archivePath);
                             resolve({archiveFolder, archiveFile, archivePath});
                         }));
                 });
@@ -112,7 +112,7 @@ module.exports = (function() {
         let regexp = /filename=([^;]*)/g
         let match = regexp.exec(contentDisposition);
         if (!match) {
-            return "";
+            return '';
         }
 
         return match[1];
@@ -159,7 +159,7 @@ module.exports = (function() {
                 if (exists) {
                     fs.remove(tempPath, err => {
                         if (err) {
-                            console.error("Error removing temporary path ", tempPath);
+                            console.error('Error removing temporary path ', tempPath);
                             reject();
                         } else {
                             resolve();

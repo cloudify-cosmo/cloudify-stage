@@ -8,7 +8,7 @@ export default class {
     }
 
     doGetBlueprints() {
-        return this.toolbox.getManager().doGet(`/blueprints?_include=id`);
+        return this.toolbox.getManager().doGet('/blueprints?_include=id');
     }
 
     doGetFullBlueprintData(blueprintId) {

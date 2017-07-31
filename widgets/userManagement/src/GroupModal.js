@@ -58,7 +58,7 @@ export default class GroupModal extends React.Component {
     render() {
         var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
 
-        var user = Object.assign({},{username:""}, this.props.user);
+        var user = Object.assign({},{username:''}, this.props.user);
         var groups = Object.assign({},{items:[]}, this.props.groups);
 
         var options = _.map(groups.items, item => { return {text: item.name, value: item.name, key: item.name} });

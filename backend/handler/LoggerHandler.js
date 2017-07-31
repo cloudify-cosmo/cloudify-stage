@@ -25,11 +25,11 @@ module.exports = (function() {
 
         try {
             _.forEach(logDirectories, function (logDirectory) {
-                console.log("Setting up logs directory:", logDirectory);
+                console.log('Setting up logs directory:', logDirectory);
                 mkdirp.sync(logDirectory)
             });
         } catch (e) {
-            console.error("Could not set up directory, error was:", e);
+            console.error('Could not set up directory, error was:', e);
             process.exit(1);
         }
     }

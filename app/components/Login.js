@@ -72,14 +72,14 @@ export default class Login extends Component {
 
                         {
                             this.props.loginError ?
-                                <div className="ui error message tiny" style={{"display":"block"}}>
+                                <div className="ui error message tiny" style={{'display':'block'}}>
                                     <p>{this.props.loginError}</p>
                                 </div>
                                 :
                                 ''
                         }
 
-                        <button className={"ui submit huge button " + (this.props.isLoggingIn ? 'loading disabled' : '')} type="submit" disabled={this.props.isLoggingIn}>Login</button>
+                        <button className={'ui submit huge button ' + (this.props.isLoggingIn ? 'loading disabled' : '')} type="submit" disabled={this.props.isLoggingIn}>Login</button>
                     </form>
 
                 </div>

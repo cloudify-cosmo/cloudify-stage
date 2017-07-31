@@ -202,9 +202,9 @@ module.exports = {
         expandWidgetButton: 'div.blueprintsWidget .widgetViewButtons i.expand'
     },
     props: {
-        widgetId: "blueprints",
-        testBlueprint: "blueprint",
-        testBlueprintUrl: "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip"
+        widgetId: 'blueprints',
+        testBlueprint: 'blueprint',
+        testBlueprintUrl: 'https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip'
     },
 
     commands: [

@@ -8,7 +8,7 @@ exports.command = function(deploymentName) {
             var deploymentActionButtons = this.page.deploymentActionButtons();
 
             this.isWidgetPresent(deploymentActionButtons.props.widgetId, result => {
-                this.log("removing", deploymentName, "deployment");
+                this.log('removing', deploymentName, 'deployment');
 
                 if (!result.value) {
                     this.moveToEditMode()
@@ -29,10 +29,10 @@ exports.command = function(deploymentName) {
 
                 this.page.filter()
                     .waitForDeploymentNotPresent(deploymentName)
-                    .selectOptionInDropdown('@deploymentSearch', "");
+                    .selectOptionInDropdown('@deploymentSearch', '');
             });
         } else {
-            this.log("not removing", deploymentName, "deployment, it doesn't exist");
+            this.log('not removing', deploymentName, "deployment, it doesn't exist");
         }
     });
 };

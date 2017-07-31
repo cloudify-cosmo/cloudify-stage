@@ -65,11 +65,11 @@ export default class Topology extends React.Component {
     _setStyle() {
         // Set the container's size (its only available after loading the template)
         $(this.refs.topologyContainer).find('.topologyContainer').css({
-            "position": "absolute",
-            "left": "10px",
-            "top": "10px",
-            "bottom": "10px",
-            "right": "10px"
+            'position': 'absolute',
+            'left': '10px',
+            'top': '10px',
+            'bottom': '10px',
+            'right': '10px'
         });
 
         var loadingHtml = Stage.ComponentToHtmlString(<Stage.Basic.Loading/>);

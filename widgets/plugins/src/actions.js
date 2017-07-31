@@ -21,9 +21,9 @@ export default class {
         }
 
         if (file) {
-            return this.toolbox.getManager().doUpload(`/plugins`, params, file, 'post');
+            return this.toolbox.getManager().doUpload('/plugins', params, file, 'post');
         } else {
-            return this.toolbox.getManager().doPost(`/plugins`, params);
+            return this.toolbox.getManager().doPost('/plugins', params);
         }
     }
 

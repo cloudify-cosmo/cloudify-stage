@@ -1,9 +1,9 @@
 
 const LOG_LEVELS = ['debug', 'info', 'warning', 'error', 'critical'];
 
-const EVENT_TYPE = "cloudify_event";
-const LOG_TYPE = "cloudify_log";
-const TYPES = [{text: "", value: ""}, {text: "Logs", value: LOG_TYPE}, {text: "Events", value: EVENT_TYPE}];
+const EVENT_TYPE = 'cloudify_event';
+const LOG_TYPE = 'cloudify_log';
+const TYPES = [{text: '', value: ''}, {text: 'Logs', value: LOG_TYPE}, {text: 'Events', value: EVENT_TYPE}];
 
 export default class EventFilter extends React.Component {
 
@@ -21,11 +21,11 @@ export default class EventFilter extends React.Component {
             blueprintId: [],
             deploymentId: [],
             eventType: [],
-            timeRange: "",
-            timeStart: "",
-            timeEnd: "",
-            type: "",
-            messageText: "",
+            timeRange: '',
+            timeStart: '',
+            timeEnd: '',
+            type: '',
+            messageText: '',
             logLevel: []
         }
     }

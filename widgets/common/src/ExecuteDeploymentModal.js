@@ -104,7 +104,7 @@ export default class ExecuteDeploymentModal extends React.Component {
     render() {
         var {Modal, Icon, Form, Message, ApproveButton, CancelButton, GenericField} = Stage.Basic;
 
-        var workflow = Object.assign({},{name:"", parameters:[]}, this.props.workflow);
+        var workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
         return (
             <Modal open={this.props.open} className="executeWorkflowModal">
                 <Modal.Header>

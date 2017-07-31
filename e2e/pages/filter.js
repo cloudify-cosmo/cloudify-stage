@@ -9,11 +9,11 @@ module.exports = {
     },
     commands: [{
         isBlueprintPresent: function(blueprint, callback) {
-            return this.waitForElementPresent(".filterWidget #blueprintFilterField select")
+            return this.waitForElementPresent('.filterWidget #blueprintFilterField select')
                        .isPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]', callback);
         },
         isDeploymentPresent: function(deployment, callback) {
-            return this.waitForElementPresent(".filterWidget #deploymentFilterField select")
+            return this.waitForElementPresent('.filterWidget #deploymentFilterField select')
                        .isPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]', callback);
         },
         waitForBlueprintPresent: function(blueprint) {
@@ -30,6 +30,6 @@ module.exports = {
         }
     }],
     props: {
-        widgetId: "filter"
+        widgetId: 'filter'
     }
 };

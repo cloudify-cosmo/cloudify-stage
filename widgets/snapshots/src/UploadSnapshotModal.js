@@ -14,8 +14,8 @@ export default class UploadModal extends React.Component {
 
     static initialState = {
         loading: false,
-        snapshotUrl: "",
-        snapshotId: "",
+        snapshotUrl: '',
+        snapshotId: '',
         privateResource: false,
         errors: {}
     }
@@ -43,15 +43,15 @@ export default class UploadModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.snapshotUrl) && !snapshotFile) {
-            errors["snapshotUrl"]="Please select snapshot file or url";
+            errors['snapshotUrl']='Please select snapshot file or url';
         }
 
-        if (!_.isEmpty(this.state.pluginUrl) && pluginFile) {
-            errors["snapshotUrl"]="Either snapshot file or url must be selected, not both";
+        if (!_.isEmpty(this.state.snapshotUrl) && snapshotFile) {
+            errors['snapshotUrl']='Either snapshot file or url must be selected, not both';
         }
 
         if (_.isEmpty(this.state.snapshotId)) {
-            errors["snapshotId"]="Please provide snapshot id";
+            errors['snapshotId']='Please provide snapshot id';
         }
 
         if (!_.isEmpty(errors)) {
@@ -94,7 +94,7 @@ export default class UploadModal extends React.Component {
                             <Form.Field width="9" error={this.state.errors.snapshotUrl}>
                                 <Form.Input label="URL" placeholder="Enter snapshot url" name="snapshotUrl"
                                             value={this.state.snapshotUrl} onChange={this._handleInputChange.bind(this)}
-                                            onBlur={()=>this.state.snapshotUrl ? this.refs.snapshotFile.reset() : ""}/>
+                                            onBlur={()=>this.state.snapshotUrl ? this.refs.snapshotFile.reset() : ''}/>
 
                             </Form.Field>
                             <Form.Field width="1" style={{position:'relative'}}>
@@ -104,7 +104,7 @@ export default class UploadModal extends React.Component {
                             </Form.Field>
                             <Form.Field width="8" error={this.state.errors.snapshotUrl}>
                                 <Form.File placeholder="Select snapshot file" name="snapshotFile" ref="snapshotFile"
-                                           onChange={(file)=>file ? this.setState({snapshotUrl: ""}) : ""}/>
+                                           onChange={(file)=>file ? this.setState({snapshotUrl: ''}) : ''}/>
 
                             </Form.Field>
                         </Form.Group>

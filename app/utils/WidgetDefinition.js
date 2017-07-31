@@ -10,7 +10,7 @@ export default class WidgetDefinition {
         this.showBorder = true;
         this.initialWidth = 3;
         this.initialHeight = 12;
-        this.color = "blue";
+        this.color = 'blue';
         this.initialConfiguration = [];
         this.hasStyle = false;
         this.isAdmin = false;

@@ -58,7 +58,7 @@ export default class Overlay extends Component {
     };
 
     static defaultProps = {
-        className: "large"
+        className: 'large'
     };
 
     componentWillUnmount() {
@@ -73,7 +73,7 @@ export default class Overlay extends Component {
             .modal({observeChanges: true,
                     onShow: ()=>$('body').css({overflow: 'hidden'}),
                     onHide: ()=>$('body').css({overflow: 'inherit'})
-            }).modal("show");
+            }).modal('show');
     }
 
     render() {

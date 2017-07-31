@@ -24,7 +24,7 @@ function shadeColor(color, percent) {
     var p=percent<0?percent*-1:percent;
     var R=num>>16,G=num>>8&0x00FF,B=num&0x0000FF; // extract the RGB
     var newR = Math.round((t-R)*p)+R,newG = Math.round((t-G)*p)+G,newB = Math.round((t-B)*p)+B;
-    return "#"+(0x1000000+(newR)*0x10000+(newG)*0x100+(newB)).toString(16).slice(1);
+    return '#'+(0x1000000+(newR)*0x10000+(newG)*0x100+(newB)).toString(16).slice(1);
 }
 
 router.get('/', function(req, res, next) {
@@ -40,7 +40,7 @@ router.get('/', function(req, res, next) {
         sidebarTextColor: whiteLabel.enabled && whiteLabel.sidebarTextColor || DEFAULT_SIDEBAR_TEXT_COLOR
     });
 
-    res.header("content-type", "text/css");
+    res.header('content-type', 'text/css');
     res.send(stylesheet);
 });
 

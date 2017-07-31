@@ -15,8 +15,8 @@ export default class CreateModal extends React.Component {
     static initialState = {
         open: false,
         loading: false,
-        groupName: "",
-        ldapGroup: "",
+        groupName: '',
+        ldapGroup: '',
         errors: {}
     }
 

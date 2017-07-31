@@ -53,7 +53,7 @@ export default class extends React.Component{
                                 </Grid.Row>
 
                                 <Grid.Column width="16">
-                                    <div style={{height:"30px"}}></div>
+                                    <div style={{height:'30px'}}></div>
                                 </Grid.Column>
                             </Grid>
 

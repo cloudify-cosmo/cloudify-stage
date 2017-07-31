@@ -13,7 +13,7 @@ export default class extends React.Component {
 
         this.state = {
             error: null,
-            modalType: "",
+            modalType: '',
             showModal: false,
             deployment: {},
             workflow: {}

@@ -150,8 +150,8 @@ export default class Form extends Component {
             value = parseInt(field.value);
 
         if (_.isEmpty(name)) {
-            console.error("Required name attribute is not provided!", field);
-            throw "Required name attribute is not provided!";
+            console.error('Required name attribute is not provided!', field);
+            throw 'Required name attribute is not provided!';
         }
 
         return {[name]: value};
@@ -182,7 +182,7 @@ export default class Form extends Component {
 
                 <ErrorMessage header="Errors in the form" error={errors} onDismiss={this.props.onErrorsDismiss}/>
 
-                <input type='submit' name="submitFormBtn" style={{"display": "none"}} ref='submitFormBtn'/>
+                <input type='submit' name="submitFormBtn" style={{'display': 'none'}} ref='submitFormBtn'/>
             </FormSemanticUiReact>
         );
     }

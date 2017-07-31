@@ -3,5 +3,5 @@
  */
 
 exports.command = function(widgetId, callback) {
-    return this.isPresent('.widget.' + widgetId + "Widget", callback);
+    return this.isPresent('.widget.' + widgetId + 'Widget', callback);
 };

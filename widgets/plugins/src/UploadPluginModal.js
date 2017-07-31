@@ -14,7 +14,7 @@ export default class UploadModal extends React.Component {
 
     static initialState = {
         loading: false,
-        pluginUrl: "",
+        pluginUrl: '',
         errors: {},
         privateResource: false
     }
@@ -41,11 +41,11 @@ export default class UploadModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.pluginUrl) && !pluginFile) {
-            errors["pluginUrl"]="Please select plugin file or url";
+            errors['pluginUrl']='Please select plugin file or url';
         }
 
         if (!_.isEmpty(this.state.pluginUrl) && pluginFile) {
-            errors["pluginUrl"]="Either plugin file or url must be selected, not both";
+            errors['pluginUrl']='Either plugin file or url must be selected, not both';
         }
 
         if (!_.isEmpty(errors)) {
@@ -89,7 +89,7 @@ export default class UploadModal extends React.Component {
                             <Form.Field width="9" error={this.state.errors.pluginUrl}>
                                 <Form.Input label="URL" placeholder="Enter plugin url" name="pluginUrl"
                                             value={this.state.pluginUrl} onChange={this._handleInputChange.bind(this)}
-                                            onBlur={()=>this.state.pluginUrl ? this.refs.pluginFile.reset() : ""}/>
+                                            onBlur={()=>this.state.pluginUrl ? this.refs.pluginFile.reset() : ''}/>
                             </Form.Field>
                             <Form.Field width="1" style={{position:'relative'}}>
                                 <div className="ui vertical divider">
@@ -98,7 +98,7 @@ export default class UploadModal extends React.Component {
                             </Form.Field>
                             <Form.Field width="8" error={this.state.errors.pluginUrl}>
                                 <Form.File placeholder="Select plugin file" name="pluginFile" ref="pluginFile"
-                                           onChange={(file)=>file ? this.setState({pluginUrl: ""}) : ""}/>
+                                           onChange={(file)=>file ? this.setState({pluginUrl: ''}) : ''}/>
 
                             </Form.Field>
                         </Form.Group>

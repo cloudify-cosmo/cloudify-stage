@@ -11,7 +11,7 @@ module.exports = {
 
     'No blueprint selected': function (client) {
         client.page.blueprintInfo().section.noData
-            .assert.containsText('@message', "No blueprint selected");
+            .assert.containsText('@message', 'No blueprint selected');
     },
 
     'Show blueprint info': function (client) {

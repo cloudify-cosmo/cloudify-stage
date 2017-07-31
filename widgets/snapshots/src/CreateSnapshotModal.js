@@ -14,7 +14,7 @@ export default class CreateModal extends React.Component {
 
     static initialState = {
         loading: false,
-        snapshotId: "",
+        snapshotId: '',
         includeMetrics: false,
         includeCredentials: false,
         privateResource: false,
@@ -41,11 +41,11 @@ export default class CreateModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.snapshotId)) {
-            errors["snapshotId"]="Please provide snapshot id";
+            errors['snapshotId']='Please provide snapshot id';
         } else {
             const URL_SAFE_CHARACTERS_RE = /^[0-9a-zA-Z\$\-\_\.\+\!\*\'\(\)\,]+$/;
             if (!URL_SAFE_CHARACTERS_RE.test(this.state.snapshotId)) {
-                errors["snapshotId"] = "Please use safe characters. Letters, digits and the following " +
+                errors['snapshotId'] = 'Please use safe characters. Letters, digits and the following ' +
                                        "special characters $-_.+!*'(), are allowed";
             }
         }

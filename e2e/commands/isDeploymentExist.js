@@ -12,7 +12,7 @@ exports.command = function(deploymentName, callback) {
 
         this.page.filter()
             .isDeploymentPresent(deploymentName, result => {
-                this.log("does deployment", deploymentName, "exist:", result.value)
+                this.log('does deployment', deploymentName, 'exist:', result.value)
 
                 if (callback) {
                     callback(result);

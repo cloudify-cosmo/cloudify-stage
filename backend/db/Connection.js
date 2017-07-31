@@ -4,8 +4,8 @@
 var config = require('../config').get();
 var Sequelize = require('sequelize');
 var _ = require('lodash');
-var fs        = require("fs");
-var path      = require("path");
+var fs        = require('fs');
+var path      = require('path');
 
 var logger = require('log4js').getLogger('DBConnection');
 
@@ -30,7 +30,7 @@ var db        = {};
 fs
     .readdirSync(__dirname)
     .filter(function(file) {
-        return (file.indexOf(".") !== 0) && (file !== "Connection.js");
+        return (file.indexOf('.') !== 0) && (file !== 'Connection.js');
     })
     .forEach(function(file) {
         var model = sequelize.import(path.join(__dirname, file));

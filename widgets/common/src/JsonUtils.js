@@ -5,7 +5,7 @@
 class JsonUtils {
     static stringify(value, indented = false) {
         if (_.isEmpty(value)) {
-            return "";
+            return '';
         }
 
         let stringifiedValue = value;

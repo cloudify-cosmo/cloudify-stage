@@ -25,37 +25,37 @@ describe('(Component) Pagination', () => {
         wrapper.setProps({totalSize:10});
         wrapper.setProps({pageSize:5});
 
-        expect(wrapper.find(".gridPagination .dropdown .text")).to.have.text('5');
-        let dropdownText = wrapper.find(".gridPagination select").text();
-        let infoText = wrapper.find(".gridPagination").childAt(0).text();
+        expect(wrapper.find('.gridPagination .dropdown .text')).to.have.text('5');
+        let dropdownText = wrapper.find('.gridPagination select').text();
+        let infoText = wrapper.find('.gridPagination').childAt(0).text();
 
         //remove concatenated options values either from <select> and corresponding <divs> elements
-        infoText = infoText.replace(dropdownText, "").replace(dropdownText, "");
+        infoText = infoText.replace(dropdownText, '').replace(dropdownText, '');
 
-        expect(infoText.replace(dropdownText, "").replace(dropdownText, "")).to.be.equal("Page size: 5  1 to 5 of 10 entries");
+        expect(infoText.replace(dropdownText, '').replace(dropdownText, '')).to.be.equal('Page size: 5  1 to 5 of 10 entries');
     });
 
     it('changes page size', (done) => {
         var fetchSpy = sinon.spy(()=>done());
         wrapper.setProps({fetchData:fetchSpy});
 
-        $(".gridPagination .selection.dropdown").dropdown("set value", "4");
+        $('.gridPagination .selection.dropdown').dropdown('set value', '4');
         expect(fetchSpy).to.have.been.calledOnce;
         sinon.assert.calledWith(fetchSpy, {currentPage: 1, pageSize: 4});
-        expect(wrapper.find(".gridPagination .dropdown .text")).to.have.text('4');
+        expect(wrapper.find('.gridPagination .dropdown .text')).to.have.text('4');
         fetchSpy.reset();
     });
 
     it('tests paginator for single page', () => {
         wrapper.setProps({totalSize:5});
-        expect(wrapper.find(".gridPagination")).to.have.length(0);
+        expect(wrapper.find('.gridPagination')).to.have.length(0);
         wrapper.setProps({totalSize:7});
-        expect(wrapper.find(".gridPagination")).to.have.length(1);
+        expect(wrapper.find('.gridPagination')).to.have.length(1);
     });
 
     it('tests paginator for pages count equals to default number of pages', () => {
         wrapper.setProps({totalSize:25});
-        const pagination = wrapper.find(".pagination");
+        const pagination = wrapper.find('.pagination');
 
         const page0 = pagination.childAt(0);
         expect(page0).to.have.className('icon');
@@ -75,7 +75,7 @@ describe('(Component) Pagination', () => {
     it('tests paginator for more then default number of pages', () => {
         wrapper.setProps({totalSize:36});
 
-        const pagination = wrapper.find(".pagination");
+        const pagination = wrapper.find('.pagination');
 
         const page0 = pagination.childAt(0);
         expect(page0).to.have.className('icon');
@@ -100,7 +100,7 @@ describe('(Component) Pagination', () => {
         var fetchSpy = sinon.spy(()=>done());
         wrapper.setProps({fetchData:fetchSpy});
 
-        const pagination = wrapper.find(".pagination");
+        const pagination = wrapper.find('.pagination');
         pagination.childAt(2).simulate('click');
         expect(fetchSpy).to.have.been.calledOnce;
         sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 2, pageSize: 5}});
@@ -133,7 +133,7 @@ describe('(Component) Pagination', () => {
         var fetchSpy = sinon.spy(()=>done());
         wrapper.setProps({fetchData:fetchSpy});
 
-        const pagination = wrapper.find(".pagination");
+        const pagination = wrapper.find('.pagination');
 
         pagination.childAt(7).simulate('click');
         expect(fetchSpy).to.have.been.calledOnce;
@@ -168,7 +168,7 @@ describe('(Component) Pagination', () => {
         var fetchSpy = sinon.spy(()=>done());
         wrapper.setProps({fetchData:fetchSpy, totalSize:36});
 
-        const pagination = wrapper.find(".pagination");
+        const pagination = wrapper.find('.pagination');
 
         const page4 = pagination.childAt(4);
         page4.simulate('click');

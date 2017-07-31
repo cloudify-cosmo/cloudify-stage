@@ -11,7 +11,7 @@ exports.command = function(deploymentName, inputs, blueprintName) {
         if (!result.value) {
             var blueprintActionButtons = this.page.blueprintActionButtons();
             this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
-                this.log("deploying", blueprintName, "blueprint");
+                this.log('deploying', blueprintName, 'blueprint');
 
                 if (!result.value) {
                     this.moveToEditMode()
@@ -36,7 +36,7 @@ exports.command = function(deploymentName, inputs, blueprintName) {
                     .waitForDeploymentPresent(deploymentName);
             });
         } else {
-            this.log("not deploying", blueprintName, "blueprint,", deploymentName, "deployment already exists");
+            this.log('not deploying', blueprintName, 'blueprint,', deploymentName, 'deployment already exists');
         }
     });
 };

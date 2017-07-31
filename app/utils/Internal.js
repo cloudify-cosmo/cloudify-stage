@@ -20,7 +20,7 @@ export default class Internal extends External {
 
         var auth = this._data.auth || {};
         if (auth.isSecured && auth.token) {
-            headers["Authentication-Token"] = auth.token;
+            headers['Authentication-Token'] = auth.token;
         }
 
         return headers;

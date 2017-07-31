@@ -19,7 +19,7 @@ var ServerSettings = {
         };
 
         var displayUsage = ()=>{
-            logger.info('Usage: server.js -mode ['+MODE_MAIN + '|' +MODE_CUSTOMER + ']');
+            logger.info('Usage: server.js -mode ['+this.MODE_MAIN + '|' +this.MODE_CUSTOMER + ']');
             process.exit(0);
         };
 

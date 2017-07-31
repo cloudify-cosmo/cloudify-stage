@@ -14,8 +14,8 @@ export default class PasswordModal extends React.Component {
 
     static initialState = {
         loading: false,
-        password: "",
-        confirmPassword: "",
+        password: '',
+        confirmPassword: '',
         errors: {}
     }
 
@@ -39,16 +39,16 @@ export default class PasswordModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.password)) {
-            errors["password"]="Please provide user password";
+            errors['password']='Please provide user password';
         }
 
         if (_.isEmpty(this.state.confirmPassword)) {
-            errors["confirmPassword"]="Please provide password confirmation";
+            errors['confirmPassword']='Please provide password confirmation';
         }
 
         if (!_.isEmpty(this.state.password) && !_.isEmpty(this.state.confirmPassword) &&
             this.state.password !== this.state.confirmPassword) {
-            errors["confirmPassword"]="Passwords do not match";
+            errors['confirmPassword']='Passwords do not match';
         }
 
         if (!_.isEmpty(errors)) {
@@ -76,7 +76,7 @@ export default class PasswordModal extends React.Component {
     render() {
         var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
 
-        var user = Object.assign({},{username:""}, this.props.user);
+        var user = Object.assign({},{username:''}, this.props.user);
 
         return (
             <Modal open={this.props.open}>

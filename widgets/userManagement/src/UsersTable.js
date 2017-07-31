@@ -17,7 +17,7 @@ export default class UsersTable extends React.Component {
         this.state = {
             error: null,
             showModal: false,
-            modalType: "",
+            modalType: '',
             user: {},
             tenants: {},
             groups: {}

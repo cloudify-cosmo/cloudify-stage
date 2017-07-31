@@ -13,7 +13,7 @@ export default class UserDetails extends React.Component {
 
         this.state = {
             processing: false,
-            processItem: ""
+            processItem: ''
         }
     }
 

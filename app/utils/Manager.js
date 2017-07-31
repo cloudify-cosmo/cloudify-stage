@@ -39,11 +39,11 @@ export default class Manager extends Internal {
             url = url.substring(0, index);
 
             data = Object.assign({}, data, {su:urlInServer});
-            var queryString =  (url.indexOf("?") > 0?(_.endsWith(url, "?")?"":"&"):"?") + $.param(data, true);
+            var queryString =  (url.indexOf('?') > 0?(_.endsWith(url, '?')?'':'&'):'?') + $.param(data, true);
 
             return url + queryString;
         } else {
-            var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data, true) : '';
+            var queryString =  data ? (url.indexOf('?') > 0?'&':'?') + $.param(data, true) : '';
             var urlInServer = encodeURIComponent(`${this._data.apiVersion?'/api/'+this._data.apiVersion:''}${url}${queryString}`);
 
             return `/sp/?su=${urlInServer}`;
@@ -59,7 +59,7 @@ export default class Manager extends Internal {
         return pr.then(data=>{
             size += data.items.length;
             fullData.items = _.concat(fullData.items,data.items);
-            var total = _.get(data, "metadata.pagination.total");
+            var total = _.get(data, 'metadata.pagination.total');
 
             if (total > size) {
                 return this.doGetFull(url,params,parseResponse,fullData,size);

@@ -226,7 +226,7 @@ export default class DataTable extends Component {
         this.state = {
             sortColumn: props.sortColumn,
             sortAscending: props.sortAscending,
-            searchText: ""
+            searchText: ''
         }
     }
 
@@ -266,11 +266,11 @@ export default class DataTable extends Component {
         totalSize: -1,
         fetchSize: -1,
         pageSize: 0,
-        sortColumn: "",
+        sortColumn: '',
         sortAscending: true,
         searchable: false,
         selectable: false,
-        className: "",
+        className: '',
         noDataAvailable: false,
         sizeMultiplier: 5
     };

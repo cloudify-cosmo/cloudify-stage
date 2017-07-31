@@ -103,7 +103,7 @@ module.exports = {
             .checkIfDeploymentRemoved(DEPLOYMENT_NAME);
 
         //Fix strange issue in the filter when deployment is removed
-        client.page.filter().selectOptionInDropdown('@deploymentSearch', "");
+        client.page.filter().selectOptionInDropdown('@deploymentSearch', '');
     },
 
     after(client) {

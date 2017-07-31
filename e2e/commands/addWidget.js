@@ -7,7 +7,7 @@ exports.command = function(widgetId) {
 
     return this.isWidgetPresent(widgetId, result => {
         if (!result.value) {
-            this.log("adding", widgetId, "widget");
+            this.log('adding', widgetId, 'widget');
 
             page.section.page
                 .clickElement('@addWidgetButton');
