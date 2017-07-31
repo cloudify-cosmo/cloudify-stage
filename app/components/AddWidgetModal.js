@@ -3,8 +3,8 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Input, Segment, Divider, Item, Button, DataTable, Modal, Confirm, ErrorMessage, Icon, Checkbox} from "./basic/index";
-import InstallWidgetModal from "./InstallWidgetModal";
+import {Input, Segment, Divider, Item, Button, DataTable, Modal, Confirm, ErrorMessage, Icon, Checkbox} from './basic/index';
+import InstallWidgetModal from './InstallWidgetModal';
 
 export default class AddWidgetModal extends Component {
 
@@ -21,7 +21,7 @@ export default class AddWidgetModal extends Component {
     static initialState = (props) => {
         return {
             filteredWidgetDefinitions: props.widgetDefinitions,
-            search: "",
+            search: '',
             showConfirm : false,
             widget: {},
             usedByList: []
@@ -128,7 +128,7 @@ export default class AddWidgetModal extends Component {
                         );
                     }
                 )}
-            </DataTable></Segment>) : "";
+            </DataTable></Segment>) : '';
 
         return (
             <div>

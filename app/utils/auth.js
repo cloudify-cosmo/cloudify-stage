@@ -59,9 +59,9 @@ export default class Auth {
                 */
 
                 const mapping = [
-                    {startServerVersion: "3.4.0", apiVersion: "v2.1"},
-                    {startServerVersion: "4.0.0", apiVersion: "v3"},
-                    {startServerVersion: "4.1.0", apiVersion: "v3.1"}
+                    {startServerVersion: '3.4.0', apiVersion: 'v2.1'},
+                    {startServerVersion: '4.0.0', apiVersion: 'v3'},
+                    {startServerVersion: '4.1.0', apiVersion: 'v3.1'}
                 ];
 
                 function _fill(v) {

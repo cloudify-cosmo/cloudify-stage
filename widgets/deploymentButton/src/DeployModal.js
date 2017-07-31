@@ -94,11 +94,11 @@ export default class DeployModal extends React.Component {
         const EMPTY_STRING = '""';
 
         if (_.isEmpty(this.state.deploymentName)) {
-            errors["deploymentName"]="Please provide deployment name";
+            errors['deploymentName']='Please provide deployment name';
         }
 
         if (_.isEmpty(this.state.blueprint.id)) {
-            errors["blueprintName"]="Please select blueprint from the list";
+            errors['blueprintName']='Please select blueprint from the list';
         }
 
         let deploymentInputs = {};

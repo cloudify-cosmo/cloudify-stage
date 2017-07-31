@@ -10,7 +10,7 @@ exports.command = function(blueprintName) {
     var filter = this.page.filter();
 
     return this.isWidgetPresent(filter.props.widgetId, result => {
-            this.log("selecting", blueprintName, "blueprint");
+            this.log('selecting', blueprintName, 'blueprint');
 
             if (!result.value) {
                 this.moveToEditMode()

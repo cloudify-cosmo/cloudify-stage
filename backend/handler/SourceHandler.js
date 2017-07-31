@@ -17,7 +17,7 @@ var caFile =  null;
 try {
     caFile = _.get(config,'app.ssl.ca') ? fs.readFileSync(config.app.ssl.ca) : null;
 } catch (e) {
-    console.error("Could not setup ssl ca, error loading file.", e);
+    console.error('Could not setup ssl ca, error loading file.', e);
     process.exit(1);
 }
 
@@ -27,15 +27,15 @@ var lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir)
 module.exports = (function() {
 
     function browseArchiveTree(req, blueprintId, version) {
-        var archiveUrl = config.managerUrl + "/api/" + version + "/blueprints/" + req.params.blueprintId + "/archive";
+        var archiveUrl = config.managerUrl + '/api/' + version + '/blueprints/' + req.params.blueprintId + '/archive';
         logger.debug('download archive from url', archiveUrl);
 
-        var archiveFolder = pathlib.join(browseSourcesDir, "source" + Date.now());
+        var archiveFolder = pathlib.join(browseSourcesDir, 'source' + Date.now());
         return ArchiveHelper.removeOldExtracts(browseSourcesDir)
             .then(() => ArchiveHelper.saveDataFromUrl(archiveUrl, archiveFolder, req,caFile))
             .then(data => {
                 var archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
-                var extractedDir = pathlib.join(data.archiveFolder, "extracted");
+                var extractedDir = pathlib.join(data.archiveFolder, 'extracted');
 
                 return ArchiveHelper.decompressArchive(archivePath, extractedDir)
                     .then(() => _scanArchive(extractedDir));
@@ -65,12 +65,12 @@ module.exports = (function() {
 
 
     function _saveMultipartData(req) {
-        var targetPath = pathlib.join(lookupYamlsDir, "archive" + Date.now());
+        var targetPath = pathlib.join(lookupYamlsDir, 'archive' + Date.now());
         return ArchiveHelper.saveMultipartData(req, targetPath, 'archive');
     }
 
     function _saveDataFromUrl(archiveUrl) {
-        var targetPath = pathlib.join(lookupYamlsDir, "archive" + Date.now());
+        var targetPath = pathlib.join(lookupYamlsDir, 'archive' + Date.now());
         return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
     }
 
@@ -81,12 +81,12 @@ module.exports = (function() {
             var archiveFolder = data.archiveFolder;
             var archiveFile = data.archiveFile;
             var archivePath = pathlib.join(archiveFolder, archiveFile);
-            var extractedDir = pathlib.join(archiveFolder, "extracted");
+            var extractedDir = pathlib.join(archiveFolder, 'extracted');
 
             return ArchiveHelper.removeOldExtracts(lookupYamlsDir)
                 .then(() => {
                     if (_.isEmpty(archiveFile)) {
-                        throw "No archive file provided";
+                        throw 'No archive file provided';
                     }
                 })
                 .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
@@ -108,7 +108,7 @@ module.exports = (function() {
             items = fs.readdirSync(pathlib.join(extractedDir, items[0]));
         }
 
-        items = _.filter(items, item => item.endsWith(".yaml") || item.endsWith(".yml"));
+        items = _.filter(items, item => item.endsWith('.yaml') || item.endsWith('.yml'));
 
         return Promise.resolve(items);
     }
@@ -131,7 +131,7 @@ module.exports = (function() {
         }
 
         const item = {
-            key: archivePath.replace(pathlib.join(root, pathlib.sep), ""),
+            key: archivePath.replace(pathlib.join(root, pathlib.sep), ''),
             title: name
         };
 
@@ -145,7 +145,7 @@ module.exports = (function() {
 
                 return item;
             } catch(ex) {
-                if (ex.code == "EACCES")
+                if (ex.code == 'EACCES')
                     //User does not have permissions, ignore directory
                     return null;
             }

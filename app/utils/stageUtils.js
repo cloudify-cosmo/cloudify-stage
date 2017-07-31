@@ -39,13 +39,13 @@ export default class StageUtils {
         var tagPattern = /<(\w+)[^<]*>/;
         var attrPattern = /\w+=[',",`](\w+)[',",`]/g;
 
-        var matchedTag, matchedAttr, sentence = "";
+        var matchedTag, matchedAttr, sentence = '';
         while (matchedTag = tagPattern.exec(message)) {
             var tag = matchedTag[0];
             var sentence = matchedTag[1].toLowerCase();
 
             while (matchedAttr = attrPattern.exec(tag)) {
-                sentence += " " + matchedAttr[1];
+                sentence += ' ' + matchedAttr[1];
             }
 
             message = message.replace(tag, sentence);

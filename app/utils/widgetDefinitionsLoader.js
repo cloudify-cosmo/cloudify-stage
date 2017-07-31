@@ -60,7 +60,7 @@ export default class WidgetDefinitionsLoader {
     }
 
     static _loadWidgets() {
-        console.log("Load widgets");
+        console.log('Load widgets');
 
         var external = new External();
         return Promise.all([
@@ -84,7 +84,7 @@ export default class WidgetDefinitionsLoader {
     }
 
     static _loadWidgetsResources(widgets) {
-        console.log("Load widgets resources");
+        console.log('Load widgets resources');
 
         var promises = [];
         widgetDefinitions.forEach((widgetDefinition)=> {
@@ -109,7 +109,7 @@ export default class WidgetDefinitionsLoader {
     }
 
     static _initWidgets() {
-        console.log("Init widgets");
+        console.log('Init widgets');
 
         _.each(widgetDefinitions,w=>{
             if (w.init && typeof w.init === 'function') {
@@ -137,11 +137,11 @@ export default class WidgetDefinitionsLoader {
         var internal = new Internal(manager);
 
         if (widgetUrl) {
-            console.log("Install widget from url", widgetUrl);
-            return internal.doPut(`/widgets/install`,{url: widgetUrl, username: manager.username});
+            console.log('Install widget from url', widgetUrl);
+            return internal.doPut('/widgets/install',{url: widgetUrl, username: manager.username});
         } else {
-            console.log("Install widget from file");
-            return internal.doUpload(`/widgets/install`,{username: manager.username},{widget:widgetFile});
+            console.log('Install widget from file');
+            return internal.doUpload('/widgets/install',{username: manager.username},{widget:widgetFile});
         }
     }
 
@@ -149,11 +149,11 @@ export default class WidgetDefinitionsLoader {
         var internal = new Internal(manager);
 
         if (widgetUrl) {
-            console.log("Update widget " + widgetId + " from url", widgetUrl);
-            return internal.doPut(`/widgets/update`,{url: widgetUrl, id: widgetId});
+            console.log('Update widget ' + widgetId + ' from url', widgetUrl);
+            return internal.doPut('/widgets/update',{url: widgetUrl, id: widgetId});
         } else {
-            console.log("Update widget " + widgetId + " from file");
-            return internal.doUpload(`/widgets/update`,{id: widgetId},{widget:widgetFile});
+            console.log('Update widget ' + widgetId + ' from file');
+            return internal.doUpload('/widgets/update',{id: widgetId},{widget:widgetFile});
         }
     }
 
@@ -161,7 +161,7 @@ export default class WidgetDefinitionsLoader {
         return WidgetDefinitionsLoader._installWidget(widgetFile, widgetUrl, manager)
             .then(data => WidgetDefinitionsLoader._loadWidget(data.id, true)
                 .then(() => {
-                    var error = "";
+                    var error = '';
                     if (_.isEmpty(widgetDefinitions)) {
                         error = 'Widget not properly initialized. Please check if widget.js is correctly defined.';
                     } else if (widgetDefinitions.length > 1) {
@@ -204,16 +204,16 @@ export default class WidgetDefinitionsLoader {
 
 class GenericConfig {
     static POLLING_TIME_CONFIG = (pollingTime = 0) => {
-        return {id: "pollingTime",
-                name: "Refresh time interval",
+        return {id: 'pollingTime',
+                name: 'Refresh time interval',
                 default: pollingTime,
-                placeHolder: "Enter time interval in seconds",
-                description: "Data of the widget will be refreshed per provided interval time in seconds",
+                placeHolder: 'Enter time interval in seconds',
+                description: 'Data of the widget will be refreshed per provided interval time in seconds',
                 type: BasicComponents.GenericField.NUMBER_TYPE}
     };
 
     static PAGE_SIZE_CONFIG = (pageSize = Pagination.PAGE_SIZE_LIST(5)[0]) => {
-        return {id: "pageSize",
+        return {id: 'pageSize',
                 default: pageSize,
                 hidden: true}
     };

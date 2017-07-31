@@ -6,7 +6,7 @@ exports.command = function(deploymentName) {
     var filter = this.page.filter();
 
     return this.isWidgetPresent(filter.props.widgetId, result => {
-            this.log("selecting", deploymentName, "deployment");
+            this.log('selecting', deploymentName, 'deployment');
 
             if (!result.value) {
                 this.moveToEditMode()

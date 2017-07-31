@@ -166,7 +166,7 @@ export default class GenericField extends Component {
         if (type === GenericField.MULTI_SELECT_LIST_TYPE) {
             value = _.split(value, ',');
         } else if (type === GenericField.BOOLEAN_TYPE) {
-            value = (_.isBoolean(value) && value) || (_.isString(value) && value === "true");
+            value = (_.isBoolean(value) && value) || (_.isString(value) && value === 'true');
         } else if (type === GenericField.NUMBER_TYPE ||
             type === GenericField.NUMBER_LIST_TYPE ||
             type === GenericField.NUMBER_EDITABLE_LIST_TYPE) {
@@ -185,7 +185,7 @@ export default class GenericField extends Component {
 
             field = <Input icon={this.props.icon} iconPosition={this.props.icon?'left':undefined} name={this.props.name}
                            type={this.props.type === GenericField.STRING_TYPE?'text':this.props.type}
-                           placeholder={this.props.placeholder} value={this.props.value === null ? "" : this.props.value}
+                           placeholder={this.props.placeholder} value={this.props.value === null ? '' : this.props.value}
                            onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}
                            max={this.props.type === GenericField.NUMBER_TYPE?this.props.max:null}
                            min={this.props.type === GenericField.NUMBER_TYPE?this.props.min:null}/>;
@@ -194,7 +194,7 @@ export default class GenericField extends Component {
 
             field = <Checkbox name={this.props.name} toggle={true}
                               checked={(_.isBoolean(this.props.value) && this.props.value) ||
-                                              (_.isString(this.props.value) && this.props.value === "true")}
+                                              (_.isString(this.props.value) && this.props.value === 'true')}
                               onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}/>
 
         } else if (this.props.type === GenericField.LIST_TYPE ||

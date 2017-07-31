@@ -11,8 +11,8 @@ export default class UploadModal extends React.Component {
 
     static initialState = {
         loading: false,
-        blueprintName: "",
-        blueprintFileName: "",
+        blueprintName: '',
+        blueprintFileName: '',
         privateResource: false,
         errors: {}
     }
@@ -37,7 +37,7 @@ export default class UploadModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.blueprintName)) {
-            errors["blueprintName"]="Please provide blueprint name";
+            errors['blueprintName']='Please provide blueprint name';
         }
 
         if (!_.isEmpty(errors)) {
@@ -68,8 +68,8 @@ export default class UploadModal extends React.Component {
     render() {
         var {Modal, CancelButton, ApproveButton, Icon, Form, PrivateField} = Stage.Basic;
 
-        var files = Object.assign({},{tree:[], repo:""}, this.props.files);
-        files.tree = _.filter(files.tree, x => x.type === "blob" && x.path.endsWith(".yaml"));
+        var files = Object.assign({},{tree:[], repo:''}, this.props.files);
+        files.tree = _.filter(files.tree, x => x.type === 'blob' && x.path.endsWith('.yaml'));
 
         var options = _.map(files.tree, item => { return {text: item.path, value: item.path} });
 

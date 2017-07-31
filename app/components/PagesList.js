@@ -18,8 +18,8 @@ export default class PagesList extends Component {
 
     componentDidMount() {
         $(this.refs.pages).sortable({
-            placeholder: "ui-sortable-placeholder",
-            helper: "clone",
+            placeholder: 'ui-sortable-placeholder',
+            helper: 'clone',
             forcePlaceholderSize: true,
             start: (event, ui)=>this.pageIndex = ui.item.index(),
             update: (event, ui)=>this.props.onPageReorder(this.pageIndex, ui.item.index())
@@ -34,12 +34,12 @@ export default class PagesList extends Component {
 
     _enableReorderInEditMode() {
         if (this.props.isEditMode) {
-            if ($(this.refs.pages).sortable( "option", "disabled" )) {
-                $(this.refs.pages).sortable("enable");
+            if ($(this.refs.pages).sortable( 'option', 'disabled' )) {
+                $(this.refs.pages).sortable('enable');
             }
         } else {
-            if (!$(this.refs.pages).sortable( "option", "disabled" )) {
-                $(this.refs.pages).sortable("disable");
+            if (!$(this.refs.pages).sortable( 'option', 'disabled' )) {
+                $(this.refs.pages).sortable('disable');
             }
         }
     }

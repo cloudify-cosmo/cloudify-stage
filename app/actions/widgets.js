@@ -92,8 +92,8 @@ export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldo
 
         var pageId = widget.drillDownPages[defaultTemplate.name];
         if (!pageId) {
-            var currentPage = _.replace(window.location.pathname, "/page/", "");
-            var newPageId = _.snakeCase(currentPage + " " + defaultTemplate.name);
+            var currentPage = _.replace(window.location.pathname, '/page/', '');
+            var newPageId = _.snakeCase(currentPage + ' ' + defaultTemplate.name);
 
             dispatch(createDrilldownPage(newPageId,defaultTemplate.name));
             _.each(defaultTemplate.widgets,(widget)=>{

@@ -81,7 +81,7 @@ class Toolbox {
 
     loading(show) {}
 
-    _currentPageId() {return "";}
+    _currentPageId() {return '';}
 }
 
 var toolbox = null;

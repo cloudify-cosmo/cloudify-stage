@@ -3,7 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import GridItem from "./GridItem";
+import GridItem from './GridItem';
 
 export default class Grid extends Component {
     static propTypes = {

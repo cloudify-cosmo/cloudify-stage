@@ -50,7 +50,7 @@ export default class extends React.Component {
                     </div>
                 </div>
 
-                <div className="inline fields" ref="advanced" style={{display:"none"}}>
+                <div className="inline fields" ref="advanced" style={{display:'none'}}>
                     <div className="three wide field">
                     </div>
                     <div className="three wide field">

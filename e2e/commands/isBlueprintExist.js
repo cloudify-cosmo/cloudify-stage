@@ -12,7 +12,7 @@ exports.command = function(blueprintName, callback) {
 
         this.page.filter()
             .isBlueprintPresent(blueprintName, result => {
-                this.log("does blueprint", blueprintName, "exist:", result.value)
+                this.log('does blueprint', blueprintName, 'exist:', result.value)
 
                 if (callback) {
                     callback(result);

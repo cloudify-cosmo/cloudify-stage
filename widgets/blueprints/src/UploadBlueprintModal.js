@@ -15,10 +15,10 @@ export default class UploadModal extends React.Component {
         loading: false,
         urlLoading: false,
         fileLoading: false,
-        blueprintUrl: "",
-        blueprintName: "",
-        blueprintFileName: "",
-        imageUrl: "",
+        blueprintUrl: '',
+        blueprintName: '',
+        blueprintFileName: '',
+        imageUrl: '',
         errors: {},
         yamlFiles: [],
         privateResource: false
@@ -48,15 +48,15 @@ export default class UploadModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.blueprintUrl) && !blueprintFile) {
-            errors["blueprintUrl"]="Please select blueprint file or url";
+            errors['blueprintUrl']='Please select blueprint file or url';
         }
 
         if (!_.isEmpty(this.state.blueprintUrl) && blueprintFile) {
-            errors["blueprintUrl"]="Either blueprint file or url must be selected, not both";
+            errors['blueprintUrl']='Either blueprint file or url must be selected, not both';
         }
 
         if (_.isEmpty(this.state.blueprintName)) {
-            errors["blueprintName"]="Please provide blueprint name";
+            errors['blueprintName']='Please provide blueprint name';
         }
 
         if (!_.isEmpty(errors)) {
@@ -106,7 +106,7 @@ export default class UploadModal extends React.Component {
             return;
         }
 
-        this.setState({fileLoading: true, blueprintUrl: ""});
+        this.setState({fileLoading: true, blueprintUrl: ''});
         this.actions.doListYamlFiles(null, file).then((yamlFiles)=>{
             this.setState({yamlFiles, errors: {}, fileLoading: false});
         }).catch((err)=>{
@@ -166,7 +166,7 @@ export default class UploadModal extends React.Component {
                                 <Form.Field width="9" error={this.state.errors.imageUrl}>
                                     <Form.Input label="URL" placeholder="Enter image url" name="imageUrl"
                                                 value={this.state.imageUrl} onChange={this._handleInputChange.bind(this)}
-                                                onBlur={()=>this.state.imageUrl ? this.refs.imageFile.reset() : ""}/>
+                                                onBlur={()=>this.state.imageUrl ? this.refs.imageFile.reset() : ''}/>
                                 </Form.Field>
                                 <Form.Field width="1" style={{position:'relative'}}>
                                     <div className="ui vertical divider">
@@ -175,7 +175,7 @@ export default class UploadModal extends React.Component {
                                 </Form.Field>
                                 <Form.Field width="8" error={this.state.errors.imageUrl}>
                                     <Form.File placeholder="Select image file" name="imageFile" ref="imageFile"
-                                               onChange={(file)=>file ? this.setState({imageUrl: ""}) : ""}/>
+                                               onChange={(file)=>file ? this.setState({imageUrl: ''}) : ''}/>
                                 </Form.Field>
                             </Form.Group>
                         </Form>

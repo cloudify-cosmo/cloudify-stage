@@ -13,7 +13,7 @@ export default class UserDetails extends React.Component {
 
         this.state = {
             processing: false,
-            processItem: ""
+            processItem: ''
         }
     }
 
@@ -29,10 +29,10 @@ export default class UserDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveFromTenant(this.props.data.username, tenant).then(()=>{
             this.props.toolbox.refresh();
-            this.setState({processItem: "", processing: false});
+            this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
-            this.setState({processItem: "", processing: false});
+            this.setState({processItem: '', processing: false});
         });
     }
 
@@ -42,10 +42,10 @@ export default class UserDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveFromGroup(this.props.data.username, group).then(()=>{
             this.props.toolbox.refresh();
-            this.setState({processItem: "", processing: false});
+            this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
-            this.setState({processItem: "", processing: false});
+            this.setState({processItem: '', processing: false});
         });
     }
 

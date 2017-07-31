@@ -2,7 +2,7 @@
  * Created by pposel on 07/02/2017.
  */
 
-const BLUEPRINT_IMAGE_FILENAME = "blueprint.png";
+const BLUEPRINT_IMAGE_FILENAME = 'blueprint.png';
 const GITHUB_BLUEPRINT_IMAGE_URL = (user,repo)=>`/github/content/${user}/${repo}/master/${BLUEPRINT_IMAGE_FILENAME}`;
 const UPLOAD_URL = (user,repo)=>`https://api.github.com/repos/${user}/${repo}/zipball/master`;
 
@@ -42,7 +42,7 @@ export default class Actions {
 
     doFindImage(repo, defaultImage) {
         return this.doGetRepoTree(repo)
-            .then(tree => { return _.findIndex(tree.tree, {"path":BLUEPRINT_IMAGE_FILENAME})<0?
+            .then(tree => { return _.findIndex(tree.tree, {'path':BLUEPRINT_IMAGE_FILENAME})<0?
                 Promise.resolve(defaultImage):
                 Promise.resolve(GITHUB_BLUEPRINT_IMAGE_URL(this.getUsername(), repo))});
     }

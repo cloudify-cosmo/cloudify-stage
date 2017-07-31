@@ -8,7 +8,7 @@ var me = null;
 try {
     me = require('../conf/me.json');
 } catch(err) {
-    if (err.code !== "MODULE_NOT_FOUND") {
+    if (err.code !== 'MODULE_NOT_FOUND') {
         throw err;
     }
 }

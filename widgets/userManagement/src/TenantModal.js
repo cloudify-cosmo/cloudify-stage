@@ -58,7 +58,7 @@ export default class TenantModal extends React.Component {
     render() {
         var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
 
-        var user = Object.assign({},{username:""}, this.props.user);
+        var user = Object.assign({},{username:''}, this.props.user);
         var tenants = Object.assign({},{items:[]}, this.props.tenants);
 
         var options = _.map(tenants.items, item => { return {text: item.name, value: item.name, key: item.name} });

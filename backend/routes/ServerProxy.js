@@ -18,7 +18,7 @@ var caFile =  null;
 try {
     caFile = _.get(config,'app.ssl.ca') ? fs.readFileSync(config.app.ssl.ca) : null;
 } catch (e) {
-    console.error("Could not setup ssl ca, error loading file.", e);
+    console.error('Could not setup ssl ca, error loading file.', e);
     process.exit(1);
 }
 

@@ -38,8 +38,8 @@ logger.info('Server started in mode '+ServerSettings.settings.mode);
 
 var app = express();
 
-app.use(express.static(path.resolve(__dirname , "../dist"),{index: 'index.html'}));
-app.use(log4js.connectLogger(log4js.getLogger("http"), { level: 'INFO'}));
+app.use(express.static(path.resolve(__dirname , '../dist'),{index: 'index.html'}));
+app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'INFO'}));
 
 // For dev purposes
 app.use((req,res,next) => {

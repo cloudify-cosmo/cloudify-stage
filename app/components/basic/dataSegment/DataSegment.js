@@ -161,7 +161,7 @@ export default class DataSegment extends Component {
     };
 
     static defaultProps = {
-        className: "",
+        className: '',
         fetchData: () => {},
         totalSize: -1,
         fetchSize: -1,

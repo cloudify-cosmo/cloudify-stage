@@ -6,7 +6,7 @@ var consts = {
     A: 'a',
     B: 'b',
     C: 'c',
-    ABC: "AAA"
+    ABC: 'AAA'
 };
 
 Stage.defineCommon({

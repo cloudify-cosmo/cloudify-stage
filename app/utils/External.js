@@ -7,7 +7,7 @@ import {saveAs} from 'file-saver';
 import StageUtils from './stageUtils';
 
 import log from 'loglevel';
-let logger = log.getLogger("External");
+let logger = log.getLogger('External');
 
 export default class External {
 
@@ -52,7 +52,7 @@ export default class External {
                 var total = e.totalSize || e.total;
                 logger.debug('xhr progress: ' + Math.round(done/total*100) + '%');
             });
-            xhr.addEventListener("error", function(e){
+            xhr.addEventListener('error', function(e){
                 logger.error('xhr upload error', e, xhr.responseText);
 
                 try {
@@ -168,12 +168,12 @@ export default class External {
     }
 
     _buildActualUrl(url, data) {
-        var queryString =  data ? (url.indexOf("?") > 0?"&":"?") + $.param(data, true) : '';
+        var queryString =  data ? (url.indexOf('?') > 0?'&':'?') + $.param(data, true) : '';
         return `${url}${queryString}`;
     }
 
     _contentType() {
-        return {"content-type": "application/json"};
+        return {'content-type': 'application/json'};
     }
 
     _buildHeaders() {
@@ -183,7 +183,7 @@ export default class External {
 
         var headers = {};
         if (this._data.basicAuth) {
-            headers["Authorization"] = `Basic ${this._data.basicAuth}`;
+            headers['Authorization'] = `Basic ${this._data.basicAuth}`;
         }
 
         return headers;

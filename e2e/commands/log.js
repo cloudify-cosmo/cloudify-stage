@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 2017-06-01.
  */
 
-var _ = require("lodash");
+var _ = require('lodash');
 
 exports.command = function() {
     return this.perform(() => {

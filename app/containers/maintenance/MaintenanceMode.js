@@ -3,7 +3,7 @@
  */
 import MaintenanceMode from '../../components/maintenance/MaintenanceMode';
 import { connect } from 'react-redux';
-import {switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExecution} from "../../actions/managers";
+import {switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExecution} from '../../actions/managers';
 
 const mapStateToProps = (state, ownProps) => {
     return {

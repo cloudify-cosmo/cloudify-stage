@@ -24,6 +24,6 @@ module.exports = {
         }
     },
     props: {
-        widgetId: "blueprintActionButtons"
+        widgetId: 'blueprintActionButtons'
     }
 };

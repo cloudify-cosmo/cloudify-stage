@@ -9,7 +9,7 @@ export default class BlueprintInfo extends React.Component {
         super(props,context);
 
         this.state = {
-            error: ""
+            error: ''
         }
     }
 

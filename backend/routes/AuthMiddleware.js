@@ -12,14 +12,14 @@ var caFile =  null;
 try {
     caFile = _.get(config,'app.ssl.ca') ? fs.readFileSync(config.app.ssl.ca) : null;
 } catch (e) {
-    console.error("Could not setup ssl ca, error loading file.", e);
+    console.error('Could not setup ssl ca, error loading file.', e);
     process.exit(1);
 }
 
 
 module.exports = function(req,res,next) {
     var options = {
-        url: config.managerUrl + "/api/version",
+        url: config.managerUrl + '/api/version',
         headers: {
             'authentication-token': req.headers['authentication-token'],
             'tenant' : req.headers['tenant'],

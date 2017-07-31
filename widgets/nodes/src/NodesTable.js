@@ -62,25 +62,25 @@ export default class NodesTable extends React.Component {
 
                     <DataTable.Column width="5%"/>
                     <DataTable.Column label="Name" name="id" width="15%"
-                                      show={fieldsToShow.indexOf("Name") >= 0}/>
+                                      show={fieldsToShow.indexOf('Name') >= 0}/>
                     <DataTable.Column label="Type" name="type" width="20%"
-                                      show={fieldsToShow.indexOf("Type") >= 0}/>
+                                      show={fieldsToShow.indexOf('Type') >= 0}/>
                     <DataTable.Column label="Blueprint" name="blueprint_id" width="10%"
-                                      show={fieldsToShow.indexOf("Blueprint") >= 0 && _.isEmpty(this.props.data.blueprintId)} />
+                                      show={fieldsToShow.indexOf('Blueprint') >= 0 && _.isEmpty(this.props.data.blueprintId)} />
                     <DataTable.Column label="Deployment" name="deployment_id" width="10%"
-                                      show={fieldsToShow.indexOf("Deployment") >= 0 && _.isEmpty(this.props.data.deploymentId)} />
+                                      show={fieldsToShow.indexOf('Deployment') >= 0 && _.isEmpty(this.props.data.deploymentId)} />
                     <DataTable.Column label="Contained in" name="host_id" width="7%"
-                                      show={fieldsToShow.indexOf("Contained in") >= 0}/>
+                                      show={fieldsToShow.indexOf('Contained in') >= 0}/>
                     <DataTable.Column label="Connected to" width="7%"
-                                      show={fieldsToShow.indexOf("Connected to") >= 0}/>
+                                      show={fieldsToShow.indexOf('Connected to') >= 0}/>
                     <DataTable.Column label="Host" name='host_id' width="7%"
-                                      show={fieldsToShow.indexOf("Host") >= 0}/>
+                                      show={fieldsToShow.indexOf('Host') >= 0}/>
                     <DataTable.Column label="Creator" name='created_by' width="7%"
-                                      show={fieldsToShow.indexOf("Creator") >= 0}/>
+                                      show={fieldsToShow.indexOf('Creator') >= 0}/>
                     <DataTable.Column label="# Instances" name="number_of_instances" width="9%"
-                                      show={fieldsToShow.indexOf("# Instances") >= 0}/>
+                                      show={fieldsToShow.indexOf('# Instances') >= 0}/>
                     <DataTable.Column label="Groups" width="10%"
-                                      show={fieldsToShow.indexOf("Groups") >= 0 && (!_.isEmpty(this.props.data.blueprintId) || !_.isEmpty(this.props.data.deploymentId))} />
+                                      show={fieldsToShow.indexOf('Groups') >= 0 && (!_.isEmpty(this.props.data.blueprintId) || !_.isEmpty(this.props.data.deploymentId))} />
 
                     {
                         this.props.data.items.map((node) => {

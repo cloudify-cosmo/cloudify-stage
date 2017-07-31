@@ -1,20 +1,43 @@
-
 {
-  "ecmaFeatures": {
-    "jsx": true,
-    "modules": true
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true
+    }
   },
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "_": true,
+    "Stage": true,
+    "StageUtils": true,
+    "$": true,
+    "moment": true,
+    "d3": true,
+    "React": true,
+    "describe": true,
+    "it": true,
+    "before": true,
+    "beforeEach": true,
+    "after": true,
+    "afterEach": true,
+    "angular": true
   },
   "parser": "babel-eslint",
   "rules": {
-    "quotes": [2, "single"],
-    "strict": [2, "never"],
+    "quotes": [2, "single", {"avoidEscape": true}],
+    "strict": [1, "never"],
     "react/jsx-uses-react": 2,
     "react/jsx-uses-vars": 2,
-    "react/react-in-jsx-scope": 2
+    "react/react-in-jsx-scope": 2,
+    "eqeqeq": 1,
+    "curly": 1,
+    "no-empty-function": 1,
+    "no-undef": 2,
+    "no-unused-vars": 1
   },
   "plugins": [
     "react"

@@ -3,7 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Icon, Button, Divider, Form, Modal, Message} from "./basic/index"
+import {Icon, Button, Divider, Form, Modal, Message} from './basic/index'
 import EventBus from '../utils/EventBus';
 
 export default class InstallWidgetModal extends Component {
@@ -17,9 +17,9 @@ export default class InstallWidgetModal extends Component {
     static initialState = {
         open: false,
         loading: false,
-        widgetUrl: "",
+        widgetUrl: '',
         errors: {},
-        scriptError: ""
+        scriptError: ''
     }
 
     static propTypes = {
@@ -39,19 +39,19 @@ export default class InstallWidgetModal extends Component {
         let errors = {};
 
         if (_.isEmpty(this.state.widgetUrl) && !widgetFile) {
-            errors["widgetUrl"]="Please select widget file or url";
+            errors['widgetUrl']='Please select widget file or url';
         }
 
         if (!_.isEmpty(this.state.widgetUrl) && widgetFile) {
-            errors["widgetUrl"]="Either widget file or url must be selected, not both";
+            errors['widgetUrl']='Either widget file or url must be selected, not both';
         }
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors, scriptError: ""});
+            this.setState({errors, scriptError: ''});
             return false;
         }
 
-        this.setState({loading: true, errors: {}, scriptError: ""});
+        this.setState({loading: true, errors: {}, scriptError: ''});
 
         EventBus.on('window:error', this._showScriptError, this);
         this.props.onWidgetInstalled(widgetFile, this.state.widgetUrl)

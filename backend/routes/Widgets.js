@@ -39,7 +39,7 @@ router.get('/:widgetId/used', AuthMiddleware, function (req, res, next) {
 
 router.delete('/:widgetId', AuthMiddleware, function (req, res, next) {
     WidgetHandler.deleteWidget(req.params.widgetId)
-        .then(response => res.send({status:"ok"}))
+        .then(response => res.send({status:'ok'}))
         .catch(next);
 });
 

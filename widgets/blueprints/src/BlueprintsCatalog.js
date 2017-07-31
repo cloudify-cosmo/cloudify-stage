@@ -78,7 +78,7 @@ export default class BlueprintsCatalog extends React.Component{
                             </Grid>
 
                             <Grid.Column width="16">
-                                <div style={{height:"50px"}}></div>
+                                <div style={{height:'50px'}}></div>
                             </Grid.Column>
                         </DataSegment.Item>
 

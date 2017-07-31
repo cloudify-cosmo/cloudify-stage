@@ -12,7 +12,7 @@ module.exports = {
 
     'No blueprint selected': function (client) {
         client.page.blueprintSources().section.noBlueprintSelected
-            .assert.containsText('@message', "Please select blueprint to display source files");
+            .assert.containsText('@message', 'Please select blueprint to display source files');
     },
 
     'Browse blueprint source': function (client) {
@@ -22,14 +22,14 @@ module.exports = {
             .assert.containsText('@blueprintHeader', client.page.blueprints().props.testBlueprint)
             .assert.containsText('@blueprintYaml', client.page.blueprintSources().props.blueprintYaml)
             .waitForElementPresent('@emptyContent')
-            .click("@blueprintYaml")
+            .click('@blueprintYaml')
             .waitForElementPresent('@contentSnippet')
             .waitForElementPresent('@fullScreenButton')
-            .click("@fullScreenButton");
+            .click('@fullScreenButton');
 
         client.page.blueprintSources()
             .waitForElementPresent('@fullScreen')
-            .click("@overlay")
+            .click('@overlay')
     },
 
     after(client) {

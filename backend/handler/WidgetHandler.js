@@ -14,9 +14,9 @@ var ArchiveHelper = require('./ArchiveHelper');
 var logger = require('log4js').getLogger('widgets');
 
 //TODO: Temporary solution, the approach needs to be think over thoroughly
-var widgetsFolder = "../widgets";
+var widgetsFolder = '../widgets';
 if (!fs.existsSync(widgetsFolder)) {
-    widgetsFolder = "../dist/widgets";
+    widgetsFolder = '../dist/widgets';
 }
 
 var widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
@@ -24,12 +24,12 @@ var widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
 module.exports = (function() {
 
     function _saveMultipartData(req) {
-        var targetPath = pathlib.join(widgetTempDir, "widget" + Date.now());
+        var targetPath = pathlib.join(widgetTempDir, 'widget' + Date.now());
         return ArchiveHelper.saveMultipartData(req, targetPath, 'widget');
     }
 
     function _saveDataFromUrl(archiveUrl) {
-        var targetPath = pathlib.join(widgetTempDir, "widget" + Date.now());
+        var targetPath = pathlib.join(widgetTempDir, 'widget' + Date.now());
         return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
     }
 
@@ -42,7 +42,7 @@ module.exports = (function() {
     function _validateUniqueness(widgetId) {
         var widgets = _getInstalledWidgets();
         if (_.indexOf(widgets, widgetId) >= 0) {
-            return Promise.reject("Widget " + widgetId + " is already installed");
+            return Promise.reject('Widget ' + widgetId + ' is already installed');
         }
 
         return Promise.resolve();
@@ -50,7 +50,7 @@ module.exports = (function() {
 
     function _validateConsistency(widgetId, dirName) {
         if (widgetId !== widgetId) {
-            return Promise.reject("Updated widget does not complies with directory name: " + widgetId + " <> " + dirName);
+            return Promise.reject('Updated widget does not complies with directory name: ' + widgetId + ' <> ' + dirName);
         }
 
         return Promise.resolve();
@@ -62,7 +62,7 @@ module.exports = (function() {
         if (files.length === 1 && fs.statSync(pathlib.join(extractedDir, files[0])).isDirectory()) {
             var dirName = files[0];
             if (dirName !== widgetId) {
-                return Promise.reject("Incorrect widget folder name not consistent with widget id: " + widgetId + " <> " + dirName);
+                return Promise.reject('Incorrect widget folder name not consistent with widget id: ' + widgetId + ' <> ' + dirName);
             }
 
             extractedDir = pathlib.join(extractedDir, dirName);
@@ -73,7 +73,7 @@ module.exports = (function() {
         var missingFiles = _.difference(requiredFiles, files);
 
         if (!_.isEmpty(missingFiles)) {
-            return Promise.reject("The following files are required for widget registration: " + _.join(missingFiles, ", "));
+            return Promise.reject('The following files are required for widget registration: ' + _.join(missingFiles, ', '));
         } else {
             return Promise.resolve(extractedDir);
         }
@@ -99,12 +99,12 @@ module.exports = (function() {
 
     function _persistData(widgetId, username) {
         return db.Resources
-            .findOne({ where: {resourceId:widgetId, type:"widget"} })
+            .findOne({ where: {resourceId:widgetId, type:'widget'} })
             .then(function(widget) {
                 if(widget) {
                     return widget.update({creator: username});
                 } else {
-                    return db.Resources.create({resourceId:widgetId, type:"widget", creator: username});
+                    return db.Resources.create({resourceId:widgetId, type:'widget', creator: username});
                 }
             });
     }
@@ -179,7 +179,7 @@ module.exports = (function() {
         var widgets = _getInstalledWidgets();
 
         return db.Resources
-            .findAll({where: {type: "widget"}, attributes: ['resourceId'], raw: true})
+            .findAll({where: {type: 'widget'}, attributes: ['resourceId'], raw: true})
             .then(items => _.map(items, item => item.resourceId))
             .then(ids => widgets.map(id => { return {id, isCustom: _.indexOf(ids, id) >= 0}}));
     }

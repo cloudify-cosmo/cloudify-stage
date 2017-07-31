@@ -19,6 +19,6 @@ module.exports = {
         }
     },
     props: {
-        widgetId: "blueprintInfo"
+        widgetId: 'blueprintInfo'
     }
 };

@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import {LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
-let d3Format = require("d3-format");
+let d3Format = require('d3-format');
 
 /**
  * Graph is a component to present data in form of line or bar chart
@@ -100,9 +100,9 @@ export default class Graph extends Component {
 
     render () {
         const MARGIN = {top: 5, right: 30, left: 20, bottom: 5};
-        const COLOR = "#8884d8";
-        const INTERPOLATION_TYPE = "monotone";
-        const STROKE_DASHARRAY = "3 3";
+        const COLOR = '#8884d8';
+        const INTERPOLATION_TYPE = 'monotone';
+        const STROKE_DASHARRAY = '3 3';
 
         let valueFormatter = d3Format.format('.3s');
         let label = this.props.label || this.props.yDataKey;

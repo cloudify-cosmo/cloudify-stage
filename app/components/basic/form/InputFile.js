@@ -28,8 +28,8 @@ export default class InputFile extends Component {
         super(props,context);
 
         this.state = {
-            value: "",
-            title: ""
+            value: '',
+            title: ''
         }
     }
 
@@ -86,9 +86,9 @@ export default class InputFile extends Component {
     }
 
     reset() {
-        $(this.refs.inputFile).val("");
-        this.setState({value: "", title: ""});
-        this.props.onChange(null, "");
+        $(this.refs.inputFile).val('');
+        this.setState({value: '', title: ''});
+        this.props.onChange(null, '');
     }
 
     render() {
@@ -96,7 +96,7 @@ export default class InputFile extends Component {
             <div>
                 <div className={`ui action input ${this.props.disabled?'disabled':''}`}>
                     <input type="text" readOnly='true' value={this.state.value} title={this.state.title}
-                           name={"fileName" + this.props.name} placeholder={this.props.placeholder}
+                           name={'fileName' + this.props.name} placeholder={this.props.placeholder}
                            onClick={this._openFileSelection.bind(this)}/>
 
 
@@ -107,7 +107,7 @@ export default class InputFile extends Component {
                     }
                 </div>
 
-                <input type="file" name={this.props.name} style={{"display": "none"}} onChange={this._fileChanged.bind(this)} ref="inputFile"/>
+                <input type="file" name={this.props.name} style={{'display': 'none'}} onChange={this._fileChanged.bind(this)} ref="inputFile"/>
             </div>
         );
     }

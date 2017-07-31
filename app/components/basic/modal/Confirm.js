@@ -27,7 +27,7 @@ import { Confirm as ConfirmSemanticUiReact } from 'semantic-ui-react';
 export default class Confirm extends Component {
 
     static defaultProps = {
-        className: ""
+        className: ''
     };
 
     render() {

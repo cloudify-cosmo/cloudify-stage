@@ -17,7 +17,7 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
             var blueprints = this.page.blueprints();
 
             this.isWidgetPresent(blueprints.props.widgetId, result => {
-                this.log("adding", blueprintName, "blueprint - upload blueprint");
+                this.log('adding', blueprintName, 'blueprint - upload blueprint');
 
                 if (!result.value) {
                     this.moveToEditMode()
@@ -43,7 +43,7 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
                     .waitForBlueprintPresent(blueprintName);
             });
         } else {
-            this.log("not adding", blueprintName, "blueprint, it already exists");
+            this.log('not adding', blueprintName, 'blueprint, it already exists');
         }
     });
 };

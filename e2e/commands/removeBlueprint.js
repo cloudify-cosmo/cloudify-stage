@@ -12,7 +12,7 @@ exports.command = function(blueprintName) {
             var blueprintActionButtons = this.page.blueprintActionButtons();
 
             this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
-                this.log("removing", blueprintName, "blueprint");
+                this.log('removing', blueprintName, 'blueprint');
 
                 if (!result.value) {
                     this.moveToEditMode()
@@ -34,7 +34,7 @@ exports.command = function(blueprintName) {
                     .waitForBlueprintNotPresent(blueprintName);
             });
         } else {
-            this.log("not removing", blueprintName, "blueprint, it doesn't exist");
+            this.log('not removing', blueprintName, "blueprint, it doesn't exist");
         }
     });
 };

@@ -3,7 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
-import TableDataCell from "./TableDataCell";
+import TableDataCell from './TableDataCell';
 
 /**
  * Defines table rows, renders <tr> elements.

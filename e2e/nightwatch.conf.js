@@ -1,9 +1,9 @@
 module.exports = (function(settings) {
     console.log(`Running nightwatch on ${process.platform} platform.`);
     if (process.platform === 'win32') {
-        settings.selenium.cli_args['webdriver.chrome.driver']  = "./e2e/bin/chromedriver.exe";
+        settings.selenium.cli_args['webdriver.chrome.driver']  = './e2e/bin/chromedriver.exe';
     } else if (process.platform === 'linux'){
-        settings.selenium.cli_args['webdriver.chrome.driver']  = "./e2e/bin/chromedriver.linux";
+        settings.selenium.cli_args['webdriver.chrome.driver']  = './e2e/bin/chromedriver.linux';
     }
 
     var managerUrl = process.env.STAGE_E2E_MANAGER_URL;

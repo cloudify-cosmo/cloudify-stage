@@ -4,8 +4,8 @@
 
 let PropTypes = React.PropTypes;
 
-const DEFAULT_WORKFLOW = "default";
-const CUSTOM_WORKFLOW = "custom";
+const DEFAULT_WORKFLOW = 'default';
+const CUSTOM_WORKFLOW = 'custom';
 
 export default class UpdateDeploymentModal extends React.Component {
 
@@ -20,9 +20,9 @@ export default class UpdateDeploymentModal extends React.Component {
         runWorkflow: DEFAULT_WORKFLOW,
         installWorkflow: true,
         uninstallWorkflow: true,
-        applicationFileName: "",
-        blueprintUrl: "",
-        workflowId: "",
+        applicationFileName: '',
+        blueprintUrl: '',
+        workflowId: '',
         errors: {},
         urlLoading: false,
         fileLoading: false,
@@ -60,15 +60,15 @@ export default class UpdateDeploymentModal extends React.Component {
 
         let errors = {};
         if (_.isEmpty(this.state.blueprintUrl) && !blueprintFile) {
-            errors["blueprintUrl"]="Please select blueprint file or url";
+            errors['blueprintUrl']='Please select blueprint file or url';
         }
 
         if (!_.isEmpty(this.state.blueprintUrl) && blueprintFile) {
-            errors["blueprintUrl"]="Either blueprint file or url must be selected, not both";
+            errors['blueprintUrl']='Either blueprint file or url must be selected, not both';
         }
 
         if (this.state.runWorkflow === CUSTOM_WORKFLOW && _.isEmpty(this.state.workflowId)) {
-            errors["workflowId"]="Please provide workflow id";
+            errors['workflowId']='Please provide workflow id';
         }
 
         if (!_.isEmpty(errors)) {
@@ -123,7 +123,7 @@ export default class UpdateDeploymentModal extends React.Component {
             return;
         }
 
-        this.setState({fileLoading: true, blueprintUrl: ""});
+        this.setState({fileLoading: true, blueprintUrl: ''});
 
         var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions.doListYamlFiles(null, file).then((yamlFiles)=>{

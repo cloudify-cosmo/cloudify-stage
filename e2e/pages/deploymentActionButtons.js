@@ -26,6 +26,6 @@ module.exports = {
         }
     },
     props: {
-        widgetId: "deploymentActionButtons"
+        widgetId: 'deploymentActionButtons'
     }
 };

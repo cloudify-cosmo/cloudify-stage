@@ -21,7 +21,7 @@ export default class Services extends Component {
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell colSpan='2'>
-                            <Header style={{"marginTop":"1rem"}} size="medium"><Icon name='settings'/>Server Services Status</Header>
+                            <Header style={{'marginTop':'1rem'}} size="medium"><Icon name='settings'/>Server Services Status</Header>
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>

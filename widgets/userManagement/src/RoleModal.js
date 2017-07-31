@@ -14,7 +14,7 @@ export default class RoleModal extends React.Component {
 
     static initialState = {
         loading: false,
-        role: "",
+        role: '',
         errors: {}
     }
 
@@ -38,7 +38,7 @@ export default class RoleModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.role)) {
-            errors["role"]="Please provide user role";
+            errors['role']='Please provide user role';
         }
 
         if (!_.isEmpty(errors)) {
@@ -71,7 +71,7 @@ export default class RoleModal extends React.Component {
             {text: Actions.ADMIN_ROLE, value: Actions.ADMIN_ROLE}
         ];
 
-        var user = Object.assign({},{username:""}, this.props.user);
+        var user = Object.assign({},{username:''}, this.props.user);
 
         return (
             <Modal open={this.props.open}>

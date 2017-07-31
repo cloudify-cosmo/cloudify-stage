@@ -17,7 +17,7 @@ export default class AddButton extends Component {
 
     render() {
         return (
-            <button className={"ui labeled icon button tiny teal basic compact " + this.props.className} onClick={this.props.onClick}>
+            <button className={'ui labeled icon button tiny teal basic compact ' + this.props.className} onClick={this.props.onClick}>
                 <i className="plus icon"></i>
                 {this.props.children}
             </button>

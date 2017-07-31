@@ -27,7 +27,7 @@ class InfluxActions {
     }
 
     doRunQuery(query) {
-        return this.toolbox.getInternal().doGet(`/monitor/query`, {q: query});
+        return this.toolbox.getInternal().doGet('/monitor/query', {q: query});
     }
 }
 

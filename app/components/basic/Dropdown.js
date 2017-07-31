@@ -44,9 +44,9 @@ export default class Dropdown extends DropdownSemanticUiReact {
 
         const { pageYOffset, pageXOffset } = window;
 
-        style.left = Math.round(coords.left + pageXOffset) + "px";
-        style.top = Math.round(coords.top + coords.height + pageYOffset - 2) + "px";
-        style.width = coords.width + "px";
+        style.left = Math.round(coords.left + pageXOffset) + 'px';
+        style.top = Math.round(coords.top + coords.height + pageYOffset - 2) + 'px';
+        style.width = coords.width + 'px';
 
         return style
     }
@@ -101,7 +101,7 @@ export default class Dropdown extends DropdownSemanticUiReact {
             'dropdown',
             'dropdownPortal',
             className
-        ].filter(e => !_.isEmpty(e)).join(" ");
+        ].filter(e => !_.isEmpty(e)).join(' ');
 
         var style = {};
         if (this.ref && open) {
@@ -112,7 +112,7 @@ export default class Dropdown extends DropdownSemanticUiReact {
         // Used only for dropdown menu, we are currently using Popup Menu so I do not port it to the body.
         if (!_.isNil(children)) {
             const menuChild = Children.only(children);
-            const className = [menuClasses, menuChild.props.className].join(" ");
+            const className = [menuClasses, menuChild.props.className].join(' ');
 
             return cloneElement(menuChild, { className, ...ariaOptions })
         }

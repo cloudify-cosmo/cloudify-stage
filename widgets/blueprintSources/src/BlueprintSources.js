@@ -12,10 +12,10 @@ export default class BlueprintSources extends React.Component {
     }
 
     static initialState = {
-        content: "",
-        filename: "",
-        error: "",
-        type: "json"
+        content: '',
+        filename: '',
+        error: '',
+        type: 'json'
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -32,7 +32,7 @@ export default class BlueprintSources extends React.Component {
 
     _selectFile(selectedKeys, info) {
         if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.props.children)) {
-            this.setState({content:"", filename:""});
+            this.setState({content:'', filename:''});
             return;
         }
 
@@ -42,22 +42,22 @@ export default class BlueprintSources extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doGetFileContent(path).then(data => {
-            var type = "basic";
-            if (_.endsWith(path, ".yaml") || _.endsWith(path, ".yml")) {
-                type = "yaml";
-            } else if (_.endsWith(path, ".py")) {
-                type = "python";
-            } else if (_.endsWith(path, ".sh")) {
-                type = "bash";
-            } else if (_.endsWith(path, ".json")) {
-                type = "json";
+            var type = 'basic';
+            if (_.endsWith(path, '.yaml') || _.endsWith(path, '.yml')) {
+                type = 'yaml';
+            } else if (_.endsWith(path, '.py')) {
+                type = 'python';
+            } else if (_.endsWith(path, '.sh')) {
+                type = 'bash';
+            } else if (_.endsWith(path, '.json')) {
+                type = 'json';
             }
 
             this.props.toolbox.loading(false);
 
-            this.setState({content:data, filename:info.node.props.title.props.children[1], type, error: ""});
+            this.setState({content:data, filename:info.node.props.title.props.children[1], type, error: ''});
         }).catch(err => {
-            this.setState({error: err.message, content:"", filename:""});
+            this.setState({error: err.message, content:'', filename:''});
             this.props.toolbox.loading(false);
         });
     }
