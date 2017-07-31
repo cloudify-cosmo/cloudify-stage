@@ -142,7 +142,12 @@ export default class Form extends Component {
 
     static fieldNameValue(field) {
         const name = field.name;
-        const value = field.type === 'checkbox' ? field.checked : field.value;
+        var value = field.value;
+
+        if (field.type === 'checkbox')
+            value = field.checked;
+        if (field.type === 'number')
+            value = parseInt(field.value);
 
         if (_.isEmpty(name)) {
             console.error("Required name attribute is not provided!", field);

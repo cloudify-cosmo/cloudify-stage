@@ -136,8 +136,8 @@ export default class GenericField extends Component {
      * @property {object} [value=''] specifies the value of an <input> element
      * @property {object[]} [items=[]] list of items (only for list fields)
      * @property {function} [onChange=()=>{}] function called on input value change
-     * @property {number} [max=0] maximal value (valid only when type is set to {@link GenericField.NUMBER_TYPE})
-     * @property {number} [min=0] minimal value (valid only when type is set to {@link GenericField.NUMBER_TYPE})
+     * @property {number} maximal value (valid only when type is set to {@link GenericField.NUMBER_TYPE})
+     * @property {number} minimal value (valid only when type is set to {@link GenericField.NUMBER_TYPE})
      */
     static propTypes = {
         label: PropTypes.string.isRequired,
@@ -159,9 +159,7 @@ export default class GenericField extends Component {
         description: '',
         value: '',
         items: [],
-        onChange: ()=>{},
-        max: 0,
-        min: 0
+        onChange: ()=>{}
     };
 
     static formatValue(type, value) {

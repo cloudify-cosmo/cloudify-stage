@@ -13,11 +13,13 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     static initialState = (props) => {
-
         var params = {};
         _.each(props.workflow.parameters,(param, name)=>{
-            params[name] = Stage.Common.JsonUtils.stringify(param.default);
-        })
+            if (typeof param.default == 'undefined' || typeof param.default == 'object')
+                params[name] = Stage.Common.JsonUtils.stringify(param.default);
+            else
+                params[name] = param.default;
+        });
 
         return {
             errors: {},
@@ -68,15 +70,31 @@ export default class ExecuteDeploymentModal extends React.Component {
         })
     }
 
+    getGenericFieldType(parameter){
+        const {GenericField} = Stage.Basic;
+
+        // if param type is not provided attempt to infer it from default value
+        if (!parameter.type)
+            parameter.type = typeof parameter.default;
+
+        switch (parameter.type){
+            case 'boolean':
+                return GenericField.BOOLEAN_TYPE;
+            case 'integer':
+                return GenericField.NUMBER_TYPE;
+            default:
+                return GenericField.STRING_TYPE;
+        }
+    }
+
     handleInputChange(event, field) {
         this.setState({params: {...this.state.params, ...Stage.Basic.Form.fieldNameValue(field)}});
     }
 
     render() {
-        var {Modal, Icon, Form, Message, Input, ApproveButton, CancelButton} = Stage.Basic;
+        var {Modal, Icon, Form, Message, ApproveButton, CancelButton, GenericField} = Stage.Basic;
 
         var workflow = Object.assign({},{name:"", parameters:[]}, this.props.workflow);
-
         return (
             <Modal open={this.props.open} className="executeWorkflowModal">
                 <Modal.Header>
@@ -96,8 +114,12 @@ export default class ExecuteDeploymentModal extends React.Component {
                             _.map(workflow.parameters,(parameter,name)=>{
                                 return (
                                     <Form.Field key={name}>
-                                        <label title={parameter.description || name }>{name}</label>
-                                        <Input name={name} value={this.state.params[name]} onChange={this.handleInputChange.bind(this)}/>
+                                        <GenericField name={name}
+                                                      label={name}
+                                                      description={parameter.description}
+                                                      type={this.getGenericFieldType(parameter)}
+                                                      value={this.state.params[name]}
+                                                      onChange={this.handleInputChange.bind(this)} />
                                     </Form.Field>
                                 );
                             })
