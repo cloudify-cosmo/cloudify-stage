@@ -64,7 +64,7 @@ export default class TenantModal extends React.Component {
         var options = _.map(tenants.items, item => { return {text: item.name, value: item.name, key: item.name} });
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} className="editTenantsModal">
                 <Modal.Header>
                     <Icon name="user"/> Edit tenants for {user.username}
                 </Modal.Header>

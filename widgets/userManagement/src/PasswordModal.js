@@ -79,7 +79,7 @@ export default class PasswordModal extends React.Component {
         var user = Object.assign({},{username:''}, this.props.user);
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} className='userPasswordModal'>
                 <Modal.Header>
                     <Icon name="lock"/> Set password for {user.username}
                 </Modal.Header>

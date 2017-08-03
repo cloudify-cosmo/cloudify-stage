@@ -30,7 +30,8 @@ module.exports = {
             elements: {
                 userName: 'span:first-child',
                 userDropdownMenu : '.menu',
-                editModeMenuItem : '#editModeMenuItem'
+                editModeMenuItem : '#editModeMenuItem',
+                logoutMenuItem: '#logoutMenuItem'
             },
             props: {
                 editModeLabel: 'Edit Mode',
