@@ -2,11 +2,13 @@
  * Created by kinneretzin on 02/04/2017.
  */
 
+var Config = require('../config');
+
 module.exports = {
     'Admin user menu': function (client) {
         client.login()
             .page.page().section.userMenu
-            .assert.containsText('@userName', 'admin')
+            .assert.containsText('@userName', Config.admin)
             .clickElement('@userName')
             .waitForElementVisible('@userDropdownMenu')
             .assert.containsText('#maintenanceMenuItem span','Maintenance Mode')
@@ -19,11 +21,10 @@ module.exports = {
     },
 
     'Regular user menu': function (client) {
-        // TODO: Test is working only when user 'user1' exists and is associated with at least one tenant.
-        //       To be fixed. Necessary to ensure that 'user1' exists and has at least one tenant assigned.
-        client.login(true)
+        client.ensureUserIsPresent(Config.user, Config.pass)
+            .login(true)
             .page.page().section.userMenu
-            .assert.containsText('@userName', 'user1')
+            .assert.containsText('@userName', Config.user)
             .clickElement('@userName')
             .waitForElementVisible('@userDropdownMenu')
             .assert.containsText('#resetMenuItem span','Reset')

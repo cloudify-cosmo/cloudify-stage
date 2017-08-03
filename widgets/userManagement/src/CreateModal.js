@@ -94,10 +94,11 @@ export default class CreateModal extends React.Component {
             {text: Actions.ADMIN_ROLE, value: Actions.ADMIN_ROLE}
         ];
 
-        const addButton = <Button content='Add' icon='add user' labelPosition='left' />;
+        const addButton = <Button content='Add' icon='add user' labelPosition='left' className='addUserButton' />;
 
         return (
-            <Modal trigger={addButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
+            <Modal trigger={addButton} open={this.state.open} onOpen={()=>this.setState({open:true})}
+                   onClose={()=>this.setState({open:false})} className="addUserModal">
                 <Modal.Header>
                     <Icon name="add user"/> Add user
                 </Modal.Header>

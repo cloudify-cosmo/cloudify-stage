@@ -154,6 +154,7 @@ export default class UsersTable extends React.Component {
 
     render() {
         let {ErrorMessage, DataTable, Checkmark, Label, Confirm} = Stage.Basic;
+        let tableName = 'usersTable';
 
         return (
             <div>
@@ -164,7 +165,7 @@ export default class UsersTable extends React.Component {
                            pageSize={this.props.widget.configuration.pageSize}
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
-                           className="usersTable">
+                           className={tableName}>
 
                     <DataTable.Column label="Username" name="username" width="32%" />
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />
@@ -177,7 +178,7 @@ export default class UsersTable extends React.Component {
                         this.props.data.items.map((item) => {
                             return (
                                 <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
-                                    <DataTable.Row key={item.username} selected={item.isSelected} onClick={this._selectUser.bind(this, item.username)}>
+                                    <DataTable.Row id={`${tableName}_${item.username}`} key={item.username} selected={item.isSelected} onClick={this._selectUser.bind(this, item.username)}>
                                         <DataTable.Data>{item.username}</DataTable.Data>
                                         <DataTable.Data>{item.last_login_at}</DataTable.Data>
                                         <DataTable.Data>{item.role}</DataTable.Data>
