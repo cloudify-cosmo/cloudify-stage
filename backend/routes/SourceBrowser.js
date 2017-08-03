@@ -4,7 +4,6 @@
  */
 
 var express = require('express');
-var request = require('request');
 var SourceHandler = require('../handler/SourceHandler');
 var AuthMiddleware = require('./AuthMiddleware');
 
@@ -25,8 +24,8 @@ router.get('/browse/file', function(req, res, next) {
         .catch(next);
 });
 
-router.get('/browse/:blueprintId/archive/:version', function(req, res, next) {
-    SourceHandler.browseArchiveTree(req, req.params.blueprintId, req.params.version)
+router.get('/browse/:blueprintId/archive', function(req, res, next) {
+    SourceHandler.browseArchiveTree(req)
         .then(data => res.send(data))
         .catch(next);
 });

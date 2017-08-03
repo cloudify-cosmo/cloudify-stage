@@ -151,7 +151,8 @@ export default class External {
             return response;
         }
 
-        // Ignoreing content type and trying to parse the json response. Some errors do send json body but not the right content type (like 400 bad request)
+        // Ignoring content type and trying to parse the json response.
+        // Some errors do send json body but not the right content type (like 400 bad request)
         return response.text()
             .then(resText=>{
                 try {

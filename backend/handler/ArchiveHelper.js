@@ -10,6 +10,7 @@ var sanitize = require('sanitize-filename');
 var decompress = require('decompress');
 var multer  = require('multer');
 var request = require('request');
+var ManagerHandler = require('./ManagerHandler');
 
 var logger = require('log4js').getLogger('archiveHelper');
 
@@ -47,59 +48,53 @@ module.exports = (function() {
         });
     }
 
-    function saveDataFromUrl(archiveUrl, targetDir, req, caFile) {
+    function saveDataFromUrl(archiveUrl, targetDir, req) {
         return new Promise((resolve, reject) => {
             archiveUrl = decodeURIComponent(archiveUrl.trim());
 
             logger.debug('fetching file from url', archiveUrl);
 
-            var options = {headers: {'User-Agent': 'Cloudify'}};
-            if (caFile) {
-                options.agentOptions = {
-                    ca: caFile
-                };
-            }
-            
-            var getRequest = request.get(archiveUrl, options)
-                .on('error', reject)
-                .on('response', function (response) {
-                    var archiveFile = _extractFilename(response.headers['content-disposition']);
+            var onErrorFetch = reject;
+            var onSuccessFetch = function (response) {
+                var archiveFile = _extractFilename(response.headers['content-disposition']);
 
-                    logger.debug('filename extracted from content-disposition', archiveFile);
-                    logger.debug('content length', response.headers['content-length']);
+                logger.debug('filename extracted from content-disposition', archiveFile);
+                logger.debug('content length', response.headers['content-length']);
 
-                    if (!archiveFile) {
-                        var details = pathlib.parse(archiveUrl);
+                if (!archiveFile) {
+                    var details = pathlib.parse(archiveUrl);
 
-                        var archiveExt = ['tar', 'bz2', 'gz', 'zip'].find(function (ext) {
-                            return _.includes(details.ext, ext);
-                        })
+                    var archiveExt = ['tar', 'bz2', 'gz', 'zip'].find(function (ext) {
+                        return _.includes(details.ext, ext);
+                    })
 
-                        if (archiveExt) {
-                            archiveFile = details.base;
-                        } else {
-                            return reject('Unable to determine filename from url ' + archiveUrl);
-                        }
-
-                        logger.debug('filename build from url', archiveFile);
+                    if (archiveExt) {
+                        archiveFile = details.base;
+                    } else {
+                        return reject('Unable to determine filename from url ' + archiveUrl);
                     }
 
-                    //remove not allowed characters
-                    archiveFile = sanitize(archiveFile);
+                    logger.debug('filename build from url', archiveFile);
+                }
 
-                    var archiveFolder = _.isFunction(targetDir) ? targetDir(archiveFile) : targetDir;
-                    fs.mkdirsSync(archiveFolder);
-                    var archivePath = pathlib.join(archiveFolder, archiveFile);
+                //remove not allowed characters
+                archiveFile = sanitize(archiveFile);
 
-                    logger.debug('streaming to file', archivePath);
+                var archiveFolder = _.isFunction(targetDir) ? targetDir(archiveFile) : targetDir;
+                fs.mkdirsSync(archiveFolder);
+                var archivePath = pathlib.join(archiveFolder, archiveFile);
 
-                    response.pipe(fs.createWriteStream(archivePath)
-                        .on('error', reject)
-                        .on('close', function () {
-                            logger.debug('archive saved, archivePath:', archivePath);
-                            resolve({archiveFolder, archiveFile, archivePath});
-                        }));
-                });
+                logger.debug('streaming to file', archivePath);
+
+                response.pipe(fs.createWriteStream(archivePath)
+                    .on('error', reject)
+                    .on('close', function () {
+                        logger.debug('archive saved, archivePath:', archivePath);
+                        resolve({archiveFolder, archiveFile, archivePath});
+                    }));
+            };
+
+            var getRequest = ManagerHandler.getRequest(archiveUrl, {'User-Agent': 'Cloudify'}, onSuccessFetch, onErrorFetch);
 
             if (req) {
                 req.pipe(getRequest);

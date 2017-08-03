@@ -11,28 +11,18 @@ var config = require('../config').get();
 var ArchiveHelper = require('./ArchiveHelper');
 
 var logger = require('log4js').getLogger('sourceHandler');
-
-var caFile =  null;
-
-try {
-    caFile = _.get(config,'app.ssl.ca') ? fs.readFileSync(config.app.ssl.ca) : null;
-} catch (e) {
-    console.error('Could not setup ssl ca, error loading file.', e);
-    process.exit(1);
-}
-
 var browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourcesDir);
 var lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
 
 module.exports = (function() {
 
-    function browseArchiveTree(req, blueprintId, version) {
-        var archiveUrl = config.managerUrl + '/api/' + version + '/blueprints/' + req.params.blueprintId + '/archive';
+    function browseArchiveTree(req) {
+        var archiveUrl = '/blueprints/' + req.params.blueprintId + '/archive';
         logger.debug('download archive from url', archiveUrl);
 
         var archiveFolder = pathlib.join(browseSourcesDir, 'source' + Date.now());
         return ArchiveHelper.removeOldExtracts(browseSourcesDir)
-            .then(() => ArchiveHelper.saveDataFromUrl(archiveUrl, archiveFolder, req,caFile))
+            .then(() => ArchiveHelper.saveDataFromUrl(archiveUrl, archiveFolder, req))
             .then(data => {
                 var archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
                 var extractedDir = pathlib.join(data.archiveFolder, 'extracted');
