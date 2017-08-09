@@ -2,7 +2,6 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-
 import * as types from './types';
 import { push } from 'react-router-redux';
 import {v4} from 'node-uuid';
@@ -93,7 +92,7 @@ export function selectPage(pageId,isDrilldown,drilldownContext,drilldownPageName
             dispatch(clearContext());
         }
 
-        var location = {pathname:`/page/${pageId}`};
+        var location = {pathname: `page/${pageId}`};
         if (!_.isEmpty(drilldownPageName)){
             location.pathname +=`/${drilldownPageName}`;
         }

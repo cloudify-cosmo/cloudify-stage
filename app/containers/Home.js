@@ -37,10 +37,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(setDrilldownContext(drilldownContext));
         },
         navigateTo404: () =>{
-            dispatch(push('/404'));
+            dispatch(push('404'));
         },
         navigateToMaintenancePage: () =>{
-            dispatch(push('/maintenance'));
+            dispatch(push('maintenance'));
         }
     }
 };

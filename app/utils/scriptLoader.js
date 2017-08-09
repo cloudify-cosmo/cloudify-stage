@@ -2,10 +2,11 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
+import StageUtils from './stageUtils';
 
 export default class ScriptLoader {
     constructor(scriptPath) {
-        this.path = scriptPath;
+        this.path = StageUtils.url(scriptPath);
         this.loaded = false;
     }
 

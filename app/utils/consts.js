@@ -3,6 +3,8 @@
  */
 
 export default {
+    CONTEXT_PATH: '/stage',
+
     DEFAULT_TENANT: 'default_tenant',
     MODE_MAIN: 'main',
     MODE_CUSTOMER: 'customer',

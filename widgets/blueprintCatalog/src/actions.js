@@ -37,7 +37,8 @@ export default class Actions {
 
         return this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params)
             .then(()=>this.doFindImage(repo))
-            .then(imageUrl=> imageUrl ? this.toolbox.getInternal().doPost(`/ba/image/${blueprintName}`, {imageUrl}) : Promise.resolve());
+            .then(imageUrl=> imageUrl ? this.toolbox.getInternal().doPost(`/ba/image/${blueprintName}`,
+                                                            {imageUrl: Stage.Utils.url(imageUrl)}) : Promise.resolve());
     }
 
     doFindImage(repo, defaultImage) {

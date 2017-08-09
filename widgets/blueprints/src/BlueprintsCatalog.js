@@ -40,7 +40,7 @@ export default class BlueprintsCatalog extends React.Component{
                             <Grid>
                                 <Grid.Row className="bottomDivider">
                                     <Grid.Column width="16">
-                                        <Image src={`/ba/image/${item.id}`}/>
+                                        <Image src={Stage.Utils.url(`/ba/image/${item.id}`)}/>
                                         <Header><a href="javascript:void(0)">{item.id}</a></Header>
                                         <PrivateMarker show={item.private_resource} title="Private resource" className="rightFloated"/>
                                     </Grid.Column>

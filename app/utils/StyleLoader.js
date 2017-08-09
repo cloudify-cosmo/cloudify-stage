@@ -2,10 +2,11 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
+import StageUtils from './stageUtils';
 
 export default class StyleLoader {
     constructor(stylePath) {
-        this.path = stylePath;
+        this.path = StageUtils.url(stylePath);
         this.loaded = false;
     }
 

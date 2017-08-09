@@ -149,7 +149,7 @@ export default class AddWidgetModal extends Component {
                                         <Item key={widget.id} data-id={widget.id} onClick={()=>{this._toggleWidgetInstall(widget)}}>
                                             <Checkbox className="addWidgetCheckbox" readOnly={true} title="Add widget to page"
                                                       checked={this.state.widgetsToAdd.includes(widget)}/>
-                                            <Item.Image as="div" size="small" bordered src={`/widgets/${widget.id}/widget.png`}/>
+                                            <Item.Image as="div" size="small" bordered src={Stage.Utils.url(`/widgets/${widget.id}/widget.png`)}/>
                                             <Item.Content>
                                                 <Item.Header as='a'>{widget.name}</Item.Header>
                                                 <Item.Meta>{widget.description}</Item.Meta>

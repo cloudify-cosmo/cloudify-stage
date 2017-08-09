@@ -3,6 +3,7 @@
  */
 
 import md5 from 'blueimp-md5';
+import Const from './consts';
 
 export default class StageUtils {
 
@@ -57,4 +58,13 @@ export default class StageUtils {
     static getMD5(str) {
         return md5(str);
     }
+
+    static url(path) {
+        if (path === '/') {
+            return Const.CONTEXT_PATH;
+        }
+
+        return Const.CONTEXT_PATH + (_.startsWith(path, '/') ? '' : '/') + path;
+    }
+
 }

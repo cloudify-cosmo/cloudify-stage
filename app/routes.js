@@ -20,12 +20,12 @@ export default (store)=> {
         var managerData = store.getState().manager;
         if (!Auth.isLoggedIn(managerData)) {
             console.log('User is not logged in, navigating to Login screen');
-            replace('/login');
+            replace('login');
         }
 
         if (managerData.maintenance === Consts.MAINTENANCE_ACTIVATED) {
             console.log('Manager is on maintenance mode, navigating to maintenance page');
-            replace('/maintenance');
+            replace('maintenance');
         }
 
         callback();
@@ -37,7 +37,7 @@ export default (store)=> {
         // This is only relevant if the user is logged in
         if (!Auth.isLoggedIn(managerData)) {
             console.log('User is not logged in, navigating to Login screen');
-            replace('/login');
+            replace('login');
         }
 
         // Only stay here if we are in maintenance mode
@@ -50,15 +50,15 @@ export default (store)=> {
     };
 
     return (
-        <Route>
-            <Route path='/login' component={Login}/>
-            <Route path='/maintenance' component={MaintenanceMode} onEnter={isInMaintenanceMode}/>
-            <Route path="/" component={Layout} onEnter={isLoggedIn}>
-                <Route path='/page/(:pageId)' component={Home}/>
-                <Route path='/page/(:pageId)/(:pageName)' component={Home}/>
-                <Route path="404" component={NotFound}/>
+        <Route path='/'>
+            <Route path='login' component={Login}/>
+            <Route path='maintenance' component={MaintenanceMode} onEnter={isInMaintenanceMode}/>
+            <Route component={Layout} onEnter={isLoggedIn}>
+                <Route path='page/(:pageId)' component={Home}/>
+                <Route path='page/(:pageId)/(:pageName)' component={Home}/>
+                <Route path='404' component={NotFound}/>
                 <IndexRoute component={Home}/>
-                <Redirect from="*" to="404"/>
+                <Redirect from="*" to='404'/>
             </Route>
         </Route>
     );

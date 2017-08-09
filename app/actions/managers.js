@@ -61,7 +61,7 @@ export function logout(err) {
     return function(dispatch) {
         dispatch(clearContext());
         dispatch(doLogout(err));
-        dispatch(push('/login'));
+        dispatch(push('login'));
     }
 }
 
@@ -95,7 +95,7 @@ export function switchMaintenance(manager, activate) {
         return managerAccessor.doPost(`/maintenance/${activate?'activate':'deactivate'}`)
             .then((data)=>{
                 dispatch(setStatus(manager.status, data.status, manager.services));
-                dispatch(push(activate? '/maintenance' : '/'));
+                dispatch(push(activate ? 'maintenance' : '/'));
             });
     }
 }

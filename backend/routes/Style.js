@@ -14,7 +14,7 @@ var styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
 
 var DEFAULT_MAIN_COLOR = '#000069';
 var DEFAULT_HEADER_TEXT_COLOR = '#d8e3e8';
-var DEFAULT_LOGO_URL = '/app/images/Cloudify-logo.png';
+var DEFAULT_LOGO_URL = config.app.contextPath + '/app/images/Cloudify-logo.png';
 var DEFAULT_SIDEBAR_COLOR = '#d8e3e8';
 var DEFAULT_SIDEBAR_TEXT_COLOR = '#000000';
 

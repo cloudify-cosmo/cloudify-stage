@@ -3,7 +3,6 @@
  */
 
 import fetch from 'isomorphic-fetch'
-import External from './External'
 import Internal from './Internal'
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
@@ -23,7 +22,7 @@ import WidgetDefinition from './WidgetDefinition';
 var widgetDefinitions = [];
 
 function fetchWidgetTemplate(path) {
-    return fetch(path)
+    return fetch(StageUtils.url(path))
         .then((response)=>{
             if (response.status >= 400) {
                 console.error(response.statusText);
@@ -57,10 +56,10 @@ export default class WidgetDefinitionsLoader {
     static _loadWidgets() {
         console.log('Load widgets');
 
-        var external = new External();
+        var internal = new Internal();
         return Promise.all([
                 new ScriptLoader('/widgets/common/common.js').load(), // Commons has to load before the widgets
-                external.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
+                internal.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
             ])
             .then((results)=> {
                 var data = results[1]; // widgets data

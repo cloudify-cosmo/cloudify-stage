@@ -10,45 +10,47 @@ new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
     hot: true,
     inline: true,
-    historyApiFallback: true,
+    historyApiFallback: {
+        index:'/stage/index.html'
+    },
     proxy: {
-        '/sp': {
+        '/stage/sp': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/config': {
+        '/stage/config': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/ua': {
+        '/stage/ua': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/source': {
+        '/stage/source': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/ba': {
+        '/stage/ba': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/clientConfig': {
+        '/stage/clientConfig': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/monitor': {
+        '/stage/monitor': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/github': {
+        '/stage/github': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/style': {
+        '/stage/style': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/widgets': {
+        '/stage/widgets': {
             target: 'http://localhost:8088',
             secure: false
         }
