@@ -3,6 +3,7 @@
  */
 
 import Internal from './Internal';
+import StageUtils from './stageUtils';
 
 export default class Manager extends Internal {
 
@@ -46,7 +47,7 @@ export default class Manager extends Internal {
             var queryString =  data ? (url.indexOf('?') > 0?'&':'?') + $.param(data, true) : '';
             var urlInServer = encodeURIComponent(`${this._data.apiVersion?'/api/'+this._data.apiVersion:''}${url}${queryString}`);
 
-            return `/sp/?su=${urlInServer}`;
+            return StageUtils.url(`/sp/?su=${urlInServer}`);
         }
     }
 

@@ -36,13 +36,15 @@ ServerSettings.init();
 
 logger.info('Server started in mode '+ServerSettings.settings.mode);
 
+var contextPath = config.get().app.contextPath;
+
 var app = express();
 
-app.use(express.static(path.resolve(__dirname , '../dist'),{index: 'index.html'}));
+app.use(contextPath, express.static(path.resolve(__dirname , '../dist'),{index: 'index.html'}));
 app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'INFO'}));
 
 // For dev purposes
-app.use((req,res,next) => {
+app.use(contextPath, (req,res,next) => {
     // Setting access control allow origin headers
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     // Request methods you wish to allow
@@ -57,17 +59,17 @@ app.use((req,res,next) => {
 });
 
 // Routes
-app.use('/sp',ServerProxy);
-app.use('/ua',UserApp);
-app.use('/applications',Applications);
-app.use('/source',SourceBrowser);
-app.use('/ba',BlueprintAdditions);
-app.use('/monitor',Monitoring);
-app.use('/style',Style);
-app.use('/widgets',Widgets);
-app.use('/clientConfig',clientConfig);
-app.use('/github',GitHub);
-app.use('/config',function(req,res){
+app.use(contextPath +'/sp',ServerProxy);
+app.use(contextPath +'/ua',UserApp);
+app.use(contextPath +'/applications',Applications);
+app.use(contextPath +'/source',SourceBrowser);
+app.use(contextPath +'/ba',BlueprintAdditions);
+app.use(contextPath +'/monitor',Monitoring);
+app.use(contextPath +'/style',Style);
+app.use(contextPath +'/widgets',Widgets);
+app.use(contextPath +'/clientConfig',clientConfig);
+app.use(contextPath +'/github',GitHub);
+app.use(contextPath +'/config',function(req,res){
     res.send(config.getForClient(ServerSettings.settings.mode));
 });
 

@@ -35,14 +35,16 @@ import '../node_modules/highlight.js/styles/xcode.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, browserHistory ,useRouterHistory} from 'react-router';
+import { Router, useRouterHistory} from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux'
+import { createHistory } from 'history';
 
 import configureStore  from './configureStore';
 import WidgetDefinitionsLoader from './utils/widgetDefinitionsLoader';
 import {createToolbox} from './utils/Toolbox';
 import ConfigLoader from './utils/ConfigLoader';
 import EventBus from './utils/EventBus';
+import Consts from './utils/consts';
 import createRoutes from './routes';
 
 import TemplatesLoader from './utils/templatesLoader';
@@ -50,6 +52,10 @@ import TemplatesLoader from './utils/templatesLoader';
 import StatusPoller from './utils/StatusPoller';
 import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
 import SplashLoadingScreen from './utils/SplashLoadingScreen';
+
+const browserHistory = useRouterHistory(createHistory)({
+    basename: Consts.CONTEXT_PATH
+});
 
 export default class app{
     static load (){

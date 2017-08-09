@@ -38,9 +38,9 @@ export default class MaintenanceModePageMessage extends Component {
     render () {
         var {Label,Icon} = Stage.Basic;
         return (
-            <div className='maintenancePage ui segment basic inverted teal'>
+            <div className='maintenancePage ui segment basic'>
                 <div className="logo">
-                    <img src="/app/images/Cloudify-logo.png" />
+                    <img src={Stage.Utils.url('/app/images/Cloudify-logo.png')}/>
                 </div>
 
                 <div className="ui raised very padded text container segment center aligned maintenanceContainer">

@@ -28,7 +28,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'dist'),
         filename: '[name].js',
-        publicPath: '/'
+        publicPath: '/stage'
     },
 
     plugins: [
@@ -76,7 +76,7 @@ module.exports = {
         loaders: [
             {
                 test: /\.js?$/,
-                exclude: [/bower_components/, /node_modules/,/cloudify-blueprint-topology/],
+                exclude: [/bower_components/, new RegExp('node_modules\\'+path.sep+'(?!d3-format).*'), /cloudify-blueprint-topology/],
                 loaders: ['react-hot','babel']
             },
             {
