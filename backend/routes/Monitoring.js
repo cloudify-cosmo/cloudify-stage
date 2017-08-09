@@ -83,12 +83,16 @@ router.get('/metrics/:deploymentId',function (req, res,next) {
  *    to - the to time
  *    timeGroup - group the results by time
  */
-router.get('/byMetric/:deploymentId/:metric',function(req,res,next){
+router.get('/byMetric/:deploymentId/:metrics',function(req,res,next){
     var fromTime = req.query.from ||  'now() - 15m';
     var toTime = req.query.to || 'now()';
     var timeGrouping = req.query.timeGroup || 10;
+    var metrics = _.chain(req.params.metrics)
+                   .split(',')
+                   .map(function(metric) { return `(${metric})`})
+                   .join('|');
 
-    var query = 'select mean(value) from /'+req.params.deploymentId+'\\..*\\.'+req.params.metric+'/  ' +
+    var query = 'select mean(value) from /'+req.params.deploymentId+'\\..*\\.('+metrics+')$/ ' +
                 'where time > '+fromTime+' and time < '+toTime+' group by time('+timeGrouping+')  order asc';
 
     logger.debug('Query: ',query);

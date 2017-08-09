@@ -15,10 +15,16 @@ Stage.defineWidget({
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5),
         {id: "deploymentId", name: "Deployment ID", placeHolder: "If not set, then will be taken from context", default: "", type: Stage.Basic.GenericField.STRING_TYPE},
-        {id: "metric", name: "Metric", placeHolder: "Metric data to be presented on the graph", default: "memory_MemFree", type: Stage.Basic.GenericField.EDITABLE_LIST_TYPE,
-         items: [{name: "cpu_total_system", value: "cpu_total_system"}, {name: "cpu_total_user", value: "cpu_total_user"},
-                 {name: "memory_MemFree", value: "memory_MemFree"}, {name: "memory_SwapFree", value: "memory_SwapFree"},
-                 {name: "loadavg_processes_running", value: "loadavg_processes_running"}]},
+        {id: "charts", name: "Charts table",  description: "", default: "", type: Stage.Basic.GenericField.EDITABLE_TABLE_TYPE, max: 5, items: [
+            {name: "metric", label: 'Metric', default: "", type: Stage.Basic.GenericField.EDITABLE_LIST_TYPE, description: "Name of the metric to be presented on the graph",
+                items: ["", "cpu_total_system", "cpu_total_user", "memory_MemFree", "memory_SwapFree", "loadavg_processes_running"]},
+            {name: 'label', label: 'Label', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart label"},
+            {name: 'unit', label: 'Unit', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart data unit"}
+        ]
+        },
+        {id: 'query', name: 'Chart query', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "InfluxQL query to fetch input data for the graph"},
+        {id: "type", name: "Charts type", items: [{name:'Line chart', value:Stage.Basic.Graphs.Graph.LINE_CHART_TYPE}, {name:'Bar chart', value:Stage.Basic.Graphs.Graph.BAR_CHART_TYPE}],
+            default: Stage.Basic.Graphs.Graph.LINE_CHART_TYPE, type: Stage.Basic.GenericField.LIST_TYPE},
         {id: "from", name: "Time range start", placeHolder: "Start time for data to be presented", default: "now() - 15m", type: Stage.Basic.GenericField.LIST_TYPE,
          items: [{name:'last 15 minutes', value:'now() - 15m'}, {name:'last hour', value:'now() - 1h'}, {name:'last day', value: 'now() - 1d'}]},
         {id: "to", name: "Time range end", placeHolder: "End time for data to be presented", default: "now()", type: Stage.Basic.GenericField.LIST_TYPE,
@@ -26,35 +32,77 @@ Stage.defineWidget({
         {id: "resolution", name: "Time resolution value",  placeHolder: "Time resolution value", default: "1", type: Stage.Basic.GenericField.NUMBER_TYPE,
          min: Stage.Common.TimeConsts.MIN_TIME_RESOLUTION_VALUE, max: Stage.Common.TimeConsts.MAX_TIME_RESOLUTION_VALUE},
         {id: "unit", name: "Time resolution unit", placeHolder: "Time resolution unit", default: "m", type: Stage.Basic.GenericField.LIST_TYPE,
-            items: Stage.Common.TimeConsts.TIME_RESOLUTION_UNITS},
-        {id: "query", name: "Database query", placeHolder: "InfluxQL query to fetch input data for the graph", default: "", type: Stage.Basic.GenericField.STRING_TYPE},
-        {id: "type", name: "Graph type", items: [{name:'Line chart', value:Stage.Basic.Graphs.Graph.LINE_CHART_TYPE}, {name:'Bar chart', value:Stage.Basic.Graphs.Graph.BAR_CHART_TYPE}],
-         default: Stage.Basic.Graphs.Graph.LINE_CHART_TYPE, type: Stage.Basic.GenericField.LIST_TYPE},
-        {id: "label", name: "Graph label",  placeHolder: "Data label to be shown below the graph", default: "", type: Stage.Basic.GenericField.STRING_TYPE},
-        {id: "dataUnit", name: "Graph data unit",  placeHolder: "Data unit to be shown on the left side of the graph", default: "", type: Stage.Basic.GenericField.STRING_TYPE}
+            items: Stage.Common.TimeConsts.TIME_RESOLUTION_UNITS}
     ],
 
-    _prepareData: function(data, xDataKey, yDataKey, yDataUnit) {
+    _prepareData: function(data, xDataKey) {
         const TIME_FORMAT = "HH:mm:ss";
         const MAX_NUMBER_OF_POINTS = 500;
+        const TIME_INDEX = 0;
+        const VALUE_INDEX = 1;
+        const REFERENCE_METRIC_INDEX = 0;
+        const NUMBER_OF_METRICS = data.length;
+        const NUMBER_OF_POINTS = data[REFERENCE_METRIC_INDEX].points.length;
+        let points = [];
 
-        // Data optimization (show no more than MAX_NUMBER_OF_POINTS points on the graph)
-        if (data.length > MAX_NUMBER_OF_POINTS) {
-            let optimizedData = [];
-            let delta = parseFloat(data.length / MAX_NUMBER_OF_POINTS);
-            for (let i = 0; i < data.length; i = i + delta) {
-                optimizedData.push(data[Math.floor(i)]);
+        // Data conversion to recharts format
+        // As a reference time points list, metric no. REFERENCE_METRIC_INDEX is taken
+        for (let i = 0; i < NUMBER_OF_POINTS; i++) {
+            let point = { [xDataKey]: Stage.Utils.formatTimestamp(data[REFERENCE_METRIC_INDEX].points[i][TIME_INDEX], TIME_FORMAT, null) };
+            for (let j = 0; j < NUMBER_OF_METRICS; j++) {
+                if (data[j].points[i] &&
+                    data[REFERENCE_METRIC_INDEX].points[i][TIME_INDEX] === data[j].points[i][TIME_INDEX])
+                {
+                    let metricName = data[j].name;
+                    let pointValue = data[j].points[i][VALUE_INDEX];
+                    point[metricName] = pointValue;
+                }
             }
-            data = optimizedData;
+            points.push(point);
         }
 
-        // Convert data to recharts format
-        data = _.map(data, (element) => ({
-            [xDataKey]: Stage.Utils.formatTimestamp(element[0], TIME_FORMAT, null),
-            [yDataKey]: element[1]
-        }));
+        // Data optimization (show no more than MAX_NUMBER_OF_POINTS points on the graph)
+        if (points.length > MAX_NUMBER_OF_POINTS) {
+            let optimizedPoints = [];
+            let delta = parseFloat(points.length / MAX_NUMBER_OF_POINTS);
+            for (let i = 0; i < points.length; i = i + delta) {
+                optimizedPoints.push(points[Math.floor(i)]);
+            }
+            points = optimizedPoints;
+        }
 
-        return data;
+        return points;
+    },
+
+    _getChartsMetricsList: function(charts) {
+        return _.map(_.filter(charts, (graph) => !_.isEmpty(graph.metric)), (graph) => graph.metric);
+    },
+
+    _getChartsConfiguration: function(charts, query, data) {
+        let chartsConfig = [];
+
+        if (!_.isEmpty(query)) {
+            _.forEach(data, (chart) => {
+                chartsConfig.push({
+                    name: chart.name,
+                    label: chart.name,
+                    axisLabel: ''
+                });
+            })
+        } else {
+            _.forEach(charts, (chart) => {
+                let chartName = chart.metric;
+                if (!_.isEmpty(chartName)) {
+                    chartsConfig.push({
+                        name: chartName,
+                        label: (chart.label ? chart.label : chartName) + (chart.unit ? ` [${chart.unit}]` : ''),
+                        axisLabel: ''
+                    });
+                }
+            })
+        }
+
+        return chartsConfig;
     },
 
     fetchParams: function(widget, toolbox) {
@@ -78,51 +126,58 @@ Stage.defineWidget({
     },
 
     fetchData: function(widget, toolbox, params) {
-        let query = widget.configuration.query;
         let actions = new Stage.Common.InfluxActions(toolbox);
+        let deploymentId = params.deploymentId;
+        let metrics = this._getChartsMetricsList(widget.configuration.charts);
+        let query = widget.configuration.query;
 
         if (!_.isEmpty(query)) {
-            return actions.doRunQuery(query).then((data) => Promise.resolve({metrics: data}))
+            return actions.doRunQuery(query).then((data) => {
+                let formattedResponse
+                    = _.map(data, (metric) => ({name: _.last(_.split(metric.name, '.')), points: metric.points}));
+                return Promise.resolve(formattedResponse)
+            })
+        } else if (!_.isEmpty(deploymentId) && !_.isEmpty(metrics)) {
+            let from = params.timeStart;
+            let to = params.timeEnd;
+            let timeGroup = params.timeGroup;
+            return actions.doGetMetric(deploymentId, metrics, from, to, timeGroup).then((data) => {
+                let formattedResponse
+                    = _.map(data, (metric) => ({name: _.last(_.split(metric.name, '.')), points: metric.points}));
+                return Promise.resolve(formattedResponse);
+            });
         } else {
-            let deploymentId = params.deploymentId;
-            let metric = widget.configuration.metric;
-            if (!_.isEmpty(deploymentId) && !_.isEmpty(metric)) {
-                let from = params.timeStart;
-                let to = params.timeEnd;
-                let timeGroup = params.timeGroup;
-                return actions.doGetMetric(deploymentId, metric, from, to, timeGroup).then((data) => Promise.resolve({metrics: data}))
-            } else {
-                return Promise.resolve({metrics: []});
-            }
+            return Promise.resolve([]);
         }
     },
 
     render: function(widget,data,error,toolbox) {
-        let deploymentId = toolbox.getContext().getValue('deploymentId') || widget.configuration.deploymentId;
-        let metric = widget.configuration.metric;
-        let query = widget.configuration.query;
-        if ((_.isEmpty(deploymentId) || _.isEmpty(metric)) && _.isEmpty(query)) {
+        let {deploymentId, charts, query, type} = widget.configuration;
+        deploymentId = toolbox.getContext().getValue('deploymentId') || deploymentId;
+        let metrics = this._getChartsMetricsList(charts);
+
+        if ((_.isEmpty(deploymentId) || _.isEmpty(metrics)) && _.isEmpty(query)) {
             let {Message, Icon} = Stage.Basic;
             return (
                 <Message>
                     <Icon name="ban" />
-                    <span>Widget not configured properly. Please provide Metric and Deployment ID or database Query.</span>
+                    <span>
+                        Widget not configured properly. Please configure at least one chart in Charts Table
+                        and provide Deployment ID or fill in InfluxQL query.
+                    </span>
                 </Message>
             );
         }
 
-        if (_.isEmpty(data) || _.isEmpty(data.metrics)) {
+        if (_.isEmpty(data)) {
             return <Stage.Basic.Loading/>;
         }
 
         let {Graph} = Stage.Basic.Graphs;
-        let label = widget.configuration.label;
-        let type = widget.configuration.type;
-        let dataUnit = widget.configuration.dataUnit;
-        let preparedData = this._prepareData(data.metrics[0].points, Graph.DEFAULT_X_DATA_KEY, metric, dataUnit);
-
         return (
-            <Graph yDataKey={metric} yDataUnit={dataUnit} data={preparedData} label={label} type={type} />
+            <Graph type={type}
+                   data={this._prepareData(data, Graph.DEFAULT_X_DATA_KEY)}
+                   charts={this._getChartsConfiguration(charts, query, data)} />
         );
 
     }

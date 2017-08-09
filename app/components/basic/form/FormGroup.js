@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { Form } from 'semantic-ui-react'
 
 /**
- * FormGroup is a component to group {@link FormField} components and is used in {@link FormWrapper} component
+ * FormGroup is a component to group {@link FormField} components and is used in {@link Form} component
  *
  * FormGroup is a wrapper for [Semantic UI-React's Form.Group component](https://react.semantic-ui.com/collections/form),
  * so all properties of that component can be used here.

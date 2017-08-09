@@ -6,7 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import { Form } from 'semantic-ui-react'
 
 /**
- * FormField is a component to present field and is used in {@link FormWrapper} component
+ * FormField is a component to present field and is used in {@link Form} component
  *
  * FormField is a wrapper for [Semantic UI-React's Form.Field component](https://react.semantic-ui.com/collections/form),
  * so all properties of that component can be used here.
