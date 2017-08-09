@@ -5,7 +5,7 @@
 import 'proxy-polyfill';
 
 import {drillDownToPage} from '../actions/widgets';
-import {selectHomePage, selectParentPage} from '../actions/page';
+import {selectPageByName, selectHomePage, selectParentPage} from '../actions/page';
 
 
 import EventBus from './EventBus';
@@ -46,6 +46,10 @@ class Toolbox {
 
     goToParentPage() {
         this.store.dispatch(selectParentPage(this._currentPageId()));
+    }
+
+    goToPage(pageName) {
+        this.store.dispatch(selectPageByName(pageName));
     }
 
     getEventBus (){

@@ -114,6 +114,10 @@ export function selectPage(pageId,isDrilldown,drilldownContext,drilldownPageName
         dispatch(push(location));
     }
 }
+export function selectPageByName(pageName) {
+    var pageId = _.snakeCase(pageName);
+    return selectPage(pageId, false);
+}
 
 export function removePage(pageId) {
     return {
