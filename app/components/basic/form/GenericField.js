@@ -4,11 +4,12 @@
 
 import React, { Component, PropTypes } from 'react';
 import {Icon, Popup, Input, Checkbox, Dropdown, Form} from '../index'
+import EdiTable from './EdiTable';
 
 /**
- * GenericField is a generic component which can be used as different input fields in {@link FormWrapper} component
+ * GenericField is a generic component which can be used as different input fields in {@link Form} component
  *
- * It is used widely in widget coniguration modal. Constant values used for defining field type are described below.
+ * It is used widely in widget configuration modal. Constant values used for defining field type are described below.
  *
  * ## Access
  * `Stage.Basic.Form.GenericField`
@@ -77,7 +78,23 @@ import {Icon, Popup, Input, Checkbox, Dropdown, Form} from '../index'
  * <GenericField name="numberEditableListTest" type={GenericField.NUMBER_EDITABLE_LIST_TYPE}
  *               label="NUMBER_EDITABLE_LIST_TYPE" items={[1,2,3]} value={2}/>
  * ```
+ *
+ * ### Editable table field
+ * ![GenericField](manual/asset/form/GenericField_10.png)
+ * ```
+ * <GenericField name="editableTable" type={GenericField.EDITABLE_TABLE_TYPE}
+ *               label="EDITABLE_TABLE_TYPE"
+ *               items={[
+ *                 {name: "metric", label: 'Metric', default: "", type: Stage.Basic.GenericField.EDITABLE_LIST_TYPE, description: "Name of the metric to be presented on the graph",
+ *                  items: ["", "cpu_total_system", "cpu_total_user", "memory_MemFree", "memory_SwapFree", "loadavg_processes_running"]},
+ *                 {name: 'label', label: 'Label', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart label"},
+ *                 {name: 'unit', label: 'Unit', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart data unit"}
+ *               ]}
+ *               max={3} />
+ * ```
  */
+
+
 export default class GenericField extends Component {
 
     /**
@@ -126,18 +143,23 @@ export default class GenericField extends Component {
     static NUMBER_EDITABLE_LIST_TYPE = 'numberEditableList';
 
     /**
+     * dropdown editable numeric list
+     */
+    static EDITABLE_TABLE_TYPE = 'editableTable';
+
+    /**
      * propTypes
      * @property {string} label field's label to show above the field
      * @property {string} name name of the input field
      * @property {string} [placeholder=''] specifies a short hint that describes the expected value of an input field
      * @property {string} [type=GenericField.STRING_TYPE] specifies type of the field
-     * @property {string} [icon] additional icon in right side of the input field
+     * @property {string} [icon=null] additional icon in right side of the input field
      * @property {string} [description=''] fields description showed in popup when user hovers field
      * @property {object} [value=''] specifies the value of an <input> element
-     * @property {object[]} [items=[]] list of items (only for list fields)
+     * @property {object[]} [items=[]] list of items (for list types) or list of columns (for {@link GenericField.EDITABLE_TABLE_TYPE} type)
      * @property {function} [onChange=()=>{}] function called on input value change
-     * @property {number} maximal value (valid only when type is set to {@link GenericField.NUMBER_TYPE})
-     * @property {number} minimal value (valid only when type is set to {@link GenericField.NUMBER_TYPE})
+     * @property {number} [max=null] maximal value (for {@link GenericField.NUMBER_TYPE} type) or number of rows (for {@link GenericField.EDITABLE_TABLE_TYPE})
+     * @property {number} [min=null] minimal value (only for {@link GenericField.NUMBER_TYPE} type)
      */
     static propTypes = {
         label: PropTypes.string.isRequired,
@@ -156,11 +178,53 @@ export default class GenericField extends Component {
     static defaultProps = {
         placeholder: '',
         type: GenericField.STRING_TYPE,
+        icon: null,
         description: '',
         value: '',
         items: [],
-        onChange: ()=>{}
+        onChange: ()=>{},
+        max: null,
+        min: null
     };
+
+    constructor(props,context) {
+        super(props,context);
+
+        this._initOptions(props);
+    }
+
+    _initOptions(props) {
+        if (!_.isEmpty(props.items)) {
+            let valueAlreadyInOptions = false;
+            let options = _.map(props.items, item => {
+                if (!_.isObject(item)) {
+                    item = {name:item, value:item};
+                }
+
+                if (item.value === props.value) {
+                    valueAlreadyInOptions = true;
+                }
+                return { text: item.name, value: item.value}
+            });
+
+            if (props.type !== GenericField.MULTI_SELECT_LIST_TYPE && !valueAlreadyInOptions) {
+                options.push({ text: props.value, value: props.value });
+            }
+
+            this.state = {options};
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps !== this.props && nextProps.items !== this.props.items) {
+            this._initOptions(nextProps);
+        }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return JSON.stringify(this.props) !== JSON.stringify(nextProps)
+            || JSON.stringify(this.state) !== JSON.stringify(nextState);
+    }
 
     static formatValue(type, value) {
         if (type === GenericField.MULTI_SELECT_LIST_TYPE) {
@@ -168,8 +232,8 @@ export default class GenericField extends Component {
         } else if (type === GenericField.BOOLEAN_TYPE) {
             value = (_.isBoolean(value) && value) || (_.isString(value) && value === 'true');
         } else if (type === GenericField.NUMBER_TYPE ||
-            type === GenericField.NUMBER_LIST_TYPE ||
-            type === GenericField.NUMBER_EDITABLE_LIST_TYPE) {
+                   type === GenericField.NUMBER_LIST_TYPE ||
+                   type === GenericField.NUMBER_EDITABLE_LIST_TYPE) {
             value = parseInt(value) || 0;
         }
 
@@ -194,7 +258,7 @@ export default class GenericField extends Component {
 
             field = <Checkbox name={this.props.name} toggle={true}
                               checked={(_.isBoolean(this.props.value) && this.props.value) ||
-                                              (_.isString(this.props.value) && this.props.value === 'true')}
+                                       (_.isString(this.props.value) && this.props.value === 'true')}
                               onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}/>
 
         } else if (this.props.type === GenericField.LIST_TYPE ||
@@ -203,36 +267,39 @@ export default class GenericField extends Component {
                    this.props.type === GenericField.EDITABLE_LIST_TYPE ||
                    this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE) {
 
-            let options = []
-            if (!_.isEmpty(this.props.items)) {
-                options = _.map(this.props.items, item => {
-                    if (!_.isObject(item)) {
-                        item = {name:item, value:item};
-                    }
-
-                    return { text: item.name, value: item.value}
-                });
-            }
-
             field = <Dropdown fluid selection value={this.props.value} name={this.props.name}
                               multiple={this.props.type === GenericField.MULTI_SELECT_LIST_TYPE}
-                              allowAdditions={this.props.type === GenericField.EDITABLE_LIST_TYPE || this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
-                              search={this.props.type === GenericField.EDITABLE_LIST_TYPE || this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
-                              placeholder={this.props.placeholder} options={options}
-                              onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}/>;
+                              allowAdditions={this.props.type === GenericField.EDITABLE_LIST_TYPE ||
+                                              this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
+                              search={this.props.type === GenericField.EDITABLE_LIST_TYPE ||
+                                      this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
+                              placeholder={this.props.placeholder} options={this.state.options}
+                              onAddItem={(e, { value }) => {this.setState({options: [{ text: value, value }, ...this.state.options]})}}
+                              onChange={(proxy, field)=> { this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}} />;
+
+        } else if (this.props.type === GenericField.EDITABLE_TABLE_TYPE) {
+
+            field = <EdiTable name={this.props.name}
+                              value={this.props.value}
+                              rows={this.props.max}
+                              columns={this.props.items}
+                              onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))} />;
         }
 
         return (
             <Form.Field className={this.props.name}>
-                <label>{this.props.label}&nbsp;
-                    {
-                        this.props.description &&
-                        <Popup>
-                            <Popup.Trigger><Icon name="help circle outline"/></Popup.Trigger>
-                            {this.props.description}
-                        </Popup>
-                    }
-                </label>
+                {
+                    this.props.label &&
+                    <label>{this.props.label}&nbsp;
+                        {
+                            this.props.description &&
+                            <Popup>
+                                <Popup.Trigger><Icon name="help circle outline"/></Popup.Trigger>
+                                {this.props.description}
+                            </Popup>
+                        }
+                    </label>
+                }
 
                 {field}
 

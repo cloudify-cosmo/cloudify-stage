@@ -61,6 +61,10 @@ export default class extends React.Component {
         this.setState({showModal: false});
     }
 
+    _onErrorDismiss() {
+        this.setState({error: null});
+    }
+
     render() {
         var ErrorMessage = Stage.Basic.ErrorMessage;
 

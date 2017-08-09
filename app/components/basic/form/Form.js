@@ -12,6 +12,7 @@ import FormDivider from './FormDivider'
 import FormFile from './InputFile'
 import FormDateRange from './InputDateRange'
 import FormDropdown from '../Dropdown'
+import FormTable from './EdiTable'
 
 /**
  * Form is a component to present HTML forms
@@ -120,6 +121,11 @@ export default class Form extends Component {
      * Form checkbox input, see [Button](https://react.semantic-ui.com/elements/button)
      */
     static Button = FormButton;
+
+    /**
+     * Form table input, see {@link EdiTable}
+     */
+    static Table = FormTable;
 
     /**
      * propTypes
