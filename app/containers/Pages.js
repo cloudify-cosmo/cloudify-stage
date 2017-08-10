@@ -6,6 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PagesList from '../components/PagesList';
 import {selectPage, removePage, reorderPage} from '../actions/page';
+import {toogleSidebar} from '../actions/app';
 
 const findSelectedRootPage = (pagesMap,selectedPageId) => {
     var _r = (page) => {
@@ -46,6 +47,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onPageReorder: (pageIndex, newPageIndex) => {
             dispatch(reorderPage(pageIndex, newPageIndex));
+        },
+        onSidebarClose: () => {
+            dispatch(toogleSidebar());
         }
     }
 };

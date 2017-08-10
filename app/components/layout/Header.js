@@ -28,7 +28,8 @@ export default class Header extends Component {
     static propTypes = {
         manager: PropTypes.any.isRequired,
         mode: PropTypes.string.isRequired,
-        onResetTemplate: PropTypes.func.isRequired
+        onResetTemplate: PropTypes.func.isRequired,
+        onSidebarOpen : PropTypes.func.isRequired,
     };
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -36,10 +37,18 @@ export default class Header extends Component {
     }
 
     render() {
+        let {Icon} = Stage.Basic;
         let isModeMain = this.props.mode === Consts.MODE_MAIN;
 
         return (
             <div className="ui top fixed menu inverted secondary headerBar">
+                <Icon
+                    link
+                    name="content"
+                    className="sidebar-button"
+                    size="large"
+                    onClick={() => this.props.onSidebarOpen()}
+                />
                 <div className="logo">
                 </div>
                 {

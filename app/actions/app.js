@@ -39,3 +39,9 @@ export function intialPageLoad() {
         });
     }
 }
+
+export function toogleSidebar() {
+    return {
+        type : types.APP_SIDEBAR_TOOGLE
+    }
+}
