@@ -4,12 +4,13 @@
  */
 
 var logger = require('log4js').getLogger('argsReader');
-
+var _ = require('lodash');
 
 var ServerSettings = {
 
     MODE_MAIN: 'main',
     MODE_CUSTOMER : 'customer',
+    MODE_COMMUNITY : 'community',
 
     settings: {},
 
@@ -17,9 +18,10 @@ var ServerSettings = {
         this.settings = {
             mode: this.MODE_MAIN
         };
+        var modes = [this.MODE_MAIN, this.MODE_CUSTOMER, this.MODE_COMMUNITY];
 
         var displayUsage = ()=>{
-            logger.info('Usage: server.js -mode ['+this.MODE_MAIN + '|' +this.MODE_CUSTOMER + ']');
+            logger.info('Usage: server.js -mode [' + _.join(modes,'|') + ']');
             process.exit(0);
         };
 
@@ -31,7 +33,7 @@ var ServerSettings = {
             if (val.toLowerCase() === '-mode') {
                 if (process.argv.length > index+1){
                     var mode = process.argv[index+1].toLowerCase();
-                    if (mode === this.MODE_MAIN || mode === this.MODE_CUSTOMER) {
+                    if (_.includes(modes, mode)) {
                         this.settings.mode = mode;
                     } else {
                         displayUsage();
