@@ -4,7 +4,6 @@
 
 import 'babel-polyfill';
 
-//import $ from 'jquery'
 window.$ = $;
 import 'jquery-ui/ui/core.js';
 import 'jquery-ui/ui/widget.js';
@@ -12,9 +11,6 @@ import 'jquery-ui/ui/widgets/mouse.js';
 import 'jquery-ui/ui/widgets/draggable.js';
 import 'jquery-ui/ui/widgets/droppable.js';
 
-import _ from 'lodash';
-
-//import '../styles/bootstrap.min.css';
 import './styles/style.scss';
 
 // Import semantic

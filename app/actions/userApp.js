@@ -3,10 +3,10 @@
  */
 
 import * as types from './types';
-import fetch from 'isomorphic-fetch';
 import {createPageFromInitialTemplate} from './page';
+import {setAppLoading} from './app';
 import Internal from '../utils/Internal';
-import Consts from '../utils/consts';
+import InitialTemplate from '../utils/InitialTemplate';
 import { push } from 'react-router-redux';
 
 const  CURRENT_APP_DATA_VERSION = 4;
@@ -34,7 +34,7 @@ export function resetTemplate(manager,config,templates,widgetDefinitions){
         dispatch(setPages([]));
 
         // Need to create from initial template
-        var initialTemplateName = config.app['initialTemplate'][config.mode === Consts.MODE_CUSTOMER ? Consts.MODE_CUSTOMER: manager.auth.role] || Consts.DEFAULT_INITIAL_TEMPLATE;
+        var initialTemplateName = InitialTemplate.getName(config, manager);
         var initialTemplate = templates[initialTemplateName];
         dispatch(createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions));
         dispatch(push('/'));
@@ -57,6 +57,17 @@ export function loadOrCreateUserAppData (manager,config,templates,widgetDefiniti
                     var data = { pages: getState().pages};
                     return dispatch(saveUserAppData(manager, data));
                 }
+            });
+    }
+}
+
+export function reloadUserAppData () {
+    return function (dispatch,getState) {
+        dispatch(setAppLoading(true));
+        var state = getState();
+        return dispatch(loadOrCreateUserAppData(state.manager,state.config,state.templates,state.widgetDefinitions))
+            .then(()=>{
+                dispatch(setAppLoading(false));
             });
     }
 }
