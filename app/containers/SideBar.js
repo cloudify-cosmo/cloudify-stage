@@ -12,7 +12,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         homePageId,
         pageId:     ownProps.pageId || homePageId,
-        isEditMode: state.config.isEditMode || false
+        isEditMode: state.config.isEditMode || false,
+        isOpen: state.app.sidebarIsOpen
     }
 };
 

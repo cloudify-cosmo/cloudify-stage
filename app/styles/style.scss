@@ -25,6 +25,14 @@ a:hover {
   display: inline-block;
 }
 
+.sidebar-button{
+  color: white;
+  padding: 15px;
+  @media (min-width: 992px) {
+    display: none !important;
+   }
+}
+
 .main {
   position: absolute;
   left: 0;
@@ -33,12 +41,19 @@ a:hover {
   //bottom: 30px;
   top: 55px;
 
-
   .sidebar {
     &.ui.left.menu{
-      z-index: 0;
+      z-index: 1;
       top: 55px;
       height: calc(100% - 55px) !important;
+      transition: all 500ms cubic-bezier(.55, 0, .1, 1);
+      left: -200px;
+      @media (min-width: 992px) {
+        left: 0px;
+      }
+      &.open{
+        left: 0px !important;
+      }
     }
   }
 
@@ -47,8 +62,9 @@ a:hover {
   }
 
   .page {
-    margin-left: 13rem;
-
+    @media (min-width: 992px) {
+      margin-left: 13rem;
+    }
     .ui.labeled.icon.button.addWidgetBtn {
       position: absolute;
       top: 2rem;
@@ -66,6 +82,15 @@ a:hover {
   left: 0px;
   bottom: 0px;
   width: 13rem;
+  z-index:1;
+  transition: all 500ms cubic-bezier(.55, 0, .1, 1);
+  left: -200px;
+  @media (min-width: 992px) {
+    left: 0px;
+  }
+  &.open{
+    left: 0px !important;
+  }
 }
 
 .grid-stack > .grid-stack-item.widget > .grid-stack-item-content {

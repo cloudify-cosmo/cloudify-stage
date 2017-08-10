@@ -16,6 +16,10 @@ const app = (state = {loading:true}, action) => {
             return {
                 loading: true
             };
+        case types.APP_SIDEBAR_TOOGLE:
+            return Object.assign({},state,{
+                sidebarIsOpen: !state.sidebarIsOpen
+            });
         default:
             return state;
     }

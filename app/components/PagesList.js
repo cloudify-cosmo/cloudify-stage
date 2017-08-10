@@ -11,6 +11,7 @@ export default class PagesList extends Component {
         onPageSelected: PropTypes.func.isRequired,
         onPageRemoved: PropTypes.func.isRequired,
         onPageReorder: PropTypes.func.isRequired,
+        onSidebarClose : PropTypes.func.isRequired,
         pages: PropTypes.array.isRequired,
         selected: PropTypes.string,
         isEditMode : PropTypes.bool.isRequired
@@ -56,7 +57,13 @@ export default class PagesList extends Component {
             <div className="pages" ref="pages">
                 {
                     _.filter(this.props.pages, (p)=>{return !p.isDrillDown}).map(function(page){
-                        return <div key={page.id} className={'item link ' + (this.props.selected === page.id ? 'active' : '') + ' pageMenuItem'} onClick={(event) => {event.stopPropagation(); this.props.onPageSelected(page);} }>
+                        return <div 
+                                key={page.id} className={'item link ' + (this.props.selected === page.id ? 'active' : '') + ' pageMenuItem'}
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    this.props.onPageSelected(page);
+                                    this.props.onSidebarClose();
+                                }}>
                         {page.name}
                         {
                             this.props.isEditMode && pageCount > 1 ?
