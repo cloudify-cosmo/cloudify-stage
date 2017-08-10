@@ -64,8 +64,8 @@ export default class PieGraph extends Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return this.props.widget !== nextProps.widget
-            || this.state != nextState
+        return !_.isEqual(this.props.widget, nextProps.widget)
+            || !_.isEqual(this.state, nextState)
             || !_.isEqual(this.props.data, nextProps.data);
     }
 
@@ -75,7 +75,7 @@ export default class PieGraph extends Component {
         return (
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                    <Pie data={data} labelLine={true} label={true} cx="40%">
+                    <Pie data={data} labelLine={true} label={true} isAnimationActive={false} cx="40%">
                         {
                             data.map((entry, index) => <Cell fill={entry.color}/>)
                         }
