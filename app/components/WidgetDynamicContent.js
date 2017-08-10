@@ -3,11 +3,9 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import StageUtils from '../utils/stageUtils';
 import {getToolbox} from '../utils/Toolbox';
 
 import {ErrorMessage} from './basic'
-import fetch from 'isomorphic-fetch';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 
 export default class WidgetDynamicContent extends Component {
@@ -207,6 +205,11 @@ export default class WidgetDynamicContent extends Component {
         this._stopPolling();
 
         console.log(`Widget '${this.props.widget.name}' unmounts`);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props, nextProps)
+            || !_.isEqual(this.state, nextState);
     }
 
     renderWidget() {
