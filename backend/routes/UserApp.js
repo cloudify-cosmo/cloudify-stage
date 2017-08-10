@@ -20,7 +20,13 @@ router.use(bodyParser.json());
  */
 router.get('/:username/:role', function (req, res, next) {
     db.UserApp
-        .findOne({ where: {managerIp: config.manager.ip, username: req.params.username, role: req.params.role,mode: ServerSettings.settings.mode} }).then(function(userApp) {
+        .findOne({ where: {
+            managerIp: config.manager.ip,
+            username: req.params.username,
+            role: req.params.role,
+            mode: ServerSettings.settings.mode,
+            tenant: req.headers.tenant
+        } }).then(function(userApp) {
             res.send(userApp || {});
         })
         .catch(next);
@@ -28,7 +34,13 @@ router.get('/:username/:role', function (req, res, next) {
 
 router.post('/:username/:role', function (req, res, next) {
     db.UserApp
-        .findOrCreate({ where: {managerIp: config.manager.ip, username: req.params.username, role: req.params.role,mode: ServerSettings.settings.mode}, defaults: {appData: {},appDataVersion:req.body.version}})
+        .findOrCreate({ where: {
+            managerIp: config.manager.ip,
+            username: req.params.username,
+            role: req.params.role,
+            mode: ServerSettings.settings.mode,
+            tenant: req.headers.tenant
+        }, defaults: {appData: {},appDataVersion:req.body.version}})
         .spread(function(userApp, created) {
             userApp.update({ appData: req.body.appData,appDataVersion:req.body.version}, {fields: ['appData','appDataVersion']}).then(function(ua) {
                 res.send(ua);

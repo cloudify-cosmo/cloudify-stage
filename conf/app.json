@@ -1,8 +1,13 @@
 {
   "contextPath": "/stage",
   "initialTemplate": {
-    "admin": "initial-template-admin",
-    "user": "initial-template",
+    "*": "initial-template",
+    "admin": {
+      "*": "initial-template-admin"
+    },
+    "user": {
+      "*": "initial-template"
+    },
     "customer": "initial-template-customer"
   },
   "singleManager": true,

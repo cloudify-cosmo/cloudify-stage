@@ -37,7 +37,7 @@
       }
     },
     {
-      "name": "filer",
+      "name": "Filter",
       "definition": "filter",
       "x": 0,
       "y": 32,
