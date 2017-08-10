@@ -20,7 +20,7 @@ export default class Manager extends Component {
     }
 
     render() {
-        let userRole = _.get(this.props.manager, 'auth.role', 'user');
+        let userRole = _.get(this.props.manager, 'auth.role', Consts.ROLE_USER);
 
         let managerInfo = () =>
             <div className="managerMenu">
@@ -29,7 +29,7 @@ export default class Manager extends Component {
             </div>;
 
         return (
-            userRole === 'admin'
+            userRole === Consts.ROLE_ADMIN
             ?
                 <Popup wide hoverable>
                     <Popup.Trigger>{managerInfo()}</Popup.Trigger>

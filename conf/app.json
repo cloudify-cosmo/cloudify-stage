@@ -8,7 +8,8 @@
     "user": {
       "*": "initial-template"
     },
-    "customer": "initial-template-customer"
+    "customer": "initial-template-customer",
+    "community": "initial-template-community"
   },
   "singleManager": true,
   "whiteLabel": {
