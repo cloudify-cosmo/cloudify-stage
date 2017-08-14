@@ -1,6 +1,6 @@
 pipeline {
     triggers {
-            pollSCM('H/15 * * * *')
+            cron('H/30 8-21 * * 0-5')
     }
     agent { label 'web-ui' }
     parameters {
