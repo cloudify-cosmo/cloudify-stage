@@ -17,7 +17,11 @@ export default class InitialTemplate {
         var initialTemplateModeRole = initialTemplateObj[mode === Consts.MODE_MAIN ? role : mode];
 
         if (_.isObject(initialTemplateModeRole)) {
-            name = _.get(initialTemplateModeRole, tenant, initialTemplateObj[InitialTemplate.DEFAULT_KEY]);
+            name = _.get(
+                        initialTemplateModeRole,
+                        tenant,
+                        initialTemplateModeRole[InitialTemplate.DEFAULT_KEY] || initialTemplateObj[InitialTemplate.DEFAULT_KEY]
+                    );
         } else if (_.isString(initialTemplateModeRole)) {
             name = initialTemplateModeRole;
         } else {
