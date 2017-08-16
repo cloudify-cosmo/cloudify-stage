@@ -6,7 +6,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var WidgetHandler = require('../handler/WidgetHandler');
 var _ = require('lodash');
-var AuthMiddleware = require('./AuthMiddleware');
+var passport = require('passport');
 
 var router = express.Router();
 
@@ -19,25 +19,25 @@ router.get('/list', function (req, res, next) {
         .catch(next);
 });
 
-router.put('/install', AuthMiddleware, function (req, res, next) {
-    WidgetHandler.installWidget(req.query.url, req.query.username, req)
+router.put('/install', passport.authenticate('token', {session: false}), function (req, res, next) {
+    WidgetHandler.installWidget(req.query.url, req.user.id, req)
         .then(data => res.send(data))
         .catch(next);
 });
 
-router.put('/update', AuthMiddleware, function (req, res, next) {
+router.put('/update', passport.authenticate('token', {session: false}), function (req, res, next) {
     WidgetHandler.updateWidget(req.query.id, req.query.url, req)
         .then(data => res.send(data))
         .catch(next);
 });
 
-router.get('/:widgetId/used', AuthMiddleware, function (req, res, next) {
+router.get('/:widgetId/used', passport.authenticate('token', {session: false}), function (req, res, next) {
     WidgetHandler.isWidgetUsed(req.params.widgetId)
         .then(result => res.send(result))
         .catch(next);
 });
 
-router.delete('/:widgetId', AuthMiddleware, function (req, res, next) {
+router.delete('/:widgetId', passport.authenticate('token', {session: false}), function (req, res, next) {
     WidgetHandler.deleteWidget(req.params.widgetId)
         .then(response => res.send({status:'ok'}))
         .catch(next);

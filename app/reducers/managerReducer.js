@@ -10,11 +10,9 @@ const manager = (state = {}, action) => {
         case types.RES_LOGIN:
             return Object.assign({}, state, {
                 isLoggingIn: false,
-                ip: action.ip,
                 username: action.username,
                 auth: {
                     isSecured : true,
-                    token: action.token,
                     role: action.role
                 },
                 err: null,
@@ -30,7 +28,6 @@ const manager = (state = {}, action) => {
                 isLoggingIn: false,
                 auth: {
                     isSecured : true,
-                    token: null,
                     role: null
                 },
                 err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
@@ -44,11 +41,9 @@ const manager = (state = {}, action) => {
         case types.ERR_LOGIN:
             return Object.assign({}, state, {
                 isLoggingIn: false,
-                ip: action.ip,
                 username: action.username,
                 auth: {
                     isSecured : true,
-                    token: null,
                     role: null
                 },
                 err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),

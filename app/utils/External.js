@@ -19,8 +19,8 @@ export default class External {
         return this._ajaxCall(url,'get',params,null,parseResponse,headers) ;
     }
 
-    doPost(url,params,data,parseResponse,headers){
-        return this._ajaxCall(url,'post',params,data,parseResponse,headers) ;
+    doPost(url,params,data,parseResponse,headers, withCredentials){
+        return this._ajaxCall(url,'post',params,data,parseResponse,headers, null, withCredentials) ;
     }
 
     doDelete(url,params,data,parseResponse,headers){
@@ -108,7 +108,7 @@ export default class External {
         });
     }
 
-    _ajaxCall(url,method,params,data,parseResponse=true,userHeaders={},fileName=null) {
+    _ajaxCall(url,method,params,data,parseResponse=true,userHeaders={},fileName=null, withCredentials) {
         var actualUrl = this._buildActualUrl(url, params);
         logger.debug(method + ' data. URL: ' + url);
 
@@ -125,6 +125,11 @@ export default class External {
             } catch (e) {
                 logger.error('Error stringifying data. URL: '+actualUrl+' data ',data);
             }
+        }
+
+        // this allows the server to set a cookie
+        if(withCredentials){
+            options.credentials = 'include';
         }
 
         if (fileName) {

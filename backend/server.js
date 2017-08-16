@@ -18,7 +18,10 @@ LoggerHandler.init(log4jsConfig);
 var db = require('./db/Connection');
 
 var express = require('express');
+var passport = require('passport');
+var getTokenStrategy = require('./routes/TokenStrategy');
 var ServerSettings = require('./serverSettings');
+var Auth = require('./routes/Auth');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
 var Applications = require('./routes/Applications');
@@ -58,8 +61,12 @@ app.use(contextPath, (req,res,next) => {
     next();
 });
 
+passport.use(getTokenStrategy());
+app.use(passport.initialize());
+
 // Routes
 app.use(contextPath +'/sp',ServerProxy);
+app.use(contextPath +'/auth',Auth);
 app.use(contextPath +'/ua',UserApp);
 app.use(contextPath +'/applications',Applications);
 app.use(contextPath +'/source',SourceBrowser);

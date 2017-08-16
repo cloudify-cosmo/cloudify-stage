@@ -132,10 +132,10 @@ export default class WidgetDefinitionsLoader {
 
         if (widgetUrl) {
             console.log('Install widget from url', widgetUrl);
-            return internal.doPut('/widgets/install',{url: widgetUrl, username: manager.username});
+            return internal.doPut('/widgets/install',{url: widgetUrl});
         } else {
             console.log('Install widget from file');
-            return internal.doUpload('/widgets/install',{username: manager.username},{widget:widgetFile});
+            return internal.doUpload('/widgets/install',null ,{widget:widgetFile});
         }
     }
 

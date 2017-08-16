@@ -1,6 +1,7 @@
 {
   "ip":"127.0.0.1",
   "apiVersion": "v3.1",
+  "serverVersion": "4.2.0",
   "protocol" : "https",
   "port": "53333"
 }
