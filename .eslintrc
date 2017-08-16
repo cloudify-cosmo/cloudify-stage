@@ -25,7 +25,8 @@
     "after": true,
     "afterEach": true,
     "angular": true,
-    "cloudifyTopology" : true
+    "cloudifyTopology": true,
+    "markdown": true
   },
   "parser": "babel-eslint",
   "rules": {

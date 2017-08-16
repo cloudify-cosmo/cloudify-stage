@@ -23,7 +23,7 @@ export default class ReadmeModal extends React.Component {
           closeOnRootNodeClick={true}
           onClose={this.onCancel.bind (this)}
           closeIcon="close"
-          size="large">
+          size="fullscreen">
           <Modal.Content style={{padding: '50px'}}>
             <div dangerouslySetInnerHTML={this.createMarkup ()} />
           </Modal.Content>
