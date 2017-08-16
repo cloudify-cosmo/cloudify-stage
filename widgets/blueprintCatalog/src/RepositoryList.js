@@ -5,6 +5,7 @@
 import RepositoryTable from './RepositoryTable';
 import RepositoryCatalog from './RepositoryCatalog';
 import UploadModal from './UploadModal';
+import ReadmeModal from './ReadmeModal';
 
 export default class extends React.Component {
 
@@ -13,6 +14,8 @@ export default class extends React.Component {
 
         this.state = {
             showModal: false,
+            showReadmeModal: false,
+            readmeContent: null,
             files: [],
             error: null
         }
@@ -61,6 +64,19 @@ export default class extends React.Component {
         this.setState({showModal: false});
     }
 
+
+    _showReadmeModal(repo) {
+        this.props.toolbox.loading(true);
+        this.props.actions.doGetReadme(repo).then(content => {
+            this.setState({readmeContent: markdown.parse(content), showReadmeModal: true});
+            this.props.toolbox.loading(false);
+        });
+    }
+
+    _hideReadmeModal() {
+        this.setState({showReadmeModal: false});
+    }
+  
     _onErrorDismiss() {
         this.setState({error: null});
     }
@@ -79,6 +95,7 @@ export default class extends React.Component {
                             fetchData={this._fetchData.bind(this)}
                             onSelect={this._selectItem.bind(this)}
                             onUpload={this._showModal.bind(this)}
+                            onReadme={this._showReadmeModal.bind(this)}
                             />
                         :
                         <RepositoryCatalog
@@ -86,6 +103,7 @@ export default class extends React.Component {
                             fetchData={this._fetchData.bind(this)}
                             onSelect={this._selectItem.bind(this)}
                             onUpload={this._showModal.bind(this)}
+                            onReadme={this._showReadmeModal.bind(this)}
                             />
 
                 }
@@ -93,6 +111,12 @@ export default class extends React.Component {
                 <UploadModal open={this.state.showModal}
                              files={this.state.files}
                              onHide={this._hideModal.bind(this)}
+                             toolbox={this.props.toolbox}
+                             actions={this.props.actions}/>
+
+                <ReadmeModal open={this.state.showReadmeModal}
+                             content={this.state.readmeContent}
+                             onHide={this._hideReadmeModal.bind(this)}
                              toolbox={this.props.toolbox}
                              actions={this.props.actions}/>
 

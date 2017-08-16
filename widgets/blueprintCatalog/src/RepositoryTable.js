@@ -32,11 +32,11 @@ export default class extends React.Component {
                        totalSize={this.props.data.total}
                        selectable={true}>
 
-                <DataTable.Column label="Name" width="30%"/>
+                <DataTable.Column label="Name" width="25%"/>
                 <DataTable.Column label="Description" width="40%"/>
                 <DataTable.Column label="Created" width="12%"/>
                 <DataTable.Column label="Updated" width="12%"/>
-                <DataTable.Column width="6%"/>
+                <DataTable.Column width="11%"/>
 
                 {
                     this.props.data.items.map((item)=>{
@@ -47,6 +47,7 @@ export default class extends React.Component {
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
+                                    <Icon name="info" link title="blueprint Readme" onClick={(event)=>{event.stopPropagation();this.props.onReadme(item.name)}} bordered/>
                                     <Icon name="upload" link title="Upload blueprint" onClick={(event)=>{event.stopPropagation();this.props.onUpload(item.name)}} bordered/>
                                 </DataTable.Data>
                             </DataTable.Row>
