@@ -20,6 +20,8 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
     fetchUrl: '[manager]/snapshots?_include=id,created_at,status,created_by,private_resource[params]',
+    fetchParams: (widget, toolbox) => 
+        toolbox.getContext ().getValue ('onlyMyResources') ? {created_by: toolbox.getManager().getCurrentUsername()} : {},
 
     render: function(widget,data,error,toolbox) {
 
