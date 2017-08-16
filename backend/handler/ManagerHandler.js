@@ -5,7 +5,7 @@
 
 var _ = require('lodash');
 var fs = require('fs-extra');
-var request = require('request');
+var req = require('request');
 var config = require('../config').get();
 var logger = require('log4js').getLogger('ManagerHandler');
 
@@ -23,35 +23,61 @@ module.exports = (function() {
         return config.managerUrl;
     }
 
-    function updateOptions(options, timeout, headers) {
+    function updateOptions(options, method, timeout, headers) {
+        options.method = method;
+
         if (caFile) {
             logger.debug('Adding CA file to Agent Options. CA File =', caFile);
             options.agentOptions = {
                 ca: caFile
             };
         }
-        if (timeout) {
-            options.timeout = timeout;
-        }
+
+        options.timeout = timeout || config.app.proxy.timeouts[method.toLowerCase()];
+
         if (headers) {
             options.headers = headers;
         }
     }
 
-    function getRequest(url, headers, onSuccess, onError, timeout) {
+    function request(method, url, headers, onSuccess, onError, timeout) {
         var requestUrl = this.getUrl() + '/api/' + config.manager.apiVersion + url;
         var requestOptions = {};
-        this.updateOptions(requestOptions, timeout, headers);
+        this.updateOptions(requestOptions, method, timeout, headers);
 
         logger.debug('Calling GET request to:', requestUrl);
-        return request.get(requestUrl, requestOptions)
+        return req(requestUrl, requestOptions)
                       .on('error', onError)
                       .on('response', onSuccess);
+    }
+
+    // the request assumes the response is JSON
+    function jsonRequest(method, url, headers, timeout){
+        return new Promise((resolve, reject) => {
+            this.request(method, url, headers, (res) => {
+                if(res.statusCode >= 200 && res.statusCode <300){
+                    res.on('data', (data) => {
+                        try {
+                            data = JSON.parse(data);
+                            resolve(data);
+                        }
+                        catch(e){
+                            reject('response data could not be parsed to JSON: ', e);
+                        }
+                    })
+                } else{
+                    reject(res.statusMessage);
+                }
+            }, (err) => {
+                reject(err);
+            }, timeout);
+        })
     }
 
     return {
         getUrl,
         updateOptions,
-        getRequest
+        request,
+        jsonRequest
     };
 })();

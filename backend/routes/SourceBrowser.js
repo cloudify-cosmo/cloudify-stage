@@ -5,12 +5,12 @@
 
 var express = require('express');
 var SourceHandler = require('../handler/SourceHandler');
-var AuthMiddleware = require('./AuthMiddleware');
+var passport = require('passport');
 
 var logger = require('log4js').getLogger('sourceBrowser');
 var router = express.Router();
 
-router.use(AuthMiddleware);
+router.use(passport.authenticate('token', {session: false}));
 
 router.get('/browse/file', function(req, res, next) {
     var path = req.query.path;

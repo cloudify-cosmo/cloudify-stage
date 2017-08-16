@@ -8,7 +8,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var path = require('path');
 var _ = require('lodash');
-var AuthMiddleware = require('./AuthMiddleware');
+var passport = require('passport');
 
 router.use(bodyParser.raw({
     limit: '1mb',
@@ -35,7 +35,7 @@ router.get('/image/:blueprint',function (req, res, next) {
         .catch(next);
 });
 
-router.post('/image/:blueprint',AuthMiddleware,function (req, res, next) {
+router.post('/image/:blueprint',passport.authenticate('token', {session: false}),function (req, res, next) {
     db.BlueprintAdditions
         .findOrCreate({ where: {blueprintId: req.params.blueprint}})
         .spread(function(blueprintAdditions, created) {
@@ -47,7 +47,7 @@ router.post('/image/:blueprint',AuthMiddleware,function (req, res, next) {
         .catch(next);
 });
 
-router.delete('/image/:blueprint',AuthMiddleware,function (req, res, next) {
+router.delete('/image/:blueprint',passport.authenticate('token', {session: false}),function (req, res, next) {
     db.BlueprintAdditions
         .destroy({ where: {blueprintId: req.params.blueprint} }).then(function(deletedRecord) {
             res.end(JSON.stringify({status:'ok'}));

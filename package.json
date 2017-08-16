@@ -20,8 +20,8 @@
   "license": "",
   "dependencies": {
     "babel-polyfill": "^6.13.0",
-    "blueimp-md5": "^2.7.0",
     "better-console": "^0.2.4",
+    "blueimp-md5": "^2.7.0",
     "d3": "~3.5.2",
     "d3-format": "^1.2.0",
     "datatables.net": "^1.10.12",
@@ -61,6 +61,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.1.0",
     "jquery-ui": "^1.12.1",
+    "js-cookie": "^2.1.4",
     "lodash": "^4.15.0",
     "loglevel": "^1.4.1",
     "map-stream": "0.0.6",

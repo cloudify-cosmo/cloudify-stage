@@ -97,19 +97,19 @@ module.exports = (function() {
         });
     }
 
-    function _persistData(widgetId, username) {
+    function _persistData(widgetId, userId) {
         return db.Resources
             .findOne({ where: {resourceId:widgetId, type:'widget'} })
             .then(function(widget) {
                 if(widget) {
-                    return widget.update({creator: username});
+                    return widget.update({creatorId: userId});
                 } else {
-                    return db.Resources.create({resourceId:widgetId, type:'widget', creator: username});
+                    return db.Resources.create({resourceId:widgetId, type:'widget', creatorId: userId});
                 }
             });
     }
 
-    function installWidget(archiveUrl, username, req) {
+    function installWidget(archiveUrl, userId, req) {
         return ArchiveHelper.removeOldExtracts(widgetTempDir)
             .then(() => archiveUrl ? _saveDataFromUrl(archiveUrl) : _saveMultipartData(req))
             .then(data => {
@@ -123,7 +123,7 @@ module.exports = (function() {
                     .then(() => _validateUniqueness(widgetId))
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then((tempPath) => _installFiles(widgetId, tempPath))
-                    .then(() => _persistData(widgetId, username))
+                    .then(() => _persistData(widgetId, userId))
                     .then(() => {
                         var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
 
@@ -200,13 +200,13 @@ module.exports = (function() {
 
     function isWidgetUsed(widgetId) {
         return db.UserApp
-            .findAll({attributes: ['appData', 'managerIp', 'username']})
+            .findAll({attributes: ['appData', 'managerIp', 'userId']})
             .then(userApp => {
                 var result = [];
                 _.forEach(userApp, function(row) {
                     var filter = _.filter(row.appData.pages, {widgets: [{definition: widgetId}]});
                     if (!_.isEmpty(filter)) {
-                        result.push({username: row.username, managerIp: row.managerIp});
+                        result.push({userId: row.userId, managerIp: row.managerIp});
                     }
                 });
 

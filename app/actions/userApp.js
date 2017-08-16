@@ -24,7 +24,7 @@ export function saveUserAppData (manager, appData) {
         var data = {appData , version: CURRENT_APP_DATA_VERSION};
 
         var internal = new Internal(manager);
-        return internal.doPost(`/ua/${manager.username}/${manager.auth.role}`,null,data);
+        return internal.doPost('/ua',null,data);
     }
 }
 
@@ -45,7 +45,7 @@ export function loadOrCreateUserAppData (manager,config,templates,widgetDefiniti
     return function(dispatch,getState) {
 
         var internal = new Internal(manager);
-        return internal.doGet(`/ua/${manager.username}/${manager.auth.role}`)
+        return internal.doGet('/ua')
             .then(userApp=>{
                 if (userApp &&
                     userApp.appDataVersion === CURRENT_APP_DATA_VERSION &&

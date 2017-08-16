@@ -94,7 +94,7 @@ module.exports = (function() {
                     }));
             };
 
-            var getRequest = ManagerHandler.getRequest(archiveUrl, {'User-Agent': 'Cloudify'}, onSuccessFetch, onErrorFetch);
+            var getRequest = ManagerHandler.request('GET', archiveUrl, {'User-Agent': 'Cloudify'}, onSuccessFetch, onErrorFetch);
 
             if (req) {
                 req.pipe(getRequest);

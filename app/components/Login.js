@@ -8,11 +8,9 @@ import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 export default class Login extends Component {
 
     static propTypes = {
-        ip: PropTypes.string,
         username: PropTypes.string,
         loginError: PropTypes.string,
         onLogin: PropTypes.func.isRequired,
-        shouldShowIpField: PropTypes.bool.isRequired,
         isLoggingIn: PropTypes.bool.isRequired,
         whiteLabel: PropTypes.object
 
@@ -22,7 +20,6 @@ export default class Login extends Component {
         super(props, context);
 
         this.state = {
-            ip: props.ip || '',
             username: props.username || '',
             password: ''
         };
@@ -31,7 +28,7 @@ export default class Login extends Component {
     onSubmit(e) {
         e.preventDefault();
 
-        this.props.onLogin(this.state.ip, this.state.username, this.state.password);
+        this.props.onLogin(this.state.username, this.state.password);
     }
 
     render() {
@@ -57,12 +54,6 @@ export default class Login extends Component {
                     }
 
                     <form className="ui huge form" onSubmit={this.onSubmit.bind(this)}>
-                        {
-                            this.props.shouldShowIpField &&
-                            <div className="field required">
-                                <input type="text" name="ip" placeholder="Enter Manager IP" required value={this.state.ip} onChange={(e)=>this.setState({ip: e.target.value})}/>
-                            </div>
-                        }
                         <div className="field required">
                             <input type="text" name="username" placeholder="Enter user name" required autoFocus value={this.state.username} onChange={(e)=>this.setState({username: e.target.value})}/>
                         </div>

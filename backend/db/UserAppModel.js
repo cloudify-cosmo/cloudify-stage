@@ -6,7 +6,7 @@ var ServerSettings = require('../serverSettings');
 module.exports = function(sequelize, DataTypes) {
     var UserApp = sequelize.define('UserApp', {
         managerIp: {type: DataTypes.STRING, allowNull: false},
-        username: {type: DataTypes.STRING, allowNull: false},
+        userId: { type: DataTypes.INTEGER, allowNull: false},
         appDataVersion: {type: DataTypes.INTEGER, allowNull: false},
         mode: {type: DataTypes.ENUM,
                values: [
@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
         indexes: [
             {
                 unique: true,
-                fields: ['managerIp','username','role','mode','tenant']
+                fields: ['managerIp','userId','role','mode','tenant']
             }
         ]
     });

@@ -18,6 +18,10 @@ new WebpackDevServer(webpack(config), {
             target: 'http://localhost:8088',
             secure: false
         },
+        '/stage/auth': {
+            target: 'http://localhost:8088',
+            secure: false
+        },
         '/stage/config': {
             target: 'http://localhost:8088',
             secure: false

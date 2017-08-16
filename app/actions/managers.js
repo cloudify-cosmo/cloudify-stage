@@ -14,39 +14,35 @@ function requestLogin() {
     }
 }
 
-function receiveLogin(ip,username,role,token,apiVersion,serverVersion,tenants) {
+function receiveLogin(username,role,apiVersion,serverVersion) {
     return {
         type: types.RES_LOGIN,
-        ip,
         username,
         role,
-        token,
         apiVersion,
         serverVersion,
-        tenants,
         receivedAt: Date.now()
     }
 }
 
-function errorLogin(ip,username,err) {
+function errorLogin(username,err) {
     return {
         type: types.ERR_LOGIN,
-        ip,
         username,
         error: err,
         receivedAt: Date.now()
     }
 }
 
-export function login (ip,username,password) {
+export function login (username,password) {
     return function (dispatch) {
         dispatch(requestLogin());
-        return Auth.login(ip,username,password)
+        return Auth.login(username,password)
                     .then(data => {
-                        dispatch(receiveLogin(ip, username, data.role, data.token, data.apiVersion, data.serverVersion, data.tenants));
+                        dispatch(receiveLogin(username, data.role, data.apiVersion, data.serverVersion));
                         dispatch(push('/'));
                     })
-                    .catch(err => dispatch(errorLogin(ip,username,err)));
+                    .catch(err => dispatch(errorLogin(username,err)));
     }
 }
 
@@ -58,10 +54,14 @@ function doLogout(err) {
     }
 }
 export function logout(err) {
-    return function(dispatch) {
-        dispatch(clearContext());
-        dispatch(doLogout(err));
-        dispatch(push('login'));
+    return function (dispatch, getState) {
+        var localLogout = () => {
+            dispatch(clearContext());
+            dispatch(doLogout(err));
+            dispatch(push('login'));
+        };
+
+        return Auth.logout(getState().manager).then(localLogout, localLogout);
     }
 }
 

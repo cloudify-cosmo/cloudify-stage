@@ -38,9 +38,9 @@ function buildManagerUrl(req,res,next) {
 
 function proxyRequest(req,res,next) {
     var options = {};
-    ManagerHandler.updateOptions(options, config.app.proxy.timeouts[req.method.toLowerCase()]);
+    ManagerHandler.updateOptions(options, req.method);
 
-    req.pipe(request[req.method.toLowerCase()](
+    req.pipe(request(
             req.su,
             options
         )
