@@ -29,9 +29,13 @@ Stage.defineWidget({
 
         blueprintId = _.isEmpty(widget.configuration.blueprintIdFilter) ? blueprintId : widget.configuration.blueprintIdFilter;
 
-        return {
+        let obj = {
             blueprint_id: blueprintId
         }
+        if(toolbox.getContext ().getValue ('onlyMyResources')){
+            obj.created_by = toolbox.getManager().getCurrentUsername();
+        }
+        return obj;
     },
 
     fetchData: function(widget,toolbox,params) {

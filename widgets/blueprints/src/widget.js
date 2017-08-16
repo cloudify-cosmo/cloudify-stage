@@ -37,6 +37,8 @@ Stage.defineWidget({
                 return result;
             });
     },
+    fetchParams: (widget, toolbox) => 
+        toolbox.getContext().getValue('onlyMyResources') ? {created_by: toolbox.getManager().getCurrentUsername()} : {},
 
     _processData(data,toolbox) {
         var blueprintsData = data.blueprints;
