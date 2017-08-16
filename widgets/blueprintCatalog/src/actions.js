@@ -24,6 +24,11 @@ export default class Actions {
             .then(response => Promise.resolve(response.json()));
     }
 
+    doGetReadme(repo){
+        return this.toolbox.getInternal()
+            .doGet(`/github/content/${this.username}/${repo}/master/README.md`);
+    }
+
     doGetRepoTree(repo) {
         return this.toolbox.getInternal().doGet(`/github/repos/${this.username}/${repo}/git/trees/master`);
     }

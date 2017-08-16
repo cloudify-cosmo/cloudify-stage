@@ -54,11 +54,27 @@ export default class extends React.Component{
 
                                 <Grid.Column width="16">
                                     <div style={{height:'30px'}}></div>
+                                    <div>
+                                        <Button
+                                            circular
+                                            icon="info"
+                                            className="icon"
+                                            onClick={event => {
+                                                event.stopPropagation();
+                                                this.props.onReadme(item.name);
+                                            }}/>
+                                        <Button
+                                            icon="upload"
+                                            content="Upload"
+                                            className="uploadButton labeled icon"
+                                            onClick={event => {
+                                                event.stopPropagation();
+                                                this.props.onUpload(item.name);
+                                            }}/>
+                                    </div>
                                 </Grid.Column>
                             </Grid>
 
-                            <Button icon="upload" content="Upload" className="uploadButton labeled icon"
-                                    onClick={(event)=>{event.stopPropagation(); this.props.onUpload(item.name)}}/>
                         </DataSegment.Item>
 
                     </Grid.Column>

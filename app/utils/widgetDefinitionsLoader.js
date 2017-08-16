@@ -11,6 +11,7 @@ var ReactDOMServer = require('react-dom/server');
 
 import 'd3';
 import momentImport from 'moment';
+import markdownImport from 'markdown';
 
 import 'cloudify-blueprint-topology';
 
@@ -49,8 +50,9 @@ export default class WidgetDefinitionsLoader {
             },
             Utils: StageUtils
         };
-
+        
         window.moment = momentImport;
+        window.markdown = markdownImport;
     }
 
     static _loadWidgets() {
