@@ -64,7 +64,6 @@ export default class extends React.Component {
         this.setState({showModal: false});
     }
 
-
     _showReadmeModal(repo) {
         this.props.toolbox.loading(true);
         this.props.actions.doGetReadme(repo).then(content => {
@@ -76,7 +75,7 @@ export default class extends React.Component {
     _hideReadmeModal() {
         this.setState({showReadmeModal: false});
     }
-  
+
     _onErrorDismiss() {
         this.setState({error: null});
     }
