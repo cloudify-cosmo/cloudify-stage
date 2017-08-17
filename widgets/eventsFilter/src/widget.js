@@ -13,6 +13,8 @@ Stage.defineWidget({
     color: "pink",
     showHeader: false,
     showBorder: false,
+    categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
+    
     fetchData:(widget,toolbox,params)=>{
         return Promise.all([
             toolbox.getManager().doGetFull('/blueprints?_include=id'),

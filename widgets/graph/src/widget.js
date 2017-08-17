@@ -12,6 +12,8 @@ Stage.defineWidget({
     showBorder: true,
     isReact: true,
     color: "blue",
+    categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
+
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5),
         {id: "deploymentId", name: "Deployment ID", placeHolder: "If not set, then will be taken from context", default: "", type: Stage.Basic.GenericField.STRING_TYPE},

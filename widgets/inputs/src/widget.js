@@ -12,6 +12,8 @@ Stage.defineWidget({
     initialHeight: 16,
     color : "teal",
     isReact: true,
+    categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
+    
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(2)
     ],

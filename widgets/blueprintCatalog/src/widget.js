@@ -16,6 +16,8 @@ Stage.defineWidget({
     color: "teal",
     hasStyle: true,
     isReact: true,
+    categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
+    
     initialConfiguration: [
         Stage.GenericConfig.PAGE_SIZE_CONFIG(6),
         {id: 'username', name: 'Fetch with username', placeHolder:"Type username", default:"cloudify-examples", type: Stage.Basic.GenericField.STRING_TYPE},

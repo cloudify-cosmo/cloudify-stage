@@ -19,6 +19,8 @@ Stage.defineWidget({
     color: "yellow",
     isReact: true,
     hasStyle: true,
+    categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
+    
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(2),
         {id: 'enableNodeClick', name: 'Enable node click', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},

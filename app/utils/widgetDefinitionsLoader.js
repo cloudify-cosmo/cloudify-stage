@@ -225,4 +225,18 @@ class GenericConfig {
                 default: sortAscending,
                 hidden: true}
     };
+    
+    static get CATEGORY ()  {
+        return {
+            BLUEPRINTS: 'Blueprints',
+            DEPLOYMENTS: 'Deployments',
+            BUTTONS_AND_FILTERS: 'Buttons and Filters',
+            CHARTS_AND_STATISTICS: 'Charts and Statistics',
+            EXECUTIONS_NODES: 'Executions/Nodes',
+            SYSTEM_RESOURCES: 'System Resources',
+            OTHERS: 'Others',
+            ALL: 'All'
+        };
+    }
 }
+

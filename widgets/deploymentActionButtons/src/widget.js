@@ -12,6 +12,8 @@ Stage.defineWidget({
     initialHeight: 5,
     showHeader: false,
     showBorder: false,
+    categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
+    
     initialConfiguration: [],
     isReact: true,
 

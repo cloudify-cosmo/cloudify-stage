@@ -3,7 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Input, Segment, Divider, Item, Button, DataTable, Modal, Confirm, ErrorMessage, Icon, Checkbox} from './basic/index';
+import {Input, Segment, Divider, Item, Button, DataTable, Modal, Confirm, ErrorMessage, Icon, Checkbox, Grid, Menu, Label} from './basic/index';
 import InstallWidgetModal from './InstallWidgetModal';
 
 export default class AddWidgetModal extends Component {
@@ -24,7 +24,9 @@ export default class AddWidgetModal extends Component {
             search: '',
             showConfirm : false,
             widget: {},
-            usedByList: []
+            usedByList: [],
+            categories: AddWidgetModal.generateCategories(props.widgetDefinitions),
+            selectedCategory: Stage.GenericConfig.CATEGORY.ALL
         }
     };
 
@@ -87,14 +89,56 @@ export default class AddWidgetModal extends Component {
         return this.props.onWidgetUpdated(widget.id, widgetFile, widgetUrl);
     }
 
-    _filterWidgets(proxy, field) {
-        var filtered = this.props.widgetDefinitions.filter(
-            el=>el.name.toLowerCase().includes(field.value.toLowerCase() || '')
-        );
-
-        this.setState({search: field.value, filteredWidgetDefinitions: filtered});
+    static generateCategories(widgets){
+        return widgets.reduce((curr,next) => {
+                (next.categories || [Stage.GenericConfig.CATEGORY.OTHERS]).map(category => {
+                    let idx = curr.findIndex(current => current.name === category);
+                    idx === -1 ? curr.push({name: category, count: 1}) : curr[idx].count++;
+                });
+                return curr
+            }, []);
     }
 
+    updateCategoriesCounter(widgets){
+        let categories = this.state.categories.map(category => {
+            category.count = widgets.filter(widget => 
+                (widget.categories || [Stage.GenericConfig.CATEGORY.OTHERS]).indexOf(category.name) !== -1
+            ).length
+            return category;
+        });
+        this.setState({categories: categories});
+    }
+
+    getWidgetsByCategory(widgets, category){
+        let filtered = widgets.filter(item => {
+            item.categories = item.categories || [Stage.GenericConfig.CATEGORY.OTHERS];
+            return category === Stage.GenericConfig.CATEGORY.ALL || item.categories.indexOf(category) !== -1;
+        });
+        
+        return filtered;
+    }
+
+    getWidgetsBySearch(widgets, search){
+        let filtered = widgets.filter(
+            el=>el.name.toLowerCase().includes(search.toLowerCase() || '')
+        );
+        this.updateCategoriesCounter(filtered)
+        return filtered;
+    }
+
+    _doFilterWidgets(field, isCategoryChange = false){
+        let search = isCategoryChange ? this.state.search : field.value;
+        let category = isCategoryChange ? field.name : this.state.selectedCategory;
+
+        let filtered = this.getWidgetsBySearch(this.props.widgetDefinitions, search);
+        filtered = this.getWidgetsByCategory(filtered ,category);
+
+        this.setState({search: search, selectedCategory: category, filteredWidgetDefinitions: filtered});
+    }
+
+    _filterWidgets = (proxy, field) => this._doFilterWidgets(field);
+    _filterByCategory = (proxy, field) => this._doFilterWidgets(field, true);
+    
     render() {
         const addWidgetBtn = <Button labelPosition='left' icon="plus" size="tiny" color="teal"
                                         basic content='Add Widget' className="addWidgetBtn"/>;
@@ -130,10 +174,27 @@ export default class AddWidgetModal extends Component {
                 )}
             </DataTable></Segment>) : '';
 
+        const menuContent = (<Menu fluid vertical tabular>
+                                <Menu.Item 
+                                    name={Stage.GenericConfig.CATEGORY.ALL}
+                                    active={this.state.selectedCategory === Stage.GenericConfig.CATEGORY.ALL}
+                                    onClick={this._filterByCategory.bind(this)}/>
+
+                                {this.state.categories.map(category => {
+                                    return <Menu.Item 
+                                            key={category.name}
+                                            name={category.name}
+                                            active={this.state.selectedCategory === category.name}
+                                            onClick={this._filterByCategory.bind(this)}>
+                                                {category.name}
+                                                <Label color={category.count ? 'green' : 'yellow'}>{category.count}</Label>
+                                            </Menu.Item>
+                                })}
+                            </Menu>)
         return (
             <div>
                 <Modal trigger={addWidgetBtn} className="addWidgetModal" open={this.state.open}
-                       onOpen={this._openModal.bind(this)} onClose={this._closeModal.bind(this)}>
+                       onOpen={this._openModal.bind(this)} onClose={this._closeModal.bind(this)} size="large">
                     <Segment basic size="large">
                         <ErrorMessage error={this.state.error}/>
 
@@ -141,7 +202,14 @@ export default class AddWidgetModal extends Component {
                                onChange={this._filterWidgets.bind(this)} value={this.state.search}/>
     
                         <Divider/>
-    
+                
+                <Grid columns={2}>
+                    <Grid.Row>
+                        <Grid.Column  width={4}>
+                            {menuContent}
+                        </Grid.Column>
+                        <Grid.Column width={12}>
+
                         <Item.Group divided className="widgetsList">
                             {
                                 this.state.filteredWidgetDefinitions.map(function(widget){
@@ -188,6 +256,11 @@ export default class AddWidgetModal extends Component {
                             <InstallWidgetModal onWidgetInstalled={this.props.onWidgetInstalled} trigger={installWidgetBtn}
                                                 header="Install new widget" buttonLabel="Install Widget"/>
                         </Button.Group>
+                        
+                    </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+
                     </Segment>
                 </Modal>
 

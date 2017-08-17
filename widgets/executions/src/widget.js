@@ -13,6 +13,8 @@ Stage.defineWidget({
     color : "blue",
     fetchUrl: '[manager]/executions?is_system_workflow=false[params]',
     isReact: true,
+    categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],
+    
     initialConfiguration:
         [
             Stage.GenericConfig.POLLING_TIME_CONFIG(2),

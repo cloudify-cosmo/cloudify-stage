@@ -13,6 +13,8 @@ Stage.defineWidget({
     color : "blue",
     hasStyle: true,
     isReact: true,
+    categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
+    
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(2),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
