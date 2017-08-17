@@ -14,6 +14,7 @@ Stage.defineWidget({
     showBorder: false,
     initialConfiguration: [],
     isReact: true,
+    categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     fetchData: function(widget,toolbox) {
         let blueprintId = toolbox.getContext().getValue('blueprintId');

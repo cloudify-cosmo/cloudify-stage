@@ -14,6 +14,8 @@ Stage.defineWidget({
     fetchUrl: '[manager]/secrets[params]',
     isReact: true,
     isAdmin: false,
+    categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
+    
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),

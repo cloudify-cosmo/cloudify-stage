@@ -11,6 +11,8 @@ Stage.defineWidget({
     color : "red",
     showHeader: false,
     isReact: true,
+    categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
+    
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5)
     ],

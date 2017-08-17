@@ -12,6 +12,7 @@ Stage.defineWidget({
     showHeader: false,
     showBorder: false,
     isReact: true,
+    categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render: function(widget,data,error,toolbox) {
         const composerUrl = `${location.protocol}//${location.hostname}:8443/composer`;

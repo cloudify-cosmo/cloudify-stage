@@ -13,6 +13,8 @@ Stage.defineWidget({
     color: "green",
     isReact: true,
     isAdmin: true,
+    categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
+
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
