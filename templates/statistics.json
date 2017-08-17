@@ -1,0 +1,94 @@
+{
+  "name": "Statistics",
+  "widgets": [{
+    "definition": "filter",
+    "name": "Filter by blueprint/deployment/execution",
+    "height": 5,
+    "width": 8,
+    "y": 0,
+    "x": 0,
+    "configuration": {
+      "filterByExecutions": false
+    }
+  }, {
+    "definition": "timeFilter",
+    "name": "Time filter",
+    "height": 7,
+    "width": 4,
+    "y": 0,
+    "x": 8,
+    "configuration": {}
+  }, {
+    "definition": "graph",
+    "name": "CPU Graph",
+    "height": 17,
+    "width": 6,
+    "y": 7,
+    "x": 6,
+    "configuration": {
+      "type": "line",
+      "metric": "cpu_total_system",
+      "charts": {
+        "0": {
+          "metric": "cpu_total_system",
+          "unit": "Mhz",
+          "label": "CPU"
+        }
+      }
+    }
+  }, {
+    "definition": "graph",
+    "name": "Memory Graph",
+    "height": 17,
+    "width": 6,
+    "y": 7,
+    "x": 0,
+    "configuration": {
+      "type": "line",
+      "metric": "memory_MemFree",
+      "charts": {
+        "0": {
+          "metric": "memory_MemFree",
+          "unit": "MB",
+          "label": "Memory"
+        }
+      }
+    }
+  }, {
+    "definition": "graph",
+    "name": "CPU Total System Graph",
+    "height": 17,
+    "width": 6,
+    "y": 25,
+    "x": 0,
+    "configuration": {
+      "type": "bar",
+      "metric": "cpu_total_system",
+      "charts": {
+        "0": {
+          "metric": "cpu_total_system",
+          "unit": "Mhz",
+          "label": "CPU Total System"
+        }
+      }
+    }
+  }, {
+    "definition": "graph",
+    "name": "Load Average Graph",
+    "height": 17,
+    "width": 6,
+    "y": 25,
+    "x": 6,
+    "configuration": {
+      "type": "line",
+      "metric": "loadavg_processes_running",
+      "charts": {
+        "0": {
+          "metric": "loadavg_processes_running",
+          "unit": "Processes",
+          "label": "Running Load Average"
+        }
+      }
+    }
+  }]
+}

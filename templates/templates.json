@@ -16,6 +16,7 @@
   "plugins",
   "adminDash",
   "catalog",
-  "catalog-community",
-  "ha"
+  "ha",
+  "statistics",
+  "catalog-community"
 ]
