@@ -1,0 +1,18 @@
+{
+  "name": "Blueprints catalog",
+  "widgets": [
+    {
+      "name": "Blueprints Catalog",
+      "definition": "blueprintCatalog",
+      "width": 12,
+      "height": 39,
+      "x": 0,
+      "y": 0,
+      "configuration":{
+        "displayStyle":"catalog",
+        "username":"cloudify-examples",
+        "filter":"blueprint in:name NOT local"
+      }
+    }
+  ]
+}

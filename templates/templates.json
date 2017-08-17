@@ -4,6 +4,7 @@
   "deployment",
   "blueprint",
   "blueprints",
+  "blueprints-community",
   "tmm",
   "initial-template",
   "initial-template-admin",
@@ -11,8 +12,10 @@
   "initial-template-community",
   "systemResources",
   "systemResources-admin",
+  "systemResources-community",
   "plugins",
   "adminDash",
   "catalog",
+  "catalog-community",
   "ha"
 ]
