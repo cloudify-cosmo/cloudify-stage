@@ -11,10 +11,12 @@ export default class Home extends Component {
 
     componentWillMount() {
         this._handleContext(this.props.selectedPage,this.props.contextParams);
+        this.props.onStorePageId(this.props.pageId);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.pageId !== this.props.pageId) {
+            this.props.onStorePageId(nextProps.pageId);
             this._handleContext(nextProps.selectedPage,nextProps.contextParams);
         }
     }

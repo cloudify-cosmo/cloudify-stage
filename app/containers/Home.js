@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Home from '../components/Home';
 import {clearContext,setValue} from '../actions/context';
 import {setDrilldownContext} from '../actions/drilldownContext';
+import {storeCurrentPageId} from '../actions/app';
 import { push } from 'react-router-redux';
 import Consts from '../utils/consts';
 
@@ -39,8 +40,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         navigateTo404: () =>{
             dispatch(push('404'));
         },
-        navigateToMaintenancePage: () =>{
+        navigateToMaintenancePage: () => {
             dispatch(push('maintenance'));
+        },
+        onStorePageId: (pageId) => {
+            dispatch(storeCurrentPageId(pageId));
         }
     }
 };

@@ -11,7 +11,7 @@ const drillDownContext = (state = [], action) => {
             return action.drilldownContext;
         case types.POP_DRILLDOWN_CONTEXT:
             var newState = [...state];
-            newState.pop()
+            newState.splice(-action.count, action.count);
             return newState;
         default:
             return state;

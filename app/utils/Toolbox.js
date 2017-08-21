@@ -45,7 +45,7 @@ class Toolbox {
     }
 
     goToParentPage() {
-        this.store.dispatch(selectParentPage(this._currentPageId()));
+        this.store.dispatch(selectParentPage());
     }
 
     goToPage(pageName) {
@@ -84,8 +84,6 @@ class Toolbox {
     refresh() {}
 
     loading(show) {}
-
-    _currentPageId() {return '';}
 }
 
 var toolbox = null;
@@ -94,15 +92,13 @@ let createToolbox = (store) =>{
     toolbox = new Toolbox(store);
 };
 
-let getToolbox  = (onRefresh, onLoading, getCurrentPageId)=>{
+let getToolbox  = (onRefresh, onLoading)=>{
     return new Proxy(toolbox,{
         get: (target, name)=> {
             if (name === 'refresh') {
                 return onRefresh;
             } else if (name === 'loading') {
                 return onLoading;
-            } else if (name === '_currentPageId') {
-                return getCurrentPageId;
             } else {
                 return target[name];
             }

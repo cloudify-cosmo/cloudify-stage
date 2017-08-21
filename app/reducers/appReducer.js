@@ -11,6 +11,8 @@ const app = (state = {loading:true}, action) => {
             return {
                 loading: action.isLoading
             };
+        case types.STORE_CURRENT_PAGE:
+            return  {...state, currentPageId: action.pageId};
         case types.RES_LOGIN:
         case types.LOGOUT:
             return {
