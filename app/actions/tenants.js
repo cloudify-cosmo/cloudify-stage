@@ -6,7 +6,7 @@ import * as types from './types';
 import Manager from '../utils/Manager';
 import {reloadUserAppData} from './userApp';
 import {clearContext} from './context';
-import {selectHomePage} from './page';
+import {selectRootPage} from './page';
 
 function requestTenants() {
     return {
@@ -56,7 +56,7 @@ export function changeTenant (tenantName) {
     return function(dispatch) {
         dispatch(clearContext());
         dispatch(selectTenant(tenantName));
-        dispatch(selectHomePage());
+        dispatch(selectRootPage());
         dispatch(reloadUserAppData());
     }
 }

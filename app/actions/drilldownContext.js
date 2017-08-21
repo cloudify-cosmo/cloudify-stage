@@ -11,8 +11,9 @@ export function setDrilldownContext(drilldownContext){
     }
 }
 
-export function popDrilldownContext() {
+export function popDrilldownContext(count = 1) {
     return {
-        type: types.POP_DRILLDOWN_CONTEXT
+        type: types.POP_DRILLDOWN_CONTEXT,
+        count
     };
 }

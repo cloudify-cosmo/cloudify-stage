@@ -40,6 +40,14 @@ export function intialPageLoad() {
     }
 }
 
+export function storeCurrentPageId(pageId) {
+    return {
+        type: types.STORE_CURRENT_PAGE,
+        pageId
+    }
+}
+
+
 export function toogleSidebar() {
     return {
         type : types.APP_SIDEBAR_TOOGLE

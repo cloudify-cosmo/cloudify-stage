@@ -31,7 +31,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     _getToolbox () {
-        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this), this._getCurrentPageId.bind(this));
+        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this));
     }
 
     _beforeFetch() {
@@ -58,10 +58,6 @@ export default class WidgetDynamicContent extends Component {
         if (this.state.loading) {
             this.setState({loading: false});
         }
-    }
-
-    _getCurrentPageId() {
-        return this.props.pageId;
     }
 
     _stopPolling() {

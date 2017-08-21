@@ -163,15 +163,45 @@ export function selectHomePage() {
     }
 }
 
-export function selectParentPage(pageId) {
+export function selectParentPage() {
     return function (dispatch,getState) {
         var state = getState();
-        var page = _.find(state.pages, {'id': pageId});
 
-        if (page && page.isDrillDown && page.parent) {
+        var pageId = state.app.currentPageId || state.pages[0].id;
+
+        var page = _.find(state.pages, {'id': pageId});
+        if (page && page.parent) {
             var parentPage = _.find(state.pages, {'id': page.parent});
             dispatch(popDrilldownContext());
             dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
+        }
+    }
+}
+
+export function selectRootPage() {
+
+    return function (dispatch,getState) {
+        var state = getState();
+
+        var pageId = state.app.currentPageId;
+        if (!pageId || !_.find(state.pages, {'id': pageId})) {
+            return dispatch(selectHomePage());
+        }
+
+        var _findRecurse = (pid, count) => {
+            var page = _.find(state.pages, {'id': pid});
+
+            if (page && page.parent) {
+                return _findRecurse(page.parent, count + 1);
+            }
+
+            return {page, count};
+        };
+
+        var found = _findRecurse(pageId, 0);
+        if (found.count > 0) {
+            dispatch(popDrilldownContext(found.count));
+            dispatch(selectPage(found.page.id, found.page.isDrillDown));
         }
     }
 }
