@@ -66,7 +66,7 @@ router.post('/login', (req, res) => {
 
 
 router.post('/logout', passport.authenticate('token', {session: false}), (req, res) => {
-    let logoutRes = (res) => {
+    var logoutRes = (res) => {
         res.clearCookie('XSRF-TOKEN');
         res.end();
     };
