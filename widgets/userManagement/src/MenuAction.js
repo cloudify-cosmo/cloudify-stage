@@ -22,15 +22,6 @@ export default class MenuAction extends React.Component {
         return (
             <PopupMenu>
                 <Menu pointing vertical>
-                    {
-                        this.props.item.active ?
-                            <Menu.Item icon='ban' content='deactivate' name={MenuAction.DEACTIVATE_ACTION}
-                                       onClick={this._actionClick.bind(this)}/>
-                        :
-                            <Menu.Item icon='ban' content='activate' name={MenuAction.ACTIVATE_ACTION}
-                                       onClick={this._actionClick.bind(this)}/>
-                    }
-
                     <Menu.Item icon='lock' content='Set password' name={MenuAction.SET_PASSWORD_ACTION}
                                onClick={this._actionClick.bind(this)}/>
                     <Menu.Item icon='male' content='Set role' name={MenuAction.SET_ROLE_ACTION}
