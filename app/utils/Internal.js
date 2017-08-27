@@ -20,10 +20,9 @@ export default class Internal extends External {
 
         var headers = {tenant: _.get(this._data,'tenants.selected', Consts.DEFAULT_TENANT)};
 
-        var auth = this._data.auth || {};
         //read token from cookies
         var token = Cookies.get('XSRF-TOKEN');
-        if (auth.isSecured && token) {
+        if (token) {
             headers['Authentication-Token'] = token;
         }
 

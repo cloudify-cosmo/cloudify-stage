@@ -20,7 +20,7 @@ module.exports = (function() {
     }
 
     function getUrl() {
-        return config.managerUrl;
+        return config.managerUrl + '/api/' + config.manager.apiVersion;
     }
 
     function updateOptions(options, method, timeout, headers) {
@@ -41,7 +41,7 @@ module.exports = (function() {
     }
 
     function request(method, url, headers, onSuccess, onError, timeout) {
-        var requestUrl = this.getUrl() + '/api/' + config.manager.apiVersion + url;
+        var requestUrl = this.getUrl() + url;
         var requestOptions = {};
         this.updateOptions(requestOptions, method, timeout, headers);
 

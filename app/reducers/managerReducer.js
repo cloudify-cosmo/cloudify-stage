@@ -12,11 +12,9 @@ const manager = (state = {}, action) => {
                 isLoggingIn: false,
                 username: action.username,
                 auth: {
-                    isSecured : true,
                     role: action.role
                 },
                 err: null,
-                apiVersion: action.apiVersion,
                 serverVersion: action.serverVersion,
                 tenants: [],
                 lastUpdated: action.receivedAt,
@@ -27,11 +25,9 @@ const manager = (state = {}, action) => {
             return Object.assign({}, state, {
                 isLoggingIn: false,
                 auth: {
-                    isSecured : true,
                     role: null
                 },
                 err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
-                apiVersion: null,
                 serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
@@ -43,18 +39,23 @@ const manager = (state = {}, action) => {
                 isLoggingIn: false,
                 username: action.username,
                 auth: {
-                    isSecured : true,
                     role: null
                 },
                 err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
-                apiVersion: null,
                 serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
                 status: null,
                 badStatusCount : 0
             });
-
+        case types.SET_USER_DATA:
+            return Object.assign({}, state, {
+                username: action.username,
+                auth: {
+                    role: action.role
+                },
+                serverVersion: action.serverVersion,
+            });
         case types.SET_MANAGER_STATUS:
             return Object.assign({}, state, {
                 status: action.status,

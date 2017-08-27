@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             return dispatch(intialPageLoad());
         },
         doLogout: (err)=>{
-            dispatch(logout(err));
+            return dispatch(logout(err));
         }
     }
 };

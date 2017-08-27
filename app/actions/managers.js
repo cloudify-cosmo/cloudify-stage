@@ -14,13 +14,9 @@ function requestLogin() {
     }
 }
 
-function receiveLogin(username,role,apiVersion,serverVersion) {
+function receiveLogin() {
     return {
         type: types.RES_LOGIN,
-        username,
-        role,
-        apiVersion,
-        serverVersion,
         receivedAt: Date.now()
     }
 }
@@ -38,11 +34,30 @@ export function login (username,password) {
     return function (dispatch) {
         dispatch(requestLogin());
         return Auth.login(username,password)
-                    .then(data => {
-                        dispatch(receiveLogin(username, data.role, data.apiVersion, data.serverVersion));
+                    .then(() => {
+                        dispatch(receiveLogin());
                         dispatch(push('/'));
                     })
                     .catch(err => dispatch(errorLogin(username,err)));
+    }
+}
+
+
+function responseUserData(username, role, serverVersion){
+    return {
+        type: types.SET_USER_DATA,
+        username,
+        role,
+        serverVersion
+    }
+}
+
+export function getUserData() {
+    return function (dispatch, getState) {
+        return Auth.getUserData(getState().manager)
+            .then(data => {
+                dispatch(responseUserData(data.username, data.role, data.serverVersion));
+            });
     }
 }
 
@@ -56,9 +71,9 @@ function doLogout(err) {
 export function logout(err) {
     return function (dispatch, getState) {
         var localLogout = () => {
+            dispatch(push('login'));
             dispatch(clearContext());
             dispatch(doLogout(err));
-            dispatch(push('login'));
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);
