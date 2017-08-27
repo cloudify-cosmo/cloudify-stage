@@ -11,7 +11,7 @@ Stage.defineWidget({
     initialWidth: 8,
     initialHeight: 24,
     color : "blue",
-    fetchUrl: '[manager]/executions?is_system_workflow=false[params]',
+    fetchUrl: '[manager]/executions?[params]',
     isReact: true,
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],
     
