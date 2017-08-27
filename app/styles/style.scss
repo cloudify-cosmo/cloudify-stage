@@ -279,7 +279,7 @@ a:hover {
   }
 }
 
-.loginPage,.maintenancePage {
+.loginPage,.maintenancePage,.noTenantsPage {
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -288,14 +288,14 @@ a:hover {
   background-color: #000069 !important;
 }
 
-.configManager.ui.segment, .loginPage.ui.segment, .loadingPage.ui.segment,.maintenancePage.ui.segment {
+.configManager.ui.segment, .loginPage.ui.segment, .loadingPage.ui.segment,.maintenancePage.ui.segment,.noTenantsPage.ui.segment {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
 
-  .configManagerContainer, .loginContainer, .maintenanceContainer {
+  .configManagerContainer, .loginContainer, .maintenanceContainer, .noTenantsContainer {
     margin: auto;
     width: 400px;
     height: 170px;
@@ -317,7 +317,7 @@ a:hover {
     height: 400px;
   }
 
-  .maintenanceContainer {
+  .maintenanceContainer, .noTenantsContainer {
     height: 220px;
   }
 

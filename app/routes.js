@@ -10,6 +10,7 @@ import Home from './containers/Home';
 import NotFound from './components/NotFound';
 import Login from './containers/Login';
 import MaintenanceMode from './containers/maintenance/MaintenanceModePageMessage';
+import NoTenants from './components/NoTenants';
 
 import {setValue,clearContext} from './actions/context';
 import Auth from './utils/auth';
@@ -52,6 +53,7 @@ export default (store)=> {
     return (
         <Route path='/'>
             <Route path='login' component={Login}/>
+            <Route path='noTenants' component={NoTenants}/>
             <Route path='maintenance' component={MaintenanceMode} onEnter={isInMaintenanceMode}/>
             <Route component={Layout} onEnter={isLoggedIn}>
                 <Route path='page/(:pageId)' component={Home}/>

@@ -165,10 +165,10 @@ export default class External {
 
                     var message = StageUtils.resolveMessage(resJson.message);
 
-                    return Promise.reject({message: message || response.statusText});
+                    return Promise.reject({message: message || response.statusText, status: response.status});
                 } catch (e) {
                     logger.error(e);
-                    return Promise.reject({message: response.statusText});
+                    return Promise.reject({message: response.statusText, status: response.status});
                 }
             });
     }

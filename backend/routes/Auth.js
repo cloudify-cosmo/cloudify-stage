@@ -31,7 +31,7 @@ router.post('/login', (req, res) => {
                         })
                         .catch((err) => {
                             logger.error(err);
-                            res.status(401).send({message: 'Failed to update user token', error: err});
+                            res.status(500).send({message: 'Failed to update user token', error: err});
                         });
                     } else {
                         db.Users.create({username: username, managerToken: token.value, role: token.role}).then(() => {
@@ -40,21 +40,21 @@ router.post('/login', (req, res) => {
                         })
                         .catch((err) => {
                             logger.error(err);
-                            res.status(401).send({message: 'Failed to create user', error: err});
+                            res.status(500).send({message: 'Failed to create user', error: err});
                         });
                     }
                 })
                 .catch((err) => {
                     logger.error(err);
-                    res.status(401).send({message: 'Failed to get user by token', error: err});
+                    res.status(500).send({message: 'Failed to get user by token', error: err});
                 });
             } else{
-                res.status(401).send({message: 'User has no tenants'});
+                res.status(403).send({message: 'User has no tenants'});
             }
         })
         .catch((err) => {
             logger.error(err);
-            res.status(401).send({message: 'Failed to get user tenants', error: err});
+            res.status(500).send({message: 'Failed to get user tenants', error: err});
         });
     })
     .catch((err) => {

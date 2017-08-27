@@ -38,7 +38,15 @@ export function login (username,password) {
                         dispatch(receiveLogin());
                         dispatch(push('/'));
                     })
-                    .catch(err => dispatch(errorLogin(username,err)));
+                    .catch((err) => {
+                        console.log(err);
+                        if(err.status === 403){
+                            dispatch(errorLogin(username));
+                            dispatch(push('/noTenants'));
+                        } else{
+                            dispatch(errorLogin(username, err));
+                        }
+                    });
     }
 }
 
