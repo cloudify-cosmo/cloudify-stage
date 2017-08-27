@@ -6,34 +6,18 @@
 var config = require('../config').get();
 var db = require('../db/Connection');
 var ManagerHandler = require('../handler/ManagerHandler');
-
 var UniqueTokenStrategy = require('passport-unique-token').Strategy;
-
-var validateToken = (token) =>{
-    return ManagerHandler.jsonRequest('GET', '/version', {
-            'authentication-token': token
-        }
-    );
-};
+var AuthHandler = require('../handler/AuthHandler');
 
 module.exports = () => {
     return new UniqueTokenStrategy({
             tokenHeader: 'authentication-token'
         }, (token, done) => {
-            db.Users.findOne({where: {managerToken: token}}).then((user) => {
-                if(!user){
-                    return done(null, false, 'No user found matching token');
-                }
-                validateToken(token).then(() => {
-                    return done(null, user);
-                })
-                .catch((err) => {
-                    return done(null, false, err);
-                });
+            AuthHandler.getUser(token).then((user) => {
+                return done(null, user);
             })
             .catch((err) => {
                 return done(null, false, err);
             });
-        }
-    );
+    });
 };

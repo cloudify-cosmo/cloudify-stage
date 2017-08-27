@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
         {
             resourceId : {type: DataTypes.STRING, allowNull: false},
             type : {type: DataTypes.ENUM, values: ['widget','template'], allowNull: false},
-            creatorId : {type: DataTypes.INTEGER, allowNull: false}
+            creator : {type: DataTypes.STRING, allowNull: true}
         },
         { indexes: [{unique: true, fields: ['resourceId']}]}
     );

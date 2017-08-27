@@ -20,7 +20,7 @@ router.get('/list', function (req, res, next) {
 });
 
 router.put('/install', passport.authenticate('token', {session: false}), function (req, res, next) {
-    WidgetHandler.installWidget(req.query.url, req.user.id, req)
+    WidgetHandler.installWidget(req.query.url, req.user.username, req)
         .then(data => res.send(data))
         .catch(next);
 });
