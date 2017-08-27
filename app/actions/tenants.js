@@ -41,6 +41,7 @@ export function getTenants (manager) {
             }).catch((err)=>{
                 console.error(err);
                 dispatch(errorTenants(err.message));
+                return Promise.reject(err);
             });
     }
 }

@@ -18,7 +18,7 @@ import Consts from './utils/consts';
 export default (store)=> {
     let isLoggedIn = (nextState, replace, callback) => {
         var managerData = store.getState().manager;
-        if (!Auth.isLoggedIn(managerData)) {
+        if (!Auth.isLoggedIn()) {
             console.log('User is not logged in, navigating to Login screen');
             replace('login');
         }
@@ -35,7 +35,7 @@ export default (store)=> {
         var managerData = store.getState().manager;
 
         // This is only relevant if the user is logged in
-        if (!Auth.isLoggedIn(managerData)) {
+        if (!Auth.isLoggedIn()) {
             console.log('User is not logged in, navigating to Login screen');
             replace('login');
         }

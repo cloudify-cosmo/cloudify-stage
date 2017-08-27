@@ -22,7 +22,6 @@ router.post('/login', (req, res) => {
                 db.Users.findOne({where: {username: username}}).then((user) => {
                     var responseObj = {
                         role: token.role,
-                        apiVersion: config.manager.apiVersion,
                         serverVersion: config.manager.serverVersion
                     };
                     if (user) {
@@ -64,6 +63,13 @@ router.post('/login', (req, res) => {
     });
 });
 
+router.get('/user', passport.authenticate('token', {session: false}), (req, res) => {
+    res.send({
+        username: req.user.username,
+        role: req.user.role,
+        serverVersion: config.manager.serverVersion
+    })
+});
 
 router.post('/logout', passport.authenticate('token', {session: false}), (req, res) => {
     var logoutRes = (res) => {

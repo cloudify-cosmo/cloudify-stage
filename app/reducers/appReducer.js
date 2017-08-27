@@ -14,9 +14,12 @@ const app = (state = {loading:true}, action) => {
         case types.STORE_CURRENT_PAGE:
             return  {...state, currentPageId: action.pageId};
         case types.RES_LOGIN:
-        case types.LOGOUT:
             return {
                 loading: true
+            };
+        case types.LOGOUT:
+            return {
+                loading: false
             };
         case types.APP_SIDEBAR_TOOGLE:
             return Object.assign({},state,{

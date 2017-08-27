@@ -14,12 +14,17 @@ export default class Auth {
         return external.doPost(StageUtils.url('/auth/login'), null, {username, password}, true, null, true);
     }
 
+    static getUserData(managerData){
+        var internal = new Internal(managerData);
+        return internal.doGet('/auth/user', null, true);
+    }
+
     static logout(managerData) {
         var internal = new Internal(managerData);
         return internal.doPost('/auth/logout', null, null, true, null, true);
     }
 
-    static isLoggedIn(managerData){
-        return !!managerData && !!managerData.auth && !!Cookies.get('XSRF-TOKEN');
+    static isLoggedIn(){
+        return !!Cookies.get('XSRF-TOKEN');
     }
 }

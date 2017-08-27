@@ -79,7 +79,7 @@ describe('(Reducer) Tenants', () => {
         store.replaceReducer(TenantReducer);
 
         return store.dispatch(getTenants(managerData))
-            .then(() => { // return of async actions
+            .catch(() => { // return of async actions
                 expect(store.getActions()).to.eql(expectedActions);
             })
     });
@@ -95,7 +95,7 @@ describe('(Reducer) Tenants', () => {
         const store = createStore(TenantReducer,{},applyMiddleware(thunk));
 
         return store.dispatch(getTenants(managerData))
-            .then(() => { // return of async actions
+            .catch(() => { // return of async actions
                 expect(store.getState()).to.eql({
                     isFetching: false,
                     error: 'Error fetching tenants',

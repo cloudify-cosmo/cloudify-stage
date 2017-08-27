@@ -474,7 +474,7 @@ Please note that it is recommended to use *fetchData()* instead of *doGet(URL, p
 
 Same as *getExternal*() but on a secured connection. All headers are appended with an 'Authentication-Token'.
 
-###### getNewManager(ip)
+###### getNewManager()
 
 Returns a manager object connected on the specified IP. May be needed in order to join a different manager (eg. for cluster joining).
 
