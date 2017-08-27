@@ -19,34 +19,10 @@ router.post('/login', (req, res) => {
     AuthHandler.getToken(username, password).then((token) => {
         AuthHandler.getTenants(token.value).then((tenants) => {
             if(!!tenants && !!tenants.items && tenants.items.length > 0) {
-                db.Users.findOne({where: {username: username}}).then((user) => {
-                    var responseObj = {
-                        role: token.role,
-                        serverVersion: config.manager.serverVersion
-                    };
-                    if (user) {
-                        db.Users.update({managerToken: token.value, role: token.role}, {where: {id: user.id}}).then(() => {
-                            res.cookie('XSRF-TOKEN', token.value);
-                            res.send(responseObj);
-                        })
-                        .catch((err) => {
-                            logger.error(err);
-                            res.status(500).send({message: 'Failed to update user token', error: err});
-                        });
-                    } else {
-                        db.Users.create({username: username, managerToken: token.value, role: token.role}).then(() => {
-                            res.cookie('XSRF-TOKEN', token.value);
-                            res.send(responseObj);
-                        })
-                        .catch((err) => {
-                            logger.error(err);
-                            res.status(500).send({message: 'Failed to create user', error: err});
-                        });
-                    }
-                })
-                .catch((err) => {
-                    logger.error(err);
-                    res.status(500).send({message: 'Failed to get user by token', error: err});
+                res.cookie('XSRF-TOKEN', token.value);
+                res.send({
+                    role: token.role,
+                    serverVersion: config.manager.serverVersion
                 });
             } else{
                 res.status(403).send({message: 'User has no tenants'});
@@ -59,7 +35,10 @@ router.post('/login', (req, res) => {
     })
     .catch((err) => {
         logger.error(err);
-        res.status(401).send({message: 'Failed to authenticate with manager', error: err});
+        if(err === 'UNAUTHORIZED'){
+            res.status(401).send({message: 'Invalid credentials', error: err});
+        }
+        res.status(500).send({message: 'Failed to authenticate with manager', error: err});
     });
 });
 
@@ -72,19 +51,8 @@ router.get('/user', passport.authenticate('token', {session: false}), (req, res)
 });
 
 router.post('/logout', passport.authenticate('token', {session: false}), (req, res) => {
-    var logoutRes = (res) => {
-        res.clearCookie('XSRF-TOKEN');
-        res.end();
-    };
-
-    db.Users.update({managerToken: null}, {where: {id: req.user.id}})
-        .then(() => {
-            logoutRes(res);
-        })
-        .catch((err) => {
-            logger.error(err);
-            logoutRes(res);
-        });
+    res.clearCookie('XSRF-TOKEN');
+    res.end();
 });
 
 module.exports = router;

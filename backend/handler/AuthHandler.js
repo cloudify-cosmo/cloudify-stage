@@ -22,6 +22,13 @@ class AuthHandler {
             }
         );
     }
+
+    static getUser(token){
+        return ManagerHandler.jsonRequest('GET', '/user', {
+                'authentication-token': token
+            }
+        );
+    };
 }
 
 module.exports = AuthHandler;

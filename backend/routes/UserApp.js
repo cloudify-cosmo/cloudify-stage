@@ -23,7 +23,7 @@ router.get('/', function (req, res, next) {
     db.UserApp
         .findOne({ where: {
             managerIp: config.manager.ip,
-            userId: req.user.id,
+            username: req.user.username,
             role: req.user.role,
             mode: ServerSettings.settings.mode,
             tenant: req.headers.tenant
@@ -37,7 +37,7 @@ router.post('/', function (req, res, next) {
     db.UserApp
         .findOrCreate({ where: {
             managerIp: config.manager.ip,
-            userId: req.user.id,
+            username: req.user.username,
             role: req.user.role,
             mode: ServerSettings.settings.mode,
             tenant: req.headers.tenant
