@@ -31,10 +31,12 @@ Stage.defineWidget({
         return {
             blueprint_id: toolbox.getContext().getValue('blueprintId'),
             deployment_id: toolbox.getContext().getValue('deploymentId'),
-            is_system_workflow: widget.configuration.showSystemExecutions &&
-                                !toolbox.getContext().getValue('blueprintId') &&
-                                !toolbox.getContext().getValue('deploymentId')
-        }
+            _include_system_workflows: (
+                widget.configuration.showSystemExecutions &&
+                !toolbox.getContext().getValue('blueprintId') &&
+                !toolbox.getContext().getValue('deploymentId')
+            )
+        };
     },
 
     render: function(widget,data,error,toolbox) {
