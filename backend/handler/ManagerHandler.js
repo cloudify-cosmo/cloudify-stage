@@ -5,9 +5,9 @@
 
 var _ = require('lodash');
 var fs = require('fs-extra');
-var req = require('request');
 var config = require('../config').get();
 var logger = require('log4js').getLogger('ManagerHandler');
+var RequestHandler = require('./RequestHandler');
 
 module.exports = (function() {
 
@@ -24,8 +24,6 @@ module.exports = (function() {
     }
 
     function updateOptions(options, method, timeout, headers) {
-        options.method = method;
-
         if (caFile) {
             logger.debug('Adding CA file to Agent Options. CA File =', caFile);
             options.agentOptions = {
@@ -45,10 +43,8 @@ module.exports = (function() {
         var requestOptions = {};
         this.updateOptions(requestOptions, method, timeout, headers);
 
-        logger.debug('Calling GET request to:', requestUrl);
-        return req(requestUrl, requestOptions)
-                      .on('error', onError)
-                      .on('response', onSuccess);
+        logger.debug(`Preparing ${method} request to manager with options: ${JSON.stringify(requestOptions)}`);
+        return RequestHandler.request(method, requestUrl, requestOptions, onSuccess, onError);
     }
 
     // the request assumes the response is JSON
