@@ -43,7 +43,7 @@ export default class GridItem extends Component {
             <div 
                 id={this.props.id}
                 ref='item'
-                className={`${this.props.maximized?'maximize':''} ${this.props.className}`}
+                className={this.props.className}
             >
                 {this.props.children}
             </div>

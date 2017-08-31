@@ -47,6 +47,7 @@ export default class Grid extends Component {
                     w: el.props.width || 10,
                     h: el.props.height || 5
                 }}
+                className={`${el.props.className} ${el.props.maximized && 'maximize'}`}
             >
                 {el}
             </div>
