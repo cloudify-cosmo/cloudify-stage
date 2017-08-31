@@ -157,6 +157,28 @@ a:hover {
 
 }
 
+
+.layout{
+  &.isEditMode{  
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 5px;
+  }
+
+  &>.react-draggable{
+    background-color: rgba(0,0,0,.04);
+    border-radius: 2px;
+  }
+  &>.react-draggable-dragging{
+    opacity: .8;
+    // filter: blur(2px);
+  }
+
+  .widgetItem{
+    height: 100%;
+  }
+}
+
 .widget {
 
   .widgetEditButtons, .widgetViewButtons {

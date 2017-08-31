@@ -3,6 +3,7 @@
  */
 
 import 'babel-polyfill';
+import _ from 'lodash';
 
 window.$ = $;
 import 'jquery-ui/ui/core.js';
@@ -21,9 +22,9 @@ import '../node_modules/semantic-ui-calendar/dist/calendar';
 import '../node_modules/semantic-ui-daterangepicker/daterangepicker.min.css';
 import '../node_modules/semantic-ui-daterangepicker/daterangepicker';
 
-// Import gridstack
-import '../node_modules/gridstack/dist/gridstack.css';
-import '../node_modules/gridstack/dist/gridstack.js';
+// Import react grid
+import '../node_modules/react-grid-layout/css/styles.css';
+import '../node_modules/react-resizable/css/styles.css';
 
 // Import highlight
 import '../node_modules/highlight.js/styles/xcode.css';

@@ -18,10 +18,10 @@ export default class GridItem extends Component {
     };
 
     static defaultProps = {
-        x: undefined,
-        y: undefined,
-        width: 1,
-        height: 1,
+        x: 0,
+        y: 0,
+        width: 10,
+        height: 5,
         className: '',
         maximized: false
     };
@@ -40,17 +40,12 @@ export default class GridItem extends Component {
 
     render() {
         return (
-            <div id={this.props.id} ref='item'
-                 className={`grid-stack-item ${this.props.maximized?'maximize':''} ${this.props.className}`}
-                 data-gs-auto-position={!(this.props.x !== undefined && this.props.y !== undefined)}
-                 data-gs-x={this.props.x}
-                 data-gs-y={this.props.y}
-                 data-gs-width={this.props.width}
-                 data-gs-height={this.props.height}>
-
-                <div className='grid-stack-item-content'>
-                    {this.props.children}
-                </div>
+            <div 
+                id={this.props.id}
+                ref='item'
+                className={`${this.props.maximized?'maximize':''} ${this.props.className}`}
+            >
+                {this.props.children}
             </div>
         );
     }
