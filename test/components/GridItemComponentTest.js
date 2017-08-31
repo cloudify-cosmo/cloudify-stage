@@ -23,47 +23,18 @@ describe('(Component) GridItem',()=>{
         expect(wrapper).to.have.length(1);
     });
 
-    it('renders children',()=>{
-        expect(wrapper.find('div.itemContent')).to.have.length(1);
-    });
-
-    it('creates the right grid-stack item',()=>{
+    it('creates the right item',()=>{
         expect(wrapper.prop('id')).to.equal('1a');
-        expect(wrapper.hasClass('grid-stack-item')).to.be.true;
         expect(wrapper.hasClass('test')).to.be.true;
         expect(wrapper.prop('style')).is.empty;
     });
 
-    it('set the right initial positioning properties',()=>{
-        expect(wrapper.prop('data-gs-auto-position')).to.be.false;
-        expect(wrapper.prop('data-gs-x')).to.equal(1);
-        expect(wrapper.prop('data-gs-y')).to.equal(2);
-        expect(wrapper.prop('data-gs-height')).to.equal(3);
-        expect(wrapper.prop('data-gs-width')).to.equal(4);
-    });
 
     it('No props were sent',()=>{
         var wrapper = shallow( <GridItem id='1a'></GridItem>);
 
         expect(wrapper).to.have.length(1);
-        expect(wrapper.prop('data-gs-auto-position')).to.be.true;
-        expect(wrapper.prop('data-gs-x')).to.be.undefined;
-        expect(wrapper.prop('data-gs-y')).to.be.undefined
-        expect(wrapper.prop('data-gs-width')).to.equal(1);
-        expect(wrapper.prop('data-gs-height')).to.equal(1);
         expect(wrapper.prop('zIndex')).to.be.undefined;
-        expect(wrapper.prop('className').trim()).to.equal('grid-stack-item'); // No additional classes
-    });
-
-    it('No positioning props were sent - use auto position',()=>{
-        var wrapper = shallow( <GridItem id='1a' width={10} height={20}></GridItem>);
-
-        expect(wrapper).to.have.length(1);
-        expect(wrapper.prop('data-gs-auto-position')).to.be.true;
-        expect(wrapper.prop('data-gs-x')).to.be.undefined;
-        expect(wrapper.prop('data-gs-y')).to.be.undefined
-        expect(wrapper.prop('data-gs-width')).to.equal(10);
-        expect(wrapper.prop('data-gs-height')).to.equal(20);
     });
 
     describe('Test lifecycle - calling add/remove of item',()=>{

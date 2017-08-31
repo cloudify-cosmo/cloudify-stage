@@ -37,18 +37,4 @@ describe('(Component) Grid ', () => {
         expect(wrapper.find(GridItem)).to.have.length(3);
     });
 
-    it('Renders GridItems child nodes',()=>{
-        var wrapper = shallow(<Grid isEditMode={false}
-                                    onGridDataChange={()=>{}}>
-            <GridItem id='1a'/>
-            <GridItem id='1b'/>
-            <div>Some other item1</div>
-            <GridItem id='1c'/>
-            <div>Some other item2</div>
-        </Grid>);
-
-        expect(wrapper.find(GridItem)).to.have.length(3);
-        expect(wrapper.children()).to.have.length(3);
-    });
-
 });
