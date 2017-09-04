@@ -49,7 +49,7 @@ app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'INFO'}));
 // For dev purposes
 app.use(contextPath, (req,res,next) => {
     // Setting access control allow origin headers
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4000');
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     // Request headers you wish to allow

@@ -30,19 +30,23 @@ function errorLogin(username,err) {
     }
 }
 
-export function login (username,password) {
+export function login (username, password, redirect) {
     return function (dispatch) {
         dispatch(requestLogin());
         return Auth.login(username,password)
                     .then(() => {
-                        dispatch(receiveLogin());
-                        dispatch(push('/'));
+                        if(redirect){
+                            window.location = redirect;
+                        } else{
+                            dispatch(receiveLogin());
+                            dispatch(push('/'));
+                        }
                     })
                     .catch((err) => {
                         console.log(err);
                         if(err.status === 403){
                             dispatch(errorLogin(username));
-                            dispatch(push('/noTenants'));
+                            dispatch(push({pathname: '/noTenants', search: redirect ? '?redirect='+redirect : ''}));
                         } else{
                             dispatch(errorLogin(username, err));
                         }
