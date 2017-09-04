@@ -27,8 +27,8 @@ export default class Login extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-
-        this.props.onLogin(this.state.username, this.state.password);
+        var redirect = this.props.location.query.redirect || null;
+        this.props.onLogin(this.state.username, this.state.password, redirect);
     }
 
     render() {

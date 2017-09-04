@@ -15,7 +15,7 @@ export default class NoTenants extends Component {
                 <div className="ui raised very padded text container segment center aligned noTenantsContainer">
                     <h2 className="ui header">User don't have any tenants</h2>
                     <p>Unfortunately you cannot login since you don't have any tenants. Ask the admin to assign you to a tenant.</p>
-                    <Link to='/login'>Go back to login</Link>
+                    <Link to={{pathname: '/login', search: this.props.location.search}}>Go back to login</Link>
                 </div>
             </div>
         );
