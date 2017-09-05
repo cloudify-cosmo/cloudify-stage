@@ -161,6 +161,11 @@ a:hover {
 
 }
 
+.react-grid-placeholder{
+  background-color: #ccc !important;
+  border: 2px dotted #777;
+  border-radius: 2px;
+}
 
 .layout{
   &.isEditMode{  
@@ -174,8 +179,8 @@ a:hover {
     border-radius: 2px;
   }
   &>.react-draggable-dragging{
-    opacity: .8;
-    // filter: blur(2px);
+    opacity: 0.3;
+    filter: blur(1px); 
   }
 
   .widgetItem{
