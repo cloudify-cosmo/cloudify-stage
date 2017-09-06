@@ -3,6 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import GridItem from './GridItem';
 import { WidthProvider, Responsive } from 'react-grid-layout';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
@@ -27,6 +28,9 @@ export default class Grid extends Component {
     }
 
     processGridItem(el) {
+        if (el.type && el.type !== GridItem) {
+            return [];
+        }
         return React.createElement('div', {
             key: el.props.id,
             className: [
