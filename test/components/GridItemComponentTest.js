@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { shallow , mount} from 'enzyme'
+import {mount} from 'enzyme'
 import {expect} from 'chai';
 import sinon from 'sinon';
 
@@ -46,7 +46,6 @@ describe('(Component) GridItem',()=>{
         expect(wrapper.prop('y')).to.equal(0);
         expect(wrapper.prop('width')).to.equal(10);
         expect(wrapper.prop('height')).to.equal(5);
-        console.log('current prop', wrapper.prop('width'))
     });
 
     it('No positioning props were sent - use auto position',()=>{
