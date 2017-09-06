@@ -26,18 +26,7 @@ export default class Grid extends Component {
             });
     }
 
-    _itemAdded() { }
-    _itemRemoved() { }
-
     processGridItem(el) {
-
-        // clone element to initialize events ( no need for it now )
-        el = React.cloneElement(el, {
-            onItemAdded: this._itemAdded.bind(this),
-            onItemRemoved: this._itemRemoved.bind(this)
-        })
-
-        // wrap element with div (needed for renderer library)
         return React.createElement('div', {
             key: el.props.id,
             className: [
@@ -63,7 +52,7 @@ export default class Grid extends Component {
                 isDraggable={this.props.isEditMode}
                 isResizable={this.props.isEditMode}
                 >
-                {React.Children.map(this.props.children, (child) => this.processGridItem(child))}
+                {_.map(this.props.children, this.processGridItem.bind(this))}
             </ResponsiveReactGridLayout>
         );
     }
