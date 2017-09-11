@@ -26,10 +26,11 @@ class DeploymentActions {
         });
     }
 
-    doExecute(deployment,workflow,params) {
+    doExecute(deployment,workflow,params, force=false) {
         return this.toolbox.getManager().doPost('/executions',null,{
             'deployment_id': deployment.id,
             'workflow_id' : workflow.name,
+            force,
             parameters: params
         });
     }

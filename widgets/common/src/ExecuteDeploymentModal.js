@@ -71,7 +71,7 @@ export default class ExecuteDeploymentModal extends React.Component {
         this.setState({params: paramsJson});
 
         var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-        actions.doExecute(this.props.deployment, this.props.workflow, paramsJson).then(()=>{
+        actions.doExecute(this.props.deployment, this.props.workflow, paramsJson, this.props.force).then(()=>{
             this.setState({loading: false, errors: {}});
             this.props.onHide();
             this.props.toolbox.getEventBus().trigger('executions:refresh');
@@ -134,6 +134,18 @@ export default class ExecuteDeploymentModal extends React.Component {
                                 );
                             })
                         }
+                        <Form.Field key="force">
+                            <GenericField
+                                name="force"
+                                label="force"
+                                description=""
+                                type={this.getGenericFieldType({type: 'boolean'})}
+                                value={this.state.force}
+                                onChange={(event, field) => {
+                                    console.log('field', field)
+                                    this.setState({force: field.checked});
+                                }} />
+                        </Form.Field>
                     </Form>
                 </Modal.Content>
 
