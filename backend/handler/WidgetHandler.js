@@ -42,7 +42,7 @@ module.exports = (function() {
     function _validateUniqueness(widgetId) {
         var widgets = _getInstalledWidgets();
         if (_.indexOf(widgets, widgetId) >= 0) {
-            return Promise.reject('Widget ' + widgetId + ' is already installed');
+            return Promise.reject({status: 422, message: 'Widget ' + widgetId + ' is already installed'});
         }
 
         return Promise.resolve();
