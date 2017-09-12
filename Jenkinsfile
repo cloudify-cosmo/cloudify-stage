@@ -58,7 +58,7 @@ pipeline {
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
                       curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/cloudify-premium/master/packages-urls/common_build_env.sh -o ./common_build_env.sh
                       . $PWD/common_build_env.sh
-                      s3cmd put --access_key=${AWS_ACCESS_KEY_ID_UPLOAD_TEMP} --secret_key=${AWS_ACCESS_KEY_UPLOAD_TEMP} --human-readable-sizes --acl-public \\
+                      s3cmd put --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --human-readable-sizes --acl-public \\
                       cloudify-stage-$VERSION-$PRERELEASE.tgz \\
                       s3://$AWS_S3_BUCKET/$AWS_S3_PATH/'''
             }
