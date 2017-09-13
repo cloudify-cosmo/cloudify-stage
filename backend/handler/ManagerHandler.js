@@ -39,7 +39,7 @@ module.exports = (function() {
     }
 
     function request(method, url, headers, onSuccess, onError, timeout) {
-        var requestUrl = this.getUrl() + url;
+        var requestUrl = this.getUrl() + (_.startsWith(url, '/') ? url : `/${url}`);
         var requestOptions = {};
         this.updateOptions(requestOptions, method, timeout, headers);
 
@@ -52,10 +52,14 @@ module.exports = (function() {
         return new Promise((resolve, reject) => {
             this.request(method, url, headers, (res) => {
                 if(res.statusCode >= 200 && res.statusCode <300){
+                    let buffer = '';
                     res.on('data', (data) => {
+                        buffer += data;
+                    });
+                    res.on('end', () => {
                         try {
-                            data = JSON.parse(data);
-                            resolve(data);
+                            buffer = JSON.parse(buffer);
+                            resolve(buffer);
                         }
                         catch(e){
                             reject('response data could not be parsed to JSON: ', e);

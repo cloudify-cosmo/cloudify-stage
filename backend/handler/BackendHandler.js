@@ -11,7 +11,7 @@ var _ = require('lodash');
 var config = require('../config').get();
 var ManagerHandler = require('./ManagerHandler');
 
-var logger = require('log4js').getLogger('widgetBackend');
+var logger = require('log4js').getLogger('WidgetBackend');
 
 //TODO: Temporary solution, the approach needs to be think over thoroughly
 var widgetsFolder = '../widgets';
@@ -41,7 +41,7 @@ var BackendRegistrator = {
 
 var ServiceHelper = {
     callManager: (method, url, req) => {
-        return ManagerHandler.jsonRequest(method, url, {'authentication-token': req.header('authentication-token')});
+        return ManagerHandler.jsonRequest(method, url, req.headers);
     }
 }
 
@@ -56,7 +56,7 @@ module.exports = (function() {
     function importWidgetBackend(widgetName) {
         var backendFile = pathlib.resolve(widgetsFolder, widgetName, config.app.widgets.backendFilename);
         if (fs.existsSync(backendFile)) {
-            console.error('-- initializing file ' + backendFile);
+            logger.info('-- initializing file ' + backendFile);
 
             try {
                 var backend = require(backendFile);
@@ -72,19 +72,19 @@ module.exports = (function() {
     }
 
     function initWidgetBackends() {
-        console.log('Scanning widget backend files...');
+        logger.info('Scanning widget backend files...');
 
         var widgets = _getInstalledWidgets();
 
         _.each(widgets, widgetName => importWidgetBackend(widgetName));
 
-        console.log('Widget backend files registration completed - ' + _.keys(services));
+        logger.info('Widget backend files registration completed - ' + _.keys(services));
     }
 
-    function callService(serviceName, req, res) {
+    function callService(serviceName, req, res, next) {
         var service = services[serviceName];
         if (service) {
-            return service(req, res, ServiceHelper);
+            return service(req, res, next, ServiceHelper);
         } else {
             throw new Error('Service name ' + serviceName + ' does not exist');
         }
