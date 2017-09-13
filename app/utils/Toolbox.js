@@ -13,6 +13,7 @@ import Context from './Context';
 import Manager from './Manager';
 import External from './External';
 import Internal from './Internal';
+import WidgetBackend from './WidgetBackend';
 
 class Toolbox {
     constructor (store) {
@@ -31,6 +32,7 @@ class Toolbox {
         this.templates = state.templates || {};
         this._Manager = new Manager(state.manager || {});
         this._Internal = new Internal(state.manager || {});
+        this._WidgetBackend = new WidgetBackend(state.manager || {});
         this._Context = new Context(this.store);
         this.widgetDefinitions = state.widgetDefinitions || [];
         this._widgetsConfig = state.config.widgets;
@@ -62,6 +64,10 @@ class Toolbox {
 
     getInternal() {
         return this._Internal;
+    }
+
+    getWidgetBackend() {
+        return this._WidgetBackend;
     }
 
     getExternal(basicAuth) {

@@ -33,6 +33,7 @@ var GitHub = require('./routes/GitHub');
 var Style = require('./routes/Style');
 var Widgets = require('./routes/Widgets');
 var BackendHandler = require('./handler/BackendHandler');
+var WidgetBackend = require('./routes/WidgetBackend');
 
 var logger = log4js.getLogger('Server');
 
@@ -80,6 +81,7 @@ app.use(contextPath +'/github',GitHub);
 app.use(contextPath +'/config',function(req,res){
     res.send(config.getForClient(ServerSettings.settings.mode));
 });
+app.use(contextPath +'/wb',WidgetBackend);
 
 // BrowserHistory code
 app.get('*',function (request, response){
