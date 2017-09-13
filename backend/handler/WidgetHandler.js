@@ -10,6 +10,7 @@ var pathlib = require('path');
 var _ = require('lodash');
 var config = require('../config').get();
 var ArchiveHelper = require('./ArchiveHelper');
+var BackendHandler = require('./BackendHandler');
 
 var logger = require('log4js').getLogger('widgets');
 
@@ -124,6 +125,7 @@ module.exports = (function() {
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then((tempPath) => _installFiles(widgetId, tempPath))
                     .then(() => _persistData(widgetId, username))
+                    .then(() => BackendHandler.importWidgetBackend(widgetId))
                     .then(() => {
                         var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
 
@@ -157,6 +159,7 @@ module.exports = (function() {
                     .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then(tempPath => _installFiles(widgetId, tempPath))
+                    .then(() => BackendHandler.importWidgetBackend(widgetId))
                     .then(() => {
                         var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
 

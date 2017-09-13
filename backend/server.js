@@ -32,6 +32,7 @@ var SourceBrowser = require('./routes/SourceBrowser');
 var GitHub = require('./routes/GitHub');
 var Style = require('./routes/Style');
 var Widgets = require('./routes/Widgets');
+var BackendHandler = require('./handler/BackendHandler');
 
 var logger = log4js.getLogger('Server');
 
@@ -94,3 +95,5 @@ app.use(function(err, req, res, next) {
     logger.error('Error has occured ', err);
     res.status(err.status || 404).send({message: err.message || err});
 });
+
+BackendHandler.initWidgetBackends();
