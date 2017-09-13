@@ -1,7 +1,4 @@
 pipeline {
-    triggers {
-            cron('H/30 8-21 * * 0-5')
-    }
     agent { label 'web-ui' }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch name')
@@ -44,8 +41,10 @@ pipeline {
                 dir('cloudify-stage') {
                     sh 'sudo npm run zip'
                 }
-                sh '''. ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
-                      curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/cloudify-premium/master/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                sh '''first=$(echo $BRANCH_NAME | cut -d. -f1)
+                      if [ "$first" -gt 17 ] || [ "$first" -eq 17 ] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
+                      . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
+                      curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH_NAME}/packages-urls/common_build_env.sh -o ./common_build_env.sh
                       . $PWD/common_build_env.sh
                       mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
 
@@ -54,9 +53,10 @@ pipeline {
 
         stage('Upload package to S3') {
             steps {
-                sh '''set +x
+                sh '''first=$(echo $BRANCH_NAME | cut -d. -f1)
+                      if [ "$first" -gt 17 ] || [ "$first" -eq 17 ] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
-                      curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/cloudify-premium/master/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                      curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH_NAME}/packages-urls/common_build_env.sh -o ./common_build_env.sh
                       . $PWD/common_build_env.sh
                       s3cmd put --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --human-readable-sizes --acl-public \\
                       cloudify-stage-$VERSION-$PRERELEASE.tgz \\
