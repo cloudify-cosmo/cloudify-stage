@@ -3,32 +3,17 @@
  */
 
 import Internal from './Internal';
-import Consts from './consts';
-import Cookies from 'js-cookie';
 
 export default class WidgetBackend extends Internal {
 
-    constructor(context, data) {
+    constructor(widget, data) {
         super(data);
-        this.context = context;
+        this.widget = widget;
     }
 
     _buildHeaders() {
-        if (!this._data) {
-            return {};
-        }
-
-        var headers = {
-            tenant: _.get(this._data,'tenants.selected', Consts.DEFAULT_TENANT),
-            widgetName: this.context.id
-        };
-
-        //read token from cookies
-        var token = Cookies.get('XSRF-TOKEN');
-        if (token) {
-            headers['Authentication-Token'] = token;
-        }
-
+        var headers = super._buildHeaders();
+        headers.widgetName = this.widget.id;
         return headers;
     }
     _buildActualUrl(path, data) {

@@ -32,11 +32,12 @@ var BackendRegistrator = function (widgetName) {
                 throw new Error('Service body must be a function (function(request, response, next, Service) {...})');
             }
 
-            if (services[serviceName]) {
-                throw new Error('Service ' + serviceName + ' already exists');
+            if (_.isObject(services[widgetName]) && !_.isNil(services[widgetName][serviceName])) {
+                throw new Error('Service ' + serviceName + ' for widget ' + widgetName + ' already exists');
             } else {
                 if (_.isEmpty(services[widgetName]))
                     services[widgetName] = {};
+                logger.info('--- registering service ' + serviceName);
                 services[widgetName][serviceName] = service;
             }
         }
@@ -50,7 +51,7 @@ var ServiceHelper = {
     db: {
         create: (key, value, req, res, next) => {
             if (_.isEmpty(req.user)) {
-                res.status(500).send({message: 'User not authenticated'});
+                res.status(401).send({message: 'User not authenticated'});
             } else {
                 return db.WidgetsData
                     .create({
@@ -66,7 +67,7 @@ var ServiceHelper = {
         },
         read: (key, req, res, next) => {
             if (_.isEmpty(req.user)) {
-                res.status(500).send({message: 'User not authenticated'});
+                res.status(401).send({message: 'User not authenticated'});
             } else {
                 return db.WidgetsData
                     .findOne({
@@ -82,7 +83,7 @@ var ServiceHelper = {
         },
         update: (key, value, req, res, next) => {
             if (_.isEmpty(req.user)) {
-                res.status(500).send({message: 'User not authenticated'});
+                res.status(401).send({message: 'User not authenticated'});
             } else {
                 return db.WidgetsData
                     .update({
@@ -101,7 +102,7 @@ var ServiceHelper = {
         },
         delete: (key, req, res, next) => {
             if (_.isEmpty(req.user)) {
-                res.status(500).send({message: 'User not authenticated'});
+                res.status(401).send({message: 'User not authenticated'});
             } else {
                 return db.WidgetsData
                     .destroy({
@@ -151,16 +152,23 @@ module.exports = (function() {
 
         _.each(widgets, widgetName => importWidgetBackend(widgetName));
 
-        logger.info('Widget backend files registration completed - ' + _.keys(services));
+        logger.info('Widget backend files for registration completed');
     }
 
     function callService(serviceName, req, res, next) {
-        var service = services[req.header('widgetName')][serviceName];
-        if (service) {
-            return service(req, res, next, ServiceHelper);
+        var widgetName = req.header('widgetName');
+        var widgetServices = services[widgetName];
+        if (widgetServices) {
+            var service = widgetServices[serviceName];
+            if (service) {
+                return service(req, res, next, ServiceHelper);
+            } else {
+                throw new Error('Widget ' + widgetName + ' has no services registered');
+            }
         } else {
-            throw new Error('Service name ' + serviceName + ' does not exist');
+            throw new Error('Service name ' + serviceName + ' does not exist for widget ' + widgetName);
         }
+
     }
 
     return {
