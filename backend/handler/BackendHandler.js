@@ -115,7 +115,22 @@ var ServiceHelper = {
                         res.status(500).send({message: 'Data delete error'});
                     });
             }
-        }
+        },
+        readAll: (req, res, next) => {
+            if (_.isEmpty(req.user)) {
+                res.status(401).send({message: 'User not authenticated'});
+            } else {
+                return db.WidgetsData
+                    .findAll({
+                        where: {
+                            user: req.user.username,
+                            widget: req.header(config.app.widgets.widgetNameHeader),
+                        }
+                    }).catch(function () {
+                        res.status(500).send({message: 'Data read error'});
+                    });
+            }
+        },
     },
 }
 
