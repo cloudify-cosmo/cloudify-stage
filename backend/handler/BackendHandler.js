@@ -29,7 +29,7 @@ var BackendRegistrator = function (widgetName) {
             if (!service) {
                 throw new Error('Service body must be provided');
             } else if (!_.isFunction(service)) {
-                throw new Error('Service body must be a function (function(request, response, Service) {...})');
+                throw new Error('Service body must be a function (function(request, response, next, Service) {...})');
             }
 
             if (services[serviceName]) {
@@ -46,7 +46,76 @@ var BackendRegistrator = function (widgetName) {
 var ServiceHelper = {
     callManager: (method, url, req) => {
         return ManagerHandler.jsonRequest(method, url, req.headers);
-    }
+    },
+    db: {
+        create: (key, value, req, res, next) => {
+            if (_.isEmpty(req.user)) {
+                res.status(500).send({message: 'User not authenticated'});
+            } else {
+                return db.WidgetsData
+                    .create({
+                        user: req.user.username,
+                        widget: req.header(config.app.widgets.widgetNameHeader),
+                        key: key,
+                        value: value
+                    })
+                    .catch(function () {
+                        res.status(500).send({message: 'Data write error'});
+                    });
+            }
+        },
+        read: (key, req, res, next) => {
+            if (_.isEmpty(req.user)) {
+                res.status(500).send({message: 'User not authenticated'});
+            } else {
+                return db.WidgetsData
+                    .findOne({
+                        where: {
+                            user: req.user.username,
+                            widget: req.header(config.app.widgets.widgetNameHeader),
+                            key: key,
+                        }
+                    }).catch(function () {
+                        res.status(500).send({message: 'Data read error'});
+                    });
+            }
+        },
+        update: (key, value, req, res, next) => {
+            if (_.isEmpty(req.user)) {
+                res.status(500).send({message: 'User not authenticated'});
+            } else {
+                return db.WidgetsData
+                    .update({
+                        value: value
+                    },
+                    {
+                        where: {
+                            user: req.user.username,
+                            widget: req.header(config.app.widgets.widgetNameHeader),
+                            key: key
+                        }
+                    }).catch(function () {
+                        res.status(500).send({message: 'Data update error'});
+                    });
+            }
+        },
+        delete: (key, req, res, next) => {
+            if (_.isEmpty(req.user)) {
+                res.status(500).send({message: 'User not authenticated'});
+            } else {
+                return db.WidgetsData
+                    .destroy({
+                        where: {
+                            user: req.user.username,
+                            widget: req.header(config.app.widgets.widgetNameHeader),
+                            key: key,
+                        }
+                    }).catch(function () {
+                        res.status(500).send({message: 'Data delete error'});
+                    });
+            }
+        }
+    },
 }
 
 module.exports = (function() {

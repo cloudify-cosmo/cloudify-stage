@@ -13,9 +13,27 @@ Stage.defineWidget({
     showBorder: true,
     isReact: true,
     categories: [Stage.GenericConfig.CATEGORY.OTHERS],
+    initialConfiguration: [
+        {id: 'service', name: 'Service', default: 'manager', type: Stage.Basic.GenericField.LIST_TYPE,
+            items: [
+                {name:'Manager', value:'manager'},
+                {name:'Database - Create', value:'databaseCreateKey'},
+                {name:'Database - Read', value:'databaseReadKey'},
+                {name:'Database - Update', value:'databaseUpdateKey'},
+                {name:'Database - Delete', value:'databaseDeleteKey'}
+            ]
+        },
+        {id: 'params', name: 'Parameter', default: '', type: Stage.Basic.GenericField.STRING_TYPE}
+    ],
+
 
     fetchData (widget, toolbox, params) {
-        return toolbox.getWidgetBackend(this).doGet('test');
+        let service = widget.configuration.service;
+        if (!_.isEmpty(service)) {
+            return toolbox.getWidgetBackend(this).doGet(service);
+        } else {
+            return Promise.resolve({});
+        }
     },
 
     render: function(widget,data,error,toolbox) {
@@ -27,7 +45,7 @@ Stage.defineWidget({
                 <Message>No data fetched</Message>
             :
                 <HighlightText>
-                    {JSON.stringify(data.items, null, 2)}
+                    {JSON.stringify(data, null, 2)}
                 </HighlightText>
         );
     }
