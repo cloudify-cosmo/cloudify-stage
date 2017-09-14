@@ -20,21 +20,25 @@ if (!fs.existsSync(widgetsFolder)) {
 }
 
 var services = {};
-var BackendRegistrator = {
-    register: (serviceName, service) => {
-        if (!serviceName) {
-            throw new Error('Service name must be provided');
-        }
-        if (!service) {
-            throw new Error('Service body must be provided');
-        } else if (!_.isFunction(service)) {
-            throw new Error('Service body must be a function (function(request, response, Service) {...})');
-        }
+var BackendRegistrator = function (widgetName) {
+    return {
+        register: (serviceName, service) => {
+            if (!serviceName) {
+                throw new Error('Service name must be provided');
+            }
+            if (!service) {
+                throw new Error('Service body must be provided');
+            } else if (!_.isFunction(service)) {
+                throw new Error('Service body must be a function (function(request, response, Service) {...})');
+            }
 
-        if (services[serviceName]) {
-            throw new Error('Service ' + serviceName + ' already exists');
-        } else {
-            services[serviceName] = service;
+            if (services[serviceName]) {
+                throw new Error('Service ' + serviceName + ' already exists');
+            } else {
+                if (_.isEmpty(services[widgetName]))
+                    services[widgetName] = {};
+                services[widgetName][serviceName] = service;
+            }
         }
     }
 }
@@ -61,7 +65,7 @@ module.exports = (function() {
             try {
                 var backend = require(backendFile);
                 if (_.isFunction(backend)) {
-                    backend(BackendRegistrator);
+                    backend(BackendRegistrator(widgetName));
                 } else {
                     throw new Error('Backend definition must be a function (module.exports = function(BackendRegistrator) {...})');
                 }
@@ -82,7 +86,7 @@ module.exports = (function() {
     }
 
     function callService(serviceName, req, res, next) {
-        var service = services[serviceName];
+        var service = services[req.header('widgetName')][serviceName];
         if (service) {
             return service(req, res, next, ServiceHelper);
         } else {

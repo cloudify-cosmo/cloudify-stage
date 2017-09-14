@@ -15,7 +15,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.OTHERS],
 
     fetchData (widget, toolbox, params) {
-        return toolbox.getWidgetBackend().doGet('test');
+        return toolbox.getWidgetBackend(this).doGet('test');
     },
 
     render: function(widget,data,error,toolbox) {

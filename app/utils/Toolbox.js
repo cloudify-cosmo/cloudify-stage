@@ -32,7 +32,6 @@ class Toolbox {
         this.templates = state.templates || {};
         this._Manager = new Manager(state.manager || {});
         this._Internal = new Internal(state.manager || {});
-        this._WidgetBackend = new WidgetBackend(state.manager || {});
         this._Context = new Context(this.store);
         this.widgetDefinitions = state.widgetDefinitions || [];
         this._widgetsConfig = state.config.widgets;
@@ -66,8 +65,9 @@ class Toolbox {
         return this._Internal;
     }
 
-    getWidgetBackend() {
-        return this._WidgetBackend;
+    getWidgetBackend(context) {
+        var state = this.store.getState();
+        return new WidgetBackend(context, state.manager || {});
     }
 
     getExternal(basicAuth) {
