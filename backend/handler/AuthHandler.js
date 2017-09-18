@@ -7,11 +7,9 @@ var ManagerHandler = require('./ManagerHandler');
 
 
 class AuthHandler {
-    static getToken(username, password){
-        var buffer = new Buffer(`${username}:${password}`).toString('base64');
-        var auth = 'Basic '+ buffer;
+    static getToken(basicAuth){
         return ManagerHandler.jsonRequest('GET', '/tokens', {
-                'Authorization': auth
+                'Authorization': basicAuth
             }
         );
     }
