@@ -27,6 +27,24 @@ function getClient() {
     return influx(options);
 }
 
+function _isValidQuery(string) {
+    const lowerCase = string.toLowerCase().slice(0, -1);
+    const pattern = /;|drop\s|update\s|delete\s/;
+    return !pattern.test(lowerCase);
+}
+
+function _sanitizeQuery(query) {
+    return query.replace(/;/g, '');
+}
+
+function _createQuery(query) {
+    const qSelect = _sanitizeQuery(query.qSelect);
+    const qFrom = _sanitizeQuery(query.qFrom);
+    const qWhere = _sanitizeQuery(query.qWhere);
+    const defaultTimeRange = 'time > now() - 15m AND time < now() group by time(1m)';
+
+    return ''.concat('SELECT ', qSelect, ' FROM ', qFrom, ' WHERE ', qWhere?qWhere:defaultTimeRange);
+}
 
 /**
  * End point to gets a list of available metrics per deployment
@@ -84,15 +102,15 @@ router.get('/metrics/:deploymentId',function (req, res,next) {
  *    timeGroup - group the results by time
  */
 router.get('/byMetric/:deploymentId/:metrics',function(req,res,next){
-    var fromTime = req.query.from ||  'now() - 15m';
-    var toTime = req.query.to || 'now()';
-    var timeGrouping = req.query.timeGroup || 10;
-    var metrics = _.chain(req.params.metrics)
+    const fromTime = req.query.from ||  'now() - 15m';
+    const toTime = req.query.to || 'now()';
+    const timeGrouping = req.query.timeGroup || 10;
+    const metrics = _.chain(req.params.metrics)
                    .split(',')
                    .map(function(metric) { return `(${metric})`})
                    .join('|');
 
-    var query = 'select mean(value) from /'+req.params.deploymentId+'\\..*\\.('+metrics+')$/ ' +
+    const query = 'select mean(value) from /'+req.params.deploymentId+'\\..*\\.('+metrics+')$/ ' +
                 'where time > '+fromTime+' and time < '+toTime+' group by time('+timeGrouping+')  order asc';
 
     logger.debug('Query: ',query);
@@ -108,13 +126,22 @@ router.get('/byMetric/:deploymentId/:metrics',function(req,res,next){
         } );
 });
 
-router.get('/query',function (req, res,next) {
-    logger.debug('Running query',req.query.q);
+router.get('/query',function (req, res, next) {
+
+    const query = _createQuery(req.query);
+    logger.debug('Running query:', query);
+
+    if (!_isValidQuery(query)){
+        logger.error('Error: not a valid SELECT query');
+        res.status(403).send('Error: not a valid SELECT query');
+        return;
+    }
+
     getClient()
-        .query(req.query.q, function(err,results){
+        .query(query, function(err,results){
             if (err) {
                 logger.error('Error connecting to influxDB', err);
-                res.status(500).send(err.message)
+                res.status(500).send(err.message);
             } else {
                 res.send(results);
             }
