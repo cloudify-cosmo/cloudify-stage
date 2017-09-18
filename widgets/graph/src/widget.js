@@ -22,9 +22,12 @@ Stage.defineWidget({
                 items: ["", "cpu_total_system", "cpu_total_user", "memory_MemFree", "memory_SwapFree", "loadavg_processes_running"]},
             {name: 'label', label: 'Label', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart label"},
             {name: 'unit', label: 'Unit', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart data unit"}
-        ]
-        },
-        {id: 'query', name: 'Chart query', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "InfluxQL query to fetch input data for the graph"},
+        ]},
+        {id: 'query', name: 'Custom Influx Query', description: 'Please note that below query builder overrides the series defined in "Charts table"', default: '', type: Stage.Basic.GenericField.EDITABLE_TABLE_TYPE, max: 1, items: [
+            {name: 'qSelect', label: 'SELECT', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: ''},
+            {name: 'qFrom', label: 'FROM', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${deploymentId} token to inject dynamic deployment ID. Example: "/${deploymentId}\..*\.((memory_MemFree))$/"'},
+            {name: 'qWhere', label: 'WHERE', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${timeFilter} token to inject dynamic data/time ranges.'}
+        ]},
         {id: "type", name: "Charts type", items: [{name:'Line chart', value:Stage.Basic.Graphs.Graph.LINE_CHART_TYPE}, {name:'Bar chart', value:Stage.Basic.Graphs.Graph.BAR_CHART_TYPE}],
             default: Stage.Basic.Graphs.Graph.LINE_CHART_TYPE, type: Stage.Basic.GenericField.LIST_TYPE},
         {id: "from", name: "Time range start", placeHolder: "Start time for data to be presented", default: "now() - 15m", type: Stage.Basic.GenericField.LIST_TYPE,
@@ -107,6 +110,33 @@ Stage.defineWidget({
         return chartsConfig;
     },
 
+    _sanitizeQuery(string){
+        return string.replace(/;/g, '');
+    },
+
+    _prepareInfluxQuery: function(queries, deploymentId, from, to, timeGroup) {
+        return _.map(queries, (queryParams) => {
+            let selectWhat = this._sanitizeQuery(queryParams.qSelect);
+            let selectFrom = this._sanitizeQuery(queryParams.qFrom);
+            let selectWhere = this._sanitizeQuery(queryParams.qWhere);
+
+            if (!_.isEmpty(selectWhat) && !_.isEmpty(selectFrom)) {
+
+                if (_.includes(selectFrom, '${deploymentId}') && _.isEmpty(deploymentId))
+                    return {};
+
+                selectFrom = _.replace(selectFrom, '${deploymentId}', deploymentId);
+                selectWhere = _.replace(selectWhere, '${timeFilter}', `time > ${from} and time < ${to} group by time(${timeGroup})`);
+
+                if (_.isEmpty(selectWhere))
+                    return {qSelect: selectWhat, qFrom: selectFrom};
+                else
+                    return {qSelect: selectWhat, qFrom: selectFrom, qWhere: selectWhere};
+            } else
+                return {};
+        });
+    },
+
     fetchParams: function(widget, toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId') || widget.configuration.deploymentId;
 
@@ -128,21 +158,23 @@ Stage.defineWidget({
     },
 
     fetchData: function(widget, toolbox, params) {
-        let actions = new Stage.Common.InfluxActions(toolbox);
-        let deploymentId = params.deploymentId;
-        let metrics = this._getChartsMetricsList(widget.configuration.charts);
-        let query = widget.configuration.query;
+        const actions = new Stage.Common.InfluxActions(toolbox);
+        const deploymentId = params.deploymentId;
+        const metrics = this._getChartsMetricsList(widget.configuration.charts);
+        const from = params.timeStart;
+        const to = params.timeEnd;
+        const timeGroup = params.timeGroup;
+        const preparedQuery = _.head(this._prepareInfluxQuery(widget.configuration.query, deploymentId, from, to, timeGroup));
 
-        if (!_.isEmpty(query)) {
-            return actions.doRunQuery(query).then((data) => {
+        if (!_.isEmpty(preparedQuery)) {
+            return actions.doRunQuery(preparedQuery.qSelect, preparedQuery.qFrom, preparedQuery.qWhere).then((data) => {
                 let formattedResponse
                     = _.map(data, (metric) => ({name: _.last(_.split(metric.name, '.')), points: metric.points}));
                 return Promise.resolve(formattedResponse)
-            })
+            }).catch((error) => {
+                return Promise.reject('There was a problem while querying for data. Please check your Influx query syntax and try again.');
+            });
         } else if (!_.isEmpty(deploymentId) && !_.isEmpty(metrics)) {
-            let from = params.timeStart;
-            let to = params.timeEnd;
-            let timeGroup = params.timeGroup;
             return actions.doGetMetric(deploymentId, metrics, from, to, timeGroup).then((data) => {
                 let formattedResponse
                     = _.map(data, (metric) => ({name: _.last(_.split(metric.name, '.')), points: metric.points}));
@@ -155,11 +187,12 @@ Stage.defineWidget({
 
     render: function(widget,data,error,toolbox) {
         let {deploymentId, charts, query, type} = widget.configuration;
+        let {Message, Icon} = Stage.Basic;
         deploymentId = toolbox.getContext().getValue('deploymentId') || deploymentId;
         let metrics = this._getChartsMetricsList(charts);
+        let preparedQuery = _.head(this._prepareInfluxQuery(query,deploymentId,null,null,null));
 
-        if ((_.isEmpty(deploymentId) || _.isEmpty(metrics)) && _.isEmpty(query)) {
-            let {Message, Icon} = Stage.Basic;
+        if ((_.isEmpty(deploymentId) || _.isEmpty(metrics)) && _.isEmpty(preparedQuery)) {
             return (
                 <Message>
                     <Icon name="ban" />
