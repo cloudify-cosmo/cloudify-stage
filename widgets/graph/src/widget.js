@@ -42,7 +42,7 @@ Stage.defineWidget({
 
     _prepareData: function(data, xDataKey) {
         const TIME_FORMAT = "HH:mm:ss";
-        const MAX_NUMBER_OF_POINTS = 500;
+        const MAX_NUMBER_OF_POINTS = 200;
         const TIME_INDEX = 0;
         const VALUE_INDEX = 1;
         const REFERENCE_METRIC_INDEX = 0;
@@ -143,10 +143,10 @@ Stage.defineWidget({
         let timeFilter = toolbox.getContext().getValue('timeFilter') || {};
 
         let timeStart = timeFilter.start;
-        timeStart = timeStart ? `${moment(timeStart).unix()}s` : widget.configuration.from;
+        timeStart = timeStart ? (moment(timeStart).isValid() ? `${moment(timeStart).unix()}s` : timeStart) : widget.configuration.from;
 
         let timeEnd = timeFilter.end;
-        timeEnd = timeEnd ? `${moment(timeEnd).unix()}s` : widget.configuration.to;
+        timeEnd = timeEnd ? (moment(timeEnd).isValid() ? `${moment(timeEnd).unix()}s` : timeEnd) : widget.configuration.to;
 
         let timeResolutionValue = timeFilter.resolution;
         let timeResolutionUnit = timeFilter.unit;
