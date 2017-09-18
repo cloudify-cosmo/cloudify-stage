@@ -14,9 +14,7 @@ var logger = require('log4js').getLogger('ClientConfigRouter');
 router.use(bodyParser.json());
 
 router.post('/login', (req, res) => {
-    var username = req.body.username;
-    var password = req.body.password;
-    AuthHandler.getToken(username, password).then((token) => {
+    AuthHandler.getToken(req.headers.authorization).then((token) => {
         AuthHandler.getTenants(token.value).then((tenants) => {
             if(!!tenants && !!tenants.items && tenants.items.length > 0) {
                 res.cookie('XSRF-TOKEN', token.value);
