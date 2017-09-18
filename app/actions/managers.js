@@ -80,10 +80,10 @@ function doLogout(err) {
         receivedAt: Date.now()
     }
 }
-export function logout(err) {
+export function logout(err, path) {
     return function (dispatch, getState) {
         var localLogout = () => {
-            dispatch(push('login'));
+            dispatch(push(path || 'logout'));
             dispatch(clearContext());
             dispatch(doLogout(err));
         };

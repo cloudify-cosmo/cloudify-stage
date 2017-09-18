@@ -20,8 +20,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         intialPageLoad: ()=>{
             return dispatch(intialPageLoad());
         },
-        doLogout: (err)=>{
-            return dispatch(logout(err));
+        doLogout: (err, path)=>{
+            return dispatch(logout(err, path));
         }
     }
 };
