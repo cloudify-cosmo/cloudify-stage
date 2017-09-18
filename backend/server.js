@@ -20,6 +20,8 @@ var db = require('./db/Connection');
 var express = require('express');
 var passport = require('passport');
 var getTokenStrategy = require('./routes/TokenStrategy');
+var getSamlStrategy = require('./routes/SamlStrategy');
+var samlSetup = require('./samlSetup');
 var ServerSettings = require('./serverSettings');
 var Auth = require('./routes/Auth');
 var ServerProxy = require('./routes/ServerProxy');
@@ -60,6 +62,12 @@ app.use(contextPath, (req,res,next) => {
 
     next();
 });
+
+var samlConfig = config.get().app.saml;
+if(samlConfig.enabled){
+    samlSetup.validate(samlConfig);
+    passport.use(getSamlStrategy());
+}
 
 passport.use(getTokenStrategy());
 app.use(passport.initialize());

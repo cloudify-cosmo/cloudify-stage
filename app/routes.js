@@ -10,7 +10,7 @@ import Home from './containers/Home';
 import NotFound from './components/NotFound';
 import Login from './containers/Login';
 import MaintenanceMode from './containers/maintenance/MaintenanceModePageMessage';
-import NoTenants from './components/NoTenants';
+import NoTenants from './containers/NoTenants';
 
 import {setValue,clearContext} from './actions/context';
 import Auth from './utils/auth';
@@ -50,9 +50,28 @@ export default (store)=> {
         callback();
     };
 
+    let redirectToPortal = () => {
+        window.location = store.getState().config.app.saml.portalUrl;
+    };
+
+    let redirectToSSO = () => {
+        window.location = store.getState().config.app.saml.ssoUrl;
+    };
+
     return (
         <Route path='/'>
-            <Route path='login' component={Login}/>
+            {store.getState().config.app.saml.enabled
+                ?
+                [
+                    <Route path='login' onEnter={redirectToSSO}/>,
+                    <Route path='logout' onEnter={redirectToPortal}/>
+                ]
+                :
+                [
+                    <Route path='login' component={Login}/>,
+                    <Redirect from='logout' to='login'/>
+                ]
+            }
             <Route path='noTenants' component={NoTenants}/>
             <Route path='maintenance' component={MaintenanceMode} onEnter={isInMaintenanceMode}/>
             <Route component={Layout} onEnter={isLoggedIn}>

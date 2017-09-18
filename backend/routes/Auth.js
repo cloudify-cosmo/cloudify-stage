@@ -12,6 +12,7 @@ var AuthHandler = require('../handler/AuthHandler');
 var logger = require('log4js').getLogger('ClientConfigRouter');
 
 router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({extended: true}));
 
 router.post('/login', (req, res) => {
     AuthHandler.getToken(req.headers.authorization).then((token) => {
@@ -39,6 +40,23 @@ router.post('/login', (req, res) => {
         res.status(500).send({message: 'Failed to authenticate with manager', error: err});
     });
 });
+
+router.post('/saml/callback', passport.authenticate('saml', {session: false}), function (req, res) {
+    if (!req.body || !req.body.SAMLResponse || !req.user) {
+        res.status(401).send('Invalid Request');
+    }
+
+    AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse).then((token) => {
+        res.cookie('XSRF-TOKEN', token.value);
+        res.redirect('/stage');
+    })
+    .catch((err) => {
+        logger.error(err);
+        res.status(500).send({message: 'Failed to authenticate with manager', error: err});
+    });
+
+});
+
 
 router.get('/user', passport.authenticate('token', {session: false}), (req, res) => {
     res.send({

@@ -26,7 +26,16 @@ class AuthHandler {
                 'authentication-token': token
             }
         );
-    };
+    }
+
+    static getTokenViaSamlResponse(samlResponse) {
+        return ManagerHandler.jsonRequest('POST', '/tokens', {
+                Tenant: 'defualt_tenant'
+            },
+            {'saml-response': samlResponse}
+        );
+    }
+
 }
 
 module.exports = AuthHandler;

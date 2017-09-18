@@ -64,5 +64,11 @@
   },
   "ssl": {
     "ca": "/etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
+  },
+  "saml":{
+    "enabled": false,
+    "certPath": "",
+    "ssoUrl": "",
+    "portalUrl": ""
   }
 }

@@ -10,6 +10,7 @@ import Header from '../../containers/layout/Header';
 import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import {NO_TENANTS_ERR} from '../../utils/ErrorCodes';
 
 export default class Layout extends Component {
     static propTypes = {
@@ -27,7 +28,13 @@ export default class Layout extends Component {
                 UserAppDataAutoSaver.getAutoSaver().start();
             })
             .catch((e)=>{
-                this.props.doLogout(e);
+                switch(e) {
+                    case NO_TENANTS_ERR:
+                        this.props.doLogout(null, 'noTenants');
+                        break;
+                    default:
+                        this.props.doLogout('Error initializing user data, cannot load page');
+                }
             });
     }
 

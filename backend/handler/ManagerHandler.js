@@ -23,7 +23,7 @@ module.exports = (function() {
         return config.managerUrl + '/api/' + config.manager.apiVersion;
     }
 
-    function updateOptions(options, method, timeout, headers) {
+    function updateOptions(options, method, timeout, headers, data) {
         if (caFile) {
             logger.debug('Adding CA file to Agent Options. CA File =', caFile);
             options.agentOptions = {
@@ -36,21 +36,25 @@ module.exports = (function() {
         if (headers) {
             options.headers = headers;
         }
+
+        if(data){
+            options.json = data;
+        }
     }
 
-    function request(method, url, headers, onSuccess, onError, timeout) {
+    function request(method, url, headers, data, onSuccess, onError, timeout) {
         var requestUrl = this.getUrl() + url;
         var requestOptions = {};
-        this.updateOptions(requestOptions, method, timeout, headers);
+        this.updateOptions(requestOptions, method, timeout, headers, data);
 
         logger.debug(`Preparing ${method} request to manager with options: ${JSON.stringify(requestOptions)}`);
         return RequestHandler.request(method, requestUrl, requestOptions, onSuccess, onError);
     }
 
     // the request assumes the response is JSON
-    function jsonRequest(method, url, headers, timeout){
+    function jsonRequest(method, url, headers, data, timeout){
         return new Promise((resolve, reject) => {
-            this.request(method, url, headers, (res) => {
+            this.request(method, url, headers, data, (res) => {
                 if(res.statusCode >= 200 && res.statusCode <300){
                     res.on('data', (data) => {
                         try {
