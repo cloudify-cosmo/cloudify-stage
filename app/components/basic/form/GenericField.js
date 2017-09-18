@@ -222,8 +222,8 @@ export default class GenericField extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return JSON.stringify(this.props) !== JSON.stringify(nextProps)
-            || JSON.stringify(this.state) !== JSON.stringify(nextState);
+        return !_.isEqual(JSON.stringify(this.props), JSON.stringify(nextProps))
+            || !_.isEqual(JSON.stringify(this.state), JSON.stringify(nextState));
     }
 
     static formatValue(type, value) {

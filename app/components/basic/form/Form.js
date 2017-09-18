@@ -11,6 +11,9 @@ import FormGroup from './FormGroup'
 import FormDivider from './FormDivider'
 import FormFile from './InputFile'
 import FormDateRange from './InputDateRange'
+import FormInputDate from './InputDate'
+import FormInputTime from './InputTime'
+import FormInputTimeFilter from './InputTimeFilter'
 import FormDropdown from '../Dropdown'
 import FormTable from './EdiTable'
 
@@ -116,6 +119,21 @@ export default class Form extends Component {
      * Form date range input, see {@link InputDateRange}
      */
     static InputDateRange = FormDateRange;
+
+    /**
+     * Calendar picker input, see {@link InputDate}
+     */
+    static InputDate = FormInputDate;
+
+    /**
+     * Time picker input, see {@link InputTime}
+     */
+    static InputTime = FormInputTime;
+
+    /**
+     * Time range filter input, see {@link InputTimeFilter}
+     */
+    static InputTimeFilter = FormInputTimeFilter;
 
     /**
      * Form checkbox input, see [Button](https://react.semantic-ui.com/elements/button)
