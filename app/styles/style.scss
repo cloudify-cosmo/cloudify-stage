@@ -473,6 +473,12 @@ code.hljs {
   }
 }
 
+.actionIcons {
+  & > i.icon {
+    margin-right: 2px !important;
+  }
+}
+
 .dataExpandable-appear {
   opacity: 0.01;
 }

@@ -1,6 +1,8 @@
 
 import * as types from './types';
 
+import {loadTemplates} from './templates';
+import {loadWidgetDefinitions} from './widgets';
 import {getTenants} from './tenants';
 import {getClientConfig} from './clientConfig';
 import {loadOrCreateUserAppData} from './userApp';
@@ -17,10 +19,12 @@ export function setAppLoading(isLoading) {
 export function intialPageLoad() {
     return function(dispatch,getState) {
         dispatch(setAppLoading(true));
-        return dispatch(getTenants(getState().manager))
+        var state = getState();
+        return dispatch(getTenants(state.manager))
             .then(() => {
                 if (getState().manager.tenants.items.length === 0) {
                     console.log('User is not attached to any tenant, cannot login');
+                    dispatch(setAppLoading(false));
                     return Promise.reject(NO_TENANTS_ERR);
                 }
             })
@@ -29,15 +33,20 @@ export function intialPageLoad() {
             })
             .then(() => {
                 return Promise.all([
-                    dispatch(getClientConfig()),
-                    dispatch(loadOrCreateUserAppData(getState().manager, getState().config, getState().templates, getState().widgetDefinitions))
+                    dispatch(loadTemplates()),
+                    dispatch(loadWidgetDefinitions()),
+                    dispatch(getClientConfig())
                 ]);
             })
             .then(() => {
+                return dispatch(loadOrCreateUserAppData());
+            })
+            .then(()=>{
                 dispatch(setAppLoading(false));
             })
-            .catch((e) => {
-                console.error('Error initializing user data. Cannot load page: ', e);
+            .catch(e => {
+                console.error('Error initializing user data. Cannot load page', e);
+                dispatch(setAppLoading(false));
                 return Promise.reject(e);
             });
     }

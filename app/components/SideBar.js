@@ -13,7 +13,7 @@ export default class SideBar extends Component {
         homePageId: PropTypes.string.isRequired,
         pageId: PropTypes.string.isRequired,
         isEditMode: PropTypes.bool.isRequired,
-        isOpen: PropTypes.bool.isRequired
+        isOpen: PropTypes.bool
     };
     
     render() {

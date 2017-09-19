@@ -28,21 +28,19 @@ export function saveUserAppData (manager, appData) {
     }
 }
 
-export function resetTemplate(manager,config,templates,widgetDefinitions){
+export function resetTemplate(){
     return function(dispatch) {
         // First clear the pages
         dispatch(setPages([]));
-
-        // Need to create from initial template
-        var initialTemplateName = InitialTemplate.getName(config, manager);
-        var initialTemplate = templates[initialTemplateName];
-        dispatch(createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions));
+        dispatch(createPageFromInitialTemplate());
         dispatch(push('/'));
     }
 }
 
-export function loadOrCreateUserAppData (manager,config,templates,widgetDefinitions) {
+export function loadOrCreateUserAppData() {
     return function(dispatch,getState) {
+
+        var manager = getState().manager;
 
         var internal = new Internal(manager);
         return internal.doGet('/ua')
@@ -50,12 +48,10 @@ export function loadOrCreateUserAppData (manager,config,templates,widgetDefiniti
                 if (userApp &&
                     userApp.appDataVersion === CURRENT_APP_DATA_VERSION &&
                     userApp.appData.pages && userApp.appData.pages.length > 0) {
-                    dispatch(setPages(userApp.appData.pages));
+                    return dispatch(setPages(userApp.appData.pages));
                 } else {
-                    dispatch(resetTemplate(manager,config,templates,widgetDefinitions));
-
-                    var data = { pages: getState().pages};
-                    return dispatch(saveUserAppData(manager, data));
+                    dispatch(resetTemplate());
+                    return dispatch(saveUserAppData(manager, {pages: getState().pages}));
                 }
             });
     }
@@ -65,9 +61,7 @@ export function reloadUserAppData () {
     return function (dispatch,getState) {
         dispatch(setAppLoading(true));
         var state = getState();
-        return dispatch(loadOrCreateUserAppData(state.manager,state.config,state.templates,state.widgetDefinitions))
-            .then(()=>{
-                dispatch(setAppLoading(false));
-            });
+        return dispatch(loadOrCreateUserAppData())
+            .then(() => dispatch(setAppLoading(false)));
     }
 }

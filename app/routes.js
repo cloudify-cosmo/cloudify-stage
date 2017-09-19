@@ -7,6 +7,7 @@ import { Route, IndexRoute, Redirect } from 'react-router';
 
 import Layout from './containers/layout/Layout';
 import Home from './containers/Home';
+import TemplateManagement from './Containers/templates/TemplateManagement';
 import NotFound from './components/NotFound';
 import Login from './containers/Login';
 import MaintenanceMode from './containers/maintenance/MaintenanceModePageMessage';
@@ -50,6 +51,24 @@ export default (store)=> {
         callback();
     };
 
+    let hasAdminRole = (nextState, replace, callback)=>{
+        var managerData = store.getState().manager;
+
+        // This is only relevant if the user is logged in
+        if (!Auth.isLoggedIn()) {
+            console.log('User is not logged in, navigating to Login screen');
+            replace('login');
+        }
+
+        // Only stay here if we have admin role
+        if (managerData.auth.role !== Consts.ROLE_ADMIN) {
+            console.log('Manager has NOT an admin role, navigating to main page');
+            replace('/');
+        }
+
+        callback();
+    };
+
     let redirectToPortal = () => {
         window.location = store.getState().config.app.saml.portalUrl;
     };
@@ -77,6 +96,7 @@ export default (store)=> {
             <Route component={Layout} onEnter={isLoggedIn}>
                 <Route path='page/(:pageId)' component={Home}/>
                 <Route path='page/(:pageId)/(:pageName)' component={Home}/>
+                <Route path='template_management' component={TemplateManagement} onEnter={hasAdminRole}/>
                 <Route path='404' component={NotFound}/>
                 <IndexRoute component={Home}/>
                 <Redirect from="*" to='404'/>

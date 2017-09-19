@@ -68,7 +68,7 @@ export default class ErrorMessage extends Component {
     componentWillReceiveProps(nextProps) {
         if (!_.isEqual(nextProps.error, this.props.error)) {
             this.setState({hidden: false});
-            if (!_.isEmpty(nextProps.error)) {
+            if (nextProps.error) {
                 this._setVisibilityTimeout(ErrorMessage.MESSAGE_VISIBLE_TIMEOUT);
             }
         }
@@ -95,7 +95,7 @@ export default class ErrorMessage extends Component {
     }
 
     render() {
-        if (_.isEmpty(this.props.error)) {
+        if (!this.props.error) {
             return null;
         }
 

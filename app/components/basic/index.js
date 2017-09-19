@@ -16,7 +16,7 @@ import Loading from './Loading';
 import GenericField from './form/GenericField';
 import Form from './form/Form';
 import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item,
-         Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal } from 'semantic-ui-react'
+         Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
 import Dropdown from './Dropdown';
@@ -25,11 +25,12 @@ import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
 import PrivateField from './PrivateField';
 import PrivateMarker from './PrivateMarker';
-
+import PopupConfirm from './PopupConfirm';
 
 export {
     Accordion,
     ApproveButton,
+    Breadcrumb,
     Button,
     CancelButton,
     Checkbox,
@@ -68,5 +69,6 @@ export {
     Radio,
     Segment,
     SplitterLayout,
-    Table
+    Table,
+    PopupConfirm
 };
