@@ -9,6 +9,7 @@ import {clearContext} from './context';
 import {popDrilldownContext} from './drilldownContext';
 import {addWidget} from './widgets';
 import {clearWidgetsData} from './WidgetData';
+import InitialTemplate from '../utils/InitialTemplate';
 
 export function createPage(name, newPageId) {
     return {
@@ -33,7 +34,6 @@ export function createDrilldownPage(newPageId,name) {
         newPageId,
         name
     }
-
 }
 
 export function renamePage(pageId, newName, newPageId) {
@@ -126,8 +126,14 @@ export function removePage(pageId) {
         }
 }
 
-export function createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions) {
-    return function (dispatch) {
+export function createPageFromInitialTemplate() {
+    return function (dispatch, getState) {
+        var state = getState();
+        var templates = state.templates;
+        var widgetDefinitions = state.widgetDefinitions;
+        var initialTemplate = templates[InitialTemplate.getName(state.config, state.manager)];
+
+        console.log('Init pages from initial template', initialTemplate);
 
         _.each(initialTemplate,(templateName)=>{
             var template = templates[templateName];
@@ -135,7 +141,6 @@ export function createPageFromInitialTemplate(initialTemplate,templates,widgetDe
                 console.error('Cannot find template : '+templateName + ' Skipping... ');
                 return;
             }
-
 
             var pageId = _.snakeCase(template.name);
             dispatch(createPage(template.name, pageId));

@@ -34,6 +34,7 @@ var SourceBrowser = require('./routes/SourceBrowser');
 var GitHub = require('./routes/GitHub');
 var Style = require('./routes/Style');
 var Widgets = require('./routes/Widgets');
+var Templates = require('./routes/Templates');
 
 var logger = log4js.getLogger('Server');
 
@@ -73,18 +74,19 @@ passport.use(getTokenStrategy());
 app.use(passport.initialize());
 
 // Routes
-app.use(contextPath +'/sp',ServerProxy);
-app.use(contextPath +'/auth',Auth);
-app.use(contextPath +'/ua',UserApp);
-app.use(contextPath +'/applications',Applications);
-app.use(contextPath +'/source',SourceBrowser);
-app.use(contextPath +'/ba',BlueprintAdditions);
-app.use(contextPath +'/monitor',Monitoring);
-app.use(contextPath +'/style',Style);
-app.use(contextPath +'/widgets',Widgets);
-app.use(contextPath +'/clientConfig',clientConfig);
-app.use(contextPath +'/github',GitHub);
-app.use(contextPath +'/config',function(req,res){
+app.use(contextPath + '/sp',ServerProxy);
+app.use(contextPath + '/auth',Auth);
+app.use(contextPath + '/ua',UserApp);
+app.use(contextPath + '/applications',Applications);
+app.use(contextPath + '/source',SourceBrowser);
+app.use(contextPath + '/ba',BlueprintAdditions);
+app.use(contextPath + '/monitor',Monitoring);
+app.use(contextPath + '/style',Style);
+app.use(contextPath + '/widgets',Widgets);
+app.use(contextPath + '/templates',Templates);
+app.use(contextPath + '/clientConfig',clientConfig);
+app.use(contextPath + '/github',GitHub);
+app.use(contextPath + '/config',function(req,res){
     res.send(config.getForClient(ServerSettings.settings.mode));
 });
 

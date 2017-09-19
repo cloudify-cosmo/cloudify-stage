@@ -20,9 +20,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onResetTemplate: (manager,config,templates,widgetDefinitions) =>{
+        onResetTemplate: () =>{
             dispatch(setAppLoading(true));
-            dispatch(resetTemplate(manager,config,templates,widgetDefinitions));
+            dispatch(resetTemplate());
             dispatch(setAppLoading(false));
         },
         onSidebarOpen(){
@@ -31,14 +31,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 };
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
-    return Object.assign({}, stateProps, ownProps, dispatchProps, {
-        onResetTemplate: ()=>dispatchProps.onResetTemplate(stateProps.manager,stateProps.config,stateProps.templates,stateProps.widgetDefinitions)
-    });
-}
-
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
+    mapDispatchToProps
 )(Header);

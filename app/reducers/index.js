@@ -7,6 +7,7 @@ import { combineReducers } from 'redux';
 import pages from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
 import templates from './templatesReducer';
+import templateManagement from './templateManagementReducer';
 import context from './contextReducer';
 import manager from './managerReducer';
 import config from './configReducer';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
     pages,
     widgetDefinitions,
     templates,
+    templateManagement,
     context,
     drilldownContext,
     config,

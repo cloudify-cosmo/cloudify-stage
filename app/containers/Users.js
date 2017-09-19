@@ -8,6 +8,7 @@ import { logout } from '../actions/managers';
 import { setEditMode } from '../actions/config';
 import { minimizeWidgets } from '../actions/widgets';
 import Consts from '../utils/consts';
+import { push } from 'react-router-redux';
 
 const mapStateToProps = (state, ownProps) => {
     var canEditTheUi = state.manager.auth.role === Consts.ROLE_ADMIN ?
@@ -29,6 +30,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onLogout: () => {
             dispatch(logout());
+        },
+        onTemplates: () => {
+            dispatch(push('template_management'));
         },
         onReset: ownProps.onReset,
         onMaintenance: ownProps.onMaintenance,

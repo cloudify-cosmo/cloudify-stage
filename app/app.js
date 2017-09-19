@@ -36,14 +36,11 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import { createHistory } from 'history';
 
 import configureStore  from './configureStore';
-import WidgetDefinitionsLoader from './utils/widgetDefinitionsLoader';
 import {createToolbox} from './utils/Toolbox';
 import ConfigLoader from './utils/ConfigLoader';
 import EventBus from './utils/EventBus';
 import Consts from './utils/consts';
 import createRoutes from './routes';
-
-import TemplatesLoader from './utils/templatesLoader';
 
 import StatusPoller from './utils/StatusPoller';
 import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
@@ -61,18 +58,8 @@ export default class app{
             EventBus.trigger('window:error', message, source, lineno, colno, error);
         };
 
-        WidgetDefinitionsLoader.init();
-
-        return Promise.all([
-            TemplatesLoader.load(),
-            WidgetDefinitionsLoader.load(),
-            ConfigLoader.load()
-        ]).then((result)=>{
-            var templates = result[0];
-            var widgetDefinitions = result[1];
-            var config = result[2];
-
-            const store = configureStore(browserHistory,templates,widgetDefinitions,config);
+        return ConfigLoader.load().then((result)=>{
+            const store = configureStore(browserHistory,result);
 
             createToolbox(store);
 
@@ -80,7 +67,6 @@ export default class app{
             UserAppDataAutoSaver.create(store);
 
             return store;
-
         });
     }
 

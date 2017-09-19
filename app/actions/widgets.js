@@ -9,6 +9,21 @@ import {v4} from 'node-uuid';
 import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
 import Internal from '../utils/Internal';
 
+export function storeWidgetDefinitions(widgetDefinitions) {
+    return {
+        type: types.STORE_WIDGETS,
+        widgetDefinitions
+    }
+}
+
+export function loadWidgetDefinitions() {
+    return function (dispatch, getState) {
+        widgetDefinitionLoader.init();
+        return widgetDefinitionLoader.load(getState().manager)
+            .then(result => dispatch(storeWidgetDefinitions(result)));
+    }
+}
+
 export function addWidget(pageId,name,widgetDefinition,width,height,x,y,configuration) {
     return {
         type: types.ADD_WIDGET,

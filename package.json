@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run lint && mocha --require ./test/setup.js -R mocha-pretty-spec-reporter --compilers babel-core/register --recursive \"./test/**/*Test.js\"",
-    "devtest": "npm run lint && mocha --require ./test/setup.js -R mocha-pretty-spec-reporter --compilers babel-core/register --recursive \"./test/**/*Test.js\"",
+    "devtest": "mocha --require ./test/setup.js -R mocha-pretty-spec-reporter --compilers babel-core/register",
     "start": "node backend/server.js",
     "lint": "eslint app test widgets backend e2e --ext .js --ignore-pattern **/widget.js --ignore-pattern **/common.js --ignore-pattern **/node_modules --ignore-pattern **/bower_components",
     "doc": "esdoc -c ./esdoc.json",

@@ -17,7 +17,8 @@ export default class Users extends Component {
         onConfigure: PropTypes.func.isRequired,
         onLogout: PropTypes.func.isRequired,
         onMaintenance: PropTypes.func,
-        onReset: PropTypes.func.isRequired
+        onReset: PropTypes.func.isRequired,
+        onTemplates: PropTypes.func.isRequired
     };
 
     componentDidMount() {
@@ -64,6 +65,12 @@ export default class Users extends Component {
                                                text={this.props.isEditMode ? 'Exit Edit Mode' : 'Edit Mode'} id='editModeMenuItem'
                                                value='editMode' onClick={this.onEditModeClick.bind(this)}/>
                             }
+                            {
+                                this.props.manager.auth.role === Consts.ROLE_ADMIN &&
+                                <Dropdown.Item icon='list layout' text='Template management' value='templates' title='Template management'
+                                               onClick={this.props.onTemplates} id='templatesMenuItem'/>
+                            }
+
                             <Dropdown.Divider />
                             <Dropdown.Item icon='log out' text='Logout' value='logout' id='logoutMenuItem'
                                            onClick={this.props.onLogout}/>
