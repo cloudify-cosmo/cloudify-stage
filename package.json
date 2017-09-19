@@ -95,7 +95,7 @@
     "semantic-ui-react": "^0.67.1",
     "url-loader": "^0.5.7",
     "yamljs": "^0.2.8",
-    "cloudify-blueprint-topology": "http://gigaspaces-repository-eu.s3.amazonaws.com/cloudify/4.2.0/.dev1-build/cloudify-blueprint-topology-4.2.0-.dev1.tar"
+    "cloudify-blueprint-topology": "http://cloudify-release-eu.s3.amazonaws.com/cloudify/4.2.0/.dev1-build/cloudify-blueprint-topology-4.2.0-.dev1.tar"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
