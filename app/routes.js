@@ -82,13 +82,13 @@ export default (store)=> {
             {store.getState().config.app.saml.enabled
                 ?
                 [
-                    <Route path='login' onEnter={redirectToSSO}/>,
-                    <Route path='logout' onEnter={redirectToPortal}/>
+                    <Route key='loginRoute' path='login' onEnter={redirectToSSO}/>,
+                    <Route key='logoutRoute' path='logout' onEnter={redirectToPortal}/>
                 ]
                 :
                 [
-                    <Route path='login' component={Login}/>,
-                    <Redirect from='logout' to='login'/>
+                    <Route key='loginRoute' path='login' component={Login}/>,
+                    <Redirect key='logoutRoute' from='logout' to='login'/>
                 ]
             }
             <Route path='noTenants' component={NoTenants}/>
