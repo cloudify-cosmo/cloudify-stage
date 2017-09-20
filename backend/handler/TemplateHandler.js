@@ -66,7 +66,7 @@ module.exports = (function() {
             .then(items => templates.map(name => {
                 var id = pathlib.parse(name).name;
                 var item = _.find(items, {id});
-                return item ? {...item, custom: true} : {id, data: initial[id], custom: false};
+                return item ? _.extend(item,{custom: true}) : {id, data: initial[id], custom: false};
             }));
     }
 
@@ -82,7 +82,7 @@ module.exports = (function() {
             .then(items => pages.map(name => {
                 var id = pathlib.parse(name).name;
                 var item = _.find(items, {id});
-                return item ? {...item, custom: true} : {id, custom: false};
+                return item ? _.extend(item,{custom: true}) : {id, custom: false};
             }));
     }
 
