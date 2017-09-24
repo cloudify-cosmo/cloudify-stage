@@ -15,7 +15,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render: function(widget,data,error,toolbox) {
-        const composerUrl = `${location.protocol}//${location.hostname}:8443/composer`;
+        const composerUrl = `${location.protocol}//${location.hostname}/composer`;
 
         return (
             <Button className="labeled icon" color="blue" fluid icon="external"
