@@ -5,6 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import {Icon, Popup, Input, Checkbox, Dropdown, Form} from '../index'
 import EdiTable from './EdiTable';
+import InputTimeFilter from './InputTimeFilter';
 
 /**
  * GenericField is a generic component which can be used as different input fields in {@link Form} component
@@ -92,6 +93,13 @@ import EdiTable from './EdiTable';
  *               ]}
  *               max={3} />
  * ```
+ *
+ * ### Time filter input field
+ * ![GenericField](manual/asset/form/GenericField_11.png)
+ * ```
+ * <GenericField name="timeFilterTest" type={GenericField.TIME_FILTER_TYPE}
+ *               label="TIME_FILTER_TYPE" value={Stage.Basic.InputTimeFilter.DEFAULT_VALUE} />
+ * ```
  */
 
 
@@ -146,6 +154,11 @@ export default class GenericField extends Component {
      * dropdown editable numeric list
      */
     static EDITABLE_TABLE_TYPE = 'editableTable';
+
+    /**
+     * time filter input field
+     */
+    static TIME_FILTER_TYPE = 'timeFilter';
 
     /**
      * propTypes
@@ -284,6 +297,12 @@ export default class GenericField extends Component {
                               rows={this.props.max}
                               columns={this.props.items}
                               onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))} />;
+        } else if (this.props.type === GenericField.TIME_FILTER_TYPE) {
+
+            field = <InputTimeFilter name={this.props.name}
+                                     defaultValue={InputTimeFilter.DEFAULT_VALUE}
+                                     value={this.props.value}
+                                     onApply={(timeFilter)=>this.props.onChange(null, {name: this.props.name, value: timeFilter, genericType: this.props.type})} />;
         }
 
         return (

@@ -30,14 +30,8 @@ Stage.defineWidget({
         ]},
         {id: "type", name: "Charts type", items: [{name:'Line chart', value:Stage.Basic.Graphs.Graph.LINE_CHART_TYPE}, {name:'Bar chart', value:Stage.Basic.Graphs.Graph.BAR_CHART_TYPE}],
             default: Stage.Basic.Graphs.Graph.LINE_CHART_TYPE, type: Stage.Basic.GenericField.LIST_TYPE},
-        {id: "from", name: "Time range start", placeHolder: "Start time for data to be presented", default: "now() - 15m", type: Stage.Basic.GenericField.LIST_TYPE,
-         items: [{name:'last 15 minutes', value:'now() - 15m'}, {name:'last hour', value:'now() - 1h'}, {name:'last day', value: 'now() - 1d'}]},
-        {id: "to", name: "Time range end", placeHolder: "End time for data to be presented", default: "now()", type: Stage.Basic.GenericField.LIST_TYPE,
-         items: [{name:'now', value:'now()'}]},
-        {id: "resolution", name: "Time resolution value",  placeHolder: "Time resolution value", default: "1", type: Stage.Basic.GenericField.NUMBER_TYPE,
-         min: Stage.Common.TimeConsts.MIN_TIME_RESOLUTION_VALUE, max: Stage.Common.TimeConsts.MAX_TIME_RESOLUTION_VALUE},
-        {id: "unit", name: "Time resolution unit", placeHolder: "Time resolution unit", default: "m", type: Stage.Basic.GenericField.LIST_TYPE,
-            items: Stage.Common.TimeConsts.TIME_RESOLUTION_UNITS}
+        {id: 'timeFilter', name: 'Time range and resolution',  description: 'Time range and time resolution for all defined charts',
+         type: Stage.Basic.GenericField.TIME_FILTER_TYPE, default: Stage.Basic.InputTimeFilter.DEFAULT_VALUE}
     ],
 
     _prepareData: function(data, xDataKey) {
@@ -140,19 +134,18 @@ Stage.defineWidget({
     fetchParams: function(widget, toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId') || widget.configuration.deploymentId;
 
-        let timeFilter = toolbox.getContext().getValue('timeFilter') || {};
+        let timeFilterFromWidget = widget.configuration.timeFilter;
+        let timeFilterFromContext = toolbox.getContext().getValue('timeFilter');
 
-        let timeStart = timeFilter.start;
-        timeStart = timeStart ? (moment(timeStart).isValid() ? `${moment(timeStart).unix()}s` : timeStart) : widget.configuration.from;
+        let timeStart = _.get(timeFilterFromContext, 'start', timeFilterFromWidget.start);
+        timeStart = moment(timeStart).isValid() ? `${moment(timeStart).unix()}s` : timeStart;
 
-        let timeEnd = timeFilter.end;
-        timeEnd = timeEnd ? (moment(timeEnd).isValid() ? `${moment(timeEnd).unix()}s` : timeEnd) : widget.configuration.to;
+        let timeEnd = _.get(timeFilterFromContext, 'end', timeFilterFromWidget.end);
+        timeEnd = moment(timeEnd).isValid() ? `${moment(timeEnd).unix()}s` : timeEnd;
 
-        let timeResolutionValue = timeFilter.resolution;
-        let timeResolutionUnit = timeFilter.unit;
-        let timeGroup = timeResolutionValue && timeResolutionUnit
-            ? `${timeResolutionValue}${timeResolutionUnit}`
-            : `${widget.configuration.resolution}${widget.configuration.unit}`;
+        let timeResolution = _.get(timeFilterFromContext, 'resolution', timeFilterFromWidget.resolution);
+        let timeUnit = _.get(timeFilterFromContext, 'unit', timeFilterFromWidget.unit);
+        let timeGroup = `${timeResolution}${timeUnit}`;
 
         return { deploymentId, timeStart, timeEnd, timeGroup };
     },
