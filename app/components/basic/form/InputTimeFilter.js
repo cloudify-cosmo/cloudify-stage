@@ -7,30 +7,57 @@ import {ApproveButton, CancelButton} from '../modal/ModalButtons';
 import Form from './Form';
 import Popup from '../Popup';
 
+/**
+ * InputTimeFilter is a component showing time range and time resolution selectors
+ *
+ * Both props: `value` and `defaultValue` are timeFilter objects:
+ * ```
+ * {
+ *   range:'',      // time range label
+ *   start:'',      // datetime string representing time range start, eg. '2017-08-06 16:00' or 'now()-15m'
+ *   end:'',        // datetime string representing time range end, eg. '2017-08-06 18:00' or 'now()'
+ *   resolution:'', // time resolution value, an integer
+ *   unit:''        // time resolution unit, eg. 'm' for minutes, 'h' for hours (InfluxDB syntax)
+ * }
+ * ```
+ *
+ * ## Access
+ * `Stage.Basic.InputTimeFilter`
+ *
+ * ## Usage
+ * ![InputTimeFilter](manual/asset/form/InputTimeFilter_0.png)
+ *
+ * ```
+ * <InputTimeFilter name='timeFilter' defaultValue={InputTimeFilter.EMPTY_VALUE} />
+ * ```
+ *
+ */
 export default class InputTimeFilter extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = InputTimeFilter.initialState;
+        this.state = InputTimeFilter.initialState(props);
     }
 
     /**
      * propTypes
      * @property {string} name name of the field
-     * @property {string} [value=InputTimeFilter.DEFAULTS] timeFilter object to set input values, timeFilter is an object with the following string keys: range, start, end, resolution, unit
+     * @property {object} defaultValue timeFilter object ({range:'', start:'', end:'', resolution:'', unit:''}) to be set when Reset button is clicked
+     * @property {object} [value=InputTimeFilter.DEFAULTS] timeFilter object to set input values
      * @property {function} [onApply=(function () {});] function called on Apply button click, timeFilter object value is sent as argument
      * @property {function} [onCancel=(function () {});] function called on Cancel button click, timeFilter object value is sent as argument
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
+        defaultValue: PropTypes.object.isRequired,
         value: PropTypes.object,
         onApply: PropTypes.func,
         onCancel: PropTypes.func
     };
 
     static defaultProps = {
-        value: InputTimeFilter.DEFAULTS,
+        value: InputTimeFilter.DEFAULT_VALUE,
         onApply: ()=>{},
         onCancel: ()=>{}
     };
@@ -48,23 +75,30 @@ export default class InputTimeFilter extends React.Component {
     };
     static CUSTOM_RANGE = 'Custom Range';
 
-    static DEFAULTS = {
+    static DEFAULT_VALUE = {
         range: 'Last 15 Minutes',
         start: 'now()-15m',
         end: 'now()',
         resolution: '1',
         unit: 'm'
     };
+    static EMPTY_VALUE = {
+        range: '',
+        start: '',
+        end: '',
+        resolution: '1',
+        unit: 'm'
+    }
 
-    static initialState = {
-        ...InputTimeFilter.DEFAULTS,
+    static initialState = (props) => ({
+        ...props.defaultValue,
         startDate: new Date(),
         startTime: '00:00',
         endDate: new Date(),
         endTime: '00:00',
         isOpen: false,
         dirty: false
-    }
+    });
 
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props, nextProps)
@@ -72,12 +106,12 @@ export default class InputTimeFilter extends React.Component {
     }
 
     componentDidMount() {
-        this.setState(InputTimeFilter.initialState);
+        this.setState(InputTimeFilter.initialState(this.props));
         this._resetFilter(false);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        this.setState({dirty: !_.isEqual(_.pick(this.state, Object.keys(InputTimeFilter.DEFAULTS)), InputTimeFilter.DEFAULTS)});
+        this.setState({dirty: !_.isEqual(_.pick(this.state, Object.keys(InputTimeFilter.DEFAULT_VALUE)), this.props.defaultValue)});
     }
 
     _handleInputChange(proxy, field, onStateUpdate) {
@@ -148,15 +182,15 @@ export default class InputTimeFilter extends React.Component {
             timeFilter.start = this.state.start;
             timeFilter.end = this.state.end;
         } else {
-            timeFilter.start = InputTimeFilter.RANGES[this.state.range].start;
-            timeFilter.end = InputTimeFilter.RANGES[this.state.range].end;
+            timeFilter.start = _.get(InputTimeFilter.RANGES[this.state.range], 'start', '');
+            timeFilter.end = _.get(InputTimeFilter.RANGES[this.state.range], 'end', '');
         }
 
         return timeFilter;
     }
 
     _resetFilter(toDefaults) {
-        let state = (toDefaults ? InputTimeFilter.DEFAULTS : this.props.value);
+        let state = (toDefaults ? this.props.defaultValue : this.props.value);
         this.setState({...state},
             () => this._resetStartEndDateTimeState());
     }
@@ -189,10 +223,12 @@ export default class InputTimeFilter extends React.Component {
     }
 
     render () {
+        let inputValue = this._isRangeSelected(InputTimeFilter.CUSTOM_RANGE) ? `${this.state.start} - ${this.state.end}` : this.state.range;
+
         return (
             <Popup position='bottom left' hoverable={false} flowing open={this.state.isOpen}>
                 <Popup.Trigger>
-                    <Form.Input value={this._isRangeSelected(InputTimeFilter.CUSTOM_RANGE) ? `${this.state.start} - ${this.state.end}` : this.state.range}
+                    <Form.Input value={inputValue} placeholder='Click to set time range and resolution'
                                 onChange={()=>{}} onFocus={()=>this.setState({isOpen: true})} icon='dropdown' fluid />
                 </Popup.Trigger>
                 <Grid columns={3}>

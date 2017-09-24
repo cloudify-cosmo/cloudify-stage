@@ -11,6 +11,7 @@ export default class TimeFilter extends React.Component {
     };
 
     _onDataChanged(timeFilter) {
+        timeFilter = _.isEmpty(timeFilter.start) || _.isEmpty(timeFilter.end) ? undefined : timeFilter;
         this.props.toolbox.getContext().setValue('timeFilter', timeFilter);
         this.props.toolbox.getEventBus().trigger('graph:refresh');
     };
@@ -20,10 +21,11 @@ export default class TimeFilter extends React.Component {
     }
 
     render () {
-        let {Form} = Stage.Basic;
+        let {InputTimeFilter} = Stage.Basic;
 
         return (
-            <Form.InputTimeFilter name='timeFilter' value={this._getTimeFilterValue()} onApply={this._onDataChanged.bind(this)} />
+            <InputTimeFilter name='timeFilter' value={this._getTimeFilterValue() || InputTimeFilter.EMPTY_VALUE}
+                             defaultValue={InputTimeFilter.EMPTY_VALUE} onApply={this._onDataChanged.bind(this)} />
         );
     }
 }

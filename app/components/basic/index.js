@@ -14,6 +14,7 @@ import DataTable from './dataTable/DataTable';
 import DataSegment from './dataSegment/DataSegment';
 import Loading from './Loading';
 import GenericField from './form/GenericField';
+import InputTimeFilter from './form/InputTimeFilter';
 import Form from './form/Form';
 import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item,
          Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
@@ -51,6 +52,7 @@ export {
     Icon,
     Image,
     Input,
+    InputTimeFilter,
     Item,
     KeyIndicator,
     Label,
