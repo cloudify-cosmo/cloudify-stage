@@ -28,14 +28,17 @@ Stage.defineWidget({
             {name: 'qFrom', label: 'FROM', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${deploymentId} token to inject dynamic deployment ID. Example: \'/${deploymentId}\..*\.((memory_MemFree))$/\''},
             {name: 'qWhere', label: 'WHERE', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${timeFilter} token to inject dynamic data/time ranges.'}
         ]},
-        {id: 'type', name: 'Charts type', items: [{name:'Line chart', value:Stage.Basic.Graphs.Graph.LINE_CHART_TYPE}, {name:'Bar chart', value:Stage.Basic.Graphs.Graph.BAR_CHART_TYPE}],
-            default: Stage.Basic.Graphs.Graph.LINE_CHART_TYPE, type: Stage.Basic.GenericField.LIST_TYPE},
+        {id: "type", name: "Charts type", items: [
+            {name:'Line chart', value:Stage.Basic.Graphs.Graph.LINE_CHART_TYPE},
+            {name:'Bar chart', value:Stage.Basic.Graphs.Graph.BAR_CHART_TYPE},
+            {name:'Area chart', value:Stage.Basic.Graphs.Graph.AREA_CHART_TYPE}],
+         default: Stage.Basic.Graphs.Graph.LINE_CHART_TYPE, type: Stage.Basic.GenericField.LIST_TYPE},
         {id: 'timeFilter', name: 'Time range and resolution',  description: 'Time range and time resolution for all defined charts',
          type: Stage.Basic.GenericField.TIME_FILTER_TYPE, default: Stage.Basic.InputTimeFilter.DEFAULT_VALUE}
     ],
 
     _prepareData: function(data, xDataKey) {
-        const TIME_FORMAT = 'HH:mm:ss';
+        const TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
         const MAX_NUMBER_OF_POINTS = 200;
         const TIME_INDEX = 0;
         const VALUE_INDEX = 1;
