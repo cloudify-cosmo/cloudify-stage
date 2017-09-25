@@ -11,31 +11,31 @@ Stage.defineWidget({
     showHeader: true,
     showBorder: true,
     isReact: true,
-    color: "blue",
+    color: 'blue',
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5),
-        {id: "deploymentId", name: "Deployment ID", placeHolder: "If not set, then will be taken from context", default: "", type: Stage.Basic.GenericField.STRING_TYPE},
-        {id: "charts", name: "Charts table",  description: "", default: "", type: Stage.Basic.GenericField.EDITABLE_TABLE_TYPE, max: 5, items: [
-            {name: "metric", label: 'Metric', default: "", type: Stage.Basic.GenericField.EDITABLE_LIST_TYPE, description: "Name of the metric to be presented on the graph",
-                items: ["", "cpu_total_system", "cpu_total_user", "memory_MemFree", "memory_SwapFree", "loadavg_processes_running"]},
-            {name: 'label', label: 'Label', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart label"},
-            {name: 'unit', label: 'Unit', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart data unit"}
+        {id: 'deploymentId', name: 'Deployment ID', placeHolder: 'If not set, then will be taken from context', default: '', type: Stage.Basic.GenericField.STRING_TYPE},
+        {id: 'charts', name: 'Charts table',  description: '', default: '', type: Stage.Basic.GenericField.EDITABLE_TABLE_TYPE, max: 5, items: [
+            {name: 'metric', label: 'Metric', default: '', type: Stage.Basic.GenericField.EDITABLE_LIST_TYPE, description: 'Name of the metric to be presented on the graph',
+                items: ['', 'cpu_total_system', 'cpu_total_user', 'memory_MemFree', 'memory_SwapFree', 'loadavg_processes_running']},
+            {name: 'label', label: 'Label', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'Chart label'},
+            {name: 'unit', label: 'Unit', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'Chart data unit'}
         ]},
-        {id: 'query', name: 'Custom Influx Query', description: 'Please note that below query builder overrides the series defined in "Charts table"', default: '', type: Stage.Basic.GenericField.EDITABLE_TABLE_TYPE, max: 1, items: [
+        {id: 'query', name: 'Custom Influx Query', description: 'Please note that below query builder overrides the series defined in \'Charts table\'', default: '', type: Stage.Basic.GenericField.EDITABLE_TABLE_TYPE, max: 1, items: [
             {name: 'qSelect', label: 'SELECT', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: ''},
-            {name: 'qFrom', label: 'FROM', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${deploymentId} token to inject dynamic deployment ID. Example: "/${deploymentId}\..*\.((memory_MemFree))$/"'},
+            {name: 'qFrom', label: 'FROM', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${deploymentId} token to inject dynamic deployment ID. Example: \'/${deploymentId}\..*\.((memory_MemFree))$/\''},
             {name: 'qWhere', label: 'WHERE', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${timeFilter} token to inject dynamic data/time ranges.'}
         ]},
-        {id: "type", name: "Charts type", items: [{name:'Line chart', value:Stage.Basic.Graphs.Graph.LINE_CHART_TYPE}, {name:'Bar chart', value:Stage.Basic.Graphs.Graph.BAR_CHART_TYPE}],
+        {id: 'type', name: 'Charts type', items: [{name:'Line chart', value:Stage.Basic.Graphs.Graph.LINE_CHART_TYPE}, {name:'Bar chart', value:Stage.Basic.Graphs.Graph.BAR_CHART_TYPE}],
             default: Stage.Basic.Graphs.Graph.LINE_CHART_TYPE, type: Stage.Basic.GenericField.LIST_TYPE},
         {id: 'timeFilter', name: 'Time range and resolution',  description: 'Time range and time resolution for all defined charts',
          type: Stage.Basic.GenericField.TIME_FILTER_TYPE, default: Stage.Basic.InputTimeFilter.DEFAULT_VALUE}
     ],
 
     _prepareData: function(data, xDataKey) {
-        const TIME_FORMAT = "HH:mm:ss";
+        const TIME_FORMAT = 'HH:mm:ss';
         const MAX_NUMBER_OF_POINTS = 200;
         const TIME_INDEX = 0;
         const VALUE_INDEX = 1;
@@ -131,6 +131,14 @@ Stage.defineWidget({
         });
     },
 
+    _isEmptyResponse: function(widget, data) {
+        return _.isArray(data) && _.isEmpty(data);
+    },
+
+    _isWidgetUnitialized: function(data) {
+        return _.isNil(data) || _.isEqual(data, {});
+    },
+
     fetchParams: function(widget, toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId') || widget.configuration.deploymentId;
 
@@ -160,45 +168,55 @@ Stage.defineWidget({
         const preparedQuery = _.head(this._prepareInfluxQuery(widget.configuration.query, deploymentId, from, to, timeGroup));
 
         if (!_.isEmpty(preparedQuery)) {
+            toolbox.loading(true);
             return actions.doRunQuery(preparedQuery.qSelect, preparedQuery.qFrom, preparedQuery.qWhere).then((data) => {
+                toolbox.loading(false);
                 let formattedResponse
                     = _.map(data, (metric) => ({name: _.last(_.split(metric.name, '.')), points: metric.points}));
                 return Promise.resolve(formattedResponse)
             }).catch((error) => {
-                return Promise.reject('There was a problem while querying for data. Please check your Influx query syntax and try again.');
+                toolbox.loading(false);
+                return Promise.reject('There was a problem while querying for data. ' +
+                                      'Please check your Influx query syntax and try again. Error: ' +
+                                      error.message || error);
             });
         } else if (!_.isEmpty(deploymentId) && !_.isEmpty(metrics)) {
-            return actions.doGetMetric(deploymentId, metrics, from, to, timeGroup).then((data) => {
-                let formattedResponse
-                    = _.map(data, (metric) => ({name: _.last(_.split(metric.name, '.')), points: metric.points}));
-                return Promise.resolve(formattedResponse);
-            });
+            toolbox.loading(true);
+            return actions.doGetMetric(deploymentId, metrics, from, to, timeGroup)
+                .then((data) => {
+                    toolbox.loading(false);
+                    let formattedResponse
+                        = _.map(data, (metric) => ({name: _.last(_.split(metric.name, '.')), points: metric.points}));
+                    return Promise.resolve(formattedResponse);
+                })
+                .catch((error) => {
+                    toolbox.loading(false);
+                    return Promise.reject('There was a problem while querying for data. ' +
+                                          'Please check Deployment ID, metric name and time range. Error: ' +
+                                          error.message || error);
+                });
         } else {
-            return Promise.resolve([]);
+            toolbox.loading(false);
+            return Promise.reject('Widget not configured properly. Please configure at least one chart in Charts Table ' +
+                                  'and provide Deployment ID or fill in InfluxQL query.');
         }
     },
 
     render: function(widget,data,error,toolbox) {
-        let {deploymentId, charts, query, type} = widget.configuration;
+        let {charts, query, type} = widget.configuration;
         let {Message, Icon} = Stage.Basic;
-        deploymentId = toolbox.getContext().getValue('deploymentId') || deploymentId;
-        let metrics = this._getChartsMetricsList(charts);
-        let preparedQuery = _.head(this._prepareInfluxQuery(query,deploymentId,null,null,null));
 
-        if ((_.isEmpty(deploymentId) || _.isEmpty(metrics)) && _.isEmpty(preparedQuery)) {
+        if (this._isWidgetUnitialized(data)) {
             return (
-                <Message>
-                    <Icon name="ban" />
-                    <span>
-                        Widget not configured properly. Please configure at least one chart in Charts Table
-                        and provide Deployment ID or fill in InfluxQL query.
-                    </span>
+                <Stage.Basic.Loading/>
+            );
+        } else if (this._isEmptyResponse(widget, data)) {
+            return (
+                <Message info icon>
+                    <Icon name='ban' />
+                    No data fetched for specified chart(s) configuration.
                 </Message>
             );
-        }
-
-        if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
         }
 
         let {Graph} = Stage.Basic.Graphs;

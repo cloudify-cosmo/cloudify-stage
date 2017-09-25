@@ -47,7 +47,7 @@
     "user" : "root",
     "password" : "root",
     "database": "cloudify",
-    "timeout": 30000
+    "timeout": 10000
   },
   "github": {
     "username": "secret(github-username)",
