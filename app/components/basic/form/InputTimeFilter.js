@@ -97,8 +97,15 @@ export default class InputTimeFilter extends React.Component {
         endDate: new Date(),
         endTime: '00:00',
         isOpen: false,
-        dirty: false
+        dirty: false,
+        startError: false,
+        endError: false
     });
+
+    static inputFieldHint = <div>Influx-compatible date/time expected<br />Examples:<br /> now() - 15m <br />2017-09-21 10:10</div>;
+
+    static influxDateRegex = /^$|^(now\(\)|([0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}))([\s-+]+[0-9]+[usmhdw])*$/;
+    static influxDurationRegex = /([-+])\s?([0-9]+)([smhdw])*/;
 
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props, nextProps)
@@ -130,31 +137,61 @@ export default class InputTimeFilter extends React.Component {
     };
 
     _setStartTimeDateState() {
+        let newState = {startError: false};
         let startMoment = moment(this.state.start);
         if (startMoment.isValid()) {
-            this.setState({
+            _.extend(newState, {
                 startDate: startMoment.toDate(),
                 startTime: startMoment.format(InputTimeFilter.TIME_FORMAT)
             });
         }
+        else if (InputTimeFilter._isValidInfluxDate(this.state.start)) {
+            _.extend(newState, this._calculateAndSetDateWithOffsets(this.state.start, 'startDate', 'startTime'));
+        }
+        this.setState(newState);
     }
 
     _setEndTimeDateState() {
+        let newState = {endError: false};
         let endMoment = moment(this.state.end);
         if (endMoment.isValid()) {
-            this.setState({
+            _.extend(newState, {
                 endDate: endMoment.toDate(),
                 endTime: endMoment.format(InputTimeFilter.TIME_FORMAT)
             });
         }
+        else if (InputTimeFilter._isValidInfluxDate(this.state.end)) {
+            _.extend(newState, this._calculateAndSetDateWithOffsets(this.state.end, 'endDate', 'endTime'));
+        }
+        this.setState(newState);
+    }
+
+    _calculateAndSetDateWithOffsets(dateTime, stateDateField, stateTimeField){
+        let matches = InputTimeFilter.influxDateRegex.exec(dateTime);
+        let baseDate = moment(matches[1]).isValid() ? moment(matches[1]) : moment();
+
+        matches.splice(0,1);
+        _.forEach(matches, (match) => {
+            if (InputTimeFilter.influxDurationRegex.test(match)) {
+                let matchedGroups = InputTimeFilter.influxDurationRegex.exec(match);
+                let opSubtraction = _.isEqual(matchedGroups[1], '-');
+                let opValue = matchedGroups[2];
+                let opScale = matchedGroups[3];
+                opSubtraction ? baseDate.subtract(opValue, opScale) : baseDate.add(opValue, opScale);
+            }
+        });
+        return {
+            [stateDateField]: baseDate.toDate(),
+            [stateTimeField]: baseDate.format(InputTimeFilter.TIME_FORMAT)
+        };
     }
 
     _setStartState() {
-        this.setState({start: `${moment(this.state.startDate).format(InputTimeFilter.DATE_FORMAT)} ${this.state.startTime}`});
+        this.setState({startError: false, start: `${moment(this.state.startDate).format(InputTimeFilter.DATE_FORMAT)} ${this.state.startTime}`});
     }
 
     _setEndState() {
-        this.setState({end: `${moment(this.state.endDate).format(InputTimeFilter.DATE_FORMAT)} ${this.state.endTime}`});
+        this.setState({endError: false, end: `${moment(this.state.endDate).format(InputTimeFilter.DATE_FORMAT)} ${this.state.endTime}`});
     }
 
     _handleCustomInputChange(proxy, field) {
@@ -170,6 +207,22 @@ export default class InputTimeFilter extends React.Component {
             }
             this.setState({range: InputTimeFilter.CUSTOM_RANGE});
         });
+    }
+
+    static _isValidInfluxDate(dateTimeString) {
+        return InputTimeFilter.influxDateRegex.test(dateTimeString);
+    }
+
+    _isStartEndFieldsValid (){
+        let isStartValidInfluxDate = InputTimeFilter._isValidInfluxDate(this.state.start);
+        let isEndValidInfluxDate = InputTimeFilter._isValidInfluxDate(this.state.end);
+
+        this.setState({
+            startError: isStartValidInfluxDate ? false : true,
+            endError: isEndValidInfluxDate? false : true
+        });
+
+        return isStartValidInfluxDate && isEndValidInfluxDate;
     }
 
     _getTimeFilterObject() {
@@ -204,7 +257,10 @@ export default class InputTimeFilter extends React.Component {
             range: field.name,
             start: InputTimeFilter.RANGES[field.name].start,
             end: InputTimeFilter.RANGES[field.name].end,
-        }, () => this._resetStartEndDateTimeState());
+        }, () => {
+            this._setStartTimeDateState();
+            this._setEndTimeDateState();
+        });
     }
 
     _handleCustomRangeButtonClick(proxy, field) {
@@ -214,7 +270,9 @@ export default class InputTimeFilter extends React.Component {
     }
 
     _handleApplyButtonClick() {
-        this.setState({isOpen: false}, () => this.props.onApply(this._getTimeFilterObject()));
+        if (this._isStartEndFieldsValid()) {
+            this.setState({isOpen: false}, () => this.props.onApply(this._getTimeFilterObject()));
+        }
     }
 
     _handleCancelButtonClick() {
@@ -228,8 +286,8 @@ export default class InputTimeFilter extends React.Component {
         return (
             <Popup position='bottom left' hoverable={false} flowing open={this.state.isOpen}>
                 <Popup.Trigger>
-                    <Form.Input value={inputValue} placeholder='Click to set time range and resolution'
-                                onChange={()=>{}} onFocus={()=>this.setState({isOpen: true})} icon='dropdown' fluid />
+                    <Form.Input value={inputValue} placeholder='Click to set time range and resolution' icon='dropdown' fluid
+                                onChange={()=>{}} onFocus={()=>this.setState({isOpen: true, startError: false, endError: false})} />
                 </Popup.Trigger>
                 <Grid columns={3}>
                     <Grid.Row>
@@ -263,9 +321,15 @@ export default class InputTimeFilter extends React.Component {
 
                                 <List>
                                     <List.Item>
-                                        <Form.Input fluid name='start' type='text' value={this.state.start}
-                                                    placeholder='Start date/time'
-                                                    onChange={this._handleCustomInputChange.bind(this)} />
+                                        <Popup wide>
+                                            <Popup.Trigger>
+                                                <Form.Input fluid name='start' type='text' value={this.state.start}
+                                                            placeholder='Start date/time'
+                                                            error={this.state.startError}
+                                                            onChange={this._handleCustomInputChange.bind(this)}/>
+                                            </Popup.Trigger>
+                                            {InputTimeFilter.inputFieldHint}
+                                        </Popup>
                                     </List.Item>
                                     <List.Item>
                                         <Form.InputDate name='startDate' inline={true} maxDate={new Date()}
@@ -285,9 +349,15 @@ export default class InputTimeFilter extends React.Component {
 
                                 <List>
                                     <List.Item>
-                                        <Form.Input fluid name='end' type='text' value={this.state.end}
-                                                    placeholder='End date/time'
-                                                    onChange={this._handleCustomInputChange.bind(this)} />
+                                        <Popup wide>
+                                            <Popup.Trigger>
+                                                <Form.Input fluid name='end' type='text' value={this.state.end}
+                                                            placeholder='End date/time'
+                                                            error={this.state.endError}
+                                                            onChange={this._handleCustomInputChange.bind(this)} />
+                                            </Popup.Trigger>
+                                            {InputTimeFilter.inputFieldHint}
+                                        </Popup>
                                     </List.Item>
                                     <List.Item>
                                         <Form.InputDate name='endDate' inline={true} maxDate={new Date()}

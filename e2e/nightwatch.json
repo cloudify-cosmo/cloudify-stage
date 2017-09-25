@@ -9,7 +9,6 @@
     "selenium" : {
         "start_process" : true,
         "server_path" : "./e2e/bin/selenium-server-standalone-3.0.1.jar",
-        "host": "127.0.0.1",
         "port" : 4444,
         "cli_args" : {
             "webdriver.chrome.driver" : "./e2e/bin/chromedriver"
