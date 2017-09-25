@@ -192,7 +192,7 @@ export default class AddWidgetModal extends Component {
                                 })}
                             </Menu>)
         return (
-            <div>
+            <div className={this.props.className}>
                 <Modal trigger={addWidgetBtn} className="addWidgetModal" open={this.state.open}
                        onOpen={this._openModal.bind(this)} onClose={this._closeModal.bind(this)} size="large">
                     <Segment basic size="large">

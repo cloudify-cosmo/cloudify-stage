@@ -16,7 +16,7 @@ import Loading from './Loading';
 import GenericField from './form/GenericField';
 import InputTimeFilter from './form/InputTimeFilter';
 import Form from './form/Form';
-import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item,
+import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item, Sidebar,
          Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
@@ -65,12 +65,13 @@ export {
     NodesTree,
     Overlay,
     Popup,
+    PopupConfirm,
     PopupMenu,
     PrivateField,
     PrivateMarker,
     Radio,
     Segment,
+    Sidebar,
     SplitterLayout,
-    Table,
-    PopupConfirm
+    Table
 };
