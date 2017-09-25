@@ -6,7 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Header from '../../components/layout/Header';
 import {resetTemplate} from '../../actions/userApp';
-import {setAppLoading, toogleSidebar} from '../../actions/app';
+import {toogleSidebar} from '../../actions/app';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -21,9 +21,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onResetTemplate: () =>{
-            dispatch(setAppLoading(true));
             dispatch(resetTemplate());
-            dispatch(setAppLoading(false));
         },
         onSidebarOpen(){
             dispatch(toogleSidebar());

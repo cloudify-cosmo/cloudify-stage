@@ -16,6 +16,13 @@ export function setAppLoading(isLoading) {
     }
 }
 
+export function setAppError(error) {
+    return {
+        type : types.SET_APP_ERROR,
+        error
+    }
+}
+
 export function intialPageLoad() {
     return function(dispatch,getState) {
         dispatch(setAppLoading(true));

@@ -7,6 +7,7 @@ import PageList from './PageList';
 import RoleList from './RoleList';
 import TenantList from './TenantList';
 import CreateTemplateModal from './CreateTemplateModal';
+import Const from '../../utils/consts';
 
 export default class Templates extends Component {
 
@@ -49,6 +50,7 @@ export default class Templates extends Component {
                         this.props.templates.map((item)=>{
                             var roles = (item.data || {}).roles;
                             var tenants = (item.data || {}).tenants;
+                            var filteredTenants = _.filter(tenants, t => t !== Const.DEFAULT_ALL) ;
 
                             return (
                                 <DataTable.RowExpandable key={item.id} expanded={item.selected}>
@@ -57,10 +59,10 @@ export default class Templates extends Component {
                                         <DataTable.Data>
                                             {
                                                 roles.map((role, index) =>
-                                                    <span key={role}>{role}{index < roles.length - 1 && <span>, </span>}</span>)
+                                                    <span key={role}>{role === Const.DEFAULT_ALL ? 'all' : role}{index < roles.length - 1 && <span>, </span>}</span>)
                                             }
                                         </DataTable.Data>
-                                        <DataTable.Data><Label color="green" horizontal>{_.size((item.data || {}).tenants)}</Label></DataTable.Data>
+                                        <DataTable.Data><Label color="green" horizontal>{_.size(filteredTenants)}</Label></DataTable.Data>
                                         <DataTable.Data>{item.createdAt && Stage.Utils.formatTimestamp(item.createdAt)}</DataTable.Data>
                                         <DataTable.Data>{item.creator}</DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
@@ -70,7 +72,7 @@ export default class Templates extends Component {
                                                               content='Are you sure to remove this template?'
                                                               onConfirm={() => this.props.onDeleteTemplate(item)}/>
                                                 <CreateTemplateModal availableTenants={this.props.tenants} availablePages={this.props.pages}
-                                                             templateName={item.id} pages={item.pages} roles={item.data.roles} tenants={item.data.tenants}
+                                                             templateName={item.id} pages={item.pages} roles={roles} tenants={filteredTenants}
                                                              onCreateTemplate={(...args) => this.props.onModifyTemplate(item, ...args)}/>
                                             </div>
                                             }

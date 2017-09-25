@@ -5,6 +5,7 @@
 import React, { Component, PropTypes } from 'react';
 import Templates from './Templates';
 import Pages from './Pages';
+import Const from '../../utils/consts';
 
 export default class TemplateManagement extends Component {
 
@@ -51,7 +52,7 @@ export default class TemplateManagement extends Component {
             id: templateName.trim(),
             data: {
                 roles,
-                tenants
+                tenants: _.isEmpty(tenants) ? [Const.DEFAULT_ALL] : tenants
             },
             pages
         };
@@ -69,7 +70,7 @@ export default class TemplateManagement extends Component {
             id: templateName.trim(),
             data: {
                 roles,
-                tenants
+                tenants: _.isEmpty(tenants) ? [Const.DEFAULT_ALL] : tenants
             },
             pages
         };
@@ -90,7 +91,8 @@ export default class TemplateManagement extends Component {
     }
 
     _removeTemplateTenant(template, tenant) {
-        template.data.tenants = _.without(template.data.tenants, tenant);
+        var tenants = _.without(template.data.tenants, tenant);
+        template.data.tenants = _.isEmpty(tenants) ? [Const.DEFAULT_ALL] : tenants;
 
         this._updateTemplate(template);
     }

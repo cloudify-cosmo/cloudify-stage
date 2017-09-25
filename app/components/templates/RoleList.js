@@ -3,6 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import Const from '../../utils/consts';
 
 export default class RoleList extends Component {
 
@@ -31,7 +32,7 @@ export default class RoleList extends Component {
                         this.props.roles.map((item) => {
                             return (
                                 <List.Item key={item}>
-                                    {item}
+                                    {item === Const.DEFAULT_ALL ? 'all' : item}
 
                                     {this.props.custom && moreThenOne &&
                                     <PopupConfirm trigger={<Icon link name='remove' className="right floated" onClick={e => e.stopPropagation()}/>}

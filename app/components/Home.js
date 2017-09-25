@@ -10,14 +10,14 @@ import Page from '../containers/Page';
 export default class Home extends Component {
 
     componentWillMount() {
-        this._handleContext(this.props.selectedPage,this.props.contextParams);
+        this._handleContext(this.props.selectedPage, this.props.contextParams, this.props.emptyPages);
         this.props.onStorePageId(this.props.pageId);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.pageId !== this.props.pageId) {
             this.props.onStorePageId(nextProps.pageId);
-            this._handleContext(nextProps.selectedPage,nextProps.contextParams);
+            this._handleContext(nextProps.selectedPage, nextProps.contextParams, nextProps.emptyPages);
         }
     }
 
@@ -27,7 +27,11 @@ export default class Home extends Component {
         }
     }
 
-    _handleContext(selectedPage,contextParams) {
+    _handleContext(selectedPage, contextParams, emptyPages) {
+        if (emptyPages) {
+            this.props.navigateToError('No pages available to display. Please try to reset application to the default settings.');
+            return;
+        }
         if (!selectedPage) {
             this.props.navigateTo404();
             return;
@@ -47,6 +51,10 @@ export default class Home extends Component {
     }
 
     render() {
+        if (this.props.emptyPages) {
+            return null;
+        }
+
         var pageId = this.props.pageId;
 
         return (

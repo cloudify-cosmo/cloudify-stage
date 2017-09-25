@@ -56,8 +56,8 @@ router.delete('/pages/:pageId', function (req, res, next) {
 });
 
 router.get('/select', function (req, res, next) {
-    TemplateHandler.selectTemplates(req.query.role, req.query.tenant)
-        .then(templates => res.send(templates))
+    TemplateHandler.selectTemplate(req.query.mode, req.query.role, req.query.tenant)
+        .then(template => res.send(template))
         .catch(next);
 });
 

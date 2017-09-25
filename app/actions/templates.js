@@ -5,7 +5,6 @@
 
 import * as types from './types';
 import templatesLoader from '../utils/templatesLoader';
-import Internal from '../utils/Internal';
 
 export function storeTemplates(templates) {
     return {

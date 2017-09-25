@@ -12,6 +12,7 @@ import NotFound from './components/NotFound';
 import Login from './containers/Login';
 import MaintenanceMode from './containers/maintenance/MaintenanceModePageMessage';
 import NoTenants from './containers/NoTenants';
+import ErrorPage from './Containers/ErrorPage';
 
 import {setValue,clearContext} from './actions/context';
 import Auth from './utils/auth';
@@ -98,6 +99,7 @@ export default (store)=> {
                 <Route path='page/(:pageId)/(:pageName)' component={Home}/>
                 <Route path='template_management' component={TemplateManagement} onEnter={hasAdminRole}/>
                 <Route path='404' component={NotFound}/>
+                <Route path='error' component={ErrorPage}/>
                 <IndexRoute component={Home}/>
                 <Redirect from="*" to='404'/>
             </Route>
