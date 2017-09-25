@@ -3,13 +3,13 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import {Container, Header} from 'semantic-ui-react';
 
 import Widget from '../containers/Widget';
 import Grid from './layout/Grid';
 import GridItem from './layout/GridItem';
 
 export default class WidgetsList extends Component {
-    static isEditMode = false;
 
     static propTypes = {
         pageId: PropTypes.string.isRequired,
@@ -24,25 +24,43 @@ export default class WidgetsList extends Component {
 
     render() {
         return (
-            <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
-                {
-                    this.props.widgets.map(function(widget){
-                        var widgetDefId = (widget.definition || {}).id;
-                        return (
-                            <GridItem
-                                key={widget.id}
-                                id={widget.id}
-                                x={widget.x} y={widget.y}
-                                height={widget.height}
-                                width={widget.width}
-                                className={`widget ${widgetDefId}Widget`}
-                                maximized={widget.maximized}>
-                                <Widget widget={widget} pageId={this.props.pageId}></Widget>
-                            </GridItem>
-                            )
-                    },this)
-                }
-            </Grid>
+            _.isEmpty(this.props.widgets)
+            ?
+
+                <Container className='emptyPage alignCenter'>
+                    {
+                        this.props.isEditMode
+                        ?
+                            <Header size='large'>
+                                This page is empty, <br/>
+                                don't be shy, give it a meaning!
+                            </Header>
+                        :
+                            <Header size='large'>
+                                This page is empty.
+                            </Header>
+                    }
+                </Container>
+            :
+                <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
+                    {
+                        this.props.widgets.map(function(widget){
+                            var widgetDefId = (widget.definition || {}).id;
+                            return (
+                                <GridItem
+                                    key={widget.id}
+                                    id={widget.id}
+                                    x={widget.x} y={widget.y}
+                                    height={widget.height}
+                                    width={widget.width}
+                                    className={`widget ${widgetDefId}Widget`}
+                                    maximized={widget.maximized}>
+                                    <Widget widget={widget} pageId={this.props.pageId}></Widget>
+                                </GridItem>
+                                )
+                        },this)
+                    }
+                </Grid>
         );
     }
 }

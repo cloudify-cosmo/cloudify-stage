@@ -11,6 +11,8 @@ import {removePage} from '../actions/page';
 import {updatePageDescription} from '../actions/page';
 import {changeWidgetGridData} from '../actions/widgets';
 import {setDrilldownContext} from '../actions/drilldownContext';
+import {setEditMode} from '../actions/config';
+import {minimizeWidgets} from '../actions/widgets';
 
 const buildPagesList = (pages,drilldownContextArray,selectedPageId) => {
     var pagesMap = _.keyBy(pages,'id');
@@ -83,7 +85,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onWidgetsGridDataChange: (pageId,widgetId,gridData)=>{
             dispatch(changeWidgetGridData(pageId,widgetId,gridData));
-        }
+        },
+        onEditModeChange: (isEditMode) => {
+            if (isEditMode) {
+                dispatch(minimizeWidgets());
+            }
+            dispatch(setEditMode(isEditMode));
+        },
     }
 };
 

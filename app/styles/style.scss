@@ -20,7 +20,7 @@ a:hover {
   height: 55px;
 }
 
-.dropDownText
+.dropDownText, .compactBlock
 {
   display: inline-block;
 }
@@ -65,7 +65,7 @@ a:hover {
     @media (min-width: 992px) {
       margin-left: 13rem;
     }
-    .ui.labeled.icon.button.addWidgetBtn {
+    div.addWidget .ui.labeled.icon.button.addWidgetBtn {
       position: absolute;
       top: 2rem;
       right: 15px;
@@ -797,4 +797,20 @@ a.underline {
       background-color: #eee;
     }
   }
+}
+
+.ui.sidebar.editModeSidebar {
+  box-shadow: none !important;
+  background-color: transparent !important;
+  max-width: 70% !important;
+  margin: 0 15% !important;
+  display: block;
+}
+
+.ui.sidebar.editModeSidebar .content {
+  margin: 10px;
+}
+
+.emptyPage {
+  padding-top: 10rem;
 }
