@@ -77,8 +77,7 @@ export default class app{
             <Provider store={store}>
                 <Router history={history} routes={createRoutes(store)} />
             </Provider>,
-            document.getElementById('app'),
-            SplashLoadingScreen.turnOff
+            document.getElementById('app')
         );
 
     }

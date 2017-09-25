@@ -36,12 +36,14 @@ const buildPagesList = (pages,drilldownContextArray,selectedPageId) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    var pagesMap = _.keyBy(state.pages,'id');
+    var pages = state.pages;
+
+    var pagesMap = _.keyBy(pages,'id');
     var page = pagesMap[ownProps.pageId];
-    var homePageId = state.pages[0].id;
+    var homePageId = pages[0].id;
     var pageId = page ? page.id : homePageId;
 
-    var pageData = _.clone(_.find(state.pages,{id:pageId}));
+    var pageData = _.clone(_.find(pages,{id:pageId}));
     var widgets = _.map(pageData.widgets,(wd)=>{
         var w = _.clone(wd);
         w.definition = _.find(state.widgetDefinitions,{id:w.definition});
@@ -50,7 +52,7 @@ const mapStateToProps = (state, ownProps) => {
     pageData.widgets = widgets;
     pageData.name = ownProps.pageName || pageData.name;
 
-    var pagesList = buildPagesList(state.pages,state.drilldownContext,pageId);
+    var pagesList = buildPagesList(pages,state.drilldownContext,pageId);
     return {
         page: pageData,
         pagesList: pagesList,

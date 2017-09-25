@@ -3,6 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import Const from '../../utils/consts';
 
 export default class TenantList extends Component {
 
@@ -29,9 +30,9 @@ export default class TenantList extends Component {
                         this.props.tenants.map((item) => {
                             return (
                                 <List.Item key={item}>
-                                    {item}
+                                    {item === Const.DEFAULT_ALL ? 'all' : item}
 
-                                    {this.props.custom &&
+                                    {item !== Const.DEFAULT_ALL && this.props.custom &&
                                     <PopupConfirm trigger={<Icon link name='remove' className="right floated" onClick={e => e.stopPropagation()}/>}
                                                   content='Are you sure to remove this tenant from template?'
                                                   onConfirm={() => this.props.onDelete(item)}/>

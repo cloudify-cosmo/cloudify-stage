@@ -44,7 +44,6 @@ export default class Layout extends Component {
     }
 
     render() {
-
         if (this.props.isLoading) {
             SplashLoadingScreen.turnOn();
             return null;

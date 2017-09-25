@@ -9,6 +9,7 @@ var fs = require('fs-extra');
 var pathlib = require('path');
 var _ = require('lodash');
 var config = require('../config').get();
+var ServerSettings = require('../serverSettings');
 var ArchiveHelper = require('./ArchiveHelper');
 var ResourceTypes = require('../db/types/ResourceTypes');
 
@@ -29,26 +30,20 @@ module.exports = (function() {
     }
 
     function _getInitialTemplateConfig() {
-
-        function asterixReplacement(value) {
-            return value === '*' ? 'all' : value;
-        }
-
-
         var data = {};
         _.forOwn(config.app.initialTemplate, function(value, role) {
             if (_.isObject(value)) {
                 _.forOwn(value, function(template, tenant) {
                     var item = data[template] || {roles: [], tenants: []};
-                    item.tenants.push(asterixReplacement(tenant));
+                    item.tenants.push(tenant);
                     if (_.indexOf(item.roles, role) < 0) {
-                        item.roles.push(asterixReplacement(role));
+                        item.roles.push(role);
                     }
                     data[template] = item;
                 });
             } else {
                 var item = data[value] || {roles: [], tenants: []};
-                item.roles.push(asterixReplacement(role));
+                item.roles.push(role);
                 data[value] = item;
             }
         });
@@ -166,10 +161,45 @@ module.exports = (function() {
         }).then(() => db.Resources.destroy({ where: {resourceId: pageId, type:ResourceTypes.PAGE}}));
     }
 
-    function selectTemplates(role, tenant) {
-        return db.Resources
-            .findAll({where: {type: ResourceTypes.TEMPLATE, data: db.sequelize.literal(`data->'roles' ? '${role}' and data->'tenants' ? '${tenant}'`)},
-                      attributes: ['resourceId'], raw: true});
+    function selectTemplate(mode, role, tenant) {
+        var DEFAULT_KEY = '*';
+
+        var initialTemplateObj = config.app.initialTemplate;
+
+        console.log('Template inputs: mode=' + mode + ', role=' + role + ', tenant=' + tenant);
+
+        var promise;
+        if (mode === ServerSettings.MODE_MAIN) {
+            promise = db.Resources
+                .findOne({where: {type: ResourceTypes.TEMPLATE,
+                    data: db.sequelize.literal(`data->'roles' ? '${role}' and (data->'tenants' ? '${tenant}' or data->'tenants' ? '${DEFAULT_KEY}')`)},
+                          attributes: ['resourceId'], raw: true})
+                .then(entity => entity ? entity.resourceId : null);
+        } else {
+            promise = Promise.resolve();
+        }
+
+        return promise.then(templateId => {
+            console.log('Custom template: ' + templateId);
+
+            if (!templateId) {
+                var initialTemplateModeRole = initialTemplateObj[mode === ServerSettings.MODE_MAIN ? role : mode];
+
+                if (_.isObject(initialTemplateModeRole)) {
+                    templateId = _.get(
+                        initialTemplateModeRole,
+                        tenant,
+                        initialTemplateModeRole[DEFAULT_KEY] || initialTemplateObj[DEFAULT_KEY]
+                    );
+                } else if (_.isString(initialTemplateModeRole)) {
+                    templateId = initialTemplateModeRole;
+                } else {
+                    throw `Error in configuration. Initial template for (mode=${mode}, role=${role}, tenant=${tenant}) invalid.`;
+                }
+            }
+
+            return templateId;
+        });
     }
 
     return {
@@ -178,7 +208,7 @@ module.exports = (function() {
         createTemplate,
         updateTemplate,
         deleteTemplate,
-        selectTemplates,
+        selectTemplate,
         createPage,
         deletePage
     }

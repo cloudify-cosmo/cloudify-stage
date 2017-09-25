@@ -7,9 +7,11 @@ import { push } from 'react-router-redux';
 import {v4} from 'node-uuid';
 import {clearContext} from './context';
 import {popDrilldownContext} from './drilldownContext';
+import {setAppError} from './app';
 import {addWidget} from './widgets';
 import {clearWidgetsData} from './WidgetData';
-import InitialTemplate from '../utils/InitialTemplate';
+import Internal from '../utils/Internal';
+import Consts from '../utils/consts';
 
 export function createPage(name, newPageId) {
     return {
@@ -126,29 +128,42 @@ export function removePage(pageId) {
         }
 }
 
-export function createPageFromInitialTemplate() {
+export function createPagesFromTemplate() {
     return function (dispatch, getState) {
-        var state = getState();
-        var templates = state.templates;
-        var widgetDefinitions = state.widgetDefinitions;
-        var initialTemplate = templates[InitialTemplate.getName(state.config, state.manager)];
+        var config = getState().config;
+        var manager = getState().manager;
 
-        console.log('Init pages from initial template', initialTemplate);
+        var mode = _.get(config, 'mode', Consts.MODE_MAIN);
+        var role = _.get(manager,'auth.role');
+        var tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
-        _.each(initialTemplate,(templateName)=>{
-            var template = templates[templateName];
-            if (!template) {
-                console.error('Cannot find template : '+templateName + ' Skipping... ');
-                return;
-            }
+        var internal = new Internal(manager);
+        return internal.doGet('/templates/select', {mode, role, tenant})
+            .then(templateId => {
+                console.log('Selected template id', templateId);
 
-            var pageId = _.snakeCase(template.name);
-            dispatch(createPage(template.name, pageId));
-            _.each(template.widgets,(widget)=>{
-                var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
-                dispatch(addWidget(pageId,widget.name,widgetDefinition,widget.width,widget.height,widget.x,widget.y,widget.configuration));
+                var templates = getState().templates;
+                var widgetDefinitions = getState().widgetDefinitions;
+
+                var pages = templates[templateId];
+
+                console.log('Create pages from selected template', pages);
+
+                _.each(pages, id => {
+                    var page = templates[id];
+                    if (!page) {
+                        console.error('Cannot find page template: ' + id + '. Skipping... ');
+                        return;
+                    }
+
+                    var pageId = _.snakeCase(page.name);
+                    dispatch(createPage(page.name, pageId));
+                    _.each(page.widgets,(widget)=>{
+                        var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
+                        dispatch(addWidget(pageId,widget.name,widgetDefinition,widget.width,widget.height,widget.x,widget.y,widget.configuration));
+                    });
+                });
             });
-        });
     }
 }
 

@@ -3,10 +3,9 @@
  */
 
 import * as types from './types';
-import {createPageFromInitialTemplate} from './page';
-import {setAppLoading} from './app';
+import {createPagesFromTemplate} from './page';
+import {setAppLoading, setAppError} from './app';
 import Internal from '../utils/Internal';
-import InitialTemplate from '../utils/InitialTemplate';
 import { push } from 'react-router-redux';
 
 const  CURRENT_APP_DATA_VERSION = 4;
@@ -29,11 +28,20 @@ export function saveUserAppData (manager, appData) {
 }
 
 export function resetTemplate(){
-    return function(dispatch) {
+    return function(dispatch, getState) {
         // First clear the pages
+        dispatch(setAppLoading(true));
         dispatch(setPages([]));
-        dispatch(createPageFromInitialTemplate());
-        dispatch(push('/'));
+        dispatch(createPagesFromTemplate())
+            .then(() => {
+                dispatch(setAppLoading(false))
+                dispatch(push('/'));
+            })
+            .catch(err => {
+                dispatch(setAppError(err.message));
+                dispatch(push('error'));
+                throw err;
+            });
     }
 }
 
