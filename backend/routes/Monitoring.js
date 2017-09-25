@@ -20,7 +20,7 @@ function getClient() {
         username: config.app.influx.user,
         password: config.app.influx.password,
         database: config.app.influx.database,
-        timeout: config.app.influx.timeout
+        requestTimeout: config.app.influx.timeout
     };
 
     logger.debug('Connecting to influx using ', options);
