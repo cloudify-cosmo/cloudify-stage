@@ -50,8 +50,8 @@
     "timeout": 30000
   },
   "github": {
-    "username": "cloudify-examples@gigaspaces.com",
-    "password": "C10udify-5xamples"
+    "username": "secret(github-username)",
+    "password": "secret(github-password)"
   },
   "source": {
     "browseSourcesDir": "/cloudifyBrowseSources",

@@ -42,7 +42,7 @@ export default class extends React.Component {
                     this.props.data.items.map((item)=>{
                         return (
                             <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelect(item)}>
-                                <DataTable.Data><Image src={item.image_url} width="30px" height="auto" inline/> <a href={item.html_url} target="_blank">{item.name}</a></DataTable.Data>
+                                <DataTable.Data><Image src={Stage.Utils.url(item.image_url)} width="30px" height="auto" inline/> <a href={item.html_url} target="_blank">{item.name}</a></DataTable.Data>
                                 <DataTable.Data>{item.description}</DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
