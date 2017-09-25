@@ -50,8 +50,8 @@
     "timeout": 30000
   },
   "github": {
-    "username": "***REMOVED***",
-    "password": "***REMOVED***"
+    "username": "secret(github-username)",
+    "password": "secret(github-password)"
   },
   "source": {
     "browseSourcesDir": "/cloudifyBrowseSources",
