@@ -45,6 +45,7 @@ import createRoutes from './routes';
 import StatusPoller from './utils/StatusPoller';
 import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
 import SplashLoadingScreen from './utils/SplashLoadingScreen';
+import widgetDefinitionLoader from './utils/widgetDefinitionsLoader';
 
 const browserHistory = useRouterHistory(createHistory)({
     basename: Consts.CONTEXT_PATH
@@ -58,6 +59,7 @@ export default class app{
             EventBus.trigger('window:error', message, source, lineno, colno, error);
         };
 
+        widgetDefinitionLoader.init();
         return ConfigLoader.load().then((result)=>{
             const store = configureStore(browserHistory,result);
 

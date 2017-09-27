@@ -13,10 +13,19 @@ import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import {NO_TENANTS_ERR} from '../../utils/ErrorCodes';
 
 export default class Layout extends Component {
+    constructor(props,context) {
+        super(props,context);
+        this.state = Layout.initialState;
+    }
+
     static propTypes = {
         children: PropTypes.element.isRequired,
         isLoading: PropTypes.bool.isRequired,
         intialPageLoad: PropTypes.func.isRequired
+    };
+
+    static initialState = {
+        initialized: false
     };
 
     componentDidMount() {
@@ -26,6 +35,7 @@ export default class Layout extends Component {
             .then(()=>{
                 StatusPoller.getPoller().start();
                 UserAppDataAutoSaver.getAutoSaver().start();
+                this.setState({initialized: true});
             })
             .catch((e)=>{
                 switch(e) {
@@ -48,8 +58,12 @@ export default class Layout extends Component {
             SplashLoadingScreen.turnOn();
             return null;
         }
-
         SplashLoadingScreen.turnOff();
+
+        if (!this.state.initialized) {
+            return null;
+        }
+
         return (
             <div>
                 <Header />
