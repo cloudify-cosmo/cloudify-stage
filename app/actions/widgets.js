@@ -18,7 +18,6 @@ export function storeWidgetDefinitions(widgetDefinitions) {
 
 export function loadWidgetDefinitions() {
     return function (dispatch, getState) {
-        widgetDefinitionLoader.init();
         return widgetDefinitionLoader.load(getState().manager)
             .then(result => dispatch(storeWidgetDefinitions(result)));
     }
