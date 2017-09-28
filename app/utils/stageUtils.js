@@ -31,6 +31,10 @@ export default class StageUtils {
         return moment.utc(timestamp, inputPattern).local().format(outputPattern);
     }
 
+    static formatLocalTimestamp(timestamp, outputPattern='DD-MM-YYYY HH:mm', inputPattern=undefined) {
+        return moment(timestamp, inputPattern).format(outputPattern);
+    }
+
     /**
      * Replace all occurrences of <Tag attr1="value1" attr1="value2" ...> to "tag value1 value2 ..."
      * @param message

@@ -57,13 +57,13 @@ import {format as d3format} from 'd3-format';
  *
  * ```
  * let data = [
- *      {name: 'Oranges', value: 300},
- *      {name: 'Apples', value: 100},
- *      {name: 'Grapes', value: 80},
- *      {name: 'Pineapples', value: 40},
- *      {name: 'Watermelons', value: 30}
+ *     {time: '10:00', value: 300},
+ *     {time: '11:00', value: 100},
+ *     {time: '12:00', value: 80},
+ *     {time: '13:00', value: 40},
+ *     {time: '14:00', value: 30}
  * ];
- * return (<Graph xDataKey='name' charts={[{name:'value', label:'Number of fruits', axisLabel:''}]} data={data} type={Graph.BAR_CHART_TYPE} />);
+ * return (<Graph dataTimeFormat='HH:mm' charts={[{name:'value', label:'Number of fruits', axisLabel:''}]} data={data} type={Graph.BAR_CHART_TYPE} />);
  * ```
  *
  * ### Line chart
@@ -79,10 +79,11 @@ import {format as d3format} from 'd3-format';
  *      {time: '18:20', value: 8},
  *      {time: '18:30', value: 5}
  * ];
- * return (<Graph charts={[{name:'value', label='CPU load'}]} data={data} type={Graph.LINE_CHART_TYPE} />);
+ * return (<Graph dataTimeFormat='HH:mm' charts={[{name:'value', label:'CPU load'}]} data={data} type={Graph.LINE_CHART_TYPE} />);
  * ```
  *
  * ### Area chart
+ * ![Graph 2](manual/asset/graphs/Graph_2.png)
  *
  * ```
  * let data = [
@@ -98,40 +99,41 @@ import {format as d3format} from 'd3-format';
  * ```
  *
  *
- * ### Line chart - multi-charts
- * ![Graph 2](manual/asset/graphs/Graph_2.png)
+ * ### Line chart - multi-charts, one Y-axis per chart
+ * ![Graph 3](manual/asset/graphs/Graph_3.png)
  *
  * ```
  * let data = [
  *      {cpu_total_system: 3.5,
  *       loadavg_processes_running: 3.071428571428572,
  *       memory_MemFree: 146003090.2857143,
- *       time: "15:20:00"},
+ *       time: "2017-09-26 11:00:00"},
  *      ...
  * ];
  *
  * let charts = [
- *      {name: "cpu_total_system", label: "CPU - System", axisLabel:"%"},
- *      {name: "memory_MemFree", label: "Memory - Free", axisLabel:"Bytes"},
- *      {name: "loadavg_processes_running", label: "Load", axisLabel:"%"}
+ *      {name: "cpu_total_system", label: "CPU - System [%]", axisLabel:""},
+ *      {name: "memory_MemFree", label: "Memory - Free [Bytes]", axisLabel:""},
+ *      {name: "loadavg_processes_running", label: "Load [%]", axisLabel:""}
  * ]
  *
  * return (<Graph charts={charts} data={data} type={Graph.LINE_CHART_TYPE} />);
  * ```
  *
- *  ### Line chart - multi lines one axis
+ * ### Line chart - multi-charts, one Y-axis
+ * ![Graph 4](manual/asset/graphs/Graph_4.png)
  *
  * ```
  * let data = [
  *      {cpu_total_system: 3.5,
+ *       cpu_total_user: 5.23,
  *       loadavg_processes_running: 3.071428571428572,
- *       memory_MemFree: 146003090.2857143,
- *       time: "15:20:00"},
+ *       time: "2017-09-26 11:20:00"},
  *      ...
  * ];
  *
  * let charts = [
- *      {name: "metrics", label: "metrics", axisLabel:"", fieldNames: ["cpu_total_system","loadavg_processes_running","memory_MemFree"]}
+ *      {name: "metrics", label: "metrics", axisLabel:"", fieldNames: ["cpu_total_system","cpu_total_user","loadavg_processes_running"]}
  * ]
  *
  * return (<Graph charts={charts} data={data} type={Graph.LINE_CHART_TYPE} />);
@@ -166,14 +168,18 @@ export default class Graph extends Component {
     /**
      * propTypes
      * @property {object[]} data charts input data (see class description for the format details)
-     * @property {string} type graph chart type ({@link Graph.LINE_CHART_TYPE} or {@link Graph.BAR_CHART_TYPE})
+     * @property {string} type graph chart type ({@link Graph.LINE_CHART_TYPE}, {@link Graph.BAR_CHART_TYPE} or {@link Graph.AREA_CHART_TYPE})
      * @property {object[]} charts charts configuration (see class description for format details)
      * @property {string} [xDataKey=Graph.DEFAULT_X_DATA_KEY] X-axis key name, must match key in data object
-     * @property {boolean} should show X-axis
-     * @property {boolean} should show Y-axis
-     * @property {boolean} should show burst (zoom)
-     * @property {boolean} should show tooltip on line
-     * @property {boolean} should show legend
+     * @property {boolean} [showXAxis=true] should show X-axis
+     * @property {boolean} [showYAxis=true] should show Y-axis
+     * @property {boolean} [showBrush=false] should show brush (zoom)
+     * @property {boolean} [showTooltip=true] should show tooltip on line
+     * @property {boolean} [showLegend=true] should show legend
+     * @property {string} [dataTimeFormat=undefined] input date format, by default not specified
+     * @property {string} [xAxisTimeFormat='DD-MM-YYYY HH:mm'] format of X-axis tick label
+     * @property {object} [xAxisTick={fontSize:'10px'}] stylesheet for X-axis tick
+     * @property {object} [yAxisTick={fontSize:'10px'}] stylesheet for Y-axis tick
      */
     static propTypes = {
         data: PropTypes.array.isRequired,
@@ -189,6 +195,7 @@ export default class Graph extends Component {
         showBrush: false,
         showTooltip: true,
         showLegend: true,
+        dataTimeFormat: undefined,
         xAxisTimeFormat: 'DD-MM-YYYY HH:mm',
         xAxisTick: {fontSize:'10px'},
         yAxisTick: {fontSize:'10px'}
@@ -259,7 +266,7 @@ export default class Graph extends Component {
                     <YAxis key={'yaxis'+chart.name}
                            dataKey={chart.name}
                            yAxisId={chart.name}
-                           width={chart.axisLabel ? 50 : 25}
+                           width={50}
                            axisLine={STYLE}
                            tick={STYLE}
                            tickLine={STYLE}
@@ -282,9 +289,7 @@ export default class Graph extends Component {
         });
 
         var xAxisDataFormatter = (value) => {
-            // console.log(value);
-            // console.log(Stage.Utils.formatTimestamp(value,this.props.xAxisTimeFormat));
-            return Stage.Utils.formatTimestamp(value,this.props.xAxisTimeFormat)
+            return Stage.Utils.formatLocalTimestamp(value, this.props.xAxisTimeFormat, this.props.dataTimeFormat)
         };
 
         return (

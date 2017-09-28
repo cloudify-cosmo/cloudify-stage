@@ -28,7 +28,7 @@ Stage.defineWidget({
             {name: 'qFrom', label: 'FROM', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${deploymentId} token to inject dynamic deployment ID. Example: \'/${deploymentId}\..*\.((memory_MemFree))$/\''},
             {name: 'qWhere', label: 'WHERE', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${timeFilter} token to inject dynamic data/time ranges.'}
         ]},
-        {id: "type", name: "Charts type", items: [
+        {id: 'type', name: 'Charts type', items: [
             {name:'Line chart', value:Stage.Basic.Graphs.Graph.LINE_CHART_TYPE},
             {name:'Bar chart', value:Stage.Basic.Graphs.Graph.BAR_CHART_TYPE},
             {name:'Area chart', value:Stage.Basic.Graphs.Graph.AREA_CHART_TYPE}],

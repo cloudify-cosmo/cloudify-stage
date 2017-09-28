@@ -113,60 +113,53 @@ export default class InputTimeFilter extends React.Component {
     }
 
     componentDidMount() {
-        this.setState(InputTimeFilter.initialState(this.props));
-        this._resetFilter(false);
+        let state = InputTimeFilter.initialState(this.props);
+        _.extend(state, this._getResetState(false));
+        this.setState(state);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        this.setState({dirty: !_.isEqual(_.pick(this.state, Object.keys(InputTimeFilter.DEFAULT_VALUE)), this.props.defaultValue)});
+        let dirty = !_.isEqual(_.pick(this.state, Object.keys(InputTimeFilter.DEFAULT_VALUE)), this.props.defaultValue);
+        if (prevState.dirty != dirty) {
+            this.setState({dirty});
+        }
     }
 
     _handleInputChange(proxy, field, onStateUpdate) {
         this.setState({[field.name]: field.value}, onStateUpdate);
     }
 
-    _resetStartEndDateTimeState() {
-        let date = new Date();
-        let time = moment(date).format(InputTimeFilter.TIME_FORMAT);
-        this.setState({
-            startDate: date,
-            startTime: time,
-            endDate: date,
-            endTime: time
-        });
-    };
-
-    _setStartTimeDateState() {
-        let newState = {startError: false};
-        let startMoment = moment(this.state.start);
+    _getStartTimeDateState(start) {
+        let startTimeDate = {startError: false};
+        let startMoment = moment(start);
         if (startMoment.isValid()) {
-            _.extend(newState, {
+            _.extend(startTimeDate, {
                 startDate: startMoment.toDate(),
                 startTime: startMoment.format(InputTimeFilter.TIME_FORMAT)
             });
         }
         else if (InputTimeFilter._isValidInfluxDate(this.state.start)) {
-            _.extend(newState, this._calculateAndSetDateWithOffsets(this.state.start, 'startDate', 'startTime'));
+            _.extend(startTimeDate, this._calculateDateWithOffsets(start, 'startDate', 'startTime'));
         }
-        this.setState(newState);
+        return startTimeDate;
     }
 
-    _setEndTimeDateState() {
-        let newState = {endError: false};
-        let endMoment = moment(this.state.end);
+    _getEndTimeDateState(end) {
+        let endTimeDate = {endError: false};
+        let endMoment = moment(end);
         if (endMoment.isValid()) {
-            _.extend(newState, {
+            _.extend(endTimeDate, {
                 endDate: endMoment.toDate(),
                 endTime: endMoment.format(InputTimeFilter.TIME_FORMAT)
             });
         }
-        else if (InputTimeFilter._isValidInfluxDate(this.state.end)) {
-            _.extend(newState, this._calculateAndSetDateWithOffsets(this.state.end, 'endDate', 'endTime'));
+        else if (InputTimeFilter._isValidInfluxDate(end)) {
+            _.extend(endTimeDate, this._calculateDateWithOffsets(end, 'endDate', 'endTime'));
         }
-        this.setState(newState);
+        return endTimeDate;
     }
 
-    _calculateAndSetDateWithOffsets(dateTime, stateDateField, stateTimeField){
+    _calculateDateWithOffsets(dateTime, stateDateField, stateTimeField){
         let matches = InputTimeFilter.influxDateRegex.exec(dateTime);
         let baseDate = moment(matches[1]).isValid() ? moment(matches[1]) : moment();
 
@@ -186,43 +179,81 @@ export default class InputTimeFilter extends React.Component {
         };
     }
 
-    _setStartState() {
-        this.setState({startError: false, start: `${moment(this.state.startDate).format(InputTimeFilter.DATE_FORMAT)} ${this.state.startTime}`});
+
+    _calculateTimeResolution(startDate, endDate) {
+        const EXPECTED_NUMBER_OF_POINTS = 50;
+        const NUMBER_OF_MILLISECONDS_IN_SECOND = 1000;
+        const NUMBER_OF_MILLISECONDS_IN_MINUTE = 1000*60;
+        const NUMBER_OF_MILLISECONDS_IN_HOUR = 1000*60*60;
+        const NUMBER_OF_MILLISECONDS_IN_DAY = 1000*60*60*24;
+        const NUMBER_OF_MILLISECONDS_IN_WEEK = 1000*60*60*24*7;
+
+        let newResolution = {};
+        let startDateMoment = moment(startDate);
+        let endDateMoment = moment(endDate);
+
+        if (startDateMoment.isValid() && endDateMoment.isValid()) {
+            let tickSize = endDateMoment.diff(startDateMoment) / EXPECTED_NUMBER_OF_POINTS;
+
+            if (tickSize <= NUMBER_OF_MILLISECONDS_IN_SECOND) {
+                newResolution = {resolution: Math.floor(tickSize), unit: 'ms'};
+            } else if (tickSize <= NUMBER_OF_MILLISECONDS_IN_MINUTE) {
+                newResolution = {resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_SECOND), unit: 's'};
+            } else if (tickSize <= NUMBER_OF_MILLISECONDS_IN_HOUR) {
+                newResolution = {resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_MINUTE), unit: 'm'};
+            } else if (tickSize <= NUMBER_OF_MILLISECONDS_IN_DAY) {
+                newResolution = {resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_HOUR), unit: 'h'};
+            } else if (tickSize <= NUMBER_OF_MILLISECONDS_IN_WEEK) {
+                newResolution = {resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_DAY), unit: 'd'};
+            } else {
+                newResolution = {resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_WEEK), unit: 'w'};
+            }
+        }
+
+        return newResolution;
     }
 
-    _setEndState() {
-        this.setState({endError: false, end: `${moment(this.state.endDate).format(InputTimeFilter.DATE_FORMAT)} ${this.state.endTime}`});
+    _getStartState(startDate, startTime) {
+        return {startError: false, start: `${moment(startDate).format(InputTimeFilter.DATE_FORMAT)} ${startTime}`};
+    }
+
+    _getEndState(endDate, endTime) {
+        return {endError: false, end: `${moment(endDate).format(InputTimeFilter.DATE_FORMAT)} ${endTime}`};
+    }
+
+    _getDateWithTime(date, time) {
+        let result = new Date(date);
+
+        let [hours, minutes] = _.split(time, ':');
+        result.setHours(hours, minutes);
+
+        return result;
     }
 
     _handleCustomInputChange(proxy, field) {
         this._handleInputChange(proxy, field, () => {
-            if (_.isEqual(field.name, 'startDate') || _.isEqual(field.name, 'startTime')) {
-                this._setStartState();
-            } else if (_.isEqual(field.name, 'endDate') || _.isEqual(field.name, 'endTime')) {
-                this._setEndState();
+            let newState = {range: InputTimeFilter.CUSTOM_RANGE};
+            if (_.isEqual(field.name, 'startDate')) {
+                _.extend(newState, this._getStartState(field.value, this.state.startTime));
+            } else if (_.isEqual(field.name, 'startTime')) {
+                let startDate = this._getDateWithTime(this.state.startDate, field.value);
+                _.extend(newState, {startDate}, this._getStartState(startDate, field.value));
+            } else if (_.isEqual(field.name, 'endDate')) {
+                _.extend(newState, this._getEndState(field.value, this.state.endTime));
+            } else if (_.isEqual(field.name, 'endTime')) {
+                let endDate = this._getDateWithTime(this.state.endDate, field.value);
+                _.extend(newState, {endDate}, this._getEndState(endDate, field.value));
             } else if (_.isEqual(field.name, 'start')) {
-                this._setStartTimeDateState();
+                _.extend(newState, this._getStartTimeDateState(field.value));
             } else if (_.isEqual(field.name, 'end')) {
-                this._setEndTimeDateState();
+                _.extend(newState, this._getEndTimeDateState(field.value));
             }
-            this.setState({range: InputTimeFilter.CUSTOM_RANGE});
+            this.setState(newState);
         });
     }
 
     static _isValidInfluxDate(dateTimeString) {
         return InputTimeFilter.influxDateRegex.test(dateTimeString);
-    }
-
-    _isStartEndFieldsValid (){
-        let isStartValidInfluxDate = InputTimeFilter._isValidInfluxDate(this.state.start);
-        let isEndValidInfluxDate = InputTimeFilter._isValidInfluxDate(this.state.end);
-
-        this.setState({
-            startError: isStartValidInfluxDate ? false : true,
-            endError: isEndValidInfluxDate? false : true
-        });
-
-        return isStartValidInfluxDate && isEndValidInfluxDate;
     }
 
     _getTimeFilterObject() {
@@ -242,10 +273,18 @@ export default class InputTimeFilter extends React.Component {
         return timeFilter;
     }
 
-    _resetFilter(toDefaults) {
-        let state = (toDefaults ? this.props.defaultValue : this.props.value);
-        this.setState({...state},
-            () => this._resetStartEndDateTimeState());
+    _getResetState(toDefaults) {
+        let value = (toDefaults ? this.props.defaultValue : this.props.value);
+        let date = new Date();
+        let time = moment(date).format(InputTimeFilter.TIME_FORMAT);
+
+        return {
+            ...value,
+            startDate: date,
+            startTime: time,
+            endDate: date,
+            endTime: time
+        };
     }
 
     _isRangeSelected(range) {
@@ -253,31 +292,54 @@ export default class InputTimeFilter extends React.Component {
     }
 
     _handleRangeButtonClick(proxy, field) {
+        let start = InputTimeFilter.RANGES[field.name].start;
+        let end = InputTimeFilter.RANGES[field.name].end;
+        let startTimeDate = this._getStartTimeDateState(start);
+        let endTimeDate = this._getEndTimeDateState(end);
+        let timeResolution = this._calculateTimeResolution(startTimeDate.startDate, endTimeDate.endDate);
         this.setState({
             range: field.name,
-            start: InputTimeFilter.RANGES[field.name].start,
-            end: InputTimeFilter.RANGES[field.name].end,
-        }, () => {
-            this._setStartTimeDateState();
-            this._setEndTimeDateState();
+            start,
+            end,
+            ...startTimeDate,
+            ...endTimeDate,
+            ...timeResolution
         });
     }
 
     _handleCustomRangeButtonClick(proxy, field) {
-        this._setStartState();
-        this._setEndState();
-        this.setState({range: field.name});
+        let newState = {range: field.name};
+        _.extend(newState, this._getStartState(this.state.startDate, this.state.startTime));
+        _.extend(newState, this._getEndState(this.state.endDate, this.state.endTime));
+        this.setState(newState);
+    }
+
+    _handleOptimizeButtonClick() {
+        let timeResolution = this._calculateTimeResolution(this.state.startDate, this.state.endDate);
+        this.setState(timeResolution);
+    }
+
+    _handleResetButtonClick() {
+        let resetState = this._getResetState(true);
+        this.setState(resetState);
     }
 
     _handleApplyButtonClick() {
-        if (this._isStartEndFieldsValid()) {
-            this.setState({isOpen: false}, () => this.props.onApply(this._getTimeFilterObject()));
-        }
+        let isStartValidInfluxDate = InputTimeFilter._isValidInfluxDate(this.state.start);
+        let isEndValidInfluxDate = InputTimeFilter._isValidInfluxDate(this.state.end);
+
+        let newState = {
+            startError: isStartValidInfluxDate ? false : true,
+            endError: isEndValidInfluxDate? false : true,
+            isOpen: !(isStartValidInfluxDate && isEndValidInfluxDate)
+        };
+
+        this.setState(newState, () => this.props.onApply(this._getTimeFilterObject()));
     }
 
     _handleCancelButtonClick() {
-        this._resetFilter(false);
-        this.setState({isOpen: false}, () => this.props.onCancel(this._getTimeFilterObject()));
+        let resetState = this._getResetState(false);
+        this.setState({...resetState, isOpen: false}, () => this.props.onCancel(this._getTimeFilterObject()));
     }
 
     render () {
@@ -389,6 +451,9 @@ export default class InputTimeFilter extends React.Component {
                                                 <Dropdown search options={Stage.Common.TimeConsts.TIME_RESOLUTION_UNITS} name="unit" selection
                                                           fluid value={this.state.unit} onChange={this._handleInputChange.bind(this)} />
                                             </Table.Cell>
+                                            <Table.Cell collapsing>
+                                                <Button onClick={this._handleOptimizeButtonClick.bind(this)} content='Optimize' icon='refresh'/>
+                                            </Table.Cell>
                                         </Table.Row>
                                     </Table.Body>
                                 </Table>
@@ -397,7 +462,7 @@ export default class InputTimeFilter extends React.Component {
                     </Grid.Row>
                 </Grid>
                 <div className='rightFloated'>
-                    <Button onClick={this._resetFilter.bind(this, true)} content="Reset" icon="undo" disabled={!this.state.dirty}/>
+                    <Button onClick={this._handleResetButtonClick.bind(this)} content="Reset" icon="undo" disabled={!this.state.dirty}/>
                     <CancelButton onClick={this._handleCancelButtonClick.bind(this)} className='cancel' />
                     <ApproveButton onClick={this._handleApplyButtonClick.bind(this)} content='Apply' positive />
                 </div>
