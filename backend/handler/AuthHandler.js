@@ -5,6 +5,7 @@
 var config = require('../config').get();
 var ManagerHandler = require('./ManagerHandler');
 
+var authorizationCache = {};
 
 class AuthHandler {
     static getToken(basicAuth){
@@ -34,6 +35,23 @@ class AuthHandler {
             },
             {'saml-response': samlResponse}
         );
+    }
+
+    static initAuthorization() {
+        //TODO: Please use API to fetch authorisation data once it is available.
+        //There is ticket for that: STAGE-503 Use API to fetch authorisation data
+
+        authorizationCache = {
+            'roles': [
+                {'name': 'admin', 'description': 'Admin role'},
+                {'name': 'user', 'description': 'User role'},
+            ],
+            'permissions': { 'api1': ['role1'] }
+        };
+    }
+
+    static getRoles() {
+        return authorizationCache.roles;
     }
 
 }

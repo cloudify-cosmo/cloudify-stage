@@ -89,11 +89,6 @@ export default class CreateModal extends React.Component {
     render() {
         var {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
 
-        let roleOptions = [
-            {text: Actions.USER_ROLE, value: Actions.USER_ROLE},
-            {text: Actions.ADMIN_ROLE, value: Actions.ADMIN_ROLE}
-        ];
-
         const addButton = <Button content='Add' icon='add user' labelPosition='left' className='addUserButton' />;
 
         return (
@@ -122,7 +117,7 @@ export default class CreateModal extends React.Component {
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.role}>
-                            <Form.Dropdown selection name='role' placeholder="Role" options={roleOptions}
+                            <Form.Dropdown selection name='role' placeholder="Role" options={this.props.roles}
                                            value={this.state.role} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 

@@ -11,10 +11,15 @@ import { getTemplates, createTemplate, updateTemplate, deleteTemplate, createPag
 const mapStateToProps = (state, ownProps) => {
     var templateManagement = state.templateManagement || {};
 
+    var roles = _.map (state.app.roles, (role) => {
+        return {text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name};
+    });
+
     return {
         manager: state.manager,
         templates: templateManagement.templates,
         pages: templateManagement.pages,
+        roles,
         isLoading: templateManagement.isLoading,
         error: templateManagement.error
     };

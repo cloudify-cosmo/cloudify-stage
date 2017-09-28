@@ -11,7 +11,10 @@ Stage.defineWidget({
     initialWidth: 5,
     initialHeight: 16,
     color: "brown",
-    fetchUrl: '[manager]/users?_get_data=true[params]',
+    fetchUrl: {
+        users: '[manager]/users?_get_data=true[params]',
+        roles: '[backend]/auth/roles'
+    },
     isReact: true,
     isAdmin: true,
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
@@ -30,8 +33,8 @@ Stage.defineWidget({
 
         var selectedUser = toolbox.getContext().getValue('userName');
 
-        let formattedData = data;
-        formattedData = Object.assign({}, data, {
+        let formattedData = data.users;
+        formattedData = Object.assign({}, data.users, {
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
                     last_login_at: item.last_login_at?Stage.Utils.formatTimestamp(item.last_login_at):"",
@@ -40,11 +43,15 @@ Stage.defineWidget({
                     isSelected: item.username === selectedUser
                 })
             }),
-            total : _.get(data, 'metadata.pagination.total', 0)
+            total : _.get(data.users, 'metadata.pagination.total', 0)
+        });
+
+        var roles = _.map (data.roles, (role) => {
+            return {text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name};
         });
 
         return (
-            <UsersTable widget={widget} data={formattedData} toolbox={toolbox}/>
+            <UsersTable widget={widget} data={formattedData} roles={roles} toolbox={toolbox}/>
         );
 
     }

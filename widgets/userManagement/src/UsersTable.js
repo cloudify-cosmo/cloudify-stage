@@ -217,7 +217,7 @@ export default class UsersTable extends React.Component {
                         })
                     }
                     <DataTable.Action>
-                        <CreateModal toolbox={this.props.toolbox}/>
+                        <CreateModal roles={this.props.roles} toolbox={this.props.toolbox}/>
                     </DataTable.Action>
                 </DataTable>
 
@@ -229,6 +229,7 @@ export default class UsersTable extends React.Component {
 
                 <RoleModal
                     open={this.state.modalType === MenuAction.SET_ROLE_ACTION && this.state.showModal}
+                    roles={this.props.roles}
                     user={this.state.user}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>

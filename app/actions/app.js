@@ -8,6 +8,7 @@ import {getClientConfig} from './clientConfig';
 import {loadOrCreateUserAppData} from './userApp';
 import {getUserData} from './managers';
 import {NO_TENANTS_ERR} from '../utils/ErrorCodes';
+import Internal from '../utils/Internal';
 
 export function setAppLoading(isLoading) {
     return {
@@ -42,6 +43,7 @@ export function intialPageLoad() {
                 return Promise.all([
                     dispatch(loadTemplates()),
                     dispatch(loadWidgetDefinitions()),
+                    dispatch(loadRoles()),
                     dispatch(getClientConfig())
                 ]);
             })
@@ -70,5 +72,21 @@ export function storeCurrentPageId(pageId) {
 export function toogleSidebar() {
     return {
         type : types.APP_SIDEBAR_TOOGLE
+    }
+}
+
+export function storeRoles(roles) {
+    return {
+        type: types.STORE_ROLES,
+        roles
+    }
+}
+
+export function loadRoles() {
+    return function (dispatch, getState) {
+        var internal = new Internal(getState().manager);
+        return internal.doGet('/auth/roles').then(roles => {
+            dispatch(storeRoles(roles));
+        });
     }
 }

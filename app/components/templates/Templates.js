@@ -14,6 +14,7 @@ export default class Templates extends Component {
     static propTypes = {
         templates: PropTypes.array,
         pages: PropTypes.array,
+        roles: PropTypes.array,
         tenants: PropTypes.object,
         onSelectTemplate: PropTypes.func,
         onRemoveTemplatePage: PropTypes.func,
@@ -72,8 +73,9 @@ export default class Templates extends Component {
                                                               content='Are you sure to remove this template?'
                                                               onConfirm={() => this.props.onDeleteTemplate(item)}/>
                                                 <CreateTemplateModal availableTenants={this.props.tenants} availablePages={this.props.pages}
-                                                             templateName={item.id} pages={item.pages} roles={roles} tenants={filteredTenants}
-                                                             onCreateTemplate={(...args) => this.props.onModifyTemplate(item, ...args)}/>
+                                                                     availableRoles={this.props.roles} templateName={item.id}
+                                                                     pages={item.pages} roles={roles} tenants={filteredTenants}
+                                                                     onCreateTemplate={(...args) => this.props.onModifyTemplate(item, ...args)}/>
                                             </div>
                                             }
                                         </DataTable.Data>
@@ -97,7 +99,7 @@ export default class Templates extends Component {
 
                     <DataTable.Action>
                         <CreateTemplateModal availableTenants={this.props.tenants} availablePages={this.props.pages}
-                                     onCreateTemplate={this.props.onCreateTemplate}/>
+                                             availableRoles={this.props.roles} onCreateTemplate={this.props.onCreateTemplate}/>
                     </DataTable.Action>
 
                 </DataTable>
