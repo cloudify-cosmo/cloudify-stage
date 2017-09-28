@@ -34,7 +34,7 @@ Stage.defineWidget({
             {name:'Area chart', value:Stage.Basic.Graphs.Graph.AREA_CHART_TYPE}],
          default: Stage.Basic.Graphs.Graph.LINE_CHART_TYPE, type: Stage.Basic.GenericField.LIST_TYPE},
         {id: 'timeFilter', name: 'Time range and resolution',  description: 'Time range and time resolution for all defined charts',
-         type: Stage.Basic.GenericField.TIME_FILTER_TYPE, default: Stage.Basic.InputTimeFilter.DEFAULT_VALUE}
+         type: Stage.Basic.GenericField.TIME_FILTER_TYPE, default: Stage.Basic.InputTimeFilter.INFLUX_DEFAULT_VALUE}
     ],
 
     _prepareData: function(data, xDataKey) {

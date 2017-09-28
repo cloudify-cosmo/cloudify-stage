@@ -98,7 +98,7 @@ import InputTimeFilter from './InputTimeFilter';
  * ![GenericField](manual/asset/form/GenericField_11.png)
  * ```
  * <GenericField name="timeFilterTest" type={GenericField.TIME_FILTER_TYPE}
- *               label="TIME_FILTER_TYPE" value={Stage.Basic.InputTimeFilter.DEFAULT_VALUE} />
+ *               label="TIME_FILTER_TYPE" value={Stage.Basic.InputTimeFilter.INFLUX_DEFAULT_VALUE} />
  * ```
  */
 
@@ -300,9 +300,10 @@ export default class GenericField extends Component {
         } else if (this.props.type === GenericField.TIME_FILTER_TYPE) {
 
             field = <InputTimeFilter name={this.props.name}
-                                     defaultValue={InputTimeFilter.DEFAULT_VALUE}
+                                     placeholder={this.props.placeholder}
+                                     defaultValue={InputTimeFilter.INFLUX_DEFAULT_VALUE}
                                      value={this.props.value}
-                                     onApply={(timeFilter)=>this.props.onChange(null, {name: this.props.name, value: timeFilter, genericType: this.props.type})} />;
+                                     onApply={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))} />;
         }
 
         return (

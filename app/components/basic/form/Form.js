@@ -10,7 +10,6 @@ import FormField from './FormField'
 import FormGroup from './FormGroup'
 import FormDivider from './FormDivider'
 import FormFile from './InputFile'
-import FormDateRange from './InputDateRange'
 import FormInputDate from './InputDate'
 import FormInputTime from './InputTime'
 import FormInputTimeFilter from './InputTimeFilter'
@@ -114,11 +113,6 @@ export default class Form extends Component {
      * Dropdown field, see {@link Dropdown}
      */
     static Dropdown = FormDropdown;
-
-    /**
-     * Form date range input, see {@link InputDateRange}
-     */
-    static InputDateRange = FormDateRange;
 
     /**
      * Calendar picker input, see {@link InputDate}
