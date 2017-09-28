@@ -16,8 +16,8 @@ import Popup from '../Popup';
  *   range:'',      // time range label
  *   start:'',      // datetime string representing time range start, eg. '2017-08-06 16:00' or 'now()-15m'
  *   end:'',        // datetime string representing time range end, eg. '2017-08-06 18:00' or 'now()'
- *   resolution:'', // time resolution value, an integer
- *   unit:''        // time resolution unit, eg. 'm' for minutes, 'h' for hours (InfluxDB syntax)
+ *   resolution:'', // time resolution value, an integer (only used when addTimeResolution is set to true)
+ *   unit:''        // time resolution InfluxDB time syntax units, eg. 'm' for minutes, 'h' for hours (only used when addTimeResolution is set to true)
  * }
  * ```
  *
@@ -40,55 +40,89 @@ export default class InputTimeFilter extends React.Component {
         this.state = InputTimeFilter.initialState(props);
     }
 
-    /**
-     * propTypes
-     * @property {string} name name of the field
-     * @property {object} defaultValue timeFilter object ({range:'', start:'', end:'', resolution:'', unit:''}) to be set when Reset button is clicked
-     * @property {object} [value=InputTimeFilter.DEFAULTS] timeFilter object to set input values
-     * @property {function} [onApply=(function () {});] function called on Apply button click, timeFilter object value is sent as argument
-     * @property {function} [onCancel=(function () {});] function called on Cancel button click, timeFilter object value is sent as argument
+    /*
+     *
      */
-    static propTypes = {
-        name: PropTypes.string.isRequired,
-        defaultValue: PropTypes.object.isRequired,
-        value: PropTypes.object,
-        onApply: PropTypes.func,
-        onCancel: PropTypes.func
+    static EMPTY_VALUE = {
+        range: '',
+        start: '',
+        end: '',
+        resolution: 1,
+        unit: 'm'
+    }
+    /*
+     *
+     */
+    static INFLUX_DEFAULT_VALUE = {
+        range: 'Last 15 Minutes',
+        start: 'now()-15m',
+        end: 'now()',
+        resolution: 1,
+        unit: 'm'
     };
-
-    static defaultProps = {
-        value: InputTimeFilter.DEFAULT_VALUE,
-        onApply: ()=>{},
-        onCancel: ()=>{}
-    };
-
-    static TIME_FORMAT = 'HH:mm';
-    static DATE_FORMAT = 'YYYY-MM-DD';
-
-    static RANGES = {
+    /*
+     *
+     */
+    static INFLUX_RANGES = {
         'Last 15 Minutes': {start: 'now()-15m', end: 'now()'},
         'Last 30 Minutes': {start: 'now()-30m', end: 'now()'},
         'Last Hour': {start: 'now()-1h', end: 'now()'},
         'Last 2 Hours': {start: 'now()-2h', end: 'now()'},
         'Last Day': {start: 'now()-1d', end: 'now()'},
         'Last Week': {start: 'now()-1w', end: 'now()'}
-    };
-    static CUSTOM_RANGE = 'Custom Range';
-
-    static DEFAULT_VALUE = {
-        range: 'Last 15 Minutes',
-        start: 'now()-15m',
-        end: 'now()',
-        resolution: '1',
-        unit: 'm'
-    };
-    static EMPTY_VALUE = {
-        range: '',
-        start: '',
-        end: '',
-        resolution: '1',
-        unit: 'm'
     }
+    /*
+     *
+     */
+    static INFLUX_DATE_SYNTAX = 'influx';
+    /*
+     *
+     */
+    static ISO_8601_DATE_SYNTAX = 'iso8601';
+
+    /**
+     * propTypes
+     * @property {string} name name of the field
+     * @property {object} [defaultValue=InputTimeFilter.INFLUX_DEFAULT_VALUE] timeFilter object ({range:'', start:'', end:'', resolution:'', unit:''}) to be set when Reset button is clicked
+     * @property {object} [value=InputTimeFilter.INFLUX_DEFAULT_VALUE] timeFilter object to set input values
+     * @property {object} [ranges=InputTimeFilter.INFLUX_RANGES] ranges object ({[range1] : {start: '', end:''}, [range2]: {start:'', end:''}, ...})
+     * @property {boolean} [addTimeResolution=true] adds time resolution segment
+     * @property {string} [dateSyntax=InputTimeFilter.INFLUX_DATE_SYNTAX] defines validation method for input start/end date (allowed values: InputTimeFilter.INFLUX_DATE_SYNTAX, InputTimeFilter.ISO_8601_DATE_SYNTAX)
+     * @property {function} [onApply=(function (event, data) {});] function called on Apply button click, timeFilter object value is sent as data.value
+     * @property {function} [onCancel=(function (event, data) {});] function called on Cancel button click, timeFilter object value is sent as data.value
+     */
+    static propTypes = {
+        name: PropTypes.string.isRequired,
+        defaultValue: PropTypes.shape({
+            range: PropTypes.string.isRequired,
+            start: PropTypes.string.isRequired,
+            end: PropTypes.string.isRequired,
+            resolution: PropTypes.number,
+            unit: PropTypes.string
+        }),
+        value: PropTypes.shape({
+            range: PropTypes.string.isRequired,
+            start: PropTypes.string.isRequired,
+            end: PropTypes.string.isRequired,
+            resolution: PropTypes.number,
+            unit: PropTypes.string
+        }),
+        ranges: PropTypes.object,
+        addTimeResolution: PropTypes.bool,
+        dateSyntax: PropTypes.oneOf([InputTimeFilter.INFLUX_DATE_SYNTAX, InputTimeFilter.ISO_8601_DATE_SYNTAX]),
+        onApply: PropTypes.func,
+        onCancel: PropTypes.func
+    };
+
+    static defaultProps = {
+        defaultValue: InputTimeFilter.INFLUX_DEFAULT_VALUE,
+        value: InputTimeFilter.INFLUX_DEFAULT_VALUE,
+        ranges: InputTimeFilter.INFLUX_RANGES,
+        addTimeResolution: true,
+        dateSyntax: InputTimeFilter.INFLUX_DATE_SYNTAX,
+        onApply: (event, data)=>{},
+        onCancel: (event, data)=>{}
+    };
 
     static initialState = (props) => ({
         ...props.defaultValue,
@@ -102,10 +136,12 @@ export default class InputTimeFilter extends React.Component {
         endError: false
     });
 
-    static inputFieldHint = <div>Influx-compatible date/time expected<br />Examples:<br /> now() - 15m <br />2017-09-21 10:10</div>;
-
-    static influxDateRegex = /^$|^(now\(\)|([0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}))([\s-+]+[0-9]+[usmhdw])*$/;
-    static influxDurationRegex = /([-+])\s?([0-9]+)([smhdw])*/;
+    static TIME_FORMAT = 'HH:mm';
+    static DATE_FORMAT = 'YYYY-MM-DD';
+    static DATETIME_FORMAT = `${InputTimeFilter.DATE_FORMAT} ${InputTimeFilter.TIME_FORMAT}`;
+    static CUSTOM_RANGE = 'Custom Range';
+    static INFLUX_DATE_REGEX = /^$|^(now\(\)|([0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}))([\s-+]+[0-9]+[usmhdw])*$/;
+    static INFLUX_DURATION_REGEX = /([-+])\s?([0-9]+)([smhdw])*/;
 
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props, nextProps)
@@ -119,7 +155,7 @@ export default class InputTimeFilter extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let dirty = !_.isEqual(_.pick(this.state, Object.keys(InputTimeFilter.DEFAULT_VALUE)), this.props.defaultValue);
+        let dirty = !_.isEqual(_.pick(this.state, Object.keys(InputTimeFilter.INFLUX_DEFAULT_VALUE)), this.props.defaultValue);
         if (prevState.dirty != dirty) {
             this.setState({dirty});
         }
@@ -131,54 +167,56 @@ export default class InputTimeFilter extends React.Component {
 
     _getStartTimeDateState(start) {
         let startTimeDate = {startError: false};
-        let startMoment = moment(start);
-        if (startMoment.isValid()) {
-            _.extend(startTimeDate, {
-                startDate: startMoment.toDate(),
-                startTime: startMoment.format(InputTimeFilter.TIME_FORMAT)
-            });
-        }
-        else if (InputTimeFilter._isValidInfluxDate(this.state.start)) {
-            _.extend(startTimeDate, this._calculateDateWithOffsets(start, 'startDate', 'startTime'));
+        if (this._isValidDate(start)) {
+            if (this._isInfluxDateSyntax()) {
+                _.extend(startTimeDate, this._calculateDateWithOffsets(start, 'startDate', 'startTime'));
+            } else {
+                let startMoment = moment(start || {});
+                _.extend(startTimeDate, {
+                    startDate: startMoment.toDate(),
+                    startTime: startMoment.format(InputTimeFilter.TIME_FORMAT)
+                });
+            }
         }
         return startTimeDate;
     }
 
     _getEndTimeDateState(end) {
         let endTimeDate = {endError: false};
-        let endMoment = moment(end);
-        if (endMoment.isValid()) {
-            _.extend(endTimeDate, {
-                endDate: endMoment.toDate(),
-                endTime: endMoment.format(InputTimeFilter.TIME_FORMAT)
-            });
-        }
-        else if (InputTimeFilter._isValidInfluxDate(end)) {
-            _.extend(endTimeDate, this._calculateDateWithOffsets(end, 'endDate', 'endTime'));
+        if (this._isValidDate(end)) {
+            if (this._isInfluxDateSyntax()) {
+                _.extend(endTimeDate, this._calculateDateWithOffsets(end, 'endDate', 'endTime'));
+            } else {
+                let endMoment = moment(end || {});
+                _.extend(endTimeDate, {
+                    endDate: endMoment.toDate(),
+                    endTime: endMoment.format(InputTimeFilter.TIME_FORMAT)
+                });
+            }
         }
         return endTimeDate;
     }
 
     _calculateDateWithOffsets(dateTime, stateDateField, stateTimeField){
-        let matches = InputTimeFilter.influxDateRegex.exec(dateTime);
+        let matches = InputTimeFilter.INFLUX_DATE_REGEX.exec(dateTime);
         let baseDate = moment(matches[1]).isValid() ? moment(matches[1]) : moment();
 
         matches.splice(0,1);
         _.forEach(matches, (match) => {
-            if (InputTimeFilter.influxDurationRegex.test(match)) {
-                let matchedGroups = InputTimeFilter.influxDurationRegex.exec(match);
+            if (InputTimeFilter.INFLUX_DURATION_REGEX.test(match)) {
+                let matchedGroups = InputTimeFilter.INFLUX_DURATION_REGEX.exec(match);
                 let opSubtraction = _.isEqual(matchedGroups[1], '-');
                 let opValue = matchedGroups[2];
                 let opScale = matchedGroups[3];
                 opSubtraction ? baseDate.subtract(opValue, opScale) : baseDate.add(opValue, opScale);
             }
         });
+
         return {
             [stateDateField]: baseDate.toDate(),
             [stateTimeField]: baseDate.format(InputTimeFilter.TIME_FORMAT)
         };
     }
-
 
     _calculateTimeResolution(startDate, endDate) {
         const EXPECTED_NUMBER_OF_POINTS = 50;
@@ -252,22 +290,29 @@ export default class InputTimeFilter extends React.Component {
         });
     }
 
-    static _isValidInfluxDate(dateTimeString) {
-        return InputTimeFilter.influxDateRegex.test(dateTimeString);
+    _isInfluxDateSyntax() {
+        return _.isEqual(this.props.dateSyntax, InputTimeFilter.INFLUX_DATE_SYNTAX);
+    }
+
+    _isValidDate(dateTimeString) {
+        return this._isInfluxDateSyntax()
+            ? InputTimeFilter.INFLUX_DATE_REGEX.test(dateTimeString)
+            : moment(dateTimeString || {}).isValid()
     }
 
     _getTimeFilterObject() {
         let timeFilter = {
-            range: this.state.range,
-            resolution: this.state.resolution,
-            unit: this.state.unit
+            range: this.state.range
         };
+        if (this.props.addTimeResolution) {
+            _.extend(timeFilter, {resolution: this.state.resolution, unit: this.state.unit});
+        }
         if (_.isEqual(this.state.range, InputTimeFilter.CUSTOM_RANGE)) {
             timeFilter.start = this.state.start;
             timeFilter.end = this.state.end;
         } else {
-            timeFilter.start = _.get(InputTimeFilter.RANGES[this.state.range], 'start', '');
-            timeFilter.end = _.get(InputTimeFilter.RANGES[this.state.range], 'end', '');
+            timeFilter.start = _.get(this.props.ranges[this.state.range], 'start', '');
+            timeFilter.end = _.get(this.props.ranges[this.state.range], 'end', '');
         }
 
         return timeFilter;
@@ -292,11 +337,11 @@ export default class InputTimeFilter extends React.Component {
     }
 
     _handleRangeButtonClick(proxy, field) {
-        let start = InputTimeFilter.RANGES[field.name].start;
-        let end = InputTimeFilter.RANGES[field.name].end;
+        let start = this.props.ranges[field.name].start;
+        let end = this.props.ranges[field.name].end;
         let startTimeDate = this._getStartTimeDateState(start);
         let endTimeDate = this._getEndTimeDateState(end);
-        let timeResolution = this._calculateTimeResolution(startTimeDate.startDate, endTimeDate.endDate);
+        let timeResolution = this.props.addTimeResolution ? this._calculateTimeResolution(startTimeDate.startDate, endTimeDate.endDate) : {};
         this.setState({
             range: field.name,
             start,
@@ -324,60 +369,67 @@ export default class InputTimeFilter extends React.Component {
         this.setState(resetState);
     }
 
-    _handleApplyButtonClick() {
-        let isStartValidInfluxDate = InputTimeFilter._isValidInfluxDate(this.state.start);
-        let isEndValidInfluxDate = InputTimeFilter._isValidInfluxDate(this.state.end);
+    _handleApplyButtonClick(event, data) {
+        let isStartValidDate = this._isValidDate(this.state.start);
+        let isEndValidDate = this._isValidDate(this.state.end);
 
         let newState = {
-            startError: isStartValidInfluxDate ? false : true,
-            endError: isEndValidInfluxDate? false : true,
-            isOpen: !(isStartValidInfluxDate && isEndValidInfluxDate)
+            startError: isStartValidDate ? false : true,
+            endError: isEndValidDate? false : true,
+            isOpen: !(isStartValidDate && isEndValidDate)
         };
 
-        this.setState(newState, () => this.props.onApply(this._getTimeFilterObject()));
+        this.setState(newState, () => this.props.onApply(event, {name: this.props.name, value: this._getTimeFilterObject()}));
     }
 
-    _handleCancelButtonClick() {
+    _handleCancelButtonClick(event, data) {
         let resetState = this._getResetState(false);
-        this.setState({...resetState, isOpen: false}, () => this.props.onCancel(this._getTimeFilterObject()));
+        this.setState({...resetState, isOpen: false}, () => this.props.onCancel(event, {name: this.props.name, value: this._getTimeFilterObject()}));
     }
 
     render () {
         let inputValue = this._isRangeSelected(InputTimeFilter.CUSTOM_RANGE) ? `${this.state.start} - ${this.state.end}` : this.state.range;
+        let inputFieldHint = this._isInfluxDateSyntax()
+            ? <div>Influx-compatible date/time expected<br />Examples:<br /> now() - 15m <br />2017-09-21 10:10</div>
+            : <div>ISO-8601-compatible date/time expected<br />Example:<br />2017-09-21 10:10</div>
 
         return (
             <Popup position='bottom left' hoverable={false} flowing open={this.state.isOpen}>
                 <Popup.Trigger>
-                    <Form.Input value={inputValue} placeholder='Click to set time range and resolution' icon='dropdown' fluid
+                    <Form.Input value={inputValue} placeholder={this.props.placeholder} icon='dropdown' fluid
                                 onChange={()=>{}} onFocus={()=>this.setState({isOpen: true, startError: false, endError: false})} />
                 </Popup.Trigger>
-                <Grid columns={3}>
+                <Grid columns={this.props.ranges ? 3 : 2}>
                     <Grid.Row>
-                        <Grid.Column width={4}>
-                            <Segment padded>
-                                <Label attached='top'>Range:</Label>
-                                <List>
-                                    {
-                                        _.map(InputTimeFilter.RANGES, (obj, name) =>
-                                            <List.Item key={name}>
-                                                <Button active={this._isRangeSelected(name)} key={name} name={name} fluid
-                                                        onClick={this._handleRangeButtonClick.bind(this)}>
-                                                    {name}
-                                                </Button>
-                                            </List.Item>
-                                        )
-                                    }
-                                    <List.Item>
-                                        <Button active={this._isRangeSelected(InputTimeFilter.CUSTOM_RANGE)}
-                                                name={InputTimeFilter.CUSTOM_RANGE} fluid
-                                                onClick={this._handleCustomRangeButtonClick.bind(this)}>
-                                            {InputTimeFilter.CUSTOM_RANGE}
-                                        </Button>
-                                    </List.Item>
-                                </List>
-                            </Segment>
-                        </Grid.Column>
-                        <Grid.Column width={6}>
+                        {
+                            this.props.ranges &&
+                            <Grid.Column width={4}>
+                                <Segment padded>
+                                    <Label attached='top'>Range:</Label>
+                                    <List>
+                                        {
+                                            _.map(this.props.ranges, (obj, name) =>
+                                                <List.Item key={name}>
+                                                    <Button active={this._isRangeSelected(name)} key={name} name={name}
+                                                            fluid
+                                                            onClick={this._handleRangeButtonClick.bind(this)}>
+                                                        {name}
+                                                    </Button>
+                                                </List.Item>
+                                            )
+                                        }
+                                        <List.Item>
+                                            <Button active={this._isRangeSelected(InputTimeFilter.CUSTOM_RANGE)}
+                                                    name={InputTimeFilter.CUSTOM_RANGE} fluid
+                                                    onClick={this._handleCustomRangeButtonClick.bind(this)}>
+                                                {InputTimeFilter.CUSTOM_RANGE}
+                                            </Button>
+                                        </List.Item>
+                                    </List>
+                                </Segment>
+                            </Grid.Column>
+                        }
+                        <Grid.Column width={this.props.ranges ? 6 : 8}>
                             <Segment padded>
                                 <Label attached='top'>From:</Label>
 
@@ -390,7 +442,7 @@ export default class InputTimeFilter extends React.Component {
                                                             error={this.state.startError}
                                                             onChange={this._handleCustomInputChange.bind(this)}/>
                                             </Popup.Trigger>
-                                            {InputTimeFilter.inputFieldHint}
+                                            {inputFieldHint}
                                         </Popup>
                                     </List.Item>
                                     <List.Item>
@@ -405,7 +457,7 @@ export default class InputTimeFilter extends React.Component {
                                 </List>
                             </Segment>
                         </Grid.Column>
-                        <Grid.Column width={6}>
+                        <Grid.Column width={this.props.ranges ? 6 : 8}>
                             <Segment padded>
                                 <Label attached='top'>To:</Label>
 
@@ -418,7 +470,7 @@ export default class InputTimeFilter extends React.Component {
                                                             error={this.state.endError}
                                                             onChange={this._handleCustomInputChange.bind(this)} />
                                             </Popup.Trigger>
-                                            {InputTimeFilter.inputFieldHint}
+                                            {inputFieldHint}
                                         </Popup>
                                     </List.Item>
                                     <List.Item>
@@ -434,32 +486,35 @@ export default class InputTimeFilter extends React.Component {
                             </Segment>
                         </Grid.Column>
                     </Grid.Row>
-                    <Grid.Row>
-                        <Grid.Column width={12} floated='right'>
-                            <Segment padded>
-                                <Label attached='top'>Resolution:</Label>
-                                <Table compact basic='very'>
-                                    <Table.Body>
-                                        <Table.Row>
-                                            <Table.Cell>
-                                                <Form.Input type='number' name="resolution" fluid
-                                                            max={Stage.Common.TimeConsts.MAX_TIME_RESOLUTION_VALUE}
-                                                            min={Stage.Common.TimeConsts.MIN_TIME_RESOLUTION_VALUE}
-                                                            value={this.state.resolution} onChange={this._handleInputChange.bind(this)} />
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                <Dropdown search options={Stage.Common.TimeConsts.TIME_RESOLUTION_UNITS} name="unit" selection
-                                                          fluid value={this.state.unit} onChange={this._handleInputChange.bind(this)} />
-                                            </Table.Cell>
-                                            <Table.Cell collapsing>
-                                                <Button onClick={this._handleOptimizeButtonClick.bind(this)} content='Optimize' icon='refresh'/>
-                                            </Table.Cell>
-                                        </Table.Row>
-                                    </Table.Body>
-                                </Table>
-                            </Segment>
-                        </Grid.Column>
-                    </Grid.Row>
+                    {
+                        this.props.addTimeResolution &&
+                        <Grid.Row>
+                            <Grid.Column width={12} floated='right'>
+                                <Segment padded>
+                                    <Label attached='top'>Resolution:</Label>
+                                    <Table compact basic='very'>
+                                        <Table.Body>
+                                            <Table.Row>
+                                                <Table.Cell>
+                                                    <Form.Input type='number' name="resolution" fluid
+                                                                max={Stage.Common.TimeConsts.MAX_TIME_RESOLUTION_VALUE}
+                                                                min={Stage.Common.TimeConsts.MIN_TIME_RESOLUTION_VALUE}
+                                                                value={this.state.resolution} onChange={this._handleInputChange.bind(this)} />
+                                                </Table.Cell>
+                                                <Table.Cell>
+                                                    <Dropdown search options={Stage.Common.TimeConsts.TIME_RESOLUTION_UNITS} name="unit" selection
+                                                              fluid value={this.state.unit} onChange={this._handleInputChange.bind(this)} />
+                                                </Table.Cell>
+                                                <Table.Cell collapsing>
+                                                    <Button onClick={this._handleOptimizeButtonClick.bind(this)} content='Optimize' icon='refresh'/>
+                                                </Table.Cell>
+                                            </Table.Row>
+                                        </Table.Body>
+                                    </Table>
+                                </Segment>
+                            </Grid.Column>
+                        </Grid.Row>
+                    }
                 </Grid>
                 <div className='rightFloated'>
                     <Button onClick={this._handleResetButtonClick.bind(this)} content="Reset" icon="undo" disabled={!this.state.dirty}/>

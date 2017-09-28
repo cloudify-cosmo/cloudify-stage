@@ -62,8 +62,8 @@ Stage.defineWidget({
         let timeStart = eventFilter.timeStart;
         let timeEnd = eventFilter.timeEnd;
         if (timeStart || timeEnd) {
-            timeStart = timeStart?timeStart.utc().toISOString():"";
-            timeEnd = timeEnd?timeEnd.utc().toISOString():"";
+            timeStart = timeStart?timeStart.utc().toISOString():'';
+            timeEnd = timeEnd?timeEnd.utc().toISOString():'';
             params._range = `@timestamp,${timeStart},${timeEnd}`;
         }
 
