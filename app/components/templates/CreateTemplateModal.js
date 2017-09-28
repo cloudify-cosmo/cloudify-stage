@@ -31,6 +31,7 @@ export default class CreateTemplateModal extends React.Component {
     static propTypes = {
         availableTenants: PropTypes.object,
         availablePages: PropTypes.array,
+        availableRoles: PropTypes.array,
         templateName: PropTypes.string,
         pages: PropTypes.array,
         roles: PropTypes.array,
@@ -43,7 +44,8 @@ export default class CreateTemplateModal extends React.Component {
         pages: [],
         roles: [],
         tenants: [],
-        availablePages: []
+        availablePages: [],
+        availableRoles: []
     };
 
     componentDidUpdate() {
@@ -127,11 +129,6 @@ export default class CreateTemplateModal extends React.Component {
     render() {
         var {Modal, Button, Icon, Form, Segment, ApproveButton, CancelButton, Message, Divider, List} = Stage.Basic;
 
-        let roleOptions = [
-            {text: Consts.ROLE_USER, value: Consts.ROLE_USER},
-            {text: Consts.ROLE_ADMIN, value: Consts.ROLE_ADMIN}
-        ];
-
         let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name}});
 
         let editMode = !_.isEmpty(this.props.templateName);
@@ -156,7 +153,7 @@ export default class CreateTemplateModal extends React.Component {
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.roles}>
-                            <Form.Dropdown placeholder='Roles' multiple selection closeOnChange options={roleOptions} name="roles"
+                            <Form.Dropdown placeholder='Roles' multiple selection closeOnChange options={this.props.availableRoles} name="roles"
                                            value={this.state.roles} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 

@@ -23,6 +23,7 @@ var getTokenStrategy = require('./routes/TokenStrategy');
 var getSamlStrategy = require('./routes/SamlStrategy');
 var samlSetup = require('./samlSetup');
 var ServerSettings = require('./serverSettings');
+var AuthHandler = require('./handler/AuthHandler');
 var Auth = require('./routes/Auth');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
@@ -72,6 +73,9 @@ if(samlConfig.enabled){
 
 passport.use(getTokenStrategy());
 app.use(passport.initialize());
+
+// Cache authorization data
+AuthHandler.initAuthorization();
 
 // Routes
 app.use(contextPath + '/sp',ServerProxy);

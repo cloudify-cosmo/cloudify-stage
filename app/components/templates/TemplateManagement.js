@@ -21,7 +21,8 @@ export default class TemplateManagement extends Component {
         onClear: PropTypes.func.isRequired,
         onClose: PropTypes.func.isRequired,
         templates: PropTypes.array,
-        pages: PropTypes.array
+        pages: PropTypes.array,
+        roles: PropTypes.array
     };
 
     static defaultProps = {
@@ -149,7 +150,7 @@ export default class TemplateManagement extends Component {
 
                     <ErrorMessage error={this.props.error}/>
 
-                    <Templates templates={this.props.templates} pages={this.props.pages}
+                    <Templates templates={this.props.templates} pages={this.props.pages} roles={this.props.roles}
                                tenants={this.props.manager.tenants}
                                onSelectTemplate={this._selectTemplate.bind(this)}
                                onRemoveTemplatePage={this._removeTemplatePage.bind(this)}

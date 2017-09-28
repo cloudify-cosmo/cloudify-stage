@@ -3,10 +3,6 @@
  */
 
 export default class Actions {
-
-    static USER_ROLE = 'user';
-    static ADMIN_ROLE = 'admin';
-
     constructor(toolbox) {
         this.toolbox = toolbox;
     }

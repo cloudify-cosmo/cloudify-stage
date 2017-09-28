@@ -57,7 +57,6 @@ router.post('/saml/callback', passport.authenticate('saml', {session: false}), f
 
 });
 
-
 router.get('/user', passport.authenticate('token', {session: false}), (req, res) => {
     res.send({
         username: req.user.username,
@@ -69,6 +68,10 @@ router.get('/user', passport.authenticate('token', {session: false}), (req, res)
 router.post('/logout', passport.authenticate('token', {session: false}), (req, res) => {
     res.clearCookie('XSRF-TOKEN');
     res.end();
+});
+
+router.get('/roles', passport.authenticate('token', {session: false}), (req, res) => {
+    res.send(AuthHandler.getRoles());
 });
 
 module.exports = router;
