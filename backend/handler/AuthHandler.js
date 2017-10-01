@@ -30,11 +30,9 @@ class AuthHandler {
     }
 
     static getTokenViaSamlResponse(samlResponse) {
-        return ManagerHandler.jsonRequest('POST', '/tokens', {
-                Tenant: 'defualt_tenant'
-            },
-            {'saml-response': samlResponse}
-        );
+        return ManagerHandler.jsonRequest('POST', '/tokens', null, {
+            'saml-response': samlResponse
+        });
     }
 
     static initAuthorization() {
@@ -46,12 +44,15 @@ class AuthHandler {
                 {'name': 'admin', 'description': 'Admin role'},
                 {'name': 'user', 'description': 'User role'},
             ],
-            'permissions': { 'api1': ['role1'] }
+            'permissions': {
+                'widget-admin': ['admin'],
+                'widget-user': ['admin', 'user']
+            }
         };
     }
 
-    static getRoles() {
-        return authorizationCache.roles;
+    static getRBAC() {
+        return authorizationCache;
     }
 
 }

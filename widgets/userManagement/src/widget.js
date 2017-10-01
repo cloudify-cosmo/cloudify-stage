@@ -12,11 +12,10 @@ Stage.defineWidget({
     initialHeight: 16,
     color: "brown",
     fetchUrl: {
-        users: '[manager]/users?_get_data=true[params]',
-        roles: '[backend]/auth/roles'
+        users: '[manager]/users?_get_data=true[params]'
     },
     isReact: true,
-    isAdmin: true,
+    permission: 'widget-admin',
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
     initialConfiguration: [
@@ -46,7 +45,7 @@ Stage.defineWidget({
             total : _.get(data.users, 'metadata.pagination.total', 0)
         });
 
-        var roles = _.map (data.roles, (role) => {
+        var roles = _.map (toolbox.getManager().getRoles(), (role) => {
             return {text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name};
         });
 

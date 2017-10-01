@@ -13,6 +13,7 @@ Stage.defineWidget({
     color: "green",
     fetchUrl: '[manager]/events[params]',
     isReact: true,
+    permission: 'widget-user',
     hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     

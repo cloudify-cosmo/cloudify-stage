@@ -17,8 +17,6 @@ const app = (state = {loading:true}, action) => {
             return {...state, loading: true};
         case types.LOGOUT:
             return {...state, loading: false};
-        case types.STORE_ROLES:
-            return {...state, roles: action.roles};
         case types.APP_SIDEBAR_TOOGLE:
             return Object.assign({},state,{
                 sidebarIsOpen: !state.sidebarIsOpen

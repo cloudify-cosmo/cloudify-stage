@@ -70,8 +70,8 @@ router.post('/logout', passport.authenticate('token', {session: false}), (req, r
     res.end();
 });
 
-router.get('/roles', passport.authenticate('token', {session: false}), (req, res) => {
-    res.send(AuthHandler.getRoles());
+router.get('/RBAC', passport.authenticate('token', {session: false}), (req, res) => {
+    res.send(AuthHandler.getRBAC());
 });
 
 module.exports = router;

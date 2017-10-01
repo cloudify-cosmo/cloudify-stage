@@ -92,6 +92,23 @@ export function logout(err, path) {
     }
 }
 
+export function storeRBAC(RBAC) {
+    return {
+        type: types.STORE_RBAC,
+        roles: RBAC.roles,
+        permissions: RBAC.permissions
+    }
+}
+
+export function getRBACConfig() {
+    return function (dispatch, getState) {
+        return Auth.getRBACConfig(getState().manager)
+            .then(RBAC => {
+                dispatch(storeRBAC(RBAC));
+            });
+    };
+}
+
 export function setStatus(status, maintenance, services) {
     return {
         type: types.SET_MANAGER_STATUS,

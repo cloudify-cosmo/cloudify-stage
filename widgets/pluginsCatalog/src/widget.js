@@ -13,6 +13,7 @@ Stage.defineWidget ({
   initialHeight: 20,
   color: 'teal',
   isReact: true,
+  permission: 'widget-user',
   initialConfiguration: [
     {
       id: 'jsonPath',
