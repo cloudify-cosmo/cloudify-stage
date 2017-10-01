@@ -12,12 +12,7 @@ import Auth from '../utils/auth';
 const mapStateToProps = (state, ownProps) => {
 
     var widgetDefinitions = state.widgetDefinitions.filter((definition) => {
-        var widgetPermission = definition.permission;
-        var authorizedRoles = state.manager.permissions[widgetPermission];
-        // currently only one role per user is supported
-        var userRoles = [state.manager.auth.role];
-
-        return !Auth.isUserAuthorized(authorizedRoles, userRoles);
+        return !Auth.isUserAuthorized(definition.permission, state.manager);
     });
 
     return {

@@ -31,10 +31,6 @@ export default class Manager extends Internal {
         return _.get(this,'_data.roles', null);
     }
 
-    getPermissions() {
-        return _.get(this,'_data.permissions', null);
-    }
-
     _buildActualUrl(url,data) {
         let index = url.indexOf('[manager]');
         if (index >= 0) {

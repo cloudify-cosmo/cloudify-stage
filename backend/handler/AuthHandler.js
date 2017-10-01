@@ -42,13 +42,11 @@ class AuthHandler {
         authorizationCache = {
             'roles': [
                 {'name': 'admin', 'description': 'Admin role'},
-                {'name': 'tenant-admin', 'description': 'Tenant admin role'},
                 {'name': 'user', 'description': 'User role'},
-                {'name': 'viewer', 'description': 'Viewer role'},
             ],
             'permissions': {
-                'widget-admin': ['admin', 'tenant-admin'],
-                'widget-user': ['admin', 'tenant-admin', 'user', 'viewer']
+                'widget-admin': ['admin'],
+                'widget-user': ['admin', 'user']
             }
         };
     }
