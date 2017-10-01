@@ -44,12 +44,7 @@ export default class Widget extends Component {
     }
 
     _isUserAuthorized() {
-        var widgetPermission = this.props.widget.definition.permission;
-        var authorizedRoles = this.props.manager.permissions[widgetPermission];
-        // currently only one role per user is supported
-        var userRoles = [this.props.manager.auth.role];
-
-        return Auth.isUserAuthorized(authorizedRoles, userRoles);
+        return Auth.isUserAuthorized(this.props.widget.definition.permission, this.props.manager);
     }
 
     componentDidUpdate(prevProps, prevState) {
