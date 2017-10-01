@@ -12,6 +12,7 @@ Stage.defineWidget({
     initialHeight: 20,
     color : 'blue',
     isReact: true,
+    permission: 'widget-user',
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],
 
     initialConfiguration: [

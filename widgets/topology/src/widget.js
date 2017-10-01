@@ -18,6 +18,7 @@ Stage.defineWidget({
     initialHeight: 16,
     color: "yellow",
     isReact: true,
+    permission: 'widget-user',
     hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
     
