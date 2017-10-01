@@ -79,6 +79,8 @@ const manager = (state = {}, action) => {
                 cancelExecution: action.execution,
                 cancelAction: action.action
             });
+        case types.STORE_RBAC:
+            return {...state, roles: action.roles, permissions: action.permissions};
         default:
             return state;
     }

@@ -29,6 +29,7 @@ Stage.defineWidget({
         });
     },
     isReact: true,
+    permission: 'widget-user',
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5)
     ],

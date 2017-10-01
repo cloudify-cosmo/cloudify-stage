@@ -27,6 +27,10 @@ export default class Manager extends Internal {
         return _.get(this,'_data.tenants.selected', null);
     }
 
+    getRoles() {
+        return _.get(this,'_data.roles', null);
+    }
+
     _buildActualUrl(url,data) {
         let index = url.indexOf('[manager]');
         if (index >= 0) {

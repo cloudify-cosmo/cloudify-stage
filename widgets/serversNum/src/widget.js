@@ -11,6 +11,7 @@ Stage.defineWidget({
     color : "red",
     showHeader: false,
     isReact: true,
+    permission: 'widget-user',
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     
     initialConfiguration: [

@@ -7,13 +7,12 @@ import React from 'react';
 import { connect } from 'react-redux'
 import {addWidget, installWidget, uninstallWidget, updateWidget, checkIfWidgetIsUsed} from '../actions/widgets';
 import AddWidgetModal from '../components/AddWidgetModal';
-import Consts from '../utils/consts';
+import Auth from '../utils/auth';
 
 const mapStateToProps = (state, ownProps) => {
-    var isUserAdmin = state.manager.auth.role === Consts.ROLE_ADMIN;
 
-    var widgetDefinitions = state.widgetDefinitions.filter((definition)=>{
-        return !definition.isAdmin || isUserAdmin;
+    var widgetDefinitions = state.widgetDefinitions.filter((definition) => {
+        return !Auth.isUserAuthorized(definition.permission, state.manager);
     });
 
     return {
