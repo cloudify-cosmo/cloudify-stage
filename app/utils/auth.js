@@ -6,6 +6,7 @@ import StageUtils from './stageUtils';
 import External from './External';
 import Internal from './Internal';
 import Cookies from 'js-cookie';
+import _ from 'lodash';
 
 export default class Auth {
 
@@ -26,5 +27,14 @@ export default class Auth {
 
     static isLoggedIn(){
         return !!Cookies.get('XSRF-TOKEN');
+    }
+
+    static getRBACConfig(managerData){
+        var internal = new Internal(managerData);
+        return internal.doGet('/auth/RBAC', null, true);
+    }
+
+    static isUserAuthorized(authorizedRoles, userRoles) {
+        return _.intersection(authorizedRoles, userRoles).length <= 0;
     }
 }

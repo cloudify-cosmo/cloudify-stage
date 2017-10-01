@@ -16,6 +16,7 @@ Stage.defineWidget({
     
     initialConfiguration: [],
     isReact: true,
+    permission: 'widget-user',
 
     fetchData: function(widget,toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId');

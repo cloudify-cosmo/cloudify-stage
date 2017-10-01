@@ -13,7 +13,7 @@ Stage.defineWidget({
     color: 'green',
     fetchUrl: '[manager]/tenants?_get_data=true[params]',
     isReact: true,
-    isAdmin: true,
+    permission: 'widget-admin',
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
     initialConfiguration: [

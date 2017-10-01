@@ -12,6 +12,7 @@ Stage.defineWidget({
     showHeader: false,
     showBorder: false,
     isReact: true,
+    permission: 'widget-user',
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render: function(widget,data,error,toolbox) {
