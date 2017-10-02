@@ -14,11 +14,11 @@ export default class Users extends Component {
         isEditMode: PropTypes.bool.isRequired,
         canEditTheUi: PropTypes.bool.isRequired,
         onEditModeChange: PropTypes.func.isRequired,
-        onConfigure: PropTypes.func.isRequired,
+        onConfigure: PropTypes.func,
         onLogout: PropTypes.func.isRequired,
         onMaintenance: PropTypes.func,
-        onReset: PropTypes.func.isRequired,
-        onTemplates: PropTypes.func.isRequired
+        onReset: PropTypes.func,
+        onTemplates: PropTypes.func
     };
 
     componentDidMount() {
@@ -49,6 +49,16 @@ export default class Users extends Component {
                                                  onClick={this.props.onConfigure}/>);
         }
 
+        var commonElements = [];
+        commonElements.push(<Dropdown.Item key='reset'id='resetMenuItem'
+                                           icon='undo' text='Reset' value='reset'
+                                           title='Reset application screens'
+                                           onClick={this.props.onReset} />);
+        commonElements.push(<Dropdown.Divider key='log-out-divider'/>);
+        commonElements.push(<Dropdown.Item key='log-out' id='logoutMenuItem'
+                                           icon='log out' text='Logout' value='logout'
+                                           onClick={this.props.onLogout}/>);
+
         return (
                 <Dropdown item trigger={userMenuTrigger} className='usersMenu' scrolling>
                     {
@@ -56,9 +66,6 @@ export default class Users extends Component {
                         ?
                         <Dropdown.Menu>
                             {adminElements}
-                            <Dropdown.Item icon='undo' text='Reset' value='reset' title='Reset application screens'
-                                           onClick={this.props.onReset} id='resetMenuItem'/>
-
                             {
                                 this.props.canEditTheUi &&
                                 <Dropdown.Item icon='configure' selected={this.props.isEditMode} active={this.props.isEditMode}
@@ -70,15 +77,11 @@ export default class Users extends Component {
                                 <Dropdown.Item icon='list layout' text='Template management' value='templates' title='Template management'
                                                onClick={this.props.onTemplates} id='templatesMenuItem'/>
                             }
-
-                            <Dropdown.Divider />
-                            <Dropdown.Item icon='log out' text='Logout' value='logout' id='logoutMenuItem'
-                                           onClick={this.props.onLogout}/>
+                            {commonElements}
                         </Dropdown.Menu>
                         :
                         <Dropdown.Menu>
-                            <Dropdown.Item icon='log out' text='Logout' value='logout' id='logoutMenuItem'
-                                           onClick={this.props.onLogout}/>
+                            {commonElements}
                         </Dropdown.Menu>
                     }
                 </Dropdown>

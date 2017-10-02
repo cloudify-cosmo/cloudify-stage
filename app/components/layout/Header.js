@@ -36,9 +36,16 @@ export default class Header extends Component {
         return !_.isEqual(this.props.manager, nextProps.manager) || this.state != nextState;
     }
 
+    _isModeMain() {
+        return this.props.mode === Consts.MODE_MAIN;
+    }
+
+    _isModeCustomer() {
+        return this.props.mode === Consts.MODE_CUSTOMER;
+    }
+
     render() {
         let {Icon} = Stage.Basic;
-        let isModeMain = this.props.mode === Consts.MODE_MAIN;
 
         return (
             <div className="ui top fixed menu inverted secondary headerBar">
@@ -51,27 +58,32 @@ export default class Header extends Component {
                 />
                 <div className="logo">
                 </div>
-                {
-                    isModeMain
-                    ?
-                    <div className="right menu">
+
+                <div className="right menu">
+                    {
+                        !this._isModeCustomer() &&
                         <div className='item'>
                             <Manager manager={this.props.manager}/>
                         </div>
-
+                    }
+                    {
+                        this._isModeMain() &&
                         <Tenants manager={this.props.manager}/>
-
+                    }
+                    {
+                        this._isModeCustomer()
+                        ?
+                        <Users manager={this.props.manager}
+                               showAllOptions={false}
+                               onReset={()=> this.setState({showResetConfirm: true})}/>
+                        :
                         <Users manager={this.props.manager}
                                showAllOptions={true}
                                onMaintenance={()=> this.setState({showMaintenanceModal: true})}
                                onConfigure={()=> this.setState({showConfigureModal: true})}
                                onReset={()=> this.setState({showResetConfirm: true})}/>
-                    </div>
-                    :
-                    <div className="right menu">
-                        <Users manager={this.props.manager} showAllOptions={false}/>
-                    </div>
-                }
+                    }
+                </div>
 
                 <MaintenanceMessage manager={this.props.manager}/>
                 <MaintenanceMode show={this.state.showMaintenanceModal}
