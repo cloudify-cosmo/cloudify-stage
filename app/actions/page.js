@@ -134,7 +134,7 @@ export function createPagesFromTemplate() {
         var manager = getState().manager;
 
         var mode = _.get(config, 'mode', Consts.MODE_MAIN);
-        var role = _.get(manager,'auth.role');
+        var role = _.words(_.get(manager, 'auth.role'))[0];
         var tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
         var internal = new Internal(manager);

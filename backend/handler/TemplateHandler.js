@@ -3,14 +3,12 @@
  * Created by pposel on 24/02/2017.
  */
 
-var os = require('os');
 var db = require('../db/Connection');
 var fs = require('fs-extra');
 var pathlib = require('path');
 var _ = require('lodash');
 var config = require('../config').get();
 var ServerSettings = require('../serverSettings');
-var ArchiveHelper = require('./ArchiveHelper');
 var ResourceTypes = require('../db/types/ResourceTypes');
 
 var logger = require('log4js').getLogger('templates');
@@ -166,7 +164,7 @@ module.exports = (function() {
 
         var initialTemplateObj = config.app.initialTemplate;
 
-        console.log('Template inputs: mode=' + mode + ', role=' + role + ', tenant=' + tenant);
+        logger.debug('Template inputs: mode=' + mode + ', role=' + role + ', tenant=' + tenant);
 
         var promise;
         if (mode === ServerSettings.MODE_MAIN) {
@@ -180,7 +178,7 @@ module.exports = (function() {
         }
 
         return promise.then(templateId => {
-            console.log('Custom template: ' + templateId);
+            logger.debug('Custom template: ' + templateId);
 
             if (!templateId) {
                 var initialTemplateModeRole = initialTemplateObj[mode === ServerSettings.MODE_MAIN ? role : mode];
