@@ -74,9 +74,6 @@ if(samlConfig.enabled){
 passport.use(getTokenStrategy());
 app.use(passport.initialize());
 
-// Cache authorization data
-AuthHandler.initAuthorization();
-
 // Routes
 app.use(contextPath + '/sp',ServerProxy);
 app.use(contextPath + '/auth',Auth);
@@ -99,8 +96,13 @@ app.get('*',function (request, response){
     response.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
 });
 
-app.listen(8088, function () {
-    logger.info('Stage runs on port 8088!');
+// Initialize authorization data (fetch from manager)
+AuthHandler.initAuthorization().then(function(){
+
+    // Only after we have all the data in place start the server
+    app.listen(8088, function () {
+        logger.info('Stage runs on port 8088!');
+    });
 });
 
 //Error handling
