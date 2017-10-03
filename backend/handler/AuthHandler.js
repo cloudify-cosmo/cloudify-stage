@@ -46,7 +46,12 @@ class AuthHandler {
             ],
             'permissions': {
                 'widget-admin': ['admin'],
-                'widget-user': ['admin', 'user']
+                'widget-user': ['admin', 'user'],
+                'stage-services-status': ['admin'],
+                'stage-edit-mode': ['admin'],
+                'stage-maintenance-mode': ['admin'],
+                'stage-configure': ['admin'],
+                'stage-template-management': ['admin']
             }
         };
     }

@@ -8,8 +8,13 @@ export default {
     DEFAULT_TENANT: 'default_tenant',
     MODE_MAIN: 'main',
     MODE_CUSTOMER: 'customer',
-    ROLE_ADMIN: 'admin',
-    ROLE_USER: 'user',
+    permissions: {
+        STAGE_SERVICES_STATUS: 'stage-services-status',
+        STAGE_EDIT_MODE: 'stage-edit-mode',
+        STAGE_MAINTENANCE_MODE: 'stage-maintenance-mode',
+        STAGE_CONFIGURE: 'stage-configure',
+        STAGE_TEMPLATE_MANAGEMENT: 'stage-template-management'
+    },
     MANAGER_RUNNING: 'running',
     MAINTENANCE_ACTIVATING: 'activating',
     MAINTENANCE_ACTIVATED: 'activated',
