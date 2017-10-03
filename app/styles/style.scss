@@ -613,6 +613,11 @@ code.hljs {
 
 }
 
+.breakWord {
+  display: block !important;
+  word-wrap: break-word;
+}
+
 /* Popup Menu */
 
 .popupMenu {
