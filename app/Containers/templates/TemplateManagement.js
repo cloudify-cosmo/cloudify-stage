@@ -11,7 +11,7 @@ import { getTemplates, createTemplate, updateTemplate, deleteTemplate, createPag
 const mapStateToProps = (state, ownProps) => {
     var templateManagement = state.templateManagement || {};
 
-    var roles = _.map (state.app.roles, (role) => {
+    var roles = _.map (state.manager.roles, (role) => {
         return {text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name};
     });
 
