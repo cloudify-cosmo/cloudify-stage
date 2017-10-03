@@ -26,6 +26,7 @@ export default class TimeFilter extends React.Component {
 
         return (
             <InputTimeFilter name='timeFilter' value={this._getTimeFilterValue() || InputTimeFilter.EMPTY_VALUE}
+                             defaultValue={InputTimeFilter.EMPTY_VALUE}
                              placeholder='Click to set time range and resolution' onApply={this._onDataChanged.bind(this)} />
         );
     }
