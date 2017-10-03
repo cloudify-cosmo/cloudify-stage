@@ -34,10 +34,10 @@ export default class Auth {
         return internal.doGet('/auth/RBAC', null, true);
     }
 
-    static isUserAuthorized(widgetPermission, managerData) {
-        var authorizedRoles = managerData.permissions[widgetPermission];
+    static isUserAuthorized(permission, managerData) {
+        var authorizedRoles = managerData.permissions[permission];
         // currently only one role per user is supported
         var userRoles = [managerData.auth.role];
-        return _.intersection(authorizedRoles, userRoles).length <= 0;
+        return _.intersection(authorizedRoles, userRoles).length > 0;
     }
 }

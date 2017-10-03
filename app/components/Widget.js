@@ -75,7 +75,7 @@ export default class Widget extends Component {
             );
         }
 
-        if (this.props.widget.definition && this._isUserAuthorized()) {
+        if (this.props.widget.definition && !this._isUserAuthorized()) {
             return (
                 <div className='widgetItem ui segment'>
                     {

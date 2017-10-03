@@ -12,7 +12,7 @@ import Auth from '../utils/auth';
 const mapStateToProps = (state, ownProps) => {
 
     var widgetDefinitions = state.widgetDefinitions.filter((definition) => {
-        return !Auth.isUserAuthorized(definition.permission, state.manager);
+        return Auth.isUserAuthorized(definition.permission, state.manager);
     });
 
     return {

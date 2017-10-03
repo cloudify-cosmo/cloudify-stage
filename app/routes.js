@@ -52,7 +52,7 @@ export default (store)=> {
         callback();
     };
 
-    let hasAdminRole = (nextState, replace, callback)=>{
+    let isTemplateManagementAuthorized = (nextState, replace, callback)=>{
         var managerData = store.getState().manager;
 
         // This is only relevant if the user is logged in
@@ -61,8 +61,8 @@ export default (store)=> {
             replace('login');
         }
 
-        // Only stay here if we have admin role
-        if (managerData.auth.role !== Consts.ROLE_ADMIN) {
+        // Only stay here if user roles match required permissions
+        if (!Auth.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, managerData)){
             console.log('Manager has NOT an admin role, navigating to main page');
             replace('/');
         }
@@ -97,7 +97,7 @@ export default (store)=> {
             <Route component={Layout} onEnter={isLoggedIn}>
                 <Route path='page/(:pageId)' component={Home}/>
                 <Route path='page/(:pageId)/(:pageName)' component={Home}/>
-                <Route path='template_management' component={TemplateManagement} onEnter={hasAdminRole}/>
+                <Route path='template_management' component={TemplateManagement} onEnter={isTemplateManagementAuthorized}/>
                 <Route path='404' component={NotFound}/>
                 <Route path='error' component={ErrorPage}/>
                 <IndexRoute component={Home}/>

@@ -4,10 +4,14 @@
 
 import { connect } from 'react-redux'
 import Manager from '../components/Manager'
+import Auth from '../utils/auth';
+import Consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
+    var showServicesStatus = Auth.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager);
     return {
-        manager: ownProps.manager
+        manager: ownProps.manager,
+        showServicesStatus
     }
 };
 
