@@ -6,9 +6,10 @@ import {Button, Dropdown, Grid, Label, List, Segment, Table} from 'semantic-ui-r
 import {ApproveButton, CancelButton} from '../modal/ModalButtons';
 import Form from './Form';
 import Popup from '../Popup';
+import moment from 'moment';
 
 /**
- * InputTimeFilter is a component showing time range and time resolution selectors
+ * InputTimeFilter is a component showing time range and optionally time resolution selectors
  *
  * Both props: `value` and `defaultValue` are timeFilter objects:
  * ```
@@ -126,10 +127,8 @@ export default class InputTimeFilter extends React.Component {
 
     static initialState = (props) => ({
         ...props.defaultValue,
-        startDate: new Date(),
-        startTime: '00:00',
-        endDate: new Date(),
-        endTime: '00:00',
+        startDate: moment(),
+        endDate: moment(),
         isOpen: false,
         dirty: false,
         startError: false,
@@ -141,7 +140,7 @@ export default class InputTimeFilter extends React.Component {
     static DATETIME_FORMAT = `${InputTimeFilter.DATE_FORMAT} ${InputTimeFilter.TIME_FORMAT}`;
     static CUSTOM_RANGE = 'Custom Range';
     static INFLUX_DATE_REGEX = /^$|^(now\(\)|([0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}))([\s-+]+[0-9]+[usmhdw])*$/;
-    static INFLUX_DURATION_REGEX = /([-+])\s?([0-9]+)([smhdw])*/;
+    static INFLUX_DURATION_REGEX = /([-+])\s?([0-9]+)([smhdw]){1}/g;
 
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props, nextProps)
@@ -165,56 +164,46 @@ export default class InputTimeFilter extends React.Component {
         this.setState({[field.name]: field.value}, onStateUpdate);
     }
 
-    _getStartTimeDateState(start) {
-        let startTimeDate = {startError: false};
+    _getStartDateState(start) {
+        let startDate = {startError: false};
         if (this._isValidDate(start)) {
             if (this._isInfluxDateSyntax()) {
-                _.extend(startTimeDate, this._calculateDateWithOffsets(start, 'startDate', 'startTime'));
+                _.extend(startDate, this._calculateDateWithOffsets(start, 'startDate'));
             } else {
                 let startMoment = moment(start || {});
-                _.extend(startTimeDate, {
-                    startDate: startMoment.toDate(),
-                    startTime: startMoment.format(InputTimeFilter.TIME_FORMAT)
-                });
+                _.extend(startDate, {startDate: startMoment});
             }
         }
-        return startTimeDate;
+        return startDate;
     }
 
-    _getEndTimeDateState(end) {
-        let endTimeDate = {endError: false};
+    _getEndDateState(end) {
+        let endDate = {endError: false};
         if (this._isValidDate(end)) {
             if (this._isInfluxDateSyntax()) {
-                _.extend(endTimeDate, this._calculateDateWithOffsets(end, 'endDate', 'endTime'));
+                _.extend(endDate, this._calculateDateWithOffsets(end, 'endDate'));
             } else {
                 let endMoment = moment(end || {});
-                _.extend(endTimeDate, {
-                    endDate: endMoment.toDate(),
-                    endTime: endMoment.format(InputTimeFilter.TIME_FORMAT)
-                });
+                _.extend(endDate, {endDate: endMoment});
             }
         }
-        return endTimeDate;
+        return endDate;
     }
 
-    _calculateDateWithOffsets(dateTime, stateDateField, stateTimeField){
-        let matches = InputTimeFilter.INFLUX_DATE_REGEX.exec(dateTime);
-        let baseDate = moment(matches[1]).isValid() ? moment(matches[1]) : moment();
+    _calculateDateWithOffsets(dateTime, stateDateField){
+        let groups = InputTimeFilter.INFLUX_DATE_REGEX.exec(dateTime);
+        let baseDate = moment(groups[1], InputTimeFilter.DATETIME_FORMAT).isValid() ? moment(groups[1]) : moment();
 
-        matches.splice(0,1);
-        _.forEach(matches, (match) => {
-            if (InputTimeFilter.INFLUX_DURATION_REGEX.test(match)) {
-                let matchedGroups = InputTimeFilter.INFLUX_DURATION_REGEX.exec(match);
+        _.forEach(groups[0].match(InputTimeFilter.INFLUX_DURATION_REGEX), (match) => {
+                let matchedGroups = new RegExp(InputTimeFilter.INFLUX_DURATION_REGEX).exec(match);
                 let opSubtraction = _.isEqual(matchedGroups[1], '-');
                 let opValue = matchedGroups[2];
                 let opScale = matchedGroups[3];
                 opSubtraction ? baseDate.subtract(opValue, opScale) : baseDate.add(opValue, opScale);
-            }
         });
 
         return {
-            [stateDateField]: baseDate.toDate(),
-            [stateTimeField]: baseDate.format(InputTimeFilter.TIME_FORMAT)
+            [stateDateField]: baseDate
         };
     }
 
@@ -251,40 +240,25 @@ export default class InputTimeFilter extends React.Component {
         return newResolution;
     }
 
-    _getStartState(startDate, startTime) {
-        return {startError: false, start: `${moment(startDate).format(InputTimeFilter.DATE_FORMAT)} ${startTime}`};
+    _getStartState(startDate) {
+        return {startError: false, start: moment(startDate).format(InputTimeFilter.DATETIME_FORMAT)};
     }
 
-    _getEndState(endDate, endTime) {
-        return {endError: false, end: `${moment(endDate).format(InputTimeFilter.DATE_FORMAT)} ${endTime}`};
-    }
-
-    _getDateWithTime(date, time) {
-        let result = new Date(date);
-
-        let [hours, minutes] = _.split(time, ':');
-        result.setHours(hours, minutes);
-
-        return result;
+    _getEndState(endDate) {
+        return {endError: false, end: moment(endDate).format(InputTimeFilter.DATETIME_FORMAT)};
     }
 
     _handleCustomInputChange(proxy, field) {
         this._handleInputChange(proxy, field, () => {
             let newState = {range: InputTimeFilter.CUSTOM_RANGE};
             if (_.isEqual(field.name, 'startDate')) {
-                _.extend(newState, this._getStartState(field.value, this.state.startTime));
-            } else if (_.isEqual(field.name, 'startTime')) {
-                let startDate = this._getDateWithTime(this.state.startDate, field.value);
-                _.extend(newState, {startDate}, this._getStartState(startDate, field.value));
-            } else if (_.isEqual(field.name, 'endDate')) {
-                _.extend(newState, this._getEndState(field.value, this.state.endTime));
-            } else if (_.isEqual(field.name, 'endTime')) {
-                let endDate = this._getDateWithTime(this.state.endDate, field.value);
-                _.extend(newState, {endDate}, this._getEndState(endDate, field.value));
-            } else if (_.isEqual(field.name, 'start')) {
-                _.extend(newState, this._getStartTimeDateState(field.value));
+                _.extend(newState, this._getStartState(field.value));
+            }  else if (_.isEqual(field.name, 'endDate')) {
+                _.extend(newState, this._getEndState(field.value));
+            }  else if (_.isEqual(field.name, 'start')) {
+                _.extend(newState, this._getStartDateState(field.value));
             } else if (_.isEqual(field.name, 'end')) {
-                _.extend(newState, this._getEndTimeDateState(field.value));
+                _.extend(newState, this._getEndDateState(field.value));
             }
             this.setState(newState);
         });
@@ -320,15 +294,12 @@ export default class InputTimeFilter extends React.Component {
 
     _getResetState(toDefaults) {
         let value = (toDefaults ? this.props.defaultValue : this.props.value);
-        let date = new Date();
-        let time = moment(date).format(InputTimeFilter.TIME_FORMAT);
+        let date = moment();
 
         return {
             ...value,
             startDate: date,
-            startTime: time,
             endDate: date,
-            endTime: time
         };
     }
 
@@ -339,23 +310,23 @@ export default class InputTimeFilter extends React.Component {
     _handleRangeButtonClick(proxy, field) {
         let start = this.props.ranges[field.name].start;
         let end = this.props.ranges[field.name].end;
-        let startTimeDate = this._getStartTimeDateState(start);
-        let endTimeDate = this._getEndTimeDateState(end);
-        let timeResolution = this.props.addTimeResolution ? this._calculateTimeResolution(startTimeDate.startDate, endTimeDate.endDate) : {};
+        let startDate = this._getStartDateState(start);
+        let endDate = this._getEndDateState(end);
+        let timeResolution = this.props.addTimeResolution ? this._calculateTimeResolution(startDate.startDate, endDate.endDate) : {};
         this.setState({
             range: field.name,
             start,
             end,
-            ...startTimeDate,
-            ...endTimeDate,
+            ...startDate,
+            ...endDate,
             ...timeResolution
         });
     }
 
     _handleCustomRangeButtonClick(proxy, field) {
         let newState = {range: field.name};
-        _.extend(newState, this._getStartState(this.state.startDate, this.state.startTime));
-        _.extend(newState, this._getEndState(this.state.endDate, this.state.endTime));
+        _.extend(newState, this._getStartState(this.state.startDate));
+        _.extend(newState, this._getEndState(this.state.endDate));
         this.setState(newState);
     }
 
@@ -388,7 +359,9 @@ export default class InputTimeFilter extends React.Component {
     }
 
     render () {
-        let inputValue = this._isRangeSelected(InputTimeFilter.CUSTOM_RANGE) ? `${this.state.start} - ${this.state.end}` : this.state.range;
+        let from = this.state.start ? `from [${this.state.start}] ` : '';
+        let until = this.state.end ? ` until [${this.state.end}]` : '';
+        let inputValue = this._isRangeSelected(InputTimeFilter.CUSTOM_RANGE) ? `${from}${until}` : this.state.range;
         let inputFieldHint = this._isInfluxDateSyntax()
             ? <div>Influx-compatible date/time expected<br />Examples:<br /> now() - 15m <br />2017-09-21 10:10</div>
             : <div>ISO-8601-compatible date/time expected<br />Example:<br />2017-09-21 10:10</div>
@@ -399,8 +372,8 @@ export default class InputTimeFilter extends React.Component {
                     <Form.Input value={inputValue} placeholder={this.props.placeholder} icon='dropdown' fluid
                                 onChange={()=>{}} onFocus={()=>this.setState({isOpen: true, startError: false, endError: false})} />
                 </Popup.Trigger>
-                <Grid columns={this.props.ranges ? 3 : 2}>
-                    <Grid.Row>
+                <Grid style={{maxWidth: '1200px'}}>
+                    <Grid.Row columns={this.props.ranges ? 3 : 2}>
                         {
                             this.props.ranges &&
                             <Grid.Column width={4}>
@@ -446,13 +419,11 @@ export default class InputTimeFilter extends React.Component {
                                         </Popup>
                                     </List.Item>
                                     <List.Item>
-                                        <Form.InputDate name='startDate' inline={true} maxDate={new Date()}
-                                                        endDate={this.state.endDate} value={this.state.startDate}
-                                                        onChange={this._handleCustomInputChange.bind(this)} />
-                                    </List.Item>
-                                    <List.Item>
-                                        <Form.InputTime name='startTime' value={this.state.startTime}
-                                                        onChange={this._handleCustomInputChange.bind(this)} />
+                                        <Form.InputDate name='startDate' value={this.state.startDate}
+                                                        onChange={this._handleCustomInputChange.bind(this)}
+                                                        startDate={this.state.startDate}
+                                                        endDate={this.state.endDate}
+                                                        maxDate={moment()} />
                                     </List.Item>
                                 </List>
                             </Segment>
@@ -474,13 +445,11 @@ export default class InputTimeFilter extends React.Component {
                                         </Popup>
                                     </List.Item>
                                     <List.Item>
-                                        <Form.InputDate name='endDate' inline={true} maxDate={new Date()}
-                                                        startDate={this.state.startDate} value={this.state.endDate}
-                                                        onChange={this._handleCustomInputChange.bind(this)} />
-                                    </List.Item>
-                                    <List.Item>
-                                        <Form.InputTime name='endTime' value={this.state.endTime}
-                                                        onChange={this._handleCustomInputChange.bind(this)} />
+                                        <Form.InputDate name='endDate' value={this.state.endDate}
+                                                        onChange={this._handleCustomInputChange.bind(this)}
+                                                        startDate={this.state.startDate}
+                                                        endDate={this.state.endDate}
+                                                        maxDate={moment()} />
                                     </List.Item>
                                 </List>
                             </Segment>

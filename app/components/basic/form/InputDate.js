@@ -3,9 +3,12 @@
  */
 
 import React, { Component, PropTypes } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import '../../styles/InputDate.css';
 
 /**
- * InputDate is a component showing calendar picker using [Semantic-UI-Calendar library](https://github.com/mdehoog/Semantic-UI-Calendar)
+ * InputDate is a component showing calendar picker using [react-datepicker library](https://github.com/Hacker0x01/react-datepicker)
  *
  * ## Access
  * `Stage.Basic.Form.InputDate`
@@ -14,9 +17,11 @@ import React, { Component, PropTypes } from 'react';
  * ![InputDate](manual/asset/form/InputDate_0.png)
  *
  * ```
- * <Form.InputDate name='startDate' inline={true} maxDate={new Date()}
- *                 endDate={this.state.endDate} value={this.state.startDate}
- *                 onChange={this._handleCustomInputChange.bind(this)} />
+ * <Form.InputDate name='endDate' value={this.state.endDate}
+ *                 onChange={this._handleCustomInputChange.bind(this)}
+ *                 startDate={this.state.startDate}
+ *                 endDate={this.state.endDate}
+ *                 maxDate={moment()} />
  * ```
  *
  */
@@ -24,21 +29,17 @@ export default class InputDate extends Component {
 
     constructor(props, context) {
         super(props, context);
-
-        this.calendarElement = this._getCalendarSelector(props.name);
-
-        this.state = InputDate.initialState;
     }
 
     /**
      * propTypes
      * @property {string} name name of the field
-     * @property {object} [value='00:00'] variable for input value control (acceptable format: Date())
-     * @property {function} [onChange=(function () {});] function called on calendar date change
-     * @property {object} [minDate=null] JS Date object with min allowed date on the picker
-     * @property {object} [maxDate=null] JS Date object with max allowed date on the picker
-     * @property {object} [startDate=null] JS Date object for start range date (used when two InputDate components are used to display date range)
-     * @property {object} [endDate=null] JS Date object for end range date (used when two InputDate components are used to display date range)
+     * @property {object} [value=null] MomentJS object with date to be selected on the picker
+     * @property {function} [onChange=(function () {});] function (selectedDateMoment, {name, value}) called on calendar date change
+     * @property {object} [minDate=null] MomentJS object with min allowed date on the picker
+     * @property {object} [maxDate=null] MomentJS object with max allowed date on the picker
+     * @property {object} [startDate=null] MomentJS object for start range date (used when two InputDate components are used to display date range)
+     * @property {object} [endDate=null] MomentJS object for end range date (used when two InputDate components are used to display date range)
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
@@ -59,68 +60,27 @@ export default class InputDate extends Component {
         endDate: null
     };
 
-    static initialState = {
-        value: null
-    };
-
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(nextProps, this.props)
             || !_.isEqual(nextState, this.state);
     }
 
-    componentDidMount() {
-        this._initializeCalendar();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.startDate && !_.isEqual(this.props.startDate, nextProps.startDate)) {
-            this._callCalendarFunction('set startDate', nextProps.startDate);
-        }
-        if (nextProps.endDate && !_.isEqual(this.props.endDate, nextProps.endDate)) {
-            this._callCalendarFunction('set endDate', nextProps.endDate);
-        }
-        if (!_.isEqual(this.props.value, nextProps.value) && !_.isEqual(nextProps.value, this.state.value)) {
-            this._callCalendarFunction('set date', nextProps.value, false, false);
-        }
-    }
-
-    _callCalendarFunction(behaviorName, arg1, arg2, arg3) {
-        $(this.calendarElement).calendar(behaviorName, arg1, arg2, arg3);
-    }
-
-    _getCalendarSelector(id) {
-        return `#${id}`;
-    }
-
-    _initializeCalendar() {
-        let _this = this;
-        $(this.calendarElement).calendar({
-            type: 'date',
-            inline: _this.props.inline,
-            minDate: _this.props.minDate,
-            maxDate: _this.props.maxDate,
-            onChange: function (date, text, mode) {
-                _this.setState({value: date}, () =>
-                    _this.props.onChange(null, {
-                        name: _this.props.name,
-                        value: date
-                    })
-                );
-            }
-        });
-
-        this._callCalendarFunction('set date', this.props.value, false, false);
-        if (this.props.startDate) {
-            this._callCalendarFunction('set startDate', this.props.startDate);
-        }
-        if (this.props.endDate) {
-            this._callCalendarFunction('set endDate', this.props.endDate);
-        }
+    _handleSelectedDateChange(date) {
+        return this.props.onChange(date, {name: this.props.name, value: date});
     }
 
     render() {
         return (
-            <div className="ui calendar" id={this.props.name} />
+            <DatePicker
+                selected={this.props.value}
+                onChange={this._handleSelectedDateChange.bind(this)}
+                startDate={this.props.startDate}
+                endDate={this.props.endDate}
+                maxDate={this.props.maxDate}
+                showTimeSelect
+                timeIntervals={60}
+                inline
+                calendarClassName="input-time-filter"/>
         );
     }
 }
