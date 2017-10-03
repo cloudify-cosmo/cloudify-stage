@@ -4,6 +4,9 @@
 'use strict';
 var config = require('../config').get();
 var ManagerHandler = require('./ManagerHandler');
+var logger = require('log4js').getLogger('AuthHandler');
+var fs = require('fs');
+var _ = require('lodash');
 
 var authorizationCache = {};
 
@@ -36,24 +39,30 @@ class AuthHandler {
     }
 
     static initAuthorization() {
-        //TODO: Please use API to fetch authorisation data once it is available.
-        //There is ticket for that: STAGE-503 Use API to fetch authorisation data
-
-        authorizationCache = {
-            'roles': [
-                {'name': 'admin', 'description': 'Admin role'},
-                {'name': 'user', 'description': 'User role'},
-            ],
-            'permissions': {
-                'widget-admin': ['admin'],
-                'widget-user': ['admin', 'user'],
-                'stage-services-status': ['admin'],
-                'stage-edit-mode': ['admin'],
-                'stage-maintenance-mode': ['admin'],
-                'stage-configure': ['admin'],
-                'stage-template-management': ['admin']
+        return new Promise(function(resolve,reject){
+            // Read rest-security file to get system-admin user and pass
+            var restSecurity = {};
+            try {
+                var restSecurityFile = fs.readFileSync(config.manager.restSecurityFile);
+                restSecurity = JSON.parse(restSecurityFile);
+            } catch (e) {
+                logger.error('Could not setup authorization, error loading rest-security file. Please check your manager.json configuration, make sure "restSecurityFile" is set properly', e);
+                process.exit(1);
             }
-        };
+
+            // Read the authorization info
+            var authorization = 'Basic ' + new Buffer(`${restSecurity.admin_username}:${restSecurity.admin_password}`).toString('base64');
+            ManagerHandler.jsonRequest('GET', '/config', {
+                'Authorization': authorization
+            }).then(authConfig => {
+                authorizationCache = authConfig.authorization;
+                logger.debug('Authorization config loaded successfully: ',authorizationCache);
+                resolve();
+            }).catch(err => {
+                logger.error('Failed to fetch auth config. Error: ',err);
+                process.exit(1);
+            })
+        });
     }
 
     static getRBAC() {
