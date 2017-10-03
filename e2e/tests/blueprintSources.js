@@ -2,9 +2,6 @@
  * Created by pposel on 05/07/2017.
  */
 
-/*
-TODO: Fix blueprintSources widget first, then uncomment these tests.
-
 module.exports = {
     before(client) {
         client.login()
@@ -39,4 +36,3 @@ module.exports = {
         client.end();
     }
 };
-*/
