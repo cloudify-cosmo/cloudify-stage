@@ -17,6 +17,8 @@ export default class TemplateManagement extends Component {
         onTemplateSelect: PropTypes.func.isRequired,
         onPageCreate: PropTypes.func.isRequired,
         onPageDelete: PropTypes.func.isRequired,
+        onPageEdit: PropTypes.func.isRequired,
+        onPagePreview: PropTypes.func.isRequired,
         onPageSelect: PropTypes.func.isRequired,
         onClear: PropTypes.func.isRequired,
         onClose: PropTypes.func.isRequired,
@@ -102,36 +104,20 @@ export default class TemplateManagement extends Component {
         this.props.onTemplateUpdate(template);
     }
 
-    _createPage(pageName) {
-        var pageId = _.snakeCase(pageName.trim());
-
-        var suffix = 1;
-        _.each(this.props.pages, page => {
-            if (page.id.startsWith(pageId)) {
-                var index = parseInt(page.id.substring(pageId.length)) || suffix;
-                suffix = Math.max(index + 1, suffix + 1);
-            }
-        });
-
-        if (suffix > 1) {
-            pageId = pageId + suffix;
-        }
-
-        var page = {
-            id: pageId,
-            name: pageName,
-            widgets: []
-        };
-
-        return this.props.onPageCreate(page);
-    }
-
     _deletePage(page) {
         this.props.onPageDelete(page.id);
     }
 
     _canDeletePage(page) {
         return _.isEmpty(page.templates) ? null : 'Page is used by the templates and cannot be deleted';
+    }
+
+    _editPage(page) {
+        this.props.onPageEdit(page.id, page.name);
+    }
+
+    _previewPage(page) {
+        this.props.onPagePreview(page.id, page.name);
     }
 
     render () {
@@ -163,8 +149,10 @@ export default class TemplateManagement extends Component {
 
                     <Pages pages={this.props.pages}
                            onSelectPage={this._selectPage.bind(this)}
-                           onCreatePage={this._createPage.bind(this)}
+                           onCreatePage={this.props.onPageCreate}
                            onDeletePage={this._deletePage.bind(this)}
+                           onEditPage={this._editPage.bind(this)}
+                           onPreviewPage={this._previewPage.bind(this)}
                            onCanDeletePage={this._canDeletePage.bind(this)}/>
 
                 </Segment>

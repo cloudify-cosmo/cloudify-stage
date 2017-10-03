@@ -2,11 +2,6 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-/**
- * Created by kinneretzin on 29/08/2016.
- */
-
-
 import React, { Component, PropTypes } from 'react';
 import InlineEdit from 'react-edit-inline';
 
@@ -27,7 +22,8 @@ export default class Widget extends Component {
         onWidgetRemoved: PropTypes.func.isRequired,
         onWidgetMaximize: PropTypes.func.isRequired,
         onWidgetConfigUpdate: PropTypes.func.isRequired,
-        fetchWidgetData: PropTypes.func.isRequired
+        fetchWidgetData: PropTypes.func.isRequired,
+        isPageManagement: PropTypes.bool
     };
 
     _widgetConfigUpdate(config) {
@@ -117,13 +113,13 @@ export default class Widget extends Component {
                     </h5>
                 }
                 {
-                    this.props.isEditMode ?
+                    this.props.isEditMode || this.props.isPageManagement ?
                         <div className='widgetEditButtons'>
-                            <EditWidget pageId={this.props.pageId} widget={this.props.widget}/>
+                            {!this.props.isPageManagement && <EditWidget pageId={this.props.pageId} widget={this.props.widget}/>}
                             <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                         </div>
                         :
-                        this.props.widget.definition.showHeader &&
+                        this.props.widget.definition.showHeader && !this.props.isPageManagement &&
                         <div className={`widgetViewButtons ${this.props.widget.maximized?'alwaysOnTop':''}`}>
                             {
                                 this.props.widget.maximized ?

@@ -49,6 +49,12 @@ router.post('/pages', function (req, res, next) {
         .catch(next);
 });
 
+router.put('/pages', function (req, res, next) {
+    TemplateHandler.updatePage(req.user.username, req.body)
+        .then(() => res.send({status:'ok'}))
+        .catch(next);
+});
+
 router.delete('/pages/:pageId', function (req, res, next) {
     TemplateHandler.deletePage(req.params.pageId)
         .then(() => res.send({status:'ok'}))

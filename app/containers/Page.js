@@ -86,11 +86,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onWidgetsGridDataChange: (pageId,widgetId,gridData)=>{
             dispatch(changeWidgetGridData(pageId,widgetId,gridData));
         },
-        onEditModeChange: (isEditMode) => {
-            if (isEditMode) {
-                dispatch(minimizeWidgets());
-            }
-            dispatch(setEditMode(isEditMode));
+        onEditModeExit: () => {
+            dispatch(setEditMode(false));
         },
     }
 };

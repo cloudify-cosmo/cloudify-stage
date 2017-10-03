@@ -6,6 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Widget from '../components/Widget';
 import {renameWidget,drillDownToPage,removeWidget,editWidget,maximizeWidget} from '../actions/widgets';
+import {removePageWidget} from '../actions/templateManagement';
 import {setValue} from '../actions/context';
 import {fetchWidgetData} from '../actions/WidgetData';
 
@@ -14,7 +15,8 @@ const mapStateToProps = (state, ownProps) => {
         context: state.context,
         templates: state.templates.items || {},
         manager: state.manager || {},
-        isEditMode: state.config.isEditMode,
+        isEditMode: ownProps.isEditMode,
+        isPageManagement: ownProps.isPageManagement,
         widgetData: _.find(state.widgetData,{id:ownProps.widget.id}) || {}
     }
 };
@@ -28,7 +30,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(setValue(key,value));
         },
         onWidgetRemoved: (pageId,widgetId) => {
-            dispatch(removeWidget(pageId,widgetId));
+            if (ownProps.isPageManagement) {
+                dispatch(removePageWidget(widgetId));
+            } else {
+                dispatch(removeWidget(pageId, widgetId));
+            }
         },
         onWidgetMaximize: (pageId,widgetId,maximized) => {
             dispatch(maximizeWidget(pageId,widgetId,maximized));

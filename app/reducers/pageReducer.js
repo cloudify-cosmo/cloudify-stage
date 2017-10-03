@@ -4,7 +4,6 @@
 
 
 import * as types from '../actions/types';
-import {v4} from 'node-uuid';
 import widgets from './widgetsReducer';
 
 const page = (state = {}, action) => {

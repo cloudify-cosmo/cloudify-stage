@@ -3,6 +3,7 @@
  */
 
 import * as types from './types';
+import { push } from 'react-router-redux';
 import {addTemplate, editTemplate, removeTemplate, addPage, removePage} from '../actions/templates';
 import Internal from '../utils/Internal';
 
@@ -109,8 +110,43 @@ export function deleteTemplate(templateId) {
     }
 }
 
-export function createPage(page) {
+export function selectTemplate(templateId) {
+    return {
+        type: types.TEMPLATE_MANAGEMENT_SELECT,
+        templateId
+    }
+}
+
+function createPageId(name, templates) {
+    var ids = _.keysIn(templates);
+
+    //Add suffix to make URL unique if same page name already exists
+    var newPageId = _.snakeCase(name.trim());
+
+    var suffix = 1;
+    _.each(ids,(id)=>{
+        if (id.startsWith(newPageId)) {
+            var index = parseInt(id.substring(newPageId.length)) || suffix;
+            suffix = Math.max(index + 1, suffix + 1);
+        }
+    });
+
+    if (suffix > 1) {
+        newPageId = newPageId + suffix;
+    }
+
+    return newPageId;
+}
+
+export function createPage(pageName) {
     return function (dispatch, getState) {
+        let pageId = createPageId(pageName, getState().templates);
+        var page = {
+            id: pageId,
+            name: pageName,
+            widgets: []
+        };
+
         var internal = new Internal(getState().manager);
         return internal.doPost('/templates/pages', {}, page)
             .then(() => dispatch(addPage(page.id, page.name, page.widgets)))
@@ -130,16 +166,113 @@ export function deletePage(pageId) {
     }
 }
 
-export function selectTemplate(templateId) {
+export function addPageWidget(pageId,name,widgetDefinition,width,height,x,y,configuration) {
     return {
-        type: types.TEMPLATE_MANAGEMENT_SEL_TEMPLATE,
-        templateId
+        type: types.PAGE_MANAGEMENT_ADD_WIDGET,
+        pageId,
+        name,
+        widgetDefinition,
+        width,
+        height,
+        x,
+        y,
+        configuration
+    };
+}
+
+export function changePageWidgetGridData(widgetId,gridData) {
+    return {
+        type: types.PAGE_MANAGEMENT_CHANGE_WIDGET,
+        widgetId,
+        gridData
+    }
+}
+
+export function setPageShow(pageId, pageName, isEditMode) {
+    return {
+        type: types.PAGE_MANAGEMENT_SHOW,
+        pageId,
+        pageName,
+        isEditMode
+    }
+}
+
+export function changePageName(pageId, pageName) {
+    return {
+        type: types.PAGE_MANAGEMENT_CHANGE_NAME,
+        pageId,
+        pageName
+    }
+}
+
+export function updatePageName(pageName) {
+    return function (dispatch, getState) {
+        let pageId = createPageId(pageName, getState().templates);
+        dispatch(changePageName(pageId, pageName));
+    }
+}
+
+export function showPage(pageId, pageName, isEditMode) {
+    return function (dispatch, getState) {
+        dispatch(setPageShow(pageId, pageName, isEditMode));
+
+        var templates = getState().templates;
+        var widgetDefinitions = getState().widgetDefinitions;
+        var page = templates[pageId];
+
+        _.each(page.widgets, (widget) => {
+            var widgetDefinition = _.find(widgetDefinitions, {id: widget.definition});
+            dispatch(addPageWidget(pageId, widget.name, widgetDefinition, widget.width, widget.height, widget.x, widget.y, widget.configuration));
+        });
+
+        dispatch(push('page_management'));
+    }
+}
+
+export function removePageWidget(widgetId) {
+    return {
+        type: types.PAGE_MANAGEMENT_REMOVE_WIDGET,
+        widgetId
+    }
+}
+
+export function savePage(page) {
+    return function (dispatch, getState) {
+        var widgets = page.widgets.map(w => {
+            return {
+                name: w.name,
+                definition: w.definition.id,
+                width: w.width,
+                height: w.height,
+                x: w.x,
+                y: w.y
+            };
+        });
+
+        var pageData = {
+            id: page.id,
+            oldId: page.oldId,
+            name: page.name,
+            widgets
+        };
+
+        var internal = new Internal(getState().manager);
+        return internal.doPut('/templates/pages', {}, pageData)
+            .then(() => {
+                dispatch(removePage(page.id));
+                if (page.oldId && page.oldId !== page.id) {
+                    dispatch(removePage(page.oldId));
+                }
+            })
+            .then(() => dispatch(addPage(page.id, page.name, pageData.widgets)))
+            .then(() => dispatch(fetchTemplates()))
+            .catch(err => dispatch(errorTemplateManagement(err.message)));
     }
 }
 
 export function selectPage(pageId) {
     return {
-        type: types.TEMPLATE_MANAGEMENT_SEL_PAGE,
+        type: types.PAGE_MANAGEMENT_SELECT,
         pageId
     }
 }

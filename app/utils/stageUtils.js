@@ -71,4 +71,21 @@ export default class StageUtils {
         return Const.CONTEXT_PATH + (_.startsWith(path, '/') ? '' : '/') + path;
     }
 
+    static buildConfig(widgetDefinition) {
+        var configs = {};
+
+        _.each(widgetDefinition.initialConfiguration,(config)=>{
+            if (!config.id) {
+                console.log('Cannot process config for widget :"'+widgetDefinition.name+'" , because it missing an Id ',config);
+                return;
+            }
+
+            var value = config.default && !config.value ? config.default : (_.isUndefined(config.value) ? null : config.value );
+
+            configs[config.id] = Stage.Basic.GenericField.formatValue(config.type, value);
+        });
+
+        return configs;
+    };
+
 }
