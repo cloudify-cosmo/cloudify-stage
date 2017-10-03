@@ -9,7 +9,7 @@ exports.command = function(widgetId) {
         if (!result.value) {
             this.log('adding', widgetId, 'widget');
 
-            page.section.page
+            page.section.editModeSidebar
                 .clickElement('@addWidgetButton');
 
             this.pause(1000); // Wait for modal to open

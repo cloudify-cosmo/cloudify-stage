@@ -14,7 +14,7 @@ module.exports = {
 
         var page = client.page.page();
 
-        page.section.page
+        page.section.editModeSidebar
             .click('@addWidgetButton');
 
         client.pause(1000);
@@ -113,7 +113,7 @@ module.exports = {
     'Widget already installed': function (client) {
         var page = client.page.page();
 
-        page.section.page
+        page.section.editModeSidebar
             .click('@addWidgetButton');
 
         client.pause(1000);
