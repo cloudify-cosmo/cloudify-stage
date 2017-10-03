@@ -34,6 +34,22 @@ import Portal from '../../../node_modules/semantic-ui-react/dist/commonjs/addons
  */
 export default class Dropdown extends DropdownSemanticUiReact {
 
+    componentWillMount() {
+        super.componentWillMount();
+        window.addEventListener('scroll', this.hideOnScroll)
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        window.removeEventListener('scroll', this.hideOnScroll);
+    }
+
+    hideOnScroll = (e) => {
+        if (this.state.open) {
+            this.close(e);
+        }
+    }
+
     computePopupStyle() {
         var coords = this.ref.getBoundingClientRect();
 
