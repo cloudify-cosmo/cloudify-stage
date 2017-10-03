@@ -222,7 +222,8 @@ module.exports = {
                                 .parent.section.usersTable
                                     .editTenants(userName)
                                     .parent.section.editTenantsModal
-                                        .addTenant(tenant));
+                                        .addTenant(tenant),
+                            (context) => {});
             }
 
         }

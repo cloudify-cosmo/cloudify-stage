@@ -8,6 +8,12 @@ module.exports = {
     },
 
     sections: {
+        header: {
+            selector: '.headerBar',
+            elements: {
+                sidebarButton: 'i.sidebar-button'
+            }
+        },
         managerData: {
             selector: '.managerMenu',
             elements: {
@@ -41,7 +47,6 @@ module.exports = {
         sidebar: {
             selector : '.sidebarContainer',
             elements: {
-                addPageButton: '.addPageContainer button',
                 lastPage: '.pages .item:last-child',
                 lastPageRemoveButton : '.pages .item:last-child .pageRemoveButton'
             },
@@ -49,10 +54,16 @@ module.exports = {
                 lastPageLabel: 'Page_0'
             }
         },
+        editModeSidebar: {
+            selector : '.editModeSidebar',
+            elements: {
+                addWidgetButton: '.addWidgetBtn',
+                addPageButton: '.addPageBtn'
+            },
+        },
         page: {
             selector: '.page',
             elements: {
-                addWidgetButton: '.addWidgetBtn',
                 firstWidget: '.widget:first-child',
                 firstWidgetName: '.widget:first-child h5.header span',
                 firstWidgetRemoveIcon: '.widget:first-child .widgetEditButtons i.remove.link.icon.small',
@@ -118,6 +129,12 @@ module.exports = {
             }
         }
     },
+
+    commands: [{
+        openSidebarMenu: function() {
+
+        }
+    }],
 
     elements: {
         tenantsDropdownText : 'div.tenantsMenu',

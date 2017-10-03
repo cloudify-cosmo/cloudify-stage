@@ -30,7 +30,7 @@ module.exports = {
             .setValue('@passwordField', Config.pass + 'a')
             .clickElement('@submitButton')
             .waitForElementVisible('@errorMessage')
-            .assert.containsText('@errorMessage', 'User unauthorized');
+            .assert.containsText('@errorMessage', 'Invalid credentials');
 
         client.end();
     }

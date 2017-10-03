@@ -33,11 +33,11 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
                     .waitForElementVisible('@okButton')
                     .setValue('@blueprintName', blueprintName)
                     .setValue('@blueprintUrl', [blueprintUrl, api.Keys.TAB])
-                    .waitForElementPresent(blueprintYamlFileOptionElement)
+                    .waitForElementPresent(blueprintYamlFileOptionElement, 20000)
                     .selectOptionInDropdown(blueprintYamlFileDropdownSelector, blueprintYamlFile)
                     .clickElement('@okButton');
 
-                blueprints.waitForElementNotPresent('@uploadModal', 10000);
+                blueprints.waitForElementNotPresent('@uploadModal');
 
                 this.page.filter()
                     .waitForBlueprintPresent(blueprintName);

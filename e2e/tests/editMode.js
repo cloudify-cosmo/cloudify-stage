@@ -9,11 +9,11 @@ module.exports = {
         client.login()
             .moveToEditMode();
 
-        page.section.sidebar
-            .waitForElementVisible('@addPageButton');
+        page.section.editModeSidebar
+            .waitForElementVisible('@addPageButton')
+            .waitForElementVisible('@addWidgetButton');
 
         page.section.page
-            .waitForElementVisible('@addWidgetButton')
             .waitForElementVisible('@firstWidget')
             .moveToElement('@firstWidget',30,30)
             .waitForElementVisible('@firstWidgetRemoveIcon')
@@ -29,6 +29,7 @@ module.exports = {
         client.login()
             .moveToEditMode()
             .addPage()
+            .ensureSidebarMenuIsOpen()
             .page.page().section.sidebar
             .waitForElementVisible('@lastPage')
             .assert.containsText('@lastPage', 'Page_0')
