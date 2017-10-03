@@ -13,7 +13,9 @@ export default class Pages extends Component {
         onSelectPage: PropTypes.func,
         onCreatePage: PropTypes.func,
         onDeletePage: PropTypes.func,
-        onCanDeletePage: PropTypes.func
+        onCanDeletePage: PropTypes.func,
+        onEditPage: PropTypes.func,
+        onPreviewPage: PropTypes.func
     }
 
     static defaultProps = {
@@ -47,13 +49,19 @@ export default class Pages extends Component {
                                         <DataTable.Data>{item.createdAt && Stage.Utils.formatTimestamp(item.createdAt)}</DataTable.Data>
                                         <DataTable.Data>{item.creator}</DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
-                                            {item.custom &&
-                                            <div>
-                                                <PopupConfirm trigger={<Icon name="remove" link onClick={e => e.stopPropagation()}/>}
-                                                              content='Are you sure to remove this page?'
-                                                              onConfirm={() => this.props.onDeletePage(item)}
-                                                              onCanConfirm={() => this.props.onCanDeletePage(item)}/>
-                                            </div>
+                                            {item.custom ?
+                                                <div>
+                                                    <PopupConfirm trigger={<Icon name="remove" link
+                                                                                 onClick={e => e.stopPropagation()}/>}
+                                                                  content='Are you sure to remove this page?'
+                                                                  onConfirm={() => this.props.onDeletePage(item)}
+                                                                  onCanConfirm={() => this.props.onCanDeletePage(item)}/>
+                                                    <Icon name="edit" link className='updatePageIcon' onClick={e => {e.stopPropagation();this.props.onEditPage(item)}}/>
+                                                </div>
+                                                :
+                                                <div>
+                                                    <Icon name="search" link className='updatePageIcon' onClick={e => {e.stopPropagation();this.props.onPreviewPage(item)}}/>
+                                                </div>
                                             }
                                         </DataTable.Data>
                                     </DataTable.Row>

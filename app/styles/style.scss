@@ -662,6 +662,10 @@ code.hljs {
   float: right;
 }
 
+.leftFloated {
+  float: left;
+}
+
 .verticalCenter {
   position: relative;
   top: 50%;
@@ -807,13 +811,15 @@ a.underline {
 .ui.sidebar.editModeSidebar {
   box-shadow: none !important;
   background-color: transparent !important;
-  max-width: 70% !important;
-  margin: 0 15% !important;
+  max-width: 500px !important;
+  margin: 0 calc(50% - 250px) !important;
   display: block;
-}
 
-.ui.sidebar.editModeSidebar .content {
-  margin: 10px;
+  .content {
+    margin-top: 10px;
+    display: inline-block;
+    width: 100%;
+  }
 }
 
 .emptyPage {

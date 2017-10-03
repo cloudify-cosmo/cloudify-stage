@@ -105,15 +105,15 @@ module.exports = (function() {
                 resolve();
             }
         })
-            .then(() => fs.writeJson(path, template.pages, {spaces: '  '}))
-            .then(() => db.Resources.findOne({ where: {resourceId:template.id, type:ResourceTypes.TEMPLATE} }))
-            .then(entity => {
-                if(entity) {
-                    return entity.update({resourceId:template.id, data: template.data});
-                } else {
-                    return db.Resources.create({resourceId:template.id, type:ResourceTypes.TEMPLATE, creator: username, data: template.data});
-                }
-            });
+        .then(() => fs.writeJson(path, template.pages, {spaces: '  '}))
+        .then(() => db.Resources.findOne({ where: {resourceId:template.id, type:ResourceTypes.TEMPLATE} }))
+        .then(entity => {
+            if(entity) {
+                return entity.update({resourceId:template.id, data: template.data});
+            } else {
+                return db.Resources.create({resourceId:template.id, type:ResourceTypes.TEMPLATE, creator: username, data: template.data});
+            }
+        });
     }
 
     function deleteTemplate(templateId) {
@@ -143,6 +143,38 @@ module.exports = (function() {
 
         return fs.writeJson(path, content, {spaces: '  '})
             .then(() => db.Resources.create({resourceId:page.id, type:ResourceTypes.PAGE, creator: username}));
+    }
+
+    function updatePage(username, page) {
+        var path = pathlib.resolve(pagesFolder, page.id + '.json');
+
+        var content = {
+            'name': page.name,
+            'widgets': page.widgets
+        }
+
+        return new Promise((resolve, reject) => {
+            if (page.oldId && page.id !== page.oldId) {
+                if (fs.existsSync(path)) {
+                    reject('Page name "' + page.id + '" already exists');
+                } else {
+                    deletePage(page.oldId)
+                        .then(() => resolve())
+                        .catch(error => reject(error));
+                }
+            } else {
+                resolve();
+            }
+        })
+        .then(() => fs.writeJson(path, content, {spaces: '  '}))
+        .then(() => db.Resources.findOne({ where: {resourceId:page.id, type:ResourceTypes.PAGE} }))
+        .then(entity => {
+            if(entity) {
+                return Promise.resolve();
+            } else {
+                return db.Resources.create({resourceId:page.id, type:ResourceTypes.PAGE, creator: username});
+            }
+        });
     }
 
     function deletePage(pageId) {
@@ -208,6 +240,7 @@ module.exports = (function() {
         deleteTemplate,
         selectTemplate,
         createPage,
+        updatePage,
         deletePage
     }
 })();

@@ -9,7 +9,8 @@ import AddPageButton from '../containers/AddPageButton';
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './WidgetsList';
 import Breadcrumbs from './Breadcrumbs';
-import {EditableLabel, Message, Sidebar} from './basic';
+import EditModeBubble from './EditModeBubble';
+import {EditableLabel} from './basic';
 
 export default class Page extends Component {
     static propTypes = {
@@ -20,7 +21,7 @@ export default class Page extends Component {
         onWidgetsGridDataChange: PropTypes.func.isRequired,
         onPageSelected: PropTypes.func.isRequired,
         onPageRemoved: PropTypes.func.isRequired,
-        onEditModeChange: PropTypes.func.isRequired,
+        onEditModeExit: PropTypes.func.isRequired,
         isEditMode: PropTypes.bool.isRequired
         };
 
@@ -55,19 +56,8 @@ export default class Page extends Component {
                              isEditMode={this.props.isEditMode || false}
                              />
 
-                {/* Modal is here so it will exist one time in the page. we dont need it for each edit button*/}
+                <EditModeBubble isVisible={this.props.isEditMode} onDismiss={this.props.onEditModeExit} page={this.props.page}/>
 
-                <Sidebar as={Message} animation='overlay' direction='bottom' visible={this.props.isEditMode} className='editModeSidebar'>
-                    <Message color='yellow' onDismiss={() => this.props.onEditModeChange(false)}>
-                        <Message.Header className='alignCenter'>
-                            Edit mode
-                        </Message.Header>
-                        <Message.Content className='alignCenter'>
-                            <AddWidget className='compactBlock' pageId={this.props.page.id} />
-                            <AddPageButton />
-                        </Message.Content>
-                    </Message>
-                </Sidebar>
             </div>
         );
 

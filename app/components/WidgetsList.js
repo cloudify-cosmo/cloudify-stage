@@ -15,7 +15,8 @@ export default class WidgetsList extends Component {
         pageId: PropTypes.string.isRequired,
         widgets: PropTypes.array.isRequired,
         onWidgetsGridDataChange: PropTypes.func.isRequired,
-        isEditMode: PropTypes.bool.isRequired
+        isEditMode: PropTypes.bool.isRequired,
+        isPageManagement: PropTypes.bool
     };
 
     _updateWidget (widgetId,data) {
@@ -37,7 +38,7 @@ export default class WidgetsList extends Component {
                             </Header>
                         :
                             <Header size='large'>
-                                This page is empty.
+                                This page is empty
                             </Header>
                     }
                 </Container>
@@ -55,7 +56,8 @@ export default class WidgetsList extends Component {
                                     width={widget.width}
                                     className={`widget ${widgetDefId}Widget`}
                                     maximized={widget.maximized}>
-                                    <Widget widget={widget} pageId={this.props.pageId}></Widget>
+                                    <Widget widget={widget} pageId={this.props.pageId} isEditMode={this.props.isEditMode}
+                                            isPageManagement={this.props.isPageManagement}/>
                                 </GridItem>
                                 )
                         },this)

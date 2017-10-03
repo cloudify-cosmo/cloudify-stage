@@ -6,7 +6,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { selectHomePage } from '../../actions/page';
 import TemplateManagement from '../../components/templates/TemplateManagement';
-import { getTemplates, createTemplate, updateTemplate, deleteTemplate, createPage, deletePage, selectTemplate, selectPage, clear} from '../../actions/templateManagement';
+import { getTemplates, createTemplate, updateTemplate, deleteTemplate, createPage, deletePage,
+         showPage, selectTemplate, selectPage, clear} from '../../actions/templateManagement';
 
 const mapStateToProps = (state, ownProps) => {
     var templateManagement = state.templateManagement || {};
@@ -34,6 +35,8 @@ const mapDispatchToProps = (dispatch, getState, ownProps) => {
         onTemplateSelect: templateId => dispatch(selectTemplate(templateId)),
         onPageCreate: page => dispatch(createPage(page)),
         onPageDelete: pageId => dispatch(deletePage(pageId)),
+        onPagePreview: (pageId, pageName) => dispatch(showPage(pageId, pageName, false)),
+        onPageEdit: (pageId, pageName) => dispatch(showPage(pageId, pageName, true)),
         onPageSelect: pageId => dispatch(selectPage(pageId)),
         onClear: () => dispatch(clear()),
         onClose: () => dispatch(selectHomePage())

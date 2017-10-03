@@ -8,6 +8,7 @@ import { Route, IndexRoute, Redirect } from 'react-router';
 import Layout from './containers/layout/Layout';
 import Home from './containers/Home';
 import TemplateManagement from './Containers/templates/TemplateManagement';
+import PageManagement from './Containers/templates/PageManagement';
 import NotFound from './components/NotFound';
 import Login from './containers/Login';
 import MaintenanceMode from './containers/maintenance/MaintenanceModePageMessage';
@@ -70,6 +71,18 @@ export default (store)=> {
         callback();
     };
 
+    let pageManagementEnter = (nextState, replace, callback)=>{
+        isTemplateManagementAuthorized(nextState, replace, () => {
+            var templateManagement = store.getState().templateManagement;
+
+            if (!templateManagement.page) {
+                replace('template_management');
+            }
+
+            callback();
+        });
+    };
+
     let redirectToPortal = () => {
         window.location = store.getState().config.app.saml.portalUrl;
     };
@@ -98,6 +111,7 @@ export default (store)=> {
                 <Route path='page/(:pageId)' component={Home}/>
                 <Route path='page/(:pageId)/(:pageName)' component={Home}/>
                 <Route path='template_management' component={TemplateManagement} onEnter={isTemplateManagementAuthorized}/>
+                <Route path='page_management' component={PageManagement} onEnter={pageManagementEnter}/>
                 <Route path='404' component={NotFound}/>
                 <Route path='error' component={ErrorPage}/>
                 <IndexRoute component={Home}/>
