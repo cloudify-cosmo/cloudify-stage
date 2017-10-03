@@ -3,15 +3,20 @@
  */
 
 var express = require('express');
-var influx = require('influx');
+var influx = require('influx-old');
+var influxNew = require('influx');
 var config = require('../config').get();
 var _ = require('lodash');
 var passport = require('passport');
+var bodyParser = require('body-parser');
 
 var router = express.Router();
 var logger = require('log4js').getLogger('MonitoringRouter');
 
 router.use(passport.authenticate('token', {session: false}));
+router.use(bodyParser.json());
+
+const defaultTimeRange = 'time > now() - 15m AND time < now() group by time(1m)';
 
 function getClient() {
     var options = {
@@ -25,6 +30,20 @@ function getClient() {
 
     logger.debug('Connecting to influx using ', options);
     return influx(options);
+}
+
+function getClientNew() {
+    var options = {
+        host: config.app.influx.ip,
+        port: config.app.influx.port,
+        username: config.app.influx.user,
+        password: config.app.influx.password,
+        database: config.app.influx.database,
+        timeout: config.app.influx.timeout
+    };
+
+    logger.debug('Connecting to influx using ', options);
+    return new influxNew.InfluxDB(options);
 }
 
 function _isValidQuery(string) {
@@ -41,9 +60,19 @@ function _createQuery(query) {
     const qSelect = _sanitizeQuery(query.qSelect);
     const qFrom = _sanitizeQuery(query.qFrom);
     const qWhere = _sanitizeQuery(query.qWhere);
-    const defaultTimeRange = 'time > now() - 15m AND time < now() group by time(1m)';
 
     return ''.concat('SELECT ', qSelect, ' FROM ', qFrom, ' WHERE ', qWhere?qWhere:defaultTimeRange);
+}
+
+function _createShowTagValuesQuery(query) {
+    const qFrom = _sanitizeQuery(query.qFrom);
+    const qWithKey = _sanitizeQuery(query.qWithKey);
+    var q = ''.concat('SHOW TAG values FROM ', qFrom, ' WITH KEY',qWithKey);
+    if (query.qWhere) {
+        const qWhere = _sanitizeQuery(query.qWhere);
+        q = q.concat(' WHERE ', qWhere);
+    }
+    return q;
 }
 
 /**
@@ -147,6 +176,73 @@ router.get('/query',function (req, res, next) {
             }
         } );
 
+});
+
+
+router.get('/new/showTagValues',function (req, res, next) {
+
+    const query = _createShowTagValuesQuery(req.query);
+    logger.debug('Running query:', query);
+
+    if (!_isValidQuery(query)){
+        logger.error('Error: not a valid SHOW TAG VALUES query');
+        res.status(403).send('Error: not a valid SHOW TAG VALUES query');
+        return;
+    }
+
+    getClientNew()
+        .query(query)
+        .then(function (results) {
+            logger.debug('Influx got result ' + results);
+            res.send(results);
+
+        })
+        .catch(function (err) {
+            logger.error('Error connecting to influxDB', err);
+            res.status(500).send(err.message)
+        });
+});
+
+router.post('/new/query',function (req, res, next) {
+
+    var queries = [];
+    var isValid = true;
+    logger.debug('body is: ',req.body);
+    _.each(req.body,function(queryObj,i){
+        var query = _createQuery(queryObj);
+        logger.debug('Got query['+i+']:', query);
+
+        if (!_isValidQuery(query)){
+            logger.error('Error: not a valid SELECT query');
+            res.status(403).send('Error: not a valid SELECT query');
+            isValid = false;
+            return;
+        }
+
+        queries.push(query);
+    });
+
+    if (!isValid) return;
+
+    if (_.isEmpty(queries)){
+        logger.warn('Got Empty queries list ');
+        res.send([]);
+        return;
+    }
+
+    var queryToRun = _.join(queries,';');
+
+    getClientNew()
+        .query(queryToRun)
+        .then(function (results) {
+            logger.debug('Influx got result ' + results);
+            res.send(results);
+
+        })
+        .catch(function (err) {
+            logger.error('Error connecting to influxDB', err);
+            res.status(500).send(err.message)
+        });
 });
 
 module.exports = router;
