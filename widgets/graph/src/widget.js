@@ -78,7 +78,11 @@ Stage.defineWidget({
     },
 
     _getChartsMetricsList: function(charts) {
-        return _.map(_.filter(charts, (graph) => !_.isEmpty(graph.metric)), (graph) => graph.metric);
+        return _.chain(charts)
+                .filter((graph) => !_.isEmpty(graph.metric))
+                .map((graph) => graph.metric)
+                .uniq()
+                .value();
     },
 
     _getChartsConfiguration: function(charts, query, data) {
@@ -103,6 +107,8 @@ Stage.defineWidget({
                     });
                 }
             })
+
+            chartsConfig = _.uniqBy(chartsConfig, 'name');
         }
 
         return chartsConfig;
