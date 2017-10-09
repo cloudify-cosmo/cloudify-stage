@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 2017-08-02.
  */
 
-exports.command = function(userName, password, role = 'user', tenant = 'default_tenant') {
+exports.command = function(userName, password, role = 'user - Regular user', tenant = 'default_tenant') {
     var users = this.page.userManagement();
 
     this.log('adding', userName, 'user')

@@ -1,4 +1,8 @@
 module.exports = (function(settings) {
+    var merge = require('lodash').merge;
+    var me = require('../conf/me.json')
+    settings = merge(settings, me.e2e);
+
     console.log(`Running nightwatch on ${process.platform} platform.`);
     if (process.platform === 'win32') {
         settings.selenium.cli_args['webdriver.chrome.driver']  = './e2e/bin/chromedriver.exe';
