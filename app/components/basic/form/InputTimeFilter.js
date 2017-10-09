@@ -155,8 +155,16 @@ export default class InputTimeFilter extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         let dirty = !_.isEqual(_.pick(this.state, Object.keys(InputTimeFilter.INFLUX_DEFAULT_VALUE)), this.props.defaultValue);
+        let value = this.props.value;
+        let newState = {};
         if (prevState.dirty != dirty) {
-            this.setState({dirty});
+            newState.dirty = dirty;
+        }
+        if (prevProps.value != value) {
+            _.extend(newState, {...value}, this._getStartDateState(value.start), this._getEndDateState(value.end));
+        }
+        if (!_.isEmpty(newState)) {
+            this.setState(newState);
         }
     }
 

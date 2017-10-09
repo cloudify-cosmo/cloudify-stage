@@ -45,7 +45,10 @@ Stage.defineWidget({
                 items: data.deployments.items
             },
             eventTypes:{
-                items: _.uniqBy(data.types.items, 'event_type')
+                items: _.chain(data.types.items)
+                        .uniqBy('event_type')
+                        .filter((eventType) => !_.isEmpty(eventType))
+                        .value()
             }
         });
 

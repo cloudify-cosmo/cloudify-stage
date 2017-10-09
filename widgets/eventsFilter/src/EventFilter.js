@@ -31,9 +31,8 @@ export default class EventFilter extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget, nextProps.widget)
-            || !_.isEqual(this.state, nextState)
-            || !_.isEqual(this.props.data, nextProps.data);
+        return !_.isEqual(this.state.fields, nextState.fields)
+            || !_.isEqual(this.props, nextProps);
     }
 
     componentDidMount() {
@@ -44,22 +43,19 @@ export default class EventFilter extends React.Component {
         return _.truncate(data.text, {'length': 30});
     }
 
-    _updateFieldState(fieldName, fieldValue) {
-        let fields = this.state.fields;
-        fields[fieldName] = fieldValue;
-        this.setState({fields});
-    }
-
     _handleInputChange(proxy, field) {
         this.dirty[field.name] = !_.isEmpty(field.value);
 
+        let fields = Object.assign({}, this.state.fields);
+        fields[field.name] = field.value;
         if (field.name === 'timeRange') {
-            this._updateFieldState('timeStart', _.isEmpty(field.value.start) ? '' : moment(field.value.start));
-            this._updateFieldState('timeEnd', _.isEmpty(field.value.end) ? '' : moment(field.value.end));
+            fields['timeStart'] = _.isEmpty(field.value.start) ? '' : moment(field.value.start);
+            fields['timeEnd'] = _.isEmpty(field.value.end) ? '' : moment(field.value.end);
         }
-        this._updateFieldState(field.name, field.value);
 
-        this.props.toolbox.getContext().setValue('eventFilter', this.state.fields);
+        this.setState({fields}, () => {
+            this.props.toolbox.getContext().setValue('eventFilter', this.state.fields)
+        });
     }
 
     _isDirty() {
@@ -75,11 +71,12 @@ export default class EventFilter extends React.Component {
         this.dirty = {};
 
         let fields = Object.assign({}, EventFilter.initialState.fields);
-        this.setState({fields});
-        this.props.toolbox.getContext().setValue('eventFilter', fields);
+        this.setState({fields}, () => {
+            this.props.toolbox.getContext().setValue('eventFilter', fields);
 
-        this.props.toolbox.getEventBus().trigger('events:refresh');
-        this.props.toolbox.getEventBus().trigger('logs:refresh');
+            this.props.toolbox.getEventBus().trigger('events:refresh');
+            this.props.toolbox.getEventBus().trigger('logs:refresh');
+        });
     }
 
     _isTypeSet(type) {
