@@ -1,7 +1,16 @@
 module.exports = (function(settings) {
-    var merge = require('lodash').merge;
-    var me = require('../conf/me.json')
-    settings = merge(settings, me.e2e);
+    var _ = require('lodash');
+    try {
+        var me = require('../conf/me.json');
+        console.log('me.json found. Updating nightwatch settings.');
+        _.merge(settings, me.e2e);
+    } catch(err) {
+        if (err.code !== 'MODULE_NOT_FOUND') {
+            throw err;
+        } else {
+            console.log('me.json not found. Using nightwatch settings.');
+        }
+    }
 
     console.log(`Running nightwatch on ${process.platform} platform.`);
     if (process.platform === 'win32') {
