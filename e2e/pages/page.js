@@ -58,7 +58,7 @@ module.exports = {
             selector : '.editModeSidebar',
             elements: {
                 addWidgetButton: '.addWidgetBtn',
-                addPageButton: '.addPageBtn'
+                addPageButton: 'button:nth-child(2)'
             },
         },
         page: {
@@ -111,7 +111,7 @@ module.exports = {
             },
             props: {
                 emptyFieldsError: 'Please select widget file or url',
-                invalidURIError: 'Invalid URI "test"',
+                invalidURIError: 'Unable to determine filename from url test',
                 bothFieldsError: 'Either widget file or url must be selected, not both',
                 incorrectFilesError: 'The following files are required for widget registration: widget.js, widget.png',
                 widgetAlreadyInstalledError: 'Widget testWidget is already installed'

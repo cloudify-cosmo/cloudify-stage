@@ -31,6 +31,10 @@
             "desiredCapabilities": {
                 "browserName": "chrome",
                 "marionette": true
+            },
+            "globals" : {
+                "usePathResolutionForResources": false,
+                "resourcesPath": "/home/ubuntu/stage/e2e/resources/"
             }
         },
 
@@ -38,6 +42,10 @@
             "launch_url" : "http://localhost:4000",
             "screenshots" : {
                 "enabled" : false
+            },
+            "globals" : {
+                "usePathResolutionForResources": true,
+                "resourcesPath": "e2e/resources/"
             }
         }
     }
