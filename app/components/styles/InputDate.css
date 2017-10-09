@@ -6,6 +6,7 @@
     border: 0 none #aeaeae;
     border-radius: 0.3rem;
     display: flex;
+    min-width: 300px;
 }
 
 .react-datepicker__month-container {
@@ -66,4 +67,19 @@
 
 .react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {
     right: 110px;
+}
+
+/*Handle smaller viewports*/
+@media only screen and (max-width: 1400px) {
+    .ui.flowing.popup {
+        left: 0 !important;
+    }
+}
+
+.fixed-width {
+    width: 1090px !important;
+}
+
+.top-padded-10 {
+    margin-top: 10px;
 }

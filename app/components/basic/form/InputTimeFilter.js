@@ -375,12 +375,12 @@ export default class InputTimeFilter extends React.Component {
             : <div>ISO-8601-compatible date/time expected<br />Example:<br />2017-09-21 10:10</div>
 
         return (
-            <Popup position='bottom left' hoverable={false} flowing open={this.state.isOpen}>
+            <Popup  basic={true} hoverable={false} flowing open={this.state.isOpen}>
                 <Popup.Trigger>
                     <Form.Input value={inputValue} placeholder={this.props.placeholder} icon='dropdown' fluid
                                 onChange={()=>{}} onFocus={()=>this.setState({isOpen: true, startError: false, endError: false})} />
                 </Popup.Trigger>
-                <Grid style={{maxWidth: '1200px'}}>
+                <Grid className="fixed-width">
                     <Grid.Row columns={this.props.ranges ? 3 : 2}>
                         {
                             this.props.ranges &&
@@ -493,7 +493,7 @@ export default class InputTimeFilter extends React.Component {
                         </Grid.Row>
                     }
                 </Grid>
-                <div className='rightFloated'>
+                <div className='rightFloated top-padded-10'>
                     <Button onClick={this._handleResetButtonClick.bind(this)} content="Reset" icon="undo" disabled={!this.state.dirty}/>
                     <CancelButton onClick={this._handleCancelButtonClick.bind(this)} className='cancel' />
                     <ApproveButton onClick={this._handleApplyButtonClick.bind(this)} content='Apply' positive />
