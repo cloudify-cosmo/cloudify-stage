@@ -86,6 +86,7 @@ module.exports = (function() {
         }
 
         return fs.writeJson(path, template.pages, {spaces: '  '})
+            .then(() => db.Resources.destroy({where: {resourceId: template.id, type:ResourceTypes.TEMPLATE}}))
             .then(() => db.Resources.create({resourceId:template.id, type:ResourceTypes.TEMPLATE, creator: username, data: template.data}));
     }
 
@@ -142,6 +143,7 @@ module.exports = (function() {
         }
 
         return fs.writeJson(path, content, {spaces: '  '})
+            .then(() => db.Resources.destroy({ where:{resourceId: page.id, type:ResourceTypes.PAGE}}))
             .then(() => db.Resources.create({resourceId:page.id, type:ResourceTypes.PAGE, creator: username}));
     }
 
