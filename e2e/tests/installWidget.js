@@ -5,8 +5,8 @@
 module.exports = {
     before(client) {
         client.login()
+            .resetTemplate()
             .moveToEditMode()
-            .removeLastPage()
             .addPage();
 
         var page = client.page.page();

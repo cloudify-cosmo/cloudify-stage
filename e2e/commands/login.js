@@ -7,13 +7,13 @@ var Config = require('../config');
 exports.command =  function(asUser) {
     return this.page.login()
         .navigate()
-        .waitForElementNotVisible('@splashPage')
+        .waitForSplashPageNotVisible()
         .waitForElementVisible('@usernameField')
         .resetValue('@usernameField')
         .setValue('@usernameField', asUser ? Config.user : Config.admin)
         .resetValue('@passwordField')
         .setValue('@passwordField', asUser ? Config.pass: Config.adminPass)
         .clickElement('@submitButton')
-        .waitForElementNotVisible('@splashPage')
+        .waitForSplashPageNotVisible()
         .waitForElementVisible('@managerData');
 }
