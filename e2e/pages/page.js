@@ -37,6 +37,7 @@ module.exports = {
                 userName: 'span:first-child',
                 userDropdownMenu : '.menu',
                 editModeMenuItem : '#editModeMenuItem',
+                resetMenuItem : '#resetMenuItem',
                 logoutMenuItem: '#logoutMenuItem'
             },
             props: {
@@ -127,7 +128,15 @@ module.exports = {
             props: {
                 widgetIsUsed: 'Widget is currently used by:'
             }
-        }
+        },
+        resetTemplateConfirmModal: {
+            selector: '.confirmModal',
+            elements: {
+                yesButton: '.ui.primary.button',
+                noButton: '.ui.button'
+            }
+        },
+
     },
 
     commands: [{

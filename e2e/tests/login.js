@@ -8,12 +8,12 @@ module.exports = {
     'Successful login test': function (client) {
         client.page.login()
             .navigate()
-            .waitForElementNotVisible('@splashPage')
+            .waitForSplashPageNotVisible()
             .waitForElementVisible('@usernameField')
             .setValue('@usernameField', Config.admin)
             .setValue('@passwordField', Config.adminPass)
             .clickElement('@submitButton')
-            .waitForElementNotVisible('@splashPage')
+            .waitForSplashPageNotVisible()
             .waitForElementVisible('@managerData')
             .assert.containsText('@managerData', Config.managerVersion)
             .assert.containsText('@tenantsDropdownText','default_tenant');
@@ -24,7 +24,7 @@ module.exports = {
     'Failed login test': function (client) {
         client.page.login()
             .navigate()
-            .waitForElementNotVisible('@splashPage')
+            .waitForSplashPageNotVisible()
             .waitForElementVisible('@usernameField')
             .setValue('@usernameField', Config.user)
             .setValue('@passwordField', Config.pass + 'a')
