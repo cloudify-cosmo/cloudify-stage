@@ -20,5 +20,7 @@ export default {
     MAINTENANCE_ACTIVATED: 'activated',
     MAINTENANCE_DEACTIVATED: 'deactivated',
     DEFAULT_INITIAL_TEMPLATE: 'initial-template',
-    DEFAULT_ALL: '*'
+    DEFAULT_ALL: '*',
+    PAGE_MANAGEMENT_VIEW: 'view',
+    PAGE_MANAGEMENT_EDIT: 'edit'
 };

@@ -23,7 +23,7 @@ export default class Widget extends Component {
         onWidgetMaximize: PropTypes.func.isRequired,
         onWidgetConfigUpdate: PropTypes.func.isRequired,
         fetchWidgetData: PropTypes.func.isRequired,
-        isPageManagement: PropTypes.bool
+        pageManagementMode: PropTypes.string
     };
 
     _widgetConfigUpdate(config) {
@@ -113,13 +113,13 @@ export default class Widget extends Component {
                     </h5>
                 }
                 {
-                    this.props.isEditMode || this.props.isPageManagement ?
+                    this.props.isEditMode ?
                         <div className='widgetEditButtons'>
-                            {!this.props.isPageManagement && <EditWidget pageId={this.props.pageId} widget={this.props.widget}/>}
+                            <EditWidget pageId={this.props.pageId} widget={this.props.widget} pageManagementMode={this.props.pageManagementMode}/>
                             <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                         </div>
                         :
-                        this.props.widget.definition.showHeader && !this.props.isPageManagement &&
+                        this.props.widget.definition.showHeader &&
                         <div className={`widgetViewButtons ${this.props.widget.maximized?'alwaysOnTop':''}`}>
                             {
                                 this.props.widget.maximized ?
@@ -131,6 +131,7 @@ export default class Widget extends Component {
                             }
                         </div>
                 }
+
                 {
                     (this.props.widget.definition &&
                     !_.isEmpty(_.get(this.props,'manager.tenants.selected')) &&

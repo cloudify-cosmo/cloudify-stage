@@ -6,7 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { selectHomePage } from '../../actions/page';
-import { changePageWidgetGridData, savePage, updatePageName } from '../../actions/templateManagement';
+import { changePageWidgetGridData, savePage, updatePageName, clearPageContext, drillDownWarning} from '../../actions/templateManagement';
 import PageManagement from '../../components/templates/PageManagement';
 
 const mapStateToProps = (state, ownProps) => {
@@ -22,24 +22,28 @@ const mapStateToProps = (state, ownProps) => {
 
     return {
         error: templateManagement.error,
-        isEditMode: templateManagement.isEditMode,
-        page: pageData,
+        isPageEditMode: templateManagement.isPageEditMode,
+        showDrillDownWarn: templateManagement.showDrillDownWarn,
+        page: pageData
     };
 };
 
 const mapDispatchToProps = (dispatch, getState, ownProps) => {
     return {
         onClose: () => dispatch(selectHomePage()),
+        onClear: () => dispatch(clearPageContext()),
         onTemplateNavigate: () => dispatch(push('template_management')),
         onWidgetsGridDataChange: (pageId,widgetId,gridData) => {
             dispatch(changePageWidgetGridData(widgetId,gridData));
         },
         onPageSave: (page) => {
             dispatch(savePage(page));
-            dispatch(push('template_management'));
         },
         onPageNameChange: (pageName) => {
             dispatch(updatePageName(pageName));
+        },
+        onCloseDrillDownWarning: () => {
+            dispatch(drillDownWarning(false));
         }
     }
 };

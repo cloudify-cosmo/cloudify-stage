@@ -4,6 +4,7 @@
 
 import { ApproveButton, CancelButton } from './modal/ModalButtons';
 import Confirm from './modal/Confirm';
+import Alert from './modal/Alert';
 import KeyIndicator from './KeyIndicator';
 import ErrorMessage from './ErrorMessage';
 import HighlightText from './HighlightText';
@@ -30,6 +31,7 @@ import PopupConfirm from './PopupConfirm';
 
 export {
     Accordion,
+    Alert,
     ApproveButton,
     Breadcrumb,
     Button,

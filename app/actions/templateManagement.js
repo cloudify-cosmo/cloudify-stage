@@ -188,12 +188,12 @@ export function changePageWidgetGridData(widgetId,gridData) {
     }
 }
 
-export function setPageShow(pageId, pageName, isEditMode) {
+export function setPageShow(pageId, pageName, isPageEditMode) {
     return {
         type: types.PAGE_MANAGEMENT_SHOW,
         pageId,
         pageName,
-        isEditMode
+        isPageEditMode
     }
 }
 
@@ -212,9 +212,9 @@ export function updatePageName(pageName) {
     }
 }
 
-export function showPage(pageId, pageName, isEditMode) {
+export function showPage(pageId, pageName, isPageEditMode) {
     return function (dispatch, getState) {
-        dispatch(setPageShow(pageId, pageName, isEditMode));
+        dispatch(setPageShow(pageId, pageName, isPageEditMode));
 
         var templates = getState().templates;
         var widgetDefinitions = getState().widgetDefinitions;
@@ -236,7 +236,16 @@ export function removePageWidget(widgetId) {
     }
 }
 
-export function savePage(page) {
+export function editPageWidget(pageId, widgetId, configuration) {
+    return {
+        type: types.PAGE_MANAGEMENT_EDIT_WIDGET,
+        pageId,
+        widgetId,
+        configuration
+    }
+}
+
+export function persistPage(page) {
     return function (dispatch, getState) {
         var widgets = page.widgets.map(w => {
             return {
@@ -245,7 +254,8 @@ export function savePage(page) {
                 width: w.width,
                 height: w.height,
                 x: w.x,
-                y: w.y
+                y: w.y,
+                configuration: w.configuration
             };
         });
 
@@ -270,6 +280,13 @@ export function savePage(page) {
     }
 }
 
+export function savePage(page) {
+    return function (dispatch) {
+        dispatch(persistPage(page));
+        dispatch(push('template_management'));
+    };
+}
+
 export function selectPage(pageId) {
     return {
         type: types.PAGE_MANAGEMENT_SELECT,
@@ -277,8 +294,30 @@ export function selectPage(pageId) {
     }
 }
 
-export function clear() {
+export function clearTemplateContext() {
     return {
         type: types.TEMPLATE_MANAGEMENT_CLEAR
+    }
+}
+
+export function clearPageContext() {
+    return {
+        type: types.PAGE_MANAGEMENT_CLEAR
+    }
+}
+
+export function maximizePageWidget(pageId,widgetId,maximized) {
+    return {
+        type: types.PAGE_MANAGEMENT_MAXIMIZE_WIDGET,
+        pageId,
+        widgetId,
+        maximized
+    }
+}
+
+export function drillDownWarning(show) {
+    return {
+        type: types.PAGE_MANAGEMENT_DRILLDOWN_WARN,
+        show
     }
 }
