@@ -3,6 +3,7 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var path = require('path');
 
 module.exports = {
@@ -56,6 +57,12 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery",
             d3: 'd3'
+        }),
+        new UglifyJsPlugin({
+            include: 'app.bundle.js',
+            sourceMap: true,
+            parallel: true,
+            extractComments: true
         })
     ],
     //eslint: {

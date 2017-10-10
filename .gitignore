@@ -6,9 +6,11 @@ bower_components
 /backend/logs
 
 /widgets/*/widget.js
+/widgets/*/widget.js.map
 
 stage.tar.gz
 /widgets/common/common.js
+/widgets/common/common.js.map
 
 reports
 selenium-debug.log

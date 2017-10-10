@@ -4,11 +4,13 @@
 
 module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks
+    require('grunt-contrib-uglify')(grunt);
 
     grunt.registerTask("prepareModules", "Finds and prepares modules for concatenation.", function() {
 
         // get the current concat object from initConfig
         var browserify = grunt.config.get('browserify') || {};
+        var uglify = grunt.config.get('uglify') || {};
 
         // get all module directories
         grunt.file.expand("widgets/**/src").forEach(function (dir) {
@@ -23,16 +25,19 @@ module.exports = function(grunt) {
             if (dirName === 'common') {
                 browserify.widgets.files[destDir+'/common.js'] = [dir + '/**/*.js'];
                 browserify.dist.files[destDir+'/common.js'] = [dir + '/**/*.js'];
+                uglify.dist.files[destDir+'/common.js'] = [destDir + '/common.js'];
             } else {
                 browserify.widgets.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
                 browserify.dist.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
+                uglify.dist.files[destDir+'/widget.js'] = [destDir + '/widget.js'];
             }
         });
 
         // add module subtasks to the concat task in initConfig
         grunt.config.set('browserify', browserify);
+        grunt.config.set('uglify', uglify);
         console.log('browserify files:' ,browserify.widgets.files);
-        
+
     });
 
     grunt.initConfig({
@@ -58,6 +63,15 @@ module.exports = function(grunt) {
                 options: {
                 }
             }
+        },
+        uglify: {
+            dist: {
+                options: {
+                    sourceMap: true
+                },
+                files: {
+                }
+            }
         }
     });
 
@@ -69,7 +83,8 @@ module.exports = function(grunt) {
     grunt.registerTask('build',
         [
             'prepareModules',
-            'browserify:dist'
+            'browserify:dist',
+            'uglify:dist'
         ]);
 
 };
