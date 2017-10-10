@@ -52,7 +52,7 @@ export default class ConfigureModal extends Component {
 
     render() {
         return (
-            <Modal open={this.props.show}>
+            <Modal open={this.props.show} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
                     Configure UI properties
                 </Modal.Header>

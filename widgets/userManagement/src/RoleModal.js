@@ -69,7 +69,7 @@ export default class RoleModal extends React.Component {
         var user = Object.assign({},{username:''}, this.props.user);
 
         return (
-            <Modal open={this.props.open} className='userRoleModal'>
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()} className='userRoleModal'>
                 <Modal.Header>
                     <Icon name="male"/> Set role for {user.username}
                 </Modal.Header>

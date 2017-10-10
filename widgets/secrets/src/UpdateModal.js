@@ -88,7 +88,7 @@ export default class UpdateModal extends React.Component {
 
         return (
             <div>
-                <Modal open={this.props.open}>
+                <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                     <Modal.Header>
                         <Icon name='edit' /> Update secret {this.props.secret.key}
                     </Modal.Header>

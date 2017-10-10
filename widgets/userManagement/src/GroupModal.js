@@ -64,7 +64,7 @@ export default class GroupModal extends React.Component {
         var options = _.map(groups.items, item => { return {text: item.name, value: item.name, key: item.name} });
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
                     <Icon name="user"/> Edit user groups for {user.username}
                 </Modal.Header>
