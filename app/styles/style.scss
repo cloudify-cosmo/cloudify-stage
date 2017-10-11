@@ -236,7 +236,7 @@ a:hover {
   background-color: #000069;
 
   .ui.text.container.segment404 {
-    max-width: 600px !important;
+    max-width: 400px !important;
     top: 170px;
   }
 }
@@ -307,7 +307,7 @@ a:hover {
   }
 }
 
-.loginPage,.maintenancePage,.noTenantsPage {
+.logoPage,.maintenancePage {
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -316,7 +316,7 @@ a:hover {
   background-color: #000069 !important;
 }
 
-.configManager.ui.segment, .loginPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment, .noTenantsPage.ui.segment {
+.configManager.ui.segment, .logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
   position: absolute;
   left: 0;
   right: 0;

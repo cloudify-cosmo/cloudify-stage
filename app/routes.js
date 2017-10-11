@@ -10,6 +10,7 @@ import Home from './containers/Home';
 import TemplateManagement from './Containers/templates/TemplateManagement';
 import PageManagement from './Containers/templates/PageManagement';
 import NotFound from './components/NotFound';
+import LogoPage from './components/LogoPage';
 import Login from './containers/Login';
 import MaintenanceMode from './containers/maintenance/MaintenanceModePageMessage';
 import NoTenants from './containers/NoTenants';
@@ -93,19 +94,22 @@ export default (store)=> {
 
     return (
         <Route path='/'>
-            {store.getState().config.app.saml.enabled
-                ?
-                [
-                    <Route key='loginRoute' path='login' onEnter={redirectToSSO}/>,
-                    <Route key='logoutRoute' path='logout' onEnter={redirectToPortal}/>
-                ]
-                :
-                [
-                    <Route key='loginRoute' path='login' component={Login}/>,
-                    <Redirect key='logoutRoute' from='logout' to='login'/>
-                ]
-            }
-            <Route path='noTenants' component={NoTenants}/>
+            <Route component={LogoPage}>
+                {store.getState().config.app.saml.enabled
+                    ?
+                    [
+                        <Route key='loginRoute' path='login' onEnter={redirectToSSO}/>,
+                        <Route key='logoutRoute' path='logout' onEnter={redirectToPortal}/>
+                    ]
+                    :
+                    [
+                        <Route key='loginRoute' path='login' component={Login}/>,
+                        <Redirect key='logoutRoute' from='logout' to='login'/>
+                    ]
+                }
+                <Route path='error' component={ErrorPage}/>
+                <Route path='noTenants' component={NoTenants}/>
+            </Route>
             <Route path='maintenance' component={MaintenanceMode} onEnter={isInMaintenanceMode}/>
             <Route component={Layout} onEnter={isLoggedIn}>
                 <Route path='page/(:pageId)' component={Home}/>
@@ -113,7 +117,6 @@ export default (store)=> {
                 <Route path='template_management' component={TemplateManagement} onEnter={isTemplateManagementAuthorized}/>
                 <Route path='page_management' component={PageManagement} onEnter={pageManagementEnter}/>
                 <Route path='404' component={NotFound}/>
-                <Route path='error' component={ErrorPage}/>
                 <IndexRoute component={Home}/>
                 <Redirect from="*" to='404'/>
             </Route>
