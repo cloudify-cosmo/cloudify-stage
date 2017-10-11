@@ -13,7 +13,7 @@ Stage.defineWidget({
     showHeader: false,
     showBorder: false,
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('timeFilter'),
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render: function(widget,data,error,toolbox) {

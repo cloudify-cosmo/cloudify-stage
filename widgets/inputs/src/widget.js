@@ -12,7 +12,7 @@ Stage.defineWidget({
     initialHeight: 16,
     color : "teal",
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('inputs'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
     
     initialConfiguration: [

@@ -25,7 +25,7 @@ Stage.defineWidget({
             Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
         ],
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
     fetchParams: function(widget, toolbox) {
         var blueprintId = toolbox.getContext().getValue('blueprintId');

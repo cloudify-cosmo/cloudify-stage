@@ -8,7 +8,7 @@ Stage.defineWidget({
     initialHeight: 20,
     color : "blue",
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('outputs'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
     
     initialConfiguration: [

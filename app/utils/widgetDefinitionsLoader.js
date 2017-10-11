@@ -238,5 +238,17 @@ class GenericConfig {
             ALL: 'All'
         };
     }
+
+    static get CUSTOM_WIDGET_PERMISSIONS () {
+        return {
+            CUSTOM_ADMIN_ONLY: 'widget_custom_admin',
+            CUSTOM_SYS_ADMIN_ONLY: 'widget_custom_sys_admin',
+            CUSTOM_ALL: 'widget_custom_all'
+        };
+    }
+
+    static WIDGET_PERMISSION = (widgetId) => {
+        return 'widget_'+widgetId
+    }
 }
 

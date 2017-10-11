@@ -13,7 +13,7 @@ Stage.defineWidget({
     color : "blue",
     hasStyle: true,
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprints'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
     
     initialConfiguration: [

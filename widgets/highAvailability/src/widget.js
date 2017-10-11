@@ -12,7 +12,7 @@ Stage.defineWidget({
     initialHeight: 25,
     color: "green",
     isReact: true,
-    permission: 'widget-admin',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('highAvailability'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     initialConfiguration: [
