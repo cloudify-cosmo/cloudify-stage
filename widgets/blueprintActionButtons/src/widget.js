@@ -14,7 +14,7 @@ Stage.defineWidget({
     showBorder: false,
     initialConfiguration: [],
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintActionButtons'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     fetchData: function(widget,toolbox) {

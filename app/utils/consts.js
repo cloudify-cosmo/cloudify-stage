@@ -9,11 +9,11 @@ export default {
     MODE_MAIN: 'main',
     MODE_CUSTOMER: 'customer',
     permissions: {
-        STAGE_SERVICES_STATUS: 'stage-services-status',
-        STAGE_EDIT_MODE: 'stage-edit-mode',
-        STAGE_MAINTENANCE_MODE: 'stage-maintenance-mode',
-        STAGE_CONFIGURE: 'stage-configure',
-        STAGE_TEMPLATE_MANAGEMENT: 'stage-template-management'
+        STAGE_SERVICES_STATUS: 'stage_services_status',
+        STAGE_EDIT_MODE: 'stage_edit_mode',
+        STAGE_MAINTENANCE_MODE: 'stage_maintenance_mode',
+        STAGE_CONFIGURE: 'stage_configure',
+        STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management'
     },
     MANAGER_RUNNING: 'running',
     MAINTENANCE_ACTIVATING: 'activating',

@@ -15,7 +15,7 @@ Stage.defineWidget({
         users: '[manager]/users?_get_data=true[params]'
     },
     isReact: true,
-    permission: 'widget-admin',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('userManagement'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
     initialConfiguration: [

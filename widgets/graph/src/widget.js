@@ -11,7 +11,7 @@ Stage.defineWidget({
     showHeader: true,
     showBorder: true,
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('graph'),
     color: 'blue',
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
 
