@@ -222,7 +222,7 @@ export default class WidgetDynamicContent extends Component {
 
     renderReact () {
         if (this.props.data.error) {
-            return <ErrorMessage error={this.props.data.error} header="An unexpected error occurred"/>;
+            return <ErrorMessage error={this.props.data.error} header="An unexpected error occurred" autoHide={true}/>;
         }
 
         if (this.props.widget.definition && this.props.widget.definition.render) {
@@ -230,7 +230,7 @@ export default class WidgetDynamicContent extends Component {
                 return this.props.widget.definition.render(this.props.widget,this.props.data.data,this.props.data.error,this._getToolbox());
             } catch (e) {
                 console.error('Error rendering widget - '+e.message,e.stack);
-                return <ErrorMessage error={`Error rendering widget: ${e.message}`}/>;
+                return <ErrorMessage error={`Error rendering widget: ${e.message}`} autoHide={true}/>;
             }
         }
         return <div/>;
