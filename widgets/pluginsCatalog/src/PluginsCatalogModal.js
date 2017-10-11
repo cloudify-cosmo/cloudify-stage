@@ -115,6 +115,7 @@ export default class PluginsCatalogModal extends React.Component {
             <ErrorMessage
               error={this.state.error}
               onDismiss={() => this.setState ({error: null})}
+              autoHide={true}
             />
             Are you sure you want to upload the plugin
             {' '}
