@@ -83,7 +83,7 @@ function doLogout(err) {
 export function logout(err, path) {
     return function (dispatch, getState) {
         var localLogout = () => {
-            dispatch(push(path || 'logout'));
+            dispatch(push(path || (err ? 'error' : 'logout')));
             dispatch(clearContext());
             dispatch(doLogout(err));
         };

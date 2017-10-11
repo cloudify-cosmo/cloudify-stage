@@ -51,6 +51,7 @@ export function intialPageLoad() {
             })
             .then(()=>{
                 dispatch(setAppLoading(false));
+                dispatch(setAppError(null));
             })
             .catch(e => {
                 console.error('Error initializing user data. Cannot load page', e);

@@ -7,9 +7,7 @@ import { connect } from 'react-redux';
 import noTenants from '../components/NoTenants';
 
 const mapStateToProps = (state, ownProps) => {
-    return {
-        portalUrl: state.config.app.saml.enabled ? state.config.app.saml.portalUrl : null
-    }
+    return {}
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {

@@ -27,7 +27,7 @@ const manager = (state = {}, action) => {
                 auth: {
                     role: null
                 },
-                err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
+                err: null,
                 serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
