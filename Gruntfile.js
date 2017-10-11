@@ -4,7 +4,6 @@
 
 module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks
-    require('grunt-contrib-uglify')(grunt);
 
     grunt.registerTask("prepareModules", "Finds and prepares modules for concatenation.", function() {
 
