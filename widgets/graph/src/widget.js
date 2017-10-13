@@ -37,6 +37,8 @@ Stage.defineWidget({
         {id: 'timeFilter', name: 'Time range and resolution',  description: 'Time range and time resolution for all defined charts',
          type: Stage.Basic.GenericField.TIME_FILTER_TYPE, default: Stage.Basic.InputTimeFilter.INFLUX_DEFAULT_VALUE}
     ],
+    UNCONFIGURED_STATE: {unconfigured: true},
+    UNINITIALIZED_STATE: {},
 
     _prepareData: function(data, xDataKey) {
         const TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -141,12 +143,16 @@ Stage.defineWidget({
         });
     },
 
-    _isEmptyResponse: function(widget, data) {
+    _isEmptyResponse: function(data) {
         return _.isArray(data) && _.isEmpty(data);
     },
 
-    _isWidgetUnitialized: function(data) {
-        return _.isNil(data) || _.isEqual(data, {});
+    _isWidgetUnitialized: function(widget, data) {
+        return _.isNil(data) || _.isEqual(data, widget.definition.UNINITIALIZED_STATE);
+    },
+
+    _isWidgetNotConfigured: function(widget, data) {
+        return _.isEqual(data, widget.definition.UNCONFIGURED_STATE);
     },
 
     fetchParams: function(widget, toolbox) {
@@ -207,8 +213,7 @@ Stage.defineWidget({
                 });
         } else {
             toolbox.loading(false);
-            return Promise.reject('Widget not configured properly. Please configure at least one chart in Charts Table ' +
-                                  'and provide Deployment ID or fill in InfluxQL query.');
+            return Promise.resolve(widget.definition.UNCONFIGURED_STATE);
         }
     },
 
@@ -216,11 +221,19 @@ Stage.defineWidget({
         let {charts, query, type} = widget.configuration;
         let {Message, Icon} = Stage.Basic;
 
-        if (this._isWidgetUnitialized(data)) {
+        if (this._isWidgetUnitialized(widget, data)) {
             return (
                 <Stage.Basic.Loading/>
             );
-        } else if (this._isEmptyResponse(widget, data)) {
+        } else if (this._isWidgetNotConfigured(widget, data)) {
+            return (
+                <Message info icon>
+                    <Icon name='info' />
+                    Please configure chart(s) in Charts Table
+                    and provide Deployment ID or fill in InfluxQL query.
+                </Message>
+            );
+        } else if (this._isEmptyResponse(data)) {
             return (
                 <Message info icon>
                     <Icon name='ban' />
@@ -235,6 +248,5 @@ Stage.defineWidget({
                    data={this._prepareData(data, Graph.DEFAULT_X_DATA_KEY)}
                    charts={this._getChartsConfiguration(charts, query, data)} />
         );
-
     }
 });
