@@ -12,6 +12,7 @@ Stage.defineWidget({
     initialHeight: 20,
     color : "blue",
     isReact: true,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('plugins'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
     initialConfiguration: [

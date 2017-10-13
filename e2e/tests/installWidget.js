@@ -2,19 +2,16 @@
  * Created by pposel on 07/06/2017.
  */
 
-/*
-TODO: Find a solution to make widget.zip accessible for the server, then uncomment test.
-
 module.exports = {
     before(client) {
         client.login()
+            .resetTemplate()
             .moveToEditMode()
-            .removeLastPage()
             .addPage();
 
         var page = client.page.page();
 
-        page.section.page
+        page.section.editModeSidebar
             .click('@addWidgetButton');
 
         client.pause(1000);
@@ -24,11 +21,11 @@ module.exports = {
             .isWidgetInstalled('testWidget', result => {
                 if (result.value) {
                     client.page.page().section.addWidgetModal
-                          .click("@removeWidgetButton");
+                          .click('@removeWidgetButton');
 
                     client.page.page().section.removeWidgetConfirm
                           .waitForElementPresent('@okButton')
-                          .click("@okButton")
+                          .click('@okButton')
                           .waitForElementNotPresent('@okButton');
                 }
             });
@@ -45,14 +42,14 @@ module.exports = {
             .click('@okButton')
             .waitForElementPresent('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.emptyFieldsError)
-            .setValue('@urlField', "test")
+            .setValue('@urlField', 'test')
             .click('@okButton');
 
         client.pause(2000);
 
         page.section.installWidgetModal
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError)
-            .setValue('@fileField', client.page.resources().props.blankFile)
+            .setValue('@fileField', client.page.resources().props.blankFile(client.globals))
             .click('@okButton');
 
         client.pause(2000);
@@ -79,7 +76,7 @@ module.exports = {
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
-            .setValue('@fileField', client.page.resources().props.testWidget)
+            .setValue('@fileField', client.page.resources().props.testWidget(client.globals))
             .click('@okButton')
             .waitForElementNotPresent('@okButton', 10000);
     },
@@ -89,12 +86,12 @@ module.exports = {
 
         page.section.addWidgetModal
             .waitForElementPresent('@removeWidgetButton')
-            .click("@removeWidgetButton");
+            .click('@removeWidgetButton');
 
         page.section.removeWidgetConfirm
             .waitForElementPresent('@okButton')
             .assert.elementNotPresent('@widgetIsUsedLabel')
-            .click("@cancelButton")
+            .click('@cancelButton')
             .waitForElementNotPresent('@okButton');
     },
 
@@ -105,7 +102,7 @@ module.exports = {
             .waitForElementPresent('@updateWidgetButton');
 
         page.section.page
-            .addWidget("testWidget")
+            .addWidget('testWidget')
             .waitForElementPresent('@testWidgetContent')
             .assert.containsText('@testWidgetContent', page.section.page.props.testWidgetLabel);
     },
@@ -113,7 +110,7 @@ module.exports = {
     'Widget already installed': function (client) {
         var page = client.page.page();
 
-        page.section.page
+        page.section.editModeSidebar
             .click('@addWidgetButton');
 
         client.pause(1000);
@@ -124,7 +121,7 @@ module.exports = {
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
-            .setValue('@fileField', client.page.resources().props.testWidget)
+            .setValue('@fileField', client.page.resources().props.testWidget(client.globals))
             .click('@okButton')
             .waitForElementNotPresent('@loader')
             .waitForElementPresent('@errorMessage')
@@ -138,12 +135,12 @@ module.exports = {
 
         page.section.addWidgetModal
             .waitForElementPresent('@removeWidgetButton')
-            .click("@removeWidgetButton");
+            .click('@removeWidgetButton');
 
         page.section.removeWidgetConfirm
             .waitForElementPresent('@okButton')
             .assert.containsText('@widgetIsUsedLabel', page.section.removeWidgetConfirm.props.widgetIsUsed)
-            .click("@okButton")
+            .click('@okButton')
             .waitForElementNotPresent('@okButton');
 
         page.section.addWidgetModal
@@ -154,4 +151,3 @@ module.exports = {
         client.end();
     }
 };
-*/

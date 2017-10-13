@@ -1,0 +1,85 @@
+.input-time-filter {
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #fff;
+    color: #000;
+    border: 0 none #aeaeae;
+    border-radius: 0.3rem;
+    display: flex;
+    min-width: 300px;
+}
+
+.react-datepicker__month-container {
+    float: left;
+    width: 250px;
+}
+
+.react-datepicker__time-container {
+    width: 120px;
+}
+
+.react-datepicker__day--outside-month {
+    color: #c0c0c0;
+}
+
+.react-datepicker__day, .react-datepicker__day-name {
+    width: 2rem;
+    line-height: 2rem;
+    padding: 1px 0;
+}
+
+.react-datepicker__day:hover {
+    color: white;
+    background-color: grey;
+}
+
+.react-datepicker__header {
+    border-bottom: 0 none #aeaeae;
+}
+
+.react-datepicker__day--in-range {
+    background: lightgrey;
+    color: black;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.react-datepicker__day--range-end, .react-datepicker__day--range-start {
+    border: 1px solid grey;
+    padding: 0;
+    border-radius: 0.3rem;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected,
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected:hover{
+    background-color: #c0c1c2;
+    color: black;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box {
+    width: 100%;
+    display: inline-block;
+}
+
+.react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {
+    right: 110px;
+}
+
+/*Handle smaller viewports*/
+@media only screen and (max-width: 1400px) {
+    .ui.flowing.popup {
+        left: 0 !important;
+    }
+}
+
+.fixed-width {
+    width: 1090px !important;
+}
+
+.top-padded-10 {
+    margin-top: 10px;
+}

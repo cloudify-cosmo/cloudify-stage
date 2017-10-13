@@ -6,7 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Header from '../../components/layout/Header';
 import {resetTemplate} from '../../actions/userApp';
-import {setAppLoading, toogleSidebar} from '../../actions/app';
+import {toogleSidebar} from '../../actions/app';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -20,10 +20,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onResetTemplate: (manager,config,templates,widgetDefinitions) =>{
-            dispatch(setAppLoading(true));
-            dispatch(resetTemplate(manager,config,templates,widgetDefinitions));
-            dispatch(setAppLoading(false));
+        onResetTemplate: () =>{
+            dispatch(resetTemplate());
         },
         onSidebarOpen(){
             dispatch(toogleSidebar());
@@ -31,14 +29,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 };
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
-    return Object.assign({}, stateProps, ownProps, dispatchProps, {
-        onResetTemplate: ()=>dispatchProps.onResetTemplate(stateProps.manager,stateProps.config,stateProps.templates,stateProps.widgetDefinitions)
-    });
-}
-
 export default connect(
     mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
+    mapDispatchToProps
 )(Header);

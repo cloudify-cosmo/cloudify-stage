@@ -108,7 +108,8 @@ export default class EdiTable extends Component {
             <Table celled>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell key='-1' textAlign="center">No.</Table.HeaderCell>
+                        {(this.props.rows > 1) &&
+                        <Table.HeaderCell key='-1' textAlign="center">No.</Table.HeaderCell>}
                         {
                             _.map(this.props.columns, (column, index) =>
                                 <Table.HeaderCell key={index} textAlign="center">
@@ -130,7 +131,8 @@ export default class EdiTable extends Component {
                     {
                         _.times(this.props.rows, (index) =>
                             <Table.Row key={index}>
-                                <Table.Cell key={`${index}|no`} textAlign="center">{index + 1}</Table.Cell>
+                                {(this.props.rows > 1) &&
+                                <Table.Cell key={`${index}|no`} textAlign="center">{index + 1}</Table.Cell>}
                                 {
                                     _.map(this.props.columns, (column) =>
                                         <Table.Cell key={`${index}|${column.name}`}>

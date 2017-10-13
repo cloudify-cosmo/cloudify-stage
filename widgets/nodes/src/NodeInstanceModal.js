@@ -21,7 +21,7 @@ export default class extends React.Component {
 
         return (
             <div>
-                <Modal open={this.props.open} className='nodeInstanceModal'>
+                <Modal open={this.props.open} onClose={()=>this.props.onClose()} className='nodeInstanceModal'>
                     <Modal.Header>
                         Node instance {instance.id}
                     </Modal.Header>

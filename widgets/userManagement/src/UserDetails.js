@@ -56,65 +56,45 @@ export default class UserDetails extends React.Component {
             <Segment.Group horizontal>
                 <Segment>
                     <Icon name="users"/> Groups
+                    <Divider/>
+                    <List divided relaxed verticalAlign='middle' className="light">
+                        {
+                            this.props.data.groups.map((item) => {
+                                let processing = this.state.processing && this.state.processItem === item;
 
-                    {
-                        !_.isEmpty(this.props.data.groups)
-                        &&
-                        <div>
-                            <Divider/>
-                            <List divided verticalAlign='middle' className="light">
-                                {
-                                    this.props.data.groups.map((item) => {
-                                        let processing = this.state.processing && this.state.processItem === item;
+                                return (
+                                    <List.Item key={item}>
+                                        {item}
+                                        <Icon link name={processing?'notched circle':'remove'} loading={processing}
+                                              className="right floated" onClick={this._removeGroup.bind(this, item)}/>
+                                    </List.Item>
+                                );
+                            })
+                        }
 
-                                        return (
-                                            <List.Item key={item}>
-                                                {item}
-                                                <Icon size="small" link name={processing?'notched circle':'remove'} loading={processing}
-                                                      className="right floated" onClick={this._removeGroup.bind(this, item)}/>
-                                            </List.Item>
-                                        );
-                                    })
-                                }
-                            </List>
-                        </div>
-                    }
-                    {
-                        _.isEmpty(this.props.data.groups)
-                        &&
-                        <Message content="No groups available"/>
-                    }
+                        {_.isEmpty(this.props.data.groups) && <Message content="No groups available"/>}
+                    </List>
                 </Segment>
                 <Segment>
                     <Icon name="user"/> Tenants
+                    <Divider/>
+                    <List divided relaxed verticalAlign='middle' className="light">
+                        {
+                            this.props.data.tenants.map((item) => {
+                                let processing = this.state.processing && this.state.processItem === item;
 
-                    {
-                        !_.isEmpty(this.props.data.tenants)
-                        &&
-                        <div>
-                            <Divider/>
-                            <List divided verticalAlign='middle' className="light">
-                                {
-                                    this.props.data.tenants.map((item) => {
-                                        let processing = this.state.processing && this.state.processItem === item;
+                                return (
+                                    <List.Item key={item}>
+                                        {item}
+                                        <Icon link name={processing?'notched circle':'remove'} loading={processing}
+                                              className="right floated" onClick={this._removeTenant.bind(this, item)}/>
+                                    </List.Item>
+                                );
+                            })
+                        }
 
-                                        return (
-                                            <List.Item key={item}>
-                                                {item}
-                                                <Icon size="small" link name={processing?'notched circle':'remove'} loading={processing}
-                                                      className="right floated" onClick={this._removeTenant.bind(this, item)}/>
-                                            </List.Item>
-                                        );
-                                    })
-                                }
-                            </List>
-                        </div>
-                    }
-                    {
-                        _.isEmpty(this.props.data.tenants)
-                        &&
-                        <Message content="No tenants available"/>
-                    }
+                        {_.isEmpty(this.props.data.tenants) && <Message content="No tenants available"/>}
+                    </List>
                 </Segment>
             </Segment.Group>
         );

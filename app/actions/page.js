@@ -7,8 +7,11 @@ import { push } from 'react-router-redux';
 import {v4} from 'node-uuid';
 import {clearContext} from './context';
 import {popDrilldownContext} from './drilldownContext';
+import {setAppError} from './app';
 import {addWidget} from './widgets';
 import {clearWidgetsData} from './WidgetData';
+import Internal from '../utils/Internal';
+import Consts from '../utils/consts';
 
 export function createPage(name, newPageId) {
     return {
@@ -33,7 +36,6 @@ export function createDrilldownPage(newPageId,name) {
         newPageId,
         name
     }
-
 }
 
 export function renamePage(pageId, newName, newPageId) {
@@ -126,24 +128,42 @@ export function removePage(pageId) {
         }
 }
 
-export function createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions) {
-    return function (dispatch) {
+export function createPagesFromTemplate() {
+    return function (dispatch, getState) {
+        var config = getState().config;
+        var manager = getState().manager;
 
-        _.each(initialTemplate,(templateName)=>{
-            var template = templates[templateName];
-            if (!template) {
-                console.error('Cannot find template : '+templateName + ' Skipping... ');
-                return;
-            }
+        var mode = _.get(config, 'mode', Consts.MODE_MAIN);
+        var role = _.words(_.get(manager, 'auth.role'))[0];
+        var tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
+        var internal = new Internal(manager);
+        return internal.doGet('/templates/select', {mode, role, tenant})
+            .then(templateId => {
+                console.log('Selected template id', templateId);
 
-            var pageId = _.snakeCase(template.name);
-            dispatch(createPage(template.name, pageId));
-            _.each(template.widgets,(widget)=>{
-                var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
-                dispatch(addWidget(pageId,widget.name,widgetDefinition,widget.width,widget.height,widget.x,widget.y,widget.configuration));
+                var templates = getState().templates;
+                var widgetDefinitions = getState().widgetDefinitions;
+
+                var pages = templates[templateId];
+
+                console.log('Create pages from selected template', pages);
+
+                _.each(pages, id => {
+                    var page = templates[id];
+                    if (!page) {
+                        console.error('Cannot find page template: ' + id + '. Skipping... ');
+                        return;
+                    }
+
+                    var pageId = _.snakeCase(page.name);
+                    dispatch(createPage(page.name, pageId));
+                    _.each(page.widgets,(widget)=>{
+                        var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
+                        dispatch(addWidget(pageId,widget.name,widgetDefinition,widget.width,widget.height,widget.x,widget.y,widget.configuration));
+                    });
+                });
             });
-        });
     }
 }
 

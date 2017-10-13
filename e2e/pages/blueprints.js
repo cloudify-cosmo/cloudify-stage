@@ -54,7 +54,7 @@ module.exports = {
         blueprintsCatalog: {
             selector: 'div.blueprintsWidget .segmentList',
             props: {
-                blueprintElementSelector : (name) => `div.segmentList div.${name} h3 a`
+                blueprintElementSelector : (name) => `div.${name}`
             },
             commands: [
                 {
@@ -87,7 +87,7 @@ module.exports = {
                             .waitForElementVisible(this.selector)
                             .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB], (result) => this.log('setValueBlueprintUrl=',result))
                             .setValue('@blueprintName', blueprintName, (result) => this.log('setValueBlueprintName=',result))
-                            .waitForElementPresent(blueprintFileOptionElement)
+                            .waitForElementPresent(blueprintFileOptionElement, 20000)
                             .selectOptionInDropdown(this.elements.blueprintYamlFile.selector, blueprintYamlFile);
 
                     },

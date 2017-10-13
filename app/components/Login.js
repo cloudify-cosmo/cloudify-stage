@@ -27,8 +27,8 @@ export default class Login extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-
-        this.props.onLogin(this.state.username, this.state.password);
+        var redirect = this.props.location.query.redirect || null;
+        this.props.onLogin(this.state.username, this.state.password, redirect);
     }
 
     render() {
@@ -39,10 +39,6 @@ export default class Login extends Component {
         let loginPageText = _.get(this.props,'whiteLabel.loginPageText');
         let isHeaderTextPresent = isWhiteLabelEnabled && (loginPageHeader || loginPageText);
         return (
-            <div className='loginPage ui segment basic inverted'>
-                <div className="logo">
-                </div>
-
                 <div className={`loginContainer ${isHeaderTextPresent?'loginContainerExtended':''}`} >
 
                     {
@@ -72,9 +68,7 @@ export default class Login extends Component {
 
                         <button className={'ui submit huge button ' + (this.props.isLoggingIn ? 'loading disabled' : '')} type="submit" disabled={this.props.isLoggingIn}>Login</button>
                     </form>
-
                 </div>
-            </div>
         );
     }
 }

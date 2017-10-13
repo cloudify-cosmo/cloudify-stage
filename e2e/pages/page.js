@@ -8,6 +8,12 @@ module.exports = {
     },
 
     sections: {
+        header: {
+            selector: '.headerBar',
+            elements: {
+                sidebarButton: 'i.sidebar-button'
+            }
+        },
         managerData: {
             selector: '.managerMenu',
             elements: {
@@ -31,6 +37,7 @@ module.exports = {
                 userName: 'span:first-child',
                 userDropdownMenu : '.menu',
                 editModeMenuItem : '#editModeMenuItem',
+                resetMenuItem : '#resetMenuItem',
                 logoutMenuItem: '#logoutMenuItem'
             },
             props: {
@@ -41,7 +48,6 @@ module.exports = {
         sidebar: {
             selector : '.sidebarContainer',
             elements: {
-                addPageButton: '.addPageContainer button',
                 lastPage: '.pages .item:last-child',
                 lastPageRemoveButton : '.pages .item:last-child .pageRemoveButton'
             },
@@ -49,10 +55,16 @@ module.exports = {
                 lastPageLabel: 'Page_0'
             }
         },
+        editModeSidebar: {
+            selector : '.editModeSidebar',
+            elements: {
+                addWidgetButton: '.addWidgetBtn',
+                addPageButton: 'button:nth-child(2)'
+            },
+        },
         page: {
             selector: '.page',
             elements: {
-                addWidgetButton: '.addWidgetBtn',
                 firstWidget: '.widget:first-child',
                 firstWidgetName: '.widget:first-child h5.header span',
                 firstWidgetRemoveIcon: '.widget:first-child .widgetEditButtons i.remove.link.icon.small',
@@ -100,7 +112,7 @@ module.exports = {
             },
             props: {
                 emptyFieldsError: 'Please select widget file or url',
-                invalidURIError: 'Invalid URI "test"',
+                invalidURIError: 'Unable to determine filename from url test',
                 bothFieldsError: 'Either widget file or url must be selected, not both',
                 incorrectFilesError: 'The following files are required for widget registration: widget.js, widget.png',
                 widgetAlreadyInstalledError: 'Widget testWidget is already installed'
@@ -116,8 +128,22 @@ module.exports = {
             props: {
                 widgetIsUsed: 'Widget is currently used by:'
             }
-        }
+        },
+        resetTemplateConfirmModal: {
+            selector: '.confirmModal',
+            elements: {
+                yesButton: '.ui.primary.button',
+                noButton: '.ui.button'
+            }
+        },
+
     },
+
+    commands: [{
+        openSidebarMenu: function() {
+
+        }
+    }],
 
     elements: {
         tenantsDropdownText : 'div.tenantsMenu',

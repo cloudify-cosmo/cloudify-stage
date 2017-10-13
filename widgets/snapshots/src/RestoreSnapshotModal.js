@@ -77,7 +77,7 @@ export default class RestoreSnapshotModal extends React.Component {
         var {Modal, ApproveButton, CancelButton, Icon, Form, Message} = Stage.Basic;
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
                     <Icon name="undo"/> Restore snapshot
                 </Modal.Header>

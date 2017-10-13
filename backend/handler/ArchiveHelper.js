@@ -9,8 +9,8 @@ var pathlib = require('path');
 var sanitize = require('sanitize-filename');
 var decompress = require('decompress');
 var multer  = require('multer');
-var request = require('request');
 var ManagerHandler = require('./ManagerHandler');
+var RequestHandler = require('./RequestHandler');
 
 var logger = require('log4js').getLogger('archiveHelper');
 
@@ -50,11 +50,15 @@ module.exports = (function() {
 
     function saveDataFromUrl(archiveUrl, targetDir, req) {
         return new Promise((resolve, reject) => {
+            const HEADERS = {'User-Agent': 'Cloudify'};
             archiveUrl = decodeURIComponent(archiveUrl.trim());
 
             logger.debug('fetching file from url', archiveUrl);
 
-            var onErrorFetch = reject;
+            var getRequest = null;
+            var onErrorFetch = function (error) {
+                reject(error);
+            }
             var onSuccessFetch = function (response) {
                 var archiveFile = _extractFilename(response.headers['content-disposition']);
 
@@ -94,13 +98,24 @@ module.exports = (function() {
                     }));
             };
 
-            var getRequest = ManagerHandler.request('GET', archiveUrl, {'User-Agent': 'Cloudify'}, onSuccessFetch, onErrorFetch);
+            if (_isExternalUrl(archiveUrl)) {
+                var options = {options: {headers: HEADERS}};
+                getRequest = RequestHandler.request('GET', archiveUrl, options, onSuccessFetch, onErrorFetch);
+            } else {
+                getRequest = ManagerHandler.request('GET', archiveUrl, HEADERS, null, onSuccessFetch, onErrorFetch);
+            }
 
             if (req) {
                 req.pipe(getRequest);
             }
         });
 
+    }
+
+    function _isExternalUrl(url) {
+        const ABSOLUTE_URL_REGEX = new RegExp('^(?:[a-z]+:)?//', 'i');
+
+        return ABSOLUTE_URL_REGEX.test(url);
     }
 
     function _extractFilename(contentDisposition) {

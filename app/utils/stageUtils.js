@@ -31,6 +31,10 @@ export default class StageUtils {
         return moment.utc(timestamp, inputPattern).local().format(outputPattern);
     }
 
+    static formatLocalTimestamp(timestamp, outputPattern='DD-MM-YYYY HH:mm', inputPattern=undefined) {
+        return moment(timestamp, inputPattern).format(outputPattern);
+    }
+
     /**
      * Replace all occurrences of <Tag attr1="value1" attr1="value2" ...> to "tag value1 value2 ..."
      * @param message
@@ -66,5 +70,22 @@ export default class StageUtils {
 
         return Const.CONTEXT_PATH + (_.startsWith(path, '/') ? '' : '/') + path;
     }
+
+    static buildConfig(widgetDefinition) {
+        var configs = {};
+
+        _.each(widgetDefinition.initialConfiguration,(config)=>{
+            if (!config.id) {
+                console.log('Cannot process config for widget :"'+widgetDefinition.name+'" , because it missing an Id ',config);
+                return;
+            }
+
+            var value = config.default && !config.value ? config.default : (_.isUndefined(config.value) ? null : config.value );
+
+            configs[config.id] = Stage.Basic.GenericField.formatValue(config.type, value);
+        });
+
+        return configs;
+    };
 
 }

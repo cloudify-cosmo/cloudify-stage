@@ -118,7 +118,8 @@ export default class extends React.Component {
                             let isSnapshotUseful = this._isSnapshotUseful(item);
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectSnapshot.bind(this, item)}>
-                                    <DataTable.Data><a className='snapshotName' href="javascript:void(0)">{item.id}</a>
+                                    <DataTable.Data>
+                                        {item.id}
                                         <PrivateMarker show={item.private_resource} title="Private resource"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>

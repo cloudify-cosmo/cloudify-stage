@@ -20,7 +20,7 @@ a:hover {
   height: 55px;
 }
 
-.dropDownText
+.dropDownText, .compactBlock
 {
   display: inline-block;
 }
@@ -65,7 +65,7 @@ a:hover {
     @media (min-width: 992px) {
       margin-left: 13rem;
     }
-    .ui.labeled.icon.button.addWidgetBtn {
+    div.addWidget .ui.labeled.icon.button.addWidgetBtn {
       position: absolute;
       top: 2rem;
       right: 15px;
@@ -96,6 +96,10 @@ a:hover {
 .grid-stack > .grid-stack-item.widget > .grid-stack-item-content {
   overflow-x: initial;
   overflow-y: initial;
+}
+
+.gridStackBottomSpace {
+  height: 150px;
 }
 
 .maximizeWidget .widget {
@@ -263,7 +267,7 @@ a:hover {
   background-color: #000069;
 
   .ui.text.container.segment404 {
-    max-width: 600px !important;
+    max-width: 400px !important;
     top: 170px;
   }
 }
@@ -294,6 +298,30 @@ a:hover {
     height: 435px;
     overflow: auto;
     padding-top: 5px;
+    .item{
+      padding: 30px 10px;
+      cursor: pointer;
+      align-items: center;
+      &:hover{
+        background-color: #eee;
+        border-radius: 5px;
+      }
+      .image{
+        &>img{
+          object-fit: contain;
+          height: 80px !important;
+          border-radius: 5px;
+          background: #fff;
+          border: 1px dotted #eee;
+          transition: all 500ms ease-in-out;
+          &:hover{
+            transform: scale(1.3);
+            z-index: 100;
+            box-shadow: 0px 8px 20px -6px rgba(0, 0, 0, 0.75);          
+          }
+        }
+      }
+    }
   }
 
   .widgetsList .selectWidgetButton {
@@ -310,7 +338,7 @@ a:hover {
   }
 }
 
-.loginPage,.maintenancePage,.noTenantsPage {
+.logoPage,.maintenancePage {
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -319,7 +347,7 @@ a:hover {
   background-color: #000069 !important;
 }
 
-.configManager.ui.segment, .loginPage.ui.segment, .loadingPage.ui.segment,.maintenancePage.ui.segment,.noTenantsPage.ui.segment {
+.configManager.ui.segment, .logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
   position: absolute;
   left: 0;
   right: 0;
@@ -399,6 +427,9 @@ a:hover {
   .dropdown.icon {
     margin: 0 0 0 0.4em !important;
   }
+  &>span{
+    margin-top: 1px;
+  }
 }
 
 .tenantsMenu, .managerMenu {
@@ -474,6 +505,12 @@ code.hljs {
 
   & > div {
     display: inline-block;
+  }
+}
+
+.actionIcons {
+  & > i.icon {
+    margin-right: 2px !important;
   }
 }
 
@@ -611,6 +648,11 @@ code.hljs {
 
 }
 
+.breakWord {
+  display: block !important;
+  word-wrap: break-word;
+}
+
 /* Popup Menu */
 
 .popupMenu {
@@ -653,6 +695,10 @@ code.hljs {
 
 .rightFloated {
   float: right;
+}
+
+.leftFloated {
+  float: left;
 }
 
 .verticalCenter {
@@ -795,4 +841,22 @@ a.underline {
       background-color: #eee;
     }
   }
+}
+
+.ui.sidebar.editModeSidebar {
+  box-shadow: none !important;
+  background-color: transparent !important;
+  max-width: 500px !important;
+  margin: 0 calc(50% - 250px) !important;
+  display: block;
+
+  .content {
+    margin-top: 10px;
+    display: inline-block;
+    width: 100%;
+  }
+}
+
+.emptyPage {
+  padding-top: 10rem;
 }

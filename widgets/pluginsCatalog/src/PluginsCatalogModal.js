@@ -71,7 +71,7 @@ export default class PluginsCatalogModal extends React.Component {
       .then (() => {
         this.setState ({errors: null, loading: false});
         this.props.toolbox.getEventBus ().trigger ('plugins:refresh');
-        this.props.onHide ();
+        this.props.onHide();
         this.props.onSuccess (
           `${this.props.plugin.name} Successfully uploaded`
         );
@@ -99,7 +99,7 @@ export default class PluginsCatalogModal extends React.Component {
 
     return (
       <div>
-        <Modal open={this.props.open}>
+        <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
           <Modal.Header>
             <Icon name="upload" /> Upload Plugin
             <PrivateField

@@ -6,12 +6,13 @@ import StageUtils from './stageUtils';
 import External from './External';
 import Internal from './Internal';
 import Cookies from 'js-cookie';
+import _ from 'lodash';
 
 export default class Auth {
 
     static login(username,password) {
         var external = new External({basicAuth: btoa(`${username}:${password}`)});
-        return external.doPost(StageUtils.url('/auth/login'), null, {username, password}, true, null, true);
+        return external.doPost(StageUtils.url('/auth/login'), null, null, true, null, true);
     }
 
     static getUserData(managerData){
@@ -26,5 +27,17 @@ export default class Auth {
 
     static isLoggedIn(){
         return !!Cookies.get('XSRF-TOKEN');
+    }
+
+    static getRBACConfig(managerData){
+        var internal = new Internal(managerData);
+        return internal.doGet('/auth/RBAC', null, true);
+    }
+
+    static isUserAuthorized(permission, managerData) {
+        var authorizedRoles = managerData.permissions[permission];
+        // currently only one role per user is supported
+        var userRoles = [managerData.auth.role];
+        return _.intersection(authorizedRoles, userRoles).length > 0;
     }
 }

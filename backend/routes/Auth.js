@@ -12,11 +12,10 @@ var AuthHandler = require('../handler/AuthHandler');
 var logger = require('log4js').getLogger('ClientConfigRouter');
 
 router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({extended: true}));
 
 router.post('/login', (req, res) => {
-    var username = req.body.username;
-    var password = req.body.password;
-    AuthHandler.getToken(username, password).then((token) => {
+    AuthHandler.getToken(req.headers.authorization).then((token) => {
         AuthHandler.getTenants(token.value).then((tenants) => {
             if(!!tenants && !!tenants.items && tenants.items.length > 0) {
                 res.cookie('XSRF-TOKEN', token.value);
@@ -35,11 +34,27 @@ router.post('/login', (req, res) => {
     })
     .catch((err) => {
         logger.error(err);
-        if(err === 'UNAUTHORIZED'){
+        if(err.error_code === 'unauthorized_error'){
             res.status(401).send({message: 'Invalid credentials', error: err});
         }
         res.status(500).send({message: 'Failed to authenticate with manager', error: err});
     });
+});
+
+router.post('/saml/callback', passport.authenticate('saml', {session: false}), function (req, res) {
+    if (!req.body || !req.body.SAMLResponse || !req.user) {
+        res.status(401).send('Invalid Request');
+    }
+
+    AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse).then((token) => {
+        res.cookie('XSRF-TOKEN', token.value);
+        res.redirect('/stage');
+    })
+    .catch((err) => {
+        logger.error(err);
+        res.status(500).send({message: 'Failed to authenticate with manager', error: err});
+    });
+
 });
 
 router.get('/user', passport.authenticate('token', {session: false}), (req, res) => {
@@ -53,6 +68,10 @@ router.get('/user', passport.authenticate('token', {session: false}), (req, res)
 router.post('/logout', passport.authenticate('token', {session: false}), (req, res) => {
     res.clearCookie('XSRF-TOKEN');
     res.end();
+});
+
+router.get('/RBAC', passport.authenticate('token', {session: false}), (req, res) => {
+    res.send(AuthHandler.getRBAC());
 });
 
 module.exports = router;

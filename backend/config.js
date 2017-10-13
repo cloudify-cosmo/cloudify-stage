@@ -48,7 +48,12 @@ module.exports = {
             app: {
                 initialTemplate: config.app.initialTemplate,
                 singleManager: config.app.singleManager,
-                whiteLabel : config.app.whiteLabel
+                whiteLabel : config.app.whiteLabel,
+                saml: {
+                    enabled: config.app.saml.enabled,
+                    ssoUrl: config.app.saml.ssoUrl,
+                    portalUrl: config.app.saml.portalUrl
+                }
             },
             manager: {
                 ip: config.manager.ip

@@ -5,7 +5,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Widget from '../components/Widget';
-import {renameWidget,drillDownToPage,removeWidget,editWidget,maximizeWidget} from '../actions/widgets';
+import {renameWidget,removeWidget,editWidget,maximizeWidget} from '../actions/widgets';
+import {removePageWidget, editPageWidget, maximizePageWidget} from '../actions/templateManagement';
 import {setValue} from '../actions/context';
 import {fetchWidgetData} from '../actions/WidgetData';
 
@@ -14,7 +15,8 @@ const mapStateToProps = (state, ownProps) => {
         context: state.context,
         templates: state.templates.items || {},
         manager: state.manager || {},
-        isEditMode: state.config.isEditMode,
+        isEditMode: ownProps.isEditMode,
+        pageManagementMode: ownProps.pageManagementMode,
         widgetData: _.find(state.widgetData,{id:ownProps.widget.id}) || {}
     }
 };
@@ -28,13 +30,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(setValue(key,value));
         },
         onWidgetRemoved: (pageId,widgetId) => {
-            dispatch(removeWidget(pageId,widgetId));
+            if (ownProps.pageManagementMode) {
+                dispatch(removePageWidget(widgetId));
+            } else {
+                dispatch(removeWidget(pageId, widgetId));
+            }
         },
         onWidgetMaximize: (pageId,widgetId,maximized) => {
-            dispatch(maximizeWidget(pageId,widgetId,maximized));
+            if (ownProps.pageManagementMode) {
+                dispatch(maximizePageWidget(pageId, widgetId, maximized));
+            } else {
+                dispatch(maximizeWidget(pageId, widgetId, maximized));
+            }
         },
         onWidgetConfigUpdate: (pageId, widgetId, configuration) => {
-            dispatch(editWidget(pageId, widgetId, configuration));
+            if (ownProps.pageManagementMode) {
+                dispatch(editPageWidget(pageId, widgetId, configuration));
+            } else {
+                dispatch(editWidget(pageId, widgetId, configuration));
+            }
         },
         fetchWidgetData: (widget,toolbox,paramsHandler) => {
             return dispatch(fetchWidgetData(widget,toolbox,paramsHandler));

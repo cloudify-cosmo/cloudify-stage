@@ -64,7 +64,7 @@ export default class TenantsModal extends React.Component {
         var options = _.map(tenants.items, item => { return {text: item.name, value: item.name, key: item.name} });
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
                     <Icon name="user"/> Add group {group.name} to tenants
                 </Modal.Header>

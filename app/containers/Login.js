@@ -21,8 +21,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onLogin: (username,password)=> {
-            dispatch(login(username,password));
+        onLogin: (username, password, redirect)=> {
+            dispatch(login(username, password, redirect));
         }
     }
 };

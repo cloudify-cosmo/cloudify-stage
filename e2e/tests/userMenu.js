@@ -12,7 +12,6 @@ module.exports = {
             .clickElement('@userName')
             .waitForElementVisible('@userDropdownMenu')
             .assert.containsText('#maintenanceMenuItem span','Maintenance Mode')
-            .assert.containsText('#configureMenuItem span','Configure')
             .assert.containsText('#resetMenuItem span','Reset')
             .assert.containsText('#editModeMenuItem span','Edit Mode')
             .assert.containsText('#logoutMenuItem span','Logout');

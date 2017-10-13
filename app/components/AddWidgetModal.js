@@ -140,8 +140,7 @@ export default class AddWidgetModal extends Component {
     _filterByCategory = (proxy, field) => this._doFilterWidgets(field, true);
     
     render() {
-        const addWidgetBtn = <Button labelPosition='left' icon="plus" size="tiny" color="teal"
-                                        basic content='Add Widget' className="addWidgetBtn"/>;
+        const addWidgetBtn = <Button icon="bar chart" labelPosition='left' basic content='Add Widget' className="addWidgetBtn"/>;
 
         const installWidgetBtn = <Button animated="vertical" id="installWidgetBtn" onClick={()=> {}}>
                                     <Button.Content visible>Install new widget</Button.Content>
@@ -192,7 +191,7 @@ export default class AddWidgetModal extends Component {
                                 })}
                             </Menu>)
         return (
-            <div>
+            <div className={this.props.className}>
                 <Modal trigger={addWidgetBtn} className="addWidgetModal" open={this.state.open}
                        onOpen={this._openModal.bind(this)} onClose={this._closeModal.bind(this)} size="large">
                     <Segment basic size="large">
@@ -215,11 +214,11 @@ export default class AddWidgetModal extends Component {
                                 this.state.filteredWidgetDefinitions.map(function(widget){
                                     return (
                                         <Item key={widget.id} data-id={widget.id} onClick={()=>{this._toggleWidgetInstall(widget)}}>
-                                            <Checkbox className="addWidgetCheckbox" readOnly={true} title="Add widget to page"
+                                            <Checkbox className="addWidgetCheckbox" readOnly={true} title="Add widget to page" 
                                                       checked={this.state.widgetsToAdd.includes(widget)}/>
                                             <Item.Image as="div" size="small" bordered src={Stage.Utils.url(`/widgets/${widget.id}/widget.png`)}/>
                                             <Item.Content>
-                                                <Item.Header as='a'>{widget.name}</Item.Header>
+                                                <Item.Header as='div'>{widget.name}</Item.Header>
                                                 <Item.Meta>{widget.description}</Item.Meta>
                                                 <Item.Description></Item.Description>
                                                 <Item.Extra>

@@ -17,3 +17,6 @@ tests_output
 /e2e/screenshots
 /doc/components
 /conf/me.json
+/conf/rest-security.conf
+
+package-lock.json

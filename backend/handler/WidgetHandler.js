@@ -10,6 +10,7 @@ var pathlib = require('path');
 var _ = require('lodash');
 var config = require('../config').get();
 var ArchiveHelper = require('./ArchiveHelper');
+var ResourceTypes = require('../db/types/ResourceTypes');
 
 var logger = require('log4js').getLogger('widgets');
 
@@ -42,7 +43,7 @@ module.exports = (function() {
     function _validateUniqueness(widgetId) {
         var widgets = _getInstalledWidgets();
         if (_.indexOf(widgets, widgetId) >= 0) {
-            return Promise.reject('Widget ' + widgetId + ' is already installed');
+            return Promise.reject({status: 422, message: 'Widget ' + widgetId + ' is already installed'});
         }
 
         return Promise.resolve();
@@ -99,12 +100,12 @@ module.exports = (function() {
 
     function _persistData(widgetId, username) {
         return db.Resources
-            .findOne({ where: {resourceId:widgetId, type:'widget'} })
+            .findOne({ where: {resourceId:widgetId, type:ResourceTypes.WIDGET} })
             .then(function(widget) {
                 if(widget) {
                     return widget.update({creator: username});
                 } else {
-                    return db.Resources.create({resourceId:widgetId, type:'widget', creator: username});
+                    return db.Resources.create({resourceId:widgetId, type:ResourceTypes.WIDGET, creator: username});
                 }
             });
     }
@@ -179,7 +180,7 @@ module.exports = (function() {
         var widgets = _getInstalledWidgets();
 
         return db.Resources
-            .findAll({where: {type: 'widget'}, attributes: ['resourceId'], raw: true})
+            .findAll({where: {type: ResourceTypes.WIDGET}, attributes: ['resourceId'], raw: true})
             .then(items => _.map(items, item => item.resourceId))
             .then(ids => widgets.map(id => { return {id, isCustom: _.indexOf(ids, id) >= 0}}));
     }
@@ -195,7 +196,7 @@ module.exports = (function() {
                     resolve();
                 }
             })
-        }).then(() => db.Resources.destroy({ where: {resourceId: widgetId} }));
+        }).then(() => db.Resources.destroy({ where: {resourceId: widgetId, type: ResourceTypes.WIDGET} }));
     }
 
     function isWidgetUsed(widgetId) {

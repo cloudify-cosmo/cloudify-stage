@@ -9,7 +9,8 @@ import {Icon, Popup} from './basic/index';
 
 export default class Manager extends Component {
     static propTypes = {
-        manager: PropTypes.object.isRequired
+        manager: PropTypes.object.isRequired,
+        showServicesStatus: PropTypes.bool.isRequired
     };
 
     renderStatusIcon(status, maintenance) {
@@ -20,8 +21,6 @@ export default class Manager extends Component {
     }
 
     render() {
-        let userRole = _.get(this.props.manager, 'auth.role', Consts.ROLE_USER);
-
         let managerInfo = () =>
             <div className="managerMenu">
                 {this.renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
@@ -29,7 +28,7 @@ export default class Manager extends Component {
             </div>;
 
         return (
-            userRole === Consts.ROLE_ADMIN
+            this.props.showServicesStatus
             ?
                 <Popup wide hoverable>
                     <Popup.Trigger>{managerInfo()}</Popup.Trigger>

@@ -26,8 +26,8 @@ class InfluxActions {
         return this.toolbox.getInternal().doGet(`/monitor/metrics/${deploymentId}`);
     }
 
-    doRunQuery(query) {
-        return this.toolbox.getInternal().doGet('/monitor/query', {q: query});
+    doRunQuery(qSelect, qFrom, qWhere) {
+        return this.toolbox.getInternal().doGet('/monitor/query', {qSelect, qFrom, qWhere});
     }
 }
 

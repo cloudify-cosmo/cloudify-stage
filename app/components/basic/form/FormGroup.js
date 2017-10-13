@@ -20,28 +20,16 @@ import { Form } from 'semantic-ui-react'
  *
  * ```
  * <Form size="small">
- *   <Form.Group inline widths="2">
- *     <Form.Field>
- *        <Form.InputDateRange fluid placeholder='Time Range' name="range"
- *                             value={this.state.fields.range} onChange={this._handleTimeRangeChange.bind(this)}/>
+ *   <Form.Group>
+ *     <Form.Field width="9" error={this.state.errors.widgetUrl}>
+ *       <Form.Input label="URL" placeholder="Enter widget url" name="widgetUrl"
+ *                   value={this.state.widgetUrl} onChange={this._handleInputChange.bind(this)}/>
  *     </Form.Field>
- *
- *     <Form.Field>
- *        <Button disabled={!this.dirty} icon="remove" basic floated="right"
- *                onClick={this._resetFilter.bind(this)}/>
+ *     <Form.Field width="1" style={{position:'relative'}}>
+ *       <Divider vertical>Or</Divider>
  *     </Form.Field>
- *   </Form.Group>
- *
- *   <Form.Group inline widths="2">
- *     <Form.Field>
- *       <Form.Input fluid type='number' name="resolution" label='Time Resolution'
- *                   max={Stage.Common.TimeConsts.MAX_TIME_RESOLUTION_VALUE}
- *                   min={Stage.Common.TimeConsts.MIN_TIME_RESOLUTION_VALUE}
- *                   value={this.state.fields.resolution} onChange={this._handleInputChange.bind(this)} />
- *     </Form.Field>
- *     <Form.Field>
- *        <Form.Dropdown fluid options={Stage.Common.TimeConsts.TIME_RESOLUTION_UNITS} name="unit" search selection
- *                       value={this.state.fields.unit} onChange={this._handleInputChange.bind(this)}/>
+ *     <Form.Field width="8" error={this.state.errors.widgetUrl}>
+ *       <Form.File placeholder="Select widget file" name="widgetFile" ref="widgetFile"/>
  *     </Form.Field>
  *   </Form.Group>
  * </Form>

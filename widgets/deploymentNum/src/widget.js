@@ -11,6 +11,7 @@ Stage.defineWidget({
     color : "green",
     showHeader: false,
     isReact: true,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentNum'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     
     initialConfiguration: [

@@ -75,7 +75,7 @@ export default class UploadModal extends React.Component {
 
         return (
             <div>
-                <Modal open={this.props.open}>
+                <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                     <Modal.Header>
                         <Icon name="upload"/> Upload blueprint from {files.repo}
                         <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"

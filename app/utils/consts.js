@@ -8,11 +8,19 @@ export default {
     DEFAULT_TENANT: 'default_tenant',
     MODE_MAIN: 'main',
     MODE_CUSTOMER: 'customer',
-    ROLE_ADMIN: 'admin',
-    ROLE_USER: 'user',
+    permissions: {
+        STAGE_SERVICES_STATUS: 'stage_services_status',
+        STAGE_EDIT_MODE: 'stage_edit_mode',
+        STAGE_MAINTENANCE_MODE: 'stage_maintenance_mode',
+        STAGE_CONFIGURE: 'stage_configure',
+        STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management'
+    },
     MANAGER_RUNNING: 'running',
     MAINTENANCE_ACTIVATING: 'activating',
     MAINTENANCE_ACTIVATED: 'activated',
     MAINTENANCE_DEACTIVATED: 'deactivated',
-    DEFAULT_INITIAL_TEMPLATE: 'initial-template'
+    DEFAULT_INITIAL_TEMPLATE: 'initial-template',
+    DEFAULT_ALL: '*',
+    PAGE_MANAGEMENT_VIEW: 'view',
+    PAGE_MANAGEMENT_EDIT: 'edit'
 };

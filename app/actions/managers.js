@@ -30,19 +30,23 @@ function errorLogin(username,err) {
     }
 }
 
-export function login (username,password) {
+export function login (username, password, redirect) {
     return function (dispatch) {
         dispatch(requestLogin());
         return Auth.login(username,password)
                     .then(() => {
-                        dispatch(receiveLogin());
-                        dispatch(push('/'));
+                        if(redirect){
+                            window.location = redirect;
+                        } else{
+                            dispatch(receiveLogin());
+                            dispatch(push('/'));
+                        }
                     })
                     .catch((err) => {
                         console.log(err);
                         if(err.status === 403){
                             dispatch(errorLogin(username));
-                            dispatch(push('/noTenants'));
+                            dispatch(push({pathname: '/noTenants', search: redirect ? '?redirect='+redirect : ''}));
                         } else{
                             dispatch(errorLogin(username, err));
                         }
@@ -76,16 +80,33 @@ function doLogout(err) {
         receivedAt: Date.now()
     }
 }
-export function logout(err) {
+export function logout(err, path) {
     return function (dispatch, getState) {
         var localLogout = () => {
-            dispatch(push('login'));
+            dispatch(push(path || (err ? 'error' : 'logout')));
             dispatch(clearContext());
             dispatch(doLogout(err));
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);
     }
+}
+
+export function storeRBAC(RBAC) {
+    return {
+        type: types.STORE_RBAC,
+        roles: RBAC.roles,
+        permissions: RBAC.permissions
+    }
+}
+
+export function getRBACConfig() {
+    return function (dispatch, getState) {
+        return Auth.getRBACConfig(getState().manager)
+            .then(RBAC => {
+                dispatch(storeRBAC(RBAC));
+            });
+    };
 }
 
 export function setStatus(status, maintenance, services) {
