@@ -51,7 +51,7 @@ export default class Grid extends Component {
             <ResponsiveReactGridLayout
                 className={['layout', this.props.isEditMode && 'isEditMode'].join(' ')}
                 breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 10, md: 10, sm: 6, xs: 4, xxs: 2 }} rowHeight={10}
+                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }} rowHeight={10}
                 onLayoutChange={this._saveChangedItems.bind(this)}
                 isDraggable={this.props.isEditMode}
                 isResizable={this.props.isEditMode}
