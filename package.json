@@ -1,6 +1,6 @@
 {
   "name": "cloudify-ui-new",
-  "version": "1.0.0",
+  "version": "4.2.0-.dev1",
   "description": "New cloudify ui project ... blah blah",
   "main": "index.js",
   "scripts": {
