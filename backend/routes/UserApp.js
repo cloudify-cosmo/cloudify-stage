@@ -3,13 +3,11 @@
  * Created by kinneretzin on 13/02/2017.
  */
 var express = require('express');
-var request = require('request');
 var db = require('../db/Connection');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var passport = require('passport');
 
-var logger = require('log4js').getLogger('UserAppRouter');
 var ServerSettings = require('../serverSettings');
 var config = require('../config').get();
 
@@ -24,7 +22,6 @@ router.get('/', function (req, res, next) {
         .findOne({ where: {
             managerIp: config.manager.ip,
             username: req.user.username,
-            role: req.user.role,
             mode: ServerSettings.settings.mode,
             tenant: req.headers.tenant
         } }).then(function(userApp) {
@@ -38,7 +35,6 @@ router.post('/', function (req, res, next) {
         .findOrCreate({ where: {
             managerIp: config.manager.ip,
             username: req.user.username,
-            role: req.user.role,
             mode: ServerSettings.settings.mode,
             tenant: req.headers.tenant
         }, defaults: {appData: {},appDataVersion:req.body.version}})
