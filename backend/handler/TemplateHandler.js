@@ -215,7 +215,7 @@ module.exports = (function() {
             logger.debug('Custom template: ' + templateId);
 
             if (!templateId) {
-                var initialTemplateModeRole = initialTemplateObj[mode === ServerSettings.MODE_MAIN ? role : mode];
+                var initialTemplateModeRole = (initialTemplateObj[mode === ServerSettings.MODE_MAIN ? role : mode]) || initialTemplateObj[DEFAULT_KEY];
 
                 if (_.isObject(initialTemplateModeRole)) {
                     templateId = _.get(
