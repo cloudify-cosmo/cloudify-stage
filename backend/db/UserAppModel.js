@@ -15,16 +15,15 @@ module.exports = function(sequelize, DataTypes) {
                    ServerSettings.MODE_COMMUNITY
                ],
                allowNull: false,
-               default: ServerSettings.MODE_MAIN},
-        role: {type: DataTypes.ENUM, values: ['admin', 'user'], allowNull: false, default: 'user'},
-        tenant: {type: DataTypes.STRING, allowNull: false, default: 'default_tenant'},
+               defaultValue: ServerSettings.MODE_MAIN},
+        tenant: {type: DataTypes.STRING, allowNull: false, defaultValue: 'default_tenant'},
         appData: {type: DataTypes.JSON, allowNull: false}
     },
     {
         indexes: [
             {
                 unique: true,
-                fields: ['managerIp','username','role','mode','tenant']
+                fields: ['managerIp','username','mode','tenant']
             }
         ]
     });
