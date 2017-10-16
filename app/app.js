@@ -3,7 +3,6 @@
  */
 
 import 'babel-polyfill';
-import _ from 'lodash';
 
 window.$ = $;
 import 'jquery-ui/ui/core.js';
@@ -19,11 +18,11 @@ import '../semantic/dist/semantic.min.css';
 import '../semantic/dist/semantic.min';
 
 // Import react grid
-import '../node_modules/react-grid-layout/css/styles.css';
-import '../node_modules/react-resizable/css/styles.css';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 // Import highlight
-import '../node_modules/highlight.js/styles/xcode.css';
+import 'highlight.js/styles/xcode.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -41,7 +40,6 @@ import createRoutes from './routes';
 
 import StatusPoller from './utils/StatusPoller';
 import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
-import SplashLoadingScreen from './utils/SplashLoadingScreen';
 import widgetDefinitionLoader from './utils/widgetDefinitionsLoader';
 
 const browserHistory = useRouterHistory(createHistory)({
