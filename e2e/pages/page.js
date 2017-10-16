@@ -81,6 +81,7 @@ module.exports = {
             elements: {
                 searchInput : 'input',
                 installWidgetBtn: '#installWidgetBtn',
+                testWidget: '.widgetsList .item[data-id="testWidget"]',
                 removeWidgetButton: '.widgetsList .item[data-id="testWidget"] .removeWidgetButton',
                 updateWidgetButton: '.widgetsList .item[data-id="testWidget"] .updateWidgetButton'
 
