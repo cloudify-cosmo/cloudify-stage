@@ -13,7 +13,6 @@ const mapStateToProps = (state, ownProps) => {
         manager: state.manager || {},
         mode: state.config.mode,
         config: state.config,
-        templates: state.templates,
         widgetDefinitions: state.widgetDefinitions
     }
 };
