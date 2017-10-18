@@ -130,15 +130,11 @@ export function removePage(pageId) {
 
 export function createPagesFromTemplate() {
     return function (dispatch, getState) {
-        var config = getState().config;
         var manager = getState().manager;
-
-        var mode = _.get(config, 'mode', Consts.MODE_MAIN);
-        var role = _.words(_.get(manager, 'auth.role'))[0];
         var tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
         var internal = new Internal(manager);
-        return internal.doGet('/templates/select', {mode, role, tenant})
+        return internal.doGet('/templates/select', {tenant})
             .then(templateId => {
                 console.log('Selected template id', templateId);
 
