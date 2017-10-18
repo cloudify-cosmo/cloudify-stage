@@ -2,7 +2,7 @@
   "contextPath": "/stage",
   "initialTemplate": {
     "*": "initial-template",
-    "admin": {
+    "sys_admin": {
       "*": "initial-template-admin"
     },
     "user": {
