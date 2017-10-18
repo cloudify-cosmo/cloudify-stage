@@ -142,15 +142,15 @@ export function createPagesFromTemplate() {
             .then(templateId => {
                 console.log('Selected template id', templateId);
 
-                var templates = getState().templates;
+                var storeTemplates = getState().templates;
                 var widgetDefinitions = getState().widgetDefinitions;
 
-                var pages = templates[templateId];
+                var pages = storeTemplates.templatesDef[templateId];
 
                 console.log('Create pages from selected template', pages);
 
                 _.each(pages, id => {
-                    var page = templates[id];
+                    var page = storeTemplates.pagesDef[id];
                     if (!page) {
                         console.error('Cannot find page template: ' + id + '. Skipping... ');
                         return;

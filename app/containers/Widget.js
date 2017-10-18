@@ -13,7 +13,6 @@ import {fetchWidgetData} from '../actions/WidgetData';
 const mapStateToProps = (state, ownProps) => {
     return {
         context: state.context,
-        templates: state.templates.items || {},
         manager: state.manager || {},
         isEditMode: ownProps.isEditMode,
         pageManagementMode: ownProps.pageManagementMode,

@@ -11,7 +11,6 @@ import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 export default class WidgetDynamicContent extends Component {
     static propTypes = {
         widget: PropTypes.object.isRequired,
-        templates : PropTypes.object.isRequired,
         manager: PropTypes.object.isRequired,
         data: PropTypes.object.isRequired,
         onWidgetConfigUpdate: PropTypes.func,

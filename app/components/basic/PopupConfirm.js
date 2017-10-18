@@ -46,7 +46,7 @@ export default class PopupConfirm extends Component {
 
     render() {
         return (
-            <Popup trigger={this.props.trigger} flowing on='click' hideOnScroll open={this.state.showPopup}
+            <Popup trigger={this.props.trigger} on='click' wide="very" hideOnScroll open={this.state.showPopup}
                    onOpen={this.openPopup.bind(this)} onClose={this.closePopup.bind(this)}>
                 <Header>{this.state.canConfirm ? this.state.canConfirm : this.props.content}</Header>
 
