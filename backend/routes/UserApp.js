@@ -46,4 +46,20 @@ router.post('/', function (req, res, next) {
         .catch(next);
 });
 
+router.get('/clear-pages', function (req, res, next) {
+    db.UserApp
+        .findOne({ where: {
+            managerIp: config.manager.ip,
+            username: req.user.username,
+            mode: ServerSettings.settings.mode,
+            tenant: req.query.tenant
+        }, defaults: {appData: {},appDataVersion:req.body.version}})
+        .then(function(userApp) {
+            userApp.update({ appData: {pages:[]}}).then(function(ua) {
+                res.send(ua);
+            })
+        })
+        .catch(next);
+});
+
 module.exports = router;
