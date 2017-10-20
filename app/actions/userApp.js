@@ -7,6 +7,7 @@ import {createPagesFromTemplate} from './page';
 import {setAppLoading, setAppError} from './app';
 import Internal from '../utils/Internal';
 import { push } from 'react-router-redux';
+import Consts from '../utils/consts';
 
 const  CURRENT_APP_DATA_VERSION = 4;
 
@@ -18,8 +19,20 @@ function setPages(pages) {
     }
 }
 
+export function clearPagesForTenant(tenant){
+    return function(dispatch, getState) {
+        let manager = getState().manager;
+        if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
+            resetTemplate(dispatch);
+        } else {
+            let internal = new Internal(getState().manager);
+            return internal.doGet('ua/clear-pages', {tenant: tenant});
+        }
+    }
+}
+
 export function saveUserAppData (manager, appData) {
-    return function(dispatch) {
+    return function() {
         var data = {appData , version: CURRENT_APP_DATA_VERSION};
 
         var internal = new Internal(manager);
@@ -27,22 +40,20 @@ export function saveUserAppData (manager, appData) {
     }
 }
 
-export function resetTemplate(){
-    return function(dispatch, getState) {
-        // First clear the pages
-        dispatch(setAppLoading(true));
-        dispatch(setPages([]));
-        dispatch(createPagesFromTemplate())
-            .then(() => {
-                dispatch(setAppLoading(false))
-                dispatch(push('/'));
-            })
-            .catch(err => {
-                dispatch(setAppError(err.message));
-                dispatch(push('error'));
-                throw err;
-            });
-    }
+function resetTemplate(dispatch){
+    // First clear the pages
+    dispatch(setAppLoading(true));
+    dispatch(setPages([]));
+    dispatch(createPagesFromTemplate())
+        .then(() => {
+            dispatch(setAppLoading(false));
+            dispatch(push('/'));
+        })
+        .catch(err => {
+            dispatch(setAppError(err.message));
+            dispatch(push('error'));
+            throw err;
+        });
 }
 
 export function loadOrCreateUserAppData() {
@@ -58,7 +69,7 @@ export function loadOrCreateUserAppData() {
                     userApp.appData.pages && userApp.appData.pages.length > 0) {
                     return dispatch(setPages(userApp.appData.pages));
                 } else {
-                    dispatch(resetTemplate());
+                    dispatch(resetTemplate);
                     return dispatch(saveUserAppData(manager, {pages: getState().pages}));
                 }
             });
