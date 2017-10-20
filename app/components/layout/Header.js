@@ -7,7 +7,7 @@ import React, { Component, PropTypes } from 'react';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
-import {Confirm} from '../basic';
+import ResetViewsModal from '../../components/ResetViewsModal.js';
 import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
 import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
 import ConfigureModal from '../../containers/ConfigureModal';
@@ -90,10 +90,11 @@ export default class Header extends Component {
                                  onHide={()=> this.setState({showMaintenanceModal: false})}/>
                 <ConfigureModal show={this.state.showConfigureModal}
                                 onHide={()=> this.setState({showConfigureModal: false})}/>
-                <Confirm content={'Are you sure you want to reset application screens to default?'}
-                         open={this.state.showResetConfirm}
-                         onConfirm={()=>{this.setState({showResetConfirm: false}); this.props.onResetTemplate()}}
-                         onCancel={()=>this.setState({showResetConfirm: false})} />
+
+                <ResetViewsModal open={this.state.showResetConfirm}
+                                 tenants={this.props.manager.tenants}
+                                 onConfirm={(tenantList)=>{this.setState({showResetConfirm: false}); this.props.onResetTemplate(tenantList)}}
+                                 onHide={()=> this.setState({showResetConfirm: false})} />
             </div>
         );
     }

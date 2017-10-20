@@ -5,7 +5,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Header from '../../components/layout/Header';
-import {resetTemplate} from '../../actions/userApp';
+import {clearPagesForTenant} from '../../actions/userApp';
 import {toogleSidebar} from '../../actions/app';
 
 const mapStateToProps = (state, ownProps) => {
@@ -20,8 +20,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onResetTemplate: () =>{
-            dispatch(resetTemplate());
+        onResetTemplate: (tenantList) =>{
+            _.forEach(tenantList, tennant => {
+                dispatch(clearPagesForTenant(tennant));
+            });
         },
         onSidebarOpen(){
             dispatch(toogleSidebar());
