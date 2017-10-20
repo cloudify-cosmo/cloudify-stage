@@ -51,15 +51,13 @@ export default class ResetViewsModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}
-                          onErrorsDismiss={() => this.setState({errors: {}})}>
                         Please select tenants you would like to reset views for:
                         <Table celled padded>
                             <Table.Body>
                                 {this.props.tenants.items.map((tenant) => {
                                     return (
                                         <Table.Row key={tenant.name}>
-                                            <Table.Cell>
+                                            <Table.Cell textAlign="right">
                                                 <Checkbox
                                                     name={tenant.name}
                                                     defaultChecked
@@ -73,12 +71,11 @@ export default class ResetViewsModal extends React.Component {
                                 })}
                             </Table.Body>
                         </Table>
-                    </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} icon="undo" color="green"/>
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} icon="undo" color="green" content="Reset"/>
                 </Modal.Actions>
             </Modal>
         );
