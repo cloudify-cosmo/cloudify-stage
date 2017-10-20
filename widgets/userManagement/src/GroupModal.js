@@ -45,6 +45,8 @@ export default class GroupModal extends React.Component {
         actions.doHandleGroups(this.props.user.username, groupsToAdd, groupsToRemove).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('userGroups:refresh');
+            this.props.toolbox.getEventBus().trigger('tenants:refresh');
             this.props.onHide();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
