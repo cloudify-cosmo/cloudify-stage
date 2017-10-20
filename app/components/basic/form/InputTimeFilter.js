@@ -351,14 +351,15 @@ export default class InputTimeFilter extends React.Component {
     _handleApplyButtonClick(event, data) {
         let isStartValidDate = this._isValidDate(this.state.start);
         let isEndValidDate = this._isValidDate(this.state.end);
+        let isValid = isStartValidDate && isEndValidDate;
 
         let newState = {
             startError: isStartValidDate ? false : true,
             endError: isEndValidDate? false : true,
-            isOpen: !(isStartValidDate && isEndValidDate)
+            isOpen: !isValid
         };
 
-        this.setState(newState, () => this.props.onApply(event, {name: this.props.name, value: this._getTimeFilterObject()}));
+        this.setState(newState, () => { if (isValid) { this.props.onApply(event, {name: this.props.name, value: this._getTimeFilterObject()}); }});
     }
 
     _handleCancelButtonClick(event, data) {
