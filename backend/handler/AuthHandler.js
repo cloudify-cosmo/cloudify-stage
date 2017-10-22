@@ -26,7 +26,7 @@ class AuthHandler {
     }
 
     static getUser(token){
-        return ManagerHandler.jsonRequest('GET', '/user', {
+        return ManagerHandler.jsonRequest('GET', '/user?_get_data=true', {
                 'authentication-token': token
             }
         );
