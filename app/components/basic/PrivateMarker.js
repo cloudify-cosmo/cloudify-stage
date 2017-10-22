@@ -3,7 +3,8 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Icon} from 'semantic-ui-react'
+import {Icon} from 'semantic-ui-react';
+import Consts from '../../utils/consts';
 
 /**
  * PrivateMarker - a simple red padlock icon with a show/hide switch
@@ -17,30 +18,30 @@ import {Icon} from 'semantic-ui-react'
  *
  * ![PrivateMarker](manual/asset/privateMarker/PrivateMarker_0.png)
  * ```
- * <PrivateMarker title='Private Marker' show={true} />
+ * <PrivateMarker title='Private Marker' availability={'private'} />
  *```
  */
 export default class PrivateMarker extends Component {
 
     /**
-     * @property {boolean} [show=false] If 'true' the component will be displayed
+     * @property {string} [availability=''] resource availability - in ['private', 'tenant, 'global']
      * @property {string} [title=''] Tooltip text when mouse is over the component
      * @property {string} [className=''] Name of the style class to be added
      */
     static propTypes = {
-        show: PropTypes.bool,
+        availability: PropTypes.string,
         title: PropTypes.string,
         className: PropTypes.string
     };
 
     static defaultProps = {
-        show: false,
+        availability: '',
         title: '',
         className: ''
     };
 
     render() {
-        if (!this.props.show) {
+        if (this.props.availability !== Consts.PRIVATE_RESOURCE) {
             return null;
         }
 

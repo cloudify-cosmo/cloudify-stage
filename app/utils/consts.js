@@ -22,5 +22,6 @@ export default {
     DEFAULT_INITIAL_TEMPLATE: 'initial-template',
     DEFAULT_ALL: '*',
     PAGE_MANAGEMENT_VIEW: 'view',
-    PAGE_MANAGEMENT_EDIT: 'edit'
+    PAGE_MANAGEMENT_EDIT: 'edit',
+    PRIVATE_RESOURCE: 'private'
 };

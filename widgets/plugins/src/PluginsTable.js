@@ -109,7 +109,7 @@ export default class extends React.Component {
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
                                         {item.id}
-                                        <PrivateMarker show={item.private_resource} title="Private resource"/>
+                                        <PrivateMarker availability={item.resource_availability} title="Private resource"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.package_name}</DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>
