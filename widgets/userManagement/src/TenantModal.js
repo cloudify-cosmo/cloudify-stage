@@ -45,6 +45,7 @@ export default class TenantModal extends React.Component {
         actions.doHandleTenants(this.props.user.username, tenantsToAdd, tenantsToRemove).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('tenants:refresh');
             this.props.onHide();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
