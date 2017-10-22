@@ -36,8 +36,10 @@ export default class Auth {
 
     static isUserAuthorized(permission, managerData) {
         var authorizedRoles = managerData.permissions[permission];
-        // currently only one role per user is supported
-        var userRoles = [managerData.auth.role];
+
+        var systemRole = managerData.auth.role;
+        var tenantRoles = managerData.auth.tenantsRoles[managerData.tenants.selected];
+        var userRoles = tenantRoles.concat(systemRole);
         return _.intersection(authorizedRoles, userRoles).length > 0;
     }
 }
