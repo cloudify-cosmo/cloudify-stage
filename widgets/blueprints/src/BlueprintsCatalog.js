@@ -42,7 +42,7 @@ export default class BlueprintsCatalog extends React.Component{
                                     <Grid.Column width="16">
                                         <Image src={Stage.Utils.url(`/ba/image/${item.id}`)}/>
                                         <Header><a href="javascript:void(0)" className="breakWord">{item.id}</a></Header>
-                                        <PrivateMarker show={item.private_resource} title="Private resource" className="rightFloated"/>
+                                        <PrivateMarker availability={item.resource_availability} title="Private resource" className="rightFloated"/>
                                     </Grid.Column>
                                 </Grid.Row>
 
