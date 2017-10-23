@@ -97,8 +97,8 @@ export default class UpdateModal extends React.Component {
                         <Form loading={this.state.loading} errors={this.state.errors}
                               onErrorsDismiss={() => this.setState({errors: {}})}>
                             <Form.Field error={this.state.errors.secretValue}>
-                                <Form.Input name='secretValue' placeholder='Secret value'
-                                            value={this.state.secretValue} onChange={this._handleInputChange.bind(this)}/>
+                                <Form.TextArea name='secretValue' placeholder='Secret value' autoHeight
+                                               value={this.state.secretValue} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
                         </Form>
                     </Modal.Content>
