@@ -84,7 +84,7 @@ export default class UserDetails extends React.Component {
                     <Divider/>
                     <List divided relaxed verticalAlign='middle' className="light">
                         {
-                            this.props.data.tenants.map((item) => {
+                            _.map(_.keys(this.props.data.tenants), (item) => {
                                 let processing = this.state.processing && this.state.processItem === item;
 
                                 return (
