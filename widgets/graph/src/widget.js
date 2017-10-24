@@ -37,8 +37,8 @@ Stage.defineWidget({
         {id: 'timeFilter', name: 'Time range and resolution',  description: 'Time range and time resolution for all defined charts',
          type: Stage.Basic.GenericField.TIME_FILTER_TYPE, default: Stage.Basic.InputTimeFilter.INFLUX_DEFAULT_VALUE}
     ],
-    UNCONFIGURED_STATE: {unconfigured: true},
-    UNINITIALIZED_STATE: {},
+    UNCONFIGURED_STATE: 'unconfigured',
+    EMPTY_RESPONSE_STATE: 'emptyResponse',
 
     _prepareData: function(data, xDataKey) {
         const TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -143,16 +143,12 @@ Stage.defineWidget({
         });
     },
 
-    _isEmptyResponse: function(data) {
-        return _.isArray(data) && _.isEmpty(data);
-    },
-
-    _isWidgetUnitialized: function(widget, data) {
-        return _.isNil(data) || _.isEqual(data, widget.definition.UNINITIALIZED_STATE);
+    _isEmptyResponse: function(widget, data) {
+        return _.isEqual(_.get(data, 'state', ''), widget.definition.EMPTY_RESPONSE_STATE);
     },
 
     _isWidgetNotConfigured: function(widget, data) {
-        return _.isEqual(data, widget.definition.UNCONFIGURED_STATE);
+        return _.isEqual(_.get(data, 'state', ''), widget.definition.UNCONFIGURED_STATE);
     },
 
     fetchParams: function(widget, toolbox) {
@@ -189,7 +185,7 @@ Stage.defineWidget({
                 toolbox.loading(false);
                 let formattedResponse
                     = _.map(data, (metric) => ({name: _.last(_.split(metric.name, '.')), points: metric.points}));
-                return Promise.resolve(formattedResponse)
+                return Promise.resolve(_.isEmpty(data) ? {state: widget.definition.EMPTY_RESPONSE_STATE} : formattedResponse);
             }).catch((error) => {
                 toolbox.loading(false);
                 return Promise.reject('There was a problem while querying for data. ' +
@@ -203,7 +199,7 @@ Stage.defineWidget({
                     toolbox.loading(false);
                     let formattedResponse
                         = _.map(data, (metric) => ({name: _.last(_.split(metric.name, '.')), points: metric.points}));
-                    return Promise.resolve(formattedResponse);
+                    return Promise.resolve(_.isEmpty(data) ? {state: widget.definition.EMPTY_RESPONSE_STATE} : formattedResponse);
                 })
                 .catch((error) => {
                     toolbox.loading(false);
@@ -213,7 +209,7 @@ Stage.defineWidget({
                 });
         } else {
             toolbox.loading(false);
-            return Promise.resolve(widget.definition.UNCONFIGURED_STATE);
+            return Promise.resolve({state: widget.definition.UNCONFIGURED_STATE});
         }
     },
 
@@ -221,7 +217,7 @@ Stage.defineWidget({
         let {charts, query, type} = widget.configuration;
         let {Message, Icon} = Stage.Basic;
 
-        if (this._isWidgetUnitialized(widget, data)) {
+        if (_.isEmpty(data)) {
             return (
                 <Stage.Basic.Loading/>
             );
@@ -229,11 +225,10 @@ Stage.defineWidget({
             return (
                 <Message info icon>
                     <Icon name='info' />
-                    Please configure chart(s) in Charts Table
-                    and provide Deployment ID or fill in InfluxQL query.
+                    Please select a deployment and use the widget's configuration to present the data graph.
                 </Message>
             );
-        } else if (this._isEmptyResponse(data)) {
+        } else if (this._isEmptyResponse(widget, data)) {
             return (
                 <Message info icon>
                     <Icon name='ban' />
