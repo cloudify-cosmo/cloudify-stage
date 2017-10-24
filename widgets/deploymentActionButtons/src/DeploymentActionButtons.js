@@ -71,7 +71,7 @@ export default class DeploymentActionButtons extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 <PopupMenu className="workflowAction" position="bottom center" offset={0}>
                     <Popup.Trigger>
