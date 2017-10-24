@@ -113,7 +113,7 @@ export default class BlueprintSources extends React.Component {
                     </div>
                 }
 
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
             </div>
         );
     }

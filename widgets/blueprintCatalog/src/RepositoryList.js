@@ -95,7 +95,7 @@ export default class extends React.Component {
         return (
             <div>
                 {this.props.data.isAuthenticated ? '' :notAuthenticatedWarning}
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 {
                     this.props.widget.configuration.displayStyle === 'table' ?
