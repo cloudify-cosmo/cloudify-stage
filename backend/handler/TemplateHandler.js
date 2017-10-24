@@ -71,10 +71,12 @@ module.exports = (function() {
     function _getRole(systemRole, tenantsRoles, tenant) {
         var rbac = AuthHandler.getRBAC();
         var roles = rbac.roles;
-        var tenantRole = tenantsRoles[tenant][0];
 
         logger.debug('Inputs for role calculation: ' + 'systemRole=' + systemRole +
-            ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
+                     ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
+
+        var tenantRoles = tenantsRoles[tenant];
+        var tenantRole = _.isArray(tenantRoles) ? _.first(tenantsRoles) : '';
 
         var result = null;
         for (var i = 0; i < roles.length; i++) {
