@@ -45,7 +45,7 @@ export function fetchTemplates() {
                 var pageList = data[1];
 
                 var templates = _.map(templateList, template => {
-                    return {...template, pages: storeTemplates[template.id]}
+                    return {...template, pages: storeTemplates.templatesDef[template.id]}
                 });
                 if (selectedTemplate) {
                     (_.find(templates, {'id': selectedTemplate.id}) || {}).selected = true;
@@ -53,7 +53,7 @@ export function fetchTemplates() {
 
 
                 var pages = _.map(pageList, page => {
-                    return {...page, name: (storeTemplates[page.id] || {}).name,
+                    return {...page, name: (storeTemplates.pagesDef[page.id] || {}).name,
                             templates: _.map(_.filter(templates, template => _.indexOf(template.pages, page.id) >= 0), 'id')
                     }
                 });
@@ -117,8 +117,8 @@ export function selectTemplate(templateId) {
     }
 }
 
-function createPageId(name, templates) {
-    var ids = _.keysIn(templates);
+function createPageId(name, pages) {
+    var ids = _.keysIn(pages);
 
     //Add suffix to make URL unique if same page name already exists
     var newPageId = _.snakeCase(name.trim());
@@ -140,7 +140,7 @@ function createPageId(name, templates) {
 
 export function createPage(pageName) {
     return function (dispatch, getState) {
-        let pageId = createPageId(pageName, getState().templates);
+        let pageId = createPageId(pageName, getState().templates.pagesDef);
         var page = {
             id: pageId,
             name: pageName,
@@ -207,7 +207,7 @@ export function changePageName(pageId, pageName) {
 
 export function updatePageName(pageName) {
     return function (dispatch, getState) {
-        let pageId = createPageId(pageName, getState().templates);
+        let pageId = createPageId(pageName, getState().templates.pagesDef);
         dispatch(changePageName(pageId, pageName));
     }
 }
@@ -216,9 +216,9 @@ export function showPage(pageId, pageName, isPageEditMode) {
     return function (dispatch, getState) {
         dispatch(setPageShow(pageId, pageName, isPageEditMode));
 
-        var templates = getState().templates;
+        var pagesDef = getState().templates.pagesDef;
         var widgetDefinitions = getState().widgetDefinitions;
-        var page = templates[pageId];
+        var page = pagesDef[pageId];
 
         _.each(page.widgets, (widget) => {
             var widgetDefinition = _.find(widgetDefinitions, {id: widget.definition});

@@ -10,13 +10,13 @@ const templates = (state = {}, action) => {
             return {...action.templates};
         case types.ADD_TEMPLATE:
         case types.EDIT_TEMPLATE:
-            return {...state, [action.templateId]: action.pages};
+            return {...state, templatesDef: {...state.templatesDef, [action.templateId]: action.pages}};
         case types.REMOVE_TEMPLATE:
-            return _.omit(state, [action.templateId]);
+            return {...state, templatesDef: _.omit(state.templatesDef, [action.templateId])};
         case types.ADD_TEMPLATE_PAGE:
-            return {...state, [action.pageId]: {name: action.name, widgets: action.widgets}};
+            return {...state, pagesDef: {...state.pagesDef, [action.pageId]: {name: action.name, widgets: action.widgets}}};
         case types.REMOVE_TEMPLATE_PAGE:
-            return _.omit(state, [action.pageId]);
+            return {...state, pagesDef: _.omit(state.pagesDef, [action.pageId])};
         default:
             return state;
     }
