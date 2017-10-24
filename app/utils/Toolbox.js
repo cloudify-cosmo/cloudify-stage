@@ -37,7 +37,7 @@ class Toolbox {
     }
 
     drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName) {
-        this.store.dispatch(drillDownToPage(widget,this.templates.templatesDef[defaultTemplate],this.widgetDefinitions,drilldownContext,drilldownPageName));
+        this.store.dispatch(drillDownToPage(widget,this.templates.pagesDef[defaultTemplate],this.widgetDefinitions,drilldownContext,drilldownPageName));
     }
 
     goToHomePage() {
