@@ -14,7 +14,6 @@ export default class Widget extends Component {
         pageId: PropTypes.string.isRequired,
         widget: PropTypes.object.isRequired,
         context: PropTypes.object.isRequired,
-        templates : PropTypes.object.isRequired,
         manager: PropTypes.object.isRequired,
         widgetData: PropTypes.object,
         onWidgetNameChange: PropTypes.func.isRequired,
@@ -137,7 +136,6 @@ export default class Widget extends Component {
                     !_.isEmpty(_.get(this.props,'manager.tenants.selected')) &&
                     !_.get(this.props,'manager.tenants.isFetching'))?
                         <WidgetDynamicContent widget={this.props.widget}
-                                              templates={this.props.templates}
                                               context={this.props.context}
                                               manager={this.props.manager}
                                               data={this.props.widgetData}

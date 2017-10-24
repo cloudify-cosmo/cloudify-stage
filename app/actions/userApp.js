@@ -32,7 +32,7 @@ export function resetTemplate(){
         // First clear the pages
         dispatch(setAppLoading(true));
         dispatch(setPages([]));
-        dispatch(createPagesFromTemplate())
+        return dispatch(createPagesFromTemplate())
             .then(() => {
                 dispatch(setAppLoading(false))
                 dispatch(push('/'));
@@ -58,8 +58,7 @@ export function loadOrCreateUserAppData() {
                     userApp.appData.pages && userApp.appData.pages.length > 0) {
                     return dispatch(setPages(userApp.appData.pages));
                 } else {
-                    dispatch(resetTemplate());
-                    return dispatch(saveUserAppData(manager, {pages: getState().pages}));
+                    return dispatch(resetTemplate());
                 }
             });
     }
