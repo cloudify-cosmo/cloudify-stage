@@ -35,7 +35,7 @@ Stage.defineWidget({
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
                     userCount: item.users.length,
-                    tenantCount: item.tenants.length,
+                    tenantCount: _.size(item.tenants),
                     isSelected: item.name === selectedUserGroup
                 })
             }),

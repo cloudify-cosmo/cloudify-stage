@@ -10,6 +10,7 @@ var _ = require('lodash');
 var config = require('../config').get();
 var ServerSettings = require('../serverSettings');
 var ResourceTypes = require('../db/types/ResourceTypes');
+var AuthHandler = require('./AuthHandler');
 
 var logger = require('log4js').getLogger('templates');
 
@@ -65,6 +66,32 @@ module.exports = (function() {
 
     function _getPages() {
         return fs.readdirSync(pathlib.resolve(pagesFolder));
+    }
+
+    function _getRole(systemRole, tenantsRoles, tenant) {
+        var rbac = AuthHandler.getRBAC();
+        var roles = rbac.roles;
+
+        logger.debug('Inputs for role calculation: ' + 'systemRole=' + systemRole +
+                     ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
+
+        var tenantRoles = tenantsRoles[tenant];
+        var tenantRole = _.isArray(tenantRoles) ? _.first(tenantsRoles) : '';
+
+        var result = null;
+        for (var i = 0; i < roles.length; i++) {
+            var role = roles[i].name;
+            if (_.isEqual(role, systemRole)) {
+                result = systemRole;
+                break;
+            } else if (_.isEqual(role, tenantRole)) {
+                result = tenantRole;
+                break;
+            }
+        }
+
+        logger.debug('Calculated role: ' + result);
+        return result;
     }
 
     function listPages() {
@@ -193,10 +220,11 @@ module.exports = (function() {
         }).then(() => db.Resources.destroy({ where: {resourceId: pageId, type:ResourceTypes.PAGE}}));
     }
 
-    function selectTemplate(mode, role, tenant) {
+    function selectTemplate(mode, systemRole, tenantsRoles, tenant) {
         var DEFAULT_KEY = '*';
 
         var initialTemplateObj = config.app.initialTemplate;
+        var role = _getRole(systemRole, tenantsRoles, tenant);
 
         logger.debug('Template inputs: mode=' + mode + ', role=' + role + ', tenant=' + tenant);
 

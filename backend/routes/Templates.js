@@ -63,7 +63,7 @@ router.delete('/pages/:pageId', function (req, res, next) {
 });
 
 router.get('/select', function (req, res, next) {
-    TemplateHandler.selectTemplate(ServerSettings.settings.mode, req.user.role, req.query.tenant)
+    TemplateHandler.selectTemplate(ServerSettings.settings.mode, req.user.role, req.user.tenants, req.query.tenant)
         .then(template => res.send(template))
         .catch(next);
 });

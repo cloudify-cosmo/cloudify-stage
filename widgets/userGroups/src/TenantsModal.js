@@ -30,7 +30,7 @@ export default class TenantsModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            this.setState({...TenantsModal.initialState, tenants: nextProps.group.tenants});
+            this.setState({...TenantsModal.initialState, tenants: _.keys(nextProps.group.tenants)});
         }
     }
 
@@ -38,8 +38,8 @@ export default class TenantsModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        let tenantsToAdd = _.difference(this.state.tenants, this.props.group.tenants);
-        let tenantsToRemove = _.difference(this.props.group.tenants, this.state.tenants);
+        let tenantsToAdd = _.difference(this.state.tenants, _.keys(this.props.group.tenants));
+        let tenantsToRemove = _.difference(_.keys(this.props.group.tenants), this.state.tenants);
 
         var actions = new Actions(this.props.toolbox);
         actions.doHandleTenants(this.props.group.name, tenantsToAdd, tenantsToRemove).then(()=>{
