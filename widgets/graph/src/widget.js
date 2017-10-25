@@ -144,11 +144,11 @@ Stage.defineWidget({
     },
 
     _isEmptyResponse: function(widget, data) {
-        return _.isEqual(_.get(data, 'state', ''), widget.definition.EMPTY_RESPONSE_STATE);
+        return data.state === widget.definition.EMPTY_RESPONSE_STATE;
     },
 
     _isWidgetNotConfigured: function(widget, data) {
-        return _.isEqual(_.get(data, 'state', ''), widget.definition.UNCONFIGURED_STATE);
+        return data.state === widget.definition.UNCONFIGURED_STATE;
     },
 
     fetchParams: function(widget, toolbox) {
