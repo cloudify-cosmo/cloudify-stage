@@ -22,11 +22,11 @@ const widgetData = (state=[], action) => {
             } else {
                 return state.map( (w) => {
                     if (w.id === action.widgetId) {
-                        return Object.assign(w,{
+                        return {...w, ...{
                             loading:true,
                             canceled: false,
                             error: null
-                        })
+                        }}
                     }
                     return w
                 });
@@ -35,24 +35,24 @@ const widgetData = (state=[], action) => {
         case types.WIDGET_FETCH_ERROR:
             return state.map( (w) => {
                 if (w.id === action.widgetId) {
-                    return Object.assign(w,{
+                    return {...w, ...{
                         loading:false,
                         error: action.error,
                         canceled: false
-                    })
+                    }}
                 }
                 return w
             });
         case types.WIDGET_FETCH_RES:
             return state.map( (w) => {
                 if (w.id === action.widgetId) {
-                    return Object.assign(w,{
+                    return {...w, ...{
                         loading:false,
                         data: action.data,
                         recievedAt: action.recievedAt,
                         error: null,
                         canceled: false
-                    })
+                    }}
                 }
                 return w
             });
@@ -60,11 +60,11 @@ const widgetData = (state=[], action) => {
         case types.WIDGET_FETCH_CANCELED:
             return state.map( (w) => {
                 if (w.id === action.widgetId) {
-                    return Object.assign(w,{
+                    return {...w, ...{
                         loading:false,
                         error: null,
                         canceled: true
-                    })
+                    }}
                 }
                 return w
             });

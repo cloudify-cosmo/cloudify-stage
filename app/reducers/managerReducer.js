@@ -52,7 +52,8 @@ const manager = (state = {}, action) => {
             return Object.assign({}, state, {
                 username: action.username,
                 auth: {
-                    role: action.role
+                    role: action.role,
+                    tenantsRoles: action.tenantsRoles
                 },
                 serverVersion: action.serverVersion,
             });

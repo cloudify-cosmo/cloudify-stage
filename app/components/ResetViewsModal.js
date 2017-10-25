@@ -42,35 +42,25 @@ export default class ResetViewsModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, ApproveButton, CancelButton, Checkbox, Table} = Stage.Basic;
+        var {Modal, Icon, Form, ApproveButton, CancelButton, Checkbox, List, Card, Segment} = Stage.Basic;
 
         return (
-            <Modal size="small" open={this.props.open} onClose={()=>this.props.onHide()}>
+            <Modal size="small" className="tiny" open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
                     <Icon name="user"/> Reset view for tenants
                 </Modal.Header>
 
                 <Modal.Content>
-                        Please select tenants you would like to reset views for:
-                        <Table celled padded>
-                            <Table.Body>
-                                {this.props.tenants.items.map((tenant) => {
-                                    return (
-                                        <Table.Row key={tenant.name}>
-                                            <Table.Cell textAlign="right">
-                                                <Checkbox
-                                                    name={tenant.name}
-                                                    defaultChecked
-                                                    onChange={this.toggleCheckbox.bind(this)} />
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                {tenant.name}
-                                            </Table.Cell>
-                                        </Table.Row>
-                                    );
-                                })}
-                            </Table.Body>
-                        </Table>
+                        Please select tenants you would like to reset views for:<br/>
+
+                        <Card fluid><Card.Content>
+                        <List relaxed>
+                            {this.props.tenants.items.map((tenant) => {
+                                return (
+                                    <List.Item><Checkbox name={tenant.name} defaultChecked onChange={this.toggleCheckbox.bind(this)} label={tenant.name}/></List.Item>
+                                );
+                            })}
+                        </List></Card.Content></Card>
                 </Modal.Content>
 
                 <Modal.Actions>

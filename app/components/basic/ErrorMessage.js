@@ -50,20 +50,22 @@ export default class ErrorMessage extends Component {
         error: PropTypes.any,
         onDismiss: PropTypes.func,
         header: PropTypes.string,
-        className: PropTypes.string
+        className: PropTypes.string,
+        autoHide: PropTypes.bool
     };
 
     static defaultProps = {
         error: null,
         onDismiss: () => {},
         header: 'Error Occured',
-        className: ''
+        className: '',
+        autoHide: false
     };
 
     /**
      * Message visibility timeout
      */
-    static MESSAGE_VISIBLE_TIMEOUT = 5000;
+    static MESSAGE_VISIBLE_TIMEOUT = 10000;
 
     componentWillReceiveProps(nextProps) {
         if (!_.isEqual(nextProps.error, this.props.error)) {
@@ -83,10 +85,12 @@ export default class ErrorMessage extends Component {
     }
 
     _setVisibilityTimeout(timeout) {
-        clearTimeout(this.visibilityTimeout);
-        this.visibilityTimeout = setTimeout(() => {
-            this._handleDismiss();
-        }, timeout)
+        if (this.props.autoHide) {
+            clearTimeout(this.visibilityTimeout);
+            this.visibilityTimeout = setTimeout(() => {
+                this._handleDismiss();
+            }, timeout)
+        }
     }
 
     _handleDismiss() {

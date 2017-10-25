@@ -29,9 +29,11 @@ describe('(Reducer) Pages - drilldown process', () => {
         it('create a drilldown page if it doesnt exist', () => {
             var initialState = {
                 templates: {
-                    'tmp1' : {
-                        name: 'tmp1',
-                        widgets: [{name: 'some widget',definition: 'widget1',width:1,height:1,x:1,y:1}]
+                    templatesDef: {
+                        'tmp1': {
+                            name: 'tmp1',
+                            widgets: [{name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1}]
+                        }
                     }
                 },
                 manager : {
@@ -55,7 +57,7 @@ describe('(Reducer) Pages - drilldown process', () => {
             ];
 
             var widget = initialState.pages[0].widgets[0];
-            var defaultTemplate = initialState.templates.tmp1;
+            var defaultTemplate = initialState.templates.templatesDef.tmp1;
             var widgetDefinitions = initialState.widgetDefinitions;
 
             store.dispatch(drillDownToPage(widget,defaultTemplate,widgetDefinitions));
@@ -81,9 +83,11 @@ describe('(Reducer) Pages - drilldown process', () => {
         it('move to an existing drilldown ', () => {
             var initialState = {
                 templates: {
-                    'tmp1' : {
-                        name: 'tmp1',
-                        widgets: [{name: 'some widget',definition: 'widget1',width:1,height:1,x:1,y:1}]
+                    templatesDef: {
+                        'tmp1': {
+                            name: 'tmp1',
+                            widgets: [{name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1}]
+                        }
                     }
                 },
                 manager : {
@@ -106,7 +110,7 @@ describe('(Reducer) Pages - drilldown process', () => {
             ];
 
             var widget = initialState.pages[0].widgets[0];
-            var defaultTemplate = initialState.templates.tmp1;
+            var defaultTemplate = initialState.templates.templatesDef.tmp1;
             var widgetDefinitions = initialState.widgetDefinitions;
 
             store.dispatch(drillDownToPage(widget,defaultTemplate,widgetDefinitions));
@@ -119,9 +123,11 @@ describe('(Reducer) Pages - drilldown process', () => {
         it('Pass drilldown context', () => {
             var initialState = {
                 templates: {
-                    'tmp1' : {
-                        name: 'tmp1',
-                        widgets: [{name: 'some widget',definition: 'widget1',width:1,height:1,x:1,y:1}]
+                    templatesDef: {
+                        'tmp1': {
+                            name: 'tmp1',
+                            widgets: [{name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1}]
+                        }
                     }
                 },
                 manager : {
@@ -139,7 +145,7 @@ describe('(Reducer) Pages - drilldown process', () => {
             const store = mockStore(initialState);
 
             var widget = initialState.pages[0].widgets[0];
-            var defaultTemplate = initialState.templates.tmp1;
+            var defaultTemplate = initialState.templates.templatesDef.tmp1;
             var widgetDefinitions = initialState.widgetDefinitions;
 
             store.dispatch(drillDownToPage(widget,defaultTemplate,widgetDefinitions,{contextValue:'kuku'}));
@@ -157,9 +163,11 @@ describe('(Reducer) Pages - drilldown process', () => {
 
         var initialState = {
             templates: {
-                'tmp1': {
-                    name: 'tmp1',
-                    widgets: [{name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1}]
+                templatesDef: {
+                    'tmp1': {
+                        name: 'tmp1',
+                        widgets: [{name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1}]
+                    }
                 }
             },
             manager: {
@@ -180,7 +188,7 @@ describe('(Reducer) Pages - drilldown process', () => {
         const store = createStore(PagesReducer, initialState.pages, applyMiddleware(thunk));
 
         var widget = initialState.pages[0].widgets[0];
-        var defaultTemplate = initialState.templates.tmp1;
+        var defaultTemplate = initialState.templates.templatesDef.tmp1;
         var widgetDefinitions = initialState.widgetDefinitions;
 
         store.dispatch(drillDownToPage(widget, defaultTemplate, widgetDefinitions));
@@ -233,15 +241,16 @@ describe('(Reducer) Pages - drilldown process', () => {
     describe('Drilldown to 2 pages from the same widget',()=> {
         var initialState = {
             templates: {
-                'tmp1' : {
-                    name: 'tmp1',
-                    widgets: [{name: 'some widget',definition: 'widget1',width:1,height:1,x:1,y:1}]
-                },
-                'tmp2' : {
-                    name: 'tmp2',
-                    widgets: [{name: 'some widget2',definition: 'widget1',width:1,height:1,x:1,y:1}]
+                templatesDef: {
+                    'tmp1': {
+                        name: 'tmp1',
+                        widgets: [{name: 'some widget', definition: 'widget1', width: 1, height: 1, x: 1, y: 1}]
+                    },
+                    'tmp2': {
+                        name: 'tmp2',
+                        widgets: [{name: 'some widget2', definition: 'widget1', width: 1, height: 1, x: 1, y: 1}]
+                    }
                 }
-
             },
             manager : {
                 ip: '1.1.1.1'
@@ -257,8 +266,8 @@ describe('(Reducer) Pages - drilldown process', () => {
         const store = createStore(PagesReducer,initialState.pages,applyMiddleware(thunk));
 
         var widget = initialState.pages[0].widgets[0];
-        var defaultTemplate1 = initialState.templates.tmp1;
-        var defaultTemplate2 = initialState.templates.tmp2;
+        var defaultTemplate1 = initialState.templates.templatesDef.tmp1;
+        var defaultTemplate2 = initialState.templates.templatesDef.tmp2;
         var widgetDefinitions = initialState.widgetDefinitions;
 
         store.dispatch(drillDownToPage(widget,defaultTemplate1,widgetDefinitions));

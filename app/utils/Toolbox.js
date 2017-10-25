@@ -28,7 +28,7 @@ class Toolbox {
 
     _initFromStore () {
         var state = this.store.getState();
-        this.templates = state.templates || {};
+        this.templates = state.templates || {templatesDef: {}};
         this._Manager = new Manager(state.manager || {});
         this._Internal = new Internal(state.manager || {});
         this._Context = new Context(this.store);
@@ -37,7 +37,7 @@ class Toolbox {
     }
 
     drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName) {
-        this.store.dispatch(drillDownToPage(widget,this.templates[defaultTemplate],this.widgetDefinitions,drilldownContext,drilldownPageName));
+        this.store.dispatch(drillDownToPage(widget,this.templates.pagesDef[defaultTemplate],this.widgetDefinitions,drilldownContext,drilldownPageName));
     }
 
     goToHomePage() {
