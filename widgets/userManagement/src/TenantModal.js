@@ -3,6 +3,8 @@
  */
 
 import Actions from './actions';
+const RolesPicker = Stage.Common.RolesPicker;
+const RolesUtil = Stage.Common.RolesUtil;
 
 export default class TenantModal extends React.Component {
 
@@ -14,7 +16,7 @@ export default class TenantModal extends React.Component {
 
     static initialState = {
         loading: false,
-        tenants: [],
+        tenants: {},
         errors: {}
     }
 
@@ -28,9 +30,20 @@ export default class TenantModal extends React.Component {
         return true;
     }
 
+    onRoleChange(tenant, role){
+        var newTenants = Object.assign({}, this.state.tenants);
+        newTenants[tenant] = role;
+        this.setState({tenants: newTenants});
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            this.setState({...TenantModal.initialState, tenants: _.keys(nextProps.user.tenants)});
+            // Currently there is no map which role is the user's role and which is just inherited.
+            // Since multiple tenant roles are only in LDAP use case, choosing the first role for now.
+           var tenants = _.mapValues(nextProps.user.tenants, (roles) => {
+               return roles[0];
+           });
+           this.setState({...TenantModal.initialState, tenants: tenants});
         }
     }
 
@@ -38,11 +51,19 @@ export default class TenantModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        let tenantsToAdd = _.difference(this.state.tenants, _.keys(this.props.user.tenants));
-        let tenantsToRemove = _.difference(_.keys(this.props.user.tenants), this.state.tenants);
+        var tenants = this.props.user.tenants;
+        var tenantsList = Object.keys(tenants);
+        var submitTenants = this.state.tenants;
+        var submitTenantsList = Object.keys(submitTenants);
+
+        let tenantsToAdd = _.pick(submitTenants, _.difference(submitTenantsList, tenantsList));
+        let tenantsToRemove = _.difference(tenantsList, submitTenantsList);
+        let tenantsToUpdate = _.pickBy(submitTenants, (role, tenant) => {
+            return tenants[tenant] && !_.isEqual(tenants[tenant], role);
+        });
 
         var actions = new Actions(this.props.toolbox);
-        actions.doHandleTenants(this.props.user.username, tenantsToAdd, tenantsToRemove).then(()=>{
+        actions.doHandleTenants(this.props.user.username, tenantsToAdd, tenantsToRemove, tenantsToUpdate).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('tenants:refresh');
@@ -53,7 +74,11 @@ export default class TenantModal extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        var newTenants = {};
+        _.forEach(field.value, (tenant) => {
+            newTenants[tenant] = this.state.tenants[tenant] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+        });
+        this.setState({tenants: newTenants});
     }
 
     render() {
@@ -75,8 +100,9 @@ export default class TenantModal extends React.Component {
                           onErrorsDismiss={() => this.setState({errors: {}})}>
                         <Form.Field>
                             <Form.Dropdown placeholder='Tenants' multiple selection options={options} name="tenants"
-                                           value={this.state.tenants} onChange={this._handleInputChange.bind(this)}/>
+                                           value={Object.keys(this.state.tenants)} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
+                        <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.tenants} resourceName="tenant" toolbox={this.props.toolbox}></RolesPicker>
                     </Form>
                 </Modal.Content>
 
