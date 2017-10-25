@@ -114,7 +114,7 @@ export default class GroupsModal extends React.Component {
                 <Form loading={this.state.loading} errors={this.state.errors}
                       onErrorsDismiss={() => this.setState({errors: {}})}>
                     <Form.Field>
-                        <Form.Dropdown placeholder='Groups' multiple selection options={userGroups} name="userGroups"
+                        <Form.Dropdown placeholder='Groups' multiple selection closeOnChange options={userGroups} name="userGroups"
                                        value={Object.keys(this.state.userGroups)} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.userGroups} resourceName="user group" toolbox={this.props.toolbox}></RolesPicker>
