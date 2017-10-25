@@ -61,6 +61,7 @@ router.get('/user', passport.authenticate('token', {session: false}), (req, res)
     res.send({
         username: req.user.username,
         role: req.user.role,
+        tenantsRoles: req.user.tenants,
         serverVersion: config.manager.serverVersion
     })
 });

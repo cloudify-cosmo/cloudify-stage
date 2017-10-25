@@ -10,6 +10,7 @@ var _ = require('lodash');
 var config = require('../config').get();
 var ServerSettings = require('../serverSettings');
 var ResourceTypes = require('../db/types/ResourceTypes');
+var AuthHandler = require('./AuthHandler');
 
 var logger = require('log4js').getLogger('templates');
 
@@ -67,6 +68,32 @@ module.exports = (function() {
         return fs.readdirSync(pathlib.resolve(pagesFolder));
     }
 
+    function _getRole(systemRole, tenantsRoles, tenant) {
+        var rbac = AuthHandler.getRBAC();
+        var roles = rbac.roles;
+
+        logger.debug('Inputs for role calculation: ' + 'systemRole=' + systemRole +
+                     ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
+
+        var tenantRoles = tenantsRoles[tenant];
+        var tenantRole = _.isArray(tenantRoles) ? _.first(tenantsRoles) : '';
+
+        var result = null;
+        for (var i = 0; i < roles.length; i++) {
+            var role = roles[i].name;
+            if (_.isEqual(role, systemRole)) {
+                result = systemRole;
+                break;
+            } else if (_.isEqual(role, tenantRole)) {
+                result = tenantRole;
+                break;
+            }
+        }
+
+        logger.debug('Calculated role: ' + result);
+        return result;
+    }
+
     function listPages() {
         var pages = _getPages();
 
@@ -85,7 +112,8 @@ module.exports = (function() {
             return Promise.reject('Template name "' + template.id + '" already exists');
         }
 
-        return fs.writeJson(path, template.pages, {spaces: '  '})
+        return checkTemplateExistence(template.data)
+            .then(() => fs.writeJson(path, template.pages, {spaces: '  '}))
             .then(() => db.Resources.destroy({where: {resourceId: template.id, type:ResourceTypes.TEMPLATE}}))
             .then(() => db.Resources.create({resourceId:template.id, type:ResourceTypes.TEMPLATE, creator: username, data: template.data}));
     }
@@ -93,19 +121,21 @@ module.exports = (function() {
     function updateTemplate(username, template) {
         var path = pathlib.resolve(templatesFolder, template.id + '.json');
 
-        return new Promise((resolve, reject) => {
-            if (template.oldId && template.id !== template.oldId) {
-                if (fs.existsSync(path)) {
-                    reject('Template name "' + template.id + '" already exists');
+        return checkTemplateExistence(template.data, template.oldId)
+        .then(() =>
+            new Promise((resolve, reject) => {
+                if (template.oldId && template.id !== template.oldId) {
+                    if (fs.existsSync(path)) {
+                        reject('Template name "' + template.id + '" already exists');
+                    } else {
+                        deleteTemplate(template.oldId)
+                            .then(() => resolve())
+                            .catch(error => reject(error));
+                    }
                 } else {
-                    deleteTemplate(template.oldId)
-                        .then(() => resolve())
-                        .catch(error => reject(error));
+                    resolve();
                 }
-            } else {
-                resolve();
-            }
-        })
+            }))
         .then(() => fs.writeJson(path, template.pages, {spaces: '  '}))
         .then(() => db.Resources.findOne({ where: {resourceId:template.id, type:ResourceTypes.TEMPLATE} }))
         .then(entity => {
@@ -114,6 +144,34 @@ module.exports = (function() {
             } else {
                 return db.Resources.create({resourceId:template.id, type:ResourceTypes.TEMPLATE, creator: username, data: template.data});
             }
+        });
+    }
+
+    function checkTemplateExistence(data, excludeTemplateId) {
+        var textRoles = _.replace(JSON.stringify(data.roles), /"/g, "'");
+        var textTenants = _.replace(JSON.stringify(data.tenants), /"/g, "'");
+
+        var where = {
+            type: ResourceTypes.TEMPLATE,
+            data: db.sequelize.literal(`data->'roles' ?| array${textRoles} and data->'tenants' ?| array${textTenants}`)
+        };
+
+        if (excludeTemplateId) {
+            where.resourceId = {ne: excludeTemplateId};
+        }
+
+        return new Promise((resolve, reject) => {
+            db.Resources
+                .findOne({where, attributes: ['data'], raw: true})
+                .then(entity => {
+                    if (entity) {
+                        var commonRoles = _.join(_.intersection(data.roles, entity.data.roles), ', ');
+                        var commonTenants = _.join(_.intersection(data.tenants, entity.data.tenants), ', ');
+                        reject(`Template for roles [${commonRoles}] and tenants [${commonTenants}] already exists`);
+                    } else {
+                        resolve();
+                    }
+                })
         });
     }
 
@@ -193,10 +251,11 @@ module.exports = (function() {
         }).then(() => db.Resources.destroy({ where: {resourceId: pageId, type:ResourceTypes.PAGE}}));
     }
 
-    function selectTemplate(mode, role, tenant) {
+    function selectTemplate(mode, systemRole, tenantsRoles, tenant) {
         var DEFAULT_KEY = '*';
 
         var initialTemplateObj = config.app.initialTemplate;
+        var role = _getRole(systemRole, tenantsRoles, tenant);
 
         logger.debug('Template inputs: mode=' + mode + ', role=' + role + ', tenant=' + tenant);
 

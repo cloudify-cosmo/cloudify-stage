@@ -19,14 +19,14 @@ function setPages(pages) {
     }
 }
 
-export function clearPagesForTenant(tenant){
+export function resetTemplateForTenant(tenant) {
     return function(dispatch, getState) {
         let manager = getState().manager;
         if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
-            resetTemplate(dispatch);
+            dispatch(resetTemplate());
         } else {
             let internal = new Internal(getState().manager);
-            return internal.doGet('ua/clear-pages', {tenant: tenant});
+            return internal.doGet('ua/reset', {tenant});
         }
     }
 }
@@ -40,20 +40,22 @@ export function saveUserAppData (manager, appData) {
     }
 }
 
-function resetTemplate(dispatch){
-    // First clear the pages
-    dispatch(setAppLoading(true));
-    dispatch(setPages([]));
-    dispatch(createPagesFromTemplate())
-        .then(() => {
-            dispatch(setAppLoading(false));
-            dispatch(push('/'));
-        })
-        .catch(err => {
-            dispatch(setAppError(err.message));
-            dispatch(push('error'));
-            throw err;
-        });
+export function resetTemplate(){
+    return function(dispatch) {
+        // First clear the pages
+        dispatch(setAppLoading(true));
+        dispatch(setPages([]));
+        return dispatch(createPagesFromTemplate())
+            .then(() => {
+                dispatch(setAppLoading(false))
+                dispatch(push('/'));
+            })
+            .catch(err => {
+                dispatch(setAppError(err.message));
+                dispatch(push('error'));
+                throw err;
+            });
+    }
 }
 
 export function loadOrCreateUserAppData() {
@@ -69,8 +71,7 @@ export function loadOrCreateUserAppData() {
                     userApp.appData.pages && userApp.appData.pages.length > 0) {
                     return dispatch(setPages(userApp.appData.pages));
                 } else {
-                    dispatch(resetTemplate);
-                    return dispatch(saveUserAppData(manager, {pages: getState().pages}));
+                    return dispatch(resetTemplate());
                 }
             });
     }

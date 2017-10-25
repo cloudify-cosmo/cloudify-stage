@@ -62,18 +62,20 @@ module.exports = {
             commands: [
                 {
                     addTenant: function (tenant) {
-                        return this.log(this.props.tenantTag(tenant)).isPresent(this.props.tenantTag(tenant), (result) => {
-                            if (!result.value) {
-                                this.log('Tenant', tenant, 'not present. Adding...')
-                                    .selectOptionInDropdown('@tenantDropdown', tenant)
-                                    .clickElement('@okButton')
-                                    .waitForElementNotPresent(this.selector);
-                            } else {
-                                this.log('Tenant', tenant, 'present. Closing modal.')
-                                    .clickElement('@cancelButton')
-                                    .waitForElementNotPresent(this.selector);
-                            }
-                        });
+                        return this
+                            .log(this.props.tenantTag(tenant))
+                            .isPresent(this.props.tenantTag(tenant), (result) => {
+                                if (!result.value) {
+                                    this.log('Tenant', tenant, 'not present. Adding...')
+                                        .selectOptionInDropdown('@tenantDropdown', tenant)
+                                        .clickElement('@okButton')
+                                        .waitForElementNotPresent(this.selector);
+                                } else {
+                                    this.log('Tenant', tenant, 'present. Closing modal.')
+                                        .clickElement('@cancelButton')
+                                        .waitForElementNotPresent(this.selector);
+                                }
+                            });
                     }
                 }
             ],

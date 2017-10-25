@@ -44,6 +44,15 @@ export default class Header extends Component {
         return this.props.mode === Consts.MODE_CUSTOMER;
     }
 
+    _handleReset() {
+        var tenants = this.props.manager.tenants;
+        if (_.size(tenants.items) > 1) {
+            this.setState({showResetConfirm: true});
+        } else {
+            this.props.onResetTemplate([tenants.selected]);
+        }
+    }
+
     render() {
         let {Icon} = Stage.Basic;
 
@@ -75,13 +84,13 @@ export default class Header extends Component {
                         ?
                         <Users manager={this.props.manager}
                                showAllOptions={false}
-                               onReset={()=> this.setState({showResetConfirm: true})}/>
+                               onReset={this._handleReset.bind(this)}/>
                         :
                         <Users manager={this.props.manager}
                                showAllOptions={true}
                                onMaintenance={()=> this.setState({showMaintenanceModal: true})}
                                onConfigure={()=> this.setState({showConfigureModal: true})}
-                               onReset={()=> this.setState({showResetConfirm: true})}/>
+                               onReset={this._handleReset.bind(this)}/>
                     }
                 </div>
 

@@ -49,8 +49,9 @@ export default class Templates extends Component {
 
                     {
                         this.props.templates.map((item)=>{
-                            var roles = (item.data || {}).roles;
-                            var tenants = (item.data || {}).tenants;
+                            var data = item.data || {roles: [], tenants: []};
+                            var roles = data.roles;
+                            var tenants = data.tenants;
                             var filteredTenants = _.filter(tenants, t => t !== Const.DEFAULT_ALL) ;
 
                             return (

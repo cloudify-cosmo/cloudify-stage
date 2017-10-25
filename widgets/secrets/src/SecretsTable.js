@@ -91,13 +91,13 @@ export default class SecretsTable extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, DataTable, Icon, Label} = Stage.Basic;
+        let {ErrorMessage, DataTable, Icon} = Stage.Basic;
         let DeleteModal = Stage.Basic.Confirm;
         let data = this.props.data;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                            totalSize={data.total}
@@ -125,8 +125,8 @@ export default class SecretsTable extends React.Component {
                                                 ? this.state.showSecretLoading
                                                     ? <Icon name="spinner" loading />
                                                     : <div>
-                                                        <Label>{this.state.showSecretValue}</Label>
-                                                        <Icon bordered link name="hide" title="Hide secret valeu" onClick={this._onHideSecret.bind(this)} />
+                                                        <pre className="forceMaxWidth">{this.state.showSecretValue}</pre>
+                                                        <Icon bordered link name="hide" title="Hide secret value" onClick={this._onHideSecret.bind(this)} />
                                                       </div>
                                                 : <Icon bordered link name="unhide" title="Show secret value" onClick={this._onShowSecret.bind(this, secret)} />
                                         }

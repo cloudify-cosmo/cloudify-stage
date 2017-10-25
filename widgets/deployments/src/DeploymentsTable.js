@@ -54,7 +54,7 @@ export default class extends React.Component {
 
                             <DataTable.Row id={`${tableName}_${item.id}`} key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
                                 <DataTable.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a>
-                                    <PrivateMarker show={item.private_resource} title="Private resource"/>
+                                    <PrivateMarker availability={item.resource_availability} title="Private resource"/>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>

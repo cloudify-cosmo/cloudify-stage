@@ -97,7 +97,7 @@ export default class extends React.Component {
 
         return (
             <div className="snapshotsTableDiv">
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                            totalSize={this.props.data.total}
@@ -120,7 +120,7 @@ export default class extends React.Component {
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectSnapshot.bind(this, item)}>
                                     <DataTable.Data>
                                         {item.id}
-                                        <PrivateMarker show={item.private_resource} title="Private resource"/>
+                                        <PrivateMarker availability={item.resource_availability} title="Private resource"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
                                     <DataTable.Data>{item.status}</DataTable.Data>
