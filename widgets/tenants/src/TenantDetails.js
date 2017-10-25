@@ -62,7 +62,7 @@ export default class TenantDetails extends React.Component {
                     <Divider/>
                     <List divided relaxed verticalAlign='middle' className="light">
                         {
-                            tenant.groups.map((group) => {
+                            Object.keys(tenant.groups).map((group) => {
                                 let processing = this.state.processing && this.state.processItem === group;
 
                                 return (
@@ -83,7 +83,7 @@ export default class TenantDetails extends React.Component {
                     <Divider/>
                     <List divided relaxed verticalAlign='middle' className="light">
                         {
-                            tenant.users.map((user) => {
+                            Object.keys(tenant.users).map((user) => {
                                 let processing = this.state.processing && this.state.processItem === user;
 
                                 return (
