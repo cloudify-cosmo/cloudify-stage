@@ -82,7 +82,7 @@ export default class GroupsModal extends React.Component {
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('userGroups:refresh');
-            this.props.toolbox.getEventBus().trigger('userManagement:refresh');
+            this.props.toolbox.getEventBus().trigger('users:refresh');
             this.props.onHide();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
