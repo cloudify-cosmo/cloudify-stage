@@ -130,7 +130,7 @@ module.exports = {
                 widgetIsUsed: 'Widget is currently used by:'
             }
         },
-        resetTemplateConfirmModal: {
+        resetPagesConfirmModal: {
             selector: '.confirmModal',
             elements: {
                 yesButton: '.ui.primary.button',

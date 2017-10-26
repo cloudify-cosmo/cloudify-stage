@@ -5,7 +5,7 @@
 module.exports = {
     before(client) {
         client.login()
-            .resetTemplate()
+            .resetPages()
             .moveToEditMode()
             .addPage();
 

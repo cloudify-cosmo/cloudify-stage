@@ -46,7 +46,7 @@ router.post('/', function (req, res, next) {
         .catch(next);
 });
 
-router.get('/reset', function (req, res, next) {
+router.get('/clear-pages', function (req, res, next) {
     db.UserApp
         .findOne({ where: {
             managerIp: config.manager.ip,
@@ -58,7 +58,7 @@ router.get('/reset', function (req, res, next) {
             if (userApp) {
                 return userApp.update({appData: {pages: []}});
             } else {
-                return Promise.resolve();
+                return Promise.reject('Could not clear pages. Row not found');
             }
         })
         .then(function() {

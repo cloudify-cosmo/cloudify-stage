@@ -19,14 +19,14 @@ function setPages(pages) {
     }
 }
 
-export function resetTemplateForTenant(tenant) {
+export function resetPagesForTenant(tenant) {
     return function(dispatch, getState) {
         let manager = getState().manager;
         if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
-            dispatch(resetTemplate());
+            dispatch(resetPages());
         } else {
             let internal = new Internal(getState().manager);
-            return internal.doGet('ua/reset', {tenant});
+            return internal.doGet('ua/clear-pages', {tenant});
         }
     }
 }
@@ -40,7 +40,7 @@ export function saveUserAppData (manager, appData) {
     }
 }
 
-export function resetTemplate(){
+export function resetPages(){
     return function(dispatch) {
         // First clear the pages
         dispatch(setAppLoading(true));
@@ -71,7 +71,7 @@ export function loadOrCreateUserAppData() {
                     userApp.appData.pages && userApp.appData.pages.length > 0) {
                     return dispatch(setPages(userApp.appData.pages));
                 } else {
-                    return dispatch(resetTemplate());
+                    return dispatch(resetPages());
                 }
             });
     }
