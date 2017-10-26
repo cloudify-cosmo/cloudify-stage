@@ -7,7 +7,7 @@ import React, { Component, PropTypes } from 'react';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
-import ResetViewsModal from '../../components/ResetViewsModal.js';
+import ResetPagesModal from '../ResetPagesModal.js';
 import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
 import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
 import ConfigureModal from '../../containers/ConfigureModal';
@@ -21,14 +21,14 @@ export default class Header extends Component {
         this.state = {
             showMaintenanceModal: false,
             showConfigureModal: false,
-            showResetConfirm: false
+            showResetPagesConfirm: false
         }
     }
 
     static propTypes = {
         manager: PropTypes.any.isRequired,
         mode: PropTypes.string.isRequired,
-        onResetTemplate: PropTypes.func.isRequired,
+        onResetPages: PropTypes.func.isRequired,
         onSidebarOpen : PropTypes.func.isRequired,
     };
 
@@ -45,12 +45,7 @@ export default class Header extends Component {
     }
 
     _handleReset() {
-        var tenants = this.props.manager.tenants;
-        if (_.size(tenants.items) > 1) {
-            this.setState({showResetConfirm: true});
-        } else {
-            this.props.onResetTemplate([tenants.selected]);
-        }
+        this.setState({showResetPagesConfirm: true});
     }
 
     render() {
@@ -100,10 +95,10 @@ export default class Header extends Component {
                 <ConfigureModal show={this.state.showConfigureModal}
                                 onHide={()=> this.setState({showConfigureModal: false})}/>
 
-                <ResetViewsModal open={this.state.showResetConfirm}
+                <ResetPagesModal open={this.state.showResetPagesConfirm}
                                  tenants={this.props.manager.tenants}
-                                 onConfirm={(tenantList)=>{this.setState({showResetConfirm: false}); this.props.onResetTemplate(tenantList)}}
-                                 onHide={()=> this.setState({showResetConfirm: false})} />
+                                 onConfirm={(tenantList)=>{this.setState({showResetPagesConfirm: false}); this.props.onResetPages(tenantList)}}
+                                 onHide={()=> this.setState({showResetPagesConfirm: false})} />
             </div>
         );
     }

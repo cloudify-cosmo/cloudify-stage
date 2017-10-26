@@ -8,7 +8,7 @@ exports.command = function() {
     return section.clickElement('@userName')
         .waitForElementVisible('@userDropdownMenu')
         .clickElement('@resetMenuItem')
-        .parent.section.resetTemplateConfirmModal
+        .parent.section.resetPagesConfirmModal
         .clickElement('@yesButton')
         .waitForSplashPageNotVisible();
 };
