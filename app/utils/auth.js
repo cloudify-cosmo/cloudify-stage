@@ -38,7 +38,8 @@ export default class Auth {
         var authorizedRoles = managerData.permissions[permission];
 
         var systemRole = managerData.auth.role;
-        var tenantRoles = managerData.auth.tenantsRoles[managerData.tenants.selected];
+        var currentTenantRoles = managerData.auth.tenantsRoles[managerData.tenants.selected];
+        var tenantRoles = currentTenantRoles ? currentTenantRoles.roles : [];
         var userRoles = tenantRoles.concat(systemRole);
         return _.intersection(authorizedRoles, userRoles).length > 0;
     }
