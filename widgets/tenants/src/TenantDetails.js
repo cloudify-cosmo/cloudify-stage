@@ -29,7 +29,7 @@ export default class TenantDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveUser(this.props.tenant.name, username).then(()=>{
             this.props.toolbox.refresh();
-            this.props.toolbox.getEventBus().trigger('userManagement:refresh');
+            this.props.toolbox.getEventBus().trigger('users:refresh');
             this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
