@@ -45,7 +45,7 @@ export default class UsersModal extends React.Component {
         actions.doHandleUsers(this.props.group.name, usersToAdd, usersToRemove).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
-            this.props.toolbox.getEventBus().trigger('userManagement:refresh');
+            this.props.toolbox.getEventBus().trigger('users:refresh');
             this.props.toolbox.getEventBus().trigger('tenants:refresh');
             this.props.onHide();
         }).catch((err)=>{

@@ -29,7 +29,7 @@ export default class UserDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveTenantFromGroup(tenant, this.props.data.name).then(()=>{
             this.props.toolbox.refresh();
-            this.props.toolbox.getEventBus().trigger('userManagement:refresh');
+            this.props.toolbox.getEventBus().trigger('users:refresh');
             this.props.toolbox.getEventBus().trigger('tenants:refresh');
             this.setState({processItem: '', processing: false});
         }).catch((err)=>{
@@ -44,7 +44,7 @@ export default class UserDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveUserFromGroup(username, this.props.data.name).then(()=>{
             this.props.toolbox.refresh();
-            this.props.toolbox.getEventBus().trigger('userManagement:refresh');
+            this.props.toolbox.getEventBus().trigger('users:refresh');
             this.props.toolbox.getEventBus().trigger('tenants:refresh');
             this.setState({processItem: '', processing: false});
         }).catch((err)=>{

@@ -49,7 +49,7 @@ export default class ResetPagesModal extends React.Component {
                             <List relaxed>
                                 {this.props.tenants.items.map((tenant) => {
                                     return (
-                                        <List.Item><Checkbox name={tenant.name} defaultChecked onChange={this.toggleCheckbox.bind(this)} label={tenant.name}/></List.Item>
+                                        <List.Item key={tenant.name}><Checkbox name={tenant.name} defaultChecked onChange={this.toggleCheckbox.bind(this)} label={tenant.name}/></List.Item>
                                     );
                                 })}
                             </List></Card.Content></Card>
