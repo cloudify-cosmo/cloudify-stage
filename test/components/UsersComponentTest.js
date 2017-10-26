@@ -32,7 +32,7 @@ describe('(Component) Users', () => {
                                 canTemplateManagement={true}
                                 onEditModeChange={()=>{}}
                                 onConfigure={()=>{}}
-                                onResetTemplate={()=>{}}
+                                onResetPages={()=>{}}
                                 onReset={()=>{}}
                                 onTemplates={()=>{}}
                                 onLogout={()=>{}}/>);
