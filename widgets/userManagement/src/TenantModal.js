@@ -38,12 +38,12 @@ export default class TenantModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            // Currently there is no map which role is the user's role and which is just inherited.
-            // Since multiple tenant roles are only in LDAP use case, choosing the first role for now.
-           var tenants = _.mapValues(nextProps.user.tenants, (roles) => {
-               return roles[0];
-           });
-           this.setState({...TenantModal.initialState, tenants: tenants});
+            var tenants = _.mapValues(_.pickBy(nextProps.user.tenants, (rolesObj) => {
+                return !_.isEmpty(rolesObj['tenant-role']);
+            }), (rolesObj) => {
+                return rolesObj['tenant-role'];
+            });
+            this.setState({...TenantModal.initialState, tenants: tenants});
         }
     }
 
