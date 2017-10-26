@@ -7,7 +7,7 @@ import Manager from '../utils/Manager';
 import {setAppLoading} from './app';
 import {clearContext} from './context';
 import {reloadUserAppData} from './userApp';
-import {selectHomePage} from './page';
+import { push } from 'react-router-redux';
 
 function requestTenants() {
     return {
@@ -58,7 +58,7 @@ export function changeTenant (tenantName) {
     return function(dispatch) {
         dispatch(setAppLoading(true));
         dispatch(clearContext());
-        dispatch(selectHomePage());
+        dispatch(push('/'));
         dispatch(selectTenant(tenantName));
         dispatch(reloadUserAppData());
     }
