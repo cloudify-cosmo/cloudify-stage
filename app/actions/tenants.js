@@ -6,7 +6,8 @@ import * as types from './types';
 import Manager from '../utils/Manager';
 import {setAppLoading} from './app';
 import {clearContext} from './context';
-import {resetTemplate} from './userApp';
+import {reloadUserAppData} from './userApp';
+import { push } from 'react-router-redux';
 
 function requestTenants() {
     return {
@@ -57,7 +58,8 @@ export function changeTenant (tenantName) {
     return function(dispatch) {
         dispatch(setAppLoading(true));
         dispatch(clearContext());
+        dispatch(push('/'));
         dispatch(selectTenant(tenantName));
-        dispatch(resetTemplate());
+        dispatch(reloadUserAppData());
     }
 }

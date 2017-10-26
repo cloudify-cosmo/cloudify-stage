@@ -7,6 +7,7 @@ import {createPagesFromTemplate} from './page';
 import {setAppLoading, setAppError} from './app';
 import Internal from '../utils/Internal';
 import { push } from 'react-router-redux';
+import Consts from '../utils/consts';
 
 const  CURRENT_APP_DATA_VERSION = 4;
 
@@ -18,8 +19,20 @@ function setPages(pages) {
     }
 }
 
+export function resetPagesForTenant(tenant) {
+    return function(dispatch, getState) {
+        let manager = getState().manager;
+        if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
+            dispatch(resetPages());
+        } else {
+            let internal = new Internal(getState().manager);
+            return internal.doGet('ua/clear-pages', {tenant});
+        }
+    }
+}
+
 export function saveUserAppData (manager, appData) {
-    return function(dispatch) {
+    return function() {
         var data = {appData , version: CURRENT_APP_DATA_VERSION};
 
         var internal = new Internal(manager);
@@ -27,8 +40,8 @@ export function saveUserAppData (manager, appData) {
     }
 }
 
-export function resetTemplate(){
-    return function(dispatch, getState) {
+export function resetPages(){
+    return function(dispatch) {
         // First clear the pages
         dispatch(setAppLoading(true));
         dispatch(setPages([]));
@@ -58,7 +71,7 @@ export function loadOrCreateUserAppData() {
                     userApp.appData.pages && userApp.appData.pages.length > 0) {
                     return dispatch(setPages(userApp.appData.pages));
                 } else {
-                    return dispatch(resetTemplate());
+                    return dispatch(resetPages());
                 }
             });
     }

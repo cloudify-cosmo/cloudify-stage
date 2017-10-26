@@ -3,7 +3,6 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import Consts from '../utils/consts';
 import EventBus from '../utils/EventBus';
 
 export default class Users extends Component {

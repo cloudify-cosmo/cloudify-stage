@@ -46,4 +46,25 @@ router.post('/', function (req, res, next) {
         .catch(next);
 });
 
+router.get('/clear-pages', function (req, res, next) {
+    db.UserApp
+        .findOne({ where: {
+            managerIp: config.manager.ip,
+            username: req.user.username,
+            mode: ServerSettings.settings.mode,
+            tenant: req.query.tenant
+        }})
+        .then(function(userApp) {
+            if (userApp) {
+                return userApp.update({appData: {pages: []}});
+            } else {
+                return Promise.reject('Could not clear pages. Row not found');
+            }
+        })
+        .then(function() {
+            res.send({status:'ok'})
+        })
+        .catch(next);
+});
+
 module.exports = router;
