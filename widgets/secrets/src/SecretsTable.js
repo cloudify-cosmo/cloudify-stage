@@ -86,12 +86,26 @@ export default class SecretsTable extends React.Component {
         });
     }
 
+    _setGlobalSecret(secret) {
+        var actions = new Actions(this.props.toolbox);
+        this.props.toolbox.loading(true);
+        actions.doSetGlobal(secret.key)
+            .then(()=> {
+                this.props.toolbox.loading(false);
+                this.props.toolbox.refresh();
+            })
+            .catch((err)=>{
+                this.props.toolbox.loading(false);
+                this.setState({error: err.message});
+            });
+    }
+
     _hideModal() {
         this.setState({showModal: false});
     }
 
     render() {
-        let {ErrorMessage, DataTable, Icon} = Stage.Basic;
+        let {ErrorMessage, DataTable, Icon, ResourceAvailability} = Stage.Basic;
         let DeleteModal = Stage.Basic.Confirm;
         let data = this.props.data;
 
@@ -118,7 +132,10 @@ export default class SecretsTable extends React.Component {
                         data.items.map((secret)=>{
                             return (
                                 <DataTable.Row key={secret.key}>
-                                    <DataTable.Data>{secret.key}</DataTable.Data>
+                                    <DataTable.Data>
+                                        {secret.key}
+                                        <ResourceAvailability availability={secret.resource_availability} onSetGlobal={this._setGlobalSecret.bind(this, secret)} />
+                                    </DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
                                         {
                                             this.state.showSecretKey === secret.key

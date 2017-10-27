@@ -14,7 +14,7 @@ export default class BlueprintInfo extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, Grid, Image, PrivateMarker, Message, Label} = Stage.Basic;
+        var {ErrorMessage, Grid, Image, ResourceAvailability, Message, Label} = Stage.Basic;
 
         var blueprint = this.props.data;
 
@@ -29,7 +29,9 @@ export default class BlueprintInfo extends React.Component {
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
-
+                <ResourceAvailability availability='private' />
+                <ResourceAvailability availability='tenant' />
+                <ResourceAvailability availability='global' />
                 <Grid>
                     <Grid.Row className="bottomDivider">
                         <Grid.Column width="4"><Image src={`/ba/image/${blueprint.id}`} centered={true}/></Grid.Column>
@@ -37,7 +39,7 @@ export default class BlueprintInfo extends React.Component {
                             <h3 className="ui icon header verticalCenter">
                                 <a className="underline blueprintInfoName" href="javascript:void(0)">{blueprint.id}</a>
                             </h3>
-                            <PrivateMarker availability={blueprint.resource_availability} title="Private resource" className="rightFloated"/>
+                            <ResourceAvailability availability={blueprint.resource_availability} className="rightFloated"/>
                         </Grid.Column>
                     </Grid.Row>
 

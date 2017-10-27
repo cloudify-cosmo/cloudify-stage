@@ -93,7 +93,7 @@ export default class extends React.Component {
     }
 
     render() {
-        let {Confirm, ErrorMessage, DataTable, Icon, PrivateMarker} = Stage.Basic;
+        let {Confirm, ErrorMessage, DataTable, Icon, ResourceAvailability} = Stage.Basic;
 
         return (
             <div className="snapshotsTableDiv">
@@ -120,7 +120,7 @@ export default class extends React.Component {
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectSnapshot.bind(this, item)}>
                                     <DataTable.Data>
                                         {item.id}
-                                        <PrivateMarker availability={item.resource_availability} title="Private resource"/>
+                                        <ResourceAvailability availability={item.resource_availability} />
                                     </DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
                                     <DataTable.Data>{item.status}</DataTable.Data>
