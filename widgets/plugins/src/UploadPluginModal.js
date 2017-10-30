@@ -77,8 +77,8 @@ export default class UploadModal extends React.Component {
             <Modal trigger={uploadButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
                 <Modal.Header>
                     <Icon name="upload"/> Upload plugin
-                    <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"
-                             onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
+                    <PrivateField lock={this.state.privateResource} className="rightFloated"
+                                  onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
                 </Modal.Header>
 
                 <Modal.Content>

@@ -3,10 +3,12 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {Icon} from 'semantic-ui-react'
+import {Icon} from 'semantic-ui-react';
+import Popup from './Popup';
 
 /**
- * PrivateField - a simple component showing a locked/unlocked icon depending on its state
+ * PrivateField - a simple component showing a lock/user icon depending on resource availability.
+ * Additional popup message is shown when user hover this component.
  *
  * The component accepts a callback function for onClick event making it possible to change
  * the component's state by user interaction.
@@ -16,47 +18,49 @@ import {Icon} from 'semantic-ui-react'
  *
  * ## Usage
  *
- * ### PrivateField (locked)
+ * ### PrivateField (private resource)
  *
  * ![PrivateField](manual/asset/privateField/PrivateField_0.png)
  * ```
- * <PrivateField title='Private Field Locked' lock={true} />
+ * <PrivateField lock={true} />
  *```
- * ### PrivateField (unlocked)
+ * ### PrivateField (tenant resource)
  *
  * ![PrivateField](manual/asset/privateField/PrivateField_1.png)
  * ```
- * <PrivateField title='Private Field Unlocked' />
+ * <PrivateField />
  *```
  */
 export default class PrivateField extends Component {
 
     /**
      * @property {boolean} [lock='false'] If 'true' the icon will change to a red padlock (locked).
-     * When 'false' the icon shows a black padlock (open)
+     * When 'false' the icon shows green user icon
      * @property {function} [onClick=()=>{}] The function that will be called when clicked
-     * @property {string} [title=''] Tooltip text when mouse is over the component
      * @property {string} [className=''] Name of the style class to be added
      */
     static propTypes = {
         lock: PropTypes.bool,
         onClick: PropTypes.func,
-        title: PropTypes.string,
         className: PropTypes.string
     };
 
     static defaultProps = {
         lock: false,
         onClick: () => {},
-        title: '',
         className: ''
     };
 
     render() {
         return (
-            <Icon name={this.props.lock?'lock':'unlock'} link className={this.props.className}
-                  color={this.props.lock?'red':'black'} title={this.props.title}
-                  onClick={this.props.onClick}/>
+            <Popup>
+                <Popup.Trigger>
+                    <Icon name={this.props.lock?'lock':'user'} link className={this.props.className}
+                          color={this.props.lock?'red':'green'} title={this.props.lock?'Private resource':'Tenant resource'}
+                          onClick={this.props.onClick} />
+                </Popup.Trigger>
+                Resource availability modification is not possible when you set it to private
+            </Popup>
         );
     }
 }

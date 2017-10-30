@@ -148,8 +148,8 @@ export default class DeployModal extends React.Component {
             <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
                     <Icon name="rocket"/> Create new deployment
-                    <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"
-                             onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
+                    <PrivateField lock={this.state.privateResource} className="rightFloated"
+                                  onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
                 </Modal.Header>
 
                 <Modal.Content>
