@@ -75,17 +75,13 @@ module.exports = (function() {
         logger.debug('Inputs for role calculation: ' + 'systemRole=' + systemRole +
                      ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
 
-        var tenantRoles = tenantsRoles[tenant];
-        var tenantRole = _.isArray(tenantRoles) ? _.first(tenantsRoles) : '';
+        var userRoles = _.compact(_.concat(_.get(tenantsRoles[tenant], 'roles', []), systemRole));
 
         var result = null;
         for (var i = 0; i < roles.length; i++) {
             var role = roles[i].name;
-            if (_.isEqual(role, systemRole)) {
-                result = systemRole;
-                break;
-            } else if (_.isEqual(role, tenantRole)) {
-                result = tenantRole;
+            if (_.includes(userRoles, role)) {
+                result = role;
                 break;
             }
         }
