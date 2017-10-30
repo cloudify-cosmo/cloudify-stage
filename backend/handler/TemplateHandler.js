@@ -75,7 +75,7 @@ module.exports = (function() {
         logger.debug('Inputs for role calculation: ' + 'systemRole=' + systemRole +
                      ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
 
-        var userRoles = _.concat(tenantsRoles[tenant].roles, systemRole);
+        var userRoles = _.compact(_.concat(_.get(tenantsRoles[tenant], 'roles', []), systemRole));
 
         var result = null;
         for (var i = 0; i < roles.length; i++) {
