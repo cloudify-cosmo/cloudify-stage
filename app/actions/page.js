@@ -152,7 +152,7 @@ export function createPagesFromTemplate() {
                         return;
                     }
 
-                    var pageId = _.snakeCase(page.name);
+                    var pageId = createPageId(page.name, getState().pages);
                     dispatch(createPage(page.name, pageId));
                     _.each(page.widgets,(widget)=>{
                         var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
