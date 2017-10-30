@@ -29,9 +29,6 @@ export default class BlueprintInfo extends React.Component {
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
-                <ResourceAvailability availability='private' />
-                <ResourceAvailability availability='tenant' />
-                <ResourceAvailability availability='global' />
                 <Grid>
                     <Grid.Row className="bottomDivider">
                         <Grid.Column width="4"><Image src={`/ba/image/${blueprint.id}`} centered={true}/></Grid.Column>
