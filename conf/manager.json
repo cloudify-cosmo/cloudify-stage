@@ -3,6 +3,5 @@
   "apiVersion": "v3.1",
   "serverVersion": "4.2.0",
   "protocol" : "https",
-  "port": "53333",
-  "restSecurityFile" : "/opt/manager/rest-security.conf"
+  "port": "53333"
 }
