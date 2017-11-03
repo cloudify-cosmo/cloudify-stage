@@ -53,7 +53,7 @@ describe('(Component) Users', () => {
         expect(wrapper.find(Dropdown.Item).get(1).props.icon).to.equal('configure'); // Having configure icon for Edit Mode option
         expect(wrapper.find(Dropdown.Item).get(2).props.text).to.equal('Template management'); // Having Template management option
         expect(wrapper.find(Dropdown.Item).get(2).props.icon).to.equal('list layout'); // Having list layout icon for Template management option
-        expect(wrapper.find(Dropdown.Item).get(3).props.text).to.equal('Reset Pages'); // Having Edit Mode option
+        expect(wrapper.find(Dropdown.Item).get(3).props.text).to.equal('Reset Pages'); // Having Reset Pages option
         expect(wrapper.find(Dropdown.Item).get(3).props.icon).to.equal('undo'); // Having configure icon for Edit Mode option
         expect(wrapper.find(Dropdown.Item).get(4).props.text).to.equal('Logout'); // Having Logout option
         expect(wrapper.find(Dropdown.Item).get(4).props.icon).to.equal('log out'); // Having log out icon for Logout option
@@ -64,7 +64,7 @@ describe('(Component) Users', () => {
 
         expect(wrapper.find(Dropdown)).to.have.length(1); // Showing the users menu
         expect(wrapper.find(Dropdown.Item).length).to.equal(2); // 2 menu options
-        expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Reset Pages'); // Having Edit Mode option
+        expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Reset Pages'); // Having Reset Pages option
         expect(wrapper.find(Dropdown.Item).get(0).props.icon).to.equal('undo'); // Having configure icon for Edit Mode option
         expect(wrapper.find(Dropdown.Item).get(1).props.text).to.equal('Logout'); // Having Logout option
         expect(wrapper.find(Dropdown.Item).get(1).props.icon).to.equal('log out'); // Having log out icon for Logout option
