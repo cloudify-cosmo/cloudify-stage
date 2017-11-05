@@ -20,3 +20,6 @@ tests_output
 /conf/rest-security.conf
 
 package-lock.json
+
+/resources
+/dev
