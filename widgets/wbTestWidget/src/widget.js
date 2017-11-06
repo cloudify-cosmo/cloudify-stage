@@ -15,6 +15,7 @@ Stage.defineWidget({
     showBorder: true,
     isReact: true,
     categories: [Stage.GenericConfig.CATEGORY.OTHERS],
+    permission: Stage.GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ALL,
     initialConfiguration: [
         {id: 'service', name: 'Service', default: 'manager', type: Stage.Basic.GenericField.LIST_TYPE,
             items: [

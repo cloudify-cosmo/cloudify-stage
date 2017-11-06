@@ -3,13 +3,10 @@
  * Created by pposel on 13/09/2017.
  */
 
-var os = require('os');
-var db = require('../db/Connection');
 var fs = require('fs-extra');
 var pathlib = require('path');
 var _ = require('lodash');
 var config = require('../config').get();
-var ManagerHandler = require('./ManagerHandler');
 
 var logger = require('log4js').getLogger('WidgetBackend');
 
@@ -29,7 +26,7 @@ var BackendRegistrator = function (widgetName) {
             if (!service) {
                 throw new Error('Service body must be provided');
             } else if (!_.isFunction(service)) {
-                throw new Error('Service body must be a function (function(request, response, next, Service) {...})');
+                throw new Error('Service body must be a function (function(request, response, next, helper) {...})');
             }
 
             if (_.isObject(services[widgetName]) && !_.isNil(services[widgetName][serviceName])) {
@@ -42,96 +39,6 @@ var BackendRegistrator = function (widgetName) {
             }
         }
     }
-}
-
-var ServiceHelper = {
-    callManager: (method, url, req) => {
-        return ManagerHandler.jsonRequest(method, url, req.headers);
-    },
-    db: {
-        create: (key, value, req, res, next) => {
-            if (_.isEmpty(req.user)) {
-                res.status(401).send({message: 'User not authenticated'});
-            } else {
-                return db.WidgetsData
-                    .create({
-                        user: req.user.username,
-                        widget: req.header(config.app.widgets.widgetNameHeader),
-                        key: key,
-                        value: value
-                    })
-                    .catch(function () {
-                        res.status(500).send({message: 'Data write error'});
-                    });
-            }
-        },
-        read: (key, req, res, next) => {
-            if (_.isEmpty(req.user)) {
-                res.status(401).send({message: 'User not authenticated'});
-            } else {
-                return db.WidgetsData
-                    .findOne({
-                        where: {
-                            user: req.user.username,
-                            widget: req.header(config.app.widgets.widgetNameHeader),
-                            key: key,
-                        }
-                    }).catch(function () {
-                        res.status(500).send({message: 'Data read error'});
-                    });
-            }
-        },
-        readAll: (req, res, next) => {
-            if (_.isEmpty(req.user)) {
-                res.status(500).send({message: 'User not authenticated'});
-            } else {
-                return db.WidgetsData
-                    .findAll({
-                        where: {
-                            user: req.user.username,
-                            widget: req.header(config.app.widgets.widgetNameHeader),
-                        }
-                    }).catch(function () {
-                        res.status(500).send({message: 'Data read error'});
-                    });
-            }
-        },
-        update: (key, value, req, res, next) => {
-            if (_.isEmpty(req.user)) {
-                res.status(401).send({message: 'User not authenticated'});
-            } else {
-                return db.WidgetsData
-                    .update({
-                        value: value
-                    },
-                    {
-                        where: {
-                            user: req.user.username,
-                            widget: req.header(config.app.widgets.widgetNameHeader),
-                            key: key
-                        }
-                    }).catch(function () {
-                        res.status(500).send({message: 'Data update error'});
-                    });
-            }
-        },
-        delete: (id, req, res, next) => {
-            if (_.isEmpty(req.user)) {
-                res.status(401).send({message: 'User not authenticated'});
-            } else {
-                return db.WidgetsData
-                    .destroy({
-                        where: {
-                            user: req.user.username,
-                            widget: req.header(config.app.widgets.widgetNameHeader),
-                            id: id,
-                        }
-                    }).catch(function () {
-                        res.status(500).send({message: 'Data delete error'});
-                    });
-            }
-        },
-    },
 }
 
 module.exports = (function() {
@@ -176,7 +83,8 @@ module.exports = (function() {
         if (widgetServices) {
             var service = widgetServices[serviceName];
             if (service) {
-                return service(req, res, next, ServiceHelper);
+                var helperServices = require('./services');
+                return service(req, res, next, helperServices);
             } else {
                 throw new Error('Widget ' + widgetName + ' has no services registered');
             }
