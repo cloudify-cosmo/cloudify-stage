@@ -13,6 +13,7 @@ Stage.defineWidget ({
   initialHeight: 20,
   color: 'teal',
   isReact: true,
+  permission: Stage.GenericConfig.WIDGET_PERMISSION('pluginsCatalog'),
   initialConfiguration: [
     {
       id: 'jsonPath',

@@ -2,18 +2,18 @@
  * Created by jakubniezgoda on 2017-08-02.
  */
 
-exports.command = function(userName, password, role = 'user', tenant = 'default_tenant') {
+exports.command = function(userName, password, role = 'default - User exists, but have no permissions', tenant = 'default_tenant') {
     var users = this.page.userManagement();
 
+    this.log('adding', userName, 'user')
+        .moveToEditMode()
+        .addPage();
+
     return this.isWidgetPresent(users.props.widgetId, result => {
-        this.log('adding', userName, 'user');
-
         if (!result.value) {
-            this.moveToEditMode()
-                .addWidget(users.props.widgetId)
-                .moveOutOfEditMode();
+            this.addWidget(users.props.widgetId)
         }
-
-        users.add(userName, password, role, tenant);
+        users.add(userName, password, role, tenant)
+             .moveOutOfEditMode();
     });
 };

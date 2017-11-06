@@ -41,8 +41,8 @@ export default class extends React.Component {
                                           onClick={()=>this.props.onSelectDeployment(item)}>
                                 <div className="ui grid">
                                     <div className="three wide center aligned column rightDivider">
-                                        <h3 className="ui icon header verticalCenter">{item.id}</h3>
-                                        <PrivateMarker show={item.private_resource} title="Private resource" className="rightFloated"/>
+                                        <h3 className="ui icon header verticalCenter breakWord">{item.id}</h3>
+                                        <PrivateMarker availability={item.resource_availability} title="Private resource" className="rightFloated"/>
                                     </div>
                                     <div className="two wide column">
                                         <h5 className="ui icon header">Blueprint</h5>

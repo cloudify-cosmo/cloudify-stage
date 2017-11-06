@@ -5,6 +5,8 @@
 import Actions from './actions';
 
 let PropTypes = React.PropTypes;
+const RolesPicker = Stage.Common.RolesPicker;
+const RolesUtil = Stage.Common.RolesUtil;
 
 export default class GroupsModal extends React.Component {
 
@@ -17,7 +19,7 @@ export default class GroupsModal extends React.Component {
     }
 
     static initialState = {
-        userGroups: [],
+        userGroups: {},
         loading: false,
         errors: {}
     }
@@ -43,6 +45,12 @@ export default class GroupsModal extends React.Component {
         return true;
     }
 
+    onRoleChange(group, role){
+        var newUserGroups = Object.assign({}, this.state.userGroups);
+        newUserGroups[group] = role;
+        this.setState({userGroups: newUserGroups});
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
             this.setState({
@@ -58,13 +66,23 @@ export default class GroupsModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        let userGroupsToAdd = _.difference(this.state.userGroups, this.props.tenant.groups);
-        let userGroupsToRemove = _.difference(this.props.tenant.groups, this.state.userGroups);
+        var userGroups = this.props.tenant.groups;
+        var userGroupsList = Object.keys(userGroups);
+        var submitUserGroups = this.state.userGroups;
+        var submitUserGroupsList = Object.keys(submitUserGroups);
+
+        let userGroupsToAdd = _.pick(submitUserGroups, _.difference(submitUserGroupsList, userGroupsList));
+        let userGroupsToRemove = _.difference(userGroupsList, submitUserGroupsList);
+        let userGroupsToUpdate = _.pickBy(submitUserGroups, (role, group) => {
+            return userGroups[group] && !_.isEqual(userGroups[group], role);
+        });
 
         let actions = new Actions(this.props.toolbox);
-        actions.doHandleUserGroups(this.props.tenant.name, userGroupsToAdd, userGroupsToRemove).then(()=>{
+        actions.doHandleUserGroups(this.props.tenant.name, userGroupsToAdd, userGroupsToRemove, userGroupsToUpdate).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('userGroups:refresh');
+            this.props.toolbox.getEventBus().trigger('users:refresh');
             this.props.onHide();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
@@ -72,7 +90,12 @@ export default class GroupsModal extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        var newUserGroups = {};
+        _.forEach(field.value, (group) => {
+            newUserGroups[group] = this.state.userGroups[group] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+        });
+
+        this.setState({userGroups: newUserGroups});
     }
 
     render() {
@@ -82,7 +105,7 @@ export default class GroupsModal extends React.Component {
         let userGroups = _.map(this.props.userGroups.items, (userGroup) => { return {text: userGroup.name, value: userGroup.name, key: userGroup.name} });
 
         return (
-        <Modal open={this.props.open} >
+        <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
             <Modal.Header>
                 <Icon name="users"/> Modify user groups for {tenant.name}
             </Modal.Header>
@@ -91,9 +114,10 @@ export default class GroupsModal extends React.Component {
                 <Form loading={this.state.loading} errors={this.state.errors}
                       onErrorsDismiss={() => this.setState({errors: {}})}>
                     <Form.Field>
-                        <Form.Dropdown placeholder='Groups' multiple selection options={userGroups} name="userGroups"
-                                       value={this.state.userGroups} onChange={this._handleInputChange.bind(this)}/>
+                        <Form.Dropdown placeholder='Groups' multiple selection closeOnChange options={userGroups} name="userGroups"
+                                       value={Object.keys(this.state.userGroups)} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
+                    <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.userGroups} resourceName="user group" toolbox={this.props.toolbox}></RolesPicker>
                 </Form>
             </Modal.Content>
 

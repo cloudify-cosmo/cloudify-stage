@@ -16,9 +16,8 @@ function setClientConfig(config) {
 export function getClientConfig() {
     return function(dispatch,getState) {
         var internal = new Internal(getState().manager);
-        return internal.doGet('/clientConfig').then(response=>{
-            dispatch(setClientConfig(response.config))
-        });
+        return internal.doGet('/clientConfig')
+            .then(response => dispatch(setClientConfig(response.config)));
     }
 }
 

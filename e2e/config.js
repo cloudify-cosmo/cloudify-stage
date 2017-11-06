@@ -3,17 +3,15 @@
  */
 
 var config = require('./config.json');
+var _ = require('lodash');
 
-var me = null;
 try {
-    me = require('../conf/me.json');
+    var me = require('../conf/me.json');
+    _.merge(config, me.e2e);
 } catch(err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
         throw err;
     }
 }
-var _ = require('lodash');
-
-_.merge(config, me.e2e);
 
 module.exports = config;

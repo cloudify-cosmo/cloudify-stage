@@ -49,8 +49,8 @@ function createUserAppModel (queryInterface,Sequelize) {
     managerIp : {type: Sequelize.STRING, allowNull: false },
     username: { type: Sequelize.STRING, allowNull: false},
     appDataVersion: {type: Sequelize.INTEGER, allowNull: false},
-    mode: {type: Sequelize.ENUM, values: ['customer','main'], allowNull: false, default: 'main'},
-    role: {type: Sequelize.ENUM, values: ['admin','user'], allowNull: false, default: 'user'},
+    mode: {type: Sequelize.ENUM, values: ['customer','main'], allowNull: false, defaultValue: 'main'},
+    role: {type: Sequelize.ENUM, values: ['admin','user'], allowNull: false, defaultValue: 'user'},
     appData: { type: Sequelize.JSON,allowNull: false},
 
     createdAt: {

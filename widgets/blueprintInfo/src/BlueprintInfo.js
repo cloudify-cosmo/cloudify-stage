@@ -28,7 +28,7 @@ export default class BlueprintInfo extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 <Grid>
                     <Grid.Row className="bottomDivider">
@@ -37,7 +37,7 @@ export default class BlueprintInfo extends React.Component {
                             <h3 className="ui icon header verticalCenter">
                                 <a className="underline blueprintInfoName" href="javascript:void(0)">{blueprint.id}</a>
                             </h3>
-                            <PrivateMarker show={blueprint.private_resource} title="Private resource" className="rightFloated"/>
+                            <PrivateMarker availability={blueprint.resource_availability} title="Private resource" className="rightFloated"/>
                         </Grid.Column>
                     </Grid.Row>
 

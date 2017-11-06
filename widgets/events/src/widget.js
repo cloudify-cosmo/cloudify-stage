@@ -13,6 +13,7 @@ Stage.defineWidget({
     color: "green",
     fetchUrl: '[manager]/events[params]',
     isReact: true,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('events'),
     hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
@@ -62,8 +63,8 @@ Stage.defineWidget({
         let timeStart = eventFilter.timeStart;
         let timeEnd = eventFilter.timeEnd;
         if (timeStart || timeEnd) {
-            timeStart = timeStart?timeStart.utc().toISOString():"";
-            timeEnd = timeEnd?timeEnd.utc().toISOString():"";
+            timeStart = timeStart?timeStart.utc().toISOString():'';
+            timeEnd = timeEnd?timeEnd.utc().toISOString():'';
             params._range = `@timestamp,${timeStart},${timeEnd}`;
         }
 

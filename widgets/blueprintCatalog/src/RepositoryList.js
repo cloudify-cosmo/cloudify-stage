@@ -81,11 +81,21 @@ export default class extends React.Component {
     }
 
     render() {
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        let {ErrorMessage, Message, Icon} = Stage.Basic;
+
+        let notAuthenticatedWarning = (
+            <Message>
+                <Icon name="ban" />
+                <span>
+                    No GitHub credentials provided! Widget may stop working after reaching unrestricted query limit (~50).
+                    Fix this by adding 'github-username' and 'github-password' entries to your secrets store (Secrets widget).
+                </span>
+            </Message>);
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
+                {this.props.data.isAuthenticated ? '' :notAuthenticatedWarning}
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 {
                     this.props.widget.configuration.displayStyle === 'table' ?

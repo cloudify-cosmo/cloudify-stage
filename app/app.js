@@ -16,10 +16,6 @@ import './styles/style.scss';
 // Import semantic
 import '../semantic/dist/semantic.min.css';
 import '../semantic/dist/semantic.min';
-import '../node_modules/semantic-ui-calendar/dist/calendar.min.css';
-import '../node_modules/semantic-ui-calendar/dist/calendar';
-import '../node_modules/semantic-ui-daterangepicker/daterangepicker.min.css';
-import '../node_modules/semantic-ui-daterangepicker/daterangepicker';
 
 // Import gridstack
 import '../node_modules/gridstack/dist/gridstack.css';
@@ -36,18 +32,16 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import { createHistory } from 'history';
 
 import configureStore  from './configureStore';
-import WidgetDefinitionsLoader from './utils/widgetDefinitionsLoader';
 import {createToolbox} from './utils/Toolbox';
 import ConfigLoader from './utils/ConfigLoader';
 import EventBus from './utils/EventBus';
 import Consts from './utils/consts';
 import createRoutes from './routes';
 
-import TemplatesLoader from './utils/templatesLoader';
-
 import StatusPoller from './utils/StatusPoller';
 import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
 import SplashLoadingScreen from './utils/SplashLoadingScreen';
+import widgetDefinitionLoader from './utils/widgetDefinitionsLoader';
 
 const browserHistory = useRouterHistory(createHistory)({
     basename: Consts.CONTEXT_PATH
@@ -61,18 +55,9 @@ export default class app{
             EventBus.trigger('window:error', message, source, lineno, colno, error);
         };
 
-        WidgetDefinitionsLoader.init();
-
-        return Promise.all([
-            TemplatesLoader.load(),
-            WidgetDefinitionsLoader.load(),
-            ConfigLoader.load()
-        ]).then((result)=>{
-            var templates = result[0];
-            var widgetDefinitions = result[1];
-            var config = result[2];
-
-            const store = configureStore(browserHistory,templates,widgetDefinitions,config);
+        widgetDefinitionLoader.init();
+        return ConfigLoader.load().then((result)=>{
+            const store = configureStore(browserHistory,result);
 
             createToolbox(store);
 
@@ -80,7 +65,6 @@ export default class app{
             UserAppDataAutoSaver.create(store);
 
             return store;
-
         });
     }
 
@@ -91,8 +75,7 @@ export default class app{
             <Provider store={store}>
                 <Router history={history} routes={createRoutes(store)} />
             </Provider>,
-            document.getElementById('app'),
-            SplashLoadingScreen.turnOff
+            document.getElementById('app')
         );
 
     }

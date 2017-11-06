@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+#path to machine's private key
+export KEY_PATH=~/dev/keys/eden.pem
+export PROJECT_PATH=/Users/edenp/dev/cloudify-stage
+export MANAGER_IP=$(cat conf/me.json | jq -r .manager.ip)
+
+echo "Manager ip is: $MANAGER_IP"
+rsync -Pav -e "ssh -o StrictHostKeyChecking=no -i $KEY_PATH" centos@$MANAGER_IP:/opt/cloudify-stage/resources/ $PROJECT_PATH/resources/

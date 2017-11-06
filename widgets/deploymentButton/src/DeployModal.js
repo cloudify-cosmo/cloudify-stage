@@ -145,7 +145,7 @@ export default class DeployModal extends React.Component {
                                         [(input => !_.isNil(input.default)), 'name']);
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
                     <Icon name="rocket"/> Create new deployment
                     <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"

@@ -10,7 +10,9 @@ import FormField from './FormField'
 import FormGroup from './FormGroup'
 import FormDivider from './FormDivider'
 import FormFile from './InputFile'
-import FormDateRange from './InputDateRange'
+import FormInputDate from './InputDate'
+import FormInputTime from './InputTime'
+import FormInputTimeFilter from './InputTimeFilter'
 import FormDropdown from '../Dropdown'
 import FormTable from './EdiTable'
 
@@ -113,9 +115,19 @@ export default class Form extends Component {
     static Dropdown = FormDropdown;
 
     /**
-     * Form date range input, see {@link InputDateRange}
+     * Calendar picker input, see {@link InputDate}
      */
-    static InputDateRange = FormDateRange;
+    static InputDate = FormInputDate;
+
+    /**
+     * Time picker input, see {@link InputTime}
+     */
+    static InputTime = FormInputTime;
+
+    /**
+     * Time range filter input, see {@link InputTimeFilter}
+     */
+    static InputTimeFilter = FormInputTimeFilter;
 
     /**
      * Form checkbox input, see [Button](https://react.semantic-ui.com/elements/button)
@@ -184,9 +196,9 @@ export default class Form extends Component {
 
         return (
             <FormSemanticUiReact {...rest} onSubmit={this._handleSubmit.bind(this)} error={!_.isEmpty(errors)}>
-                {this.props.children}
-
                 <ErrorMessage header="Errors in the form" error={errors} onDismiss={this.props.onErrorsDismiss}/>
+
+                {this.props.children}
 
                 <input type='submit' name="submitFormBtn" style={{'display': 'none'}} ref='submitFormBtn'/>
             </FormSemanticUiReact>

@@ -140,8 +140,7 @@ export default class AddWidgetModal extends Component {
     _filterByCategory = (proxy, field) => this._doFilterWidgets(field, true);
     
     render() {
-        const addWidgetBtn = <Button labelPosition='left' icon="plus" size="tiny" color="teal"
-                                        basic content='Add Widget' className="addWidgetBtn"/>;
+        const addWidgetBtn = <Button icon="bar chart" labelPosition='left' basic content='Add Widget' className="addWidgetBtn"/>;
 
         const installWidgetBtn = <Button animated="vertical" id="installWidgetBtn" onClick={()=> {}}>
                                     <Button.Content visible>Install new widget</Button.Content>
@@ -192,7 +191,7 @@ export default class AddWidgetModal extends Component {
                                 })}
                             </Menu>)
         return (
-            <div>
+            <div className={this.props.className}>
                 <Modal trigger={addWidgetBtn} className="addWidgetModal" open={this.state.open}
                        onOpen={this._openModal.bind(this)} onClose={this._closeModal.bind(this)} size="large">
                     <Segment basic size="large">

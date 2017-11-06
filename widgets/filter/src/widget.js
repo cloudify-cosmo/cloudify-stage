@@ -30,6 +30,7 @@ Stage.defineWidget({
     },
 
     isReact: true,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('filter'),
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5),
         {id: "filterByExecutions",name: "Should show execution filter", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}

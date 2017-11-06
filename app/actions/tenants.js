@@ -4,9 +4,10 @@
 
 import * as types from './types';
 import Manager from '../utils/Manager';
-import {reloadUserAppData} from './userApp';
+import {setAppLoading} from './app';
 import {clearContext} from './context';
-import {selectRootPage} from './page';
+import {reloadUserAppData} from './userApp';
+import { push } from 'react-router-redux';
 
 function requestTenants() {
     return {
@@ -55,9 +56,10 @@ export function selectTenant (tenantName) {
 
 export function changeTenant (tenantName) {
     return function(dispatch) {
+        dispatch(setAppLoading(true));
         dispatch(clearContext());
+        dispatch(push('/'));
         dispatch(selectTenant(tenantName));
-        dispatch(selectRootPage());
         dispatch(reloadUserAppData());
     }
 }

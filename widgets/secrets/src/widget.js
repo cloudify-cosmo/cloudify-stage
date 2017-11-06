@@ -13,7 +13,7 @@ Stage.defineWidget({
     color: 'red',
     fetchUrl: '[manager]/secrets[params]',
     isReact: true,
-    isAdmin: false,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('secrets'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
     initialConfiguration: [

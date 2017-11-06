@@ -5,9 +5,24 @@
 
 import * as types from './types';
 import {createDrilldownPage,selectPage} from './page';
+import {drillDownWarning} from './templateManagement';
 import {v4} from 'node-uuid';
 import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
 import Internal from '../utils/Internal';
+
+export function storeWidgetDefinitions(widgetDefinitions) {
+    return {
+        type: types.STORE_WIDGETS,
+        widgetDefinitions
+    }
+}
+
+export function loadWidgetDefinitions() {
+    return function (dispatch, getState) {
+        return widgetDefinitionLoader.load(getState().manager)
+            .then(result => dispatch(storeWidgetDefinitions(result)));
+    }
+}
 
 export function addWidget(pageId,name,widgetDefinition,width,height,x,y,configuration) {
     return {
@@ -88,7 +103,11 @@ export function addWidgetDrilldownPage(widgetId,drillDownName,drillDownPageId) {
 
 export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldownContext,drilldownPageName) {
 
-    return function (dispatch) {
+    return function (dispatch, getState) {
+        var isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
+        if (!_.isUndefined(isPageEditMode)) {
+            return dispatch(drillDownWarning(true));
+        }
 
         var pageId = widget.drillDownPages[defaultTemplate.name];
         if (!pageId) {

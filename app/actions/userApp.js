@@ -3,11 +3,11 @@
  */
 
 import * as types from './types';
-import {createPageFromInitialTemplate} from './page';
-import {setAppLoading} from './app';
+import {createPagesFromTemplate} from './page';
+import {setAppLoading, setAppError} from './app';
 import Internal from '../utils/Internal';
-import InitialTemplate from '../utils/InitialTemplate';
 import { push } from 'react-router-redux';
+import Consts from '../utils/consts';
 
 const  CURRENT_APP_DATA_VERSION = 4;
 
@@ -19,8 +19,20 @@ function setPages(pages) {
     }
 }
 
+export function resetPagesForTenant(tenant) {
+    return function(dispatch, getState) {
+        let manager = getState().manager;
+        if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
+            dispatch(resetPages());
+        } else {
+            let internal = new Internal(getState().manager);
+            return internal.doGet('ua/clear-pages', {tenant});
+        }
+    }
+}
+
 export function saveUserAppData (manager, appData) {
-    return function(dispatch) {
+    return function() {
         var data = {appData , version: CURRENT_APP_DATA_VERSION};
 
         var internal = new Internal(manager);
@@ -28,21 +40,28 @@ export function saveUserAppData (manager, appData) {
     }
 }
 
-export function resetTemplate(manager,config,templates,widgetDefinitions){
+export function resetPages(){
     return function(dispatch) {
         // First clear the pages
+        dispatch(setAppLoading(true));
         dispatch(setPages([]));
-
-        // Need to create from initial template
-        var initialTemplateName = InitialTemplate.getName(config, manager);
-        var initialTemplate = templates[initialTemplateName];
-        dispatch(createPageFromInitialTemplate(initialTemplate,templates,widgetDefinitions));
-        dispatch(push('/'));
+        return dispatch(createPagesFromTemplate())
+            .then(() => {
+                dispatch(setAppLoading(false))
+                dispatch(push('/'));
+            })
+            .catch(err => {
+                dispatch(setAppError(err.message));
+                dispatch(push('error'));
+                throw err;
+            });
     }
 }
 
-export function loadOrCreateUserAppData (manager,config,templates,widgetDefinitions) {
+export function loadOrCreateUserAppData() {
     return function(dispatch,getState) {
+
+        var manager = getState().manager;
 
         var internal = new Internal(manager);
         return internal.doGet('/ua')
@@ -50,12 +69,9 @@ export function loadOrCreateUserAppData (manager,config,templates,widgetDefiniti
                 if (userApp &&
                     userApp.appDataVersion === CURRENT_APP_DATA_VERSION &&
                     userApp.appData.pages && userApp.appData.pages.length > 0) {
-                    dispatch(setPages(userApp.appData.pages));
+                    return dispatch(setPages(userApp.appData.pages));
                 } else {
-                    dispatch(resetTemplate(manager,config,templates,widgetDefinitions));
-
-                    var data = { pages: getState().pages};
-                    return dispatch(saveUserAppData(manager, data));
+                    return dispatch(resetPages());
                 }
             });
     }
@@ -65,9 +81,7 @@ export function reloadUserAppData () {
     return function (dispatch,getState) {
         dispatch(setAppLoading(true));
         var state = getState();
-        return dispatch(loadOrCreateUserAppData(state.manager,state.config,state.templates,state.widgetDefinitions))
-            .then(()=>{
-                dispatch(setAppLoading(false));
-            });
+        return dispatch(loadOrCreateUserAppData())
+            .then(() => dispatch(setAppLoading(false)));
     }
 }

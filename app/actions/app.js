@@ -1,10 +1,13 @@
 
 import * as types from './types';
 
+import {loadTemplates} from './templates';
+import {loadWidgetDefinitions} from './widgets';
 import {getTenants} from './tenants';
 import {getClientConfig} from './clientConfig';
 import {loadOrCreateUserAppData} from './userApp';
-import {getUserData} from './managers';
+import {getUserData, getRBACConfig} from './managers';
+import {NO_TENANTS_ERR} from '../utils/ErrorCodes';
 
 export function setAppLoading(isLoading) {
     return {
@@ -13,14 +16,23 @@ export function setAppLoading(isLoading) {
     }
 }
 
+export function setAppError(error) {
+    return {
+        type : types.SET_APP_ERROR,
+        error
+    }
+}
+
 export function intialPageLoad() {
     return function(dispatch,getState) {
         dispatch(setAppLoading(true));
-        return dispatch(getTenants(getState().manager))
+        var state = getState();
+        return dispatch(getTenants(state.manager))
             .then(() => {
                 if (getState().manager.tenants.items.length === 0) {
                     console.log('User is not attached to any tenant, cannot login');
-                    return Promise.reject('User is not attached to any tenant, cannot login');
+                    dispatch(setAppLoading(false));
+                    return Promise.reject(NO_TENANTS_ERR);
                 }
             })
             .then(() => {
@@ -28,16 +40,23 @@ export function intialPageLoad() {
             })
             .then(() => {
                 return Promise.all([
-                    dispatch(getClientConfig()),
-                    dispatch(loadOrCreateUserAppData(getState().manager, getState().config, getState().templates, getState().widgetDefinitions))
+                    dispatch(loadTemplates()),
+                    dispatch(loadWidgetDefinitions()),
+                    dispatch(getRBACConfig()),
+                    dispatch(getClientConfig())
                 ]);
             })
             .then(() => {
-                dispatch(setAppLoading(false));
+                return dispatch(loadOrCreateUserAppData());
             })
-            .catch((e) => {
+            .then(()=>{
+                dispatch(setAppLoading(false));
+                dispatch(setAppError(null));
+            })
+            .catch(e => {
                 console.error('Error initializing user data. Cannot load page', e);
-                return Promise.reject('Error initializing user data, cannot load page');
+                dispatch(setAppLoading(false));
+                return Promise.reject(e);
             });
     }
 }

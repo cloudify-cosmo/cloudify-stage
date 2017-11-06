@@ -20,7 +20,10 @@ var db = require('./db/Connection');
 var express = require('express');
 var passport = require('passport');
 var getTokenStrategy = require('./routes/TokenStrategy');
+var getSamlStrategy = require('./routes/SamlStrategy');
+var samlSetup = require('./samlSetup');
 var ServerSettings = require('./serverSettings');
+var AuthHandler = require('./handler/AuthHandler');
 var Auth = require('./routes/Auth');
 var ServerProxy = require('./routes/ServerProxy');
 var UserApp = require('./routes/UserApp');
@@ -32,6 +35,7 @@ var SourceBrowser = require('./routes/SourceBrowser');
 var GitHub = require('./routes/GitHub');
 var Style = require('./routes/Style');
 var Widgets = require('./routes/Widgets');
+var Templates = require('./routes/Templates');
 var BackendHandler = require('./handler/BackendHandler');
 var WidgetBackend = require('./routes/WidgetBackend');
 
@@ -63,22 +67,29 @@ app.use(contextPath, (req,res,next) => {
     next();
 });
 
+var samlConfig = config.get().app.saml;
+if(samlConfig.enabled){
+    samlSetup.validate(samlConfig);
+    passport.use(getSamlStrategy());
+}
+
 passport.use(getTokenStrategy());
 app.use(passport.initialize());
 
 // Routes
-app.use(contextPath +'/sp',ServerProxy);
-app.use(contextPath +'/auth',Auth);
-app.use(contextPath +'/ua',UserApp);
-app.use(contextPath +'/applications',Applications);
-app.use(contextPath +'/source',SourceBrowser);
-app.use(contextPath +'/ba',BlueprintAdditions);
-app.use(contextPath +'/monitor',Monitoring);
-app.use(contextPath +'/style',Style);
-app.use(contextPath +'/widgets',Widgets);
-app.use(contextPath +'/clientConfig',clientConfig);
-app.use(contextPath +'/github',GitHub);
-app.use(contextPath +'/config',function(req,res){
+app.use(contextPath + '/sp',ServerProxy);
+app.use(contextPath + '/auth',Auth);
+app.use(contextPath + '/ua',UserApp);
+app.use(contextPath + '/applications',Applications);
+app.use(contextPath + '/source',SourceBrowser);
+app.use(contextPath + '/ba',BlueprintAdditions);
+app.use(contextPath + '/monitor',Monitoring);
+app.use(contextPath + '/style',Style);
+app.use(contextPath + '/widgets',Widgets);
+app.use(contextPath + '/templates',Templates);
+app.use(contextPath + '/clientConfig',clientConfig);
+app.use(contextPath + '/github',GitHub);
+app.use(contextPath + '/config',function(req,res){
     res.send(config.getForClient(ServerSettings.settings.mode));
 });
 app.use(contextPath +'/wb',WidgetBackend);
@@ -88,8 +99,13 @@ app.get('*',function (request, response){
     response.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
 });
 
-app.listen(8088, function () {
-    logger.info('Stage runs on port 8088!');
+// Initialize authorization data (fetch from manager)
+AuthHandler.initAuthorization().then(function(){
+
+    // Only after we have all the data in place start the server
+    app.listen(8088, function () {
+        logger.info('Stage runs on port 8088!');
+    });
 });
 
 //Error handling

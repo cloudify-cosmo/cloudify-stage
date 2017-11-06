@@ -3,7 +3,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import {LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
+import {LineChart, Line, BarChart,  Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,Brush} from 'recharts';
 import {format as d3format} from 'd3-format';
 
 /**
@@ -57,13 +57,13 @@ import {format as d3format} from 'd3-format';
  *
  * ```
  * let data = [
- *      {name: 'Oranges', value: 300},
- *      {name: 'Apples', value: 100},
- *      {name: 'Grapes', value: 80},
- *      {name: 'Pineapples', value: 40},
- *      {name: 'Watermelons', value: 30}
+ *     {time: '10:00', value: 300},
+ *     {time: '11:00', value: 100},
+ *     {time: '12:00', value: 80},
+ *     {time: '13:00', value: 40},
+ *     {time: '14:00', value: 30}
  * ];
- * return (<Graph xDataKey='name' charts={[{name:'value', label:'Number of fruits', axisLabel:''}]} data={data} type={Graph.BAR_CHART_TYPE} />);
+ * return (<Graph dataTimeFormat='HH:mm' charts={[{name:'value', label:'Number of fruits', axisLabel:''}]} data={data} type={Graph.BAR_CHART_TYPE} />);
  * ```
  *
  * ### Line chart
@@ -79,29 +79,66 @@ import {format as d3format} from 'd3-format';
  *      {time: '18:20', value: 8},
  *      {time: '18:30', value: 5}
  * ];
- * return (<Graph charts={[{name:'value', label='CPU load'}]} data={data} type={Graph.LINE_CHART_TYPE} />);
+ * return (<Graph dataTimeFormat='HH:mm' charts={[{name:'value', label:'CPU load'}]} data={data} type={Graph.LINE_CHART_TYPE} />);
  * ```
  *
- * ### Line chart - multi-charts
+ * ### Area chart
  * ![Graph 2](manual/asset/graphs/Graph_2.png)
+ *
+ * ```
+ * let data = [
+ *      {time: '17:30', value: 1},
+ *      {time: '17:40', value: 2},
+ *      {time: '17:50', value: 1},
+ *      {time: '18:00', value: 3},
+ *      {time: '18:10', value: 5},
+ *      {time: '18:20', value: 8},
+ *      {time: '18:30', value: 5}
+ * ];
+ * return (<Graph charts={[{name:'value', label='CPU load'}]} data={data} type={Graph.AREA_CHART_TYPE} />);
+ * ```
+ *
+ *
+ * ### Line chart - multi-charts, one Y-axis per chart
+ * ![Graph 3](manual/asset/graphs/Graph_3.png)
  *
  * ```
  * let data = [
  *      {cpu_total_system: 3.5,
  *       loadavg_processes_running: 3.071428571428572,
  *       memory_MemFree: 146003090.2857143,
- *       time: "15:20:00"},
+ *       time: "2017-09-26 11:00:00"},
  *      ...
  * ];
  *
  * let charts = [
- *      {name: "cpu_total_system", label: "CPU - System", axisLabel:"%"},
- *      {name: "memory_MemFree", label: "Memory - Free", axisLabel:"Bytes"},
- *      {name: "loadavg_processes_running", label: "Load", axisLabel:"%"}
+ *      {name: "cpu_total_system", label: "CPU - System [%]", axisLabel:""},
+ *      {name: "memory_MemFree", label: "Memory - Free [Bytes]", axisLabel:""},
+ *      {name: "loadavg_processes_running", label: "Load [%]", axisLabel:""}
  * ]
  *
  * return (<Graph charts={charts} data={data} type={Graph.LINE_CHART_TYPE} />);
  * ```
+ *
+ * ### Line chart - multi-charts, one Y-axis
+ * ![Graph 4](manual/asset/graphs/Graph_4.png)
+ *
+ * ```
+ * let data = [
+ *      {cpu_total_system: 3.5,
+ *       cpu_total_user: 5.23,
+ *       loadavg_processes_running: 3.071428571428572,
+ *       time: "2017-09-26 11:20:00"},
+ *      ...
+ * ];
+ *
+ * let charts = [
+ *      {name: "metrics", label: "metrics", axisLabel:"", fieldNames: ["cpu_total_system","cpu_total_user","loadavg_processes_running"]}
+ * ]
+ *
+ * return (<Graph charts={charts} data={data} type={Graph.LINE_CHART_TYPE} />);
+ * ```
+
  */
 export default class Graph extends Component {
 
@@ -117,6 +154,12 @@ export default class Graph extends Component {
      * bar chart
      */
     static BAR_CHART_TYPE = 'bar';
+
+    /**
+     * area chart
+     */
+    static AREA_CHART_TYPE = 'area';
+
     /**
      * maximum number of charts
      */
@@ -125,9 +168,18 @@ export default class Graph extends Component {
     /**
      * propTypes
      * @property {object[]} data charts input data (see class description for the format details)
-     * @property {string} type graph chart type ({@link Graph.LINE_CHART_TYPE} or {@link Graph.BAR_CHART_TYPE})
+     * @property {string} type graph chart type ({@link Graph.LINE_CHART_TYPE}, {@link Graph.BAR_CHART_TYPE} or {@link Graph.AREA_CHART_TYPE})
      * @property {object[]} charts charts configuration (see class description for format details)
      * @property {string} [xDataKey=Graph.DEFAULT_X_DATA_KEY] X-axis key name, must match key in data object
+     * @property {boolean} [showXAxis=true] should show X-axis
+     * @property {boolean} [showYAxis=true] should show Y-axis
+     * @property {boolean} [showBrush=false] should show brush (zoom)
+     * @property {boolean} [showTooltip=true] should show tooltip on line
+     * @property {boolean} [showLegend=true] should show legend
+     * @property {string} [dataTimeFormat=undefined] input date format, by default not specified
+     * @property {string} [xAxisTimeFormat='DD-MM-YYYY HH:mm'] format of X-axis tick label
+     * @property {object} [xAxisTick={fontSize:'10px'}] stylesheet for X-axis tick
+     * @property {object} [yAxisTick={fontSize:'10px'}] stylesheet for Y-axis tick
      */
     static propTypes = {
         data: PropTypes.array.isRequired,
@@ -137,12 +189,21 @@ export default class Graph extends Component {
     };
 
     static defaultProps = {
-        xDataKey: Graph.DEFAULT_X_DATA_KEY
+        xDataKey: Graph.DEFAULT_X_DATA_KEY,
+        showXAxis: true,
+        showYAxis: true,
+        showBrush: false,
+        showTooltip: true,
+        showLegend: true,
+        dataTimeFormat: undefined,
+        xAxisTimeFormat: 'DD-MM-YYYY HH:mm',
+        xAxisTick: {fontSize:'10px'},
+        yAxisTick: {fontSize:'10px'}
     };
 
     render () {
-        const CHART_COMPONENTS = { [Graph.LINE_CHART_TYPE] : LineChart, [Graph.BAR_CHART_TYPE] : BarChart};
-        const DRAWING_COMPONENTS = { [Graph.LINE_CHART_TYPE] : Line, [Graph.BAR_CHART_TYPE] : Bar};
+        const CHART_COMPONENTS = { [Graph.LINE_CHART_TYPE] : LineChart, [Graph.BAR_CHART_TYPE] : BarChart, [Graph.AREA_CHART_TYPE] : AreaChart};
+        const DRAWING_COMPONENTS = { [Graph.LINE_CHART_TYPE] : Line, [Graph.BAR_CHART_TYPE] : Bar, [Graph.AREA_CHART_TYPE] : Area};
         const COLORS = ['#000069', '#28aae1', '#f4773c', '#21ba45', '#af41f4'];
 
         const VALUE_FORMATTER = d3format('.3s');
@@ -166,27 +227,82 @@ export default class Graph extends Component {
 
         let ChartComponent = CHART_COMPONENTS[this.props.type];
         let DrawingComponent = DRAWING_COMPONENTS[this.props.type];
+
+        var chartElements = [];
+        var index = 0;
+        _.each(_.slice(this.props.charts, 0, Graph.MAX_NUMBER_OF_CHARTS), (chart)  => {
+            if (chart.fieldNames) {
+                if (this.props.showYAxis) {
+                    chartElements.push(
+                        <YAxis key={'yaxis'+chart.name}
+                               padding={{top:10}}
+                               width={chart.axisLabel ? 50 : 25}
+                               tickFormatter={VALUE_FORMATTER}
+                               tick={this.props.yAxisTick}
+                               label={<AxisLabel vertical>{chart.axisLabel}</AxisLabel>} />
+                    );
+                }
+
+                _.each(chart.fieldNames,(field)=>{
+                    var COLOR = COLORS[index++];
+                    chartElements.push(
+                        <DrawingComponent key={field}
+                                          isAnimationActive={false}
+                                          name={field}
+                                          type={INTERPOLATION_TYPE}
+                                          dataKey={field}
+                                          stroke={COLOR}
+                                          fill={COLOR}
+                                          fillOpacity={0.3}
+                                          dot={false}/>
+                    );
+                });
+
+            } else {
+                var COLOR = COLORS[index++];
+                var STYLE = {stroke: COLOR};
+
+                chartElements.push(
+                    <YAxis key={'yaxis'+chart.name}
+                           dataKey={chart.name}
+                           yAxisId={chart.name}
+                           width={50}
+                           axisLine={STYLE}
+                           tick={STYLE}
+                           tickLine={STYLE}
+                           tickFormatter={VALUE_FORMATTER}
+                           label={<AxisLabel vertical fill={COLOR}>{chart.axisLabel}</AxisLabel>} />
+                );
+
+                chartElements.push(
+                    <DrawingComponent key={chart.name}
+                                      isAnimationActive={false}
+                                      name={chart.label}
+                                      type={INTERPOLATION_TYPE}
+                                      dataKey={chart.name}
+                                      stroke={COLOR}
+                                      fillOpacity={0.3}
+                                      fill={COLOR}
+                                      yAxisId={chart.name} />
+                );
+            }
+        });
+
+        var xAxisDataFormatter = (value) => {
+            return Stage.Utils.formatLocalTimestamp(value, this.props.xAxisTimeFormat, this.props.dataTimeFormat)
+        };
+
         return (
             <ResponsiveContainer width="100%" height="100%">
-                <ChartComponent data={this.props.data} margin={MARGIN}>
-                    {
-                        _.map(_.slice(this.props.charts, 0, Graph.MAX_NUMBER_OF_CHARTS), (chart, index)  => {
-                            const COLOR = COLORS[index];
-                            const STYLE = {stroke: COLOR};
-
-                            return [
-                                <YAxis key={chart.name} dataKey={chart.name} yAxisId={chart.name} width={chart.axisLabel ? 80 : 60}
-                                       axisLine={STYLE} tick={STYLE} tickLine={STYLE} tickFormatter={VALUE_FORMATTER}
-                                       label={<AxisLabel vertical fill={COLOR}>{chart.axisLabel}</AxisLabel>} />,
-                                <DrawingComponent key={chart.name} isAnimationActive={false} name={chart.label} type={INTERPOLATION_TYPE}
-                                                  dataKey={chart.name} stroke={COLOR} fill={COLOR} yAxisId={chart.name} />
-                            ];
-                        })
-                    }
+                <ChartComponent data={this.props.data} margin={MARGIN}
+                                syncId={this.props.syncId}
+                                onClick={this.props.onClick}>
+                    {chartElements}
                     <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
-                    <XAxis dataKey={this.props.xDataKey} />
-                    <Tooltip isAnimationActive={false} formatter={VALUE_FORMATTER} />
-                    <Legend />
+                    {this.props.showXAxis && <XAxis dataKey={this.props.xDataKey} tickFormatter={xAxisDataFormatter} tick={this.props.xAxisTick}/> }
+                    {this.props.showTooltip && <Tooltip isAnimationActive={false} formatter={VALUE_FORMATTER} labelFormatter={xAxisDataFormatter}/>}
+                    {this.props.showLegend && <Legend />}
+                    {this.props.showBrush &&  <Brush />}
                 </ChartComponent>
             </ResponsiveContainer>
         );

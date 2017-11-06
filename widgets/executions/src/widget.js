@@ -13,6 +13,7 @@ Stage.defineWidget({
     color : "blue",
     fetchUrl: '[manager]/executions?[params]',
     isReact: true,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('executions'),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],
     
     initialConfiguration:

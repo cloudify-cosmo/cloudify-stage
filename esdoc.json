@@ -1,21 +1,32 @@
 {
   "source": "./app/components/basic",
   "destination": "./doc/components/basic",
-  "undocumentIdentifier": false,
-  "experimentalProposal": {
-    "classProperties": true,
-    "objectRestSpread": true,
-    "decorators": true,
-    "doExpressions": true,
-    "functionBind": true,
-    "asyncGenerators": true,
-    "exportExtensions": true,
-    "dynamicImport": true
-  },
-  "title": "Cloudify UI",
-  "index": "./doc/index.md",
-  "manual": {
-    "usage": ["./doc/widgets/readme.md"],
-    "asset": "./doc/asset"
-  }
+  "plugins": [
+    {
+      "name": "esdoc-standard-plugin",
+      "option": {
+        "undocumentIdentifier": {"enable": false},
+        "brand": {
+          "title": "Cloudify UI"
+        },
+        "manual": {
+          "files": [
+            "./doc/widgets/readme.md"
+          ],
+          "asset": "./doc/asset"
+        }
+      }
+    },
+    {
+      "name": "esdoc-ecmascript-proposal-plugin",
+      "option": {"all": true}
+    },
+    {
+      "name": "esdoc-jsx-plugin",
+      "option": {"enable": true}
+    }
+  ],
+
+  "index": "./doc/index.md"
+
 }

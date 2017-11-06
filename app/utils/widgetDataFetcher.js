@@ -33,26 +33,35 @@ export default class WidgetDataFetcher {
 
     }
 
+    _handleUrl(prefix, url) {
+        var baseUrl = url.substring(prefix.length);
+
+        let params = {};
+        let paramsMatch = this._getUrlRegExString('params').exec(baseUrl);
+        if (!_.isNull(paramsMatch)) {
+            let [paramsString, allowedParams] = paramsMatch;
+
+            params = this._paramsHandler.buildParamsToSend(allowedParams);
+
+            baseUrl = _.replace(baseUrl, paramsString, '');
+        }
+
+        return {url: baseUrl, params};
+    }
+
     _fetchByUrl(url) {
         var fetchUrl = _.replace(url,this._getUrlRegExString('config'),(match,configName)=>{
             return this._widget.configuration ? this._widget.configuration[configName] : 'NA';
         });
 
-        // User manager accessor if needs to go to the manager
         if (url.indexOf('[manager]') >= 0) {
-            var baseUrl = url.substring('[manager]'.length);
-
-            let params = {};
-            let paramsMatch = this._getUrlRegExString('params').exec(url);
-            if (!_.isNull(paramsMatch)) {
-                let [paramsString, allowedParams] = paramsMatch;
-
-                params = this._paramsHandler.buildParamsToSend(allowedParams);
-
-                baseUrl = _.replace(baseUrl, paramsString, '');
-            }
-
-            return this._toolbox.getManager().doGet(baseUrl, params);
+            // User manager accessor if needs to go to the manager
+            var data = this._handleUrl('[manager]', url);
+            return this._toolbox.getManager().doGet(data.url, data.params);
+        } else if (url.indexOf('[backend]') >= 0) {
+            // User backend accessor if needs to go to the backend
+            var data = this._handleUrl('[backend]', url);
+            return this._toolbox.getInternal().doGet(data.url, data.params);
         } else {
             // User external if the url is not manager based
             return this._toolbox.getExternal().doGet(fetchUrl);

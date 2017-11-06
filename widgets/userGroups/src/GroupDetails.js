@@ -29,6 +29,8 @@ export default class UserDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveTenantFromGroup(tenant, this.props.data.name).then(()=>{
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('users:refresh');
+            this.props.toolbox.getEventBus().trigger('tenants:refresh');
             this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
@@ -42,6 +44,8 @@ export default class UserDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveUserFromGroup(username, this.props.data.name).then(()=>{
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('users:refresh');
+            this.props.toolbox.getEventBus().trigger('tenants:refresh');
             this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
@@ -56,65 +60,45 @@ export default class UserDetails extends React.Component {
             <Segment.Group horizontal>
                 <Segment>
                     <Icon name="users"/> Users
+                    <Divider/>
+                    <List divided relaxed verticalAlign='middle' className="light">
+                        {
+                            this.props.data.users.map((item) => {
+                                let processing = this.state.processing && this.state.processItem === item;
 
-                    {
-                        !_.isEmpty(this.props.data.users)
-                        &&
-                        <div>
-                            <Divider/>
-                            <List divided verticalAlign='middle' className="light">
-                                {
-                                    this.props.data.users.map((item) => {
-                                        let processing = this.state.processing && this.state.processItem === item;
+                                return (
+                                    <List.Item key={item}>
+                                        {item}
+                                        <Icon link name={processing?'notched circle':'remove'} loading={processing}
+                                              className="right floated" onClick={this._removeUser.bind(this, item)}/>
+                                    </List.Item>
+                                );
+                            })
+                        }
 
-                                        return (
-                                            <List.Item key={item}>
-                                                {item}
-                                                <Icon size="small" link name={processing?'notched circle':'remove'} loading={processing}
-                                                      className="right floated" onClick={this._removeUser.bind(this, item)}/>
-                                            </List.Item>
-                                        );
-                                    })
-                                }
-                            </List>
-                        </div>
-                    }
-                    {
-                        _.isEmpty(this.props.data.users)
-                        &&
-                        <Message content="No users available"/>
-                    }
+                        {_.isEmpty(this.props.data.users) && <Message content="No users available"/>}
+                    </List>
                 </Segment>
                 <Segment>
                     <Icon name="users"/> Tenants
+                    <Divider/>
+                    <List divided relaxed verticalAlign='middle' className="light">
+                        {
+                            _.map(_.keys(this.props.data.tenants), (item) => {
+                                let processing = this.state.processing && this.state.processItem === item;
 
-                    {
-                        !_.isEmpty(this.props.data.tenants)
-                        &&
-                        <div>
-                            <Divider/>
-                            <List divided verticalAlign='middle' className="light">
-                                {
-                                    this.props.data.tenants.map((item) => {
-                                        let processing = this.state.processing && this.state.processItem === item;
+                                return (
+                                    <List.Item key={item}>
+                                        {item}
+                                        <Icon link name={processing?'notched circle':'remove'} loading={processing}
+                                              className="right floated" onClick={this._removeTenant.bind(this, item)}/>
+                                    </List.Item>
+                                );
+                            })
+                        }
 
-                                        return (
-                                            <List.Item key={item}>
-                                                {item}
-                                                <Icon size="small" link name={processing?'notched circle':'remove'} loading={processing}
-                                                      className="right floated" onClick={this._removeTenant.bind(this, item)}/>
-                                            </List.Item>
-                                        );
-                                    })
-                                }
-                            </List>
-                        </div>
-                    }
-                    {
-                        _.isEmpty(this.props.data.tenants)
-                        &&
-                        <Message content="No tenants available"/>
-                    }
+                        {_.isEmpty(this.props.data.tenants) && <Message content="No tenants available"/>}
+                    </List>
                 </Segment>
             </Segment.Group>
         );

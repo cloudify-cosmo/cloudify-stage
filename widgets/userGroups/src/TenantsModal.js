@@ -3,6 +3,8 @@
  */
 
 import Actions from './actions';
+const RolesPicker = Stage.Common.RolesPicker;
+const RolesUtil = Stage.Common.RolesUtil;
 
 export default class TenantsModal extends React.Component {
 
@@ -14,7 +16,7 @@ export default class TenantsModal extends React.Component {
 
     static initialState = {
         loading: false,
-        tenants: [],
+        tenants: {},
         errors: {}
     }
 
@@ -28,6 +30,13 @@ export default class TenantsModal extends React.Component {
         return true;
     }
 
+    onRoleChange(tenant, role){
+        var newTenants = Object.assign({}, this.state.tenants);
+        newTenants[tenant] = role;
+        this.setState({tenants: newTenants});
+    }
+
+
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
             this.setState({...TenantsModal.initialState, tenants: nextProps.group.tenants});
@@ -38,13 +47,22 @@ export default class TenantsModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        let tenantsToAdd = _.difference(this.state.tenants, this.props.group.tenants);
-        let tenantsToRemove = _.difference(this.props.group.tenants, this.state.tenants);
+        var tenants = this.props.group.tenants;
+        var tenantsList = Object.keys(tenants);
+        var submitTenants = this.state.tenants;
+        var submitTenantsList = Object.keys(submitTenants);
+
+        let tenantsToAdd = _.pick(submitTenants, _.difference(submitTenantsList, tenantsList));
+        let tenantsToRemove = _.difference(tenantsList, submitTenantsList);
+        let tenantsToUpdate = _.pickBy(submitTenants, (role, tenant) => {
+            return tenants[tenant] && !_.isEqual(tenants[tenant], role);
+        });
 
         var actions = new Actions(this.props.toolbox);
-        actions.doHandleTenants(this.props.group.name, tenantsToAdd, tenantsToRemove).then(()=>{
+        actions.doHandleTenants(this.props.group.name, tenantsToAdd, tenantsToRemove, tenantsToUpdate).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('tenants:refresh');
             this.props.onHide();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
@@ -52,7 +70,11 @@ export default class TenantsModal extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        var newTenants = {};
+        _.forEach(field.value, (tenant) => {
+            newTenants[tenant] = this.state.tenants[tenant] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+        });
+        this.setState({tenants: newTenants});
     }
 
     render() {
@@ -64,7 +86,7 @@ export default class TenantsModal extends React.Component {
         var options = _.map(tenants.items, item => { return {text: item.name, value: item.name, key: item.name} });
 
         return (
-            <Modal open={this.props.open}>
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
                     <Icon name="user"/> Add group {group.name} to tenants
                 </Modal.Header>
@@ -73,9 +95,10 @@ export default class TenantsModal extends React.Component {
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
                         <Form.Field>
-                            <Form.Dropdown placeholder='Tenants' multiple selection options={options} name="tenants"
-                                           value={this.state.tenants} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.Dropdown placeholder='Tenants' multiple selection closeOnChange options={options} name="tenants"
+                                           value={Object.keys(this.state.tenants)} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
+                        <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.tenants} resourceName="tenant" toolbox={this.props.toolbox}></RolesPicker>
                     </Form>
                 </Modal.Content>
 

@@ -55,10 +55,10 @@ export default class WidgetDefinitionsLoader {
         window.markdown = markdownImport;
     }
 
-    static _loadWidgets() {
+    static _loadWidgets(manager) {
         console.log('Load widgets');
 
-        var internal = new Internal();
+        var internal = new Internal(manager);
         return Promise.all([
                 new ScriptLoader('/widgets/common/common.js').load(), // Commons has to load before the widgets
                 internal.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
@@ -119,8 +119,8 @@ export default class WidgetDefinitionsLoader {
         return Promise.resolve(loadedWidgetDefinitions);
     }
 
-    static load() {
-        return WidgetDefinitionsLoader._loadWidgets()
+    static load(manager) {
+        return WidgetDefinitionsLoader._loadWidgets(manager)
             .then((widgets) => WidgetDefinitionsLoader._loadWidgetsResources(widgets))
             .then(() => WidgetDefinitionsLoader._initWidgets())
             .catch((e)=>{
@@ -134,10 +134,10 @@ export default class WidgetDefinitionsLoader {
 
         if (widgetUrl) {
             console.log('Install widget from url', widgetUrl);
-            return internal.doPut('/widgets/install',{url: widgetUrl});
+            return internal.doPut('/widgets/install', {url: widgetUrl});
         } else {
             console.log('Install widget from file');
-            return internal.doUpload('/widgets/install',null ,{widget:widgetFile});
+            return internal.doUpload('/widgets/install', {}, {widget:widgetFile});
         }
     }
 
@@ -237,6 +237,18 @@ class GenericConfig {
             OTHERS: 'Others',
             ALL: 'All'
         };
+    }
+
+    static get CUSTOM_WIDGET_PERMISSIONS () {
+        return {
+            CUSTOM_ADMIN_ONLY: 'widget_custom_admin',
+            CUSTOM_SYS_ADMIN_ONLY: 'widget_custom_sys_admin',
+            CUSTOM_ALL: 'widget_custom_all'
+        };
+    }
+
+    static WIDGET_PERMISSION = (widgetId) => {
+        return 'widget_'+widgetId
     }
 }
 

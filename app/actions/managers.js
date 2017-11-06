@@ -55,11 +55,12 @@ export function login (username, password, redirect) {
 }
 
 
-function responseUserData(username, role, serverVersion){
+function responseUserData(username, systemRole, tenantsRoles, serverVersion){
     return {
         type: types.SET_USER_DATA,
         username,
-        role,
+        role: systemRole,
+        tenantsRoles,
         serverVersion
     }
 }
@@ -68,7 +69,7 @@ export function getUserData() {
     return function (dispatch, getState) {
         return Auth.getUserData(getState().manager)
             .then(data => {
-                dispatch(responseUserData(data.username, data.role, data.serverVersion));
+                dispatch(responseUserData(data.username, data.role, data.tenantsRoles, data.serverVersion));
             });
     }
 }
@@ -80,16 +81,33 @@ function doLogout(err) {
         receivedAt: Date.now()
     }
 }
-export function logout(err) {
+export function logout(err, path) {
     return function (dispatch, getState) {
         var localLogout = () => {
-            dispatch(push('login'));
+            dispatch(push(path || (err ? 'error' : 'logout')));
             dispatch(clearContext());
             dispatch(doLogout(err));
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);
     }
+}
+
+export function storeRBAC(RBAC) {
+    return {
+        type: types.STORE_RBAC,
+        roles: RBAC.roles,
+        permissions: RBAC.permissions
+    }
+}
+
+export function getRBACConfig() {
+    return function (dispatch, getState) {
+        return Auth.getRBACConfig(getState().manager)
+            .then(RBAC => {
+                dispatch(storeRBAC(RBAC));
+            });
+    };
 }
 
 export function setStatus(status, maintenance, services) {

@@ -2,7 +2,7 @@
   "contextPath": "/stage",
   "initialTemplate": {
     "*": "initial-template",
-    "admin": {
+    "sys_admin": {
       "*": "initial-template-admin"
     },
     "user": {
@@ -47,11 +47,11 @@
     "user" : "root",
     "password" : "root",
     "database": "cloudify",
-    "timeout": 30000
+    "timeout": 10000
   },
   "github": {
-    "username": "***REMOVED***",
-    "password": "***REMOVED***"
+    "username": "secret(github-username)",
+    "password": "secret(github-password)"
   },
   "source": {
     "browseSourcesDir": "/cloudifyBrowseSources",
@@ -66,5 +66,11 @@
   },
   "ssl": {
     "ca": "/etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
+  },
+  "saml":{
+    "enabled": false,
+    "certPath": "",
+    "ssoUrl": "",
+    "portalUrl": ""
   }
 }

@@ -20,7 +20,7 @@ a:hover {
   height: 55px;
 }
 
-.dropDownText
+.dropDownText, .compactBlock
 {
   display: inline-block;
 }
@@ -65,7 +65,7 @@ a:hover {
     @media (min-width: 992px) {
       margin-left: 13rem;
     }
-    .ui.labeled.icon.button.addWidgetBtn {
+    div.addWidget .ui.labeled.icon.button.addWidgetBtn {
       position: absolute;
       top: 2rem;
       right: 15px;
@@ -96,6 +96,10 @@ a:hover {
 .grid-stack > .grid-stack-item.widget > .grid-stack-item-content {
   overflow-x: initial;
   overflow-y: initial;
+}
+
+.gridStackBottomSpace {
+  height: 150px;
 }
 
 .maximizeWidget .grid-stack-item.widget {
@@ -232,7 +236,7 @@ a:hover {
   background-color: #000069;
 
   .ui.text.container.segment404 {
-    max-width: 600px !important;
+    max-width: 400px !important;
     top: 170px;
   }
 }
@@ -303,7 +307,7 @@ a:hover {
   }
 }
 
-.loginPage,.maintenancePage,.noTenantsPage {
+.logoPage,.maintenancePage {
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -312,7 +316,7 @@ a:hover {
   background-color: #000069 !important;
 }
 
-.configManager.ui.segment, .loginPage.ui.segment, .loadingPage.ui.segment,.maintenancePage.ui.segment,.noTenantsPage.ui.segment {
+.configManager.ui.segment, .logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
   position: absolute;
   left: 0;
   right: 0;
@@ -473,6 +477,12 @@ code.hljs {
   }
 }
 
+.actionIcons {
+  & > i.icon {
+    margin-right: 2px !important;
+  }
+}
+
 .dataExpandable-appear {
   opacity: 0.01;
 }
@@ -607,6 +617,11 @@ code.hljs {
 
 }
 
+.breakWord {
+  display: block !important;
+  word-wrap: break-word;
+}
+
 /* Popup Menu */
 
 .popupMenu {
@@ -645,10 +660,19 @@ code.hljs {
   font-weight: 700;
 }
 
+.ui.modal.tiny {
+  width: 500px !important;
+  margin-left: -222px !important;
+}
+
 /* Center vertically */
 
 .rightFloated {
   float: right;
+}
+
+.leftFloated {
+  float: left;
 }
 
 .verticalCenter {
@@ -791,4 +815,30 @@ a.underline {
       background-color: #eee;
     }
   }
+}
+
+.ui.sidebar.editModeSidebar {
+  box-shadow: none !important;
+  background-color: transparent !important;
+  max-width: 500px !important;
+  margin: 0 calc(50% - 250px) !important;
+  display: block;
+
+  .content {
+    margin-top: 10px;
+    display: inline-block;
+    width: 100%;
+  }
+}
+
+.emptyPage {
+  padding-top: 10rem;
+}
+
+.forceMaxWidth {
+  white-space: pre-wrap;       /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  max-width: 500px;
 }

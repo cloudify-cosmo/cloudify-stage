@@ -39,10 +39,6 @@ export default class Login extends Component {
         let loginPageText = _.get(this.props,'whiteLabel.loginPageText');
         let isHeaderTextPresent = isWhiteLabelEnabled && (loginPageHeader || loginPageText);
         return (
-            <div className='loginPage ui segment basic inverted'>
-                <div className="logo">
-                </div>
-
                 <div className={`loginContainer ${isHeaderTextPresent?'loginContainerExtended':''}`} >
 
                     {
@@ -72,9 +68,7 @@ export default class Login extends Component {
 
                         <button className={'ui submit huge button ' + (this.props.isLoggingIn ? 'loading disabled' : '')} type="submit" disabled={this.props.isLoggingIn}>Login</button>
                     </form>
-
                 </div>
-            </div>
         );
     }
 }

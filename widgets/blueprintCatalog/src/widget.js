@@ -16,6 +16,7 @@ Stage.defineWidget({
     color: "teal",
     hasStyle: true,
     isReact: true,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintCatalog'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
     
     initialConfiguration: [
@@ -39,12 +40,16 @@ Stage.defineWidget({
         var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.filter);
 
         return actions.doGetRepos(params).then(data => {
-            var repos = data.items;
-            var total = data.total_count;
+            let repos = data.items;
+            let total = data.total_count;
+            let isAuthenticated = data.isAuth;
 
-            var fetches = _.map(repos, repo => actions.doFindImage(repo.name, DEFUALT_IMAGE)
+            let fetches = _.map(repos, repo => actions.doFindImage(repo.name, DEFUALT_IMAGE)
                                .then(imageUrl=>Promise.resolve(Object.assign(repo, {image_url:imageUrl}))));
-            return Promise.all(fetches).then((items)=>Promise.resolve({items, total}));
+
+            return Promise.all(fetches).then((items)=> {
+                return Promise.resolve({items, total, isAuthenticated});
+            });
         });
     },
 
@@ -70,7 +75,6 @@ Stage.defineWidget({
         });
 
         var actions = new Actions(toolbox, widget.configuration.username, widget.configuration.password);
-
         return (
             <RepositoryList widget={widget} data={formattedData} toolbox={toolbox} actions={actions}/>
         );

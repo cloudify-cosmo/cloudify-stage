@@ -6,14 +6,16 @@ import UsersTable from './UsersTable';
 
 Stage.defineWidget({
     id: 'userManagement',
-    name: "User management",
+    name: 'User management',
     description: 'This widget shows a list of available users and allow managing them',
     initialWidth: 5,
     initialHeight: 16,
-    color: "brown",
-    fetchUrl: '[manager]/users?_get_data=true[params]',
+    color: 'brown',
+    fetchUrl: {
+        users: '[manager]/users?_get_data=true[params]'
+    },
     isReact: true,
-    isAdmin: true,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('userManagement'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
     initialConfiguration: [
@@ -30,21 +32,25 @@ Stage.defineWidget({
 
         var selectedUser = toolbox.getContext().getValue('userName');
 
-        let formattedData = data;
-        formattedData = Object.assign({}, data, {
+        let formattedData = data.users;
+        formattedData = Object.assign({}, data.users, {
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
                     last_login_at: item.last_login_at?Stage.Utils.formatTimestamp(item.last_login_at):"",
                     groupCount: item.groups.length,
-                    tenantCount: item.tenants.length,
+                    tenantCount: _.size(item.tenants),
                     isSelected: item.username === selectedUser
                 })
             }),
-            total : _.get(data, 'metadata.pagination.total', 0)
+            total : _.get(data.users, 'metadata.pagination.total', 0)
+        });
+
+        var roles = _.map (toolbox.getManager().getSystemRoles(), (role) => {
+            return {text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name};
         });
 
         return (
-            <UsersTable widget={widget} data={formattedData} toolbox={toolbox}/>
+            <UsersTable widget={widget} data={formattedData} roles={roles} toolbox={toolbox}/>
         );
 
     }

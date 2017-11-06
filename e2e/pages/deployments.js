@@ -168,7 +168,7 @@ module.exports = {
                             .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB])
                             // TODO: Make inputs.yaml file accessible from the server
                             // .setValue('@blueprintInputsFile', pathlib.resolve('e2e/resources/' + blueprintName + 'Inputs.yaml'))
-                            .waitForElementPresent(blueprintFileOptionElement)
+                            .waitForElementPresent(blueprintFileOptionElement, 20000)
                             .selectOptionInDropdown(this.elements.blueprintYamlFile.selector, blueprintYamlFile);
                     },
                     clickUpdate: function () {

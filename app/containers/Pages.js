@@ -20,15 +20,16 @@ const findSelectedRootPage = (pagesMap,selectedPageId) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    var pagesMap = _.keyBy(state.pages,'id');
+    var pages = state.pages;
+    var pagesMap = _.keyBy(pages,'id');
     var page = pagesMap[ownProps.pageId];
-    var homePageId = state.pages[0].id;
+    var homePageId = pages[0].id;
     var pageId = page ? page.id : homePageId;
-    var selected = state.pages && state.pages.length > 0 ? findSelectedRootPage(pagesMap,pageId) : null;
+    var selected = pages && pages.length > 0 ? findSelectedRootPage(pagesMap,pageId) : null;
 
     return {
-        pages: state.pages,
-        selected :selected
+        pages,
+        selected
     };
 };
 

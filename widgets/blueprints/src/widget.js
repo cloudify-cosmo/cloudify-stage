@@ -13,6 +13,7 @@ Stage.defineWidget({
     color : "blue",
     hasStyle: true,
     isReact: true,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprints'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
     
     initialConfiguration: [
@@ -27,7 +28,7 @@ Stage.defineWidget({
 
     fetchData(widget,toolbox,params) {
         var result = {};
-        return toolbox.getManager().doGet('/blueprints?_include=id,updated_at,created_at,description,created_by,private_resource,main_file_name',params)
+        return toolbox.getManager().doGet('/blueprints?_include=id,updated_at,created_at,description,created_by,resource_availability,main_file_name',params)
             .then(data=>{
                 result.blueprints = data;
                 var blueprintIds = data.items.map(item=>item.id);

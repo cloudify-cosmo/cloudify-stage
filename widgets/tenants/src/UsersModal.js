@@ -5,6 +5,8 @@
 import Actions from './actions';
 
 let PropTypes = React.PropTypes;
+const RolesPicker = Stage.Common.RolesPicker;
+const RolesUtil = Stage.Common.RolesUtil;
 
 export default class UsersModal extends React.Component {
 
@@ -17,7 +19,7 @@ export default class UsersModal extends React.Component {
     }
 
     static initialState = {
-        users: [],
+        users: {},
         loading: false,
         errors: {}
     }
@@ -43,11 +45,24 @@ export default class UsersModal extends React.Component {
         return true;
     }
 
+    onRoleChange(user, role){
+        var newUsers = Object.assign({}, this.state.users);
+        newUsers[user] = role;
+        this.setState({users: newUsers});
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
+
+            var users = _.mapValues(_.pickBy(nextProps.tenant.users, (rolesObj) => {
+                return !_.isEmpty(rolesObj['tenant-role']);
+            }), (rolesObj) => {
+                return rolesObj['tenant-role'];
+            });
+
             this.setState({
                 ...UsersModal.initialState,
-                users: nextProps.tenant.users
+                users: users
             });
         }
     }
@@ -58,13 +73,22 @@ export default class UsersModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        let usersToAdd = _.difference(this.state.users, this.props.tenant.users);
-        let usersToRemove = _.difference(this.props.tenant.users, this.state.users);
+        var users = this.props.tenant.users;
+        var usersList = Object.keys(users);
+        var submitUsers = this.state.users;
+        var submitUsersList = Object.keys(submitUsers);
+
+        let usersToAdd = _.pick(submitUsers, _.difference(submitUsersList, usersList));
+        let usersToRemove = _.difference(usersList, submitUsersList);
+        let usersToUpdate = _.pickBy(submitUsers, (role, user) => {
+            return users[user] && !_.isEqual(users[user], role);
+        });
 
         let actions = new Actions(this.props.toolbox);
-        actions.doHandleUsers(this.props.tenant.name, usersToAdd, usersToRemove).then(()=>{
+        actions.doHandleUsers(this.props.tenant.name, usersToAdd, usersToRemove, usersToUpdate).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('users:refresh');
             this.props.onHide();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
@@ -72,7 +96,11 @@ export default class UsersModal extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        var newUsers = {};
+        _.forEach(field.value, (user) => {
+            newUsers[user] = this.state.users[user] || RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+        });
+        this.setState({users: newUsers});
     }
 
     render() {
@@ -82,7 +110,7 @@ export default class UsersModal extends React.Component {
         let users = _.map(this.props.users.items, (user) => { return {text: user.username, value: user.username, key: user.username} });
 
         return (
-        <Modal open={this.props.open}>
+        <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
             <Modal.Header>
                 <Icon name="user"/> Modify users for tenant {tenant.name}
             </Modal.Header>
@@ -91,9 +119,10 @@ export default class UsersModal extends React.Component {
                 <Form loading={this.state.loading} errors={this.state.errors}
                       onErrorsDismiss={() => this.setState({errors: {}})}>
                     <Form.Field>
-                        <Form.Dropdown placeholder='Users' multiple selection options={users} name="users"
-                                       value={this.state.users} onChange={this._handleInputChange.bind(this)}/>
+                        <Form.Dropdown placeholder='Users' multiple selection closeOnChange options={users} name="users"
+                                       value={Object.keys(this.state.users)} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
+                    <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.users} resourceName="user" toolbox={this.props.toolbox}></RolesPicker>
                 </Form>
             </Modal.Content>
 

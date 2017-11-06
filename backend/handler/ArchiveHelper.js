@@ -56,7 +56,9 @@ module.exports = (function() {
             logger.debug('fetching file from url', archiveUrl);
 
             var getRequest = null;
-            var onErrorFetch = reject;
+            var onErrorFetch = function (error) {
+                reject(error);
+            }
             var onSuccessFetch = function (response) {
                 var archiveFile = _extractFilename(response.headers['content-disposition']);
 
@@ -100,9 +102,8 @@ module.exports = (function() {
                 var options = {options: {headers: HEADERS}};
                 getRequest = RequestHandler.request('GET', archiveUrl, options, onSuccessFetch, onErrorFetch);
             } else {
-                getRequest = ManagerHandler.request('GET', archiveUrl, HEADERS, onSuccessFetch, onErrorFetch);
+                getRequest = ManagerHandler.request('GET', archiveUrl, HEADERS, null, onSuccessFetch, onErrorFetch);
             }
-
 
             if (req) {
                 req.pipe(getRequest);

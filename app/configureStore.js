@@ -8,14 +8,11 @@ import createLogger from 'redux-logger'
 import { createStore, applyMiddleware } from 'redux'
 
 import StatePersister from './utils/StatePersister';
-import InitialTemplate from './utils/InitialTemplate';
 import throttle from 'lodash/throttle';
 
 import reducers from './reducers';
 
-import {createPageFromInitialTemplate} from './actions/page';
-
-export default (history,templates,widgetDefinitions,config) => {
+export default (history,config) => {
 
     let initialState = StatePersister.load(config.mode);
 
@@ -26,11 +23,7 @@ export default (history,templates,widgetDefinitions,config) => {
             manager: {}
         }
     }
-    initialState = Object.assign({},initialState,{
-        templates,
-        widgetDefinitions,
-        config
-    });
+    initialState = Object.assign({},initialState,{config});
 
     // Clear login error if has any
     initialState.manager.err = null;

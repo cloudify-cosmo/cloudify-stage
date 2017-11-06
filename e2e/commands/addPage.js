@@ -3,7 +3,7 @@
  */
 
 exports.command = function() {
-    this.page.page().section.sidebar
+    this.page.page().section.editModeSidebar
         .clickElement('@addPageButton');
 
     return this.pause(2000);

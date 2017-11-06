@@ -19,7 +19,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 let AddPageButton = ({onClick}) => {
     return (
-        <Button labelPosition='left' icon="plus" size="tiny" color="teal" basic onClick={onClick} content='Add Page'/>
+        <Button icon="file text outline" labelPosition='left' basic onClick={onClick} content='Add Page' className='addPageBtn' />
     );
 };
 

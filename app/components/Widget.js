@@ -2,24 +2,18 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-/**
- * Created by kinneretzin on 29/08/2016.
- */
-
-
 import React, { Component, PropTypes } from 'react';
 import InlineEdit from 'react-edit-inline';
 
 import EditWidget from '../containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
-import Consts from '../utils/consts';
+import Auth from '../utils/auth';
 
 export default class Widget extends Component {
     static propTypes = {
         pageId: PropTypes.string.isRequired,
         widget: PropTypes.object.isRequired,
         context: PropTypes.object.isRequired,
-        templates : PropTypes.object.isRequired,
         manager: PropTypes.object.isRequired,
         widgetData: PropTypes.object,
         onWidgetNameChange: PropTypes.func.isRequired,
@@ -27,7 +21,8 @@ export default class Widget extends Component {
         onWidgetRemoved: PropTypes.func.isRequired,
         onWidgetMaximize: PropTypes.func.isRequired,
         onWidgetConfigUpdate: PropTypes.func.isRequired,
-        fetchWidgetData: PropTypes.func.isRequired
+        fetchWidgetData: PropTypes.func.isRequired,
+        pageManagementMode: PropTypes.string
     };
 
     _widgetConfigUpdate(config) {
@@ -41,6 +36,10 @@ export default class Widget extends Component {
         if (event.keyCode === 27) {
             this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false);
         }
+    }
+
+    _isUserAuthorized() {
+        return Auth.isUserAuthorized(this.props.widget.definition.permission, this.props.manager);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -71,7 +70,7 @@ export default class Widget extends Component {
             );
         }
 
-        if (this.props.widget.definition && this.props.widget.definition.isAdmin && this.props.manager.auth.role !== Consts.ROLE_ADMIN) {
+        if (this.props.widget.definition && !this._isUserAuthorized()) {
             return (
                 <div className='widgetItem ui segment'>
                     {
@@ -84,7 +83,7 @@ export default class Widget extends Component {
                     <div className='ui segment basic' style={{height:'100%'}}>
                         <div className="ui icon message error">
                             <i className="ban icon"></i>
-                            Only admin can access this widget
+                            You are not authorized for this widget
                         </div>
                     </div>
                 </div>
@@ -115,7 +114,7 @@ export default class Widget extends Component {
                 {
                     this.props.isEditMode ?
                         <div className='widgetEditButtons'>
-                            <EditWidget pageId={this.props.pageId} widget={this.props.widget}/>
+                            <EditWidget pageId={this.props.pageId} widget={this.props.widget} pageManagementMode={this.props.pageManagementMode}/>
                             <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                         </div>
                         :
@@ -131,12 +130,12 @@ export default class Widget extends Component {
                             }
                         </div>
                 }
+
                 {
                     (this.props.widget.definition &&
                     !_.isEmpty(_.get(this.props,'manager.tenants.selected')) &&
                     !_.get(this.props,'manager.tenants.isFetching'))?
                         <WidgetDynamicContent widget={this.props.widget}
-                                              templates={this.props.templates}
                                               context={this.props.context}
                                               manager={this.props.manager}
                                               data={this.props.widgetData}

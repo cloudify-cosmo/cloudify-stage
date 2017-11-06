@@ -9,11 +9,4 @@ export function setEditMode(isEditMode) {
         type : types.SET_CONFIG_EDIT_MODE,
         isEditMode
     }
-
 }
-
-/*export function toggleDashboardEditMode(isEditMode) {
-    return function (dispatch) {
-        dispatch(toggleDashboardEditMode(isEditMode));
-        }
-}*/
