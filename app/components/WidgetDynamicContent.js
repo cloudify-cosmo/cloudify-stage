@@ -30,7 +30,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     _getToolbox () {
-        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this));
+        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this), this.props.widget.definition.id);
     }
 
     _beforeFetch() {
@@ -153,7 +153,7 @@ export default class WidgetDynamicContent extends Component {
         if (prevProps.widget.configuration && this.props.widget.configuration) {
 
             _.each(this.props.widget.configuration,(config,confName)=>{
-                //var oldConfig = _.find(prevProps.widget.configuration,{id:config.id});
+                //var oldConfig = _.find(prevProps.widget.configuration,{id:config});
                 var oldConfig = prevProps.widget.configuration[confName];
 
                 if (oldConfig !== config) {

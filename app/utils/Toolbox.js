@@ -65,9 +65,9 @@ class Toolbox {
         return this._Internal;
     }
 
-    getWidgetBackend(context) {
+    getWidgetBackend() {
         var state = this.store.getState();
-        return new WidgetBackend(context, state.manager || {});
+        return new WidgetBackend(this.getWidgetDefinitionId(), state.manager || {});
     }
 
     getExternal(basicAuth) {
@@ -90,6 +90,8 @@ class Toolbox {
     refresh() {}
 
     loading(show) {}
+
+    getWidgetDefinitionId() {}
 }
 
 var toolbox = null;
@@ -98,13 +100,15 @@ let createToolbox = (store) =>{
     toolbox = new Toolbox(store);
 };
 
-let getToolbox  = (onRefresh, onLoading)=>{
+let getToolbox = (onRefresh, onLoading, widgetDefinitionId)=>{
     return new Proxy(toolbox,{
         get: (target, name)=> {
             if (name === 'refresh') {
                 return onRefresh;
             } else if (name === 'loading') {
                 return onLoading;
+            } else if (name === 'getWidgetDefinitionId') {
+                return () => widgetDefinitionId;
             } else {
                 return target[name];
             }

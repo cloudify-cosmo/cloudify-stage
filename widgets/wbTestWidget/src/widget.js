@@ -30,7 +30,7 @@ Stage.defineWidget({
     fetchData (widget, toolbox, params) {
         let service = widget.configuration.service;
         if (!_.isEmpty(service)) {
-            return toolbox.getWidgetBackend(this).doGet(service);
+            return toolbox.getWidgetBackend().doGet(service);
         } else {
             return Promise.resolve({});
         }
@@ -45,18 +45,22 @@ Stage.defineWidget({
     },
 
     render: function(widget,data,error,toolbox) {
+        if (_.isEmpty(data)) {
+            return <Stage.Basic.Loading/>;
+        }
+
         let {Message, HighlightText} = Stage.Basic;
 
         //TODO: we should have a better way of calling refresh after data update
         //TODO: Dont send widgetBackend ref to child only to get it back in parent's private function
 
         let content = ((_.isEmpty(data) && widget.configuration.service === 'wbTestReadItems') ? <Message>No data fetched</Message> :
-            <TestDataTable data={data} widgetBackend={toolbox.getWidgetBackend(this)} onDelete={this._dbDelete} refreshData={toolbox.refresh} />);
+            <TestDataTable data={data} widgetBackend={toolbox.getWidgetBackend()} onDelete={this._dbDelete} refreshData={toolbox.refresh} />);
 
         return (
         widget.configuration.service === 'wbTestReadItems' ?
             <div>
-                <CreateControls onCreate={this._createInDb} widgetBackend={toolbox.getWidgetBackend(this)} refreshData={toolbox.refresh}/>
+                <CreateControls onCreate={this._createInDb} widgetBackend={toolbox.getWidgetBackend()} refreshData={toolbox.refresh}/>
                 {content}
             </div>
             :

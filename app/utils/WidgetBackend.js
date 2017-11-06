@@ -6,14 +6,14 @@ import Internal from './Internal';
 
 export default class WidgetBackend extends Internal {
 
-    constructor(widget, data) {
+    constructor(widgetId, data) {
         super(data);
-        this.widget = widget;
+        this.widgetId = widgetId;
     }
 
     _buildHeaders() {
         var headers = super._buildHeaders();
-        headers.widgetName = this.widget.id;
+        headers.widgetId = this.widgetId;
         return headers;
     }
     _buildActualUrl(path, data) {

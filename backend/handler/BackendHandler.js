@@ -17,7 +17,7 @@ if (!fs.existsSync(widgetsFolder)) {
 }
 
 var services = {};
-var BackendRegistrator = function (widgetName) {
+var BackendRegistrator = function (widgetId) {
     return {
         register: (serviceName, service) => {
             if (!serviceName) {
@@ -29,13 +29,13 @@ var BackendRegistrator = function (widgetName) {
                 throw new Error('Service body must be a function (function(request, response, next, helper) {...})');
             }
 
-            if (_.isObject(services[widgetName]) && !_.isNil(services[widgetName][serviceName])) {
-                throw new Error('Service ' + serviceName + ' for widget ' + widgetName + ' already exists');
+            if (_.isObject(services[widgetId]) && !_.isNil(services[widgetId][serviceName])) {
+                throw new Error('Service ' + serviceName + ' for widget ' + widgetId + ' already exists');
             } else {
-                if (_.isEmpty(services[widgetName]))
-                    services[widgetName] = {};
+                if (_.isEmpty(services[widgetId]))
+                    services[widgetId] = {};
                 logger.info('--- registering service ' + serviceName);
-                services[widgetName][serviceName] = service;
+                services[widgetId][serviceName] = service;
             }
         }
     }
@@ -49,15 +49,15 @@ module.exports = (function() {
             && _.indexOf(config.app.widgets.ignoreFolders, dir) < 0);
     }
 
-    function importWidgetBackend(widgetName) {
-        var backendFile = pathlib.resolve(widgetsFolder, widgetName, config.app.widgets.backendFilename);
+    function importWidgetBackend(widgetId) {
+        var backendFile = pathlib.resolve(widgetsFolder, widgetId, config.app.widgets.backendFilename);
         if (fs.existsSync(backendFile)) {
             logger.info('-- initializing file ' + backendFile);
 
             try {
                 var backend = require(backendFile);
                 if (_.isFunction(backend)) {
-                    backend(BackendRegistrator(widgetName));
+                    backend(BackendRegistrator(widgetId));
                 } else {
                     throw new Error('Backend definition must be a function (module.exports = function(BackendRegistrator) {...})');
                 }
@@ -72,24 +72,24 @@ module.exports = (function() {
 
         var widgets = _getInstalledWidgets();
 
-        _.each(widgets, widgetName => importWidgetBackend(widgetName));
+        _.each(widgets, widgetId => importWidgetBackend(widgetId));
 
         logger.info('Widget backend files for registration completed');
     }
 
     function callService(serviceName, req, res, next) {
-        var widgetName = req.header('widgetName');
-        var widgetServices = services[widgetName];
+        var widgetId = req.header('widgetId');
+        var widgetServices = services[widgetId];
         if (widgetServices) {
             var service = widgetServices[serviceName];
             if (service) {
                 var helperServices = require('./services');
                 return service(req, res, next, helperServices);
             } else {
-                throw new Error('Widget ' + widgetName + ' has no services registered');
+                throw new Error('Widget ' + widgetId + ' has no services registered');
             }
         } else {
-            throw new Error('Service name ' + serviceName + ' does not exist for widget ' + widgetName);
+            throw new Error('Service name ' + serviceName + ' does not exist for widget ' + widgetId);
         }
 
     }
