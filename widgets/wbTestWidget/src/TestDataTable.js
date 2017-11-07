@@ -26,7 +26,7 @@ export default class TestDataTable extends React.Component {
                                     <DataTable.Data>{item.id}</DataTable.Data>
                                     <DataTable.Data>{item.key}</DataTable.Data>
                                     <DataTable.Data>{item.value}</DataTable.Data>
-                                    <DataTable.Data style={{textAlign: "center"}}>
+                                    <DataTable.Data style={{textAlign: 'center'}}>
                                         <Button floated="right" icon="trash" onClick={this._delete.bind(this, item)}/>
                                     </DataTable.Data>
                                 </DataTable.Row>

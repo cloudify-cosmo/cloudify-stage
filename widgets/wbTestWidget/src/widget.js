@@ -23,13 +23,14 @@ Stage.defineWidget({
                 {name:'Local Storage', value:'wbTestReadItems'}
             ]
         },
-        {id: 'params', name: 'Parameter', default: '', type: Stage.Basic.GenericField.STRING_TYPE}
+        {id: 'endpoint', name: 'Endpoint (only for Manager service)', default: 'users', type: Stage.Basic.GenericField.STRING_TYPE}
     ],
 
     fetchData (widget, toolbox, params) {
         let service = widget.configuration.service;
+        let endpoint = widget.configuration.endpoint;
         if (!_.isEmpty(service)) {
-            return toolbox.getWidgetBackend().doGet(service);
+            return toolbox.getWidgetBackend().doGet(service, {endpoint});
         } else {
             return Promise.resolve({items:[]});
         }
