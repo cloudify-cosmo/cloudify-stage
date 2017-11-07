@@ -26,22 +26,23 @@ Stage.defineWidget({
         {id: 'params', name: 'Parameter', default: '', type: Stage.Basic.GenericField.STRING_TYPE}
     ],
 
-
     fetchData (widget, toolbox, params) {
         let service = widget.configuration.service;
         if (!_.isEmpty(service)) {
             return toolbox.getWidgetBackend().doGet(service);
         } else {
-            return Promise.resolve({});
+            return Promise.resolve({items:[]});
         }
     },
 
-    _createInDb(widgetBackend, key, value) {
-        widgetBackend.doGet('wbTestCreateItem', {key, value});
+    _createInDb(toolbox, key, value) {
+        toolbox.getWidgetBackend().doGet('wbTestCreateItem', {key, value});
+        toolbox.refresh();
     },
 
-    _dbDelete(widgetBackend, key) {
-        widgetBackend.doGet('wbTestDeleteItem', {key})
+    _dbDelete(toolbox, id) {
+        toolbox.getWidgetBackend().doGet('wbTestDeleteItem', {id})
+        toolbox.refresh();
     },
 
     render: function(widget,data,error,toolbox) {
@@ -51,17 +52,17 @@ Stage.defineWidget({
 
         let {Message, HighlightText} = Stage.Basic;
 
-        //TODO: we should have a better way of calling refresh after data update
-        //TODO: Dont send widgetBackend ref to child only to get it back in parent's private function
-
-        let content = ((_.isEmpty(data) && widget.configuration.service === 'wbTestReadItems') ? <Message>No data fetched</Message> :
-            <TestDataTable data={data} widgetBackend={toolbox.getWidgetBackend()} onDelete={this._dbDelete} refreshData={toolbox.refresh} />);
-
         return (
         widget.configuration.service === 'wbTestReadItems' ?
             <div>
-                <CreateControls onCreate={this._createInDb} widgetBackend={toolbox.getWidgetBackend()} refreshData={toolbox.refresh}/>
-                {content}
+                <CreateControls onCreate={this._createInDb.bind(this, toolbox)}/>
+                {
+                    _.isEmpty(data.items)
+                    ?
+                    <Message>No data available</Message>
+                    :
+                    <TestDataTable data={data} onDelete={this._dbDelete.bind(this, toolbox)}/>
+                }
             </div>
             :
             <HighlightText>

@@ -6,6 +6,8 @@ var _ = require('lodash');
 var db = require('../../db/Connection');
 var config = require('../../config').get();
 
+const headerWidgetIdKey = 'widgetId';
+
 module.exports = (function() {
     function create(key, value, req, res, next) {
         if (_.isEmpty(req.user)) {
@@ -14,12 +16,9 @@ module.exports = (function() {
             return db.WidgetsData
                 .create({
                     user: req.user.username,
-                    widget: req.header(config.app.widgets.widgetNameHeader),
+                    widget: req.header(headerWidgetIdKey),
                     key: key,
                     value: value
-                })
-                .catch(function () {
-                    res.status(500).send({message: 'Data write error'});
                 });
         }
     }
@@ -32,11 +31,9 @@ module.exports = (function() {
                 .findOne({
                     where: {
                         user: req.user.username,
-                        widget: req.header(config.app.widgets.widgetNameHeader),
+                        widget: req.header(headerWidgetIdKey),
                         key: key,
                     }
-                }).catch(function () {
-                    res.status(500).send({message: 'Data read error'});
                 });
         }
     }
@@ -49,10 +46,8 @@ module.exports = (function() {
                 .findAll({
                     where: {
                         user: req.user.username,
-                        widget: req.header(config.app.widgets.widgetNameHeader),
+                        widget: req.header(headerWidgetIdKey),
                     }
-                }).catch(function () {
-                    res.status(500).send({message: 'Data read error'});
                 });
         }
     }
@@ -68,13 +63,10 @@ module.exports = (function() {
                     {
                         where: {
                             user: req.user.username,
-                            widget: req.header(config.app.widgets.widgetNameHeader),
+                            widget: req.header(headerWidgetIdKey),
                             key: key
                         }
-                    })
-                .catch(function () {
-                    res.status(500).send({message: 'Data update error'});
-                });
+                    });
         }
     }
 
@@ -86,11 +78,9 @@ module.exports = (function() {
                 .destroy({
                     where: {
                         user: req.user.username,
-                        widget: req.header(config.app.widgets.widgetNameHeader),
+                        widget: req.header(headerWidgetIdKey),
                         id: id,
                     }
-                }).catch(function () {
-                    res.status(500).send({message: 'Data delete error'});
                 });
         }
     }

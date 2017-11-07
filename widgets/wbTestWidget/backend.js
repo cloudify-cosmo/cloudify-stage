@@ -8,21 +8,21 @@ module.exports = function(r) {
 
     r.register('wbTestReadItems', (req, res, next, helper) => {
         helper.Database.readAll(req, res, next)
-            .then((data) => res.send(data))
+            .then((data) => res.send({items: data}))
             .catch(next);
     });
 
 
     r.register('wbTestCreateItem', (req, res, next, helper) => {
         helper.Database.create(req.query.key, req.query.value, req, res, next)
-            .then((data) => res.send(data))
+            .then((data) => res.send({status:'ok'}))
             .catch(next);
     });
 
 
     r.register('wbTestDeleteItem', (req, res, next, helper) => {
-        helper.Database.remove(req.query.key, req, res, next)
-            .then((data) => res.send(data))
+        helper.Database.remove(req.query.id, req, res, next)
+            .then((data) => res.send({status:'ok'}))
             .catch(next);
     });
 

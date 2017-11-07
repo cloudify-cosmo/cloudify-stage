@@ -4,25 +4,12 @@
 
 export default class TestDataTable extends React.Component {
 
+    _delete(item) {
+        this.props.onDelete(item.id);
+    }
+
     render() {
         var {DataTable, Button} = Stage.Basic;
-
-        let tableRows = _.isArray(this.props.data) ? (
-                this.props.data.map((item)=>{
-                return (
-                    <DataTable.Row key={item.id}>
-                        <DataTable.Data>{item.id}</DataTable.Data>
-                        <DataTable.Data>{item.key}</DataTable.Data>
-                        <DataTable.Data>{JSON.stringify(item.value)}</DataTable.Data>
-                        <DataTable.Data>
-                            <Button floated="right" icon="trash" onClick={() => {
-                                this.props.onDelete(this.props.widgetBackend, item.id);
-                                this.props.refreshData();
-                            }}/>
-                        </DataTable.Data>
-                    </DataTable.Row>
-                )})
-            ) : 'No records found';
 
         return (
             <div>
@@ -31,7 +18,20 @@ export default class TestDataTable extends React.Component {
                     <DataTable.Column label="Key" width="30%"/>
                     <DataTable.Column label="Value" width="30%"/>
                     <DataTable.Column label="Actions" width="10%"/>
-                    {tableRows}
+
+                    {
+                        this.props.data.items.map(item => {
+                            return (
+                                <DataTable.Row key={item.id}>
+                                    <DataTable.Data>{item.id}</DataTable.Data>
+                                    <DataTable.Data>{item.key}</DataTable.Data>
+                                    <DataTable.Data>{item.value}</DataTable.Data>
+                                    <DataTable.Data style={{textAlign: "center"}}>
+                                        <Button floated="right" icon="trash" onClick={this._delete.bind(this, item)}/>
+                                    </DataTable.Data>
+                                </DataTable.Row>
+                            )})
+                    }
                 </DataTable>
             </div>
         );
