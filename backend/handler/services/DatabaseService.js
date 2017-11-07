@@ -4,9 +4,7 @@
 
 var _ = require('lodash');
 var db = require('../../db/Connection');
-var config = require('../../config').get();
-
-const headerWidgetIdKey = 'widgetId';
+var consts = require('../../consts');
 
 module.exports = (function() {
     function create(key, value, req, res, next) {
@@ -16,7 +14,7 @@ module.exports = (function() {
             return db.WidgetsData
                 .create({
                     user: req.user.username,
-                    widget: req.header(headerWidgetIdKey),
+                    widget: req.header(consts.WIDGET_ID_HEADER),
                     key: key,
                     value: value
                 });
@@ -31,7 +29,7 @@ module.exports = (function() {
                 .findOne({
                     where: {
                         user: req.user.username,
-                        widget: req.header(headerWidgetIdKey),
+                        widget: req.header(consts.WIDGET_ID_HEADER),
                         key: key,
                     }
                 });
@@ -46,7 +44,7 @@ module.exports = (function() {
                 .findAll({
                     where: {
                         user: req.user.username,
-                        widget: req.header(headerWidgetIdKey),
+                        widget: req.header(consts.WIDGET_ID_HEADER),
                     }
                 });
         }
@@ -63,7 +61,7 @@ module.exports = (function() {
                     {
                         where: {
                             user: req.user.username,
-                            widget: req.header(headerWidgetIdKey),
+                            widget: req.header(consts.WIDGET_ID_HEADER),
                             key: key
                         }
                     });
@@ -78,7 +76,7 @@ module.exports = (function() {
                 .destroy({
                     where: {
                         user: req.user.username,
-                        widget: req.header(headerWidgetIdKey),
+                        widget: req.header(consts.WIDGET_ID_HEADER),
                         id: id,
                     }
                 });

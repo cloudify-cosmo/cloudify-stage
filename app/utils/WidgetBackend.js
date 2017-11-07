@@ -3,6 +3,7 @@
  */
 
 import Internal from './Internal';
+import consts from '../utils/consts';
 
 export default class WidgetBackend extends Internal {
 
@@ -13,7 +14,7 @@ export default class WidgetBackend extends Internal {
 
     _buildHeaders() {
         var headers = super._buildHeaders();
-        headers.widgetId = this.widgetId;
+        headers[consts.WIDGET_ID_HEADER] = this.widgetId;
         return headers;
     }
     _buildActualUrl(path, data) {
