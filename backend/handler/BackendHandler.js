@@ -7,6 +7,7 @@ var fs = require('fs-extra');
 var pathlib = require('path');
 var _ = require('lodash');
 var config = require('../config').get();
+var consts = require('../consts');
 
 var logger = require('log4js').getLogger('WidgetBackend');
 
@@ -78,7 +79,7 @@ module.exports = (function() {
     }
 
     function callService(serviceName, req, res, next) {
-        var widgetId = req.header('widgetId');
+        var widgetId = req.header(consts.WIDGET_ID_HEADER);
         var widgetServices = services[widgetId];
         if (widgetServices) {
             var service = widgetServices[serviceName];

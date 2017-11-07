@@ -4,7 +4,7 @@
 
 var _ = require('lodash');
 var db = require('../../db/Connection');
-var config = require('../../config').get();
+var consts = require('../../consts');
 
 module.exports = (function() {
     function create(key, value, req, res, next) {
@@ -14,7 +14,7 @@ module.exports = (function() {
             return db.WidgetsData
                 .create({
                     user: req.user.username,
-                    widget: req.header(config.app.widgets.widgetNameHeader),
+                    widget: req.header(consts.WIDGET_ID_HEADER),
                     key: key,
                     value: value
                 })
@@ -32,7 +32,7 @@ module.exports = (function() {
                 .findOne({
                     where: {
                         user: req.user.username,
-                        widget: req.header(config.app.widgets.widgetNameHeader),
+                        widget: req.header(consts.WIDGET_ID_HEADER),
                         key: key,
                     }
                 }).catch(function () {
@@ -49,7 +49,7 @@ module.exports = (function() {
                 .findAll({
                     where: {
                         user: req.user.username,
-                        widget: req.header(config.app.widgets.widgetNameHeader),
+                        widget: req.header(consts.WIDGET_ID_HEADER),
                     }
                 }).catch(function () {
                     res.status(500).send({message: 'Data read error'});
@@ -68,7 +68,7 @@ module.exports = (function() {
                     {
                         where: {
                             user: req.user.username,
-                            widget: req.header(config.app.widgets.widgetNameHeader),
+                            widget: req.header(consts.WIDGET_ID_HEADER),
                             key: key
                         }
                     })
@@ -86,7 +86,7 @@ module.exports = (function() {
                 .destroy({
                     where: {
                         user: req.user.username,
-                        widget: req.header(config.app.widgets.widgetNameHeader),
+                        widget: req.header(consts.WIDGET_ID_HEADER),
                         id: id,
                     }
                 }).catch(function () {

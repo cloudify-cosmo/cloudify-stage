@@ -61,8 +61,7 @@
     "ignoreFolders": ["common"],
     "tempDir": "cloudifyWidgets",
     "requiredFiles" : ["widget.js", "widget.png"],
-    "backendFilename" : "backend.js",
-    "widgetNameHeader" : "widgetName"
+    "backendFilename" : "backend.js"
   },
   "ssl": {
     "ca": "/etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
