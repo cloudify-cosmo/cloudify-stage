@@ -8,6 +8,7 @@ var pathlib = require('path');
 var _ = require('lodash');
 var config = require('../config').get();
 var consts = require('../consts');
+const {NodeVM, VMScript} = require('vm2');
 
 var logger = require('log4js').getLogger('WidgetBackend');
 
@@ -35,8 +36,9 @@ var BackendRegistrator = function (widgetId) {
             } else {
                 if (_.isEmpty(services[widgetId]))
                     services[widgetId] = {};
+
                 logger.info('--- registering service ' + serviceName);
-                services[widgetId][serviceName] = service;
+                services[widgetId][serviceName] = new VMScript('module.exports = ' + service.toString());
             }
         }
     }
@@ -82,10 +84,12 @@ module.exports = (function() {
         var widgetId = req.header(consts.WIDGET_ID_HEADER);
         var widgetServices = services[widgetId];
         if (widgetServices) {
-            var service = widgetServices[serviceName];
-            if (service) {
-                var helperServices = require('./services');
-                return service(req, res, next, helperServices);
+            var serviceScript = widgetServices[serviceName];
+            if (serviceScript) {
+                var helper = require('./services');
+
+                var vm = new NodeVM();
+                return vm.run(serviceScript)(req, res, next, helper);
             } else {
                 throw new Error('Widget ' + widgetId + ' has no services registered');
             }
