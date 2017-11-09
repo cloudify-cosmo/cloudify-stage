@@ -27,7 +27,7 @@ export default class CreateControls extends React.Component {
 
         return (
             <Form>
-                <Form.Group inline widths="3">
+                <Form.Group inline widths="equal">
                     <Form.Field>
                         <Form.Input fluid value={this.state.key} name="key" label='Key' onChange={this._onChange.bind(this)}/>
                     </Form.Field>
