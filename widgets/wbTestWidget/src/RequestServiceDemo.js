@@ -21,7 +21,6 @@ export default class RequestServiceDemo extends React.Component {
             error: '',
             loading: false
         }
-
     }
 
     _onChange(event, field) {
@@ -44,29 +43,36 @@ export default class RequestServiceDemo extends React.Component {
     }
 
     render() {
-        var {Button, ErrorMessage, Form, HighlightText, Label, Loading, Segment} = Stage.Basic;
+        var {Button, Dropdown, ErrorMessage, Input, HighlightText, Label, Loading, Popup, Segment, Table} = Stage.Basic;
 
 
         return (
             <div>
                 <Segment padded>
                     <Label attached='top'>Request</Label>
-                    <Form onSubmit={this._onClick.bind(this)}>
-                        <Form.Group inline>
-                            <Form.Field>
-                                <Form.Dropdown value={this.state.method} name="method" label='Method' selection closeOnChange
-                                               onChange={this._onChange.bind(this)} options={this.methods} />
-                            </Form.Field>
-                            <Form.Field>
-                                <Form.Input value={this.state.url} name="url" label='URL'
-                                            onChange={this._onChange.bind(this)} />
-                            </Form.Field>
-                            <Form.Field>
-                                <Form.Button content='Fire' icon='rocket' disabled={_.isEmpty(this.state.url)}
-                                             onClick={this._onClick.bind(this)} />
-                            </Form.Field>
-                        </Form.Group>
-                    </Form>
+                    <Table compact basic='very'>
+                        <Table.Body>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                    <Dropdown value={this.state.method} name="method" label='Method' selection closeOnChange compact
+                                              onChange={this._onChange.bind(this)} options={this.methods} />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Popup>
+                                        <Popup.Trigger>
+                                            <Input value={this.state.url} name="url" label='URL' fluid
+                                                   onChange={this._onChange.bind(this)} />
+                                        </Popup.Trigger>
+                                        You can use any HTTP URL here.
+                                    </Popup>
+                                </Table.Cell>
+                                <Table.Cell collapsing>
+                                    <Button content='Fire' icon='rocket' disabled={_.isEmpty(this.state.url)}
+                                            onClick={this._onClick.bind(this)} />
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table.Body>
+                    </Table>
                 </Segment>
                 <Segment padded>
                     <Label attached='top'>Response</Label>

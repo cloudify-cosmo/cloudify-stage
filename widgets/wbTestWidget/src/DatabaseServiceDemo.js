@@ -52,7 +52,7 @@ export default class DatabaseServiceDemo extends React.Component {
             <div>
                 <CreateControls onCreate={this._dbCreate.bind(this)}/>
                 {
-                    _.isEmpty(this.state.error) ? <div /> : <Message>{this.state.error.message}</Message>
+                    _.isEmpty(this.state.error) ? <div /> : <Message>{this.state.error}</Message>
                 }
                 {
                     _.isEmpty(this.state.data.items)

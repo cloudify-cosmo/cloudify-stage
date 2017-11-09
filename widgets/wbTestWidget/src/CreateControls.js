@@ -15,6 +15,7 @@ export default class CreateControls extends React.Component {
 
     _create() {
         this.props.onCreate(this.state.key, this.state.value);
+        this.setState({key: '', value: ''});
     }
 
     _onChange(event, field) {

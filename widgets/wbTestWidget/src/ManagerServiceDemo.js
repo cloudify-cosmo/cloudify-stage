@@ -44,29 +44,36 @@ export default class ManagerServiceDemo extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, Form, HighlightText, Label, Loading, Segment} = Stage.Basic;
+        var {Button, Dropdown, ErrorMessage, Input, HighlightText, Label, Loading, Popup, Segment, Table} = Stage.Basic;
 
 
         return (
             <div>
                 <Segment padded>
                     <Label attached='top'>Request</Label>
-                    <Form onSubmit={this._onClick.bind(this)}>
-                        <Form.Group inline>
-                            <Form.Field>
-                                <Form.Dropdown value={this.state.method} name="method" label='Method' selection closeOnChange
-                                               onChange={this._onChange.bind(this)} options={this.methods} />
-                            </Form.Field>
-                            <Form.Field>
-                                <Form.Input value={this.state.endpoint} name="endpoint" label='REST API Endpoint'
-                                            onChange={this._onChange.bind(this)} />
-                            </Form.Field>
-                            <Form.Field>
-                                <Form.Button content='Fire' icon='rocket' disabled={_.isEmpty(this.state.endpoint)}
-                                             onClick={this._onClick.bind(this)} />
-                            </Form.Field>
-                        </Form.Group>
-                    </Form>
+                    <Table compact basic='very'>
+                        <Table.Body>
+                            <Table.Row>
+                                <Table.Cell collapsing>
+                                    <Dropdown value={this.state.method} name="method" label='Method' selection closeOnChange compact
+                                              onChange={this._onChange.bind(this)} options={this.methods} />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Popup>
+                                        <Popup.Trigger>
+                                            <Input value={this.state.endpoint} name="endpoint" label='http://<manager-ip>/api/v3.1/'
+                                                   onChange={this._onChange.bind(this)} fluid placeholder='Cloudify REST API endpoint'/>
+                                        </Popup.Trigger>
+                                        See Cloudify REST API documentation for details about possible endpoints.
+                                    </Popup>
+                                </Table.Cell>
+                                <Table.Cell collapsing>
+                                    <Button content='Fire' icon='rocket' disabled={_.isEmpty(this.state.endpoint)}
+                                            onClick={this._onClick.bind(this)} />
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table.Body>
+                    </Table>
                 </Segment>
                 <Segment padded>
                     <Label attached='top'>Response</Label>
