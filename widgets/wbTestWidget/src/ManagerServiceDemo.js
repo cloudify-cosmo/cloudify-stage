@@ -10,6 +10,7 @@ export default class ManagerServiceDemo extends React.Component {
         this.methods = [
             {text: 'GET', value: 'get', key: 'get', func: 'doGet'},
             {text: 'POST', value: 'post', key: 'post', func: 'doPost'},
+            {text: 'PUT', value: 'put', key: 'put', func: 'doPut'},
             {text: 'PATCH', value: 'patch', key: 'patch', func: 'doPatch'},
             {text: 'DELETE', value: 'delete', key: 'delete', func: 'doDelete'},
         ];
@@ -19,6 +20,7 @@ export default class ManagerServiceDemo extends React.Component {
         this.state = {
             method: this.methods[0].value,
             endpoint: '',
+            payload: '',
             data: '',
             error: '',
             loading: false
@@ -30,21 +32,20 @@ export default class ManagerServiceDemo extends React.Component {
     }
 
     _onClick() {
-        this.state.data = null;
         let method = _.find(this.methods, (method) => method.value === this.state.method);
-
         this.setState({loading: true})
-        this.props.widgetBackend.doGet(this.managerServiceName, {endpoint: this.state.endpoint, method: this.state.method})
-            .then((data) => {
+        this.props.widgetBackend[method.func](this.managerServiceName, {
+                endpoint: this.state.endpoint,
+                payload: this.state.payload
+            }).then((data) => {
                 this.setState({data, error: '', loading: false})
-            })
-            .catch((error) => {
+            }).catch((error) => {
                 this.setState({data: '', error: error.status + ' - ' + error.message, loading: false})
             });
     }
 
     render() {
-        var {Button, Dropdown, ErrorMessage, Input, HighlightText, Label, Loading, Popup, Segment, Table} = Stage.Basic;
+        var {Button, Dropdown, ErrorMessage, Form, Input, HighlightText, Label, Loading, Popup, Segment, Table} = Stage.Basic;
 
 
         return (
@@ -70,6 +71,15 @@ export default class ManagerServiceDemo extends React.Component {
                                 <Table.Cell collapsing>
                                     <Button content='Fire' icon='rocket' disabled={_.isEmpty(this.state.endpoint)}
                                             onClick={this._onClick.bind(this)} />
+                                </Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell colSpan='3'>
+                                    <Form>
+                                        <Form.TextArea value={this.state.payload} name="payload" rows={3}
+                                                       onChange={this._onChange.bind(this)} placeholder='JSON payload'/>
+                                    </Form>
+
                                 </Table.Cell>
                             </Table.Row>
                         </Table.Body>

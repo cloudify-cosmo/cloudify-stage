@@ -1,6 +1,6 @@
 module.exports = function(r) {
     r.register('manager', (req, res, next, helper) => {
-        helper.Manager.call('GET', req.query.endpoint, req)
+        helper.Manager.call(req.method, req.query.endpoint, req.headers, JSON.parse(req.query.payload))
             .then((data) => res.send(data))
             .catch(next);
     });

@@ -10,9 +10,12 @@ export default class RequestServiceDemo extends React.Component {
         this.methods = [
             {text: 'GET', value: 'get', key: 'get', func: 'doGet'},
             {text: 'POST', value: 'post', key: 'post', func: 'doPost'},
+            {text: 'PUT', value: 'put', key: 'put', func: 'doPut'},
             {text: 'PATCH', value: 'patch', key: 'patch', func: 'doPatch'},
             {text: 'DELETE', value: 'delete', key: 'delete', func: 'doDelete'},
         ];
+
+        this.requestServiceName = 'request';
 
         this.state = {
             method: this.methods[0].value,
@@ -29,11 +32,10 @@ export default class RequestServiceDemo extends React.Component {
 
     _onClick() {
         this.state.data = null;
-        const REQUEST_SERVICE_NAME = 'request';
         let method = _.find(this.methods, (method) => method.value === this.state.method);
 
         this.setState({loading: true})
-        this.props.widgetBackend[method.func](REQUEST_SERVICE_NAME, {url: this.state.url})
+        this.props.widgetBackend[method.func](this.requestServiceName, {url: this.state.url})
             .then((data) => {
                 this.setState({data, error: '', loading: false})
             })
