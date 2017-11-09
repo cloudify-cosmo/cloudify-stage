@@ -2,10 +2,9 @@
  * Created by jakubniezgoda on 13/09/2017.
  */
 
-import TestDataTable from './TestDataTable';
-import CreateControls from './CreateControls';
 import RequestServiceDemo from './RequestServiceDemo';
 import ManagerServiceDemo from './ManagerServiceDemo';
+import DatabaseServiceDemo from './DatabaseServiceDemo';
 
 Stage.defineWidget({
     id: 'wbTest',
@@ -23,46 +22,17 @@ Stage.defineWidget({
             items: [
                 {name: 'Manager', value: 'manager'},
                 {name: 'Request', value: 'request'},
-                {name: 'Database', value: 'wbTestReadItems'}
+                {name: 'Database', value: 'database'}
             ]
         }
     ],
 
-    fetchData (widget, toolbox, params) {
-        let service = widget.configuration.service;
-        if (service === 'wbTestReadItems') {
-            return toolbox.getWidgetBackend().doGet(service);
-        } else {
-            return Promise.resolve({});
-        }
-    },
-
-    _createInDb(toolbox, key, value) {
-        toolbox.getWidgetBackend().doGet('wbTestCreateItem', {key, value});
-        toolbox.refresh();
-    },
-
-    _dbDelete(toolbox, id) {
-        toolbox.getWidgetBackend().doGet('wbTestDeleteItem', {id})
-        toolbox.refresh();
-    },
-
     render: function(widget,data,error,toolbox) {
-        let {Message} = Stage.Basic;
 
         switch(widget.configuration.service) {
-            case 'wbTestReadItems':
+            case 'database':
                 return (
-                    <div>
-                        <CreateControls onCreate={this._createInDb.bind(this, toolbox)}/>
-                        {
-                            _.isEmpty(data.items)
-                                ?
-                                <Message>No data available</Message>
-                                :
-                                <TestDataTable data={data} onDelete={this._dbDelete.bind(this, toolbox)}/>
-                        }
-                    </div>
+                    <DatabaseServiceDemo widgetBackend={toolbox.getWidgetBackend()}/>
                 );
                 break;
             case 'manager':
