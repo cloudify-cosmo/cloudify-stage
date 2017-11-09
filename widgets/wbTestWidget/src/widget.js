@@ -4,6 +4,8 @@
 
 import TestDataTable from './TestDataTable';
 import CreateControls from './CreateControls';
+import RequestServiceDemo from './RequestServiceDemo';
+import ManagerServiceDemo from './ManagerServiceDemo';
 
 Stage.defineWidget({
     id: 'wbTest',
@@ -19,20 +21,19 @@ Stage.defineWidget({
     initialConfiguration: [
         {id: 'service', name: 'Service', default: 'manager', type: Stage.Basic.GenericField.LIST_TYPE,
             items: [
-                {name:'Manager', value:'manager'},
-                {name:'Local Storage', value:'wbTestReadItems'}
+                {name: 'Manager', value: 'manager'},
+                {name: 'Request', value: 'request'},
+                {name: 'Database', value: 'wbTestReadItems'}
             ]
-        },
-        {id: 'endpoint', name: 'Endpoint (only for Manager service)', default: 'users', type: Stage.Basic.GenericField.STRING_TYPE}
+        }
     ],
 
     fetchData (widget, toolbox, params) {
         let service = widget.configuration.service;
-        let endpoint = widget.configuration.endpoint;
-        if (!_.isEmpty(service)) {
-            return toolbox.getWidgetBackend().doGet(service, {endpoint});
+        if (service === 'wbTestReadItems') {
+            return toolbox.getWidgetBackend().doGet(service);
         } else {
-            return Promise.resolve({items:[]});
+            return Promise.resolve({});
         }
     },
 
@@ -47,28 +48,33 @@ Stage.defineWidget({
     },
 
     render: function(widget,data,error,toolbox) {
-        if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
-        }
+        let {Message} = Stage.Basic;
 
-        let {Message, HighlightText} = Stage.Basic;
-
-        return (
-        widget.configuration.service === 'wbTestReadItems' ?
-            <div>
-                <CreateControls onCreate={this._createInDb.bind(this, toolbox)}/>
-                {
-                    _.isEmpty(data.items)
-                    ?
-                    <Message>No data available</Message>
-                    :
-                    <TestDataTable data={data} onDelete={this._dbDelete.bind(this, toolbox)}/>
-                }
-            </div>
-            :
-            <HighlightText>
-                {JSON.stringify(data.items, null, 2)}
-            </HighlightText>
-        );
+        switch(widget.configuration.service) {
+            case 'wbTestReadItems':
+                return (
+                    <div>
+                        <CreateControls onCreate={this._createInDb.bind(this, toolbox)}/>
+                        {
+                            _.isEmpty(data.items)
+                                ?
+                                <Message>No data available</Message>
+                                :
+                                <TestDataTable data={data} onDelete={this._dbDelete.bind(this, toolbox)}/>
+                        }
+                    </div>
+                );
+                break;
+            case 'manager':
+                return (
+                    <ManagerServiceDemo widgetBackend={toolbox.getWidgetBackend()}/>
+                );
+                break;
+            case 'request':
+                return (
+                    <RequestServiceDemo widgetBackend={toolbox.getWidgetBackend()}/>
+                );
+                break;
+        };
     }
 });

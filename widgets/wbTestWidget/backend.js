@@ -5,6 +5,11 @@ module.exports = function(r) {
             .catch(next);
     });
 
+    r.register('request', (req, res, next, helper) => {
+        helper.Request.call(req.method, req.query.url)
+            .then((data) => res.send(data))
+            .catch(next);
+    });
 
     r.register('wbTestReadItems', (req, res, next, helper) => {
         helper.Database.readAll(req, res, next)
