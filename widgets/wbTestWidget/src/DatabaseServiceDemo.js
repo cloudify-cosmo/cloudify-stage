@@ -26,33 +26,31 @@ export default class DatabaseServiceDemo extends React.Component {
     }
 
     _dbCreate(key, value) {
-        this.setState({error:''});
         this.state.widgetBackend
             .doPost('dbCreate', {key, value})
             .then(this._loadData())
             .catch((error) => {
-                this.setState({error: 'Create failed: '+error});
+                this.setState({error: 'Create failed: '+error.message});
             });
     };
 
     _dbDelete(id) {
-        this.setState({error:''});
         this.state.widgetBackend
             .doDelete('dbDelete', {id})
             .then(this._loadData())
             .catch((error) => {
-                this.setState({error: 'Delete failed: '+error});
+                this.setState({error: 'Delete failed: '+error.message});
             });
     };
 
     render() {
-        let {Message} = Stage.Basic;
+        let {Message, ErrorMessage} = Stage.Basic;
 
         return (
             <div>
                 <CreateControls onCreate={this._dbCreate.bind(this)}/>
                 {
-                    _.isEmpty(this.state.error) ? <div /> : <Message>{this.state.error}</Message>
+                    _.isEmpty(this.state.error) ? <div /> : <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: ''})} />
                 }
                 {
                     _.isEmpty(this.state.data.items)
