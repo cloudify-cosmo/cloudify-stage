@@ -26,6 +26,10 @@ export default class DatabaseServiceDemo extends React.Component {
     }
 
     _dbCreate(key, value) {
+        if (_.isEmpty(key)){
+            this.setState({error: 'Key may not be blank. Please provide a valid value.'});
+            return;
+        }
         this.state.widgetBackend
             .doPost('dbCreate', {key, value})
             .then(this._loadData())
