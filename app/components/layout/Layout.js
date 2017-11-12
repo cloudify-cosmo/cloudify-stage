@@ -10,7 +10,7 @@ import Header from '../../containers/layout/Header';
 import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
-import {NO_TENANTS_ERR} from '../../utils/ErrorCodes';
+import {NO_TENANTS_ERR, UNAUTHORIZED_ERR} from '../../utils/ErrorCodes';
 
 export default class Layout extends Component {
     constructor(props,context) {
@@ -41,6 +41,8 @@ export default class Layout extends Component {
                 switch(e) {
                     case NO_TENANTS_ERR:
                         this.props.doLogout(null, 'noTenants');
+                        break;
+                    case UNAUTHORIZED_ERR:
                         break;
                     default:
                         this.props.doLogout('Error initializing user data, cannot load page');

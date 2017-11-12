@@ -5,6 +5,8 @@
 import 'isomorphic-fetch';
 import {saveAs} from 'file-saver';
 import StageUtils from './stageUtils';
+import Interceptor from './Interceptor';
+import {UNAUTHORIZED_ERR} from '../utils/ErrorCodes';
 
 import log from 'loglevel';
 let logger = log.getLogger('External');
@@ -134,12 +136,12 @@ export default class External {
 
         if (fileName) {
             return fetch(actualUrl, options)
-                .then(this._checkStatus)
+                .then(this._checkStatus.bind(this))
                 .then(response => response.blob())
                 .then(blob => saveAs(blob, fileName));
         } else {
             return fetch(actualUrl, options)
-                .then(this._checkStatus)
+                .then(this._checkStatus.bind(this))
                 .then(response => {
                     if (parseResponse) {              
                       var contentType = _.toLower(response.headers.get('content-type'));
@@ -151,9 +153,19 @@ export default class External {
         }
     }
 
+    _isUnauthorized(response){
+        return false;
+    }
+
     _checkStatus(response) {
         if (response.ok) {
             return response;
+        }
+
+        if(this._isUnauthorized(response)){
+            let interceptor = Interceptor.getInterceptor();
+            interceptor.handle401();
+            return Promise.reject(UNAUTHORIZED_ERR);
         }
 
         // Ignoring content type and trying to parse the json response.
