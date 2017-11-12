@@ -15,10 +15,12 @@ export default class Grid extends Component {
         $(this.refs.grid).gridstack({
             cellHeight: 10,
             verticalMargin: 10,
-            float: true,
             animate: true,
             disableResize: !this.props.isEditMode,
-            disableDrag: !this.props.isEditMode
+            disableDrag: !this.props.isEditMode,
+            draggable: {
+                scroll: true
+            }
         });
 
         $(this.refs.grid).off('change').on('change', (event, items)=> {
