@@ -1,6 +1,6 @@
 {
   "name": "stage-backend",
-  "version": "4.2.0",
+  "version": "17.11.12",
   "description": "",
   "main": "server.js",
   "scripts": {
