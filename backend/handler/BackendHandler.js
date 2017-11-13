@@ -21,7 +21,10 @@ if (!fs.existsSync(widgetsFolder)) {
 var services = {};
 var BackendRegistrator = function (widgetId) {
     return {
-        register: (serviceName, service) => {
+        register: (method, serviceName, service) => {
+            if (!method) {
+                throw new Error('Method must be provided');
+            }
             if (!serviceName) {
                 throw new Error('Service name must be provided');
             }
@@ -31,14 +34,17 @@ var BackendRegistrator = function (widgetId) {
                 throw new Error('Service body must be a function (function(request, response, next, helper) {...})');
             }
 
-            if (_.isObject(services[widgetId]) && !_.isNil(services[widgetId][serviceName])) {
-                throw new Error('Service ' + serviceName + ' for widget ' + widgetId + ' already exists');
+            if (!_.isUndefined(_.get(services, [widgetId, serviceName, method]))) {
+                throw new Error('Service ' + serviceName + ' for method ' + method + ' for widget ' + widgetId + ' already exists');
             } else {
                 if (_.isEmpty(services[widgetId]))
                     services[widgetId] = {};
 
-                logger.info('--- registering service ' + serviceName);
-                services[widgetId][serviceName] = new VMScript('module.exports = ' + service.toString());
+                if (_.isEmpty(services[widgetId][serviceName]))
+                    services[widgetId][serviceName] = {};
+
+                logger.info('--- registering service ' + serviceName + ' for ' + method + ' method');
+                services[widgetId][serviceName][method] = new VMScript('module.exports = ' + service.toString());
             }
         }
     }
@@ -80,21 +86,27 @@ module.exports = (function() {
         logger.info('Widget backend files for registration completed');
     }
 
-    function callService(serviceName, req, res, next) {
+    function callService(method, serviceName, req, res, next) {
         var widgetId = req.header(consts.WIDGET_ID_HEADER);
         var widgetServices = services[widgetId];
         if (widgetServices) {
-            var serviceScript = widgetServices[serviceName];
-            if (serviceScript) {
-                var helper = require('./services');
+            var serviceScripts = widgetServices[serviceName];
+            if (serviceScripts) {
+                logger.error(serviceScripts);
+                var serviceScript = serviceScripts[method];
+                if (serviceScript) {
+                    var helper = require('./services');
 
-                var vm = new NodeVM();
-                return vm.run(serviceScript)(req, res, next, helper);
+                    var vm = new NodeVM();
+                    return vm.run(serviceScript)(req, res, next, helper);
+                } else {
+                    throw new Error('Widget ' + widgetId + ' has no service ' + serviceName + ' for method ' + method + ' registered');
+                }
             } else {
-                throw new Error('Widget ' + widgetId + ' has no services registered');
+                throw new Error('Widget ' + widgetId + ' has no service ' + serviceName + ' registered');
             }
         } else {
-            throw new Error('Service name ' + serviceName + ' does not exist for widget ' + widgetId);
+            throw new Error('Widget ' + widgetId + ' does not have any services registered');
         }
 
     }

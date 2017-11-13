@@ -9,32 +9,32 @@ module.exports = (function() {
         return ManagerHandler.jsonRequest(method, url, headers, data);
     }
 
-    function get(url, headers, data) {
+    function doGet(url, headers, data) {
         return call('get', url, headers, data);
     }
 
-    function post(url, headers, data) {
+    function doPost(url, headers, data) {
         return call('post', url, headers, data);
     }
 
-    function del(url, headers, data) {
+    function doDelete(url, headers, data) {
         return call('delete', url, headers, data);
     }
 
-    function put(url, headers, data) {
+    function doPut(url, headers, data) {
         return call('put', url, headers, data);
     }
 
-    function patch(url, headers, data) {
+    function doPatch(url, headers, data) {
         return call('PATCH', url, headers, data);
     }
 
     return {
         call,
-        get,
-        post,
-        del,
-        put,
-        patch
+        doGet,
+        doPost,
+        doDelete,
+        doPut,
+        doPatch
     };
 })();

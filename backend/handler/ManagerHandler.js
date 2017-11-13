@@ -37,8 +37,13 @@ module.exports = (function() {
             options.headers = headers;
         }
 
-        if(data){
+        if (data) {
             options.json = data;
+            try {
+                options.headers['content-length'] = JSON.stringify(data).length;
+            } catch (error) {
+                logger.error('Invalid payload data. Error:', error)
+            }
         }
     }
 

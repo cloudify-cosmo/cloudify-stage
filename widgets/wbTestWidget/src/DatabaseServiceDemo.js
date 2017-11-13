@@ -17,11 +17,14 @@ export default class DatabaseServiceDemo extends React.Component {
             loading: false
         };
 
+        this.databaseServiceName = 'database';
+
         this._loadData();
     };
 
     _loadData(){
-        this.state.widgetBackend.doGet('dbGetAll')
+        this.state.widgetBackend
+            .doGet(this.databaseServiceName)
             .then((data) => this.setState({data}));
     }
 
@@ -31,7 +34,7 @@ export default class DatabaseServiceDemo extends React.Component {
             return;
         }
         this.state.widgetBackend
-            .doPost('dbCreate', {key, value})
+            .doPost(this.databaseServiceName, {key, value})
             .then(this._loadData())
             .catch((error) => {
                 this.setState({error: 'Create failed: '+error.message});
@@ -40,7 +43,7 @@ export default class DatabaseServiceDemo extends React.Component {
 
     _dbDelete(id) {
         this.state.widgetBackend
-            .doDelete('dbDelete', {id})
+            .doDelete(this.databaseServiceName, {id})
             .then(this._loadData())
             .catch((error) => {
                 this.setState({error: 'Delete failed: '+error.message});

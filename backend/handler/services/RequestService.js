@@ -13,7 +13,12 @@ module.exports = (function() {
                 options.headers = headers;
             }
             if (data) {
-                options.body = data;
+                options.json = data;
+                try {
+                    options.headers['content-length'] = JSON.stringify(data).length;
+                } catch (error) {
+                    throw new Error('Invalid (non-json) payload data. Error:', error)
+                }
             }
             if (params) {
                 url = (url.indexOf('?') > 0? '&' : '?') + $.param(params, true);
@@ -38,32 +43,32 @@ module.exports = (function() {
         });
     }
 
-    function get(url, params, headers, data) {
+    function doGet(url, params, headers, data) {
         return call('get', url, params, headers, data);
     }
 
-    function post(url, params, headers, data) {
+    function doPost(url, params, headers, data) {
         return call('post', url, params, headers, data);
     }
 
-    function del(url, params, headers, data) {
+    function doDelete(url, params, headers, data) {
         return call('delete', url, params, headers, data);
     }
 
-    function put(url, params, headers, data) {
+    function doPut(url, params, headers, data) {
         return call('put', url, params, headers, data);
     }
 
-    function patch(url, params, headers, data) {
+    function doPatch(url, params, headers, data) {
         return call('PATCH', url, params, headers, data);
     }
 
     return {
         call,
-        get,
-        post,
-        del,
-        put,
-        patch
+        doGet,
+        doPost,
+        doDelete,
+        doPut,
+        doPatch
     };
 })();
