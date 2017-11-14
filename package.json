@@ -117,6 +117,7 @@
     "eslint-plugin-react": "^7.1.0",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.0.0",
+    "grunt-babel": "^7.0.0",
     "grunt-cli": "^1.2.0",
     "html-webpack-plugin": "^2.22.0",
     "ip": "^1.1.3",
