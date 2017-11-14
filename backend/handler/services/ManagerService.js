@@ -2,31 +2,37 @@
  * Created by jakubniezgoda on 06/11/2017.
  */
 
+var param = require('jquery-param');
 var ManagerHandler = require('../ManagerHandler');
+var consts = require('../../consts');
 
 module.exports = (function() {
-    function call(method, url, headers, data) {
+    function call(method, url, params, data, headers={}) {
+        if (params) {
+            var queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
+            url = `${url}${queryString}`;
+        }
         return ManagerHandler.jsonRequest(method, url, headers, data);
     }
 
-    function doGet(url, headers, data) {
-        return call('get', url, headers, data);
+    function doGet(url, params, headers) {
+        return call(consts.ALLOWED_METHODS_OBJECT.get, url, params, null, headers);
     }
 
-    function doPost(url, headers, data) {
-        return call('post', url, headers, data);
+    function doPost(url, params, data, headers) {
+        return call(consts.ALLOWED_METHODS_OBJECT.post, url, params, data, headers);
     }
 
-    function doDelete(url, headers, data) {
-        return call('delete', url, headers, data);
+    function doDelete(url, params, data, headers) {
+        return call(consts.ALLOWED_METHODS_OBJECT.delete, url, params, data, headers);
     }
 
-    function doPut(url, headers, data) {
-        return call('put', url, headers, data);
+    function doPut(url, params, data, headers) {
+        return call(consts.ALLOWED_METHODS_OBJECT.put, url, params, data, headers);
     }
 
-    function doPatch(url, headers, data) {
-        return call('PATCH', url, headers, data);
+    function doPatch(url, params, data, headers) {
+        return call(consts.ALLOWED_METHODS_OBJECT.patch, url, params, data, headers);
     }
 
     return {

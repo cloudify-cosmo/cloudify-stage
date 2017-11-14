@@ -21,13 +21,23 @@ if (!fs.existsSync(widgetsFolder)) {
 var services = {};
 var BackendRegistrator = function (widgetId) {
     return {
-        register: (method, serviceName, service) => {
-            if (!method) {
-                throw new Error('Method must be provided');
-            }
+        register: (serviceName, method, service) => {
             if (!serviceName) {
                 throw new Error('Service name must be provided');
             }
+
+            if (!_.isString(method)) {
+                service = method;
+                method = consts.ALLOWED_METHODS_OBJECT.get;
+            } else if (!_.isNil(method)) {
+                method = _.toUpper(method);
+                if (!_.includes(consts.ALLOWED_METHODS_ARRAY, method)) {
+                    throw new Error(`Method '${method}' not allowed. Valid methods: ${consts.ALLOWED_METHODS_ARRAY.toString()}`);
+                }
+            } else {
+                throw new Error('Service body must be provided');
+            }
+
             if (!service) {
                 throw new Error('Service body must be provided');
             } else if (!_.isFunction(service)) {
@@ -86,19 +96,23 @@ module.exports = (function() {
         logger.info('Widget backend files for registration completed');
     }
 
-    function callService(method, serviceName, req, res, next) {
+    function callService(serviceName, method, req, res, next) {
         var widgetId = req.header(consts.WIDGET_ID_HEADER);
+        var method = _.toUpper(method);
         var widgetServices = services[widgetId];
         if (widgetServices) {
             var serviceScripts = widgetServices[serviceName];
             if (serviceScripts) {
-                logger.error(serviceScripts);
                 var serviceScript = serviceScripts[method];
                 if (serviceScript) {
                     var helper = require('./services');
 
-                    var vm = new NodeVM();
-                    return vm.run(serviceScript)(req, res, next, helper);
+                    var vm = new NodeVM({
+                        require: {
+                            external: ['lodash']
+                        }
+                    });
+                    return vm.run(serviceScript, process.cwd())(req, res, next, helper);
                 } else {
                     throw new Error('Widget ' + widgetId + ' has no service ' + serviceName + ' for method ' + method + ' registered');
                 }

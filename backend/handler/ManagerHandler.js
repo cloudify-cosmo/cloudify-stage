@@ -40,7 +40,8 @@ module.exports = (function() {
         if (data) {
             options.json = data;
             try {
-                options.headers['content-length'] = JSON.stringify(data).length;
+                data = JSON.stringify(data);
+                options.headers['content-length'] = Buffer.byteLength(data);
             } catch (error) {
                 logger.error('Invalid payload data. Error:', error)
             }
@@ -77,7 +78,7 @@ module.exports = (function() {
                     }
                     catch(e) {
                         if (isSuccess) {
-                            reject('response data could not be parsed to JSON: ', e);
+                            reject('response data could not be parsed to JSON: ' + e);
                         } else {
                             reject(res.statusMessage);
                         }

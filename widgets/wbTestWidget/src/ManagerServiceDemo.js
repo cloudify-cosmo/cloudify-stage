@@ -11,7 +11,6 @@ export default class ManagerServiceDemo extends React.Component {
             {text: 'GET', value: 'get', key: 'get', func: 'doGet'},
             {text: 'POST', value: 'post', key: 'post', func: 'doPost'},
             {text: 'PUT', value: 'put', key: 'put', func: 'doPut'},
-            {text: 'PATCH', value: 'patch', key: 'patch', func: 'doPatch'},
             {text: 'DELETE', value: 'delete', key: 'delete', func: 'doDelete'},
         ];
 
@@ -20,6 +19,8 @@ export default class ManagerServiceDemo extends React.Component {
         this.state = {
             method: this.methods[0].value,
             endpoint: '',
+            params: {},
+            paramsCount: 0,
             payload: '',
             data: '',
             error: '',
@@ -33,11 +34,29 @@ export default class ManagerServiceDemo extends React.Component {
 
     _onClick() {
         let method = _.find(this.methods, (method) => method.value === this.state.method);
+
+        let params = {};
+        for (var i = 0; i < this.state.paramsCount; i++) {
+            if (this.state.params[i] && this.state.params[i].name) {
+                params[this.state.params[i].name] = this.state.params[i].value;
+            }
+        }
+
+        let endpoint = this.state.endpoint;
+
+        let payload = true; // in case of doGet this value is sent as parseResponse argument
+        if (!_.isEqual(this.state.method, this.methods[0].value) && !_.isEmpty(this.state.payload)){
+            try {
+                payload = JSON.parse(this.state.payload);
+            } catch (error) {
+                this.setState({error: 'Cannot parse payload. Error: ' + error});
+                return;
+            }
+        }
+
         this.setState({loading: true})
-        this.props.widgetBackend[method.func](this.managerServiceName, {
-                endpoint: this.state.endpoint,
-                payload: this.state.payload
-            }).then((data) => {
+        this.props.widgetBackend[method.func](this.managerServiceName, {endpoint, ...params}, payload)
+            .then((data) => {
                 this.setState({data, error: '', loading: false})
             }).catch((error) => {
                 this.setState({data: '', error: error.status + ' - ' + error.message, loading: false})
@@ -46,7 +65,8 @@ export default class ManagerServiceDemo extends React.Component {
 
     render() {
         var {Button, Dropdown, ErrorMessage, Form, Input, HighlightText, Label, Loading, Popup, Segment, Table} = Stage.Basic;
-
+        var isGetMethodSelected = _.isEqual(this.state.method, this.methods[0].value);
+        var data = this.state.data;
 
         return (
             <div>
@@ -73,17 +93,39 @@ export default class ManagerServiceDemo extends React.Component {
                                             onClick={this._onClick.bind(this)} />
                                 </Table.Cell>
                             </Table.Row>
-                            <Table.Row>
-                                <Table.Cell colSpan='3'>
-                                    <Form>
-                                        <Form.TextArea value={this.state.payload} name="payload" rows={3}
-                                                       onChange={this._onChange.bind(this)} placeholder='JSON payload'/>
-                                    </Form>
-
-                                </Table.Cell>
-                            </Table.Row>
                         </Table.Body>
                     </Table>
+                    <Segment padded>
+                        <Label attached='top'>Parameters</Label>
+                        <Table>
+                            <Table.Row>
+                                <Table.Cell colSpan='2'>
+                                    <Form>
+                                        <Form.Table name="params" value={this.state.params} onChange={this._onChange.bind(this)}
+                                                    columns={[
+                                                        {name: 'name', label: 'Name', default: '', type: Stage.Basic.GenericField.STRING_TYPE},
+                                                        {name: 'value', label: 'Value', default: '', type: Stage.Basic.GenericField.STRING_TYPE}
+                                                    ]}
+                                                    rows={this.state.paramsCount} />
+                                    </Form>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Button icon='add' onClick={() => this.setState({paramsCount: this.state.paramsCount + 1})} />
+                                    <Button icon='minus' disabled={this.state.paramsCount === 0} onClick={() => this.setState({paramsCount: this.state.paramsCount - 1})} />
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table>
+                    </Segment>
+                    {
+                        !isGetMethodSelected &&
+                        <Segment padded>
+                            <Label attached='top'>Payload</Label>
+                            <Form>
+                                <Form.TextArea value={this.state.payload} name="payload" rows={3}
+                                               onChange={this._onChange.bind(this)}  />
+                            </Form>
+                        </Segment>
+                    }
                 </Segment>
                 <Segment padded>
                     <Label attached='top'>Response</Label>
@@ -91,7 +133,7 @@ export default class ManagerServiceDemo extends React.Component {
                         this.state.loading
                             ? <Loading />
                             : _.isEmpty(this.state.error)
-                                ? <HighlightText>{JSON.stringify(this.state.data, null, 2)}</HighlightText>
+                                ? <HighlightText>{_.isObject(data) ? JSON.stringify(data, null, 2) : data}</HighlightText>
                                 : <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: ''})} />
                     }
                 </Segment>
