@@ -48,9 +48,7 @@ export default class CreatePageModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        this.props.onCreatePage(this.state.pageName).then(()=>{
-            this.setState({errors: {}, loading: false, open: false});
-        }).catch((err)=>{
+        this.props.onCreatePage(this.state.pageName).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
         });
     }
