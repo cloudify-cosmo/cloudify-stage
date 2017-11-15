@@ -17,6 +17,7 @@
   "author": "",
   "license": "",
   "dependencies": {
+    "body": "^5.1.0",
     "body-parser": "^1.16.1",
     "decompress": "^4.0.0",
     "ejs": "^2.5.6",

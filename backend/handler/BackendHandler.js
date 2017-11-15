@@ -24,6 +24,8 @@ var BackendRegistrator = function (widgetId) {
         register: (serviceName, method, service) => {
             if (!serviceName) {
                 throw new Error('Service name must be provided');
+            } else {
+                serviceName = _.toUpper(serviceName);
             }
 
             if (!_.isString(method)) {
@@ -34,8 +36,6 @@ var BackendRegistrator = function (widgetId) {
                 if (!_.includes(consts.ALLOWED_METHODS_ARRAY, method)) {
                     throw new Error(`Method '${method}' not allowed. Valid methods: ${consts.ALLOWED_METHODS_ARRAY.toString()}`);
                 }
-            } else {
-                throw new Error('Service body must be provided');
             }
 
             if (!service) {
@@ -98,7 +98,9 @@ module.exports = (function() {
 
     function callService(serviceName, method, req, res, next) {
         var widgetId = req.header(consts.WIDGET_ID_HEADER);
-        var method = _.toUpper(method);
+        method = _.toUpper(method);
+        serviceName = _.toUpper(serviceName);
+
         var widgetServices = services[widgetId];
         if (widgetServices) {
             var serviceScripts = widgetServices[serviceName];
@@ -109,10 +111,10 @@ module.exports = (function() {
 
                     var vm = new NodeVM({
                         require: {
-                            external: ['lodash']
+                            external: config.app.widgets.allowedModules
                         }
                     });
-                    return vm.run(serviceScript, process.cwd())(req, res, next, helper);
+                    return vm.run(serviceScript, process.cwd() + '/backend')(req, res, next, helper);
                 } else {
                     throw new Error('Widget ' + widgetId + ' has no service ' + serviceName + ' for method ' + method + ' registered');
                 }

@@ -2,19 +2,16 @@ module.exports = function(r) {
 
     r.register('manager', 'POST', (req, res, next, helper) => {
         var _ = require('lodash');
-        var body = [];
-        req.on('data', (chunk) => {
-            body.push(chunk);
-        }).on('end', () => {
-            body = Buffer.concat(body).toString();
-            var url = req.query.endpoint;
-            var params = _.omit(req.query, 'endpoint');
-            var json = JSON.parse(body);
-            var headers = req.headers;
-            helper.Manager.doPost(url, params, json, headers)
+        var jsonBody = require('body/json');
+        var url = req.query.endpoint;
+        var params = _.omit(req.query, 'endpoint');
+        var headers = req.headers;
+
+        jsonBody(req, res, function (error, body) {
+            helper.Manager.doPost(url, params, body, headers)
                 .then((data) => res.send(data))
                 .catch(next);
-        });
+        })
     });
 
     r.register('manager', (req, res, next, helper) => {
@@ -29,19 +26,16 @@ module.exports = function(r) {
 
     r.register('manager', 'PUT', (req, res, next, helper) => {
         var _ = require('lodash');
-        var body = [];
-        req.on('data', (chunk) => {
-            body.push(chunk);
-        }).on('end', () => {
-            body = Buffer.concat(body).toString();
-            var url = req.query.endpoint;
-            var params = _.omit(req.query, 'endpoint');
-            var json = JSON.parse(body);
-            var headers = req.headers;
-            helper.Manager.doPut(url, params, json, headers)
+        var jsonBody = require('body/json');
+        var url = req.query.endpoint;
+        var params = _.omit(req.query, 'endpoint');
+        var headers = req.headers;
+
+        jsonBody(req, res, function (error, body) {
+            helper.Manager.doPut(url, params, body, headers)
                 .then((data) => res.send(data))
                 .catch(next);
-        });
+        })
     });
 
     r.register('manager', 'DELETE', (req, res, next, helper) => {
@@ -57,15 +51,12 @@ module.exports = function(r) {
 
     r.register('request', 'POST', (req, res, next, helper) => {
         var _ = require('lodash');
-        var body = [];
-        req.on('data', (chunk) => {
-            body.push(chunk);
-        }).on('end', () => {
-            body = Buffer.concat(body).toString();
-            var url = req.query.url;
-            var params = _.omit(req.query, 'url');
-            var json = JSON.parse(body);
-            helper.Request.doPost(url, params, json)
+        var jsonBody = require('body/json');
+        var url = req.query.url;
+        var params = _.omit(req.query, 'url');
+
+        jsonBody(req, res, function (error, body) {
+            helper.Request.doPost(url, params, body)
                 .then((data) => res.send(data))
                 .catch(next);
         });
@@ -82,15 +73,12 @@ module.exports = function(r) {
 
     r.register('request', 'PUT', (req, res, next, helper) => {
         var _ = require('lodash');
-        var body = [];
-        req.on('data', (chunk) => {
-            body.push(chunk);
-        }).on('end', () => {
-            body = Buffer.concat(body).toString();
-            var url = req.query.url;
-            var params = _.omit(req.query, 'url');
-            var json = JSON.parse(body);
-            helper.Request.doPut(url, params, json)
+        var jsonBody = require('body/json');
+        var url = req.query.url;
+        var params = _.omit(req.query, 'url');
+
+        jsonBody(req, res, function (error, body) {
+            helper.Request.doPut(url, params, body)
                 .then((data) => res.send(data))
                 .catch(next);
         });

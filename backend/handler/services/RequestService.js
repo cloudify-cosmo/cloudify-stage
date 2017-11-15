@@ -12,7 +12,7 @@ module.exports = (function() {
     function call(method, url, params, data, parseResponse=true, headers={}) {
         return new Promise((resolve, reject) => {
             var options = {headers: {}};
-            if (params) {
+            if (!_.isEmpty(params)) {
                 var queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
                 url = `${url}${queryString}`;
             }
