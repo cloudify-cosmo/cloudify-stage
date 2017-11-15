@@ -6,6 +6,7 @@ bower_components
 /backend/logs
 
 /widgets/*/widget.js
+/widgets/*/backend.js
 
 stage.tar.gz
 /widgets/common/common.js
