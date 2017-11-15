@@ -114,7 +114,7 @@ module.exports = (function() {
                             external: config.app.widgets.allowedModules
                         }
                     });
-                    return vm.run(serviceScript, process.cwd() + '/backend')(req, res, next, helper);
+                    return vm.run(serviceScript, pathlib.resolve(process.cwd() + '/' + widgetId))(req, res, next, helper);
                 } else {
                     throw new Error('Widget ' + widgetId + ' has no service ' + serviceName + ' for method ' + method + ' registered');
                 }
