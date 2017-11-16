@@ -144,8 +144,8 @@ export default class CreateTemplateModal extends React.Component {
     render() {
         var {Modal, Button, Icon, Form, Segment, ApproveButton, CancelButton, Message, Divider, List} = Stage.Basic;
 
-        let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name, icon: "radio"}});
-        tenantOptions.push({text: 'All tenants', value: Consts.DEFAULT_ALL, icon: "selected radio"});
+        let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name, icon: 'radio'}});
+        tenantOptions.push({text: 'All tenants', value: Consts.DEFAULT_ALL, icon: 'selected radio'});
 
         let editMode = !_.isEmpty(this.props.templateName);
 
