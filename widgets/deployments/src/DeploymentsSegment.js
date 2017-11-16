@@ -41,7 +41,7 @@ export default class extends React.Component {
                                           onClick={()=>this.props.onSelectDeployment(item)}>
                                 <div className="ui grid">
                                     <div className="three wide center aligned column rightDivider">
-                                        <h3 className="ui icon header verticalCenter breakWord">{item.id}</h3>
+                                        <h3 className="ui icon header verticalCenter breakWord"><a href="javascript:void(0)" className="breakWord">{item.id}</a></h3>
                                         <ResourceAvailability availability={item.resource_availability} className="topRightCorner"/>
                                     </div>
                                     <div className="two wide column">
