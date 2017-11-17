@@ -153,12 +153,12 @@ export default class CreateTemplateModal extends React.Component {
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.roles}>
-                            <Form.Dropdown placeholder='Roles' multiple selection closeOnChange options={this.props.availableRoles} name="roles"
+                            <Form.Dropdown placeholder='Roles' multiple selection options={this.props.availableRoles} name="roles"
                                            value={this.state.roles} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.tenants}>
-                            <Form.Dropdown placeholder='Tenants' multiple selection closeOnChange options={tenantOptions} name="tenants"
+                            <Form.Dropdown placeholder='Tenants' multiple selection options={tenantOptions} name="tenants"
                                            value={this.state.tenants} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 

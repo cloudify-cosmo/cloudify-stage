@@ -98,6 +98,10 @@ a:hover {
   overflow-y: initial;
 }
 
+.grid-stack-item-content.auto-z-index.grid-stack-override.widget-content {
+  z-index: auto !important;
+}
+
 .gridStackBottomSpace {
   height: 150px;
 }
@@ -651,7 +655,6 @@ code.hljs {
 
 .ui.modal:not(.overlay) > .content {
   max-height: 480px;
-  overflow: auto;
 }
 
 .confirmModal.ui.modal > .content {
