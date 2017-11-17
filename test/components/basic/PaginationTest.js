@@ -25,7 +25,7 @@ describe('(Component) Pagination', () => {
         wrapper.setProps({totalSize:10});
         wrapper.setProps({pageSize:5});
 
-        expect(wrapper.find('.gridPagination .dropdown .text').first()).to.have.text('5');
+        expect(wrapper.find('.gridPagination .dropdown .text')).to.have.text('5');
         let dropdownText = wrapper.find('.gridPagination select').text();
         let infoText = wrapper.find('.gridPagination').childAt(0).text();
 
