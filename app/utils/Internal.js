@@ -32,4 +32,8 @@ export default class Internal extends External {
     _buildActualUrl(path,data) {
         return super._buildActualUrl(StageUtils.url(path), data);
     }
+
+    _isUnauthorized(response){
+        return response.status === 401;
+    }
 }
