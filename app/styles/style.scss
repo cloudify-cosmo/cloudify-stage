@@ -823,11 +823,19 @@ a.underline {
   max-width: 500px !important;
   margin: 0 calc(50% - 250px) !important;
   display: block;
+  @media (min-width: 992px) {
+    left: 6.5rem !important;
+  }
 
   .content {
     margin-top: 10px;
     display: inline-block;
     width: 100%;
+  }
+
+  .button {
+    margin-left: 5px;
+    margin-right: 5px;
   }
 }
 
