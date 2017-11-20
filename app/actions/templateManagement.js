@@ -150,7 +150,8 @@ export function createPage(pageName) {
         var internal = new Internal(getState().manager);
         return internal.doPost('/templates/pages', {}, page)
             .then(() => dispatch(addPage(page.id, page.name, page.widgets)))
-            .then(() => dispatch(fetchTemplates()));
+            .then(() => dispatch(fetchTemplates()))
+            .then(() => dispatch(showPage(pageId, pageName, true)));
     }
 }
 
