@@ -80,8 +80,29 @@ export function loadOrCreateUserAppData() {
 export function reloadUserAppData () {
     return function (dispatch,getState) {
         dispatch(setAppLoading(true));
-        var state = getState();
+
         return dispatch(loadOrCreateUserAppData())
-            .then(() => dispatch(setAppLoading(false)));
+            .then(() => {
+                let getPageById = (pages, pageId) => {
+                    return _.find(pages, {id: pageId});
+                };
+
+                var state = getState();
+                var currentPageId = state.app.currentPageId;
+                var pages = state.pages;
+                var page = getPageById(pages, currentPageId);
+                if(!page){
+                    dispatch(push('/'));
+                } else if(page.isDrillDown) {
+                    var parent = getPageById(pages, page.parent);
+                    if(!parent) {
+                        dispatch(push('/'));
+                    } else {
+                        dispatch(push('/page/'+parent.id));
+                    }
+                }
+
+                dispatch(setAppLoading(false));
+            });
     }
 }
