@@ -26,7 +26,7 @@ import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
 import PrivateField from './PrivateField';
-import PrivateMarker from './PrivateMarker';
+import ResourceAvailability from './ResourceAvailability';
 import PopupConfirm from './PopupConfirm';
 
 export {
@@ -71,7 +71,7 @@ export {
     PopupConfirm,
     PopupMenu,
     PrivateField,
-    PrivateMarker,
+    ResourceAvailability,
     Radio,
     Segment,
     Sidebar,

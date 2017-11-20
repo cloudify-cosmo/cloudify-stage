@@ -65,7 +65,7 @@ import {Message, Form, Icon} from 'semantic-ui-react';
  *                  <div className="ui grid">
  *                      <div className="three wide center aligned column rightDivider">
  *                          <h3 className="ui icon header verticalCenter">{item.id}</h3>
- *                          <PrivateMarker show={item.private_resource} title="Private resource" className="rightFloated"/>
+ *                          <ResourceAvailability availability={item.resource_availability} className="rightFloated"/>
  *                      </div>
  *                      <div className="two wide column">
  *                          <h5 className="ui icon header">Blueprint</h5>

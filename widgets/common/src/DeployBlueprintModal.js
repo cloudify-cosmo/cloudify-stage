@@ -128,8 +128,8 @@ export default class DeployBlueprintModal extends React.Component {
             <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="deployBlueprintModal">
                 <Modal.Header>
                     <Icon name="rocket"/> Deploy blueprint {blueprint.id}
-                    <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"
-                             onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
+                    <PrivateField lock={this.state.privateResource} className="rightFloated"
+                                  onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
                 </Modal.Header>
 
                 <Modal.Content>

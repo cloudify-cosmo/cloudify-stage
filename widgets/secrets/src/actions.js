@@ -22,4 +22,8 @@ export default class {
     doUpdate(key, value) {
         return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, {value});
     }
+
+    doSetGlobal(key) {
+        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-global`);
+    }
 }
