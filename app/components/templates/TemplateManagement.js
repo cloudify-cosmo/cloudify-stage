@@ -55,7 +55,7 @@ export default class TemplateManagement extends Component {
             id: templateName.trim(),
             data: {
                 roles,
-                tenants: _.isEmpty(tenants) ? [Const.DEFAULT_ALL] : tenants
+                tenants
             },
             pages
         };
