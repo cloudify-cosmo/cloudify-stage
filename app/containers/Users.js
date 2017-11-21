@@ -16,7 +16,7 @@ const mapStateToProps = (state, ownProps) => {
     var canEditMode = Auth.isUserAuthorized(Consts.permissions.STAGE_EDIT_MODE, state.manager);
     var canMaintenanceMode = Auth.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager);
     var canConfigure = Auth.isUserAuthorized(Consts.permissions.STAGE_CONFIGURE, state.manager);
-    var canTemplateManagement = Auth.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager);
+    var canTemplateManagement = state.config.mode === Consts.MODE_MAIN && Auth.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager);
     return {
         isEditMode: canEditMode ? (state.config.isEditMode || false) : false,
         canEditMode,
