@@ -23,7 +23,8 @@
     "loginPageText": "",
     "loginPageTextColor": "white",
     "sidebarColor": "#ffffff",
-    "sidebarTextColor" : "#000000"
+    "sidebarTextColor" : "#000000",
+    "pageTitle": "Cloudify"
   },
   "db": {
     "url": "postgres://cloudify:cloudify@localhost:5432/stage",

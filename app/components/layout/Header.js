@@ -36,6 +36,13 @@ export default class Header extends Component {
         return !_.isEqual(this.props.manager, nextProps.manager) || this.state != nextState;
     }
 
+    componentDidMount() {
+        let whiteLabel = this.props.config.app.whiteLabel;
+        if (whiteLabel.enabled) {
+            document.title = whiteLabel.pageTitle || 'Cloudify';
+        }
+    }
+
     _isModeMain() {
         return this.props.mode === Consts.MODE_MAIN;
     }

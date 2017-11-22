@@ -40,6 +40,7 @@ export default class Login extends Component {
         let loginPageText = _.get(this.props,'whiteLabel.loginPageText');
         let loginPageTextColor = _.get(this.props,'whiteLabel.loginPageTextColor','white');
         let isHeaderTextPresent = isWhiteLabelEnabled && (loginPageHeader || loginPageText);
+
         return (
                 <div className={`loginContainer ${isHeaderTextPresent?'loginContainerExtended':''}`} >
 
