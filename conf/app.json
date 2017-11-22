@@ -19,7 +19,9 @@
     "pagesLocation": "",
     "headerTextColor": "white",
     "loginPageHeader": "",
+    "loginPageHeaderColor": "white",
     "loginPageText": "",
+    "loginPageTextColor": "white",
     "sidebarColor": "#ffffff",
     "sidebarTextColor" : "#000000"
   },
