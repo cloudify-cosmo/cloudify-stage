@@ -691,6 +691,11 @@ code.hljs {
   font-weight: 700;
 }
 
+.ui.modal.tiny {
+  width: 500px !important;
+  margin-left: -222px !important;
+}
+
 /* Center vertically */
 
 .rightFloated {
@@ -849,14 +854,30 @@ a.underline {
   max-width: 500px !important;
   margin: 0 calc(50% - 250px) !important;
   display: block;
+  @media (min-width: 992px) {
+    left: 6.5rem !important;
+  }
 
   .content {
     margin-top: 10px;
     display: inline-block;
     width: 100%;
   }
+
+  .button {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 }
 
 .emptyPage {
   padding-top: 10rem;
+}
+
+.forceMaxWidth {
+  white-space: pre-wrap;       /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  max-width: 500px;
 }

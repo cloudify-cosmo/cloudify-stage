@@ -108,5 +108,11 @@ AuthHandler.initAuthorization().then(function(){
 //Error handling
 app.use(function(err, req, res, next) {
     logger.error('Error has occured ', err);
-    res.status(err.status || 404).send({message: err.message || err});
+
+    var message = err.message;
+    if (err.status === 500) {
+        message = 'The server is temporarily unavailable';
+    }
+
+    res.status(err.status || 404).send({message: message || err});
 });

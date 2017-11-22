@@ -81,6 +81,7 @@ module.exports = {
             elements: {
                 searchInput : 'input',
                 installWidgetBtn: '#installWidgetBtn',
+                testWidget: '.widgetsList .item[data-id="testWidget"]',
                 removeWidgetButton: '.widgetsList .item[data-id="testWidget"] .removeWidgetButton',
                 updateWidgetButton: '.widgetsList .item[data-id="testWidget"] .updateWidgetButton'
 
@@ -129,7 +130,7 @@ module.exports = {
                 widgetIsUsed: 'Widget is currently used by:'
             }
         },
-        resetTemplateConfirmModal: {
+        resetPagesConfirmModal: {
             selector: '.confirmModal',
             elements: {
                 yesButton: '.ui.primary.button',

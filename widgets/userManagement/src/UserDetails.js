@@ -29,6 +29,7 @@ export default class UserDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveFromTenant(this.props.data.username, tenant).then(()=>{
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('tenants:refresh');
             this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
@@ -42,6 +43,7 @@ export default class UserDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveFromGroup(this.props.data.username, group).then(()=>{
             this.props.toolbox.refresh();
+            this.props.toolbox.getEventBus().trigger('userGroups:refresh');
             this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
@@ -80,7 +82,7 @@ export default class UserDetails extends React.Component {
                     <Divider/>
                     <List divided relaxed verticalAlign='middle' className="light">
                         {
-                            this.props.data.tenants.map((item) => {
+                            _.map(_.keys(this.props.data.tenants), (item) => {
                                 let processing = this.state.processing && this.state.processItem === item;
 
                                 return (

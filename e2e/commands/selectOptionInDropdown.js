@@ -2,6 +2,8 @@
  * Created by jakubniezgoda on 02/06/2017.
  */
 
+var _ = require('lodash');
+
 exports.command = function (dropdownTriggerElement, optionName) {
     const OPTION_SELECTOR = 'div.dropdownPortal div[role="option"]';
 
@@ -34,4 +36,9 @@ exports.command = function (dropdownTriggerElement, optionName) {
         })
         .perform(findOptionElementId)
         .perform(() => this.elementIdClick(optionElementIdToClick))
+        .getAttribute(dropdownTriggerElement, 'class', function(result) {
+            if (_.includes(_.words(result.value), 'multiple')) {
+                this.clickElement(dropdownTriggerElement)
+            };
+        });
     };

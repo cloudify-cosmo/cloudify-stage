@@ -7,7 +7,7 @@ import React, { Component, PropTypes } from 'react';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
-import {Confirm} from '../basic';
+import ResetPagesModal from '../ResetPagesModal.js';
 import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
 import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
 import ConfigureModal from '../../containers/ConfigureModal';
@@ -21,14 +21,14 @@ export default class Header extends Component {
         this.state = {
             showMaintenanceModal: false,
             showConfigureModal: false,
-            showResetConfirm: false
+            showResetPagesConfirm: false
         }
     }
 
     static propTypes = {
         manager: PropTypes.any.isRequired,
         mode: PropTypes.string.isRequired,
-        onResetTemplate: PropTypes.func.isRequired,
+        onResetPages: PropTypes.func.isRequired,
         onSidebarOpen : PropTypes.func.isRequired,
     };
 
@@ -42,6 +42,10 @@ export default class Header extends Component {
 
     _isModeCustomer() {
         return this.props.mode === Consts.MODE_CUSTOMER;
+    }
+
+    _handleReset() {
+        this.setState({showResetPagesConfirm: true});
     }
 
     render() {
@@ -75,13 +79,13 @@ export default class Header extends Component {
                         ?
                         <Users manager={this.props.manager}
                                showAllOptions={false}
-                               onReset={()=> this.setState({showResetConfirm: true})}/>
+                               onReset={this._handleReset.bind(this)}/>
                         :
                         <Users manager={this.props.manager}
                                showAllOptions={true}
                                onMaintenance={()=> this.setState({showMaintenanceModal: true})}
                                onConfigure={()=> this.setState({showConfigureModal: true})}
-                               onReset={()=> this.setState({showResetConfirm: true})}/>
+                               onReset={this._handleReset.bind(this)}/>
                     }
                 </div>
 
@@ -90,10 +94,11 @@ export default class Header extends Component {
                                  onHide={()=> this.setState({showMaintenanceModal: false})}/>
                 <ConfigureModal show={this.state.showConfigureModal}
                                 onHide={()=> this.setState({showConfigureModal: false})}/>
-                <Confirm content={'Are you sure you want to reset application screens to default?'}
-                         open={this.state.showResetConfirm}
-                         onConfirm={()=>{this.setState({showResetConfirm: false}); this.props.onResetTemplate()}}
-                         onCancel={()=>this.setState({showResetConfirm: false})} />
+
+                <ResetPagesModal open={this.state.showResetPagesConfirm}
+                                 tenants={this.props.manager.tenants}
+                                 onConfirm={(tenantList)=>{this.setState({showResetPagesConfirm: false}); this.props.onResetPages(tenantList)}}
+                                 onHide={()=> this.setState({showResetPagesConfirm: false})} />
             </div>
         );
     }

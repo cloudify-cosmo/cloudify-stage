@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var TemplateHandler = require('../handler/TemplateHandler');
 var _ = require('lodash');
 var passport = require('passport');
+var ServerSettings = require('../serverSettings');
 
 var router = express.Router();
 
@@ -62,7 +63,7 @@ router.delete('/pages/:pageId', function (req, res, next) {
 });
 
 router.get('/select', function (req, res, next) {
-    TemplateHandler.selectTemplate(req.query.mode, req.query.role, req.query.tenant)
+    TemplateHandler.selectTemplate(ServerSettings.settings.mode, req.user.role, req.user.tenants, req.query.tenant)
         .then(template => res.send(template))
         .catch(next);
 });

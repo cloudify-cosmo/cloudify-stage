@@ -17,7 +17,7 @@ import Loading from './Loading';
 import GenericField from './form/GenericField';
 import InputTimeFilter from './form/InputTimeFilter';
 import Form from './form/Form';
-import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item, Sidebar,
+import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item, Sidebar, Card,
          Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
@@ -26,7 +26,7 @@ import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
 import PrivateField from './PrivateField';
-import PrivateMarker from './PrivateMarker';
+import ResourceAvailability from './ResourceAvailability';
 import PopupConfirm from './PopupConfirm';
 
 export {
@@ -36,6 +36,7 @@ export {
     Breadcrumb,
     Button,
     CancelButton,
+    Card,
     Checkbox,
     Checkmark,
     Confirm,
@@ -70,7 +71,7 @@ export {
     PopupConfirm,
     PopupMenu,
     PrivateField,
-    PrivateMarker,
+    ResourceAvailability,
     Radio,
     Segment,
     Sidebar,

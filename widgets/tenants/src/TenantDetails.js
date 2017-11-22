@@ -29,7 +29,7 @@ export default class TenantDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveUser(this.props.tenant.name, username).then(()=>{
             this.props.toolbox.refresh();
-            this.props.toolbox.getEventBus().trigger('tenants:refresh');
+            this.props.toolbox.getEventBus().trigger('users:refresh');
             this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
@@ -43,7 +43,7 @@ export default class TenantDetails extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveUserGroup(this.props.tenant.name, group).then(()=>{
             this.props.toolbox.refresh();
-            this.props.toolbox.getEventBus().trigger('tenants:refresh');
+            this.props.toolbox.getEventBus().trigger('userGroups:refresh');
             this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
@@ -62,7 +62,7 @@ export default class TenantDetails extends React.Component {
                     <Divider/>
                     <List divided relaxed verticalAlign='middle' className="light">
                         {
-                            tenant.groups.map((group) => {
+                            Object.keys(tenant.groups).map((group) => {
                                 let processing = this.state.processing && this.state.processItem === group;
 
                                 return (
@@ -83,7 +83,7 @@ export default class TenantDetails extends React.Component {
                     <Divider/>
                     <List divided relaxed verticalAlign='middle' className="light">
                         {
-                            tenant.users.map((user) => {
+                            Object.keys(tenant.users).map((user) => {
                                 let processing = this.state.processing && this.state.processItem === user;
 
                                 return (

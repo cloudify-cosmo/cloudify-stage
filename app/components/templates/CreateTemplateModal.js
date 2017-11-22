@@ -85,6 +85,10 @@ export default class CreateTemplateModal extends React.Component {
             errors['roles']='Please select role';
         }
 
+        if (_.isEmpty(this.state.tenants)) {
+            errors['tenants']='Please select tenant';
+        }
+
         if (_.isEmpty(this.state.pages)) {
             errors['pages']='Please select page';
         }
@@ -105,6 +109,17 @@ export default class CreateTemplateModal extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
+        if (field.name === 'tenants') {
+            let wasSelectedAll = _.indexOf(this.state.tenants, Consts.DEFAULT_ALL) >= 0;
+            let willSelectAll = _.indexOf(field.value, Consts.DEFAULT_ALL) >= 0;
+
+            if (wasSelectedAll) {
+                _.pull(field.value, Consts.DEFAULT_ALL);
+            } else if (willSelectAll) {
+                field.value = [Consts.DEFAULT_ALL];
+            }
+        }
+
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -129,7 +144,8 @@ export default class CreateTemplateModal extends React.Component {
     render() {
         var {Modal, Button, Icon, Form, Segment, ApproveButton, CancelButton, Message, Divider, List} = Stage.Basic;
 
-        let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name}});
+        let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name, icon: 'radio'}});
+        tenantOptions.push({text: 'All tenants', value: Consts.DEFAULT_ALL, icon: 'selected radio'});
 
         let editMode = !_.isEmpty(this.props.templateName);
 

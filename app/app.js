@@ -41,6 +41,7 @@ import createRoutes from './routes';
 import StatusPoller from './utils/StatusPoller';
 import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
 import widgetDefinitionLoader from './utils/widgetDefinitionsLoader';
+import Interceptor from './utils/Interceptor';
 
 const browserHistory = useRouterHistory(createHistory)({
     basename: Consts.CONTEXT_PATH
@@ -62,6 +63,7 @@ export default class app{
 
             StatusPoller.create(store);
             UserAppDataAutoSaver.create(store);
+            Interceptor.create(store);
 
             return store;
         });

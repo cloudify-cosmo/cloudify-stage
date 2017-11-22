@@ -5,7 +5,7 @@
 module.exports = {
     before(client) {
         client.login()
-            .resetTemplate()
+            .resetPages()
             .moveToEditMode()
             .addPage();
 
@@ -85,6 +85,7 @@ module.exports = {
         var page = client.page.page();
 
         page.section.addWidgetModal
+            .waitForElementPresent('@testWidget')
             .waitForElementPresent('@removeWidgetButton')
             .click('@removeWidgetButton');
 

@@ -1,6 +1,6 @@
 {
   "name": "cloudify-ui-new",
-  "version": "1.0.0",
+  "version": "4.3.0-.dev1",
   "description": "New cloudify ui project ... blah blah",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "datatables.net": "^1.10.12",
     "datatables.net-dt": "^1.10.12",
     "del": "^2.2.2",
-    "esdoc": "^1.0.2",
+    "esdoc": "^1.0.4",
     "esdoc-standard-plugin": "^1.0.0",
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-jsx-plugin": "^1.0.0",

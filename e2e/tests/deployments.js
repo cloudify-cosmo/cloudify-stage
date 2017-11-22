@@ -72,8 +72,8 @@ module.exports = {
         page.section.executeWorkflowModal
             .clickExecute();
 
+        client.pause(2000);
         page.section.deploymentsTable
-            .checkIfWorkflowStartedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT)
             .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
     },
 
@@ -86,8 +86,8 @@ module.exports = {
         page.section.updateDeploymentModal
             .fillIn(BLUEPRINT_URL, BLUEPRINT_YAML_FILENAME)
             .clickUpdate();
+        client.pause(2000);
         page.section.deploymentsTable
-            .checkIfWorkflowStartedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT)
             .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
 
         // TODO: Add verification?
