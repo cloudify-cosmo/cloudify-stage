@@ -24,8 +24,18 @@ const pagesFolder = pathlib.resolve(templatesFolder, 'pages');
 module.exports = (function() {
 
     function _getTemplates() {
+        var initials = [];
+        if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN) {
+            initials = _.pick(config.app.initialTemplate, [ServerSettings.MODE_COMMUNITY, ServerSettings.MODE_CUSTOMER]);
+        } else {
+            initials = _.omit(config.app.initialTemplate, ServerSettings.settings.mode);
+        }
+
+        var excludes = _.reduce(initials, (result, value) => _.concat(result, _.isObject(value) ? _.values(value) : value), []);
+
         return fs.readdirSync(pathlib.resolve(templatesFolder))
-            .filter(item => fs.lstatSync(pathlib.resolve(templatesFolder, item)).isFile());
+            .filter(item => fs.lstatSync(pathlib.resolve(templatesFolder, item)).isFile()
+                && !_.includes(excludes, pathlib.basename(item, '.json')));
     }
 
     function _getInitialTemplateConfig() {
@@ -261,11 +271,12 @@ module.exports = (function() {
         }).then(() => db.Resources.destroy({ where: {resourceId: pageId, type:ResourceTypes.PAGE}}));
     }
 
-    function selectTemplate(mode, systemRole, tenantsRoles, tenant) {
+    function selectTemplate(systemRole, tenantsRoles, tenant) {
         var DEFAULT_KEY = '*';
 
         var initialTemplateObj = config.app.initialTemplate;
         var role = _getRole(systemRole, tenantsRoles, tenant);
+        var mode = ServerSettings.settings.mode;
 
         logger.debug('Template inputs: mode=' + mode + ', role=' + role + ', tenant=' + tenant);
 
