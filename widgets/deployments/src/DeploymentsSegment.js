@@ -42,7 +42,7 @@ export default class extends React.Component {
                                 <div className="ui grid">
                                     <div className="three wide center aligned column rightDivider">
                                         <h3 className="ui icon header verticalCenter breakWord">{item.id}</h3>
-                                        <ResourceAvailability availability={item.resource_availability} className="rightFloated"/>
+                                        <ResourceAvailability availability={item.resource_availability} className="topRightCorner"/>
                                     </div>
                                     <div className="two wide column">
                                         <h5 className="ui icon header">Blueprint</h5>

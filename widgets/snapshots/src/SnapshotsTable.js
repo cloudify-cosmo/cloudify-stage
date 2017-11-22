@@ -120,7 +120,7 @@ export default class extends React.Component {
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectSnapshot.bind(this, item)}>
                                     <DataTable.Data>
                                         {item.id}
-                                        <ResourceAvailability availability={item.resource_availability} />
+                                        <ResourceAvailability availability={item.resource_availability} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
                                     <DataTable.Data>{item.status}</DataTable.Data>

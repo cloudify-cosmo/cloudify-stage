@@ -601,7 +601,6 @@ code.hljs {
 
   .bottomDivider {
     position: relative;
-    margin-bottom: 1rem;
   }
 
   .bottomDivider::after {
@@ -652,6 +651,11 @@ code.hljs {
 .ui.modal:not(.overlay) > .content {
   max-height: 480px;
   overflow: auto;
+}
+
+.ui.modal.unlimited > .content {
+  max-height: none;
+  overflow: inherit;
 }
 
 .confirmModal.ui.modal > .content {
@@ -849,4 +853,11 @@ a.underline {
   white-space: -o-pre-wrap;    /* Opera 7 */
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
   max-width: 500px;
+  margin: 1px;
+}
+
+.topRightCorner {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
