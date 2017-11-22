@@ -77,8 +77,8 @@ export default class CreateTemplateModal extends React.Component {
     _submitCreate() {
         let errors = {};
 
-        if (_.isEmpty(this.state.templateName)) {
-            errors['templateName']='Please provide template name';
+        if (_.isEmpty(_.trim(this.state.templateName))) {
+            errors['templateName']='Please provide correct template name';
         }
 
         if (_.isEmpty(this.state.roles)) {
@@ -101,7 +101,7 @@ export default class CreateTemplateModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        this.props.onCreateTemplate(this.state.templateName, this.state.roles, this.state.tenants, this.state.pages).then(()=>{
+        this.props.onCreateTemplate(_.trim(this.state.templateName), this.state.roles, this.state.tenants, this.state.pages).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});

@@ -36,8 +36,8 @@ export default class CreatePageModal extends React.Component {
     _submitCreate() {
         let errors = {};
 
-        if (_.isEmpty(this.state.pageName)) {
-            errors['pageName']='Please provide page name';
+        if (_.isEmpty(_.trim(this.state.pageName))) {
+            errors['pageName']='Please provide correct page name';
         }
 
         if (!_.isEmpty(errors)) {
@@ -48,7 +48,7 @@ export default class CreatePageModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        this.props.onCreatePage(this.state.pageName).catch((err)=>{
+        this.props.onCreatePage(_.trim(this.state.pageName)).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
         });
     }
