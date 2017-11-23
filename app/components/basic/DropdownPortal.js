@@ -12,8 +12,11 @@ import { createShorthand, useKeyOnly, useKeyOrValueAndKey, isBrowser } from 'sem
  *
  * See [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework for details about props and usage details.
  *
+ *
  * ## Access
- * `Stage.Basic.Form.Dropdown` or `Stage.Basic.Dropdown`
+ * `Stage.Basic.Form.DropdownPortal` or `Stage.Basic.DropdownPortal`
+ *
+ * Note: This component is closely related to `Stage.Basic.Dropdown` component, which does not include a Portal wrapper.
  *
  * ## Usage
  * ```
@@ -22,7 +25,7 @@ import { createShorthand, useKeyOnly, useKeyOrValueAndKey, isBrowser } from 'sem
  *   {text: 'Option 2', value: 'option2'},
  *   {text: 'Option 3', value: 'option3'}
  * ];
- * <Dropdown search selection options={options} value={options[0].value}/>
+ * <DropdownPortal search selection options={options} value={options[0].value}/>
  * ```
  *
  * ### Dropdown - closed
