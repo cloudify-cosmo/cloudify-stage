@@ -134,7 +134,7 @@ export default class SecretsTable extends React.Component {
                                 <DataTable.Row key={secret.key}>
                                     <DataTable.Data>
                                         {secret.key}
-                                        <ResourceAvailability availability={secret.resource_availability} onSetGlobal={this._setGlobalSecret.bind(this, secret)} />
+                                        <ResourceAvailability availability={secret.resource_availability} onSetGlobal={this._setGlobalSecret.bind(this, secret)} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
                                         {

@@ -123,7 +123,7 @@ export default class extends React.Component {
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
                                         {item.id}
-                                        <ResourceAvailability availability={item.resource_availability} onSetGlobal={this._setGlobalPlugin.bind(this, item)} />
+                                        <ResourceAvailability availability={item.resource_availability} onSetGlobal={this._setGlobalPlugin.bind(this, item)} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.package_name}</DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>
