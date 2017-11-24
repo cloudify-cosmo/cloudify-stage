@@ -48,7 +48,7 @@ export default class GridItem extends Component {
                  data-gs-width={this.props.width}
                  data-gs-height={this.props.height}>
 
-                <div className='grid-stack-item-content auto-z-index grid-stack-override widget-content'>
+                <div className='grid-stack-item-content'>
                     {this.props.children}
                 </div>
             </div>

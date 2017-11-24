@@ -3,7 +3,7 @@
  */
   
 import React, { Component, PropTypes } from 'react';
-import { DropdownPortal } from '../index'
+import { Dropdown } from '../index'
 
 export default class PaginationInfo extends Component {
 
@@ -53,7 +53,7 @@ export default class PaginationInfo extends Component {
             <div className="ui small form">
                 Page size:&nbsp;
 
-                <DropdownPortal compact search selection allowAdditions value={this.props.pageSize} additionLabel="Set "
+                <Dropdown compact search selection allowAdditions value={this.props.pageSize} additionLabel="Set "
                           options={options} onChange={this._handleChange.bind(this)} id="pageSizeField"/>
 
                 &nbsp;&nbsp;{start} to {stop}

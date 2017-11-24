@@ -22,7 +22,6 @@ import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item, Sid
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
 import Dropdown from './Dropdown';
-import DropdownPortal from './DropdownPortal';
 import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
@@ -45,7 +44,6 @@ export {
     DataTable,
     Divider,
     Dropdown,
-    DropdownPortal,
     EditableLabel,
     ErrorMessage,
     Form,
