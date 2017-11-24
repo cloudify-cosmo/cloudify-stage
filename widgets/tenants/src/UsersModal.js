@@ -119,7 +119,7 @@ export default class UsersModal extends React.Component {
                 <Form loading={this.state.loading} errors={this.state.errors}
                       onErrorsDismiss={() => this.setState({errors: {}})}>
                     <Form.Field>
-                        <Form.Dropdown placeholder='Users' multiple selection closeOnChange options={users} name="users"
+                        <Form.Dropdown placeholder='Users' multiple selection options={users} name="users"
                                        value={Object.keys(this.state.users)} onChange={this._handleInputChange.bind(this)}/>
                     </Form.Field>
                     <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.users} resourceName="user" toolbox={this.props.toolbox}></RolesPicker>
