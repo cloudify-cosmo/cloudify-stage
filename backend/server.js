@@ -36,6 +36,7 @@ var GitHub = require('./routes/GitHub');
 var Style = require('./routes/Style');
 var Widgets = require('./routes/Widgets');
 var Templates = require('./routes/Templates');
+var File = require('./routes/File');
 
 var logger = log4js.getLogger('Server');
 
@@ -87,6 +88,7 @@ app.use(contextPath + '/widgets',Widgets);
 app.use(contextPath + '/templates',Templates);
 app.use(contextPath + '/clientConfig',clientConfig);
 app.use(contextPath + '/github',GitHub);
+app.use(contextPath + '/file',File);
 app.use(contextPath + '/config',function(req,res){
     res.send(config.getForClient(ServerSettings.settings.mode));
 });
