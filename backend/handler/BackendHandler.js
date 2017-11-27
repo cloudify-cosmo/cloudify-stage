@@ -127,9 +127,14 @@ module.exports = (function() {
 
     }
 
+    function removeWidgetBackend(widgetId) {
+        services = _.omit(services, widgetId);
+    }
+
     return {
         importWidgetBackend,
         initWidgetBackends,
+        removeWidgetBackend,
         callService
     }
 })();
