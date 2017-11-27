@@ -62,7 +62,8 @@ export function fetchTemplates() {
                 }
 
                 return dispatch(fetchTemplateManagement(templates, pages));
-            });
+            })
+            .catch(err => dispatch(errorTemplateManagement(err.message)));
     }
 }
 
@@ -80,7 +81,8 @@ export function createTemplate(template) {
         var internal = new Internal(getState().manager);
         return internal.doPost('/templates', {}, template)
             .then(() => dispatch(addTemplate(template.id, template.pages)))
-            .then(() => dispatch(fetchTemplates()));
+            .then(() => dispatch(fetchTemplates()))
+            .catch(err => dispatch(errorTemplateManagement(err.message)));
     }
 }
 
@@ -94,7 +96,8 @@ export function updateTemplate(template) {
                     dispatch(removeTemplate(template.oldId));
                 }
             })
-            .then(() => dispatch(fetchTemplates()));
+            .then(() => dispatch(fetchTemplates()))
+            .catch(err => dispatch(errorTemplateManagement(err.message)));
     }
 }
 
@@ -151,7 +154,8 @@ export function createPage(pageName) {
         return internal.doPost('/templates/pages', {}, page)
             .then(() => dispatch(addPage(page.id, page.name, page.widgets)))
             .then(() => dispatch(fetchTemplates()))
-            .then(() => dispatch(showPage(pageId, pageName, true)));
+            .then(() => dispatch(showPage(pageId, pageName, true)))
+            .catch(err => dispatch(errorTemplateManagement(err.message)));
     }
 }
 

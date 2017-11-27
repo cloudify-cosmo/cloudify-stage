@@ -94,14 +94,13 @@ export default class TemplateManagement extends Component {
     }
 
     _removeTemplateTenant(template, tenant) {
-        var tenants = _.without(template.data.tenants, tenant);
-        template.data.tenants = _.isEmpty(tenants) ? [Const.DEFAULT_ALL] : tenants;
+        template.data.tenants = _.without(template.data.tenants, tenant);
 
         this._updateTemplate(template);
     }
 
     _updateTemplate(template) {
-        this.props.onTemplateUpdate(template);
+        return this.props.onTemplateUpdate({...template, oldId: template.id});
     }
 
     _deletePage(page) {
