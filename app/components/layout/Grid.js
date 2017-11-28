@@ -4,108 +4,60 @@
 
 import React, { Component, PropTypes } from 'react';
 import GridItem from './GridItem';
+import { WidthProvider, Responsive } from 'react-grid-layout';
+
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 export default class Grid extends Component {
+
     static propTypes = {
         onGridDataChange: PropTypes.func.isRequired,
         isEditMode: PropTypes.bool.isRequired
     };
 
-    componentDidMount() {
-        $(this.refs.grid).gridstack({
-            cellHeight: 10,
-            verticalMargin: 10,
-            animate: true,
-            disableResize: !this.props.isEditMode,
-            disableDrag: !this.props.isEditMode,
-            draggable: {
-                scroll: true
-            }
-        });
-
-        $(this.refs.grid).off('change').on('change', (event, items)=> {
-            this._saveChangedItems(items);
-        });
-
-        this.itemIds = [];
-        _.each(this.props.children,(child)=>{
-            if (child.type && child.type === GridItem) {
-                this.itemIds.push(child.props.id);
-            }
-        });
-    }
-
-    _saveChangedItems(items) {
-        // Run update method for each item that was changed
-        _.each(items,(item)=>{
-            var itemId = $(item.el).attr('id');
-            this.props.onGridDataChange(itemId,{
-                height: item.height,
-                width: item.width,
-                x: item.x,
-                y: item.y
+    _saveChangedItems(layout) {
+        this.props.isEditMode &&
+            _.each(layout, (item) => {
+                this.props.onGridDataChange(item.i, {
+                    height: item.h,
+                    width: item.w,
+                    x: item.x,
+                    y: item.y
+                });
             });
-        });
     }
 
-    componentWillUnmount() {
-        $(this.refs.grid).off('change');
-    }
-
-    toggleWidgetListEditMode(isEditMode) {
-        var gridStack = $(this.refs.grid).data('gridstack');
-        if (isEditMode) {
-            gridStack.enable();
+    processGridItem(el) {
+        if (el.type && el.type !== GridItem) {
+            return [];
         }
-        else {
-            gridStack.disable();
-        }
-    }
-
-    componentDidUpdate() {
-        this.toggleWidgetListEditMode(this.props.isEditMode);
-    }
-
-    _itemAdded (itemId) {
-        if (this.itemIds && _.indexOf(this.itemIds,itemId) < 0) {
-            let el = $(this.refs.grid).find('#'+itemId);
-            if (el.length > 0) {
-                el = el[0];
-                var gridStack = $(this.refs.grid).data('gridstack');
-                gridStack.makeWidget(el);
+        return React.createElement('div', {
+            key: el.props.id,
+            className: [
+                el.props.className,
+                el.props.maximized && 'maximize'
+            ].join(' '),
+            'data-grid': {
+                x: el.props.x || 0,
+                y: el.props.y || 0,
+                w: el.props.width || 10,
+                h: el.props.height || 5
             }
-            this.itemIds.push(itemId);
-        }
-    }
-
-    _itemRemoved(itemId) {
-        if (this.itemIds && _.indexOf(this.itemIds,itemId) >= 0) {
-            let el = $(this.refs.grid).find('#'+itemId);
-            if (el.length > 0) {
-                el = el[0];
-                var gridStack = $(this.refs.grid).data('gridstack');
-                gridStack.removeWidget(el, false);
-            }
-            _.pull(this.itemIds,itemId);
-        }
+        }, el)
     }
 
     render() {
-
-        var gridItems = [];
-        _.each(this.props.children,(child)=>{
-            if (child.type && child.type === GridItem) {
-                var gridItem = React.cloneElement(child,{onItemAdded: this._itemAdded.bind(this),onItemRemoved: this._itemRemoved.bind(this)})
-                gridItems.push(gridItem);
-            } else {
-                console.warn('Found a grid child that is not grid item. Ignoring this child')
-            }
-        });
-
         return (
-            <div className="grid-stack" ref='grid'>
-                {gridItems}
-            </div>
+            <ResponsiveReactGridLayout
+                className={['layout', this.props.isEditMode && 'isEditMode'].join(' ')}
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }} rowHeight={10}
+                onLayoutChange={this._saveChangedItems.bind(this)}
+                isDraggable={this.props.isEditMode}
+                isResizable={this.props.isEditMode}
+                >
+                {_.map(this.props.children, this.processGridItem.bind(this))}
+            </ResponsiveReactGridLayout>
         );
     }
 }
