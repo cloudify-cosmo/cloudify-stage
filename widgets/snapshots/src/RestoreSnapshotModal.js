@@ -97,8 +97,8 @@ export default class RestoreSnapshotModal extends React.Component {
                         {
                             this.state.isFromTenantlessEnv &&
                             <Message>
-                                When restoring from a tenant-less environment, the selected tenant must be a new one.
-                                Please make sure you created a new tenant and selected it before restoring this snapshot.
+                                When restoring from a tenant-less environment, make sure you uploaded the snapshot to
+                                a "clean" tenant that does not contain any other resources.
                             </Message>
 
                         }

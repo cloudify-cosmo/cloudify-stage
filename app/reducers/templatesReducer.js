@@ -22,5 +22,4 @@ const templates = (state = {}, action) => {
     }
 };
 
-
 export default templates;

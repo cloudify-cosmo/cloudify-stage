@@ -11,7 +11,9 @@ export default class extends React.Component {
         widget: PropTypes.object.isRequired,
         fetchData: PropTypes.func,
         onSelect: PropTypes.func,
-        onUpload: PropTypes.func
+        onUpload: PropTypes.func,
+        onReadme: PropTypes.func,
+        readmeLoading: PropTypes.string
     };
 
     static defaultProps = {
@@ -47,7 +49,8 @@ export default class extends React.Component {
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
-                                    <Icon name="info" link title="blueprint Readme" onClick={(event)=>{event.stopPropagation();this.props.onReadme(item.name)}} bordered/>
+                                    <Icon name="info" link title="blueprint Readme" loading={this.props.readmeLoading === item.name}
+                                          onClick={(event)=>{event.stopPropagation();this.props.onReadme(item.name)}} bordered/>
                                     <Icon name="upload" link title="Upload blueprint" onClick={(event)=>{event.stopPropagation();this.props.onUpload(item.name)}} bordered/>
                                 </DataTable.Data>
                             </DataTable.Row>

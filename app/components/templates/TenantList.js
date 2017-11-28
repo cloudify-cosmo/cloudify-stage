@@ -32,7 +32,7 @@ export default class TenantList extends Component {
                                 <List.Item key={item}>
                                     {item === Const.DEFAULT_ALL ? 'all' : item}
 
-                                    {item !== Const.DEFAULT_ALL && this.props.custom &&
+                                    {this.props.custom && _.size(this.props.tenants) > 1 &&
                                     <PopupConfirm trigger={<Icon link name='remove' className="right floated" onClick={e => e.stopPropagation()}/>}
                                                   content='Are you sure to remove this tenant from template?'
                                                   onConfirm={() => this.props.onDelete(item)}/>

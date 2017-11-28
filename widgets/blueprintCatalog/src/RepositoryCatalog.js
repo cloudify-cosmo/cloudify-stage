@@ -11,7 +11,9 @@ export default class extends React.Component{
         widget: PropTypes.object.isRequired,
         fetchData: PropTypes.func,
         onSelect: PropTypes.func,
-        onUpload: PropTypes.func
+        onUpload: PropTypes.func,
+        onReadme: PropTypes.func,
+        readmeLoading: PropTypes.string
     };
 
     static defaultProps = {
@@ -30,7 +32,7 @@ export default class extends React.Component{
                     <Grid.Column key={item.id}>
 
                         <DataSegment.Item selected={item.isSelected} onClick={(event)=>{event.stopPropagation(); this.props.onSelect(item)}} className="fullHeight">
-                            <Grid>
+                            <Grid className="contentBlock">
                                 <Grid.Row className="bottomDivider">
                                     <Grid.Column width="16">
                                         <Image src={Stage.Utils.url(item.image_url)}/>
@@ -52,29 +54,26 @@ export default class extends React.Component{
                                     <Grid.Column width="12">{item.updated_at}</Grid.Column>
                                 </Grid.Row>
 
-                                <Grid.Column width="16">
-                                    <div style={{height:'30px'}}></div>
-                                    <div>
-                                        <Button
-                                            circular
-                                            icon="info"
-                                            className="icon"
-                                            onClick={event => {
-                                                event.stopPropagation();
-                                                this.props.onReadme(item.name);
-                                            }}/>
-                                        <Button
-                                            icon="upload"
-                                            content="Upload"
-                                            className="uploadButton labeled icon"
-                                            onClick={event => {
-                                                event.stopPropagation();
-                                                this.props.onUpload(item.name);
-                                            }}/>
-                                    </div>
-                                </Grid.Column>
                             </Grid>
-
+                            <div>
+                                <Button
+                                    circular
+                                    icon="info"
+                                    loading={this.props.readmeLoading === item.name}
+                                    className="readmeButton icon"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        this.props.onReadme(item.name);
+                                    }}/>
+                                <Button
+                                    icon="upload"
+                                    content="Upload"
+                                    className="uploadButton labeled icon"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        this.props.onUpload(item.name);
+                                    }}/>
+                            </div>
                         </DataSegment.Item>
 
                     </Grid.Column>

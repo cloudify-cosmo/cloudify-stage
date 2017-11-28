@@ -102,20 +102,24 @@ a:hover {
   height: 150px;
 }
 
-.maximizeWidget .grid-stack-item.widget {
+.maximizeWidget .widget {
   display: none;
 
-  &.maximize {
+  &.maximize {  
     display: block;
-  }
-
-  &.maximize .widgetItem {
-    position: fixed;
-    top: 8rem;
-    bottom: 1rem;
-    left: 14rem;
-    right: 1rem;
+    width: auto !important;
+    height: auto !important;
+    transform: translate(0px, 0px) !important;
+    position: fixed !important;
+    top: 8rem !important;
+    bottom: 1rem !important;
+    left: 14rem !important;
+    right: 1rem !important;
     outline: 0;
+
+    .widget{
+      display: block;
+    }
   }
 }
 
@@ -159,6 +163,33 @@ a:hover {
     height: 40px !important;
   }
 
+}
+
+.react-grid-placeholder{
+  background-color: #ccc !important;
+  border: 2px dotted #777;
+  border-radius: 2px;
+}
+
+.layout{
+  &.isEditMode{  
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 5px;
+  }
+
+  &>.react-draggable{
+    background-color: rgba(0,0,0,.04);
+    border-radius: 2px;
+  }
+  &>.react-draggable-dragging{
+    opacity: 0.3;
+    filter: blur(1px); 
+  }
+
+  .widgetItem{
+    height: 100%;
+  }
 }
 
 .widget {
@@ -601,7 +632,6 @@ code.hljs {
 
   .bottomDivider {
     position: relative;
-    margin-bottom: 1rem;
   }
 
   .bottomDivider::after {
@@ -652,6 +682,11 @@ code.hljs {
 .ui.modal:not(.overlay) > .content {
   max-height: 480px;
   overflow: auto;
+}
+
+.ui.modal.unlimited > .content {
+  max-height: none;
+  overflow: inherit;
 }
 
 .confirmModal.ui.modal > .content {
@@ -823,11 +858,19 @@ a.underline {
   max-width: 500px !important;
   margin: 0 calc(50% - 250px) !important;
   display: block;
+  @media (min-width: 992px) {
+    left: 6.5rem !important;
+  }
 
   .content {
     margin-top: 10px;
     display: inline-block;
     width: 100%;
+  }
+
+  .button {
+    margin-left: 5px;
+    margin-right: 5px;
   }
 }
 
@@ -841,4 +884,11 @@ a.underline {
   white-space: -o-pre-wrap;    /* Opera 7 */
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
   max-width: 500px;
+  margin: 1px;
+}
+
+.topRightCorner {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }

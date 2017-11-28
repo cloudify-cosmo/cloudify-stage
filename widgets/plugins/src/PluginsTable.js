@@ -62,6 +62,20 @@ export default class extends React.Component {
             });
     }
 
+    _setGlobalPlugin(item) {
+        var actions = new Actions(this.props.toolbox);
+        this.props.toolbox.loading(true);
+        actions.doSetGlobal(item)
+            .then(()=> {
+                this.props.toolbox.loading(false);
+                this.props.toolbox.refresh();
+            })
+            .catch((err)=>{
+                this.props.toolbox.loading(false);
+                this.setState({error: err.message});
+            });
+    }
+
     _refreshData() {
         this.props.toolbox.refresh();
     }
@@ -79,7 +93,7 @@ export default class extends React.Component {
     }
 
     render() {
-        var {Confirm, ErrorMessage, DataTable, PrivateMarker} = Stage.Basic;
+        var {Confirm, ErrorMessage, DataTable, ResourceAvailability} = Stage.Basic;
 
         return (
             <div>
@@ -109,7 +123,7 @@ export default class extends React.Component {
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
                                         {item.id}
-                                        <PrivateMarker availability={item.resource_availability} title="Private resource"/>
+                                        <ResourceAvailability availability={item.resource_availability} onSetGlobal={this._setGlobalPlugin.bind(this, item)} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.package_name}</DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>

@@ -4,8 +4,8 @@
 
 import React, { Component, PropTypes, Children, cloneElement } from 'react';
 import { Dropdown as DropdownSemanticUiReact, DropdownMenu, DropdownHeader } from 'semantic-ui-react'
-import { createShorthand, useKeyOnly, useKeyOrValueAndKey, isBrowser } from '../../../node_modules/semantic-ui-react/dist/commonjs/lib';
-import Portal from '../../../node_modules/semantic-ui-react/dist/commonjs/addons/Portal';
+import { createShorthand, useKeyOnly, useKeyOrValueAndKey, isBrowser } from 'semantic-ui-react/dist/commonjs/lib';
+import Portal from 'semantic-ui-react/dist/commonjs/addons/Portal';
 
 /**
  * Dropdown is a component which extends [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework

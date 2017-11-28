@@ -77,12 +77,16 @@ export default class CreateTemplateModal extends React.Component {
     _submitCreate() {
         let errors = {};
 
-        if (_.isEmpty(this.state.templateName)) {
-            errors['templateName']='Please provide template name';
+        if (_.isEmpty(_.trim(this.state.templateName))) {
+            errors['templateName']='Please provide correct template name';
         }
 
         if (_.isEmpty(this.state.roles)) {
             errors['roles']='Please select role';
+        }
+
+        if (_.isEmpty(this.state.tenants)) {
+            errors['tenants']='Please select tenant';
         }
 
         if (_.isEmpty(this.state.pages)) {
@@ -97,7 +101,7 @@ export default class CreateTemplateModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        this.props.onCreateTemplate(this.state.templateName, this.state.roles, this.state.tenants, this.state.pages).then(()=>{
+        this.props.onCreateTemplate(_.trim(this.state.templateName), this.state.roles, this.state.tenants, this.state.pages).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
@@ -105,6 +109,17 @@ export default class CreateTemplateModal extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
+        if (field.name === 'tenants') {
+            let wasSelectedAll = _.indexOf(this.state.tenants, Consts.DEFAULT_ALL) >= 0;
+            let willSelectAll = _.indexOf(field.value, Consts.DEFAULT_ALL) >= 0;
+
+            if (wasSelectedAll) {
+                _.pull(field.value, Consts.DEFAULT_ALL);
+            } else if (willSelectAll) {
+                field.value = [Consts.DEFAULT_ALL];
+            }
+        }
+
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
@@ -129,7 +144,8 @@ export default class CreateTemplateModal extends React.Component {
     render() {
         var {Modal, Button, Icon, Form, Segment, ApproveButton, CancelButton, Message, Divider, List} = Stage.Basic;
 
-        let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name}});
+        let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name, icon: 'radio'}});
+        tenantOptions.push({text: 'All tenants', value: Consts.DEFAULT_ALL, icon: 'selected radio'});
 
         let editMode = !_.isEmpty(this.props.templateName);
 

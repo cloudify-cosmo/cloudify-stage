@@ -12,7 +12,7 @@ module.exports = {
             .clickElement('@userName')
             .waitForElementVisible('@userDropdownMenu')
             .assert.containsText('#maintenanceMenuItem span','Maintenance Mode')
-            .assert.containsText('#resetMenuItem span','Reset')
+            .assert.containsText('#resetMenuItem span','Reset Templates')
             .assert.containsText('#editModeMenuItem span','Edit Mode')
             .assert.containsText('#logoutMenuItem span','Logout');
 
@@ -26,7 +26,7 @@ module.exports = {
             .assert.containsText('@userName', Config.user)
             .clickElement('@userName')
             .waitForElementVisible('@userDropdownMenu')
-            .assert.containsText('#resetMenuItem span','Reset')
+            .assert.containsText('#resetMenuItem span','Reset Templates')
             .assert.containsText('#logoutMenuItem span','Logout');
 
         client.end();

@@ -16,8 +16,6 @@ export default class PageList extends Component {
     render () {
         let {Segment, Icon, Divider, List, Message, PopupConfirm} = Stage.Basic;
 
-        var moreThenOne = _.size(this.props.pages) > 1;
-
         return (
             <Segment style={this.props.style}>
                 <Icon name="block layout"/> Pages
@@ -29,7 +27,7 @@ export default class PageList extends Component {
                                 <List.Item key={item}>
                                     {item}
 
-                                    {this.props.custom && moreThenOne &&
+                                    {this.props.custom && _.size(this.props.pages) > 1 &&
                                     <PopupConfirm trigger={<Icon link name='remove' className="right floated" onClick={e => e.stopPropagation()}/>}
                                         content='Are you sure to remove this page from template?'
                                         onConfirm={() => this.props.onDelete(item)}/>
