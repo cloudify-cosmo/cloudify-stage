@@ -74,12 +74,28 @@ module.exports = (function() {
             logger.info('-- initializing file ' + backendFile);
 
             try {
-                var backend = require(backendFile);
-                if (_.isFunction(backend)) {
-                    backend(BackendRegistrator(widgetId));
-                } else {
-                    throw new Error('Backend definition must be a function (module.exports = function(BackendRegistrator) {...})');
-                }
+                var vm = new NodeVM({
+                    sandbox: {
+                        _,
+                        backendFile,
+                        widgetId,
+                        BackendRegistrator
+                    },
+                    require: {
+                        context: 'sandbox',
+                        external: config.app.widgets.allowedModules
+                    }
+                });
+
+                var script = `var backend = require(backendFile);
+                    if (_.isFunction(backend)) {
+                        backend(BackendRegistrator(widgetId));
+                    } else {
+                        throw new Error('Backend definition must be a function (module.exports = function(BackendRegistrator) {...})');
+                    }`;
+
+                return vm.run(script, pathlib.resolve(process.cwd() + '/' + widgetId));
+
             } catch(err) {
                 throw new Error('Error during importing widget backend from file ' + backendFile + ' - ' + err.message);
             }
@@ -127,9 +143,14 @@ module.exports = (function() {
 
     }
 
+    function removeWidgetBackend(widgetId) {
+        services = _.omit(services, widgetId);
+    }
+
     return {
         importWidgetBackend,
         initWidgetBackends,
+        removeWidgetBackend,
         callService
     }
 })();

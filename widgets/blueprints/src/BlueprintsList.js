@@ -61,9 +61,23 @@ export default class BlueprintList extends React.Component {
         actions.doDelete(this.state.item)
             .then(()=> {
                 this.setState({error: null});
-                this.props.toolbox.getEventBus().trigger('blueprints:refresh');
+                this.props.toolbox.refresh();
             })
             .catch((err)=>{
+                this.setState({error: err.message});
+            });
+    }
+
+    _setGlobalBlueprint(item) {
+        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        this.props.toolbox.loading(true);
+        actions.doSetGlobal(item.id)
+            .then(()=> {
+                this.props.toolbox.loading(false);
+                this.props.toolbox.refresh();
+            })
+            .catch((err)=>{
+                this.props.toolbox.loading(false);
                 this.setState({error: err.message});
             });
     }
@@ -106,6 +120,7 @@ export default class BlueprintList extends React.Component {
                             onSelectBlueprint={this._selectBlueprint.bind(this)}
                             onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
                             onCreateDeployment={this._createDeployment.bind(this)}
+                            onSetGlobal={this._setGlobalBlueprint.bind(this)}
                             />
                         :
                         <BlueprintsCatalog
@@ -114,6 +129,7 @@ export default class BlueprintList extends React.Component {
                             onSelectBlueprint={this._selectBlueprint.bind(this)}
                             onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
                             onCreateDeployment={this._createDeployment.bind(this)}
+                            onSetGlobal={this._setGlobalBlueprint.bind(this)}
                             />
 
                 }

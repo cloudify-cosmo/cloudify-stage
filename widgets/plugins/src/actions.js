@@ -33,4 +33,8 @@ export default class {
 
         return this.toolbox.getManager().doDownload(pluginDownloadUrl, pluginFileName);
     }
+
+    doSetGlobal(plugin) {
+        return this.toolbox.getManager().doPatch(`/plugins/${plugin.id}/set-global`);
+    }
 }

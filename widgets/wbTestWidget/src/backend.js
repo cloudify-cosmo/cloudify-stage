@@ -92,30 +92,4 @@ module.exports = function(r) {
             .then((data) => res.send(data))
             .catch(next);
     });
-
-
-    r.register('database', 'POST', (req, res, next, helper) => {
-        helper.Database.create(req.query.key, req.query.value, req, res, next)
-            .then((data) => res.send({status:'ok'}))
-            .catch(next);
-    });
-
-    r.register('database', (req, res, next, helper) => {
-        helper.Database.readAll(req, res, next)
-            .then((data) => res.send({items: data}))
-            .catch(next);
-    });
-
-    r.register('database', 'PUT', (req, res, next, helper) => {
-        helper.Database.update(req.query.key, req.query.value, req, res, next)
-            .then((data) => res.send({status:'ok'}))
-            .catch(next);
-    });
-
-    r.register('database', 'DELETE', (req, res, next, helper) => {
-        helper.Database.remove(req.query.id, req, res, next)
-            .then((data) => res.send({status:'ok'}))
-            .catch(next);
-    });
-
 }

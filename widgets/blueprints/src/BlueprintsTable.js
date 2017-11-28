@@ -14,19 +14,20 @@ export default class BlueprintsTable extends React.Component{
         fetchGridData: PropTypes.func,
         onSelectBlueprint: PropTypes.func,
         onDeleteBlueprint: PropTypes.func,
-        onCreateDeployment: PropTypes.func
-
+        onCreateDeployment: PropTypes.func,
+        onSetGlobal: PropTypes.func
     };
 
     static defaultProps = {
         fetchGridData: ()=>{},
         onSelectBlueprint: ()=>{},
         onDeleteBlueprint: ()=>{},
-        onCreateDeployment: ()=>{}
+        onCreateDeployment: ()=>{},
+        onSetGlobal: ()=>{}
     };
 
     render(){
-        var {DataTable, Image, PrivateMarker} = Stage.Basic;
+        var {DataTable, Image, ResourceAvailability} = Stage.Basic;
         let tableName = 'blueprintsTable';
 
         return (
@@ -51,8 +52,8 @@ export default class BlueprintsTable extends React.Component{
                         return (
                             <DataTable.Row id={`${tableName}_${item.id}`} key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
                                 <DataTable.Data>
-                                    <Image src={`/ba/image/${item.id}`} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
-                                    <PrivateMarker availability={item.resource_availability} title="Private resource"/>
+                                    <Image src={Stage.Utils.url(`/ba/image/${item.id}`)} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
+                                    <ResourceAvailability availability={item.resource_availability} onSetGlobal={()=>this.props.onSetGlobal(item)} className="rightFloated"/>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>

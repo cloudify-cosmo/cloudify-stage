@@ -13,32 +13,32 @@
   }, {
     "definition": "timeFilter",
     "name": "Time filter",
-    "height": 7,
+    "height": 5,
     "width": 4,
     "y": 0,
     "x": 8,
     "configuration": {}
   }, {
     "definition": "graph",
-    "name": "CPU Graph",
+    "name": "CPU Total User Graph",
     "height": 17,
     "width": 6,
     "y": 7,
     "x": 6,
     "configuration": {
       "type": "line",
-      "metric": "cpu_total_system",
+      "metric": "cpu_total_user",
       "charts": {
         "0": {
-          "metric": "cpu_total_system",
-          "unit": "Mhz",
-          "label": "CPU"
+          "metric": "cpu_total_user",
+          "unit": "%",
+          "label": "CPU Total User"
         }
       }
     }
   }, {
     "definition": "graph",
-    "name": "Memory Graph",
+    "name": "Memory Free Graph",
     "height": 17,
     "width": 6,
     "y": 7,
@@ -49,7 +49,7 @@
       "charts": {
         "0": {
           "metric": "memory_MemFree",
-          "unit": "MB",
+          "unit": "B",
           "label": "Memory"
         }
       }
@@ -67,7 +67,7 @@
       "charts": {
         "0": {
           "metric": "cpu_total_system",
-          "unit": "Mhz",
+          "unit": "%",
           "label": "CPU Total System"
         }
       }
@@ -85,7 +85,7 @@
       "charts": {
         "0": {
           "metric": "loadavg_processes_running",
-          "unit": "Processes",
+          "unit": "%",
           "label": "Running Load Average"
         }
       }

@@ -21,8 +21,6 @@ export default class RoleList extends Component {
     render () {
         let {Segment, Icon, Divider, List, Message, PopupConfirm} = Stage.Basic;
 
-        var moreThenOne = _.size(this.props.roles) > 1;
-
         return (
             <Segment style={this.props.style}>
                 <Icon name="student"/> Roles
@@ -32,9 +30,9 @@ export default class RoleList extends Component {
                         this.props.roles.map((item) => {
                             return (
                                 <List.Item key={item}>
-                                    {item === Const.DEFAULT_ALL ? 'all' : item}
+                                    {item}
 
-                                    {this.props.custom && moreThenOne &&
+                                    {this.props.custom && _.size(this.props.roles) > 1 &&
                                     <PopupConfirm trigger={<Icon link name='remove' className="right floated" onClick={e => e.stopPropagation()}/>}
                                                   content='Are you sure to remove this role from template?'
                                                   onConfirm={() => this.props.onDelete(item)}/>

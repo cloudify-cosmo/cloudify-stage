@@ -58,7 +58,6 @@ export function changeTenant (tenantName) {
     return function(dispatch) {
         dispatch(setAppLoading(true));
         dispatch(clearContext());
-        dispatch(push('/'));
         dispatch(selectTenant(tenantName));
         dispatch(reloadUserAppData());
     }

@@ -87,7 +87,7 @@ function cmdMigrate() {
 function getCurrMigration() {
     return umzug.executed()
         .then((executed) => {
-            return Promise.resolve(executed.length > 0 ? executed[0].file : '<NO_MIGRATIONS>');
+            return Promise.resolve(executed.length > 0 ? _.last(executed).file : '<NO_MIGRATIONS>');
         });
 }
 

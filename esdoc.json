@@ -1,19 +1,18 @@
 {
   "source": "./app/components/basic",
-  "destination": "./doc/components/basic",
+  "destination": "./doc/www",
   "plugins": [
     {
       "name": "esdoc-standard-plugin",
       "option": {
         "undocumentIdentifier": {"enable": false},
         "brand": {
-          "title": "Cloudify UI"
+          "title": "Cloudify UI Basic Components"
         },
         "manual": {
-          "files": [
-            "./doc/widgets/readme.md"
-          ],
-          "asset": "./doc/asset"
+          "index": "./doc/index.md",
+          "asset": "./doc/asset",
+          "files": ["./doc/index.md"]
         }
       }
     },
