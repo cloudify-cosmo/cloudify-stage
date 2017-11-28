@@ -160,6 +160,7 @@ module.exports = (function() {
                     .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then(tempPath => _installFiles(widgetId, tempPath))
+                    .then(() => BackendHandler.removeWidgetBackend(widgetId))
                     .then(() => BackendHandler.importWidgetBackend(widgetId))
                     .then(() => {
                         var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
@@ -199,7 +200,9 @@ module.exports = (function() {
                     resolve();
                 }
             })
-        }).then(() => db.Resources.destroy({ where: {resourceId: widgetId, type: ResourceTypes.WIDGET} }));
+        })
+        .then(() => BackendHandler.removeWidgetBackend(widgetId))
+        .then(() => db.Resources.destroy({ where: {resourceId: widgetId, type: ResourceTypes.WIDGET} }));
     }
 
     function isWidgetUsed(widgetId) {
