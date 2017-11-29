@@ -115,7 +115,7 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, PrivateField} = Stage.Basic;
+        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, PrivateField, Popup} = Stage.Basic;
         const uploadButton = <Button content='Upload' icon='upload' labelPosition='left' className="uploadBlueprintButton"/>;
 
         var options = _.map(this.state.yamlFiles, item => { return {text: item, value: item} });
@@ -134,8 +134,8 @@ export default class UploadModal extends React.Component {
                         <Form loading={this.state.loading} errors={this.state.errors}
                               onErrorsDismiss={() => this.setState({errors: {}})}>
                             <Form.Group>
-                                <Form.Field width="9" error={this.state.errors.blueprintUrl}>
-                                    <Form.Input label="URL" placeholder="Enter blueprint url" name="blueprintUrl"
+                                <Form.Field width="8" error={this.state.errors.blueprintUrl}>
+                                    <Form.Input label="URL" placeholder="Enter blueprint package URL location" name="blueprintUrl"
                                                 onChange={this._handleInputChange.bind(this)} value={this.state.blueprintUrl}
                                                 onBlur={this._onBlueprintUrlBlur.bind(this)} loading={this.state.urlLoading}
                                                 icon={this.state.urlLoading?'search':false} disabled={this.state.urlLoading} />
@@ -145,26 +145,41 @@ export default class UploadModal extends React.Component {
                                         Or
                                     </div>
                                 </Form.Field>
-                                <Form.Field width="8" error={this.state.errors.blueprintUrl}>
-                                    <Form.File placeholder="Select blueprint file" name="blueprintFile" ref="blueprintFile"
+                                <Form.Field width="7" error={this.state.errors.blueprintUrl}>
+                                    <Form.File placeholder="Select blueprint package file" name="blueprintFile" ref="blueprintFile"
                                                onChange={this._onBlueprintFileChange.bind(this)} loading={this.state.fileLoading}
                                                disabled={this.state.fileLoading}/>
                                 </Form.Field>
+                                <Form.Field width="1">
+                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                           content='To upload a blueprint to the manager you need to select the archive package containing exactly 1 directory, in which there should be a yaml file describing the main blueprint.'/>
+                                </Form.Field>
                             </Form.Group>
 
-                            <Form.Field error={this.state.errors.blueprintName}>
-                                <Form.Input name='blueprintName' placeholder="Blueprint name"
-                                            value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
-                            </Form.Field>
-
-                            <Form.Field>
-                                <Form.Dropdown placeholder='Blueprint filename' search selection options={options} name="blueprintFileName"
-                                               value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
-                            </Form.Field>
+                            <Form.Group>
+                                <Form.Field width="16" error={this.state.errors.blueprintName}>
+                                    <Form.Input name='blueprintName' placeholder="Blueprint name"
+                                                value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
+                                </Form.Field>
+                                <Form.Field width="1">
+                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                           content='The package will be uploaded to the Manager as a Blueprint resource, under the name you specify here.'/>
+                                </Form.Field>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Field width="16">
+                                    <Form.Dropdown placeholder='Blueprint filename' search selection options={options} name="blueprintFileName"
+                                                   value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
+                                </Form.Field>
+                                <Form.Field width="1">
+                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                           content='As you can have more than one yaml file in the archive, you need to specify which is the main one for your application.'/>
+                                </Form.Field>
+                            </Form.Group>
 
                             <Form.Group>
-                                <Form.Field width="9" error={this.state.errors.imageUrl}>
-                                    <Form.Input label="URL" placeholder="Enter image url" name="imageUrl"
+                                <Form.Field width="8" error={this.state.errors.imageUrl}>
+                                    <Form.Input label="URL" placeholder="Enter blueprint icon image file (.png)" name="imageUrl"
                                                 value={this.state.imageUrl} onChange={this._handleInputChange.bind(this)}
                                                 onBlur={()=>this.state.imageUrl ? this.refs.imageFile.reset() : ''}/>
                                 </Form.Field>
@@ -173,9 +188,13 @@ export default class UploadModal extends React.Component {
                                         Or
                                     </div>
                                 </Form.Field>
-                                <Form.Field width="8" error={this.state.errors.imageUrl}>
-                                    <Form.File placeholder="Select image file" name="imageFile" ref="imageFile"
+                                <Form.Field width="7" error={this.state.errors.imageUrl}>
+                                    <Form.File placeholder="Select blueprint icon image file (.png)" name="imageFile" ref="imageFile"
                                                onChange={(file)=>file ? this.setState({imageUrl: ''}) : ''}/>
+                                </Form.Field>
+                                <Form.Field width="1">
+                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                           content='The blueprint Icon file is an optional field in which you can choose the icon image that will represent the blueprint in the local blueprint widget.'/>
                                 </Form.Field>
                             </Form.Group>
                         </Form>
