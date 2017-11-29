@@ -76,17 +76,12 @@ export default class EditWidgetModal extends Component {
                     <Form>
                         {
                             this.props.configDef.filter((config) => !config.hidden).map((config)=>{
-                                return <GenericField key={config.id}
-                                              name={config.id}
-                                              type={config.type}
-                                              placeholder={config.placeHolder}
-                                              label={config.name}
-                                              description={config.description}
-                                              icon={config.icon}
-                                              items={config.items}
-                                              value={this.state.fields[config.id]}
-                                              onChange={this._handleInputChange.bind(this)}
-                                              max={config.max || null} min={config.min || null} />
+                                return <GenericField {...config}
+                                                     key={config.id}
+                                                     name={config.id}
+                                                     label={config.name}
+                                                     value={this.state.fields[config.id]}
+                                                     onChange={this._handleInputChange.bind(this)} />
                             })
                         }
 

@@ -35,8 +35,15 @@ export default class NodeInstancesTable extends React.Component {
         return true;
     }
 
+    _selectNodeInstance(item){
+        let selectedNodeInstanceId = this.props.toolbox.getContext().getValue('nodeInstanceId');
+        let clickedNodeInstanceId = item.id;
+        this.props.toolbox.getContext().setValue('nodeInstanceId', clickedNodeInstanceId === selectedNodeInstanceId ? null : clickedNodeInstanceId);
+        this.props.toolbox.getEventBus().trigger('topology:selectNode', item.id);
+    }
+
     render() {
-        let DataTable = Stage.Basic.DataTable;
+        let {DataTable, Icon} = Stage.Basic;
 
         return (
             <div>
@@ -50,13 +57,12 @@ export default class NodeInstancesTable extends React.Component {
                     {
                         this.props.instances.map((instance) => {
                             return (
-                                <DataTable.Row key={instance.id}>
+                                <DataTable.Row key={instance.id} selected={instance.isSelected} onClick={this._selectNodeInstance.bind(this, instance)}>
                                     <DataTable.Data>{instance.id}</DataTable.Data>
                                     <DataTable.Data>{instance.state}</DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
-                                        <i className="table icon link bordered"
-                                           onClick={this._showInstanceModal.bind(this, instance)}>
-                                        </i>
+                                        <Icon bordered link className="table"
+                                              onClick={(event)=>{event.stopPropagation();this._showInstanceModal(instance);}} />
                                     </DataTable.Data>
                                 </DataTable.Row>
                             );

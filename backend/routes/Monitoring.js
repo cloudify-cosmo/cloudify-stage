@@ -76,9 +76,9 @@ function _createShowTagValuesQuery(query) {
 }
 
 /**
- * End point to gets a list of available metrics per deployment
+ * End point to gets a list of available metrics per deployment, node and node instances
  *
- * It uses the query 'list series' and filter it by the deploymentId
+ * It uses the query 'list series' and filter it by the deploymentId, nodeId and nodeInstanceId
  *
  * The result is parsed like a graph with time 0
  * it looks like this:
@@ -103,11 +103,13 @@ function _createShowTagValuesQuery(query) {
  * }
  * ]
  *
- * So we parse out only the metric (after the last dot)
  */
-router.get('/metrics/:deploymentId',function (req, res,next) {
+router.get('/metrics/:deploymentId/:nodeId/:nodeInstanceId',function (req, res,next) {
+    const deploymentId = req.params.deploymentId;
+    const nodeId = req.params.nodeId;
+    const nodeInstanceId = req.params.nodeInstanceId;
     getClient()
-        .query('list series /'+req.params.deploymentId+'..*/i', function(err,response){
+        .query(`list series /^${deploymentId}\.${nodeId}\.${nodeInstanceId}\..*/i`, function(err,response){
             if (err) {
                 logger.error('Error connecting to influxDB', err);
                 res.status(500).send({message: err.message})
@@ -120,27 +122,37 @@ router.get('/metrics/:deploymentId',function (req, res,next) {
 });
 
 /**
- * Return a specific metrics graph for a deployment
+ * Return a specific metrics graph for a selected deployment, node and node instance
  * The query looks like this:
- * select  mean(value) from /kinneret\..*\.cpu_total_system/  where time > now() - 15m group by time(10)  order asc
+ *   select mean(value) from /^${deploymentId}.${nodeId}.${nodeInstanceId}.(${metrics})$/
+ *   where time > ${fromTime} and time < ${toTime} group by time(${timeGrouping}) order asc
  *
  *
- * The user can pass 3 query params for time filtering -
+ * The user can pass 4 url params:
+ *    deploymentId - deployment ID (or * for all deployments)
+ *    nodeId - node ID (or * for all nodes)
+ *    nodeInstanceId - node instance ID (or * for all node instances)
+ *    metrics - at least one metric separated with ','
+ *
+ * and 3 query params for time filtering -
  *    from - the from time
  *    to - the to time
  *    timeGroup - group the results by time
  */
-router.get('/byMetric/:deploymentId/:metrics',function(req,res,next){
+router.get('/byMetric/:deploymentId/:nodeId/:nodeInstanceId/:metrics',function(req,res,next){
+    const deploymentId = req.params.deploymentId;
+    const nodeId = req.params.nodeId;
+    const nodeInstanceId = req.params.nodeInstanceId;
+    const metrics = _.chain(req.params.metrics)
+                     .split(',')
+                     .map(function(metric) { return `(${metric})`})
+                     .join('|');
     const fromTime = req.query.from ||  'now() - 15m';
     const toTime = req.query.to || 'now()';
     const timeGrouping = req.query.timeGroup || 10;
-    const metrics = _.chain(req.params.metrics)
-                   .split(',')
-                   .map(function(metric) { return `(${metric})`})
-                   .join('|');
 
-    const query = 'select mean(value) from /'+req.params.deploymentId+'\\..*\\.('+metrics+')$/ ' +
-                'where time > '+fromTime+' and time < '+toTime+' group by time('+timeGrouping+')  order asc';
+    const query = `select mean(value) from /^${deploymentId}.${nodeId}.${nodeInstanceId}.(${metrics})$/ ` +
+                  `where time > ${fromTime} and time < ${toTime} group by time(${timeGrouping}) order asc`;
 
     logger.debug('Query: ',query);
 

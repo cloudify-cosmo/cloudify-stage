@@ -4,8 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import {Icon, Popup, Input, Checkbox, Dropdown, Form} from '../index'
-import EdiTable from './EdiTable';
-import InputTimeFilter from './InputTimeFilter';
+import {getToolbox} from '../../../utils/Toolbox';
 
 /**
  * GenericField is a generic component which can be used as different input fields in {@link Form} component
@@ -80,25 +79,25 @@ import InputTimeFilter from './InputTimeFilter';
  *               label="NUMBER_EDITABLE_LIST_TYPE" items={[1,2,3]} value={2}/>
  * ```
  *
- * ### Editable table field
+ * ### Custom field - Editable table
  * ![GenericField](manual/asset/form/GenericField_10.png)
  * ```
- * <GenericField name="editableTable" type={GenericField.EDITABLE_TABLE_TYPE}
+ * <GenericField name="editableTable" type={GenericField.CUSTOM_TYPE} component={Stage.Basic.Form.Table}
  *               label="EDITABLE_TABLE_TYPE"
- *               items={[
+ *               columns={[
  *                 {name: "metric", label: 'Metric', default: "", type: Stage.Basic.GenericField.EDITABLE_LIST_TYPE, description: "Name of the metric to be presented on the graph",
  *                  items: ["", "cpu_total_system", "cpu_total_user", "memory_MemFree", "memory_SwapFree", "loadavg_processes_running"]},
  *                 {name: 'label', label: 'Label', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart label"},
  *                 {name: 'unit', label: 'Unit', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart data unit"}
  *               ]}
- *               max={3} />
+ *               rows={3} />
  * ```
  *
- * ### Time filter input field
+ * ### Custom filed - Time filter
  * ![GenericField](manual/asset/form/GenericField_11.png)
  * ```
- * <GenericField name="timeFilterTest" type={GenericField.TIME_FILTER_TYPE}
- *               label="TIME_FILTER_TYPE" value={Stage.Basic.InputTimeFilter.INFLUX_DEFAULT_VALUE} />
+ * <GenericField name="timeFilterTest" type={GenericField.CUSTOM_TYPE} component={Stage.Basic.TimeFilter}
+ *               label="TIME_FILTER_TYPE" value={Stage.Basic.TimeFilter.INFLUX_DEFAULT_VALUE} />
  * ```
  */
 
@@ -151,14 +150,17 @@ export default class GenericField extends Component {
     static NUMBER_EDITABLE_LIST_TYPE = 'numberEditableList';
 
     /**
-     * dropdown editable numeric list
+     * custom input field
      */
-    static EDITABLE_TABLE_TYPE = 'editableTable';
+    static CUSTOM_TYPE = 'custom';
 
-    /**
-     * time filter input field
-     */
-    static TIME_FILTER_TYPE = 'timeFilter';
+    static isListType(type) {
+        return type === GenericField.LIST_TYPE ||
+               type === GenericField.NUMBER_LIST_TYPE ||
+               type === GenericField.MULTI_SELECT_LIST_TYPE ||
+               type === GenericField.EDITABLE_LIST_TYPE ||
+               type === GenericField.NUMBER_EDITABLE_LIST_TYPE;
+    }
 
     /**
      * propTypes
@@ -169,9 +171,9 @@ export default class GenericField extends Component {
      * @property {string} [icon=null] additional icon in right side of the input field
      * @property {string} [description=''] fields description showed in popup when user hovers field
      * @property {object} [value=''] specifies the value of an <input> element
-     * @property {object[]} [items=[]] list of items (for list types) or list of columns (for {@link GenericField.EDITABLE_TABLE_TYPE} type)
+     * @property {object[]} [items=[]] list of items (for list types)
      * @property {function} [onChange=()=>{}] function called on input value change
-     * @property {number} [max=null] maximal value (for {@link GenericField.NUMBER_TYPE} type) or number of rows (for {@link GenericField.EDITABLE_TABLE_TYPE})
+     * @property {number} [max=null] maximal value (only for {@link GenericField.NUMBER_TYPE} type)
      * @property {number} [min=null] minimal value (only for {@link GenericField.NUMBER_TYPE} type)
      */
     static propTypes = {
@@ -182,8 +184,11 @@ export default class GenericField extends Component {
         icon: PropTypes.string,
         description: PropTypes.string,
         value: PropTypes.any,
-        items: PropTypes.array,
         onChange: PropTypes.func,
+        storeValueInContext: PropTypes.bool,
+
+        // field specific configuration
+        items: PropTypes.array,
         max: PropTypes.number,
         min: PropTypes.number
     };
@@ -194,8 +199,11 @@ export default class GenericField extends Component {
         icon: null,
         description: '',
         value: '',
-        items: [],
         onChange: ()=>{},
+        storeValueInContext: false,
+
+        // field specific configuration
+        items: [],
         max: null,
         min: null
     };
@@ -203,11 +211,12 @@ export default class GenericField extends Component {
     constructor(props,context) {
         super(props,context);
 
+        this.toolbox = getToolbox(()=>{}, ()=>{}, null);
         this._initOptions(props);
     }
 
     _initOptions(props) {
-        if (!_.isEmpty(props.items)) {
+        if (GenericField.isListType(props.type) && props.items) {
             let valueAlreadyInOptions = false;
             let options = _.map(props.items, item => {
                 if (!_.isObject(item)) {
@@ -225,6 +234,24 @@ export default class GenericField extends Component {
             }
 
             this.state = {options};
+        }
+    }
+
+    _storeValueInContext(name, value) {
+        this.toolbox.getContext().setValue([name], value);
+        this.toolbox.getEventBus().trigger(`${name}:change`);
+    }
+
+    _handleInputChange(proxy, field) {
+        if (this.props.storeValueInContext) {
+            this._storeValueInContext(field.name, field.value);
+        }
+        this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}));
+    }
+
+    componentWillMount() {
+        if (this.props.storeValueInContext) {
+            this._storeValueInContext(this.props.name, this.props.value);
         }
     }
 
@@ -263,7 +290,7 @@ export default class GenericField extends Component {
             field = <Input icon={this.props.icon} iconPosition={this.props.icon?'left':undefined} name={this.props.name}
                            type={this.props.type === GenericField.STRING_TYPE?'text':this.props.type}
                            placeholder={this.props.placeholder} value={this.props.value === null ? '' : this.props.value}
-                           onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}
+                           onChange={this._handleInputChange.bind(this)}
                            max={this.props.type === GenericField.NUMBER_TYPE?this.props.max:null}
                            min={this.props.type === GenericField.NUMBER_TYPE?this.props.min:null}/>;
 
@@ -272,38 +299,34 @@ export default class GenericField extends Component {
             field = <Checkbox name={this.props.name} toggle={true}
                               checked={(_.isBoolean(this.props.value) && this.props.value) ||
                                        (_.isString(this.props.value) && this.props.value === 'true')}
-                              onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}/>
+                              onChange={this._handleInputChange.bind(this)}/>
 
-        } else if (this.props.type === GenericField.LIST_TYPE ||
-                   this.props.type === GenericField.NUMBER_LIST_TYPE ||
-                   this.props.type === GenericField.MULTI_SELECT_LIST_TYPE ||
-                   this.props.type === GenericField.EDITABLE_LIST_TYPE ||
-                   this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE) {
+        } else if (GenericField.isListType(this.props.type)) {
 
             field = <Dropdown fluid selection value={this.props.value} name={this.props.name}
                               multiple={this.props.type === GenericField.MULTI_SELECT_LIST_TYPE}
                               allowAdditions={this.props.type === GenericField.EDITABLE_LIST_TYPE ||
-                                              this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
+                              this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
                               search={this.props.type === GenericField.EDITABLE_LIST_TYPE ||
-                                      this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
+                              this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
                               placeholder={this.props.placeholder} options={this.state.options}
                               onAddItem={(e, { value }) => {this.setState({options: [{ text: value, value }, ...this.state.options]})}}
-                              onChange={(proxy, field)=> { this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))}} />;
+                              onChange={this._handleInputChange.bind(this)} />;
 
-        } else if (this.props.type === GenericField.EDITABLE_TABLE_TYPE) {
+        } else if (this.props.type === GenericField.CUSTOM_TYPE) {
+            let optionalProps = _.keys(GenericField.defaultProps);
+            let requiredProps = ['name', 'label', 'component'];
+            let componentProps = _.omit(this.props, [...optionalProps, ...requiredProps]);
+            let CustomComponent = this.props.component;
 
-            field = <EdiTable name={this.props.name}
-                              value={this.props.value}
-                              rows={this.props.max}
-                              columns={this.props.items}
-                              onChange={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))} />;
-        } else if (this.props.type === GenericField.TIME_FILTER_TYPE) {
+            if (_.isUndefined(CustomComponent)) {
+                return new Error('For `' + this.props.type + '` type `component` prop have to be supplied.')
+            };
 
-            field = <InputTimeFilter name={this.props.name}
-                                     placeholder={this.props.placeholder}
-                                     defaultValue={InputTimeFilter.INFLUX_DEFAULT_VALUE}
+            field = <CustomComponent name={this.props.name}
                                      value={this.props.value}
-                                     onApply={(proxy, field)=>this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}))} />;
+                                     onChange={this._handleInputChange.bind(this)}
+                                     {...componentProps} />;
         }
 
         return (

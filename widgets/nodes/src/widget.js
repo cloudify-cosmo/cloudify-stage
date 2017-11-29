@@ -56,7 +56,8 @@ Stage.defineWidget({
         }
 
         const CONNECTED_TO_RELATIONSHIP = 'cloudify.relationships.connected_to';
-        const SELECTED_NODE_ID = toolbox.getContext().getValue('nodeId');
+        const SELECTED_NODE_ID = toolbox.getContext().getValue('depNodeId');
+        const SELECTED_NODE_INSTANCE_ID = toolbox.getContext().getValue('nodeInstanceId');
 
         let params = this.fetchParams(widget, toolbox);
 
@@ -78,7 +79,8 @@ Stage.defineWidget({
                     numberOfInstances: node.number_of_instances,
                     instances: instances.filter((instance) =>
                                                 instance.node_id === node.id &&
-                                                instance.deployment_id === node.deployment_id),
+                                                instance.deployment_id === node.deployment_id)
+                                        .map((instance) => ({...instance, isSelected: instance.id === SELECTED_NODE_INSTANCE_ID})),
                     isSelected: (node.id + node.deployment_id) === SELECTED_NODE_ID,
                     groups: !_.isNil(group = groups[node.id + node.deployment_id]) ? group.join(', ') : ''
                 })
