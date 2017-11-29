@@ -5,7 +5,7 @@
 import External from './External';
 import Consts from './consts';
 import StageUtils from './stageUtils';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
 export default class Internal extends External {
 

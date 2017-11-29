@@ -37,13 +37,19 @@ module.exports = (function() {
             options.headers = headers;
         }
 
-        if(data){
+        if (data) {
             options.json = data;
+            try {
+                data = JSON.stringify(data);
+                options.headers['content-length'] = Buffer.byteLength(data);
+            } catch (error) {
+                logger.error('Invalid payload data. Error:', error)
+            }
         }
     }
 
     function request(method, url, headers, data, onSuccess, onError, timeout) {
-        var requestUrl = this.getUrl() + url;
+        var requestUrl = this.getUrl() + (_.startsWith(url, '/') ? url : `/${url}`);
         var requestOptions = {};
         this.updateOptions(requestOptions, method, timeout, headers, data);
 
@@ -72,7 +78,7 @@ module.exports = (function() {
                     }
                     catch(e) {
                         if (isSuccess) {
-                            reject('response data could not be parsed to JSON: ', e);
+                            reject('response data could not be parsed to JSON: ' + e);
                         } else {
                             reject(res.statusMessage);
                         }
