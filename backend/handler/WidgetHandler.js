@@ -125,8 +125,8 @@ module.exports = (function() {
                     .then(() => _validateUniqueness(widgetId))
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then((tempPath) => _installFiles(widgetId, tempPath))
-                    .then(() => _persistData(widgetId, username))
                     .then(() => BackendHandler.importWidgetBackend(widgetId))
+                    .then(() => _persistData(widgetId, username))
                     .then(() => {
                         var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
 
@@ -139,6 +139,7 @@ module.exports = (function() {
                         return Promise.resolve({id: widgetId, isCustom: true});
                     })
                     .catch(err => {
+                        deleteWidget(widgetId);
                         ArchiveHelper.cleanTempData(widgetTempPath);
                         throw err;
                     });
@@ -156,7 +157,8 @@ module.exports = (function() {
                 var archivePath = pathlib.join(widgetTempPath, widgetZipFile);
                 var extractedDir = pathlib.join(widgetTempPath, widgetId);
 
-                return _validateConsistency(updateWidgetId, widgetId)
+                return _backupWidget(widgetId, widgetTempPath)
+                    .then(() =>_validateConsistency(updateWidgetId, widgetId))
                     .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then(tempPath => _installFiles(widgetId, tempPath))
@@ -168,16 +170,50 @@ module.exports = (function() {
                         logger.info('Widget updated');
                         logger.info('Widget id: ', widgetId);
                         logger.info('Widget path: ', pathlib.resolve(widgetPath));
-
+                        
                         ArchiveHelper.cleanTempData(widgetTempPath);
 
                         return Promise.resolve({id: widgetId, isCustom: true});
                     })
                     .catch(err => {
-                        ArchiveHelper.cleanTempData(widgetTempPath);
+                        _restoreBackup(widgetId, widgetTempPath)
+                        .then(() => BackendHandler.removeWidgetBackend(widgetId))
+                        .then(() => BackendHandler.importWidgetBackend(widgetId))
+                        .then(() => ArchiveHelper.cleanTempData(widgetTempPath));
                         throw err;
                     });
                 });
+    }
+
+    function _backupWidget(widgetId, tempPath) {
+        var installPath = pathlib.resolve(widgetsFolder, widgetId);
+        var backupPath = pathlib.resolve(tempPath, 'backup');
+
+        return new Promise((resolve, reject) => {
+            fs.copy(installPath, backupPath, err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            })
+        });
+    }
+
+    function _restoreBackup(widgetId, tempPath) {
+        var installPath = pathlib.resolve(widgetsFolder, widgetId);
+        var backupPath = pathlib.resolve(tempPath, 'backup');
+
+        return new Promise((resolve, reject) => {
+            fs.removeSync(installPath);
+            fs.move(backupPath, installPath, err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            })
+        })
     }
 
     function listWidgets() {
