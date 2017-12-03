@@ -1,5 +1,6 @@
 import * as types from '../actions/types';
 import tenants from './tenantsReducer';
+import status from './statusReducer';
 
 const manager = (state = {}, action) => {
     switch (action.type) {
@@ -18,8 +19,7 @@ const manager = (state = {}, action) => {
                 serverVersion: action.serverVersion,
                 tenants: [],
                 lastUpdated: action.receivedAt,
-                status: null,
-                badStatusCount : 0
+                status: {}
             });
         case types.LOGOUT:
             return Object.assign({}, state, {
@@ -31,8 +31,7 @@ const manager = (state = {}, action) => {
                 serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
-                status: null,
-                badStatusCount : 0
+                status: {}
             });
         case types.ERR_LOGIN:
             return Object.assign({}, state, {
@@ -45,8 +44,7 @@ const manager = (state = {}, action) => {
                 serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
-                status: null,
-                badStatusCount : 0
+                status: {}
             });
         case types.SET_USER_DATA:
             return Object.assign({}, state, {
@@ -55,14 +53,17 @@ const manager = (state = {}, action) => {
                     role: action.role,
                     tenantsRoles: action.tenantsRoles
                 },
-                serverVersion: action.serverVersion,
+                serverVersion: action.serverVersion
             });
+        case types.REQ_MANAGER_STATUS:
         case types.SET_MANAGER_STATUS:
+        case types.ERR_MANAGER_STATUS:
             return Object.assign({}, state, {
-                status: action.status,
-                maintenance: action.maintenance,
-                services: action.services,
-                badStatusCount: action.status === 'Error' ? state.badStatusCount +1 : 0
+                status: status(state.status, action)
+            });
+        case types.SET_MAINTENANCE_STATUS:
+            return Object.assign({}, state, {
+                maintenance: action.maintenance
             });
         case types.REQ_TENANTS:
         case types.RES_TENANTS:

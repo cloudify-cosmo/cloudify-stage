@@ -16,35 +16,36 @@ describe('(Component) Manager', () => {
 
     beforeEach(() => {
         manager = {
-            maintenance: 'deactivated'
+            maintenance: 'deactivated',
+            status: {status: 'running'}
         };
 
         wrapper = mount(<Manager manager={manager}/>);
     });
 
     it('renders manager component with available status ',()=>{
-        manager.status = 'running';
+        manager.status.status = 'running';
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
         expect(wrapper.find(Icon).getNode().props.color).to.equal('green'); // Green icon
     });
 
     it('renders manager component with unavailable status ',()=>{
-        manager.status = 'not-running';
+        manager.status.status = 'not-running';
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
         expect(wrapper.find(Icon).getNode().props.color).to.equal('red'); // Red icon
     });
 
     it('renders manager component with no status ',()=>{
-        manager.status = undefined;
+        manager.status.status = undefined;
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
         expect(wrapper.find(Icon).getNode().props.color).to.equal('grey'); // Empty icon
     });
 
     it('renders manager component with activated maintenance ',()=>{
-        manager.status = 'running';
+        manager.status.status = 'running';
         manager.maintenance = 'activated';
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
@@ -52,7 +53,7 @@ describe('(Component) Manager', () => {
     });
 
     it('renders manager component with activated maintenance and unavailable status',()=>{
-        manager.status = 'not-running';
+        manager.status.status = 'not-running';
         manager.maintenance = 'activated';
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component

@@ -110,26 +110,22 @@ export function getRBACConfig() {
     };
 }
 
-export function setStatus(status, maintenance, services) {
+export function setMaintenanceStatus(maintenance) {
     return {
-        type: types.SET_MANAGER_STATUS,
-        status,
+        type: types.SET_MAINTENANCE_STATUS,
         maintenance,
-        services,
         receivedAt: Date.now()
     }
 }
 
-export function getStatus (manager) {
+export function getMaintenanceStatus(manager) {
     var managerAccessor = new Manager(manager);
     return function(dispatch) {
-        return Promise.all([managerAccessor.doGet('/status'), managerAccessor.doGet('/maintenance')])
-            .then((data)=>{
-                var services = _.filter(data[0].services, item => !_.isEmpty(item.instances));
-                dispatch(setStatus(data[0].status, data[1].status, services));
-            }).catch((err)=>{
+        return managerAccessor.doGet('/maintenance')
+            .then((data) => {
+                dispatch(setMaintenanceStatus(data.status));
+            }).catch((err) => {
                 console.error(err);
-                dispatch(setStatus('Error'));
             });
     }
 }
@@ -139,7 +135,7 @@ export function switchMaintenance(manager, activate) {
     return function(dispatch) {
         return managerAccessor.doPost(`/maintenance/${activate?'activate':'deactivate'}`)
             .then((data)=>{
-                dispatch(setStatus(manager.status, data.status, manager.services));
+                dispatch(setMaintenanceStatus(data.status));
                 dispatch(push(activate ? 'maintenance' : '/'));
             });
     }

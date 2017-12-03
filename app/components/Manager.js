@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import Consts from '../utils/consts';
-import Services from './Services';
+import Services from '../containers/Services';
 import {Icon, Popup} from './basic/index';
 
 export default class Manager extends Component {
@@ -23,7 +23,7 @@ export default class Manager extends Component {
     render() {
         let managerInfo = () =>
             <div className="managerMenu">
-                {this.renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
+                {this.renderStatusIcon(this.props.manager.status.status, this.props.manager.maintenance)}
                 <span className="managerVersion">v{this.props.manager.serverVersion}</span>
             </div>;
 
@@ -32,7 +32,7 @@ export default class Manager extends Component {
             ?
                 <Popup wide hoverable>
                     <Popup.Trigger>{managerInfo()}</Popup.Trigger>
-                    <Services services={this.props.manager.services}/>
+                    <Services/>
                 </Popup>
             :
                 managerInfo()
