@@ -7,7 +7,11 @@ npm install grunt-cli -g
 npm install
 bower install
 grunt build
-cd semantic
-gulp build
-cd ../backend
-npm install
+
+pushd semantic
+	gulp build
+popd
+
+pushd backend
+	npm install
+popd
