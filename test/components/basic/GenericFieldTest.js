@@ -49,6 +49,17 @@ describe('(Component) Field', () => {
         expect(wrapper.find('input[checked]')).to.have.length(1);
     });
 
+    it('boolean list type', () => {
+        let wrapper = mount(<GenericField name="test" type="booleanList" label="label" value="true"/>);
+
+        expect(wrapper.find('select[name="test"]')).to.have.length(1);
+        expect(wrapper.find('select[value="true"]')).to.have.length(1);
+        expect(wrapper.find('select[multiple=false]')).to.have.length(1);
+        expect(wrapper.find('select option')).to.have.length(3);
+        expect(wrapper.find('select').childAt(1)).to.have.text('false');
+        expect(wrapper.find('select').childAt(2)).to.have.text('true');
+    });
+
     it('list type', () => {
         let wrapper = mount(<GenericField name="test" type="list" items={[1,2,3]} label="label" value="2" placeholder="placeholder"/>);
 

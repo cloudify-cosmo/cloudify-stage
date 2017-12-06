@@ -2,6 +2,7 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
+import _ from 'lodash';
 let PropTypes = React.PropTypes;
 
 export default class ExecuteDeploymentModal extends React.Component {
@@ -9,25 +10,17 @@ export default class ExecuteDeploymentModal extends React.Component {
     constructor(props,context) {
         super(props,context);
 
-        this.state = ExecuteDeploymentModal.initialState(props);
+        this.state = ExecuteDeploymentModal.initialState();
     }
 
-    static initialState = (props) => {
-        var params = {};
-        _.each(props.workflow.parameters,(param, name)=>{
-            if (typeof param.default == 'undefined' || typeof param.default == 'object')
-                params[name] = Stage.Common.JsonUtils.stringify(param.default);
-            else
-                params[name] = param.default;
-        });
-
+    static initialState = () => {
         return {
             errors: {},
             loading: false,
             force: false,
-            params
+            params: {}
         }
-    }
+    };
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
@@ -39,7 +32,7 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            this.setState(ExecuteDeploymentModal.initialState(nextProps));
+            this.setState(ExecuteDeploymentModal.initialState());
         }
     }
 
@@ -56,6 +49,19 @@ export default class ExecuteDeploymentModal extends React.Component {
     _submitExecute () {
         if (!this.props.deployment || !this.props.workflow) {
             this.setState({errors: {error: 'Missing workflow or deployment'}});
+            return false;
+        }
+
+        //Check required parameters has value
+        var errors = {};
+        _.forEach(this.props.workflow.parameters, (param, name) => {
+            if(this.isParamRequired(param) && !this.state.params[name]){
+                errors[name] = `Please provide ${name}`;
+            }
+        });
+
+        if (!_.isEmpty(errors)){
+            this.setState({errors: errors});
             return false;
         }
 
@@ -84,18 +90,26 @@ export default class ExecuteDeploymentModal extends React.Component {
     getGenericFieldType(parameter){
         const {GenericField} = Stage.Basic;
 
-        // if param type is not provided attempt to infer it from default value
-        if (!parameter.type)
-            parameter.type = typeof parameter.default;
-
         switch (parameter.type){
             case 'boolean':
-                return GenericField.BOOLEAN_TYPE;
+                return GenericField.BOOLEAN_LIST_TYPE;
             case 'integer':
                 return GenericField.NUMBER_TYPE;
             default:
                 return GenericField.STRING_TYPE;
         }
+    }
+
+    getParameterPlaceholder(defaultValue){
+        if(_.isString(defaultValue)){
+            return defaultValue;
+        } else if(!_.isUndefined(defaultValue)){
+            return Stage.Common.JsonUtils.stringify(defaultValue, null, true);
+        }
+    }
+
+    isParamRequired(parameter){
+        return _.isUndefined(parameter.default);
     }
 
     handleInputChange(event, field) {
@@ -124,12 +138,14 @@ export default class ExecuteDeploymentModal extends React.Component {
                         {
                             _.map(workflow.parameters,(parameter,name)=>{
                                 return (
-                                    <Form.Field key={name}>
+                                    <Form.Field key={name} error={this.state.errors[name]}>
                                         <GenericField name={name}
                                                       label={name}
                                                       description={parameter.description}
                                                       type={this.getGenericFieldType(parameter)}
                                                       value={this.state.params[name]}
+                                                      placeholder={this.getParameterPlaceholder(parameter.default)}
+                                                      required={this.isParamRequired(parameter)}
                                                       onChange={this.handleInputChange.bind(this)} />
                                     </Form.Field>
                                 );
@@ -140,7 +156,7 @@ export default class ExecuteDeploymentModal extends React.Component {
                                 name="force"
                                 label="force"
                                 description=""
-                                type={this.getGenericFieldType({type: 'boolean'})}
+                                type={GenericField.BOOLEAN_TYPE}
                                 value={this.state.force}
                                 onChange={(event, field) => {
                                     this.setState({force: field.checked});
