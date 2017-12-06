@@ -27,6 +27,13 @@ class AuthHandler {
         );
     }
 
+    static getVersion(token){
+        return ManagerHandler.jsonRequest('GET', '/version', {
+                'authentication-token': token
+            }
+        );
+    }
+
     static getUser(token){
         return ManagerHandler.jsonRequest('GET', '/user?_get_data=true', {
                 'authentication-token': token

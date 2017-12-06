@@ -10,13 +10,24 @@ var passport = require('passport');
 var config = require('../config').get();
 var AuthHandler = require('../handler/AuthHandler');
 var logger = require('log4js').getLogger('ClientConfigRouter');
+var ServerSettings = require('../serverSettings');
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
 router.post('/login', (req, res) => {
     AuthHandler.getToken(req.headers.authorization).then((token) => {
-        AuthHandler.getTenants(token.value).then((tenants) => {
+        Promise.all([AuthHandler.getTenants(token.value), AuthHandler.getVersion(token.value)])
+            .then((response) => {
+            var tenants = response[0];
+            var version = response[1];
+
+            //set community mode from manager API only if mode is not set from the command line
+            if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN
+                && version.edition === ServerSettings.MODE_COMMUNITY) {
+                ServerSettings.settings.mode = ServerSettings.MODE_COMMUNITY;
+            }
+
             if(!!tenants && !!tenants.items && tenants.items.length > 0) {
                 res.cookie('XSRF-TOKEN', token.value);
                 res.send({
