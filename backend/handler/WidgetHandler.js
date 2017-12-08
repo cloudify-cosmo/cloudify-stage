@@ -11,6 +11,7 @@ var _ = require('lodash');
 var config = require('../config').get();
 var ArchiveHelper = require('./ArchiveHelper');
 var ResourceTypes = require('../db/types/ResourceTypes');
+var BackendHandler = require('./BackendHandler');
 
 var logger = require('log4js').getLogger('widgets');
 
@@ -125,6 +126,7 @@ module.exports = (function() {
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then((tempPath) => _installFiles(widgetId, tempPath))
                     .then(() => _persistData(widgetId, username))
+                    .then(() => BackendHandler.importWidgetBackend(widgetId))
                     .then(() => {
                         var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
 
@@ -158,6 +160,8 @@ module.exports = (function() {
                     .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then(tempPath => _installFiles(widgetId, tempPath))
+                    .then(() => BackendHandler.removeWidgetBackend(widgetId))
+                    .then(() => BackendHandler.importWidgetBackend(widgetId))
                     .then(() => {
                         var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
 
@@ -196,7 +200,9 @@ module.exports = (function() {
                     resolve();
                 }
             })
-        }).then(() => db.Resources.destroy({ where: {resourceId: widgetId, type: ResourceTypes.WIDGET} }));
+        })
+        .then(() => BackendHandler.removeWidgetBackend(widgetId))
+        .then(() => db.Resources.destroy({ where: {resourceId: widgetId, type: ResourceTypes.WIDGET} }));
     }
 
     function isWidgetUsed(widgetId) {

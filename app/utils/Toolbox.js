@@ -13,6 +13,7 @@ import Context from './Context';
 import Manager from './Manager';
 import External from './External';
 import Internal from './Internal';
+import WidgetBackend from './WidgetBackend';
 
 class Toolbox {
     constructor (store) {
@@ -64,6 +65,11 @@ class Toolbox {
         return this._Internal;
     }
 
+    getWidgetBackend() {
+        var state = this.store.getState();
+        return new WidgetBackend(this.getWidgetDefinitionId(), state.manager || {});
+    }
+
     getExternal(basicAuth) {
         return new External(basicAuth);
     }
@@ -84,6 +90,8 @@ class Toolbox {
     refresh() {}
 
     loading(show) {}
+
+    getWidgetDefinitionId() {}
 }
 
 var toolbox = null;
@@ -92,13 +100,15 @@ let createToolbox = (store) =>{
     toolbox = new Toolbox(store);
 };
 
-let getToolbox  = (onRefresh, onLoading)=>{
+let getToolbox = (onRefresh, onLoading, widgetDefinitionId)=>{
     return new Proxy(toolbox,{
         get: (target, name)=> {
             if (name === 'refresh') {
                 return onRefresh;
             } else if (name === 'loading') {
                 return onLoading;
+            } else if (name === 'getWidgetDefinitionId') {
+                return () => widgetDefinitionId;
             } else {
                 return target[name];
             }

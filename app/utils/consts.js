@@ -23,5 +23,6 @@ export default {
     DEFAULT_ALL: '*',
     PAGE_MANAGEMENT_VIEW: 'view',
     PAGE_MANAGEMENT_EDIT: 'edit',
-    PRIVATE_RESOURCE: 'private'
+    PRIVATE_RESOURCE: 'private',
+    WIDGET_ID_HEADER: 'widget-id'
 };

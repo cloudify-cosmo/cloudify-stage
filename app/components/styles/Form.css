@@ -1,3 +1,8 @@
+/* FormGroup.js */
+.ui.form .inline.fields .field:last-child{
+    padding-right: 0;
+}
+/* InputDate.js */
 .input-time-filter {
     font-family: inherit;
     font-size: inherit;

@@ -17,12 +17,12 @@ import './styles/style.scss';
 import '../semantic/dist/semantic.min.css';
 import '../semantic/dist/semantic.min';
 
-// Import gridstack
-import '../node_modules/gridstack/dist/gridstack.css';
-import '../node_modules/gridstack/dist/gridstack.js';
+// Import react grid
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 // Import highlight
-import '../node_modules/highlight.js/styles/xcode.css';
+import 'highlight.js/styles/xcode.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -40,7 +40,6 @@ import createRoutes from './routes';
 
 import StatusPoller from './utils/StatusPoller';
 import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
-import SplashLoadingScreen from './utils/SplashLoadingScreen';
 import widgetDefinitionLoader from './utils/widgetDefinitionsLoader';
 import Interceptor from './utils/Interceptor';
 
