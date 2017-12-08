@@ -26,8 +26,4 @@ export default class {
     doSetGlobal(key) {
         return this.toolbox.getManager().doPatch(`/secrets/${key}/set-global`);
     }
-
-    doGetFileContent(file) {
-        return this.toolbox.getInternal().doUpload('/file/text', null, {file}, 'post', false);
-    }
 }
