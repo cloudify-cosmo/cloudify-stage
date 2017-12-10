@@ -11,7 +11,6 @@ Stage.defineWidget({
     initialWidth: 8,
     initialHeight: 24,
     color : "purple",
-    hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
     initialConfiguration:
