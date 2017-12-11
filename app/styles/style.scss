@@ -590,6 +590,10 @@ code.hljs {
     }
   }
 
+  .ui.header  a {
+    color: inherit;
+  }
+
   .row.bottomDivider {
 
     img {
@@ -605,10 +609,6 @@ code.hljs {
       vertical-align: middle !important;
       display: inline-block;
       max-width: calc(100% - 150px);
-
-      a {
-        color: inherit;
-      }
     }
   }
 }
