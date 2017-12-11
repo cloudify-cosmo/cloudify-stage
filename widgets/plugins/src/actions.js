@@ -34,7 +34,7 @@ export default class {
         return this.toolbox.getManager().doDownload(pluginDownloadUrl, pluginFileName);
     }
 
-    doSetGlobal(plugin) {
-        return this.toolbox.getManager().doPatch(`/plugins/${plugin.id}/set-global`);
+    doSetAvailability(pluginId, availability) {
+        return this.toolbox.getManager().doPatch(`/plugins/${pluginId}/set-availability`, null, {availability: availability});
     }
 }

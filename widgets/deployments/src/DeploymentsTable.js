@@ -16,7 +16,9 @@ export default class extends React.Component {
         onSelectDeployment: PropTypes.func,
         onCancelExecution: PropTypes.func,
         onMenuAction: PropTypes.func,
-        onError: PropTypes.func
+        onError: PropTypes.func,
+        onSetAvailability: PropTypes.func,
+        allowedSettingTo: PropTypes.array
     };
 
     static defaultProps = {
@@ -24,7 +26,9 @@ export default class extends React.Component {
         onSelectDeployment: ()=>{},
         onCancelExecution: ()=>{},
         onMenuAction: ()=>{},
-        onError: ()=>{}
+        onError: ()=>{},
+        onSetAvailability: ()=>{},
+        allowedSettingTo: ['tenant']
     };
 
     render() {
@@ -54,7 +58,7 @@ export default class extends React.Component {
 
                             <DataTable.Row id={`${tableName}_${item.id}`} key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
                                 <DataTable.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a>
-                                    <ResourceAvailability availability={item.resource_availability} className="rightFloated"/>
+                                    <ResourceAvailability availability={item.resource_availability} onSetAvailability={(availability) => this.props.onSetAvailability(item.id, availability)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>

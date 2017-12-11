@@ -66,6 +66,10 @@ class DeploymentActions {
         }
     }
 
+    doSetAvailability(deploymentId, availability){
+        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}/set-availability`, null, {availability: availability});
+    }
+
 }
 
 Stage.defineCommon({
