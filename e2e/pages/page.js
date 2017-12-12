@@ -83,8 +83,8 @@ module.exports = {
                 installWidgetBtn: '#installWidgetBtn',
                 testWidget: '.widgetsList .item[data-id="testWidget"]',
                 removeWidgetButton: '.widgetsList .item[data-id="testWidget"] .removeWidgetButton',
-                updateWidgetButton: '.widgetsList .item[data-id="testWidget"] .updateWidgetButton'
-
+                updateWidgetButton: '.widgetsList .item[data-id="testWidget"] .updateWidgetButton',
+                closeIcon: '.close.icon'
             },
             commands: [{
                 selectAndAddWidget: function(widgetId) {
@@ -96,8 +96,17 @@ module.exports = {
                         .waitForElementPresent('.widget.' + widgetId + 'Widget');
                 },
 
+                uninstallWidget: function(widgetId) {
+                    this.clickElement(`.widgetsList .item[data-id="${widgetId}"] .removeWidgetButton`);
+
+                    return this.parent.section.removeWidgetConfirm
+                        .waitForElementPresent('@okButton')
+                        .click('@okButton')
+                        .waitForElementNotPresent('@okButton');
+                },
+
                 isWidgetInstalled: function(widgetId, callback) {
-                    return this.isPresent('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .selectWidgetButton', callback);
+                    return this.isPresent('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .removeWidgetButton', callback);
                 }
             }]
         },
@@ -131,10 +140,10 @@ module.exports = {
             }
         },
         resetPagesConfirmModal: {
-            selector: '.confirmModal',
+            selector: '.resetPagesModal',
             elements: {
-                yesButton: '.ui.primary.button',
-                noButton: '.ui.button'
+                yesButton: '.ui.button.ok',
+                noButton: '.ui.button.cancel'
             }
         },
 

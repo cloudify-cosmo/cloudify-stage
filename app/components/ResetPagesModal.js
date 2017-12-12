@@ -37,7 +37,7 @@ export default class ResetPagesModal extends React.Component {
         return (
             this.props.tenants.items.length > 1
             ?
-                <Modal size="small" className="tiny" open={this.props.open} onClose={this.props.onHide}>
+                <Modal className="tiny resetPagesModal" open={this.props.open} onClose={this.props.onHide}>
                     <Modal.Header>
                         <Icon name="user"/> Reset pages for tenants
                     </Modal.Header>

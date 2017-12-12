@@ -700,6 +700,10 @@ code.hljs {
   margin-left: -222px !important;
 }
 
+.ui.tiny.modal > .header:not(.ui) {
+  font-size: 1.3em;
+}
+
 /* Center vertically */
 
 .rightFloated {
