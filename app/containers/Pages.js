@@ -33,17 +33,28 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+    return Object.assign({}, ownProps, dispatchProps, stateProps,
+        {
+            onPageRemoved: (page) => {dispatchProps.onPageRemoved(page, stateProps.pages)}
+    })
+}
+
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onPageSelected: (page) => {
             dispatch(selectPage(page.id,page.isDrillDown));
         },
-        onPageRemoved: (page) => {
+        onPageRemoved: (page, pages) => {
             dispatch(removePage(page.id));
 
             // If user removes current page, then navigate to home page
             if (ownProps.pageId === page.id) {
-                dispatch(selectPage(ownProps.homePageId,false));
+                if(ownProps.pageId === ownProps.homePageId){
+                    dispatch(selectPage(pages[1].id,false));
+                } else{
+                    dispatch(selectPage(ownProps.homePageId,false));
+                }
             }
         },
         onPageReorder: (pageIndex, newPageIndex) => {
@@ -57,7 +68,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const Pages = connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
+    mergeProps
 )(PagesList);
 
 
