@@ -44,8 +44,6 @@ var logger = log4js.getLogger('Server');
 
 ServerSettings.init();
 
-logger.info('Server started in mode '+ServerSettings.settings.mode);
-
 var contextPath = config.get().app.contextPath;
 
 var app = express();
@@ -106,6 +104,7 @@ AuthHandler.initAuthorization().then(function(){
 
     // Only after we have all the data in place start the server
     app.listen(8088, function () {
+        logger.info('Server started in mode '+ServerSettings.settings.mode);
         logger.info('Stage runs on port 8088!');
     });
 });
