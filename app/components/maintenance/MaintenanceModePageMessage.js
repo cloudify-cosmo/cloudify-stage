@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
 import Consts from '../../utils/consts';
 import StatusPoller from '../../utils/StatusPoller';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 
 export default class MaintenanceModePageMessage extends Component {
     constructor(props,context) {
@@ -37,6 +38,8 @@ export default class MaintenanceModePageMessage extends Component {
     }
 
     render () {
+        SplashLoadingScreen.turnOff();
+
         var {Label,Icon} = Stage.Basic;
         return (
             <div className='maintenancePage ui segment basic'>
