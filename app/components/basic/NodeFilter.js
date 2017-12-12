@@ -100,7 +100,7 @@ export default class NodeFilter extends React.Component {
                 let parsedData = _.chain(data.items || {})
                                   .map((item) => ({text: item.id, value: item.id, key: item.id}))
                                   .unshift({text: '', value: '', key: ''})
-                                  .uniq()
+                                  .uniqWith(_.isEqual)
                                   .value();
                 this.setState({[loading]: false, [optionsField]: parsedData});
             })

@@ -88,7 +88,7 @@ export default class MetricFilter extends React.Component {
                 let metrics = _.chain(data ||  {})
                                .map((item) => ({text: item, value: item, key: item}))
                                .unshift({text: '', value: '', key: ''})
-                               .uniq()
+                               .uniqWith(_.isEqual)
                                .value();
                 let newState = {loading: false, metrics};
                 if (_.findIndex(metrics, (metric) => metric.value === this.state.metricId) === -1) {
