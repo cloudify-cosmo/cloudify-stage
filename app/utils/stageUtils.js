@@ -56,7 +56,7 @@ export default class StageUtils {
 
             if (attributes.length > 0) {
                 if (attributes.length > 1) {
-                    sentence += " with";
+                    sentence += ' with';
                     _.each(attributes,(item, index)=> {
                         sentence += `  ${item.key}=${item.value} ${(index < attributes.length - 1) ? ' and' : ''}`;
                     })
