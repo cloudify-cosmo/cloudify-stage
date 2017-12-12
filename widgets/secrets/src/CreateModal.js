@@ -82,8 +82,8 @@ export default class CreateModal extends React.Component {
 
         this.setState({fileLoading: true});
 
-        let actions = new Actions(this.props.toolbox);
-        actions.doGetFileContent(file).then((fileContent)=>{
+        let actions = new Stage.Common.FileActions(this.props.toolbox);
+        actions.doGetTextFileContent(file).then((fileContent)=>{
             this.setState({secretValue: fileContent, errors: {}, fileLoading: false});
         }).catch((err)=>{
             this.setState({secretValue: '', errors: {error: err.message}, fileLoading: false});

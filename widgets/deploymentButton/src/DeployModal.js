@@ -23,6 +23,8 @@ export default class DeployModal extends React.Component {
         loading: false,
         blueprint: EMPTY_BLUEPRINT,
         deploymentName: '',
+        yamlFile: null,
+        fileLoading: false,
         deploymentInputs: [],
         privateResource: false,
         skipPluginsValidation: false
@@ -53,6 +55,15 @@ export default class DeployModal extends React.Component {
     onCancel () {
         this.props.onHide();
         return true;
+    }
+
+    _getDeploymentInputs(blueprintPlanInputs) {
+        let deploymentInputs = {};
+
+        _.forEach(blueprintPlanInputs,
+            (inputObj, inputName) => deploymentInputs[inputName] = '');
+
+        return deploymentInputs;
     }
 
     _selectBlueprint(proxy, data){
@@ -135,6 +146,42 @@ export default class DeployModal extends React.Component {
             });
     }
 
+    _handleYamlFileChange(file) {
+        let blueprintPlanInputs = this.state.blueprint.plan.inputs;
+
+        if (!file) {
+            let deploymentInputs = this._getDeploymentInputs(blueprintPlanInputs);
+            this.setState({errors: {}, deploymentInputs});
+            return;
+        }
+
+        this.setState({fileLoading: true});
+        let actions = new Stage.Common.FileActions(this.props.toolbox);
+        actions.doGetYamlFileContent(file).then((inputs) => {
+            let notFoundInputs = [];
+            let deploymentInputs = {};
+
+            _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
+                let inputValue = inputs[inputName];
+                if (_.isEmpty(inputValue)) {
+                    if (_.isNil(inputObj.default)) {
+                        notFoundInputs.push(inputName);
+                    }
+                } else {
+                    deploymentInputs[inputName] = inputValue;
+                }
+            });
+
+            if (_.isEmpty(notFoundInputs)) {
+                this.setState({errors: {}, deploymentInputs, fileLoading: false});
+            } else {
+                this.setState({errors: {yamlFile: `Mandatory input(s) (${notFoundInputs}) not provided in YAML file.`}, fileLoading: false});
+            }
+        }).catch((err)=>{
+            this.setState({errors: {yamlFile: err.message}, fileLoading: false});
+        });
+    }
+
     render() {
         var {Modal, Icon, Form, Message, Popup, ApproveButton, CancelButton, PrivateField, Header} = Stage.Basic;
 
@@ -143,6 +190,12 @@ export default class DeployModal extends React.Component {
 
         let deploymentInputs = _.sortBy(_.map(this.state.blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
                                         [(input => !_.isNil(input.default)), 'name']);
+        let yamlFileField = () =>
+            <Form.Field error={this.state.errors.yamlFile}>
+                <Form.File name="yamlFile" placeholder="YAML file" ref="yamlFile"
+                           onChange={this._handleYamlFileChange.bind(this)} loading={this.state.fileLoading}
+                           disabled={this.state.fileLoading} />
+            </Form.Field>;
 
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
@@ -180,9 +233,18 @@ export default class DeployModal extends React.Component {
                         }
 
                         {
-                            this.state.blueprint.id && _.isEmpty(this.state.blueprint.plan.inputs)
-                            &&
-                            <Message content="No inputs available for the selected blueprint"/>
+                            this.state.blueprint.id &&
+                            (
+                                _.isEmpty(this.state.blueprint.plan.inputs)
+                                ?
+                                    <Message content="No inputs available for the selected blueprint"/>
+                                :
+                                    <Popup trigger={yamlFileField()} position='top right' wide >
+                                        <Popup.Content>
+                                            <Icon name="info circle"/>Provide YAML file with all deployments inputs to automatically fill in the form.
+                                        </Popup.Content>
+                                    </Popup>
+                            )
                         }
 
                         {
