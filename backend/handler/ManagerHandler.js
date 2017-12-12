@@ -34,7 +34,7 @@ module.exports = (function() {
         options.timeout = timeout || config.app.proxy.timeouts[method.toLowerCase()];
 
         if (headers) {
-            options.headers = headers;
+            options.headers = _.omit(headers, 'host');
         }
 
         if (data) {
