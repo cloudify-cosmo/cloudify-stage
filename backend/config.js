@@ -47,7 +47,7 @@ module.exports = {
         var clientConfig = {
             app: {
                 initialTemplate: config.app.initialTemplate,
-                pollingInterval: config.app.pollingInterval,
+                maintenancePollingInterval: config.app.maintenancePollingInterval,
                 singleManager: config.app.singleManager,
                 whiteLabel : config.app.whiteLabel,
                 saml: {
