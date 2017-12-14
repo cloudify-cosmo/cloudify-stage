@@ -91,7 +91,7 @@ export default class UploadModal extends React.Component {
                                                 value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
                                 </Form.Field>
                                 <Form.Field width="1">
-                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
                                            content='The package will be uploaded to the Manager as a Blueprint resource, under the name you specify here.'/>
                                 </Form.Field>
                             </Form.Group>
@@ -102,7 +102,7 @@ export default class UploadModal extends React.Component {
                                                    value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
                                 </Form.Field>
                                 <Form.Field width="1">
-                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
                                            content='As you can have more than one yaml file in the archive, you need to specify which is the main one for your application.'/>
                                 </Form.Field>
                             </Form.Group>

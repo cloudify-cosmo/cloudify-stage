@@ -151,7 +151,7 @@ export default class UploadModal extends React.Component {
                                                disabled={this.state.fileLoading}/>
                                 </Form.Field>
                                 <Form.Field width="1">
-                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
                                            content='To upload a blueprint to the manager you need to select the archive package containing exactly 1 directory, in which there should be a yaml file describing the main blueprint.'/>
                                 </Form.Field>
                             </Form.Group>
@@ -162,7 +162,7 @@ export default class UploadModal extends React.Component {
                                                 value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
                                 </Form.Field>
                                 <Form.Field width="1">
-                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
                                            content='The package will be uploaded to the Manager as a Blueprint resource, under the name you specify here.'/>
                                 </Form.Field>
                             </Form.Group>
@@ -172,14 +172,14 @@ export default class UploadModal extends React.Component {
                                                    value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
                                 </Form.Field>
                                 <Form.Field width="1">
-                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
                                            content='As you can have more than one yaml file in the archive, you need to specify which is the main one for your application.'/>
                                 </Form.Field>
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Field width="8" error={this.state.errors.imageUrl}>
-                                    <Form.Input label="URL" placeholder="Enter blueprint icon image file (.png)" name="imageUrl"
+                                    <Form.Input label="URL" placeholder="Enter blueprint icon image file (.png) URL location" name="imageUrl"
                                                 value={this.state.imageUrl} onChange={this._handleInputChange.bind(this)}
                                                 onBlur={()=>this.state.imageUrl ? this.refs.imageFile.reset() : ''}/>
                                 </Form.Field>
@@ -193,7 +193,7 @@ export default class UploadModal extends React.Component {
                                                onChange={(file)=>file ? this.setState({imageUrl: ''}) : ''}/>
                                 </Form.Field>
                                 <Form.Field width="1">
-                                    <Popup trigger={<Icon name="info circle"/>} position='top left' wide
+                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
                                            content='The blueprint Icon file is an optional field in which you can choose the icon image that will represent the blueprint in the local blueprint widget.'/>
                                 </Form.Field>
                             </Form.Group>
