@@ -37,6 +37,7 @@ module.exports = {
                 userName: 'span:first-child',
                 userDropdownMenu : '.menu',
                 editModeMenuItem : '#editModeMenuItem',
+                resetMenuItem : '#resetMenuItem',
                 logoutMenuItem: '#logoutMenuItem'
             },
             props: {
@@ -80,6 +81,7 @@ module.exports = {
             elements: {
                 searchInput : 'input',
                 installWidgetBtn: '#installWidgetBtn',
+                testWidget: '.widgetsList .item[data-id="testWidget"]',
                 removeWidgetButton: '.widgetsList .item[data-id="testWidget"] .removeWidgetButton',
                 updateWidgetButton: '.widgetsList .item[data-id="testWidget"] .updateWidgetButton'
 
@@ -127,7 +129,15 @@ module.exports = {
             props: {
                 widgetIsUsed: 'Widget is currently used by:'
             }
-        }
+        },
+        resetPagesConfirmModal: {
+            selector: '.confirmModal',
+            elements: {
+                yesButton: '.ui.primary.button',
+                noButton: '.ui.button'
+            }
+        },
+
     },
 
     commands: [{

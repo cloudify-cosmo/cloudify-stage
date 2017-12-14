@@ -15,19 +15,20 @@ export default class BlueprintsCatalog extends React.Component{
         fetchData: PropTypes.func,
         onSelectBlueprint: PropTypes.func,
         onDeleteBlueprint: PropTypes.func,
-        onCreateDeployment: PropTypes.func
-
+        onCreateDeployment: PropTypes.func,
+        onSetGlobal: PropTypes.func
     };
 
     static defaultProps = {
         fetchData: ()=>{},
         onSelectBlueprint: ()=>{},
         onDeleteBlueprint: ()=>{},
-        onCreateDeployment: ()=>{}
+        onCreateDeployment: ()=>{},
+        onSetGlobal: ()=>{}
     };
 
     render(){
-        var {DataSegment, Grid, Image, Button, Label, PrivateMarker, Header} = Stage.Basic;
+        var {DataSegment, Grid, Image, Button, Label, ResourceAvailability, Header} = Stage.Basic;
 
         var index=0;
         var blueprintsItems =
@@ -42,7 +43,7 @@ export default class BlueprintsCatalog extends React.Component{
                                     <Grid.Column width="16">
                                         <Image src={Stage.Utils.url(`/ba/image/${item.id}`)}/>
                                         <Header><a href="javascript:void(0)" className="breakWord">{item.id}</a></Header>
-                                        <PrivateMarker show={item.private_resource} title="Private resource" className="rightFloated"/>
+                                        <ResourceAvailability availability={item.resource_availability} onSetGlobal={()=>this.props.onSetGlobal(item)} className="rightFloated"/>
                                     </Grid.Column>
                                 </Grid.Row>
 

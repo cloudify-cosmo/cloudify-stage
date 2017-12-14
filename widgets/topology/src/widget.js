@@ -5,11 +5,6 @@
 import Topology from './Topology';
 import DataFetcher from './DataFetcher';
 
-let getConfig = (widgetConfig,id) =>{
-    var conf = widgetConfig ? _.find(widgetConfig,{id:id}) : {};
-    return (conf && conf.value === 'true');
-};
-
 Stage.defineWidget({
     id: 'topology',
     name: "Topology",
@@ -18,7 +13,7 @@ Stage.defineWidget({
     initialHeight: 16,
     color: "yellow",
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('topology'),
     hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
     

@@ -3,7 +3,6 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import Consts from '../utils/consts';
 import EventBus from '../utils/EventBus';
 
 export default class Users extends Component {
@@ -44,7 +43,7 @@ export default class Users extends Component {
 
         var commonElements = [];
         commonElements.push(<Dropdown.Item key='reset'id='resetMenuItem'
-                                           icon='undo' text='Reset' value='reset'
+                                           icon='undo' text='Reset Templates' value='reset'
                                            title='Reset application screens'
                                            onClick={this.props.onReset} />);
         commonElements.push(<Dropdown.Divider key='log-out-divider'/>);

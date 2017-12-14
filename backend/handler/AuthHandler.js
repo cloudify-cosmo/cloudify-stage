@@ -7,6 +7,8 @@ var ManagerHandler = require('./ManagerHandler');
 var logger = require('log4js').getLogger('AuthHandler');
 var fs = require('fs');
 var _ = require('lodash');
+var path = require('path');
+
 
 var authorizationCache = {};
 
@@ -26,7 +28,7 @@ class AuthHandler {
     }
 
     static getUser(token){
-        return ManagerHandler.jsonRequest('GET', '/user', {
+        return ManagerHandler.jsonRequest('GET', '/user?_get_data=true', {
                 'authentication-token': token
             }
         );
@@ -41,19 +43,18 @@ class AuthHandler {
     static initAuthorization() {
         return new Promise(function(resolve,reject){
             // Read rest-security file to get system-admin user and pass
-            var restSecurity = {};
+            var token = '';
+            var tokenPath = path.resolve(__dirname, '../../resources/admin_token');
             try {
-                var restSecurityFile = fs.readFileSync(config.manager.restSecurityFile);
-                restSecurity = JSON.parse(restSecurityFile);
+                token = fs.readFileSync(tokenPath, 'utf8');
             } catch (e) {
-                logger.error('Could not setup authorization, error loading rest-security file. Please check your manager.json configuration, make sure "restSecurityFile" is set properly', e);
+                logger.error(`Could not setup authorization, error loading admin_token file at ${tokenPath}`, e);
                 process.exit(1);
             }
 
             // Read the authorization info
-            var authorization = 'Basic ' + new Buffer(`${restSecurity.admin_username}:${restSecurity.admin_password}`).toString('base64');
             ManagerHandler.jsonRequest('GET', '/config', {
-                'Authorization': authorization
+                'API-Authentication-Token': token
             }).then(authConfig => {
                 authorizationCache = authConfig.authorization;
                 logger.debug('Authorization config loaded successfully: ',authorizationCache);

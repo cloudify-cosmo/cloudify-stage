@@ -79,8 +79,10 @@ export default class EdiTable extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value)) {
-            EdiTable.initialState(nextProps);
+        if (JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value) ||
+            this.props.rows !== nextProps.rows)
+        {
+            this.setState(EdiTable.initialState(nextProps));
         }
     }
 

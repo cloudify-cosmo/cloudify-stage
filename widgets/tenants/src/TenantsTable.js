@@ -114,7 +114,7 @@ export default class TenantsTable extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
                            totalSize={data.total}
@@ -134,8 +134,8 @@ export default class TenantsTable extends React.Component {
                                 <DataTable.RowExpandable key={tenant.name} expanded={tenant.isSelected}>
                                     <DataTable.Row key={tenant.name} selected={tenant.isSelected} onClick={this._selectTenant.bind(this, tenant.name)}>
                                         <DataTable.Data>{tenant.name}</DataTable.Data>
-                                        <DataTable.Data><Label className="green" horizontal>{tenant.groups.length}</Label></DataTable.Data>
-                                        <DataTable.Data><Label className="blue" horizontal>{tenant.users.length}</Label></DataTable.Data>
+                                        <DataTable.Data><Label className="green" horizontal>{Object.keys(tenant.groups).length}</Label></DataTable.Data>
+                                        <DataTable.Data><Label className="blue" horizontal>{Object.keys(tenant.users).length}</Label></DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
                                             <MenuAction tenant={tenant} onSelectAction={this._selectAction.bind(this)} />
                                         </DataTable.Data>

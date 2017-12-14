@@ -5,6 +5,8 @@
 import 'isomorphic-fetch';
 import {saveAs} from 'file-saver';
 import StageUtils from './stageUtils';
+import Interceptor from './Interceptor';
+import {UNAUTHORIZED_ERR} from '../utils/ErrorCodes';
 
 import log from 'loglevel';
 let logger = log.getLogger('External');
@@ -31,15 +33,15 @@ export default class External {
         return this._ajaxCall(url,'put',params,data,parseResponse,headers) ;
     }
 
-    doPatch(url,params,data,parseResponse) {
-        return this._ajaxCall(url,'PATCH',params,data,parseResponse) ;
+    doPatch(url,params,data,parseResponse,headers) {
+        return this._ajaxCall(url,'PATCH',params,data,parseResponse,headers);
     }
 
     doDownload(url,fileName) {
         return this._ajaxCall(url,'get',null,null,null,null,fileName);
     }
 
-    doUpload(url,params,files,method) {
+    doUpload(url,params,files,method,parseResponse=true) {
         var actualUrl = this._buildActualUrl(url,params);
 
         logger.debug('Uploading file for url: '+url);
@@ -70,8 +72,9 @@ export default class External {
             xhr.addEventListener('load', function(e) {
                 logger.debug('xhr upload complete', e, xhr.responseText);
 
+                var isSuccess = xhr.status >= 200 && xhr.status < 300;
                 try {
-                    var response = JSON.parse(xhr.responseText);
+                    var response = parseResponse || !isSuccess ? JSON.parse(xhr.responseText) : xhr.responseText;
                     if (response.message) {
                         logger.error('xhr upload error', e, xhr.responseText);
 
@@ -82,6 +85,7 @@ export default class External {
                     logger.error('Cannot parse upload response', err, xhr.responseText);
                     reject({message: xhr.responseText || err.message});
                 }
+
                 resolve(response);
             });
 
@@ -134,12 +138,12 @@ export default class External {
 
         if (fileName) {
             return fetch(actualUrl, options)
-                .then(this._checkStatus)
+                .then(this._checkStatus.bind(this))
                 .then(response => response.blob())
                 .then(blob => saveAs(blob, fileName));
         } else {
             return fetch(actualUrl, options)
-                .then(this._checkStatus)
+                .then(this._checkStatus.bind(this))
                 .then(response => {
                     if (parseResponse) {              
                       var contentType = _.toLower(response.headers.get('content-type'));
@@ -151,9 +155,19 @@ export default class External {
         }
     }
 
+    _isUnauthorized(response){
+        return false;
+    }
+
     _checkStatus(response) {
         if (response.ok) {
             return response;
+        }
+
+        if(this._isUnauthorized(response)){
+            let interceptor = Interceptor.getInterceptor();
+            interceptor.handle401();
+            return Promise.reject(UNAUTHORIZED_ERR);
         }
 
         // Ignoring content type and trying to parse the json response.

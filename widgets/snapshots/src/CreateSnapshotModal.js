@@ -81,8 +81,8 @@ export default class CreateModal extends React.Component {
             <Modal trigger={createButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
                 <Modal.Header>
                     <Icon name="add"/> Create snapshot
-                    <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"
-                             onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
+                    <PrivateField lock={this.state.privateResource} className="rightFloated"
+                                  onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
                 </Modal.Header>
 
                 <Modal.Content>

@@ -34,7 +34,7 @@ router.post('/login', (req, res) => {
     })
     .catch((err) => {
         logger.error(err);
-        if(err === 'UNAUTHORIZED'){
+        if(err.error_code === 'unauthorized_error'){
             res.status(401).send({message: 'Invalid credentials', error: err});
         }
         res.status(500).send({message: 'Failed to authenticate with manager', error: err});
@@ -61,6 +61,7 @@ router.get('/user', passport.authenticate('token', {session: false}), (req, res)
     res.send({
         username: req.user.username,
         role: req.user.role,
+        tenantsRoles: req.user.tenants,
         serverVersion: config.manager.serverVersion
     })
 });

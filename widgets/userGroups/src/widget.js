@@ -13,7 +13,7 @@ Stage.defineWidget({
     color: 'violet',
     fetchUrl: '[manager]/user-groups?_get_data=true[params]',
     isReact: true,
-    permission: 'widget-admin',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('userGroups'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
     initialConfiguration: [
@@ -35,7 +35,7 @@ Stage.defineWidget({
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
                     userCount: item.users.length,
-                    tenantCount: item.tenants.length,
+                    tenantCount: _.size(item.tenants),
                     isSelected: item.name === selectedUserGroup
                 })
             }),

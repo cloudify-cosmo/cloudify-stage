@@ -49,9 +49,10 @@ export default class Templates extends Component {
 
                     {
                         this.props.templates.map((item)=>{
-                            var roles = (item.data || {}).roles;
-                            var tenants = (item.data || {}).tenants;
-                            var filteredTenants = _.filter(tenants, t => t !== Const.DEFAULT_ALL) ;
+                            var data = item.data || {roles: [], tenants: []};
+                            var roles = data.roles;
+                            var tenants = data.tenants;
+                            var tenantsCount = _.indexOf(tenants, Const.DEFAULT_ALL) >= 0 ? _.size(this.props.tenants.items) : _.size(tenants);
 
                             return (
                                 <DataTable.RowExpandable key={item.id} expanded={item.selected}>
@@ -63,7 +64,7 @@ export default class Templates extends Component {
                                                     <span key={role}>{role === Const.DEFAULT_ALL ? 'all' : role}{index < roles.length - 1 && <span>, </span>}</span>)
                                             }
                                         </DataTable.Data>
-                                        <DataTable.Data><Label color="green" horizontal>{_.size(filteredTenants)}</Label></DataTable.Data>
+                                        <DataTable.Data><Label color="green" horizontal>{tenantsCount}</Label></DataTable.Data>
                                         <DataTable.Data>{item.createdAt && Stage.Utils.formatTimestamp(item.createdAt)}</DataTable.Data>
                                         <DataTable.Data>{item.creator}</DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
@@ -74,7 +75,7 @@ export default class Templates extends Component {
                                                               onConfirm={() => this.props.onDeleteTemplate(item)}/>
                                                 <CreateTemplateModal availableTenants={this.props.tenants} availablePages={this.props.pages}
                                                                      availableRoles={this.props.roles} templateName={item.id}
-                                                                     pages={item.pages} roles={roles} tenants={filteredTenants}
+                                                                     pages={item.pages} roles={roles} tenants={tenants}
                                                                      onCreateTemplate={(...args) => this.props.onModifyTemplate(item, ...args)}/>
                                             </div>
                                             }

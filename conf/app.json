@@ -2,7 +2,7 @@
   "contextPath": "/stage",
   "initialTemplate": {
     "*": "initial-template",
-    "admin": {
+    "sys_admin": {
       "*": "initial-template-admin"
     },
     "user": {
@@ -19,9 +19,12 @@
     "pagesLocation": "",
     "headerTextColor": "white",
     "loginPageHeader": "",
+    "loginPageHeaderColor": "white",
     "loginPageText": "",
+    "loginPageTextColor": "white",
     "sidebarColor": "#ffffff",
-    "sidebarTextColor" : "#000000"
+    "sidebarTextColor" : "#000000",
+    "pageTitle": "Cloudify"
   },
   "db": {
     "url": "postgres://cloudify:cloudify@localhost:5432/stage",
@@ -60,7 +63,9 @@
   "widgets": {
     "ignoreFolders": ["common"],
     "tempDir": "cloudifyWidgets",
-    "requiredFiles" : ["widget.js", "widget.png"]
+    "requiredFiles": ["widget.js", "widget.png"],
+    "backendFilename": "backend.js",
+    "allowedModules": ["lodash", "body/json"]
   },
   "ssl": {
     "ca": "/etc/cloudify/ssl/cloudify_internal_ca_cert.pem"

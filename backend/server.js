@@ -36,6 +36,9 @@ var GitHub = require('./routes/GitHub');
 var Style = require('./routes/Style');
 var Widgets = require('./routes/Widgets');
 var Templates = require('./routes/Templates');
+var BackendHandler = require('./handler/BackendHandler');
+var WidgetBackend = require('./routes/WidgetBackend');
+var File = require('./routes/File');
 
 var logger = log4js.getLogger('Server');
 
@@ -87,9 +90,11 @@ app.use(contextPath + '/widgets',Widgets);
 app.use(contextPath + '/templates',Templates);
 app.use(contextPath + '/clientConfig',clientConfig);
 app.use(contextPath + '/github',GitHub);
+app.use(contextPath + '/file',File);
 app.use(contextPath + '/config',function(req,res){
     res.send(config.getForClient(ServerSettings.settings.mode));
 });
+app.use(contextPath +'/wb',WidgetBackend);
 
 // BrowserHistory code
 app.get('*',function (request, response){
@@ -108,5 +113,13 @@ AuthHandler.initAuthorization().then(function(){
 //Error handling
 app.use(function(err, req, res, next) {
     logger.error('Error has occured ', err);
-    res.status(err.status || 404).send({message: err.message || err});
+
+    var message = err.message;
+    if (err.status === 500) {
+        message = 'The server is temporarily unavailable';
+    }
+
+    res.status(err.status || 404).send({message: message || err});
 });
+
+BackendHandler.initWidgetBackends();

@@ -55,11 +55,12 @@ export function login (username, password, redirect) {
 }
 
 
-function responseUserData(username, role, serverVersion){
+function responseUserData(username, systemRole, tenantsRoles, serverVersion){
     return {
         type: types.SET_USER_DATA,
         username,
-        role,
+        role: systemRole,
+        tenantsRoles,
         serverVersion
     }
 }
@@ -68,7 +69,7 @@ export function getUserData() {
     return function (dispatch, getState) {
         return Auth.getUserData(getState().manager)
             .then(data => {
-                dispatch(responseUserData(data.username, data.role, data.serverVersion));
+                dispatch(responseUserData(data.username, data.role, data.tenantsRoles, data.serverVersion));
             });
     }
 }
@@ -83,7 +84,7 @@ function doLogout(err) {
 export function logout(err, path) {
     return function (dispatch, getState) {
         var localLogout = () => {
-            dispatch(push(path || 'logout'));
+            dispatch(push(path || (err ? 'error' : 'logout')));
             dispatch(clearContext());
             dispatch(doLogout(err));
         };

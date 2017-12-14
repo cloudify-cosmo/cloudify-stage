@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 2017-08-02.
  */
 
-exports.command = function(userName, password, role = 'user - Regular user', tenant = 'default_tenant') {
+exports.command = function(userName, password, role = 'default - User exists, but have no permissions', tenant = 'default_tenant') {
     var users = this.page.userManagement();
 
     this.log('adding', userName, 'user')
@@ -13,7 +13,6 @@ exports.command = function(userName, password, role = 'user - Regular user', ten
         if (!result.value) {
             this.addWidget(users.props.widgetId)
         }
-
         users.add(userName, password, role, tenant)
              .moveOutOfEditMode();
     });

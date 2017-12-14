@@ -16,7 +16,7 @@ export default class WidgetsList extends Component {
         widgets: PropTypes.array.isRequired,
         onWidgetsGridDataChange: PropTypes.func.isRequired,
         isEditMode: PropTypes.bool.isRequired,
-        isPageManagement: PropTypes.bool
+        pageManagementMode: PropTypes.string
     };
 
     _updateWidget (widgetId,data) {
@@ -43,26 +43,29 @@ export default class WidgetsList extends Component {
                     }
                 </Container>
             :
-                <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
-                    {
-                        this.props.widgets.map(function(widget){
-                            var widgetDefId = (widget.definition || {}).id;
-                            return (
-                                <GridItem
-                                    key={widget.id}
-                                    id={widget.id}
-                                    x={widget.x} y={widget.y}
-                                    height={widget.height}
-                                    width={widget.width}
-                                    className={`widget ${widgetDefId}Widget`}
-                                    maximized={widget.maximized}>
-                                    <Widget widget={widget} pageId={this.props.pageId} isEditMode={this.props.isEditMode}
-                                            isPageManagement={this.props.isPageManagement}/>
-                                </GridItem>
-                                )
-                        },this)
-                    }
-                </Grid>
+                <div>
+                    <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
+                        {
+                            this.props.widgets.map(function(widget){
+                                var widgetDefId = (widget.definition || {}).id;
+                                return (
+                                    <GridItem
+                                        key={widget.id}
+                                        id={widget.id}
+                                        x={widget.x} y={widget.y}
+                                        height={widget.height}
+                                        width={widget.width}
+                                        className={`widget ${widgetDefId}Widget`}
+                                        maximized={widget.maximized}>
+                                        <Widget widget={widget} pageId={this.props.pageId} isEditMode={this.props.isEditMode}
+                                                pageManagementMode={this.props.pageManagementMode}/>
+                                    </GridItem>
+                                    )
+                            },this)
+                        }
+                    </Grid>
+                    {(this.props.isEditMode || this.props.pageManagementMode) && <div className="gridStackBottomSpace"></div>}
+                </div>
         );
     }
 }

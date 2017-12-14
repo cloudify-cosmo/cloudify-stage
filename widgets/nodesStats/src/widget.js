@@ -10,7 +10,7 @@ Stage.defineWidget({
     initialHeight: 22,
     color : 'green',
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('nodesStats'),
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
 
     initialConfiguration: [

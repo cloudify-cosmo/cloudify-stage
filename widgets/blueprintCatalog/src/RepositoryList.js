@@ -16,6 +16,7 @@ export default class extends React.Component {
             showModal: false,
             showReadmeModal: false,
             readmeContent: null,
+            readmeLoading: null,
             files: [],
             error: null
         }
@@ -65,10 +66,9 @@ export default class extends React.Component {
     }
 
     _showReadmeModal(repo) {
-        this.props.toolbox.loading(true);
+        this.setState({readmeLoading: repo});
         this.props.actions.doGetReadme(repo).then(content => {
-            this.setState({readmeContent: markdown.parse(content), showReadmeModal: true});
-            this.props.toolbox.loading(false);
+            this.setState({readmeContent: markdown.parse(content), showReadmeModal: true, readmeLoading: null});
         });
     }
 
@@ -95,7 +95,7 @@ export default class extends React.Component {
         return (
             <div>
                 {this.props.data.isAuthenticated ? '' :notAuthenticatedWarning}
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 {
                     this.props.widget.configuration.displayStyle === 'table' ?
@@ -105,6 +105,7 @@ export default class extends React.Component {
                             onSelect={this._selectItem.bind(this)}
                             onUpload={this._showModal.bind(this)}
                             onReadme={this._showReadmeModal.bind(this)}
+                            readmeLoading={this.state.readmeLoading}
                             />
                         :
                         <RepositoryCatalog
@@ -113,6 +114,7 @@ export default class extends React.Component {
                             onSelect={this._selectItem.bind(this)}
                             onUpload={this._showModal.bind(this)}
                             onReadme={this._showReadmeModal.bind(this)}
+                            readmeLoading={this.state.readmeLoading}
                             />
 
                 }

@@ -104,7 +104,6 @@ export default class PluginsCatalogModal extends React.Component {
             <Icon name="upload" /> Upload Plugin
             <PrivateField
               lock={this.state.privateResource}
-              title="Private resource"
               className="rightFloated"
               onClick={() =>
                 this.setState ({privateResource: !this.state.privateResource})}

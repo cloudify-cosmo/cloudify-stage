@@ -3,7 +3,7 @@
  */
 
 exports.command = function() {
-    return this.isPresent('.sidebarContainer div.sidebar.menu', result => {
+    return this.isVisible('.sidebarContainer div.sidebar.menu', result => {
         if (!result.value) {
             return this.log('Opening sidebar menu.')
                 .clickElement('i.sidebar-button')

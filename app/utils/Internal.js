@@ -5,7 +5,7 @@
 import External from './External';
 import Consts from './consts';
 import StageUtils from './stageUtils';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
 export default class Internal extends External {
 
@@ -31,5 +31,9 @@ export default class Internal extends External {
 
     _buildActualUrl(path,data) {
         return super._buildActualUrl(StageUtils.url(path), data);
+    }
+
+    _isUnauthorized(response){
+        return response.status === 401;
     }
 }

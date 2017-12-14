@@ -4,3 +4,4 @@
 'use strict';
 
 export const NO_TENANTS_ERR = 'NO_TENANTS_ERR';
+export const UNAUTHORIZED_ERR = 'UNAUTHORIZED_ERR';

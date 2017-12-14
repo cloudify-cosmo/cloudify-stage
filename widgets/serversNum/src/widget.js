@@ -11,7 +11,7 @@ Stage.defineWidget({
     color : "red",
     showHeader: false,
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('serversNum'),
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     
     initialConfiguration: [

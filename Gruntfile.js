@@ -9,6 +9,7 @@ module.exports = function(grunt) {
 
         // get the current concat object from initConfig
         var browserify = grunt.config.get('browserify') || {};
+        var babel = grunt.config.get('babel') || {};
         var uglify = grunt.config.get('uglify') || {};
 
         // get all module directories
@@ -26,26 +27,39 @@ module.exports = function(grunt) {
                 browserify.dist.files[destDir+'/common.js'] = [dir + '/**/*.js'];
                 uglify.dist.files[destDir+'/common.js'] = [destDir + '/common.js'];
             } else {
-                browserify.widgets.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
-                browserify.dist.files[destDir+'/widget.js'] = [dir + '/**/*.js'];
+                browserify.widgets.files[destDir+'/widget.js'] = [dir + '/**/*.js', '!' + dir + '/**/backend.js'];
+                browserify.dist.files[destDir+'/widget.js'] = [dir + '/**/*.js', '!' + dir + '/**/backend.js'];
                 uglify.dist.files[destDir+'/widget.js'] = [destDir + '/widget.js'];
+                if (grunt.file.exists(dir, 'backend.js')) {
+                    babel.dist.files[destDir+'/backend.js'] = [dir + '/**/backend.js'];
+                }
             }
         });
 
         // add module subtasks to the concat task in initConfig
         grunt.config.set('browserify', browserify);
+        grunt.config.set('babel', babel);
         grunt.config.set('uglify', uglify);
-        console.log('browserify files:' ,browserify.widgets.files);
+        console.log('Widget files:', browserify.widgets.files);
+        console.log('Backend files:', babel.dist.files);
 
     });
 
     grunt.initConfig({
-        //clean: ['.tmp'],
+        babel: {
+            options: {
+                sourceMap: false
+            },
+            dist: {
+                files: {
+                }
+            }
+        },
         browserify: {
             options: {
                 transform: [[require('babelify')]],
                 browserifyOptions: {
-                    debug: true
+                    debug: true,
                 }
             },
             widgets: {
@@ -77,11 +91,18 @@ module.exports = function(grunt) {
     grunt.registerTask('widgets',
         [
             'prepareModules',
+            'babel:dist',
             'browserify:widgets'
+        ]);
+    grunt.registerTask('backend',
+        [
+            'prepareModules',
+            'babel:dist'
         ]);
     grunt.registerTask('build',
         [
             'prepareModules',
+            'babel:dist',
             'browserify:dist',
             'uglify:dist'
         ]);

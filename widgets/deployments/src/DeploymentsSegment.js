@@ -28,7 +28,7 @@ export default class extends React.Component {
     };
 
     render() {
-        let {DataSegment, PrivateMarker} = Stage.Basic;
+        let {DataSegment, ResourceAvailability} = Stage.Basic;
 
         return (
             <DataSegment totalSize={this.props.data.total}
@@ -41,8 +41,8 @@ export default class extends React.Component {
                                           onClick={()=>this.props.onSelectDeployment(item)}>
                                 <div className="ui grid">
                                     <div className="three wide center aligned column rightDivider">
-                                        <h3 className="ui icon header verticalCenter breakWord">{item.id}</h3>
-                                        <PrivateMarker show={item.private_resource} title="Private resource" className="rightFloated"/>
+                                        <h3 className="ui icon header verticalCenter breakWord"><a href="javascript:void(0)" className="breakWord">{item.id}</a></h3>
+                                        <ResourceAvailability availability={item.resource_availability} className="topRightCorner"/>
                                     </div>
                                     <div className="two wide column">
                                         <h5 className="ui icon header">Blueprint</h5>

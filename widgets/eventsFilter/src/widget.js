@@ -29,7 +29,7 @@ Stage.defineWidget({
         });
     },
     isReact: true,
-    permission: 'widget-user',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('eventsFilter'),
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5)
     ],

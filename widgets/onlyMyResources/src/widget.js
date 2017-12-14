@@ -14,7 +14,7 @@ Stage.defineWidget ({
   showHeader: false,
   showBorder: false,
   isReact: true,
-  permission: 'widget-user',
+  permission: Stage.GenericConfig.WIDGET_PERMISSION('onlyMyResources'),
 
   render: function (widget, data, error, toolbox) {
     return <MyResourcesCheckbox widget={widget} toolbox={toolbox} />;

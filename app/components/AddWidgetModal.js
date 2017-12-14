@@ -120,7 +120,7 @@ export default class AddWidgetModal extends Component {
 
     getWidgetsBySearch(widgets, search){
         let filtered = widgets.filter(
-            el=>el.name.toLowerCase().includes(search.toLowerCase() || '')
+            el => el.name.toLowerCase().includes(search.toLowerCase() || '')
         );
         this.updateCategoriesCounter(filtered)
         return filtered;

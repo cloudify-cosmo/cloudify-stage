@@ -6,6 +6,15 @@ import {v4} from 'node-uuid';
 import * as types from '../actions/types';
 import StageUtils from '../utils/stageUtils';
 
+function updateWidget(widgets, widgetId, params) {
+    return widgets.map( (w) => {
+        if (w.id === widgetId) {
+            return {...w, ...params};
+        }
+        return w
+    });
+}
+
 const templates = (state = {}, action) => {
     switch (action.type) {
         case types.TEMPLATE_MANAGEMENT_LOADING:
@@ -23,7 +32,7 @@ const templates = (state = {}, action) => {
                 return {...item, selected: !item.selected && item.id === action.pageId}
             })};
         case types.PAGE_MANAGEMENT_SHOW:
-            return {...state, isEditMode: action.isEditMode, page: {id: action.pageId, name: action.pageName, widgets: []}};
+            return {...state, isPageEditMode: action.isPageEditMode, page: {id: action.pageId, name: action.pageName, widgets: []}};
         case types.PAGE_MANAGEMENT_CHANGE_NAME:
             return {...state, page: {...state.page, oldId: state.page.id, id: action.pageId, name: action.pageName}};
         case types.PAGE_MANAGEMENT_ADD_WIDGET:
@@ -46,23 +55,29 @@ const templates = (state = {}, action) => {
             });
 
             return {...state, page: {...state.page, widgets}};
+        case types.PAGE_MANAGEMENT_EDIT_WIDGET:
+            var widgets = updateWidget(state.page.widgets, action.widgetId, {configuration: action.configuration});
+            return {...state, page: {...state.page, widgets}};
+        case types.PAGE_MANAGEMENT_MAXIMIZE_WIDGET:
+            var widgets = updateWidget(state.page.widgets, action.widgetId, {maximized: action.maximized});
+            return {...state, page: {...state.page, widgets}};
         case types.PAGE_MANAGEMENT_CHANGE_WIDGET:
-            var widgets = state.page.widgets.map( (w) => {
-                if (w.id === action.widgetId) {
-                    return {
-                        ...w,
-                        x: action.gridData.x,
-                        y: action.gridData.y,
-                        width: action.gridData.width,
-                        height: action.gridData.height
-                    };
-                }
-                return w
-            });
-
+            var params = {
+                x: action.gridData.x,
+                y: action.gridData.y,
+                width: action.gridData.width,
+                height: action.gridData.height
+            };
+            var widgets = updateWidget(state.page.widgets, action.widgetId, params);
             return {...state, page: {...state.page, widgets}};
         case types.TEMPLATE_MANAGEMENT_CLEAR:
-            return {...state, pages: [], templates: []};
+            let {pages, templates, ...templateRest} = state;
+            return templateRest;
+        case types.PAGE_MANAGEMENT_CLEAR:
+            let {page, ...pageRest} = state;
+            return pageRest;
+        case types.PAGE_MANAGEMENT_DRILLDOWN_WARN:
+            return {...state, showDrillDownWarn: action.show};
         default:
             return state;
     }

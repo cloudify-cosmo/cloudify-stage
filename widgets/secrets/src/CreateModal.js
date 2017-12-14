@@ -18,6 +18,7 @@ export default class CreateModal extends React.Component {
         loading: false,
         secretKey: '',
         secretValue: '',
+        secretFile: null,
         errors: {}
     }
 
@@ -73,6 +74,22 @@ export default class CreateModal extends React.Component {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
+    _onSecretFileChange(file) {
+        if (!file) {
+            this.setState({secretValue: '', errors: {}});
+            return;
+        }
+
+        this.setState({fileLoading: true});
+
+        let actions = new Actions(this.props.toolbox);
+        actions.doGetFileContent(file).then((fileContent)=>{
+            this.setState({secretValue: fileContent, errors: {}, fileLoading: false});
+        }).catch((err)=>{
+            this.setState({secretValue: '', errors: {error: err.message}, fileLoading: false});
+        });
+    }
+
     render() {
         let {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
         const createButton = <Button content='Create' icon='add' labelPosition='left' />;
@@ -91,8 +108,13 @@ export default class CreateModal extends React.Component {
                                         value={this.state.secretKey} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                         <Form.Field error={this.state.errors.secretValue}>
-                            <Form.Input name='secretValue' placeholder='Secret value'
-                                        value={this.state.secretValue} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.TextArea name='secretValue' placeholder='Secret value' autoHeight
+                                           value={this.state.secretValue} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+                        <Form.Field error={this.state.errors.secretFile}>
+                            <Form.File name="secretFile" placeholder="Get secret value from file (max: 50kB)" ref="secretFile"
+                                       onChange={this._onSecretFileChange.bind(this)} loading={this.state.fileLoading}
+                                       disabled={this.state.fileLoading} />
                         </Form.Field>
                     </Form>
                 </Modal.Content>

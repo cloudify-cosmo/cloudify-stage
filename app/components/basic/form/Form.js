@@ -15,6 +15,7 @@ import FormInputTime from './InputTime'
 import FormInputTimeFilter from './InputTimeFilter'
 import FormDropdown from '../Dropdown'
 import FormTable from './EdiTable'
+import '../../styles/Form.css';
 
 /**
  * Form is a component to present HTML forms

@@ -1,11 +1,11 @@
 {
-  "name": "Blueprints catalog",
+  "name": "Blueprints Catalog",
   "widgets": [
     {
       "name": "Blueprints Catalog",
       "definition": "blueprintCatalog",
       "width": 12,
-      "height": 39,
+      "height": 24,
       "x": 0,
       "y": 0,
       "configuration":{

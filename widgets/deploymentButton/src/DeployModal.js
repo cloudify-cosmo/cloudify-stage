@@ -148,8 +148,8 @@ export default class DeployModal extends React.Component {
             <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
                     <Icon name="rocket"/> Create new deployment
-                    <PrivateField lock={this.state.privateResource} title="Private resource" className="rightFloated"
-                             onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
+                    <PrivateField lock={this.state.privateResource} className="rightFloated"
+                                  onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
                 </Modal.Header>
 
                 <Modal.Content>
@@ -188,7 +188,7 @@ export default class DeployModal extends React.Component {
                         {
                             _.map(deploymentInputs, (input) => {
                                 let formInput = () =>
-                                    <Form.Input name={input.name} placeholder={input.description}
+                                    <Form.Input name={input.name} placeholder={this._stringify(input.default)}
                                                 value={this.state.deploymentInputs[input.name]}
                                                 onChange={this._handleInputChange.bind(this)}
                                                 className={DEPLOYMENT_INPUT_CLASSNAME} />
@@ -203,10 +203,12 @@ export default class DeployModal extends React.Component {
                                             }
                                         </label>
                                         {
-                                            !_.isNil(input.default)
-                                                ? <Popup trigger={formInput()} header="Default value"
-                                                         content={this._stringify(input.default)}
-                                                         position='top right' wide />
+                                            !_.isNil(input.description)
+                                                ? <Popup trigger={formInput()} position='top right' wide >
+                                                      <Popup.Content>
+                                                          <Icon name="info circle"/>{input.description}
+                                                      </Popup.Content>
+                                                  </Popup>
                                                 : formInput()
                                         }
                                     </Form.Field>

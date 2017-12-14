@@ -19,7 +19,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         widgetDefinitions: widgetDefinitions,
         pageId: ownProps.pageId,
-        isPageManagement: ownProps.isPageManagement
+        pageManagementMode: ownProps.pageManagementMode
     }
 };
 
@@ -28,7 +28,7 @@ let nameIndex = 0;
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onWidgetAdded: (widgetDefinition) => {
-            if (ownProps.isPageManagement) {
+            if (ownProps.pageManagementMode) {
                 dispatch(addPageWidget(ownProps.pageId,widgetDefinition.name || 'Widget_'+(nameIndex++),widgetDefinition));
             } else {
                 dispatch(addWidget(ownProps.pageId,widgetDefinition.name || 'Widget_'+(nameIndex++),widgetDefinition));
