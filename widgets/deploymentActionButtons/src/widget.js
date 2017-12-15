@@ -8,7 +8,7 @@ Stage.defineWidget({
     id: 'deploymentActionButtons',
     name: 'Deployment action buttons',
     description: 'Provides set of action buttons for deployment',
-    initialWidth: 8,
+    initialWidth: 5,
     initialHeight: 5,
     showHeader: false,
     showBorder: false,

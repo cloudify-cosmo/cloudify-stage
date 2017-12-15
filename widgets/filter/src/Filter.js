@@ -109,20 +109,20 @@ export default class Filter extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
-                <Form>
-                    <Form.Group widths='equal'>
+                <Form size="small">
+                    <Form.Group inline widths='equal'>
                         <Form.Field>
-                            <Form.Dropdown search selection value={this.props.data.blueprintId || ''} placeholder="Select Blueprint"
+                            <Form.Dropdown search selection value={this.props.data.blueprintId || ''} placeholder="Select Blueprint" fluid
                                            options={blueprintOptions} onChange={this._selectBlueprint.bind(this)} id="blueprintFilterField"/>
                         </Form.Field>
                         <Form.Field>
-                            <Form.Dropdown search selection value={this.props.data.deploymentId || ''} placeholder="Select Deployment"
+                            <Form.Dropdown search selection value={this.props.data.deploymentId || ''} placeholder="Select Deployment" fluid
                                            options={deploymentOptions} onChange={this._selectDeployment.bind(this)} id="deploymentFilterField"/>
                         </Form.Field>
                         {
                             this.props.widget.configuration.filterByExecutions &&
                             <Form.Field>
-                                <Form.Dropdown search selection value={this.props.data.executionId || ''} placeholder="Select Execution"
+                                <Form.Dropdown search selection value={this.props.data.executionId || ''} placeholder="Select Execution" fluid
                                                options={executionOptions} onChange={this._selectExecution.bind(this)} id="executionFilterField"/>
                             </Form.Field>
                         }
