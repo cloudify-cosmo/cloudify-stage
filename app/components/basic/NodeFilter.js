@@ -3,7 +3,6 @@
  */
 
 import React, { PropTypes } from 'react';
-import ErrorMessage from './ErrorMessage';
 import Form from './form/Form';
 
 /**
@@ -64,7 +63,8 @@ export default class NodeFilter extends React.Component {
         blueprintId: props.value.blueprintId,
         deploymentId: props.value.deploymentId,
         nodeId: props.value.nodeId,
-        nodeInstanceId: props.value.nodeInstanceId
+        nodeInstanceId: props.value.nodeInstanceId,
+        errors: {}
     });
 
     static BASIC_PARAMS = {_include: 'id'};
@@ -80,7 +80,11 @@ export default class NodeFilter extends React.Component {
             this.state.nodeId !== nextProps.value.nodeId ||
             this.state.nodeInstanceId !== nextProps.value.nodeInstanceId)
         {
-            NodeFilter.initialState(nextProps);
+            this.setState({...NodeFilter.initialState(nextProps)});
+            this._fetchBlueprints();
+            this._fetchDeployments();
+            this._fetchNodes();
+            this._fetchNodeInstances();
         }
     }
 
@@ -94,7 +98,9 @@ export default class NodeFilter extends React.Component {
     _fetchData(fetchUrl, params, optionsField) {
         let loading = `${optionsField}Loading`;
 
-        this.setState({[loading]: true, [optionsField]: []});
+        let errors = {...this.state.errors};
+        errors[optionsField] = null;
+        this.setState({[loading]: true, [optionsField]: [], errors});
         this.toolbox.getManager().doGet(fetchUrl, params)
             .then((data) => {
                 let parsedData = _.chain(data.items || {})
@@ -105,7 +111,8 @@ export default class NodeFilter extends React.Component {
                 this.setState({[loading]: false, [optionsField]: parsedData});
             })
             .catch((error) => {
-                this.setState({[loading]: false, [optionsField]: [], error: error.message});
+                errors[optionsField] = `Data fetching error: ${error.message}`;
+                this.setState({[loading]: false, [optionsField]: [], errors});
             });
     }
 
@@ -187,33 +194,36 @@ export default class NodeFilter extends React.Component {
     }
 
     render() {
-        return (
-            <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
+        let errors = this.state.errors;
+        let errorMessage = 'Data fetching error';
 
-                <Form.Group widths='equal'>
-                    <Form.Field>
-                        <Form.Dropdown search selection value={this.state.blueprintId} placeholder="Blueprint"
-                                       options={this.state.blueprints} onChange={this._selectBlueprint.bind(this)}
-                                       name="blueprintId" loading={this.state.blueprintsLoading} />
-                    </Form.Field>
-                    <Form.Field>
-                        <Form.Dropdown search selection value={this.state.deploymentId} placeholder="Deployment"
-                                       options={this.state.deployments} onChange={this._selectDeployment.bind(this)}
-                                       name="deploymentId" loading={this.state.deploymentsLoading} />
-                    </Form.Field>
-                    <Form.Field>
-                        <Form.Dropdown search selection value={this.state.nodeId} placeholder="Node"
-                                       options={this.state.nodes} onChange={this._selectNode.bind(this)}
-                                       name="nodeId" loading={this.state.nodesLoading} />
-                    </Form.Field>
-                    <Form.Field>
-                        <Form.Dropdown search selection value={this.state.nodeInstanceId} placeholder="Node Instance"
-                                       options={this.state.nodeInstances} onChange={this._selectNodeInstance.bind(this)}
-                                       name="nodeInstanceId" loading={this.state.nodeInstancesLoading} />
-                    </Form.Field>
-                </Form.Group>
-            </div>
+        return (
+            <Form.Group widths='equal'>
+                <Form.Field error={this.state.errors.blueprints}>
+                    <Form.Dropdown search selection value={errors.blueprints ? '' : this.state.blueprintId}
+                                   placeholder={errors.blueprints || 'Blueprint'}
+                                   options={this.state.blueprints} onChange={this._selectBlueprint.bind(this)}
+                                   name="blueprintId" loading={this.state.blueprintsLoading} />
+                </Form.Field>
+                <Form.Field error={this.state.errors.deployments}>
+                    <Form.Dropdown search selection value={errors.deployments ? '' : this.state.deploymentId}
+                                   placeholder={errors.deployments || 'Deployment'}
+                                   options={this.state.deployments} onChange={this._selectDeployment.bind(this)}
+                                   name="deploymentId" loading={this.state.deploymentsLoading} />
+                </Form.Field>
+                <Form.Field error={this.state.errors.nodes}>
+                    <Form.Dropdown search selection value={errors.nodes ? '' : this.state.nodeId}
+                                   placeholder={errors.nodes || 'Node'}
+                                   options={this.state.nodes} onChange={this._selectNode.bind(this)}
+                                   name="nodeId" loading={this.state.nodesLoading} />
+                </Form.Field>
+                <Form.Field error={this.state.errors.nodeInstances}>
+                    <Form.Dropdown search selection value={errors.nodeInstances ? '' : this.state.nodeInstanceId}
+                                   placeholder={errors.nodeInstances || 'Node Instance'}
+                                   options={this.state.nodeInstances} onChange={this._selectNodeInstance.bind(this)}
+                                   name="nodeInstanceId" loading={this.state.nodeInstancesLoading} />
+                </Form.Field>
+            </Form.Group>
         );
     }
 }

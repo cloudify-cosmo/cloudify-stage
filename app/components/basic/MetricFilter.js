@@ -3,7 +3,6 @@
  */
 
 import React, { PropTypes } from 'react';
-import ErrorMessage from './ErrorMessage';
 import Form from './form/Form';
 
 /**
@@ -49,7 +48,8 @@ export default class MetricFilter extends React.Component {
 
     static initialState = (props) => ({
         metrics: [],
-        metricId: props.value
+        metricId: props.value,
+        error: null
     });
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -58,8 +58,9 @@ export default class MetricFilter extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.state.metricId !== nextProps.value.metricId) {
-            MetricFilter.initialState(nextProps);
+        if (this.state.metricId !== nextProps.value) {
+            this.setState({...MetricFilter.initialState(nextProps)});
+            this._fetchMetrics();
         }
     }
 
@@ -81,7 +82,7 @@ export default class MetricFilter extends React.Component {
         let nodeId = filter && filter.nodeId;
         let nodeInstanceId = filter && filter.nodeInstanceId;
 
-        this.setState({loading: true, metrics: []});
+        this.setState({loading: true, metrics: [], error: null});
         let actions = new Stage.Common.InfluxActions(this.toolbox);
         actions.doGetMetrics(deploymentId, nodeId, nodeInstanceId)
             .then((data) => {
@@ -97,7 +98,8 @@ export default class MetricFilter extends React.Component {
                 this._setState(null, newState);
             })
             .catch((error) => {
-                this.setState({loading: false, metrics: [], error: error.message});
+                let errorMessage = `Data fetching error: ${error.message}`;
+                this.setState({loading: false, metrics: [], error: errorMessage});
             });
     }
 
@@ -116,14 +118,12 @@ export default class MetricFilter extends React.Component {
 
     render() {
         return (
-            <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
-                <Form.Field>
-                    <Form.Dropdown search selection value={this.state.metricId} placeholder="Metric"
-                                   options={this.state.metrics} onChange={this._handleInputChange.bind(this)}
-                                   name="metricId" loading={this.state.loading} />
-                </Form.Field>
-            </div>
+            <Form.Field error={this.state.error}>
+                <Form.Dropdown search selection value={this.state.error ? '' : this.state.metricId}
+                               placeholder={this.state.error || 'Metric'}
+                               options={this.state.metrics} onChange={this._handleInputChange.bind(this)}
+                               name="metricId" loading={this.state.loading} />
+            </Form.Field>
         );
     }
 }
