@@ -21,8 +21,8 @@ Stage.defineWidget({
     
     initialConfiguration: [
         Stage.GenericConfig.PAGE_SIZE_CONFIG(3),
-        {id: 'username', name: 'Fetch with username', placeHolder:"Type username", default:"cloudify-examples", type: Stage.Basic.GenericField.STRING_TYPE},
-        {id: 'filter', name: 'Optional blueprints filter', placeHolder:"Type filter for GitHub repositories", default:"blueprint in:name NOT local", type: Stage.Basic.GenericField.STRING_TYPE},
+        {id: 'username', name: 'Fetch with', placeHolder:"Type GitHub's user or organization name", description:"GitHub user or organization account name which is the owner of the repositories to fetch", default:"cloudify-examples", type: Stage.Basic.GenericField.STRING_TYPE},
+        {id: 'filter', name: 'Filter', placeHolder:"Type filter for GitHub repositories", description:"Optional filter for GitHub repositories. See GitHub's web page 'Searching repositories' for more details", default:"blueprint in:name NOT local", type: Stage.Basic.GenericField.STRING_TYPE},
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
              default: "catalog", type: Stage.Basic.GenericField.LIST_TYPE},
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
