@@ -42,15 +42,27 @@ export default class StageUtils {
      */
     static resolveMessage(message) {
         var tagPattern = /<(\w+)[^<]*>/;
-        var attrPattern = /\w+=[',",`](\w+)[',",`]/g;
+        var attrPattern = /(\w+)=[',",`]([^',^",^`]+)[',",`]/g;
 
         var matchedTag, matchedAttr, sentence = '';
         while (matchedTag = tagPattern.exec(message)) {
             var tag = matchedTag[0];
             var sentence = matchedTag[1].toLowerCase();
 
+            var attributes = [];
             while (matchedAttr = attrPattern.exec(tag)) {
-                sentence += ' ' + matchedAttr[1];
+                attributes.push({key: matchedAttr[1], value: matchedAttr[2]});
+            }
+
+            if (attributes.length > 0) {
+                if (attributes.length > 1) {
+                    sentence += ' with';
+                    _.each(attributes,(item, index)=> {
+                        sentence += `  ${item.key}=${item.value} ${(index < attributes.length - 1) ? ' and' : ''}`;
+                    })
+                } else {
+                    sentence += `  ${attributes[0].value}`;
+                }
             }
 
             message = message.replace(tag, sentence);
