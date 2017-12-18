@@ -66,7 +66,7 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, CancelButton, ApproveButton, Icon, Form, PrivateField} = Stage.Basic;
+        var {Modal, CancelButton, ApproveButton, Icon, Form, PrivateField, Popup} = Stage.Basic;
 
         var files = Object.assign({},{tree:[], repo:''}, this.props.files);
         files.tree = _.filter(files.tree, x => x.type === 'blob' && x.path.endsWith('.yaml'));
@@ -75,7 +75,7 @@ export default class UploadModal extends React.Component {
 
         return (
             <div>
-                <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
+                <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="uploadModal">
                     <Modal.Header>
                         <Icon name="upload"/> Upload blueprint from {files.repo}
                         <PrivateField lock={this.state.privateResource} className="rightFloated"
@@ -85,16 +85,27 @@ export default class UploadModal extends React.Component {
                     <Modal.Content>
                         <Form loading={this.state.loading} errors={this.state.errors}
                               onErrorsDismiss={() => this.setState({errors: {}})}>
-                            <Form.Field error={this.state.errors.blueprintName}>
-                                <Form.Input name='blueprintName' placeholder="Blueprint name"
-                                            value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
-                            </Form.Field>
-
-                            <Form.Field>
-                                <Form.Dropdown placeholder='Blueprint filename' search selection options={options}
-                                               name="blueprintFileName"
-                                               value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
-                            </Form.Field>
+                            <Form.Group>
+                                <Form.Field width="16" error={this.state.errors.blueprintName}>
+                                    <Form.Input name='blueprintName' placeholder="Blueprint name"
+                                                value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
+                                </Form.Field>
+                                <Form.Field width="1">
+                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
+                                           content='The package will be uploaded to the Manager as a Blueprint resource, under the name you specify here.'/>
+                                </Form.Field>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Field width="16">
+                                    <Form.Dropdown placeholder='Blueprint filename' search selection options={options}
+                                                   name="blueprintFileName"
+                                                   value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
+                                </Form.Field>
+                                <Form.Field width="1">
+                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
+                                           content='As you can have more than one yaml file in the archive, you need to specify which is the main one for your application.'/>
+                                </Form.Field>
+                            </Form.Group>
                         </Form>
                     </Modal.Content>
 
