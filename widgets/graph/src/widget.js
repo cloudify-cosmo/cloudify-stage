@@ -17,14 +17,16 @@ Stage.defineWidget({
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(5),
-        {id: 'deploymentId', name: 'Deployment ID', placeHolder: 'If not set, then will be taken from context', default: '', type: Stage.Basic.GenericField.STRING_TYPE},
-        {id: 'charts', name: 'Charts table',  description: '', default: '', type: Stage.Basic.GenericField.EDITABLE_TABLE_TYPE, max: 5, items: [
-            {name: 'metric', label: 'Metric', default: '', type: Stage.Basic.GenericField.EDITABLE_LIST_TYPE, description: 'Name of the metric to be presented on the graph',
-                items: ['', 'cpu_total_system', 'cpu_total_user', 'memory_MemFree', 'memory_SwapFree', 'loadavg_processes_running']},
-            {name: 'label', label: 'Label', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'Chart label'},
-            {name: 'unit', label: 'Unit', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'Chart data unit'}
+        {id: 'nodeFilter', name: 'Node filter',  description: 'Node filter to limit number of available metrics', type: Stage.Basic.GenericField.CUSTOM_TYPE,
+         component: Stage.Basic.NodeFilter, default: Stage.Basic.NodeFilter.EMPTY_VALUE, storeValueInContext: true},
+        {id: 'charts', name: 'Charts table',  description: 'Charts configuration table', default: '', type: Stage.Basic.GenericField.CUSTOM_TYPE,
+         component: Stage.Basic.Form.Table, rows: 5, columns: [
+            {name: 'metric', label: 'Metric', default: '', type: Stage.Basic.GenericField.CUSTOM_TYPE,
+             component: Stage.Basic.MetricFilter, description: 'Metric to be presented on the chart', filterContextName: 'nodeFilter'},
+            {name: 'label', label: 'Label', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'Chart label'}
         ]},
-        {id: 'query', name: 'Custom Influx Query', description: 'Please note that below query builder overrides the series defined in \'Charts table\'', default: '', type: Stage.Basic.GenericField.EDITABLE_TABLE_TYPE, max: 1, items: [
+        {id: 'query', name: 'Custom Influx Query', description: 'Please note that below query builder overrides the series defined in \'Charts table\'', default: '', type: Stage.Basic.GenericField.CUSTOM_TYPE,
+         component: Stage.Basic.Form.Table, rows: 1, columns: [
             {name: 'qSelect', label: 'SELECT', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: ''},
             {name: 'qFrom', label: 'FROM', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${deploymentId} token to inject dynamic deployment ID. Example: \'/${deploymentId}\..*\.((memory_MemFree))$/\''},
             {name: 'qWhere', label: 'WHERE', default: '', type: Stage.Basic.GenericField.STRING_TYPE, description: 'You can use ${timeFilter} token to inject dynamic data/time ranges.'}
@@ -35,7 +37,8 @@ Stage.defineWidget({
             {name:'Area chart', value:Stage.Basic.Graphs.Graph.AREA_CHART_TYPE}],
          default: Stage.Basic.Graphs.Graph.LINE_CHART_TYPE, type: Stage.Basic.GenericField.LIST_TYPE},
         {id: 'timeFilter', name: 'Time range and resolution',  description: 'Time range and time resolution for all defined charts',
-         type: Stage.Basic.GenericField.TIME_FILTER_TYPE, default: Stage.Basic.InputTimeFilter.INFLUX_DEFAULT_VALUE}
+         type: Stage.Basic.GenericField.CUSTOM_TYPE, component: Stage.Basic.TimeFilter,
+         default: Stage.Basic.TimeFilter.INFLUX_DEFAULT_VALUE, defaultValue: Stage.Basic.TimeFilter.INFLUX_DEFAULT_VALUE}
     ],
     UNCONFIGURED_STATE: 'unconfigured',
     EMPTY_RESPONSE_STATE: 'emptyResponse',
@@ -104,7 +107,7 @@ Stage.defineWidget({
                 if (!_.isEmpty(chartName)) {
                     chartsConfig.push({
                         name: chartName,
-                        label: (chart.label ? chart.label : chartName) + (chart.unit ? ` [${chart.unit}]` : ''),
+                        label: chart.label ? chart.label : chartName,
                         axisLabel: ''
                     });
                 }
@@ -120,7 +123,7 @@ Stage.defineWidget({
         return string.replace(/;/g, '');
     },
 
-    _prepareInfluxQuery: function(queries, deploymentId, from, to, timeGroup) {
+    _prepareInfluxQuery: function(queries, deploymentId, nodeId, nodeInstanceId, from, to, timeGroup) {
         return _.map(queries, (queryParams) => {
             let selectWhat = this._sanitizeQuery(queryParams.qSelect);
             let selectFrom = this._sanitizeQuery(queryParams.qFrom);
@@ -128,10 +131,14 @@ Stage.defineWidget({
 
             if (!_.isEmpty(selectWhat) && !_.isEmpty(selectFrom)) {
 
-                if (_.includes(selectFrom, '${deploymentId}') && _.isEmpty(deploymentId))
+                if ((_.includes(selectFrom, '${deploymentId}') && _.isEmpty(deploymentId)) ||
+                    (_.includes(selectFrom, '${nodeId}') && _.isEmpty(nodeId)) ||
+                    (_.includes(selectFrom, '${nodeInstanceId}') && _.isEmpty(nodeInstanceId)))
                     return {};
 
                 selectFrom = _.replace(selectFrom, '${deploymentId}', deploymentId);
+                selectFrom = _.replace(selectFrom, '${nodeId}', nodeId);
+                selectFrom = _.replace(selectFrom, '${nodeInstanceId}', nodeInstanceId);
                 selectWhere = _.replace(selectWhere, '${timeFilter}', `time > ${from} and time < ${to} group by time(${timeGroup})`);
 
                 if (_.isEmpty(selectWhere))
@@ -152,7 +159,15 @@ Stage.defineWidget({
     },
 
     fetchParams: function(widget, toolbox) {
-        let deploymentId = toolbox.getContext().getValue('deploymentId') || widget.configuration.deploymentId;
+        let deploymentId = toolbox.getContext().getValue('deploymentId');
+        let nodeId = toolbox.getContext().getValue('nodeId');
+        let nodeInstanceId = toolbox.getContext().getValue('nodeInstanceId');
+        let nodeFilterFromWidget = widget.configuration.nodeFilter;
+        if (nodeFilterFromWidget.deploymentId || nodeFilterFromWidget.nodeId || nodeFilterFromWidget.nodeInstanceId) {
+            deploymentId = nodeFilterFromWidget.deploymentId;
+            nodeId = nodeFilterFromWidget.nodeId;
+            nodeInstanceId = nodeFilterFromWidget.nodeInstanceId;
+        }
 
         let timeFilterFromWidget = widget.configuration.timeFilter;
         let timeFilterFromContext = toolbox.getContext().getValue('timeFilter');
@@ -167,17 +182,19 @@ Stage.defineWidget({
         let timeUnit = _.get(timeFilterFromContext, 'unit', timeFilterFromWidget.unit);
         let timeGroup = `${timeResolution}${timeUnit}`;
 
-        return { deploymentId, timeStart, timeEnd, timeGroup };
+        return { deploymentId, nodeId, nodeInstanceId, timeStart, timeEnd, timeGroup };
     },
 
     fetchData: function(widget, toolbox, params) {
         const actions = new Stage.Common.InfluxActions(toolbox);
         const deploymentId = params.deploymentId;
+        const nodeId = params.nodeId;
+        const nodeInstanceId = params.nodeInstanceId;
         const metrics = this._getChartsMetricsList(widget.configuration.charts);
         const from = params.timeStart;
         const to = params.timeEnd;
         const timeGroup = params.timeGroup;
-        const preparedQuery = _.head(this._prepareInfluxQuery(widget.configuration.query, deploymentId, from, to, timeGroup));
+        const preparedQuery = _.head(this._prepareInfluxQuery(widget.configuration.query, deploymentId, nodeId, nodeInstanceId, from, to, timeGroup));
 
         if (!_.isEmpty(preparedQuery)) {
             toolbox.loading(true);
@@ -192,9 +209,9 @@ Stage.defineWidget({
                                       'Please check your Influx query syntax and try again. Error: ' +
                                       error.message || error);
             });
-        } else if (!_.isEmpty(deploymentId) && !_.isEmpty(metrics)) {
+        } else if ((!_.isEmpty(deploymentId) || !_.isEmpty(nodeId) || !_.isEmpty(nodeInstanceId)) && !_.isEmpty(metrics)) {
             toolbox.loading(true);
-            return actions.doGetMetric(deploymentId, metrics, from, to, timeGroup)
+            return actions.doGetMetric(deploymentId, nodeId, nodeInstanceId, metrics, from, to, timeGroup)
                 .then((data) => {
                     toolbox.loading(false);
                     let formattedResponse
@@ -204,7 +221,7 @@ Stage.defineWidget({
                 .catch((error) => {
                     toolbox.loading(false);
                     return Promise.reject('There was a problem while querying for data. ' +
-                                          'Please check Deployment ID, metric name and time range. Error: ' +
+                                          'Please check Deployment ID, Node ID, Node Instance ID, Metric and time range. Error: ' +
                                           error.message || error);
                 });
         } else {
@@ -225,7 +242,7 @@ Stage.defineWidget({
             return (
                 <Message info icon>
                     <Icon name='info' />
-                    Please select a deployment and use the widget's configuration to present the data graph.
+                    Please select deployment, node or node instance and metric in widget's configuration to present the data graph.
                 </Message>
             );
         } else if (this._isEmptyResponse(widget, data)) {

@@ -4,17 +4,16 @@
 
 import React, { Component, PropTypes } from 'react';
 import {Form as FormSemanticUiReact, Input as FormInput, TextArea, Radio as FormRadio,
-         Checkbox as FormCheckbox, Button as FormButton} from 'semantic-ui-react'
-import ErrorMessage from '../ErrorMessage'
-import FormField from './FormField'
-import FormGroup from './FormGroup'
-import FormDivider from './FormDivider'
-import FormFile from './InputFile'
-import FormInputDate from './InputDate'
-import FormInputTime from './InputTime'
-import FormInputTimeFilter from './InputTimeFilter'
-import FormDropdown from '../Dropdown'
-import FormTable from './EdiTable'
+        Checkbox as FormCheckbox, Button as FormButton} from 'semantic-ui-react';
+import ErrorMessage from '../ErrorMessage';
+import FormField from './FormField';
+import FormGroup from './FormGroup';
+import FormDivider from './FormDivider';
+import FormFile from './InputFile';
+import FormInputDate from './InputDate';
+import FormInputTime from './InputTime';
+import FormDropdown from '../Dropdown';
+import FormTable from './EdiTable';
 import '../../styles/Form.css';
 
 /**
@@ -124,11 +123,6 @@ export default class Form extends Component {
      * Time picker input, see {@link InputTime}
      */
     static InputTime = FormInputTime;
-
-    /**
-     * Time range filter input, see {@link InputTimeFilter}
-     */
-    static InputTimeFilter = FormInputTimeFilter;
 
     /**
      * Form checkbox input, see [Button](https://react.semantic-ui.com/elements/button)

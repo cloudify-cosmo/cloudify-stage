@@ -3,13 +3,13 @@
  */
 import React, { PropTypes } from 'react';
 import {Button, Dropdown, Grid, Label, List, Segment, Table} from 'semantic-ui-react';
-import {ApproveButton, CancelButton} from '../modal/ModalButtons';
-import Form from './Form';
-import Popup from '../Popup';
+import {ApproveButton, CancelButton} from './modal/ModalButtons';
+import Form from './form/Form';
+import Popup from './Popup';
 import moment from 'moment';
 
 /**
- * InputTimeFilter is a component showing time range and optionally time resolution selectors
+ * TimeFilter is a component showing time range and optionally time resolution selectors
  *
  * Both props: `value` and `defaultValue` are timeFilter objects:
  * ```
@@ -23,22 +23,22 @@ import moment from 'moment';
  * ```
  *
  * ## Access
- * `Stage.Basic.InputTimeFilter`
+ * `Stage.Basic.TimeFilter`
  *
  * ## Usage
- * ![InputTimeFilter](manual/asset/form/InputTimeFilter_0.png)
+ * ![TimeFilter](manual/asset/form/TimeFilter_0.png)
  *
  * ```
- * <InputTimeFilter name='timeFilter' defaultValue={InputTimeFilter.EMPTY_VALUE} />
+ * <TimeFilter name='timeFilter' defaultValue={TimeFilter.EMPTY_VALUE} />
  * ```
  *
  */
-export default class InputTimeFilter extends React.Component {
+export default class TimeFilter extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = InputTimeFilter.initialState(props);
+        this.state = TimeFilter.initialState(props);
     }
 
     /*
@@ -84,12 +84,12 @@ export default class InputTimeFilter extends React.Component {
     /**
      * propTypes
      * @property {string} name name of the field
-     * @property {object} [defaultValue=InputTimeFilter.INFLUX_DEFAULT_VALUE] timeFilter object ({range:'', start:'', end:'', resolution:'', unit:''}) to be set when Reset button is clicked
-     * @property {object} [value=InputTimeFilter.INFLUX_DEFAULT_VALUE] timeFilter object to set input values
-     * @property {object} [ranges=InputTimeFilter.INFLUX_RANGES] ranges object ({[range1] : {start: '', end:''}, [range2]: {start:'', end:''}, ...})
+     * @property {object} [defaultValue=TimeFilter.INFLUX_DEFAULT_VALUE] timeFilter object ({range:'', start:'', end:'', resolution:'', unit:''}) to be set when Reset button is clicked
+     * @property {object} [value=TimeFilter.INFLUX_DEFAULT_VALUE] timeFilter object to set input values
+     * @property {object} [ranges=TimeFilter.INFLUX_RANGES] ranges object ({[range1] : {start: '', end:''}, [range2]: {start:'', end:''}, ...})
      * @property {boolean} [addTimeResolution=true] adds time resolution segment
-     * @property {string} [dateSyntax=InputTimeFilter.INFLUX_DATE_SYNTAX] defines validation method for input start/end date (allowed values: InputTimeFilter.INFLUX_DATE_SYNTAX, InputTimeFilter.ISO_8601_DATE_SYNTAX)
-     * @property {function} [onApply=(function (event, data) {});] function called on Apply button click, timeFilter object value is sent as data.value
+     * @property {string} [dateSyntax=TimeFilter.INFLUX_DATE_SYNTAX] defines validation method for input start/end date (allowed values: TimeFilter.INFLUX_DATE_SYNTAX, TimeFilter.ISO_8601_DATE_SYNTAX)
+     * @property {function} [onChange=(function (event, data) {});] function called on Apply button click, timeFilter object value is sent as data.value
      * @property {function} [onCancel=(function (event, data) {});] function called on Cancel button click, timeFilter object value is sent as data.value
      */
     static propTypes = {
@@ -110,18 +110,18 @@ export default class InputTimeFilter extends React.Component {
         }),
         ranges: PropTypes.object,
         addTimeResolution: PropTypes.bool,
-        dateSyntax: PropTypes.oneOf([InputTimeFilter.INFLUX_DATE_SYNTAX, InputTimeFilter.ISO_8601_DATE_SYNTAX]),
-        onApply: PropTypes.func,
+        dateSyntax: PropTypes.oneOf([TimeFilter.INFLUX_DATE_SYNTAX, TimeFilter.ISO_8601_DATE_SYNTAX]),
+        onChange: PropTypes.func,
         onCancel: PropTypes.func
     };
 
     static defaultProps = {
-        defaultValue: InputTimeFilter.INFLUX_DEFAULT_VALUE,
-        value: InputTimeFilter.INFLUX_DEFAULT_VALUE,
-        ranges: InputTimeFilter.INFLUX_RANGES,
+        defaultValue: TimeFilter.INFLUX_DEFAULT_VALUE,
+        value: TimeFilter.INFLUX_DEFAULT_VALUE,
+        ranges: TimeFilter.INFLUX_RANGES,
         addTimeResolution: true,
-        dateSyntax: InputTimeFilter.INFLUX_DATE_SYNTAX,
-        onApply: (event, data)=>{},
+        dateSyntax: TimeFilter.INFLUX_DATE_SYNTAX,
+        onChange: (event, data)=>{},
         onCancel: (event, data)=>{}
     };
 
@@ -137,7 +137,7 @@ export default class InputTimeFilter extends React.Component {
 
     static TIME_FORMAT = 'HH:mm';
     static DATE_FORMAT = 'YYYY-MM-DD';
-    static DATETIME_FORMAT = `${InputTimeFilter.DATE_FORMAT} ${InputTimeFilter.TIME_FORMAT}`;
+    static DATETIME_FORMAT = `${TimeFilter.DATE_FORMAT} ${TimeFilter.TIME_FORMAT}`;
     static CUSTOM_RANGE = 'Custom Range';
     static INFLUX_DATE_REGEX = /^$|^(now\(\)|([0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}))([\s-+]+[0-9]+[usmhdw])*$/;
     static INFLUX_DURATION_REGEX = /([-+])\s?([0-9]+)([smhdw]){1}/g;
@@ -148,13 +148,13 @@ export default class InputTimeFilter extends React.Component {
     }
 
     componentDidMount() {
-        let state = InputTimeFilter.initialState(this.props);
+        let state = TimeFilter.initialState(this.props);
         _.extend(state, this._getResetState(false));
         this.setState(state);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let dirty = !_.isEqual(_.pick(this.state, Object.keys(InputTimeFilter.INFLUX_DEFAULT_VALUE)), this.props.defaultValue);
+        let dirty = !_.isEqual(_.pick(this.state, Object.keys(TimeFilter.INFLUX_DEFAULT_VALUE)), this.props.defaultValue);
         let value = this.props.value;
         let newState = {};
         if (prevState.dirty != dirty) {
@@ -199,11 +199,11 @@ export default class InputTimeFilter extends React.Component {
     }
 
     _calculateDateWithOffsets(dateTime, stateDateField){
-        let groups = InputTimeFilter.INFLUX_DATE_REGEX.exec(dateTime);
-        let baseDate = moment(groups[1], InputTimeFilter.DATETIME_FORMAT).isValid() ? moment(groups[1]) : moment();
+        let groups = TimeFilter.INFLUX_DATE_REGEX.exec(dateTime);
+        let baseDate = moment(groups[1], TimeFilter.DATETIME_FORMAT).isValid() ? moment(groups[1]) : moment();
 
-        _.forEach(groups[0].match(InputTimeFilter.INFLUX_DURATION_REGEX), (match) => {
-                let matchedGroups = new RegExp(InputTimeFilter.INFLUX_DURATION_REGEX).exec(match);
+        _.forEach(groups[0].match(TimeFilter.INFLUX_DURATION_REGEX), (match) => {
+                let matchedGroups = new RegExp(TimeFilter.INFLUX_DURATION_REGEX).exec(match);
                 let opSubtraction = _.isEqual(matchedGroups[1], '-');
                 let opValue = matchedGroups[2];
                 let opScale = matchedGroups[3];
@@ -249,16 +249,16 @@ export default class InputTimeFilter extends React.Component {
     }
 
     _getStartState(startDate) {
-        return {startError: false, start: moment(startDate).format(InputTimeFilter.DATETIME_FORMAT)};
+        return {startError: false, start: moment(startDate).format(TimeFilter.DATETIME_FORMAT)};
     }
 
     _getEndState(endDate) {
-        return {endError: false, end: moment(endDate).format(InputTimeFilter.DATETIME_FORMAT)};
+        return {endError: false, end: moment(endDate).format(TimeFilter.DATETIME_FORMAT)};
     }
 
     _handleCustomInputChange(proxy, field) {
         this._handleInputChange(proxy, field, () => {
-            let newState = {range: InputTimeFilter.CUSTOM_RANGE};
+            let newState = {range: TimeFilter.CUSTOM_RANGE};
             if (_.isEqual(field.name, 'startDate')) {
                 _.extend(newState, this._getStartState(field.value));
             }  else if (_.isEqual(field.name, 'endDate')) {
@@ -273,12 +273,12 @@ export default class InputTimeFilter extends React.Component {
     }
 
     _isInfluxDateSyntax() {
-        return _.isEqual(this.props.dateSyntax, InputTimeFilter.INFLUX_DATE_SYNTAX);
+        return _.isEqual(this.props.dateSyntax, TimeFilter.INFLUX_DATE_SYNTAX);
     }
 
     _isValidDate(dateTimeString) {
         return this._isInfluxDateSyntax()
-            ? InputTimeFilter.INFLUX_DATE_REGEX.test(dateTimeString)
+            ? TimeFilter.INFLUX_DATE_REGEX.test(dateTimeString)
             : moment(dateTimeString || {}).isValid()
     }
 
@@ -289,7 +289,7 @@ export default class InputTimeFilter extends React.Component {
         if (this.props.addTimeResolution) {
             _.extend(timeFilter, {resolution: this.state.resolution, unit: this.state.unit});
         }
-        if (_.isEqual(this.state.range, InputTimeFilter.CUSTOM_RANGE)) {
+        if (_.isEqual(this.state.range, TimeFilter.CUSTOM_RANGE)) {
             timeFilter.start = this.state.start;
             timeFilter.end = this.state.end;
         } else {
@@ -359,7 +359,7 @@ export default class InputTimeFilter extends React.Component {
             isOpen: !isValid
         };
 
-        this.setState(newState, () => { if (isValid) { this.props.onApply(event, {name: this.props.name, value: this._getTimeFilterObject()}); }});
+        this.setState(newState, () => { if (isValid) { this.props.onChange(event, {name: this.props.name, value: this._getTimeFilterObject()}); }});
     }
 
     _handleCancelButtonClick(event, data) {
@@ -370,7 +370,7 @@ export default class InputTimeFilter extends React.Component {
     render () {
         let from = this.state.start ? `from [${this.state.start}] ` : '';
         let until = this.state.end ? ` until [${this.state.end}]` : '';
-        let inputValue = this._isRangeSelected(InputTimeFilter.CUSTOM_RANGE) ? `${from}${until}` : this.state.range;
+        let inputValue = this._isRangeSelected(TimeFilter.CUSTOM_RANGE) ? `${from}${until}` : this.state.range;
         let inputFieldHint = this._isInfluxDateSyntax()
             ? <div>Influx-compatible date/time expected<br />Examples:<br /> now() - 15m <br />2017-09-21 10:10</div>
             : <div>ISO-8601-compatible date/time expected<br />Example:<br />2017-09-21 10:10</div>
@@ -401,10 +401,10 @@ export default class InputTimeFilter extends React.Component {
                                             )
                                         }
                                         <List.Item>
-                                            <Button active={this._isRangeSelected(InputTimeFilter.CUSTOM_RANGE)}
-                                                    name={InputTimeFilter.CUSTOM_RANGE} fluid
+                                            <Button active={this._isRangeSelected(TimeFilter.CUSTOM_RANGE)}
+                                                    name={TimeFilter.CUSTOM_RANGE} fluid
                                                     onClick={this._handleCustomRangeButtonClick.bind(this)}>
-                                                {InputTimeFilter.CUSTOM_RANGE}
+                                                {TimeFilter.CUSTOM_RANGE}
                                             </Button>
                                         </List.Item>
                                     </List>

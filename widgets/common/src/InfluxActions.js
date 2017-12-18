@@ -7,7 +7,7 @@ class InfluxActions {
         this.toolbox = toolbox;
     }
 
-    doGetMetric(deploymentId, metric, from, to, timeGroup) {
+    doGetMetric(deploymentId, nodeId, nodeInstanceId, metrics, from, to, timeGroup) {
         let params = {};
         if (!_.isEmpty(from)) {
             params.from = from;
@@ -19,11 +19,12 @@ class InfluxActions {
             params.timeGroup = timeGroup;
         }
 
-        return this.toolbox.getInternal().doGet(`/monitor/byMetric/${deploymentId}/${metric}`, params);
+        return this.toolbox.getInternal().doGet(`/monitor/byMetric/${deploymentId || '*'}/${nodeId || '*'}/${nodeInstanceId || '*'}/${metrics || '*'}`, params);
     }
 
-    doGetMetrics(deploymentId) {
-        return this.toolbox.getInternal().doGet(`/monitor/metrics/${deploymentId}`);
+
+    doGetMetrics(deploymentId, nodeId, nodeInstanceId) {
+        return this.toolbox.getInternal().doGet(`/monitor/metrics/${deploymentId || '*'}/${nodeId || '*'}/${nodeInstanceId || '*'}`);
     }
 
     doRunQuery(qSelect, qFrom, qWhere) {

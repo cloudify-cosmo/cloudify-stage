@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 4.4.5
+    version: 8.9.1
 dependencies:
   override:
     - npm run beforebuild

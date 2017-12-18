@@ -4,6 +4,7 @@
 
 import md5 from 'blueimp-md5';
 import Const from './consts';
+import {getToolbox} from './Toolbox';
 
 export default class StageUtils {
 
@@ -99,5 +100,9 @@ export default class StageUtils {
 
         return configs;
     };
+
+    static getToolbox(onRefresh, onLoading, widgetId) {
+        return getToolbox(onRefresh, onLoading, widgetId);
+    }
 
 }
