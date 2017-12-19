@@ -8,7 +8,7 @@ Stage.defineWidget({
     name: "Composer link",
     description: 'Opens Cloudify Composer in a different tab',
     initialWidth: 2,
-    initialHeight: 4,
+    initialHeight: 5,
     showHeader: false,
     showBorder: false,
     isReact: true,

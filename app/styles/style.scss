@@ -190,6 +190,10 @@ a:hover {
   .widgetItem{
     height: 100%;
   }
+
+  .widgetWithoutContent{
+    overflow: auto;
+  }
 }
 
 .widget {

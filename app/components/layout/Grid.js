@@ -4,9 +4,9 @@
 
 import React, { Component, PropTypes } from 'react';
 import GridItem from './GridItem';
-import { WidthProvider, Responsive } from 'react-grid-layout';
+import RGL, { WidthProvider } from 'react-grid-layout';
 
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
+const ReactGridLayout = WidthProvider(RGL);
 
 export default class Grid extends Component {
 
@@ -48,16 +48,15 @@ export default class Grid extends Component {
 
     render() {
         return (
-            <ResponsiveReactGridLayout
+            <ReactGridLayout
                 className={['layout', this.props.isEditMode && 'isEditMode'].join(' ')}
-                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }} rowHeight={10}
+                cols={12} rowHeight={10}
                 onLayoutChange={this._saveChangedItems.bind(this)}
                 isDraggable={this.props.isEditMode}
                 isResizable={this.props.isEditMode}
                 >
                 {_.map(this.props.children, this.processGridItem.bind(this))}
-            </ResponsiveReactGridLayout>
+            </ReactGridLayout>
         );
     }
 }
