@@ -52,7 +52,7 @@ export default class Widget extends Component {
 
         if (!this.props.widget.definition) {
             return (
-                <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className='widgetItem ui segment'>
+                <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className='widgetItem ui segment widgetWithoutContent'>
                     {
                         this.props.isEditMode &&
                         <div className='widgetEditButtons'>
@@ -72,7 +72,7 @@ export default class Widget extends Component {
 
         if (this.props.widget.definition && !this._isUserAuthorized()) {
             return (
-                <div className='widgetItem ui segment'>
+                <div className='widgetItem ui segment widgetWithoutContent'>
                     {
                         this.props.isEditMode &&
                         <div className='widgetEditButtons'>
