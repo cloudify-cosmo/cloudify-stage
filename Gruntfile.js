@@ -10,6 +10,7 @@ module.exports = function(grunt) {
         // get the current concat object from initConfig
         var browserify = grunt.config.get('browserify') || {};
         var babel = grunt.config.get('babel') || {};
+        var uglify = grunt.config.get('uglify') || {};
 
         // get all module directories
         grunt.file.expand("widgets/**/src").forEach(function (dir) {
@@ -24,9 +25,11 @@ module.exports = function(grunt) {
             if (dirName === 'common') {
                 browserify.widgets.files[destDir+'/common.js'] = [dir + '/**/*.js'];
                 browserify.dist.files[destDir+'/common.js'] = [dir + '/**/*.js'];
+                uglify.dist.files[destDir+'/common.js'] = [destDir + '/common.js'];
             } else {
                 browserify.widgets.files[destDir+'/widget.js'] = [dir + '/**/*.js', '!' + dir + '/**/backend.js'];
                 browserify.dist.files[destDir+'/widget.js'] = [dir + '/**/*.js', '!' + dir + '/**/backend.js'];
+                uglify.dist.files[destDir+'/widget.js'] = [destDir + '/widget.js'];
                 if (grunt.file.exists(dir, 'backend.js')) {
                     babel.dist.files[destDir+'/backend.js'] = [dir + '/**/backend.js'];
                 }
@@ -36,9 +39,10 @@ module.exports = function(grunt) {
         // add module subtasks to the concat task in initConfig
         grunt.config.set('browserify', browserify);
         grunt.config.set('babel', babel);
-        console.log('Widget files:' ,browserify.widgets.files);
-        console.log('Backend files:' ,babel.dist.files);
-        
+        grunt.config.set('uglify', uglify);
+        console.log('Widget files:', browserify.widgets.files);
+        console.log('Backend files:', babel.dist.files);
+
     });
 
     grunt.initConfig({
@@ -72,6 +76,15 @@ module.exports = function(grunt) {
                 options: {
                 }
             }
+        },
+        uglify: {
+            dist: {
+                options: {
+                    sourceMap: true
+                },
+                files: {
+                }
+            }
         }
     });
 
@@ -91,6 +104,7 @@ module.exports = function(grunt) {
             'prepareModules',
             'babel:dist',
             'browserify:dist',
+            'uglify:dist'
         ]);
 
 };
