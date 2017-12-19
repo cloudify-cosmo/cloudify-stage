@@ -96,6 +96,20 @@ export default class extends React.Component {
         });
     }
 
+    _setDeploymentAvailability(deploymentId, availability) {
+        var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        this.props.toolbox.loading(true);
+        actions.doSetAvailability(deploymentId, availability)
+            .then(()=> {
+                this.props.toolbox.loading(false);
+                this.props.toolbox.refresh();
+            })
+            .catch((err)=>{
+                this.props.toolbox.loading(false);
+                this.setState({error: err.message});
+            });
+    }
+
     _refreshData() {
         this.props.toolbox.refresh();
     }
@@ -132,14 +146,18 @@ export default class extends React.Component {
                                      onSelectDeployment={this._selectDeployment.bind(this)}
                                      onMenuAction={this._showModal.bind(this)}
                                      onCancelExecution={this._cancelExecution.bind(this)}
-                                     onError={this._setError.bind(this)} />
+                                     onError={this._setError.bind(this)}
+                                     onSetAvailability={this._setDeploymentAvailability.bind(this)}
+                                     allowedSettingTo={['tenant']}/>
                     :
                     <DeploymentsSegment widget={this.props.widget} data={this.props.data}
                                        fetchData={this.fetchData.bind(this)}
                                        onSelectDeployment={this._selectDeployment.bind(this)}
                                        onMenuAction={this._showModal.bind(this)}
                                        onCancelExecution={this._cancelExecution.bind(this)}
-                                       onError={this._setError.bind(this)} />
+                                       onError={this._setError.bind(this)}
+                                       onSetAvailability={this._setDeploymentAvailability.bind(this)}
+                                       allowedSettingTo={['tenant']}/>
                 }
 
                 <Confirm content={`Are you sure you want to remove deployment ${this.state.deployment.id}?`}

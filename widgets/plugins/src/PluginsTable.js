@@ -62,10 +62,10 @@ export default class extends React.Component {
             });
     }
 
-    _setGlobalPlugin(item) {
+    _setPluginAvailability(pluginId, availability) {
         var actions = new Actions(this.props.toolbox);
         this.props.toolbox.loading(true);
-        actions.doSetGlobal(item)
+        actions.doSetAvailability(pluginId, availability)
             .then(()=> {
                 this.props.toolbox.loading(false);
                 this.props.toolbox.refresh();
@@ -123,7 +123,7 @@ export default class extends React.Component {
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
                                         {item.id}
-                                        <ResourceAvailability availability={item.resource_availability} onSetGlobal={this._setGlobalPlugin.bind(this, item)} className="rightFloated"/>
+                                        <ResourceAvailability availability={item.resource_availability} onSetAvailability={(availability) => this._setPluginAvailability(item.id, availability)} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.package_name}</DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>

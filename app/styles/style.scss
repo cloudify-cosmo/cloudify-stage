@@ -689,10 +689,13 @@ code.hljs {
   overflow: inherit;
 }
 
-.confirmModal.ui.modal > .content {
-  font-size: 1.3em;
-  line-height: 1.28571429em;
-  font-weight: 700;
+
+.confirmModal.ui.modal, .setAvailabilityModal.ui.modal{
+  > .content{
+    font-size: 1.3em;
+    line-height: 1.28571429em;
+    font-weight: 700;
+  }
 }
 
 .ui.modal.tiny {
@@ -895,4 +898,9 @@ a.underline {
   position: absolute;
   top: 1rem;
   right: 1rem;
+}
+
+.setAvailability{
+  margin-top: 10px;
+  text-align: center;
 }

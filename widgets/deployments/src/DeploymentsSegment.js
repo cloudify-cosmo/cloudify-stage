@@ -16,7 +16,9 @@ export default class extends React.Component {
         onSelectDeployment: PropTypes.func,
         onCancelExecution: PropTypes.func,
         onMenuAction: PropTypes.func,
-        onError: PropTypes.func
+        onError: PropTypes.func,
+        onSetAvailability: PropTypes.func,
+        allowedSettingTo: PropTypes.array
     };
 
     static defaultProps = {
@@ -24,7 +26,9 @@ export default class extends React.Component {
         onSelectDeployment: ()=>{},
         onCancelExecution: ()=>{},
         onMenuAction: ()=>{},
-        onError: ()=>{}
+        onError: ()=>{},
+        onSetAvailability: ()=>{},
+        allowedSettingTo: ['tenant']
     };
 
     render() {
@@ -42,7 +46,7 @@ export default class extends React.Component {
                                 <div className="ui grid">
                                     <div className="three wide center aligned column rightDivider">
                                         <h3 className="ui icon header verticalCenter breakWord"><a href="javascript:void(0)" className="breakWord">{item.id}</a></h3>
-                                        <ResourceAvailability availability={item.resource_availability} className="topRightCorner"/>
+                                        <ResourceAvailability availability={item.resource_availability} onSetAvailability={(availability) => this.props.onSetAvailability(item.id, availability)} allowedSettingTo={this.props.allowedSettingTo} className="topRightCorner"/>
                                     </div>
                                     <div className="two wide column">
                                         <h5 className="ui icon header">Blueprint</h5>

@@ -16,7 +16,8 @@ export default class BlueprintsCatalog extends React.Component{
         onSelectBlueprint: PropTypes.func,
         onDeleteBlueprint: PropTypes.func,
         onCreateDeployment: PropTypes.func,
-        onSetGlobal: PropTypes.func
+        onSetAvailability: PropTypes.func,
+        allowedSettingTo: PropTypes.array
     };
 
     static defaultProps = {
@@ -24,7 +25,8 @@ export default class BlueprintsCatalog extends React.Component{
         onSelectBlueprint: ()=>{},
         onDeleteBlueprint: ()=>{},
         onCreateDeployment: ()=>{},
-        onSetGlobal: ()=>{}
+        onSetAvailability: ()=>{},
+        allowedSettingTo: ['tenant']
     };
 
     render(){
@@ -43,7 +45,7 @@ export default class BlueprintsCatalog extends React.Component{
                                     <Grid.Column width="16">
                                         <Image src={Stage.Utils.url(`/ba/image/${item.id}`)}/>
                                         <Header><a href="javascript:void(0)" className="breakWord">{item.id}</a></Header>
-                                        <ResourceAvailability availability={item.resource_availability} onSetGlobal={()=>this.props.onSetGlobal(item)} className="rightFloated"/>
+                                        <ResourceAvailability availability={item.resource_availability} onSetAvailability={(availability)=>this.props.onSetAvailability(item.id, availability)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
                                     </Grid.Column>
                                 </Grid.Row>
 

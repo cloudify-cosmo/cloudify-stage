@@ -44,8 +44,8 @@ class BlueprintActions {
         return promise.then(()=> this.doUploadImage(blueprintName, imageUrl, image));
     }
 
-    doSetGlobal(blueprintId) {
-        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-global`);
+    doSetAvailability(blueprintId, availability) {
+        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-availability`, null, {availability: availability});
     }
 
     doListYamlFiles(blueprintUrl, file) {

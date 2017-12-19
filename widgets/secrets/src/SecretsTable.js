@@ -86,10 +86,10 @@ export default class SecretsTable extends React.Component {
         });
     }
 
-    _setGlobalSecret(secret) {
+    _setSecretAvailability(secretKey, availability) {
         var actions = new Actions(this.props.toolbox);
         this.props.toolbox.loading(true);
-        actions.doSetGlobal(secret.key)
+        actions.doSetAvailability(secretKey, availability)
             .then(()=> {
                 this.props.toolbox.loading(false);
                 this.props.toolbox.refresh();
@@ -134,7 +134,7 @@ export default class SecretsTable extends React.Component {
                                 <DataTable.Row key={secret.key}>
                                     <DataTable.Data>
                                         {secret.key}
-                                        <ResourceAvailability availability={secret.resource_availability} onSetGlobal={this._setGlobalSecret.bind(this, secret)} className="rightFloated"/>
+                                        <ResourceAvailability availability={secret.resource_availability} onSetAvailability={(availability) => {this._setSecretAvailability(secret.key, availability)}} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
                                         {

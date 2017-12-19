@@ -23,7 +23,7 @@ export default class {
         return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, {value});
     }
 
-    doSetGlobal(key) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-global`);
+    doSetAvailability(key, availability) {
+        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-availability`, null, {availability});
     }
 }
