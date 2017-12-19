@@ -7,6 +7,7 @@ import {getTenants} from './tenants';
 import {getClientConfig} from './clientConfig';
 import {loadOrCreateUserAppData} from './userApp';
 import {getUserData, getRBACConfig} from './managers';
+import {getStatus} from '../actions/status';
 import {NO_TENANTS_ERR} from '../utils/ErrorCodes';
 
 export function setAppLoading(isLoading) {
@@ -43,7 +44,8 @@ export function intialPageLoad() {
                     dispatch(loadTemplates()),
                     dispatch(loadWidgetDefinitions()),
                     dispatch(getRBACConfig()),
-                    dispatch(getClientConfig())
+                    dispatch(getClientConfig()),
+                    dispatch(getStatus())
                 ]);
             })
             .then(() => {

@@ -11,6 +11,7 @@
     "customer": "initial-template-customer",
     "community": "initial-template-community"
   },
+  "maintenancePollingInterval": 10000,
   "singleManager": true,
   "whiteLabel": {
     "enabled": false,
