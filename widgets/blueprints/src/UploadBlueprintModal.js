@@ -21,7 +21,7 @@ export default class UploadModal extends React.Component {
         imageUrl: '',
         errors: {},
         yamlFiles: [],
-        privateResource: false
+        availability: 'tenant'
     }
 
     onApprove () {
@@ -73,7 +73,7 @@ export default class UploadModal extends React.Component {
                          blueprintFile,
                          this.state.imageUrl,
                          this.refs.imageFile.file(),
-                         this.state.privateResource).then(()=>{
+                         this.state.availability).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch((err)=>{
@@ -115,7 +115,7 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, PrivateField, Popup} = Stage.Basic;
+        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, AvailabilityField, Popup} = Stage.Basic;
         const uploadButton = <Button content='Upload' icon='upload' labelPosition='left' className="uploadBlueprintButton"/>;
 
         var options = _.map(this.state.yamlFiles, item => { return {text: item, value: item} });
@@ -126,8 +126,8 @@ export default class UploadModal extends React.Component {
                        onClose={()=>this.setState({open:false})} className="uploadBlueprintModal">
                     <Modal.Header>
                         <Icon name="upload"/> Upload blueprint
-                        <PrivateField lock={this.state.privateResource} className="rightFloated"
-                                      onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
+                        <AvailabilityField availability={this.state.availability} className="rightFloated"
+                                      onAvailabilityChange={(availability)=>this.setState({availability: availability})}/>
                     </Modal.Header>
 
                     <Modal.Content>

@@ -13,7 +13,13 @@ export default {
         STAGE_EDIT_MODE: 'stage_edit_mode',
         STAGE_MAINTENANCE_MODE: 'stage_maintenance_mode',
         STAGE_CONFIGURE: 'stage_configure',
-        STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management'
+        STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management',
+        CREATE_GLOBAL_RESOURCE: 'create_global_resource'
+    },
+    availability: {
+        PRIVATE: 'private',
+        TENANT: 'tenant',
+        GLOBAL: 'global'
     },
     MANAGER_RUNNING: 'running',
     MAINTENANCE_ACTIVATING: 'activating',

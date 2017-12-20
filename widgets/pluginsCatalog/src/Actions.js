@@ -35,9 +35,9 @@ export default class Actions {
    * @param {boolean} [privateResource=false] 
    * @access public
    */
-  doUpload (archiveUrl, privateResource = false) {
+  doUpload (archiveUrl, availability) {
     let params = {
-      private_resource: privateResource,
+      availability,
       plugin_archive_url: archiveUrl,
     };
 

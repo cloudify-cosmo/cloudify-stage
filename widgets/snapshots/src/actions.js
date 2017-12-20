@@ -18,9 +18,8 @@ export default class {
             {force: shouldForceRestore, recreate_deployments_envs: false, tenant_name: ''});
     }
 
-    doUpload(snapshotUrl, snapshotId, file, privateResource=false) {
-        var params = {private_resource: privateResource};
-
+    doUpload(snapshotUrl, snapshotId, file) {
+        var params = {};
         if (!_.isEmpty(snapshotUrl)) {
             params['snapshot_archive_url'] = snapshotUrl;
         }
@@ -40,12 +39,11 @@ export default class {
         return this.toolbox.getManager().doDownload(snapshotDownloadUrl, snapshotFileName);
     }
 
-    doCreate(snapshotId, includeMetrics=false, includeCredentials=false, privateResource=false){
+    doCreate(snapshotId, includeMetrics=false, includeCredentials=false){
         snapshotId = encodeURIComponent(snapshotId);
         return this.toolbox.getManager().doPut(`/snapshots/${snapshotId}`, null, {
             include_metrics: includeMetrics,
-            include_credentials: includeCredentials,
-            private_resource: privateResource
+            include_credentials: includeCredentials
         });
     }
 }

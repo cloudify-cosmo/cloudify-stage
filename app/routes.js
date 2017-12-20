@@ -18,6 +18,7 @@ import ErrorPage from './Containers/ErrorPage';
 
 import {setValue,clearContext} from './actions/context';
 import Auth from './utils/auth';
+import stageUtils from './utils/stageUtils';
 import Consts from './utils/consts';
 
 export default (store)=> {
@@ -64,7 +65,7 @@ export default (store)=> {
         }
 
         // Only stay here if user roles match required permissions
-        if (!Auth.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, managerData)){
+        if (!stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, managerData)){
             console.log('Manager has NOT an admin role, navigating to main page');
             replace('/');
         }

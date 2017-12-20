@@ -16,16 +16,17 @@ class BlueprintActions {
             .then(()=>this.doDeleteImage(blueprint.id));
     }
 
-    doDeploy(blueprint, deploymentId, inputs, privateResource=false, skipPluginsValidation=false) {
-        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`,{private_resource:privateResource}, {
+    doDeploy(blueprint, deploymentId, inputs, availability, skipPluginsValidation=false) {
+        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null, {
             'blueprint_id': blueprint.id,
             inputs,
+            availability,
             skip_plugins_validation:skipPluginsValidation
         });
     }
 
-    doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, privateResource=false) {
-        var params = {private_resource: privateResource};
+    doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, availability) {
+        var params = {availability: availability};
 
         if (!_.isEmpty(blueprintFileName)) {
             params['application_file_name'] = blueprintFileName;

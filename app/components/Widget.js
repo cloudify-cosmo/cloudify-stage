@@ -7,7 +7,7 @@ import InlineEdit from 'react-edit-inline';
 
 import EditWidget from '../containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
-import Auth from '../utils/auth';
+import stageUtils from '../utils/stageUtils';
 
 export default class Widget extends Component {
     static propTypes = {
@@ -39,7 +39,7 @@ export default class Widget extends Component {
     }
 
     _isUserAuthorized() {
-        return Auth.isUserAuthorized(this.props.widget.definition.permission, this.props.manager);
+        return stageUtils.isUserAuthorized(this.props.widget.definition.permission, this.props.manager);
     }
 
     componentDidUpdate(prevProps, prevState) {

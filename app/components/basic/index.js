@@ -27,7 +27,7 @@ import Dropdown from './Dropdown';
 import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
-import PrivateField from './PrivateField';
+import AvailabilityField from '../../containers/AvailabilityField';
 import ResourceAvailability from './ResourceAvailability';
 import PopupConfirm from './PopupConfirm';
 
@@ -73,7 +73,7 @@ export {
     Popup,
     PopupConfirm,
     PopupMenu,
-    PrivateField,
+    AvailabilityField,
     ResourceAvailability,
     Radio,
     Segment,

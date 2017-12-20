@@ -4,6 +4,8 @@
 
 import React, { Component, PropTypes } from 'react';
 import {Icon, Popup, Button, Message, Confirm} from 'semantic-ui-react';
+import AvailabilityIcon from '../AvailabilityIcon';
+import consts from '../../utils/consts';
 
 /**
  * ResourceAvailability - an icon representing resource availability. If allowed setting different availability than current,
@@ -18,27 +20,12 @@ import {Icon, Popup, Button, Message, Confirm} from 'semantic-ui-react';
  *
  * ![ResourceAvailability](manual/asset/resourceAvailability/ResourceAvailability_0.png)
  * ```
- * <ResourceAvailability availability={ResourceAvailability.PRIVATE} />
- * <ResourceAvailability availability={ResourceAvailability.TENANT} />
- * <ResourceAvailability availability={ResourceAvailability.GLOBAL} />
+ * <ResourceAvailability availability={consts.availability.PRIVATE} />
+ * <ResourceAvailability availability={consts.availability.TENANT} />
+ * <ResourceAvailability availability={consts.availability.GLOBAL} />
  *```
  */
 export default class ResourceAvailability extends Component {
-
-    /**
-     *
-     */
-    static PRIVATE = 'private';
-
-    /**
-     *
-     */
-    static TENANT = 'tenant';
-
-    /**
-     *
-     */
-    static GLOBAL = 'global';
 
     constructor(props, context){
         super(props, context);
@@ -48,7 +35,6 @@ export default class ResourceAvailability extends Component {
         }
     }
 
-
     /**
      * @property {string} availability resource availability - in ['private', 'tenant, 'global']
      * @property {func} [onSetAvailability(availability)] function to be called when user confirm changing availability
@@ -57,9 +43,9 @@ export default class ResourceAvailability extends Component {
      */
     static propTypes = {
         availability: PropTypes.oneOf([
-            ResourceAvailability.PRIVATE,
-            ResourceAvailability.TENANT,
-            ResourceAvailability.GLOBAL]).isRequired,
+            consts.availability.PRIVATE,
+            consts.availability.TENANT,
+            consts.availability.GLOBAL]).isRequired,
         onSetAvailability: PropTypes.func,
         allowedSettingTo: PropTypes.array,
         className: PropTypes.string
@@ -70,21 +56,15 @@ export default class ResourceAvailability extends Component {
     };
 
     render() {
-        const ICON_PROP = {
-            [ResourceAvailability.PRIVATE]: {name: 'lock', color: 'red', title: 'Private resource'},
-            [ResourceAvailability.TENANT]: {name: 'user', color: 'green', title: 'Tenant resource'},
-            [ResourceAvailability.GLOBAL]: {name: 'globe', color: 'blue', title: 'Global resource'}
-        };
-        let setTenantAllowed = _.includes(this.props.allowedSettingTo, ResourceAvailability.TENANT) && _.isEqual(this.props.availability, ResourceAvailability.PRIVATE);
-        let setGlobalAllowed = _.includes(this.props.allowedSettingTo, ResourceAvailability.GLOBAL) && !_.isEqual(this.props.availability, ResourceAvailability.GLOBAL);
+        let setTenantAllowed = _.includes(this.props.allowedSettingTo, consts.availability.TENANT) && _.isEqual(this.props.availability, ResourceAvailability.PRIVATE);
+        let setGlobalAllowed = _.includes(this.props.allowedSettingTo, consts.availability.GLOBAL) && !_.isEqual(this.props.availability, ResourceAvailability.GLOBAL);
         let canChangeAvailability = setGlobalAllowed || setTenantAllowed;
-        let icon = <Icon name={ICON_PROP[this.props.availability].name}
-                         color={ICON_PROP[this.props.availability].color}
-                         title={ICON_PROP[this.props.availability].title}
-                         className={this.props.className} link={setGlobalAllowed}
-                         onClick={e => e.stopPropagation()}
-                         bordered
-                         disabled={!canChangeAvailability}/>;
+        let icon = <AvailabilityIcon availability={this.props.availability}
+                                     className={this.props.className}
+                                     link={setGlobalAllowed}
+                                     onClick={e => e.stopPropagation()}
+                                     bordered
+                                     disabled={!canChangeAvailability}/>;
 
         let closePopup = ()=>{};
         let popupContent =
@@ -93,23 +73,23 @@ export default class ResourceAvailability extends Component {
             {
                 setTenantAllowed
                 &&
-                <Button animated color={ICON_PROP[ResourceAvailability.TENANT].color} onClick={() => {
+                <Button animated color={ICON_PROP[consts.availability.TENANT].color} onClick={() => {
                     closePopup();
-                    this.setState({openConfirm: true, availability: ResourceAvailability.TENANT})
+                    this.setState({openConfirm: true, availability: consts.availability.TENANT})
                 }}>
                     <Button.Content visible>Tenant</Button.Content>
-                    <Button.Content hidden><Icon name={ICON_PROP[ResourceAvailability.TENANT].name} /></Button.Content>
+                    <Button.Content hidden><Icon name={ICON_PROP[consts.availability.TENANT].name} /></Button.Content>
                 </Button>
             }
             {
                 setGlobalAllowed
                 &&
-                <Button animated color={ICON_PROP[ResourceAvailability.GLOBAL].color} onClick={() => {
+                <Button animated color={ICON_PROP[consts.availability.GLOBAL].color} onClick={() => {
                     closePopup();
-                    this.setState({openConfirm: true, availability: ResourceAvailability.GLOBAL})
+                    this.setState({openConfirm: true, availability: consts.availability.GLOBAL})
                 }}>
                     <Button.Content visible>Global</Button.Content>
-                    <Button.Content hidden><Icon name={ICON_PROP[ResourceAvailability.GLOBAL].name}/></Button.Content>
+                    <Button.Content hidden><Icon name={ICON_PROP[consts.availability.GLOBAL].name}/></Button.Content>
                 </Button>
             }
         </div>;
