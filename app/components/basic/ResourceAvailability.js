@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 import {Icon, Popup, Button, Message, Confirm} from 'semantic-ui-react';
 import AvailabilityIcon from '../AvailabilityIcon';
 import consts from '../../utils/consts';
+import _ from 'lodash';
 
 /**
  * ResourceAvailability - an icon representing resource availability. If allowed setting different availability than current,
@@ -56,8 +57,8 @@ export default class ResourceAvailability extends Component {
     };
 
     render() {
-        let setTenantAllowed = _.includes(this.props.allowedSettingTo, consts.availability.TENANT) && _.isEqual(this.props.availability, ResourceAvailability.PRIVATE);
-        let setGlobalAllowed = _.includes(this.props.allowedSettingTo, consts.availability.GLOBAL) && !_.isEqual(this.props.availability, ResourceAvailability.GLOBAL);
+        let setTenantAllowed = _.includes(this.props.allowedSettingTo, consts.availability.TENANT) && _.isEqual(this.props.availability, consts.availability.PRIVATE);
+        let setGlobalAllowed = _.includes(this.props.allowedSettingTo, consts.availability.GLOBAL) && !_.isEqual(this.props.availability, consts.availability.GLOBAL);
         let canChangeAvailability = setGlobalAllowed || setTenantAllowed;
         let icon = <AvailabilityIcon availability={this.props.availability}
                                      className={this.props.className}
@@ -73,23 +74,23 @@ export default class ResourceAvailability extends Component {
             {
                 setTenantAllowed
                 &&
-                <Button animated color={ICON_PROP[consts.availability.TENANT].color} onClick={() => {
+                <Button animated color="green" onClick={() => {
                     closePopup();
                     this.setState({openConfirm: true, availability: consts.availability.TENANT})
                 }}>
                     <Button.Content visible>Tenant</Button.Content>
-                    <Button.Content hidden><Icon name={ICON_PROP[consts.availability.TENANT].name} /></Button.Content>
+                    <Button.Content hidden><Icon name="user" /></Button.Content>
                 </Button>
             }
             {
                 setGlobalAllowed
                 &&
-                <Button animated color={ICON_PROP[consts.availability.GLOBAL].color} onClick={() => {
+                <Button animated color="blue" onClick={() => {
                     closePopup();
                     this.setState({openConfirm: true, availability: consts.availability.GLOBAL})
                 }}>
                     <Button.Content visible>Global</Button.Content>
-                    <Button.Content hidden><Icon name={ICON_PROP[consts.availability.GLOBAL].name}/></Button.Content>
+                    <Button.Content hidden><Icon name="globe"/></Button.Content>
                 </Button>
             }
         </div>;

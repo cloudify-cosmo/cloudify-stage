@@ -2,7 +2,7 @@
  * Created by kinneretzin on 09/02/2017.
  */
 
-import {getMaintenanceStatus,logout} from '../actions/managers';
+import {getMaintenanceStatus} from '../actions/managers';
 import StageUtils from './stageUtils';
 
 
