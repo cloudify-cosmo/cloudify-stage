@@ -209,7 +209,7 @@ Stage.defineWidget({
                                       'Please check your Influx query syntax and try again. Error: ' +
                                       error.message || error);
             });
-        } else if ((!_.isEmpty(deploymentId) || !_.isEmpty(nodeId) || !_.isEmpty(nodeInstanceId)) && !_.isEmpty(metrics)) {
+        } else if (!_.isEmpty(deploymentId) && !_.isEmpty(nodeInstanceId) && !_.isEmpty(metrics)) {
             toolbox.loading(true);
             return actions.doGetMetric(deploymentId, nodeId, nodeInstanceId, metrics, from, to, timeGroup)
                 .then((data) => {
@@ -242,7 +242,7 @@ Stage.defineWidget({
             return (
                 <Message info icon>
                     <Icon name='info' />
-                    Please select deployment, node or node instance and metric in widget's configuration to present the data graph.
+                    Please select deployment, node instance and metric in widget's configuration to present the data graph.
                 </Message>
             );
         } else if (this._isEmptyResponse(widget, data)) {
