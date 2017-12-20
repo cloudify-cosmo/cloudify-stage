@@ -27,12 +27,10 @@
     "x": 6,
     "configuration": {
       "type": "line",
-      "metric": "cpu_total_user",
       "charts": {
         "0": {
           "metric": "cpu_total_user",
-          "unit": "%",
-          "label": "CPU Total User"
+          "label": "CPU Total User [%]"
         }
       }
     }
@@ -45,12 +43,10 @@
     "x": 0,
     "configuration": {
       "type": "line",
-      "metric": "memory_MemFree",
       "charts": {
         "0": {
           "metric": "memory_MemFree",
-          "unit": "B",
-          "label": "Memory"
+          "label": "Memory [B]"
         }
       }
     }
@@ -63,12 +59,10 @@
     "x": 0,
     "configuration": {
       "type": "bar",
-      "metric": "cpu_total_system",
       "charts": {
         "0": {
           "metric": "cpu_total_system",
-          "unit": "%",
-          "label": "CPU Total System"
+          "label": "CPU Total System [%]"
         }
       }
     }
@@ -81,12 +75,10 @@
     "x": 6,
     "configuration": {
       "type": "line",
-      "metric": "loadavg_processes_running",
       "charts": {
         "0": {
           "metric": "loadavg_processes_running",
-          "unit": "%",
-          "label": "Running Load Average"
+          "label": "Running Load Average [%]"
         }
       }
     }
