@@ -28,7 +28,7 @@ import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
 import AvailabilityField from '../../containers/AvailabilityField';
-import ResourceAvailability from './ResourceAvailability';
+import ResourceAvailability from '../../containers/ResourceAvailability';
 import PopupConfirm from './PopupConfirm';
 
 export {
