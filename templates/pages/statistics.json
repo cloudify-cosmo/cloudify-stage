@@ -2,13 +2,15 @@
   "name": "Statistics",
   "widgets": [{
     "definition": "filter",
-    "name": "Filter by blueprint/deployment/execution",
+    "name": "Nodes filter",
     "height": 5,
     "width": 8,
     "y": 0,
     "x": 0,
     "configuration": {
-      "filterByExecutions": false
+      "filterByExecutions": false,
+      "filterByNodes": true,
+      "filterByNodeInstances": true
     }
   }, {
     "definition": "timeFilter",
