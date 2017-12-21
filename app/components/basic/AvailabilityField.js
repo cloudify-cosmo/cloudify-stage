@@ -15,7 +15,7 @@ import consts from '../../utils/consts';
  * `Stage.Basic.AvailabilityField`
  *
  * ## Usage
- *
+ *  <AvailabilityField availability={CURRENT_AVAILABILITY} onAvailabilityChange={(newAvailability) => IMPLEMENT_LOGIC_HERE} disallowGlobal={true} className={ANY_CLASS_NAME}/>
  */
 export default class AvailabilityField extends Component {
 
