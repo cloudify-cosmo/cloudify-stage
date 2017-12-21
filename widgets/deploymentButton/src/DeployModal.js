@@ -26,7 +26,7 @@ export default class DeployModal extends React.Component {
         yamlFile: null,
         fileLoading: false,
         deploymentInputs: [],
-        availability: 'tenant',
+        availability: Stage.Common.Consts.defaultAvailability,
         skipPluginsValidation: false
     }
 

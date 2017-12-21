@@ -15,7 +15,7 @@ export default class PluginsCatalogModal extends React.Component {
   static initialState = {
     loading: false,
     error: {},
-    availability: 'tenant',
+    availability: Stage.Common.Consts.defaultAvailability,
   };
 
   /**

@@ -21,7 +21,7 @@ export default class UploadModal extends React.Component {
         imageUrl: '',
         errors: {},
         yamlFiles: [],
-        availability: 'tenant'
+        availability: Stage.Common.Consts.defaultAvailability
     }
 
     onApprove () {

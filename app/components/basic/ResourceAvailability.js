@@ -21,9 +21,9 @@ import _ from 'lodash';
  *
  * ![ResourceAvailability](manual/asset/resourceAvailability/ResourceAvailability_0.png)
  * ```
- * <ResourceAvailability availability={consts.availability.PRIVATE} />
- * <ResourceAvailability availability={consts.availability.TENANT} />
- * <ResourceAvailability availability={consts.availability.GLOBAL} />
+ * <ResourceAvailability availability={consts.availability.PRIVATE.name} />
+ * <ResourceAvailability availability={consts.availability.TENANT.name} />
+ * <ResourceAvailability availability={consts.availability.GLOBAL.name} />
  *```
  */
 export default class ResourceAvailability extends Component {
@@ -44,9 +44,9 @@ export default class ResourceAvailability extends Component {
      */
     static propTypes = {
         availability: PropTypes.oneOf([
-            consts.availability.PRIVATE,
-            consts.availability.TENANT,
-            consts.availability.GLOBAL]).isRequired,
+            consts.availability.PRIVATE.name,
+            consts.availability.TENANT.name,
+            consts.availability.GLOBAL.name]).isRequired,
         onSetAvailability: PropTypes.func,
         allowedSettingTo: PropTypes.array,
         className: PropTypes.string
@@ -57,8 +57,8 @@ export default class ResourceAvailability extends Component {
     };
 
     render() {
-        let setTenantAllowed = _.includes(this.props.allowedSettingTo, consts.availability.TENANT) && _.isEqual(this.props.availability, consts.availability.PRIVATE);
-        let setGlobalAllowed = _.includes(this.props.allowedSettingTo, consts.availability.GLOBAL) && !_.isEqual(this.props.availability, consts.availability.GLOBAL);
+        let setTenantAllowed = _.includes(this.props.allowedSettingTo, consts.availability.TENANT.name) && _.isEqual(this.props.availability, consts.availability.PRIVATE.name);
+        let setGlobalAllowed = _.includes(this.props.allowedSettingTo, consts.availability.GLOBAL.name) && !_.isEqual(this.props.availability, consts.availability.GLOBAL.name);
         let canChangeAvailability = setGlobalAllowed || setTenantAllowed;
         let icon = <AvailabilityIcon availability={this.props.availability}
                                      className={this.props.className}
@@ -76,7 +76,7 @@ export default class ResourceAvailability extends Component {
                 &&
                 <Button animated color="green" onClick={() => {
                     closePopup();
-                    this.setState({openConfirm: true, availability: consts.availability.TENANT})
+                    this.setState({openConfirm: true, availability: consts.availability.TENANT.name})
                 }}>
                     <Button.Content visible>Tenant</Button.Content>
                     <Button.Content hidden><Icon name="user" /></Button.Content>
@@ -87,7 +87,7 @@ export default class ResourceAvailability extends Component {
                 &&
                 <Button animated color="blue" onClick={() => {
                     closePopup();
-                    this.setState({openConfirm: true, availability: consts.availability.GLOBAL})
+                    this.setState({openConfirm: true, availability: consts.availability.GLOBAL.name})
                 }}>
                     <Button.Content visible>Global</Button.Content>
                     <Button.Content hidden><Icon name="globe"/></Button.Content>

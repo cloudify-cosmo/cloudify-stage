@@ -17,9 +17,9 @@ export default {
         CREATE_GLOBAL_RESOURCE: 'create_global_resource'
     },
     availability: {
-        PRIVATE: 'private',
-        TENANT: 'tenant',
-        GLOBAL: 'global'
+        PRIVATE: {name: 'private', icon: 'lock', color: 'red', title: 'Private resource'},
+        TENANT: {name: 'tenant', icon: 'user', color: 'green', title: 'Tenant resource'},
+        GLOBAL: {name: 'global', icon: 'globe', color: 'blue', title: 'Global resource'}
     },
     MANAGER_RUNNING: 'running',
     MAINTENANCE_ACTIVATING: 'activating',

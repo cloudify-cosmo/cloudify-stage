@@ -21,7 +21,7 @@ export default class DeployBlueprintModal extends React.Component {
         yamlFile: null,
         fileLoading: false,
         deploymentInputs: [],
-        availability: 'tenant',
+        availability: Stage.Common.Consts.defaultAvailability,
         skipPluginsValidation: false
     }
 

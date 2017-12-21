@@ -16,7 +16,7 @@ export default class UploadModal extends React.Component {
         loading: false,
         pluginUrl: '',
         errors: {},
-        availability: 'tenant'
+        availability: Stage.Common.Consts.defaultAvailability
     }
 
     onApprove () {

@@ -22,7 +22,7 @@ export default class AvailabilityField extends Component {
     /**
      * order of availabilities when changing availability
      */
-    static availabilitiesOrder = [consts.availability.TENANT, consts.availability.PRIVATE, consts.availability.GLOBAL];
+    static availabilitiesOrder = [consts.availability.TENANT.name, consts.availability.PRIVATE.name, consts.availability.GLOBAL.name];
 
 
     /**
@@ -33,9 +33,9 @@ export default class AvailabilityField extends Component {
      */
     static propTypes = {
         availability: PropTypes.oneOf([
-            consts.availability.PRIVATE,
-            consts.availability.TENANT,
-            consts.availability.GLOBAL]).isRequired,
+            consts.availability.PRIVATE.name,
+            consts.availability.TENANT.name,
+            consts.availability.GLOBAL.name]).isRequired,
         onAvailabilityChange: PropTypes.func,
         disallowGlobal: PropTypes.bool,
         className: PropTypes.string

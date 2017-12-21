@@ -17,21 +17,15 @@ export default class AvailabilityIcon extends Component {
      */
     static propTypes = {
         availability: PropTypes.oneOf([
-            consts.availability.PRIVATE,
-            consts.availability.TENANT,
-            consts.availability.GLOBAL]).isRequired
+            consts.availability.PRIVATE.name,
+            consts.availability.TENANT.name,
+            consts.availability.GLOBAL.name]).isRequired
     };
 
     render() {
-        const ICON_PROPS = {
-            private: {name: 'lock', color: 'red', title: 'Private resource'},
-            tenant: {name: 'user', color: 'green', title: 'Tenant resource'},
-            global: {name: 'globe', color: 'blue', title: 'Global resource'}
-        };
-
-        let icon = ICON_PROPS[this.props.availability];
+        let data = _.find(consts.availability, {name: this.props.availability});
         return (
-        <Icon name={icon.name} color={icon.color} title={icon.title} {..._.omit(this.props, 'availability')}/>
+            <Icon name={data.icon} color={data.color} title={data.title} {..._.omit(this.props, 'availability')}/>
         );
     }
 }
