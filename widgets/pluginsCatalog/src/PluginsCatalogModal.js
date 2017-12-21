@@ -15,7 +15,7 @@ export default class PluginsCatalogModal extends React.Component {
   static initialState = {
     loading: false,
     error: {},
-    privateResource: false,
+    availability: Stage.Common.Consts.defaultAvailability,
   };
 
   /**
@@ -67,7 +67,7 @@ export default class PluginsCatalogModal extends React.Component {
   onApprove () {
     this.setState ({loading: true});
     this.props.actions
-      .doUpload (this.props.plugin.url, this.state.privateResource)
+      .doUpload (this.props.plugin.url, this.state.availability)
       .then (() => {
         this.setState ({errors: null, loading: false});
         this.props.toolbox.getEventBus ().trigger ('plugins:refresh');
@@ -94,7 +94,7 @@ export default class PluginsCatalogModal extends React.Component {
       ApproveButton,
       Icon,
       ErrorMessage,
-      PrivateField,
+      AvailabilityField,
     } = Stage.Basic;
 
     return (
@@ -102,11 +102,11 @@ export default class PluginsCatalogModal extends React.Component {
         <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
           <Modal.Header>
             <Icon name="upload" /> Upload Plugin
-            <PrivateField
-              lock={this.state.privateResource}
+            <AvailabilityField
+              availability={this.state.availability}
               className="rightFloated"
-              onClick={() =>
-                this.setState ({privateResource: !this.state.privateResource})}
+              onAvailabilityChange={(availability) =>
+                this.setState({availability: availability})}
             />
           </Modal.Header>
 

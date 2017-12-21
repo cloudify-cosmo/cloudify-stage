@@ -17,7 +17,6 @@ export default class CreateModal extends React.Component {
         snapshotId: '',
         includeMetrics: false,
         includeCredentials: false,
-        privateResource: false,
         errors: {}
     }
 
@@ -60,7 +59,7 @@ export default class CreateModal extends React.Component {
 
         // Call create method
         var actions = new Actions(this.props.toolbox);
-        actions.doCreate(this.state.snapshotId, this.state.includeMetrics, this.state.includeCredentials, this.state.privateResource).then(()=>{
+        actions.doCreate(this.state.snapshotId, this.state.includeMetrics, this.state.includeCredentials).then(()=>{
             this.props.toolbox.getContext().setValue(this.props.widget.id + 'createSnapshot',null);
             this.props.toolbox.getEventBus().trigger('snapshots:refresh');
             this.setState({errors: {}, loading: false, open: false});
@@ -74,15 +73,13 @@ export default class CreateModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, PrivateField} = Stage.Basic;
+        var {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
         const createButton = <Button content='Create' icon='add' labelPosition='left' />;
 
         return (
             <Modal trigger={createButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
                 <Modal.Header>
                     <Icon name="add"/> Create snapshot
-                    <PrivateField lock={this.state.privateResource} className="rightFloated"
-                                  onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
                 </Modal.Header>
 
                 <Modal.Content>

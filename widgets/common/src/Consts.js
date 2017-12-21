@@ -3,13 +3,10 @@
  */
 
 var consts = {
-    A: 'a',
-    B: 'b',
-    C: 'c',
-    ABC: 'AAA'
+    defaultAvailability: 'tenant'
 };
 
 Stage.defineCommon({
-    name: 'someConsts',
+    name: 'Consts',
     common: consts
 });

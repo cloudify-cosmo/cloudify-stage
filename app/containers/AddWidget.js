@@ -8,12 +8,12 @@ import { connect } from 'react-redux'
 import {addWidget, installWidget, uninstallWidget, updateWidget, checkIfWidgetIsUsed} from '../actions/widgets';
 import {addPageWidget} from '../actions/templateManagement';
 import AddWidgetModal from '../components/AddWidgetModal';
-import Auth from '../utils/auth';
+import stageUtils from '../utils/stageUtils';
 
 const mapStateToProps = (state, ownProps) => {
 
     var widgetDefinitions = state.widgetDefinitions.filter((definition) => {
-        return Auth.isUserAuthorized(definition.permission, state.manager);
+        return stageUtils.isUserAuthorized(definition.permission, state.manager);
     });
 
     return {

@@ -4,6 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import {Table, Dropdown} from 'semantic-ui-react';
+import _ from 'lodash';
 
 /**
  * InputTime is a component showing time picker in form of hours/minutes input field

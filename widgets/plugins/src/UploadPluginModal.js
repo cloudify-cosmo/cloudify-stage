@@ -16,7 +16,7 @@ export default class UploadModal extends React.Component {
         loading: false,
         pluginUrl: '',
         errors: {},
-        privateResource: false
+        availability: Stage.Common.Consts.defaultAvailability
     }
 
     onApprove () {
@@ -57,7 +57,7 @@ export default class UploadModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doUpload(this.state.pluginUrl, pluginFile, this.state.privateResource).then(()=>{
+        actions.doUpload(this.state.pluginUrl, pluginFile, this.state.availability).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch(err=>{
@@ -70,15 +70,15 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, PrivateField} = Stage.Basic;
+        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, AvailabilityField} = Stage.Basic;
         const uploadButton = <Button content='Upload' icon='upload' labelPosition='left' />;
 
         return (
             <Modal trigger={uploadButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
                 <Modal.Header>
                     <Icon name="upload"/> Upload plugin
-                    <PrivateField lock={this.state.privateResource} className="rightFloated"
-                                  onClick={()=>this.setState({privateResource:!this.state.privateResource})}/>
+                    <AvailabilityField availability={this.state.availability} className="rightFloated"
+                                  onAvailabilityChange={(availability)=>this.setState({availability: availability})}/>
                 </Modal.Header>
 
                 <Modal.Content>

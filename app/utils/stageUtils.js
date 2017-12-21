@@ -5,6 +5,7 @@
 import md5 from 'blueimp-md5';
 import Const from './consts';
 import {getToolbox} from './Toolbox';
+import _ from 'lodash';
 
 export default class StageUtils {
 
@@ -105,4 +106,13 @@ export default class StageUtils {
         return getToolbox(onRefresh, onLoading, widgetId);
     }
 
+    static isUserAuthorized(permission, managerData) {
+        var authorizedRoles = managerData.permissions[permission];
+
+        var systemRole = managerData.auth.role;
+        var currentTenantRoles = managerData.auth.tenantsRoles[managerData.tenants.selected];
+        var tenantRoles = currentTenantRoles ? currentTenantRoles.roles : [];
+        var userRoles = tenantRoles.concat(systemRole);
+        return _.intersection(authorizedRoles, userRoles).length > 0;
+    }
 }

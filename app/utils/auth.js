@@ -6,7 +6,6 @@ import StageUtils from './stageUtils';
 import External from './External';
 import Internal from './Internal';
 import Cookies from 'js-cookie';
-import _ from 'lodash';
 
 export default class Auth {
 
@@ -32,15 +31,5 @@ export default class Auth {
     static getRBACConfig(managerData){
         var internal = new Internal(managerData);
         return internal.doGet('/auth/RBAC', null, true);
-    }
-
-    static isUserAuthorized(permission, managerData) {
-        var authorizedRoles = managerData.permissions[permission];
-
-        var systemRole = managerData.auth.role;
-        var currentTenantRoles = managerData.auth.tenantsRoles[managerData.tenants.selected];
-        var tenantRoles = currentTenantRoles ? currentTenantRoles.roles : [];
-        var userRoles = tenantRoles.concat(systemRole);
-        return _.intersection(authorizedRoles, userRoles).length > 0;
     }
 }
