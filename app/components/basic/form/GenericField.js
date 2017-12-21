@@ -125,6 +125,11 @@ export default class GenericField extends Component {
     static BOOLEAN_TYPE = 'boolean';
 
     /**
+     * boolean with no default
+     */
+    static BOOLEAN_LIST_TYPE = 'booleanList';
+
+    /**
      * dropdown alphanumeric list field
      */
     static LIST_TYPE = 'list';
@@ -158,6 +163,7 @@ export default class GenericField extends Component {
         return type === GenericField.LIST_TYPE ||
                type === GenericField.NUMBER_LIST_TYPE ||
                type === GenericField.MULTI_SELECT_LIST_TYPE ||
+               type === GenericField.BOOLEAN_LIST_TYPE ||
                type === GenericField.EDITABLE_LIST_TYPE ||
                type === GenericField.NUMBER_EDITABLE_LIST_TYPE;
     }
@@ -171,6 +177,7 @@ export default class GenericField extends Component {
      * @property {string} [icon=null] additional icon in right side of the input field
      * @property {string} [description=''] fields description showed in popup when user hovers field
      * @property {object} [value=''] specifies the value of an <input> element
+     * @property {boolean} [required={true}] define if a field is required adding a red star icon to label
      * @property {object[]} [items=[]] list of items (for list types)
      * @property {function} [onChange=()=>{}] function called on input value change
      * @property {number} [max=null] maximal value (only for {@link GenericField.NUMBER_TYPE} type)
@@ -184,6 +191,7 @@ export default class GenericField extends Component {
         icon: PropTypes.string,
         description: PropTypes.string,
         value: PropTypes.any,
+        required: PropTypes.bool,
         onChange: PropTypes.func,
         storeValueInContext: PropTypes.bool,
 
@@ -216,7 +224,11 @@ export default class GenericField extends Component {
     }
 
     _initOptions(props) {
-        if (GenericField.isListType(props.type) && props.items) {
+        if(props.type === GenericField.BOOLEAN_LIST_TYPE){
+            this.state = {
+                options: [{text: 'false', value: false}, {text: 'true', value: true}]
+            };
+        } else if (GenericField.isListType(props.type) && props.items) {
             let valueAlreadyInOptions = false;
             let options = _.map(props.items, item => {
                 if (!_.isObject(item)) {
@@ -309,7 +321,7 @@ export default class GenericField extends Component {
                               this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
                               search={this.props.type === GenericField.EDITABLE_LIST_TYPE ||
                               this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
-                              placeholder={this.props.placeholder} options={this.state.options}
+                              placeholder={this.props.placeholder || 'Please select'} options={this.state.options}
                               onAddItem={(e, { value }) => {this.setState({options: [{ text: value, value }, ...this.state.options]})}}
                               onChange={this._handleInputChange.bind(this)} />;
 
@@ -333,7 +345,7 @@ export default class GenericField extends Component {
             <Form.Field className={this.props.name}>
                 {
                     this.props.label &&
-                    <label>{this.props.label}&nbsp;
+                    <label>{this.props.label}{this.props.required && <Icon name='asterisk' color='red' size='tiny' className='superscripted'/>}&nbsp;
                         {
                             this.props.description &&
                             <Popup>

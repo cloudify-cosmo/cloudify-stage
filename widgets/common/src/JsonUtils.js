@@ -3,8 +3,8 @@
  */
 
 class JsonUtils {
-    static stringify(value, indented = false) {
-        if (_.isEmpty(value)) {
+    static stringify(value, indented = false, ignoreEmpty = false) {
+        if (!ignoreEmpty && _.isEmpty(value)) {
             return '';
         }
 
