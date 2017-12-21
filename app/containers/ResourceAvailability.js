@@ -9,8 +9,8 @@ import consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
     var allowedSettingTo = ownProps.allowedSettingTo;
-    if(_.includes(ownProps.allowedSettingTo, consts.availability.GLOBAL) && !stageUtils.isUserAuthorized(consts.permissions.CREATE_GLOBAL_RESOURCE, state.manager)){
-        allowedSettingTo = _.without(allowedSettingTo, consts.availability.GLOBAL);
+    if(_.includes(ownProps.allowedSettingTo, consts.availability.GLOBAL.name) && !stageUtils.isUserAuthorized(consts.permissions.CREATE_GLOBAL_RESOURCE, state.manager)){
+        allowedSettingTo = _.without(allowedSettingTo, consts.availability.GLOBAL.name);
     }
     return {
         allowedSettingTo: allowedSettingTo
