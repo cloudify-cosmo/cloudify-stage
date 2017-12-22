@@ -15,8 +15,8 @@ export default class {
         return this.toolbox.getManager().doDelete(`/secrets/${key}`);
     }
 
-    doCreate(key, value) {
-        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, {value});
+    doCreate(key, value, availability) {
+        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, {value, availability});
     }
 
     doUpdate(key, value) {
