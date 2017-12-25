@@ -39,11 +39,13 @@ export default class {
         return this.toolbox.getManager().doDownload(snapshotDownloadUrl, snapshotFileName);
     }
 
-    doCreate(snapshotId, includeMetrics=false, includeCredentials=false){
+    doCreate(snapshotId, includeMetrics=false, includeCredentials=false, excludeLogs=false, excludeEvents=false){
         snapshotId = encodeURIComponent(snapshotId);
         return this.toolbox.getManager().doPut(`/snapshots/${snapshotId}`, null, {
             include_metrics: includeMetrics,
-            include_credentials: includeCredentials
+            include_credentials: includeCredentials,
+            include_logs: !excludeLogs,
+            include_events: !excludeEvents
         });
     }
 }
