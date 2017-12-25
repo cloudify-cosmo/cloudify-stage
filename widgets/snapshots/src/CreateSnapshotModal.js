@@ -17,6 +17,8 @@ export default class CreateModal extends React.Component {
         snapshotId: '',
         includeMetrics: false,
         includeCredentials: false,
+        excludeLogs: false,
+        excludeEvents: false,
         errors: {}
     }
 
@@ -59,7 +61,7 @@ export default class CreateModal extends React.Component {
 
         // Call create method
         var actions = new Actions(this.props.toolbox);
-        actions.doCreate(this.state.snapshotId, this.state.includeMetrics, this.state.includeCredentials).then(()=>{
+        actions.doCreate(this.state.snapshotId, this.state.includeMetrics, this.state.includeCredentials, this.state.excludeLogs, this.state.excludeEvents).then(()=>{
             this.props.toolbox.getContext().setValue(this.props.widget.id + 'createSnapshot',null);
             this.props.toolbox.getEventBus().trigger('snapshots:refresh');
             this.setState({errors: {}, loading: false, open: false});
@@ -99,6 +101,16 @@ export default class CreateModal extends React.Component {
                         <Form.Field>
                             <Form.Checkbox label="Include agent SSH keys (including those specified in uploaded blueprints)" name="includeCredentials"
                                            checked={this.state.includeCredentials} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+
+                        <Form.Field>
+                            <Form.Checkbox label="Exclude logs" name="excludeLogs"
+                            checked={this.state.excludeLogs} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+
+                        <Form.Field>
+                            <Form.Checkbox label="Exclude events" name="excludeEvents"
+                            checked={this.state.excludeEvents} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
                     </Form>
