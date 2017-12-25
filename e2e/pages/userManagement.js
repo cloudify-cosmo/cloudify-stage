@@ -107,7 +107,7 @@ module.exports = {
             ],
         },
         setRoleModal : {
-            selector: 'div.userRoleModal',
+            selector: 'div.roleModal',
             elements: {
                 role: '.content div.field div[role="listbox"]',
                 saveButton: '.actions button.ok',

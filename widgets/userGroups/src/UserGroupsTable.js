@@ -7,6 +7,7 @@ import GroupDetails from './GroupDetails';
 import CreateModal from './CreateModal';
 import TenantsModal from './TenantsModal';
 import UsersModal from './UsersModal';
+const RoleModal = Stage.Common.RoleModal;
 
 export default class UserGroupsTable extends React.Component {
     constructor(props, context) {
@@ -80,7 +81,7 @@ export default class UserGroupsTable extends React.Component {
             this._getAvailableTenants(value, group);
         } else if (value === MenuAction.EDIT_USERS_ACTION) {
             this._getAvailableUsers(value, group);
-        } else if (value === MenuAction.DELETE_ACTION) {
+        } else if (value === MenuAction.DELETE_ACTION || value === MenuAction.SET_ROLE_ACTION) {
             this.setState({group, modalType: value, showModal: true});
         } else {
             this.setState({error: `Internal error: Unknown action ('${value}') cannot be handled.`});
@@ -113,6 +114,7 @@ export default class UserGroupsTable extends React.Component {
 
     render() {
         let {ErrorMessage, DataTable, Label, Confirm} = Stage.Basic;
+        let actions = new Actions(this.props.toolbox);
 
         return (
             <div>
@@ -151,7 +153,7 @@ export default class UserGroupsTable extends React.Component {
                         })
                     }
                     <DataTable.Action>
-                        <CreateModal toolbox={this.props.toolbox}/>
+                        <CreateModal roles={this.props.roles} toolbox={this.props.toolbox}/>
                     </DataTable.Action>
                 </DataTable>
 
@@ -159,6 +161,14 @@ export default class UserGroupsTable extends React.Component {
                     open={this.state.modalType === MenuAction.EDIT_USERS_ACTION && this.state.showModal}
                     group={this.state.group}
                     users={this.state.users}
+                    onHide={this._hideModal.bind(this)}
+                    toolbox={this.props.toolbox}/>
+
+                <RoleModal
+                    open={this.state.modalType === MenuAction.SET_ROLE_ACTION && this.state.showModal}
+                    roles={this.props.roles}
+                    resource={{role: this.state.group.role, name: this.state.group.name}}
+                    onSetRole={actions.doSetRole}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 

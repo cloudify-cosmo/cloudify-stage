@@ -8,16 +8,20 @@ export default class Actions {
         this.toolbox = toolbox;
     }
 
-    doCreate(groupName, ldapGroup) {
+    doCreate(groupName, ldapGroup, role) {
         let params = _.isUndefined(ldapGroup) || _.isEmpty(ldapGroup)
-            ? {'group_name': groupName}
-            : {'group_name': groupName, 'ldap_group_dn': ldapGroup};
+            ? {'group_name': groupName, role}
+            : {'group_name': groupName, 'ldap_group_dn': ldapGroup, role};
 
         return this.toolbox.getManager().doPost('/user-groups', null, params);
     }
 
     doDelete(groupName) {
         return this.toolbox.getManager().doDelete(`/user-groups/${groupName}`);
+    }
+
+    doSetRole(groupName, role) {
+        return this.toolbox.getManager().doPost(`/user-groups/${groupName}`, null, {role});
     }
 
     doGetUsers() {

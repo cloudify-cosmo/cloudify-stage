@@ -6,7 +6,7 @@ import MenuAction from './MenuAction';
 import UserDetails from './UserDetails';
 import CreateModal from './CreateModal';
 import PasswordModal from './PasswordModal';
-import RoleModal from './RoleModal';
+const RoleModal = Stage.Common.RoleModal;
 import TenantModal from './TenantModal';
 import GroupModal from './GroupModal';
 
@@ -163,6 +163,7 @@ export default class UsersTable extends React.Component {
     render() {
         let {ErrorMessage, DataTable, Loader, Checkbox, Label, Confirm} = Stage.Basic;
         let tableName = 'usersTable';
+        let actions = new Actions(this.props.toolbox);
 
         return (
             <div>
@@ -230,7 +231,8 @@ export default class UsersTable extends React.Component {
                 <RoleModal
                     open={this.state.modalType === MenuAction.SET_ROLE_ACTION && this.state.showModal}
                     roles={this.props.roles}
-                    user={this.state.user}
+                    resource={{role: this.state.user.role, name: this.state.user.username}}
+                    onSetRole={actions.doSetRole}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
