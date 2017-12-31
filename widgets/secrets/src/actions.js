@@ -15,15 +15,15 @@ export default class {
         return this.toolbox.getManager().doDelete(`/secrets/${key}`);
     }
 
-    doCreate(key, value, availability) {
-        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, {value, availability});
+    doCreate(key, value, visibility) {
+        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, {value, visibility});
     }
 
     doUpdate(key, value) {
         return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, {value});
     }
 
-    doSetAvailability(key, availability) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-availability`, null, {availability});
+    doSetVisibility(key, visibility) {
+        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-visibility`, null, {visibility});
     }
 }

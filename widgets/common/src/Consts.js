@@ -3,7 +3,7 @@
  */
 
 var consts = {
-    defaultAvailability: 'tenant'
+    defaultVisibility: 'tenant'
 };
 
 Stage.defineCommon({

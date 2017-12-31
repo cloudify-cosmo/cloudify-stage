@@ -13,8 +13,8 @@ export default class {
 
     }
 
-    doUpload(pluginUrl, file, availability) {
-        var params = {availability: availability};
+    doUpload(pluginUrl, file, visibility) {
+        var params = {visibility: visibility};
 
         if (!_.isEmpty(pluginUrl)) {
             params['plugin_archive_url'] = pluginUrl;
@@ -34,7 +34,7 @@ export default class {
         return this.toolbox.getManager().doDownload(pluginDownloadUrl, pluginFileName);
     }
 
-    doSetAvailability(pluginId, availability) {
-        return this.toolbox.getManager().doPatch(`/plugins/${pluginId}/set-availability`, null, {availability: availability});
+    doSetVisibility(pluginId, visibility) {
+        return this.toolbox.getManager().doPatch(`/plugins/${pluginId}/set-visibility`, null, {visibility: visibility});
     }
 }

@@ -93,7 +93,7 @@ export default class extends React.Component {
     }
 
     render() {
-        let {Confirm, ErrorMessage, DataTable, Icon, ResourceAvailability} = Stage.Basic;
+        let {Confirm, ErrorMessage, DataTable, Icon, ResourceVisibility} = Stage.Basic;
 
         return (
             <div className="snapshotsTableDiv">
@@ -120,7 +120,7 @@ export default class extends React.Component {
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectSnapshot.bind(this, item)}>
                                     <DataTable.Data>
                                         {item.id}
-                                        <ResourceAvailability availability={item.resource_availability} className="rightFloated"/>
+                                        <ResourceVisibility visibility={item.visibility} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
                                     <DataTable.Data>{item.status}</DataTable.Data>

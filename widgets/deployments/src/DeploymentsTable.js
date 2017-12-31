@@ -17,7 +17,7 @@ export default class extends React.Component {
         onCancelExecution: PropTypes.func,
         onMenuAction: PropTypes.func,
         onError: PropTypes.func,
-        onSetAvailability: PropTypes.func,
+        onSetVisibility: PropTypes.func,
         allowedSettingTo: PropTypes.array
     };
 
@@ -27,12 +27,12 @@ export default class extends React.Component {
         onCancelExecution: ()=>{},
         onMenuAction: ()=>{},
         onError: ()=>{},
-        onSetAvailability: ()=>{},
+        onSetVisibility: ()=>{},
         allowedSettingTo: ['tenant']
     };
 
     render() {
-        var {DataTable, ResourceAvailability} = Stage.Basic;
+        var {DataTable, ResourceVisibility} = Stage.Basic;
         let tableName = 'deploymentsTable';
 
         return (
@@ -58,7 +58,7 @@ export default class extends React.Component {
 
                             <DataTable.Row id={`${tableName}_${item.id}`} key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
                                 <DataTable.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a>
-                                    <ResourceAvailability availability={item.resource_availability} onSetAvailability={(availability) => this.props.onSetAvailability(item.id, availability)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
+                                    <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>

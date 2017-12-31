@@ -15,7 +15,7 @@ export default class BlueprintsTable extends React.Component{
         onSelectBlueprint: PropTypes.func,
         onDeleteBlueprint: PropTypes.func,
         onCreateDeployment: PropTypes.func,
-        onSetAvailability: PropTypes.func,
+        onSetVisibility: PropTypes.func,
         allowedSettingTo: PropTypes.array
     };
 
@@ -24,12 +24,12 @@ export default class BlueprintsTable extends React.Component{
         onSelectBlueprint: ()=>{},
         onDeleteBlueprint: ()=>{},
         onCreateDeployment: ()=>{},
-        onSetAvailability: ()=>{},
+        onSetVisibility: ()=>{},
         allowedSettingTo: ['Tenant']
     };
 
     render(){
-        var {DataTable, Image, ResourceAvailability} = Stage.Basic;
+        var {DataTable, Image, ResourceVisibility} = Stage.Basic;
         let tableName = 'blueprintsTable';
 
         return (
@@ -55,7 +55,7 @@ export default class BlueprintsTable extends React.Component{
                             <DataTable.Row id={`${tableName}_${item.id}`} key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
                                 <DataTable.Data>
                                     <Image src={Stage.Utils.url(`/ba/image/${item.id}`)} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
-                                    <ResourceAvailability availability={item.resource_availability} onSetAvailability={(availability)=>this.props.onSetAvailability(item.id, availability)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
+                                    <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility)=>this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
