@@ -1,0 +1,2 @@
+# snapshot restores script, and auth token script
+cfyuser ALL=(stage_user) NOPASSWD:/opt/manager/env/bin/python

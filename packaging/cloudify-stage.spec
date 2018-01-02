@@ -13,8 +13,8 @@ URL:            https://github.com/cloudify-cosmo/cloudify-stage
 Vendor:         Cloudify Platform Ltd.
 Packager:       Cloudify Platform Ltd.
 
-Requires:       nodejs
-BuildRequires:  %{requires}, git
+BuildRequires:  nodejs, git
+Requires:       nodejs, cloudify-rest-service
 Requires(pre):  shadow-utils
 
 %description
@@ -46,12 +46,21 @@ cp -r ${RPM_SOURCE_DIR}/backend/** %{buildroot}/opt/cloudify-stage/backend
 cp ${RPM_SOURCE_DIR}/conf/** %{buildroot}/opt/cloudify-stage/conf
 cp ${RPM_SOURCE_DIR}/scripts/package-template.json %{buildroot}/opt/cloudify-stage/package.json
 
+cp -R ${RPM_SOURCE_DIR}/packaging/files/* %{buildroot}
 
 %pre
 groupadd -fr stage_group
 getent passwd stage_user >/dev/null || useradd -r -g stage_group -d /etc/cloudify -s /sbin/nologin stage_user
 
+%postun
+groupdel stage_group
+
 
 %files
 %attr(750,stage_user,stage_group) /opt/cloudify-stage
 %attr(750,stage_user,stage_group) /var/log/cloudify/stage
+/opt/manager
+%attr(750,stage_user,cfyuser) /opt/manager/scripts/make-auth-token.py
+%attr(750,stage_user,cfyuser) /opt/manager/scripts/restore-snapshot.py
+/etc/sudoers.d/cloudify-stage
+/etc/logrotate.d/cloudify-stage
