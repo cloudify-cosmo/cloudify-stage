@@ -70,7 +70,6 @@ pipeline {
           sh 'sudo chown jenkins:jenkins -R ../*'
           deleteDir()
         }
-
         failure {
           //mail(from: "jenkins-master-on-aws@gigaspaces.com",
           //     to: "kinneret@gigaspaces.com, limor@gigaspaces.com",
