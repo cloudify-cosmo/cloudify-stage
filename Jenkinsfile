@@ -4,6 +4,11 @@ pipeline {
         string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch name')
     }
     stages {
+        stage('BRANCH_NAME') {
+            steps{
+                sh 'echo BRANCH_NAME = ${BRANCH_NAME}'
+            }
+        }
         stage('Clean') {
             steps {
                 sh '''#sudo npm cache clean
