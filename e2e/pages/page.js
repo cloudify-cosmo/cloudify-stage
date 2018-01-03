@@ -69,7 +69,7 @@ module.exports = {
                 firstWidgetName: '.widget:first-child h5.header span',
                 firstWidgetRemoveIcon: '.widget:first-child .widgetEditButtons i.remove.link.icon.small',
                 firstWidgetConfigureIcon: '.widget:first-child .widgetEditButtons .editWidgetIcon',
-                firstWidgetResizeHandle: '.widget:first-child .ui-resizable-handle',
+                firstWidgetResizeHandle: '.widget:first-child .react-resizable-handle',
                 testWidgetContent: '.widget.testWidgetWidget .widgetContent .statistic .label'
             },
             props: {
@@ -140,10 +140,10 @@ module.exports = {
             }
         },
         resetPagesConfirmModal: {
-            selector: '.resetPagesModal',
+            selector: '.modal',
             elements: {
-                yesButton: '.ui.button.ok',
-                noButton: '.ui.button.cancel'
+                yesButton: '.ui.button.primary',
+                noButton: '.ui.button'
             }
         },
 
