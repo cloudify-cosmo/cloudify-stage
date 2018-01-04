@@ -6,7 +6,6 @@ import MenuAction from './MenuAction';
 import UserDetails from './UserDetails';
 import CreateModal from './CreateModal';
 import PasswordModal from './PasswordModal';
-const RoleModal = Stage.Common.RoleModal;
 import TenantModal from './TenantModal';
 import GroupModal from './GroupModal';
 
@@ -162,6 +161,7 @@ export default class UsersTable extends React.Component {
 
     render() {
         let {ErrorMessage, DataTable, Loader, Checkbox, Label, Confirm} = Stage.Basic;
+        let RoleModal = Stage.Common.RoleModal;
         let tableName = 'usersTable';
         let actions = new Actions(this.props.toolbox);
 

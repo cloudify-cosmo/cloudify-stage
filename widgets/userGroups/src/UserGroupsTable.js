@@ -7,7 +7,6 @@ import GroupDetails from './GroupDetails';
 import CreateModal from './CreateModal';
 import TenantsModal from './TenantsModal';
 import UsersModal from './UsersModal';
-const RoleModal = Stage.Common.RoleModal;
 
 export default class UserGroupsTable extends React.Component {
     constructor(props, context) {
@@ -114,6 +113,7 @@ export default class UserGroupsTable extends React.Component {
 
     render() {
         let {ErrorMessage, DataTable, Label, Confirm} = Stage.Basic;
+        let RoleModal = Stage.Common.RoleModal;
         let actions = new Actions(this.props.toolbox);
 
         return (
@@ -128,7 +128,8 @@ export default class UserGroupsTable extends React.Component {
                            className="userGroupsTable">
 
                     <DataTable.Column label="Group" name="name" width="30%" />
-                    <DataTable.Column label="LDAP group" name="ldap_dn" width="15%" />
+                    <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />
+                    <DataTable.Column label="Role" name="role" width="15%" />
                     <DataTable.Column label="# Users" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
                     <DataTable.Column label="" width="5%" />
@@ -139,6 +140,7 @@ export default class UserGroupsTable extends React.Component {
                                     <DataTable.Row key={item.name} selected={item.isSelected} onClick={this._selectUserGroup.bind(this, item.name)}>
                                         <DataTable.Data>{item.name}</DataTable.Data>
                                         <DataTable.Data>{item.ldap_dn}</DataTable.Data>
+                                        <DataTable.Data>{item.role}</DataTable.Data>
                                         <DataTable.Data><Label className="green" horizontal>{item.userCount}</Label></DataTable.Data>
                                         <DataTable.Data><Label className="blue" horizontal>{item.tenantCount}</Label></DataTable.Data>
                                         <DataTable.Data className="center aligned">
