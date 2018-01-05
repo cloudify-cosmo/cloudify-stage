@@ -53,7 +53,7 @@ export default class PaginationInfo extends Component {
             <div className="ui small form">
                 Page size:&nbsp;
 
-                <Dropdown compact search selection allowAdditions value={this.props.pageSize} additionLabel="Set "
+                <Dropdown compact upward search selection allowAdditions value={this.props.pageSize} additionLabel="Set "
                           options={options} onChange={this._handleChange.bind(this)} id="pageSizeField"/>
 
                 &nbsp;&nbsp;{start} to {stop}
