@@ -67,7 +67,7 @@ export default class WidgetDefinitionsLoader {
                 var data = results[1]; // widgets data
                 var promises = [];
                 data.forEach((item)=>{
-                    promises.push(WidgetDefinitionsLoader._loadWidget(item.id, false));
+                    promises.push(WidgetDefinitionsLoader._loadWidget(item, false));
                 });
 
                 var output = _.keyBy(data, 'id');
@@ -75,8 +75,8 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    static _loadWidget(id, rejectOnError) {
-        return new ScriptLoader(`/widgets/${id}/widget.js`).load(id, rejectOnError);
+    static _loadWidget(widget, rejectOnError) {
+        return new ScriptLoader(`/${widget.isCustom ? 'userData/widgets' : 'widgets'}/${widget.id}/widget.js`).load(widget.id, rejectOnError);
     }
 
     static _loadWidgetsResources(widgets) {
@@ -155,7 +155,7 @@ export default class WidgetDefinitionsLoader {
 
     static install(widgetFile, widgetUrl, manager) {
         return WidgetDefinitionsLoader._installWidget(widgetFile, widgetUrl, manager)
-            .then(data => WidgetDefinitionsLoader._loadWidget(data.id, true)
+            .then(data => WidgetDefinitionsLoader._loadWidget(data, true)
                 .then(() => {
                     var error = '';
                     if (_.isEmpty(widgetDefinitions)) {
@@ -181,7 +181,7 @@ export default class WidgetDefinitionsLoader {
 
     static update(widgetId, widgetFile, widgetUrl, manager) {
         return WidgetDefinitionsLoader._updateWidget(widgetId, widgetFile, widgetUrl, manager)
-            .then(data => WidgetDefinitionsLoader._loadWidget(data.id, true)
+            .then(data => WidgetDefinitionsLoader._loadWidget(data, true)
                 .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([data], 'id'))))
             .then(() => WidgetDefinitionsLoader._initWidgets())
             .catch(err => {
