@@ -99,7 +99,7 @@ export default class TenantModal extends React.Component {
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
                         <Form.Field>
-                            <Form.Dropdown placeholder='Tenants' multiple selection closeOnChange options={options} name="tenants"
+                            <Form.Dropdown placeholder='Tenants' multiple selection options={options} name="tenants"
                                            value={Object.keys(this.state.tenants)} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                         <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.tenants} resourceName="tenant" toolbox={this.props.toolbox}></RolesPicker>

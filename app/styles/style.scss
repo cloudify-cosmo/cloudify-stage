@@ -102,6 +102,10 @@ a:hover {
   height: 150px;
 }
 
+.react-grid-item.widget {
+  z-index: auto !important;
+}
+
 .maximizeWidget .widget {
   display: none;
 
