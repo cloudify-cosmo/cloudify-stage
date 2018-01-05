@@ -54,6 +54,7 @@ export default class Grid extends Component {
                 onLayoutChange={this._saveChangedItems.bind(this)}
                 isDraggable={this.props.isEditMode}
                 isResizable={this.props.isEditMode}
+                useCSSTransforms={false}
                 >
                 {_.map(this.props.children, this.processGridItem.bind(this))}
             </ReactGridLayout>
