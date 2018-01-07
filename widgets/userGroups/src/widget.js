@@ -42,8 +42,12 @@ Stage.defineWidget({
             total : _.get(data, 'metadata.pagination.total', 0)
         });
 
+        var roles = _.map (toolbox.getManager().getSystemRoles(), (role) => {
+            return {text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name};
+        });
+
         return (
-            <UserGroupsTable widget={widget} data={formattedData} toolbox={toolbox}/>
+            <UserGroupsTable widget={widget} data={formattedData} roles={roles} toolbox={toolbox}/>
         );
 
     }
