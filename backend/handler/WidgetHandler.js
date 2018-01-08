@@ -7,18 +7,21 @@ var os = require('os');
 var db = require('../db/Connection');
 var fs = require('fs-extra');
 var pathlib = require('path');
+var mkdirp = require('mkdirp');
 var _ = require('lodash');
 var config = require('../config').get();
 var ArchiveHelper = require('./ArchiveHelper');
 var ResourceTypes = require('../db/types/ResourceTypes');
 var BackendHandler = require('./BackendHandler');
 
-var logger = require('log4js').getLogger('widgets');
+var logger = require('log4js').getLogger('WidgetHandler');
 
 //TODO: Temporary solution, the approach needs to be think over thoroughly
-var widgetsFolder = '../widgets';
-if (!fs.existsSync(widgetsFolder)) {
-    widgetsFolder = '../dist/widgets';
+var builtInWidgetsFolder = '../widgets';
+var userWidgetsFolder = '../userData/widgets';
+if (!fs.existsSync(builtInWidgetsFolder)) {
+    builtInWidgetsFolder = '../dist/widgets';
+    userWidgetsFolder = '../dist/userData/widgets';
 }
 
 var widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
@@ -35,14 +38,23 @@ module.exports = (function() {
         return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
     }
 
-    function _getInstalledWidgets() {
-        return fs.readdirSync(pathlib.resolve(widgetsFolder))
-            .filter(dir => fs.lstatSync(pathlib.resolve(widgetsFolder, dir)).isDirectory()
-            && _.indexOf(config.app.widgets.ignoreFolders, dir) < 0);
+    function _getUserWidgets() {
+        return fs.readdirSync(pathlib.resolve(userWidgetsFolder))
+                .filter(dir => fs.lstatSync(pathlib.resolve(userWidgetsFolder, dir)).isDirectory());
+    }
+
+    function _getBuiltInWidgets() {
+        return fs.readdirSync(pathlib.resolve(builtInWidgetsFolder))
+                .filter(dir => fs.lstatSync(pathlib.resolve(builtInWidgetsFolder, dir)).isDirectory()
+                        && _.indexOf(config.app.widgets.ignoreFolders, dir) < 0);
+    }
+
+    function _getAllWidgets() {
+        return _.concat(_getUserWidgets(), _getBuiltInWidgets());
     }
 
     function _validateUniqueness(widgetId) {
-        var widgets = _getInstalledWidgets();
+        var widgets = _getAllWidgets();
         if (_.indexOf(widgets, widgetId) >= 0) {
             return Promise.reject({status: 422, message: 'Widget ' + widgetId + ' is already installed'});
         }
@@ -51,7 +63,7 @@ module.exports = (function() {
     }
 
     function _validateConsistency(widgetId, dirName) {
-        if (widgetId !== widgetId) {
+        if (widgetId !== dirName) {
             return Promise.reject('Updated widget does not complies with directory name: ' + widgetId + ' <> ' + dirName);
         }
 
@@ -82,10 +94,10 @@ module.exports = (function() {
     }
 
     function _installFiles(widgetId, tempPath) {
-        logger.debug('installing widget files to the target path', pathlib.resolve(widgetsFolder));
+        logger.debug('installing widget files to the target path', pathlib.resolve(userWidgetsFolder));
         logger.debug('widget temp path', tempPath);
 
-        var installPath = pathlib.resolve(widgetsFolder, widgetId);
+        var installPath = pathlib.resolve(userWidgetsFolder, widgetId);
 
         return new Promise((resolve, reject) => {
             fs.removeSync(installPath);
@@ -128,7 +140,7 @@ module.exports = (function() {
                     .then(() => BackendHandler.importWidgetBackend(widgetId))
                     .then(() => _persistData(widgetId, username))
                     .then(() => {
-                        var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
+                        var widgetPath = pathlib.resolve(userWidgetsFolder, widgetId);
 
                         logger.info('New widget installed');
                         logger.info('Widget id: ', widgetId);
@@ -165,7 +177,7 @@ module.exports = (function() {
                     .then(() => BackendHandler.removeWidgetBackend(widgetId))
                     .then(() => BackendHandler.importWidgetBackend(widgetId))
                     .then(() => {
-                        var widgetPath = pathlib.resolve(widgetsFolder, widgetId);
+                        var widgetPath = pathlib.resolve(userWidgetsFolder, widgetId);
 
                         logger.info('Widget updated');
                         logger.info('Widget id: ', widgetId);
@@ -186,7 +198,7 @@ module.exports = (function() {
     }
 
     function _backupWidget(widgetId, tempPath) {
-        var installPath = pathlib.resolve(widgetsFolder, widgetId);
+        var installPath = pathlib.resolve(userWidgetsFolder, widgetId);
         var backupPath = pathlib.resolve(tempPath, 'backup');
 
         return new Promise((resolve, reject) => {
@@ -201,7 +213,7 @@ module.exports = (function() {
     }
 
     function _restoreBackup(widgetId, tempPath) {
-        var installPath = pathlib.resolve(widgetsFolder, widgetId);
+        var installPath = pathlib.resolve(userWidgetsFolder, widgetId);
         var backupPath = pathlib.resolve(tempPath, 'backup');
 
         return new Promise((resolve, reject) => {
@@ -217,16 +229,14 @@ module.exports = (function() {
     }
 
     function listWidgets() {
-        var widgets = _getInstalledWidgets();
+        var builtInWidgets = _.map(_getBuiltInWidgets(), (widget) => ({id: widget, isCustom: false}));
+        var userWidgets = _.map(_getUserWidgets(), (widget) => ({id: widget, isCustom: true}));
 
-        return db.Resources
-            .findAll({where: {type: ResourceTypes.WIDGET}, attributes: ['resourceId'], raw: true})
-            .then(items => _.map(items, item => item.resourceId))
-            .then(ids => widgets.map(id => { return {id, isCustom: _.indexOf(ids, id) >= 0}}));
+        return Promise.resolve(_.concat(builtInWidgets, userWidgets));
     }
 
     function deleteWidget(widgetId) {
-        var path = pathlib.resolve(widgetsFolder, widgetId);
+        var path = pathlib.resolve(userWidgetsFolder, widgetId);
 
         return new Promise((resolve,reject) => {
             fs.remove(path, (err) => {
@@ -257,7 +267,18 @@ module.exports = (function() {
             });
     }
 
+    function init() {
+        try {
+            logger.info('Setting up user widgets directory', userWidgetsFolder);
+            mkdirp.sync(userWidgetsFolder);
+        } catch (e) {
+            logger.error('Could not set up directory, error was:', e);
+            process.exit(1);
+        }
+    }
+
     return {
+        init,
         listWidgets,
         installWidget,
         isWidgetUsed,
