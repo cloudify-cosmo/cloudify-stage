@@ -21,7 +21,7 @@ export default class DeployBlueprintModal extends React.Component {
         yamlFile: null,
         fileLoading: false,
         deploymentInputs: [],
-        availability: Stage.Common.Consts.defaultAvailability,
+        visibility: Stage.Common.Consts.defaultVisibility,
         skipPluginsValidation: false
     }
 
@@ -97,7 +97,7 @@ export default class DeployBlueprintModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs, this.state.availability, this.state.skipPluginsValidation)
+        actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs, this.state.visibility, this.state.skipPluginsValidation)
             .then((/*deployment*/)=> {
                 this.setState({loading: false, errors: {}});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -162,7 +162,7 @@ export default class DeployBlueprintModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message, Popup, Header, ApproveButton, CancelButton, AvailabilityField} = Stage.Basic;
+        var {Modal, Icon, Form, Message, Popup, Header, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
 
         let blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
         let deploymentInputs = _.sortBy(_.map(blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
@@ -178,8 +178,8 @@ export default class DeployBlueprintModal extends React.Component {
             <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="deployBlueprintModal">
                 <Modal.Header>
                     <Icon name="rocket"/> Deploy blueprint {blueprint.id}
-                    <AvailabilityField availability={this.state.availability} className="rightFloated"
-                                  onAvailabilityChange={(availability)=>this.setState({availability: availability})} disallowGlobal={true}/>
+                    <VisibilityField visibility={this.state.visibility} className="rightFloated"
+                                  onVisibilityChange={(visibility)=>this.setState({visibility: visibility})} disallowGlobal={true}/>
                 </Modal.Header>
 
                 <Modal.Content>

@@ -16,17 +16,17 @@ class BlueprintActions {
             .then(()=>this.doDeleteImage(blueprint.id));
     }
 
-    doDeploy(blueprint, deploymentId, inputs, availability, skipPluginsValidation=false) {
+    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation=false) {
         return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null, {
             'blueprint_id': blueprint.id,
             inputs,
-            availability,
+            visibility,
             skip_plugins_validation:skipPluginsValidation
         });
     }
 
-    doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, availability) {
-        var params = {availability: availability};
+    doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, visibility) {
+        var params = {visibility: visibility};
 
         if (!_.isEmpty(blueprintFileName)) {
             params['application_file_name'] = blueprintFileName;
@@ -45,8 +45,8 @@ class BlueprintActions {
         return promise.then(()=> this.doUploadImage(blueprintName, imageUrl, image));
     }
 
-    doSetAvailability(blueprintId, availability) {
-        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-availability`, null, {availability: availability});
+    doSetVisibility(blueprintId, visibility) {
+        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, null, {visibility: visibility});
     }
 
     doListYamlFiles(blueprintUrl, file) {

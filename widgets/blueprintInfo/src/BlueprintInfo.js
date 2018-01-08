@@ -14,7 +14,7 @@ export default class BlueprintInfo extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, Grid, Image, ResourceAvailability, Message, Label} = Stage.Basic;
+        var {ErrorMessage, Grid, Image, ResourceVisibility, Message, Label} = Stage.Basic;
 
         var blueprint = this.props.data;
 
@@ -36,7 +36,7 @@ export default class BlueprintInfo extends React.Component {
                             <h3 className="ui icon header verticalCenter">
                                 <a className="underline blueprintInfoName" href="javascript:void(0)">{blueprint.id}</a>
                             </h3>
-                            <ResourceAvailability availability={blueprint.resource_availability} className="rightFloated"/>
+                            <ResourceVisibility visibility={blueprint.visibility} className="rightFloated"/>
                         </Grid.Column>
                     </Grid.Row>
 

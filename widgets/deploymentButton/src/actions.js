@@ -15,11 +15,11 @@ export default class {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}`);
     }
 
-    doDeploy(blueprintId,deploymentId,inputs, availability, skipPluginsValidation=false) {
+    doDeploy(blueprintId,deploymentId,inputs, visibility, skipPluginsValidation=false) {
         return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null,{
             'blueprint_id': blueprintId,
             inputs,
-            availability,
+            visibility,
             skip_plugins_validation:skipPluginsValidation
         });
     }

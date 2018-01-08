@@ -27,8 +27,8 @@ import Dropdown from './Dropdown';
 import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
-import AvailabilityField from '../../containers/AvailabilityField';
-import ResourceAvailability from '../../containers/ResourceAvailability';
+import VisibilityField from '../../containers/VisibilityField';
+import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
 
 export {
@@ -73,8 +73,8 @@ export {
     Popup,
     PopupConfirm,
     PopupMenu,
-    AvailabilityField,
-    ResourceAvailability,
+    VisibilityField,
+    ResourceVisibility,
     Radio,
     Segment,
     Sidebar,

@@ -3,7 +3,7 @@
  */
 
 import { connect } from 'react-redux';
-import AvailabilityField from '../components/basic/AvailabilityField';
+import VisibilityField from '../components/basic/VisibilityField';
 import stageUtils from '../utils/stageUtils';
 import consts from '../utils/consts';
 
@@ -20,4 +20,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AvailabilityField);
+)(VisibilityField);

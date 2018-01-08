@@ -21,7 +21,7 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
-    fetchUrl: '[manager]/snapshots?_include=id,created_at,status,created_by,resource_availability[params]',
+    fetchUrl: '[manager]/snapshots?_include=id,created_at,status,created_by,visibility[params]',
     fetchParams: (widget, toolbox) => 
         toolbox.getContext ().getValue ('onlyMyResources') ? {created_by: toolbox.getManager().getCurrentUsername()} : {},
 

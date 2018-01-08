@@ -17,7 +17,7 @@ export default class extends React.Component {
         onCancelExecution: PropTypes.func,
         onMenuAction: PropTypes.func,
         onError: PropTypes.func,
-        onSetAvailability: PropTypes.func,
+        onSetVisibility: PropTypes.func,
         allowedSettingTo: PropTypes.array
     };
 
@@ -27,12 +27,12 @@ export default class extends React.Component {
         onCancelExecution: ()=>{},
         onMenuAction: ()=>{},
         onError: ()=>{},
-        onSetAvailability: ()=>{},
+        onSetVisibility: ()=>{},
         allowedSettingTo: ['tenant']
     };
 
     render() {
-        let {DataSegment, ResourceAvailability} = Stage.Basic;
+        let {DataSegment, ResourceVisibility} = Stage.Basic;
 
         return (
             <DataSegment totalSize={this.props.data.total}
@@ -46,7 +46,7 @@ export default class extends React.Component {
                                 <div className="ui grid">
                                     <div className="three wide center aligned column rightDivider">
                                         <h3 className="ui icon header verticalCenter breakWord"><a href="javascript:void(0)" className="breakWord">{item.id}</a></h3>
-                                        <ResourceAvailability availability={item.resource_availability} onSetAvailability={(availability) => this.props.onSetAvailability(item.id, availability)} allowedSettingTo={this.props.allowedSettingTo} className="topRightCorner"/>
+                                        <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="topRightCorner"/>
                                     </div>
                                     <div className="two wide column">
                                         <h5 className="ui icon header">Blueprint</h5>
