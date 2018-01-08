@@ -17,11 +17,11 @@ var BackendHandler = require('./BackendHandler');
 var logger = require('log4js').getLogger('WidgetHandler');
 
 //TODO: Temporary solution, the approach needs to be think over thoroughly
-var builtInWidgetsFolder = '../widgets';
-var userWidgetsFolder = '../userData/widgets';
+var builtInWidgetsFolder = pathlib.resolve('../widgets');
+var userWidgetsFolder = pathlib.resolve('../userData/widgets');
 if (!fs.existsSync(builtInWidgetsFolder)) {
-    builtInWidgetsFolder = '../dist/widgets';
-    userWidgetsFolder = '../dist/userData/widgets';
+    builtInWidgetsFolder = pathlib.resolve('../dist/widgets');
+    userWidgetsFolder = pathlib.resolve('../dist/userData/widgets');
 }
 
 var widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
@@ -50,7 +50,7 @@ module.exports = (function() {
     }
 
     function _getAllWidgets() {
-        return _.concat(_getUserWidgets(), _getBuiltInWidgets());
+        return _.concat(_getBuiltInWidgets(), _getUserWidgets());
     }
 
     function _validateUniqueness(widgetId) {
@@ -269,7 +269,7 @@ module.exports = (function() {
 
     function init() {
         try {
-            logger.info('Setting up user widgets directory', userWidgetsFolder);
+            logger.info('Setting up user widgets directory:', userWidgetsFolder);
             mkdirp.sync(userWidgetsFolder);
         } catch (e) {
             logger.error('Could not set up directory, error was:', e);
