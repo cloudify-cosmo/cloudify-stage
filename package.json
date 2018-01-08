@@ -92,7 +92,7 @@
     "run-sequence": "^1.2.2",
     "react-datepicker": "^0.55.0",
     "semantic-ui": "^2.2.4",
-    "semantic-ui-react": "^0.67.1",
+    "semantic-ui-react": "^0.68.1",
     "url-loader": "^0.5.7",
     "yamljs": "^0.3.0",
     "cloudify-blueprint-topology": "http://cloudify-release-eu.s3.amazonaws.com/cloudify/4.2.0/.dev1-build/cloudify-blueprint-topology-4.2.0-.dev1.tar"
