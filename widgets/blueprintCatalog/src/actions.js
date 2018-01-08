@@ -33,8 +33,8 @@ export default class Actions {
         return this.toolbox.getInternal().doGet(`/github/repos/${this.username}/${repo}/git/trees/master`);
     }
 
-    doUpload(blueprintName, blueprintFileName, repo, availability) {
-        var params = {availability, blueprint_archive_url: UPLOAD_URL(this.getUsername(), repo)};
+    doUpload(blueprintName, blueprintFileName, repo, visibility) {
+        var params = {visibility, blueprint_archive_url: UPLOAD_URL(this.getUsername(), repo)};
 
         if (!_.isEmpty(blueprintFileName)) {
             params['application_file_name'] = blueprintFileName;

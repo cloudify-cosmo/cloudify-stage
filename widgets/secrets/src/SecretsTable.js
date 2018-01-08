@@ -86,10 +86,10 @@ export default class SecretsTable extends React.Component {
         });
     }
 
-    _setSecretAvailability(secretKey, availability) {
+    _setSecretVisibility(secretKey, visibility) {
         var actions = new Actions(this.props.toolbox);
         this.props.toolbox.loading(true);
-        actions.doSetAvailability(secretKey, availability)
+        actions.doSetVisibility(secretKey, visibility)
             .then(()=> {
                 this.props.toolbox.loading(false);
                 this.props.toolbox.refresh();
@@ -105,7 +105,7 @@ export default class SecretsTable extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, DataTable, Icon, ResourceAvailability} = Stage.Basic;
+        let {ErrorMessage, DataTable, Icon, ResourceVisibility} = Stage.Basic;
         let DeleteModal = Stage.Basic.Confirm;
         let data = this.props.data;
 
@@ -134,7 +134,7 @@ export default class SecretsTable extends React.Component {
                                 <DataTable.Row key={secret.key}>
                                     <DataTable.Data>
                                         {secret.key}
-                                        <ResourceAvailability availability={secret.resource_availability} onSetAvailability={(availability) => {this._setSecretAvailability(secret.key, availability)}} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
+                                        <ResourceVisibility visibility={secret.visibility} onSetVisibility={(visibility) => {this._setSecretVisibility(secret.key, visibility)}} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
                                         {

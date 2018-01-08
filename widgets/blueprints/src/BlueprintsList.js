@@ -68,10 +68,10 @@ export default class BlueprintList extends React.Component {
             });
     }
 
-    _setBlueprintAvailability(blueprintId, availability) {
+    _setBlueprintVisibility(blueprintId, visibility) {
         var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         this.props.toolbox.loading(true);
-        actions.doSetAvailability(blueprintId, availability)
+        actions.doSetVisibility(blueprintId, visibility)
             .then(()=> {
                 this.props.toolbox.loading(false);
                 this.props.toolbox.refresh();
@@ -120,7 +120,7 @@ export default class BlueprintList extends React.Component {
                             onSelectBlueprint={this._selectBlueprint.bind(this)}
                             onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
                             onCreateDeployment={this._createDeployment.bind(this)}
-                            onSetAvailability={this._setBlueprintAvailability.bind(this)}
+                            onSetVisibility={this._setBlueprintVisibility.bind(this)}
                             allowedSettingTo={['tenant','global']}
                             />
                         :
@@ -130,7 +130,7 @@ export default class BlueprintList extends React.Component {
                             onSelectBlueprint={this._selectBlueprint.bind(this)}
                             onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
                             onCreateDeployment={this._createDeployment.bind(this)}
-                            onSetAvailability={this._setBlueprintAvailability.bind(this)}
+                            onSetVisibility={this._setBlueprintVisibility.bind(this)}
                             allowedSettingTo={['tenant','global']}
                             />
 
