@@ -10,6 +10,7 @@ var pathlib = require('path');
 var mkdirp = require('mkdirp');
 var _ = require('lodash');
 var config = require('../config').get();
+var Consts = require('../consts');
 var ArchiveHelper = require('./ArchiveHelper');
 var ResourceTypes = require('../db/types/ResourceTypes');
 var BackendHandler = require('./BackendHandler');
@@ -17,11 +18,11 @@ var BackendHandler = require('./BackendHandler');
 var logger = require('log4js').getLogger('WidgetHandler');
 
 //TODO: Temporary solution, the approach needs to be think over thoroughly
-var builtInWidgetsFolder = '../widgets';
-var userWidgetsFolder = '../userData/widgets';
+var builtInWidgetsFolder = pathlib.resolve('../widgets');
+var userWidgetsFolder = pathlib.resolve(`..${Consts.USER_DATA_PATH}/widgets`);
 if (!fs.existsSync(builtInWidgetsFolder)) {
-    builtInWidgetsFolder = '../dist/widgets';
-    userWidgetsFolder = '../dist/userData/widgets';
+    builtInWidgetsFolder = pathlib.resolve('../dist/widgets');
+    userWidgetsFolder = pathlib.resolve(`../dist${Consts.USER_DATA_PATH}/widgets`);
 }
 
 var widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
@@ -50,7 +51,7 @@ module.exports = (function() {
     }
 
     function _getAllWidgets() {
-        return _.concat(_getUserWidgets(), _getBuiltInWidgets());
+        return _.concat(_getBuiltInWidgets(), _getUserWidgets());
     }
 
     function _validateUniqueness(widgetId) {
@@ -269,7 +270,7 @@ module.exports = (function() {
 
     function init() {
         try {
-            logger.info('Setting up user widgets directory', userWidgetsFolder);
+            logger.info('Setting up user widgets directory:', userWidgetsFolder);
             mkdirp.sync(userWidgetsFolder);
         } catch (e) {
             logger.error('Could not set up directory, error was:', e);

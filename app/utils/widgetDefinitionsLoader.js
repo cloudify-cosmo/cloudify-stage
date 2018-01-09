@@ -17,6 +17,7 @@ import 'cloudify-blueprint-topology';
 
 import * as BasicComponents from '../components/basic';
 import StageUtils from './stageUtils';
+import Consts from './consts';
 import Pagination from '../components/basic/pagination/Pagination';
 
 import WidgetDefinition from './WidgetDefinition';
@@ -76,7 +77,8 @@ export default class WidgetDefinitionsLoader {
     }
 
     static _loadWidget(widget, rejectOnError) {
-        return new ScriptLoader(`/${widget.isCustom ? 'userData/widgets' : 'widgets'}/${widget.id}/widget.js`).load(widget.id, rejectOnError);
+        var scriptPath = `${widget.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widget.id}/widget.js`;
+        return new ScriptLoader(scriptPath).load(widget.id, rejectOnError);
     }
 
     static _loadWidgetsResources(widgets) {

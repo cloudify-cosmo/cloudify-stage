@@ -40,6 +40,7 @@ var BackendHandler = require('./handler/BackendHandler');
 var WidgetBackend = require('./routes/WidgetBackend');
 var File = require('./routes/File');
 var WidgetHandler = require('./handler/WidgetHandler');
+var TemplateHandler = require('./handler/TemplateHandler');
 
 var logger = log4js.getLogger('Server');
 
@@ -124,3 +125,4 @@ app.use(function(err, req, res, next) {
 
 BackendHandler.initWidgetBackends();
 WidgetHandler.init();
+TemplateHandler.init();
