@@ -4,6 +4,7 @@
 
 
 import Internal from './Internal'
+import Consts from './consts';
 
 export default class TemplateLoader {
 
@@ -19,15 +20,15 @@ export default class TemplateLoader {
 
                 var promises = [];
                 templateList.forEach((item)=>{
-                    promises.push(internal.doGet(`/templates/${item.id}.json`)
-                        .then((templateData => templatesDef[item.id] = templateData))
+                    promises.push(internal.doGet(`${item.custom ? Consts.USER_DATA_PATH : ''}/templates/${item.id}.json`)
+                        .then(templateData => templatesDef[item.id] = templateData)
                         .catch(e=>{throw new Error('Error loading template ' +item.id,e);})
                     );
                 });
 
                 pageList.forEach((item)=>{
-                    promises.push(internal.doGet(`/templates/pages/${item.id}.json`)
-                        .then((pageData => pagesDef[item.id] = pageData))
+                    promises.push(internal.doGet(`${item.custom ? Consts.USER_DATA_PATH : ''}/templates/pages/${item.id}.json`)
+                        .then(pageData => pagesDef[item.id] = pageData)
                         .catch(e=>{throw new Error('Error loading page template ' +item.id,e);})
                     );
                 });

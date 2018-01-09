@@ -10,6 +10,7 @@ var mkdirp = require('mkdirp');
 var _ = require('lodash');
 var config = require('../config').get();
 var ServerSettings = require('../serverSettings');
+var Consts = require('../consts');
 var ResourceTypes = require('../db/types/ResourceTypes');
 var AuthHandler = require('./AuthHandler');
 
@@ -17,10 +18,10 @@ var logger = require('log4js').getLogger('TemplateHandler');
 
 //TODO: Temporary solution, the approach needs to be think over thoroughly
 var builtInTemplatesFolder = pathlib.resolve('../templates');
-var userTemplatesFolder = pathlib.resolve('../userData/templates');
+var userTemplatesFolder = pathlib.resolve(`..${Consts.USER_DATA_PATH}/templates`);
 if (!fs.existsSync(builtInTemplatesFolder)) {
     builtInTemplatesFolder = pathlib.resolve('../dist/templates');
-    userTemplatesFolder = pathlib.resolve('../dist/userData/templates');
+    userTemplatesFolder = pathlib.resolve(`../dist${Consts.USER_DATA_PATH}/templates`);
 }
 const builtInPagesFolder = pathlib.resolve(builtInTemplatesFolder, 'pages');
 const userPagesFolder = pathlib.resolve(userTemplatesFolder, 'pages');

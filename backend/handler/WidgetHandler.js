@@ -10,6 +10,7 @@ var pathlib = require('path');
 var mkdirp = require('mkdirp');
 var _ = require('lodash');
 var config = require('../config').get();
+var Consts = require('../consts');
 var ArchiveHelper = require('./ArchiveHelper');
 var ResourceTypes = require('../db/types/ResourceTypes');
 var BackendHandler = require('./BackendHandler');
@@ -18,10 +19,10 @@ var logger = require('log4js').getLogger('WidgetHandler');
 
 //TODO: Temporary solution, the approach needs to be think over thoroughly
 var builtInWidgetsFolder = pathlib.resolve('../widgets');
-var userWidgetsFolder = pathlib.resolve('../userData/widgets');
+var userWidgetsFolder = pathlib.resolve(`..${Consts.USER_DATA_PATH}/widgets`);
 if (!fs.existsSync(builtInWidgetsFolder)) {
     builtInWidgetsFolder = pathlib.resolve('../dist/widgets');
-    userWidgetsFolder = pathlib.resolve('../dist/userData/widgets');
+    userWidgetsFolder = pathlib.resolve(`../dist${Consts.USER_DATA_PATH}/widgets`);
 }
 
 var widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
