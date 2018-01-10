@@ -80,7 +80,7 @@ pipeline {
           //     to: "kinneret@gigaspaces.com, limor@gigaspaces.com",
           //     subject: "UI build failed!",
           //     body: "For more information see the build log.")
-          emailext attachLog: true, body: 'For more information see the build log.', recipientProviders: [[$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: 'UI build failed!', to: 'kinneret@gigaspaces.com,limor@gigaspaces.com'
+          emailext attachLog: true, body: 'For more information see the build log.', recipientProviders: [[$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: 'UI build failed!', to: 'limor@cloudify.co,jakub.niezgoda@cloudify.co,edenp@cloudify.co'
         }
       }
 
