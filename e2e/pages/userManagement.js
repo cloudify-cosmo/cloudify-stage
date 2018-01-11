@@ -4,7 +4,7 @@
 
 module.exports = {
     elements: {
-        header: 'div.userManagementWidget h5.header',
+        header: 'div.userManagementWidget > div.widgetItem > h5.header',
         loader: 'div.userManagementWidget div.widgetLoader',
         addButton: 'div.userManagementWidget .addUserButton',
         addModal: '.addUserModal',

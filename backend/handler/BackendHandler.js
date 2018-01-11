@@ -13,9 +13,9 @@ const {NodeVM, VMScript} = require('vm2');
 var logger = require('log4js').getLogger('WidgetBackend');
 
 //TODO: Temporary solution, the approach needs to be think over thoroughly
-var widgetsFolder = '../widgets';
+var widgetsFolder = pathlib.resolve(`..${consts.USER_DATA_PATH}/widgets`);
 if (!fs.existsSync(widgetsFolder)) {
-    widgetsFolder = '../dist/widgets';
+    widgetsFolder = pathlib.resolve(`../dist${consts.USER_DATA_PATH}/widgets`);
 }
 
 var services = {};

@@ -33,7 +33,7 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
                     .waitForElementVisible('@okButton')
                     .setValue('@blueprintName', blueprintName)
                     .setValue('@blueprintUrl', [blueprintUrl, api.Keys.TAB])
-                    .waitForElementPresent(blueprintYamlFileOptionElement, 20000)
+                    .waitForElementPresent(blueprintYamlFileOptionElement)
                     .selectOptionInDropdown(blueprintYamlFileDropdownSelector, blueprintYamlFile)
                     .clickElement('@okButton');
 
