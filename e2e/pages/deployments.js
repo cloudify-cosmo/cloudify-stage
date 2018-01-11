@@ -22,7 +22,7 @@ module.exports = {
                     .waitForElementPresent('@header')
                     .waitForElementNotVisible('@loader')
                     .waitForElementPresent('@header')
-                    .moveToElement('@header', undefined, undefined)
+                    .moveToElement('@header', undefined, undefined) // For details, see: https://github.com/nightwatchjs/nightwatch/issues/1250#issuecomment-257644295
                     .clickElement('@editWidgetButton')
                 return this;
             },
