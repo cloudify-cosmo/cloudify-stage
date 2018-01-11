@@ -4,7 +4,7 @@
 
 module.exports = {
     elements: {
-        header: 'div.deploymentsWidget h5.header',
+        header: 'div.deploymentsWidget > div.widgetItem > h5.header',
         loader: 'div.deploymentsWidget div.widgetLoader',
         editWidgetButton: 'div.deploymentsWidget .widgetEditButtons i.editWidgetIcon',
         removeWidgetButton: 'div.deploymentsWidget .widgetEditButtons i.remove',
@@ -20,8 +20,9 @@ module.exports = {
             configureWidget: function () {
                 this.moveToEditMode()
                     .waitForElementPresent('@header')
-                    .waitForElementNotVisible('@loader', 20000)
-                    .moveToElement('@header', 5, 5)
+                    .waitForElementNotVisible('@loader')
+                    .waitForElementPresent('@header')
+                    .moveToElement('@header', undefined, undefined)
                     .clickElement('@editWidgetButton')
                 return this;
             },
@@ -168,7 +169,7 @@ module.exports = {
                             .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB])
                             // TODO: Make inputs.yaml file accessible from the server
                             // .setValue('@blueprintInputsFile', pathlib.resolve('e2e/resources/' + blueprintName + 'Inputs.yaml'))
-                            .waitForElementPresent(blueprintFileOptionElement, 20000)
+                            .waitForElementPresent(blueprintFileOptionElement)
                             .selectOptionInDropdown(this.elements.blueprintYamlFile.selector, blueprintYamlFile);
                     },
                     clickUpdate: function () {

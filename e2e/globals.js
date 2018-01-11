@@ -5,7 +5,7 @@ module.exports = {
 
     // default timeout value in milliseconds for waitFor commands and implicit waitFor value for
     // expect assertions
-    waitForConditionTimeout : 10000,
+    waitForConditionTimeout : 20000,
 
     // controls the timeout time for async hooks. Expects the done() callback to be invoked within this time
     // or an error is thrown

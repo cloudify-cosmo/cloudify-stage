@@ -33,7 +33,8 @@
                 "marionette": true,
                 "chromeOptions": {
                     "args": [
-                        "window-size=1600,1600"
+                        "window-size=1600,1600",
+                        "headless"
                     ]
                 }
             },
