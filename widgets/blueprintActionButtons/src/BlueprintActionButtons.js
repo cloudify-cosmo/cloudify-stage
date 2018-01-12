@@ -47,7 +47,9 @@ export default class BlueprintActionButtons extends React.Component {
             this.setState({loading: false, error: null});
             this._hideModal();
             this.props.toolbox.loading(false);
-
+            if (_.isEqual(this.props.blueprint.id, this.props.toolbox.getContext().getValue('blueprintId'))) {
+                this.props.toolbox.getContext().setValue('blueprintId', null);
+            };
             this.props.toolbox.goToParentPage();
         }).catch((err)=>{
             this.setState({loading: false, error: err.message});

@@ -87,7 +87,7 @@ module.exports = {
                             .waitForElementVisible(this.selector)
                             .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB], (result) => this.log('setValueBlueprintUrl=',result))
                             .setValue('@blueprintName', blueprintName, (result) => this.log('setValueBlueprintName=',result))
-                            .waitForElementPresent(blueprintFileOptionElement, 20000)
+                            .waitForElementPresent(blueprintFileOptionElement)
                             .selectOptionInDropdown(this.elements.blueprintYamlFile.selector, blueprintYamlFile);
 
                     },
@@ -193,7 +193,7 @@ module.exports = {
         }
     },
     elements: {
-        header: 'div.blueprintsWidget h5.header',
+        header: 'div.blueprintsWidget > div.widgetItem > h5.header',
         loader: 'div.blueprintsWidget div.widgetLoader',
         uploadButton: 'div.blueprintsWidget .uploadBlueprintButton',
         uploadModal: '.uploadBlueprintModal',
@@ -212,8 +212,9 @@ module.exports = {
             configureWidget: function () {
                 this.moveToEditMode()
                     .waitForElementPresent('@header')
-                    .waitForElementNotVisible('@loader', 20000)
-                    .moveToElement('@header', 5, 5)
+                    .waitForElementNotVisible('@loader')
+                    .waitForElementPresent('@header')
+                    .moveToElement('@header', undefined, undefined) // For details, see: https://github.com/nightwatchjs/nightwatch/issues/1250#issuecomment-257644295
                     .clickElement('@editWidgetButton')
                 return this;
             },

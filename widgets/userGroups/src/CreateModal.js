@@ -17,7 +17,8 @@ export default class CreateModal extends React.Component {
         loading: false,
         groupName: '',
         ldapGroup: '',
-        errors: {}
+        errors: {},
+        role: ''
     }
 
     onApprove () {
@@ -43,6 +44,10 @@ export default class CreateModal extends React.Component {
             errors['groupName'] = 'Please provide group name';
         }
 
+        if (_.isEmpty(this.state.role)) {
+            errors['role'] = 'Please provide group role';
+        }
+
         if (!_.isEmpty(errors)) {
             this.setState({errors});
             return false;
@@ -53,7 +58,7 @@ export default class CreateModal extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doCreate(this.state.groupName,
-                         this.state.ldapGroup
+                         this.state.ldapGroup, this.state.role
         ).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
@@ -87,6 +92,11 @@ export default class CreateModal extends React.Component {
                         <Form.Field error={this.state.errors.ldapGroup}>
                             <Form.Input name='ldapGroup' placeholder="LDAP group name"
                                         value={this.state.ldapGroup} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+
+                        <Form.Field error={this.state.errors.role}>
+                            <Form.Dropdown selection name='role' placeholder="Role" options={this.props.roles}
+                                           value={this.state.role} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
                     </Form>

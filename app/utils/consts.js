@@ -16,7 +16,7 @@ export default {
         STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management',
         CREATE_GLOBAL_RESOURCE: 'create_global_resource'
     },
-    availability: {
+    visibility: {
         PRIVATE: {name: 'private', icon: 'lock', color: 'red', title: 'Private resource'},
         TENANT: {name: 'tenant', icon: 'user', color: 'green', title: 'Tenant resource'},
         GLOBAL: {name: 'global', icon: 'globe', color: 'blue', title: 'Global resource'}
@@ -30,5 +30,6 @@ export default {
     PAGE_MANAGEMENT_VIEW: 'view',
     PAGE_MANAGEMENT_EDIT: 'edit',
     PRIVATE_RESOURCE: 'private',
-    WIDGET_ID_HEADER: 'widget-id'
+    WIDGET_ID_HEADER: 'widget-id',
+    USER_DATA_PATH: '/userData'
 };

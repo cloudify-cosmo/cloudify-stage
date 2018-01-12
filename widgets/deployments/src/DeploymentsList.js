@@ -96,10 +96,10 @@ export default class extends React.Component {
         });
     }
 
-    _setDeploymentAvailability(deploymentId, availability) {
+    _setDeploymentVisibility(deploymentId, visibility) {
         var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         this.props.toolbox.loading(true);
-        actions.doSetAvailability(deploymentId, availability)
+        actions.doSetVisibility(deploymentId, visibility)
             .then(()=> {
                 this.props.toolbox.loading(false);
                 this.props.toolbox.refresh();
@@ -147,7 +147,7 @@ export default class extends React.Component {
                                      onMenuAction={this._showModal.bind(this)}
                                      onCancelExecution={this._cancelExecution.bind(this)}
                                      onError={this._setError.bind(this)}
-                                     onSetAvailability={this._setDeploymentAvailability.bind(this)}
+                                     onSetVisibility={this._setDeploymentVisibility.bind(this)}
                                      allowedSettingTo={['tenant']}/>
                     :
                     <DeploymentsSegment widget={this.props.widget} data={this.props.data}
@@ -156,7 +156,7 @@ export default class extends React.Component {
                                        onMenuAction={this._showModal.bind(this)}
                                        onCancelExecution={this._cancelExecution.bind(this)}
                                        onError={this._setError.bind(this)}
-                                       onSetAvailability={this._setDeploymentAvailability.bind(this)}
+                                       onSetVisibility={this._setDeploymentVisibility.bind(this)}
                                        allowedSettingTo={['tenant']}/>
                 }
 

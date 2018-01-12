@@ -698,7 +698,7 @@ code.hljs {
 }
 
 
-.confirmModal.ui.modal, .setAvailabilityModal.ui.modal{
+.confirmModal.ui.modal, .setVisibilityModal.ui.modal{
   > .content{
     font-size: 1.3em;
     line-height: 1.28571429em;
@@ -908,7 +908,7 @@ a.underline {
   right: 1rem;
 }
 
-.setAvailability{
+.setVisibility{
   margin-top: 10px;
   text-align: center;
 }

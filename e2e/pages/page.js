@@ -56,7 +56,7 @@ module.exports = {
             }
         },
         editModeSidebar: {
-            selector : '.editModeSidebar',
+            selector : '.editModeSidebar:not(.animating)',
             elements: {
                 addWidgetButton: '.addWidgetBtn',
                 addPageButton: 'button:nth-child(2)'
@@ -65,11 +65,11 @@ module.exports = {
         page: {
             selector: '.page',
             elements: {
-                firstWidget: '.widget:first-child',
-                firstWidgetName: '.widget:first-child h5.header span',
-                firstWidgetRemoveIcon: '.widget:first-child .widgetEditButtons i.remove.link.icon.small',
-                firstWidgetConfigureIcon: '.widget:first-child .widgetEditButtons .editWidgetIcon',
-                firstWidgetResizeHandle: '.widget:first-child .react-resizable-handle',
+                firstWidget: '.react-grid-item.widget:first-child',
+                firstWidgetName: '.react-grid-item.widget:first-child div.widgetItem > h5.header span',
+                firstWidgetRemoveIcon: '.react-grid-item.widget:first-child .widgetEditButtons i.remove.link.icon.small',
+                firstWidgetConfigureIcon: '.react-grid-item.widget:first-child .widgetEditButtons .editWidgetIcon',
+                firstWidgetResizeHandle: '.react-grid-item.widget:first-child .react-resizable-handle',
                 testWidgetContent: '.widget.testWidgetWidget .widgetContent .statistic .label'
             },
             props: {
@@ -93,7 +93,7 @@ module.exports = {
 
                     return this.clickElement('#addWidgetsBtn')
                         .waitForElementNotPresent('.addWidgetModal')
-                        .waitForElementPresent('.widget.' + widgetId + 'Widget');
+                        .waitForElementPresent('.react-grid-item.widget.' + widgetId + 'Widget');
                 },
 
                 uninstallWidget: function(widgetId) {

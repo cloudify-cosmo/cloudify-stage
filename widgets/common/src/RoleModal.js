@@ -2,8 +2,6 @@
  * Created by pposel on 31/01/2017.
  */
 
-import Actions from './actions';
-
 export default class RoleModal extends React.Component {
 
     constructor(props,context) {
@@ -30,7 +28,7 @@ export default class RoleModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            this.setState({...RoleModal.initialState, role: nextProps.user.role});
+            this.setState({...RoleModal.initialState, role: nextProps.resource.role});
         }
     }
 
@@ -38,7 +36,7 @@ export default class RoleModal extends React.Component {
         let errors = {};
 
         if (_.isEmpty(this.state.role)) {
-            errors['role']='Please provide user role';
+            errors['role']='Please provide a role';
         }
 
         if (!_.isEmpty(errors)) {
@@ -49,8 +47,7 @@ export default class RoleModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var actions = new Actions(this.props.toolbox);
-        actions.doSetRole(this.props.user.username, this.state.role).then(()=>{
+        this.props.onSetRole(this.props.resource.name, this.state.role).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.onHide();
@@ -66,12 +63,12 @@ export default class RoleModal extends React.Component {
     render() {
         var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
 
-        var user = Object.assign({},{username:''}, this.props.user);
+        var resource = Object.assign({},{name:''}, this.props.resource);
 
         return (
-            <Modal open={this.props.open} onClose={()=>this.props.onHide()} className='userRoleModal'>
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()} className='roleModal'>
                 <Modal.Header>
-                    <Icon name="male"/> Set role for {user.username}
+                    <Icon name="male"/> Set role for {resource.name}
                 </Modal.Header>
 
                 <Modal.Content>
@@ -92,3 +89,8 @@ export default class RoleModal extends React.Component {
         );
     }
 };
+
+Stage.defineCommon({
+    name: 'RoleModal',
+    common: RoleModal
+});

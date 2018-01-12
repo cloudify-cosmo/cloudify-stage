@@ -44,6 +44,10 @@ module.exports = {
             { from: 'templates',
                 to: 'templates'}
         ]),
+        new CopyWebpackPlugin([
+            { from: 'userData',
+                to: 'userData'}
+        ]),
         new HtmlWebpackPlugin({
             template: 'app/index.tmpl.html',
             inject: 'body',

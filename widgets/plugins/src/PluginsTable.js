@@ -62,10 +62,10 @@ export default class extends React.Component {
             });
     }
 
-    _setPluginAvailability(pluginId, availability) {
+    _setPluginVisibility(pluginId, visibility) {
         var actions = new Actions(this.props.toolbox);
         this.props.toolbox.loading(true);
-        actions.doSetAvailability(pluginId, availability)
+        actions.doSetVisibility(pluginId, visibility)
             .then(()=> {
                 this.props.toolbox.loading(false);
                 this.props.toolbox.refresh();
@@ -93,7 +93,7 @@ export default class extends React.Component {
     }
 
     render() {
-        var {Confirm, ErrorMessage, DataTable, ResourceAvailability} = Stage.Basic;
+        var {Confirm, ErrorMessage, DataTable, ResourceVisibility} = Stage.Basic;
 
         return (
             <div>
@@ -123,7 +123,7 @@ export default class extends React.Component {
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
                                         {item.id}
-                                        <ResourceAvailability availability={item.resource_availability} onSetAvailability={(availability) => this._setPluginAvailability(item.id, availability)} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
+                                        <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this._setPluginVisibility(item.id, visibility)} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.package_name}</DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>

@@ -6,24 +6,34 @@
 var db = require('../db/Connection');
 var fs = require('fs-extra');
 var pathlib = require('path');
+var mkdirp = require('mkdirp');
 var _ = require('lodash');
 var config = require('../config').get();
 var ServerSettings = require('../serverSettings');
+var Consts = require('../consts');
 var ResourceTypes = require('../db/types/ResourceTypes');
 var AuthHandler = require('./AuthHandler');
 
-var logger = require('log4js').getLogger('templates');
+var logger = require('log4js').getLogger('TemplateHandler');
 
 //TODO: Temporary solution, the approach needs to be think over thoroughly
-var templatesFolder = '../templates';
-if (!fs.existsSync(templatesFolder)) {
-    templatesFolder = '../dist/templates';
+var builtInTemplatesFolder = pathlib.resolve('../templates');
+var userTemplatesFolder = pathlib.resolve(`..${Consts.USER_DATA_PATH}/templates`);
+if (!fs.existsSync(builtInTemplatesFolder)) {
+    builtInTemplatesFolder = pathlib.resolve('../dist/templates');
+    userTemplatesFolder = pathlib.resolve(`../dist${Consts.USER_DATA_PATH}/templates`);
 }
-const pagesFolder = pathlib.resolve(templatesFolder, 'pages');
+const builtInPagesFolder = pathlib.resolve(builtInTemplatesFolder, 'pages');
+const userPagesFolder = pathlib.resolve(userTemplatesFolder, 'pages');
 
 module.exports = (function() {
 
-    function _getTemplates() {
+    function _getUserTemplates() {
+        return db.Resources
+            .findAll({where: {type: ResourceTypes.TEMPLATE}, attributes: [['resourceId','id'], 'createdAt', 'creator', 'data'], raw: true});
+    }
+
+    function _getBuiltInTemplates() {
         var initials = [];
         if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN) {
             initials = _.pick(config.app.initialTemplate, [ServerSettings.MODE_COMMUNITY, ServerSettings.MODE_CUSTOMER]);
@@ -33,9 +43,10 @@ module.exports = (function() {
 
         var excludes = _.reduce(initials, (result, value) => _.concat(result, _.isObject(value) ? _.values(value) : value), []);
 
-        return fs.readdirSync(pathlib.resolve(templatesFolder))
-            .filter(item => fs.lstatSync(pathlib.resolve(templatesFolder, item)).isFile()
-                && !_.includes(excludes, pathlib.basename(item, '.json')));
+        return fs.readdirSync(pathlib.resolve(builtInTemplatesFolder))
+            .filter(file => fs.lstatSync(pathlib.resolve(builtInTemplatesFolder, file)).isFile()
+                && !_.includes(excludes, pathlib.basename(file, '.json')))
+            .map(templateFile => pathlib.basename(templateFile, '.json'));
     }
 
     function _getInitialTemplateConfig() {
@@ -61,21 +72,22 @@ module.exports = (function() {
     }
 
     function listTemplates() {
-        var templates = _getTemplates();
         var initial = _getInitialTemplateConfig();
+        var builtInTemplates = _.map(_getBuiltInTemplates(), (template) => ({id: template, data: initial[template], custom: false}));
 
-        return db.Resources
-            .findAll({where: {type: ResourceTypes.TEMPLATE},
-                      attributes: [['resourceId','id'], 'createdAt', 'creator', 'data'], raw: true})
-            .then(items => templates.map(name => {
-                var id = pathlib.parse(name).name;
-                var item = _.find(items, {id});
-                return item ? _.extend(item,{custom: true}) : {id, data: initial[id], custom: false};
-            }));
+        return _getUserTemplates()
+            .then(userTemplates => _.map(userTemplates, (template) => _.extend(template, {custom: true})))
+            .then(userTemplates => _.concat(builtInTemplates, userTemplates));
     }
 
-    function _getPages() {
-        return fs.readdirSync(pathlib.resolve(pagesFolder));
+    function _getUserPages() {
+        return db.Resources
+            .findAll({where: {type: ResourceTypes.PAGE}, attributes: [['resourceId','id'], 'createdAt', 'creator'], raw: true});
+    }
+
+    function _getBuiltInPages() {
+        return fs.readdirSync(pathlib.resolve(builtInPagesFolder))
+            .map((pageFile) => pathlib.basename(pageFile, '.json'));
     }
 
     function _getRole(systemRole, tenantsRoles, tenant) {
@@ -101,19 +113,15 @@ module.exports = (function() {
     }
 
     function listPages() {
-        var pages = _getPages();
+        var builtInPages = _.map(_getBuiltInPages(), (page) => ({id: page, custom: false}));
 
-        return db.Resources
-            .findAll({where: {type: ResourceTypes.PAGE}, attributes: [['resourceId','id'], 'createdAt', 'creator'], raw: true})
-            .then(items => pages.map(name => {
-                var id = pathlib.parse(name).name;
-                var item = _.find(items, {id});
-                return item ? _.extend(item,{custom: true}) : {id, custom: false};
-            }));
+        return _getUserPages()
+            .then(userPages => _.map(userPages, (page) => _.extend(page, {custom: true})))
+            .then(userPages => _.concat(builtInPages, userPages));
     }
 
     function createTemplate(username, template) {
-        var path = pathlib.resolve(templatesFolder, template.id + '.json');
+        var path = pathlib.resolve(userTemplatesFolder, template.id + '.json');
         if (fs.existsSync(path)) {
             return Promise.reject('Template name "' + template.id + '" already exists');
         }
@@ -125,7 +133,7 @@ module.exports = (function() {
     }
 
     function updateTemplate(username, template) {
-        var path = pathlib.resolve(templatesFolder, template.id + '.json');
+        var path = pathlib.resolve(userTemplatesFolder, template.id + '.json');
 
         return checkTemplateExistence(template.data, template.oldId)
         .then(() =>
@@ -196,7 +204,7 @@ module.exports = (function() {
     }
 
     function deleteTemplate(templateId) {
-        var path = pathlib.resolve(templatesFolder, templateId + '.json');
+        var path = pathlib.resolve(userTemplatesFolder, templateId + '.json');
 
         return new Promise((resolve,reject) => {
             fs.remove(path, (err) => {
@@ -210,7 +218,7 @@ module.exports = (function() {
     }
 
     function createPage(username, page) {
-        var path = pathlib.resolve(pagesFolder, page.id + '.json');
+        var path = pathlib.resolve(userPagesFolder, page.id + '.json');
         if (fs.existsSync(path)) {
             return Promise.reject('Page id "' + page.id + '" already exists');
         }
@@ -226,7 +234,7 @@ module.exports = (function() {
     }
 
     function updatePage(username, page) {
-        var path = pathlib.resolve(pagesFolder, page.id + '.json');
+        var path = pathlib.resolve(userPagesFolder, page.id + '.json');
 
         var content = {
             'name': page.name,
@@ -258,7 +266,7 @@ module.exports = (function() {
     }
 
     function deletePage(pageId) {
-        var path = pathlib.resolve(pagesFolder, pageId + '.json');
+        var path = pathlib.resolve(userPagesFolder, pageId + '.json');
 
         return new Promise((resolve,reject) => {
             fs.remove(path, (err) => {
@@ -314,7 +322,20 @@ module.exports = (function() {
         });
     }
 
+    function init() {
+        try {
+            logger.info('Setting up user templates directory:', userTemplatesFolder);
+            mkdirp.sync(userTemplatesFolder);
+            logger.info('Setting up user pages directory:', userPagesFolder);
+            mkdirp.sync(userPagesFolder);
+        } catch (e) {
+            logger.error('Could not set up directories for templates and pages, error was:', e);
+            process.exit(1);
+        }
+    }
+
     return {
+        init,
         listTemplates,
         listPages,
         createTemplate,

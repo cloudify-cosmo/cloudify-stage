@@ -20,7 +20,7 @@ export default class CreateModal extends React.Component {
         secretValue: '',
         secretFile: null,
         errors: {},
-        availability: Stage.Common.Consts.defaultAvailability
+        visibility: Stage.Common.Consts.defaultVisibility
     }
 
     static propTypes = {
@@ -63,7 +63,7 @@ export default class CreateModal extends React.Component {
         this.setState({loading: true});
 
         let actions = new Actions(this.props.toolbox);
-        actions.doCreate(this.state.secretKey, this.state.secretValue, this.state.availability).then(()=>{
+        actions.doCreate(this.state.secretKey, this.state.secretValue, this.state.visibility).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch((err)=> {
@@ -92,15 +92,15 @@ export default class CreateModal extends React.Component {
     }
 
     render() {
-        let {Modal, Button, Icon, Form, ApproveButton, CancelButton, AvailabilityField} = Stage.Basic;
+        let {Modal, Button, Icon, Form, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
         const createButton = <Button content='Create' icon='add' labelPosition='left' />;
 
         return (
             <Modal trigger={createButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
                 <Modal.Header>
                     <Icon name='add' /> Create secret
-                    <AvailabilityField availability={this.state.availability} className="rightFloated"
-                                       onAvailabilityChange={(availability)=>this.setState({availability: availability})}/>
+                    <VisibilityField visibility={this.state.visibility} className="rightFloated"
+                                       onVisibilityChange={(visibility)=>this.setState({visibility: visibility})}/>
                 </Modal.Header>
 
                 <Modal.Content>

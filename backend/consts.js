@@ -5,6 +5,7 @@ var _ = require('lodash');
 
 module.exports = {
     WIDGET_ID_HEADER: 'widget-id',
+    USER_DATA_PATH: '/userData',
     ALLOWED_METHODS_OBJECT: {get: 'GET', post: 'POST', put: 'PUT', delete: 'DELETE', patch: 'PATCH'},
 };
 

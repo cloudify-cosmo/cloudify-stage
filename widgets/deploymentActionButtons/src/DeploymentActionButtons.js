@@ -38,7 +38,9 @@ export default class DeploymentActionButtons extends React.Component {
             this._hideModal();
             this.props.toolbox.loading(false);
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
-
+            if (_.isEqual(this.props.deployment.id, this.props.toolbox.getContext().getValue('deploymentId'))) {
+                this.props.toolbox.getContext().setValue('deploymentId', null);
+            };
             this.props.toolbox.goToParentPage();
         }).catch((err) => {
             this.setState({loading: false, error: err.message});

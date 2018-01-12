@@ -16,7 +16,7 @@ export default class BlueprintsCatalog extends React.Component{
         onSelectBlueprint: PropTypes.func,
         onDeleteBlueprint: PropTypes.func,
         onCreateDeployment: PropTypes.func,
-        onSetAvailability: PropTypes.func,
+        onSetVisibility: PropTypes.func,
         allowedSettingTo: PropTypes.array
     };
 
@@ -25,12 +25,12 @@ export default class BlueprintsCatalog extends React.Component{
         onSelectBlueprint: ()=>{},
         onDeleteBlueprint: ()=>{},
         onCreateDeployment: ()=>{},
-        onSetAvailability: ()=>{},
+        onSetVisibility: ()=>{},
         allowedSettingTo: ['tenant']
     };
 
     render(){
-        var {DataSegment, Grid, Image, Button, Label, ResourceAvailability, Header} = Stage.Basic;
+        var {DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header} = Stage.Basic;
 
         var index=0;
         var blueprintsItems =
@@ -45,7 +45,7 @@ export default class BlueprintsCatalog extends React.Component{
                                     <Grid.Column width="16">
                                         <Image src={Stage.Utils.url(`/ba/image/${item.id}`)}/>
                                         <Header><a href="javascript:void(0)" className="breakWord">{item.id}</a></Header>
-                                        <ResourceAvailability availability={item.resource_availability} onSetAvailability={(availability)=>this.props.onSetAvailability(item.id, availability)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
+                                        <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility)=>this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
                                     </Grid.Column>
                                 </Grid.Row>
 
