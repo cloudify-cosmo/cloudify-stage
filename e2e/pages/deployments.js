@@ -109,7 +109,7 @@ module.exports = {
         configureWidgetModal: {
             selector: '.editWidgetModal',
             elements: {
-                displayStyle: '.content div.field.displayStyle div[role="listbox"]',
+                displayStyle: '.content div.field.displayStyle',
                 saveButton: '.actions button.ok',
                 cancelButton: '.actions button.cancel'
             },
@@ -129,10 +129,10 @@ module.exports = {
                         return this.setInputText('.content div.field.blueprintIdFilter', blueprintId);
                     },
                     setTableView: function () {
-                        return this.selectOptionInDropdown('@displayStyle', this.props.tableView);
+                        return this.selectOptionInDropdown('@displayStyle', `${this.selector} ${this.elements.displayStyle.selector}`, this.props.tableView);
                     },
                     setListView: function () {
-                        return this.selectOptionInDropdown('@displayStyle', this.props.listView);
+                        return this.selectOptionInDropdown('@displayStyle', `${this.selector} ${this.elements.displayStyle.selector}`, this.props.listView);
 
                     },
                     clickSave: function () {
@@ -155,7 +155,7 @@ module.exports = {
                 blueprintFile: '.content input[name="blueprintFile"]',
                 blueprintUrl: '.content input[name="blueprintUrl"]',
                 blueprintInputsFile: '.content input[name="inputsFile"]',
-                blueprintYamlFile: '.content input[name="applicationFileName-search"]',
+                blueprintYamlFile: '.content div.dropdown',
                 updateButton: '.actions button.button.ok',
                 cancelButton: '.actions button.button.cancel'
             },
@@ -166,11 +166,11 @@ module.exports = {
                         // var pathlib = require("path");
                         return this
                             .waitForElementVisible(this.selector)
-                            .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB])
+                            .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB], (result) => this.log('Setting blueprintUrl field value. Status =', result.status))
                             // TODO: Make inputs.yaml file accessible from the server
                             // .setValue('@blueprintInputsFile', pathlib.resolve('e2e/resources/' + blueprintName + 'Inputs.yaml'))
                             .waitForElementPresent(blueprintFileOptionElement)
-                            .selectOptionInDropdown(this.elements.blueprintYamlFile.selector, blueprintYamlFile);
+                            .selectOptionInDropdown('@blueprintYamlFile', this.elements.blueprintYamlFile.selector, blueprintYamlFile);
                     },
                     clickUpdate: function () {
                         this.waitForElementVisible(this.selector)

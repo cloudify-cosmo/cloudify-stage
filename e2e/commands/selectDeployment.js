@@ -14,6 +14,6 @@ exports.command = function(deploymentName) {
                     .moveOutOfEditMode();
             }
 
-            filter.selectOptionInDropdown('@deploymentSearch', deploymentName);
+            filter.selectOptionInDropdown('@deploymentSearch', filter.elements.deploymentSearch.selector, deploymentName);
         });
 };

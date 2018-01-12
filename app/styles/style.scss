@@ -295,7 +295,7 @@ a:hover {
 
 // TODO need to calc it according to screen size
 .editWidgetModal {
-  max-height: 600px;
+  max-height: none;
 }
 
 // TODO need to calc it according to screen size
@@ -688,8 +688,6 @@ code.hljs {
 /* Modal */
 
 .ui.modal:not(.overlay) > .content {
-  max-height: 480px;
-  overflow: auto;
 }
 
 .ui.modal.unlimited > .content {
