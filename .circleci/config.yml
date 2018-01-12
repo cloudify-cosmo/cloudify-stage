@@ -1,0 +1,79 @@
+version: 2
+
+common:
+  - &docker_node
+      docker:
+        - image: circleci/node:8.9
+
+jobs:
+  test:
+    <<: *docker_node
+
+    steps:
+      - checkout
+      - run: npm run beforebuild
+      - run: npm test
+
+  build:
+    <<: *docker_node
+
+    steps:
+      - checkout
+      - run: npm run build
+
+  deploy:
+    <<: *docker_node
+
+    steps:
+      - checkout
+      - run: npm run build
+      - run: npm run zip
+      - run: scp stage.tar.gz ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com:~
+      - run: cat scripts/ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
+
+  build_rpm:
+    machine: true
+
+    steps:
+      - checkout
+      - run: git clone --depth 1 https://github.com/cloudify-cosmo/cloudify-manager.git ~/cloudify-manager
+      - run: |
+          cd ~/cloudify-manager
+          git fetch --depth 1 origin "${CIRCLE_BRANCH}" && git checkout "${CIRCLE_BRANCH}" || echo no matching branch found, using master
+      - run: |
+          builder="docker run --cap-add SYS_ADMIN --security-opt apparmor:unconfined \
+            --mount type=bind,source=$(pwd),target=/source \
+            --mount type=bind,source=${HOME}/cloudify-manager,target=/builder \
+            cloudify3/mock-builder:0.1 \
+            python /builder/packaging/build_rpm.py"
+          $builder /source/packaging/cloudify-stage.spec
+      - run: mkdir result
+      - run: mv ~/cloudify-manager/packaging/*.rpm result
+
+      - store_artifacts:
+          path: result
+          destination: result
+
+
+workflows:
+  version: 2
+
+  build_test_deploy:
+    jobs:
+      - test
+
+      - build:
+          requires:
+            - test
+          filters:
+            branches:
+              ignore: deploy-demo
+
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: deploy-demo
+
+      - build_rpm
