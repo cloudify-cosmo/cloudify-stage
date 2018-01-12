@@ -43,7 +43,7 @@ export default class GridItem extends Component {
             <div 
                 id={this.props.id}
                 ref='item'
-                className={`${this.props.className} grid-stack-item auto-z-index grid-stack-override widget-content`}
+                className={this.props.className}
             >
                 {this.props.children}
             </div>

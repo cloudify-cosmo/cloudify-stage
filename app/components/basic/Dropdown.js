@@ -13,8 +13,6 @@ import { createShorthand } from 'semantic-ui-react/dist/commonjs/lib';
  * ## Access
  * `Stage.Basic.Form.Dropdown` or `Stage.Basic.Dropdown`
  *
- * Note: This component is closely related to `Stage.Basic.DropdownPortal` component, which additionally wraps the Dropdown in a Portal from Semantic-UI-React.
- *
  * ## Usage
  * ```
  * let options = [
