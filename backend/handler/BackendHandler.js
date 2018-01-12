@@ -12,12 +12,8 @@ const {NodeVM, VMScript} = require('vm2');
 
 var logger = require('log4js').getLogger('WidgetBackend');
 
-//TODO: Temporary solution, the approach needs to be think over thoroughly
-var widgetsFolder = pathlib.resolve(`..${consts.USER_DATA_PATH}/widgets`);
-if (!fs.existsSync(widgetsFolder)) {
-    widgetsFolder = pathlib.resolve(`../dist${consts.USER_DATA_PATH}/widgets`);
-}
-
+var userWidgetsFolder = '';
+var builtInWidgetsFolder = '';
 var services = {};
 var BackendRegistrator = function (widgetId) {
     return {
@@ -62,14 +58,25 @@ var BackendRegistrator = function (widgetId) {
 
 module.exports = (function() {
 
-    function _getInstalledWidgets() {
-        return fs.readdirSync(pathlib.resolve(widgetsFolder))
-            .filter(dir => fs.lstatSync(pathlib.resolve(widgetsFolder, dir)).isDirectory()
+    function _getUserWidgets() {
+        return fs.readdirSync(userWidgetsFolder)
+            .filter(dir => fs.lstatSync(pathlib.resolve(userWidgetsFolder, dir)).isDirectory()
             && _.indexOf(config.app.widgets.ignoreFolders, dir) < 0);
     }
 
-    function importWidgetBackend(widgetId) {
+    function _getBuiltInWidgets() {
+        return fs.readdirSync(builtInWidgetsFolder)
+            .filter(dir => fs.lstatSync(pathlib.resolve(builtInWidgetsFolder, dir)).isDirectory()
+                && _.indexOf(config.app.widgets.ignoreFolders, dir) < 0);
+    }
+
+    function importWidgetBackend(widgetId, isCustom=true) {
+        var widgetsFolder = userWidgetsFolder;
+        if (!isCustom) {
+            widgetsFolder = builtInWidgetsFolder;
+        }
         var backendFile = pathlib.resolve(widgetsFolder, widgetId, config.app.widgets.backendFilename);
+
         if (fs.existsSync(backendFile)) {
             logger.info('-- initializing file ' + backendFile);
 
@@ -102,12 +109,16 @@ module.exports = (function() {
         }
     }
 
-    function initWidgetBackends() {
+    function initWidgetBackends(userFolder, builtInFolder) {
+        userWidgetsFolder = userFolder;
+        builtInWidgetsFolder = builtInFolder;
         logger.info('Scanning widget backend files...');
 
-        var widgets = _getInstalledWidgets();
+        var userWidgets = _getUserWidgets();
+        var builtInWidgets = _getBuiltInWidgets();
 
-        _.each(widgets, widgetId => importWidgetBackend(widgetId));
+        _.each(userWidgets, widgetId => importWidgetBackend(widgetId));
+        _.each(builtInWidgets, widgetId => importWidgetBackend(widgetId, false));
 
         logger.info('Widget backend files for registration completed');
     }
