@@ -272,6 +272,7 @@ module.exports = (function() {
         try {
             logger.info('Setting up user widgets directory:', userWidgetsFolder);
             mkdirp.sync(userWidgetsFolder);
+            BackendHandler.initWidgetBackends(userWidgetsFolder, builtInWidgetsFolder);
         } catch (e) {
             logger.error('Could not set up directory, error was:', e);
             process.exit(1);
