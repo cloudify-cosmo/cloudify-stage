@@ -51,7 +51,7 @@ export default class TenantModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var tenants = this.props.user.tenants;
+        var tenants = this.props.user.tenant_roles.direct;
         var tenantsList = Object.keys(tenants);
         var submitTenants = this.state.tenants;
         var submitTenantsList = Object.keys(submitTenants);

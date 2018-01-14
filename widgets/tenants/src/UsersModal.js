@@ -73,7 +73,7 @@ export default class UsersModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var users = this.props.tenant.users;
+        var users = this.props.tenant.user_roles.direct;
         var usersList = Object.keys(users);
         var submitUsers = this.state.users;
         var submitUsersList = Object.keys(submitUsers);
