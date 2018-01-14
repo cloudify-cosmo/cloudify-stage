@@ -3,6 +3,7 @@
  */
 
 import Actions from './actions';
+import UserRoles from './UserRoles';
 
 let PropTypes = React.PropTypes;
 
@@ -62,12 +63,12 @@ export default class TenantDetails extends React.Component {
                     <Divider/>
                     <List divided relaxed verticalAlign='middle' className="light">
                         {
-                            Object.keys(tenant.groups).map((group) => {
+                            _.map(tenant.groups, (role, group) => {
                                 let processing = this.state.processing && this.state.processItem === group;
 
                                 return (
                                     <List.Item key={group}>
-                                        {group}
+                                        {group} - {role} (<i>direct role</i>)
                                         <Icon link name={processing?'notched circle':'remove'} loading={processing}
                                               className="right floated" onClick={this._removeUserGroup.bind(this, group)}/>
                                     </List.Item>
@@ -83,12 +84,12 @@ export default class TenantDetails extends React.Component {
                     <Divider/>
                     <List divided relaxed verticalAlign='middle' className="light">
                         {
-                            Object.keys(tenant.users).map((user) => {
+                            _.map(tenant.users, (data, user) => {
                                 let processing = this.state.processing && this.state.processItem === user;
 
                                 return (
                                     <List.Item key={user}>
-                                        {user}
+                                        {user} - <UserRoles tenant={tenant} user={user}/>
                                         <Icon link name={processing?'notched circle':'remove'} loading={processing}
                                               className="right floated" onClick={this._removeUser.bind(this, user)}/>
                                     </List.Item>

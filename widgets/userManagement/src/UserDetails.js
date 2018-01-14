@@ -53,6 +53,7 @@ export default class UserDetails extends React.Component {
 
     render() {
         let {Segment, List, Icon, Message, Divider} = Stage.Basic;
+        let RolesPresenter = Stage.Common.RolesPresenter;
 
         return (
             <Segment.Group horizontal>
@@ -87,7 +88,7 @@ export default class UserDetails extends React.Component {
 
                                 return (
                                     <List.Item key={item}>
-                                        {item}
+                                        {item} - <RolesPresenter directRole={this.props.data.tenant_roles.direct[item]} groupRoles={this.props.data.tenant_roles.groups[item]}/>
                                         <Icon link name={processing?'notched circle':'remove'} loading={processing}
                                               className="right floated" onClick={this._removeTenant.bind(this, item)}/>
                                     </List.Item>

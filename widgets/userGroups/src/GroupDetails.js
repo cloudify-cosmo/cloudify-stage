@@ -84,12 +84,12 @@ export default class UserDetails extends React.Component {
                     <Divider/>
                     <List divided relaxed verticalAlign='middle' className="light">
                         {
-                            _.map(_.keys(this.props.data.tenants), (item) => {
+                            _.map(this.props.data.tenants, (role, item) => {
                                 let processing = this.state.processing && this.state.processItem === item;
 
                                 return (
                                     <List.Item key={item}>
-                                        {item}
+                                        {item} - {role} (<i>direct role</i>)
                                         <Icon link name={processing?'notched circle':'remove'} loading={processing}
                                               className="right floated" onClick={this._removeTenant.bind(this, item)}/>
                                     </List.Item>
