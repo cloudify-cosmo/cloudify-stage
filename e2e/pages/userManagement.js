@@ -67,7 +67,7 @@ module.exports = {
                             .isPresent(this.props.tenantTag(tenant), (result) => {
                                 if (!result.value) {
                                     this.log('Tenant', tenant, 'not present. Adding...')
-                                        .selectOptionInDropdown('@tenantDropdown', tenant)
+                                        .selectOptionInDropdown('@tenantDropdown', `${this.selector} ${this.elements.tenantDropdown.selector}`, tenant)
                                         .clickElement('@okButton')
                                         .waitForElementNotPresent(this.selector);
                                 } else {
@@ -122,7 +122,7 @@ module.exports = {
                     },
                     setRole: function (role) {
                         return this
-                            .selectOptionInDropdown('@role', role)
+                            .selectOptionInDropdown('@role', `${this.selector} ${this.elements.role.selector}`, role)
                             .clickSave();
                     }
                 }
@@ -151,7 +151,7 @@ module.exports = {
                             .setValue('@userName', userName)
                             .setValue('@password', password)
                             .setValue('@confirmPassword', password)
-                            .selectOptionInDropdown('@role', role);
+                            .selectOptionInDropdown('@role', `${this.selector} ${this.elements.role.selector}`, role)
 
                     },
                     clickAdd: function() {

@@ -119,7 +119,7 @@ module.exports = {
             .click('@configIcon')
 
         backend.section.widgetConfig
-            .selectOptionInDropdown('@dropdown', backend.section.widgetConfig.props.requestItem)
+            .selectOptionInDropdown('@dropdown', `${backend.section.widgetConfig.selector} ${backend.section.widgetConfig.elements.dropdown.selector}`, backend.section.widgetConfig.props.requestItem)
             .click('@saveBtn')
 
         backend.section.backendWidget

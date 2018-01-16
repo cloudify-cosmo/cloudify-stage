@@ -27,9 +27,9 @@ exports.command = function(deploymentName) {
                     .clickElement('@okButton')
                     .waitForElementNotPresent('@okButton');
 
-                this.page.filter()
-                    .waitForDeploymentNotPresent(deploymentName)
-                    .selectOptionInDropdown('@deploymentSearch', '');
+                var filter = this.page.filter();
+                filter.waitForDeploymentNotPresent(deploymentName)
+                    .selectOptionInDropdown('@deploymentSearch', filter.elements.blueprintSearch.selector, '');
             });
         } else {
             this.log('not removing', deploymentName, "deployment, it doesn't exist");

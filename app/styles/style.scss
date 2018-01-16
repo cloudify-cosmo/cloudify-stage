@@ -102,6 +102,10 @@ a:hover {
   height: 150px;
 }
 
+.react-grid-item.widget {
+  z-index: auto !important;
+}
+
 .maximizeWidget .widget {
   display: none;
 
@@ -291,7 +295,7 @@ a:hover {
 
 // TODO need to calc it according to screen size
 .editWidgetModal {
-  max-height: 600px;
+  max-height: none;
 }
 
 // TODO need to calc it according to screen size
@@ -684,8 +688,6 @@ code.hljs {
 /* Modal */
 
 .ui.modal:not(.overlay) > .content {
-  max-height: 480px;
-  overflow: auto;
 }
 
 .ui.modal.unlimited > .content {
@@ -745,11 +747,6 @@ code.hljs {
 
 .noPadded {
   padding: 0px !important;
-}
-
-.dropdownPortal {
-  z-index: 100000 !important;
-  visibility: hidden !important;
 }
 
 .ui.dropdown .menu>.item.indent {

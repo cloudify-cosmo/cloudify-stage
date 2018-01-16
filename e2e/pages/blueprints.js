@@ -72,7 +72,7 @@ module.exports = {
                 blueprintUrl: '.content input[name="blueprintUrl"]',
                 blueprintName: '.content input[name="blueprintName"]',
                 blueprintFile: '.content input[name="blueprintFile"]',
-                blueprintYamlFile: '.content input[name="blueprintFileName-search"]',
+                blueprintYamlFile: '.content div.dropdown',
                 imageUrl: '.content input[name="imageUrl"]',
                 imageFile: '.content input[name="fileNameimageFile"]',
                 okButton: '.actions button.ok',
@@ -85,10 +85,12 @@ module.exports = {
                         let blueprintFileOptionElement = `select[name="blueprintFileName"] option[value="${blueprintYamlFile}"]`;
                         return this
                             .waitForElementVisible(this.selector)
-                            .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB], (result) => this.log('setValueBlueprintUrl=',result))
-                            .setValue('@blueprintName', blueprintName, (result) => this.log('setValueBlueprintName=',result))
+                            .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB], (result) => this.log('Setting blueprintUrl field value. Status =', result.status))
+                            .setValue('@blueprintName', blueprintName, (result) => this.log('Setting blueprintName field value. Status =', result.status))
                             .waitForElementPresent(blueprintFileOptionElement)
-                            .selectOptionInDropdown(this.elements.blueprintYamlFile.selector, blueprintYamlFile);
+                            .selectOptionInDropdown('@blueprintYamlFile',
+                                                    `${this.selector} ${this.elements.blueprintYamlFile.selector}`,
+                                                    blueprintYamlFile);
 
                     },
                     clickUpload: function() {
@@ -168,10 +170,14 @@ module.exports = {
                         return this.setInputText('.content div.field.pollingTime', value);
                     },
                     setTableView: function () {
-                        return this.selectOptionInDropdown('@displayStyle', this.props.tableView);
+                        return this.selectOptionInDropdown('@displayStyle',
+                                                           `${this.selector} ${this.elements.displayStyle.selector}`,
+                                                           this.props.tableView);
                     },
                     setCatalogView: function () {
-                        return this.selectOptionInDropdown('@displayStyle', this.props.catalogView);
+                        return this.selectOptionInDropdown('@displayStyle',
+                                                           `${this.selector} ${this.elements.displayStyle.selector}`,
+                                                           this.props.catalogView);
 
                     },
                     clickSave: function () {

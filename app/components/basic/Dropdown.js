@@ -2,15 +2,12 @@
  * Created by pposel on 23/01/2017.
  */
 
-import React, { Component, PropTypes, Children, cloneElement } from 'react';
+import React, { Children, cloneElement } from 'react';
 import { Dropdown as DropdownSemanticUiReact, DropdownMenu, DropdownHeader } from 'semantic-ui-react'
-import { createShorthand, useKeyOnly, useKeyOrValueAndKey, isBrowser } from 'semantic-ui-react/dist/commonjs/lib';
-import Portal from 'semantic-ui-react/dist/commonjs/addons/Portal';
+import { createShorthand } from 'semantic-ui-react/dist/commonjs/lib';
 
 /**
  * Dropdown is a component which extends [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework
- * and wraps it with use of [Portal](https://react.semantic-ui.com/addons/portal) component from Semantic-UI-React framework.
- *
  * See [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework for details about props and usage details.
  *
  * ## Access
@@ -34,39 +31,6 @@ import Portal from 'semantic-ui-react/dist/commonjs/addons/Portal';
  */
 export default class Dropdown extends DropdownSemanticUiReact {
 
-    componentWillMount() {
-        super.componentWillMount();
-        window.addEventListener('scroll', this.hideOnScroll)
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        window.removeEventListener('scroll', this.hideOnScroll);
-    }
-
-    hideOnScroll = (e) => {
-        if (this.state.open) {
-            this.close(e);
-        }
-    }
-
-    computePopupStyle() {
-        var coords = this.ref.getBoundingClientRect();
-
-        const style = { position: 'absolute' };
-
-        // Do not access window/document when server side rendering
-        if (!isBrowser) return style;
-
-        const { pageYOffset, pageXOffset } = window;
-
-        style.left = Math.round(coords.left + pageXOffset) + 'px';
-        style.top = Math.round(coords.top + coords.height + pageYOffset - 2) + 'px';
-        style.width = coords.width + 'px';
-
-        return style
-    }
-
     renderMenu = () => {
         const { open } = this.state;
         const menuClasses = open ? 'visible' : '';
@@ -74,55 +38,9 @@ export default class Dropdown extends DropdownSemanticUiReact {
 
         const {
             children,
-            header,
-            basic,
-            button,
-            className,
-            compact,
-            floating,
-            inline,
-            item,
-            labeled,
-            multiple,
-            pointing,
-            search,
-            selection,
-            simple,
-            loading,
-            error,
-            disabled,
-            scrolling
+            header
         } = this.props;
 
-        // Classes
-        const classes = [
-            'ui',
-            useKeyOnly(open, 'active visible'),
-            useKeyOnly(disabled, 'disabled'),
-            useKeyOnly(error, 'error'),
-            useKeyOnly(loading, 'loading'),
-            useKeyOnly(basic, 'basic'),
-            useKeyOnly(button, 'button'),
-            useKeyOnly(compact, 'compact'),
-            useKeyOnly(floating, 'floating'),
-            useKeyOnly(inline, 'inline'),
-            useKeyOnly(labeled, 'labeled'),
-            useKeyOnly(item, 'item'),
-            useKeyOnly(multiple, 'multiple'),
-            useKeyOnly(search, 'search'),
-            useKeyOnly(selection, 'selection'),
-            useKeyOnly(simple, 'simple'),
-            useKeyOnly(scrolling, 'scrolling'),
-            useKeyOrValueAndKey(pointing, 'pointing'),
-            'dropdown',
-            'dropdownPortal',
-            className
-        ].filter(e => !_.isEmpty(e)).join(' ');
-
-        var style = {};
-        if (this.ref && open) {
-            style = this.computePopupStyle();
-        }
 
         // single menu child
         // Used only for dropdown menu, we are currently using Popup Menu so I do not port it to the body.
@@ -134,12 +52,10 @@ export default class Dropdown extends DropdownSemanticUiReact {
         }
 
         return (
-            <Portal open={open} className={classes}>
-                <DropdownMenu {...ariaOptions} className={`${menuClasses} ${name}`} style={style}>
-                    {createShorthand(DropdownHeader, val => ({ content: val }), header)}
-                    {this.renderOptions()}
-                </DropdownMenu>
-            </Portal>
+            <DropdownMenu {...ariaOptions} className={`${menuClasses} ${name}`} >
+                {createShorthand(DropdownHeader, val => ({content: val}), header)}
+                {this.renderOptions()}
+            </DropdownMenu>
         )
     }
 

@@ -34,7 +34,7 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
                     .setValue('@blueprintName', blueprintName)
                     .setValue('@blueprintUrl', [blueprintUrl, api.Keys.TAB])
                     .waitForElementPresent(blueprintYamlFileOptionElement)
-                    .selectOptionInDropdown(blueprintYamlFileDropdownSelector, blueprintYamlFile)
+                    .selectOptionInDropdown(blueprintYamlFileDropdownSelector, blueprintYamlFileDropdownSelector, blueprintYamlFile)
                     .clickElement('@okButton');
 
                 blueprints.waitForElementNotPresent('@uploadModal');
