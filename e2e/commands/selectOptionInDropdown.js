@@ -12,6 +12,7 @@ exports.command = function (dropdownTriggerElement, dropdownCssSelector, optionN
     let index = 0;
     let findOptionElementId = () => {
         this.elementIdText(optionElementIds[index], (text) => {
+            this.log(`Checking option '${text.value}'.`);
             if (text.value === optionName) {
                 optionElementIdToClick = optionElementIds[index];
                 this.log(`Found '${optionName}' option.`);

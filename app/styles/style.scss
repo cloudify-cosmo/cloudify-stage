@@ -13,6 +13,10 @@ a:hover {
     margin: 4px;
   }
 }
+.loadingSegment {
+    height: 100%;
+    z-index: 100 !important;
+}
 
 .ui.top.menu .right.menu .ui.dropdown.item{
   padding: 5px 10px;

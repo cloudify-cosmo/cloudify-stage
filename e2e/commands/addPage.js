@@ -3,8 +3,7 @@
  */
 
 exports.command = function() {
-    this.page.page().section.editModeSidebar
-        .clickElement('@addPageButton');
-
-    return this.pause(2000);
+    return this.page.page().section.editModeSidebar
+        .clickElement('@addPageButton')
+        .waitForElementPresent('div.emptyPage');
 };
