@@ -24,12 +24,14 @@ export default class Filter extends React.Component {
     componentDidMount() {
         this.props.toolbox.getEventBus().on('blueprints:refresh', this._refreshData, this);
         this.props.toolbox.getEventBus().on('deployments:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('nodes:refresh', this._refreshData, this);
         this.props.toolbox.getEventBus().on('executions:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
         this.props.toolbox.getEventBus().off('blueprints:refresh', this._refreshData);
         this.props.toolbox.getEventBus().off('deployments:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('nodes:refresh', this._refreshData);
         this.props.toolbox.getEventBus().off('executions:refresh', this._refreshData);
     }
 
@@ -45,6 +47,14 @@ export default class Filter extends React.Component {
                 var currDeployment = _.find(this.props.data.deployments.items,{id:this.props.data.deploymentId});
                 if (currDeployment.blueprint_id !== blueprintId) {
                     this.props.toolbox.getContext().setValue('deploymentId',null);
+                }
+            }
+
+            if (this.props.data.nodeId) {
+                var currNode = _.find(this.props.data.nodes.items,{id:this.props.data.nodeId});
+                if (currNode.blueprint_id !== blueprintId) {
+                    this.props.toolbox.getContext().setValue('nodeId',null);
+                    this.props.toolbox.getContext().setValue('nodeInstanceId',null);
                 }
             }
 
@@ -64,15 +74,62 @@ export default class Filter extends React.Component {
         if (_.isEmpty(deploymentId)) {
             deploymentId = null;
         }
-        // Clear the selected execution if its not related to the selected deployment
-        if (this.props.data.executionId && !_.isEmpty(deploymentId)) {
-            var currExecution = _.find(this.props.data.executions.items,{id:this.props.data.executionId});
-            if (currExecution.deployment_id !== deploymentId) {
-                this.props.toolbox.getContext().setValue('executionId',null);
+
+        if (!_.isEmpty(deploymentId)) {
+            if (this.props.data.nodeId) {
+                var node = _.find(this.props.data.nodes.items, {id: this.props.data.nodeId});
+                if (node.deployment_id !== deploymentId) {
+                    this.props.toolbox.getContext().setValue('depNodeId', null);
+                    this.props.toolbox.getContext().setValue('nodeId', null);
+                }
+            }
+
+            if (this.props.data.nodeInstanceId) {
+                var nodeInstance = _.find(this.props.data.nodeInstances.items, {id: this.props.data.nodeInstanceId});
+                if (nodeInstance.deployment_id !== deploymentId) {
+                    this.props.toolbox.getContext().setValue('nodeInstanceId', null);
+                }
+            }
+
+            // Clear the selected execution if its not related to the selected deployment
+            if (this.props.data.executionId) {
+                var currExecution = _.find(this.props.data.executions.items,{id:this.props.data.executionId});
+                if (currExecution.deployment_id !== deploymentId) {
+                    this.props.toolbox.getContext().setValue('executionId',null);
+                }
             }
         }
-        this.props.toolbox.getContext().setValue('deploymentId',deploymentId);
 
+        this.props.toolbox.getContext().setValue('deploymentId',deploymentId);
+    }
+
+    _selectNode(proxy, field) {
+        var nodeId = field.value;
+        if (_.isEmpty(nodeId)) {
+            nodeId = null;
+        }
+
+        if (this.props.data.nodeInstanceId && !_.isEmpty(nodeId)) {
+            var nodeInstance = _.find(this.props.data.nodeInstances.items, {id: this.props.data.nodeInstanceId});
+            if (nodeInstance.node_id !== nodeId) {
+                this.props.toolbox.getContext().setValue('nodeInstanceId', null);
+            }
+        }
+
+        this.props.toolbox.getContext().setValue('nodeId', nodeId);
+        if (!_.isEmpty(this.props.data.deploymentId)) {
+            let depNodeId = nodeId + this.props.data.deploymentId;
+            this.props.toolbox.getContext().setValue('depNodeId', depNodeId);
+        }
+    }
+
+    _selectNodeInstance(proxy, field) {
+        var nodeInstanceId = field.value;
+        if (_.isEmpty(nodeInstanceId)) {
+            nodeInstanceId = null;
+        }
+
+        this.props.toolbox.getContext().setValue('nodeInstanceId', nodeInstanceId);
     }
 
     _selectExecution(proxy, field) {
@@ -97,6 +154,16 @@ export default class Filter extends React.Component {
         });
         deploymentOptions.unshift(EMPTY_OPTION);
 
+        let nodeOptions = _.map(this.props.data.nodes.items, node => {
+            return { text: node.id, value: node.id }
+        });
+        nodeOptions.unshift(EMPTY_OPTION);
+
+        let nodeInstanceOptions = _.map(this.props.data.nodeInstances.items, nodeInstance => {
+            return { text: nodeInstance.id, value: nodeInstance.id }
+        });
+        nodeInstanceOptions.unshift(EMPTY_OPTION);
+
         let executionOptions = [];
         if (this.props.widget.configuration.filterByExecutions) {
             executionOptions = _.map(this.props.data.executions.items, execution => {
@@ -119,6 +186,22 @@ export default class Filter extends React.Component {
                             <Form.Dropdown search selection value={this.props.data.deploymentId || ''} placeholder="Select Deployment" fluid
                                            options={deploymentOptions} onChange={this._selectDeployment.bind(this)} id="deploymentFilterField"/>
                         </Form.Field>
+                        {
+                            this.props.widget.configuration.filterByNodes &&
+                            <Form.Field>
+                                <Form.Dropdown search selection value={this.props.data.nodeId || ''}
+                                               placeholder="Select Node" fluid
+                                               options={nodeOptions} onChange={this._selectNode.bind(this)}
+                                               id="nodeFilterField"/>
+                            </Form.Field>
+                        }
+                        {
+                            this.props.widget.configuration.filterByNodeInstances &&
+                            <Form.Field>
+                                <Form.Dropdown search selection value={this.props.data.nodeInstanceId || ''} placeholder="Select Node Instance" fluid
+                                               options={nodeInstanceOptions} onChange={this._selectNodeInstance.bind(this)} id="nodeInstanceFilterField"/>
+                            </Form.Field>
+                        }
                         {
                             this.props.widget.configuration.filterByExecutions &&
                             <Form.Field>
