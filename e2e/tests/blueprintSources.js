@@ -22,14 +22,14 @@ module.exports = {
             .assert.containsText('@blueprintHeader', client.page.blueprints().props.testBlueprint)
             .assert.containsText('@blueprintYaml', client.page.blueprintSources().props.blueprintYaml)
             .waitForElementPresent('@emptyContent')
-            .click('@blueprintYaml')
+            .clickElement('@blueprintYaml')
             .waitForElementPresent('@contentSnippet')
             .waitForElementPresent('@fullScreenButton')
-            .click('@fullScreenButton');
+            .clickElement('@fullScreenButton');
 
         client.page.blueprintSources()
             .waitForElementPresent('@fullScreen')
-            .click('@overlay')
+            .clickElement('@overlay')
     },
 
     after(client) {

@@ -7,14 +7,18 @@ exports.command = function(widgetId) {
 
     return this.isWidgetPresent(widgetId, result => {
         if (!result.value) {
-            this.log('adding', widgetId, 'widget');
+            this.log('adding', widgetId, 'widget')
 
-            page.section.editModeSidebar
-                .clickElement('@addWidgetButton');
-
-            this.pause(1000); // Wait for modal to open
-
-            page.section.addWidgetModal.selectAndAddWidget(widgetId);
+            this.isPresent(page.section.addWidgetModal.selector, (result) => {
+                if (!result.value) {
+                    this.log('opening add widget modal')
+                    page.section.editModeSidebar
+                        .clickElement('@addWidgetButton');
+                }
+                page.section.addWidgetModal
+                    .waitForElementVisible(page.section.addWidgetModal.selector)
+                    .selectAndAddWidget(widgetId);
+            });
         }
     });
 };

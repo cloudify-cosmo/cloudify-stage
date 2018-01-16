@@ -10,13 +10,10 @@ module.exports = {
             .addPage();
 
         var page = client.page.page();
+        var backend = client.page.widgetBackend();
 
         page.section.editModeSidebar
-            .click('@addWidgetButton');
-
-        client.pause(1000);
-
-        var backend = client.page.widgetBackend();
+            .clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
@@ -37,16 +34,15 @@ module.exports = {
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
-            .click('@installWidgetBtn');
+            .clickElement('@installWidgetBtn');
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
             .setValue('@fileField', client.page.resources().props.fileByName(backend.props.broken1WidgetFilename, client.globals))
-            .click('@okButton');
-
-        client.pause(2000);
+            .clickElement('@okButton');
 
         page.section.installWidgetModal
+            .waitForElementPresent('@errorMessage')
             .assert.containsText('@errorMessage', backend.section.installWidget.props.notAllowedModuleError);
     },
 
@@ -56,25 +52,23 @@ module.exports = {
 
         page.section.installWidgetModal
             .setValue('@fileField', client.page.resources().props.fileByName(backend.props.broken2WidgetFilename, client.globals))
-            .click('@okButton')
+            .clickElement('@okButton')
             .waitForElementNotPresent('@okButton');
 
         page.section.addWidgetModal
-            .click('@closeIcon')
+            .clickElement('@closeIcon')
             .waitForElementNotPresent(page.section.addWidgetModal.selector);
 
         client.prepareTestWidget(backend.props.broken2WidgetId);
 
         backend.section.brokenWidget
             .setValue('@endpoint', 'version')
-            .click('@fireBtn')
+            .clickElement('@fireBtn')
             .waitForElementPresent('@errorMsg')
             .assert.containsText('@errorMsg', backend.section.installWidget.props.notAllowedModuleError);
 
         page.section.editModeSidebar
-            .click('@addWidgetButton');
-
-        client.pause(1000);
+            .clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
@@ -91,22 +85,22 @@ module.exports = {
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
-            .click('@installWidgetBtn');
+            .clickElement('@installWidgetBtn');
 
         page.section.installWidgetModal
             .setValue('@fileField', client.page.resources().props.fileByName(backend.props.widgetFilename, client.globals))
-            .click('@okButton')
+            .clickElement('@okButton')
             .waitForElementNotPresent('@okButton');
 
         page.section.addWidgetModal
-            .click('@closeIcon')
+            .clickElement('@closeIcon')
             .waitForElementNotPresent(page.section.addWidgetModal.selector);
 
         client.prepareTestWidget(backend.props.widgetId);
 
         backend.section.backendWidget
             .setValue('@endpoint', 'version')
-            .click('@fireBtn')
+            .clickElement('@fireBtn')
             .waitForElementPresent('@jsonResult')
             .assert.elementPresent('@jsonResult');
     },
@@ -116,24 +110,22 @@ module.exports = {
         var backend = client.page.widgetBackend();
 
         backend.section.backendWidget
-            .click('@configIcon')
+            .clickElement('@configIcon')
 
         backend.section.widgetConfig
             .selectOptionInDropdown('@dropdown', `${backend.section.widgetConfig.selector} ${backend.section.widgetConfig.elements.dropdown.selector}`, backend.section.widgetConfig.props.requestItem)
-            .click('@saveBtn')
+            .clickElement('@saveBtn')
 
         backend.section.backendWidget
             .waitForElementPresent('@urlIcon')
             .assert.containsText('@urlIcon', backend.section.backendWidget.props.urlLabel)
             .setValue('@urlInput', backend.section.backendWidget.props.blankUrl)
-            .click('@fireBtn')
+            .clickElement('@fireBtn')
             .waitForElementPresent('@xmlResult')
             .assert.elementPresent('@xmlResult');
 
         page.section.editModeSidebar
-            .click('@addWidgetButton');
-
-        client.pause(1000);
+            .clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')

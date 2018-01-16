@@ -12,20 +12,17 @@ module.exports = {
         var page = client.page.page();
 
         page.section.editModeSidebar
-            .click('@addWidgetButton');
-
-        client.pause(1000);
+            .clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
             .isWidgetInstalled('testWidget', result => {
                 if (result.value) {
                     client.page.page().section.addWidgetModal
-                          .click('@removeWidgetButton');
+                          .clickElement('@removeWidgetButton');
 
                     client.page.page().section.removeWidgetConfirm
-                          .waitForElementPresent('@okButton')
-                          .click('@okButton')
+                          .clickElement('@okButton')
                           .waitForElementNotPresent('@okButton');
                 }
             });
@@ -35,35 +32,33 @@ module.exports = {
         var page = client.page.page();
 
         page.section.addWidgetModal
-            .click('@installWidgetBtn');
+            .clickElement('@installWidgetBtn');
 
         page.section.installWidgetModal
-            .waitForElementPresent('@okButton')
-            .click('@okButton')
+            .clickElement('@okButton')
             .waitForElementPresent('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.emptyFieldsError)
+
+        page.section.installWidgetModal
             .setValue('@urlField', 'test')
-            .click('@okButton');
-
-        client.pause(2000);
-
-        page.section.installWidgetModal
+            .clickElement('@okButton')
+            .waitForElementPresent('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError)
+
+        page.section.installWidgetModal
             .setValue('@fileField', client.page.resources().props.blankFile(client.globals))
-            .click('@okButton');
-
-        client.pause(2000);
+            .clickElement('@okButton')
+            .waitForElementPresent('@errorMessage')
+            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.bothFieldsError);
 
         page.section.installWidgetModal
-            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.bothFieldsError)
             .resetValue('@urlField')
-            .click('@okButton');
-
-        client.pause(2000);
+            .clickElement('@okButton')
+            .waitForElementPresent('@errorMessage')
+            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.incorrectFilesError);
 
         page.section.installWidgetModal
-            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.incorrectFilesError)
-            .click('@cancelButton')
+            .clickElement('@cancelButton')
             .waitForElementNotPresent('@okButton');
     },
 
@@ -71,14 +66,13 @@ module.exports = {
         var page = client.page.page();
 
         page.section.addWidgetModal
-            .waitForElementPresent('@installWidgetBtn')
-            .click('@installWidgetBtn');
+            .clickElement('@installWidgetBtn');
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
             .setValue('@fileField', client.page.resources().props.testWidget(client.globals))
-            .click('@okButton')
-            .waitForElementNotPresent('@okButton', 10000);
+            .clickElement('@okButton')
+            .waitForElementNotPresent('@okButton');
     },
 
     'Check widget removing': function (client) {
@@ -86,21 +80,17 @@ module.exports = {
 
         page.section.addWidgetModal
             .waitForElementPresent('@testWidget')
-            .waitForElementPresent('@removeWidgetButton')
-            .click('@removeWidgetButton');
+            .clickElement('@removeWidgetButton');
 
         page.section.removeWidgetConfirm
             .waitForElementPresent('@okButton')
             .assert.elementNotPresent('@widgetIsUsedLabel')
-            .click('@cancelButton')
+            .clickElement('@cancelButton')
             .waitForElementNotPresent('@okButton');
     },
 
     'Add installed widget': function (client) {
         var page = client.page.page();
-
-        page.section.addWidgetModal
-            .waitForElementPresent('@updateWidgetButton');
 
         page.section.page
             .addWidget('testWidget')
@@ -112,22 +102,19 @@ module.exports = {
         var page = client.page.page();
 
         page.section.editModeSidebar
-            .click('@addWidgetButton');
-
-        client.pause(1000);
+            .clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
-            .waitForElementPresent('@installWidgetBtn')
-            .click('@installWidgetBtn');
+            .clickElement('@installWidgetBtn')
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
             .setValue('@fileField', client.page.resources().props.testWidget(client.globals))
-            .click('@okButton')
+            .clickElement('@okButton')
             .waitForElementNotPresent('@loader')
             .waitForElementPresent('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.widgetAlreadyInstalledError)
-            .click('@cancelButton')
+            .clickElement('@cancelButton')
             .waitForElementNotPresent('@okButton');
     },
 
@@ -135,15 +122,13 @@ module.exports = {
         var page = client.page.page();
 
         page.section.addWidgetModal
-            .waitForElementPresent('@removeWidgetButton')
-            .click('@removeWidgetButton');
+            .clickElement('@removeWidgetButton');
 
         page.section.removeWidgetConfirm
             .waitForElementPresent('@okButton')
             .assert.containsText('@widgetIsUsedLabel', page.section.removeWidgetConfirm.props.widgetIsUsed)
-            .click('@okButton')
-            .waitForElementNotPresent('@okButton');
-
+            .clickElement('@okButton')
+            .waitForElementNotPresent('@okButton')
         page.section.addWidgetModal
             .waitForElementNotPresent('@removeWidgetButton');
     },

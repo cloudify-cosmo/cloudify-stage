@@ -7,6 +7,7 @@ import InlineEdit from 'react-edit-inline';
 
 import EditWidget from '../containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
+import {Loading} from './basic';
 import stageUtils from '../utils/stageUtils';
 
 export default class Widget extends Component {
@@ -144,11 +145,7 @@ export default class Widget extends Component {
                                               fetchWidgetData={this.props.fetchWidgetData}
                                               pageId={this.props.pageId}/>
                         :
-                        <div className='ui segment basic' style={{height:'100%'}}>
-                            <div className="ui active inverted dimmer">
-                                <div className="ui text loader">Loading</div>
-                            </div>
-                        </div>
+                        <Loading />
                 }
 
             </div>

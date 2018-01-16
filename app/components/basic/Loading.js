@@ -35,7 +35,7 @@ export default class Loading extends Component {
 
     render() {
         return (
-            <Segment basic style={{height:'100%'}}>
+            <Segment basic className='loadingSegment'>
                 <Dimmer active inverted>
                     <Loader>{this.props.message}</Loader>
                 </Dimmer>

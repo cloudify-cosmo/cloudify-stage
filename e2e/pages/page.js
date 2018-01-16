@@ -26,7 +26,7 @@ module.exports = {
         tenants: {
             selector: '.tenantsMenu',
             elements: {
-                tenantName: 'span',
+                tenantName: 'span span',
                 tenantsDropdownMenu: '.menu',
                 tenantsDropdownMenuItem: '.menu .item span'
             }
@@ -101,7 +101,7 @@ module.exports = {
 
                     return this.parent.section.removeWidgetConfirm
                         .waitForElementPresent('@okButton')
-                        .click('@okButton')
+                        .clickElement('@okButton')
                         .waitForElementNotPresent('@okButton');
                 },
 
@@ -132,7 +132,7 @@ module.exports = {
             selector: '.removeWidgetConfirm',
             elements: {
                 okButton: '.ui.primary.button',
-                cancelButton: '.ui.button',
+                cancelButton: '.ui.button:not(.primary)',
                 widgetIsUsedLabel: '.ui.basic.segment h5'
             },
             props: {
