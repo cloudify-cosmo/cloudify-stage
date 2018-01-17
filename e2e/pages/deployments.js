@@ -166,9 +166,9 @@ module.exports = {
                         // var pathlib = require("path");
                         return this
                             .waitForElementVisible(this.selector)
-                            .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB], (result) => this.log('Setting blueprintUrl field value. Status =', result.status))
+                            .setElementValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB], (result) => this.log('Setting blueprintUrl field value. Status =', result.status))
                             // TODO: Make inputs.yaml file accessible from the server
-                            // .setValue('@blueprintInputsFile', pathlib.resolve('e2e/resources/' + blueprintName + 'Inputs.yaml'))
+                            // .setElementValue('@blueprintInputsFile', pathlib.resolve('e2e/resources/' + blueprintName + 'Inputs.yaml'))
                             .waitForElementPresent(blueprintFileOptionElement)
                             .selectOptionInDropdown('@blueprintYamlFile', this.elements.blueprintYamlFile.selector, blueprintYamlFile);
                     },

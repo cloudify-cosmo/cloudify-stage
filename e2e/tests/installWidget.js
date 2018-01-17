@@ -40,13 +40,13 @@ module.exports = {
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.emptyFieldsError)
 
         page.section.installWidgetModal
-            .setValue('@urlField', 'test')
+            .setElementValue('@urlField', 'test')
             .clickElement('@okButton')
             .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError)
 
         page.section.installWidgetModal
-            .setValue('@fileField', client.page.resources().props.blankFile(client.globals))
+            .setElementValue('@fileField', client.page.resources().props.blankFile(client.globals))
             .clickElement('@okButton')
             .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.bothFieldsError);
@@ -70,7 +70,7 @@ module.exports = {
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
-            .setValue('@fileField', client.page.resources().props.testWidget(client.globals))
+            .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals))
             .clickElement('@okButton')
             .waitForElementNotPresent('@okButton');
     },
@@ -109,7 +109,7 @@ module.exports = {
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
-            .setValue('@fileField', client.page.resources().props.testWidget(client.globals))
+            .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals))
             .clickElement('@okButton')
             .waitForElementNotPresent('@loader')
             .waitForElementPresent('@errorMessage')

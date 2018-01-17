@@ -38,7 +38,7 @@ module.exports = {
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
-            .setValue('@fileField', client.page.resources().props.fileByName(backend.props.broken1WidgetFilename, client.globals))
+            .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.broken1WidgetFilename, client.globals))
             .clickElement('@okButton');
 
         page.section.installWidgetModal
@@ -51,7 +51,7 @@ module.exports = {
         var backend = client.page.widgetBackend();
 
         page.section.installWidgetModal
-            .setValue('@fileField', client.page.resources().props.fileByName(backend.props.broken2WidgetFilename, client.globals))
+            .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.broken2WidgetFilename, client.globals))
             .clickElement('@okButton')
             .waitForElementNotPresent('@okButton');
 
@@ -62,7 +62,7 @@ module.exports = {
         client.prepareTestWidget(backend.props.broken2WidgetId);
 
         backend.section.brokenWidget
-            .setValue('@endpoint', 'version')
+            .setElementValue('@endpoint', 'version')
             .clickElement('@fireBtn')
             .waitForElementPresent('@errorMsg')
             .assert.containsText('@errorMsg', backend.section.installWidget.props.notAllowedModuleError);
@@ -88,7 +88,7 @@ module.exports = {
             .clickElement('@installWidgetBtn');
 
         page.section.installWidgetModal
-            .setValue('@fileField', client.page.resources().props.fileByName(backend.props.widgetFilename, client.globals))
+            .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.widgetFilename, client.globals))
             .clickElement('@okButton')
             .waitForElementNotPresent('@okButton');
 
@@ -99,7 +99,7 @@ module.exports = {
         client.prepareTestWidget(backend.props.widgetId);
 
         backend.section.backendWidget
-            .setValue('@endpoint', 'version')
+            .setElementValue('@endpoint', 'version')
             .clickElement('@fireBtn')
             .waitForElementPresent('@jsonResult')
             .assert.elementPresent('@jsonResult');
@@ -119,7 +119,7 @@ module.exports = {
         backend.section.backendWidget
             .waitForElementPresent('@urlIcon')
             .assert.containsText('@urlIcon', backend.section.backendWidget.props.urlLabel)
-            .setValue('@urlInput', backend.section.backendWidget.props.blankUrl)
+            .setElementValue('@urlInput', backend.section.backendWidget.props.blankUrl)
             .clickElement('@fireBtn')
             .waitForElementPresent('@xmlResult')
             .assert.elementPresent('@xmlResult');

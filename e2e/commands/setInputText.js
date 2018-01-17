@@ -7,5 +7,5 @@ exports.command = function (field, value) {
 
     return this
         .clearValue(input)
-        .setValue(input, value);
+        .setElementValue(input, value);
 };
