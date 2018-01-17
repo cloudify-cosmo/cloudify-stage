@@ -36,25 +36,25 @@ module.exports = {
 
         page.section.installWidgetModal
             .clickElement('@okButton')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.emptyFieldsError)
 
         page.section.installWidgetModal
             .setValue('@urlField', 'test')
             .clickElement('@okButton')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError)
 
         page.section.installWidgetModal
             .setValue('@fileField', client.page.resources().props.blankFile(client.globals))
             .clickElement('@okButton')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.bothFieldsError);
 
         page.section.installWidgetModal
             .resetValue('@urlField')
             .clickElement('@okButton')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.incorrectFilesError);
 
         page.section.installWidgetModal
