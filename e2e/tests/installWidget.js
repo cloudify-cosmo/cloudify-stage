@@ -36,25 +36,25 @@ module.exports = {
 
         page.section.installWidgetModal
             .clickElement('@okButton')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.emptyFieldsError)
 
         page.section.installWidgetModal
-            .setValue('@urlField', 'test')
+            .setElementValue('@urlField', 'test')
             .clickElement('@okButton')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError)
 
         page.section.installWidgetModal
-            .setValue('@fileField', client.page.resources().props.blankFile(client.globals))
+            .setElementValue('@fileField', client.page.resources().props.blankFile(client.globals))
             .clickElement('@okButton')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.bothFieldsError);
 
         page.section.installWidgetModal
             .resetValue('@urlField')
             .clickElement('@okButton')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.incorrectFilesError);
 
         page.section.installWidgetModal
@@ -70,7 +70,7 @@ module.exports = {
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
-            .setValue('@fileField', client.page.resources().props.testWidget(client.globals))
+            .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals))
             .clickElement('@okButton')
             .waitForElementNotPresent('@okButton');
     },
@@ -109,7 +109,7 @@ module.exports = {
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
-            .setValue('@fileField', client.page.resources().props.testWidget(client.globals))
+            .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals))
             .clickElement('@okButton')
             .waitForElementNotPresent('@loader')
             .waitForElementPresent('@errorMessage')

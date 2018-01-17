@@ -10,9 +10,9 @@ exports.command =  function(asUser) {
         .waitForSplashPageNotVisible()
         .waitForElementVisible('@usernameField')
         .resetValue('@usernameField')
-        .setValue('@usernameField', asUser ? Config.user : Config.admin)
+        .setElementValue('@usernameField', asUser ? Config.user : Config.admin)
         .resetValue('@passwordField')
-        .setValue('@passwordField', asUser ? Config.pass: Config.adminPass)
+        .setElementValue('@passwordField', asUser ? Config.pass: Config.adminPass)
         .clickElement('@submitButton')
         .waitForSplashPageNotVisible()
         .waitForElementVisible('@managerData');

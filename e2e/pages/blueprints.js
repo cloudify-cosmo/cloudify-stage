@@ -85,8 +85,8 @@ module.exports = {
                         let blueprintFileOptionElement = `select[name="blueprintFileName"] option[value="${blueprintYamlFile}"]`;
                         return this
                             .waitForElementVisible(this.selector)
-                            .setValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB], (result) => this.log('Setting blueprintUrl field value. Status =', result.status))
-                            .setValue('@blueprintName', blueprintName, (result) => this.log('Setting blueprintName field value. Status =', result.status))
+                            .setElementValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB])
+                            .setElementValue('@blueprintName', blueprintName)
                             .waitForElementPresent(blueprintFileOptionElement)
                             .selectOptionInDropdown('@blueprintYamlFile',
                                                     `${this.selector} ${this.elements.blueprintYamlFile.selector}`,
@@ -117,7 +117,7 @@ module.exports = {
                         this.waitForElementVisible('@deploymentName')
                             .api.perform(() =>
                                 _.each(blueprintInputs, (inputValue, inputName) => {
-                                    this.setValue(`input[name="${inputName}"]`, inputValue)
+                                    this.setElementValue(`input[name="${inputName}"]`, inputValue)
                                 }));
                         return this;
                     },

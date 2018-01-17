@@ -32,6 +32,7 @@ exports.command = function (dropdownTriggerElement, dropdownCssSelector, optionN
         .clickElement(dropdownTriggerElement)
         .log(`Looking for option '${optionName}' inside '${OPTION_SELECTOR}'...`)
         .elements('css selector', OPTION_SELECTOR, function (elements) {
+            this.log('Elements:', elements);
             for (let i = 0; i < elements.value.length; i++) {
                 optionElementIds.push(elements.value[i].ELEMENT);
             }

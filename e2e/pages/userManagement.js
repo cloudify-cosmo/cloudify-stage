@@ -98,9 +98,9 @@ module.exports = {
                     setPassword: function (password) {
                         return this
                             .resetValue('@password')
-                            .setValue('@password', password)
+                            .setElementValue('@password', password)
                             .resetValue('@confirmPassword')
-                            .setValue('@confirmPassword', password)
+                            .setElementValue('@confirmPassword', password)
                             .clickSave();
                     }
                 }
@@ -148,9 +148,9 @@ module.exports = {
                     fillIn: function(userName, password, role) {
                         return this
                             .waitForElementVisible(this.selector)
-                            .setValue('@userName', userName)
-                            .setValue('@password', password)
-                            .setValue('@confirmPassword', password)
+                            .setElementValue('@userName', userName)
+                            .setElementValue('@password', password)
+                            .setElementValue('@confirmPassword', password)
                             .selectOptionInDropdown('@role', `${this.selector} ${this.elements.role.selector}`, role)
 
                     },
