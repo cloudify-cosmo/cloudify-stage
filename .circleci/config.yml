@@ -36,8 +36,8 @@ jobs:
       - run: sudo npm install -g webpack
       - run: npm run build
       - persist_to_workspace:
-          root: .
-          paths: node_modules
+          root: *workdir
+          paths: .
 
   deploy:
     <<: *docker_node
