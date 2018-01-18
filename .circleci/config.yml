@@ -1,32 +1,50 @@
 version: 2
 
+
 common:
   - &docker_node
       docker:
         - image: circleci/node:8.9
 
+
 jobs:
-  test:
+  beforebuild:
     <<: *docker_node
 
     steps:
       - checkout
       - run: npm run beforebuild
+      - persist_to_workspace:
+          root: ~
+          paths: project
+
+
+
+  test:
+    <<: *docker_node
+
+    steps:
+      - attach_workspace:
+          at: ~
       - run: npm test
 
   build:
     <<: *docker_node
 
     steps:
-      - checkout
+      - attach_workspace:
+          at: ~
       - run: npm run build
+      - persist_to_workspace:
+          root: ~
+          paths: project
 
   deploy:
     <<: *docker_node
 
     steps:
-      - checkout
-      - run: npm run build
+      - attach_workspace:
+          at: ~
       - run: npm run zip
       - run: scp stage.tar.gz ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com:~
       - run: cat scripts/ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
@@ -60,18 +78,19 @@ workflows:
 
   build_test_deploy:
     jobs:
-      - test
+      - beforebuild
+
+      - test:
+          requires:
+            - beforebuild
 
       - build:
           requires:
-            - test
-          filters:
-            branches:
-              ignore: deploy-demo
+            - beforebuild
 
       - deploy:
           requires:
-            - test
+            - build
           filters:
             branches:
               only: deploy-demo
