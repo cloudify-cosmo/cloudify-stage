@@ -20,13 +20,17 @@ import argparse
 
 
 def _restore(snapshot_root, homedir, override=False):
-    for folder in ['conf', 'dist/widgets', 'dist/templates']:
+    for folder in ['conf', 'dist/userData', 'dist/widgets', 'dist/templates']:
         destination = os.path.join(homedir, folder)
         if not override:
             destination = os.path.join(destination, 'from_snapshot')
         if os.path.exists(destination):
             shutil.rmtree(destination)
-        shutil.copytree(os.path.join(snapshot_root, folder), destination)
+        # in old snapshots, userData might not exist
+        try:
+            shutil.copytree(os.path.join(snapshot_root, folder), destination)
+        except OSError:
+            pass
 
 
 if __name__ == '__main__':
