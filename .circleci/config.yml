@@ -3,6 +3,7 @@ version: 2
 
 common:
   - &docker_node
+      working_directory: &workdir ~/project
       docker:
         - image: circleci/node:8.9
 
@@ -15,7 +16,7 @@ jobs:
       - checkout
       - run: npm run beforebuild
       - persist_to_workspace:
-          root: ~
+          root: .
           paths: project
 
 
@@ -25,7 +26,7 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: ~
+          at: *workdir
       - run: npm test
 
   build:
@@ -33,10 +34,10 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: ~
+          at: *workdir
       - run: npm run build
       - persist_to_workspace:
-          root: ~
+          root: .
           paths: project
 
   deploy:
@@ -44,7 +45,7 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: ~
+          at: .
       - run: npm run zip
       - run: scp stage.tar.gz ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com:~
       - run: cat scripts/ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
