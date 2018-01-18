@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 set -x
-npm install webpack -g
-npm install bower -g
-npm install gulp -g
-npm install grunt-cli -g
+
+if [ ${CIRCLECI:false} == true ]; then
+    npm_install_g="sudo npm install -g"
+else
+    npm_install_g="npm install -g"
+fi
+
+for package in "webpack bower gulp grunt-cli"; do
+    $npm_install_g $package
+done
+
 npm install
 bower install
 grunt build
