@@ -17,7 +17,7 @@ jobs:
       - run: npm run beforebuild
       - persist_to_workspace:
           root: .
-          paths: project
+          paths: node_modules
 
 
 
@@ -27,6 +27,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *workdir
+      - run: npm run beforebuild
       - run: npm test
 
   build:
@@ -35,10 +36,11 @@ jobs:
     steps:
       - attach_workspace:
           at: *workdir
+      - run: npm run beforebuild
       - run: npm run build
       - persist_to_workspace:
           root: .
-          paths: project
+          paths: node_modules
 
   deploy:
     <<: *docker_node
@@ -46,6 +48,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: npm run beforebuild
       - run: npm run zip
       - run: scp stage.tar.gz ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com:~
       - run: cat scripts/ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
