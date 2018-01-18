@@ -16,7 +16,7 @@ jobs:
       - checkout
       - run: npm run beforebuild
       - persist_to_workspace:
-          root: &workdir
+          root: *workdir
           paths: *
 
   test:
