@@ -64,3 +64,4 @@ groupdel stage_group
 %attr(750,stage_user,cfyuser) /opt/manager/scripts/restore-snapshot.py
 /etc/sudoers.d/cloudify-stage
 /etc/logrotate.d/cloudify-stage
+/usr/lib/systemd/system/cloudify-stage.service
