@@ -39,16 +39,6 @@ jobs:
           root: *workdir
           paths: .
 
-  deploy:
-    <<: *docker_node
-
-    steps:
-      - attach_workspace:
-          at: *workdir
-      - run: npm run zip
-      - run: scp stage.tar.gz ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com:~
-      - run: cat scripts/ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
-
   build_rpm:
     machine: true
 
@@ -87,13 +77,5 @@ workflows:
       - build:
           requires:
             - beforebuild
-
-      - deploy:
-          requires:
-            - build
-            - test
-          filters:
-            branches:
-              only: deploy-demo
 
       - build_rpm
