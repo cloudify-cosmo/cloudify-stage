@@ -7,11 +7,11 @@ After=network-online.target
 TimeoutStartSec=0
 Restart=always
 RestartSec=10
-EnvironmentFile=-/etc/sysconfig/cloudify-stage
+EnvironmentFile=/etc/sysconfig/cloudify-stage
 User=stage_user
 Group=stage_group
 WorkingDirectory=/opt/cloudify-stage/backend
-ExecStart=/opt/nodejs/bin/node /opt/cloudify-stage/backend/server.js ${STAGE_ARGS}
+ExecStart=/usr/bin/node /opt/cloudify-stage/backend/server.js ${STAGE_ARGS}
 
 [Install]
 WantedBy=multi-user.target
