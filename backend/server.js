@@ -38,6 +38,7 @@ var Widgets = require('./routes/Widgets');
 var Templates = require('./routes/Templates');
 var WidgetBackend = require('./routes/WidgetBackend');
 var File = require('./routes/File');
+var Plugins = require('./routes/Plugins');
 var WidgetHandler = require('./handler/WidgetHandler');
 var TemplateHandler = require('./handler/TemplateHandler');
 
@@ -94,6 +95,7 @@ app.use(contextPath + '/config',function(req,res){
     res.send(config.getForClient(ServerSettings.settings.mode));
 });
 app.use(contextPath +'/wb',WidgetBackend);
+app.use(contextPath +'/plugins',Plugins);
 
 // BrowserHistory code
 app.get('*',function (request, response){

@@ -62,26 +62,18 @@ module.exports = (function() {
         return new Promise((resolve, reject) => {
             this.request(method, url, headers, data, (res) => {
                 var isSuccess = res.statusCode >= 200 && res.statusCode <300;
-                var body = '';
-                res.on('data', function(chunk) {
-                    body += chunk;
-                });
-                res.on('end', function() {
-                    try {
-                        var jsonResponse = JSON.parse(body);
 
-                        if (isSuccess) {
-                            resolve(jsonResponse)
-                        } else {
-                            reject(jsonResponse);
-                        }
+                RequestHandler.getResponseJson(res).then((data) => {
+                    if (isSuccess) {
+                        resolve(data)
+                    } else {
+                        reject(data);
                     }
-                    catch(e) {
-                        if (isSuccess) {
-                            reject('response data could not be parsed to JSON: ' + e);
-                        } else {
-                            reject(res.statusMessage);
-                        }
+                }).catch((e) => {
+                    if (isSuccess) {
+                        reject('response data could not be parsed to JSON: ' + e);
+                    } else {
+                        reject(res.statusMessage);
                     }
                 });
             }, (err) => {

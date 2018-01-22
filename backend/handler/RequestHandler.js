@@ -16,7 +16,26 @@ module.exports = (function() {
             .on('response', onSuccess)
     };
 
+    function getResponseJson(res) {
+        return new Promise((resolve, reject) => {
+            var body = '';
+            res.on('data', function(chunk) {
+                body += chunk;
+            });
+            res.on('end', function() {
+                try {
+                    var jsonResponse = JSON.parse(body);
+                    resolve(jsonResponse);
+                }
+                catch(e) {
+                    reject(e);
+                }
+            });
+        });
+    }
+
     return {
-        request
+        request,
+        getResponseJson
     };
 })();

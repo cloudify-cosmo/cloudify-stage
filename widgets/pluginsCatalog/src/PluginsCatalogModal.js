@@ -14,7 +14,7 @@ export default class PluginsCatalogModal extends React.Component {
    */
   static initialState = {
     loading: false,
-    error: {},
+    error: null,
     visibility: Stage.Common.Consts.defaultVisibility,
   };
 
@@ -67,7 +67,7 @@ export default class PluginsCatalogModal extends React.Component {
   onApprove () {
     this.setState ({loading: true});
     this.props.actions
-      .doUpload (this.props.plugin.url, this.state.visibility)
+      .doUpload (this.props.plugin.url, this.props.plugin.yamlUrl, this.state.visibility)
       .then (() => {
         this.setState ({errors: null, loading: false});
         this.props.toolbox.getEventBus ().trigger ('plugins:refresh');
