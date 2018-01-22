@@ -162,6 +162,7 @@ export default class UsersTable extends React.Component {
     render() {
         let {ErrorMessage, DataTable, Loader, Checkbox, Label, Confirm} = Stage.Basic;
         let RoleModal = Stage.Common.RoleModal;
+        let RolesPresenter = Stage.Common.RolesPresenter;
         let tableName = 'usersTable';
         let actions = new Actions(this.props.toolbox);
 
@@ -178,7 +179,7 @@ export default class UsersTable extends React.Component {
 
                     <DataTable.Column label="Username" name="username" width="32%" />
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />
-                    <DataTable.Column label="Role" width="15%" />
+                    <DataTable.Column label="System Role" width="15%" />
                     <DataTable.Column label="Is active" name="active" width="10%" />
                     <DataTable.Column label="# Groups" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
@@ -190,7 +191,7 @@ export default class UsersTable extends React.Component {
                                     <DataTable.Row id={`${tableName}_${item.username}`} key={item.username} selected={item.isSelected} onClick={this._selectUser.bind(this, item.username)}>
                                         <DataTable.Data>{item.username}</DataTable.Data>
                                         <DataTable.Data>{item.last_login_at}</DataTable.Data>
-                                        <DataTable.Data>{item.role}</DataTable.Data>
+                                        <DataTable.Data><RolesPresenter directRole={item.role} groupRoles={item.group_system_roles}/></DataTable.Data>
                                         <DataTable.Data className="center aligned">
                                         {this.state.activateLoading === item.username ? 
                                             <Loader active inline size='mini'></Loader> :
