@@ -20,7 +20,7 @@ import argparse
 
 
 def _restore(snapshot_root, homedir, override=False):
-    for folder in ['conf', 'dist/userData', 'dist/widgets', 'dist/templates']:
+    for folder in ['conf', 'dist/userData']:
         destination = os.path.join(homedir, folder)
         if not override:
             destination = os.path.join(destination, 'from_snapshot')
