@@ -69,6 +69,10 @@ new WebpackDevServer(webpack(config), {
         '/stage/file': {
             target: 'http://localhost:8088',
             secure: false
+        },
+        '/stage/plugins': {
+            target: 'http://localhost:8088',
+            secure: false
         }
     }
 }).listen(4000, 'localhost', function (err, result) {

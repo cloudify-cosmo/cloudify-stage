@@ -25,7 +25,7 @@ export default class Actions {
    * @access public
    */
   doGetPluginsList () {
-    return this.toolbox.getExternal ().doGet (this.jsonPath);
+    return this.toolbox.getExternal().doGet(this.jsonPath);
   }
 
   /**
@@ -35,12 +35,13 @@ export default class Actions {
    * @param {boolean} [privateResource=false] 
    * @access public
    */
-  doUpload (archiveUrl, visibility) {
+  doUpload (wagonUrl, yamlUrl, visibility) {
     let params = {
       visibility,
-      plugin_archive_url: archiveUrl,
+      wagonUrl: wagonUrl,
+      yamlUrl: yamlUrl
     };
 
-    return this.toolbox.getManager ().doPost ('/plugins', params);
+    return this.toolbox.getInternal().doUpload('/plugins/upload', params, null, 'post');
   }
 }

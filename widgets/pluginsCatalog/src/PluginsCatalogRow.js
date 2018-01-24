@@ -45,7 +45,7 @@ export default class PluginCatalogRow extends React.Component {
                             className="rightFloated"
                             onClick={event => {
                               event.preventDefault ();
-                              this.props.onUpload (item);
+                              this.props.onUpload(Object.assign({}, item, {yamlUrl: this.props.item.link}));
                             }}
                           />
                         </Grid.Column>

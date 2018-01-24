@@ -14,7 +14,8 @@ export default class UploadModal extends React.Component {
 
     static initialState = {
         loading: false,
-        pluginUrl: '',
+        wagonUrl: '',
+        yamlUrl: '',
         errors: {},
         visibility: Stage.Common.Consts.defaultVisibility
     }
@@ -36,16 +37,25 @@ export default class UploadModal extends React.Component {
     }
 
     _submitUpload() {
-        let pluginFile = this.refs.pluginFile.file();
+        let wagonFile = this.refs.wagonFile.file();
+        let yamlFile = this.refs.yamlFile.file();
 
         let errors = {};
 
-        if (_.isEmpty(this.state.pluginUrl) && !pluginFile) {
-            errors['pluginUrl']='Please select plugin file or url';
+        if (_.isEmpty(this.state.wagonUrl) && !wagonFile) {
+            errors['wagon']='Please select wagon file or url';
         }
 
-        if (!_.isEmpty(this.state.pluginUrl) && pluginFile) {
-            errors['pluginUrl']='Either plugin file or url must be selected, not both';
+        if (!_.isEmpty(this.state.wagonUrl) && wagonFile) {
+            errors['wagon']='Either wagon file or url must be selected, not both';
+        }
+
+        if (_.isEmpty(this.state.yamlUrl) && !yamlFile) {
+            errors['yaml']='Please select yaml file or url';
+        }
+
+        if (!_.isEmpty(this.state.yamlUrl) && yamlFile) {
+            errors['yaml']='Either yaml file or url must be selected, not both';
         }
 
         if (!_.isEmpty(errors)) {
@@ -57,7 +67,7 @@ export default class UploadModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doUpload(this.state.pluginUrl, pluginFile, this.state.visibility).then(()=>{
+        actions.doUpload(this.state.visibility, this.state.wagonUrl, this.state.yamlUrl, wagonFile, yamlFile).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch(err=>{
@@ -86,19 +96,37 @@ export default class UploadModal extends React.Component {
                           onErrorsDismiss={() => this.setState({errors: {}})}>
 
                         <Form.Group>
-                            <Form.Field width="9" error={this.state.errors.pluginUrl}>
-                                <Form.Input label="URL" placeholder="Enter plugin url" name="pluginUrl"
-                                            value={this.state.pluginUrl} onChange={this._handleInputChange.bind(this)}
-                                            onBlur={()=>this.state.pluginUrl ? this.refs.pluginFile.reset() : ''}/>
+                            <Form.Field width="9" error={this.state.errors.wagon}>
+                                <Form.Input label="URL" placeholder="Enter wagon url" name="wagonUrl"
+                                            value={this.state.wagonUrl} onChange={this._handleInputChange.bind(this)}
+                                            onBlur={()=>this.state.wagonUrl ? this.refs.wagonFile.reset() : ''}/>
                             </Form.Field>
                             <Form.Field width="1" style={{position:'relative'}}>
                                 <div className="ui vertical divider">
                                     Or
                                 </div>
                             </Form.Field>
-                            <Form.Field width="8" error={this.state.errors.pluginUrl}>
-                                <Form.File placeholder="Select plugin file" name="pluginFile" ref="pluginFile"
-                                           onChange={(file)=>file ? this.setState({pluginUrl: ''}) : ''}/>
+                            <Form.Field width="8" error={this.state.errors.wagon}>
+                                <Form.File placeholder="Select wagon file" name="wagonFile" ref="wagonFile"
+                                           onChange={(file)=>file ? this.setState({wagonUrl: ''}) : ''}/>
+
+                            </Form.Field>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Field width="9" error={this.state.errors.yaml}>
+                                <Form.Input label="URL" placeholder="Enter yaml url" name="yamlUrl"
+                                            value={this.state.yamlUrl} onChange={this._handleInputChange.bind(this)}
+                                            onBlur={()=>this.state.yamlUrl ? this.refs.yamlFile.reset() : ''}/>
+                            </Form.Field>
+                            <Form.Field width="1" style={{position:'relative'}}>
+                                <div className="ui vertical divider">
+                                    Or
+                                </div>
+                            </Form.Field>
+                            <Form.Field width="8" error={this.state.errors.yaml}>
+                                <Form.File placeholder="Select yaml file" name="yamlFile" ref="yamlFile"
+                                           onChange={(file)=>file ? this.setState({yamlUrl: ''}) : ''}/>
 
                             </Form.Field>
                         </Form.Group>

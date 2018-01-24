@@ -13,18 +13,26 @@ export default class {
 
     }
 
-    doUpload(pluginUrl, file, visibility) {
+    doUpload(visibility, wagonUrl, yamlUrl, wagonFile, yamlFile) {
         var params = {visibility: visibility};
 
-        if (!_.isEmpty(pluginUrl)) {
-            params['plugin_archive_url'] = pluginUrl;
+        if (!_.isEmpty(wagonUrl)) {
+            params['wagonUrl'] = wagonUrl;
         }
 
-        if (file) {
-            return this.toolbox.getManager().doUpload('/plugins', params, file, 'post');
-        } else {
-            return this.toolbox.getManager().doPost('/plugins', params);
+        if (!_.isEmpty(yamlUrl)) {
+            params['yamlUrl'] = yamlUrl;
         }
+        var files = {};
+        if (wagonFile) {
+            files['wagon_file'] = wagonFile;
+        }
+
+        if (yamlFile) {
+            files['yaml_file'] = yamlFile;
+        }
+
+        return this.toolbox.getInternal().doUpload('/plugins/upload', params, !_.isEmpty(files) ? files : null, 'post');
     }
 
     doDownload(plugin) {
