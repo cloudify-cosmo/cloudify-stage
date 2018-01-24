@@ -32,9 +32,9 @@ module.exports = {
     commands: [
         {
             openUploadModal: function() {
-                return this.waitForElementVisible('@uploadButton', 10000)
+                return this.waitForElementVisible('@uploadButton')
                     .clickElement('@uploadButton')
-                    .waitForElementVisible(this.section.uploadModal.selector, 10000);
+                    .waitForElementVisible(this.section.uploadModal.selector);
             },
             fillWagonUrl: function(url) {
                 return this.section.uploadModal.setValue('@wagonUrl', url).parent;
