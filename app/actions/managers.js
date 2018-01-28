@@ -55,11 +55,12 @@ export function login (username, password, redirect) {
 }
 
 
-function responseUserData(username, systemRole, tenantsRoles, serverVersion){
+function responseUserData(username, systemRole, groupSystemRoles, tenantsRoles, serverVersion){
     return {
         type: types.SET_USER_DATA,
         username,
         role: systemRole,
+        groupSystemRoles,
         tenantsRoles,
         serverVersion
     }
@@ -69,7 +70,7 @@ export function getUserData() {
     return function (dispatch, getState) {
         return Auth.getUserData(getState().manager)
             .then(data => {
-                dispatch(responseUserData(data.username, data.role, data.tenantsRoles, data.serverVersion));
+                dispatch(responseUserData(data.username, data.role, data.groupSystemRoles, data.tenantsRoles, data.serverVersion));
             });
     }
 }
