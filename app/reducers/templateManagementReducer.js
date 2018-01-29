@@ -49,6 +49,9 @@ const templates = (state = {}, action) => {
             };
 
             return {...state, page: {...state.page, widgets: [...state.page.widgets, widget]}};
+        case types.PAGE_MANAGEMENT_RENAME_WIDGET:
+            var widgets = updateWidget(state.page.widgets, action.widgetId, {name: action.name});
+            return {...state, page: {...state.page, widgets}};
         case types.PAGE_MANAGEMENT_REMOVE_WIDGET:
             var widgets = _.filter(state.page.widgets, (w) => {
                 return w.id !== action.widgetId;
