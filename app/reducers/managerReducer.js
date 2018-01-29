@@ -13,7 +13,9 @@ const manager = (state = {}, action) => {
                 isLoggingIn: false,
                 username: action.username,
                 auth: {
-                    role: action.role
+                    role: action.role,
+                    groupSystemRoles: {},
+                    tenantsRoles: {}
                 },
                 err: null,
                 serverVersion: action.serverVersion,
@@ -25,7 +27,9 @@ const manager = (state = {}, action) => {
             return Object.assign({}, state, {
                 isLoggingIn: false,
                 auth: {
-                    role: null
+                    role: null,
+                    groupSystemRoles: {},
+                    tenantsRoles: {}
                 },
                 err: null,
                 serverVersion: null,
@@ -38,7 +42,9 @@ const manager = (state = {}, action) => {
                 isLoggingIn: false,
                 username: action.username,
                 auth: {
-                    role: null
+                    role: null,
+                    groupSystemRoles: {},
+                    tenantsRoles: {}
                 },
                 err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
                 serverVersion: null,
@@ -51,6 +57,7 @@ const manager = (state = {}, action) => {
                 username: action.username,
                 auth: {
                     role: action.role,
+                    groupSystemRoles: action.groupSystemRoles,
                     tenantsRoles: action.tenantsRoles
                 },
                 serverVersion: action.serverVersion

@@ -110,9 +110,10 @@ export default class StageUtils {
         var authorizedRoles = managerData.permissions[permission];
 
         var systemRole = managerData.auth.role;
+        var groupSystemRoles = _.keys(managerData.auth.groupSystemRoles);
         var currentTenantRoles = managerData.auth.tenantsRoles[managerData.tenants.selected];
         var tenantRoles = currentTenantRoles ? currentTenantRoles.roles : [];
-        var userRoles = tenantRoles.concat(systemRole);
+        var userRoles = _.uniq(tenantRoles.concat(systemRole, groupSystemRoles));
         return _.intersection(authorizedRoles, userRoles).length > 0;
     }
 }

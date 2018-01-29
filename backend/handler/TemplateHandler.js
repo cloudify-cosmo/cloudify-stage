@@ -90,14 +90,14 @@ module.exports = (function() {
             .map((pageFile) => pathlib.basename(pageFile, '.json'));
     }
 
-    function _getRole(systemRole, tenantsRoles, tenant) {
+    function _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant) {
         var rbac = AuthHandler.getRBAC();
         var roles = rbac.roles;
 
         logger.debug('Inputs for role calculation: ' + 'systemRole=' + systemRole +
                      ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
 
-        var userRoles = _.compact(_.concat(_.get(tenantsRoles[tenant], 'roles', []), systemRole));
+        var userRoles = _.compact(_.concat(_.get(tenantsRoles[tenant], 'roles', []), systemRole, _.keys(groupSystemRoles)));
 
         var result = null;
         for (var i = 0; i < roles.length; i++) {
@@ -279,11 +279,11 @@ module.exports = (function() {
         }).then(() => db.Resources.destroy({ where: {resourceId: pageId, type:ResourceTypes.PAGE}}));
     }
 
-    function selectTemplate(systemRole, tenantsRoles, tenant) {
+    function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant) {
         var DEFAULT_KEY = '*';
 
         var initialTemplateObj = config.app.initialTemplate;
-        var role = _getRole(systemRole, tenantsRoles, tenant);
+        var role = _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant);
         var mode = ServerSettings.settings.mode;
 
         logger.debug('Template inputs: mode=' + mode + ', role=' + role + ', tenant=' + tenant);
