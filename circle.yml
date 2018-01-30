@@ -16,3 +16,9 @@ deployment:
     branch: /.*/
     commands:
       - npm run build
+  documentation:
+    branch: STAGE-557
+    commands:
+      - npm install --only=dev
+      - npm run doc
+      - npm run docdeploy

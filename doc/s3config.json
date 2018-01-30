@@ -1,0 +1,8 @@
+{
+  "domain": "docs.getcloudify.org",
+  "prefix": "widgets/api/v4.3",
+
+  "uploadDir": "./doc/www",
+  "deploy": true,
+  "index": "index.html"
+}
