@@ -1,6 +1,9 @@
 machine:
   node:
     version: 8.9.1
+test:
+  override:
+    - echo OK
 dependencies:
   override:
     - npm install --only=dev
