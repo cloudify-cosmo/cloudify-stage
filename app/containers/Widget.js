@@ -6,7 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Widget from '../components/Widget';
 import {renameWidget,removeWidget,editWidget,maximizeWidget} from '../actions/widgets';
-import {removePageWidget, editPageWidget, maximizePageWidget} from '../actions/templateManagement';
+import {renamePageWidget, removePageWidget, editPageWidget, maximizePageWidget} from '../actions/templateManagement';
 import {setValue} from '../actions/context';
 import {fetchWidgetData} from '../actions/WidgetData';
 
@@ -23,7 +23,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onWidgetNameChange: (pageId,widgetId,newName)=> {
-            dispatch(renameWidget(pageId,widgetId,newName));
+            if (ownProps.pageManagementMode) {
+                dispatch(renamePageWidget(pageId, widgetId, newName));
+            } else {
+                dispatch(renameWidget(pageId, widgetId, newName));
+            }
         },
         setContextValue: (key,value) => {
             dispatch(setValue(key,value));

@@ -234,6 +234,16 @@ export function showPage(pageId, pageName, isPageEditMode) {
     }
 }
 
+export function renamePageWidget(pageId, widgetId, newName) {
+    return {
+        type: types.PAGE_MANAGEMENT_RENAME_WIDGET,
+        pageId,
+        widgetId,
+        name: newName
+    }
+
+}
+
 export function removePageWidget(widgetId) {
     return {
         type: types.PAGE_MANAGEMENT_REMOVE_WIDGET,
