@@ -1,6 +1,6 @@
 {
   "domain": "docs.getcloudify.org",
-  "prefix": "widgets/api/v4.3",
+  "prefix": "widgets-api",
 
   "uploadDir": "./doc/www",
   "deploy": true,
