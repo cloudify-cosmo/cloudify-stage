@@ -1,0 +1,10 @@
+{
+  "region": "us-east-1",
+  "localDir": "./doc/www",
+  "deleteRemoved": true,
+  "s3Params": {
+    "Bucket": "docs.getcloudify.org",
+    "Prefix": "widgets-api",
+    "ACL": "public-read"
+  }
+}

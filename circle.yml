@@ -12,5 +12,7 @@ deployment:
   documentation:
     branch: /.*/
     commands:
+      - npm install --only=dev
+      - npm install esdoc -g
       - npm run doc
       - npm run docdeploy
