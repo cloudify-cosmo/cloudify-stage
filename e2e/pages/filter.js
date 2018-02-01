@@ -17,16 +17,16 @@ module.exports = {
                        .isPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]', callback);
         },
         waitForBlueprintPresent: function(blueprint) {
-            return this.waitForElementPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]', 10000);
+            return this.waitForElementPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]');
         },
         waitForBlueprintNotPresent: function(blueprint) {
-            return this.waitForElementNotPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]', 10000);
+            return this.waitForElementNotPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]');
         },
         waitForDeploymentPresent: function(deployment) {
-            return this.waitForElementPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]', 10000);
+            return this.waitForElementPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]');
         },
         waitForDeploymentNotPresent: function(deployment) {
-            return this.waitForElementNotPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]', 10000);
+            return this.waitForElementNotPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]');
         }
     }],
     props: {
