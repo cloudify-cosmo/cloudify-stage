@@ -14,5 +14,6 @@ deployment:
     commands:
       - npm install --only=dev
       - npm install esdoc -g
+      - pip install awscli
       - npm run doc
       - npm run docdeploy
