@@ -91,7 +91,7 @@ export default class WidgetDefinitionsLoader {
 
             if (widgetDefinition.hasTemplate) {
                 promises.push(
-                    fetchWidgetTemplate(`/widgets/${widgetDefinition.id}/widget.html`)
+                    fetchWidgetTemplate(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/widget.html`)
                         .then((widgetHtml)=> {
                             if (widgetHtml) {
                                 widgetDefinition.template = widgetHtml;
@@ -99,7 +99,7 @@ export default class WidgetDefinitionsLoader {
                         }));
             }
             if (widgetDefinition.hasStyle) {
-                promises.push(new StyleLoader(`/widgets/${widgetDefinition.id}/widget.css`).load());
+                promises.push(new StyleLoader(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/widget.css`).load());
             }
         });
 
