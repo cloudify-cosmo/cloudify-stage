@@ -74,6 +74,11 @@ module.exports = (function() {
     function _validateWidget(widgetId, extractedDir) {
         var files = fs.readdirSync(extractedDir);
 
+        //remove hidden or junk files
+        files = _.filter(files, file => {
+           return !file.match(/^\..+/) && file !== '__MACOSX';
+        });
+
         if (files.length === 1 && fs.statSync(pathlib.join(extractedDir, files[0])).isDirectory()) {
             var dirName = files[0];
             if (dirName !== widgetId) {
