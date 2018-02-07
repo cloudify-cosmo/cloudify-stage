@@ -35,9 +35,13 @@ pipeline {
                     sh 'sudo npm run zip'
                 }
                 sh '''first=$(echo $BRANCH_NAME | cut -d. -f1)
-                      if [ "$first" -gt 17 ] || [ "$first" -eq 17 ] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
+                      if [[ $first =~ ^[0-9]+$ ]] && [[ "$first" -gt 17 ]] || [[ "$first" -eq 17 ]] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
-                      curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH_NAME}/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                      if ! [[ $first =~ ^[0-9]+$ ]] && [[ "${BRANCH_NAME}" != "master"  ]];then
+                        curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH_NAME}/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                      else
+                        curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/master/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                      fi
                       . $PWD/common_build_env.sh
                       mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
 
@@ -47,9 +51,13 @@ pipeline {
         stage('Upload package to S3') {
             steps {
                 sh '''first=$(echo $BRANCH_NAME | cut -d. -f1)
-                      if [ "$first" -gt 17 ] || [ "$first" -eq 17 ] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
+                      if [[ $first =~ ^[0-9]+$ ]] && [[ "$first" -gt 17 ]] || [[ "$first" -eq 17 ]] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
-                      curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH_NAME}/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                      if ! [[ $first =~ ^[0-9]+$ ]] && [[ "${BRANCH_NAME}" != "master"  ]];then
+                        curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH_NAME}/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                      else
+                        curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/master/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                      fi
                       . $PWD/common_build_env.sh
                       s3cmd put --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --human-readable-sizes --acl-public \\
                       cloudify-stage-$VERSION-$PRERELEASE.tgz \\
