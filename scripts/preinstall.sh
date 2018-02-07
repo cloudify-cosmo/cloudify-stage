@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 set -x
-sudo npm install webpack -g
-sudo npm install bower -g
-sudo npm install gulp -g
-sudo npm install grunt-cli -g
+
+
+if [ -z ${CIRCLE_BUILD_NUM} ]; then
+NPM_GLOBAL_INSTALL_PREFIX="sudo"; # Run as sudo in Jenkins
+else
+NPM_GLOBAL_INSTALL_PREFIX=""; # Run without sudo in CircleCI
+fi
+
+${NPM_GLOBAL_INSTALL_PREFIX} npm install webpack -g
+${NPM_GLOBAL_INSTALL_PREFIX} npm install bower -g
+${NPM_GLOBAL_INSTALL_PREFIX} npm install gulp -g
+${NPM_GLOBAL_INSTALL_PREFIX} npm install grunt-cli -g
+
 npm install
 bower install
 grunt build
