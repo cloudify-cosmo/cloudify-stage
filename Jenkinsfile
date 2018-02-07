@@ -43,6 +43,8 @@ pipeline {
                         curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/master/packages-urls/common_build_env.sh -o ./common_build_env.sh
                       fi
                       . $PWD/common_build_env.sh
+                      echo "##printenv 1"
+                      printenv
                       mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
 
             }
@@ -50,7 +52,9 @@ pipeline {
 
         stage('Upload package to S3') {
             steps {
-                sh '''first=$(echo $BRANCH_NAME | cut -d. -f1)
+                sh '''echo "##printenv 2"
+                      printenv
+                      first=$(echo $BRANCH_NAME | cut -d. -f1)
                       if [[ $first =~ ^[0-9]+$ ]] && [[ "$first" -gt 17 ]] || [[ "$first" -eq 17 ]] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
                       if ! [[ $first =~ ^[0-9]+$ ]] && [[ "${BRANCH_NAME}" != "master"  ]];then
