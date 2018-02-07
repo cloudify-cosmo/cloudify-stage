@@ -38,10 +38,11 @@ pipeline {
                       if [[ $first =~ ^[0-9]+$ ]] && [[ "$first" -gt 17 ]] || [[ "$first" -eq 17 ]] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
                       if ! [[ $first =~ ^[0-9]+$ ]] && [[ "${BRANCH_NAME}" != "master"  ]];then
-                        curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH_NAME}/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                        BRANCH="${BRANCH_NAME}"
                       else
-                        curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/master/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                        BRANCH="master"
                       fi
+                      curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH}/packages-urls/common_build_env.sh -o ./common_build_env.sh
                       . $PWD/common_build_env.sh
                       echo "##printenv 1"
                       printenv
@@ -58,14 +59,16 @@ pipeline {
                       if [[ $first =~ ^[0-9]+$ ]] && [[ "$first" -gt 17 ]] || [[ "$first" -eq 17 ]] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
                       if ! [[ $first =~ ^[0-9]+$ ]] && [[ "${BRANCH_NAME}" != "master"  ]];then
-                        curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH_NAME}/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                        BRANCH="${BRANCH_NAME}"
+                        BRANCH_S3_FOLDER="/${BRANCH_NAME}"
                       else
-                        curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/master/packages-urls/common_build_env.sh -o ./common_build_env.sh
+                        BRANCH="master"
+                        BRANCH_S3_FOLDER=""
                       fi
                       . $PWD/common_build_env.sh
                       s3cmd put --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --human-readable-sizes --acl-public \\
                       cloudify-stage-$VERSION-$PRERELEASE.tgz \\
-                      s3://$AWS_S3_BUCKET/$AWS_S3_PATH/Jenkinsfile-update-build/'''
+                      s3://$AWS_S3_BUCKET/$AWS_S3_PATH$BRANCH_S3_FOLDER/'''
             }
         }
     }
