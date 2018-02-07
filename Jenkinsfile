@@ -11,8 +11,8 @@ pipeline {
         }
         stage('Clean') {
             steps {
-                sh '''#sudo npm cache clean
-                  #bower cache clean
+                sh '''npm cache clean --force
+                  bower cache clean
                   sudo chown jenkins:jenkins -R ../*'''
                 step([$class: 'WsCleanup'])
             }
@@ -22,17 +22,14 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'cloudify-stage']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
                 dir('cloudify-stage') {
-                    sh '''sudo npm install
-                          sudo npm install webpack -g
+                    sh '''sudo npm install webpack -g
                           sudo npm install bower -g
                           sudo npm install gulp -g
                           sudo npm install grunt-cli -g
+                          npm install
                           bower install'''
                     dir('semantic') {
-                        //sh 'sudo gulp build'
-                        sh '''curl http://repository.cloudifysource.org/cloudify/components/dist.zip -o dist.zip
-                              unzip dist.zip
-                              rm -rf dist.zip'''
+                        sh 'gulp build'
                     }
                     sh 'grunt build'
                     dir('backend') {

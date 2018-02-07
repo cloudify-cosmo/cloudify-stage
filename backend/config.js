@@ -2,12 +2,23 @@
  * Created by kinneretzin on 25/01/2017.
  */
 
+var _ = require('lodash');
+var flatten = require('flat');
+
 var app = require('../conf/app.json');
 var manager = require('../conf/manager.json');
-var customer = require('../conf/customer.json');
-var widgets = require('../conf/widgets.json');
 var log4jsConfig = require('../conf/log4jsConfig.json');
-var ServerSettings = require('./serverSettings');
+
+var userConfig = require('../conf/userConfig.json');
+try {
+    var userDataConfig = require('../userData/userConfig.json');
+    userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig))); // Security reason - get only allowed parameters
+    userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration
+} catch(err) {
+    if (err.code !== 'MODULE_NOT_FOUND') {
+        throw err;
+    }
+}
 
 var me = null;
 try {
@@ -17,22 +28,16 @@ try {
         throw err;
     }
 }
-var _ = require('lodash');
 
 
 module.exports = {
     get: function(mode) {
         var config = {
-            app: app,
+            app: _.merge(app, userConfig),
             manager: manager,
             mode: mode,
-            widgets: widgets,
             log4jsConfig: log4jsConfig
         };
-
-        if (mode === ServerSettings.MODE_CUSTOMER) {
-            config.customer = customer;
-        }
 
         _.merge(config, me);
 
@@ -49,7 +54,7 @@ module.exports = {
                 initialTemplate: config.app.initialTemplate,
                 maintenancePollingInterval: config.app.maintenancePollingInterval,
                 singleManager: config.app.singleManager,
-                whiteLabel : config.app.whiteLabel,
+                whiteLabel : userConfig.whiteLabel,
                 saml: {
                     enabled: config.app.saml.enabled,
                     ssoUrl: config.app.saml.ssoUrl,
@@ -60,12 +65,7 @@ module.exports = {
                 ip: config.manager.ip
             },
             mode: config.mode,
-            widgets: config.widgets
         };
-
-        if(config.customer){
-            clientConfig.customer = config.customer;
-        }
 
         return clientConfig;
     }

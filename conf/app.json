@@ -13,20 +13,7 @@
   },
   "maintenancePollingInterval": 10000,
   "singleManager": true,
-  "whiteLabel": {
-    "enabled": false,
-    "logoUrl": "/stage/app/images/Cloudify-icon.png",
-    "mainColor": "black",
-    "pagesLocation": "",
-    "headerTextColor": "white",
-    "loginPageHeader": "",
-    "loginPageHeaderColor": "white",
-    "loginPageText": "",
-    "loginPageTextColor": "white",
-    "sidebarColor": "#ffffff",
-    "sidebarTextColor" : "#000000",
-    "pageTitle": "Cloudify"
-  },
+
   "db": {
     "url": "postgres://cloudify:cloudify@localhost:5432/stage",
     "options": {
@@ -65,8 +52,7 @@
     "ignoreFolders": ["common"],
     "tempDir": "cloudifyWidgets",
     "requiredFiles": ["widget.js", "widget.png"],
-    "backendFilename": "backend.js",
-    "allowedModules": ["lodash", "body/json"]
+    "backendFilename": "backend.js"
   },
   "ssl": {
     "ca": "/etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
