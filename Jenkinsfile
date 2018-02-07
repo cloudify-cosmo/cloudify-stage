@@ -22,23 +22,8 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: BRANCH_NAME]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'cloudify-stage']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '9f6aca75-ebff-4045-9919-b8ec6b5ccf9d', url: 'https://github.com/cloudify-cosmo/cloudify-stage.git']]])
                 dir('cloudify-stage') {
-                    sh '''sudo npm install
-                          sudo npm install webpack -g
-                          sudo npm install bower -g
-                          sudo npm install gulp -g
-                          sudo npm install grunt-cli -g
-                          bower install'''
-                    dir('semantic') {
-                        //sh 'sudo gulp build'
-                        sh '''curl http://repository.cloudifysource.org/cloudify/components/dist.zip -o dist.zip
-                              unzip dist.zip
-                              rm -rf dist.zip'''
-                    }
-                    sh 'grunt build'
-                    dir('backend') {
-                        sh 'npm install'
-                    }
-                    sh 'webpack --config webpack.config-prod.js --bail'
+                    sh 'npm run beforebuild'
+                    sh 'npm run build'
                     sh 'sudo chown jenkins:jenkins -R .'
                 }
             }
@@ -68,7 +53,7 @@ pipeline {
                       . $PWD/common_build_env.sh
                       s3cmd put --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --human-readable-sizes --acl-public \\
                       cloudify-stage-$VERSION-$PRERELEASE.tgz \\
-                      s3://$AWS_S3_BUCKET/$AWS_S3_PATH/'''
+                      s3://$AWS_S3_BUCKET/$AWS_S3_PATH/Jenkinsfile-update-build/'''
             }
         }
     }
