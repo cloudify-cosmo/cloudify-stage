@@ -46,6 +46,7 @@ pipeline {
                       . $PWD/common_build_env.sh
                       echo "##printenv 1"
                       printenv > env.txt
+                      echo "${env.AWS_ACCESS_KEY_ID}"
                       mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
 
             }
