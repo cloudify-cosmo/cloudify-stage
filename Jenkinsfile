@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'web-ui' }
     parameters {
-        string(name: 'BRANCH_NAME', description: 'Branch name')
+        string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch name')
     }
     stages {
         stage('BRANCH_NAME') {
