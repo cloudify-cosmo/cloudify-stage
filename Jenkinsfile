@@ -1,11 +1,9 @@
 pipeline {
-    node {
-      label 'web-ui'
-      customWorkspace pwd()
-    }
+    agent { label 'web-ui' }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch name')
     }
+    ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}".replace('%2F', '_')) {
     stages {
         stage('BRANCH_NAME') {
             steps{
@@ -69,11 +67,12 @@ pipeline {
             }
         }
     }
+    }
 
     post {
         always {
           sh 'sudo chown jenkins:jenkins -R ../*'
-          deleteDir()
+          //deleteDir()
         }
         failure {
           mail(from: "jenkins-master-on-aws@gigaspaces.com",
