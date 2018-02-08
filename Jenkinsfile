@@ -76,7 +76,6 @@ pipeline {
                //body: "For more information see the build log.")
             emailext(body: 'For more information see the build log.',
                      attachLog: true,
-                     from: "jenkins-master-on-aws@cloudify.co",
                      subject: 'Stage build failed!',
                      to: 'limor@gigaspaces.com')
         }
