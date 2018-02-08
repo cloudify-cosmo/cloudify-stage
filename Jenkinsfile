@@ -1,8 +1,7 @@
 pipeline {
     agent { label 'web-ui' }
     environment {
-        //BRANCH_NAME=${env.BRANCH_NAME}
-        BRANCH_NAME='master'
+        BRANCH_NAME=${env.BRANCH_NAME}
     }
     
     stages {
@@ -75,7 +74,11 @@ pipeline {
                //to: "limor@cloudify.co,jakub.niezgoda@cloudify.co,edenp@cloudify.co",
                //subject: "UI build failed!",
                //body: "For more information see the build log.")
-          emailext attachLog: true, body: 'For more information see the build log.', recipientProviders: [[$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: 'UI build failed!', to: 'limor@gigaspaces.com'
+            emailext(body: 'For more information see the build log.',
+                     attachLog: true,
+                     from: "jenkins-master-on-aws@cloudify.co",
+                     subject: 'Stage build failed!',
+                     to: 'limor@gigaspaces.com')
         }
       }
 
