@@ -47,6 +47,7 @@ pipeline {
                       echo "##printenv 1"
                       printenv > env.txt
                       source env.txt
+                      printenv
                       echo "AWS_ACCESS_KEY_IDfff=${AWS_ACCESS_KEY_ID}"
                       mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
 
