@@ -58,7 +58,9 @@ pipeline {
         stage('Upload package to S3') {
             steps {
                
-                sh '''. $PWD/env.txt
+                sh '''set +e
+                      . $PWD/env.txt
+                      set -e
                       s3cmd put --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --human-readable-sizes --acl-public \\
                       cloudify-stage-$VERSION-$PRERELEASE.tgz \\
                       s3://$AWS_S3_BUCKET/$AWS_S3_PATH$BRANCH_S3_FOLDER/'''
