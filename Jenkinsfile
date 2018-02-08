@@ -1,10 +1,8 @@
 pipeline {
     agent { label 'web-ui' }
-    //parameters {
-    //    string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch name')
-    //}
     environment {
-        BRANCH_NAME=${env.BRANCH_NAME}
+        //BRANCH_NAME=${env.BRANCH_NAME}
+        BRANCH_NAME='master'
     }
     
     stages {
@@ -85,7 +83,7 @@ pipeline {
                //to: "limor@cloudify.co,jakub.niezgoda@cloudify.co,edenp@cloudify.co",
                //subject: "UI build failed!",
                //body: "For more information see the build log.")
-          emailext attachLog: true, body: 'For more information see the build log.', recipientProviders: [[$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: 'UI build failed!', to: 'kinneret@gigaspaces.com,limor@gigaspaces.com'
+          emailext attachLog: true, body: 'For more information see the build log.', recipientProviders: [[$class: 'FirstFailingBuildSuspectsRecipientProvider'], [$class: 'DevelopersRecipientProvider']], subject: 'UI build failed!', to: 'limor@gigaspaces.com'
         }
       }
 
