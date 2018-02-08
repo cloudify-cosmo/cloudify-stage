@@ -5,7 +5,7 @@ pipeline {
     }
     
     stages {
-        ws("workspace/${env.JOB_NAME}/${env.BRANCH_NAME}".replace('%2F', '_')) {
+        
         stage('BRANCH_NAME') {
             steps{
                 sh 'echo BRANCH_NAME = ${BRANCH_NAME}'
@@ -68,7 +68,7 @@ pipeline {
             }
         }
     }
-    }
+    
 
     post {
         always {
