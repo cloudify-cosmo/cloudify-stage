@@ -42,15 +42,7 @@ pipeline {
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
                       echo "#BRANCH_NAME=$BRANCH_NAME"
                       echo "#first=$first"
-                      if [[ $first =~ ^[0-9]+$ ]] || [[ "${BRANCH_NAME}" == "master" ]];then
-                        echo "# build branch and master"
-                        BRANCH="${BRANCH_NAME}"
-                        export BRANCH_S3_FOLDER="" 
-                      else
-                        echo "# dev branches"
-                        BRANCH="master"
-                        export BRANCH_S3_FOLDER="/${BRANCH_NAME}" 
-                      fi
+                      if [[ $first =~ ^[0-9]+$ ]] || [[ "${BRANCH_NAME}" == "master" ]];then echo "# build branch and master";BRANCH="${BRANCH_NAME}";export BRANCH_S3_FOLDER="";else echo "# dev branches";BRANCH="master";export BRANCH_S3_FOLDER="/${BRANCH_NAME}";fi 
                       curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH}/packages-urls/common_build_env.sh -o ./common_build_env.sh
                       . $PWD/common_build_env.sh
                       printenv > env.txt
