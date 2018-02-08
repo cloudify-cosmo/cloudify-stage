@@ -1,5 +1,8 @@
 pipeline {
-    agent { label 'web-ui' }
+    node {
+      label 'web-ui'
+      customWorkspace pwd()
+    }
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Branch name')
     }
