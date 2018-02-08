@@ -46,9 +46,6 @@ pipeline {
                       . $PWD/common_build_env.sh
                       echo "##printenv 1"
                       printenv > env.txt
-                      source env.txt
-                      printenv
-                      echo "AWS_ACCESS_KEY_IDfff=${AWS_ACCESS_KEY_ID}"
                       mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
 
             }
@@ -60,6 +57,9 @@ pipeline {
                       for i in $ENV; do 
                         echo $i 
                       done
+                      source env.txt
+                      echo "##printenv 2"
+                      printenv
                       s3cmd put --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --human-readable-sizes --acl-public \\
                       cloudify-stage-$VERSION-$PRERELEASE.tgz \\
                       s3://$AWS_S3_BUCKET/$AWS_S3_PATH$BRANCH_S3_FOLDER/'''
