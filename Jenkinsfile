@@ -57,7 +57,7 @@ pipeline {
                       for i in $ENV; do 
                         echo $i 
                       done
-                      source env.txt
+                      . env.txt
                       echo "##printenv 2"
                       printenv
                       s3cmd put --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --human-readable-sizes --acl-public \\
