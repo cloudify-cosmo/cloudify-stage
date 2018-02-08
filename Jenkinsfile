@@ -31,9 +31,9 @@ pipeline {
 
         stage('Pack') {
             steps {
-                dir('cloudify-stage') {
-                    sh 'sudo npm run zip'
-                }
+                //dir('cloudify-stage') {
+                //    sh 'sudo npm run zip'
+                //}
                 sh '''first=$(echo $BRANCH_NAME | cut -d. -f1)
                       if [[ $first =~ ^[0-9]+$ ]] && [[ "$first" -gt 17 ]] || [[ "$first" -eq 17 ]] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
