@@ -46,7 +46,7 @@ pipeline {
                       . $PWD/common_build_env.sh
                       echo "##printenv 1"
                       printenv > env.txt
-                      //mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
+                      #mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
 
             }
         }
