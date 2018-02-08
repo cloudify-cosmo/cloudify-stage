@@ -39,9 +39,12 @@ pipeline {
                 sh '''first=$(echo $BRANCH_NAME | cut -d. -f1)
                       if [[ $first =~ ^[0-9]+$ ]] && [[ "$first" -gt 17 ]] || [[ "$first" -eq 17 ]] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
+                      echo "#BRANCH_NAME=$BRANCH_NAME"
+                      echo "#first=$first"
                       if [[ $first =~ ^[0-9]+$ ]] || [[ "${BRANCH_NAME}" == "master"  ]];then
                         # build branch and master
                         BRANCH="${BRANCH_NAME}"
+                        export BRANCH_S3_FOLDER="" 
                       else
                        # dev branches
                         BRANCH="master"
