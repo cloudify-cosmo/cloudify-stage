@@ -43,11 +43,11 @@ pipeline {
                       echo "#BRANCH_NAME=$BRANCH_NAME"
                       echo "#first=$first"
                       if [[ $first =~ ^[0-9]+$ ]] || [[ "${BRANCH_NAME}" == "master" ]];then
-                        # build branch and master
+                        echo "# build branch and master"
                         BRANCH="${BRANCH_NAME}"
                         export BRANCH_S3_FOLDER="" 
                       else
-                       # dev branches
+                        echo "# dev branches"
                         BRANCH="master"
                         export BRANCH_S3_FOLDER="/${BRANCH_NAME}" 
                       fi
