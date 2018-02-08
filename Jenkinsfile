@@ -41,7 +41,7 @@ pipeline {
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
                       echo "#BRANCH_NAME=$BRANCH_NAME"
                       echo "#first=$first"
-                      if [[ $first =~ ^[0-9]+$ ]] || [[ "${BRANCH_NAME}" == "master"  ]];then
+                      if [[ $first =~ ^[0-9]+$ ]] || [[ "${BRANCH_NAME}" == "master" ]];then
                         # build branch and master
                         BRANCH="${BRANCH_NAME}"
                         export BRANCH_S3_FOLDER="" 
