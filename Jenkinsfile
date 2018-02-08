@@ -40,12 +40,14 @@ pipeline {
                       if [[ $first =~ ^[0-9]+$ ]] && [[ "$first" -gt 17 ]] || [[ "$first" -eq 17 ]] ; then REPO="cloudify-versions" ; else REPO="cloudify-premium" ; fi
                       . ${JENKINS_HOME}/jobs/credentials.sh > /dev/null 2>&1
                       if ! [[ $first =~ ^[0-9]+$ ]] && [[ "${BRANCH_NAME}" != "master"  ]];then
-                        BRANCH="${BRANCH_NAME}"
-                      else
                         BRANCH="master"
+                      else
+                        BRANCH="${BRANCH_NAME}"
+                        export BRANCH_S3_FOLDER="/${BRANCH_NAME}"
                       fi
                       curl -u $GITHUB_USERNAME:$GITHUB_PASSWORD https://raw.githubusercontent.com/cloudify-cosmo/${REPO}/${BRANCH}/packages-urls/common_build_env.sh -o ./common_build_env.sh
                       . $PWD/common_build_env.sh
+                      printenv > env.txt
                       mv cloudify-stage/stage.tar.gz  cloudify-stage-$VERSION-$PRERELEASE.tgz'''
 
             }
