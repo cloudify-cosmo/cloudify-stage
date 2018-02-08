@@ -16,7 +16,7 @@ pipeline {
                 sh '''#npm cache clean --force
                   #bower cache clean
                   sudo chown jenkins:jenkins -R ../*'''
-                step([$class: 'WsCleanup'])
+                //step([$class: 'WsCleanup'])
             }
         }
 
@@ -55,6 +55,7 @@ pipeline {
 
         stage('Upload package to S3') {
             steps {
+               
                 sh '''ENV=`cat env.txt`
                       for i in $ENV; do 
                         echo $i 
@@ -66,6 +67,7 @@ pipeline {
                       cloudify-stage-$VERSION-$PRERELEASE.tgz \\
                       s3://$AWS_S3_BUCKET/$AWS_S3_PATH$BRANCH_S3_FOLDER/'''
             }
+      
         }
     }
     
