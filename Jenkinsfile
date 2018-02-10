@@ -71,14 +71,15 @@ pipeline {
           //deleteDir()
         }
         failure {
-          //mail(from: "jenkins-master-on-aws@gigaspaces.com",
+          mail(from: "jenkins-master-on-aws@gigaspaces.com",
                //to: "limor@cloudify.co,jakub.niezgoda@cloudify.co,edenp@cloudify.co",
-               //subject: "UI build failed!",
-               //body: "For more information see the build log.")
-            emailext(body: 'For more information see the build log.',
-                     attachLog: true,
-                     subject: 'Stage build failed!',
-                     to: 'limor@cloudify.co')
+               to: "limor@cloudify.co",
+               subject: "Stage build failed!",
+               body: "For more information see the build log: ${env.BUILD_URL}")
+            //emailext(body: 'For more information see the build log.',
+                     //attachLog: true,
+                     //subject: 'Stage build failed!',
+                     //to: 'limor@cloudify.co')
         }
       }
 
