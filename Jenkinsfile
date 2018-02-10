@@ -75,7 +75,7 @@ pipeline {
                //to: "limor@cloudify.co,jakub.niezgoda@cloudify.co,edenp@cloudify.co",
                to: "limor@cloudify.co",
                subject: "Stage build failed!",
-               body: "For more information see the build log: ${env.BUILD_URL}")
+               body: "For more information see the build log: ${env.BUILD_URL}/console")
             //emailext(body: 'For more information see the build log.',
                      //attachLog: true,
                      //subject: 'Stage build failed!',
