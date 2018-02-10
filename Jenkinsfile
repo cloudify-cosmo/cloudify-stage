@@ -16,6 +16,7 @@ pipeline {
                 sh '''#npm cache clean --force
                   #bower cache clean
                   sudo chown jenkins:jenkins -R ../*'''
+                sh 'exit1'
                 step([$class: 'WsCleanup'])
             }
         }
