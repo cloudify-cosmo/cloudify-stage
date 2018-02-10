@@ -16,7 +16,6 @@ pipeline {
                 sh '''#npm cache clean --force
                   #bower cache clean
                   sudo chown jenkins:jenkins -R ../*'''
-                sh 'exit1'
                 step([$class: 'WsCleanup'])
             }
         }
@@ -72,8 +71,7 @@ pipeline {
         }
         failure {
           mail(from: "jenkins-master-on-aws@gigaspaces.com",
-               //to: "limor@cloudify.co,jakub.niezgoda@cloudify.co,edenp@cloudify.co",
-               to: "limor@cloudify.co",
+               to: "limor@cloudify.co,jakub.niezgoda@cloudify.co,edenp@cloudify.co",
                subject: "Stage build failed!",
                body: "For more information see the build log: ${env.BUILD_URL}/console")
             //emailext(body: 'For more information see the build log.',
