@@ -6,7 +6,7 @@ let path = require('path');
 let fs = require('fs');
 
 const BLUEPRINT_NAME = 'TestBlueprint123';
-const BLUEPRINT_FILENAME = 'singlehost-blueprint.yaml';
+const BLUEPRINT_FILENAME = 'simple-blueprint.yaml';
 
 module.exports = {
 
@@ -77,7 +77,7 @@ module.exports = {
             deploymentName: DEPLOYMENT_NAME,
             agent_private_key_path: 'agentpath',
             agent_user: 'agentuser',
-            server_ip: 'IP'
+            host_ip: 'IP'
         }
 
         let page = client.page.blueprints();
