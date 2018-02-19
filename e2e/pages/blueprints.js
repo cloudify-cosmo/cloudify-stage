@@ -210,7 +210,8 @@ module.exports = {
     props: {
         widgetId: 'blueprints',
         testBlueprint: 'blueprint',
-        testBlueprintUrl: 'https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip'
+        testBlueprintUrl: 'https://github.com/cloudify-cosmo/cloudify-nodecellar-example/archive/master.zip',
+        testBlueprintYamlFile: 'local-blueprint.yaml'
     },
 
     commands: [
