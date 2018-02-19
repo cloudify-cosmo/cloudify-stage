@@ -22,8 +22,6 @@ tests_output
 /conf/me.json
 /conf/rest-security.conf
 
-package-lock.json
-
 /resources
 /dev
 /userData
