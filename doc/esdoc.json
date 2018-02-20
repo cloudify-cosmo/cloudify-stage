@@ -7,7 +7,10 @@
       "option": {
         "undocumentIdentifier": {"enable": false},
         "brand": {
-          "title": "Cloudify UI Basic Components"
+          "title": "Cloudify widgets components documentation",
+          "logo": "./app/images/favicon.png",
+          "site": "https://github.com/cloudify-cosmo/cloudify-stage",
+          "repository": "https://github.com/cloudify-cosmo/cloudify-stage.git"
         },
         "manual": {
           "index": "./doc/index.md",
@@ -23,6 +26,10 @@
     {
       "name": "esdoc-jsx-plugin",
       "option": {"enable": true}
+    },
+    {
+      "name": "esdoc-publish-html-plugin",
+      "option": {"template": "./doc/template"}
     }
   ],
 

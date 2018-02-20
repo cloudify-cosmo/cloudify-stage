@@ -1,18 +1,19 @@
 machine:
   node:
     version: 8.9.1
+test:
+  override:
+    - echo OK
 dependencies:
   override:
-    - npm run beforebuild
+    - npm install --only=dev
+    - npm install esdoc -g
 deployment:
-  demo-deploy:
-    branch: deploy-demo
-    commands:
-      - npm run build
-      - npm run zip
-      - scp stage.tar.gz ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com:~
-      - cat scripts/ec2-extract.sh | ssh ec2-user@ec2-54-91-113-74.compute-1.amazonaws.com
-  webpackall:
+  documentation:
     branch: /.*/
     commands:
-      - npm run build
+      - npm install --only=dev
+      - npm install esdoc -g
+      - pip install awscli
+      - npm run doc
+      - npm run docdeploy
