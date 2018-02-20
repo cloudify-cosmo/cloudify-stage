@@ -61,6 +61,19 @@ pipeline {
                       s3://$AWS_S3_BUCKET/$AWS_S3_PATH$BRANCH_S3_FOLDER/'''
             }
         }
+
+        stage('Upload documentation to S3') {
+            steps {
+               dir('cloudify-stage') {
+                    sh '''#!/bin/bash
+                          npm run doc
+                          . $PWD/env.txt
+                          s3cmd sync --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --acl-public \\
+                          doc/www \\
+                          s3://docs.getcloudify.org/widgets-api/$BRANCH_NAME/'''
+               }
+            }
+        }
     }
     
 
