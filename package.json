@@ -116,6 +116,7 @@
     "esdoc-standard-plugin": "^1.0.0",
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-jsx-plugin": "^1.0.0",
+    "esdoc-publish-html-plugin": "^1.1.0",
     "eslint": "^4.3.0",
     "eslint-plugin-react": "^7.1.0",
     "grunt": "^1.0.1",

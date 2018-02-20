@@ -26,6 +26,10 @@
     {
       "name": "esdoc-jsx-plugin",
       "option": {"enable": true}
+    },
+    {
+      "name": "esdoc-publish-html-plugin",
+      "option": {"template": "./doc/template"}
     }
   ],
 
