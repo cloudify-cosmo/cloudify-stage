@@ -38,7 +38,14 @@ function buildManagerUrl(req,res,next) {
 
 function proxyRequest(req,res,next) {
     var options = {};
-    ManagerHandler.updateOptions(options, req.method);
+    var timeout;
+
+    //if is a blueprint upload request = set higher timeout
+    if(!!req.query.su.match(/\/blueprints/) &&  req.method === 'PUT'){
+        timeout = config.app.proxy.timeouts.blueprintUpload;
+    }
+
+    ManagerHandler.updateOptions(options, req.method, timeout);
 
     req.pipe(request(
             req.su,

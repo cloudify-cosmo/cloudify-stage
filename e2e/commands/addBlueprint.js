@@ -2,7 +2,7 @@
  * Created by pawelposel on 2017-05-31.
  */
 
-exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile = 'blueprint.yaml') {
+exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile = '') {
     let api = this;
 
     if (!blueprintName) {
@@ -10,6 +10,10 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
     }
     if (!blueprintUrl) {
         blueprintUrl = this.page.blueprints().props.testBlueprintUrl;
+    }
+
+    if(!blueprintYamlFile) {
+        blueprintYamlFile = this.page.blueprints().props.testBlueprintYamlFile;
     }
 
     return this.isBlueprintExist(blueprintName, result => {
