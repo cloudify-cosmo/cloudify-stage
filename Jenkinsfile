@@ -62,22 +62,26 @@ pipeline {
             }
         }
 
-//        stage('Upload documentation to S3') {
-//            TODO: Publish it only in two cases:
-//            1. BRANCH_NAME == 'master' => publish it to s3://docs.getcloudify.org/widgets-api/latest
-//            2. BRANCH_NAME == <tag/milestone/release-branch> => s3://docs.getcloudify.org/widgets-api/$BRANCH_NAME
-//
-//            steps {
-//                dir('cloudify-stage') {
-//                    sh 'npm run doc'
-//                }
-//                sh '''#!/bin/bash
-//                      . $PWD/env.txt
-//                      s3cmd sync --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --acl-public --no-mime-magic --guess-mime-type \\
-//                      cloudify-stage/doc/www/ \\
-//                      s3://docs.getcloudify.org/widgets-api/$BRANCH_NAME/'''
-//            }
-//        }
+        stage('Upload documentation to S3') {
+            steps {
+                dir('cloudify-stage') {
+                    sh 'npm run doc'
+                }
+                sh '''#!/bin/bash
+                      . $PWD/env.txt
+                      WIDGET_SUB_DIR=""
+                      if [ "${BRANCH_NAME}" == "master" ];then
+                        WIDGET_SUB_DIR="latest"
+                      elif [[ $BRANCH_NAME =~ [0-9].[0-9]{1,2}-build ]];then
+                        WIDGET_SUB_DIR=$(echo $BRANCH_NAME | tr -d '-build')
+                      fi
+                      if [ ! -z $WIDGET_SUB_DIR ];then
+                        s3cmd sync --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --acl-public --no-mime-magic --guess-mime-type \\
+                        cloudify-stage/doc/www/ \\
+                        s3://docs.getcloudify.org/widgets-api/$WIDGET_SUB_DIR/
+                      fi'''
+            }
+        }
     }
     
 
