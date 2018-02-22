@@ -83,8 +83,6 @@ pipeline {
             }
         }
     }
-    
-
     post {
         always {
           sh 'sudo chown jenkins:jenkins -R ../*'
