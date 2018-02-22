@@ -8,22 +8,17 @@ bower_components
 /widgets/*/widget.js
 /widgets/*/widget.js.map
 /widgets/*/backend.js
-
-stage.tar.gz
 /widgets/common/common.js
 /widgets/common/common.js.map
 
+stage.tar.gz
+
 reports
 selenium-debug.log
-tests_output
 
 /e2e/screenshots
 /doc/www
 /conf/me.json
-/conf/rest-security.conf
-
-package-lock.json
 
 /resources
-/dev
 /userData
