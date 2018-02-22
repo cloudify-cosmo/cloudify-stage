@@ -92,11 +92,11 @@
 }
 
 .navigation .manual-toc [class^="indent-h"] a {
-  color: #666;
+  color: #fff;
 }
 
 .navigation .manual-toc .indent-h1 a {
-  color: #555;
+  color: #fff;
   font-weight: 600;
   display: block;
 }

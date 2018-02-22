@@ -15,7 +15,7 @@
 
 html
 {
-  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   overflow: auto;
   /*font-size: 14px;*/
   /*color: #4d4e53;*/
@@ -165,7 +165,7 @@ li > code {
   top: 0;
   left: 0;
   box-sizing: border-box;
-  width: 250px;
+  width: 300px;
   height: 100%;
   padding-top: 40px;
   padding-left: 15px;
@@ -174,6 +174,7 @@ li > code {
   overflow-x: scroll;
   box-shadow: rgba(255, 255, 255, 1) -1px 0 0 inset;
   border-right: 1px solid #ddd;
+  background-color: #474747;
 }
 
 .navigation ul {
@@ -183,11 +184,10 @@ li > code {
 .navigation li {
   list-style: none;
   margin: 4px 0;
-  white-space: nowrap;
 }
 
 .navigation li a {
-  color: #666;
+  color: #fff;
 }
 
 .navigation .nav-dir-path {
@@ -256,7 +256,7 @@ h1 .url a {
 
 .content {
   margin-top: 40px;
-  margin-left: 250px;
+  margin-left: 300px;
   padding: 10px 50px 10px 20px;
 }
 
