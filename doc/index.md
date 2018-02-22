@@ -1,4 +1,4 @@
-## Widgets components documentation
+## Widgets Components API Reference
 Welcome to [Cloudify](http://cloudify.co)’s Widgets Components API Reference documentation!
 
 You can find here documentation for all [ReactJS](https://reactjs.org/) components developed by Cloudify team. All of those can be used in custom widgets development.
