@@ -444,7 +444,7 @@ a:hover {
   }
 }
 
-.tenantsMenu, .managerMenu {
+.tenantsMenu, .managerMenu, .helpMenu {
   .dropdown.icon {
     margin: 0 0 0 0.4em !important;
     vertical-align: middle;
@@ -452,6 +452,12 @@ a:hover {
 
   i + span {
     vertical-align: middle;
+  }
+}
+
+.helpMenu {
+  .question.icon {
+    margin: 0 !important;
   }
 }
 
