@@ -456,8 +456,14 @@ a:hover {
 }
 
 .helpMenu {
-  .question.icon {
+  .help.icon {
     margin: 0 !important;
+  }
+  a {
+    color: inherit !important;
+  }
+  a:hover {
+    text-decoration: none !important;
   }
 }
 

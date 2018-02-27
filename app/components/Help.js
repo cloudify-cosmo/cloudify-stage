@@ -13,12 +13,12 @@ export default class Help extends Component {
         let {Dropdown, Icon} = Stage.Basic;
 
         const helpMenuTrigger = (
-            <Icon name='question' />
+            <Icon name='help circle' />
         );
 
-        const ExternalLink = (url, text) => (
+        const ExternalLink = (url, text, icon='external') => (
             <div>
-                <Icon name='external' />
+                <Icon name={icon} />
                 <a href={url} target='_blank' className='ui text'>{text}</a>
             </div>
         );
@@ -26,10 +26,10 @@ export default class Help extends Component {
         return (
             <Dropdown item trigger={helpMenuTrigger} className='helpMenu' scrolling>
                 <Dropdown.Menu>
-                    <Dropdown.Item content={ExternalLink('https://docs.cloudify.co', 'Documentation')} />
-                    <Dropdown.Item content={ExternalLink('https://cloudify.co/academy', 'Tutorials')} />
-                    <Dropdown.Item content={ExternalLink('https://cloudify.co/knowledge-base/', 'Knowledge Base')} />
-                    <Dropdown.Item content={ExternalLink('https://cloudify.co/community', 'Contact Us')} />
+                    <Dropdown.Item content={ExternalLink('https://docs.cloudify.co', 'Documentation', 'book')} />
+                    <Dropdown.Item content={ExternalLink('https://cloudify.co/academy', 'Tutorials', 'video camera')} />
+                    <Dropdown.Item content={ExternalLink('https://cloudify.co/knowledge-base/', 'Knowledge Base', 'student')} />
+                    <Dropdown.Item content={ExternalLink('https://cloudify.co/community', 'Contact Us', 'talk')} />
                 </Dropdown.Menu>
             </Dropdown>
         );
