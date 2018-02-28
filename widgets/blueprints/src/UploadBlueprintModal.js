@@ -152,7 +152,7 @@ export default class UploadModal extends React.Component {
                                 </Form.Field>
                                 <Form.Field width="1">
                                     <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
-                                           content='To upload a blueprint to the manager you need to select the archive package containing exactly 1 directory, in which there should be a yaml file describing the main blueprint.'/>
+                                           content='The archive package must contain exactly one directory that includes a yaml file for the main blueprint.'/>
                                 </Form.Field>
                             </Form.Group>
 
@@ -163,7 +163,7 @@ export default class UploadModal extends React.Component {
                                 </Form.Field>
                                 <Form.Field width="1">
                                     <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
-                                           content='The package will be uploaded to the Manager as a Blueprint resource, under the name you specify here.'/>
+                                           content='The package is uploaded to the Manager as a blueprint with the name you specify here.'/>
                                 </Form.Field>
                             </Form.Group>
                             <Form.Group>
@@ -173,7 +173,7 @@ export default class UploadModal extends React.Component {
                                 </Form.Field>
                                 <Form.Field width="1">
                                     <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
-                                           content='As you can have more than one yaml file in the archive, you need to specify which is the main one for your application.'/>
+                                           content='You must specify the blueprint yaml file for your environment because the archive can contain more than one yaml file.'/>
                                 </Form.Field>
                             </Form.Group>
 
@@ -194,7 +194,7 @@ export default class UploadModal extends React.Component {
                                 </Form.Field>
                                 <Form.Field width="1">
                                     <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
-                                           content='The blueprint Icon file is an optional field in which you can choose the icon image that will represent the blueprint in the local blueprint widget.'/>
+                                           content='(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget.'/>
                                 </Form.Field>
                             </Form.Group>
                         </Form>
