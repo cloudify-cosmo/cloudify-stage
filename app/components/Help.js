@@ -29,7 +29,7 @@ export default class Help extends Component {
                     <Dropdown.Item content={ExternalLink('https://docs.cloudify.co', 'Documentation', 'book')} />
                     <Dropdown.Item content={ExternalLink('https://cloudify.co/academy', 'Tutorials', 'video camera')} />
                     <Dropdown.Item content={ExternalLink('https://cloudify.co/knowledge-base/', 'Knowledge Base', 'student')} />
-                    <Dropdown.Item content={ExternalLink('https://cloudify.co/community', 'Contact Us', 'talk')} />
+                    <Dropdown.Item content={ExternalLink('https://cloudify.co/community', 'Contact Us', 'comments')} />
                 </Dropdown.Menu>
             </Dropdown>
         );
