@@ -7,10 +7,20 @@ import InlineEdit from 'react-edit-inline';
 
 import EditWidget from '../containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
-import {Loading} from './basic';
+import {Loading, Icon, ReadmeModal} from './basic';
 import stageUtils from '../utils/stageUtils';
 
 export default class Widget extends Component {
+
+    constructor(props,context) {
+        super(props,context);
+
+        this.state = {
+            showReadmeModal: false,
+            readmeContent: ''
+        }
+    }
+
     static propTypes = {
         pageId: PropTypes.string.isRequired,
         widget: PropTypes.object.isRequired,
@@ -37,6 +47,20 @@ export default class Widget extends Component {
         if (event.keyCode === 27) {
             this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false);
         }
+    }
+
+    _showReadmeModal() {
+        let readme = this.props.widget.definition.readme;
+        let readmeContent = '';
+
+        if (!_.isEmpty(readme)) {
+            readmeContent = markdown.parse(this.props.widget.definition.readme);
+        }
+        this.setState({readmeContent, showReadmeModal: true});
+    }
+
+    _hideReadmeModal() {
+        this.setState({readmeContent: '', showReadmeModal: false});
     }
 
     _isUserAuthorized() {
@@ -77,19 +101,29 @@ export default class Widget extends Component {
                     {
                         this.props.isEditMode &&
                         <div className='widgetEditButtons'>
-                            <i className="remove link icon small"
-                               onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
+                            <Icon name='remove' link size='small'
+                                  onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                         </div>
                     }
                     <div className='ui segment basic' style={{height:'100%'}}>
                         <div className="ui icon message error">
-                            <i className="ban icon"></i>
+                            <Icon name='ban' />
                             You are not authorized for this widget
                         </div>
                     </div>
                 </div>
             );
         }
+
+        const helpIcon = (size='small') => (
+            this.props.widget.definition.helpUrl ?
+                <a href={this.props.widget.definition.helpUrl} target='_blank'>
+                    <Icon name='help circle' size={size} link />
+                </a>
+            :
+                this.props.widget.definition.readme &&
+                <Icon name='help circle' size={size} link onClick={this._showReadmeModal.bind(this)} />
+        );
 
         return (
             <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className={`widgetItem ui segment
@@ -116,20 +150,34 @@ export default class Widget extends Component {
                     this.props.isEditMode ?
                         <div className='widgetEditButtons'>
                             <EditWidget pageId={this.props.pageId} widget={this.props.widget} pageManagementMode={this.props.pageManagementMode}/>
-                            <i className="remove link icon small" onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
+                            {helpIcon()}
+                            <Icon name='remove' link size='small' onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                         </div>
                         :
-                        this.props.widget.definition.showHeader &&
-                        <div className={`widgetViewButtons ${this.props.widget.maximized?'alwaysOnTop':''}`}>
-                            {
-                                this.props.widget.maximized ?
-                                <i className="compress link icon"
-                                   onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false)}/>
-                                :
-                                <i className="expand link icon small"
-                                   onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, true)}/>
-                            }
-                        </div>
+                        this.props.widget.definition.showHeader ?
+                            <div className={`widgetViewButtons ${this.props.widget.maximized?'alwaysOnTop':''}`}>
+                                {
+                                    this.props.widget.maximized ?
+                                        [
+                                            helpIcon(null)
+                                            ,
+                                            <Icon name='compress' link
+                                               onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false)} />
+                                        ]
+
+                                    :
+                                        [
+                                            helpIcon()
+                                            ,
+                                            <Icon name='expand' link size='small'
+                                                  onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, true)} />
+                                        ]
+                                }
+                            </div>
+                            :
+                            <div className='widgetViewButtons'>
+                                {helpIcon()}
+                            </div>
                 }
 
                 {
@@ -148,6 +196,7 @@ export default class Widget extends Component {
                         <Loading />
                 }
 
+                <ReadmeModal open={this.state.showReadmeModal} content={this.state.readmeContent} onHide={this._hideReadmeModal.bind(this)} />
             </div>
         );
     }

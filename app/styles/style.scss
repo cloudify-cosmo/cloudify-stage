@@ -211,6 +211,14 @@ a:hover {
     top: 0px;
     right : 0px;
     display: none;
+
+    a {
+      color: inherit !important;
+    }
+
+    a:hover {
+      text-decoration: none !important;
+    }
   }
 
   .widgetViewButtons.alwaysOnTop {
