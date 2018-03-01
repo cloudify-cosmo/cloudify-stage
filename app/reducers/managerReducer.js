@@ -21,7 +21,10 @@ const manager = (state = {}, action) => {
                 serverVersion: action.serverVersion,
                 tenants: [],
                 lastUpdated: action.receivedAt,
-                status: {}
+                status: {},
+                version: null,
+                distribution: null,
+                distroRelease: null
             });
         case types.LOGOUT:
             return Object.assign({}, state, {
@@ -35,7 +38,10 @@ const manager = (state = {}, action) => {
                 serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
-                status: {}
+                status: {},
+                version: null,
+                distribution: null,
+                distroRelease: null
             });
         case types.ERR_LOGIN:
             return Object.assign({}, state, {
@@ -50,7 +56,10 @@ const manager = (state = {}, action) => {
                 serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
-                status: {}
+                status: {},
+                version: null,
+                distribution: null,
+                distroRelease: null
             });
         case types.SET_USER_DATA:
             return Object.assign({}, state, {
@@ -67,6 +76,12 @@ const manager = (state = {}, action) => {
         case types.ERR_MANAGER_STATUS:
             return Object.assign({}, state, {
                 status: status(state.status, action)
+            });
+        case types.SET_MANAGER_VERSION:
+            return Object.assign({}, state, {
+                version: action.version,
+                distribution: action.distribution,
+                distroRelease: action.distroRelease,
             });
         case types.SET_MAINTENANCE_STATUS:
             return Object.assign({}, state, {
