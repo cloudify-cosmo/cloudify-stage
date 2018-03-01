@@ -23,6 +23,7 @@
     "decompress": "^4.0.0",
     "ejs": "^2.5.6",
     "express": "^4.14.0",
+    "flat": "^4.0.0",
     "fs-extra": "^3.0.1",
     "influx": "^5.0.0",
     "influx-old": "https://github.com/cloudify-cosmo/influx-v0.8",
