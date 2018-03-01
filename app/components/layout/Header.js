@@ -7,6 +7,7 @@ import React, { Component, PropTypes } from 'react';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
+import Help from '../../containers/Help';
 import ResetPagesModal from '../ResetPagesModal.js';
 import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
 import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
@@ -81,6 +82,7 @@ export default class Header extends Component {
                         this._isModeMain() &&
                         <Tenants manager={this.props.manager}/>
                     }
+                    <Help />
                     {
                         this._isModeCustomer()
                         ?
