@@ -5,7 +5,6 @@
 import RepositoryTable from './RepositoryTable';
 import RepositoryCatalog from './RepositoryCatalog';
 import UploadModal from './UploadModal';
-import ReadmeModal from './ReadmeModal';
 
 export default class extends React.Component {
 
@@ -81,7 +80,7 @@ export default class extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, Message, Icon} = Stage.Basic;
+        let {ErrorMessage, Message, Icon, ReadmeModal} = Stage.Basic;
 
         let notAuthenticatedWarning = (
             <Message>

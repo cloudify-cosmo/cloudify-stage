@@ -5,6 +5,7 @@
 import { ApproveButton, CancelButton } from './modal/ModalButtons';
 import Confirm from './modal/Confirm';
 import Alert from './modal/Alert';
+import ReadmeModal from './modal/ReadmeModal';
 import KeyIndicator from './KeyIndicator';
 import ErrorMessage from './ErrorMessage';
 import HighlightText from './HighlightText';
@@ -76,6 +77,7 @@ export {
     VisibilityField,
     ResourceVisibility,
     Radio,
+    ReadmeModal,
     Segment,
     Sidebar,
     SplitterLayout,

@@ -23,7 +23,7 @@ import Pagination from '../components/basic/pagination/Pagination';
 import WidgetDefinition from './WidgetDefinition';
 var widgetDefinitions = [];
 
-function fetchWidgetTemplate(path) {
+function fetchWidgetTextFile(path) {
     return fetch(StageUtils.url(path))
         .then((response)=>{
             if (response.status >= 400) {
@@ -91,7 +91,7 @@ export default class WidgetDefinitionsLoader {
 
             if (widgetDefinition.hasTemplate) {
                 promises.push(
-                    fetchWidgetTemplate(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/widget.html`)
+                    fetchWidgetTextFile(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/widget.html`)
                         .then((widgetHtml)=> {
                             if (widgetHtml) {
                                 widgetDefinition.template = widgetHtml;
@@ -100,6 +100,16 @@ export default class WidgetDefinitionsLoader {
             }
             if (widgetDefinition.hasStyle) {
                 promises.push(new StyleLoader(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/widget.css`).load());
+            }
+
+            if (widgetDefinition.hasReadme) {
+                promises.push(
+                    fetchWidgetTextFile(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/readme.md`)
+                        .then((widgetReadme) => {
+                            if (widgetReadme) {
+                                widgetDefinition.readme = widgetReadme;
+                            }
+                        }));
             }
         });
 
