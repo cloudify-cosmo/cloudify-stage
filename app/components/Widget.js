@@ -115,7 +115,7 @@ export default class Widget extends Component {
             );
         }
 
-        const helpIcon = (size='small') => (
+        const helpIcon = (size=undefined) => ( // Setting size to 'undefined' means not overriding icon normal size
             this.props.widget.definition.helpUrl ?
                 <a href={this.props.widget.definition.helpUrl} target='_blank'>
                     <Icon name='help circle' size={size} link />
@@ -150,7 +150,7 @@ export default class Widget extends Component {
                     this.props.isEditMode ?
                         <div className='widgetEditButtons'>
                             <EditWidget pageId={this.props.pageId} widget={this.props.widget} pageManagementMode={this.props.pageManagementMode}/>
-                            {helpIcon()}
+                            {helpIcon('small')}
                             <Icon name='remove' link size='small' onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                         </div>
                         :
@@ -159,7 +159,7 @@ export default class Widget extends Component {
                                 {
                                     this.props.widget.maximized ?
                                         [
-                                            helpIcon(null)
+                                            helpIcon()
                                             ,
                                             <Icon name='compress' link
                                                onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false)} />
@@ -167,7 +167,7 @@ export default class Widget extends Component {
 
                                     :
                                         [
-                                            helpIcon()
+                                            helpIcon('small')
                                             ,
                                             <Icon name='expand' link size='small'
                                                   onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, true)} />
@@ -176,7 +176,7 @@ export default class Widget extends Component {
                             </div>
                             :
                             <div className='widgetViewButtons'>
-                                {helpIcon()}
+                                {helpIcon('small')}
                             </div>
                 }
 
