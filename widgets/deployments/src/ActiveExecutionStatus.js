@@ -29,7 +29,8 @@ export default class ActiveExecutionStatus extends React.Component {
         let {ExecutionUtils} = Stage.Common;
 
         let execution = this.props.item;
-        let activeExecutionStatus = execution.workflow_id + ' ' + execution.status;
+        let executionStatusDisplay = execution.status_display || execution.status;
+        let activeExecutionStatus = execution.workflow_id + ' ' + executionStatusDisplay;
         let cancelClicked = this.state.cancelClicked;
 
         return (
