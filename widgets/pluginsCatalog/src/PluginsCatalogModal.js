@@ -117,9 +117,7 @@ export default class PluginsCatalogModal extends React.Component {
             />
             Are you sure you want to upload the plugin
             {' '}
-            <b>({this.props.plugin && this.props.plugin.title})</b>
-            {' '}
-            .. ?
+            <b>{this.props.plugin && this.props.plugin.title}</b>?
           </Modal.Content>
 
           <Modal.Actions>
