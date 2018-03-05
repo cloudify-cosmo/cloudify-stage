@@ -73,7 +73,7 @@ export default class PluginsCatalogModal extends React.Component {
         this.props.toolbox.getEventBus ().trigger ('plugins:refresh');
         this.props.onHide();
         this.props.onSuccess (
-          `${this.props.plugin.name} Successfully uploaded`
+          `${this.props.plugin.title} Successfully uploaded`
         );
       })
       .catch (err => {
@@ -117,9 +117,7 @@ export default class PluginsCatalogModal extends React.Component {
             />
             Are you sure you want to upload the plugin
             {' '}
-            <b>({this.props.plugin && this.props.plugin.name})</b>
-            {' '}
-            .. ?
+            <b>{this.props.plugin && this.props.plugin.title}</b>?
           </Modal.Content>
 
           <Modal.Actions>
