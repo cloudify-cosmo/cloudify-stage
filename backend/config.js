@@ -4,14 +4,24 @@
 
 var _ = require('lodash');
 var flatten = require('flat');
+var pathlib = require('path');
+var fs = require('fs-extra');
+
+var Consts = require('./consts');
 
 var app = require('../conf/app.json');
 var manager = require('../conf/manager.json');
 var log4jsConfig = require('../conf/log4jsConfig.json');
-
 var userConfig = require('../conf/userConfig.json');
+
+var userDataConfigPath = pathlib.resolve(`..${Consts.USER_DATA_PATH}/userConfig.json`);
+if (!fs.existsSync(userDataConfigPath)) {
+    userDataConfigPath = pathlib.resolve(`../dist${Consts.USER_DATA_PATH}/userConfig.json`);
+}
+console.log(`Trying to fetch user config from: ${userDataConfigPath}`);
+
 try {
-    var userDataConfig = require('../userData/userConfig.json');
+    var userDataConfig = require(userDataConfigPath);
     userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig))); // Security reason - get only allowed parameters
     userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration
 } catch(err) {
