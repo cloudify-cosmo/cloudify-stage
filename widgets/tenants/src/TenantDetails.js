@@ -68,7 +68,7 @@ export default class TenantDetails extends React.Component {
 
                                 return (
                                     <List.Item key={group}>
-                                        {group} - {role} (<i>direct role</i>)
+                                        {group} - {role}
                                         <Icon link name={processing?'notched circle':'remove'} loading={processing}
                                               className="right floated" onClick={this._removeUserGroup.bind(this, group)}/>
                                     </List.Item>
