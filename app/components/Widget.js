@@ -95,26 +95,6 @@ export default class Widget extends Component {
             );
         }
 
-        if (this.props.widget.definition && !this._isUserAuthorized()) {
-            return (
-                <div className='widgetItem ui segment widgetWithoutContent'>
-                    {
-                        this.props.isEditMode &&
-                        <div className='widgetEditButtons'>
-                            <Icon name='remove' link size='small'
-                                  onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
-                        </div>
-                    }
-                    <div className='ui segment basic' style={{height:'100%'}}>
-                        <div className="ui icon message error">
-                            <Icon name='ban' />
-                            You are not authorized for this widget
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
         const helpIcon = (size=undefined) => ( // Setting size to 'undefined' means not overriding icon normal size
             this.props.widget.definition.helpUrl ?
                 <a href={this.props.widget.definition.helpUrl} target='_blank'>
