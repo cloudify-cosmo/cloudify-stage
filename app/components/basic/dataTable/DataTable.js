@@ -227,7 +227,11 @@ export default class DataTable extends Component {
             sortColumn: props.sortColumn,
             sortAscending: props.sortAscending,
             searchText: ''
-        }
+        };
+
+        this.debouncedSearch = _.debounce(() => {
+            this.refs.pagination.reset(this._fetchData.bind(this));
+        }, 300, {'maxWait': 2000});
     }
 
     /**
@@ -299,9 +303,8 @@ export default class DataTable extends Component {
         }
 
         var fetchData = {sortColumn: name, sortAscending: ascending, currentPage: 1};
-        (this._fetchData(fetchData) || Promise.resolve()).then(() => {
-            this.setState(fetchData)
-            this.refs.pagination.reset();
+        this.setState(fetchData, () => {
+            this.refs.pagination.reset(this._fetchData.bind(this));
         });
     }
 
@@ -319,8 +322,14 @@ export default class DataTable extends Component {
         }
     }
 
-    _fetchData(fetchParams) {
-        return this.props.fetchData({gridParams: fetchParams});
+    _fetchData() {
+        return this.props.fetchData({gridParams: {
+            _search: this.state.searchText,
+            currentPage: this.refs.pagination.state.currentPage,
+            pageSize: this.refs.pagination.state.pageSize,
+            sortColumn: this.state.sortColumn,
+            sortAscending: this.state.sortAscending
+        }});
     }
 
     render() {
@@ -362,7 +371,9 @@ export default class DataTable extends Component {
                 { (this.props.searchable || !_.isEmpty(gridFilters) || gridAction) &&
                 <Form size="small" as="div">
                     <Form.Group inline>
-                        {this.props.searchable && <TableSearch/>}
+                        {this.props.searchable && <TableSearch search={this.state.searchText} onSearch={(searchText) => {
+                            this.setState({searchText}, this.debouncedSearch);
+                        }}/>}
                         {gridFilters}
                         {gridAction}
                     </Form.Group>
