@@ -17,38 +17,52 @@ export default class RolesPresenter extends React.Component {
     };
 
 
-    render(){
+    render() {
+        let {Popup} = Stage.Basic;
+        const HELP_MESSAGE = 'When the roles are inherited from a user group, ' +
+            'the name of the user group is also shown, ' +
+            'for example: viewer (Viewers)';
+
         let restOfGroupRoles = '';
         _.forEach(_.omit(this.props.groupRoles, this.props.directRole), (groups, role) => {
-            restOfGroupRoles += role+' ('+groups.join(', ')+'), ';
+            restOfGroupRoles += role + ' (' + groups.join(', ') + '), ';
         });
         restOfGroupRoles = restOfGroupRoles.slice(0, -2);
 
-        return (
-            _.isEmpty(this.props.groupRoles)
+        let RolesList = function(directRole, groupRoles) {
+            return (
+                _.isEmpty(groupRoles)
                 ?
                 //Use case 1: user
-                this.props.directRole && <span>{this.props.directRole}</span>
+                directRole && <span>{directRole}</span>
                 :
-                _.has(this.props.groupRoles, this.props.directRole)
+                _.has(groupRoles, directRole)
                     ?
                     _.isEmpty(restOfGroupRoles)
                         ?
                         //Use case 2: user (gp1)
-                        <span>{this.props.directRole} ({this.props.groupRoles[this.props.directRole].join(', ')})</span>
+                        <span>{directRole} ({groupRoles[directRole].join(', ')})</span>
                         :
                         //Use case 3: user (gp1), viewer (gp2)
-                        <span>{this.props.directRole} ({this.props.groupRoles[this.props.directRole].join(', ')}), {restOfGroupRoles}</span>
+                        <span>{directRole} ({groupRoles[directRole].join(', ')}), {restOfGroupRoles}</span>
                     :
-                    this.props.directRole
+                    directRole
                         ?
                         //Use case 4: user, viewer (gp2)
-                        <span>{this.props.directRole}, {restOfGroupRoles}</span>
+                        <span>{directRole}, {restOfGroupRoles}</span>
                         :
                         //Use case 5: viewer (gp2)
                         <span>{restOfGroupRoles}</span>
-            )
+            );
+        };
 
+        return (
+            _.isEmpty(this.props.groupRoles)
+                ?
+                RolesList(this.props.directRole, this.props.groupRoles)
+                :
+                <Popup trigger={RolesList(this.props.directRole, this.props.groupRoles)} content={HELP_MESSAGE} />
+        );
     }
 }
 
