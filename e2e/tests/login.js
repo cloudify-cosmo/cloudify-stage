@@ -30,7 +30,7 @@ module.exports = {
             .setElementValue('@passwordField', Config.pass + 'a')
             .clickElement('@submitButton')
             .waitForElementVisible('@errorMessage')
-            .assert.containsText('@errorMessage', 'Invalid credentials');
+            .assert.containsText('@errorMessage', `User unauthorized: Authentication failed for user ${Config.user}`);
 
         client.end();
     }
