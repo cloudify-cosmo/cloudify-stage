@@ -140,7 +140,7 @@ export default class UserGroupsTable extends React.Component {
                                     <DataTable.Row key={item.name} selected={item.isSelected} onClick={this._selectUserGroup.bind(this, item.name)}>
                                         <DataTable.Data>{item.name}</DataTable.Data>
                                         <DataTable.Data>{item.ldap_dn}</DataTable.Data>
-                                        <DataTable.Data>{item.role} (<i>direct role</i>)</DataTable.Data>
+                                        <DataTable.Data>{item.role}</DataTable.Data>
                                         <DataTable.Data><Label className="green" horizontal>{item.userCount}</Label></DataTable.Data>
                                         <DataTable.Data><Label className="blue" horizontal>{item.tenantCount}</Label></DataTable.Data>
                                         <DataTable.Data className="center aligned">
