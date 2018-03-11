@@ -123,7 +123,7 @@ export default class BlueprintsCatalog extends React.Component{
             <div>
                 <DataSegment totalSize={this.props.data.total}
                          pageSize={this.props.widget.configuration.pageSize}
-                         fetchData={this.props.fetchData} className="blueprintCatalog">
+                         fetchData={this.props.fetchData} className="blueprintCatalog" searchable={true}>
 
                     <DataSegment.Action>
                         <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>

@@ -39,17 +39,19 @@ export default class Pagination extends Component {
     };
 
     _changePageSize(size){
-        var fetchParams = {pageSize: parseInt(size) || Pagination.PAGE_SIZE_LIST(this.props.sizeMultiplier)[0], currentPage: 1};
-        (this.props.fetchData(fetchParams) || Promise.resolve()).then(() => this.setState(fetchParams));
+        this.setState({pageSize: parseInt(size) || Pagination.PAGE_SIZE_LIST(this.props.sizeMultiplier)[0], currentPage: 1}, () => {
+            this.props.fetchData();
+        });
     }
 
     _changePage(page){
-        var fetchParams = {currentPage: page, pageSize: this.state.pageSize};
-        (this.props.fetchData(fetchParams) || Promise.resolve()).then(() => this.setState(fetchParams));
+        this.setState({currentPage: page, pageSize: this.state.pageSize}, () => {
+            this.props.fetchData();
+        });
     }
 
-    reset(){
-        this.setState({currentPage: 1});
+    reset(callback){
+        this.setState({currentPage: 1}, callback);
     }
 
     componentWillReceiveProps(nextProps) {
