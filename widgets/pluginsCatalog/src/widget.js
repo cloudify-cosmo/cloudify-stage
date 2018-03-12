@@ -7,7 +7,7 @@ import PluginsCatalogList from './PluginsCatalogList';
 
 Stage.defineWidget ({
   id: 'pluginsCatalog',
-  name: 'Plugins catalog',
+  name: 'Plugins Catalog',
   description: 'Shows plugins catalog',
   initialWidth: 12,
   initialHeight: 20,
