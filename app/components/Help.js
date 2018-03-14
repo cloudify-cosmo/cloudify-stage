@@ -17,10 +17,9 @@ export default class Help extends Component {
         );
 
         const ExternalLink = (url, text, icon='external') => (
-            <div>
-                <Icon name={icon} />
-                <a href={url} target='_blank' className='ui text'>{text}</a>
-            </div>
+            <a href={url} target='_blank' className='ui text'>
+                <Icon name={icon} /> {text}
+            </a>
         );
 
         return (
