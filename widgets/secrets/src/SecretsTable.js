@@ -118,6 +118,7 @@ export default class SecretsTable extends React.Component {
                            pageSize={this.props.widget.configuration.pageSize}
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
+                           searchable={true}
                            className="secretsTable">
 
                     <DataTable.Column label="Key" name="key" width="20%" />
