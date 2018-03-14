@@ -104,7 +104,7 @@ export default class WidgetDefinitionsLoader {
 
             if (widgetDefinition.hasReadme) {
                 promises.push(
-                    fetchWidgetTextFile(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/readme.md`)
+                    fetchWidgetTextFile(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/README.md`)
                         .then((widgetReadme) => {
                             if (widgetReadme) {
                                 widgetDefinition.readme = widgetReadme;
