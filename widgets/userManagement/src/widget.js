@@ -39,7 +39,9 @@ Stage.defineWidget({
                     last_login_at: item.last_login_at?Stage.Utils.formatTimestamp(item.last_login_at):"",
                     groupCount: item.groups.length,
                     tenantCount: _.size(item.tenants),
-                    isSelected: item.username === selectedUser
+                    isSelected: item.username === selectedUser,
+                    isAdmin: item.role === Stage.Common.Consts.sysAdminRole ||
+                             _.has(item.group_system_roles, Stage.Common.Consts.sysAdminRole)
                 })
             }),
             total : _.get(data.users, 'metadata.pagination.total', 0)

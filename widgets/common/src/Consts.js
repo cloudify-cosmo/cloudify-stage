@@ -3,7 +3,8 @@
  */
 
 var consts = {
-    defaultVisibility: 'tenant'
+    defaultVisibility: 'tenant',
+    sysAdminRole: 'sys_admin'
 };
 
 Stage.defineCommon({

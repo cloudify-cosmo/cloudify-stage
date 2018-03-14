@@ -106,6 +106,10 @@ export default class WidgetParamsHandler {
                 params._sort = `${this.fetchParams.gridParams.sortAscending?'':'-'}${this.fetchParams.gridParams.sortColumn}`;
             }
 
+            if (this.fetchParams.gridParams._search) {
+                params._search = this.fetchParams.gridParams._search;
+            }
+
             if (this.fetchParams.gridParams.pageSize) {
                 params._size=this.fetchParams.gridParams.pageSize;
             }

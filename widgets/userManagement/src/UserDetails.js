@@ -52,7 +52,7 @@ export default class UserDetails extends React.Component {
     }
 
     render() {
-        let {Segment, List, Icon, Message, Divider} = Stage.Basic;
+        let {Segment, List, Icon, Message, Divider, Popup} = Stage.Basic;
         let RolesPresenter = Stage.Common.RolesPresenter;
 
         return (
@@ -78,27 +78,35 @@ export default class UserDetails extends React.Component {
                         {_.isEmpty(this.props.data.groups) && <Message content="No groups available"/>}
                     </List>
                 </Segment>
-                <Segment>
-                    <Icon name="user"/> Tenants
-                    <Divider/>
-                    <List divided relaxed verticalAlign='middle' className="light">
-                        {
-                            _.map(_.keys(this.props.data.tenants), (item) => {
-                                let processing = this.state.processing && this.state.processItem === item;
 
-                                return (
-                                    <List.Item key={item}>
-                                        {item} - <RolesPresenter directRole={this.props.data.tenant_roles.direct[item]} groupRoles={this.props.data.tenant_roles.groups[item]}/>
-                                        <Icon link name={processing?'notched circle':'remove'} loading={processing}
-                                              className="right floated" onClick={this._removeTenant.bind(this, item)}/>
-                                    </List.Item>
-                                );
-                            })
-                        }
+                <Popup>
+                    <Popup.Trigger>
+                        <Segment>
+                            <Icon name="user"/> Tenants
+                            <Divider/>
+                            <List divided relaxed verticalAlign='middle' className="light">
+                                {
+                                    _.map(_.keys(this.props.data.tenants), (item) => {
+                                        let processing = this.state.processing && this.state.processItem === item;
 
-                        {_.isEmpty(this.props.data.tenants) && <Message content="No tenants available"/>}
-                    </List>
-                </Segment>
+                                        return (
+                                            <List.Item key={item}>
+                                                {item} - <RolesPresenter directRole={this.props.data.tenant_roles.direct[item]} groupRoles={this.props.data.tenant_roles.groups[item]}/>
+                                                <Icon link name={processing?'notched circle':'remove'} loading={processing}
+                                                      className="right floated" onClick={this._removeTenant.bind(this, item)}/>
+                                            </List.Item>
+                                        );
+                                    })
+                                }
+
+                                {_.isEmpty(this.props.data.tenants) && <Message content="No tenants available"/>}
+                            </List>
+                        </Segment>
+                    </Popup.Trigger>
+                    <Popup.Content>
+                        The tenants that this user is assigned to, and the assigned roles. When the roles are inherited from a user group, the name of the user group is also shown, for example: viewer (Viewers)
+                    </Popup.Content>
+                </Popup>
             </Segment.Group>
         );
     }

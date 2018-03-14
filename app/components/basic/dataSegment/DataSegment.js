@@ -7,6 +7,7 @@ import SegmentItem from './SegmentItem';
 import SegmentAction from './SegmentAction';
 import Pagination from '../pagination/Pagination';
 import {Message, Form, Icon} from 'semantic-ui-react';
+import TableSearch from '../dataTable/TableSearch';
 
 /**
  * DataSegment component enables fetching data using predefined function and showing segmented data in a simple manner.
@@ -136,6 +137,14 @@ export default class DataSegment extends Component {
 
     constructor(props,context) {
         super(props,context);
+
+        this.state = {
+            searchText: ''
+        };
+
+        this.debouncedSearch = _.debounce(() => {
+            this.refs.pagination.reset(this._fetchData.bind(this));
+        }, 300, {'maxWait': 2000});
     }
 
     /**
@@ -149,6 +158,7 @@ export default class DataSegment extends Component {
      * @property {number} [sizeMultiplier=3] - param related to pagination.
      * List of page sizes is generated as multiplication of basic fixed values [1, 2, 3, 5, 10] by this param
      * @property {string} [className=''] - CSS classname
+     * @property {boolean} [searchable=false] - if true filtering and searching input to be added
      */
     static propTypes = {
         children: PropTypes.any.isRequired,
@@ -157,7 +167,8 @@ export default class DataSegment extends Component {
         fetchSize: PropTypes.number,
         pageSize: PropTypes.number,
         className: PropTypes.string,
-        sizeMultiplier: PropTypes.number
+        sizeMultiplier: PropTypes.number,
+        searchable: PropTypes.bool
     };
 
     static defaultProps = {
@@ -166,17 +177,16 @@ export default class DataSegment extends Component {
         totalSize: -1,
         fetchSize: -1,
         pageSize: 0,
-        sizeMultiplier: 3
+        sizeMultiplier: 3,
+        searchable: false
     };
 
-    componentDidUpdate(prevProps, prevState) {
-        if (!_.isEqual(this.state, prevState)) {
-            this._fetchData();
-        }
-    }
-
-    _fetchData(fetchParams) {
-        return this.props.fetchData({gridParams: Object.assign({}, this.state, fetchParams)});
+    _fetchData() {
+        return this.props.fetchData({gridParams: {
+            _search: this.state.searchText,
+            currentPage: this.refs.pagination.state.currentPage,
+            pageSize: this.refs.pagination.state.pageSize
+        }});
     }
 
     render() {
@@ -196,9 +206,12 @@ export default class DataSegment extends Component {
         return (
             <div className={`segmentList ${this.props.className}`}>
                 {
-                    segmentAction &&
+                    (segmentAction || this.props.searchable) &&
                     <Form size="small" as="div">
                         <Form.Group inline>
+                            {this.props.searchable && <TableSearch search={this.state.searchText} onSearch={(searchText) => {
+                                this.setState({searchText}, this.debouncedSearch);
+                            }}/>}
                             {segmentAction}
                         </Form.Group>
                     </Form>

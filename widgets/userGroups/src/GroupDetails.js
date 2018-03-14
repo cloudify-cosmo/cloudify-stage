@@ -89,7 +89,7 @@ export default class UserDetails extends React.Component {
 
                                 return (
                                     <List.Item key={item}>
-                                        {item} - {role} (<i>direct role</i>)
+                                        {item} - {role}
                                         <Icon link name={processing?'notched circle':'remove'} loading={processing}
                                               className="right floated" onClick={this._removeTenant.bind(this, item)}/>
                                     </List.Item>

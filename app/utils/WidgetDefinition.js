@@ -5,14 +5,20 @@
 export default class WidgetDefinition {
 
     constructor(data) {
-        // Set default
-        this.showHeader = true;
-        this.showBorder = true;
-        this.initialWidth = 3;
-        this.initialHeight = 12;
+        // Set default values for optional properties
         this.color = 'blue';
-        this.initialConfiguration = [];
+        this.categories = [Stage.GenericConfig.CATEGORY.OTHERS];
+        //this.description = undefined;
+        //this.fetchUrl = undefined;
+        this.hasReadme = false;
         this.hasStyle = false;
+        this.hasTemplate = false;
+        //this.helpUrl = undefined;
+        this.initialConfiguration = [];
+        this.initialHeight = 12;
+        this.initialWidth = 3;
+        this.showBorder = true;
+        this.showHeader = true;
 
         // Override defaults with data
         Object.assign(this,data);
@@ -24,7 +30,7 @@ export default class WidgetDefinition {
             throw new Error('Missing widget id. Widget data is :',data);
         }
         if (!this.permission){
-            console.warn('Missing widget permission. No user would be authorized for this widget.')
+            throw new Error('Missing widget permission. No user would be authorized for this widget.')
         }
     }
 

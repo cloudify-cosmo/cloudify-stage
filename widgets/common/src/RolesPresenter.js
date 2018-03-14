@@ -18,8 +18,6 @@ export default class RolesPresenter extends React.Component {
 
 
     render(){
-        let directRoleLabel = <i>direct role</i>;
-
         let restOfGroupRoles = '';
         _.forEach(_.omit(this.props.groupRoles, this.props.directRole), (groups, role) => {
             restOfGroupRoles += role+' ('+groups.join(', ')+'), ';
@@ -29,23 +27,23 @@ export default class RolesPresenter extends React.Component {
         return (
             _.isEmpty(this.props.groupRoles)
                 ?
-                //Use case 1: user (direct role)
-                this.props.directRole && <span>{this.props.directRole} ({directRoleLabel})</span>
+                //Use case 1: user
+                this.props.directRole && <span>{this.props.directRole}</span>
                 :
                 _.has(this.props.groupRoles, this.props.directRole)
                     ?
                     _.isEmpty(restOfGroupRoles)
                         ?
-                        //Use case 2: user (direct role, gp1)
-                        <span>{this.props.directRole} ({directRoleLabel}, {this.props.groupRoles[this.props.directRole].join(', ')})</span>
+                        //Use case 2: user (gp1)
+                        <span>{this.props.directRole} ({this.props.groupRoles[this.props.directRole].join(', ')})</span>
                         :
-                        //Use case 3: user (direct role, gp1), viewer (gp2)
-                        <span>{this.props.directRole} ({directRoleLabel}, {this.props.groupRoles[this.props.directRole].join(', ')}), {restOfGroupRoles}</span>
+                        //Use case 3: user (gp1), viewer (gp2)
+                        <span>{this.props.directRole} ({this.props.groupRoles[this.props.directRole].join(', ')}), {restOfGroupRoles}</span>
                     :
                     this.props.directRole
                         ?
-                        //Use case 4: user (direct role), viewer (gp2)
-                        <span>{this.props.directRole} ({directRoleLabel}), {restOfGroupRoles}</span>
+                        //Use case 4: user, viewer (gp2)
+                        <span>{this.props.directRole}, {restOfGroupRoles}</span>
                         :
                         //Use case 5: viewer (gp2)
                         <span>{restOfGroupRoles}</span>

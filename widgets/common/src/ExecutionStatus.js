@@ -30,15 +30,15 @@ export default class ExecutionStatus extends React.Component {
         let {ExecutionUtils} = Stage.Common;
 
         let execution = this.props.item;
+        let executionStatusDisplay = execution.status_display || execution.status;
 
         if (ExecutionUtils.isActiveExecution(execution)) {
-            let activeExecutionStatus = execution.status;
             let cancelClicked = this.state.cancelClicked;
 
             return (
                 <Label>
                     <Icon name="spinner" loading />
-                    {activeExecutionStatus}
+                    {executionStatusDisplay}
                     <PopupMenu disabled={cancelClicked} icon='delete' >
                         <Menu pointing vertical>
                             <Menu.Item content='Cancel' name={ExecutionUtils.CANCEL_ACTION}
@@ -51,7 +51,7 @@ export default class ExecutionStatus extends React.Component {
             )
         } else {
             let inactiveExecutionStatus
-                = this.props.showInactiveAsLink ? (<a href="javascript:void(0)">{execution.status}</a>) : execution.status;
+                = this.props.showInactiveAsLink ? (<a href="javascript:void(0)">{executionStatusDisplay}</a>) : executionStatusDisplay;
             return (
                 <Label>{inactiveExecutionStatus}</Label>
             )

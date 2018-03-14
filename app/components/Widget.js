@@ -78,6 +78,7 @@ export default class Widget extends Component {
         if (!this.props.widget.definition) {
             return (
                 <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className='widgetItem ui segment widgetWithoutContent'>
+                    <div className='widgetButtons' onMouseDown={e => e.stopPropagation()}>
                     {
                         this.props.isEditMode &&
                         <div className='widgetEditButtons'>
@@ -85,6 +86,7 @@ export default class Widget extends Component {
                                onClick={()=>this.props.onWidgetRemoved(this.props.pageId,this.props.widget.id)}/>
                         </div>
                     }
+                    </div>
                     <div className='ui segment basic' style={{height:'100%'}}>
                         <div className="ui icon message error">
                             <i className="ban icon"></i>
@@ -97,12 +99,12 @@ export default class Widget extends Component {
 
         const helpIcon = (size=undefined) => ( // Setting size to 'undefined' means not overriding icon normal size
             this.props.widget.definition.helpUrl ?
-                <a href={this.props.widget.definition.helpUrl} target='_blank'>
+                <a key='helpLink' href={this.props.widget.definition.helpUrl} target='_blank'>
                     <Icon name='help circle' size={size} link />
                 </a>
             :
                 this.props.widget.definition.readme &&
-                <Icon name='help circle' size={size} link onClick={this._showReadmeModal.bind(this)} />
+                <Icon key='helpIcon' name='help circle' size={size} link onClick={this._showReadmeModal.bind(this)} />
         );
 
         return (
@@ -126,6 +128,8 @@ export default class Widget extends Component {
                             }
                     </h5>
                 }
+
+                <div className='widgetButtons' onMouseDown={e => e.stopPropagation()}>
                 {
                     this.props.isEditMode ?
                         <div className='widgetEditButtons'>
@@ -141,15 +145,15 @@ export default class Widget extends Component {
                                         [
                                             helpIcon()
                                             ,
-                                            <Icon name='compress' link
-                                               onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false)} />
+                                            <Icon key='compressIcon' name='compress' link
+                                                  onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, false)} />
                                         ]
 
                                     :
                                         [
                                             helpIcon('small')
                                             ,
-                                            <Icon name='expand' link size='small'
+                                            <Icon key='expandIcon' name='expand' link size='small'
                                                   onClick={() => this.props.onWidgetMaximize(this.props.pageId, this.props.widget.id, true)} />
                                         ]
                                 }
@@ -159,6 +163,7 @@ export default class Widget extends Component {
                                 {helpIcon('small')}
                             </div>
                 }
+                </div>
 
                 {
                     (this.props.widget.definition &&
