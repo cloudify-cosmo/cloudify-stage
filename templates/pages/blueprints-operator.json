@@ -11,7 +11,7 @@
       "configuration":{
         "displayStyle":"catalog",
         "pageSize": 6,
-        "drillDownPage":"blueprint-viewer"
+        "drillDownPage":"blueprint-operator"
       }
     }
   ]

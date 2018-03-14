@@ -2,12 +2,6 @@
   "name": "Deployments",
   "widgets": [
     {
-      "name": "Deployment Button",
-      "definition": "deploymentButton",
-      "x": 0,
-      "y": 0
-    },
-    {
       "name": "Filter",
       "definition": "filter",
       "x": 0,
@@ -24,7 +18,8 @@
       "x": 0,
       "y": 8,
       "configuration":{
-        "displayStyle":"list"
+        "displayStyle":"list",
+        "drillDownPage":"deployment-viewer"
       }
     }
   ]

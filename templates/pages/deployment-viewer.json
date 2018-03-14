@@ -2,14 +2,6 @@
   "name": "Deployment",
   "widgets": [
     {
-      "name": "Deployment Action Buttons",
-      "definition": "deploymentActionButtons",
-      "width": 7,
-      "height": 5,
-      "x": 0,
-      "y": 0
-    },
-    {
       "name": "Topology",
       "definition": "topology",
       "width": 12,

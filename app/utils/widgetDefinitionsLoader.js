@@ -237,6 +237,12 @@ class GenericConfig {
                 default: sortAscending,
                 hidden: true}
     };
+
+    static DRILLDOWN_PAGE_CONFIG = (drillDownPage) => {
+        return {id: 'drillDownPage',
+                default: drillDownPage,
+                hidden: true}
+    };
     
     static get CATEGORY ()  {
         return {

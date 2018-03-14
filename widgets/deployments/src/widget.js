@@ -22,7 +22,8 @@ Stage.defineWidget({
             {id: "displayStyle", name: "Display style", items: [{name:'Table', value:'table'}, {name:'List', value:'list'}],
                 default: "table", type: Stage.Basic.GenericField.LIST_TYPE},
             Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
-            Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
+            Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
+            Stage.GenericConfig.DRILLDOWN_PAGE_CONFIG('deployment')
         ],
     isReact: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),

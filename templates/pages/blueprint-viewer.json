@@ -2,14 +2,6 @@
   "name": "Blueprint",
   "widgets": [
     {
-      "name": "Blueprint Actions",
-      "definition": "blueprintActionButtons",
-      "width": 7,
-      "height": 5,
-      "x": 0,
-      "y": 0
-    },
-    {
       "name": "Topology",
       "definition": "topology",
       "width": 12,
@@ -25,7 +17,8 @@
       "x": 7,
       "y": 35,
       "configuration":{
-        "displayStyle":"list"
+        "displayStyle":"list",
+        "drillDownPage":"deployment-viewer"
       }
     },
     {
