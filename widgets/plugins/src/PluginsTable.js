@@ -105,6 +105,7 @@ export default class extends React.Component {
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
                            selectable={true}
+                           searchable={true}
                            className="pluginsTable">
 
                     <DataTable.Column label="Id" name="id" width="20%"/>
