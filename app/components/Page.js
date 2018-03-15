@@ -5,9 +5,7 @@
 
 import React, { Component, PropTypes } from 'react';
 
-import AddPageButton from '../containers/AddPageButton';
-import AddWidget from '../containers/AddWidget';
-import WidgetsList from './WidgetsList';
+import WidgetsList from '../containers/WidgetsList';
 import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import {EditableLabel} from './basic';
