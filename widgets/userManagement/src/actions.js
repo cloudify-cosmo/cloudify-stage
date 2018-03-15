@@ -20,7 +20,7 @@ export default class Actions {
     }
 
     doGetTenants() {
-        return this.toolbox.getManager().doGet('/tenants?_include=name');
+        return this.toolbox.getManager().doGet('/tenants?_get_all_results=true&_include=name');
     }
 
     doRemoveFromTenant(username, tenant_name) {

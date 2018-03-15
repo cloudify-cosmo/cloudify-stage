@@ -21,7 +21,7 @@ class AuthHandler {
     }
 
     static getTenants(token){
-        return ManagerHandler.jsonRequest('GET', '/tenants', {
+        return ManagerHandler.jsonRequest('GET', '/tenants?_get_all_results=true&_include=name', {
                 'authentication-token': token
             }
         );
