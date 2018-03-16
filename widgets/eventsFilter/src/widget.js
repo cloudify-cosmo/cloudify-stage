@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: "Events/logs filter",
     description: 'Adds a filter section for events and logs',
     initialWidth: 12,
-    initialHeight: 6,
+    initialHeight: 7,
     color: "pink",
     showHeader: false,
     showBorder: false,
