@@ -36,7 +36,7 @@ export function getTenants (manager) {
     return function(dispatch) {
 
         dispatch(requestTenants());
-        return managerAccessor.doGet('/tenants',{_include:'name'})
+        return managerAccessor.doGet('/tenants',{_include:'name', _get_all_results: true})
             .then((tenants)=>{
                 dispatch(recieveTenants(tenants));
             }).catch((err)=>{
