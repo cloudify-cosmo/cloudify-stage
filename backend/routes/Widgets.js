@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var WidgetHandler = require('../handler/WidgetHandler');
 var _ = require('lodash');
 var passport = require('passport');
+var AuthHandler = require('../handler/AuthHandler');
 
 var router = express.Router();
 
@@ -19,13 +20,22 @@ router.get('/list', function (req, res, next) {
         .catch(next);
 });
 
-router.put('/install', function (req, res, next) {
+function validateInstallWidgetsPermission(req, res, next) {
+    const permissionId = 'stage_install_widgets';
+    var permission = AuthHandler.getRBAC().permissions[permissionId];
+    if(!AuthHandler.isAuthorized(req.user, permission)){
+        res.sendStatus(403);
+    }
+    next();
+}
+
+router.put('/install', validateInstallWidgetsPermission, function (req, res, next) {
     WidgetHandler.installWidget(req.query.url, req.user.username, req)
         .then(data => res.send(data))
         .catch(next);
 });
 
-router.put('/update', function (req, res, next) {
+router.put('/update', validateInstallWidgetsPermission, function (req, res, next) {
     WidgetHandler.updateWidget(req.query.id, req.query.url, req)
         .then(data => res.send(data))
         .catch(next);
@@ -37,7 +47,7 @@ router.get('/:widgetId/used', function (req, res, next) {
         .catch(next);
 });
 
-router.delete('/:widgetId', function (req, res, next) {
+router.delete('/:widgetId', validateInstallWidgetsPermission, function (req, res, next) {
     WidgetHandler.deleteWidget(req.params.widgetId)
         .then(response => res.send({status:'ok'}))
         .catch(next);

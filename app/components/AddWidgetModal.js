@@ -223,7 +223,7 @@ export default class AddWidgetModal extends Component {
                                                 <Item.Meta>{widget.description}</Item.Meta>
                                                 <Item.Description></Item.Description>
                                                 <Item.Extra>
-                                                    {widget.isCustom &&
+                                                    {widget.isCustom && this.props.canInstallWidgets &&
                                                         <div>
                                                             <InstallWidgetModal onWidgetInstalled={this._updateWidget.bind(this,widget)}
                                                                                 trigger={updateWidgetBtn} buttonLabel="Update Widget"
@@ -253,8 +253,8 @@ export default class AddWidgetModal extends Component {
                             </Button>
 
 
-                            <InstallWidgetModal onWidgetInstalled={this.props.onWidgetInstalled} trigger={installWidgetBtn}
-                                                header="Install new widget" buttonLabel="Install Widget"/>
+                            {this.props.canInstallWidgets && <InstallWidgetModal onWidgetInstalled={this.props.onWidgetInstalled} trigger={installWidgetBtn}
+                                                header="Install new widget" buttonLabel="Install Widget"/>}
                         </Button.Group>
                         
                     </Grid.Column>

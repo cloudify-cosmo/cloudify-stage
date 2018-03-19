@@ -88,6 +88,13 @@ class AuthHandler {
         return authorizationCache;
     }
 
+    static isAuthorized(user, authorizedRoles) {
+        var systemRole = user.role;
+        var groupSystemRoles = _.keys(user.group_system_roles);
+
+        var userSystemRoles = _.uniq(_.concat(systemRole, groupSystemRoles));
+        return _.intersection(userSystemRoles, authorizedRoles).length > 0;
+    }
 }
 
 module.exports = AuthHandler;
