@@ -89,7 +89,8 @@ export default class UsersTable extends React.Component {
              this._deactivateUser(user);
         } else if (value === MenuAction.SET_ADMIN_USER_ROLE_ACTION) {
             this._setRole(user, true);
-        } else if (value === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && !this._isCurrentUser(user)) {
+        } else if (value === MenuAction.SET_DEFAULT_USER_ROLE_ACTION &&
+                   (!this._isCurrentUser(user) || this._isUserInAdminGroup(user))) {
             this._setRole(user, false);
         } else {
             this.setState({user, modalType: value, showModal: true});
@@ -106,6 +107,10 @@ export default class UsersTable extends React.Component {
 
     _isCurrentUser(user) {
         return this.props.toolbox.getManager().getCurrentUsername() === user.username;
+    }
+
+    _isUserInAdminGroup(user) {
+        return _.has(user.group_system_roles, Stage.Common.Consts.sysAdminRole);
     }
 
     _deleteUser() {
@@ -128,11 +133,12 @@ export default class UsersTable extends React.Component {
         this.props.toolbox.loading(true);
         this.setState({settingUserRoleLoading: user.username});
 
+        console.error(user);
         var actions = new Actions(this.props.toolbox);
         actions.doSetRole(user.username, changeToSysAdmin ? Stage.Common.Consts.sysAdminRole : Stage.Common.Consts.defaultUserRole).then(()=>{
             this.setState({error: null, settingUserRoleLoading: false});
             this.props.toolbox.loading(false);
-            if (this._isCurrentUser(user) && !changeToSysAdmin) {
+            if (!changeToSysAdmin && this._isCurrentUser(user) && !this._isUserInAdminGroup(user)) {
                 this.props.toolbox.getEventBus().trigger('menu.users:logout');
             } else {
                 this.props.toolbox.refresh();
