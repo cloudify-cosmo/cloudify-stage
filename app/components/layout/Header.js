@@ -42,6 +42,8 @@ export default class Header extends Component {
         if (whiteLabel.enabled) {
             document.title = whiteLabel.pageTitle || 'Cloudify';
         }
+
+        this.props.continueTour();
     }
 
     _isModeMain() {
@@ -57,7 +59,7 @@ export default class Header extends Component {
     }
 
     render() {
-        let {Icon} = Stage.Basic;
+        let {Icon, Button} = Stage.Basic;
 
         return (
             <div className="ui top fixed menu inverted secondary headerBar">
@@ -70,6 +72,7 @@ export default class Header extends Component {
                 />
                 <div className="logo">
                 </div>
+                <Button onClick={this.props.onTourStart}>Take the tour</Button>
 
                 <div className="right menu">
                     {
