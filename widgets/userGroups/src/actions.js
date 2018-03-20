@@ -66,4 +66,27 @@ export default class Actions {
 
         return Promise.all(_.concat(addActions, deleteActions, updateActions));
     }
+
+    isCurrentUserIn(users) {
+        return _.includes(users, this.toolbox.getManager().getCurrentUsername());
+    }
+
+    isUserNotAdmin(username = this.toolbox.getManager().getCurrentUsername()) {
+        return username !== Stage.Common.Consts.adminUsername;
+    }
+
+    isAdminGroup(group) {
+        return group.role === Stage.Common.Consts.sysAdminRole;
+    }
+
+    // Check if user <username> belongs to group <group> and it is the only admin group he belongs to
+    isUserGroupTheOnlyAdminGroup(group, groups, username = this.toolbox.getManager().getCurrentUsername()) {
+        if (_.includes(group.users, username)) {
+            let currentUserAdminGroups = _.filter(groups, g =>
+                _.includes(g.users, username) && (g.role === Stage.Common.Consts.sysAdminRole));
+            return _.size(currentUserAdminGroups) === 1;
+        } else {
+            return false;
+        }
+    }
 }

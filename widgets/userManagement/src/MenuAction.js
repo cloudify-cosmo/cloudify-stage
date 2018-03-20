@@ -10,7 +10,7 @@ export default class MenuAction extends React.Component {
     static DELETE_ACTION='delete';
     static DEACTIVATE_ACTION = 'deactivate';
     static ACTIVATE_ACTION = 'activate';
-    static SET_DEFAULT_USER_ROLE_ACTION = 'set-user-role';
+    static SET_DEFAULT_USER_ROLE_ACTION = 'set-default-role';
     static SET_ADMIN_USER_ROLE_ACTION = 'set-admin-role';
 
     _actionClick(proxy, {name}) {

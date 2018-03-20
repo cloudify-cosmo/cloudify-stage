@@ -107,7 +107,7 @@ export default class GroupsModal extends React.Component {
         return (
         <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
             <Modal.Header>
-                <Icon name="users"/> Modify user groups for {tenant.name}
+                <Icon name="users"/> Edit user groups for {tenant.name}
             </Modal.Header>
 
             <Modal.Content>

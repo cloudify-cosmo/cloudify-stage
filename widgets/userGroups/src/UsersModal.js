@@ -15,7 +15,8 @@ export default class UsersModal extends React.Component {
     static initialState = {
         loading: false,
         users: [],
-        errors: {}
+        errors: {},
+        waitingForConfirmation: false
     }
 
     onApprove () {
@@ -35,14 +36,26 @@ export default class UsersModal extends React.Component {
     }
 
     _submitUsers() {
-        // Disable the form
-        this.setState({loading: true});
-
+        let actions = new Actions(this.props.toolbox);
         let usersToAdd = _.difference(this.state.users, this.props.group.users);
         let usersToRemove = _.difference(this.props.group.users, this.state.users);
 
-        var actions = new Actions(this.props.toolbox);
+        if (!this.state.waitingForConfirmation &&
+            actions.isCurrentUserIn(usersToRemove) &&
+            actions.isAdminGroup(this.props.group) &&
+            actions.isUserNotAdmin() &&
+            actions.isUserGroupTheOnlyAdminGroup(this.props.group, this.props.groups)) {
+            this.setState({waitingForConfirmation: true});
+            return;
+        }
+
+        // Disable the form
+        this.setState({loading: true});
+
         actions.doHandleUsers(this.props.group.name, usersToAdd, usersToRemove).then(()=>{
+            if (this.state.waitingForConfirmation) {
+                this.props.toolbox.getEventBus().trigger('menu.users:logout');
+            }
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('users:refresh');
@@ -54,11 +67,11 @@ export default class UsersModal extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        this.setState({...Stage.Basic.Form.fieldNameValue(field), waitingForConfirmation: false});
     }
 
     render() {
-        var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        var {ApproveButton, CancelButton, Form, Icon, Message, Modal} = Stage.Basic;
 
         var group = Object.assign({},{name:''}, this.props.group);
         var users = Object.assign({},{items:[]}, this.props.users);
@@ -68,10 +81,20 @@ export default class UsersModal extends React.Component {
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
-                    <Icon name="user"/> Add users to group {group.name}
+                    <Icon name="user"/> Edit users for {group.name}
                 </Modal.Header>
 
                 <Modal.Content>
+                    {
+                        this.state.waitingForConfirmation &&
+                        <Message warning onDismiss={() => this.setState({waitingForConfirmation: false})}>
+                            <Message.Header>Confirmation request</Message.Header>
+                            You are about to remove current user from this group.
+                            This action will disable administrative rights for that user.
+                            If you are sure you want to make such change and log out
+                            then press <strong>Save</strong> button once again.
+                        </Message>
+                    }
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
                         <Form.Field>

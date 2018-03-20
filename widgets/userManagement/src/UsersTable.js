@@ -129,16 +129,15 @@ export default class UsersTable extends React.Component {
         });
     }
 
-    _setRole(user, changeToSysAdmin) {
+    _setRole(user, isAdmin) {
         this.props.toolbox.loading(true);
         this.setState({settingUserRoleLoading: user.username});
 
-        console.error(user);
         var actions = new Actions(this.props.toolbox);
-        actions.doSetRole(user.username, changeToSysAdmin ? Stage.Common.Consts.sysAdminRole : Stage.Common.Consts.defaultUserRole).then(()=>{
+        actions.doSetRole(user.username, Stage.Common.RolesUtil.getSystemRole(isAdmin).then(()=>{
             this.setState({error: null, settingUserRoleLoading: false});
             this.props.toolbox.loading(false);
-            if (!changeToSysAdmin && this._isCurrentUser(user) && !this._isUserInAdminGroup(user)) {
+            if (!isAdmin && this._isCurrentUser(user) && !this._isUserInAdminGroup(user)) {
                 this.props.toolbox.getEventBus().trigger('menu.users:logout');
             } else {
                 this.props.toolbox.refresh();
@@ -178,6 +177,7 @@ export default class UsersTable extends React.Component {
                 this.props.toolbox.getEventBus().trigger('menu.users:logout');
             } else {
                 this.props.toolbox.refresh();
+                this.props.toolbox.getEventBus().trigger('userGroups:refresh');
             }
         }).catch((err)=>{
             this.setState({error: err.message, activateLoading: false});
@@ -186,7 +186,7 @@ export default class UsersTable extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, DataTable, Loader, Checkbox, Label, Confirm} = Stage.Basic;
+        let {Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader, Popup} = Stage.Basic;
         let tableName = 'usersTable';
 
         return (
@@ -209,22 +209,36 @@ export default class UsersTable extends React.Component {
                     <DataTable.Column label="" width="5%" />
                     {
                         this.props.data.items.map((item) => {
+
+                            const isAdminCheckbox = (item, disabled) =>
+                                <Checkbox checked={item.isAdmin}
+                                          disabled={disabled || item.username === Stage.Common.Consts.adminUsername}
+                                          onChange={() =>
+                                              item.isAdmin
+                                                  ? this._showModal(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
+                                                  : this._showModal(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
+                                          }
+                                          onClick={(e)=>{e.stopPropagation();}}
+                                />
+
                             return (
                                 <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
                                     <DataTable.Row id={`${tableName}_${item.username}`} key={item.username} selected={item.isSelected} onClick={this._selectUser.bind(this, item.username)}>
                                         <DataTable.Data>{item.username}</DataTable.Data>
                                         <DataTable.Data>{item.last_login_at}</DataTable.Data>
                                         <DataTable.Data className="center aligned">
-                                        {this.state.settingUserRoleLoading === item.username ?
-                                            <Loader active inline size='mini' /> :
-                                            <Checkbox checked={item.isAdmin}
-                                                      onChange={() =>
-                                                          item.isAdmin
-                                                              ? this._showModal(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
-                                                              : this._showModal(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
-                                                      }
-                                                      onClick={(e)=>{e.stopPropagation();}}
-                                            />}
+                                            {this.state.settingUserRoleLoading === item.username
+                                                ? <Loader active inline size='mini'/>
+                                                : this._isUserInAdminGroup(item)
+                                                    ? <Popup>
+                                                        <Popup.Trigger>{isAdminCheckbox(item, true)}</Popup.Trigger>
+                                                        <Popup.Content>
+                                                            User is admin by group association. To remove
+                                                            admin right, remove the user from the group.
+                                                        </Popup.Content>
+                                                    </Popup>
+                                                    : isAdminCheckbox(item, false)
+                                            }
                                         </DataTable.Data>
                                         <DataTable.Data className="center aligned">
                                         {this.state.activateLoading === item.username ? 

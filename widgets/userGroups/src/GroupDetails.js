@@ -13,13 +13,16 @@ export default class UserDetails extends React.Component {
 
         this.state = {
             processing: false,
-            processItem: ''
+            processItem: '',
+            showModal: false,
+            user: ''
         }
     }
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
         data: PropTypes.object.isRequired,
+        groups: PropTypes.array.isRequired,
         onError: PropTypes.func
     };
 
@@ -43,18 +46,38 @@ export default class UserDetails extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doRemoveUserFromGroup(username, this.props.data.name).then(()=>{
+            if (this.state.showModal) {
+                this.props.toolbox.getEventBus().trigger('menu.users:logout');
+            }
+            this.setState({processItem: '', processing: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('users:refresh');
             this.props.toolbox.getEventBus().trigger('tenants:refresh');
-            this.setState({processItem: '', processing: false});
         }).catch((err)=>{
             this.props.onError(err.message);
             this.setState({processItem: '', processing: false});
         });
     }
 
+    _removeUserOrShowModal(username) {
+        var actions = new Actions(this.props.toolbox);
+
+        if (actions.isCurrentUserIn([username]) &&
+            actions.isAdminGroup(this.props.data) &&
+            actions.isUserNotAdmin(username) &&
+            actions.isUserGroupTheOnlyAdminGroup(this.props.data, this.props.groups, username)) {
+            this.setState({user: username, showModal: true});
+        } else {
+            this._removeUser(username);
+        }
+    }
+
+    _hideModal() {
+        this.setState({user: '', showModal: false});
+    }
+
     render() {
-        let {Segment, List, Icon, Message, Divider} = Stage.Basic;
+        let {Confirm, Divider, Icon, List, Message, Segment} = Stage.Basic;
 
         return (
             <Segment.Group horizontal>
@@ -70,7 +93,7 @@ export default class UserDetails extends React.Component {
                                     <List.Item key={item}>
                                         {item}
                                         <Icon link name={processing?'notched circle':'remove'} loading={processing}
-                                              className="right floated" onClick={this._removeUser.bind(this, item)}/>
+                                              className="right floated" onClick={this._removeUserOrShowModal.bind(this, item)}/>
                                     </List.Item>
                                 );
                             })
@@ -100,6 +123,14 @@ export default class UserDetails extends React.Component {
                         {_.isEmpty(this.props.data.tenants) && <Message content="No tenants available"/>}
                     </List>
                 </Segment>
+
+                <Confirm content={`You are about to remove current user from group '${this.props.data.name}'. ` +
+                                  'This action will disable administrative rights for current user. ' +
+                                  'Are you sure you want to make such change and log out?'}
+                         open={this.state.showModal}
+                         onConfirm={this._removeUser.bind(this, this.state.user)}
+                         onCancel={this._hideModal.bind(this)} />
+
             </Segment.Group>
         );
     }

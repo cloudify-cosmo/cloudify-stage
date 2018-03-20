@@ -112,7 +112,7 @@ export default class UsersModal extends React.Component {
         return (
         <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
             <Modal.Header>
-                <Icon name="user"/> Modify users for tenant {tenant.name}
+                <Icon name="user"/> Edit users for tenant {tenant.name}
             </Modal.Header>
 
             <Modal.Content>
