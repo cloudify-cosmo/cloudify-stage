@@ -5,6 +5,12 @@
     "sys_admin": {
       "*": "initial-template-admin"
     },
+    "viewer": {
+      "*": "initial-template-viewer"
+    },
+    "operator": {
+      "*": "initial-template-operator"
+    },
     "user": {
       "*": "initial-template"
     },

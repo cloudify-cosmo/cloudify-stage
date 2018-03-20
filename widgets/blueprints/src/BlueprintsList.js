@@ -26,7 +26,8 @@ export default class BlueprintList extends React.Component {
 
     _selectBlueprint (item){
         if (this.props.widget.configuration.clickToDrillDown) {
-            this.props.toolbox.drillDown(this.props.widget,'blueprint',{blueprintId: item.id}, item.id);
+            this.props.toolbox.drillDown(this.props.widget, this.props.widget.configuration.drillDownPage,
+                                         {blueprintId: item.id}, item.id);
         } else {
             var oldSelectedBlueprintId = this.props.toolbox.getContext().getValue('blueprintId');
             this.props.toolbox.getContext().setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);

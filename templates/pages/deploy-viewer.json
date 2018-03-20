@@ -1,0 +1,26 @@
+{
+  "name": "Deployments",
+  "widgets": [
+    {
+      "name": "Filter",
+      "definition": "filter",
+      "x": 0,
+      "y": 4,
+      "configuration": {
+        "filterByExecutions":false
+      }
+    },
+    {
+      "name": "Deployments",
+      "width": 12,
+      "height": 40,
+      "definition": "deployments",
+      "x": 0,
+      "y": 8,
+      "configuration":{
+        "displayStyle":"list",
+        "drillDownPage":"deployment-viewer"
+      }
+    }
+  ]
+}
