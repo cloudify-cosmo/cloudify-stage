@@ -62,10 +62,7 @@ export default class UserDetails extends React.Component {
     _removeUserOrShowModal(username) {
         var actions = new Actions(this.props.toolbox);
 
-        if (actions.isCurrentUserIn([username]) &&
-            actions.isAdminGroup(this.props.data) &&
-            actions.isUserNotAdmin(username) &&
-            actions.isUserGroupTheOnlyAdminGroup(this.props.data, this.props.groups, username)) {
+        if (actions.isLogoutToBePerformed(this.props.data, this.props.groups, [username])) {
             this.setState({user: username, showModal: true});
         } else {
             this._removeUser(username);

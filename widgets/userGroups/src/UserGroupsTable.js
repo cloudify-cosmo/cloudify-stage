@@ -85,9 +85,7 @@ export default class UserGroupsTable extends React.Component {
             this._getAvailableUsers(value, group);
         } else if (value === MenuAction.DELETE_ACTION ||
                    (value === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION &&
-                    actions.isCurrentUserIn(group.users) &&
-                    actions.isUserNotAdmin() &&
-                    actions.isUserGroupTheOnlyAdminGroup(group, this.props.data.items))) {
+                    actions.isLogoutToBePerformed(group, this.props.data.items, group.users))) {
             this.setState({group, modalType: value, showModal: true});
         } else if (value === MenuAction.SET_ADMIN_GROUP_ROLE_ACTION) {
             this._setRole(group, true);
@@ -98,8 +96,8 @@ export default class UserGroupsTable extends React.Component {
         }
     }
 
-    _hideModal() {
-        this.setState({showModal: false});
+    _hideModal(newState) {
+        this.setState({showModal: false, ...newState});
     }
 
     _handleError(message) {
@@ -111,15 +109,17 @@ export default class UserGroupsTable extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doDelete(this.state.group.name).then(()=>{
-            this._hideModal();
-            this.setState({error: null});
-            this.props.toolbox.loading(false);
-            this.props.toolbox.refresh();
-            this.props.toolbox.getEventBus().trigger('users:refresh');
-            this.props.toolbox.getEventBus().trigger('tenants:refresh');
+            if (actions.isLogoutToBePerformed(this.state.group, this.props.data.items, this.state.group.users)) {
+                this.props.toolbox.getEventBus().trigger('menu.users:logout');
+            } else {
+                this._hideModal({error: null});
+                this.props.toolbox.loading(false);
+                this.props.toolbox.refresh();
+                this.props.toolbox.getEventBus().trigger('users:refresh');
+                this.props.toolbox.getEventBus().trigger('tenants:refresh');
+            }
         }).catch((err)=>{
-            this._hideModal();
-            this.setState({error: err.message});
+            this._hideModal({error: err.message});
             this.props.toolbox.loading(false);
         });
     }
@@ -147,6 +147,7 @@ export default class UserGroupsTable extends React.Component {
 
     render() {
         let {Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader} = Stage.Basic;
+        let actions = new Actions(this.props.toolbox);
 
         return (
             <div>
@@ -159,9 +160,9 @@ export default class UserGroupsTable extends React.Component {
                            sortAscending={this.props.widget.configuration.sortAscending}
                            className="userGroupsTable">
 
-                    <DataTable.Column label="Group" name="name" width="30%" />
+                    <DataTable.Column label="Group" name="name" width="35%" />
                     <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />
-                    <DataTable.Column label="Is admin" name="role" width="15%" />
+                    <DataTable.Column label="Is admin" name="role" width="10%" />
                     <DataTable.Column label="# Users" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
                     <DataTable.Column label="" width="5%" />
@@ -219,14 +220,16 @@ export default class UserGroupsTable extends React.Component {
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
-                <Confirm content={`Are you sure you want to remove group ${this.state.group.name}?`}
+                <Confirm content={actions.isLogoutToBePerformed(this.state.group, this.props.data.items, this.state.group.users)
+                                  ? `Current user is member of ${this.state.group.name} group. ` +
+                                    `Are you sure you want to remove group ${this.state.group.name} and log out?`
+                                  : `Are you sure you want to remove group ${this.state.group.name}?` }
                          open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
                          onConfirm={this._deleteUserGroup.bind(this)}
                          onCancel={this._hideModal.bind(this)} />
 
                 <Confirm content={`Current user is member of admin group '${this.state.group.name}'. ` +
-                                  'You are about to disable administrative rights for this group. ' +
-                                  'Are you sure you want to make such change and log out?'}
+                                  'Are you sure you want to disable administrative rights for this group and log out?'}
                          open={this.state.modalType === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION && this.state.showModal}
                          onConfirm={this._setRole.bind(this, this.state.group, false)}
                          onCancel={this._hideModal.bind(this)} />

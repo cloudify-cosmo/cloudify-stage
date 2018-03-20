@@ -39,12 +39,9 @@ export default class UsersModal extends React.Component {
         let actions = new Actions(this.props.toolbox);
         let usersToAdd = _.difference(this.state.users, this.props.group.users);
         let usersToRemove = _.difference(this.props.group.users, this.state.users);
+        let waitingForConfirmation = this.state.waitingForConfirmation;
 
-        if (!this.state.waitingForConfirmation &&
-            actions.isCurrentUserIn(usersToRemove) &&
-            actions.isAdminGroup(this.props.group) &&
-            actions.isUserNotAdmin() &&
-            actions.isUserGroupTheOnlyAdminGroup(this.props.group, this.props.groups)) {
+        if (!waitingForConfirmation && actions.isLogoutToBePerformed(this.props.group, this.props.groups, usersToRemove)) {
             this.setState({waitingForConfirmation: true});
             return;
         }
@@ -53,7 +50,7 @@ export default class UsersModal extends React.Component {
         this.setState({loading: true});
 
         actions.doHandleUsers(this.props.group.name, usersToAdd, usersToRemove).then(()=>{
-            if (this.state.waitingForConfirmation) {
+            if (waitingForConfirmation) {
                 this.props.toolbox.getEventBus().trigger('menu.users:logout');
             }
             this.setState({errors: {}, loading: false});

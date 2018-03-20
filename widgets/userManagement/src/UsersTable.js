@@ -89,8 +89,7 @@ export default class UsersTable extends React.Component {
              this._deactivateUser(user);
         } else if (value === MenuAction.SET_ADMIN_USER_ROLE_ACTION) {
             this._setRole(user, true);
-        } else if (value === MenuAction.SET_DEFAULT_USER_ROLE_ACTION &&
-                   (!this._isCurrentUser(user) || this._isUserInAdminGroup(user))) {
+        } else if (value === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && !this._isCurrentUser(user)) {
             this._setRole(user, false);
         } else {
             this.setState({user, modalType: value, showModal: true});
@@ -134,10 +133,10 @@ export default class UsersTable extends React.Component {
         this.setState({settingUserRoleLoading: user.username});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doSetRole(user.username, Stage.Common.RolesUtil.getSystemRole(isAdmin).then(()=>{
+        actions.doSetRole(user.username, Stage.Common.RolesUtil.getSystemRole(isAdmin)).then(()=>{
             this.setState({error: null, settingUserRoleLoading: false});
             this.props.toolbox.loading(false);
-            if (!isAdmin && this._isCurrentUser(user) && !this._isUserInAdminGroup(user)) {
+            if (this._isCurrentUser(user) && !isAdmin) {
                 this.props.toolbox.getEventBus().trigger('menu.users:logout');
             } else {
                 this.props.toolbox.refresh();
@@ -146,12 +145,11 @@ export default class UsersTable extends React.Component {
             this.setState({error: err.message, settingUserRoleLoading: false});
             this.props.toolbox.loading(false);
         });
-
     }
 
     _activateUser(user) {
         this.props.toolbox.loading(true);
-        this.setState({activateLoading: user.username})
+        this.setState({activateLoading: user.username});
 
         var actions = new Actions(this.props.toolbox);
         actions.doActivate(user.username).then(()=>{
@@ -167,7 +165,7 @@ export default class UsersTable extends React.Component {
 
     _deactivateUser(user) {
         this.props.toolbox.loading(true);
-        this.setState({activateLoading: user.username})
+        this.setState({activateLoading: user.username});
 
         var actions = new Actions(this.props.toolbox);
         actions.doDeactivate(user.username).then(()=>{
@@ -200,9 +198,9 @@ export default class UsersTable extends React.Component {
                            sortAscending={this.props.widget.configuration.sortAscending}
                            className={tableName}>
 
-                    <DataTable.Column label="Username" name="username" width="32%" />
+                    <DataTable.Column label="Username" name="username" width="37%" />
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />
-                    <DataTable.Column label="Is admin" width="15%" />
+                    <DataTable.Column label="Is admin" width="10%" />
                     <DataTable.Column label="Is active" name="active" width="10%" />
                     <DataTable.Column label="# Groups" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />

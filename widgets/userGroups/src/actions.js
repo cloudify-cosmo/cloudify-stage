@@ -6,6 +6,8 @@ export default class Actions {
 
     constructor(toolbox) {
         this.toolbox = toolbox;
+        this.currentUsername = toolbox.getManager().getCurrentUsername();
+        this.currentUserRole = toolbox.getManager().getCurrentUserRole();
     }
 
     doCreate(groupName, ldapGroup, role) {
@@ -67,20 +69,20 @@ export default class Actions {
         return Promise.all(_.concat(addActions, deleteActions, updateActions));
     }
 
-    isCurrentUserIn(users) {
-        return _.includes(users, this.toolbox.getManager().getCurrentUsername());
+    _isUserIn(users, username = this.currentUsername) {
+        return _.includes(users, username);
     }
 
-    isUserNotAdmin(username = this.toolbox.getManager().getCurrentUsername()) {
-        return username !== Stage.Common.Consts.adminUsername;
+    _hasCurrentUserAdminRole() {
+        return this.currentUserRole === Stage.Common.Consts.sysAdminRole;
     }
 
-    isAdminGroup(group) {
+    _isAdminGroup(group) {
         return group.role === Stage.Common.Consts.sysAdminRole;
     }
 
     // Check if user <username> belongs to group <group> and it is the only admin group he belongs to
-    isUserGroupTheOnlyAdminGroup(group, groups, username = this.toolbox.getManager().getCurrentUsername()) {
+    _isUserGroupTheOnlyAdminGroup(group, groups, username = this.currentUsername) {
         if (_.includes(group.users, username)) {
             let currentUserAdminGroups = _.filter(groups, g =>
                 _.includes(g.users, username) && (g.role === Stage.Common.Consts.sysAdminRole));
@@ -88,5 +90,16 @@ export default class Actions {
         } else {
             return false;
         }
+    }
+
+    // Check if user <username> is in <users>
+    //          user <username> does not have admin role
+    //          group <group> has admin rights
+    //          user <username> belongs to group <group> as the only admin group
+    isLogoutToBePerformed(group, groups, users, username = this.currentUsername) {
+        return this._isUserIn(users, username) &&
+               !this._hasCurrentUserAdminRole() &&
+               this._isAdminGroup(group) &&
+               this._isUserGroupTheOnlyAdminGroup(group, groups, username);
     }
 }
