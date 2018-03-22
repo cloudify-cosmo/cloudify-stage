@@ -27,7 +27,7 @@
                 "on_failure": true,
                 "on_error": true
             },
-            "end_session_on_fail" : true,
+            "end_session_on_fail" : false,
             "desiredCapabilities": {
                 "browserName": "chrome",
                 "marionette": true,
