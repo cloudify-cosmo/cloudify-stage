@@ -137,13 +137,6 @@ module.exports = {
     },
 
     after(client) {
-        client
-            .getLogTypes(function(result) {
-                console.log(result);
-            })
-            .getLog('browser', function(result) {
-                console.log(result);
-            })
-            .end();
+        client.end();
     }
 };
