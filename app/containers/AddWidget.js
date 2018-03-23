@@ -9,17 +9,20 @@ import {addWidget, installWidget, uninstallWidget, updateWidget, checkIfWidgetIs
 import {addPageWidget} from '../actions/templateManagement';
 import AddWidgetModal from '../components/AddWidgetModal';
 import stageUtils from '../utils/stageUtils';
+import Consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
 
     var widgetDefinitions = state.widgetDefinitions.filter((definition) => {
         return stageUtils.isUserAuthorized(definition.permission, state.manager);
     });
+    var canInstallWidgets = stageUtils.isUserAuthorized(Consts.permissions.STAGE_INSTALL_WIDGETS, state.manager);
 
     return {
         widgetDefinitions: widgetDefinitions,
         pageId: ownProps.pageId,
-        pageManagementMode: ownProps.pageManagementMode
+        pageManagementMode: ownProps.pageManagementMode,
+        canInstallWidgets
     }
 };
 

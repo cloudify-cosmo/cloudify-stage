@@ -11,6 +11,7 @@ export default {
     permissions: {
         STAGE_SERVICES_STATUS: 'stage_services_status',
         STAGE_EDIT_MODE: 'stage_edit_mode',
+        STAGE_INSTALL_WIDGETS: 'stage_install_widgets',
         STAGE_MAINTENANCE_MODE: 'stage_maintenance_mode',
         STAGE_CONFIGURE: 'stage_configure',
         STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management',
