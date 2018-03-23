@@ -227,7 +227,7 @@ export default class UsersTable extends React.Component {
                                         <DataTable.Data className="center aligned">
                                             {this.state.settingUserRoleLoading === item.username
                                                 ? <Loader active inline size='mini'/>
-                                                : this._isUserInAdminGroup(item)
+                                                : this._isUserInAdminGroup(item) && item.username !== Stage.Common.Consts.adminUsername
                                                     ? <Popup>
                                                         <Popup.Trigger>{isAdminCheckbox(item, true)}</Popup.Trigger>
                                                         <Popup.Content>
