@@ -26,11 +26,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
-          name: Create widget bundle files
-          command: grunt build
-
-      - run:
-          name: Create application bundle file
+          name: Build application
           command: npm run build
 
       - run:
@@ -43,4 +39,4 @@ jobs:
 
       - run:
           name: Check bundle size
-          command: npm run prodtest
+          command: npm run size
