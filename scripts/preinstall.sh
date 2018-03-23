@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -x
 
-
 if [ -z ${CIRCLE_BUILD_NUM} ]; then
 NPM_GLOBAL_INSTALL_PREFIX="sudo"; # Run as sudo in Jenkins
 else
