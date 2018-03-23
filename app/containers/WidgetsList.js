@@ -11,7 +11,7 @@ const mapStateToProps = (state, ownProps) => {
     let widgets = ownProps.widgets;
 
     if (!_.isEmpty(widgets)) {
-        widgets = widgets.filter((widget) => stageUtils.isUserAuthorized(widget.definition.permission, manager));
+        widgets = widgets.filter((widget) => widget.definition && stageUtils.isUserAuthorized(widget.definition.permission, manager));
     }
 
     return {
