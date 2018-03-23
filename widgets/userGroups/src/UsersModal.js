@@ -86,10 +86,10 @@ export default class UsersModal extends React.Component {
                         this.state.waitingForConfirmation &&
                         <Message warning onDismiss={() => this.setState({waitingForConfirmation: false})}>
                             <Message.Header>Confirmation request</Message.Header>
-                            You are about to remove current user from this group.
-                            This action will disable administrative rights for that user.
-                            If you are sure you want to make such change and log out
-                            then press <strong>Save</strong> button once again.
+                            You are about to remove yourself from this group.
+                            Your administrative privileges will be removed
+                            and you will be logged out of the system so the changes take effect.
+                            Are you sure you want to continue?
                         </Message>
                     }
                     <Form loading={this.state.loading} errors={this.state.errors}
@@ -102,8 +102,10 @@ export default class UsersModal extends React.Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} icon="user" color="green"/>
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading}
+                                  content={this.state.waitingForConfirmation ? 'No' : undefined} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} icon="user" color="green"
+                                   content={this.state.waitingForConfirmation ? 'Yes' : undefined} />
                 </Modal.Actions>
             </Modal>
         );

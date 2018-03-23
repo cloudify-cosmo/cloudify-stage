@@ -200,8 +200,8 @@ export default class UsersTable extends React.Component {
 
                     <DataTable.Column label="Username" name="username" width="37%" />
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />
-                    <DataTable.Column label="Is admin" width="10%" />
-                    <DataTable.Column label="Is active" name="active" width="10%" />
+                    <DataTable.Column label="Admin" width="10%" />
+                    <DataTable.Column label="Active" name="active" width="10%" />
                     <DataTable.Column label="# Groups" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
                     <DataTable.Column label="" width="5%" />
@@ -231,8 +231,8 @@ export default class UsersTable extends React.Component {
                                                     ? <Popup>
                                                         <Popup.Trigger>{isAdminCheckbox(item, true)}</Popup.Trigger>
                                                         <Popup.Content>
-                                                            User is admin by group association. To remove
-                                                            admin right, remove the user from the group.
+                                                            To remove the administrator privileges for this user,
+                                                            remove the user from the group that is assigned administrator privileges.
                                                         </Popup.Content>
                                                     </Popup>
                                                     : isAdminCheckbox(item, false)
@@ -294,7 +294,8 @@ export default class UsersTable extends React.Component {
                          onConfirm={this._deleteUser.bind(this)}
                          onCancel={this._hideModal.bind(this)} />
 
-                <Confirm content='Are you sure you want to disable administrative rights for current user and log out?'
+                <Confirm content={'Are you sure you want to remove your administrator privileges? ' +
+                                  'You will be logged out of the system so the changes take effect.'}
                          open={this.state.modalType === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && this.state.showModal}
                          onConfirm={this._setRole.bind(this, this.state.user, false)}
                          onCancel={this._hideModal.bind(this)} />

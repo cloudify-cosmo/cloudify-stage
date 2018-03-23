@@ -92,7 +92,7 @@ export default class CreateModal extends React.Component {
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.isAdmin}>
-                            <Form.Checkbox label="Is admin" name="isAdmin" checked={this.state.isAdmin}
+                            <Form.Checkbox label="Admin" name="isAdmin" checked={this.state.isAdmin}
                                            onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 

@@ -162,7 +162,7 @@ export default class UserGroupsTable extends React.Component {
 
                     <DataTable.Column label="Group" name="name" width="35%" />
                     <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />
-                    <DataTable.Column label="Is admin" name="role" width="10%" />
+                    <DataTable.Column label="Admin" name="role" width="10%" />
                     <DataTable.Column label="# Users" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
                     <DataTable.Column label="" width="5%" />
@@ -220,16 +220,14 @@ export default class UserGroupsTable extends React.Component {
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
-                <Confirm content={actions.isLogoutToBePerformed(this.state.group, this.props.data.items, this.state.group.users)
-                                  ? `Current user is member of ${this.state.group.name} group. ` +
-                                    `Are you sure you want to remove group ${this.state.group.name} and log out?`
-                                  : `Are you sure you want to remove group ${this.state.group.name}?` }
+                <Confirm content={`Are you sure you want to remove group ${this.state.group.name}?`}
                          open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
                          onConfirm={this._deleteUserGroup.bind(this)}
                          onCancel={this._hideModal.bind(this)} />
 
-                <Confirm content={`Current user is member of admin group '${this.state.group.name}'. ` +
-                                  'Are you sure you want to disable administrative rights for this group and log out?'}
+                <Confirm content={`You have administrator privileges from the '${this.state.group.name}' group. ` +
+                                  'Are you sure you want to remove administrator privileges from this group? ' +
+                                  'You will be logged out of the system so the changes take effect.'}
                          open={this.state.modalType === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION && this.state.showModal}
                          onConfirm={this._setRole.bind(this, this.state.group, false)}
                          onCancel={this._hideModal.bind(this)} />

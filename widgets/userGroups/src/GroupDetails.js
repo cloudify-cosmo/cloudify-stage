@@ -121,9 +121,9 @@ export default class UserDetails extends React.Component {
                     </List>
                 </Segment>
 
-                <Confirm content={`You are about to remove current user from group '${this.props.data.name}'. ` +
-                                  'This action will disable administrative rights for current user. ' +
-                                  'Are you sure you want to make such change and log out?'}
+                <Confirm content={`You have administrator privileges from the '${this.props.data.name}' group.` +
+                                  'Are you sure you want to remove yourself from this group? ' +
+                                  'You will be logged out of the system so the changes take effect.'}
                          open={this.state.showModal}
                          onConfirm={this._removeUser.bind(this, this.state.user)}
                          onCancel={this._hideModal.bind(this)} />
