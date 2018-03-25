@@ -14,6 +14,7 @@ import FormInputDate from './InputDate';
 import FormInputTime from './InputTime';
 import FormDropdown from '../Dropdown';
 import FormTable from './EdiTable';
+import FormColorPicker from './ColorPicker';
 import '../../styles/Form.css';
 
 /**
@@ -133,6 +134,11 @@ export default class Form extends Component {
      * Form table input, see {@link EdiTable}
      */
     static Table = FormTable;
+
+    /**
+     * Form color picker input, see {@link ColorPicker}
+     */
+    static ColorPicker = FormColorPicker;
 
     /**
      * propTypes
