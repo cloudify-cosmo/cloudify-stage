@@ -15,7 +15,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(5)
+        Stage.GenericConfig.POLLING_TIME_CONFIG(30)
     ],
     fetchUrl: '[manager]/node-instances?state=started&_include=id&_sort=deployment_id&_size=1',
 

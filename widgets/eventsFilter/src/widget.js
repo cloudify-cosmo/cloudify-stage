@@ -31,7 +31,7 @@ Stage.defineWidget({
     isReact: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('eventsFilter'),
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(5)
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10)
     ],
 
     _processData(blueprintId,deploymentId,data) {

@@ -12,7 +12,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
     
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(2)
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10)
     ],
 
     fetchData: function(widget,toolbox) {
