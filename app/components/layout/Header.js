@@ -72,7 +72,6 @@ export default class Header extends Component {
                 />
                 <div className="logo">
                 </div>
-                <Button onClick={this.props.onTourStart}>Take the tour</Button>
 
                 <div className="right menu">
                     {

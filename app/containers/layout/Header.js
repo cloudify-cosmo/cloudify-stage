@@ -6,7 +6,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Header from '../../components/layout/Header';
 import {resetPagesForTenant} from '../../actions/userApp';
-import {firstTour, continueTour} from '../../actions/tour'
+import {welcomeTour, continueTour} from '../../actions/tour'
 
 import {toogleSidebar} from '../../actions/app';
 
@@ -28,9 +28,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onSidebarOpen(){
             dispatch(toogleSidebar());
-        },
-        onTourStart: () => {
-           dispatch(firstTour());
         },
         continueTour: () => {
             dispatch(continueTour());

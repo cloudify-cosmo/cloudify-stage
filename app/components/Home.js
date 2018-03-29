@@ -6,6 +6,7 @@ import React, { Component, PropTypes } from 'react';
 
 import SideBar from '../containers/SideBar';
 import Page from '../containers/Page';
+import TourDimmer from '../containers/TourDimmer';
 
 export default class Home extends Component {
 
@@ -66,6 +67,7 @@ export default class Home extends Component {
                         <Page pageId={pageId} pageName={this.props.params.pageName}/>
                     </div>
                 </div>
+                <TourDimmer></TourDimmer>
             </div>
         );
     }
