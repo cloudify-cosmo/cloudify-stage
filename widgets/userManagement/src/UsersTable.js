@@ -19,7 +19,9 @@ export default class UsersTable extends React.Component {
             modalType: '',
             user: {},
             tenants: {},
-            groups: {}
+            groups: {},
+            activateLoading: false,
+            settingUserRoleLoading: false
         }
     }
 
@@ -85,6 +87,10 @@ export default class UsersTable extends React.Component {
             this._activateUser(user);
         } else if (value === MenuAction.DEACTIVATE_ACTION && !this._isCurrentUser(user)) {
              this._deactivateUser(user);
+        } else if (value === MenuAction.SET_ADMIN_USER_ROLE_ACTION) {
+            this._setRole(user, true);
+        } else if (value === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && !this._isCurrentUser(user)) {
+            this._setRole(user, false);
         } else {
             this.setState({user, modalType: value, showModal: true});
         }
@@ -100,6 +106,10 @@ export default class UsersTable extends React.Component {
 
     _isCurrentUser(user) {
         return this.props.toolbox.getManager().getCurrentUsername() === user.username;
+    }
+
+    _isUserInAdminGroup(user) {
+        return _.has(user.group_system_roles, Stage.Common.Consts.sysAdminRole);
     }
 
     _deleteUser() {
@@ -118,19 +128,32 @@ export default class UsersTable extends React.Component {
         });
     }
 
-    componentWillReceiveProps(nextProps){
-        if(!_.isEqual(this.props.data, nextProps.data)){
-            this.setState({activateLoading: false});
-        }    
+    _setRole(user, isAdmin) {
+        this.props.toolbox.loading(true);
+        this.setState({settingUserRoleLoading: user.username});
+
+        var actions = new Actions(this.props.toolbox);
+        actions.doSetRole(user.username, Stage.Common.RolesUtil.getSystemRole(isAdmin)).then(()=>{
+            this.setState({error: null, settingUserRoleLoading: false});
+            this.props.toolbox.loading(false);
+            if (this._isCurrentUser(user) && !isAdmin) {
+                this.props.toolbox.getEventBus().trigger('menu.users:logout');
+            } else {
+                this.props.toolbox.refresh();
+            }
+        }).catch((err)=>{
+            this.setState({error: err.message, settingUserRoleLoading: false});
+            this.props.toolbox.loading(false);
+        });
     }
-    
+
     _activateUser(user) {
         this.props.toolbox.loading(true);
-        this.setState({activateLoading: user.username})
+        this.setState({activateLoading: user.username});
 
         var actions = new Actions(this.props.toolbox);
         actions.doActivate(user.username).then(()=>{
-            this.setState({error: null});
+            this.setState({error: null, activateLoading: false});
             this.props.toolbox.loading(false);
             this.props.toolbox.refresh();
         }).catch((err)=>{
@@ -142,16 +165,17 @@ export default class UsersTable extends React.Component {
 
     _deactivateUser(user) {
         this.props.toolbox.loading(true);
-        this.setState({activateLoading: user.username})
+        this.setState({activateLoading: user.username});
 
         var actions = new Actions(this.props.toolbox);
         actions.doDeactivate(user.username).then(()=>{
-            this.setState({error: null});
+            this.setState({error: null, activateLoading: false});
             this.props.toolbox.loading(false);
             if (this._isCurrentUser(user)) {
                 this.props.toolbox.getEventBus().trigger('menu.users:logout');
             } else {
                 this.props.toolbox.refresh();
+                this.props.toolbox.getEventBus().trigger('userGroups:refresh');
             }
         }).catch((err)=>{
             this.setState({error: err.message, activateLoading: false});
@@ -160,10 +184,8 @@ export default class UsersTable extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, DataTable, Loader, Checkbox, Label, Confirm} = Stage.Basic;
-        let RoleModal = Stage.Common.RoleModal;
+        let {Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader, Popup} = Stage.Basic;
         let tableName = 'usersTable';
-        let actions = new Actions(this.props.toolbox);
 
         return (
             <div>
@@ -176,26 +198,49 @@ export default class UsersTable extends React.Component {
                            sortAscending={this.props.widget.configuration.sortAscending}
                            className={tableName}>
 
-                    <DataTable.Column label="Username" name="username" width="32%" />
+                    <DataTable.Column label="Username" name="username" width="37%" />
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />
-                    <DataTable.Column label="Is admin" width="15%" />
-                    <DataTable.Column label="Is active" name="active" width="10%" />
+                    <DataTable.Column label="Admin" width="10%" />
+                    <DataTable.Column label="Active" name="active" width="10%" />
                     <DataTable.Column label="# Groups" width="10%" />
                     <DataTable.Column label="# Tenants" width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {
                         this.props.data.items.map((item) => {
+
+                            const isAdminCheckbox = (item, disabled) =>
+                                <Checkbox checked={item.isAdmin}
+                                          disabled={disabled || item.username === Stage.Common.Consts.adminUsername}
+                                          onChange={() =>
+                                              item.isAdmin
+                                                  ? this._showModal(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
+                                                  : this._showModal(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
+                                          }
+                                          onClick={(e)=>{e.stopPropagation();}}
+                                />
+
                             return (
                                 <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
                                     <DataTable.Row id={`${tableName}_${item.username}`} key={item.username} selected={item.isSelected} onClick={this._selectUser.bind(this, item.username)}>
                                         <DataTable.Data>{item.username}</DataTable.Data>
                                         <DataTable.Data>{item.last_login_at}</DataTable.Data>
                                         <DataTable.Data className="center aligned">
-                                            <Checkbox disabled checked={item.isAdmin} />
+                                            {this.state.settingUserRoleLoading === item.username
+                                                ? <Loader active inline size='mini'/>
+                                                : this._isUserInAdminGroup(item) && item.username !== Stage.Common.Consts.adminUsername
+                                                    ? <Popup>
+                                                        <Popup.Trigger>{isAdminCheckbox(item, true)}</Popup.Trigger>
+                                                        <Popup.Content>
+                                                            To remove the administrator privileges for this user,
+                                                            remove the user from the group that is assigned administrator privileges.
+                                                        </Popup.Content>
+                                                    </Popup>
+                                                    : isAdminCheckbox(item, false)
+                                            }
                                         </DataTable.Data>
                                         <DataTable.Data className="center aligned">
                                         {this.state.activateLoading === item.username ? 
-                                            <Loader active inline size='mini'></Loader> :
+                                            <Loader active inline size='mini' /> :
                                             <Checkbox 
                                                 checked={item.active}
                                                 onChange={() => 
@@ -230,14 +275,6 @@ export default class UsersTable extends React.Component {
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
 
-                <RoleModal
-                    open={this.state.modalType === MenuAction.SET_ROLE_ACTION && this.state.showModal}
-                    roles={this.props.roles}
-                    resource={{role: this.state.user.role, name: this.state.user.username}}
-                    onSetRole={actions.doSetRole}
-                    onHide={this._hideModal.bind(this)}
-                    toolbox={this.props.toolbox}/>
-
                 <TenantModal
                     open={this.state.modalType === MenuAction.EDIT_TENANTS_ACTION && this.state.showModal}
                     user={this.state.user}
@@ -255,6 +292,12 @@ export default class UsersTable extends React.Component {
                 <Confirm content={`Are you sure you want to remove user ${this.state.user.username}?`}
                          open={this.state.modalType === MenuAction.DELETE_ACTION && this.state.showModal}
                          onConfirm={this._deleteUser.bind(this)}
+                         onCancel={this._hideModal.bind(this)} />
+
+                <Confirm content={'Are you sure you want to remove your administrator privileges? ' +
+                                  'You will be logged out of the system so the changes take effect.'}
+                         open={this.state.modalType === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && this.state.showModal}
+                         onConfirm={this._setRole.bind(this, this.state.user, false)}
                          onCancel={this._hideModal.bind(this)} />
 
                 <Confirm content='Are you sure you want to deactivate current user and log out?'

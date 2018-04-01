@@ -36,7 +36,9 @@ Stage.defineWidget({
                 return Object.assign({}, item, {
                     userCount: item.users.length,
                     tenantCount: _.size(item.tenants),
-                    isSelected: item.name === selectedUserGroup
+                    isSelected: item.name === selectedUserGroup,
+                    isAdmin: item.role === Stage.Common.Consts.sysAdminRole ||
+                             _.has(item.group_system_roles, Stage.Common.Consts.sysAdminRole)
                 })
             }),
             total : _.get(data, 'metadata.pagination.total', 0)

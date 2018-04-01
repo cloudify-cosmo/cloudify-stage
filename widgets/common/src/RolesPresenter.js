@@ -12,7 +12,7 @@ export default class RolesPresenter extends React.Component {
     }
 
     static propTypes = {
-        groupRoles: PropTypes.object.isRequired,
+        groupRoles: PropTypes.object,
         directRole: PropTypes.string
     };
 

@@ -15,7 +15,8 @@ export default class UsersModal extends React.Component {
     static initialState = {
         loading: false,
         users: [],
-        errors: {}
+        errors: {},
+        waitingForConfirmation: false
     }
 
     onApprove () {
@@ -35,14 +36,23 @@ export default class UsersModal extends React.Component {
     }
 
     _submitUsers() {
+        let actions = new Actions(this.props.toolbox);
+        let usersToAdd = _.difference(this.state.users, this.props.group.users);
+        let usersToRemove = _.difference(this.props.group.users, this.state.users);
+        let waitingForConfirmation = this.state.waitingForConfirmation;
+
+        if (!waitingForConfirmation && actions.isLogoutToBePerformed(this.props.group, this.props.groups, usersToRemove)) {
+            this.setState({waitingForConfirmation: true});
+            return;
+        }
+
         // Disable the form
         this.setState({loading: true});
 
-        let usersToAdd = _.difference(this.state.users, this.props.group.users);
-        let usersToRemove = _.difference(this.props.group.users, this.state.users);
-
-        var actions = new Actions(this.props.toolbox);
         actions.doHandleUsers(this.props.group.name, usersToAdd, usersToRemove).then(()=>{
+            if (waitingForConfirmation) {
+                this.props.toolbox.getEventBus().trigger('menu.users:logout');
+            }
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('users:refresh');
@@ -54,11 +64,11 @@ export default class UsersModal extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        this.setState({...Stage.Basic.Form.fieldNameValue(field), waitingForConfirmation: false});
     }
 
     render() {
-        var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        var {ApproveButton, CancelButton, Form, Icon, Message, Modal} = Stage.Basic;
 
         var group = Object.assign({},{name:''}, this.props.group);
         var users = Object.assign({},{items:[]}, this.props.users);
@@ -68,10 +78,20 @@ export default class UsersModal extends React.Component {
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
-                    <Icon name="user"/> Add users to group {group.name}
+                    <Icon name="user"/> Edit users for {group.name}
                 </Modal.Header>
 
                 <Modal.Content>
+                    {
+                        this.state.waitingForConfirmation &&
+                        <Message warning onDismiss={() => this.setState({waitingForConfirmation: false})}>
+                            <Message.Header>Confirmation request</Message.Header>
+                            You are about to remove yourself from this group.
+                            Your administrative privileges will be removed
+                            and you will be logged out of the system so the changes take effect.
+                            Are you sure you want to continue?
+                        </Message>
+                    }
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
                         <Form.Field>
@@ -82,8 +102,10 @@ export default class UsersModal extends React.Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} icon="user" color="green"/>
+                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading}
+                                  content={this.state.waitingForConfirmation ? 'No' : undefined} />
+                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} icon="user" color="green"
+                                   content={this.state.waitingForConfirmation ? 'Yes' : undefined} />
                 </Modal.Actions>
             </Modal>
         );
