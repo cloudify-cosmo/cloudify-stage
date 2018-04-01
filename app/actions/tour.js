@@ -70,6 +70,60 @@ var tours = [
                 arrowOffset: 250
             }
         ]
+    },
+    {
+        id: "new-deployment",
+        steps: [
+            {
+                title: "Let’s deploy some blueprints!",
+                content: "Here we go. Grab yourself a blueprint from the catalog, upload it to the local collection of blueprints (Upload? Whatever..), and deploy the blueprint to a… wait for it… DEPLOYMENT!",
+                target: ".tourButton",
+                placement: "bottom",
+            },
+            {
+                title: "Catalog of blueprints in the sky",
+                content: "This is the catalog of blueprints. It’s a list of blueprints stored in the cloud that you can use in your manager. Don’t be confused. These blueprints aren’t actually on the manager until you click Upload. So obvious, right?",
+                target: ".blueprintCatalogWidget",
+                placement: "top",
+                width: 350
+            },
+            {
+                title: "Upload the blueprint to the manager",
+                content: "When you click this button, a galactic star command fleet is ordered to capture the blueprint from the evil Cloud Master and return it to its rightful place in the manager storage. And if you believe that...",
+                target: ".uploadButton",
+                placement: "top",
+                multipage: true,
+                onNext: () => {
+                    window.location = "/stage/page/local_blueprints"
+                }
+            },
+            {
+                title: "List of local blueprints",
+                content: "The list of blueprints shows the name and icon of each blueprint, its visibility level, creation date, update date, creator, name of main blueprint .yaml file and the number of deployments created from it.",
+                target: ".blueprintsWidget",
+                placement: "top",
+                delay: 200,
+            },
+            {
+                title: "Where are my deployments?",
+                content: "When you click on Deploy, you need to enter the input values for the deployment, or else you are mocked by the crowd that’s watching on reality TV. Are you ready?",
+                target: ".deployButton",
+                placement: "top",
+                multipage: true,
+                onNext: () => {
+                    window.location = "/stage/page/deployments"
+                }
+            },
+            {
+                title: "Here are your deployments",
+                content: `There you have it -- Deployments! Are you happy now? Isn’t that what you wanted this whole time?
+                Those are the basics of deploying. Anything more complicated than that is extra charge. Payment is accepted in dollars, sterling, bitcoin, or any other current or future currency.
+                Have fun!`,
+                target: ".deploymentsWidget",
+                placement: "top",
+                delay: 200
+            }
+        ]
     }
 ];
 
@@ -80,6 +134,12 @@ function getTourById(tourId) {
 export function welcomeTour() {
     return function (dispatch) {
         hopscotch.startTour(getTourById('hello-cloudify'));
+    }
+}
+
+export function newDeploymentTour() {
+    return function (dispatch) {
+        hopscotch.startTour(getTourById('new-deployment'));
     }
 }
 

@@ -89,7 +89,7 @@ export default class BlueprintsCatalog extends React.Component{
                             <Button icon="trash" content="Delete" className="icon" basic
                                     onClick={(event)=>{event.stopPropagation(); this.props.onDeleteBlueprint(item)}}/>
 
-                            <Button icon="rocket" content="Deploy" className="labeled icon"
+                            <Button icon="rocket" content="Deploy" className="labeled icon deployButton"
                                     onClick={(event)=>{event.stopPropagation(); this.props.onCreateDeployment(item)}}/>
                         </div>
 

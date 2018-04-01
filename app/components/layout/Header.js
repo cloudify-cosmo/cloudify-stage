@@ -72,6 +72,7 @@ export default class Header extends Component {
                 />
                 <div className="logo">
                 </div>
+                <Button onClick={this.props.onTourStart} className="tourButton" primary size="tiny" icon labelPosition='right'>Take the tour<Icon name='university'/></Button>
 
                 <div className="right menu">
                     {
