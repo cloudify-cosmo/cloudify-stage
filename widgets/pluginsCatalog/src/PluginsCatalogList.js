@@ -23,6 +23,12 @@ export default class PluginsCatalogList extends React.Component {
     };
   }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props.widget, nextProps.widget)
+            || !_.isEqual(this.state, nextState)
+            || !_.isEqual(this.props.data, nextProps.data);
+    }
+
   /*
   |--------------------------------------------------------------------------
   | Custom Events
