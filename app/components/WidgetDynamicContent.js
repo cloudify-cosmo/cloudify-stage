@@ -180,10 +180,9 @@ export default class WidgetDynamicContent extends Component {
 
     // In component will mount fetch the data if needed
     componentDidMount() {
-        $(window).on('focus', this._startPolling.bind(this));
-        $(window).on('blur', this._stopPolling.bind(this));
 
         this.mounted = true;
+        this._startPolling();
 
         console.log(`Widget '${this.props.widget.name}' mounted`);
 
@@ -192,11 +191,8 @@ export default class WidgetDynamicContent extends Component {
     }
 
     componentWillUnmount() {
-        $(window).off('focus', this._startPolling.bind(this));
-        $(window).off('blur', this._stopPolling.bind(this));
 
         this.mounted = false;
-
         this._stopPolling();
 
         console.log(`Widget '${this.props.widget.name}' unmounts`);
