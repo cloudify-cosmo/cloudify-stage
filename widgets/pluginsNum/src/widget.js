@@ -15,7 +15,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(5)
+        Stage.GenericConfig.POLLING_TIME_CONFIG(30)
     ],
     fetchUrl: '[manager]/plugins?_include=id&_size=1',
 

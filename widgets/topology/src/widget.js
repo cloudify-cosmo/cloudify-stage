@@ -18,7 +18,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
     
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(2),
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {id: 'enableNodeClick', name: 'Enable node click', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: 'enableGroupClick', name: 'Enable group click', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: 'enableZoom', name: 'Enable zoom', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},

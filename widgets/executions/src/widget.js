@@ -18,7 +18,7 @@ Stage.defineWidget({
     
     initialConfiguration:
         [
-            Stage.GenericConfig.POLLING_TIME_CONFIG(2),
+            Stage.GenericConfig.POLLING_TIME_CONFIG(5),
             Stage.GenericConfig.PAGE_SIZE_CONFIG(),
             {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
                 items: ["Blueprint","Deployment","Workflow","Id","Created","Creator","IsSystem","Params","Status"],

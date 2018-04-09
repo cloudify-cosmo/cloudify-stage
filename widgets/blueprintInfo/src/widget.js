@@ -17,7 +17,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
 
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(2),
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {id: "blueprintId", name: "Blueprint ID", placeHolder: "Enter the blueprint id you wish to show info", type: Stage.Basic.GenericField.STRING_TYPE}
     ],
 

@@ -16,7 +16,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(5),
+        Stage.GenericConfig.POLLING_TIME_CONFIG(30),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         Stage.GenericConfig.SORT_COLUMN_CONFIG('name'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
