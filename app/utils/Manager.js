@@ -19,6 +19,10 @@ export default class Manager extends Internal {
         return _.get(this,'_data.username', null);
     }
 
+    getCurrentUserRole() {
+        return _.get(this,'_data.auth.role', null);
+    }
+
     getManagerUrl(url,data) {
         return this._buildActualUrl(url,data);
     }

@@ -15,7 +15,7 @@ Stage.defineWidget({
 
     initialConfiguration:
         [
-            Stage.GenericConfig.POLLING_TIME_CONFIG(2),
+            Stage.GenericConfig.POLLING_TIME_CONFIG(10),
             Stage.GenericConfig.PAGE_SIZE_CONFIG(),
             {id: "clickToDrillDown", name: "Enable click to drill down", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
             {id: "blueprintIdFilter", name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by", type: Stage.Basic.GenericField.STRING_TYPE},

@@ -336,7 +336,7 @@ export default class GenericField extends Component {
             };
 
             field = <CustomComponent name={this.props.name}
-                                     value={this.props.value}
+                                     value={_.isUndefined(this.props.value) ? this.props.default : this.props.value}
                                      onChange={this._handleInputChange.bind(this)}
                                      {...componentProps} />;
         }

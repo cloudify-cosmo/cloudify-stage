@@ -89,7 +89,7 @@ export default class TenantsModal extends React.Component {
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
-                    <Icon name="user"/> Add group {group.name} to tenants
+                    <Icon name="user"/> Edit tenants for {group.name}
                 </Modal.Header>
 
                 <Modal.Content>

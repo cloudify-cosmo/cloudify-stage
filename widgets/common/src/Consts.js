@@ -4,7 +4,9 @@
 
 var consts = {
     defaultVisibility: 'tenant',
-    sysAdminRole: 'sys_admin'
+    sysAdminRole: 'sys_admin',
+    defaultUserRole: 'default',
+    adminUsername: 'admin'
 };
 
 Stage.defineCommon({

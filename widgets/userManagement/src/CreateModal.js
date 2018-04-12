@@ -18,7 +18,7 @@ export default class CreateModal extends React.Component {
         username: '',
         password: '',
         confirmPassword: '',
-        role: '',
+        isAdmin: false,
         errors: {}
     }
 
@@ -58,10 +58,6 @@ export default class CreateModal extends React.Component {
             errors['confirmPassword']='Passwords do not match';
         }
 
-        if (_.isEmpty(this.state.role)) {
-            errors['role']='Please provide user role';
-        }
-
         if (!_.isEmpty(errors)) {
             this.setState({errors});
             return false;
@@ -73,7 +69,7 @@ export default class CreateModal extends React.Component {
         var actions = new Actions(this.props.toolbox);
         actions.doCreate(this.state.username,
                          this.state.password,
-                         this.state.role
+                         Stage.Common.RolesUtil.getSystemRole(this.state.isAdmin)
         ).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
@@ -116,9 +112,9 @@ export default class CreateModal extends React.Component {
                                         value={this.state.confirmPassword} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field error={this.state.errors.role}>
-                            <Form.Dropdown selection name='role' placeholder="Role" options={this.props.roles}
-                                           value={this.state.role} onChange={this._handleInputChange.bind(this)}/>
+                        <Form.Field error={this.state.errors.isAdmin}>
+                            <Form.Checkbox label="Admin" name="isAdmin" checked={this.state.isAdmin}
+                                           onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 
                     </Form>
