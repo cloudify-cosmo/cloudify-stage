@@ -15,8 +15,7 @@ Stage.defineWidget({
     showHeader: false,
     showBorder: false,
     isReact: true,
-    // TODO: Change permission to that widget after special permission is on backend side
-    permission: Stage.GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ALL,
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('text'),
     initialConfiguration:
         [
             {id: 'header', name: 'Header', default: 'Header text', type: Stage.Basic.GenericField.STRING_TYPE},
