@@ -9,8 +9,7 @@ module.exports = {
     context: path.join(__dirname),
     devtool: 'source-map',
     resolve: {
-        modulesDirectories: ["web_modules", "node_modules", "bower_components"],
-        fallback: __dirname + "/node_modules",
+        modules: ["web_modules", "node_modules", "bower_components"],
         alias: {
             'jquery-ui': 'jquery-ui/ui',
             'jquery': __dirname + "/node_modules/jquery" // Always make sure we take jquery from the same place
@@ -54,49 +53,60 @@ module.exports = {
             filename: 'index.html',
             chunks: ["main.bundle"]
         }),
-        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development')
-        })
-        ,
-        new webpack.ResolverPlugin(
-            new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(".bower.json", ["main"])
-        ),
+        }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
             d3: 'd3'
         })
     ],
-    //eslint: {
-    //    configFile: '.eslintrc',
-    //    failOnWarning: false,
-    //    failOnError: false
-    //},
-    resolveLoader: { fallback: __dirname + "/node_modules" },
     module: {
-        loaders: [
-            {
-                test: /\.js?$/,
-                exclude: [/bower_components/, new RegExp('node_modules\\'+path.sep+'(?!d3-format).*'), /cloudify-blueprint-topology/],
-                loaders: ['react-hot','babel']
-            },
-            {
-                test: /\.json?$/,
-                loader: 'json'
-            },
-            {
-                test: /\.scss$/,
-                loader: 'style!css!sass?modules&localIdentName=[name]---[local]---[hash:base64:5]'
-            },
-            { test: /\.css$/, loader: "style-loader!css-loader?importLoaders=1" },
-            //{ test: /\.(png|woff|woff2|eot|ttf|svg|jpg)$/, loader: 'url-loader?limit=100000' },
-            //{ test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/, loader: 'url-loader?limit=100000' }
-            { test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/
-                , loader: 'url-loader?limit=100000&name=[name].[ext]'
+        rules: [{
+            test: /\.js?$/,
+            exclude: [/bower_components/, new RegExp('node_modules\\'+path.sep+'(?!d3-format).*'), /cloudify-blueprint-topology/],
+            use: [{
+                loader: 'babel-loader',
+                options: {
+                    cacheDirectory: true,
+                    plugins: ['react-hot-loader/babel'],
+                },
+            }]
+        }, {
+            test: /\.scss$/,
+            use: [{
+                loader: 'style-loader'
+            }, {
+                loader: 'css-loader'
+            }, {
+                loader: 'sass-loader',
+
+                options: {
+                    modules: true,
+                    localIdentName: '[name]---[local]---[hash:base64:5]'
+                }
+            }]
+        }, { test: /\.css$/, use: [{
+            loader: 'style-loader'
+        }, {
+            loader: 'css-loader',
+
+            options: {
+                importLoaders: 1
             }
-        ]
+        }] }, //{ test: /\.(png|woff|woff2|eot|ttf|svg|jpg)$/, loader: 'url-loader?limit=100000' }
+        { test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/, use: [{
+            loader: 'url-loader',
+
+            options: {
+                limit: 100000,
+                name: '[name].[ext]'
+            }
+        }]
+        }]
     }
 };
