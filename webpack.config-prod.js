@@ -7,6 +7,7 @@ var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var path = require('path');
 
 module.exports = {
+    mode: 'production',
     context: path.join(__dirname),
     devtool: 'source-map',
     resolve: {
@@ -44,10 +45,6 @@ module.exports = {
             filename: 'index.html'
         }),
         new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('production')
-        }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
@@ -60,6 +57,11 @@ module.exports = {
             extractComments: true
         })
     ],
+
+    optimization: {
+        noEmitOnErrors: true
+    },
+
     module: {
         rules: [{
             test: /\.js?$/,
@@ -97,6 +99,7 @@ module.exports = {
                 limit: 100000,
                 name: '[name].[ext]'
             }
-        }]}]
+        }]
+        }]
     }
 };

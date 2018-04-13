@@ -6,6 +6,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var path = require('path');
 
 module.exports = {
+    mode: 'development',
     context: path.join(__dirname),
     devtool: 'source-map',
     resolve: {
@@ -55,16 +56,17 @@ module.exports = {
         }),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('development')
-        }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
             d3: 'd3'
         })
     ],
+
+    optimization: {
+        noEmitOnErrors: true
+    },
+
     module: {
         rules: [{
             test: /\.js?$/,
@@ -72,7 +74,7 @@ module.exports = {
             use: [{
                 loader: 'babel-loader',
                 options: {
-                    cacheDirectory: true,
+                    // cacheDirectory: true,
                     plugins: ['react-hot-loader/babel'],
                 },
             }]
