@@ -14,7 +14,7 @@
     "e2e": "nightwatch -c ./e2e/nightwatch.conf.js",
     "e2ev": "nightwatch -c ./e2e/nightwatch.conf.js --verbose",
     "beforebuild": "scripts/preinstall.sh",
-    "build": "webpack -v && webpack --config webpack.config-prod.js --bail --display-error-details",
+    "build": "webpack --config webpack.config-prod.js --bail --display-error-details",
     "zip": "scripts/createPackage.sh",
     "size": "size-limit"
   },
@@ -153,7 +153,7 @@
     "timekeeper": "^1.0.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "url-loader": "^1.0.1",
-    "webpack": "^4.5.0",
+    "webpack": "^4.6.0",
     "webpack-cli": "^2.0.14",
     "webpack-dev-middleware": "^3.1.2",
     "webpack-dev-server": "^3.1.3"
