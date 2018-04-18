@@ -6,6 +6,7 @@ import { routerReducer} from 'react-router-redux';
 import { combineReducers } from 'redux';
 import pages from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
+import tours from './toursReducer';
 import templates from './templatesReducer';
 import templateManagement from './templateManagementReducer';
 import context from './contextReducer';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
     manager,
     pages,
     widgetDefinitions,
+    tours,
     templates,
     templateManagement,
     context,

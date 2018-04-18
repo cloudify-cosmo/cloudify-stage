@@ -2,6 +2,7 @@
 import * as types from './types';
 
 import {loadTemplates} from './templates';
+import {loadTours} from './tours';
 import {loadWidgetDefinitions} from './widgets';
 import {getTenants} from './tenants';
 import {getClientConfig} from './clientConfig';
@@ -43,6 +44,7 @@ export function intialPageLoad() {
             .then(() => {
                 return Promise.all([
                     dispatch(loadTemplates()),
+                    dispatch(loadTours()),
                     dispatch(loadWidgetDefinitions()),
                     dispatch(getRBACConfig()),
                     dispatch(getClientConfig()),

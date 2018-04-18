@@ -62,6 +62,10 @@ new WebpackDevServer(webpack(config), {
             target: 'http://localhost:8088',
             secure: false
         },
+        '/stage/tours': {
+            target: 'http://localhost:8088',
+            secure: false
+        },
         '/stage/wb': {
             target: 'http://localhost:8088',
             secure: false
