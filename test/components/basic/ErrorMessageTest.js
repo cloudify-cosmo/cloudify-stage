@@ -14,7 +14,7 @@ describe('(Component) ErrorMessage', () => {
     it('doesn\'t render if error empty',()=>{
         var wrapper = shallow(<ErrorMessage/>);
 
-        expect(wrapper.find('<Message/>')).to.not.exist;
+        expect(wrapper.find(Message)).to.not.exist;
     });
 
     var wrapper = mount(<ErrorMessage error="test" className="testClassName" header="test header" />);

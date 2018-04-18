@@ -2,7 +2,7 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 
 import SideBar from '../containers/SideBar';
 import Page from '../containers/Page';
@@ -56,6 +56,7 @@ export default class Home extends Component {
         }
 
         var pageId = this.props.pageId;
+        var pageName = this.props.pageName;
 
         return (
             <div className='main'>
@@ -63,7 +64,7 @@ export default class Home extends Component {
 
                 <div className="page">
                     <div className="ui basic segment">
-                        <Page pageId={pageId} pageName={this.props.params.pageName}/>
+                        <Page pageId={pageId} pageName={pageName}/>
                     </div>
                 </div>
             </div>

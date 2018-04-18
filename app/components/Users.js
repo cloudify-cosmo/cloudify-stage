@@ -2,7 +2,9 @@
  * Created by jakubniezgoda on 07/02/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import EventBus from '../utils/EventBus';
 
 export default class Users extends Component {

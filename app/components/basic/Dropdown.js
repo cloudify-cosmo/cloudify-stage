@@ -62,4 +62,4 @@ export default class Dropdown extends DropdownSemanticUiReact {
 }
 
 Dropdown.defaultProps = Object.assign({}, Dropdown.defaultProps,
-                                            {selectOnBlur: false, openOnFocus: false, closeOnBlur: false});
+                                            {selectOnBlur: false, openOnFocus: false});

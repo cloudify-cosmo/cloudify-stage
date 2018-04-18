@@ -2,7 +2,9 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 
 import {Modal} from 'semantic-ui-react';
 import {ApproveButton} from './ModalButtons';

@@ -2,7 +2,9 @@
  * Created by pposel on 08/05/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import VisibilityIcon from '../VisibilityIcon';
 import consts from '../../utils/consts';
 

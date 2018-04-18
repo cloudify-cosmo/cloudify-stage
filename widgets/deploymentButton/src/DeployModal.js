@@ -5,7 +5,7 @@
 
 import Actions from './actions';
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 const EMPTY_BLUEPRINT = {id: '', plan: {inputs: {}}};
 const DEPLOYMENT_INPUT_CLASSNAME = 'deploymentInput';

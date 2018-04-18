@@ -2,7 +2,9 @@
  * Created by pposel on 23/01/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import { Form } from 'semantic-ui-react'
 
 /**

@@ -3,7 +3,9 @@
  */
 
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 
 import WidgetsList from '../containers/WidgetsList';
 import Breadcrumbs from './Breadcrumbs';
@@ -39,11 +41,11 @@ export default class Page extends Component {
 
                 <div>
                     <EditableLabel
-                       text={this.props.page.description}
-                       placeholder='Page description'
-                       className='pageDescription'
-                       isEditEnable={this.props.isEditMode}
-                       onEditDone={(newDesc)=>this.props.onPageDescriptionChange(this.props.page.id,newDesc)}
+                        text={this.props.page.description}
+                        placeholder='Page description'
+                        className='pageDescription'
+                        isEditEnable={this.props.isEditMode}
+                        onEditDone={(newDesc)=>this.props.onPageDescriptionChange(this.props.page.id,newDesc)}
                     />
                 </div>
 

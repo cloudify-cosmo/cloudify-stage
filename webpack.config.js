@@ -10,18 +10,18 @@ module.exports = {
     context: path.join(__dirname),
     devtool: 'source-map',
     resolve: {
-        modules: ["web_modules", "node_modules", "bower_components"],
+        modules: ['web_modules', 'node_modules', 'bower_components'],
         alias: {
             'jquery-ui': 'jquery-ui/ui',
-            'jquery': __dirname + "/node_modules/jquery" // Always make sure we take jquery from the same place
+            'jquery': __dirname + '/node_modules/jquery' // Always make sure we take jquery from the same place
         }
     },
     entry: {
-        "dev": [
+        'dev': [
             'webpack-dev-server/client?http://0.0.0.0:4000', // WebpackDevServer host and port
             'webpack/hot/only-dev-server' /// "only" prevents reload on syntax errors
         ],
-        "main.bundle": [
+        'main.bundle': [
             './app/main.js'
         ]
     },
@@ -52,13 +52,13 @@ module.exports = {
             template: 'app/index.tmpl.html',
             inject: 'body',
             filename: 'index.html',
-            chunks: ["main.bundle"]
+            chunks: ['main.bundle']
         }),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery",
+            $: 'jquery',
+            jQuery: 'jquery',
             d3: 'd3'
         })
     ],
@@ -74,7 +74,6 @@ module.exports = {
             use: [{
                 loader: 'babel-loader',
                 options: {
-                    // cacheDirectory: true,
                     plugins: ['react-hot-loader/babel'],
                 },
             }]
@@ -100,7 +99,7 @@ module.exports = {
             options: {
                 importLoaders: 1
             }
-        }] }, //{ test: /\.(png|woff|woff2|eot|ttf|svg|jpg)$/, loader: 'url-loader?limit=100000' }
+        }] },
         { test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/, use: [{
             loader: 'url-loader',
 

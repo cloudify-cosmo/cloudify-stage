@@ -2,8 +2,9 @@
  * Created by kinneretzin on 15/11/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
-import InlineEdit from 'react-edit-inline';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 
 /**
  * EditableLabel component shows an (optionally) editable label.
@@ -32,6 +33,12 @@ import InlineEdit from 'react-edit-inline';
 */
 export default class EditableLabel extends Component {
 
+    constructor(props,context) {
+        super(props,context);
+
+        this.state = EditableLabel.initialState(props);
+    }
+
     /**
      * @property {string} [text=''] Label's default value
      * @property {string} [placeholder=''] Label's value if text {@link EditableLabel.text} value is not set
@@ -50,24 +57,65 @@ export default class EditableLabel extends Component {
     static defaultProps = {
         text: '',
         placeholder: '',
+        className: '',
         isEditEnable: true,
-        onEditDone : () => {},
-        className: ''
+        onEditDone : () => {}
+    };
+
+    static initialState = (props) => {
+        return {
+            editing: false,
+            text: props.text
+        }
+    };
+
+    labelClicked() {
+        if (this.props.isEditEnable) {
+            this.setState({ editing: true });
+        }
+    };
+
+    textChanged(event) {
+        this.setState({text: event.target.value});
+    };
+
+    inputLostFocus() {
+        if (this.props.isEditEnable) {
+            this.props.onEditDone(this.state.text);
+            this.setState({editing: false});
+        }
+    };
+
+    keyPressed(event) {
+        if (event.key === 'Enter') {
+            this.inputLostFocus();
+        }
     };
 
     render() {
-        if (this.props.isEditEnable) {
+        let className = `${this.props.className} ${_.isEmpty(this.props.text) ? 'editPlaceholder' : ''}`;
+
+        if (this.state.editing) {
             return (
-                <InlineEdit
-                    text={!_.isEmpty(this.props.text) ? this.props.text : this.props.placeholder}
-                    className={this.props.className +' '+ (_.isEmpty(this.props.text) ? 'editPlaceholder' : '')}
-                    change={(data)=>this.props.onEditDone(data.text)}
-                    paramName="text"
-                    />
+                <input
+                    type='text' value={this.state.text} autoFocus
+                    onClick={(event) => {event.stopPropagation(); this.labelClicked();}} onChange={this.textChanged.bind(this)}
+                    onBlur={this.inputLostFocus.bind(this)} onKeyPress={this.keyPressed.bind(this)}
+                    className={className}
+                />
             );
         } else {
+            const text
+                = this.props.isEditEnable
+                ? this.props.text || this.props.placeholder
+                : this.props.text;
+
             return (
-                <span className={this.props.className}>{this.props.text}</span>
+                <label
+                    onClick={(event) => {event.stopPropagation(); this.labelClicked();}}
+                    className={className}>
+                    {text}
+                </label>
             );
         }
     }

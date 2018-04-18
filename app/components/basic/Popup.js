@@ -2,8 +2,11 @@
  * Created by jakubniezgoda on 06/03/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import { Popup as PopupSemanticUiReact } from 'semantic-ui-react';
+import {areComponentsEqual} from 'react-hot-loader';
 
 class Wrapper extends Component {
 
@@ -54,7 +57,7 @@ export default class Popup extends Component {
         let children = this.props.children;
 
         React.Children.forEach(this.props.children, function (child) {
-            if (child.type && child.type === Wrapper) {
+            if (child.type && areComponentsEqual(child.type, Wrapper)) {
                 trigger = child.props.children;
                 children = _.without(props.children, child);
             }

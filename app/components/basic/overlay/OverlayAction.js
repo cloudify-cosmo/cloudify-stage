@@ -2,8 +2,9 @@
 /**
  * Created by pawelposel on 22/11/2016.
  */
+import PropTypes from 'prop-types';
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Popup from '../Popup';
 
 /**

@@ -3,7 +3,7 @@
  */
 
 import Actions from './actions';
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 export default class RestoreSnapshotModal extends React.Component {
 

@@ -2,7 +2,9 @@
  * Created by pposel on 11/08/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import Templates from './Templates';
 import Pages from './Pages';
 import Const from '../../utils/consts';

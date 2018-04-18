@@ -2,7 +2,9 @@
  * Created by edenp on 17/12/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import _ from 'lodash';
 import {Icon} from 'semantic-ui-react';
 import consts from '../utils/consts';

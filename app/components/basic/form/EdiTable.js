@@ -1,11 +1,15 @@
+
+
 /**
  * Created by jakubniezgoda on 24/07/2017.
  */
 
-import {Table, Icon} from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
+import { Table, Icon } from 'semantic-ui-react';
 import GenericField from './GenericField';
 import Popup from '../Popup';
-import React, { Component, PropTypes } from 'react';
 
 /**
  * EdiTable is a component used in forms to get tabular data input

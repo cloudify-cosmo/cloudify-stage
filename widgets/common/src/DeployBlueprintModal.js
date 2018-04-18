@@ -2,7 +2,7 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 export default class DeployBlueprintModal extends React.Component {
 

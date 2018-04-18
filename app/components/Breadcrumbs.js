@@ -2,8 +2,9 @@
  * Created by kinneretzin on 18/09/2016.
  */
 
-import React, { Component,PropTypes } from 'react';
-import InlineEdit from 'react-edit-inline';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {EditableLabel} from './basic';
 
 export default class Breadcrumbs extends Component {
@@ -24,11 +25,11 @@ export default class Breadcrumbs extends Component {
                 elements.push(
                     <EditableLabel key={p.id}
                         text={p.name}
-                        placeHolder='You must fill a page name'
+                        placeholder='You must fill a page name'
                         className='section active pageTitle'
                         isEditEnable={this.props.isEditMode}
                         onEditDone={(newName)=>this.props.onPageNameChange(p,newName)}
-                        />
+                    />
                 );
             }
 

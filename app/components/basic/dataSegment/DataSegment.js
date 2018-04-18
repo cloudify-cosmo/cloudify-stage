@@ -1,8 +1,11 @@
 /**
  * Created by pawelposel on 17/11/2016.
  */
-  
-import React, { Component, PropTypes } from 'react';
+
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
+import {areComponentsEqual} from 'react-hot-loader';
 import SegmentItem from './SegmentItem';
 import SegmentAction from './SegmentAction';
 import Pagination from '../pagination/Pagination';
@@ -195,7 +198,7 @@ export default class DataSegment extends Component {
 
         React.Children.forEach(this.props.children, function(child) {
             if (child && child.type) {
-                if (child.type === SegmentAction) {
+                if (areComponentsEqual(child.type, SegmentAction)) {
                     segmentAction = child;
                 } else {
                     children.push(child);

@@ -32,7 +32,7 @@ const mapDispatchToProps = (dispatch, getState, ownProps) => {
     return {
         onClose: () => dispatch(selectHomePage()),
         onClear: () => dispatch(clearPageContext()),
-        onTemplateNavigate: () => dispatch(push('template_management')),
+        onTemplateNavigate: () => dispatch(push('/template_management')),
         onWidgetsGridDataChange: (pageId,widgetId,gridData) => {
             dispatch(changePageWidgetGridData(widgetId,gridData));
         },

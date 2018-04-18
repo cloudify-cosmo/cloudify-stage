@@ -1,8 +1,10 @@
 /**
  * Created by pawelposel on 17/11/2016.
  */
-  
-import React, { Component, PropTypes } from 'react';
+
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import PaginationInfo from './PaginationInfo';
 import TotalSizePaginator from './TotalSizePaginator';
 import FetchSizePaginator from './FetchSizePaginator';

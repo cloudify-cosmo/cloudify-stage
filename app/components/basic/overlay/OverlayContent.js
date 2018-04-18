@@ -2,8 +2,9 @@
 /**
  * Created by pawelposel on 22/11/2016.
  */
- 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 
 /**
  * OverlayContent is integral part of {@link Overlay} component.

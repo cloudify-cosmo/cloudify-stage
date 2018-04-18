@@ -8,10 +8,14 @@ import Layout from '../../components/layout/Layout';
 import { connect } from 'react-redux';
 import {intialPageLoad} from '../../actions/app';
 import {logout} from '../../actions/managers';
+import stageUtils from '../../utils/stageUtils';
+import Consts from '../../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        isLoading: state.app.loading
+        isLoading: state.app.loading,
+        isUserAuthorizedForTemplateManagement: state.manager && stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager),
+        isPageSetForPageManagement: state.templateManagement ? !_.isEmpty(state.templateManagement.page) : false
     }
 };
 

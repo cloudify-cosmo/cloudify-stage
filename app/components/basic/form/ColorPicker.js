@@ -2,8 +2,10 @@
  * Created by jakubniezgoda on 21/03/2018.
  */
 
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import { CompactPicker } from 'react-color';
-import React, { Component, PropTypes } from 'react';
 const tinycolor = require('tinycolor2');
 
 /**

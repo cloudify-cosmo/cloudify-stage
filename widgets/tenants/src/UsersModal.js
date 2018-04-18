@@ -4,7 +4,7 @@
 
 import Actions from './actions';
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 const RolesPicker = Stage.Common.RolesPicker;
 const RolesUtil = Stage.Common.RolesUtil;
 

@@ -5,7 +5,7 @@
 import MenuAction from './MenuAction';
 import ActiveExecutionStatus from './ActiveExecutionStatus';
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 export default class extends React.Component {
 

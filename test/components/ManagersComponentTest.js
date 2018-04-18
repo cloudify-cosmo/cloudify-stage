@@ -27,21 +27,21 @@ describe('(Component) Manager', () => {
         manager.status.status = 'running';
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
-        expect(wrapper.find(Icon).getNode().props.color).to.equal('green'); // Green icon
+        expect(wrapper.find(Icon).instance().props.color).to.equal('green'); // Green icon
     });
 
     it('renders manager component with unavailable status ',()=>{
         manager.status.status = 'not-running';
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
-        expect(wrapper.find(Icon).getNode().props.color).to.equal('red'); // Red icon
+        expect(wrapper.find(Icon).instance().props.color).to.equal('red'); // Red icon
     });
 
     it('renders manager component with no status ',()=>{
         manager.status.status = undefined;
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
-        expect(wrapper.find(Icon).getNode().props.color).to.equal('grey'); // Empty icon
+        expect(wrapper.find(Icon).instance().props.color).to.equal('grey'); // Empty icon
     });
 
     it('renders manager component with activated maintenance ',()=>{
@@ -49,7 +49,7 @@ describe('(Component) Manager', () => {
         manager.maintenance = 'activated';
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
-        expect(wrapper.find(Icon).getNode().props.color).to.equal('yellow'); // Yellow icon
+        expect(wrapper.find(Icon).instance().props.color).to.equal('yellow'); // Yellow icon
     });
 
     it('renders manager component with activated maintenance and unavailable status',()=>{
@@ -57,7 +57,7 @@ describe('(Component) Manager', () => {
         manager.maintenance = 'activated';
         wrapper.setProps({manager: manager});
         expect(wrapper).to.have.length(1); // Showing manager component
-        expect(wrapper.find(Icon).getNode().props.color).to.equal('red'); // Red icon
+        expect(wrapper.find(Icon).instance().props.color).to.equal('red'); // Red icon
     });
 
 });

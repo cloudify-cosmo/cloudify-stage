@@ -230,7 +230,7 @@ export function showPage(pageId, pageName, isPageEditMode) {
             dispatch(addPageWidget(pageId, widget.name, widgetDefinition, widget.width, widget.height, widget.x, widget.y, widget.configuration));
         });
 
-        dispatch(push('page_management'));
+        dispatch(push('/page_management'));
     }
 }
 
@@ -298,7 +298,7 @@ export function persistPage(page) {
 export function savePage(page) {
     return function (dispatch) {
         dispatch(persistPage(page));
-        dispatch(push('template_management'));
+        dispatch(push('/template_management'));
     };
 }
 

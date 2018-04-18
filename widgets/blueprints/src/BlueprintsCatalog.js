@@ -5,7 +5,7 @@
 
 import UploadModal from './UploadBlueprintModal';
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 export default class BlueprintsCatalog extends React.Component{
     static propTypes = {

@@ -1,7 +1,9 @@
 /**
  * Created by jakubniezgoda on 20/03/2017.
  */
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React from 'react';
 import {Button, Dropdown, Grid, Label, List, Segment, Table} from 'semantic-ui-react';
 import {ApproveButton, CancelButton} from './modal/ModalButtons';
 import Form from './form/Form';

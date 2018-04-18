@@ -2,7 +2,9 @@
  * Created by kinneretzin on 26/09/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import EventBus from '../utils/EventBus';
 
 export default class Tenants extends Component {

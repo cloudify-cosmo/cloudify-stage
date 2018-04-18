@@ -2,7 +2,9 @@
  * Created by pposel on 11/04/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {Icon, Button, Divider, Form, Modal, Message} from './basic/index'
 import EventBus from '../utils/EventBus';
 

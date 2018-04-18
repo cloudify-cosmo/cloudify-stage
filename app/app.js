@@ -26,24 +26,26 @@ import 'highlight.js/styles/xcode.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import { Provider } from 'react-redux';
-import { Router, useRouterHistory} from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux'
-import { createHistory } from 'history';
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter } from 'react-router-redux';
+import { Switch } from 'react-router-dom';
 
 import configureStore  from './configureStore';
 import {createToolbox} from './utils/Toolbox';
 import ConfigLoader from './utils/ConfigLoader';
 import EventBus from './utils/EventBus';
 import Consts from './utils/consts';
-import createRoutes from './routes';
 
 import StatusPoller from './utils/StatusPoller';
 import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
 import widgetDefinitionLoader from './utils/widgetDefinitionsLoader';
 import Interceptor from './utils/Interceptor';
 
-const browserHistory = useRouterHistory(createHistory)({
+import Routes from './containers/Routes';
+
+const browserHistory = createHistory({
     basename: Consts.CONTEXT_PATH
 });
 
@@ -70,15 +72,16 @@ export default class app{
     }
 
     static start (store) {
-        const history = syncHistoryWithStore(browserHistory, store);
-
         ReactDOM.render(
             <Provider store={store}>
-                <Router history={history} routes={createRoutes(store)} />
+                <ConnectedRouter history={browserHistory}>
+                    <Switch>
+                        <Routes />
+                    </Switch>
+                </ConnectedRouter>
             </Provider>,
             document.getElementById('app')
         );
-
     }
 }
 

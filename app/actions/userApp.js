@@ -52,7 +52,7 @@ export function resetPages(){
             })
             .catch(err => {
                 dispatch(setAppError(err.message));
-                dispatch(push('error'));
+                dispatch(push('/error'));
                 throw err;
             });
     }

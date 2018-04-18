@@ -1,9 +1,11 @@
 /**
  * Created by jakubniezgoda on 11/01/2017.
  */
-  
-import React, { Component, PropTypes } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 /**
  * Defines content of expandable row in data table. See {@link TableRowExpandable}
@@ -32,15 +34,16 @@ export default class TableDataExpandable extends Component {
         return (
             <tr className="active">
                 <td className={this.props.className} colSpan={this.props.numberOfColumns}>
-                    <ReactCSSTransitionGroup
-                        transitionName="dataExpandable"
-                        transitionAppear={true}
-                        transitionAppearTimeout={500}
-                        transitionEnter={true}
-                        transitionEnterTimeout={500}
-                        transitionLeave={false}>
-                        {this.props.children}
-                    </ReactCSSTransitionGroup>
+                    <TransitionGroup>
+                        <CSSTransition
+                            classNames="dataExpandable"
+                            appear={true}
+                            enter={true}
+                            timeout={{ enter: 500, exit: 500}}
+                            exit={false}>
+                            {this.props.children}
+                        </CSSTransition>
+                    </TransitionGroup>
                 </td>
             </tr>
         );

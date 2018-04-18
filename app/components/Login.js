@@ -2,7 +2,10 @@
  * Created by kinneretzin on 10/11/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
+import { parse } from 'query-string';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 export default class Login extends Component {
@@ -26,8 +29,9 @@ export default class Login extends Component {
     }
 
     onSubmit(e) {
+        const query = parse(this.props.location.search);
         e.preventDefault();
-        var redirect = this.props.location.query.redirect || null;
+        var redirect = query.redirect || null;
         this.props.onLogin(this.state.username, this.state.password, redirect);
     }
 

@@ -5,6 +5,7 @@
 import * as types from './types';
 import { push } from 'react-router-redux';
 import {v4} from 'node-uuid';
+import {stringify} from 'query-string';
 import {clearContext} from './context';
 import {popDrilldownContext} from './drilldownContext';
 import {setAppError} from './app';
@@ -94,7 +95,7 @@ export function selectPage(pageId,isDrilldown,drilldownContext,drilldownPageName
             dispatch(clearContext());
         }
 
-        var location = {pathname: `page/${pageId}`};
+        var location = {pathname: `/page/${pageId}`};
         if (!_.isEmpty(drilldownPageName)){
             location.pathname +=`/${drilldownPageName}`;
         }
@@ -110,7 +111,7 @@ export function selectPage(pageId,isDrilldown,drilldownContext,drilldownPageName
                 ];
             }
 
-            location.query = {c : JSON.stringify(dContext)};
+            location.search = stringify({c: JSON.stringify(dContext)});
         }
 
         dispatch(push(location));

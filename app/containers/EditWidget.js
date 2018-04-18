@@ -2,6 +2,7 @@
  * Created by addihorowitz on 10/06/2016.
  */
 
+import PropTypes from 'prop-types';
 
 import React from 'react';
 import { connect } from 'react-redux'
@@ -44,10 +45,10 @@ class EditWidgetComponent extends React.Component {
     }
 
     static propTypes = {
-        widget : React.PropTypes.object,
-        onWidgetEdited : React.PropTypes.func,
-        configDef : React.PropTypes.array,
-        configuration : React.PropTypes.object
+        widget : PropTypes.object,
+        onWidgetEdited : PropTypes.func,
+        configDef : PropTypes.array,
+        configuration : PropTypes.object
     };
 
     _showConfig() {

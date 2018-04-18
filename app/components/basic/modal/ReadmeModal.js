@@ -2,7 +2,9 @@
  * Created by Tamer on 14/08/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {Modal} from 'semantic-ui-react';
 
 /**

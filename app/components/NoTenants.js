@@ -2,7 +2,7 @@
  * Created by edenp on 8/17/17.
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import LinkToLogin from '../containers/LinkToLogin';
 
 export default class NoTenants extends Component {

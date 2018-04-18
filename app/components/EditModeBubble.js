@@ -3,7 +3,9 @@
  */
 
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 
 import AddPageButton from '../containers/AddPageButton';
 import AddWidget from '../containers/AddWidget';

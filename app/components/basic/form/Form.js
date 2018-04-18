@@ -2,7 +2,9 @@
  * Created by pposel on 23/01/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {Form as FormSemanticUiReact, Input as FormInput, TextArea, Radio as FormRadio,
         Checkbox as FormCheckbox, Button as FormButton} from 'semantic-ui-react';
 import ErrorMessage from '../ErrorMessage';

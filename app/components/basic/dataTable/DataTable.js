@@ -1,9 +1,13 @@
 /**
  * Created by pawelposel on 17/11/2016.
  */
-  
-import React, { Component, PropTypes } from 'react';
+
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {Form} from 'semantic-ui-react';
+import {areComponentsEqual} from 'react-hot-loader';
+
 import TableRow from './TableRow';
 import TableRowExpandable from './TableRowExpandable';
 import TableColumn from './TableColumn';
@@ -341,26 +345,26 @@ export default class DataTable extends Component {
         var showCols = [];
         React.Children.forEach(this.props.children, function (child) {
             if (child && child.type) {
-                if (child.type === TableColumn) {
+                if (areComponentsEqual(child.type, TableColumn)) {
                     showCols.push(child.props.show);
                     headerColumns.push(child);
-                } else if (child.type === TableRow) {
+                } else if (areComponentsEqual(child.type, TableRow)) {
                     bodyRows.push(React.cloneElement(child, {showCols}));
-                } else if (child.type === TableRowExpandable) {
+                } else if (areComponentsEqual(child.type, TableRowExpandable)) {
                     let expandableContent = [];
                     React.Children.forEach(child.props.children, function (expChild) {
                         if (expChild && expChild.type) {
-                            if (expChild.type === TableRow) {
+                            if (areComponentsEqual(expChild.type, TableRow)) {
                                 bodyRows.push(React.cloneElement(expChild, {showCols}));
-                            } else if (expChild.type === TableDataExpandable && child.props.expanded) {
+                            } else if (areComponentsEqual(expChild.type, TableDataExpandable) && child.props.expanded) {
                                 expandableContent.push(React.cloneElement(expChild, {numberOfColumns: showCols.length}));
                             }
                         }
                     });
                     bodyRows.push(expandableContent);
-                } else if (child.type === TableAction) {
+                } else if (areComponentsEqual(child.type, TableAction)) {
                     gridAction = child;
-                } else if (child.type === TableFilter) {
+                } else if (areComponentsEqual(child.type, TableFilter)) {
                     gridFilters.push(child);
                 }
             }

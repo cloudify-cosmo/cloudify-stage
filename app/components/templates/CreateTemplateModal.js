@@ -1,10 +1,12 @@
 /**
  * Created by pposel on 22/08/2017.
  */
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import Consts from '../../utils/consts';
 
-export default class CreateTemplateModal extends React.Component {
+export default class CreateTemplateModal extends Component {
 
     constructor(props,context) {
         super(props,context);
@@ -233,4 +235,4 @@ export default class CreateTemplateModal extends React.Component {
             </Modal>
         );
     }
-};
+}
