@@ -11,10 +11,10 @@ module.exports = {
     context: path.join(__dirname),
     devtool: 'source-map',
     resolve: {
-        modules: ["web_modules", "node_modules", "bower_components"],
+        modules: ['web_modules', 'node_modules', 'bower_components'],
         alias: {
             'jquery-ui': 'jquery-ui/ui',
-            'jquery': __dirname + "/node_modules/jquery" // Always make sure we take jquery from the same place
+            'jquery': __dirname + '/node_modules/jquery' // Always make sure we take jquery from the same place
         }
     },
     entry: [
@@ -46,8 +46,8 @@ module.exports = {
         }),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery",
+            $: 'jquery',
+            jQuery: 'jquery',
             d3: 'd3'
         }),
         new UglifyJsPlugin({

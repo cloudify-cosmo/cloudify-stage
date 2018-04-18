@@ -14,7 +14,7 @@
     "e2e": "nightwatch -c ./e2e/nightwatch.conf.js",
     "e2ev": "nightwatch -c ./e2e/nightwatch.conf.js --verbose",
     "beforebuild": "scripts/preinstall.sh",
-    "build": "webpack --config webpack.config-prod.js --bail",
+    "build": "webpack -v && webpack --config webpack.config-prod.js --bail --display-error-details",
     "zip": "scripts/createPackage.sh",
     "size": "size-limit"
   },

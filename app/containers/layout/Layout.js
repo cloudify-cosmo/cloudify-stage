@@ -14,7 +14,8 @@ import Consts from '../../utils/consts';
 const mapStateToProps = (state, ownProps) => {
     return {
         isLoading: state.app.loading,
-        isUserAuthorizedForTemplateManagement: state.manager && stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager),
+        isUserAuthorizedForTemplateManagement: state.manager && state.manager.permissions &&
+            stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager),
         isPageSetForPageManagement: state.templateManagement ? !_.isEmpty(state.templateManagement.page) : false
     }
 };
