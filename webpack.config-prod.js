@@ -62,10 +62,7 @@ module.exports = {
             test: /\.js?$/,
             exclude: /node_modules/,
             use: [{
-                loader: 'babel-loader',
-                options: {
-                    presets: [['env', { 'modules': false }], 'react', 'stage-0']
-                }
+                loader: 'babel-loader'
             }]
         }, {
             test: /\.scss$/,
