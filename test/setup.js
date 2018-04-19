@@ -30,8 +30,6 @@ global.d3 = d3;
 chai.use(require('chai-enzyme')());
 chai.use(require('sinon-chai'));
 
-require('../semantic/dist/semantic');
-
 function noop() {
     return {};
 }
