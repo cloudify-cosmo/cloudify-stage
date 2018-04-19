@@ -1,17 +1,15 @@
 'use strict';
 
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-var path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const path = require('path');
 
 module.exports = {
     mode: 'production',
     context: path.join(__dirname),
-    devtool: 'source-map',
     resolve: {
-        modules: ['web_modules', 'node_modules', 'bower_components'],
         alias: {
             'jquery-ui': 'jquery-ui/ui',
             'jquery': __dirname + '/node_modules/jquery' // Always make sure we take jquery from the same place
@@ -33,7 +31,8 @@ module.exports = {
         ]),
         new CopyWebpackPlugin([
             { from: 'widgets',
-             to: 'widgets'}
+              to: 'widgets',
+              ignore: [ '**/src/*' ]}
         ]),
         new CopyWebpackPlugin([
             { from: 'templates',
@@ -50,24 +49,23 @@ module.exports = {
             jQuery: 'jquery',
             d3: 'd3'
         }),
-        new UglifyJsPlugin({
-            include: 'app.bundle.js',
-            sourceMap: true,
-            parallel: true,
-            extractComments: true
+        new CompressionPlugin({
+            asset: '[path].gz[query]',
+            algorithm: 'gzip',
+            test: /\.js$|\.css$|\.html$/,
+            threshold: 10240,
+            minRatio: 0.8
         })
     ],
-
-    optimization: {
-        noEmitOnErrors: true
-    },
-
     module: {
         rules: [{
             test: /\.js?$/,
-            exclude: [/bower_components/, new RegExp('node_modules\\'+path.sep+'(?!d3-format).*'), /cloudify-blueprint-topology/],
+            exclude: /node_modules/,
             use: [{
-                loader: 'babel-loader'
+                loader: 'babel-loader',
+                options: {
+                    presets: [['env', { 'modules': false }], 'react', 'stage-0']
+                }
             }]
         }, {
             test: /\.scss$/,
@@ -91,7 +89,7 @@ module.exports = {
             options: {
                 importLoaders: 1
             }
-        }] }, //{ test: /\.(png|woff|woff2|eot|ttf|svg|jpg)$/, loader: 'url-loader?limit=100000' }
+        }] },
         { test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/, use: [{
             loader: 'url-loader',
 

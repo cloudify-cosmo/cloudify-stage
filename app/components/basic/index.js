@@ -9,7 +9,6 @@ import ReadmeModal from './modal/ReadmeModal';
 import KeyIndicator from './KeyIndicator';
 import ErrorMessage from './ErrorMessage';
 import HighlightText from './HighlightText';
-import Overlay from './overlay/Overlay';
 import Checkmark from './Checkmark';
 import EditableLabel from './EditableLabel';
 import DataTable from './dataTable/DataTable';
@@ -70,7 +69,6 @@ export {
     Modal,
     NodeFilter,
     NodesTree,
-    Overlay,
     Popup,
     PopupConfirm,
     PopupMenu,

@@ -1,16 +1,15 @@
 'use strict';
 
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path');
 
 module.exports = {
     mode: 'development',
     context: path.join(__dirname),
     devtool: 'source-map',
     resolve: {
-        modules: ['web_modules', 'node_modules', 'bower_components'],
         alias: {
             'jquery-ui': 'jquery-ui/ui',
             'jquery': __dirname + '/node_modules/jquery' // Always make sure we take jquery from the same place
@@ -62,15 +61,10 @@ module.exports = {
             d3: 'd3'
         })
     ],
-
-    optimization: {
-        noEmitOnErrors: true
-    },
-
     module: {
         rules: [{
             test: /\.js?$/,
-            exclude: [/bower_components/, new RegExp('node_modules\\'+path.sep+'(?!d3-format).*'), /cloudify-blueprint-topology/],
+            exclude: /node_modules/,
             use: [{
                 loader: 'babel-loader',
                 options: {

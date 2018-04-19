@@ -1,14 +1,30 @@
 [
     {
-        "limit": "5300 KB",
+        "name": "Application",
+        "limit": "2 MB",
         "gzip": false,
         "webpack": false,
-        "path": "dist/app.bundle.js"
+        "path": "dist/app.bundle.js.gz"
     },
     {
-        "limit": "1300 KB",
+        "name": "Widgets",
+        "limit": "2 MB",
         "gzip": false,
         "webpack": false,
-        "path": "dist/widgets/*/widget.js"
+        "path": ["dist/widgets/*/widget.js.gz", "dist/widgets/*/widget.css", "dist/widgets/*/widget.png", "dist/widgets/*/widget.html", "dist/widgets/*/backend.js" ]
+    },
+    {
+        "name": "Templates",
+        "limit": "500",
+        "gzip": false,
+        "webpack": false,
+        "path": "dist/templates/*"
+    },
+    {
+        "name": "Images",
+        "limit": "100 KB",
+        "gzip": false,
+        "webpack": false,
+        "path": "dist/app/images/*"
     }
 ]
