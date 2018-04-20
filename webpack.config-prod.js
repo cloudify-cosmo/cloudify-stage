@@ -115,7 +115,7 @@ module.exports = [
             },
         },
         plugins: [
-            new CleanWebpackPlugin(['dist']),
+            new CleanWebpackPlugin(['dist', 'widgets/common/common.js', 'widgets/*/widget.js', 'widgets/*/backend.js' ]),
             new CopyWebpackPlugin([
                 {
                     from: 'app/images',
@@ -126,7 +126,7 @@ module.exports = [
                 {
                     from: 'widgets',
                     to: 'widgets',
-                    ignore: ['**/src/*', '**/widget.js', '**/common.js']
+                    ignore: ['**/src/*']
                 }
             ]),
             new CopyWebpackPlugin([
