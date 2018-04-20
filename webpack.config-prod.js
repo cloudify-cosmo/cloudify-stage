@@ -23,10 +23,21 @@ module.exports = {
     ],
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'app.bundle.js',
+        filename: '[name].bundle.js',
         publicPath: '/stage'
     },
-
+    optimization: {
+        splitChunks: {
+            chunks: 'initial',
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendor',
+                    chunks: 'initial',
+                },
+            },
+        },
+    },
     plugins: [
         new CleanWebpackPlugin(['dist']),
         new CopyWebpackPlugin([
@@ -85,7 +96,11 @@ module.exports = {
             use: [{
                 loader: 'style-loader'
             }, {
-                loader: 'css-loader'
+                loader: 'css-loader',
+
+                options: {
+                    minimize: true
+                }
             }, {
                 loader: 'sass-loader',
 
@@ -102,7 +117,8 @@ module.exports = {
                 loader: 'css-loader',
 
                 options: {
-                    importLoaders: 1
+                    importLoaders: 1,
+                    minimize: true
                 }
             }]
         }, {
