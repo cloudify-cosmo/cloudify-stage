@@ -8,7 +8,6 @@ import {Button, Dropdown, Grid, Label, List, Segment, Table} from 'semantic-ui-r
 import {ApproveButton, CancelButton} from './modal/ModalButtons';
 import Form from './form/Form';
 import Popup from './Popup';
-import moment from 'moment';
 
 /**
  * TimeFilter is a component showing time range and optionally time resolution selectors

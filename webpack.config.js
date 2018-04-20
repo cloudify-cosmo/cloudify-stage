@@ -1,9 +1,10 @@
 'use strict';
 
 const webpack = require('webpack');
+const path = require('path');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const path = require('path');
 
 module.exports = {
     mode: 'development',
@@ -32,20 +33,29 @@ module.exports = {
 
     plugins: [
         new CopyWebpackPlugin([
-            { from: 'app/images',
-             to: 'app/images'}
+            {
+                from: 'app/images',
+                to: 'app/images'
+            }
         ]),
         new CopyWebpackPlugin([
-            { from: 'widgets',
-             to: 'widgets'}
+            {
+                from: 'widgets',
+                to: 'widgets',
+                ignore: ['**/src/*']
+            }
         ]),
         new CopyWebpackPlugin([
-            { from: 'templates',
-                to: 'templates'}
+            {
+                from: 'templates',
+                to: 'templates'
+            }
         ]),
         new CopyWebpackPlugin([
-            { from: 'userData',
-                to: 'userData'}
+            {
+                from: 'userData',
+                to: 'userData'
+            }
         ]),
         new HtmlWebpackPlugin({
             template: 'app/index.tmpl.html',
@@ -85,23 +95,27 @@ module.exports = {
                     localIdentName: '[name]---[local]---[hash:base64:5]'
                 }
             }]
-        }, { test: /\.css$/, use: [{
-            loader: 'style-loader'
         }, {
-            loader: 'css-loader',
+            test: /\.css$/,
+            use: [{
+                loader: 'style-loader'
+            }, {
+                loader: 'css-loader',
 
-            options: {
-                importLoaders: 1
-            }
-        }] },
-        { test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/, use: [{
-            loader: 'url-loader',
+                options: {
+                    importLoaders: 1
+                }
+            }]
+        }, {
+            test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,
+            use: [{
+                loader: 'url-loader',
 
-            options: {
-                limit: 100000,
-                name: '[name].[ext]'
-            }
-        }]
+                options: {
+                    limit: 100000,
+                    name: '[name].[ext]'
+                }
+            }]
         }]
     }
 };
