@@ -2,7 +2,6 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 export default class ExecuteDeploymentModal extends React.Component {

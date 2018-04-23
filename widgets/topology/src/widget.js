@@ -2,6 +2,7 @@
  * Created by kinneretzin on 07/09/2016.
  */
 
+import 'cloudify-blueprint-topology';
 import Topology from './Topology';
 import DataFetcher from './DataFetcher';
 
