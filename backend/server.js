@@ -50,7 +50,7 @@ var contextPath = config.get().app.contextPath;
 
 var app = express();
 
-app.use(contextPath, expressStaticGzip(path.resolve(__dirname , '../dist'), {indexFromEmptyFile: false}));
+app.use(contextPath, expressStaticGzip(path.resolve(__dirname , '../dist'), {enableBrotli: true, indexFromEmptyFile: false}));
 app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'INFO'}));
 
 // For dev purposes

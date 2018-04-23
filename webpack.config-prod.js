@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
+const BrotliPlugin = require('brotli-webpack-plugin');
 
 const getWidgetEntries = () => {
     return glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
@@ -78,6 +79,12 @@ const compressionPlugins = [
     new CompressionPlugin({
         asset: '[path].gz[query]',
         algorithm: 'gzip',
+        test: /\.js$|\.css$|\.html$/,
+        threshold: 10240,
+        minRatio: 0.8
+    }),
+    new BrotliPlugin({
+        asset: '[path].br[query]',
         test: /\.js$|\.css$|\.html$/,
         threshold: 10240,
         minRatio: 0.8
