@@ -8,21 +8,21 @@
     },
     {
         "name": "Vendor gzipped JS bundle",
-        "limit": "1.65 MB",
+        "limit": "1.1 MB",
         "gzip": false,
         "webpack": false,
         "path": "dist/vendor.bundle.js.gz"
     },
     {
         "name": "Widgets gzipped JS bundle with all external resources",
-        "limit": "1.1 MB",
+        "limit": "1.6 MB",
         "gzip": false,
         "webpack": false,
         "path": ["dist/widgets/*/widget.js.gz", "dist/widgets/*/widget.css", "dist/widgets/*/widget.png", "dist/widgets/*/widget.html", "dist/widgets/*/backend.js" ]
     },
     {
         "name": "Widgets folder",
-        "limit": "2.5 MB",
+        "limit": "4.0 MB",
         "gzip": false,
         "webpack": false,
         "path": "dist/widgets/**"
