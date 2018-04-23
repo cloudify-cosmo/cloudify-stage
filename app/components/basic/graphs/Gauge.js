@@ -2,7 +2,9 @@
  * Created by kinneretzin on 14/02/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 
 function deg2rad(deg) {
     return deg * Math.PI / 180;
@@ -212,4 +214,4 @@ export default class Gauge extends Component {
             </div>
         );
     }
-};
+}

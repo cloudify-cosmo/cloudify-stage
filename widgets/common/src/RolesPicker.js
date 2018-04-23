@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 const {Form} = Stage.Basic;
 
 export default class RolesPicker extends React.Component {

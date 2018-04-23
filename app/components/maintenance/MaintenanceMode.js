@@ -1,7 +1,9 @@
 /**
  * Created by pposel on 16/02/2017.
  */
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import Consts from '../../utils/consts';
 import {Modal, Icon, ErrorMessage, DataTable, Checkmark, ApproveButton, CancelButton} from '../basic/index';
 import StageUtils from '../../utils/stageUtils';

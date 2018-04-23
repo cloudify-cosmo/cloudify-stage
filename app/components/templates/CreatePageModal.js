@@ -1,10 +1,11 @@
 /**
  * Created by pposel on 22/08/2017.
  */
-import React, { Component, PropTypes } from 'react';
-import Consts from '../../utils/consts';
+import PropTypes from 'prop-types';
 
-export default class CreatePageModal extends React.Component {
+import React, { Component } from 'react';
+
+export default class CreatePageModal extends Component {
 
     constructor(props,context) {
         super(props,context);
@@ -85,4 +86,4 @@ export default class CreatePageModal extends React.Component {
             </Modal>
         );
     }
-};
+}

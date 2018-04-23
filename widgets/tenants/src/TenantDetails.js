@@ -5,7 +5,7 @@
 import Actions from './actions';
 import UserRoles from './UserRoles';
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 export default class TenantDetails extends React.Component {
 

@@ -2,8 +2,10 @@
  * Created by Alex on 22/02/2017.
  */
 
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+
 import 'rc-tree/assets/index.css';
-import React, { Component, PropTypes } from 'react';
 import Tree, { TreeNode } from 'rc-tree';
 
 /**

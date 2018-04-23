@@ -2,7 +2,9 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {getToolbox} from '../utils/Toolbox';
 
 import {ErrorMessage} from './basic'

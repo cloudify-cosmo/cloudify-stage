@@ -2,7 +2,9 @@
  * Created by jakubniezgoda on 18/05/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
 
 /**
@@ -85,4 +87,4 @@ export default class PieGraph extends Component {
             </ResponsiveContainer>
         );
     }
-};
+}

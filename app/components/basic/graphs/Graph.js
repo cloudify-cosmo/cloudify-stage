@@ -2,7 +2,9 @@
  * Created by jakubniezgoda on 16/03/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {LineChart, Line, BarChart,  Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,Brush} from 'recharts';
 import {format as d3format} from 'd3-format';
 
@@ -307,4 +309,4 @@ export default class Graph extends Component {
             </ResponsiveContainer>
         );
     }
-};
+}

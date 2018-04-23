@@ -2,12 +2,13 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
-import InlineEdit from 'react-edit-inline';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 
 import EditWidget from '../containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
-import {Loading, Icon, ReadmeModal} from './basic';
+import {Loading, Icon, ReadmeModal, EditableLabel} from './basic';
 import stageUtils from '../utils/stageUtils';
 
 export default class Widget extends Component {
@@ -116,16 +117,12 @@ export default class Widget extends Component {
                 {
                     this.props.widget.definition && this.props.widget.definition.showHeader &&
                     <h5 className='ui header dividing'>
-                        {
-                            this.props.isEditMode ?
-                            <InlineEdit
-                                text={this.props.widget.name}
-                                change={data=>this.props.onWidgetNameChange(this.props.pageId,this.props.widget.id,data.name)}
-                                paramName="name"
-                                />
-                            :
-                                <label>{this.props.widget.name}</label>
-                            }
+                        <EditableLabel
+                            text={this.props.widget.name}
+                            placeholder='Widget header'
+                            isEditEnable={this.props.isEditMode}
+                            onEditDone={text => this.props.onWidgetNameChange(this.props.pageId, this.props.widget.id, text)}
+                        />
                     </h5>
                 }
 

@@ -83,7 +83,7 @@ describe('(Component) Users', () => {
     //     let onConfigure = sinon.spy();
     //     wrapper.setProps({onConfigure});
     //
-    //     wrapper.find(Dropdown.Item).filterWhere(element => element.getNode().props.text === 'Configure').simulate('click');
+    //     wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Configure').simulate('click');
     //
     //     expect(onConfigure.calledOnce).to.equal(true);
     // });
@@ -92,7 +92,7 @@ describe('(Component) Users', () => {
         let onEditModeChange = sinon.spy();
         wrapper.setProps({onEditModeChange});
 
-        wrapper.find(Dropdown.Item).filterWhere(element => element.getNode().props.text === 'Edit Mode').simulate('click');
+        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Edit Mode').simulate('click');
 
         expect(onEditModeChange.calledOnce).to.equal(true);
     });
@@ -101,7 +101,7 @@ describe('(Component) Users', () => {
         let onLogout = sinon.spy();
         wrapper.setProps({onLogout});
 
-        wrapper.find(Dropdown.Item).filterWhere(element => element.getNode().props.text === 'Logout').simulate('click');
+        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Logout').simulate('click');
 
         expect(onLogout.calledOnce).to.equal(true);
     });

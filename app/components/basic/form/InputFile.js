@@ -1,8 +1,10 @@
-    /**
+/**
  * Created by pposel on 23/01/2017.
  */
-import {Button} from 'semantic-ui-react'
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
+import { Button } from 'semantic-ui-react';
 
 /**
  * InputFile is a component showing file input field

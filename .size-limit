@@ -6,7 +6,7 @@
         "path": "dist/app.bundle.js"
     },
     {
-        "limit": "1200 KB",
+        "limit": "1300 KB",
         "gzip": false,
         "webpack": false,
         "path": "dist/widgets/*/widget.js"

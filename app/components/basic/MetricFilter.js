@@ -2,7 +2,9 @@
  * Created by jakubniezgoda on 04/12/2017.
  */
 
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React from 'react';
 import Form from './form/Form';
 
 /**

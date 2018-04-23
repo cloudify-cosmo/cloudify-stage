@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 export default class RolesPresenter extends React.Component {
 

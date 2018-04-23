@@ -3,7 +3,9 @@
  */
 
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';

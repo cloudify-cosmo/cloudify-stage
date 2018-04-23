@@ -2,7 +2,9 @@
  * Created by jakubniezgoda on 05/09/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {Table, Dropdown} from 'semantic-ui-react';
 import _ from 'lodash';
 

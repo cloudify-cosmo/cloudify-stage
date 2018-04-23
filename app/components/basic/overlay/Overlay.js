@@ -2,7 +2,10 @@
  * Created by pawelposel on 17/11/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
+import {areComponentsEqual} from 'react-hot-loader';
 
 import OverlayAction from './OverlayAction';
 import OverlayContent from './OverlayContent';
@@ -83,9 +86,9 @@ export default class Overlay extends Component {
 
         var self = this;
         React.Children.forEach(this.props.children, function(child,index) {
-            if (child.type && child.type === OverlayAction) {
+            if (areComponentsEqual(child.type, OverlayAction)) {
                 overlayAction = React.cloneElement(child, {onClick:self.show.bind(self)});
-            } else if (child.type && child.type === OverlayContent) {
+            } else if (areComponentsEqual(child.type, OverlayContent)) {
                 overlayContent = child;
             } else {
                 otherChildren.push(child);

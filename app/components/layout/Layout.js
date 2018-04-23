@@ -3,7 +3,10 @@
  */
 
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import Header from '../../containers/layout/Header';
 
@@ -11,6 +14,10 @@ import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import {NO_TENANTS_ERR, UNAUTHORIZED_ERR} from '../../utils/ErrorCodes';
+import TemplateManagement from '../../containers/templates/TemplateManagement';
+import PageManagement from '../../containers/templates/PageManagement';
+import Home from '../../containers/Home';
+import NotFound from '../NotFound';
 
 export default class Layout extends Component {
     constructor(props,context) {
@@ -19,8 +26,9 @@ export default class Layout extends Component {
     }
 
     static propTypes = {
-        children: PropTypes.element.isRequired,
         isLoading: PropTypes.bool.isRequired,
+        isUserAuthorizedForTemplateManagement: PropTypes.bool.isRequired,
+        isPageSetForPageManagement: PropTypes.bool,
         intialPageLoad: PropTypes.func.isRequired
     };
 
@@ -69,7 +77,21 @@ export default class Layout extends Component {
         return (
             <div>
                 <Header />
-                {this.props.children}
+                <Switch>
+                    {
+                        this.props.isUserAuthorizedForTemplateManagement &&
+                        <Route exact path='/template_management' component={TemplateManagement} />
+                    }
+                    {
+                        this.props.isUserAuthorizedForTemplateManagement && this.props.isPageSetForPageManagement &&
+                        <Route exact path='/page_management' component={PageManagement} />
+                    }
+                    <Route exact path='/page/:pageId/:pageName' component={Home}/>
+                    <Route exact path='/page/:pageId' component={Home}/>
+                    <Route exact path='/404' component={NotFound}/>,
+                    <Route exact path='/' component={Home} />
+                    <Route component={NotFound} />
+                </Switch>
             </div>
         );
     }

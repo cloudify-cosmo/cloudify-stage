@@ -2,7 +2,9 @@
  * Created by kinneretzin on 07/03/2017.
  */
 
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {Modal, ErrorMessage, GenericField, Form, ApproveButton, CancelButton} from './basic';
 
 export default class ConfigureModal extends Component {

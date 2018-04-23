@@ -2,7 +2,9 @@
  * Created by kinneretzin on 15/11/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import {Icon, Popup, Input, Checkbox, Dropdown, Form} from '../index'
 import {getToolbox} from '../../../utils/Toolbox';
 

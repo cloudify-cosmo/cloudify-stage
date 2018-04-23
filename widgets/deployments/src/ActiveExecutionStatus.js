@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 27/01/2017.
  */
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 export default class ActiveExecutionStatus extends React.Component {
 

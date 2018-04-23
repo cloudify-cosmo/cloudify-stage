@@ -2,7 +2,9 @@
  * Created by pawelposel on 2016-11-18.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import { Icon } from 'semantic-ui-react'
 
 /**

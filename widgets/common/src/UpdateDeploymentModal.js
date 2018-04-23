@@ -2,7 +2,7 @@
  * Created by pposel on 18/01/2017.
  */
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 const DEFAULT_WORKFLOW = 'default';
 const CUSTOM_WORKFLOW = 'custom';

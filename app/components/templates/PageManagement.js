@@ -2,7 +2,9 @@
  * Created by pposel on 19/09/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 import WidgetsList from '../WidgetsList';
 import Const from '../../utils/consts';
 import EditModeBubble from '../EditModeBubble';

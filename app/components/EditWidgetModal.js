@@ -2,7 +2,9 @@
  * Created by addihorowitz on 11/09/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 
 export default class EditWidgetModal extends Component {
 

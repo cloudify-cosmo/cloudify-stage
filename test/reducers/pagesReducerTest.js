@@ -9,6 +9,7 @@
  */
 import {expect} from 'chai';
 import sinon from 'sinon';
+import { parse } from 'query-string';
 
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -154,7 +155,8 @@ describe('(Reducer) Pages - drilldown process', () => {
             var routeAction = storeActions[1];
 
             expect(routeAction.payload.args).to.have.length(1);
-            expect(routeAction.payload.args[0].query.c).to.equal('[{"context":{"contextValue":"kuku"}}]');
+            var query = parse(routeAction.payload.args[0].search);
+            expect(query.c).to.equal('[{"context":{"contextValue":"kuku"}}]');
 
         });
     });

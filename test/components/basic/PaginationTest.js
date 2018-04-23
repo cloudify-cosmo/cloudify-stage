@@ -26,23 +26,17 @@ describe('(Component) Pagination', () => {
         wrapper.setProps({pageSize:5});
 
         expect(wrapper.find('.gridPagination .dropdown .text').first()).to.have.text('5');
-        let dropdownText = wrapper.find('.gridPagination select').text();
-        let infoText = wrapper.find('.gridPagination').childAt(0).text();
-
-        //remove concatenated options values either from <select> and corresponding <divs> elements
-        infoText = infoText.replace(dropdownText, '').replace(dropdownText, '');
-
-        expect(infoText.replace(dropdownText, '').replace(dropdownText, '')).to.be.equal('Page size: 5  1 to 5 of 10 entries');
+        expect(wrapper.find('.gridPagination').childAt(0).text()).to.be.equal('Page size: 5510152550  1 to 5 of 10 entries');
     });
 
     it('changes page size', (done) => {
         var fetchSpy = sinon.spy(()=>done());
         wrapper.setProps({fetchData:fetchSpy});
 
-        $('.gridPagination .selection.dropdown').dropdown('set value', '4');
+        wrapper.find('div[role="option"]').at(0).simulate('click');
         expect(fetchSpy).to.have.been.calledOnce;
-        sinon.assert.calledWith(fetchSpy, {currentPage: 1, pageSize: 4});
-        expect(wrapper.find('.gridPagination .dropdown .text')).to.have.text('4');
+        sinon.assert.calledWith(fetchSpy, {currentPage: 1, pageSize: 5});
+        expect(wrapper.find('.gridPagination .dropdown .text')).to.have.text('10');
         fetchSpy.reset();
     });
 

@@ -39,7 +39,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(logout());
         },
         onTemplates: () => {
-            dispatch(push('template_management'));
+            dispatch(push('/template_management'));
         },
         onReset: ownProps.onReset,
         onMaintenance: ownProps.onMaintenance,

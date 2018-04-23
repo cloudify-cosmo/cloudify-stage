@@ -2,7 +2,10 @@
  * Created by kinneretzin on 13/12/2016.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
+import { areComponentsEqual } from 'react-hot-loader';
 import GridItem from './GridItem';
 import RGL, { WidthProvider } from 'react-grid-layout';
 
@@ -28,7 +31,7 @@ export default class Grid extends Component {
     }
 
     processGridItem(el) {
-        if (el.type && el.type !== GridItem) {
+        if (el.type && !areComponentsEqual(el.type, GridItem)) {
             return [];
         }
         return React.createElement('div', {

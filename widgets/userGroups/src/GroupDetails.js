@@ -4,7 +4,7 @@
 
 import Actions from './actions';
 
-let PropTypes = React.PropTypes;
+import PropTypes from 'prop-types';
 
 export default class UserDetails extends React.Component {
 

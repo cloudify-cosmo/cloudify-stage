@@ -2,7 +2,9 @@
  * Created by pposel on 11/08/2017.
  */
 
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+
+import React, { Component } from 'react';
 
 export default class PageList extends Component {
 

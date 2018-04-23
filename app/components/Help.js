@@ -2,12 +2,9 @@
  * Created by jakubniezgoda on 26/02/2018.
  */
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 
 export default class Help extends Component {
-
-    static propTypes = {
-    };
 
     render() {
         let {Dropdown, Icon} = Stage.Basic;

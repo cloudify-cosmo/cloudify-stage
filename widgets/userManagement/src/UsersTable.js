@@ -257,7 +257,7 @@ export default class UsersTable extends React.Component {
                                             <MenuAction item={item} onSelectAction={this._showModal.bind(this)}/>
                                         </DataTable.Data>
                                     </DataTable.Row>
-                                    <DataTable.DataExpandable>
+                                    <DataTable.DataExpandable key={item.username}>
                                         <UserDetails data={item} toolbox={this.props.toolbox} onError={this._handleError.bind(this)}/>
                                     </DataTable.DataExpandable>
                                 </DataTable.RowExpandable>
