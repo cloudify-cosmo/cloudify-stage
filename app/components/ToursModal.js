@@ -2,7 +2,8 @@
  * Created by edenp on 15/04/2018.
  */
 
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Tours from '../utils/Tours';
 
 export default class ToursModal extends React.Component {
