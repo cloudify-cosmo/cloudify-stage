@@ -13,6 +13,8 @@ import 'd3';
 import momentImport from 'moment';
 import markdownImport from 'markdown';
 
+import 'cloudify-blueprint-topology';
+
 import * as BasicComponents from '../components/basic';
 import StageUtils from './stageUtils';
 import Consts from './consts';
