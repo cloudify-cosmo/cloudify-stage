@@ -4,13 +4,14 @@
 
 import React, {Component} from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
+import { hot } from 'react-hot-loader'
 
 import Layout from '../containers/layout/Layout';
 import LogoPage from './LogoPage';
 import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
 import {ExternalRedirect} from './ExternalRedirect';
 
-export default class Routes extends Component {
+class Routes extends Component {
     render() {
         return (
             <Switch>
@@ -38,3 +39,5 @@ export default class Routes extends Component {
         );
     }
 };
+
+export default hot(module)(Routes);

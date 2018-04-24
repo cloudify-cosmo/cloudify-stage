@@ -5,10 +5,6 @@ bower_components
 /logs
 /backend/logs
 
-/widgets/*/widget.js
-/widgets/*/backend.js
-/widgets/common/common.js
-
 stage.tar.gz
 
 reports
