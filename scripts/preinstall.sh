@@ -2,5 +2,5 @@
 set -x
 
 npm install
-cd ../backend
+cd backend
 npm install
