@@ -143,7 +143,7 @@ module.exports = {
             commands: [
                 {
                     clickYes: function () {
-                        this.waitForElementVisible(this.selector)
+                        return this.waitForElementVisible(this.selector)
                             .clickElement('@yesButton')
                             .waitForElementNotPresent(this.selector);
                     }

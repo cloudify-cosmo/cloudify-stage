@@ -173,7 +173,7 @@ module.exports = {
                             .selectOptionInDropdown('@blueprintYamlFile', this.elements.blueprintYamlFile.selector, blueprintYamlFile);
                     },
                     clickUpdate: function () {
-                        this.waitForElementVisible(this.selector)
+                        return this.waitForElementVisible(this.selector)
                             .clickElement('@updateButton')
                             .waitForElementNotPresent(this.selector);
                     }
@@ -190,7 +190,7 @@ module.exports = {
             commands: [
                 {
                     clickExecute: function () {
-                        this.waitForElementVisible(this.selector)
+                        return this.waitForElementVisible(this.selector)
                             .clickElement('@executeButton')
                             .waitForElementNotPresent(this.selector);
                     }
@@ -207,7 +207,7 @@ module.exports = {
             commands: [
                 {
                     clickYes: function () {
-                        this.waitForElementVisible(this.selector)
+                        return this.waitForElementVisible(this.selector)
                             .clickElement('@yesButton')
                             .waitForElementNotPresent(this.selector);
                     }

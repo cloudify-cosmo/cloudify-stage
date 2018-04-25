@@ -98,11 +98,18 @@ module.exports = {
         page.section.deploymentsTable
             .checkIfDeploymentPresent(DEPLOYMENT_NAME)
             .clickForceDelete(DEPLOYMENT_NAME);
+
+        // TODO: Only for debugging purposes.
         page.section.removeDeploymentModal
-            .clickYes();
+            .api.saveScreenshot('./reports/beforeModalYes.png')
+        page.section.removeDeploymentModal
+            .clickYes()
+            .api.saveScreenshot('./reports/afterModalYes.png');
 
         page.section.deploymentsTable
-            .checkIfDeploymentRemoved(DEPLOYMENT_NAME);
+            .api.saveScreenshot('./reports/beforeCheck.png')
+        page.section.deploymentsTable.checkIfDeploymentRemoved(DEPLOYMENT_NAME)
+            .api.saveScreenshot('./reports/afterCheck.png');
 
         //Fix strange issue in the filter when deployment is removed
         client.page.filter().selectOptionInDropdown('@deploymentSearch', client.page.filter().elements.deploymentSearch.selector, '');
