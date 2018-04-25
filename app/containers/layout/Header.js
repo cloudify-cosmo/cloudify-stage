@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Header from '../../components/layout/Header';
 import {resetPagesForTenant} from '../../actions/userApp';
 import {toogleSidebar} from '../../actions/app';
+import {continueTour} from '../../actions/tours';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -26,6 +27,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onSidebarOpen(){
             dispatch(toogleSidebar());
+        },
+        continueTour: () => {
+            dispatch(continueTour());
         }
     }
 };

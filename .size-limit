@@ -1,6 +1,6 @@
 [
     {
-        "limit": "5300 KB",
+        "limit": "6000 KB",
         "gzip": false,
         "webpack": false,
         "path": "dist/app.bundle.js"

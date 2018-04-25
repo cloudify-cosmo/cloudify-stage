@@ -1,0 +1,111 @@
+[
+    {
+        "name": "My first tour",
+        "id": "firstTour",
+        "steps": [
+           {
+                "title": "The future is HERE!",
+                "content": "Cloudify is Future Technology. We found a wormhole in the galaxy and hijacked a brain chip from the year 2074.<br/><br/>It took some time to crack the encryption but when we did we uncovered the code to automate thoughts. Until the hardware for thought-automation is developed, we found that we can implement this technology in the Cloudify Console to orchestrate cloud environments!",
+                "target": ".logo",
+                "placement": "bottom"
+            },
+            {
+                "title": "Take the tour!",
+                "content": "This tour shows you how to use Cloudify Console, but don’t get any ideas about hacking into someone’s brain!",
+                "target": ".logo",
+                "placement": "bottom"
+            },
+            {
+                "title": "Pages of the console",
+                "content": "Cloudify Console is divided into pages, just as the brain is divided into lobes. Each page is responsible for a set of Console capabilities, such as blueprints or deployments.\nYou can create customized pages that match your operational needs. You can’t do that with a brain… YET!",
+                "target": ".pages .pageMenuItem",
+                "placement": "right"
+            },
+            {
+                "title": "Widgets on the pages",
+                "content": "On each page is a set of widgets. Each widget shows can either configure or report on Cloudify Manager operations, much like the frontal lobe of your brain can show emotions or communicate with words.\nYou can add and remove widgets on the pages to create the best experience for your Cloudify users to do what they need to do.",
+                "target": ".widgetItem",
+                "placement": "bottom"
+            },
+            {
+                "title": "Cloudify Manager vital signs",
+                "content": "We replaced the brain function indicators with indicators that show the active services on the Cloudify Manager.\nThe brain chip we found tried to influx a rabbit to the celery of Mr. Riemann but it postgressed into a rest-service so he got logstashed with the stage composer. ;-)",
+                "target": ".right.menu .item",
+                "placement": "bottom"
+            },
+            {
+                "title": "Multi-tenant personalities",
+                "content": "Based the multiple-personality mode, you can switch to a different tenant. The pages and widgets are saved for each tenant so, when you switch tenants, the Console can have a totally different personality.",
+                "target": ".right.menu .tenantsMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 250
+            },
+            {
+                "title": "Where to go for HELP",
+                "content": "When you have trouble using the Console, you can find links to documentation and videos.\nWe wish we could use this function today with brains. Imagine… if someone is giving you trouble, you just give him a light tap on the head and you get usage instructions. Guess we’ll have to wait.",
+                "target": ".right.menu .helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            },
+            {
+                "title": "User Configuration and Logout",
+                "content": "To do all of the customization that we mentioned, you need to go to the user menu. This menu lets you edit the pages and widgets; manage page templates per tenant; and reset the templates. This is also where you logout.\nOh, and if you want the manager to take a break from working, use maintenance mode. It’s like telling the manager to take a time out!",
+                "target": ".right.menu .usersMenu",
+                "placement": "bottom",
+                "xOffset": -230,
+                "arrowOffset": 250
+            }
+        ]
+    },
+    {
+        "name": "My second tour",
+        "id": "secondTour",
+        "steps": [
+            {
+                "title": "Let’s deploy some blueprints!",
+                "content": "Here we go. Grab yourself a blueprint from the catalog, upload it to the local collection of blueprints (Upload? Whatever..), and deploy the blueprint to a… wait for it… DEPLOYMENT!",
+                "target": ".tourButton",
+                "placement": "bottom"
+            },
+            {
+                "title": "Catalog of blueprints in the sky",
+                "content": "This is the catalog of blueprints. It’s a list of blueprints stored in the cloud that you can use in your manager. Don’t be confused. These blueprints aren’t actually on the manager until you click Upload. So obvious, right?",
+                "target": ".blueprintCatalogWidget",
+                "placement": "top",
+                "width": 350
+            },
+            {
+                "title": "Upload the blueprint to the manager",
+                "content": "When you click this button, a galactic star command fleet is ordered to capture the blueprint from the evil Cloud Master and return it to its rightful place in the manager storage. And if you believe that...",
+                "target": ".uploadButton",
+                "placement": "top",
+                "multipage": true,
+                "onNextRedirectTo": "/stage/page/local_blueprints"
+            },
+            {
+                "title": "List of local blueprints",
+                "content": "The list of blueprints shows the name and icon of each blueprint, its visibility level, creation date, update date, creator, name of main blueprint .yaml file and the number of deployments created from it.",
+                "target": ".blueprintsWidget",
+                "placement": "top",
+                "delay": 200
+            },
+            {
+                "title": "Where are my deployments?",
+                "content": "When you click on Deploy, you need to enter the input values for the deployment, or else you are mocked by the crowd that’s watching on reality TV. Are you ready?",
+                "target": ".deployButton",
+                "placement": "top",
+                "multipage": true,
+                "onNextRedirectTo": "/stage/page/deployments"
+            },
+            {
+                "title": "Here are your deployments",
+                "content": "There you have it -- Deployments! Are you happy now? Isn’t that what you wanted this whole time?\nThose are the basics of deploying. Anything more complicated than that is extra charge. Payment is accepted in dollars, sterling, bitcoin, or any other current or future currency.\nHave fun!",
+                "target": ".deploymentsWidget",
+                "placement": "top",
+                "delay": 200
+            }
+        ]
+  }
+]

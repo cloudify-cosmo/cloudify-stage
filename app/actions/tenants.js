@@ -7,6 +7,7 @@ import Manager from '../utils/Manager';
 import {setAppLoading} from './app';
 import {clearContext} from './context';
 import {reloadUserAppData} from './userApp';
+import {loadTours} from './tours';
 import { push } from 'react-router-redux';
 
 function requestTenants() {
@@ -60,5 +61,6 @@ export function changeTenant (tenantName) {
         dispatch(clearContext());
         dispatch(selectTenant(tenantName));
         dispatch(reloadUserAppData());
+        dispatch(loadTours());
     }
 }

@@ -44,6 +44,7 @@ export default class Header extends Component {
         if (whiteLabel.enabled) {
             document.title = whiteLabel.pageTitle || 'Cloudify';
         }
+        this.props.continueTour();
     }
 
     _isModeMain() {
