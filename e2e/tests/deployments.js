@@ -66,14 +66,20 @@ module.exports = {
         const WORKFLOW_NAME = 'install';
         let page = client.page.deployments();
 
+        // Set refresh interval to 1 seconds to see changing execution status
+        page.configureWidget()
+            .section.configureWidgetModal
+            .setPollingTime(1)
+            .clickSave();
+
         page.section.deploymentsTable
             .checkIfDeploymentPresent(DEPLOYMENT_NAME)
             .clickExecuteWorkflow(DEPLOYMENT_NAME, WORKFLOW_NAME);
         page.section.executeWorkflowModal
             .clickExecute();
 
-        client.pause(2000);
         page.section.deploymentsTable
+            .checkIfWorkflowStartedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT)
             .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
     },
 
@@ -99,17 +105,11 @@ module.exports = {
             .checkIfDeploymentPresent(DEPLOYMENT_NAME)
             .clickForceDelete(DEPLOYMENT_NAME);
 
-        // TODO: Only for debugging purposes.
         page.section.removeDeploymentModal
-            .api.saveScreenshot('./reports/beforeModalYes.png')
-        page.section.removeDeploymentModal
-            .clickYes()
-            .api.saveScreenshot('./reports/afterModalYes.png');
+            .clickYes();
 
         page.section.deploymentsTable
-            .api.saveScreenshot('./reports/beforeCheck.png')
-        page.section.deploymentsTable.checkIfDeploymentRemoved(DEPLOYMENT_NAME)
-            .api.saveScreenshot('./reports/afterCheck.png');
+            .checkIfDeploymentRemoved(DEPLOYMENT_NAME);
 
         //Fix strange issue in the filter when deployment is removed
         client.page.filter().selectOptionInDropdown('@deploymentSearch', client.page.filter().elements.deploymentSearch.selector, '');

@@ -95,8 +95,9 @@ module.exports = {
                 .fillIn(BLUEPRINT_INPUTS)
                 .setSkipValidation(true)
                 .clickDeploy();
-        client.pause(5000);
 
+        // Wait for widget to fetch data and update deployment count
+        client.pause(5000);
         page.section.blueprintsTable
                 .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 1)
 
