@@ -81,15 +81,21 @@ module.exports = {
         }
 
         let page = client.page.blueprints();
-        page.section.blueprintsTable.checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 0);
+
+        // Set refresh interval to 3 seconds to get
+        page.configureWidget()
+            .section.configureWidgetModal
+            .setPollingTime(3)
+            .clickSave();
 
         page.section.blueprintsTable
+                .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 0)
                 .clickDeploy(BLUEPRINT_NAME)
             .parent.section.deployBlueprintModal
                 .fillIn(BLUEPRINT_INPUTS)
                 .setSkipValidation(true)
                 .clickDeploy();
-        client.pause(2000); // FIXME: waiting for blueprints table to be updated, looking for better way than pause
+        client.pause(5000);
 
         page.section.blueprintsTable
                 .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 1)

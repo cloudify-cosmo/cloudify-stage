@@ -66,7 +66,7 @@ module.exports = {
             selector: '.page',
             elements: {
                 firstWidget: '.react-grid-item.widget:first-child',
-                firstWidgetName: '.react-grid-item.widget:first-child div.widgetItem > h5.header span',
+                firstWidgetName: '.react-grid-item.widget:first-child div.widgetItem > h5.header label',
                 firstWidgetRemoveIcon: '.react-grid-item.widget:first-child .widgetEditButtons i.remove.link.icon.small',
                 firstWidgetConfigureIcon: '.react-grid-item.widget:first-child .widgetEditButtons .editWidgetIcon',
                 firstWidgetResizeHandle: '.react-grid-item.widget:first-child .react-resizable-handle',

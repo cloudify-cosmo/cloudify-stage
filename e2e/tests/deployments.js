@@ -63,7 +63,7 @@ module.exports = {
     },
 
     'Execute workflow': function (client) {
-        const WORKFLOW_NAME = 'Install';
+        const WORKFLOW_NAME = 'install';
         let page = client.page.deployments();
 
         page.section.deploymentsTable
@@ -77,21 +77,20 @@ module.exports = {
             .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
     },
 
-    'Deployment update': function (client) {
-        let page = client.page.deployments();
-
-        page.section.deploymentsTable
-            .checkIfDeploymentPresent(DEPLOYMENT_NAME)
-            .clickEdit(DEPLOYMENT_NAME);
-        page.section.updateDeploymentModal
-            .fillIn(BLUEPRINT_URL, BLUEPRINT_YAML_FILENAME)
-            .clickUpdate();
-        client.pause(2000);
-        page.section.deploymentsTable
-            .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
-
-        // TODO: Add verification?
-    },
+    // TODO: Implement when backend is ready
+    // 'Deployment update': function (client) {
+    //     let page = client.page.deployments();
+    //
+    //     page.section.deploymentsTable
+    //         .checkIfDeploymentPresent(DEPLOYMENT_NAME)
+    //         .clickEdit(DEPLOYMENT_NAME);
+    //     page.section.updateDeploymentModal
+    //         .fillIn(BLUEPRINT_URL, BLUEPRINT_YAML_FILENAME)
+    //         .clickUpdate();
+    //     client.pause(2000);
+    //     page.section.deploymentsTable
+    //         .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
+    // },
 
     'Deployment remove': function (client) {
         let page = client.page.deployments();

@@ -16,7 +16,7 @@ export default class Breadcrumbs extends Component {
 
     render() {
         var elements = [];
-        var pagesList = _(this.props.pagesList).reverse().value();
+        var pagesList = _([...this.props.pagesList]).reverse().value();
         _.each(pagesList,(p,index)=>{
             if (index !== pagesList.length-1) {
                 elements.push(<div key={p.id} className='section' onClick={()=>{this.props.onPageSelected(p,pagesList,index);} }>{p.name}</div>);

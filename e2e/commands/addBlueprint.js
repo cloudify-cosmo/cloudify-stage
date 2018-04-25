@@ -31,7 +31,7 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
 
                 blueprints.clickElement('@uploadButton');
 
-                let blueprintYamlFileOptionElement = `select[name="blueprintFileName"] option[value="${blueprintYamlFile}"]`;
+                let blueprintYamlFileOptionElement = `div[name="blueprintFileName"] div[option-value="${blueprintYamlFile}"]`;
                 let blueprintYamlFileDropdownSelector = blueprints.section.uploadModal.elements.blueprintYamlFile.selector;
                 blueprints.section.uploadModal
                     .waitForElementVisible('@okButton')

@@ -29,7 +29,7 @@ exports.command = function(deploymentName) {
 
                 var filter = this.page.filter();
                 filter.waitForDeploymentNotPresent(deploymentName)
-                    .selectOptionInDropdown('@deploymentSearch', filter.elements.blueprintSearch.selector, '');
+                    .selectOptionInDropdown('@deploymentSearch', filter.elements.deploymentSearch.selector, '');
             });
         } else {
             this.log('not removing', deploymentName, "deployment, it doesn't exist");
