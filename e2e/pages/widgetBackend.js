@@ -46,7 +46,7 @@ module.exports = {
                 saveBtn: '.ui.button.ok'
             },
             props: {
-                requestItem: 'Request'
+                requestItem: 'request'
             }
         }
     },

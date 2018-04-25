@@ -18,9 +18,9 @@ module.exports = {
             props: {
                 userRow : (name) => `tr#usersTable_${name}`,
                 userMenu : (name) => `tr#usersTable_${name} td i.content.link.icon`,
-                setPasswordOption : 'Set password',
-                setRoleOption : 'Set role',
-                editTenantsOption : 'Edit user\'s tenants'
+                adminCheckbox : (name) => `tr#usersTable_${name} td:nth-child(3)`,
+                setPasswordOption : 'password',
+                editTenantsOption : 'tenants'
             },
             commands: [
                 {
@@ -34,10 +34,9 @@ module.exports = {
                             .waitForElementVisible(this.parent.section.setPasswordModal.selector);
                     },
 
-                    setRole: function (userName) {
+                    setAdmin: function (userName, isAdmin) {
                         return this
-                            .selectOptionInPopupMenu(this.props.userMenu(userName), this.props.setRoleOption)
-                            .waitForElementVisible(this.parent.section.setRoleModal.selector);
+                            .setCheckbox(this.props.adminCheckbox(userName), isAdmin);
                     },
 
                     editTenants: function (userName) {
@@ -51,13 +50,13 @@ module.exports = {
         editTenantsModal : {
             selector: 'div.editTenantsModal',
             elements: {
-                tenantDropdown : 'div[role=\'listbox\']',
+                tenantDropdown : 'div[role="listbox"][name="tenants"]',
                 okButton: '.actions button.ok',
                 cancelButton: '.actions button.cancel'
             },
             props: {
                 tenantTag : (tagName) => `div[role='listbox'] a[value='${tagName}']`,
-                editTenantsOption : 'Edit user\'s tenants'
+                editTenantsOption : 'tenants'
             },
             commands: [
                 {
@@ -106,35 +105,13 @@ module.exports = {
                 }
             ],
         },
-        setRoleModal : {
-            selector: 'div.roleModal',
-            elements: {
-                role: '.content div.field div[role="listbox"]',
-                saveButton: '.actions button.ok',
-                cancelButton: '.actions button.cancel'
-            },
-            commands: [
-                {
-                    clickSave: function() {
-                        return this
-                            .clickElement('@saveButton')
-                            .waitForElementNotPresent(this.selector);
-                    },
-                    setRole: function (role) {
-                        return this
-                            .selectOptionInDropdown('@role', `${this.selector} ${this.elements.role.selector}`, role)
-                            .clickSave();
-                    }
-                }
-            ],
-        },
         addModal: {
             selector: '.addUserModal',
             elements: {
                 userName: '.content input[name="username"]',
                 password: '.content input[name="password"]',
                 confirmPassword: '.content input[name="confirmPassword"]',
-                role: '.content div.field div[role="listbox"]',
+                isAdmin: '.content input[type="checkbox"]',
                 okButton: '.actions button.ok',
                 cancelButton: '.actions button.cancel',
                 loading: 'form.loading'
@@ -145,13 +122,13 @@ module.exports = {
             },
             commands: [
                 {
-                    fillIn: function(userName, password, role) {
+                    fillIn: function(userName, password, isAdmin) {
                         return this
                             .waitForElementVisible(this.selector)
                             .setElementValue('@userName', userName)
                             .setElementValue('@password', password)
                             .setElementValue('@confirmPassword', password)
-                            .selectOptionInDropdown('@role', `${this.selector} ${this.elements.role.selector}`, role)
+                            .setCheckbox(`${this.selector}`, isAdmin)
 
                     },
                     clickAdd: function() {
@@ -200,11 +177,11 @@ module.exports = {
     },
     commands: [
         {
-            add: function (userName, password, role, tenant) {
+            add: function (userName, password, isAdmin, tenant) {
                 return this
                     .clickElement('@addButton')
                     .section.addModal
-                        .fillIn(userName, password, role)
+                        .fillIn(userName, password, isAdmin)
                         .performAddition(userName,
                             (context) => context
                                 .clickCancel()
@@ -213,9 +190,7 @@ module.exports = {
                                     .parent.section.setPasswordModal
                                         .setPassword(password)
                                 .parent.section.usersTable
-                                    .setRole(userName, role)
-                                    .parent.section.setRoleModal
-                                        .setRole(role)
+                                    .setAdmin(userName, isAdmin)
                                 .parent.section.usersTable
                                     .editTenants(userName)
                                     .parent.section.editTenantsModal
