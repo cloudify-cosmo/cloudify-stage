@@ -29,15 +29,30 @@ module.exports = {
                 endpoint: 'input[name="endpoint"]',
                 fireBtn: '.basic.compact.table .ui.button',
                 jsonResult: '.widgetContent .ui.segment pre code.hljs.json',
-                configIcon: '.setting.link.icon.small.editWidgetIcon',
                 urlIcon: '.widgetContent .ui.labeled.input .ui.label',
                 urlInput: 'input[name="url"]',
                 xmlResult: '.widgetContent .ui.segment pre code.hljs.xml',
+                header: 'div.widget.BackendWidgetWidget > div.widgetItem > h5.header',
+                loader: 'div.widget.BackendWidgetWidget div.widgetLoader',
+                editWidgetButton: 'div.widget.BackendWidgetWidget .widgetEditButtons i.editWidgetIcon'
             },
             props: {
                 urlLabel: 'URL',
                 blankUrl: 'http://blank.org/'
-            }
+            },
+            commands: [
+                {
+                    configureWidget: function () {
+                        this.moveToEditMode()
+                            .waitForElementPresent('@header')
+                            .waitForElementNotVisible('@loader')
+                            .waitForElementPresent('@header')
+                            .moveToElement('@header', undefined, undefined) // For details, see: https://github.com/nightwatchjs/nightwatch/issues/1250#issuecomment-257644295
+                            .clickElement('@editWidgetButton')
+                        return this;
+                    },
+                }
+            ],
         },
         widgetConfig: {
             selector: '.ui.modal.editWidgetModal',

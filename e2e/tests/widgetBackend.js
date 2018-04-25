@@ -67,6 +67,7 @@ module.exports = {
             .assert.containsText('@errorMsg', backend.section.installWidget.props.notAllowedModuleError);
 
         page.section.editModeSidebar
+            .moveToEditMode()
             .clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
@@ -110,7 +111,7 @@ module.exports = {
         var backend = client.page.widgetBackend();
 
         backend.section.backendWidget
-            .clickElement('@configIcon')
+            .configureWidget()
 
         backend.section.widgetConfig
             .selectOptionInDropdown('@dropdown', `${backend.section.widgetConfig.selector} ${backend.section.widgetConfig.elements.dropdown.selector}`, backend.section.widgetConfig.props.requestItem)
