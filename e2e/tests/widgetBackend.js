@@ -34,14 +34,13 @@ module.exports = {
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
-            .clickElement('@installWidgetBtn');
+            .clickElement('@installWidgetBtn')
+            .waitForElementVisible(page.section.installWidgetModal.selector);
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
             .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.broken1WidgetFilename, client.globals))
-            .clickElement('@okButton');
-
-        page.section.installWidgetModal
+            .clickElement('@okButton')
             .waitForElementPresent('@errorMessage')
             .assert.containsText('@errorMessage', backend.section.installWidget.props.notAllowedModuleError);
     },
@@ -74,8 +73,8 @@ module.exports = {
             .waitForElementPresent('@installWidgetBtn')
             .isWidgetInstalled(backend.props.broken2WidgetId, result => {
                 if (result.value) {
-                    client.page.page().section.addWidgetModal.uninstallWidget(backend.props.broken2WidgetId);
-            }
+                    page.section.addWidgetModal.uninstallWidget(backend.props.broken2WidgetId);
+                }
             });
     },
 
@@ -85,12 +84,13 @@ module.exports = {
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
-            .clickElement('@installWidgetBtn');
+            .clickElement('@installWidgetBtn')
+            .waitForElementVisible(page.section.installWidgetModal.selector)
 
         page.section.installWidgetModal
             .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.widgetFilename, client.globals))
             .clickElement('@okButton')
-            .waitForElementNotPresent('@okButton');
+            .waitForElementVisible(page.section.addWidgetModal.selector);
 
         page.section.addWidgetModal
             .clickElement('@closeIcon')

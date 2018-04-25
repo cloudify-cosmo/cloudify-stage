@@ -16,7 +16,7 @@ module.exports = {
             elements: {
                 tree: '.nodes-tree',
                 blueprintHeader: '.nodes-tree .rc-tree-title .label',
-                blueprintYaml: '.nodes-tree ul ul li:nth-child(3) .rc-tree-node-content-wrapper',
+                blueprintYaml: '.nodes-tree ul > li:first-child > ul > li:nth-child(3) .rc-tree-node-content-wrapper',
                 emptyContent: '.splitter-layout .layout-splitter + .layout-pane i.file.icon',
                 contentSnippet: '.splitter-layout .layout-splitter + .layout-pane .alignHighlight code span.hljs-attr:nth-child(1)',
                 fullScreenButton: '.splitter-layout .layout-splitter + .layout-pane .alignHighlight div.attached.label'
@@ -24,8 +24,8 @@ module.exports = {
         }
     },
     elements: {
-        overlay: '.ui.dimmer .overlay',
-        fullScreen: '.ui.dimmer .overlay code span.hljs-attr:nth-child(1)'
+        overlay: '.ui.dimmer .modal',
+        fullScreen: '.ui.dimmer .modal code span.hljs-attr:nth-child(1)'
     },
     props: {
         widgetId: 'blueprintSources',

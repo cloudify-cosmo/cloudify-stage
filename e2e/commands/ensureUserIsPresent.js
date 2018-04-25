@@ -2,9 +2,9 @@
  * Created by jakubniezgoda on 02/08/2017.
  */
 
-exports.command =  function(userName, password, role = 'default - User exists, but have no permissions', tenant = 'default_tenant') {
+exports.command =  function(userName, password, isAdmin = false, tenant = 'default_tenant') {
     return this
         .login()
-        .addUser(userName, password, role, tenant)
+        .addUser(userName, password, isAdmin, tenant)
         .logout();
 }

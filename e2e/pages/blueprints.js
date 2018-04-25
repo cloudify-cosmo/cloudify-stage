@@ -43,9 +43,10 @@ module.exports = {
                     },
 
                     checkIfDeploymentsCountEqual: function (blueprintName, deploymentsCount) {
-                        return this.getText(this.props.deploymentsCount(blueprintName), (result) => {
-                            this.assert.equal(result.value, deploymentsCount, 'Deployments count equals to ' + deploymentsCount + '.');
-                        });
+                        return this.waitForElementVisible(this.props.deploymentsCount(blueprintName))
+                            .getText(this.props.deploymentsCount(blueprintName), (result) => {
+                                this.assert.equal(result.value, deploymentsCount, 'Deployments count equals to ' + deploymentsCount + '.');
+                            });
                     },
                 }
             ],
@@ -82,7 +83,7 @@ module.exports = {
             commands: [
                 {
                     fillIn: function(blueprintUrl, blueprintName, blueprintYamlFile = 'blueprint.yaml') {
-                        let blueprintFileOptionElement = `select[name="blueprintFileName"] option[value="${blueprintYamlFile}"]`;
+                        let blueprintFileOptionElement = `div[name="blueprintFileName"] div[option-value="${blueprintYamlFile}"]`;
                         return this
                             .waitForElementVisible(this.selector)
                             .setElementValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB])
@@ -158,8 +159,8 @@ module.exports = {
                 cancelButton: '.actions button.cancel'
             },
             props: {
-                tableView: 'Table',
-                catalogView: 'Catalog',
+                tableView: 'table',
+                catalogView: 'catalog',
             },
             commands: [
                 {

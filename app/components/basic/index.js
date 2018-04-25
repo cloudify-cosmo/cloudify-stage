@@ -20,10 +20,11 @@ import MetricFilter from './MetricFilter';
 import NodeFilter from './NodeFilter';
 import Form from './form/Form';
 import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item, Sidebar, Card,
-         Segment, Accordion, List, Grid, Divider, Label, Menu, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
+         Segment, Accordion, List, Grid, Divider, Label, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
 import Dropdown from './Dropdown';
+import Menu from './Menu';
 import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
