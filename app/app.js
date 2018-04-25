@@ -25,7 +25,7 @@ import 'react-resizable/css/styles.css';
 import 'highlight.js/styles/xcode.css';
 
 // Import hopscotch
-import '../node_modules/hopscotch/dist/css/hopscotch.css';
+import 'hopscotch/dist/css/hopscotch.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
