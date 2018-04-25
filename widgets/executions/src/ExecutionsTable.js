@@ -7,6 +7,9 @@ export default class extends React.Component {
         super(props, context);
 
         this.state = {
+            execution: null,
+            errorModalOpen: false,
+            executionParametersModalOpen: false,
             error: null
         };
     }
@@ -50,10 +53,11 @@ export default class extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, DataTable, HighlightText, Overlay, Checkmark} = Stage.Basic;
+        let {Checkmark, DataTable, ErrorMessage, HighlightText, Icon, Modal} = Stage.Basic;
         let {ExecutionStatus} = Stage.Common;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
+        let execution = this.state.execution || {};
 
         return (
             <div>
@@ -98,31 +102,19 @@ export default class extends React.Component {
                                     <DataTable.Data>{item.created_by}</DataTable.Data>
                                     <DataTable.Data><Checkmark value={item.is_system_workflow}/></DataTable.Data>
                                     <DataTable.Data>
-                                        <Overlay>
-                                            <Overlay.Action>
-                                                <i data-overlay-action className="options icon link bordered" title="Execution parameters"></i>
-                                            </Overlay.Action>
-                                            <Overlay.Content>
-                                                <HighlightText className='json'>{JSON.stringify(item.parameters, null, 2)}</HighlightText>
-                                            </Overlay.Content>
-                                        </Overlay>
+                                        <Icon name="options" link bordered title="Execution parameters" onClick={()=>this.setState({execution: item, executionParametersModalOpen: true})} />
                                     </DataTable.Data>
                                     <DataTable.Data>
                                         { _.isEmpty(item.error) ?
                                             <div>
-                                                <i className="check circle icon inverted green"></i>
+                                                <Icon name="check circle" color="green" inverted />
                                                 <ExecutionStatus item={item} showInactiveAsLink={false} onCancelExecution={this._cancelExecution.bind(this)}/>
                                             </div>
                                             :
-                                            <Overlay>
-                                                <Overlay.Action title="Error details">
-                                                    <i data-overlay-action className="remove circle icon red link"></i>
-                                                    <ExecutionStatus item={item} showInactiveAsLink={true} onCancelExecution={this._cancelExecution.bind(this)}/>
-                                                </Overlay.Action>
-                                                <Overlay.Content>
-                                                    <HighlightText className='python'>{item.error}</HighlightText>
-                                                </Overlay.Content>
-                                            </Overlay>
+                                            <div>
+                                                <Icon name="remove circle" color="red" link onClick={()=>this.setState({execution: item, errorModalOpen: true})} />
+                                                <ExecutionStatus item={item} showInactiveAsLink={true} onCancelExecution={this._cancelExecution.bind(this)}/>
+                                            </div>
                                         }
                                     </DataTable.Data>
                                 </DataTable.Row>
@@ -130,6 +122,18 @@ export default class extends React.Component {
                         })
                     }
                 </DataTable>
+
+                <Modal open={this.state.executionParametersModalOpen} onClose={()=>this.setState({execution: null, executionParametersModalOpen: false})}>
+                    <Modal.Content scrolling>
+                        <HighlightText className='json'>{JSON.stringify(execution.parameters, null, 2)}</HighlightText>
+                    </Modal.Content>
+                </Modal>
+
+                <Modal open={this.state.errorModalOpen} onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
+                    <Modal.Content scrolling>
+                        <HighlightText className='python'>{execution.error}</HighlightText>
+                    </Modal.Content>
+                </Modal>
 
             </div>
         );

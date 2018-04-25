@@ -4,7 +4,7 @@
  */
 
 let path = require('path');
-var fs = require('fs');
+var expressStaticGzip = require('express-static-gzip');
 
 var config = require('./config');
 
@@ -52,7 +52,7 @@ var contextPath = config.get().app.contextPath;
 
 var app = express();
 
-app.use(contextPath, express.static(path.resolve(__dirname , '../dist'),{index: 'index.html'}));
+app.use(contextPath, expressStaticGzip(path.resolve(__dirname , '../dist'), {enableBrotli: true, indexFromEmptyFile: false}));
 app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'INFO'}));
 
 // For dev purposes

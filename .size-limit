@@ -1,14 +1,37 @@
 [
     {
-        "limit": "6000 KB",
+        "name": "Application (gzip)",
+        "limit": "2.7 MB",
         "gzip": false,
         "webpack": false,
-        "path": "dist/app.bundle.js"
+        "path": ["dist/*.gz", "dist/widgets/*/widget.js.gz", "dist/widgets/*/widget.css", "dist/widgets/*/widget.png", "dist/widgets/*/widget.html", "dist/widgets/*/backend.js", "dist/templates/**", "dist/app/**"]
     },
     {
-        "limit": "1300 KB",
+        "name": "Application (brotli)",
+        "limit": "2.3 MB",
         "gzip": false,
         "webpack": false,
-        "path": "dist/widgets/*/widget.js"
-    }
+        "path": ["dist/*.br", "dist/widgets/*/widget.js.br", "dist/widgets/*/widget.css", "dist/widgets/*/widget.png", "dist/widgets/*/widget.html", "dist/widgets/*/backend.js", "dist/templates/**", "dist/app/**"]
+    },
+    {
+        "name": "Main JS bundle",
+        "limit": "300 KB",
+        "gzip": false,
+        "webpack": false,
+        "path": "dist/main.bundle.js"
+    },
+    {
+        "name": "Vendor JS bundle",
+        "limit": "5 MB",
+        "gzip": false,
+        "webpack": false,
+        "path": "dist/vendor.bundle.js"
+    },
+    {
+        "name": "Application package",
+        "limit": "12 MB",
+        "gzip": false,
+        "webpack": false,
+        "path": "dist/**"
+    },
 ]

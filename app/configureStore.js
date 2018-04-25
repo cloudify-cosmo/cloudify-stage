@@ -43,6 +43,13 @@ export default (history,config) => {
     // This saves the manager data in the local storage. This is good for when a user refreshes the page we can know if he is logged in or not, and save his login info - ip, username
     store.subscribe(throttle(()=>{StatePersister.save(store.getState(),config.mode);},1000));
 
+    if (module.hot) {
+        module.hot.accept('./reducers', () => {
+            const newReducers = require('./reducers');
+            store.replaceReducer(newReducers);
+        })
+    }
+
     return store;
 };
 

@@ -2,13 +2,14 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
+const webpack = require('webpack');
+const webpackDevServer = require('webpack-dev-server');
 
-new WebpackDevServer(webpack(config), {
-    publicPath: config.output.publicPath,
+const config = require('./webpack.config');
+const options = {
+    publicPath: config[0].output.publicPath,
     hot: true,
+    host: 'localhost',
     inline: true,
     historyApiFallback: {
         index:'/stage/index.html'
@@ -79,10 +80,16 @@ new WebpackDevServer(webpack(config), {
             secure: false
         }
     }
-}).listen(4000, 'localhost', function (err, result) {
-        if (err) {
-            return console.log(err);
-        }
+};
 
-        console.log('Listening at http://localhost:4000/');
-    });
+webpackDevServer.addDevServerEntrypoints(config[0], options);
+const compiler = webpack(config);
+const server = new webpackDevServer(compiler, options);
+
+server.listen(4000, 'localhost', (err) => {
+    if (err) {
+        return console.log(err);
+    }
+
+    console.log('Listening at http://localhost:4000/');
+});

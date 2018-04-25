@@ -14,6 +14,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
 
+process.env.NODE_ENV = 'test';
 global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
 global.window = document.defaultView;
 global.navigator = window.navigator;
@@ -29,8 +30,6 @@ global.d3 = d3;
 
 chai.use(require('chai-enzyme')());
 chai.use(require('sinon-chai'));
-
-require('../semantic/dist/semantic');
 
 function noop() {
     return {};

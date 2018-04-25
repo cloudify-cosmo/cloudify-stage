@@ -1,106 +1,65 @@
 'use strict';
 
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var path = require('path');
+const webpack = require('webpack');
+const path = require('path');
+const glob = require('glob');
 
-module.exports = {
-    mode: 'development',
-    context: path.join(__dirname),
-    devtool: 'source-map',
-    resolve: {
-        modules: ['web_modules', 'node_modules', 'bower_components'],
-        alias: {
-            'jquery-ui': 'jquery-ui/ui',
-            'jquery': __dirname + '/node_modules/jquery' // Always make sure we take jquery from the same place
-        }
-    },
-    entry: {
-        'dev': [
-            'webpack-dev-server/client?http://0.0.0.0:4000', // WebpackDevServer host and port
-            'webpack/hot/only-dev-server' /// "only" prevents reload on syntax errors
-        ],
-        'main.bundle': [
-            './app/main.js'
-        ]
-    },
-    output: {
-        path: path.join(__dirname, 'dist'),
-        filename: '[name].js',
-        publicPath: '/stage'
-    },
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-    plugins: [
-        new CopyWebpackPlugin([
-            { from: 'app/images',
-             to: 'app/images'}
-        ]),
-        new CopyWebpackPlugin([
-            { from: 'widgets',
-             to: 'widgets'}
-        ]),
-        new CopyWebpackPlugin([
-            { from: 'templates',
-                to: 'templates'}
-        ]),
-        new CopyWebpackPlugin([
-            { from: 'userData',
-                to: 'userData'}
-        ]),
-        new HtmlWebpackPlugin({
-            template: 'app/index.tmpl.html',
-            inject: 'body',
-            filename: 'index.html',
-            chunks: ['main.bundle']
-        }),
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.ProvidePlugin({
-            $: 'jquery',
-            jQuery: 'jquery',
-            d3: 'd3'
-        })
-    ],
+const getWidgetEntries = () => {
+    return glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
+        let name = item.replace('./widgets/', '').replace('/src', '');
+        acc[name] = item;
+        return acc;
+    }, {});
+}
 
-    optimization: {
-        noEmitOnErrors: true
-    },
-
-    module: {
-        rules: [{
-            test: /\.js?$/,
-            exclude: [/bower_components/, new RegExp('node_modules\\'+path.sep+'(?!d3-format).*'), /cloudify-blueprint-topology/],
-            use: [{
-                loader: 'babel-loader',
-                options: {
-                    plugins: ['react-hot-loader/babel'],
-                },
-            }]
-        }, {
-            test: /\.scss$/,
-            use: [{
-                loader: 'style-loader'
-            }, {
-                loader: 'css-loader'
-            }, {
-                loader: 'sass-loader',
-
-                options: {
-                    modules: true,
-                    localIdentName: '[name]---[local]---[hash:base64:5]'
-                }
-            }]
-        }, { test: /\.css$/, use: [{
+const rules = [
+    {
+        test: /\.js?$/,
+        exclude: /node_modules/,
+        use: [{
+            loader: 'babel-loader',
+            options: {
+                presets: [['env', {modules: false}], 'react', 'stage-0'],
+                plugins: ['react-hot-loader/babel', 'transform-runtime'],
+                babelrc: false
+            }
+        }]
+    }, {
+        test: /\.scss$/,
+        use: [{
             loader: 'style-loader'
         }, {
             loader: 'css-loader',
 
             options: {
-                importLoaders: 1
+                minimize: true
             }
-        }] },
-        { test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/, use: [{
+        }, {
+            loader: 'sass-loader',
+
+            options: {
+                modules: true,
+                localIdentName: '[name]---[local]---[hash:base64:5]'
+            }
+        }]
+    }, {
+        test: /\.css$/,
+        use: [{
+            loader: 'style-loader'
+        }, {
+            loader: 'css-loader',
+
+            options: {
+                importLoaders: 1,
+                minimize: true
+            }
+        }]
+    }, {
+        test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,
+        use: [{
             loader: 'url-loader',
 
             options: {
@@ -108,6 +67,115 @@ module.exports = {
                 name: '[name].[ext]'
             }
         }]
-        }]
     }
-};
+];
+
+module.exports = [
+    {
+        mode: 'development',
+        context: path.join(__dirname),
+        devtool: 'eval',
+        resolve: {
+            alias: {
+                'jquery-ui': 'jquery-ui/ui',
+                'jquery': __dirname + '/node_modules/jquery' // Always make sure we take jquery from the same place
+            }
+        },
+        entry: {
+            'main.bundle': [
+                './app/main.js'
+            ]
+        },
+        output: {
+            path: path.join(__dirname, 'dist'),
+            filename: '[name].js',
+            publicPath: '/stage'
+        },
+        plugins: [
+            new CopyWebpackPlugin([
+                {
+                    from: 'app/images',
+                    to: 'app/images'
+                }
+            ]),
+            new CopyWebpackPlugin([
+                {
+                    from: 'widgets',
+                    to: 'widgets',
+                    ignore: ['**/src/*', '*/widget.js', '*/backend.js', '*/common.js']
+                }
+            ]),
+            new CopyWebpackPlugin([
+                {
+                    from: 'templates',
+                    to: 'templates'
+                }
+            ]),
+            new CopyWebpackPlugin([
+                {
+                    from: 'userData',
+                    to: 'userData'
+                }
+            ]),
+            new HtmlWebpackPlugin({
+                template: 'app/index.tmpl.html',
+                inject: 'body',
+                filename: 'index.html',
+                chunks: ['main.bundle']
+            }),
+            new webpack.optimize.OccurrenceOrderPlugin(),
+            new webpack.NamedModulesPlugin(),
+            new webpack.HotModuleReplacementPlugin(),
+            new webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery',
+                d3: 'd3'
+            })
+        ],
+        module: {
+            rules
+        }
+    },
+    {
+        mode: 'development',
+        context: path.join(__dirname),
+        devtool: 'eval',
+        entry: getWidgetEntries(),
+        output: {
+            path: path.join(__dirname, 'dist'),
+            filename: 'widgets/[name]',
+            publicPath: '/stage'
+        },
+        plugins: [
+            new CopyWebpackPlugin([
+                {
+                    from: 'widgets/**/src/backend.js',
+                    to: '[path]../backend.js'
+                }
+            ]),
+            new webpack.NamedModulesPlugin(),
+            new webpack.HotModuleReplacementPlugin()
+        ],
+        module: {
+            rules
+        }
+    },
+    {
+        mode: 'development',
+        context: path.join(__dirname),
+        devtool: 'eval',
+        entry: glob.sync('./widgets/common/src/*.js'),
+        output: {
+            path: path.join(__dirname, 'dist'),
+            filename: 'widgets/common/common.js',
+            publicPath: '/stage'
+        },
+        plugins: [
+            new webpack.NamedModulesPlugin(),
+            new webpack.HotModuleReplacementPlugin()
+        ],
+        module: {
+            rules
+        }
+    }
+];

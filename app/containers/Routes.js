@@ -12,7 +12,10 @@ import Auth from '../utils/auth';
 const mapStateToProps = (state, ownProps) => {
     return {
         isLoggedIn: Auth.isLoggedIn(),
-        isInMaintenanceMode: state.manager && state.manager.maintenance === Consts.MAINTENANCE_ACTIVATED
+        isInMaintenanceMode: state.manager && state.manager.maintenance === Consts.MAINTENANCE_ACTIVATED,
+        isSamlEnabled: _.get(state, 'config.app.saml.enabled', false),
+        samlPortalUrl: _.get(state, 'config.app.saml.portalUrl', ''),
+        samlSsoUrl: _.get(state, 'config.app.saml.ssoUrl', '')
     }
 };
 

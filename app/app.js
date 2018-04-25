@@ -14,8 +14,7 @@ import 'jquery-ui/ui/widgets/droppable.js';
 import './styles/style.scss';
 
 // Import semantic
-import '../semantic/dist/semantic.min.css';
-import '../semantic/dist/semantic.min';
+import 'semantic-ui-css/semantic.min.css';
 
 // Import react grid
 import 'react-grid-layout/css/styles.css';

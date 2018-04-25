@@ -1,7 +1,6 @@
 /**
  * Created by edenp on 22/10/2017.
  */
-import _ from 'lodash';
 
 import PropTypes from 'prop-types';
 

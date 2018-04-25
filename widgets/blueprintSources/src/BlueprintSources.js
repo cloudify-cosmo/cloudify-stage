@@ -63,7 +63,7 @@ export default class BlueprintSources extends React.Component {
     }
 
     render() {
-        var {NodesTree, Message, Label, Overlay, HighlightText, ErrorMessage, Icon, SplitterLayout} = Stage.Basic;
+        var {NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon, SplitterLayout} = Stage.Basic;
 
         const loop = data => {
             return data.map(item => {
@@ -94,12 +94,12 @@ export default class BlueprintSources extends React.Component {
                         {this.state.content ?
                             <div className="alignHighlight">
                                 <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
-                                <Label attached='top right' size="small" onClick={()=> this.refs.contentOverlay.show()}>
+                                <Label attached='top right' size="small" onClick={()=> this.setState({maximized: true})}>
                                     <Icon name="maximize" link/>{this.state.filename}
                                 </Label>
-                                <Overlay ref="contentOverlay">
+                                <Modal open={this.state.maximized} onClose={()=> this.setState({maximized: false})} >
                                     <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
-                                </Overlay>
+                                </Modal>
                             </div>
                             :
                             <div className="verticalCenter centeredIcon">
