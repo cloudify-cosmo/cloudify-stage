@@ -36,6 +36,8 @@ var GitHub = require('./routes/GitHub');
 var Style = require('./routes/Style');
 var Widgets = require('./routes/Widgets');
 var Templates = require('./routes/Templates');
+var Tours = require('./routes/Tours');
+var ToursHandler = require('./handler/ToursHandler');
 var WidgetBackend = require('./routes/WidgetBackend');
 var File = require('./routes/File');
 var Plugins = require('./routes/Plugins');
@@ -88,6 +90,7 @@ app.use(contextPath + '/monitor',Monitoring);
 app.use(contextPath + '/style',Style);
 app.use(contextPath + '/widgets',Widgets);
 app.use(contextPath + '/templates',Templates);
+app.use(contextPath + '/tours',Tours);
 app.use(contextPath + '/clientConfig',clientConfig);
 app.use(contextPath + '/github',GitHub);
 app.use(contextPath + '/file',File);
@@ -104,11 +107,12 @@ app.get('*',function (request, response){
 
 // Initialize authorization data (fetch from manager)
 AuthHandler.initAuthorization().then(function(){
-
-    // Only after we have all the data in place start the server
-    app.listen(8088, function () {
-        logger.info('Server started in mode '+ServerSettings.settings.mode);
-        logger.info('Stage runs on port 8088!');
+    ToursHandler.init().then(function(){
+        // Only after we have all the data in place start the server
+        app.listen(8088, function () {
+            logger.info('Server started in mode '+ServerSettings.settings.mode);
+            logger.info('Stage runs on port 8088!');
+        });
     });
 });
 
