@@ -7,4 +7,5 @@ exports.command = function(widgetId) {
         .removeLastPage()
         .addPage()
         .addWidget(widgetId)
+        .moveOutOfEditMode();
 };

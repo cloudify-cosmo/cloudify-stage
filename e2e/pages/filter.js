@@ -9,24 +9,24 @@ module.exports = {
     },
     commands: [{
         isBlueprintPresent: function(blueprint, callback) {
-            return this.waitForElementPresent('.filterWidget #blueprintFilterField select')
-                       .isPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]', callback);
+            return this.waitForElementPresent('.filterWidget #blueprintFilterField div[role="listbox"]')
+                       .isPresent('.filterWidget #blueprintFilterField div[option-value="' + blueprint + '"]', callback);
         },
         isDeploymentPresent: function(deployment, callback) {
-            return this.waitForElementPresent('.filterWidget #deploymentFilterField select')
-                       .isPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]', callback);
+            return this.waitForElementPresent('.filterWidget #deploymentFilterField div[role="listbox"]')
+                       .isPresent('.filterWidget #deploymentFilterField div[option-value="' + deployment + '"]', callback);
         },
         waitForBlueprintPresent: function(blueprint) {
-            return this.waitForElementPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]');
+            return this.waitForElementPresent('.filterWidget #blueprintFilterField div[option-value="' + blueprint + '"]');
         },
         waitForBlueprintNotPresent: function(blueprint) {
-            return this.waitForElementNotPresent('.filterWidget #blueprintFilterField select option[value="' + blueprint + '"]');
+            return this.waitForElementNotPresent('.filterWidget #blueprintFilterField div[option-value="' + blueprint + '"]');
         },
         waitForDeploymentPresent: function(deployment) {
-            return this.waitForElementPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]');
+            return this.waitForElementPresent('.filterWidget #deploymentFilterField div[option-value="' + deployment + '"]');
         },
         waitForDeploymentNotPresent: function(deployment) {
-            return this.waitForElementNotPresent('.filterWidget #deploymentFilterField select option[value="' + deployment + '"]');
+            return this.waitForElementNotPresent('.filterWidget #deploymentFilterField div[option-value="' + deployment + '"]');
         }
     }],
     props: {

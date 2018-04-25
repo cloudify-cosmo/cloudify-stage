@@ -39,9 +39,9 @@ module.exports = {
                 deploymentRow : (name) => `tr#deploymentsTable_${name}`,
                 deploymentMenu : (name) => `tr#deploymentsTable_${name} td.rowActions i.menuAction`,
                 workflowExecutionLabel : (name) => `tr#deploymentsTable_${name} td.rowActions div.label`,
-                editOption: 'Edit',
-                deleteOption: 'Delete',
-                forceDeleteOption: 'Force Delete'
+                editOption: 'edit',
+                deleteOption: 'delete',
+                forceDeleteOption: 'forceDelete'
             },
             commands: [
                 {
@@ -114,8 +114,8 @@ module.exports = {
                 cancelButton: '.actions button.cancel'
             },
             props: {
-                tableView: 'Table',
-                listView: 'List',
+                tableView: 'table',
+                listView: 'list',
             },
             commands: [
                 {
@@ -162,7 +162,7 @@ module.exports = {
             commands: [
                 {
                     fillIn: function(blueprintUrl, blueprintYamlFile = 'blueprint.yaml') {
-                        let blueprintFileOptionElement = `select[name="applicationFileName"] option[value="${blueprintYamlFile}"]`;
+                        let blueprintFileOptionElement = `div[name="applicationFileName"] div[option-value="${blueprintYamlFile}"]`;
                         // var pathlib = require("path");
                         return this
                             .waitForElementVisible(this.selector)
@@ -173,7 +173,7 @@ module.exports = {
                             .selectOptionInDropdown('@blueprintYamlFile', this.elements.blueprintYamlFile.selector, blueprintYamlFile);
                     },
                     clickUpdate: function () {
-                        this.waitForElementVisible(this.selector)
+                        return this.waitForElementVisible(this.selector)
                             .clickElement('@updateButton')
                             .waitForElementNotPresent(this.selector);
                     }
@@ -190,7 +190,7 @@ module.exports = {
             commands: [
                 {
                     clickExecute: function () {
-                        this.waitForElementVisible(this.selector)
+                        return this.waitForElementVisible(this.selector)
                             .clickElement('@executeButton')
                             .waitForElementNotPresent(this.selector);
                     }
@@ -207,7 +207,7 @@ module.exports = {
             commands: [
                 {
                     clickYes: function () {
-                        this.waitForElementVisible(this.selector)
+                        return this.waitForElementVisible(this.selector)
                             .clickElement('@yesButton')
                             .waitForElementNotPresent(this.selector);
                     }

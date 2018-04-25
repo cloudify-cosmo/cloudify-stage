@@ -63,8 +63,14 @@ module.exports = {
     },
 
     'Execute workflow': function (client) {
-        const WORKFLOW_NAME = 'Install';
+        const WORKFLOW_NAME = 'install';
         let page = client.page.deployments();
+
+        // Set refresh interval to 1 seconds to see changing execution status
+        page.configureWidget()
+            .section.configureWidgetModal
+            .setPollingTime(1)
+            .clickSave();
 
         page.section.deploymentsTable
             .checkIfDeploymentPresent(DEPLOYMENT_NAME)
@@ -72,26 +78,25 @@ module.exports = {
         page.section.executeWorkflowModal
             .clickExecute();
 
-        client.pause(2000);
         page.section.deploymentsTable
+            .checkIfWorkflowStartedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT)
             .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
     },
 
-    'Deployment update': function (client) {
-        let page = client.page.deployments();
-
-        page.section.deploymentsTable
-            .checkIfDeploymentPresent(DEPLOYMENT_NAME)
-            .clickEdit(DEPLOYMENT_NAME);
-        page.section.updateDeploymentModal
-            .fillIn(BLUEPRINT_URL, BLUEPRINT_YAML_FILENAME)
-            .clickUpdate();
-        client.pause(2000);
-        page.section.deploymentsTable
-            .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
-
-        // TODO: Add verification?
-    },
+    // TODO: Implement when backend is ready
+    // 'Deployment update': function (client) {
+    //     let page = client.page.deployments();
+    //
+    //     page.section.deploymentsTable
+    //         .checkIfDeploymentPresent(DEPLOYMENT_NAME)
+    //         .clickEdit(DEPLOYMENT_NAME);
+    //     page.section.updateDeploymentModal
+    //         .fillIn(BLUEPRINT_URL, BLUEPRINT_YAML_FILENAME)
+    //         .clickUpdate();
+    //     client.pause(2000);
+    //     page.section.deploymentsTable
+    //         .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
+    // },
 
     'Deployment remove': function (client) {
         let page = client.page.deployments();
@@ -99,6 +104,7 @@ module.exports = {
         page.section.deploymentsTable
             .checkIfDeploymentPresent(DEPLOYMENT_NAME)
             .clickForceDelete(DEPLOYMENT_NAME);
+
         page.section.removeDeploymentModal
             .clickYes();
 

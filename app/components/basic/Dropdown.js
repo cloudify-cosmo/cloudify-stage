@@ -2,9 +2,8 @@
  * Created by pposel on 23/01/2017.
  */
 
-import React, { Children, cloneElement } from 'react';
-import { Dropdown as DropdownSemanticUiReact, DropdownMenu, DropdownHeader } from 'semantic-ui-react'
-import { createShorthand } from 'semantic-ui-react/dist/commonjs/lib';
+import React from 'react';
+import { Dropdown } from 'semantic-ui-react';
 
 /**
  * Dropdown is a component which extends [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework
@@ -29,37 +28,21 @@ import { createShorthand } from 'semantic-ui-react/dist/commonjs/lib';
  * ### Dropdown - opened (after click)
  * ![Dropdown_1](manual/asset/Dropdown_1.png)
  */
-export default class Dropdown extends DropdownSemanticUiReact {
 
-    renderMenu = () => {
-        const { open } = this.state;
-        const menuClasses = open ? 'visible' : '';
-        const ariaOptions = this.getDropdownMenuAriaOptions();
-
-        const {
-            children,
-            header
-        } = this.props;
-
-
-        // single menu child
-        // Used only for dropdown menu, we are currently using Popup Menu so I do not port it to the body.
-        if (!_.isNil(children)) {
-            const menuChild = Children.only(children);
-            const className = [menuClasses, menuChild.props.className].join(' ');
-
-            return cloneElement(menuChild, { className, ...ariaOptions })
+export default class extends Dropdown {
+    render() {
+        const addOptionValueAttribute = (options) => {
+            return _.map(options, (option) => ({...option, 'option-value': option.value || 'empty-option'}));
+        }
+        let props = {...this.props};
+        if (props.options) {
+            props.options = addOptionValueAttribute(props.options);
         }
 
         return (
-            <DropdownMenu {...ariaOptions} className={`${menuClasses} ${name}`} >
-                {createShorthand(DropdownHeader, val => ({content: val}), header)}
-                {this.renderOptions()}
-            </DropdownMenu>
-        )
+            <Dropdown {...props}>
+                {this.props.children}
+            </Dropdown>
+        );
     }
-
 }
-
-Dropdown.defaultProps = Object.assign({}, Dropdown.defaultProps,
-                                            {selectOnBlur: false, openOnFocus: false});
