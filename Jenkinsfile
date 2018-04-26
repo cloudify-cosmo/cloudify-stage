@@ -1,14 +1,14 @@
 pipeline {
     agent { label 'web-ui' }
     environment {
-        BRANCH_NAME=${env.BRANCH_NAME}
+        BRANCH_NAME="${env.BRANCH_NAME}"
     }
     
     stages {
         
         stage('BRANCH_NAME') {
             steps{
-                sh 'echo BRANCH_NAME = "${BRANCH_NAME}"'
+                sh 'echo BRANCH_NAME = ${BRANCH_NAME}'
             }
         }
         stage('Clean') {
