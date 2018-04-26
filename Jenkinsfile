@@ -8,7 +8,7 @@ pipeline {
         
         stage('BRANCH_NAME') {
             steps{
-                sh 'echo BRANCH_NAME = ${BRANCH_NAME}'
+                sh 'echo BRANCH_NAME = "${BRANCH_NAME}"'
             }
         }
         stage('Clean') {
