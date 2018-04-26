@@ -32,6 +32,7 @@ export function getStatus () {
         return managerAccessor.doGet('/status')
             .then((data)=>{
                 var services = _.filter(data.services, item => !_.isEmpty(item.instances));
+                services = _.sortBy(services, (service) => service.display_name);
                 dispatch(setStatus(data.status, services));
             }).catch((err)=>{
                 console.error(err);
