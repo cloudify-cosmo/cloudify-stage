@@ -18,8 +18,8 @@ module.exports = {
 
         page.waitForElementVisible('@statusesTitle')
             .assert.containsText('@statusesTitle','Server Services Status')
-            .assert.containsText('@statusesName','Cloudify Composer')
-            .assert.containsText('@statusesDesc','Cloudify Composer Service');
+            .assert.containsText('@statusesName','AMQP InfluxDB')
+            .assert.containsText('@statusesDesc','Cloudify AMQP InfluxDB Broker Service');
 
         client.end();
     }
