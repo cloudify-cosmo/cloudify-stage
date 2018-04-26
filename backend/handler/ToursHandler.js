@@ -11,6 +11,10 @@ var TemplateHandler = require('./TemplateHandler');
 var logger = require('log4js').getLogger('ToursHandler');
 
 var builtInToursFolder = pathlib.resolve('../tours');
+if (!fs.existsSync(builtInToursFolder)) {
+    builtInToursFolder = pathlib.resolve('../dist/tours');
+}
+
 var tours = {};
 
 function getTemplateTours(templateId) {

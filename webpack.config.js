@@ -45,6 +45,10 @@ module.exports = {
                 to: 'templates'}
         ]),
         new CopyWebpackPlugin([
+            { from: 'tours',
+                to: 'tours'}
+        ]),
+        new CopyWebpackPlugin([
             { from: 'userData',
                 to: 'userData'}
         ]),
