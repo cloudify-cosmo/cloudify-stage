@@ -142,6 +142,12 @@ module.exports = [
                     to: 'templates'
                 }
             ]),
+            new CopyWebpackPlugin([
+                {
+                    from: 'tours',
+                    to: 'tours'
+                }
+            ]),
             new HtmlWebpackPlugin({
                 template: 'app/index.tmpl.html',
                 inject: 'body',
