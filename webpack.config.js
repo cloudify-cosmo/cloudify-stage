@@ -113,6 +113,12 @@ module.exports = [
             ]),
             new CopyWebpackPlugin([
                 {
+                    from: 'tours',
+                    to: 'tours'
+                }
+            ]),
+            new CopyWebpackPlugin([
+                {
                     from: 'userData',
                     to: 'userData'
                 }
