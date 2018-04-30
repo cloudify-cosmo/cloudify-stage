@@ -6,6 +6,13 @@ import * as types from './types';
 import Tours from '../utils/Tours';
 import hopscotch from 'hopscotch';
 
+function hopscotchStartTour(tour) {
+    hopscotch.startTour(Tours.parseTour(tour));
+}
+
+function getTourById(tours, tourId) {
+    return _.find(tours, {'id': tourId});
+}
 
 export function storeTours(tours) {
     return {
@@ -21,23 +28,34 @@ export function loadTours() {
     }
 }
 
-export function startTour(tour) {
+export function redirectStartTour(tourId, redirectTo) {
     return function (dispatch) {
-        hopscotch.startTour(tour);
+        sessionStorage.setItem('startedTour', tourId);
+        window.location = redirectTo;
     }
 }
 
-
-function getTourById(tours, tourId) {
-    return _.find(tours, {'id': tourId});
+export function startTour(tour) {
+    return function (dispatch) {
+        hopscotchStartTour(tour);
+    }
 }
 
 export function continueTour() {
     return function (dispatch, getState) {
         var tours = getState().tours;
-        var currentTour = hopscotch.getState();
-        if(currentTour){
-            hopscotch.startTour(getTourById(tours, currentTour.split(':')[0]));
+
+        // Checks for a initialized tour that redirected to a different page before starting
+        var startedTourId = sessionStorage.getItem('startedTour');
+        if(startedTourId){
+            sessionStorage.removeItem('startedTour');
+            hopscotchStartTour(getTourById(tours, startedTourId));
+        }else{
+            // Checks for a multipage tour in progress
+            var currentTour = hopscotch.getState();
+            if(currentTour){
+                hopscotchStartTour(getTourById(tours, currentTour.split(':')[0]));
+            }
         }
     }
 }

@@ -4,7 +4,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Tours from '../utils/Tours';
 
 export default class ToursModal extends React.Component {
 
@@ -22,7 +21,7 @@ export default class ToursModal extends React.Component {
 
     startTour(tour) {
         this.props.onClose();
-        this.props.onTourStart(Tours.parseTour(tour));
+        this.props.onTourStart(tour);
     }
 
     render() {

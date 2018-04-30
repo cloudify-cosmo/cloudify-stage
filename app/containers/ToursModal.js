@@ -4,7 +4,8 @@
 
 import ToursModal from '../components/ToursModal';
 import { connect } from 'react-redux';
-import {startTour} from '../actions/tours';
+import {startTour, redirectStartTour} from '../actions/tours';
+import Tours from '../utils/Tours';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -15,7 +16,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onTourStart: (tour) => {
-            dispatch(startTour(tour));
+            if(Tours.shouldRedirectBeforeStarting(tour)){
+                dispatch(redirectStartTour(tour.id, tour.startAt));
+            } else{
+                dispatch(startTour(tour));
+            }
         }
     }
 };

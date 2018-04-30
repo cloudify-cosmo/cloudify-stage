@@ -61,6 +61,7 @@
     },
     {
         "name": "My second tour",
+        "startAt": "/stage/page/blueprints_catalog",
         "id": "secondTour",
         "steps": [
             {
@@ -73,7 +74,7 @@
                 "title": "Catalog of blueprints in the sky",
                 "content": "This is the catalog of blueprints. It’s a list of blueprints stored in the cloud that you can use in your manager. Don’t be confused. These blueprints aren’t actually on the manager until you click Upload. So obvious, right?",
                 "target": ".blueprintCatalogWidget",
-                "placement": "top",
+                "placement": "bottom",
                 "width": 350
             },
             {
