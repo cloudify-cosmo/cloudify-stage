@@ -32,7 +32,7 @@ export default class Manager extends Component {
         return (
             this.props.showServicesStatus
             ?
-                <Popup wide hoverable>
+                <Popup wide hoverable position='bottom right'>
                     <Popup.Trigger>{managerInfo()}</Popup.Trigger>
                     <Services/>
                 </Popup>
