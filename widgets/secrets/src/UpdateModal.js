@@ -17,6 +17,7 @@ export default class UpdateModal extends React.Component {
     static initialState = {
         loading: false,
         secretValue: '',
+        canUpdateSecret: true,
         errors: {}
     }
 
@@ -47,7 +48,11 @@ export default class UpdateModal extends React.Component {
 
             let actions = new Actions(this.props.toolbox);
             actions.doGet(nextProps.secret.key).then((secret)=>{
-                this.setState({secretValue: secret.value, loading: false, errors: {}});
+                let canUpdateSecret = true;
+                if (nextProps.secret.is_hidden_value && _.isEmpty(secret.value)) {
+                    canUpdateSecret = false;
+                }
+                this.setState({secretValue: secret.value, loading: false, errors: {}, canUpdateSecret});
             }).catch((err)=> {
                 this.setState({loading: false, errors: {secretValue: err.message}});
             });
@@ -84,7 +89,10 @@ export default class UpdateModal extends React.Component {
     }
 
     render() {
-        let {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        let {Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage} = Stage.Basic;
+        let canUpdateSecret = this.state.canUpdateSecret;
+        let currentUsername = this.props.toolbox.getManager().getCurrentUsername();
+        let selectedTenant = this.props.toolbox.getManager().getSelectedTenant();
 
         return (
             <div>
@@ -94,18 +102,29 @@ export default class UpdateModal extends React.Component {
                     </Modal.Header>
 
                     <Modal.Content>
+                        {
+                            !canUpdateSecret &&
+                            <ErrorMessage error={`User \`${currentUsername}\` is not permitted to update value of the secret '${this.props.secret.key}' in the tenant \`${selectedTenant}\` .`} />
+                        }
                         <Form loading={this.state.loading} errors={this.state.errors}
                               onErrorsDismiss={() => this.setState({errors: {}})}>
-                            <Form.Field error={this.state.errors.secretValue}>
-                                <Form.TextArea name='secretValue' placeholder='Secret value' autoHeight
-                                               value={this.state.secretValue} onChange={this._handleInputChange.bind(this)}/>
-                            </Form.Field>
+                            {
+                                canUpdateSecret &&
+                                <Form.Field error={this.state.errors.secretValue}>
+                                    <Form.TextArea name='secretValue' placeholder='Secret value' autoHeight
+                                                   value={this.state.secretValue} onChange={this._handleInputChange.bind(this)}/>
+                                </Form.Field>
+                            }
                         </Form>
                     </Modal.Content>
 
                     <Modal.Actions>
                         <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                        <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Update" icon='edit' color="green"/>
+                        {
+                            (!this.props.secret.is_hidden_value || !_.isEmpty(this.props.secret.value)) &&
+                            <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading}
+                                           content="Update" icon='edit' color="green"/>
+                        }
                     </Modal.Actions>
                 </Modal>
             </div>
