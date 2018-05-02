@@ -19,8 +19,14 @@ export default class Tours {
         });
     }
 
+    static shouldRedirectBeforeStarting(tour, startAt) {
+        var startAt = _.get(tour, 'startAt', null);
+        return !_.isNil(startAt) && window.location.pathname !== startAt;
+    }
+
     static parseTour(tour) {
         var hopscotchTour =  _.omit(_.cloneDeep(tour), 'name');
+        hopscotchTour = _.omit(hopscotchTour, 'startAt');
         hopscotchTour.steps =  _.map(hopscotchTour.steps, (step) => {
             if(!_.isUndefined(step.onNextRedirectTo)){
                 var redirectionUrl = step.onNextRedirectTo;
