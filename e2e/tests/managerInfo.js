@@ -14,12 +14,10 @@ module.exports = {
             .waitForElementPresent('@statusIconGreen')
             .clickElement('@version')
             .assert.containsText('@ip', Config.managerVersion)
-            .assert.cssClassPresent('@statusIcon','green')
+            .assert.cssClassPresent('@statusIcon','green');
 
         page.waitForElementVisible('@statusesTitle')
-            .assert.containsText('@statusesTitle','Server Services Status')
-            .assert.containsText('@statusesName','AMQP InfluxDB')
-            .assert.containsText('@statusesDesc','Cloudify AMQP InfluxDB Broker Service');
+            .assert.containsText('@statusesTitle','Server Services Status');
 
         client.end();
     }

@@ -158,8 +158,6 @@ module.exports = {
     elements: {
         tenantsDropdownText : 'div.tenantsMenu',
         statusesTitle: 'table.servicesData tr th',
-        statusesName: 'table.servicesData tr td',
-        statusesDesc : 'table.servicesData tr td div.sub.header',
         breadcrumb: '.breadcrumbLineHeight',
         pageTitle: '.pageTitle'
     }
