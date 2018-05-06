@@ -78,7 +78,7 @@ pipeline {
                       if [ ! -z $WIDGET_SUB_DIR ];then
                         s3cmd sync --access_key=${AWS_ACCESS_KEY_ID} --secret_key=${AWS_ACCESS_KEY} --acl-public --no-mime-magic --guess-mime-type \\
                         cloudify-stage/doc/www/ \\
-                        s3://docs.getcloudify.org/widgets-api/$WIDGET_SUB_DIR/
+                        s3://docs.cloudify.co/widgets-api/$WIDGET_SUB_DIR/
                       fi'''
             }
         }
