@@ -15,12 +15,16 @@ export default class {
         return this.toolbox.getManager().doDelete(`/secrets/${key}`);
     }
 
-    doCreate(key, value, visibility) {
-        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, {value, visibility});
+    doCreate(key, value, visibility, is_hidden_value) {
+        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, {value, visibility, is_hidden_value});
     }
 
     doUpdate(key, value) {
         return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, {value});
+    }
+
+    doSetIsHiddenValue(key, is_hidden_value) {
+        return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, {is_hidden_value});
     }
 
     doSetVisibility(key, visibility) {

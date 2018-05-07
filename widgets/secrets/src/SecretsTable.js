@@ -15,6 +15,7 @@ export default class SecretsTable extends React.Component {
             showModal: false,
             modalType: '',
             secret: {},
+            canShowSecret: true,
             showSecretKey: '',
             showSecretValue: '',
             showSecretLoading: false
@@ -62,8 +63,11 @@ export default class SecretsTable extends React.Component {
 
         let actions = new Actions(this.props.toolbox);
         actions.doGet(secretKey).then((secret)=>{
-            this.setState({showSecretValue: secret.value, showSecretLoading: false, error: null});
-            this.props.toolbox.getEventBus().trigger('secrets:refresh');
+            let canShowSecret = true;
+            if (secret.is_hidden_value && _.isEmpty(secret.value)) {
+                canShowSecret = false;
+            }
+            this.setState({showSecretValue: secret.value, showSecretLoading: false, error: null, canShowSecret});
         }).catch((err)=> {
             this.setState({showSecretLoading: false, error: err.message});
         });
@@ -100,14 +104,30 @@ export default class SecretsTable extends React.Component {
             });
     }
 
+    _onIsHiddenValueChange(secretKey, isHiddenValue) {
+        var actions = new Actions(this.props.toolbox);
+        this.props.toolbox.loading(true);
+        actions.doSetIsHiddenValue(secretKey, isHiddenValue)
+            .then(()=> {
+                this.props.toolbox.loading(false);
+                this.props.toolbox.refresh();
+            })
+            .catch((err)=>{
+                this.props.toolbox.loading(false);
+                this.setState({error: err.message});
+            });
+    }
+
     _hideModal() {
         this.setState({showModal: false});
     }
 
     render() {
-        let {ErrorMessage, DataTable, Icon, ResourceVisibility} = Stage.Basic;
+        let {Checkbox, DataTable, ErrorMessage, Icon, Popup, ResourceVisibility} = Stage.Basic;
         let DeleteModal = Stage.Basic.Confirm;
         let data = this.props.data;
+        let currentUsername = this.props.toolbox.getManager().getCurrentUsername();
+        let selectedTenant = this.props.toolbox.getManager().getSelectedTenant();
 
         return (
             <div>
@@ -123,10 +143,11 @@ export default class SecretsTable extends React.Component {
 
                     <DataTable.Column label="Key" name="key" width="20%" />
                     <DataTable.Column label="Value" width="20%" />
+                    <DataTable.Column label="Hidden Value" name="is_hidden_value" width="10%" />
                     <DataTable.Column label="Created" name="created_at" width="10%" />
                     <DataTable.Column label="Updated" name="updated_at" width="10%" />
-                    <DataTable.Column label="Creator" name='created_by' width="15%" />
-                    <DataTable.Column label="Tenant" name="tenant_name" width="15%" />
+                    <DataTable.Column label="Creator" name='created_by' width="10%" />
+                    <DataTable.Column label="Tenant" name="tenant_name" width="10%" />
                     <DataTable.Column width="10%" />
 
                     {
@@ -142,12 +163,26 @@ export default class SecretsTable extends React.Component {
                                             this.state.showSecretKey === secret.key
                                                 ? this.state.showSecretLoading
                                                     ? <Icon name="spinner" loading />
-                                                    : <div>
-                                                        <pre className="forceMaxWidth">{this.state.showSecretValue}</pre>
-                                                        <Icon bordered link name="hide" title="Hide secret value" onClick={this._onHideSecret.bind(this)} />
-                                                      </div>
+                                                    : this.state.canShowSecret
+                                                      ? <div>
+                                                          <pre className="forceMaxWidth">{this.state.showSecretValue}</pre>
+                                                          <Icon bordered link name="hide" title="Hide secret value" onClick={this._onHideSecret.bind(this)} />
+                                                        </div>
+                                                      : <Popup position="top right" on="hover">
+                                                          <Popup.Trigger>
+                                                              <Icon bordered name="dont" color="red" />
+                                                          </Popup.Trigger>
+                                                        User `{currentUsername}` is not permitted to show the secret `{secret.key}` in the tenant `{selectedTenant}` .
+                                                        </Popup>
                                                 : <Icon bordered link name="unhide" title="Show secret value" onClick={this._onShowSecret.bind(this, secret)} />
                                         }
+                                    </DataTable.Data>
+                                    <DataTable.Data className="center aligned">
+                                        <Checkbox checked={secret.is_hidden_value}
+                                                  onChange={() => this._onIsHiddenValueChange(secret.key, !secret.is_hidden_value)}
+                                                  onClick={(e) => e.stopPropagation()}
+                                        />
+                                        {secret.is_hidden_value}
                                     </DataTable.Data>
                                     <DataTable.Data>{secret.created_at}</DataTable.Data>
                                     <DataTable.Data>{secret.updated_at}</DataTable.Data>

@@ -20,7 +20,8 @@ export default class CreateModal extends React.Component {
         secretValue: '',
         secretFile: null,
         errors: {},
-        visibility: Stage.Common.Consts.defaultVisibility
+        visibility: Stage.Common.Consts.defaultVisibility,
+        isHiddenValue: false
     }
 
     static propTypes = {
@@ -63,7 +64,7 @@ export default class CreateModal extends React.Component {
         this.setState({loading: true});
 
         let actions = new Actions(this.props.toolbox);
-        actions.doCreate(this.state.secretKey, this.state.secretValue, this.state.visibility).then(()=>{
+        actions.doCreate(this.state.secretKey, this.state.secretValue, this.state.visibility, this.state.isHiddenValue).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch((err)=> {
@@ -92,7 +93,7 @@ export default class CreateModal extends React.Component {
     }
 
     render() {
-        let {Modal, Button, Icon, Form, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
+        let {ApproveButton, Button, CancelButton, Checkbox, Icon, Form, Modal, VisibilityField} = Stage.Basic;
         const createButton = <Button content='Create' icon='add' labelPosition='left' />;
 
         return (
@@ -118,6 +119,11 @@ export default class CreateModal extends React.Component {
                             <Form.File name="secretFile" placeholder="Get secret value from file (max: 50kB)" ref="secretFile"
                                        onChange={this._onSecretFileChange.bind(this)} loading={this.state.fileLoading}
                                        disabled={this.state.fileLoading} />
+                        </Form.Field>
+                        <Form.Field error={this.state.errors.isHiddenValue}>
+                            <Form.Checkbox name="isHiddenValue" label="Hidden Value"
+                                           checked={this.state.isHiddenValue}
+                                           onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
