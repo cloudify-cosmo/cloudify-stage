@@ -7,6 +7,10 @@ class BlueprintActions {
         this.toolbox = toolbox;
     }
 
+    doGetBlueprints() {
+        return this.toolbox.getManager().doGet('/blueprints?_include=id');
+    }
+
     doGetFullBlueprintData(blueprint) {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprint.id}`);
     }

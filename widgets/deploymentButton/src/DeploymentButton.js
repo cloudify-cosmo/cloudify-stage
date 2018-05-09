@@ -4,7 +4,6 @@
 
 
 import DeployModal from './DeployModal';
-import Actions from './actions';
 
 export default class extends React.Component {
 
@@ -28,7 +27,7 @@ export default class extends React.Component {
     _createDeployment(){
         this.setState({loading: true});
 
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions.doGetBlueprints().then((blueprints)=>{
             this.setState({loading: false, error: null, blueprints, open: true});
         }).catch((err)=> {

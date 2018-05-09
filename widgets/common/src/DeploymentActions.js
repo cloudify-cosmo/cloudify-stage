@@ -35,35 +35,23 @@ class DeploymentActions {
         });
     }
 
-    doUpdate(deploymentName, applicationFileName, blueprintArchiveUrl, defaultWorkflow,
-             installWorkflow, uninstallWorkflow, workflowId, blueprintArchive, inputs) {
-        var params = {};
-        if (!_.isEmpty(applicationFileName)) {
-            params['application_file_name'] = applicationFileName;
-        }
-        if (!_.isEmpty(blueprintArchiveUrl)) {
-            params['blueprint_archive_url'] = blueprintArchiveUrl;
-        }
-        if (defaultWorkflow) {
-            params['skip_install'] = !installWorkflow;
-            params['skip_uninstall'] = !uninstallWorkflow;
-        } else {
-            params['workflow_id'] = workflowId;
+    doUpdate(deploymentName, blueprintName, deploymentInputs={},
+             shouldRunInstallWorkflow=true, shouldRunUninstallWorkflow=true, forceUpdate=false) {
+        let data = {};
+
+        if (!_.isEmpty(blueprintName)) {
+            data['blueprint_id'] = blueprintName;
         }
 
-        if (blueprintArchive || inputs) {
-            var files = {};
-            if (blueprintArchive) {
-                files['blueprint_archive'] = blueprintArchive;
-            }
-            if (inputs) {
-                files['inputs'] = inputs;
-            }
+        data['skip_install'] = !shouldRunInstallWorkflow;
+        data['skip_uninstall'] = !shouldRunUninstallWorkflow;
+        data['force'] = forceUpdate;
 
-            return this.toolbox.getManager().doUpload(`/deployment-updates/${deploymentName}/update/initiate`, params, files, 'post');
-        } else {
-            return this.toolbox.getManager().doPost(`/deployment-updates/${deploymentName}/update/initiate`, params);
+        if (!_.isEmpty(deploymentInputs)) {
+            data['inputs'] = deploymentInputs;
         }
+
+        return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, null, data);
     }
 
     doSetVisibility(deploymentId, visibility){

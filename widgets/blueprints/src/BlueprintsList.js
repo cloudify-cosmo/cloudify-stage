@@ -104,7 +104,7 @@ export default class BlueprintList extends React.Component {
 
     render() {
         let {ErrorMessage, Confirm} = Stage.Basic;
-        let DeployModal = Stage.Common.DeployBlueprintModal;
+        let DeployBlueprintModal = Stage.Common.DeployBlueprintModal;
 
         var shouldShowTable = this.props.widget.configuration['displayStyle'] === 'table';
 
@@ -141,10 +141,10 @@ export default class BlueprintList extends React.Component {
                          onConfirm={this._deleteBlueprint.bind(this)}
                          onCancel={()=>this.setState({confirmDelete : false})} />
 
-                <DeployModal open={this.state.showDeploymentModal}
-                             blueprint={this.state.blueprint}
-                             onHide={this._hideDeploymentModal.bind(this)}
-                             toolbox={this.props.toolbox}/>
+                <DeployBlueprintModal open={this.state.showDeploymentModal}
+                                      blueprint={this.state.blueprint}
+                                      onHide={this._hideDeploymentModal.bind(this)}
+                                      toolbox={this.props.toolbox}/>
 
             </div>
 
