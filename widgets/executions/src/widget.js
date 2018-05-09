@@ -11,7 +11,10 @@ Stage.defineWidget({
     initialWidth: 8,
     initialHeight: 24,
     color : "blue",
-    fetchUrl: '[manager]/executions?[params]',
+    fetchUrl: {
+        executions: '[manager]/executions?[params]',
+        deploymentUpdates: '[manager]/deployment-updates?_include=old_blueprint_id,execution_id[params:deployment_id]'
+    },
     isReact: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executions'),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],
@@ -46,23 +49,27 @@ Stage.defineWidget({
             return <Stage.Basic.Loading/>;
         }
 
-        var formattedData = Object.assign({},data);
-        var selectedExecution = toolbox.getContext().getValue('executionId');
+        let {executions, deploymentUpdates} = data;
 
-        formattedData = Object.assign({},formattedData,{
-            items: _.map (formattedData.items,(item)=>{
+        // Create map from deployments updates items where execution_id is a key and blueprint_id is a value
+        let executionIdToBlueprintIdMap = {};
+        _.forEach(deploymentUpdates.items, (deploymentUpdate) =>
+            executionIdToBlueprintIdMap[deploymentUpdate.execution_id] = deploymentUpdate.old_blueprint_id);
+
+        let selectedExecution = toolbox.getContext().getValue('executionId');
+        let params = this.fetchParams(widget, toolbox);
+        let formattedData = {...executions,
+            items: _.map (executions.items,(item)=>{
                 return Object.assign({},item,{
+                    blueprint_id: _.get(executionIdToBlueprintIdMap, item.id, item.blueprint_id),
                     created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
                     isSelected: item.id === selectedExecution
                 })
-            })
-        });
-        formattedData.total = _.get(data, "metadata.pagination.total", 0);
-
-        let params = this.fetchParams(widget, toolbox);
-        formattedData.blueprintId = params.blueprint_id;
-        formattedData.deploymentId = params.deployment_id;
-
+            }),
+            total: _.get(executions, 'metadata.pagination.total', 0),
+            blueprintId: params.blueprint_id,
+            deploymentId: params.deployment_id
+        };
 
         return (
             <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox}/>

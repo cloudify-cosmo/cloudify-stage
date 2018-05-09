@@ -2,10 +2,11 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
+import PropTypes from 'prop-types';
+
 import MenuAction from './MenuAction';
 import ActiveExecutionStatus from './ActiveExecutionStatus';
-
-import PropTypes from 'prop-types';
+import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 
 export default class extends React.Component {
 
@@ -47,6 +48,7 @@ export default class extends React.Component {
                                     <div className="three wide center aligned column rightDivider">
                                         <h3 className="ui icon header verticalCenter breakWord"><a href="javascript:void(0)" className="breakWord">{item.id}</a></h3>
                                         <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="topRightCorner"/>
+                                        <DeploymentUpdatedIcon show={item.isUpdated} className="rightFloated" />
                                     </div>
                                     <div className="two wide column">
                                         <h5 className="ui icon header">Blueprint</h5>

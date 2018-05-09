@@ -2,10 +2,11 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
+import PropTypes from 'prop-types';
+
 import MenuAction from './MenuAction';
 import ActiveExecutionStatus from './ActiveExecutionStatus';
-
-import PropTypes from 'prop-types';
+import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 
 export default class extends React.Component {
 
@@ -60,6 +61,7 @@ export default class extends React.Component {
                             <DataTable.Row id={`${tableName}_${item.id}`} key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectDeployment(item)}>
                                 <DataTable.Data><a className='deploymentName' href="javascript:void(0)">{item.id}</a>
                                     <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
+                                    <DeploymentUpdatedIcon show={item.isUpdated} className="rightFloated" />
                                 </DataTable.Data>
                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
