@@ -50,7 +50,7 @@ export default class DeploymentActionButtons extends React.Component {
     }
 
     _showExecuteWorkflowModal(workflow) {
-        this.setState({workflow})
+        this.setState({workflow});
         this._showModal(DeploymentActionButtons.WORKFLOW_ACTION);
     }
 

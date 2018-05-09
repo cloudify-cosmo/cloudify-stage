@@ -4,7 +4,7 @@
 
 import PropTypes from 'prop-types';
 
-export default class DeployBlueprintModal extends React.Component {
+class DeployBlueprintModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
@@ -13,6 +13,7 @@ export default class DeployBlueprintModal extends React.Component {
     }
 
     static DEPLOYMENT_INPUT_CLASSNAME = 'deploymentInput';
+    static EMPTY_BLUEPRINT = {id: '', plan: {inputs: {}}};
 
     static initialState = {
         loading: false,
@@ -164,7 +165,7 @@ export default class DeployBlueprintModal extends React.Component {
     render() {
         var {Modal, Icon, Form, Message, Popup, Header, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
 
-        let blueprint = Object.assign({},{id: '', plan: {inputs: {}}}, this.props.blueprint);
+        let blueprint = Object.assign({}, DeployBlueprintModal.EMPTY_BLUEPRINT, this.props.blueprint);
         let deploymentInputs = _.sortBy(_.map(blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
                                         [(input => !_.isNil(input.default)), 'name']);
         let yamlFileField = () =>

@@ -35,35 +35,31 @@ class DeploymentActions {
         });
     }
 
-    doUpdate(deploymentName, applicationFileName, blueprintArchiveUrl, defaultWorkflow,
-             installWorkflow, uninstallWorkflow, workflowId, blueprintArchive, inputs) {
-        var params = {};
-        if (!_.isEmpty(applicationFileName)) {
-            params['application_file_name'] = applicationFileName;
-        }
-        if (!_.isEmpty(blueprintArchiveUrl)) {
-            params['blueprint_archive_url'] = blueprintArchiveUrl;
-        }
-        if (defaultWorkflow) {
-            params['skip_install'] = !installWorkflow;
-            params['skip_uninstall'] = !uninstallWorkflow;
-        } else {
-            params['workflow_id'] = workflowId;
+    doUpdate(deploymentName, blueprintName, isDefaultWorkflow,
+             shouldRunInstallWorkflow, shouldRunUninstallWorkflow,
+             workflowId, deploymentInputs, forceUpdate) {
+        let data = {};
+
+        if (!_.isEmpty(blueprintName)) {
+            data['blueprint_id'] = blueprintName;
         }
 
-        if (blueprintArchive || inputs) {
-            var files = {};
-            if (blueprintArchive) {
-                files['blueprint_archive'] = blueprintArchive;
-            }
-            if (inputs) {
-                files['inputs'] = inputs;
-            }
-
-            return this.toolbox.getManager().doUpload(`/deployment-updates/${deploymentName}/update/initiate`, params, files, 'post');
+        if (isDefaultWorkflow) {
+            data['skip_install'] = !shouldRunInstallWorkflow;
+            data['skip_uninstall'] = !shouldRunUninstallWorkflow;
         } else {
-            return this.toolbox.getManager().doPost(`/deployment-updates/${deploymentName}/update/initiate`, params);
+            data['workflow_id'] = workflowId;
         }
+
+        if (forceUpdate) {
+            data['force'] = true;
+        }
+
+        if (deploymentInputs) {
+            data['inputs'] = deploymentInputs;
+        }
+
+        return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, null, data);
     }
 
     doSetVisibility(deploymentId, visibility){

@@ -3,12 +3,7 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
-import Actions from './actions';
-
 import PropTypes from 'prop-types';
-
-const EMPTY_BLUEPRINT = {id: '', plan: {inputs: {}}};
-const DEPLOYMENT_INPUT_CLASSNAME = 'deploymentInput';
 
 export default class DeployModal extends React.Component {
 
@@ -19,9 +14,9 @@ export default class DeployModal extends React.Component {
     }
 
     static initialState = {
-        errors: {},
         loading: false,
-        blueprint: EMPTY_BLUEPRINT,
+        errors: {},
+        blueprint: Stage.Common.DeployBlueprintModal.EMPTY_BLUEPRINT,
         deploymentName: '',
         yamlFile: null,
         fileLoading: false,
@@ -70,8 +65,8 @@ export default class DeployModal extends React.Component {
         if (!_.isEmpty(data.value)) {
             this.setState({loading: true});
 
-            var actions = new Actions(this.props.toolbox);
-            actions.doGetFullBlueprintData(data.value).then((blueprint)=>{
+            var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+            actions.doGetFullBlueprintData({id: data.value}).then((blueprint)=>{
                 let deploymentInputs = {};
                 _.forEach(blueprint.plan.inputs, (inputObj, inputName) => deploymentInputs[inputName] = '');
                 this.setState({deploymentInputs, blueprint, errors: {}, loading: false});
@@ -85,7 +80,7 @@ export default class DeployModal extends React.Component {
 
     _handleInputChange(proxy, field) {
         let fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
-        if (field.className === DEPLOYMENT_INPUT_CLASSNAME) {
+        if (field.className === Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME) {
             this.setState({deploymentInputs: {...this.state.deploymentInputs, ...fieldNameValue}});
         } else {
             this.setState(fieldNameValue);
@@ -104,12 +99,12 @@ export default class DeployModal extends React.Component {
         let errors = {};
         const EMPTY_STRING = '""';
 
-        if (_.isEmpty(this.state.deploymentName)) {
-            errors['deploymentName']='Please provide deployment name';
-        }
-
         if (_.isEmpty(this.state.blueprint.id)) {
             errors['blueprintName']='Please select blueprint from the list';
+        }
+
+        if (_.isEmpty(this.state.deploymentName)) {
+            errors['deploymentName']='Please provide deployment name';
         }
 
         let deploymentInputs = {};
@@ -134,8 +129,8 @@ export default class DeployModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var actions = new Actions(this.props.toolbox);
-        actions.doDeploy(this.state.blueprint.id, this.state.deploymentName, deploymentInputs, this.state.visibility, this.state.skipPluginsValidation)
+        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        actions.doDeploy(this.state.blueprint, this.state.deploymentName, deploymentInputs, this.state.visibility, this.state.skipPluginsValidation)
             .then((/*deployment*/)=> {
                 this.setState({loading: false, errors: {}});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -183,7 +178,7 @@ export default class DeployModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message, Popup, ApproveButton, CancelButton, VisibilityField, Header} = Stage.Basic;
+        var {Modal, Icon, Form, Message, Popup, Header, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
 
         let blueprints = Object.assign({},{items:[]}, this.props.blueprints);
         let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -253,36 +248,37 @@ export default class DeployModal extends React.Component {
                                     <Form.Input name={input.name} placeholder={this._stringify(input.default)}
                                                 value={this.state.deploymentInputs[input.name]}
                                                 onChange={this._handleInputChange.bind(this)}
-                                                className={DEPLOYMENT_INPUT_CLASSNAME} />
+                                                className={Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME} />
                                 return (
                                     <Form.Field key={input.name} error={this.state.errors[input.name]}>
                                         <label>
                                             {input.name}&nbsp;
                                             {
                                                 _.isNil(input.default)
-                                                    ? <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
-                                                    : null
+                                                ? <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
+                                                : null
                                             }
                                         </label>
                                         {
                                             !_.isNil(input.description)
-                                                ? <Popup trigger={formInput()} position='top right' wide >
-                                                      <Popup.Content>
-                                                          <Icon name="info circle"/>{input.description}
-                                                      </Popup.Content>
-                                                  </Popup>
-                                                : formInput()
+                                            ? <Popup trigger={formInput()} position='top right' wide >
+                                                  <Popup.Content>
+                                                      <Icon name="info circle"/>{input.description}
+                                                  </Popup.Content>
+                                              </Popup>
+                                            : formInput()
                                         }
                                     </Form.Field>
                                 );
                             })
                         }
-                        <Form.Field>
+                        <Form.Field className='skipPluginsValidationCheckbox'>
                             <Form.Checkbox toggle
                                            label="Skip plugins validation"
                                            name='skipPluginsValidation'
                                            checked={this.state.skipPluginsValidation}
-                                           onChange={this._handleInputChange.bind(this)}/>
+                                           onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
                         {
                             this.state.skipPluginsValidation && <Message>The recommended path is uploading plugins as wagons to Cloudify. This option is designed for plugin development and advanced users only.</Message>
