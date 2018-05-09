@@ -12,9 +12,6 @@ class UpdateDeploymentModal extends React.Component {
         this.state = UpdateDeploymentModal.initialState(props);
     }
     
-    static DEFAULT_WORKFLOW = 'default';
-    static CUSTOM_WORKFLOW = 'custom';
-
     static initialState = (props) => ({
         loading: false,
         errors: {},
@@ -23,10 +20,8 @@ class UpdateDeploymentModal extends React.Component {
         fileLoading: false,
         blueprint: Stage.Common.DeployBlueprintModal.EMPTY_BLUEPRINT,
         deploymentInputs: {...props.deployment.inputs},
-        runWorkflow: UpdateDeploymentModal.DEFAULT_WORKFLOW,
         installWorkflow: true,
         uninstallWorkflow: true,
-        workflowId: '',
         force: false
     });
 
@@ -63,13 +58,25 @@ class UpdateDeploymentModal extends React.Component {
 
     _submitUpdate() {
         let errors = {};
+        const EMPTY_STRING = '""';
+
         if (_.isEmpty(this.state.blueprint.id)) {
             errors['blueprintName']='Please select blueprint';
         }
 
-        if (this.state.runWorkflow === UpdateDeploymentModal.CUSTOM_WORKFLOW && _.isEmpty(this.state.workflowId)) {
-            errors['workflowId']='Please provide workflow id';
-        }
+        let deploymentInputs = {};
+        _.forEach(this.state.blueprint.plan.inputs, (inputObj, inputName) => {
+            let inputValue = this.state.deploymentInputs[inputName];
+            if (_.isEmpty(inputValue)) {
+                if (_.isNil(inputObj.default)) {
+                    errors[inputName] = `Please provide ${inputName}`;
+                }
+            } else if (inputValue === EMPTY_STRING) {
+                deploymentInputs[inputName] = '';
+            } else {
+                deploymentInputs[inputName] = inputValue;
+            }
+        });
 
         if (!_.isEmpty(errors)) {
             this.setState({errors});
@@ -82,11 +89,9 @@ class UpdateDeploymentModal extends React.Component {
         var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions.doUpdate(this.props.deployment.id,
                          this.state.blueprint.id,
-                         this.state.runWorkflow === UpdateDeploymentModal.DEFAULT_WORKFLOW,
+                         deploymentInputs,
                          this.state.installWorkflow,
                          this.state.uninstallWorkflow,
-                         this.state.workflowId,
-                         this.state.deploymentInputs,
                          this.state.force).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
@@ -188,7 +193,6 @@ class UpdateDeploymentModal extends React.Component {
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
         let blueprintsOptions = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
-        let workflowsOptions = _.map(_.keys(this.state.blueprint.plan.workflows), workflow => { return { text: workflow, value: workflow } });
 
         let deploymentInputs = _.sortBy(_.map(this.state.blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
             [(input => !_.isNil(input.default)), 'name']);
@@ -202,6 +206,12 @@ class UpdateDeploymentModal extends React.Component {
                 <Modal.Content>
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
+
+                        <Form.Divider>
+                            <Header size="tiny">
+                                Blueprint
+                            </Header>
+                        </Form.Divider>
 
                         <Form.Field error={this.state.errors.blueprintName}>
                             <Form.Dropdown search selection value={this.state.blueprint.id} placeholder="Select Blueprint"
@@ -275,36 +285,23 @@ class UpdateDeploymentModal extends React.Component {
                         }
 
                         <Form.Divider>
-                            <Form.Radio label="Run default workflow" name="runWorkflow" checked={this.state.runWorkflow === UpdateDeploymentModal.DEFAULT_WORKFLOW}
-                                        onChange={this._handleInputChange.bind(this)} value={UpdateDeploymentModal.DEFAULT_WORKFLOW}/>
+                            <Header size="tiny">
+                                Actions
+                            </Header>
                         </Form.Divider>
 
                         <Form.Field>
-                            <Form.Checkbox label="Run install workflow on added nodes" toggle
-                                           name="installWorkflow" disabled={this.state.runWorkflow !== UpdateDeploymentModal.DEFAULT_WORKFLOW}
+                            <Form.Checkbox label="Run install workflow on added nodes" toggle name="installWorkflow"
                                            checked={this.state.installWorkflow} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
                         <Form.Field>
-                            <Form.Checkbox label="Run uninstall workflow on removed nodes" toggle
-                                           name="uninstallWorkflow" disabled={this.state.runWorkflow !== UpdateDeploymentModal.DEFAULT_WORKFLOW}
+                            <Form.Checkbox label="Run uninstall workflow on removed nodes" toggle name="uninstallWorkflow"
                                            checked={this.state.uninstallWorkflow} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Divider>
-                            <Form.Radio label="Run custom workflow" name="runWorkflow" checked={this.state.runWorkflow === UpdateDeploymentModal.CUSTOM_WORKFLOW}
-                                        onChange={this._handleInputChange.bind(this)} value={UpdateDeploymentModal.CUSTOM_WORKFLOW}/>
-                        </Form.Divider>
-
-                        <Form.Field error={this.state.errors.workflowId}>
-                            <Form.Dropdown name='workflowId' search selection upward
-                                           value={this.state.workflowId} placeholder="Workflow ID"
-                                           disabled={this.state.runWorkflow !== UpdateDeploymentModal.CUSTOM_WORKFLOW}
-                                           options={workflowsOptions} onChange={this._handleInputChange.bind(this)} />
-                        </Form.Field>
-
                         <Form.Field>
-                            <Form.Checkbox label="Force" name="force" toggle
+                            <Form.Checkbox label="Force update" name="force" toggle
                                            checked={this.state.force} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                     </Form>

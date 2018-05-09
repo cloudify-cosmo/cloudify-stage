@@ -35,27 +35,19 @@ class DeploymentActions {
         });
     }
 
-    doUpdate(deploymentName, blueprintName, isDefaultWorkflow,
-             shouldRunInstallWorkflow, shouldRunUninstallWorkflow,
-             workflowId, deploymentInputs, forceUpdate) {
+    doUpdate(deploymentName, blueprintName, deploymentInputs={},
+             shouldRunInstallWorkflow=true, shouldRunUninstallWorkflow=true, forceUpdate=false) {
         let data = {};
 
         if (!_.isEmpty(blueprintName)) {
             data['blueprint_id'] = blueprintName;
         }
 
-        if (isDefaultWorkflow) {
-            data['skip_install'] = !shouldRunInstallWorkflow;
-            data['skip_uninstall'] = !shouldRunUninstallWorkflow;
-        } else {
-            data['workflow_id'] = workflowId;
-        }
+        data['skip_install'] = !shouldRunInstallWorkflow;
+        data['skip_uninstall'] = !shouldRunUninstallWorkflow;
+        data['force'] = forceUpdate;
 
-        if (forceUpdate) {
-            data['force'] = true;
-        }
-
-        if (deploymentInputs) {
+        if (!_.isEmpty(deploymentInputs)) {
             data['inputs'] = deploymentInputs;
         }
 
