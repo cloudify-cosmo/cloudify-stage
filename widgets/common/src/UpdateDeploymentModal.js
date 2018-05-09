@@ -187,7 +187,8 @@ class UpdateDeploymentModal extends React.Component {
         var {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, Popup} = Stage.Basic;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
-        let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
+        let blueprintsOptions = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
+        let workflowsOptions = _.map(_.keys(this.state.blueprint.plan.workflows), workflow => { return { text: workflow, value: workflow } });
 
         let deploymentInputs = _.sortBy(_.map(this.state.blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
             [(input => !_.isNil(input.default)), 'name']);
@@ -204,7 +205,7 @@ class UpdateDeploymentModal extends React.Component {
 
                         <Form.Field error={this.state.errors.blueprintName}>
                             <Form.Dropdown search selection value={this.state.blueprint.id} placeholder="Select Blueprint"
-                                           name="blueprintName" options={options} onChange={this._selectBlueprint.bind(this)}/>
+                                           name="blueprintName" options={blueprintsOptions} onChange={this._selectBlueprint.bind(this)}/>
                         </Form.Field>
 
                         {
@@ -296,8 +297,10 @@ class UpdateDeploymentModal extends React.Component {
                         </Form.Divider>
 
                         <Form.Field error={this.state.errors.workflowId}>
-                            <Form.Input name='workflowId' placeholder="Workflow ID" disabled={this.state.runWorkflow !== UpdateDeploymentModal.CUSTOM_WORKFLOW}
-                                        value={this.state.workflowId} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.Dropdown name='workflowId' search selection upward
+                                           value={this.state.workflowId} placeholder="Workflow ID"
+                                           disabled={this.state.runWorkflow !== UpdateDeploymentModal.CUSTOM_WORKFLOW}
+                                           options={workflowsOptions} onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 
                         <Form.Field>

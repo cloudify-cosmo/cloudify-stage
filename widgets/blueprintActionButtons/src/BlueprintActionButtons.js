@@ -7,7 +7,7 @@ export default class BlueprintActionButtons extends React.Component {
     static DEPLOY_ACTION = 'deploy';
     static DELETE_ACTION = 'delete';
 
-    static EMPTY_BLUEPRINT = {id: '', plan: {inputs: {}}};
+    static EMPTY_BLUEPRINT = {id: '', plan: {inputs: {}, workflows: {}}};
 
     constructor(props,context) {
         super(props,context);
