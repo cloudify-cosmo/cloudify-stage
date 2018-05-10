@@ -93,7 +93,8 @@ Stage.defineWidget({
         let formattedData = Object.assign({},data,{
             items: _.map (data.items,(item)=>{
                 return Object.assign({},item,{
-                    isSelected: selectedDeployment === item.id
+                    isSelected: selectedDeployment === item.id,
+                    isUpdated: !_.isEqual(item.created_at, item.updated_at)
                 })
             })
         });

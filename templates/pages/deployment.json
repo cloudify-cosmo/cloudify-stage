@@ -23,7 +23,10 @@
       "width": 12,
       "height": 24,
       "x": 0,
-      "y": 35
+      "y": 35,
+      "configuration": {
+        "fieldsToShow": ["Name","Type","Deployment","Contained in","Connected to","Host","Creator","# Instances","Groups"]
+      }
     },
     {
       "name": "Deployment Inputs",
