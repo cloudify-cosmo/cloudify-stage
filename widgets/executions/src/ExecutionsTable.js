@@ -1,6 +1,7 @@
 /**
  * Created by kinneretzin on 20/10/2016.
  */
+import UpdateDetailsModal from './UpdateDetailsModal';
 
 export default class extends React.Component {
     constructor(props, context) {
@@ -10,6 +11,8 @@ export default class extends React.Component {
             execution: null,
             errorModalOpen: false,
             executionParametersModalOpen: false,
+            deploymentUpdateModalOpen: false,
+            deploymentUpdateId: '',
             error: null
         };
     }
@@ -103,6 +106,9 @@ export default class extends React.Component {
                                     <DataTable.Data><Checkmark value={item.is_system_workflow}/></DataTable.Data>
                                     <DataTable.Data>
                                         <Icon name="options" link bordered title="Execution parameters" onClick={()=>this.setState({execution: item, executionParametersModalOpen: true})} />
+                                        {
+                                            item.workflow_id === 'update' && <Icon name="magnify" link bordered title="Update details" onClick={()=>this.setState({deploymentUpdateId: item.parameters.update_id, deploymentUpdateModalOpen: true})} />
+                                        }
                                     </DataTable.Data>
                                     <DataTable.Data>
                                         { _.isEmpty(item.error) ?
@@ -128,6 +134,11 @@ export default class extends React.Component {
                         <HighlightText className='json'>{JSON.stringify(execution.parameters, null, 2)}</HighlightText>
                     </Modal.Content>
                 </Modal>
+
+                <UpdateDetailsModal open={this.state.deploymentUpdateModalOpen}
+                                    deploymentUpdateId={this.state.deploymentUpdateId}
+                                    onClose={()=>this.setState({execution: null, deploymentUpdateId: '', deploymentUpdateModalOpen: false})}
+                                    toolbox={this.props.toolbox} />
 
                 <Modal open={this.state.errorModalOpen} onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
                     <Modal.Content scrolling>
