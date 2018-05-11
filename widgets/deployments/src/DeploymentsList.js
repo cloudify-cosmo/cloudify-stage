@@ -180,7 +180,7 @@ export default class extends React.Component {
                     toolbox={this.props.toolbox}/>
 
                 <UpdateDeploymentModal
-                    open={this.state.modalType === MenuAction.EDIT_ACTION && this.state.showModal}
+                    open={this.state.modalType === MenuAction.UPDATE_ACTION && this.state.showModal}
                     deployment={this.state.deployment}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
