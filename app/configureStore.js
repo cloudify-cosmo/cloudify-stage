@@ -29,15 +29,14 @@ export default (history,config) => {
     initialState.manager.err = null;
     initialState.manager.isLoggingIn = false;
 
+    let middlewares = process.env.NODE_ENV !== 'production'
+        ? [thunkMiddleware, routerMiddleware(history), logger]
+        : [thunkMiddleware, routerMiddleware(history)];
 
-    var store = createStore(
+    let store = createStore(
         reducers,
         initialState,
-        applyMiddleware(
-            thunkMiddleware, // lets us dispatch() functions
-            routerMiddleware(history),
-            logger // neat middleware that logs actions
-        )
+        applyMiddleware(...middlewares)
     );
 
     // This saves the manager data in the local storage. This is good for when a user refreshes the page we can know if he is logged in or not, and save his login info - ip, username
