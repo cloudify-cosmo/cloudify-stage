@@ -2,6 +2,8 @@
  * Created by pawelposel on 03/11/2016.
  */
 
+import { Link } from 'react-router-dom';
+
 Stage.defineWidget({
     id: "deploymentNum",
     name: "Number of deployments",
@@ -15,7 +17,9 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(10)
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        {id: 'page', name: 'Page to open on click', description: 'Page to open when user clicks on widget content',
+         type: Stage.Basic.GenericField.CUSTOM_TYPE, component: Stage.Basic.PageFilter}
     ],
     fetchUrl: '[manager]/deployments?_include=id&_size=1',
 
@@ -24,11 +28,14 @@ Stage.defineWidget({
             return <Stage.Basic.Loading/>;
         }
 
-        var num = _.get(data, "metadata.pagination.total", 0);
-        let KeyIndicator = Stage.Basic.KeyIndicator;
+        const num = _.get(data, 'metadata.pagination.total', 0);
+        const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
+        const KeyIndicator = Stage.Basic.KeyIndicator;
 
         return (
-            <KeyIndicator title="Deployments" icon="cube" number={num}/>
+            <Link to={to}>
+                <KeyIndicator title="Deployments" icon="cube" number={num}/>
+            </Link>
         );
     }
 });

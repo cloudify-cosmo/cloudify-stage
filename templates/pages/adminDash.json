@@ -2,15 +2,18 @@
   "name": "Dashboard",
   "widgets": [
     {
-      "name": "Widget_0",
+      "name": "Number of deployments",
       "width": 2,
       "height": 8,
       "definition": "deploymentNum",
       "x": 0,
-      "y": 0
+      "y": 0,
+      "configuration":{
+        "page":"deployments"
+      }
     },
     {
-      "name": "Widget_1",
+      "name": "Number of nodes",
       "width": 2,
       "height": 8,
       "definition": "serversNum",
@@ -18,7 +21,7 @@
       "y": 0
     },
     {
-      "name": "Widget_2",
+      "name": "Number of plugins",
       "width": 2,
       "height": 8,
       "definition": "pluginsNum",
@@ -26,10 +29,18 @@
       "y": 0
     },
     {
+      "name": "Deployment Button",
+      "width": 2,
+      "height": 4,
+      "definition": "deploymentButton",
+      "x": 0,
+      "y": 8
+    },
+    {
       "name": "Filter",
       "definition": "filter",
       "x": 0,
-      "y": 8,
+      "y": 12,
       "configuration": {
         "filterByExecutions":false
       }
@@ -37,7 +48,7 @@
     {
       "name": "Executions",
       "width": 12,
-      "height": 25,
+      "height": 29,
       "definition": "executions",
       "x": 0,
       "y": 12
@@ -45,7 +56,7 @@
     {
       "name": "Events/Logs",
       "width": 12,
-      "height": 25,
+      "height": 29,
       "definition": "events",
       "x": 0,
       "y": 37
