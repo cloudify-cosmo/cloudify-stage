@@ -13,7 +13,7 @@ export default class DeploymentUpdatedIcon extends React.Component {
     }
 
     static propTypes = {
-        show: PropTypes.boolean,
+        show: PropTypes.bool,
         className: PropTypes.string
     };
 
