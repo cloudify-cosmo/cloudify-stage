@@ -31,6 +31,7 @@ import Popup from './Popup';
 import VisibilityField from '../../containers/VisibilityField';
 import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
+import PageFilter from './PageFilter';
 
 export {
     Accordion,
@@ -70,6 +71,7 @@ export {
     Modal,
     NodeFilter,
     NodesTree,
+    PageFilter,
     Popup,
     PopupConfirm,
     PopupMenu,
