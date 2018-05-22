@@ -2,9 +2,6 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
-import Actions from './actions';
-import UploadModal from './UploadPluginModal';
-
 export default class extends React.Component {
 
     constructor(props,context) {
@@ -12,7 +9,8 @@ export default class extends React.Component {
 
         this.state = {
             error: null,
-            confirmDelete: false
+            confirmDelete: false,
+            showUploadModal: false
         }
     }
 
@@ -39,7 +37,7 @@ export default class extends React.Component {
     _downloadPlugin(item,event) {
         event.stopPropagation();
 
-        let actions = new Actions(this.props.toolbox);
+        let actions = new Stage.Common.PluginActions(this.props.toolbox);
         actions.doDownload(item)
                .then(() => {this.setState({error: null})})
                .catch((err) => {this.setState({error: err.message})});
@@ -51,7 +49,7 @@ export default class extends React.Component {
             return;
         }
 
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.PluginActions(this.props.toolbox);
         actions.doDelete(this.state.item)
             .then(()=> {
                 this.setState({confirmDelete: false, error: null});
@@ -63,7 +61,7 @@ export default class extends React.Component {
     }
 
     _setPluginVisibility(pluginId, visibility) {
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.PluginActions(this.props.toolbox);
         this.props.toolbox.loading(true);
         actions.doSetVisibility(pluginId, visibility)
             .then(()=> {
@@ -74,6 +72,14 @@ export default class extends React.Component {
                 this.props.toolbox.loading(false);
                 this.setState({error: err.message});
             });
+    }
+
+    _showUploadModal() {
+        this.setState({showUploadModal: true});
+    }
+
+    _hideUploadModal() {
+        this.setState({showUploadModal: false});
     }
 
     _refreshData() {
@@ -93,7 +99,8 @@ export default class extends React.Component {
     }
 
     render() {
-        var {Confirm, ErrorMessage, DataTable, ResourceVisibility} = Stage.Basic;
+        let {Button, Confirm, ErrorMessage, DataTable, ResourceVisibility} = Stage.Basic;
+        let {UploadPluginModal} = Stage.Common;
 
         return (
             <div>
@@ -143,11 +150,13 @@ export default class extends React.Component {
                     }
 
                     <DataTable.Action>
-                        <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
+                        <Button content='Upload' icon='upload' labelPosition='left' onClick={this._showUploadModal.bind(this)}/>
                     </DataTable.Action>
 
                 </DataTable>
 
+                <UploadPluginModal open={this.state.showUploadModal} toolbox={this.props.toolbox} onHide={this._hideUploadModal.bind(this)} />
+                
                 <Confirm content='Are you sure you want to remove this plugin?'
                          open={this.state.confirmDelete}
                          onConfirm={this._deletePlugin.bind(this)}

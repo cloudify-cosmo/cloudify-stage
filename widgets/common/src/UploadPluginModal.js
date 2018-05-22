@@ -2,14 +2,12 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
-import Actions from './actions.js';
-
-export default class UploadModal extends React.Component {
+class UploadPluginModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = {...UploadModal.initialState, open: false}
+        this.state = {...UploadPluginModal.initialState}
     }
 
     static initialState = {
@@ -26,14 +24,8 @@ export default class UploadModal extends React.Component {
     }
 
     onCancel () {
-        this.setState({open: false});
+        this.props.onHide();
         return true;
-    }
-
-    componentWillUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
-            this.setState(UploadModal.initialState);
-        }
     }
 
     _submitUpload() {
@@ -66,7 +58,7 @@ export default class UploadModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var actions = new Actions(this.props.toolbox);
+        let actions = new Stage.Common.PluginActions(this.props.toolbox);
         actions.doUpload(this.state.visibility, this.state.wagonUrl, this.state.yamlUrl, wagonFile, yamlFile).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
@@ -80,11 +72,10 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
-        const uploadButton = <Button content='Upload' icon='upload' labelPosition='left' />;
+        let {Modal, Icon, Form, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
 
         return (
-            <Modal trigger={uploadButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
+            <Modal open={this.props.open} onClose={this.props.onHide}>
                 <Modal.Header>
                     <Icon name="upload"/> Upload plugin
                     <VisibilityField visibility={this.state.visibility} className="rightFloated"
@@ -142,3 +133,8 @@ export default class UploadModal extends React.Component {
         );
     }
 };
+
+Stage.defineCommon({
+    name: 'UploadPluginModal',
+    common: UploadPluginModal
+});
