@@ -48,14 +48,6 @@
       "y": 8
     },
     {
-      "name": "Deployment Button",
-      "width": 2,
-      "height": 4,
-      "definition": "deploymentButton",
-      "x": 0,
-      "y": 8
-    },
-    {
       "name": "Filter",
       "definition": "filter",
       "x": 0,
