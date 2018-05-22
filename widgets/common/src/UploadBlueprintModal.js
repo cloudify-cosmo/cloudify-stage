@@ -2,12 +2,12 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
-export default class UploadModal extends React.Component {
+class UploadBlueprintModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = {...UploadModal.initialState, open: false};
+        this.state = {...UploadBlueprintModal.initialState, open: false};
         this.actions = new Stage.Common.BlueprintActions(props.toolbox);
     }
 
@@ -30,7 +30,7 @@ export default class UploadModal extends React.Component {
     }
 
     onCancel () {
-        this.setState({open: false});
+        this.props.onHide();
         return true;
     }
 
@@ -38,7 +38,7 @@ export default class UploadModal extends React.Component {
         if (!prevState.open && this.state.open) {
             this.refs.blueprintFile && this.refs.blueprintFile.reset();
             this.refs.imageFile && this.refs.imageFile.reset();
-            this.setState(UploadModal.initialState);
+            this.setState(UploadBlueprintModal.initialState);
         }
     }
 
@@ -76,6 +76,7 @@ export default class UploadModal extends React.Component {
                          this.state.visibility).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
+            this.props.onHide();
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, loading: false});
         });
@@ -115,15 +116,12 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton, VisibilityField, Popup} = Stage.Basic;
-        const uploadButton = <Button content='Upload' icon='upload' labelPosition='left' className="uploadBlueprintButton"/>;
-
-        var options = _.map(this.state.yamlFiles, item => { return {text: item, value: item} });
+        let {ApproveButton, CancelButton, Form, Icon, Modal, Popup, VisibilityField} = Stage.Basic;
+        let options = _.map(this.state.yamlFiles, item => { return {text: item, value: item} });
 
         return (
             <div>
-                <Modal trigger={uploadButton} open={this.state.open} onOpen={()=>this.setState({open:true})}
-                       onClose={()=>this.setState({open:false})} className="uploadBlueprintModal">
+                <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="uploadBlueprintModal">
                     <Modal.Header>
                         <Icon name="upload"/> Upload blueprint
                         <VisibilityField visibility={this.state.visibility} className="rightFloated"
@@ -209,3 +207,8 @@ export default class UploadModal extends React.Component {
         );
     }
 };
+
+Stage.defineCommon({
+    name: 'UploadBlueprintModal',
+    common: UploadBlueprintModal
+});

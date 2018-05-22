@@ -2,8 +2,6 @@
  * Created by kinneretzin on 08/01/2017.
  */
 
-import UploadModal from './UploadBlueprintModal';
-
 import PropTypes from 'prop-types';
 
 export default class BlueprintsTable extends React.Component{
@@ -29,7 +27,7 @@ export default class BlueprintsTable extends React.Component{
     };
 
     render(){
-        var {DataTable, Image, ResourceVisibility} = Stage.Basic;
+        let {DataTable, Image, ResourceVisibility} = Stage.Basic;
         let tableName = 'blueprintsTable';
 
         return (
@@ -71,11 +69,6 @@ export default class BlueprintsTable extends React.Component{
                         );
                     })
                 }
-
-                <DataTable.Action>
-                    <UploadModal widget={this.props.widget} data={this.props.data} toolbox={this.props.toolbox}/>
-                </DataTable.Action>
-
             </DataTable>
 
         );

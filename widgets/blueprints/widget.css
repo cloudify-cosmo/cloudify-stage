@@ -8,6 +8,11 @@
     margin-right: 1rem;
 }
 
+.uploadBlueprintButton {
+    z-index: 100;
+    float: right;
+}
+
 .uploadBlueprintModal i.help{
     text-align: center;
     font-size: 1.5em;
