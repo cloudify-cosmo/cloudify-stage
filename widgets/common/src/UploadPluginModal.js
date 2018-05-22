@@ -18,12 +18,12 @@ class UploadPluginModal extends React.Component {
         visibility: Stage.Common.Consts.defaultVisibility
     }
 
-    onApprove () {
+    onApprove() {
         this._submitUpload();
         return false;
     }
 
-    onCancel () {
+    onCancel() {
         this.props.onHide();
         return true;
     }
@@ -61,6 +61,7 @@ class UploadPluginModal extends React.Component {
         let actions = new Stage.Common.PluginActions(this.props.toolbox);
         actions.doUpload(this.state.visibility, this.state.wagonUrl, this.state.yamlUrl, wagonFile, yamlFile).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
+            this.props.onHide();
             this.props.toolbox.refresh();
         }).catch(err=>{
             this.setState({errors: {error: err.message}, loading: false});
