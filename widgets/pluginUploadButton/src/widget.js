@@ -7,7 +7,7 @@ import UploadButton from './UploadButton';
 Stage.defineWidget({
     id: 'pluginUploadButton',
     name: 'Plugin upload button',
-    description: 'Plugin upload button',
+    description: 'Adds button to upload new plugin',
     initialWidth: 2,
     initialHeight: 4,
     showHeader: false,

@@ -18,12 +18,6 @@ export default class extends React.Component {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget, nextProps.widget)
-            || !_.isEqual(this.state, nextState)
-            || !_.isEqual(this.props.data, nextProps.data);
-    }
-
     _createDeployment(){
         this.setState({loading: true});
 
@@ -40,17 +34,17 @@ export default class extends React.Component {
     }
 
     render() {
-        var ErrorMessage = Stage.Basic.ErrorMessage;
+        let {Button, ErrorMessage} = Stage.Basic;
 
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
-                <button className={`ui green labeled icon button fluid ${this.state.loading?'loading':''}`} onClick={this._createDeployment.bind(this)}>
-                    <i className="rocket icon"></i>Create Deployment
-                </button>
+                <Button color='green' icon='rocket' content='Create Deployment' labelPosition='left' fluid
+                        loading={this.state.loading} onClick={this._createDeployment.bind(this)} />
 
-                <DeployModal open={this.state.open} blueprints={this.state.blueprints} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
+                <DeployModal open={this.state.open} blueprints={this.state.blueprints}
+                             onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
             </div>
         );
     }

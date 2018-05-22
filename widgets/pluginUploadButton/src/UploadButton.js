@@ -8,30 +8,26 @@ export default class extends React.Component {
         super(props,context);
 
         this.state = {
-            open: false,
-            error: null
+            open: false
         }
     }
 
-    _showModal(){
+    _showModal() {
         this.setState({open: true});
     }
 
-    _hideModal () {
+    _hideModal() {
         this.setState({open: false});
     }
 
     render() {
-        let {ErrorMessage} = Stage.Basic;
+        let {Button} = Stage.Basic;
         let {UploadPluginModal} = Stage.Common;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
-
-                <button className={`ui yellow labeled icon button fluid ${this.state.loading?'loading':''}`} onClick={this._showModal.bind(this)}>
-                    <i className="upload icon" />Upload Plugin
-                </button>
+                <Button color='yellow' icon='upload' content='Upload Plugin' labelPosition='left' fluid
+                        loading={this.state.loading} onClick={this._showModal.bind(this)} />
 
                 <UploadPluginModal open={this.state.open} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
             </div>
