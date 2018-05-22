@@ -46,8 +46,8 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
-                <button className={`ui blue labeled icon button fluid ${this.state.loading?'loading':''}`} onClick={this._createDeployment.bind(this)}>
-                    <i className="rocket icon"></i>Create new deployment
+                <button className={`ui green labeled icon button fluid ${this.state.loading?'loading':''}`} onClick={this._createDeployment.bind(this)}>
+                    <i className="rocket icon"></i>Create Deployment
                 </button>
 
                 <DeployModal open={this.state.open} blueprints={this.state.blueprints} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>

@@ -2,15 +2,18 @@
   "name": "Dashboard",
   "widgets": [
     {
-      "name": "Widget_0",
+      "name": "Number of deployments",
       "width": 2,
       "height": 8,
       "definition": "deploymentNum",
       "x": 0,
-      "y": 0
+      "y": 0,
+      "configuration":{
+        "page":"deployments"
+      }
     },
     {
-      "name": "Widget_1",
+      "name": "Number of nodes",
       "width": 2,
       "height": 8,
       "definition": "serversNum",
@@ -18,7 +21,7 @@
       "y": 0
     },
     {
-      "name": "Widget_2",
+      "name": "Number of plugins",
       "width": 2,
       "height": 8,
       "definition": "pluginsNum",
