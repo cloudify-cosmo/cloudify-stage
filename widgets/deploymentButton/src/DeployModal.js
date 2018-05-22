@@ -157,7 +157,7 @@ export default class DeployModal extends React.Component {
             let deploymentInputs = {};
 
             _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
-                let inputValue = inputs[inputName];
+                let inputValue = _.isString(inputs[inputName]) ? inputs[inputName] : JSON.stringify(inputs[inputName]);
                 if (_.isEmpty(inputValue)) {
                     if (_.isNil(inputObj.default)) {
                         notFoundInputs.push(inputName);
