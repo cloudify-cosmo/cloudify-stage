@@ -3,7 +3,7 @@
  */
 
 
-export default class {
+class PluginActions {
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -46,3 +46,8 @@ export default class {
         return this.toolbox.getManager().doPatch(`/plugins/${pluginId}/set-visibility`, null, {visibility: visibility});
     }
 }
+
+Stage.defineCommon({
+    name: 'PluginActions',
+    common: PluginActions
+});
