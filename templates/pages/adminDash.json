@@ -9,7 +9,7 @@
       "x": 0,
       "y": 0,
       "configuration":{
-        "page":"deployments"
+        "page": "deployments"
       }
     },
     {
@@ -26,7 +26,10 @@
       "height": 8,
       "definition": "pluginsNum",
       "x": 2,
-      "y": 0
+      "y": 0,
+      "configuration":{
+        "page": "system_resources"
+      }
     },
     {
       "name": "Deployment Button",
@@ -34,6 +37,14 @@
       "height": 4,
       "definition": "deploymentButton",
       "x": 0,
+      "y": 8
+    },
+    {
+      "name": "Plugin Upload Button",
+      "width": 2,
+      "height": 4,
+      "definition": "pluginUploadButton",
+      "x": 2,
       "y": 8
     },
     {
