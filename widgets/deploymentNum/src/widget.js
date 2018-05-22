@@ -2,8 +2,6 @@
  * Created by pawelposel on 03/11/2016.
  */
 
-import { Link } from 'react-router-dom';
-
 Stage.defineWidget({
     id: "deploymentNum",
     name: "Number of deployments",
@@ -28,9 +26,10 @@ Stage.defineWidget({
             return <Stage.Basic.Loading/>;
         }
 
+        const {KeyIndicator, Link} = Stage.Basic;
+
         const num = _.get(data, 'metadata.pagination.total', 0);
         const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
-        const KeyIndicator = Stage.Basic.KeyIndicator;
 
         return (
             <Link to={to}>

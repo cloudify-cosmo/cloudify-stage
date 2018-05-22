@@ -32,6 +32,7 @@ import VisibilityField from '../../containers/VisibilityField';
 import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
 import PageFilter from './PageFilter';
+import {Link} from 'react-router-dom';
 
 export {
     Accordion,
@@ -63,6 +64,7 @@ export {
     KeyIndicator,
     Label,
     List,
+    Link,
     Loader,
     Loading,
     Menu,
