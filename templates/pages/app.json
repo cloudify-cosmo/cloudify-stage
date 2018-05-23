@@ -29,7 +29,10 @@
       "height": 8,
       "definition": "pluginsNum",
       "x": 4,
-      "y": 0
+      "y": 0,
+      "configuration":{
+        "page": "system_resources"
+      }
     },
     {
       "name": "Number of nodes",
