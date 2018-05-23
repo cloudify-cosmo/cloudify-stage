@@ -66,7 +66,7 @@
     {
       "name": "Deployments",
       "width": 12,
-      "height": 24,
+      "height": 25,
       "definition": "deployments",
       "x": 6,
       "y": 12,
@@ -78,7 +78,7 @@
       "name": "Filter",
       "definition": "filter",
       "x": 0,
-      "y": 36,
+      "y": 37,
       "configuration": {
         "filterByExecutions":false
       }
@@ -89,7 +89,7 @@
       "height": 25,
       "definition": "executions",
       "x": 0,
-      "y": 41
+      "y": 42
     }
   ]
 }
