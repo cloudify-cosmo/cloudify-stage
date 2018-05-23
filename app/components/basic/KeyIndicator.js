@@ -45,8 +45,7 @@ export default class KeyIndicator extends Component {
             <div className="keyIndicator">
                 <Statistic>
                     <Statistic.Value>
-                        <Icon name={this.props.icon} />
-                        {this.props.number}
+                        <Icon name={this.props.icon} /> {this.props.number}
                     </Statistic.Value>
                     <Statistic.Label>{this.props.title}</Statistic.Label>
                 </Statistic>
