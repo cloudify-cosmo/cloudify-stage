@@ -19,7 +19,7 @@ Stage.defineWidget({
     ],
     fetchUrl: {
         nodes: '[manager]/nodes?_include=id,type_hierarchy',
-        nodeInstances: '[manager]/node-instances?_include=id,node_id'
+        nodeInstances: '[manager]/node-instances?_include=id,node_id&state=started'
     },
 
     _getNumberOfComputeNodes(nodes, nodeInstances) {
