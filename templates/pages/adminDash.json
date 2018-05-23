@@ -35,10 +35,10 @@
       }
     },
     {
-      "name": "Number of nodes",
+      "name": "Number of compute nodes",
       "width": 2,
       "height": 8,
-      "definition": "serversNum",
+      "definition": "nodesComputeNum",
       "x": 6,
       "y": 0
     },
