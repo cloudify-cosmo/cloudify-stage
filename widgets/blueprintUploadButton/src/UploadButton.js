@@ -1,5 +1,5 @@
 /**
- * Created by jakubniezgoda on 21/05/2018.
+ * Created by jakubniezgoda on 22/05/2018.
  */
 
 export default class extends React.Component {
@@ -22,14 +22,14 @@ export default class extends React.Component {
 
     render() {
         let {Button} = Stage.Basic;
-        let {UploadPluginModal} = Stage.Common;
+        let {UploadBlueprintModal} = Stage.Common;
 
         return (
             <div>
-                <Button color='yellow' icon='upload' content='Upload Plugin' labelPosition='left' fluid
+                <Button color='blue' icon='upload' content='Upload Blueprint' labelPosition='left' fluid
                         loading={this.state.loading} onClick={this._showModal.bind(this)} />
 
-                <UploadPluginModal open={this.state.open} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
+                <UploadBlueprintModal open={this.state.open} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
             </div>
         );
     }

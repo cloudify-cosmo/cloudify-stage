@@ -12,6 +12,7 @@ export default class BlueprintList extends React.Component {
 
         this.state = {
             showDeploymentModal: false,
+            showUploadModal: false,
             blueprint: {},
             confirmDelete:false,
             error: null
@@ -98,19 +99,30 @@ export default class BlueprintList extends React.Component {
         this.setState({showDeploymentModal: false});
     }
 
+    _showUploadModal() {
+        this.setState({showUploadModal: true});
+    }
+
+    _hideUploadModal() {
+        this.setState({showUploadModal: false});
+    }
+
     fetchGridData(fetchParams) {
         return this.props.toolbox.refresh(fetchParams);
     }
 
     render() {
-        let {ErrorMessage, Confirm} = Stage.Basic;
-        let DeployBlueprintModal = Stage.Common.DeployBlueprintModal;
+        let {Button, Confirm, ErrorMessage} = Stage.Basic;
+        let {DeployBlueprintModal, UploadBlueprintModal} = Stage.Common;
 
         var shouldShowTable = this.props.widget.configuration['displayStyle'] === 'table';
 
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
+
+                <Button content='Upload' icon='upload' labelPosition='left' className="uploadBlueprintButton"
+                        onClick={this._showUploadModal.bind(this)}/>
 
                 {
                     shouldShowTable ?
@@ -145,6 +157,10 @@ export default class BlueprintList extends React.Component {
                                       blueprint={this.state.blueprint}
                                       onHide={this._hideDeploymentModal.bind(this)}
                                       toolbox={this.props.toolbox}/>
+
+                <UploadBlueprintModal open={this.state.showUploadModal}
+                                      onHide={this._hideUploadModal.bind(this)}
+                                      toolbox={this.props.toolbox} />
 
             </div>
 

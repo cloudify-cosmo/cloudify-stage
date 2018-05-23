@@ -4,9 +4,9 @@
 import DeploymentButton from './DeploymentButton';
 
 Stage.defineWidget({
-    id: "deploymentButton",
-    name: "New deployment button",
-    description: 'Create new deployment',
+    id: 'deploymentButton',
+    name: 'Create deployment button',
+    description: 'Adds button to create new deployment',
     initialWidth: 2,
     initialHeight: 4,
     showHeader: false,
@@ -17,7 +17,7 @@ Stage.defineWidget({
 
     render: function(widget,data,error,toolbox) {
         return (
-            <DeploymentButton widget={widget} toolbox={toolbox}></DeploymentButton>
+            <DeploymentButton toolbox={toolbox} />
         );
     }
 
