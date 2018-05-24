@@ -43,6 +43,14 @@
       "y": 0
     },
     {
+      "name": "Number of running executions",
+      "width": 2,
+      "height": 8,
+      "definition": "executionNum",
+      "x": 8,
+      "y": 0
+    },
+    {
       "name": "Blueprint Upload Button",
       "width": 2,
       "height": 4,

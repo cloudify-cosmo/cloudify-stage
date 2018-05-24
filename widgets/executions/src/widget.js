@@ -10,7 +10,7 @@ Stage.defineWidget({
     description: 'This widget shows the deployment executions',
     initialWidth: 8,
     initialHeight: 24,
-    color : "blue",
+    color : "teal",
     fetchUrl: {
         executions: '[manager]/executions?[params]',
         deploymentUpdates: '[manager]/deployment-updates?_include=old_blueprint_id,execution_id[params:deployment_id]'
