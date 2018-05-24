@@ -32,6 +32,8 @@ import VisibilityField from '../../containers/VisibilityField';
 import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
 import PageFilter from './PageFilter';
+import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
+import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
 import {Link} from 'react-router-dom';
 
 export {
@@ -67,6 +69,8 @@ export {
     Link,
     Loader,
     Loading,
+    MaintenanceModeActivationButton,
+    MaintenanceModeModal,
     Menu,
     Message,
     MetricFilter,

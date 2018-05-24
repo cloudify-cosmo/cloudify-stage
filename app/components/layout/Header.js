@@ -12,7 +12,7 @@ import Users from '../../containers/Users';
 import Help from '../../containers/Help';
 import ResetPagesModal from '../ResetPagesModal.js';
 import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
-import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
+import MaintenanceModeModal from '../basic/maintenance/MaintenanceModeModal';
 import ConfigureModal from '../../containers/ConfigureModal';
 import Consts from '../../utils/consts';
 
@@ -102,8 +102,8 @@ export default class Header extends Component {
                 </div>
 
                 <MaintenanceMessage manager={this.props.manager}/>
-                <MaintenanceMode show={this.state.showMaintenanceModal}
-                                 onHide={()=> this.setState({showMaintenanceModal: false})}/>
+                <MaintenanceModeModal show={this.state.showMaintenanceModal}
+                                      onHide={()=> this.setState({showMaintenanceModal: false})}/>
                 <ConfigureModal show={this.state.showConfigureModal}
                                 onHide={()=> this.setState({showConfigureModal: false})}/>
 

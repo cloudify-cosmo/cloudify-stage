@@ -5,7 +5,8 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
+import MaintenanceModeModal from '../basic/maintenance/MaintenanceModeModal';
+import Services from '../../containers/Services';
 import Consts from '../../utils/consts';
 import StatusPoller from '../../utils/StatusPoller';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
@@ -21,7 +22,8 @@ export default class MaintenanceModePageMessage extends Component {
 
     static propTypes = {
         manager: PropTypes.object.isRequired,
-        canMaintenanceMode: PropTypes.bool.isRequired
+        canMaintenanceMode: PropTypes.bool.isRequired,
+        showServicesStatus: PropTypes.bool.isRequired,
     };
 
 
@@ -42,7 +44,8 @@ export default class MaintenanceModePageMessage extends Component {
     render () {
         SplashLoadingScreen.turnOff();
 
-        var {Label,Icon} = Stage.Basic;
+        let {Divider, MaintenanceModeActivationButton} = Stage.Basic;
+
         return (
             <div className='maintenancePage ui segment basic'>
                 <div className="logo">
@@ -56,18 +59,19 @@ export default class MaintenanceModePageMessage extends Component {
 
                     {
                         this.props.canMaintenanceMode &&
-                        <Label as='a' onClick={()=> this.setState({showMaintenanceModal: true})}>
-                            <Icon name='doctor'/>
-                            Deactivate maintenance mode
-                        </Label>
+                        <MaintenanceModeActivationButton activate={false} onClick={()=> this.setState({showMaintenanceModal: true})} />
+                    }
 
+                    {
+                        this.props.showServicesStatus &&
+                        [<Divider />, <Services />]
                     }
                 </div>
 
                 {
                     this.props.canMaintenanceMode &&
-                    <MaintenanceMode show={this.state.showMaintenanceModal}
-                                     onHide={()=> this.setState({showMaintenanceModal: false})}/>
+                    <MaintenanceModeModal show={this.state.showMaintenanceModal}
+                                          onHide={()=> this.setState({showMaintenanceModal: false})} />
 
                 }
 
