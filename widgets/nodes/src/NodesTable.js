@@ -46,6 +46,7 @@ export default class NodesTable extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Nodes available in manager. Probably there\'s no deployment created, yet.';
         let ErrorMessage = Stage.Basic.ErrorMessage;
         let DataTable = Stage.Basic.DataTable;
 
@@ -61,7 +62,8 @@ export default class NodesTable extends React.Component {
                        sortColumn={this.props.widget.configuration.sortColumn}
                        sortAscending={this.props.widget.configuration.sortAscending}
                        selectable={true}
-                       className="nodesTable">
+                       className="nodesTable"
+                       noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column width="5%"/>
                     <DataTable.Column label="Name" name="id" width="15%"

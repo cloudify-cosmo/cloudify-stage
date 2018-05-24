@@ -266,7 +266,8 @@ export default class DataTable extends Component {
         selectable: PropTypes.bool,
         className: PropTypes.string,
         noDataAvailable: PropTypes.bool,
-        sizeMultiplier: PropTypes.number
+        sizeMultiplier: PropTypes.number,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -280,7 +281,8 @@ export default class DataTable extends Component {
         selectable: false,
         className: '',
         noDataAvailable: false,
-        sizeMultiplier: 5
+        sizeMultiplier: 5,
+        noDataMessage: 'No data available'
     };
 
     static childContextTypes = {
@@ -402,7 +404,7 @@ export default class DataTable extends Component {
                                     {this.props.fetchSize === 0 && this.refs.pagination && this.refs.pagination.state.currentPage > 1 ?
                                         <span>No more data available</span>
                                         :
-                                        <span>No data available</span>
+                                        <span>{this.props.noDataMessage}</span>
                                     }
                                     </td>
                                 </tr>

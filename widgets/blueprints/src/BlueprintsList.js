@@ -112,6 +112,7 @@ export default class BlueprintList extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Blueprints available in manager. To add blueprints, click "Upload" button.';
         let {Button, Confirm, ErrorMessage} = Stage.Basic;
         let {DeployBlueprintModal, UploadBlueprintModal} = Stage.Common;
 
@@ -134,6 +135,7 @@ export default class BlueprintList extends React.Component {
                             onCreateDeployment={this._createDeployment.bind(this)}
                             onSetVisibility={this._setBlueprintVisibility.bind(this)}
                             allowedSettingTo={['tenant','global']}
+                            noDataMessage={NO_DATA_MESSAGE}
                             />
                         :
                         <BlueprintsCatalog
@@ -144,6 +146,7 @@ export default class BlueprintList extends React.Component {
                             onCreateDeployment={this._createDeployment.bind(this)}
                             onSetVisibility={this._setBlueprintVisibility.bind(this)}
                             allowedSettingTo={['tenant','global']}
+                            noDataMessage={NO_DATA_MESSAGE}
                             />
 
                 }

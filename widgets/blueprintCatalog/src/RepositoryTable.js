@@ -13,7 +13,8 @@ export default class extends React.Component {
         onSelect: PropTypes.func,
         onUpload: PropTypes.func,
         onReadme: PropTypes.func,
-        readmeLoading: PropTypes.string
+        readmeLoading: PropTypes.string,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -32,7 +33,8 @@ export default class extends React.Component {
                        sortAscending={this.props.widget.configuration.sortAscending}
                        fetchSize={this.props.data.items.length}
                        totalSize={this.props.data.total}
-                       selectable={true}>
+                       selectable={true}
+                       noDataMessage={this.props.noDataMessage}>
 
                 <DataTable.Column label="Name" width="25%"/>
                 <DataTable.Column label="Description" width="40%"/>

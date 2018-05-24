@@ -44,6 +44,7 @@ export default class EventsTable extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Events/Logs available in manager. Probably there\'s no deployment created, yet.';
         let {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
@@ -60,7 +61,8 @@ export default class EventsTable extends React.Component {
                            pageSize={this.props.widget.configuration.pageSize}
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
-                           className="eventsTable">
+                           className="eventsTable"
+                           noDataMessage={NO_DATA_MESSAGE}>>
 
                     <DataTable.Column label="" width="40px" show={fieldsToShow.indexOf('Icon') >= 0}/>
                     <DataTable.Column label="Timestamp" name="timestamp" width="10%" show={fieldsToShow.indexOf('Timestamp') >= 0}/>
