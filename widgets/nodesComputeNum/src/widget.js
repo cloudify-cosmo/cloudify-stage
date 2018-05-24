@@ -17,32 +17,18 @@ Stage.defineWidget({
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(30)
     ],
-    fetchUrl: {
-        nodes: '[manager]/nodes?_include=id,type_hierarchy',
-        nodeInstances: '[manager]/node-instances?_include=id,node_id&state=started'
-    },
+    fetchUrl: '[manager]/node-instances?_include=host_id&state=started',
 
-    _getNumberOfComputeNodes(nodes, nodeInstances) {
-        const COMPUTE_NODE_TYPE = 'cloudify.nodes.Compute';
-        let numberOfComputeNodes = 0;
-
-        _.forEach(nodeInstances, (nodeInstance) => {
-            let node = _.find(nodes, ['id', nodeInstance.node_id]);
-            let typeHierarchy = _.get(node, 'type_hierarchy', []);
-            if (_.includes(typeHierarchy, COMPUTE_NODE_TYPE)) {
-                numberOfComputeNodes++;
-            }
-        });
-
-        return numberOfComputeNodes;
+    _getNumberOfComputeNodes(nodeInstances) {
+        return _.size(_.uniq(_.map(nodeInstances, (nodeInstance) => nodeInstance.host_id)));
     },
 
     render: function(widget,data,error,toolbox) {
-        if (_.isEmpty(data) || _.isEmpty(data.nodes) || _.isEmpty(data.nodeInstances)) {
+        if (_.isEmpty(data)) {
             return <Stage.Basic.Loading/>;
         }
 
-        let num = this._getNumberOfComputeNodes(data.nodes.items, data.nodeInstances.items);
+        let num = this._getNumberOfComputeNodes(data.items);
         let KeyIndicator = Stage.Basic.KeyIndicator;
 
         return (
