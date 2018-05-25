@@ -10,7 +10,8 @@ export default class extends React.Component {
         this.state = {
             error: null,
             confirmDelete: false,
-            showUploadModal: false
+            showUploadModal: false,
+            idPopupOpened: false
         }
     }
 
@@ -22,7 +23,13 @@ export default class extends React.Component {
 
     _selectPlugin (item){
         var oldSelectedPluginId = this.props.toolbox.getContext().getValue('pluginId');
-        this.props.toolbox.getContext().setValue('pluginId',item.id === oldSelectedPluginId ? null : item.id);
+        if (item.id === oldSelectedPluginId) {
+            this.props.toolbox.getContext().setValue('pluginId', null);
+            this._hideIdPopup();
+        } else {
+            this.props.toolbox.getContext().setValue('pluginId', item.id);
+            this._showIdPopup();
+        }
     }
 
     _deletePluginConfirm(item,event){
@@ -82,6 +89,14 @@ export default class extends React.Component {
         this.setState({showUploadModal: false});
     }
 
+    _showIdPopup() {
+        this.setState({idPopupOpened: true});
+    }
+
+    _hideIdPopup() {
+        this.setState({idPopupOpened: false});
+    }
+
     _refreshData() {
         this.props.toolbox.refresh();
     }
@@ -99,11 +114,14 @@ export default class extends React.Component {
     }
 
     render() {
-        let {Button, Confirm, ErrorMessage, DataTable, ResourceVisibility} = Stage.Basic;
+        let {Button, Confirm, CopyToClipboardButton, ErrorMessage, DataTable, Popup, ResourceVisibility} = Stage.Basic;
         let {UploadPluginModal} = Stage.Common;
 
         return (
             <div>
+                <div style={{width: '400px', height: '500px;'}}>
+                    <CopyToClipboardButton text={'Text to copy'} />
+                </div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
@@ -115,14 +133,13 @@ export default class extends React.Component {
                            searchable={true}
                            className="pluginsTable">
 
-                    <DataTable.Column label="Id" name="id" width="20%"/>
-                    <DataTable.Column label="Package name" name="package_name" width="10%"/>
+                    <DataTable.Column label="Package name" name="package_name" width="20%"/>
                     <DataTable.Column label="Package version" name="package_version" width="10%"/>
                     <DataTable.Column label="Supported platform" name="supported_platform" width="10%"/>
                     <DataTable.Column label="Distribution" name="distribution" width="10%"/>
                     <DataTable.Column label="Distribute release" name="distribution_release" width="10%"/>
-                    <DataTable.Column label="Uploaded at" name="uploaded_at" width="10%"/>
-                    <DataTable.Column label="Creator" name='created_by' width="10%"/>
+                    <DataTable.Column label="Uploaded at" name="uploaded_at" width="15%"/>
+                    <DataTable.Column label="Creator" name='created_by' width="15%"/>
                     <DataTable.Column width="10%"/>
 
                     {
@@ -130,10 +147,17 @@ export default class extends React.Component {
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
-                                        {item.id}
+                                        {
+                                            <Popup wide open={this.state.idPopupOpened && item.isSelected}
+                                                   trigger={<span>{item.package_name}</span>}>
+                                                <span className='noWrap'>
+                                                    Plugin ID: <strong>{item.id}</strong>
+                                                    <CopyToClipboardButton text={item.id} />
+                                                </span>
+                                            </Popup>
+                                        }
                                         <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this._setPluginVisibility(item.id, visibility)} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
                                     </DataTable.Data>
-                                    <DataTable.Data>{item.package_name}</DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>
                                     <DataTable.Data>{item.supported_platform}</DataTable.Data>
                                     <DataTable.Data>{item.distribution}</DataTable.Data>
