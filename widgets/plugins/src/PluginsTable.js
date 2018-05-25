@@ -119,9 +119,6 @@ export default class extends React.Component {
 
         return (
             <div>
-                <div style={{width: '400px', height: '500px;'}}>
-                    <CopyToClipboardButton text={'Text to copy'} />
-                </div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
