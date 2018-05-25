@@ -97,7 +97,6 @@ export default class DeployModal extends React.Component {
 
     _submitDeploy () {
         let errors = {};
-        const EMPTY_STRING = '""';
 
         if (_.isEmpty(this.state.blueprint.id)) {
             errors['blueprintName']='Please select blueprint from the list';
@@ -109,15 +108,13 @@ export default class DeployModal extends React.Component {
 
         let deploymentInputs = {};
         _.forEach(this.state.blueprint.plan.inputs, (inputObj, inputName) => {
-            let inputValue = this.state.deploymentInputs[inputName];
-            if (_.isEmpty(inputValue)) {
-                if (_.isNil(inputObj.default)) {
-                    errors[inputName] = `Please provide ${inputName}`;
-                }
-            } else if (inputValue === EMPTY_STRING) {
-                deploymentInputs[inputName] = '';
+            let stringInputValue = this.state.deploymentInputs[inputName];
+            let typedInputValue = Stage.Common.JsonUtils.getTypedValue(stringInputValue);
+
+            if (_.isEmpty(stringInputValue) && _.isNil(inputObj.default)) {
+                errors[inputName] = `Please provide ${inputName}`;
             } else {
-                deploymentInputs[inputName] = inputValue;
+                deploymentInputs[inputName] = typedInputValue;
             }
         });
 
@@ -157,13 +154,12 @@ export default class DeployModal extends React.Component {
             let deploymentInputs = {};
 
             _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
-                let inputValue = _.isString(inputs[inputName]) ? inputs[inputName] : JSON.stringify(inputs[inputName]);
-                if (_.isEmpty(inputValue)) {
-                    if (_.isNil(inputObj.default)) {
-                        notFoundInputs.push(inputName);
-                    }
+                let stringValue = Stage.Common.JsonUtils.getStringValue(inputs[inputName])
+
+                if (_.isEmpty(stringValue) && _.isNil(inputObj.default)) {
+                    notFoundInputs.push(inputName);
                 } else {
-                    deploymentInputs[inputName] = inputValue;
+                    deploymentInputs[inputName] = stringValue;
                 }
             });
 

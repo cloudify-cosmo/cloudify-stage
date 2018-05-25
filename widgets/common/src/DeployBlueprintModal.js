@@ -14,6 +14,7 @@ class DeployBlueprintModal extends React.Component {
 
     static DEPLOYMENT_INPUT_CLASSNAME = 'deploymentInput';
     static EMPTY_BLUEPRINT = {id: '', plan: {inputs: {}}};
+    static EMPTY_STRING = '""';
 
     static initialState = {
         loading: false,
@@ -65,7 +66,6 @@ class DeployBlueprintModal extends React.Component {
 
     _submitDeploy() {
         let errors = {};
-        const EMPTY_STRING = '""';
 
         if (!this.props.blueprint) {
             errors['error'] = 'Blueprint not selected';
@@ -77,15 +77,13 @@ class DeployBlueprintModal extends React.Component {
 
         let deploymentInputs = {};
         _.forEach(this.props.blueprint.plan.inputs, (inputObj, inputName) => {
-            let inputValue = this.state.deploymentInputs[inputName];
-            if (_.isEmpty(inputValue)) {
-                if (_.isNil(inputObj.default)) {
-                    errors[inputName] = `Please provide ${inputName}`;
-                }
-            } else if (inputValue === EMPTY_STRING) {
-                deploymentInputs[inputName] = '';
+            let stringInputValue = this.state.deploymentInputs[inputName];
+            let typedInputValue = Stage.Common.JsonUtils.getTypedValue(stringInputValue);
+
+            if (_.isEmpty(stringInputValue) && _.isNil(inputObj.default)) {
+                errors[inputName] = `Please provide ${inputName}`;
             } else {
-                deploymentInputs[inputName] = inputValue;
+                deploymentInputs[inputName] = typedInputValue;
             }
         });
 
@@ -125,13 +123,12 @@ class DeployBlueprintModal extends React.Component {
             let deploymentInputs = {};
 
             _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
-                let inputValue = _.isString(inputs[inputName]) ? inputs[inputName] : JSON.stringify(inputs[inputName]);
-                if (_.isEmpty(inputValue)) {
-                    if (_.isNil(inputObj.default)) {
-                        notFoundInputs.push(inputName);
-                    }
+                let stringValue = Stage.Common.JsonUtils.getStringValue(inputs[inputName])
+
+                if (_.isEmpty(stringValue) && _.isNil(inputObj.default)) {
+                    notFoundInputs.push(inputName);
                 } else {
-                    deploymentInputs[inputName] = inputValue;
+                    deploymentInputs[inputName] = stringValue;
                 }
             });
 
