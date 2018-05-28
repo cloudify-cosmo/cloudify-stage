@@ -32,6 +32,7 @@ import VisibilityField from '../../containers/VisibilityField';
 import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
 import PageFilter from './PageFilter';
+import CopyToClipboardButton from './CopyToClipboardButton';
 import {Link} from 'react-router-dom';
 
 export {
@@ -45,6 +46,7 @@ export {
     Checkbox,
     Checkmark,
     Confirm,
+    CopyToClipboardButton,
     DataSegment,
     DataTable,
     Divider,
