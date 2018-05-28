@@ -11,7 +11,7 @@ export default class extends React.Component {
             error: null,
             confirmDelete: false,
             showUploadModal: false,
-            idPopupOpened: false
+            showIdPopup: false
         }
     }
 
@@ -25,10 +25,10 @@ export default class extends React.Component {
         var oldSelectedPluginId = this.props.toolbox.getContext().getValue('pluginId');
         if (item.id === oldSelectedPluginId) {
             this.props.toolbox.getContext().setValue('pluginId', null);
-            this._hideIdPopup();
+            this.setState({showIdPopup: false});
         } else {
             this.props.toolbox.getContext().setValue('pluginId', item.id);
-            this._showIdPopup();
+            this.setState({showIdPopup: true});
         }
     }
 
@@ -89,14 +89,6 @@ export default class extends React.Component {
         this.setState({showUploadModal: false});
     }
 
-    _showIdPopup() {
-        this.setState({idPopupOpened: true});
-    }
-
-    _hideIdPopup() {
-        this.setState({idPopupOpened: false});
-    }
-
     _refreshData() {
         this.props.toolbox.refresh();
     }
@@ -144,7 +136,7 @@ export default class extends React.Component {
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
-                                        <Popup wide open={this.state.idPopupOpened && item.isSelected}>
+                                        <Popup wide open={this.state.showIdPopup && item.isSelected}>
                                             <Popup.Trigger>
                                                 <span>
                                                     {item.package_name}

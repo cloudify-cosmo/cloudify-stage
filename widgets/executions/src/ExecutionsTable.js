@@ -82,7 +82,7 @@ export default class extends React.Component {
                            selectable={true}
                            className="executionsTable">
 
-                    <DataTable.Column label="" width="1%" show={true} />
+                    <DataTable.Column label="" width="1%" />
                     <DataTable.Column label="Blueprint" name="blueprint_id" width="15%"
                                  show={fieldsToShow.indexOf('Blueprint') >= 0 && !this.props.data.blueprintId}/>
                     <DataTable.Column label="Deployment" name="deployment_id" width="15%"
