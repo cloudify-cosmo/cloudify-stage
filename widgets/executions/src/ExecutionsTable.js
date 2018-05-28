@@ -12,6 +12,7 @@ export default class extends React.Component {
             errorModalOpen: false,
             executionParametersModalOpen: false,
             deploymentUpdateModalOpen: false,
+            idPopupOpen: false,
             deploymentUpdateId: '',
             error: null
         };
@@ -38,6 +39,13 @@ export default class extends React.Component {
     _selectExecution(item) {
         var oldSelectedExecutionId = this.props.toolbox.getContext().getValue('executionId');
         this.props.toolbox.getContext().setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
+        if (item.id === oldSelectedExecutionId) {
+            this.props.toolbox.getContext().setValue('executionId', null);
+            this.setState({idPopupOpen: false});
+        } else {
+            this.props.toolbox.getContext().setValue('executionId', item.id);
+            this.setState({idPopupOpen: true});
+        }
     }
 
     _cancelExecution(execution, action) {
@@ -56,7 +64,7 @@ export default class extends React.Component {
     }
 
     render() {
-        let {Checkmark, DataTable, ErrorMessage, HighlightText, Icon, Modal} = Stage.Basic;
+        let {Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Modal, Popup} = Stage.Basic;
         let {ExecutionStatus} = Stage.Common;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
@@ -74,11 +82,12 @@ export default class extends React.Component {
                            selectable={true}
                            className="executionsTable">
 
-                    <DataTable.Column label="Blueprint" name="blueprint_id" width="20%"
+                    <DataTable.Column label="" width="1%" show={true} />
+                    <DataTable.Column label="Blueprint" name="blueprint_id" width="15%"
                                  show={fieldsToShow.indexOf('Blueprint') >= 0 && !this.props.data.blueprintId}/>
-                    <DataTable.Column label="Deployment" name="deployment_id" width="20%"
+                    <DataTable.Column label="Deployment" name="deployment_id" width="15%"
                                  show={fieldsToShow.indexOf('Deployment') >= 0 && !this.props.data.deploymentId}/>
-                    <DataTable.Column label="Workflow" name="workflow_id" width="15%"
+                    <DataTable.Column label="Workflow" name="workflow_id" width="20%"
                                  show={fieldsToShow.indexOf('Workflow') >= 0}/>
                     <DataTable.Column label="Id" name="id" width="15%"
                                  show={fieldsToShow.indexOf('Id') >= 0}/>
@@ -90,27 +99,37 @@ export default class extends React.Component {
                                  show={fieldsToShow.indexOf('IsSystem') >= 0}/>
                     <DataTable.Column label="Params" name="parameters" width="5%"
                                  show={fieldsToShow.indexOf('Params') >= 0}/>
-                    <DataTable.Column label="Status" width="5%" name="status"
+                    <DataTable.Column label="Status" width="10%" name="status"
                                  show={fieldsToShow.indexOf('Status') >= 0}/>
 
                     {
                         this.props.data.items.map((item)=>{
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
+                                    <DataTable.Data>
+                                        <Popup wide open={this.state.idPopupOpen && item.isSelected} trigger={<span>&nbsp;</span>}>
+                                            <span className='noWrap'>
+                                                Execution ID: <strong>{item.id}</strong>&nbsp;&nbsp;
+                                                <CopyToClipboardButton content='Copy ID' text={item.id} />
+                                            </span>
+                                        </Popup>
+                                    </DataTable.Data>
                                     <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                     <DataTable.Data>{item.deployment_id}</DataTable.Data>
                                     <DataTable.Data>{item.workflow_id}</DataTable.Data>
                                     <DataTable.Data>{item.id}</DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
                                     <DataTable.Data>{item.created_by}</DataTable.Data>
-                                    <DataTable.Data><Checkmark value={item.is_system_workflow}/></DataTable.Data>
-                                    <DataTable.Data>
+                                    <DataTable.Data className="center aligned">
+                                        <Checkmark value={item.is_system_workflow}/>
+                                    </DataTable.Data>
+                                    <DataTable.Data className="center aligned">
                                         <Icon name="options" link bordered title="Execution parameters" onClick={()=>this.setState({execution: item, executionParametersModalOpen: true})} />
                                         {
                                             item.workflow_id === 'update' && <Icon name="magnify" link bordered title="Update details" onClick={()=>this.setState({deploymentUpdateId: item.parameters.update_id, deploymentUpdateModalOpen: true})} />
                                         }
                                     </DataTable.Data>
-                                    <DataTable.Data>
+                                    <DataTable.Data className="center aligned">
                                         { _.isEmpty(item.error) ?
                                             <div>
                                                 <Icon name="check circle" color="green" inverted />

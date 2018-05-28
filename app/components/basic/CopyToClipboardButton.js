@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import { Icon, Popup } from './index';
+import { Button, Icon } from './index';
 
 /**
  * CopyToClipboardButton component shows a simple copy icon and on click action it copies prop - text to clipboard
@@ -18,7 +18,7 @@ import { Icon, Popup } from './index';
  *
  * ![CopyToClipboardButton](manual/asset/CopyToClipboardButton_0.png)
  * ```
- * <CopyToClipboardButton text='Text to copy' />
+ * <CopyToClipboardButton text='Text to copy' content='Copy ID' />
  *```
  */
 export default class CopyToClipboardButton extends Component {
@@ -33,40 +33,25 @@ export default class CopyToClipboardButton extends Component {
 
     /**
      * @property {string} text Text to be copied to clipboard
+     * @property {string} [content='Copy to clipboard'] Button label
      */
     static propTypes = {
-        text: PropTypes.string.isRequired
+        text: PropTypes.string.isRequired,
+        content: PropTypes.string
     };
 
-    static TIMEOUT_LENGTH = 2000;
-
-    handleCopy() {
-        this.setState({ copied: true });
-
-        this.timeout = setTimeout(() => {
-            this.setState({ copied: false })
-        }, CopyToClipboardButton.TIMEOUT_LENGTH)
-    };
-
-    handleClose() {
-        this.setState({ copied: false });
-        clearTimeout(this.timeout)
-    };
+    static defaultProps = {
+        content: 'Copy to clipboard'
+    }
 
     render() {
         return (
-            <Popup onClose={this.handleClose.bind(this)}>
-                <Popup.Trigger>
-                    <span style={{margin: '5px'}}>
-                        <CopyToClipboard text={this.props.text}>
-                            <Icon name='copy' link onClick={this.handleCopy.bind(this)} />
-                        </CopyToClipboard>
-                    </span>
-                </Popup.Trigger>
-                <Popup.Content>
-                    {this.state.copied ? 'Copied to clipboard' : 'Click to copy'}
-                </Popup.Content>
-            </Popup>
+            <CopyToClipboard text={this.props.text}>
+                <Button animated='vertical' basic compact>
+                    <Button.Content visible>{this.props.content}</Button.Content>
+                    <Button.Content hidden><Icon name='copy' /></Button.Content>
+                </Button>
+            </CopyToClipboard>
         )
     };
 };

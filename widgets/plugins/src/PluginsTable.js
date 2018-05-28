@@ -144,15 +144,19 @@ export default class extends React.Component {
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
-                                        {
-                                            <Popup wide open={this.state.idPopupOpened && item.isSelected}
-                                                   trigger={<span>{item.package_name}</span>}>
-                                                <span className='noWrap'>
-                                                    Plugin ID: <strong>{item.id}</strong>
-                                                    <CopyToClipboardButton text={item.id} />
+                                        <Popup wide open={this.state.idPopupOpened && item.isSelected}>
+                                            <Popup.Trigger>
+                                                <span>
+                                                    {item.package_name}
                                                 </span>
-                                            </Popup>
-                                        }
+                                            </Popup.Trigger>
+                                            <Popup.Content>
+                                                <span className='noWrap'>
+                                                    Plugin ID: <strong>{item.id}</strong>&nbsp;&nbsp;
+                                                    <CopyToClipboardButton content='Copy ID' text={item.id} />
+                                                </span>
+                                            </Popup.Content>
+                                        </Popup>
                                         <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this._setPluginVisibility(item.id, visibility)} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>
