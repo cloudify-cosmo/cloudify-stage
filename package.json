@@ -1,6 +1,6 @@
 {
   "name": "cloudify-stage",
-  "version": "4.4.0-.dev1",
+  "version": "18.5.28",
   "description": "New Cloudify UI",
   "main": "app/main.js",
   "scripts": {
