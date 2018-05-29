@@ -37,8 +37,8 @@ class Toolbox {
         this._widgetsConfig = state.config.widgets;
     }
 
-    drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName) {
-        this.store.dispatch(drillDownToPage(widget,this.templates.pagesDef[defaultTemplate],this.widgetDefinitions,drilldownContext,drilldownPageName));
+    drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName,location) {
+        this.store.dispatch(drillDownToPage(widget,this.templates.pagesDef[defaultTemplate],this.widgetDefinitions,drilldownContext,drilldownPageName,location));
     }
 
     goToHomePage() {

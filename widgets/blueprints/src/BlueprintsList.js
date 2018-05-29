@@ -2,10 +2,14 @@
  * Created by kinneretzin on 02/10/2016.
  */
 
+import {withRouter} from 'react-router-dom';
+
 import BlueprintsTable from './BlueprintsTable';
 import BlueprintsCatalog from './BlueprintsCatalog';
 
-export default class BlueprintList extends React.Component {
+export default withRouter(props => <BlueprintListWithRouter {...props}/>);
+
+class BlueprintListWithRouter extends React.Component {
 
     constructor(props,context) {
         super(props,context);
@@ -27,7 +31,8 @@ export default class BlueprintList extends React.Component {
 
     _selectBlueprint (item){
         if (this.props.widget.configuration.clickToDrillDown) {
-            this.props.toolbox.drillDown(this.props.widget,'blueprint',{blueprintId: item.id}, item.id);
+            this.props.toolbox.drillDown(this.props.widget, 'blueprint', {blueprintId: item.id},
+                                         item.id, this.props.location);
         } else {
             var oldSelectedBlueprintId = this.props.toolbox.getContext().getValue('blueprintId');
             this.props.toolbox.getContext().setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);

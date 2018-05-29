@@ -83,10 +83,28 @@ const pages = (state = [], action) => {
                 })
             });
         case types.REMOVE_PAGE:
-            var removeIndex = _.findIndex(state,{id:action.pageId});
+            let pageToBeRemoved = _.find(state, (page) => page.id === action.pageId);
+
+            // get children and grandchildren (drill down pages and drill down pages of drill down pages) if they exist
+            let childrenOfPageToBeRemoved = [];
+            let grandChildrenOfPageToBeRemoved = [];
+            if (!_.isEmpty(pageToBeRemoved.children)) {
+                childrenOfPageToBeRemoved = _.filter(state, (page) => _.includes(pageToBeRemoved.children, page.id));
+                if (!_.isEmpty(childrenOfPageToBeRemoved)) {
+                    grandChildrenOfPageToBeRemoved
+                        = _.flatten(_.map(childrenOfPageToBeRemoved, (child) => child.children
+                            ? _.filter(state, (page) => _.includes(child.children, page.id))
+                            : [])
+                        );
+                }
+            }
+            let pagesToBeRemoved = [pageToBeRemoved, ...childrenOfPageToBeRemoved, ...grandChildrenOfPageToBeRemoved];
+
+            // create new list of pages
+            let newState = _.difference(state, pagesToBeRemoved);
+
             return [
-                ...state.slice(0,removeIndex),
-                ...state.slice(removeIndex+1)
+                ...newState
             ];
         case types.RENAME_PAGE:
         case types.UPDATE_PAGE_DESCRIPTION:

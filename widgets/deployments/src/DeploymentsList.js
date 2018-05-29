@@ -2,11 +2,15 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
+import {withRouter} from 'react-router-dom';
+
 import MenuAction from './MenuAction';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 
-export default class extends React.Component {
+export default withRouter(props => <DeploymentsListWithRouter {...props}/>);
+
+class DeploymentsListWithRouter extends React.Component {
 
     constructor(props,context) {
         super(props,context);
@@ -36,7 +40,8 @@ export default class extends React.Component {
 
     _selectDeployment(item) {
         if (this.props.widget.configuration.clickToDrillDown) {
-            this.props.toolbox.drillDown(this.props.widget,'deployment',{deploymentId: item.id}, item.id);
+            this.props.toolbox.drillDown(this.props.widget, 'deployment', {deploymentId: item.id},
+                                         item.id, this.props.location);
         } else {
             var oldSelectedDeploymentId = this.props.toolbox.getContext().getValue('deploymentId');
             this.props.toolbox.getContext().setValue('deploymentId',item.id === oldSelectedDeploymentId ? null : item.id);

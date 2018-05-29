@@ -78,7 +78,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 drilldownContext.push({pageName: pagesList[i].name, context: pagesList[i].context});
             }
             dispatch(setDrilldownContext(drilldownContext));
-            dispatch(selectPage(page.id,page.isDrillDown,page.context,page.name));
+            dispatch(selectPage(page.id, page.isDrillDown, page.context, page.isDrillDown ? page.name : null));
         },
         onPageRemoved: (page) => {
             dispatch(removePage(page.id));

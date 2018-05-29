@@ -101,7 +101,7 @@ export function addWidgetDrilldownPage(widgetId,drillDownName,drillDownPageId) {
 
 }
 
-export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldownContext,drilldownPageName) {
+export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldownContext,drilldownPageName,location) {
 
     return function (dispatch, getState) {
         var isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
@@ -109,11 +109,11 @@ export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldo
             return dispatch(drillDownWarning(true));
         }
 
-        var pageId = widget.drillDownPages[defaultTemplate.name];
-        if (!pageId) {
-            var currentPage = _.replace(window.location.pathname, /.*\/page\//, '');
-            var newPageId = _.snakeCase(currentPage + ' ' + defaultTemplate.name);
+        let currentPage = _.replace(location.pathname, /.*\/page\//, '');
+        let newPageId = _.snakeCase(currentPage + ' ' + defaultTemplate.name);
+        let isDrilldownPagePresent = _.find(getState().pages, {'id': newPageId});
 
+        if (!isDrilldownPagePresent) {
             dispatch(createDrilldownPage(newPageId,defaultTemplate.name));
             _.each(defaultTemplate.widgets,(widget)=>{
                 var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
@@ -121,10 +121,9 @@ export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldo
             });
 
             dispatch(addWidgetDrilldownPage(widget.id,defaultTemplate.name,newPageId));
-            pageId = newPageId;
         }
 
-        dispatch(selectPage(pageId,true,drilldownContext,drilldownPageName));
+        dispatch(selectPage(newPageId,true,drilldownContext,drilldownPageName));
     }
 }
 
