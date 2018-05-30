@@ -4,9 +4,9 @@
 
 const _ = require('lodash');
 
-exports.command = function (popupMenuTriggerElement, optionName) {
+exports.command = function (popupMenuTriggerElement, optionName, additionalSelector='') {
     const optionValue = _.isEmpty(optionName) ? 'empty-option' : optionName;
-    const OPTION_SELECTOR = `div.popupMenu a.item[option-value="${optionValue}"]`;
+    const OPTION_SELECTOR = `div.popupMenu ${additionalSelector} a.item[option-value="${optionValue}"]`;
 
     return this
         .log(`Opening popup menu '${popupMenuTriggerElement}'...`)
