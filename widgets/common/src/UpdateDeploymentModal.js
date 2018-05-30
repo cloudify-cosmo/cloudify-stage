@@ -3,8 +3,9 @@
  */
 
 import PropTypes from 'prop-types';
+import {Component} from 'react';
 
-class UpdateDeploymentModal extends React.Component {
+class UpdateDeploymentModal extends Component {
 
     constructor(props,context) {
         super(props,context);
@@ -35,7 +36,7 @@ class UpdateDeploymentModal extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
             this.setState({loading: true});
-            var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+            let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
             actions.doGetBlueprints().then((blueprints)=>{
                 this.setState({...UpdateDeploymentModal.initialState(nextProps), blueprints});
             }).catch((err)=> {
@@ -58,7 +59,6 @@ class UpdateDeploymentModal extends React.Component {
 
     _submitUpdate() {
         let errors = {};
-        const EMPTY_STRING = '""';
 
         if (_.isEmpty(this.state.blueprint.id)) {
             errors['blueprintName']='Please select blueprint';
@@ -66,15 +66,17 @@ class UpdateDeploymentModal extends React.Component {
 
         let deploymentInputs = {};
         _.forEach(this.state.blueprint.plan.inputs, (inputObj, inputName) => {
-            let inputValue = this.state.deploymentInputs[inputName];
-            if (_.isEmpty(inputValue)) {
+            let stringInputValue = this.state.deploymentInputs[inputName];
+            let typedInputValue = Stage.Common.JsonUtils.getTypedValue(stringInputValue);
+
+            if (_.isEmpty(stringInputValue)) {
                 if (_.isNil(inputObj.default)) {
                     errors[inputName] = `Please provide ${inputName}`;
                 }
-            } else if (inputValue === EMPTY_STRING) {
+            } else if (stringInputValue === Stage.Common.DeployBlueprintModal.EMPTY_STRING) {
                 deploymentInputs[inputName] = '';
             } else {
-                deploymentInputs[inputName] = inputValue;
+                deploymentInputs[inputName] = typedInputValue;
             }
         });
 
@@ -86,7 +88,7 @@ class UpdateDeploymentModal extends React.Component {
          // Disable the form
         this.setState({loading: true});
 
-        var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions.doUpdate(this.props.deployment.id,
                          this.state.blueprint.id,
                          deploymentInputs,
@@ -123,14 +125,6 @@ class UpdateDeploymentModal extends React.Component {
         return deploymentInputs;
     }
 
-    _stringify(object) {
-        if (_.isObject(object) || _.isArray(object) || _.isBoolean(object)) {
-            return JSON.stringify(object);
-        } else {
-            return String(object || '');
-        }
-    }
-
     _handleYamlFileChange(file) {
         let blueprintPlanInputs = this.state.blueprint.plan.inputs;
 
@@ -147,15 +141,24 @@ class UpdateDeploymentModal extends React.Component {
             let deploymentInputs = {};
 
             _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
-                let inputValue = _.isString(inputs[inputName]) ? inputs[inputName] : JSON.stringify(inputs[inputName]);
-                if (_.isEmpty(inputValue)) {
+                let stringValue = Stage.Common.JsonUtils.getStringValue(inputs[inputName]);
+
+                if (_.isNil(inputs[inputName])) {
+                    // Input not present in YAML file
                     if (_.isNil(inputObj.default)) {
+                        // Mandatory input
                         notFoundInputs.push(inputName);
+                    } else {
+                        // Optional input
+                        deploymentInputs[inputName] = '';
                     }
+                } else if (stringValue === '') {
+                    deploymentInputs[inputName] = Stage.Common.DeployBlueprintModal.EMPTY_STRING;
                 } else {
-                    deploymentInputs[inputName] = inputValue;
+                    deploymentInputs[inputName] = stringValue;
                 }
             });
+            
 
             if (_.isEmpty(notFoundInputs)) {
                 this.setState({errors: {}, deploymentInputs, fileLoading: false});
@@ -175,7 +178,17 @@ class UpdateDeploymentModal extends React.Component {
             actions.doGetFullBlueprintData({id: data.value}).then((blueprint)=>{
                 let deploymentInputs = {};
                 if (_.isEqual(this.props.deployment.blueprint_id, blueprint.id)) {
-                    deploymentInputs = {...this.props.deployment.inputs};
+                    let typedDeploymentInputs = this.props.deployment.inputs;
+                    _.forEach(typedDeploymentInputs, (inputValue, inputName) => {
+                        let stringValue = Stage.Common.JsonUtils.getStringValue(inputValue);
+
+                        if (stringValue === '') {
+                            deploymentInputs[inputName] = Stage.Common.DeployBlueprintModal.EMPTY_STRING;
+                        } else {
+                            deploymentInputs[inputName] = stringValue;
+                        }
+                    });
+
                 } else {
                     _.forEach(blueprint.plan.inputs, (inputObj, inputName) => deploymentInputs[inputName] = '');
                 }
@@ -256,7 +269,7 @@ class UpdateDeploymentModal extends React.Component {
                         {
                             _.map(deploymentInputs, (input) => {
                                 let formInput = () =>
-                                    <Form.Input name={input.name} placeholder={this._stringify(input.default)}
+                                    <Form.Input name={input.name} placeholder={Stage.Common.JsonUtils.getStringValue(input.default || '')}
                                                 value={this.state.deploymentInputs[input.name]}
                                                 onChange={this._handleInputChange.bind(this)}
                                                 className={Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME} />
