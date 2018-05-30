@@ -37,6 +37,7 @@ export default class extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Inputs available. Probably there\'s no deployment created, yet.';
         let {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
         let inputs = this.props.data.items;
@@ -46,7 +47,7 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
-                <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)}>
+                <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Name" width="35%"/>
                     <DataTable.Column label="Value" width="65%"/>

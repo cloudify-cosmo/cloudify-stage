@@ -19,7 +19,8 @@ export default class extends React.Component {
         onMenuAction: PropTypes.func,
         onError: PropTypes.func,
         onSetVisibility: PropTypes.func,
-        allowedSettingTo: PropTypes.array
+        allowedSettingTo: PropTypes.array,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -29,7 +30,8 @@ export default class extends React.Component {
         onMenuAction: ()=>{},
         onError: ()=>{},
         onSetVisibility: ()=>{},
-        allowedSettingTo: ['tenant']
+        allowedSettingTo: ['tenant'],
+        noDataMessage: ''
     };
 
     render() {
@@ -44,7 +46,8 @@ export default class extends React.Component {
                        sortAscending={this.props.widget.configuration.sortAscending}
                        selectable={true}
                        searchable={true}
-                       className={tableName}>
+                       className={tableName}
+                       noDataMessage={this.props.noDataMessage}>
 
                 <DataTable.Column label="Name" name="id" width="25%"/>
                 <DataTable.Column label="Blueprint" name="blueprint_id" width="25%"/>

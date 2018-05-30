@@ -13,6 +13,8 @@ export default class extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
+        const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
         let {Modal, DataTable, HighlightText, ApproveButton} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
@@ -29,7 +31,9 @@ export default class extends React.Component {
                     <Modal.Content>
                         <div>
                             <h3>Relationships</h3>
-                            <DataTable className="nodeInstanceRelationshipsTable" totalSize={instance.relationships.length}>
+                            <DataTable className="nodeInstanceRelationshipsTable"
+                                       totalSize={instance.relationships.length}
+                                       noDataMessage={NO_DATA_MESSAGE_RELATIONSHIPS}>
 
                                 <DataTable.Column label="Target node" name="target" width="30%"/>
                                 <DataTable.Column label="Relationship type" name="relationship" width="40%"/>
@@ -49,7 +53,9 @@ export default class extends React.Component {
                             </DataTable>
 
                             <h3>Runtime properties</h3>
-                            <DataTable className="nodeInstanceRuntimePropertiesTable" totalSize={instanceTotalSize}>
+                            <DataTable className="nodeInstanceRuntimePropertiesTable"
+                                       totalSize={instanceTotalSize}
+                                       noDataMessage={NO_DATA_MESSAGE_RUNTIME_PROPERTIES}>
 
                                 <DataTable.Column label="Key" name="key" width="50%"/>
                                 <DataTable.Column label="Value" name="value" width="50%"/>

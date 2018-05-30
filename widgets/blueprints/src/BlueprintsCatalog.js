@@ -15,7 +15,8 @@ export default class BlueprintsCatalog extends React.Component{
         onDeleteBlueprint: PropTypes.func,
         onCreateDeployment: PropTypes.func,
         onSetVisibility: PropTypes.func,
-        allowedSettingTo: PropTypes.array
+        allowedSettingTo: PropTypes.array,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -24,7 +25,8 @@ export default class BlueprintsCatalog extends React.Component{
         onDeleteBlueprint: ()=>{},
         onCreateDeployment: ()=>{},
         onSetVisibility: ()=>{},
-        allowedSettingTo: ['tenant']
+        allowedSettingTo: ['tenant'],
+        noDataMessage: ''
     };
 
     render(){
@@ -120,8 +122,11 @@ export default class BlueprintsCatalog extends React.Component{
         return (
             <div>
                 <DataSegment totalSize={this.props.data.total}
-                         pageSize={this.props.widget.configuration.pageSize}
-                         fetchData={this.props.fetchData} className="blueprintCatalog" searchable={true}>
+                             pageSize={this.props.widget.configuration.pageSize}
+                             fetchData={this.props.fetchData}
+                             className="blueprintCatalog"
+                             searchable={true}
+                             noDataMessage={this.props.noDataMessage}>
 
                     <Grid>
                         {blueprintsRows}

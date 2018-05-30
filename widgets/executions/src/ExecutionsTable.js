@@ -64,6 +64,7 @@ export default class extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
         let {Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Modal, Popup} = Stage.Basic;
         let {ExecutionStatus} = Stage.Common;
 
@@ -80,7 +81,8 @@ export default class extends React.Component {
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
                            selectable={true}
-                           className="executionsTable">
+                           className="executionsTable"
+                           noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="" width="1%" />
                     <DataTable.Column label="Blueprint" name="blueprint_id" width="15%"

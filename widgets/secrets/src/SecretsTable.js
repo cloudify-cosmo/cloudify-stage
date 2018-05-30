@@ -123,6 +123,7 @@ export default class SecretsTable extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Secrets available. Click "Create" to create Secrets.';
         let {Checkbox, DataTable, ErrorMessage, Icon, Popup, ResourceVisibility} = Stage.Basic;
         let DeleteModal = Stage.Basic.Confirm;
         let data = this.props.data;
@@ -139,7 +140,8 @@ export default class SecretsTable extends React.Component {
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
                            searchable={true}
-                           className="secretsTable">
+                           className="secretsTable"
+                           noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Key" name="key" width="20%" />
                     <DataTable.Column label="Value" width="20%" />

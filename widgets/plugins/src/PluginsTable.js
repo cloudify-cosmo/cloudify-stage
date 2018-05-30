@@ -106,6 +106,7 @@ export default class extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
         let {Button, Confirm, CopyToClipboardButton, ErrorMessage, DataTable, Popup, ResourceVisibility} = Stage.Basic;
         let {UploadPluginModal} = Stage.Common;
 
@@ -120,7 +121,8 @@ export default class extends React.Component {
                            sortAscending={this.props.widget.configuration.sortAscending}
                            selectable={true}
                            searchable={true}
-                           className="pluginsTable">
+                           className="pluginsTable"
+                           noDataMessage={NO_DATA_MESSAGE} >
 
                     <DataTable.Column label="Package name" name="package_name" width="20%"/>
                     <DataTable.Column label="Package version" name="package_version" width="10%"/>
