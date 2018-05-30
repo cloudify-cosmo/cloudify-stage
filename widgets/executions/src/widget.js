@@ -25,7 +25,7 @@ Stage.defineWidget({
             Stage.GenericConfig.PAGE_SIZE_CONFIG(),
             {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
                 items: ["Blueprint","Deployment","Workflow","Id","Created","Creator","IsSystem","Params","Status"],
-                default: 'Blueprint,Deployment,Workflow,Id,Created,Creator,IsSystem,Params,Status', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
+                default: 'Blueprint,Deployment,Workflow,Created,Creator,IsSystem,Params,Status', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
             {id: "showSystemExecutions", name: "Show system executions", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
             Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
             Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
