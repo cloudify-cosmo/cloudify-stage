@@ -2,20 +2,23 @@
  * Created by pposel on 16/02/2017.
  */
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
-import Consts from '../../utils/consts';
-import {Modal, Icon, ErrorMessage, DataTable, Checkmark, ApproveButton, CancelButton} from '../basic/index';
-import StageUtils from '../../utils/stageUtils';
+import { connect } from 'react-redux';
+
+import Consts from '../../../utils/consts';
+import {Modal, Icon, ErrorMessage, DataTable, Checkmark, ApproveButton, CancelButton} from '../index';
+import StageUtils from '../../../utils/stageUtils';
+import {switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExecution} from '../../../actions/managers';
+
 
 const POLLING_INTERVAL = 2000;
 
-export default class MaintenanceMode extends Component {
+class MaintenanceModeModal extends Component {
 
     constructor(props,context) {
         super(props,context);
 
-        this.state = MaintenanceMode.initialState;
+        this.state = MaintenanceModeModal.initialState;
         this.pollingTimeout = null;
     }
 
@@ -40,7 +43,7 @@ export default class MaintenanceMode extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.show && nextProps.show) {
-            this.setState(MaintenanceMode.initialState);
+            this.setState(MaintenanceModeModal.initialState);
 
             this._loadPendingExecutions();
         } else if (this.props.show && !nextProps.show) {
@@ -186,3 +189,47 @@ export default class MaintenanceMode extends Component {
         )
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        manager: state.manager,
+        show: ownProps.show,
+        onHide: ownProps.onHide,
+        activeExecutions: state.manager.activeExecutions
+    }
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        onMaintenanceActivate: (manager) => {
+            return dispatch(switchMaintenance(manager, true));
+        },
+        onMaintenanceDeactivate: (manager) => {
+            return dispatch(switchMaintenance(manager, false));
+        },
+        onFetchActiveExecutions: (manager) => {
+            return dispatch(getActiveExecutions(manager));
+        },
+        onCancelExecution: (manager,execution, action) => {
+            return dispatch(doCancelExecution(manager, execution, action));
+        },
+        onClose: () => {
+            return dispatch(setActiveExecutions({}));
+        }
+    }
+};
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
+    return Object.assign({}, stateProps, ownProps, dispatchProps, {
+        onMaintenanceActivate: ()=>dispatchProps.onMaintenanceActivate(stateProps.manager),
+        onMaintenanceDeactivate: ()=>dispatchProps.onMaintenanceDeactivate(stateProps.manager),
+        onFetchActiveExecutions: ()=>dispatchProps.onFetchActiveExecutions(stateProps.manager),
+        onCancelExecution: (execution, action)=>dispatchProps.onCancelExecution(stateProps.manager,execution, action)
+    });
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+    mergeProps
+)(MaintenanceModeModal);

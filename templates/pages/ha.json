@@ -1,13 +1,27 @@
 {
-  "name": "High Availability Management",
+  "name": "Admin Operations",
   "widgets": [
+    {
+      "name": "Maintenance Mode Button",
+      "definition": "maintenanceModeButton",
+      "x": 0,
+      "y": 0
+    },
     {
       "name": "Cluster management",
       "definition": "highAvailability",
       "width": 12,
       "height": 24,
       "x": 0,
-      "y": 0
+      "y": 4
+    },
+    {
+      "name": "Snapshots",
+      "definition": "snapshots",
+      "width": 12,
+      "height": 24,
+      "x": 0,
+      "y": 28
     }
   ]
 }
