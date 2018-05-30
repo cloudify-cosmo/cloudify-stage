@@ -101,7 +101,7 @@ export function addWidgetDrilldownPage(widgetId,drillDownName,drillDownPageId) {
 
 }
 
-export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldownContext,drilldownPageName,location) {
+export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,location,drilldownContext,drilldownPageName) {
 
     return function (dispatch, getState) {
         var isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
@@ -111,7 +111,7 @@ export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldo
 
         let currentPage = _.replace(location.pathname, /.*\/page\//, '');
         let newPageId = _.snakeCase(currentPage + ' ' + defaultTemplate.name);
-        let isDrilldownPagePresent = _.find(getState().pages, {'id': newPageId});
+        let isDrilldownPagePresent = !!_.find(getState().pages, {'id': newPageId});
 
         if (!isDrilldownPagePresent) {
             dispatch(createDrilldownPage(newPageId,defaultTemplate.name));

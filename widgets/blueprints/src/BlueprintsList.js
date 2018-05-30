@@ -31,8 +31,7 @@ class BlueprintListWithRouter extends React.Component {
 
     _selectBlueprint (item){
         if (this.props.widget.configuration.clickToDrillDown) {
-            this.props.toolbox.drillDown(this.props.widget, 'blueprint', {blueprintId: item.id},
-                                         item.id, this.props.location);
+            this.props.toolbox.drillDown(this.props.widget, 'blueprint', this.props.location, {blueprintId: item.id}, item.id);
         } else {
             var oldSelectedBlueprintId = this.props.toolbox.getContext().getValue('blueprintId');
             this.props.toolbox.getContext().setValue('blueprintId',item.id === oldSelectedBlueprintId ? null : item.id);

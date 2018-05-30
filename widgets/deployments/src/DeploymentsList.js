@@ -40,8 +40,7 @@ class DeploymentsListWithRouter extends React.Component {
 
     _selectDeployment(item) {
         if (this.props.widget.configuration.clickToDrillDown) {
-            this.props.toolbox.drillDown(this.props.widget, 'deployment', {deploymentId: item.id},
-                                         item.id, this.props.location);
+            this.props.toolbox.drillDown(this.props.widget, 'deployment', this.props.location, {deploymentId: item.id}, item.id);
         } else {
             var oldSelectedDeploymentId = this.props.toolbox.getContext().getValue('deploymentId');
             this.props.toolbox.getContext().setValue('deploymentId',item.id === oldSelectedDeploymentId ? null : item.id);
