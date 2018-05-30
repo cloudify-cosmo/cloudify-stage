@@ -11,8 +11,6 @@ import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import Help from '../../containers/Help';
 import ResetPagesModal from '../ResetPagesModal.js';
-import MaintenanceMessage from '../../containers/maintenance/MaintenanceMessage';
-import MaintenanceModeModal from '../basic/maintenance/MaintenanceModeModal';
 import ConfigureModal from '../../containers/ConfigureModal';
 import Consts from '../../utils/consts';
 
@@ -22,7 +20,6 @@ export default class Header extends Component {
         super(props,context);
 
         this.state = {
-            showMaintenanceModal: false,
             showConfigureModal: false,
             showResetPagesConfirm: false
         }
@@ -95,15 +92,11 @@ export default class Header extends Component {
                         :
                         <Users manager={this.props.manager}
                                showAllOptions={true}
-                               onMaintenance={()=> this.setState({showMaintenanceModal: true})}
                                onConfigure={()=> this.setState({showConfigureModal: true})}
                                onReset={this._handleReset.bind(this)}/>
                     }
                 </div>
 
-                <MaintenanceMessage manager={this.props.manager}/>
-                <MaintenanceModeModal show={this.state.showMaintenanceModal}
-                                      onHide={()=> this.setState({showMaintenanceModal: false})}/>
                 <ConfigureModal show={this.state.showConfigureModal}
                                 onHide={()=> this.setState({showConfigureModal: false})}/>
 
