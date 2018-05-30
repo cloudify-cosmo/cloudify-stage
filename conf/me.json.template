@@ -1,6 +1,11 @@
 {
   "app": {
-
+      "influx": {
+        "ip" : "<MANAGER_IP>"
+      },
+      "ssl": {
+        "ca": null
+      }
   },
   "customer": {
 
@@ -9,7 +14,9 @@
 
   },
   "manager": {
-
+    "ip":"<MANAGER_IP>",
+    "protocol" : "http",
+    "port": "80"
   },
   "widgets": {
 

@@ -1,13 +1,13 @@
 {
   "name": "cloudify-stage",
   "version": "4.4.0-.dev1",
-  "description": "New Cloudify UI",
+  "description": "Cloudify Console",
   "main": "app/main.js",
   "scripts": {
     "test": "npm run lint && npm run prodtest && npm run size",
     "prodtest": "mocha --require ./test/setup.js -R mocha-pretty-spec-reporter --compilers babel-core/register --recursive \"./test/**/*Test.js\"",
     "devtest": "mocha --require ./test/setup.js -R mocha-pretty-spec-reporter --compilers babel-core/register",
-    "start": "node devServer.js",
+    "devServer": "node devServer.js",
     "lint": "eslint app test widgets backend e2e --ext .js --ignore-pattern **/widget.js --ignore-pattern **/common.js --ignore-pattern **/node_modules",
     "doc": "esdoc -c ./doc/esdoc.json",
     "deve2e": "nightwatch -c ./e2e/nightwatch.conf.js --env dev",
