@@ -15,7 +15,7 @@ module.exports = {
         pluginsTable: {
             selector: '.pluginsTable',
             elements: {
-                packageName: 'tr.clickable td:nth-child(2)',
+                packageName: 'tr.clickable td:nth-child(1)',
                 deleteButton: '.rowActions i.trash'
             }
         },
