@@ -132,6 +132,7 @@ export default class extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
         let {ErrorMessage, Confirm} = Stage.Basic;
         let {ExecuteDeploymentModal, UpdateDeploymentModal} = Stage.Common;
         let showTableComponent = this.props.widget.configuration['displayStyle'] === 'table';
@@ -142,22 +143,24 @@ export default class extends React.Component {
 
                 {showTableComponent ?
                     <DeploymentsTable widget={this.props.widget} data={this.props.data}
-                                     fetchData={this.fetchData.bind(this)}
-                                     onSelectDeployment={this._selectDeployment.bind(this)}
-                                     onMenuAction={this._showModal.bind(this)}
-                                     onCancelExecution={this._cancelExecution.bind(this)}
-                                     onError={this._setError.bind(this)}
-                                     onSetVisibility={this._setDeploymentVisibility.bind(this)}
-                                     allowedSettingTo={['tenant']}/>
+                                      fetchData={this.fetchData.bind(this)}
+                                      onSelectDeployment={this._selectDeployment.bind(this)}
+                                      onMenuAction={this._showModal.bind(this)}
+                                      onCancelExecution={this._cancelExecution.bind(this)}
+                                      onError={this._setError.bind(this)}
+                                      onSetVisibility={this._setDeploymentVisibility.bind(this)}
+                                      allowedSettingTo={['tenant']}
+                                      noDataMessage={NO_DATA_MESSAGE}/>
                     :
                     <DeploymentsSegment widget={this.props.widget} data={this.props.data}
-                                       fetchData={this.fetchData.bind(this)}
-                                       onSelectDeployment={this._selectDeployment.bind(this)}
-                                       onMenuAction={this._showModal.bind(this)}
-                                       onCancelExecution={this._cancelExecution.bind(this)}
-                                       onError={this._setError.bind(this)}
-                                       onSetVisibility={this._setDeploymentVisibility.bind(this)}
-                                       allowedSettingTo={['tenant']}/>
+                                        fetchData={this.fetchData.bind(this)}
+                                        onSelectDeployment={this._selectDeployment.bind(this)}
+                                        onMenuAction={this._showModal.bind(this)}
+                                        onCancelExecution={this._cancelExecution.bind(this)}
+                                        onError={this._setError.bind(this)}
+                                        onSetVisibility={this._setDeploymentVisibility.bind(this)}
+                                        allowedSettingTo={['tenant']}
+                                        noDataMessage={NO_DATA_MESSAGE}/>
                 }
 
                 <Confirm content={`Are you sure you want to remove deployment ${this.state.deployment.id}?`}

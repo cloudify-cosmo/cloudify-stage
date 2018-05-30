@@ -27,7 +27,6 @@ describe('(Component) Users', () => {
                                 showAllOptions={true}
                                 isEditMode={false}
                                 canEditMode={true}
-                                canMaintenanceMode={true}
                                 canConfigure={true}
                                 canTemplateManagement={true}
                                 onEditModeChange={()=>{}}
@@ -44,19 +43,17 @@ describe('(Component) Users', () => {
 
     it('renders user menu with full options list ',()=>{
         expect(wrapper.find(Dropdown)).to.have.length(1); // Showing the users menu
-        expect(wrapper.find(Dropdown.Item).length).to.equal(5); // 3 menu options
-        expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Maintenance Mode'); // Having Maintenance Mode option
-        expect(wrapper.find(Dropdown.Item).get(0).props.icon).to.equal('doctor'); // Having doctor icon for Maintenance Mode option
+        expect(wrapper.find(Dropdown.Item).length).to.equal(4); // 4 menu options
         // expect(wrapper.find(Dropdown.Item).get(1).props.text).to.equal('Configure'); // Having Configure option
         // expect(wrapper.find(Dropdown.Item).get(1).props.icon).to.equal('options'); // Having settings icon for Configure option
-        expect(wrapper.find(Dropdown.Item).get(1).props.text).to.equal('Edit Mode'); // Having Edit Mode option
-        expect(wrapper.find(Dropdown.Item).get(1).props.icon).to.equal('configure'); // Having configure icon for Edit Mode option
-        expect(wrapper.find(Dropdown.Item).get(2).props.text).to.equal('Template management'); // Having Template management option
-        expect(wrapper.find(Dropdown.Item).get(2).props.icon).to.equal('list layout'); // Having list layout icon for Template management option
-        expect(wrapper.find(Dropdown.Item).get(3).props.text).to.equal('Reset Templates'); // Having Reset Templates option
-        expect(wrapper.find(Dropdown.Item).get(3).props.icon).to.equal('undo'); // Having configure icon for Edit Mode option
-        expect(wrapper.find(Dropdown.Item).get(4).props.text).to.equal('Logout'); // Having Logout option
-        expect(wrapper.find(Dropdown.Item).get(4).props.icon).to.equal('log out'); // Having log out icon for Logout option
+        expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Edit Mode'); // Having Edit Mode option
+        expect(wrapper.find(Dropdown.Item).get(0).props.icon).to.equal('configure'); // Having configure icon for Edit Mode option
+        expect(wrapper.find(Dropdown.Item).get(1).props.text).to.equal('Template management'); // Having Template management option
+        expect(wrapper.find(Dropdown.Item).get(1).props.icon).to.equal('list layout'); // Having list layout icon for Template management option
+        expect(wrapper.find(Dropdown.Item).get(2).props.text).to.equal('Reset Templates'); // Having Reset Templates option
+        expect(wrapper.find(Dropdown.Item).get(2).props.icon).to.equal('undo'); // Having configure icon for Edit Mode option
+        expect(wrapper.find(Dropdown.Item).get(3).props.text).to.equal('Logout'); // Having Logout option
+        expect(wrapper.find(Dropdown.Item).get(3).props.icon).to.equal('log out'); // Having log out icon for Logout option
     });
 
     it('renders user menu with limited options list ',()=>{
@@ -74,9 +71,9 @@ describe('(Component) Users', () => {
         wrapper.setProps({isEditMode: true});
 
         expect(wrapper.find(Dropdown)).to.have.length(1); // Showing the users menu
-        expect(wrapper.find(Dropdown.Item).length).to.equal(5); // 5 menu options
-        expect(wrapper.find(Dropdown.Item).get(1).props.text).to.equal('Exit Edit Mode'); // Having Exit Edit Mode option
-        expect(wrapper.find(Dropdown.Item).get(1).props.selected).to.equal(true); // Having Edit Mode option selected
+        expect(wrapper.find(Dropdown.Item).length).to.equal(4); // 4 menu options
+        expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Exit Edit Mode'); // Having Exit Edit Mode option
+        expect(wrapper.find(Dropdown.Item).get(0).props.selected).to.equal(true); // Having Edit Mode option selected
     });
 
     // it('onConfigure is called',()=>{

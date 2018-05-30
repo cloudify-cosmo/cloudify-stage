@@ -171,7 +171,8 @@ export default class DataSegment extends Component {
         pageSize: PropTypes.number,
         className: PropTypes.string,
         sizeMultiplier: PropTypes.number,
-        searchable: PropTypes.bool
+        searchable: PropTypes.bool,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -181,7 +182,8 @@ export default class DataSegment extends Component {
         fetchSize: -1,
         pageSize: 0,
         sizeMultiplier: 3,
-        searchable: false
+        searchable: false,
+        noDataMessage: 'No data available'
     };
 
     _fetchData() {
@@ -229,7 +231,7 @@ export default class DataSegment extends Component {
                             {this.props.fetchSize === 0 && this.refs.pagination && this.refs.pagination.state.currentPage > 1 ?
                                 <span>No more data available</span>
                                 :
-                                <span>No data available</span>
+                                <span>{this.props.noDataMessage}</span>
                             }
                         </Message>
                         :

@@ -1,7 +1,7 @@
 [
     {
         "name": "Application (gzip)",
-        "limit": "2.7 MB",
+        "limit": "2.75 MB",
         "gzip": false,
         "webpack": false,
         "path": ["dist/*.gz", "dist/widgets/*/widget.js.gz", "dist/widgets/*/widget.css", "dist/widgets/*/widget.png", "dist/widgets/*/widget.html", "dist/widgets/*/backend.js", "dist/templates/**", "dist/app/**"]

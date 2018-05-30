@@ -374,7 +374,7 @@ a:hover {
   top: 0;
   bottom: 0;
 
-  .configManagerContainer, .loginContainer, .maintenanceContainer, .noTenantsContainer {
+  .configManagerContainer, .loginContainer, .noTenantsContainer {
     margin: auto;
     width: 400px;
     height: 170px;
@@ -383,6 +383,11 @@ a:hover {
     right: 0;
     top: 0;
     bottom: 0;
+  }
+
+  .maintenanceContainer {
+    margin: auto;
+    width: 600px;
   }
 
   .loginContainer {
@@ -396,7 +401,7 @@ a:hover {
     height: 400px;
   }
 
-  .maintenanceContainer, .noTenantsContainer {
+  .noTenantsContainer {
     height: 220px;
   }
 
@@ -461,6 +466,15 @@ a:hover {
   i + span {
     vertical-align: middle;
   }
+}
+
+table.servicesData {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+table.servicesData button.refreshButton {
+  width: auto !important;
 }
 
 .helpMenu {

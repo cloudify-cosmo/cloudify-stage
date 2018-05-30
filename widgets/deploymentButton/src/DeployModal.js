@@ -87,17 +87,8 @@ export default class DeployModal extends React.Component {
         }
     }
 
-    _stringify(object) {
-        if (_.isObject(object) || _.isArray(object) || _.isBoolean(object)) {
-            return JSON.stringify(object);
-        } else {
-            return String(object || '');
-        }
-    }
-
     _submitDeploy () {
         let errors = {};
-        const EMPTY_STRING = '""';
 
         if (_.isEmpty(this.state.blueprint.id)) {
             errors['blueprintName']='Please select blueprint from the list';
@@ -109,15 +100,17 @@ export default class DeployModal extends React.Component {
 
         let deploymentInputs = {};
         _.forEach(this.state.blueprint.plan.inputs, (inputObj, inputName) => {
-            let inputValue = this.state.deploymentInputs[inputName];
-            if (_.isEmpty(inputValue)) {
+            let stringInputValue = this.state.deploymentInputs[inputName];
+            let typedInputValue = Stage.Common.JsonUtils.getTypedValue(stringInputValue);
+
+            if (_.isEmpty(stringInputValue)) {
                 if (_.isNil(inputObj.default)) {
                     errors[inputName] = `Please provide ${inputName}`;
                 }
-            } else if (inputValue === EMPTY_STRING) {
+            } else if (stringInputValue === Stage.Common.DeployBlueprintModal.EMPTY_STRING) {
                 deploymentInputs[inputName] = '';
             } else {
-                deploymentInputs[inputName] = inputValue;
+                deploymentInputs[inputName] = typedInputValue;
             }
         });
 
@@ -157,13 +150,21 @@ export default class DeployModal extends React.Component {
             let deploymentInputs = {};
 
             _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
-                let inputValue = _.isString(inputs[inputName]) ? inputs[inputName] : JSON.stringify(inputs[inputName]);
-                if (_.isEmpty(inputValue)) {
+                let stringValue = Stage.Common.JsonUtils.getStringValue(inputs[inputName]);
+
+                if (_.isNil(inputs[inputName])) {
+                    // Input not present in YAML file
                     if (_.isNil(inputObj.default)) {
+                        // Mandatory input
                         notFoundInputs.push(inputName);
+                    } else {
+                        // Optional input
+                        deploymentInputs[inputName] = '';
                     }
+                } else if (stringValue === '') {
+                    deploymentInputs[inputName] = Stage.Common.DeployBlueprintModal.EMPTY_STRING;
                 } else {
-                    deploymentInputs[inputName] = inputValue;
+                    deploymentInputs[inputName] = stringValue;
                 }
             });
 
@@ -245,7 +246,7 @@ export default class DeployModal extends React.Component {
                         {
                             _.map(deploymentInputs, (input) => {
                                 let formInput = () =>
-                                    <Form.Input name={input.name} placeholder={this._stringify(input.default)}
+                                    <Form.Input name={input.name} placeholder={Stage.Common.JsonUtils.getStringValue(input.default || '')}
                                                 value={this.state.deploymentInputs[input.name]}
                                                 onChange={this._handleInputChange.bind(this)}
                                                 className={Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME} />

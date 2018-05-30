@@ -19,7 +19,8 @@ export default class extends React.Component {
         onMenuAction: PropTypes.func,
         onError: PropTypes.func,
         onSetVisibility: PropTypes.func,
-        allowedSettingTo: PropTypes.array
+        allowedSettingTo: PropTypes.array,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -29,7 +30,8 @@ export default class extends React.Component {
         onMenuAction: ()=>{},
         onError: ()=>{},
         onSetVisibility: ()=>{},
-        allowedSettingTo: ['tenant']
+        allowedSettingTo: ['tenant'],
+        noDataMessage: ''
     };
 
     render() {
@@ -37,8 +39,10 @@ export default class extends React.Component {
 
         return (
             <DataSegment totalSize={this.props.data.total}
-                     pageSize={this.props.widget.configuration.pageSize}
-                     fetchData={this.props.fetchData} searchable={true}>
+                         pageSize={this.props.widget.configuration.pageSize}
+                         fetchData={this.props.fetchData}
+                         searchable={true}
+                         noDataMessage={this.props.noDataMessage}>
                 {
                     this.props.data.items.map((item) => {
                         return (

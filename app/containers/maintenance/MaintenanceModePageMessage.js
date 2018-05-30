@@ -8,10 +8,12 @@ import stageUtils from '../../utils/stageUtils';
 import Consts from '../../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
-    var canMaintenanceMode = stageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager);
+    let canMaintenanceMode = stageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager);
+    let showServicesStatus = stageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager);
     return {
         manager: state.manager,
-        canMaintenanceMode
+        canMaintenanceMode,
+        showServicesStatus
     }
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

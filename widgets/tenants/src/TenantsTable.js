@@ -108,6 +108,7 @@ export default class TenantsTable extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Tenants available. Click "Add" to add Tenants.';
         let {ErrorMessage, DataTable, Label} = Stage.Basic;
         let DeleteModal = Stage.Basic.Confirm;
         let data = this.props.data;
@@ -121,7 +122,8 @@ export default class TenantsTable extends React.Component {
                            pageSize={this.props.widget.configuration.pageSize}
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
-                           className="tenantsTable">
+                           className="tenantsTable"
+                           noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Name" name="name" width="30%" />
                     <DataTable.Column label="# Groups" width="30%" />

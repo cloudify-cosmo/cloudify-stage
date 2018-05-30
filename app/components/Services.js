@@ -26,8 +26,8 @@ export default class Services extends Component {
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell colSpan='2'>
-                            <Header floated='left' style={{'marginTop':'1rem'}} size="medium"><Icon name='settings'/>Server Services Status</Header>
-                            <Button floated='right' onClick={this.props.onStatusRefresh} loading={this.props.isFetching} disabled={this.props.isFetching} circular icon='refresh' />
+                            <Header floated='left' style={{width: 'auto', marginTop: '4px'}} size="medium"><Icon name='settings'/>Manager Services Status</Header>
+                            <Button floated='right' className='refreshButton' onClick={this.props.onStatusRefresh} loading={this.props.isFetching} disabled={this.props.isFetching} circular icon='refresh' />
                         </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>

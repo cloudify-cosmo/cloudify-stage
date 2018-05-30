@@ -107,7 +107,7 @@ export default class UserGroupsTable extends React.Component {
     _deleteUserGroup() {
         this.props.toolbox.loading(true);
 
-        var actions = new Actions(this.props.toolbox);
+        let actions = new Actions(this.props.toolbox);
         actions.doDelete(this.state.group.name).then(()=>{
             if (actions.isLogoutToBePerformed(this.state.group, this.props.data.items, this.state.group.users)) {
                 this.props.toolbox.getEventBus().trigger('menu.users:logout');
@@ -128,7 +128,7 @@ export default class UserGroupsTable extends React.Component {
         this.props.toolbox.loading(true);
         this.setState({settingGroupRoleLoading: group.name});
 
-        var actions = new Actions(this.props.toolbox);
+        let actions = new Actions(this.props.toolbox);
         actions.doSetRole(group.name, changeToAdmin ? Stage.Common.Consts.sysAdminRole : Stage.Common.Consts.defaultUserRole).then(()=>{
             this.setState({error: null, settingGroupRoleLoading: false});
             this.props.toolbox.loading(false);
@@ -146,8 +146,8 @@ export default class UserGroupsTable extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no User Groups available. Click "Add" to add User Groups.';
         let {Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader} = Stage.Basic;
-        let actions = new Actions(this.props.toolbox);
 
         return (
             <div>
@@ -158,7 +158,8 @@ export default class UserGroupsTable extends React.Component {
                            pageSize={this.props.widget.configuration.pageSize}
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
-                           className="userGroupsTable">
+                           className="userGroupsTable"
+                           noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Group" name="name" width="35%" />
                     <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />
