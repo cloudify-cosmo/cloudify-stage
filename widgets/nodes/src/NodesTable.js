@@ -46,7 +46,7 @@ export default class NodesTable extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no Nodes available in manager. Probably there\'s no deployment created, yet.';
+        const NO_DATA_MESSAGE = 'There are no Nodes available. Probably there\'s no deployment created, yet.';
         let ErrorMessage = Stage.Basic.ErrorMessage;
         let DataTable = Stage.Basic.DataTable;
 

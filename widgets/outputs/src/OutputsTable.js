@@ -33,7 +33,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no Outputs available in manager. Probably there\'s no deployment created, yet.';
+        const NO_DATA_MESSAGE = 'There are no Outputs available. Probably there\'s no deployment created, yet.';
         var {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
         let outputs = this.props.data.items;

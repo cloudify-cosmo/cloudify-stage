@@ -132,7 +132,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are still no Deployments on the manager. To add deployments, click "Create deployment" button.';
+        const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
         let {ErrorMessage, Confirm} = Stage.Basic;
         let {ExecuteDeploymentModal, UpdateDeploymentModal} = Stage.Common;
         let showTableComponent = this.props.widget.configuration['displayStyle'] === 'table';

@@ -16,7 +16,7 @@ export default class ClusterNodesList extends React.Component {
     }
 
     render () {
-        const NO_DATA_MESSAGE = 'There are no Cluster Nodes available in manager.';
+        const NO_DATA_MESSAGE = 'There are no Cluster Nodes available.';
         let {DataTable,Checkmark,ErrorMessage} = Stage.Basic;
 
         return (

@@ -56,7 +56,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no Executions available in manager. Probably there\'s no deployment created, yet.';
+        const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
         let {Checkmark, DataTable, ErrorMessage, HighlightText, Icon, Modal} = Stage.Basic;
         let {ExecutionStatus} = Stage.Common;
 

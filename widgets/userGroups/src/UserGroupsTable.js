@@ -146,7 +146,7 @@ export default class UserGroupsTable extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no User Groups available in manager. To add user group, click "Add" button.';
+        const NO_DATA_MESSAGE = 'There are no User Groups available. Click "Add" to add User Groups.';
         let {Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader} = Stage.Basic;
 
         return (

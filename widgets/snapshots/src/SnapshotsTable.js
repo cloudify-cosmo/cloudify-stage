@@ -93,7 +93,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no Snapshots available on the manager. To create snapshot, click "Create" button.';
+        const NO_DATA_MESSAGE = 'There are no Snapshots available. Click "Create" to create Snapshots.';
         let {Confirm, ErrorMessage, DataTable, Icon, ResourceVisibility} = Stage.Basic;
 
         return (

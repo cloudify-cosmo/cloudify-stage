@@ -43,7 +43,7 @@ export default class NodeInstancesTable extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no Node Instances of selected Node available in manager.';
+        const NO_DATA_MESSAGE = 'There are no Node Instances of selected Node available.';
         let {DataTable, Icon} = Stage.Basic;
 
         return (

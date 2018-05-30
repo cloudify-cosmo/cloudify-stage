@@ -99,7 +99,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are still no Plugins on the manager. To add plugins, click "Upload" button';
+        const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
         let {Button, Confirm, ErrorMessage, DataTable, ResourceVisibility} = Stage.Basic;
         let {UploadPluginModal} = Stage.Common;
 

@@ -44,7 +44,7 @@ export default class EventsTable extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no Events/Logs available in manager. Probably there\'s no deployment created, yet.';
+        const NO_DATA_MESSAGE = 'There are no Events/Logs available. Probably there\'s no deployment created, yet.';
         let {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 

@@ -108,7 +108,7 @@ export default class TenantsTable extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no Tenants available in manager. To add tenant, click "Add" button.';
+        const NO_DATA_MESSAGE = 'There are no Tenants available. Click "Add" to add Tenants.';
         let {ErrorMessage, DataTable, Label} = Stage.Basic;
         let DeleteModal = Stage.Basic.Confirm;
         let data = this.props.data;

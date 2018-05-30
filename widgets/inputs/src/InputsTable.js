@@ -37,7 +37,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no Inputs available in manager. Probably there\'s no deployment created, yet.';
+        const NO_DATA_MESSAGE = 'There are no Inputs available. Probably there\'s no deployment created, yet.';
         let {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
         let inputs = this.props.data.items;
