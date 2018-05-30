@@ -177,21 +177,22 @@ class UpdateDeploymentModal extends Component {
             let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
             actions.doGetFullBlueprintData({id: data.value}).then((blueprint)=>{
                 let deploymentInputs = {};
-                if (_.isEqual(this.props.deployment.blueprint_id, blueprint.id)) {
-                    let typedDeploymentInputs = this.props.deployment.inputs;
-                    _.forEach(typedDeploymentInputs, (inputValue, inputName) => {
-                        let stringValue = Stage.Common.JsonUtils.getStringValue(inputValue);
+                let currentDeploymentInputs = this.props.deployment.inputs;
+
+                _.forEach(blueprint.plan.inputs, (inputObj, inputName) => {
+                    if (!_.isUndefined(currentDeploymentInputs[inputName])) {
+                        let stringValue = Stage.Common.JsonUtils.getStringValue(currentDeploymentInputs[inputName]);
 
                         if (stringValue === '') {
                             deploymentInputs[inputName] = Stage.Common.DeployBlueprintModal.EMPTY_STRING;
                         } else {
                             deploymentInputs[inputName] = stringValue;
                         }
-                    });
+                    } else {
+                        deploymentInputs[inputName] = '';
+                    }
+                });
 
-                } else {
-                    _.forEach(blueprint.plan.inputs, (inputObj, inputName) => deploymentInputs[inputName] = '');
-                }
                 this.setState({deploymentInputs, blueprint, errors: {}, loading: false});
             }).catch((err)=> {
                 this.setState({blueprint: Stage.Common.DeployBlueprintModal.EMPTY_BLUEPRINT, loading: false, errors: {error: err.message}});
