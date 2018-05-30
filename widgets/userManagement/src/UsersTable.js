@@ -184,6 +184,7 @@ export default class UsersTable extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Users available in manager. Click "Add" to add Users.';
         let {Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader, Popup} = Stage.Basic;
         let tableName = 'usersTable';
 
@@ -196,7 +197,8 @@ export default class UsersTable extends React.Component {
                            pageSize={this.props.widget.configuration.pageSize}
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
-                           className={tableName}>
+                           className={tableName}
+                           noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Username" name="username" width="37%" />
                     <DataTable.Column label="Last login" name="last_login_at" width="18%" />

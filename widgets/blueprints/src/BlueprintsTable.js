@@ -14,7 +14,8 @@ export default class BlueprintsTable extends React.Component{
         onDeleteBlueprint: PropTypes.func,
         onCreateDeployment: PropTypes.func,
         onSetVisibility: PropTypes.func,
-        allowedSettingTo: PropTypes.array
+        allowedSettingTo: PropTypes.array,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -23,7 +24,8 @@ export default class BlueprintsTable extends React.Component{
         onDeleteBlueprint: ()=>{},
         onCreateDeployment: ()=>{},
         onSetVisibility: ()=>{},
-        allowedSettingTo: ['Tenant']
+        allowedSettingTo: ['Tenant'],
+        noDataMessage: ''
     };
 
     render(){
@@ -38,7 +40,8 @@ export default class BlueprintsTable extends React.Component{
                        sortAscending={this.props.widget.configuration.sortAscending}
                        selectable={true}
                        searchable={true}
-                       className={tableName}>
+                       className={tableName}
+                       noDataMessage={this.props.noDataMessage}>
 
                 <DataTable.Column label="Name" name="id" width="20%"/>
                 <DataTable.Column label="Created" name="created_at" width="15%"/>

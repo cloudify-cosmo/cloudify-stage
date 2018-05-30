@@ -10,7 +10,8 @@ export default class extends React.Component {
         this.state = {
             error: null,
             confirmDelete: false,
-            showUploadModal: false
+            showUploadModal: false,
+            showIdPopup: false
         }
     }
 
@@ -22,7 +23,13 @@ export default class extends React.Component {
 
     _selectPlugin (item){
         var oldSelectedPluginId = this.props.toolbox.getContext().getValue('pluginId');
-        this.props.toolbox.getContext().setValue('pluginId',item.id === oldSelectedPluginId ? null : item.id);
+        if (item.id === oldSelectedPluginId) {
+            this.props.toolbox.getContext().setValue('pluginId', null);
+            this.setState({showIdPopup: false});
+        } else {
+            this.props.toolbox.getContext().setValue('pluginId', item.id);
+            this.setState({showIdPopup: true});
+        }
     }
 
     _deletePluginConfirm(item,event){
@@ -99,7 +106,8 @@ export default class extends React.Component {
     }
 
     render() {
-        let {Button, Confirm, ErrorMessage, DataTable, ResourceVisibility} = Stage.Basic;
+        const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
+        let {Button, Confirm, CopyToClipboardButton, ErrorMessage, DataTable, Popup, ResourceVisibility} = Stage.Basic;
         let {UploadPluginModal} = Stage.Common;
 
         return (
@@ -113,16 +121,16 @@ export default class extends React.Component {
                            sortAscending={this.props.widget.configuration.sortAscending}
                            selectable={true}
                            searchable={true}
-                           className="pluginsTable">
+                           className="pluginsTable"
+                           noDataMessage={NO_DATA_MESSAGE} >
 
-                    <DataTable.Column label="Id" name="id" width="20%"/>
-                    <DataTable.Column label="Package name" name="package_name" width="10%"/>
+                    <DataTable.Column label="Package name" name="package_name" width="20%"/>
                     <DataTable.Column label="Package version" name="package_version" width="10%"/>
                     <DataTable.Column label="Supported platform" name="supported_platform" width="10%"/>
                     <DataTable.Column label="Distribution" name="distribution" width="10%"/>
                     <DataTable.Column label="Distribute release" name="distribution_release" width="10%"/>
-                    <DataTable.Column label="Uploaded at" name="uploaded_at" width="10%"/>
-                    <DataTable.Column label="Creator" name='created_by' width="10%"/>
+                    <DataTable.Column label="Uploaded at" name="uploaded_at" width="15%"/>
+                    <DataTable.Column label="Creator" name='created_by' width="15%"/>
                     <DataTable.Column width="10%"/>
 
                     {
@@ -130,10 +138,21 @@ export default class extends React.Component {
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
-                                        {item.id}
+                                        <Popup wide open={this.state.showIdPopup && item.isSelected}>
+                                            <Popup.Trigger>
+                                                <span>
+                                                    {item.package_name}
+                                                </span>
+                                            </Popup.Trigger>
+                                            <Popup.Content>
+                                                <span className='noWrap'>
+                                                    Plugin ID: <strong>{item.id}</strong>&nbsp;&nbsp;
+                                                    <CopyToClipboardButton content='Copy ID' text={item.id} />
+                                                </span>
+                                            </Popup.Content>
+                                        </Popup>
                                         <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this._setPluginVisibility(item.id, visibility)} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
                                     </DataTable.Data>
-                                    <DataTable.Data>{item.package_name}</DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>
                                     <DataTable.Data>{item.supported_platform}</DataTable.Data>
                                     <DataTable.Data>{item.distribution}</DataTable.Data>

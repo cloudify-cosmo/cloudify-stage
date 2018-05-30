@@ -80,6 +80,7 @@ export default class extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Blueprints available in catalog. Check widget\'s configuration.';
         let {ErrorMessage, Message, Icon, ReadmeModal} = Stage.Basic;
 
         let notAuthenticatedWarning = (
@@ -105,6 +106,7 @@ export default class extends React.Component {
                             onUpload={this._showModal.bind(this)}
                             onReadme={this._showReadmeModal.bind(this)}
                             readmeLoading={this.state.readmeLoading}
+                            noDataMessage={NO_DATA_MESSAGE}
                             />
                         :
                         <RepositoryCatalog
@@ -114,6 +116,7 @@ export default class extends React.Component {
                             onUpload={this._showModal.bind(this)}
                             onReadme={this._showReadmeModal.bind(this)}
                             readmeLoading={this.state.readmeLoading}
+                            noDataMessage={NO_DATA_MESSAGE}
                             />
 
                 }

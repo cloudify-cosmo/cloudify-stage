@@ -93,6 +93,7 @@ export default class extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Snapshots available. Click "Create" to create Snapshots.';
         let {Confirm, ErrorMessage, DataTable, Icon, ResourceVisibility} = Stage.Basic;
 
         return (
@@ -105,7 +106,8 @@ export default class extends React.Component {
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
                            selectable={true}
-                           className="snapshotsTable">
+                           className="snapshotsTable"
+                           noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Id" name="id" width="40%"/>
                     <DataTable.Column label="Created at" name="created_at" width="20%"/>

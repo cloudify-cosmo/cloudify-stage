@@ -33,6 +33,7 @@ export default class extends React.Component {
     }
 
     render() {
+        const NO_DATA_MESSAGE = 'There are no Outputs available. Probably there\'s no deployment created, yet.';
         var {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
         let outputs = this.props.data.items;
@@ -42,7 +43,7 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
-                <DataTable className="outputsTable" noDataAvailable={_.isEmpty(outputs)}>
+                <DataTable className="outputsTable" noDataAvailable={_.isEmpty(outputs)} noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Name" width="35%"/>
                     <DataTable.Column label="Value" width="65%"/>
@@ -60,9 +61,12 @@ export default class extends React.Component {
                                 <DataTable.Data>
                                     {output.value &&
                                         <Popup position='top left' wide>
-                                            <Popup.Trigger><span>{JsonUtils.stringify(output.value, false)}</span></Popup.Trigger>
-                                            <HighlightText
-                                                className='json'>{JsonUtils.stringify(output.value, true)}</HighlightText>
+                                            <Popup.Trigger>
+                                                <span>{JsonUtils.getStringValue(output.value)}</span>
+                                            </Popup.Trigger>
+                                            <HighlightText className='json'>
+                                                {JsonUtils.stringify(output.value, true)}
+                                            </HighlightText>
                                         </Popup>
                                     }
                                 </DataTable.Data>

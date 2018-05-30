@@ -13,7 +13,8 @@ export default class extends React.Component{
         onSelect: PropTypes.func,
         onUpload: PropTypes.func,
         onReadme: PropTypes.func,
-        readmeLoading: PropTypes.string
+        readmeLoading: PropTypes.string,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -23,10 +24,10 @@ export default class extends React.Component{
     };
 
     render(){
-        var {DataSegment, Grid, Image, Button, Header} = Stage.Basic;
+        let {DataSegment, Grid, Image, Button, Header} = Stage.Basic;
 
-        var index=0;
-        var catalogItems =
+        let index = 0;
+        let catalogItems =
             this.props.data.items.map((item) => {
                 return (
                     <Grid.Column key={item.id}>
@@ -107,7 +108,8 @@ export default class extends React.Component{
                              totalSize={this.props.data.total}
                              pageSize={this.props.widget.configuration.pageSize}
                              fetchData={this.props.fetchData}
-                             className="repositoryCatalog">
+                             className="repositoryCatalog"
+                             noDataMessage={this.props.noDataMessage}>
 
                     <Grid>
                         {catalogRows}
