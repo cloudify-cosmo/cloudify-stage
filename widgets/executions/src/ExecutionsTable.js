@@ -126,9 +126,9 @@ export default class extends React.Component {
                                         <Checkmark value={item.is_system_workflow}/>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <Icon name="options" link bordered title="Execution parameters" onClick={()=>this.setState({execution: item, executionParametersModalOpen: true})} />
+                                        <Icon name="options" link bordered title="Execution parameters" onClick={(event)=>{event.stopPropagation();this.setState({execution: item, executionParametersModalOpen: true, idPopupOpen: false})}} />
                                         {
-                                            item.workflow_id === 'update' && <Icon name="magnify" link bordered title="Update details" onClick={()=>this.setState({deploymentUpdateId: item.parameters.update_id, deploymentUpdateModalOpen: true})} />
+                                            item.workflow_id === 'update' && <Icon name="magnify" link bordered title="Update details" onClick={(event)=>{event.stopPropagation();this.setState({deploymentUpdateId: item.parameters.update_id, deploymentUpdateModalOpen: true, idPopupOpen: false})}} />
                                         }
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
@@ -139,7 +139,7 @@ export default class extends React.Component {
                                             </div>
                                             :
                                             <div>
-                                                <Icon name="remove circle" color="red" link onClick={()=>this.setState({execution: item, errorModalOpen: true})} />
+                                                <Icon name="remove circle" color="red" link onClick={(event)=>{event.stopPropagation();this.setState({execution: item, errorModalOpen: true, idPopupOpen: false})}} />
                                                 <ExecutionStatus item={item} showInactiveAsLink={true} onCancelExecution={this._cancelExecution.bind(this)}/>
                                             </div>
                                         }

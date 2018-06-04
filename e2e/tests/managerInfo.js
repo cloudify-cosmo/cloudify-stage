@@ -17,7 +17,7 @@ module.exports = {
             .assert.cssClassPresent('@statusIcon','green');
 
         page.waitForElementVisible('@statusesTitle')
-            .assert.containsText('@statusesTitle','Server Services Status');
+            .assert.containsText('@statusesTitle','Manager Services Status');
 
         client.end();
     }
