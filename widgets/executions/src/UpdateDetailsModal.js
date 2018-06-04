@@ -66,14 +66,17 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     render() {
-        let {ApproveButton, Form, Header, Modal, Table, Popup} = Stage.Basic;
+        let {ApproveButton, Form, Header, Icon, Modal, Table, Popup} = Stage.Basic;
 
         let deploymentUpdate = this.state.deploymentUpdate;
         let oldInputs = Array.sort(_.keys(deploymentUpdate.old_inputs));
         let newInputs = Array.sort(_.keys(deploymentUpdate.new_inputs));
         let allInputs = _.uniq([...oldInputs, ...newInputs]);
+        let inputsChanged = !_.isEqual(deploymentUpdate.old_inputs, deploymentUpdate.new_inputs);
+
         let oldBlueprint = deploymentUpdate.old_blueprint_id;
         let newBlueprint = deploymentUpdate.new_blueprint_id;
+        let blueprintChanged = oldBlueprint !== newBlueprint;
 
         return (
             <div>
@@ -91,63 +94,72 @@ export default class UpdateDetailsModal extends React.Component {
                             </Header>
 
                             {
-                                _.isEqual(oldBlueprint, newBlueprint)
-                                ? <span>Not changed</span>
-                                : <span>Changed from <strong>{oldBlueprint}</strong> into <strong>{newBlueprint}</strong>.</span>
+                                blueprintChanged
+                                ? <span>Changed from <strong>{oldBlueprint}</strong> into <strong>{newBlueprint}</strong>.</span>
+                                : <span>Not changed.</span>
                             }
 
                             <Header size="tiny">
                                 Inputs
-                                <Header.Subheader>
-                                    Hover new value to see difference
-                                </Header.Subheader>
+                                {
+                                    inputsChanged &&
+                                    <Header.Subheader>
+                                        To see difference between old and new inputs hover over&nbsp;
+                                        <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
+                                    </Header.Subheader>
+                                }
                             </Header>
 
-                            <Table>
-                                <Table.Header>
-                                    <Table.Row>
-                                        <Table.HeaderCell></Table.HeaderCell>
-                                        <Table.HeaderCell>Old</Table.HeaderCell>
-                                        <Table.HeaderCell>New</Table.HeaderCell>
-                                    </Table.Row>
-                                </Table.Header>
+                            {
+                                inputsChanged
+                                ?
+                                    <Table>
+                                        <Table.Header>
+                                            <Table.Row>
+                                                <Table.HeaderCell></Table.HeaderCell>
+                                                <Table.HeaderCell>Old</Table.HeaderCell>
+                                                <Table.HeaderCell>New</Table.HeaderCell>
+                                            </Table.Row>
+                                        </Table.Header>
 
-                                <Table.Body>
-                                    {
-                                        _.map(allInputs, (input) => {
-                                           let oldValue = _.get(deploymentUpdate.old_inputs, input, '');
-                                           let newValue = _.get(deploymentUpdate.new_inputs, input, '');
+                                        <Table.Body>
+                                            {
+                                                _.map(allInputs, (input) => {
+                                                    let oldValue = _.get(deploymentUpdate.old_inputs, input, '');
+                                                    let newValue = _.get(deploymentUpdate.new_inputs, input, '');
+                                                    let inputChanged = !_.isEqual(oldValue, newValue);
 
-                                           return (
-                                                <Table.Row key={input}>
-                                                    <Table.Cell>
-                                                        {input}
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        {oldValue}
-                                                    </Table.Cell>
-                                                    <Table.Cell>
-                                                        <Popup>
-                                                            <Popup.Trigger>
-                                                                <span>{newValue}</span>
-                                                            </Popup.Trigger>
-                                                            <Popup.Content>
-                                                                <span>
-                                                                    {
-                                                                        _.isEqual(oldValue, newValue)
-                                                                        ? 'No difference'
-                                                                        : this._getDiff(oldValue, newValue)
-                                                                    }
-                                                                </span>
-                                                            </Popup.Content>
-                                                        </Popup>
-                                                    </Table.Cell>
-                                                </Table.Row>
-                                            );
-                                        })
-                                    }
-                                </Table.Body>
-                            </Table>
+                                                    return (
+                                                        <Table.Row key={input}>
+                                                            <Table.Cell>
+                                                                {input}
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                {oldValue}
+                                                            </Table.Cell>
+                                                            <Table.Cell>
+                                                                <span>{newValue} </span>
+                                                                {
+                                                                    inputChanged &&
+                                                                    <Popup>
+                                                                        <Popup.Trigger>
+                                                                            <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
+                                                                        </Popup.Trigger>
+                                                                        <Popup.Content>
+                                                                            {this._getDiff(oldValue, newValue)}
+                                                                        </Popup.Content>
+                                                                    </Popup>
+                                                                }
+                                                            </Table.Cell>
+                                                        </Table.Row>
+                                                    );
+                                                })
+                                            }
+                                        </Table.Body>
+                                    </Table>
+                                : <span>No inputs changed.</span>
+                            }
+
                         </Form>
                     </Modal.Content>
 
