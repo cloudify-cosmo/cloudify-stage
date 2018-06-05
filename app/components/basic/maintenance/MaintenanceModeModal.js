@@ -47,10 +47,14 @@ class MaintenanceModeModal extends Component {
 
             this._loadPendingExecutions();
         } else if (this.props.show && !nextProps.show) {
-            console.log('Stop polling maintenance data');
             this._stopPolling();
+            this._stopFetchingData();
             this.props.onClose();
         }
+    }
+
+    componentWillUnmount() {
+        this._stopPolling();
     }
 
     _loadPendingExecutions() {
@@ -69,8 +73,11 @@ class MaintenanceModeModal extends Component {
     }
 
     _stopPolling() {
+        console.log('Stop polling maintenance data');
         clearTimeout(this.pollingTimeout);
+    }
 
+    _stopFetchingData() {
         if (this.fetchDataPromise) {
             this.fetchDataPromise.cancel();
         }
@@ -78,6 +85,7 @@ class MaintenanceModeModal extends Component {
 
     _startPolling() {
         this._stopPolling();
+        this._stopFetchingData();
 
         if (this.props.show) {
             console.log(`Polling maintenance data - time interval: ${POLLING_INTERVAL / 1000} sec`);
