@@ -64,7 +64,10 @@ export default class MaintenanceModePageMessage extends Component {
 
                     {
                         this.props.showServicesStatus &&
-                        [<Divider />, <Services />]
+                        <div>
+                            <Divider />
+                            <Services />
+                        </div>
                     }
                 </div>
 
