@@ -64,14 +64,16 @@ module.exports = (function() {
         return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
     }
 
-    function listYamlFiles(archiveUrl, req) {
-        var promise = archiveUrl ? _saveDataFromUrl(archiveUrl) : _saveMultipartData(req);
+    function listYamlFiles(query, req) {
+        let includeFilename = !!query.includeFilename;
+        let promise = query.url ? _saveDataFromUrl(query.url) : _saveMultipartData(req);
 
         return promise.then(data => {
-            var archiveFolder = data.archiveFolder;
-            var archiveFile = data.archiveFile;
-            var archivePath = pathlib.join(archiveFolder, archiveFile);
-            var extractedDir = pathlib.join(archiveFolder, 'extracted');
+            let archiveFolder = data.archiveFolder;
+            let archiveFile = data.archiveFile; // filename with extension
+            let archiveFileName = pathlib.parse(archiveFile).name; // filename without extension
+            let archivePath = pathlib.join(archiveFolder, archiveFile);
+            let extractedDir = pathlib.join(archiveFolder, 'extracted');
 
             return ArchiveHelper.removeOldExtracts(lookupYamlsDir)
                 .then(() => {
@@ -81,6 +83,7 @@ module.exports = (function() {
                 })
                 .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
                 .then(() => _scanYamlFiles(extractedDir))
+                .then((data) => includeFilename ? [archiveFileName, ...data] : data)
                 .catch(err => {
                     ArchiveHelper.cleanTempData(archiveFolder);
                     throw err;
@@ -98,7 +101,7 @@ module.exports = (function() {
             items = fs.readdirSync(pathlib.join(extractedDir, items[0]));
         }
 
-        items = _.filter(items, item => item.endsWith('.yaml') || item.endsWith('.yml'));
+        items = _.filter(items, item => item.endsWith('.yaml'));
 
         return Promise.resolve(items);
     }

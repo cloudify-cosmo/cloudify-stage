@@ -16,9 +16,11 @@ class UploadBlueprintModal extends React.Component {
         urlLoading: false,
         fileLoading: false,
         blueprintUrl: '',
+        isBlueprintUrlUsed: true,
         blueprintName: '',
         blueprintFileName: '',
         imageUrl: '',
+        isImageUrlUsed: true,
         errors: {},
         yamlFiles: [],
         visibility: Stage.Common.Consts.defaultVisibility
@@ -94,11 +96,24 @@ class UploadBlueprintModal extends React.Component {
 
         this.setState({urlLoading: true});
         this.refs.blueprintFile.reset();
-        this.actions.doListYamlFiles(this.state.blueprintUrl).then((yamlFiles)=>{
-            this.setState({yamlFiles, errors: {}, urlLoading: false});
+        this.actions.doListYamlFiles(this.state.blueprintUrl, null, true).then((data)=>{
+            const defaultBlueprintFileName = 'blueprint.yaml';
+            let blueprintName = data.shift();
+            let blueprintFileName
+                = _.includes(data, defaultBlueprintFileName)
+                ? defaultBlueprintFileName
+                : data[0];
+            this.setState({yamlFiles: data, errors: {}, urlLoading: false, isBlueprintUrlUsed: true, blueprintName, blueprintFileName});
         }).catch((err)=>{
-            this.setState({errors: {error: err.message}, urlLoading: false});
+            this.setState({errors: {error: err.message}, urlLoading: false, blueprintName: '', blueprintFileName: ''});
         });
+    }
+
+    _onBlueprintUrlFocus() {
+        if (!this.state.isBlueprintUrlUsed) {
+            this.refs.blueprintFile.reset();
+            this.setState({isBlueprintUrlUsed: true, blueprintUrl: '', yamlFiles: [], blueprintName: '', blueprintFileName: ''});
+        }
     }
 
     _onBlueprintFileChange(file) {
@@ -107,12 +122,39 @@ class UploadBlueprintModal extends React.Component {
             return;
         }
 
-        this.setState({fileLoading: true, blueprintUrl: ''});
-        this.actions.doListYamlFiles(null, file).then((yamlFiles)=>{
-            this.setState({yamlFiles, errors: {}, fileLoading: false});
+        this.setState({fileLoading: true});
+        this.actions.doListYamlFiles(null, file, true).then((data)=>{
+            const defaultBlueprintFileName = 'blueprint.yaml';
+            let blueprintName = data.shift();
+            let blueprintFileName
+                = _.includes(data, defaultBlueprintFileName)
+                ? defaultBlueprintFileName
+                : data[0];
+            this.setState({yamlFiles: data, errors: {}, fileLoading: false, isBlueprintUrlUsed: false, blueprintUrl: file.name, blueprintName, blueprintFileName});
         }).catch((err)=>{
-            this.setState({errors: {error: err.message}, fileLoading: false});
+            this.setState({errors: {error: err.message}, fileLoading: false, blueprintName: '', blueprintFileName: ''});
         });
+    }
+
+    _onBlueprintFileReset() {
+        this.setState({yamlFiles: [], errors: {}, isBlueprintUrlUsed: true, blueprintUrl: '', blueprintName: '', blueprintFileName: ''});
+    }
+
+    _onBlueprintImageUrlFocus() {
+        if (!this.state.isImageUrlUsed) {
+            this.refs.imageFile.reset();
+            this.setState({isImageUrlUsed: true, imageUrl: ''});
+        }
+    }
+
+    _onBlueprintImageChange(file) {
+        if (file) {
+            this.setState({imageUrl: file.name, isImageUrlUsed: false});
+        }
+    }
+
+    _onBlueprintImageReset() {
+        this.setState({imageUrl: '', isImageUrlUsed: true});
     }
 
     render() {
@@ -132,21 +174,23 @@ class UploadBlueprintModal extends React.Component {
                         <Form loading={this.state.loading} errors={this.state.errors}
                               onErrorsDismiss={() => this.setState({errors: {}})}>
                             <Form.Group>
-                                <Form.Field width="8" error={this.state.errors.blueprintUrl}>
-                                    <Form.Input label="URL" placeholder="Enter blueprint package URL location" name="blueprintUrl"
-                                                onChange={this._handleInputChange.bind(this)} value={this.state.blueprintUrl}
-                                                onBlur={this._onBlueprintUrlBlur.bind(this)} loading={this.state.urlLoading}
-                                                icon={this.state.urlLoading?'search':false} disabled={this.state.urlLoading} />
+                                <Form.Field width="13" error={this.state.errors.blueprintUrl}>
+                                    <Form.Input label={this.state.isBlueprintUrlUsed ? 'URL' : 'File'}
+                                                placeholder="Provide the blueprint's URL or click browse to select a file"
+                                                name="blueprintUrl" value={this.state.blueprintUrl}
+                                                onChange={this._handleInputChange.bind(this)}
+                                                onFocus={this._onBlueprintUrlFocus.bind(this)}
+                                                onBlur={this._onBlueprintUrlBlur.bind(this)}
+                                                loading={this.state.urlLoading}
+                                                icon={this.state.urlLoading?'search':false}
+                                                disabled={this.state.urlLoading} />
                                 </Form.Field>
-                                <Form.Field width="1" style={{position:'relative'}}>
-                                    <div className="ui vertical divider">
-                                        Or
-                                    </div>
-                                </Form.Field>
-                                <Form.Field width="7" error={this.state.errors.blueprintUrl}>
-                                    <Form.File placeholder="Select blueprint package file" name="blueprintFile" ref="blueprintFile"
-                                               onChange={this._onBlueprintFileChange.bind(this)} loading={this.state.fileLoading}
-                                               disabled={this.state.fileLoading}/>
+                                <Form.Field width="2" error={this.state.errors.blueprintUrl}>
+                                    <Form.File name="blueprintFile" ref="blueprintFile"
+                                               onChange={this._onBlueprintFileChange.bind(this)}
+                                               onReset={this._onBlueprintFileReset.bind(this)}
+                                               loading={this.state.fileLoading}
+                                               disabled={this.state.fileLoading} showInput={false} />
                                 </Form.Field>
                                 <Form.Field width="1">
                                     <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
@@ -155,7 +199,7 @@ class UploadBlueprintModal extends React.Component {
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Field width="16" error={this.state.errors.blueprintName}>
+                                <Form.Field width="15" error={this.state.errors.blueprintName}>
                                     <Form.Input name='blueprintName' placeholder="Blueprint name"
                                                 value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
                                 </Form.Field>
@@ -165,7 +209,7 @@ class UploadBlueprintModal extends React.Component {
                                 </Form.Field>
                             </Form.Group>
                             <Form.Group>
-                                <Form.Field width="16">
+                                <Form.Field width="15">
                                     <Form.Dropdown placeholder='Blueprint filename' search selection options={options} name="blueprintFileName"
                                                    value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
                                 </Form.Field>
@@ -176,19 +220,18 @@ class UploadBlueprintModal extends React.Component {
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Field width="8" error={this.state.errors.imageUrl}>
-                                    <Form.Input label="URL" placeholder="Enter blueprint icon image file (.png) URL location" name="imageUrl"
-                                                value={this.state.imageUrl} onChange={this._handleInputChange.bind(this)}
-                                                onBlur={()=>this.state.imageUrl ? this.refs.imageFile.reset() : ''}/>
+                                <Form.Field width="13" error={this.state.errors.imageUrl}>
+                                    <Form.Input label={this.state.isImageUrlUsed ? 'URL' : 'File'}
+                                                placeholder="Provide the image file URL or click browse to select a file" name="imageUrl"
+                                                value={this.state.imageUrl}
+                                                onChange={this._handleInputChange.bind(this)}
+                                                onFocus={this._onBlueprintImageUrlFocus.bind(this)} />
                                 </Form.Field>
-                                <Form.Field width="1" style={{position:'relative'}}>
-                                    <div className="ui vertical divider">
-                                        Or
-                                    </div>
-                                </Form.Field>
-                                <Form.Field width="7" error={this.state.errors.imageUrl}>
-                                    <Form.File placeholder="Select blueprint icon image file (.png)" name="imageFile" ref="imageFile"
-                                               onChange={(file)=>file ? this.setState({imageUrl: ''}) : ''}/>
+                                <Form.Field width="2" error={this.state.errors.imageUrl}>
+                                    <Form.File name="imageFile" ref="imageFile"
+                                               onChange={this._onBlueprintImageChange.bind(this)}
+                                               onReset={this._onBlueprintImageReset.bind(this)}
+                                               showInput={false} />
                                 </Form.Field>
                                 <Form.Field width="1">
                                     <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
