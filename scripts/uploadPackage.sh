@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-MANAGER_USER=centos
-STAGE_PACKAGE=./stage.tar.gz
+MANAGER_USER=${MANAGER_USER:-centos}
+STAGE_PACKAGE=${STAGE_PACKAGE:-./stage.tar.gz}
 COMMON_OPTIONS="-o StrictHostKeyChecking=no"
 
 # Stage package check and download
