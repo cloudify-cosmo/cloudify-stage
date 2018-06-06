@@ -142,11 +142,15 @@ export default class DataSegment extends Component {
         super(props,context);
 
         this.state = {
-            searchText: ''
+            searchText: '',
+            searching: false
         };
 
         this.debouncedSearch = _.debounce(() => {
-            this.refs.pagination.reset(this._fetchData.bind(this));
+            this.refs.pagination.reset(() => {
+                return Promise.resolve(this._fetchData())
+                              .then(() => this.setState({searching: false}));
+            });
         }, 300, {'maxWait': 2000});
     }
 
@@ -214,9 +218,14 @@ export default class DataSegment extends Component {
                     (segmentAction || this.props.searchable) &&
                     <Form size="small" as="div">
                         <Form.Group inline>
-                            {this.props.searchable && <TableSearch search={this.state.searchText} onSearch={(searchText) => {
-                                this.setState({searchText}, this.debouncedSearch);
-                            }}/>}
+                            {
+                                this.props.searchable &&
+                                <TableSearch search={this.state.searchText}
+                                             searching={this.state.searching}
+                                             onSearch={(searchText) => this.setState({searchText, searching: true},
+                                                                                     this.debouncedSearch)}
+                                />
+                            }
                             {segmentAction}
                         </Form.Group>
                     </Form>
