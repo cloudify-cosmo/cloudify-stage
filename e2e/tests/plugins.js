@@ -14,6 +14,7 @@ module.exports = {
             .fillWagonUrl(page.props.testWagonUrl)
             .fillYamlUrl(page.props.testYamlUrl)
             .uploadPlugin()
+            .searchFor(page.props.pluginPackageName)
             .section.pluginsTable.assert.containsText('@packageName', page.props.pluginPackageName)
             .parent.deletePlugin();
     },
