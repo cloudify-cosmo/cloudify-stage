@@ -104,21 +104,25 @@ export function addWidgetDrilldownPage(widgetId,drillDownName,drillDownPageId) {
 export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldownContext,drilldownPageName) {
 
     return function (dispatch, getState) {
-        var isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
+        let isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
         if (!_.isUndefined(isPageEditMode)) {
             return dispatch(drillDownWarning(true));
         }
 
-        var pageId = widget.drillDownPages[defaultTemplate.name];
+        let pageId = widget.drillDownPages[defaultTemplate.name];
         if (!pageId) {
-            var currentPage = _.replace(window.location.pathname, /.*\/page\//, '');
-            var newPageId = _.snakeCase(currentPage + ' ' + defaultTemplate.name);
+            let currentPage = _.replace(window.location.pathname, /.*\/page\//, '');
+            let newPageId = _.snakeCase(currentPage + ' ' + defaultTemplate.name);
+            let isDrilldownPagePresent = !!_.find(getState().pages, {'id': newPageId});
 
-            dispatch(createDrilldownPage(newPageId,defaultTemplate.name));
-            _.each(defaultTemplate.widgets,(widget)=>{
-                var widgetDefinition = _.find(widgetDefinitions,{id:widget.definition});
-                dispatch(addWidget(newPageId,widget.name,widgetDefinition,widget.width,widget.height,widget.x,widget.y,widget.configuration));
-            });
+            if (!isDrilldownPagePresent) {
+                dispatch(createDrilldownPage(newPageId, defaultTemplate.name));
+                _.each(defaultTemplate.widgets, (widget) => {
+                    var widgetDefinition = _.find(widgetDefinitions, {id: widget.definition});
+                    dispatch(addWidget(newPageId, widget.name, widgetDefinition,
+                                       widget.width, widget.height, widget.x, widget.y, widget.configuration));
+                });
+            }
 
             dispatch(addWidgetDrilldownPage(widget.id,defaultTemplate.name,newPageId));
             pageId = newPageId;
