@@ -109,7 +109,7 @@ export default class extends React.Component {
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
                                     <DataTable.Data>
-                                        <Popup wide open={this.state.idPopupOpen && item.isSelected} trigger={<span>&nbsp;</span>}>
+                                        <Popup wide open={this.state.idPopupOpen && item.isSelected} onClose={() => this.setState({idPopupOpen: false})} trigger={<span>&nbsp;</span>}>
                                             <span className='noWrap'>
                                                 Execution ID: <strong>{item.id}</strong>&nbsp;&nbsp;
                                                 <CopyToClipboardButton content='Copy ID' text={item.id} />

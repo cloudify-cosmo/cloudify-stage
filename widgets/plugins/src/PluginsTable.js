@@ -138,7 +138,7 @@ export default class extends React.Component {
                             return (
                                 <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
                                     <DataTable.Data>
-                                        <Popup wide open={this.state.showIdPopup && item.isSelected}>
+                                        <Popup wide open={this.state.showIdPopup && item.isSelected} onClose={() => this.setState({showIdPopup: false})} >
                                             <Popup.Trigger>
                                                 <span>
                                                     {item.package_name}
