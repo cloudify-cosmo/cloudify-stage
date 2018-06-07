@@ -6,7 +6,7 @@ import SecretsTable from './SecretsTable';
 
 Stage.defineWidget({
     id: 'secrets',
-    name: 'Secrets management',
+    name: 'Secret Store Management',
     description: 'This widget shows a list of available secrets and allow managing them',
     initialWidth: 5,
     initialHeight: 16,
