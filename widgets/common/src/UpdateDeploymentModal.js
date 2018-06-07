@@ -4,6 +4,7 @@
 
 import PropTypes from 'prop-types';
 import {Component} from 'react';
+import NodeInstancesFilter from '../../../app/components/basic/NodeInstancesFilter';
 
 class UpdateDeploymentModal extends Component {
 
@@ -23,6 +24,9 @@ class UpdateDeploymentModal extends Component {
         deploymentInputs: {...props.deployment.inputs},
         installWorkflow: true,
         uninstallWorkflow: true,
+        installWorkflowFirst: false,
+        ignoreFailure: false,
+        nodeInstancesToReinstall: [],
         force: false
     });
 
@@ -94,6 +98,8 @@ class UpdateDeploymentModal extends Component {
                          deploymentInputs,
                          this.state.installWorkflow,
                          this.state.uninstallWorkflow,
+                         this.state.installWorkflowFirst,
+                         this.state.ignoreFailure,
                          this.state.force).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
@@ -112,7 +118,19 @@ class UpdateDeploymentModal extends Component {
         if (field.className === Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME) {
             this.setState({deploymentInputs: {...this.state.deploymentInputs, ...fieldNameValue}});
         } else {
-            this.setState(fieldNameValue);
+            this.setState(fieldNameValue, () => {
+                switch (field.name) {
+                    case 'uninstallWorkflow':
+                        !field.checked && this.setState({installWorkflowFirst: false, ignoreFailure: false});
+                        break;
+                    case 'installWorkflowFirst':
+                        field.checked && this.setState({uninstallWorkflow: true});
+                        break;
+                    case 'ignoreFailure':
+                        field.checked && this.setState({uninstallWorkflow: true});
+                        break;
+                }
+            });
         }
     }
 
@@ -203,7 +221,7 @@ class UpdateDeploymentModal extends Component {
     }
 
     render() {
-        var {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, Popup} = Stage.Basic;
+        var {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter, Popup} = Stage.Basic;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
         let blueprintsOptions = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -315,9 +333,24 @@ class UpdateDeploymentModal extends Component {
                         </Form.Field>
 
                         <Form.Field>
+                            <Form.Checkbox label="Run install workflow first" toggle name="installWorkflowFirst"
+                                           checked={this.state.installWorkflowFirst} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+
+                        <Form.Field>
+                            <Form.Checkbox label="Ignore failures in uninstall workflow" toggle name="ignoreFailure"
+                                           checked={this.state.ignoreFailure} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+
+                        <Form.Field>
                             <Form.Checkbox label="Force update" name="force" toggle
                                            checked={this.state.force} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
+
+                        <NodeInstancesFilter name='nodeInstancesToReinstall' deploymentId={this.props.deployment.id}
+                                             label='Node instances to reinstall'
+                                             value={this.state.nodeInstancesToReinstall}
+                                             onChange={this._handleInputChange.bind(this)}/>
                     </Form>
                 </Modal.Content>
 

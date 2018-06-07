@@ -36,7 +36,9 @@ class DeploymentActions {
     }
 
     doUpdate(deploymentName, blueprintName, deploymentInputs={},
-             shouldRunInstallWorkflow=true, shouldRunUninstallWorkflow=true, forceUpdate=false) {
+             shouldRunInstallWorkflow=true, shouldRunUninstallWorkflow=true,
+             installWorkflowFirst=false, ignoreFailure=false,
+             forceUpdate=false) {
         let data = {};
 
         if (!_.isEmpty(blueprintName)) {
@@ -45,6 +47,8 @@ class DeploymentActions {
 
         data['skip_install'] = !shouldRunInstallWorkflow;
         data['skip_uninstall'] = !shouldRunUninstallWorkflow;
+        data['install_first'] = installWorkflowFirst;
+        data['ignore_failure'] = ignoreFailure;
         data['force'] = forceUpdate;
 
         if (!_.isEmpty(deploymentInputs)) {

@@ -18,6 +18,7 @@ import GenericField from './form/GenericField';
 import TimeFilter from './TimeFilter';
 import MetricFilter from './MetricFilter';
 import NodeFilter from './NodeFilter';
+import NodeInstancesFilter from './NodeInstancesFilter';
 import Form from './form/Form';
 import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item, Sidebar, Card,
          Segment, Accordion, List, Grid, Divider, Label, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
@@ -78,6 +79,7 @@ export {
     MetricFilter,
     Modal,
     NodeFilter,
+    NodeInstancesFilter,
     NodesTree,
     PageFilter,
     Popup,
