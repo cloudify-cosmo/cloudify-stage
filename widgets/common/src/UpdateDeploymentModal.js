@@ -3,9 +3,8 @@
  */
 
 import PropTypes from 'prop-types';
-import {Component} from 'react';
 
-class UpdateDeploymentModal extends Component {
+class UpdateDeploymentModal extends React.Component {
 
     constructor(props,context) {
         super(props,context);
