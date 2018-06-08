@@ -40,6 +40,7 @@ export default class NodeInstancesFilter extends React.Component {
      * @property {string} [label=''] field label
      * @property {string} [placeholder=''] field's placeholder
      * @property {string} [help=''] field's help description
+     * @property {boolean} [upward=false] make dropdown to expand upwards
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
@@ -48,13 +49,15 @@ export default class NodeInstancesFilter extends React.Component {
         onChange: PropTypes.func.isRequired,
         label: PropTypes.string,
         placeholder: PropTypes.string,
-        help: PropTypes.string
+        help: PropTypes.string,
+        upward: PropTypes.boolean,
     };
 
     static defaultProps = {
         label: '',
         placeholder: '',
-        help: ''
+        help: '',
+        upward: false
     };
 
     static initialState = (props) => ({
@@ -123,7 +126,7 @@ export default class NodeInstancesFilter extends React.Component {
                 <Form.Dropdown search selection multiple value={errors.nodeInstanceIds ? '' : this.state.value}
                                placeholder={errors.nodeInstanceIds || this.props.placeholder}
                                options={this.state.nodeInstances} onChange={this._handleInputChange.bind(this)}
-                               name="nodeInstanceIds" loading={this.state.loading} />
+                               name="nodeInstanceIds" loading={this.state.loading} upward={this.props.upward} />
             </Form.Field>
         );
     }

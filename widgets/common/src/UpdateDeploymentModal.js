@@ -26,7 +26,8 @@ class UpdateDeploymentModal extends Component {
         uninstallWorkflow: true,
         installWorkflowFirst: false,
         ignoreFailure: false,
-        nodeInstancesToReinstall: [],
+        skipReinstall: false,
+        reinstallList: [],
         force: false
     });
 
@@ -100,6 +101,8 @@ class UpdateDeploymentModal extends Component {
                          this.state.uninstallWorkflow,
                          this.state.installWorkflowFirst,
                          this.state.ignoreFailure,
+                         this.state.skipReinstall,
+                         this.state.reinstallList,
                          this.state.force).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
@@ -123,11 +126,8 @@ class UpdateDeploymentModal extends Component {
                     case 'uninstallWorkflow':
                         !field.checked && this.setState({installWorkflowFirst: false, ignoreFailure: false});
                         break;
-                    case 'installWorkflowFirst':
-                        field.checked && this.setState({uninstallWorkflow: true});
-                        break;
-                    case 'ignoreFailure':
-                        field.checked && this.setState({uninstallWorkflow: true});
+                    case 'reinstallList':
+                        !_.isEmpty(field.value) && this.setState({skipReinstall: false});
                         break;
                 }
             });
@@ -221,7 +221,7 @@ class UpdateDeploymentModal extends Component {
     }
 
     render() {
-        var {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter, Popup} = Stage.Basic;
+        let {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
         let blueprintsOptions = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -270,47 +270,26 @@ class UpdateDeploymentModal extends Component {
                                     ?
                                     <Message content="No inputs available for the selected blueprint"/>
                                     :
-                                    <Popup position='top right' wide>
-                                        <Popup.Trigger>
-                                            <Form.Field error={this.state.errors.yamlFile}>
-                                                <Form.File name="yamlFile" placeholder="YAML file" ref="yamlFile"
-                                                           onChange={this._handleYamlFileChange.bind(this)} loading={this.state.fileLoading}
-                                                           disabled={this.state.fileLoading} />
-                                            </Form.Field>
-                                        </Popup.Trigger>
-                                        <Popup.Content>
-                                            <Icon name="info circle"/>Provide YAML file with all deployments inputs to automatically fill in the form.
-                                        </Popup.Content>
-                                    </Popup>
+
+                                    <Form.Field error={this.state.errors.yamlFile}
+                                                help='Provide YAML file with all deployments inputs
+                                                      to automatically fill in the form.'>
+                                        <Form.File name="yamlFile" placeholder="YAML file" ref="yamlFile"
+                                                   onChange={this._handleYamlFileChange.bind(this)} loading={this.state.fileLoading}
+                                                   disabled={this.state.fileLoading} />
+                                    </Form.Field>
                             )
                         }
 
                         {
                             _.map(deploymentInputs, (input) => {
-                                let formInput = () =>
-                                    <Form.Input name={input.name} placeholder={Stage.Common.JsonUtils.getStringValue(input.default || '')}
-                                                value={this.state.deploymentInputs[input.name]}
-                                                onChange={this._handleInputChange.bind(this)}
-                                                className={Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME} />
                                 return (
-                                    <Form.Field key={input.name} error={this.state.errors[input.name]}>
-                                        <label>
-                                            {input.name}&nbsp;
-                                            {
-                                                _.isNil(input.default)
-                                                    ? <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
-                                                    : null
-                                            }
-                                        </label>
-                                        {
-                                            !_.isNil(input.description)
-                                                ? <Popup trigger={formInput()} position='top right' wide >
-                                                    <Popup.Content>
-                                                        <Icon name="info circle"/>{input.description}
-                                                    </Popup.Content>
-                                                </Popup>
-                                                : formInput()
-                                        }
+                                    <Form.Field key={input.name} error={this.state.errors[input.name]} help={input.description}
+                                                label={input.name} required={_.isNil(input.default)}>
+                                        <Form.Input name={input.name} placeholder={Stage.Common.JsonUtils.getStringValue(input.default || '')}
+                                                    value={this.state.deploymentInputs[input.name]}
+                                                    onChange={this._handleInputChange.bind(this)}
+                                                    className={Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME} />
                                     </Form.Field>
                                 );
                             })
@@ -322,35 +301,56 @@ class UpdateDeploymentModal extends Component {
                             </Header>
                         </Form.Divider>
 
-                        <Form.Field>
-                            <Form.Checkbox label="Run install workflow on added nodes" toggle name="installWorkflow"
+                        <Form.Field help='Run install lifecycle operations'>
+                            <Form.Checkbox label="Run install workflow" toggle name="installWorkflow"
                                            checked={this.state.installWorkflow} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field>
-                            <Form.Checkbox label="Run uninstall workflow on removed nodes" toggle name="uninstallWorkflow"
+                        <Form.Field help='Run uninstall lifecycle operations'>
+                            <Form.Checkbox label="Run uninstall workflow" toggle name="uninstallWorkflow"
                                            checked={this.state.uninstallWorkflow} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field>
+                        <Form.Field help='Run install workflow first and then uninstall workflow.
+                                          Default: first uninstall and then install'>
                             <Form.Checkbox label="Run install workflow first" toggle name="installWorkflowFirst"
-                                           checked={this.state.installWorkflowFirst} onChange={this._handleInputChange.bind(this)}/>
+                                           checked={this.state.installWorkflowFirst} onChange={this._handleInputChange.bind(this)}
+                                           disabled={!this.state.uninstallWorkflow} />
                         </Form.Field>
 
-                        <Form.Field>
+
+                        <Form.Field help='Supply the parameter `ignore_failure` with
+                                          the value `true` to the uninstall workflow'>
                             <Form.Checkbox label="Ignore failures in uninstall workflow" toggle name="ignoreFailure"
-                                           checked={this.state.ignoreFailure} onChange={this._handleInputChange.bind(this)}/>
+                                           checked={this.state.ignoreFailure} onChange={this._handleInputChange.bind(this)}
+                                           disabled={!this.state.uninstallWorkflow} />
                         </Form.Field>
 
-                        <Form.Field>
+                        <NodeInstancesFilter name='reinstallList' deploymentId={this.props.deployment.id}
+                                             label='Reinstall list' value={this.state.reinstallList}
+                                             placeholder='Choose node instances to reinstall' upward
+                                             onChange={this._handleInputChange.bind(this)}
+                                             help='Node instances ids to be reinstalled as part
+                                                   of deployment update. They will be
+                                                   reinstalled even if "Skip reinstall" is set' />
+
+                        <Form.Field help='Skip automatically reinstall node instances
+                                          that their properties has been modified, as
+                                          part of a deployment update. Node instances
+                                          that were explicitly given to the reinstall
+                                          list will still be reinstalled'>
+                            <Form.Checkbox label="Skip reinstall" name="skipReinstall" toggle
+                                           checked={this.state.skipReinstall} onChange={this._handleInputChange.bind(this)}
+                                           disabled={!_.isEmpty(this.state.reinstallList)} />
+                        </Form.Field>
+
+                        <Form.Field help='Force running update in case a previous
+                                          update on this deployment has failed to
+                                          finished successfully'>
                             <Form.Checkbox label="Force update" name="force" toggle
-                                           checked={this.state.force} onChange={this._handleInputChange.bind(this)}/>
+                                           checked={this.state.force} onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 
-                        <NodeInstancesFilter name='nodeInstancesToReinstall' deploymentId={this.props.deployment.id}
-                                             label='Node instances to reinstall'
-                                             value={this.state.nodeInstancesToReinstall}
-                                             onChange={this._handleInputChange.bind(this)}/>
                     </Form>
                 </Modal.Content>
 
