@@ -126,9 +126,6 @@ class UpdateDeploymentModal extends Component {
                     case 'uninstallWorkflow':
                         !field.checked && this.setState({installWorkflowFirst: false, ignoreFailure: false});
                         break;
-                    case 'reinstallList':
-                        !_.isEmpty(field.value) && this.setState({skipReinstall: false});
-                        break;
                 }
             });
         }
@@ -340,8 +337,8 @@ class UpdateDeploymentModal extends Component {
                                           that were explicitly given to the reinstall
                                           list will still be reinstalled'>
                             <Form.Checkbox label="Skip reinstall" name="skipReinstall" toggle
-                                           checked={this.state.skipReinstall} onChange={this._handleInputChange.bind(this)}
-                                           disabled={!_.isEmpty(this.state.reinstallList)} />
+                                           checked={this.state.skipReinstall}
+                                           onChange={this._handleInputChange.bind(this)}  />
                         </Form.Field>
 
                         <Form.Field help='Force running update in case a previous
