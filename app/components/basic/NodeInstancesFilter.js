@@ -18,7 +18,7 @@ import Form from './form/Form';
  * ![NodeInstancesFilter](manual/asset/NodeInstancesFilter_0.png)
  *
  * ```
- * <NodeInstancesFilter name='nodeFilter' value={[]} label='Node Instances' onChange={()=>{}} deploymentId='nodecellar' />
+ * <NodeInstancesFilter name='nodeFilter' value={[]} onChange={()=>{}} deploymentId='nodecellar' />
  * ```
  *
  */
@@ -38,17 +38,23 @@ export default class NodeInstancesFilter extends React.Component {
      * @property {string} deploymentId ID of deployment for which Node Instances will be fetched
      * @property {function} onChange function to be called on field's value change
      * @property {string} [label=''] field label
+     * @property {string} [placeholder=''] field's placeholder
+     * @property {string} [help=''] field's help description
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
         value: PropTypes.array.isRequired,
         deploymentId: PropTypes.string.isRequired,
         onChange: PropTypes.func.isRequired,
-        label: PropTypes.string
+        label: PropTypes.string,
+        placeholder: PropTypes.string,
+        help: PropTypes.string
     };
 
     static defaultProps = {
-        label: ''
+        label: '',
+        placeholder: '',
+        help: ''
     };
 
     static initialState = (props) => ({
@@ -75,6 +81,10 @@ export default class NodeInstancesFilter extends React.Component {
     }
 
     _fetchData() {
+        if (_.isEmpty(this.props.deploymentId)) {
+            return;
+        }
+
         const params = {_include: 'id', deployment_id: this.props.deploymentId};
         const fetchUrl = '/node-instances';
         let errors = {...this.state.errors};
@@ -109,12 +119,9 @@ export default class NodeInstancesFilter extends React.Component {
         let errors = this.state.errors;
 
         return (
-            <Form.Field error={this.state.errors.nodeInstanceIds}>
-                {
-                    this.props.label && <label>{this.props.label}</label>
-                }
+            <Form.Field error={this.state.errors.nodeInstanceIds} label={this.props.label} help={this.props.help}>
                 <Form.Dropdown search selection multiple value={errors.nodeInstanceIds ? '' : this.state.value}
-                               placeholder={errors.nodeInstanceIds || 'Select Node Instances'}
+                               placeholder={errors.nodeInstanceIds || this.props.placeholder}
                                options={this.state.nodeInstances} onChange={this._handleInputChange.bind(this)}
                                name="nodeInstanceIds" loading={this.state.loading} />
             </Form.Field>
