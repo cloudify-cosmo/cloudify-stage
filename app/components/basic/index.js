@@ -32,6 +32,7 @@ import Popup from './Popup';
 import VisibilityField from '../../containers/VisibilityField';
 import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
+import PopupHelp from './PopupHelp';
 import PageFilter from './PageFilter';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
@@ -84,6 +85,7 @@ export {
     PageFilter,
     Popup,
     PopupConfirm,
+    PopupHelp,
     PopupMenu,
     VisibilityField,
     ResourceVisibility,
