@@ -102,16 +102,24 @@ export default class InputFile extends Component {
 
     render() {
         return (
-            <div>
-                <Input type="text" readOnly='true' value={this.state.value} title={this.state.title}
+            this.props.showInput
+            ?
+                <React.Fragment>
+                    <Input type="text" readOnly='true' value={this.state.value} title={this.state.title}
                        name={'fileName' + this.props.name} placeholder={this.props.placeholder}
                        onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled} action>
-                    {this.props.showInput && <input />}
+                        <input />
+                        <Button icon="folder open" loading={this.props.loading} onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled}/>
+                        <Button icon="remove" onClick={this._resetFileSelection.bind(this)} disabled={!this.state.value || this.props.disabled}/>
+                    </Input>
+                    <input type="file" name={this.props.name} hidden onChange={this._fileChanged.bind(this)} ref="inputFile" />
+                </React.Fragment>
+            :
+                <React.Fragment>
                     <Button icon="folder open" loading={this.props.loading} onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled}/>
                     <Button icon="remove" onClick={this._resetFileSelection.bind(this)} disabled={!this.state.value || this.props.disabled}/>
-                </Input>
-                <input type="file" name={this.props.name} hidden onChange={this._fileChanged.bind(this)} ref="inputFile" />
-            </div>
-        );
+                    <input type="file" name={this.props.name} hidden onChange={this._fileChanged.bind(this)} ref="inputFile" />
+                </React.Fragment>
+        )
     }
 }
