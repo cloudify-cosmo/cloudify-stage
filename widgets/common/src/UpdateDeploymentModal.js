@@ -4,7 +4,6 @@
 
 import PropTypes from 'prop-types';
 import {Component} from 'react';
-import NodeInstancesFilter from '../../../app/components/basic/NodeInstancesFilter';
 
 class UpdateDeploymentModal extends Component {
 
