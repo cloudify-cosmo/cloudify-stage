@@ -4,7 +4,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import { Button } from 'semantic-ui-react';
+import { Button, Input } from 'semantic-ui-react';
 
 /**
  * InputFile is a component showing file input field
@@ -29,6 +29,8 @@ export default class InputFile extends Component {
     constructor(props,context) {
         super(props,context);
 
+        this.inputRef = React.createRef();
+
         this.state = {
             value: '',
             title: ''
@@ -40,34 +42,41 @@ export default class InputFile extends Component {
      * @property {string} [name] name of the field appended to 'fileName' string
      * @property {string} [placeholder=''] specifies a short hint that describes the expected input
      * @property {function} [onChange=(function () {});] function called on file change
+     * @property {function} [onReset=(function () {});] function called on file reset
      * @property {boolean} [loading=false] if set to true opening file selector will be disabled
      * @property {boolean} [disabled=false] if set to true component will be disabled
+     * @property {boolean} [showInput=true] if set to false input string field will not be presented
      */
     static propTypes = {
         name: PropTypes.string,
         placeholder: PropTypes.string,
         onChange: PropTypes.func,
+        onReset: PropTypes.func,
         loading: PropTypes.bool,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        showInput: PropTypes.bool
     };
 
     static defaultProps = {
         name: '',
         placeholder: '',
         onChange: () => {},
+        onReset: () => {},
         loading: false,
-        disabled: false
+        disabled: false,
+        showInput: true
     }
 
     _openFileSelection(e) {
         e.preventDefault();
-        this.refs.inputFile.click();
+        this.inputRef.current.click();
         return false;
     }
 
     _resetFileSelection(e) {
         e.preventDefault();
         this.reset();
+        this.props.onReset();
         return false;
     }
 
@@ -84,33 +93,35 @@ export default class InputFile extends Component {
     }
 
     file() {
-        return this.refs.inputFile.files[0];
+        return this.inputRef.current.files[0];
     }
 
     reset() {
-        $(this.refs.inputFile).val('');
+        $(this.inputRef.current).val('');
         this.setState({value: '', title: ''});
         this.props.onChange(null, '');
     }
 
     render() {
         return (
-            <div>
-                <div className={`ui action input ${this.props.disabled?'disabled':''}`}>
-                    <input type="text" readOnly='true' value={this.state.value} title={this.state.title}
-                           name={'fileName' + this.props.name} placeholder={this.props.placeholder}
-                           onClick={this._openFileSelection.bind(this)}/>
-
-
-                    <Button icon="attach" loading={this.props.loading} onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled}/>
-                    {
-                        this.state.value &&
-                        <Button icon="remove" onClick={this._resetFileSelection.bind(this)} disabled={this.props.disabled}/>
-                    }
-                </div>
-
-                <input type="file" name={this.props.name} style={{'display': 'none'}} onChange={this._fileChanged.bind(this)} ref="inputFile"/>
-            </div>
-        );
+            this.props.showInput
+            ?
+                <React.Fragment>
+                    <Input type="text" readOnly='true' value={this.state.value} title={this.state.title}
+                       name={'fileName' + this.props.name} placeholder={this.props.placeholder}
+                       onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled} action>
+                        <input />
+                        <Button icon="folder open" loading={this.props.loading} onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled}/>
+                        <Button icon="remove" onClick={this._resetFileSelection.bind(this)} disabled={!this.state.value || this.props.disabled}/>
+                    </Input>
+                    <input type="file" name={this.props.name} hidden onChange={this._fileChanged.bind(this)} ref={this.inputRef} />
+                </React.Fragment>
+            :
+                <React.Fragment>
+                    <Button icon="folder open" loading={this.props.loading} onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled}/>
+                    <Button icon="remove" onClick={this._resetFileSelection.bind(this)} disabled={!this.state.value || this.props.disabled}/>
+                    <input type="file" name={this.props.name} hidden onChange={this._fileChanged.bind(this)} ref={this.inputRef} />
+                </React.Fragment>
+        )
     }
 }

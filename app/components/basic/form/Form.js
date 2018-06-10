@@ -12,6 +12,7 @@ import FormField from './FormField';
 import FormGroup from './FormGroup';
 import FormDivider from './FormDivider';
 import FormFile from './InputFile';
+import FormUrlOrFile from './InputUrlOrFile';
 import FormInputDate from './InputDate';
 import FormInputTime from './InputTime';
 import FormDropdown from '../Dropdown';
@@ -111,6 +112,11 @@ export default class Form extends Component {
      * Form file input, see {@link InputFile}
      */
     static File = FormFile;
+
+    /**
+     * Form URL or file input, see {@link InputUrlOrFile}
+     */
+    static UrlOrFile = FormUrlOrFile;
 
     /**
      * Dropdown field, see {@link Dropdown}
