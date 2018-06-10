@@ -78,7 +78,8 @@ module.exports = {
                 imageFile: '.content input[name="fileNameimageFile"]',
                 okButton: '.actions button.ok',
                 cancelButton: '.actions button.cancel',
-                errorMessage: 'ui error message'
+                errorMessage: 'ui error message',
+                loading: 'form.loading'
             },
             commands: [
                 {
@@ -87,6 +88,8 @@ module.exports = {
                         return this
                             .waitForElementVisible(this.selector)
                             .setElementValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB])
+                            .waitForElementNotPresent('@loading')
+                            .resetValue('@blueprintName')
                             .setElementValue('@blueprintName', blueprintName)
                             .waitForElementPresent(blueprintFileOptionElement)
                             .selectOptionInDropdown('@blueprintYamlFile',

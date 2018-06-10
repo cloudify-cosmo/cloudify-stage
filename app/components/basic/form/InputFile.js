@@ -29,6 +29,8 @@ export default class InputFile extends Component {
     constructor(props,context) {
         super(props,context);
 
+        this.inputRef = React.createRef();
+
         this.state = {
             value: '',
             title: ''
@@ -67,7 +69,7 @@ export default class InputFile extends Component {
 
     _openFileSelection(e) {
         e.preventDefault();
-        this.refs.inputFile.click();
+        this.inputRef.current.click();
         return false;
     }
 
@@ -91,11 +93,11 @@ export default class InputFile extends Component {
     }
 
     file() {
-        return this.refs.inputFile.files[0];
+        return this.inputRef.current.files[0];
     }
 
     reset() {
-        $(this.refs.inputFile).val('');
+        $(this.inputRef.current).val('');
         this.setState({value: '', title: ''});
         this.props.onChange(null, '');
     }
@@ -112,13 +114,13 @@ export default class InputFile extends Component {
                         <Button icon="folder open" loading={this.props.loading} onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled}/>
                         <Button icon="remove" onClick={this._resetFileSelection.bind(this)} disabled={!this.state.value || this.props.disabled}/>
                     </Input>
-                    <input type="file" name={this.props.name} hidden onChange={this._fileChanged.bind(this)} ref="inputFile" />
+                    <input type="file" name={this.props.name} hidden onChange={this._fileChanged.bind(this)} ref={this.inputRef} />
                 </React.Fragment>
             :
                 <React.Fragment>
                     <Button icon="folder open" loading={this.props.loading} onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled}/>
                     <Button icon="remove" onClick={this._resetFileSelection.bind(this)} disabled={!this.state.value || this.props.disabled}/>
-                    <input type="file" name={this.props.name} hidden onChange={this._fileChanged.bind(this)} ref="inputFile" />
+                    <input type="file" name={this.props.name} hidden onChange={this._fileChanged.bind(this)} ref={this.inputRef} />
                 </React.Fragment>
         )
     }
