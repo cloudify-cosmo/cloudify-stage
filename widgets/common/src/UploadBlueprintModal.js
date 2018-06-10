@@ -8,6 +8,10 @@ class UploadBlueprintModal extends React.Component {
         super(props,context);
 
         this.state = {...UploadBlueprintModal.initialState};
+
+        this.blueprintFileRef = React.createRef();
+        this.imageFileRef = React.createRef();
+
         this.actions = new Stage.Common.BlueprintActions(props.toolbox);
     }
 
@@ -16,11 +20,11 @@ class UploadBlueprintModal extends React.Component {
         urlLoading: false,
         fileLoading: false,
         blueprintUrl: '',
-        isBlueprintUrlUsed: true,
+        blueprintFile: null,
         blueprintName: '',
         blueprintFileName: '',
         imageUrl: '',
-        isImageUrlUsed: true,
+        imageFile: null,
         errors: {},
         yamlFiles: [],
         visibility: Stage.Common.Consts.defaultVisibility
@@ -38,18 +42,19 @@ class UploadBlueprintModal extends React.Component {
 
     componentWillUpdate(prevProps, prevState) {
         if (!prevProps.open && this.props.open) {
-            this.refs.blueprintFile && this.refs.blueprintFile.reset();
-            this.refs.imageFile && this.refs.imageFile.reset();
+            this.blueprintFileRef.current && this.blueprintFileRef.current.reset();
+            this.imageFileRef.current && this.imageFileRef.current.reset();
             this.setState(UploadBlueprintModal.initialState);
         }
     }
 
     _submitUpload() {
-        let blueprintFile = this.refs.blueprintFile ? this.refs.blueprintFile.file() : null;
+        let blueprintUrl = this.state.blueprintFile ? '' : this.state.blueprintUrl;
+        let imageUrl = this.state.imageFile ? '' : this.state.imageUrl;
 
         let errors = {};
 
-        if (_.isEmpty(this.state.blueprintUrl) && !blueprintFile) {
+        if (_.isEmpty(blueprintUrl) && !this.state.blueprintFile) {
             errors['blueprintUrl']='Please select blueprint file or url';
         }
 
@@ -67,10 +72,8 @@ class UploadBlueprintModal extends React.Component {
 
         this.actions.doUpload(this.state.blueprintName,
                          this.state.blueprintFileName,
-                         this.state.isBlueprintUrlUsed ? this.state.blueprintUrl : '',
-                         blueprintFile,
-                         this.state.isImageUrlUsed ? this.state.imageUrl : '',
-                         this.refs.imageFile.file(),
+                         blueprintUrl, this.state.blueprintFile,
+                         imageUrl, this.state.imageFile,
                          this.state.visibility).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
@@ -90,8 +93,8 @@ class UploadBlueprintModal extends React.Component {
             return;
         }
 
-        this.setState({urlLoading: true});
-        this.refs.blueprintFile && this.refs.blueprintFile.reset();
+        this.setState({urlLoading: true, blueprintFile: null});
+        this.blueprintFileRef.current && this.blueprintFileRef.current.reset();
         this.actions.doListYamlFiles(this.state.blueprintUrl, null, true).then((data)=>{
             const defaultBlueprintFileName = 'blueprint.yaml';
             let blueprintName = data.shift();
@@ -99,16 +102,16 @@ class UploadBlueprintModal extends React.Component {
                 = _.includes(data, defaultBlueprintFileName)
                 ? defaultBlueprintFileName
                 : data[0];
-            this.setState({yamlFiles: data, errors: {}, urlLoading: false, isBlueprintUrlUsed: true, blueprintName, blueprintFileName});
+            this.setState({yamlFiles: data, errors: {}, urlLoading: false, blueprintName, blueprintFileName});
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, urlLoading: false, blueprintName: '', blueprintFileName: ''});
         });
     }
 
     _onBlueprintUrlFocus() {
-        if (!this.state.isBlueprintUrlUsed) {
-            this.refs.blueprintFile && this.refs.blueprintFile.reset();
-            this.setState({isBlueprintUrlUsed: true, blueprintUrl: '', yamlFiles: [], blueprintName: '', blueprintFileName: ''});
+        if (this.state.blueprintFile) {
+            this.blueprintFileRef.current && this.blueprintFileRef.current.reset();
+            this._onBlueprintFileReset();
         }
     }
 
@@ -126,31 +129,31 @@ class UploadBlueprintModal extends React.Component {
                 = _.includes(data, defaultBlueprintFileName)
                 ? defaultBlueprintFileName
                 : data[0];
-            this.setState({yamlFiles: data, errors: {}, fileLoading: false, isBlueprintUrlUsed: false, blueprintUrl: file.name, blueprintName, blueprintFileName});
+            this.setState({yamlFiles: data, errors: {}, fileLoading: false, blueprintFile: file, blueprintUrl: file.name, blueprintName, blueprintFileName});
         }).catch((err)=>{
             this.setState({errors: {error: err.message}, fileLoading: false, blueprintName: '', blueprintFileName: ''});
         });
     }
 
     _onBlueprintFileReset() {
-        this.setState({yamlFiles: [], errors: {}, isBlueprintUrlUsed: true, blueprintUrl: '', blueprintName: '', blueprintFileName: ''});
+        this.setState({yamlFiles: [], errors: {}, blueprintFile: null, blueprintUrl: '', blueprintName: '', blueprintFileName: ''});
     }
 
     _onBlueprintImageUrlFocus() {
-        if (!this.state.isImageUrlUsed) {
-            this.refs.imageFile.reset();
-            this.setState({isImageUrlUsed: true, imageUrl: ''});
+        if (this.state.imageFile) {
+            this.imageFileRef.current && this.imageFileRef.current.reset();
+            this._onBlueprintImageReset();
         }
     }
 
     _onBlueprintImageChange(file) {
         if (file) {
-            this.setState({imageUrl: file.name, isImageUrlUsed: false});
+            this.setState({imageUrl: file.name, imageFile: file});
         }
     }
 
     _onBlueprintImageReset() {
-        this.setState({imageUrl: '', isImageUrlUsed: true});
+        this.setState({imageUrl: '', imageFile: null});
     }
 
     render() {
@@ -178,7 +181,8 @@ class UploadBlueprintModal extends React.Component {
                                                     onBlurUrl={this._onBlueprintUrlBlur.bind(this)}
                                                     onChangeFile={this._onBlueprintFileChange.bind(this)}
                                                     onResetFile={this._onBlueprintFileReset.bind(this)}
-                                                    label={<Label>{this.state.isBlueprintUrlUsed ? 'URL' : 'File'}</Label>}
+                                                    label={<Label>{!this.state.blueprintFile ? 'URL' : 'File'}</Label>}
+                                                    fileInputRef={this.blueprintFileRef}
                                     />
                                 </Form.Field>
                                 <Form.Field width="1">
@@ -217,7 +221,8 @@ class UploadBlueprintModal extends React.Component {
                                                     onBlurUrl={this._onBlueprintUrlBlur.bind(this)}
                                                     onChangeFile={this._onBlueprintImageChange.bind(this)}
                                                     onResetFile={this._onBlueprintImageReset.bind(this)}
-                                                    label={<Label>{this.state.isImageUrlUsed ? 'URL' : 'File'}</Label>}
+                                                    label={<Label>{!this.state.imageFile ? 'URL' : 'File'}</Label>}
+                                                    fileInputRef={this.imageFileRef}
                                     />
                                 </Form.Field>
                                 <Form.Field width="1">

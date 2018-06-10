@@ -45,6 +45,7 @@ export default class InputUrlOrFile extends Component {
      * @property {function} onBlurUrl function to be called on URL input blur
      * @property {function} onChangeFile function to be called on file change
      * @property {function} onResetFile function to be called on file reset
+     * @property {object} fileInputRef ref attached to file input
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
@@ -55,11 +56,13 @@ export default class InputUrlOrFile extends Component {
         onFocusUrl: PropTypes.func.isRequired,
         onBlurUrl: PropTypes.func.isRequired,
         onChangeFile: PropTypes.func.isRequired,
-        onResetFile: PropTypes.func.isRequired
+        onResetFile: PropTypes.func.isRequired,
+        fileInputRef: PropTypes.object
     };
 
     static defaultProps = {
-        label: null
+        label: null,
+        fileInputRef: null
     };
 
     render() {
@@ -72,7 +75,7 @@ export default class InputUrlOrFile extends Component {
                    action labelPosition='left'>
                 {this.props.label}
                 <input />
-                <InputFile name={`${this.props.name}File`} ref={`${this.props.name}File`}
+                <InputFile name={`${this.props.name}File`} ref={this.props.fileInputRef}
                            onChange={this.props.onChangeFile}
                            onReset={this.props.onResetFile}
                            showInput={false} />
