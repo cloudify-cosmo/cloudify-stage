@@ -43,10 +43,12 @@ class PageFilter extends React.Component {
         value: PropTypes.string.isRequired,
         pages: PropTypes.array.isRequired,
         onChange: PropTypes.func,
+        allowDrillDownPages: PropTypes.bool
     };
 
     static initialState = (props) => ({
         pageId: props.value,
+        allowDrillDownPages: false
     });
 
     _handleInputChange(event, field) {
@@ -58,8 +60,26 @@ class PageFilter extends React.Component {
         });
     }
 
+    _getPageName(pages, pageId) {
+        let page = _.find(pages, {id: pageId});
+        if (page.isDrillDown) {
+            return `${this._getPageName(pages, page.parent)} > ${page.name}`;
+        } else {
+            return page.name;
+        }
+    }
+
     render() {
-        let pagesOptions = _.map(this.props.pages, (page) => ({text: page.name, value: page.id, key: page.id}));
+        let pages = this.props.allowDrillDownPages
+            ? this.props.pages
+            : _.filter(this.props.pages, (page) => !page.isDrillDown);
+        let pagesOptions
+            = _.map(pages, (page) => ({
+                    text: this._getPageName(pages, page.id),
+                    value: page.id,
+                    key: page.id
+                }));
+        pagesOptions.sort((a, b) => a.text.localeCompare(b.text));
         let defaultValue = pagesOptions[0].value;
 
         return (

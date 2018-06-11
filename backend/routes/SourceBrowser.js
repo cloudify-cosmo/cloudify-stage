@@ -7,7 +7,6 @@ var express = require('express');
 var SourceHandler = require('../handler/SourceHandler');
 var passport = require('passport');
 
-var logger = require('log4js').getLogger('sourceBrowser');
 var router = express.Router();
 
 router.use(passport.authenticate('token', {session: false}));
@@ -31,7 +30,7 @@ router.get('/browse/:blueprintId/archive', function(req, res, next) {
 });
 
 router.put('/list/yaml', function (req, res, next) {
-    SourceHandler.listYamlFiles(req.query.url, req)
+    SourceHandler.listYamlFiles(req.query, req)
         .then(data => res.send(data))
         .catch(next);
 });
