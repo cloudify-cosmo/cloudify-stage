@@ -179,19 +179,13 @@ export default class DeployModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message, Popup, Header, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
+        var {Modal, Icon, Form, Message, Header, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
 
         let blueprints = Object.assign({},{items:[]}, this.props.blueprints);
         let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
 
         let deploymentInputs = _.sortBy(_.map(this.state.blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
                                         [(input => !_.isNil(input.default)), 'name']);
-        let yamlFileField = () =>
-            <Form.Field error={this.state.errors.yamlFile}>
-                <Form.File name="yamlFile" placeholder="YAML file" ref="yamlFile"
-                           onChange={this._handleYamlFileChange.bind(this)} loading={this.state.fileLoading}
-                           disabled={this.state.fileLoading} />
-            </Form.Field>;
 
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
@@ -235,43 +229,25 @@ export default class DeployModal extends React.Component {
                                 ?
                                     <Message content="No inputs available for the selected blueprint"/>
                                 :
-                                    <Popup trigger={yamlFileField()} position='top right' wide >
-                                        <Popup.Content>
-                                            <Icon name="info circle"/>Provide YAML file with all deployments inputs to automatically fill in the form.
-                                        </Popup.Content>
-                                    </Popup>
+                                    <Form.Field error={this.state.errors.yamlFile} help='Provide YAML file with all deployments inputs to automatically fill in the form.'>
+                                        <Form.File name="yamlFile" placeholder="YAML file" ref="yamlFile"
+                                                   onChange={this._handleYamlFileChange.bind(this)} loading={this.state.fileLoading}
+                                                   disabled={this.state.fileLoading} />
+                                    </Form.Field>
                             )
                         }
 
                         {
-                            _.map(deploymentInputs, (input) => {
-                                let formInput = () =>
+                            _.map(deploymentInputs, (input) =>
+                                <Form.Field key={input.name} error={this.state.errors[input.name]}
+                                            help={input.description} required={_.isNil(input.default)}
+                                            label={input.name}>
                                     <Form.Input name={input.name} placeholder={Stage.Common.JsonUtils.getStringValue(input.default || '')}
                                                 value={this.state.deploymentInputs[input.name]}
                                                 onChange={this._handleInputChange.bind(this)}
                                                 className={Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME} />
-                                return (
-                                    <Form.Field key={input.name} error={this.state.errors[input.name]}>
-                                        <label>
-                                            {input.name}&nbsp;
-                                            {
-                                                _.isNil(input.default)
-                                                ? <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
-                                                : null
-                                            }
-                                        </label>
-                                        {
-                                            !_.isNil(input.description)
-                                            ? <Popup trigger={formInput()} position='top right' wide >
-                                                  <Popup.Content>
-                                                      <Icon name="info circle"/>{input.description}
-                                                  </Popup.Content>
-                                              </Popup>
-                                            : formInput()
-                                        }
-                                    </Form.Field>
-                                );
-                            })
+                                </Form.Field>
+                            )
                         }
                         <Form.Field className='skipPluginsValidationCheckbox'>
                             <Form.Checkbox toggle

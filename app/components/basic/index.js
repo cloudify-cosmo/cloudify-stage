@@ -18,6 +18,7 @@ import GenericField from './form/GenericField';
 import TimeFilter from './TimeFilter';
 import MetricFilter from './MetricFilter';
 import NodeFilter from './NodeFilter';
+import NodeInstancesFilter from './NodeInstancesFilter';
 import Form from './form/Form';
 import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item, Sidebar, Card,
          Segment, Accordion, List, Grid, Divider, Label, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
@@ -31,6 +32,7 @@ import Popup from './Popup';
 import VisibilityField from '../../containers/VisibilityField';
 import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
+import PopupHelp from './PopupHelp';
 import PageFilter from './PageFilter';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
@@ -78,10 +80,12 @@ export {
     MetricFilter,
     Modal,
     NodeFilter,
+    NodeInstancesFilter,
     NodesTree,
     PageFilter,
     Popup,
     PopupConfirm,
+    PopupHelp,
     PopupMenu,
     VisibilityField,
     ResourceVisibility,
