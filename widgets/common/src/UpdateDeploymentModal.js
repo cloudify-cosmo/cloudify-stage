@@ -119,13 +119,7 @@ class UpdateDeploymentModal extends React.Component {
         if (field.className === Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME) {
             this.setState({deploymentInputs: {...this.state.deploymentInputs, ...fieldNameValue}});
         } else {
-            this.setState(fieldNameValue, () => {
-                switch (field.name) {
-                    case 'uninstallWorkflow':
-                        !field.checked && this.setState({installWorkflowFirst: false, ignoreFailure: false});
-                        break;
-                }
-            });
+            this.setState(fieldNameValue);
         }
     }
 
@@ -303,15 +297,13 @@ class UpdateDeploymentModal extends React.Component {
                         <Form.Field help='Run install workflow first and then uninstall workflow.
                                           Default: first uninstall and then install'>
                             <Form.Checkbox label="Run install workflow first" toggle name="installWorkflowFirst"
-                                           checked={this.state.installWorkflowFirst} onChange={this._handleInputChange.bind(this)}
-                                           disabled={!this.state.uninstallWorkflow} />
+                                           checked={this.state.installWorkflowFirst} onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 
                         <Form.Field help='Supply the parameter `ignore_failure` with
                                           the value `true` to the uninstall workflow'>
                             <Form.Checkbox label="Ignore failures in uninstall workflow" toggle name="ignoreFailure"
-                                           checked={this.state.ignoreFailure} onChange={this._handleInputChange.bind(this)}
-                                           disabled={!this.state.uninstallWorkflow} />
+                                           checked={this.state.ignoreFailure} onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 
                         <Form.Field help='Automatically reinstall node instances
