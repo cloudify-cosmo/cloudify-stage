@@ -173,7 +173,8 @@ class UploadBlueprintModal extends React.Component {
                         <Form loading={this.state.loading || this.state.urlLoading || this.state.fileLoading} errors={this.state.errors}
                               onErrorsDismiss={() => this.setState({errors: {}})}>
 
-                            <Form.Field width="16" error={this.state.errors.blueprintUrl}
+                            <Form.Field label='Blueprint package' required
+                                        error={this.state.errors.blueprintUrl}
                                         help='The archive package must contain exactly one directory
                                               that includes a yaml file for the main blueprint.'>
                                 <Form.UrlOrFile name="blueprint" value={this.state.blueprintUrl}
@@ -188,31 +189,35 @@ class UploadBlueprintModal extends React.Component {
                                 />
                             </Form.Field>
 
-                            <Form.Field error={this.state.errors.blueprintName} help='The package is uploaded to the Manager as a blueprint with the name you specify here.'>
-                                <Form.Input name='blueprintName' placeholder="Blueprint name"
-                                            value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.Field label='Blueprint name' required
+                                        error={this.state.errors.blueprintName}
+                                        help='The package is uploaded to the Manager as a blueprint with the name you specify here.'>
+                                <Form.Input name='blueprintName'
+                                            value={this.state.blueprintName}
+                                            onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
 
-                            <Form.Field help='You must specify the blueprint yaml file for your environment because the archive can contain more than one yaml file.'>
-                                <Form.Dropdown placeholder='Blueprint filename' search selection options={options} name="blueprintFileName"
+                            <Form.Field label='Blueprint YAML file' required
+                                        help='You must specify the blueprint yaml file for your environment
+                                              because the archive can contain more than one yaml file.'>
+                                <Form.Dropdown name="blueprintFileName" search selection options={options}
                                                value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
 
-                            <Form.Group>
-                                <Form.Field width="16" error={this.state.errors.imageUrl}
-                                            help='(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget.'>
-                                    <Form.UrlOrFile name="image" value={this.state.imageUrl}
-                                                    placeholder="Provide the image file URL or click browse to select a file"
-                                                    onChangeUrl={this._handleInputChange.bind(this)}
-                                                    onFocusUrl={this._onBlueprintImageUrlFocus.bind(this)}
-                                                    onBlurUrl={this._onBlueprintUrlBlur.bind(this)}
-                                                    onChangeFile={this._onBlueprintImageChange.bind(this)}
-                                                    onResetFile={this._onBlueprintImageReset.bind(this)}
-                                                    label={<Label>{!this.state.imageFile ? 'URL' : 'File'}</Label>}
-                                                    fileInputRef={this.imageFileRef}
-                                    />
-                                </Form.Field>
-                            </Form.Group>
+                            <Form.Field label='Blueprint image'
+                                        error={this.state.errors.imageUrl}
+                                        help='(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget.'>
+                                <Form.UrlOrFile name="image" value={this.state.imageUrl}
+                                                placeholder="Provide the image file URL or click browse to select a file"
+                                                onChangeUrl={this._handleInputChange.bind(this)}
+                                                onFocusUrl={this._onBlueprintImageUrlFocus.bind(this)}
+                                                onBlurUrl={this._onBlueprintUrlBlur.bind(this)}
+                                                onChangeFile={this._onBlueprintImageChange.bind(this)}
+                                                onResetFile={this._onBlueprintImageReset.bind(this)}
+                                                label={<Label>{!this.state.imageFile ? 'URL' : 'File'}</Label>}
+                                                fileInputRef={this.imageFileRef}
+                                />
+                            </Form.Field>
                         </Form>
                     </Modal.Content>
 
