@@ -24,7 +24,7 @@ class UpdateDeploymentModal extends React.Component {
         uninstallWorkflow: true,
         installWorkflowFirst: false,
         ignoreFailure: false,
-        skipReinstall: false,
+        automaticReinstall: true,
         reinstallList: [],
         force: false
     });
@@ -99,7 +99,7 @@ class UpdateDeploymentModal extends React.Component {
                          this.state.uninstallWorkflow,
                          this.state.installWorkflowFirst,
                          this.state.ignoreFailure,
-                         this.state.skipReinstall,
+                         this.state.automaticReinstall,
                          this.state.reinstallList,
                          this.state.force).then(()=>{
             this.setState({errors: {}, loading: false});
@@ -234,13 +234,7 @@ class UpdateDeploymentModal extends React.Component {
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
 
-                        <Form.Divider>
-                            <Header size="tiny">
-                                Blueprint
-                            </Header>
-                        </Form.Divider>
-
-                        <Form.Field error={this.state.errors.blueprintName}>
+                        <Form.Field error={this.state.errors.blueprintName} label='Blueprint' required>
                             <Form.Dropdown search selection value={this.state.blueprint.id} placeholder="Select Blueprint"
                                            name="blueprintName" options={blueprintsOptions} onChange={this._selectBlueprint.bind(this)}/>
                         </Form.Field>
@@ -313,7 +307,6 @@ class UpdateDeploymentModal extends React.Component {
                                            disabled={!this.state.uninstallWorkflow} />
                         </Form.Field>
 
-
                         <Form.Field help='Supply the parameter `ignore_failure` with
                                           the value `true` to the uninstall workflow'>
                             <Form.Checkbox label="Ignore failures in uninstall workflow" toggle name="ignoreFailure"
@@ -321,23 +314,25 @@ class UpdateDeploymentModal extends React.Component {
                                            disabled={!this.state.uninstallWorkflow} />
                         </Form.Field>
 
+                        <Form.Field help='Automatically reinstall node instances
+                                          that their properties has been modified, as
+                                          part of a deployment update. If not set, then node instances
+                                          that were explicitly given to "Reinstall
+                                          node instances list" will still be reinstalled'>
+                            <Form.Checkbox label="Run automatic reinstall" name="reinstallWorkflow" toggle
+                                           checked={this.state.automaticReinstall}
+                                           onChange={this._handleInputChange.bind(this)}  />
+                        </Form.Field>
+
                         <NodeInstancesFilter name='reinstallList' deploymentId={this.props.deployment.id}
-                                             label='Reinstall list' value={this.state.reinstallList}
+                                             label='Reinstall node instances list' value={this.state.reinstallList}
                                              placeholder='Choose node instances to reinstall' upward
                                              onChange={this._handleInputChange.bind(this)}
                                              help='Node instances ids to be reinstalled as part
                                                    of deployment update. They will be
-                                                   reinstalled even if "Skip reinstall" is set' />
+                                                   reinstalled even if "Run automatic reinstall"
+                                                   is not set' />
 
-                        <Form.Field help='Skip automatically reinstall node instances
-                                          that their properties has been modified, as
-                                          part of a deployment update. Node instances
-                                          that were explicitly given to the reinstall
-                                          list will still be reinstalled'>
-                            <Form.Checkbox label="Skip reinstall" name="skipReinstall" toggle
-                                           checked={this.state.skipReinstall}
-                                           onChange={this._handleInputChange.bind(this)}  />
-                        </Form.Field>
 
                         <Form.Field help='Force running update in case a previous
                                           update on this deployment has failed to

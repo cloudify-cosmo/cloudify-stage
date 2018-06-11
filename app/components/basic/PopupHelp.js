@@ -19,7 +19,7 @@ export default class PopupHelp extends React.Component {
 
     /**
      * propTypes
-     * @property {object} trigger help popup triggering element (on focus and on hover)
+     * @property {object} trigger help popup triggering element (on hover and focus)
      * @property {object} content help popup content
      */
     static propTypes = {
