@@ -29,7 +29,7 @@ export default class extends React.Component {
                 <Button color='yellow' icon='upload' content='Upload Plugin' labelPosition='left' fluid
                         loading={this.state.loading} onClick={this._showModal.bind(this)} />
 
-                <UploadPluginModal open={this.state.open} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
+                <UploadPluginModal open={this.state.open} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox} />
             </div>
         );
     }
