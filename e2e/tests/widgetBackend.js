@@ -40,8 +40,11 @@ module.exports = {
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
             .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.broken1WidgetFilename, client.globals))
+            .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
             .clickElement('@okButton')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@loader')
+            .waitForElementNotPresent('@loader')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', backend.section.installWidget.props.notAllowedModuleError);
     },
 
@@ -51,7 +54,10 @@ module.exports = {
 
         page.section.installWidgetModal
             .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.broken2WidgetFilename, client.globals))
+            .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
             .clickElement('@okButton')
+            .waitForElementVisible('@loader')
+            .waitForElementNotPresent('@loader')
             .waitForElementNotPresent('@okButton');
 
         page.section.addWidgetModal
@@ -90,7 +96,10 @@ module.exports = {
 
         page.section.installWidgetModal
             .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.widgetFilename, client.globals))
+            .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
             .clickElement('@okButton')
+            .waitForElementVisible('@loader')
+            .waitForElementNotPresent('@loader')
             .waitForElementVisible(page.section.addWidgetModal.selector);
 
         page.section.addWidgetModal

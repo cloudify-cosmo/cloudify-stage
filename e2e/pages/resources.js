@@ -14,6 +14,9 @@ module.exports = {
                                 : `${globals.resourcesPath}blank.file`,
         testWidget: (globals) => globals.usePathResolutionForResources
                                     ? pathlib.resolve(globals.resourcesPath + 'testWidget.zip')
-                                    : `${globals.resourcesPath}testWidget.zip`
+                                    : `${globals.resourcesPath}testWidget.zip`,
+        testWidgetInvalid: (globals) => globals.usePathResolutionForResources
+                                    ? pathlib.resolve(globals.resourcesPath + 'testWidgetInvalid.zip')
+                                    : `${globals.resourcesPath}testWidgetInvalid.zip`
     }
 };
