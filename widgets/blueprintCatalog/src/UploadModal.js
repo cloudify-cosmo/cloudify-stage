@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 /**
  * Created by pposel on 07/02/2017.
  */
@@ -9,16 +11,34 @@ export default class UploadModal extends React.Component {
         this.state = UploadModal.initialState;
     }
 
+    /**
+     * propTypes
+     * @property {object} files object containing list of files and repository name
+     * @property {boolean} open modal open state
+     * @property {function} onHide function called when modal is closed
+     * @property {object} toolbox Toolbox object
+     * @property {object} actions Actions object
+     */
+    static propTypes = {
+        files: PropTypes.object.isRequired,
+        open: PropTypes.bool.isRequired,
+        onHide: PropTypes.func.isRequired,
+        toolbox: PropTypes.object.isRequired,
+        actions: PropTypes.object.isRequired
+    };
+
     static initialState = {
         loading: false,
         blueprintName: '',
         blueprintFileName: '',
+        yamlFiles: [],
+        repository: '',
         visibility: Stage.Common.Consts.defaultVisibility,
         errors: {}
     }
 
     onApprove () {
-        this._submitUpload()
+        this._submitUpload();
         return false;
     }
 
@@ -29,7 +49,24 @@ export default class UploadModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            this.setState(UploadModal.initialState);
+            if (!_.isEmpty(nextProps.files)) {
+                const defaultBlueprintFileName = 'blueprint.yaml';
+                let files = Object.assign({},{tree:[], repo:''}, nextProps.files);
+                let yamlFiles = _.map(_.filter(files.tree,
+                                               file => file.type === 'blob' && file.path.endsWith('.yaml')),
+                                      file => file.path);
+                this.setState({
+                    ...UploadModal.initialState,
+                    blueprintName: files.repo,
+                    blueprintFileName: _.includes(yamlFiles, defaultBlueprintFileName)
+                        ? defaultBlueprintFileName
+                        : yamlFiles[0],
+                    yamlFiles,
+                    repository: files.repo
+                });
+            } else {
+                this.setState(UploadModal.initialState);
+            }
         }
     }
 
@@ -38,6 +75,10 @@ export default class UploadModal extends React.Component {
 
         if (_.isEmpty(this.state.blueprintName)) {
             errors['blueprintName']='Please provide blueprint name';
+        }
+
+        if (_.isEmpty(this.state.blueprintFileName)) {
+            errors['blueprintFileName']='Please provide blueprint YAML file';
         }
 
         if (!_.isEmpty(errors)) {
@@ -66,18 +107,14 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, CancelButton, ApproveButton, Icon, Form, VisibilityField} = Stage.Basic;
-
-        var files = Object.assign({},{tree:[], repo:''}, this.props.files);
-        files.tree = _.filter(files.tree, x => x.type === 'blob' && x.path.endsWith('.yaml'));
-
-        var options = _.map(files.tree, item => { return {text: item.path, value: item.path} });
+        let {Modal, CancelButton, ApproveButton, Icon, Form, VisibilityField} = Stage.Basic;
+        let yamlFiles = _.map(this.state.yamlFiles, item => { return {text: item, value: item} });
 
         return (
             <div>
                 <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="uploadModal">
                     <Modal.Header>
-                        <Icon name="upload"/> Upload blueprint from {files.repo}
+                        <Icon name="upload"/> Upload blueprint from {this.state.repository}
                         <VisibilityField visibility={this.state.visibility} className="rightFloated"
                                       onVisibilityChange={(visibility)=>this.setState({visibility: visibility})}/>
                     </Modal.Header>
@@ -85,13 +122,18 @@ export default class UploadModal extends React.Component {
                     <Modal.Content>
                         <Form loading={this.state.loading} errors={this.state.errors}
                               onErrorsDismiss={() => this.setState({errors: {}})}>
-                            <Form.Field width="16" error={this.state.errors.blueprintName} help='The package will be uploaded to the Manager as a Blueprint resource, under the name you specify here.'>
-                                <Form.Input name='blueprintName' placeholder="Blueprint name"
+                            <Form.Field label='Blueprint name' required
+                                        error={this.state.errors.blueprintName}
+                                        help='The package will be uploaded to the Manager as a Blueprint resource,
+                                              under the name you specify here.'>
+                                <Form.Input name='blueprintName'
                                             value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
-                            <Form.Field width="16" help='As you can have more than one yaml file in the archive, you need to specify which is the main one for your application.'>
-                                <Form.Dropdown placeholder='Blueprint filename' search selection options={options}
-                                               name="blueprintFileName"
+                            <Form.Field label='Blueprint YAML file' required
+                                        error={this.state.errors.blueprintFileName}
+                                        help='As you can have more than one yaml file in the archive,
+                                              you need to specify which is the main one for your application.'>
+                                <Form.Dropdown name='blueprintFileName' search selection options={yamlFiles}
                                                value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
                         </Form>

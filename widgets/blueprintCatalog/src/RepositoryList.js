@@ -14,9 +14,9 @@ export default class extends React.Component {
         this.state = {
             showModal: false,
             showReadmeModal: false,
-            readmeContent: null,
+            readmeContent: '',
             readmeLoading: null,
-            files: [],
+            files: {},
             error: null
         }
     }
@@ -67,7 +67,7 @@ export default class extends React.Component {
     _showReadmeModal(repo) {
         this.setState({readmeLoading: repo});
         this.props.actions.doGetReadme(repo).then(content => {
-            this.setState({readmeContent: markdown.parse(content), showReadmeModal: true, readmeLoading: null});
+            this.setState({readmeContent: markdown.parse(content) || '', showReadmeModal: true, readmeLoading: null});
         });
     }
 
