@@ -46,13 +46,9 @@ module.exports = {
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError)
 
         page.section.installWidgetModal
-            .setElementValue('@fileField', client.page.resources().props.blankFile(client.globals))
-            .clickElement('@okButton')
-            .waitForElementVisible('@errorMessage')
-            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.bothFieldsError);
-
-        page.section.installWidgetModal
             .resetValue('@urlField')
+            .setElementValue('@fileField', client.page.resources().props.testWidgetInvalid(client.globals))
+            .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
             .clickElement('@okButton')
             .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.incorrectFilesError);
@@ -71,6 +67,7 @@ module.exports = {
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
             .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals))
+            .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
             .clickElement('@okButton')
             .waitForElementNotPresent('@okButton');
     },
@@ -110,9 +107,10 @@ module.exports = {
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
             .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals))
+            .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
             .clickElement('@okButton')
             .waitForElementNotPresent('@loader')
-            .waitForElementPresent('@errorMessage')
+            .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.widgetAlreadyInstalledError)
             .clickElement('@cancelButton')
             .waitForElementNotPresent('@okButton');
