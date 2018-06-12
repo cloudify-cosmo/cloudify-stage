@@ -10,11 +10,13 @@ export default class UploadModal extends React.Component {
         super(props,context);
 
         this.state = {...UploadModal.initialState, open: false}
+        this.snapshotFileRef = React.createRef();
     }
 
     static initialState = {
         loading: false,
         snapshotUrl: '',
+        snapshotFile: null,
         snapshotId: '',
         errors: {}
     }
@@ -31,26 +33,22 @@ export default class UploadModal extends React.Component {
 
     componentWillUpdate(prevProps, prevState) {
         if (!prevState.open && this.state.open) {
-            this.refs.snapshotFile.reset();
+            this.snapshotFileRef.current && this.snapshotFileRef.current.reset();
             this.setState(UploadModal.initialState);
         }
     }
 
     _submitUpload() {
-        let snapshotFile = this.refs.snapshotFile.file();
+        let snapshotUrl = this.state.snapshotFile ? '' : this.state.snapshotUrl;
 
         let errors = {};
 
-        if (_.isEmpty(this.state.snapshotUrl) && !snapshotFile) {
+        if (_.isEmpty(snapshotUrl) && !this.state.snapshotFile) {
             errors['snapshotUrl']='Please select snapshot file or url';
         }
 
-        if (!_.isEmpty(this.state.snapshotUrl) && snapshotFile) {
-            errors['snapshotUrl']='Either snapshot file or url must be selected, not both';
-        }
-
         if (_.isEmpty(this.state.snapshotId)) {
-            errors['snapshotId']='Please provide snapshot id';
+            errors['snapshotId']='Please provide snapshot ID';
         }
 
         if (!_.isEmpty(errors)) {
@@ -62,7 +60,7 @@ export default class UploadModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doUpload(this.state.snapshotUrl, this.state.snapshotId, snapshotFile).then(()=>{
+        actions.doUpload(snapshotUrl, this.state.snapshotId, this.state.snapshotFile).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
         }).catch(err=>{
@@ -74,8 +72,25 @@ export default class UploadModal extends React.Component {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
+    _onSnapshotUrlFocus() {
+        if (this.state.snapshotFile) {
+            this.snapshotFileRef.current && this.snapshotFileRef.current.reset();
+            this._onSnapshotReset();
+        }
+    }
+
+    _onSnapshotFileChange(file) {
+        if (file) {
+            this.setState({snapshotUrl: file.name, snapshotFile: file});
+        }
+    }
+
+    _onSnapshotFileReset() {
+        this.setState({snapshotUrl: '', snapshotFile: null});
+    }
+
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        var {ApproveButton, Button, CancelButton, Form, Icon, Label, Modal} = Stage.Basic;
         const uploadButton = <Button content='Upload' icon='upload' labelPosition='left'/>;
 
         return (
@@ -87,27 +102,23 @@ export default class UploadModal extends React.Component {
                 <Modal.Content>
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
-                        <Form.Group>
-                            <Form.Field width="9" error={this.state.errors.snapshotUrl}>
-                                <Form.Input label="URL" placeholder="Enter snapshot url" name="snapshotUrl"
-                                            value={this.state.snapshotUrl} onChange={this._handleInputChange.bind(this)}
-                                            onBlur={()=>this.state.snapshotUrl ? this.refs.snapshotFile.reset() : ''}/>
+                        <Form.Field label='Snapshot file' required
+                                    error={this.state.errors.snapshotUrl}>
+                            <Form.UrlOrFile name="snapshot" value={this.state.snapshotUrl}
+                                            placeholder="Provide the snapshot's file URL or click browse to select a file"
+                                            onChangeUrl={this._handleInputChange.bind(this)}
+                                            onFocusUrl={this._onSnapshotUrlFocus.bind(this)}
+                                            onBlurUrl={() => {}}
+                                            onChangeFile={this._onSnapshotFileChange.bind(this)}
+                                            onResetFile={this._onSnapshotFileReset.bind(this)}
+                                            label={<Label>{!this.state.snapshotFile ? 'URL' : 'File'}</Label>}
+                                            fileInputRef={this.snapshotFileRef}
+                            />
+                        </Form.Field>
 
-                            </Form.Field>
-                            <Form.Field width="1" style={{position:'relative'}}>
-                                <div className="ui vertical divider">
-                                    Or
-                                </div>
-                            </Form.Field>
-                            <Form.Field width="8" error={this.state.errors.snapshotUrl}>
-                                <Form.File placeholder="Select snapshot file" name="snapshotFile" ref="snapshotFile"
-                                           onChange={(file)=>file ? this.setState({snapshotUrl: ''}) : ''}/>
-
-                            </Form.Field>
-                        </Form.Group>
-
-                        <Form.Field error={this.state.errors.snapshotId}>
-                            <Form.Input name='snapshotId' placeholder="Snapshot ID"
+                        <Form.Field label='Snapshot name' required
+                                    error={this.state.errors.snapshotId}>
+                            <Form.Input name='snapshotId'
                                         value={this.state.snapshotId} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
                     </Form>
