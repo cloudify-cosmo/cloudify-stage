@@ -109,7 +109,7 @@ export default class extends React.Component {
                            className="snapshotsTable"
                            noDataMessage={NO_DATA_MESSAGE}>
 
-                    <DataTable.Column label="Id" name="id" width="40%"/>
+                    <DataTable.Column label="Name" name="id" width="40%"/>
                     <DataTable.Column label="Created at" name="created_at" width="20%"/>
                     <DataTable.Column label="Status" name="status" width="15%"/>
                     <DataTable.Column label="Creator" name='created_by' width="15%"/>
