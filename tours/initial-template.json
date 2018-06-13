@@ -1,57 +1,51 @@
 [
     {
-        "name": "My first tour",
-        "id": "firstTour",
+        "name": "Cloudify Console Overview",
+        "id": "overview",
         "steps": [
-           {
-                "title": "The future is HERE!",
-                "content": "Cloudify is Future Technology. We found a wormhole in the galaxy and hijacked a brain chip from the year 2074.<br/><br/>It took some time to crack the encryption but when we did we uncovered the code to automate thoughts. Until the hardware for thought-automation is developed, we found that we can implement this technology in the Cloudify Console to orchestrate cloud environments!",
+            {
+                "title": "The Cloudify Console",
+                "content": "This tour reviews the areas of the Cloudify Console. Let's get started...",
                 "target": ".logo",
                 "placement": "bottom"
             },
             {
-                "title": "Take the tour!",
-                "content": "This tour shows you how to use Cloudify Console, but don’t get any ideas about hacking into someone’s brain!",
-                "target": ".logo",
-                "placement": "bottom"
-            },
-            {
-                "title": "Pages of the console",
-                "content": "Cloudify Console is divided into pages, just as the brain is divided into lobes. Each page is responsible for a set of Console capabilities, such as blueprints or deployments.\nYou can create customized pages that match your operational needs. You can’t do that with a brain… YET!",
+                "title": "Console pages",
+                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as Local Blueprints or Deployments. Administrators can customize the pages to help streamline your work.",
                 "target": ".pages .pageMenuItem",
                 "placement": "right"
             },
             {
                 "title": "Widgets on the pages",
-                "content": "On each page is a set of widgets. Each widget shows can either configure or report on Cloudify Manager operations, much like the frontal lobe of your brain can show emotions or communicate with words.\nYou can add and remove widgets on the pages to create the best experience for your Cloudify users to do what they need to do.",
+                "content": "On each page is a set of widgets. Each widget lets you do a specific Cloudify action. Widgets are grouped on the page so that you can easily access related actions. Administrators can also customize the widgets on each page to meet your needs.",
                 "target": ".widgetItem",
                 "placement": "bottom"
             },
             {
-                "title": "Cloudify Manager vital signs",
-                "content": "We replaced the brain function indicators with indicators that show the active services on the Cloudify Manager.\nThe brain chip we found tried to influx a rabbit to the celery of Mr. Riemann but it postgressed into a rest-service so he got logstashed with the stage composer. ;-)",
+                "title": "Manager Services Status",
+                "content": "Here you can quickly review the status of the Cloudify services to see if there is anything that needs attention.",
                 "target": ".right.menu .item",
                 "placement": "bottom"
             },
             {
-                "title": "Multi-tenant personalities",
-                "content": "Based the multiple-personality mode, you can switch to a different tenant. The pages and widgets are saved for each tenant so, when you switch tenants, the Console can have a totally different personality.",
+                "title": "Switch to other tenants",
+                "content": "If you can access multiple tenants on the Cloudify Manager, here you can select the tenant that you want to work on.",
                 "target": ".right.menu .tenantsMenu",
                 "placement": "bottom",
                 "xOffset": -200,
                 "arrowOffset": 250
             },
             {
-                "title": "Where to go for HELP",
-                "content": "When you have trouble using the Console, you can find links to documentation and videos.\nWe wish we could use this function today with brains. Imagine… if someone is giving you trouble, you just give him a light tap on the head and you get usage instructions. Guess we’ll have to wait.",
+                "title": "Get help",
+                "content": "If you need more information about using the Console or the Cloudify Manager, here you can find links to documentation, video tutorials, and knowledge base articles.",
                 "target": ".right.menu .helpMenu",
                 "placement": "bottom",
                 "xOffset": -200,
                 "arrowOffset": 210
             },
             {
-                "title": "User Configuration and Logout",
-                "content": "To do all of the customization that we mentioned, you need to go to the user menu. This menu lets you edit the pages and widgets; manage page templates per tenant; and reset the templates. This is also where you logout.\nOh, and if you want the manager to take a break from working, use maintenance mode. It’s like telling the manager to take a time out!",
+                "title": "User menu",
+                "content": "The user menu here gives you access to customizing pages and page templates if your user roles allow those actions. It is also where you logout.",
                 "target": ".right.menu .usersMenu",
                 "placement": "bottom",
                 "xOffset": -230,
