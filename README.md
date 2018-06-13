@@ -16,14 +16,14 @@ Create the resources needed to connect to the Cloudify Manager:
 - copy `/opt/cloudify-stage/resources/admin_token` from Cloudify Manager machine to `resources/admin_token` in repo main directory 
 
 ### Installation
-Install the webserver and database components:
+Install application dependencies and initialize database:
 - `npm run beforebuild`
 - `cd backend && npm run db-migrate`
 
 ## Deployment
 You can deploy the stage either by starting the server and connecting to stage locally, or by packaging it and deploying it on a remote server.
 
-### Start the servers locally
+### Local deployment
 Start the stage server backend and the webserver:
 - run backend server: `cd backend && npm start`
 - run development server: `npm run devServer`
@@ -32,10 +32,14 @@ Open browser to see if application is running. It runs by default on `http://loc
 
 Changes in the source code shall be hot loaded to the development development version of the application. For changes `app` directory you don't need to reload page, for changes in `widgets` directory you need to reload page to see your updates.
 
-### Package stage for remote deployment
+### Remote deployment
 Create application package:
 - to create production build run: `npm run build`
-- to pack all necessary files into archive run: `npm run zip` 
+- to pack all necessary files into archive run: `npm run zip`
+- upload the package to the remote Cloudify Manager
+- define path to private SSH key to access Cloudify Manager: `export SSH_KEY_PATH=<PATH>`
+- define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`
+- upload package to the Cloudify Manager and restart UI services: `npm run upload`
 
 Application package will be in repo main directory. 
 
