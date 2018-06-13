@@ -1,23 +1,23 @@
 [
     {
-        "name": "Dashboard Tour",
+        "name": "Cloudify Console Overview",
         "id": "dashboard",
         "steps": [
             {
-                "title": "The Cloudify Console dashboard",
-                "content": "This tour reviews the areas of the Cloudify Console dashboard.\nLet's get started...",
+                "title": "The Cloudify Console",
+                "content": "This tour reviews the areas of the Cloudify Console. Let's get started...",
                 "target": ".logo",
                 "placement": "bottom"
             },
             {
                 "title": "Console pages",
-                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as Local Blueprints or Deployments.\nAdministrators can customize the pages to help streamline your work.",
+                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as Local Blueprints or Deployments. Administrators can customize the pages to help streamline your work.",
                 "target": ".pages .pageMenuItem",
                 "placement": "right"
             },
             {
                 "title": "Widgets on the pages",
-                "content": "On each page is a set of widgets. Each widget lets you do a specific Cloudify action. Widgets are grouped on the page so that you can easily access related actions.\nAdministrators can also customize the widgets on each page to meet your needs.",
+                "content": "On each page is a set of widgets. Each widget lets you do a specific Cloudify action. Widgets are grouped on the page so that you can easily access related actions. Administrators can also customize the widgets on each page to meet your needs.",
                 "target": ".widgetItem",
                 "placement": "bottom"
             },
@@ -29,7 +29,7 @@
             },
             {
                 "title": "Switch to other tenants",
-                "content": "If you have multiple tenants on the Cloudify Manager, here you can select the tenant that you want to work on.",
+                "content": "If you can access multiple tenants on the Cloudify Manager, here you can select the tenant that you want to work on.",
                 "target": ".right.menu .tenantsMenu",
                 "placement": "bottom",
                 "xOffset": -200,
@@ -45,7 +45,7 @@
             },
             {
                 "title": "User Configuration and Logout",
-                "content": "The user menu here gives adminstrators access to customizing pages and page templates for different user roles.\nIt is also where you logout.",
+                "content": "The user menu here gives you access to customizing pages and page templates if your user roles allow those actions. It is also where you logout.",
                 "target": ".right.menu .usersMenu",
                 "placement": "bottom",
                 "xOffset": -230,
@@ -54,53 +54,51 @@
         ]
     },
     {
-        "name": "My second tour",
-        "startAt": "/stage/page/blueprints_catalog",
-        "id": "secondTour",
+        "name": "Cloudify Console Dashboard",
+        "id": "dashboard",
         "steps": [
             {
-                "title": "Let’s deploy some blueprints!",
-                "content": "Here we go. Grab yourself a blueprint from the catalog, upload it to the local collection of blueprints (Upload? Whatever..), and deploy the blueprint to a… wait for it… DEPLOYMENT!",
-                "target": ".tourButton",
+                "title": "The Cloudify Console Dashboard",
+                "content": "The Cloudify Console dashboard contains widgets that do basic actions and show the status of selected tenant. Let's see what the widgets are...",
+                "target": "dashboard page in sidebar",
                 "placement": "bottom"
             },
             {
-                "title": "Catalog of blueprints in the sky",
-                "content": "This is the catalog of blueprints. It’s a list of blueprints stored in the cloud that you can use in your manager. Don’t be confused. These blueprints aren’t actually on the manager until you click Upload. So obvious, right?",
-                "target": ".blueprintCatalogWidget",
+                "title": "Tenant resource load",
+                "content": "Here you can see how many blueprints, deployments, plugins are available, and you can see how many nodes and executions are running currently. These statistics can indicate the load on the tenant.",
+                "target": "plugins number",
+                "placement": "bottom"
+            },
+            {
+                "title": "Resource actions",
+                "content": "You can upload blueprints, create deployments and upload plugins straight from the dashboard.",
+                "target": "upload plugins button",
+                "placement": "right"
+            },
+            {
+                "title": "Execution and event filters",
+                "content": "Here you can filter the executions and events to show only those that are related to a specific blueprint or deployment.",
+                "target": "the blueprint filter",
+                "placement": "left"
+            },
+            {
+                "title": "Executions",
+                "content": "These are the executions that the tenant is implementing currently.",
+                "target": "executions list",
+                "placement": "top",
+            },
+            {
+                "title": "Events\\Logs",
+                "content": "These are the events and logs that are generated by the tenant. These events are helpful to see if there are any problems with the tenant functions.",
+                "target": "events list",
                 "placement": "bottom",
-                "width": 350
             },
             {
-                "title": "Upload the blueprint to the manager",
-                "content": "When you click this button, a galactic star command fleet is ordered to capture the blueprint from the evil Cloud Master and return it to its rightful place in the manager storage. And if you believe that...",
-                "target": ".uploadButton",
-                "placement": "top",
-                "multipage": true,
-                "onNextRedirectTo": "/stage/page/local_blueprints"
-            },
-            {
-                "title": "List of local blueprints",
-                "content": "The list of blueprints shows the name and icon of each blueprint, its visibility level, creation date, update date, creator, name of main blueprint .yaml file and the number of deployments created from it.",
-                "target": ".blueprintsWidget",
-                "placement": "top",
-                "delay": 200
-            },
-            {
-                "title": "Where are my deployments?",
-                "content": "When you click on Deploy, you need to enter the input values for the deployment, or else you are mocked by the crowd that’s watching on reality TV. Are you ready?",
-                "target": ".deployButton",
-                "placement": "top",
-                "multipage": true,
-                "onNextRedirectTo": "/stage/page/deployments"
-            },
-            {
-                "title": "Here are your deployments",
-                "content": "There you have it -- Deployments! Are you happy now? Isn’t that what you wanted this whole time?\nThose are the basics of deploying. Anything more complicated than that is extra charge. Payment is accepted in dollars, sterling, bitcoin, or any other current or future currency.\nHave fun!",
-                "target": ".deploymentsWidget",
-                "placement": "top",
-                "delay": 200
+                "title": "Check out another tour",
+                "content": "Now that you know how to use the dashboard, check out another tour to see what else you can do with the Cloudify Console.",
+                "target": "help menu",
+                "placement": "bottom",
             }
         ]
-  }
+    }
 ]
