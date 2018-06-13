@@ -33,15 +33,14 @@ Open browser to see if application is running. It runs by default on `http://loc
 Changes in the source code shall be hot loaded to the development development version of the application. For changes `app` directory you don't need to reload page, for changes in `widgets` directory you need to reload page to see your updates.
 
 ### Remote deployment
-Create application package:
-- to create production build run: `npm run build`
-- to pack all necessary files into archive run: `npm run zip`
-- upload the package to the remote Cloudify Manager
-- define path to private SSH key to access Cloudify Manager: `export SSH_KEY_PATH=<PATH>`
-- define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`
-- upload package to the Cloudify Manager and restart UI services: `npm run upload`
-
-Application package will be in repo main directory. 
+- create application package:
+    - to create production build run: `npm run build`
+    - to pack all necessary files into archive run: `npm run zip`
+    Application package will be in repo main directory. 
+- upload the package to the remote Cloudify Manager:
+    - define path to private SSH key to access Cloudify Manager: `export SSH_KEY_PATH=<PATH>`
+    - define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`
+    - upload package to the Cloudify Manager and restart UI services: `npm run upload`
 
 ## Test
 ### Unit tests
