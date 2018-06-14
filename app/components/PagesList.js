@@ -60,7 +60,7 @@ export default class PagesList extends Component {
                 {
                     _.filter(this.props.pages, (p)=>{return !p.isDrillDown}).map(function(page){
                         return <div 
-                                key={page.id} className={'item link ' + (this.props.selected === page.id ? 'active' : '') + ' pageMenuItem'}
+                                key={page.id} className={`item link pageMenuItem ${page.id}PageMenuItem ${this.props.selected === page.id ? 'active' : ''}`}
                                 onClick={(event) => {
                                     event.stopPropagation();
                                     this.props.onPageSelected(page);
