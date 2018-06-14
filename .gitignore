@@ -16,3 +16,6 @@ selenium-debug.log
 
 /resources
 /userData
+backend/package-lock.json
+package-lock.json
+.gitignore
