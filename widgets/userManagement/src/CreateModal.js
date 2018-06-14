@@ -19,6 +19,7 @@ export default class CreateModal extends React.Component {
         password: '',
         confirmPassword: '',
         isAdmin: false,
+        tenants: {},
         errors: {}
     }
 
@@ -70,22 +71,45 @@ export default class CreateModal extends React.Component {
         actions.doCreate(this.state.username,
                          this.state.password,
                          Stage.Common.RolesUtil.getSystemRole(this.state.isAdmin)
-        ).then(()=>{
+        ).then(() =>
+            actions.doHandleTenants(this.state.username, this.state.tenants, [], [])
+        ).then(() => {
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();
-        }).catch((err)=>{
+            this.props.toolbox.getEventBus().trigger('tenants:refresh');
+        }).catch((err) => {
             this.setState({errors: {error: err.message}, loading: false});
         });
+
     }
 
     _handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        if (field.name === 'tenants') {
+            let newTenants = {};
+            _.forEach(field.value, (tenant) => {
+                newTenants[tenant] = this.state.tenants[tenant]
+                    || Stage.Common.RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+            });
+            this.setState({tenants: newTenants});
+        } else {
+            this.setState(Stage.Basic.Form.fieldNameValue(field));
+        }
+    }
+
+    onRoleChange(tenant, role){
+        var newTenants = Object.assign({}, this.state.tenants);
+        newTenants[tenant] = role;
+        this.setState({tenants: newTenants});
     }
 
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        let {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        let {RolesPicker} = Stage.Common;
 
         const addButton = <Button content='Add' icon='add user' labelPosition='left' className='addUserButton' />;
+
+        let tenants = Object.assign({},{items:[]}, this.props.tenants);
+        let options = _.map(tenants.items, item => { return {text: item.name, value: item.name, key: item.name} });
 
         return (
             <Modal trigger={addButton} open={this.state.open} onOpen={()=>this.setState({open:true})}
@@ -97,18 +121,18 @@ export default class CreateModal extends React.Component {
                 <Modal.Content>
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
-                        <Form.Field error={this.state.errors.username}>
-                            <Form.Input name='username' placeholder="Username"
+                        <Form.Field label='Username' error={this.state.errors.username} required>
+                            <Form.Input name='username'
                                         value={this.state.username} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field error={this.state.errors.password}>
-                            <Form.Input name='password' placeholder="Password" type="password"
+                        <Form.Field label='Password' error={this.state.errors.password} required>
+                            <Form.Input name='password' type="password"
                                         value={this.state.password} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field error={this.state.errors.confirmPassword}>
-                            <Form.Input name='confirmPassword' placeholder="Confirm password" type="password"
+                        <Form.Field label='Confirm password' error={this.state.errors.confirmPassword} required>
+                            <Form.Input name='confirmPassword' type="password"
                                         value={this.state.confirmPassword} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
@@ -116,6 +140,15 @@ export default class CreateModal extends React.Component {
                             <Form.Checkbox label="Admin" name="isAdmin" checked={this.state.isAdmin}
                                            onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
+
+                        <Form.Field label='Tenants'>
+                            <Form.Dropdown name="tenants" multiple selection options={options}
+                                           value={Object.keys(this.state.tenants)}
+                                           onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+                        <RolesPicker onUpdate={this.onRoleChange.bind(this)}
+                                     resources={this.state.tenants}
+                                     resourceName="tenant" toolbox={this.props.toolbox} />
 
                     </Form>
                 </Modal.Content>

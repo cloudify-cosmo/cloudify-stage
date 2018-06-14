@@ -17,13 +17,15 @@ export default class UsersTable extends React.Component {
             error: null,
             showModal: false,
             modalType: '',
-            user: {},
+            user: UsersTable.EMPTY_USER,
             tenants: {},
             groups: {},
             activateLoading: false,
             settingUserRoleLoading: false
         }
     }
+
+    static EMPTY_USER = {username: ''};
 
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props.widget, nextProps.widget)
@@ -37,6 +39,7 @@ export default class UsersTable extends React.Component {
 
     componentDidMount() {
         this.props.toolbox.getEventBus().on('users:refresh', this._refreshData, this);
+        this._getAvailableTenants(null, null, false);
     }
 
     componentWillUnmount() {
@@ -52,12 +55,16 @@ export default class UsersTable extends React.Component {
         this.props.toolbox.getContext().setValue('userName', userName === selectedUserName ? null : userName);
     }
 
-    _getAvailableTenants(value, user) {
+    _getAvailableTenants(value, user, showModal=true) {
         this.props.toolbox.loading(true);
 
         let actions = new Actions(this.props.toolbox);
         actions.doGetTenants().then((tenants)=>{
-            this.setState({error: null, user, tenants, modalType: value, showModal: true});
+            this.setState({
+                error: null, tenants,
+                user: showModal ? user : UsersTable.EMPTY_USER,
+                modalType: showModal ? value : '', showModal
+            });
             this.props.toolbox.loading(false);
         }).catch((err)=> {
             this.setState({error: err.message});
@@ -267,7 +274,7 @@ export default class UsersTable extends React.Component {
                         })
                     }
                     <DataTable.Action>
-                        <CreateModal roles={this.props.roles} toolbox={this.props.toolbox}/>
+                        <CreateModal roles={this.props.roles} tenants={this.state.tenants} toolbox={this.props.toolbox}/>
                     </DataTable.Action>
                 </DataTable>
 
