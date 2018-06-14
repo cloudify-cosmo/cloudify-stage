@@ -46,7 +46,7 @@
                 "arrowOffset": 210
             },
             {
-                "title": "User configuration and logout",
+                "title": "User menu",
                 "content": "The user menu here gives you access to <b>customizing pages and page templates</b> if your user roles allow those actions. It is also where you logout.",
                 "target": ".right.menu .usersMenu",
                 "placement": "bottom",

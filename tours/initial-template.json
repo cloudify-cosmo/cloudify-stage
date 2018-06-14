@@ -6,30 +6,32 @@
             {
                 "title": "The Cloudify Console",
                 "content": "This tour reviews the areas of the Cloudify Console. Let's get started...",
-                "target": ".logo",
-                "placement": "bottom"
+                "target": ".right.menu .helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
             },
             {
                 "title": "Console pages",
-                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as Local Blueprints or Deployments. Administrators can customize the pages to help streamline your work.",
+                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as <b>Local Blueprints</b> or <b>Deployments</b>. Administrators can customize the pages to help streamline your work.",
                 "target": ".pages .pageMenuItem",
                 "placement": "right"
             },
             {
                 "title": "Widgets on the pages",
-                "content": "On each page is a set of widgets. Each widget lets you do a specific Cloudify action. Widgets are grouped on the page so that you can easily access related actions. Administrators can also customize the widgets on each page to meet your needs.",
+                "content": "On each page is a set of widgets. Each widget lets you do a specific Cloudify action. Widgets are grouped on the page so that you can easily access related actions. <b>Administrators can also customize the widgets on each page</b> to meet your needs.",
                 "target": ".widgetItem",
                 "placement": "bottom"
             },
             {
-                "title": "Manager Services Status",
+                "title": "Manager services status",
                 "content": "Here you can quickly review the status of the Cloudify services to see if there is anything that needs attention.",
                 "target": ".right.menu .item",
                 "placement": "bottom"
             },
             {
                 "title": "Switch to other tenants",
-                "content": "If you can access multiple tenants on the Cloudify Manager, here you can select the tenant that you want to work on.",
+                "content": "If you can access <b>multiple tenants</b> on the Cloudify Manager, here you can select the tenant that you want to work on.",
                 "target": ".right.menu .tenantsMenu",
                 "placement": "bottom",
                 "xOffset": -200,
@@ -37,7 +39,7 @@
             },
             {
                 "title": "Get help",
-                "content": "If you need more information about using the Console or the Cloudify Manager, here you can find links to documentation, video tutorials, and knowledge base articles.",
+                "content": "If you need more information about using the Console or the Cloudify Manager, here you can find links to <b>documentation</b>, <b>video tutorials</b>, and <b>knowledge base articles</b>.",
                 "target": ".right.menu .helpMenu",
                 "placement": "bottom",
                 "xOffset": -200,
@@ -45,11 +47,19 @@
             },
             {
                 "title": "User menu",
-                "content": "The user menu here gives you access to customizing pages and page templates if your user roles allow those actions. It is also where you logout.",
+                "content": "The user menu here gives you access to <b>customizing pages and page templates</b> if your user roles allow those actions. It is also where you logout.",
                 "target": ".right.menu .usersMenu",
                 "placement": "bottom",
                 "xOffset": -230,
                 "arrowOffset": 250
+            },
+            {
+                "title": "Next steps...",
+                "content": "Now that you know the structure of the console, <b>check out other tours</b> about working with the Cloudify Console.",
+                "target": ".right.menu .helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
             }
         ]
     },
