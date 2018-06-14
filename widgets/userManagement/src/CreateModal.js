@@ -84,20 +84,20 @@ export default class CreateModal extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
-        if (field.name === 'tenants') {
-            let newTenants = {};
-            _.forEach(field.value, (tenant) => {
-                newTenants[tenant] = this.state.tenants[tenant]
-                    || Stage.Common.RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
-            });
-            this.setState({tenants: newTenants});
-        } else {
-            this.setState(Stage.Basic.Form.fieldNameValue(field));
-        }
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
-    onRoleChange(tenant, role){
-        var newTenants = Object.assign({}, this.state.tenants);
+    _handleTenantChange(proxy, field) {
+        let newTenants = {};
+        _.forEach(field.value, (tenant) => {
+            newTenants[tenant] = this.state.tenants[tenant]
+                || Stage.Common.RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+        });
+        this.setState({tenants: newTenants});
+    }
+
+    _handleRoleChange(tenant, role){
+        let newTenants = {...this.state.tenants};
         newTenants[tenant] = role;
         this.setState({tenants: newTenants});
     }
@@ -108,7 +108,7 @@ export default class CreateModal extends React.Component {
 
         const addButton = <Button content='Add' icon='add user' labelPosition='left' className='addUserButton' />;
 
-        let tenants = Object.assign({},{items:[]}, this.props.tenants);
+        let tenants = {items:[], ...this.props.tenants};
         let options = _.map(tenants.items, item => { return {text: item.name, value: item.name, key: item.name} });
 
         return (
@@ -144,9 +144,9 @@ export default class CreateModal extends React.Component {
                         <Form.Field label='Tenants'>
                             <Form.Dropdown name="tenants" multiple selection options={options}
                                            value={Object.keys(this.state.tenants)}
-                                           onChange={this._handleInputChange.bind(this)}/>
+                                           onChange={this._handleTenantChange.bind(this)}/>
                         </Form.Field>
-                        <RolesPicker onUpdate={this.onRoleChange.bind(this)}
+                        <RolesPicker onUpdate={this._handleRoleChange.bind(this)}
                                      resources={this.state.tenants}
                                      resourceName="tenant" toolbox={this.props.toolbox} />
 
