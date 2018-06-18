@@ -171,7 +171,7 @@
                 "title": "Add secrets",
                 "content": "Blueprints use the <i>get_secret</i> function to get values from the secrets store. That way you do not have to store sensitive information in plain text in the blueprint.",
                 "target": "System Resources page - Secrets - Create",
-                "placement": "bottom",
+                "placement": "bottom"
             },
             {
                 "title": "Check out another tour",
