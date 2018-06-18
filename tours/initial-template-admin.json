@@ -127,25 +127,25 @@
             },
             {
                 "title": "Managing tenants and users",
-                "content": "Cloudify Manager use <b>tenants</b> for data and user segregation. Before you start using the manager, you must <b>define the tenants that you need on your manager</b>.",
+                "content": "Cloudify Manager use <b>tenants</b> for data and user segregation. The Cloudify Manager is installed with a default-tenant. If you need other tenants, make sure you <b>define the tenants that you need on your manager</b> before you start using the manager.",
                 "target": ".tenant_managementPageMenuItem",
                 "placement": "right"
             },
             {
                 "title": "Add tenants",
-                "content": "Add tenants to the manager. Each tenant contains a separate set of users, plugins, secrets, blueprints and deployments. For more information about sharing resources between tenants, see <b>resource visibility</b> in the documenation.",
+                "content": "Add tenants to the manager. The tenants let you separate sets of plugins, secrets, blueprints and deployments for each tenant. For more information about sharing resources between tenants, see <b>resource visibility</b> in the documenation.",
                 "target": "On tenant page - tenant management - Add button",
                 "placement": "left"
             },
             {
                 "title": "Add user groups",
-                "content": "You can create user groups on the current tenant and assign privileges to the group. Users in a group inherit the privileges of the group.",
+                "content": "You can create user groups and assign them to tenants with roles. Users in a group inherit the roles of the group.",
                 "target": "On tenant page - user groups management - Add button",
                 "placement": "left"
             },
             {
                 "title": "Add users",
-                "content": "The users that you add are assigned the specified privileges on the current tenant.",
+                "content": "You can add users and assign them to tenants with specific roles. If you import users and groups from an external authentication source, you can only assign user groups to tenants.",
                 "target": "On tenant page - user management - Add button",
                 "placement": "left"
             },
@@ -157,7 +157,7 @@
             },
             {
                 "title": "Plugins",
-                "content": "Plugins let your blueprints integrate with third-party services and run operations. The plugins required by a blueprint that are specified in the blueprint yaml file must be uploaded to the tenant that the blueprint is deployed on.",
+                "content": "Plugins let your blueprints integrate with third-party services and run operations. The plugins required by a blueprint are specified in the blueprint yaml file. You must upload the plugins to the tenant before you upload the blueprint to the tenant.",
                 "target": "System Resources page - Plugins",
                 "placement": "bottom"
             },
@@ -169,7 +169,7 @@
             },
             {
                 "title": "Add secrets",
-                "content": "Blueprints use the <i>get_secret</i> function to get values from the secrets store. That way you do not have to store sensitive information in plain text in the blueprint.",
+                "content": "Blueprints use the <i>get_secret</i> function to get values from the encrypted secrets store. That way you do not have to store sensitive information in plain text in the blueprint. For information about hidden secrets, see the documentation.",
                 "target": "System Resources page - Secrets - Create",
                 "placement": "bottom"
             },
