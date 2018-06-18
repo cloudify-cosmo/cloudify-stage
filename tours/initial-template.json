@@ -13,13 +13,13 @@
             },
             {
                 "title": "Console pages",
-                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as <b>Local Blueprints</b> or <b>Deployments</b>. Administrators can customize the pages to help streamline your work.",
+                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as <strong>Local Blueprints</strong> or <strong>Deployments</strong>. Administrators can customize the pages to help streamline your work.",
                 "target": ".pages .pageMenuItem",
                 "placement": "right"
             },
             {
                 "title": "Widgets on the pages",
-                "content": "On each page is a set of widgets. Each widget lets you do a specific Cloudify action. Widgets are grouped on the page so that you can easily access related actions. <b>Administrators can also customize the widgets on each page</b> to meet your needs.",
+                "content": "On each page is a set of widgets. Each widget lets you do a specific Cloudify action. Widgets are grouped on the page so that you can easily access related actions. <strong>Administrators can also customize the widgets on each page</strong> to meet your needs.",
                 "target": ".widgetItem",
                 "placement": "bottom"
             },
@@ -31,7 +31,7 @@
             },
             {
                 "title": "Switch to other tenants",
-                "content": "If you can access <b>multiple tenants</b> on the Cloudify Manager, here you can select the tenant that you want to work on.",
+                "content": "If you can access <strong>multiple tenants</strong> on the Cloudify Manager, here you can select the tenant that you want to work on.",
                 "target": ".right.menu .tenantsMenu",
                 "placement": "bottom",
                 "xOffset": -200,
@@ -39,7 +39,7 @@
             },
             {
                 "title": "Get help",
-                "content": "If you need more information about using the Console or the Cloudify Manager, here you can find links to <b>documentation</b>, <b>video tutorials</b>, and <b>knowledge base articles</b>.",
+                "content": "If you need more information about using the Console or the Cloudify Manager, here you can find links to <strong>documentation</strong>, <strong>video tutorials</strong>, and <strong>knowledge base articles</strong>.",
                 "target": ".right.menu .helpMenu",
                 "placement": "bottom",
                 "xOffset": -200,
@@ -47,7 +47,7 @@
             },
             {
                 "title": "User menu",
-                "content": "The user menu here gives you access to <b>customizing pages and page templates</b> if your user roles allow those actions. It is also where you logout.",
+                "content": "The user menu here gives you access to <strong>customizing pages and page templates</strong> if your user roles allow those actions. It is also where you logout.",
                 "target": ".right.menu .usersMenu",
                 "placement": "bottom",
                 "xOffset": -230,
@@ -55,7 +55,7 @@
             },
             {
                 "title": "Next steps...",
-                "content": "Now that you know the structure of the console, <b>check out other tours</b> about working with the Cloudify Console.",
+                "content": "Now that you know the structure of the console, <strong>check out other tours</strong> about working with the Cloudify Console.",
                 "target": ".right.menu .helpMenu",
                 "placement": "bottom",
                 "xOffset": -200,
@@ -69,31 +69,31 @@
         "steps": [
             {
                 "title": "The Cloudify Console Dashboard",
-                "content": "The Cloudify Console dashboard contains <b>widgets that do basic actions and show the status</b> of selected tenant. Let's see what the widgets are...",
+                "content": "The Cloudify Console dashboard contains <strong>widgets that do basic actions and show the status</strong> of selected tenant. Let's see what the widgets are...",
                 "target": ".dashboardPageMenuItem",
                 "placement": "right"
             },
             {
                 "title": "Tenant resource load",
-                "content": "Here you can see how many blueprints, deployments, plugins are available, and you can see how many nodes and executions are running currently. <b>These statistics can indicate the load on the tenant</b>.",
+                "content": "Here you can see how many blueprints, deployments, plugins are available, and you can see how many nodes and executions are running currently. <strong>These statistics can indicate the load on the tenant</strong>.",
                 "target": ".widget.pluginsNumWidget",
                 "placement": "bottom"
             },
             {
                 "title": "Resource actions",
-                "content": "You can <b>upload blueprints, create deployments and upload plugins</b> straight from the dashboard.",
+                "content": "You can <strong>upload blueprints, create deployments and upload plugins</strong> straight from the dashboard.",
                 "target": ".widget.deploymentButtonWidget",
                 "placement": "bottom"
             },
             {
                 "title": "Deployments",
-                "content": "These are the deployments that are currently available on your tenant. <b>Click on the menu to run an execution</b>.",
+                "content": "These are the deployments that are currently available on your tenant. <strong>Click on the menu to run an execution</strong>.",
                 "target": ".widget.deploymentsWidget",
                 "placement": "top"
             },
             {
                 "title": "Execution filters",
-                "content": "Here you can filter the executions and events to <b>show only those that are related to a specific blueprint or deployment</b>.",
+                "content": "Here you can filter the executions and events to <strong>show only those that are related to a specific blueprint or deployment</strong>.",
                 "target": ".widget.filterWidget",
                 "placement": "top"
             },
@@ -105,13 +105,13 @@
             },
             {
                 "title": "Events and Logs",
-                "content": "These are the events and logs that are generated by the tenant. These events are helpful to <b>see if there are any problems with the tenant functions</b>.",
+                "content": "These are the events and logs that are generated by the tenant. These events are helpful to <strong>see if there are any problems with the tenant functions</strong>.",
                 "target": ".widget.eventsWidget",
-                "placement": "bottom"
+                "placement": "top"
             },
             {
                 "title": "Check out another tour",
-                "content": "Now that you know how to use the dashboard, <b>check out another tour</b> to see what else you can do with the Cloudify Console.",
+                "content": "Now that you know how to use the dashboard, <strong>check out another tour</strong> to see what else you can do with the Cloudify Console.",
                 "target": ".ui.dropdown.helpMenu",
                 "placement": "bottom",
                 "xOffset": -200,
