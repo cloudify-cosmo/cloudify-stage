@@ -4,6 +4,7 @@
 
 import PropTypes from 'prop-types';
 import Actions from './actions';
+import {diffChars} from 'diff';
 
 export default class UpdateDetailsModal extends React.Component {
 
@@ -48,8 +49,7 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     _getDiff(stringA, stringB) {
-        let diff = require('diff');
-        let difference = diff.diffChars(stringA, stringB);
+        let difference = diffChars(String(stringA), String(stringB));
 
         return (
             <div>
