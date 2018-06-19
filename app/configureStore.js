@@ -3,7 +3,7 @@
  */
 
 import thunkMiddleware from 'redux-thunk';
-import { routerMiddleware } from 'react-router-redux';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import logger from 'redux-logger';
 import { createStore, applyMiddleware } from 'redux';
 
@@ -34,7 +34,7 @@ export default (history,config) => {
         : [thunkMiddleware, routerMiddleware(history)];
 
     let store = createStore(
-        reducers,
+        connectRouter(history)(reducers),
         initialState,
         applyMiddleware(...middlewares)
     );

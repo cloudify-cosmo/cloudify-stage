@@ -9,7 +9,7 @@ import { setEditMode } from '../actions/config';
 import { minimizeWidgets } from '../actions/widgets';
 import Consts from '../utils/consts';
 import stageUtils from '../utils/stageUtils';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 const mapStateToProps = (state, ownProps) => {
     var isTemplateManagementActive = !!state.templateManagement.templates || !!state.templateManagement.page;

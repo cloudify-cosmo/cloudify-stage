@@ -2,7 +2,6 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-import { routerReducer} from 'react-router-redux';
 import { combineReducers } from 'redux';
 import pages from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
@@ -27,8 +26,7 @@ const rootReducer = combineReducers({
     context,
     drilldownContext,
     config,
-    widgetData,
-    routing: routerReducer
+    widgetData
 });
 
 export default rootReducer;
