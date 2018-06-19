@@ -51,7 +51,7 @@ router.post('/saml/callback', passport.authenticate('saml', {session: false}), f
 
     AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse).then((token) => {
         res.cookie('XSRF-TOKEN', token.value);
-        res.redirect('/stage');
+        res.redirect('/console');
     })
     .catch((err) => {
         logger.error(err);

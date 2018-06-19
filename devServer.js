@@ -12,70 +12,70 @@ const options = {
     host: 'localhost',
     inline: true,
     historyApiFallback: {
-        index:'/stage/index.html'
+        index:'/console/index.html'
     },
     proxy: {
-        '/stage/sp': {
+        '/console/sp': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/auth': {
+        '/console/auth': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/config': {
+        '/console/config': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/ua': {
+        '/console/ua': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/source': {
+        '/console/source': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/ba': {
+        '/console/ba': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/clientConfig': {
+        '/console/clientConfig': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/monitor': {
+        '/console/monitor': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/github': {
+        '/console/github': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/style': {
+        '/console/style': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/widgets': {
+        '/console/widgets': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/templates': {
+        '/console/templates': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/tours': {
+        '/console/tours': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/wb': {
+        '/console/wb': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/file': {
+        '/console/file': {
             target: 'http://localhost:8088',
             secure: false
         },
-        '/stage/plugins': {
+        '/console/plugins': {
             target: 'http://localhost:8088',
             secure: false
         }

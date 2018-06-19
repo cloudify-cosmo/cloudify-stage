@@ -107,7 +107,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: '[name].bundle.js',
-            publicPath: '/stage'
+            publicPath: '/console'
         },
         optimization: {
             splitChunks: {
@@ -172,7 +172,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: 'widgets/[name]',
-            publicPath: '/stage'
+            publicPath: '/console'
         },
         plugins: [
             new CopyWebpackPlugin([
@@ -194,7 +194,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist/widgets'),
             filename: 'common/common.js',
-            publicPath: '/stage'
+            publicPath: '/console'
         },
         plugins: compressionPlugins,
         module: {

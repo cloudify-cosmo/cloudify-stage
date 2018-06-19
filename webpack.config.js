@@ -89,7 +89,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: '[name].js',
-            publicPath: '/stage'
+            publicPath: '/console'
         },
         plugins: [
             new CopyWebpackPlugin([
@@ -150,7 +150,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: 'widgets/[name]',
-            publicPath: '/stage'
+            publicPath: '/console'
         },
         plugins: [
             new CopyWebpackPlugin([
@@ -174,7 +174,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: 'widgets/common/common.js',
-            publicPath: '/stage'
+            publicPath: '/console'
         },
         plugins: [
             new webpack.NamedModulesPlugin(),
