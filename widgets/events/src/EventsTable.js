@@ -67,8 +67,6 @@ export default class EventsTable extends React.Component {
                     <DataTable.Column label="" width="40px" show={fieldsToShow.indexOf('Icon') >= 0}/>
                     <DataTable.Column label="Timestamp" name="timestamp" width="10%" show={fieldsToShow.indexOf('Timestamp') >= 0}/>
                     <DataTable.Column label="Type" name="event_type" show={fieldsToShow.indexOf('Type') >= 0}/>
-                    <DataTable.Column label="Blueprint" name="blueprint_id" show={!this.props.data.blueprintId && !this.props.data.deploymentId &&
-                                            !this.props.data.executionId && fieldsToShow.indexOf('Blueprint') >= 0} />
                     <DataTable.Column label="Deployment" name="deployment_id" show={!this.props.data.deploymentId && !this.props.data.executionId &&
                                             fieldsToShow.indexOf('Deployment') >= 0} />
                     <DataTable.Column label="Workflow" name="workflow_id" show={!this.props.data.executionId && fieldsToShow.indexOf('Workflow') >= 0} />
@@ -89,7 +87,6 @@ export default class EventsTable extends React.Component {
                                     <DataTable.Data className="alignCenter"><i className={`eventsType ${event.icon}`} title={event.text}></i></DataTable.Data>
                                     <DataTable.Data className="alignCenter noWrap">{item.timestamp}</DataTable.Data>
                                     <DataTable.Data>{event.text}</DataTable.Data>
-                                    <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                     <DataTable.Data>{item.deployment_id}</DataTable.Data>
                                     <DataTable.Data>{item.workflow_id}</DataTable.Data>
                                     <DataTable.Data>{item.operation}</DataTable.Data>
