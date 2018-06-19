@@ -11,29 +11,27 @@ export default class Tours {
     static load(manager) {
         console.log('Load tours');
 
-        var tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
+        let tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
-        var internal = new Internal(manager);
+        let internal = new Internal(manager);
         return internal.doGet('/tours', {tenant}).then(tours => {
             return tours;
         });
     }
 
-    static shouldRedirectBeforeStarting(tour, startAt) {
-        var startAt = _.get(tour, 'startAt', null);
-        return !_.isNil(startAt) && window.location.pathname !== startAt;
-    }
+    static parseTour(tour, dispatch) {
+        let hopscotchTour =  _.omit(_.cloneDeep(tour), 'name');
 
-    static parseTour(tour) {
-        var hopscotchTour =  _.omit(_.cloneDeep(tour), 'name');
         hopscotchTour = _.omit(hopscotchTour, 'startAt');
-        hopscotchTour.steps =  _.map(hopscotchTour.steps, (step) => {
+        hopscotchTour.steps =  _.map(hopscotchTour.steps, (step, index) => {
             if(!_.isUndefined(step.onNextRedirectTo)){
-                var redirectionUrl = step.onNextRedirectTo;
-                step.onNext = () => {
-                    window.location = redirectionUrl;
-                };
-                step.multipage = true;
+                let nextStep = hopscotchTour.steps[index + 1];
+                if (!_.isUndefined(nextStep)) {
+                    step.showCTAButton = true;
+                    step.ctaLabel = 'Next (change page)';
+                    step.onCTA = ['redirectTo', step.onNextRedirectTo, nextStep.target];
+                    step.showNextButton = false;
+                }
                 return _.omit(step, 'onNextRedirectTo');
             }
             return step;
