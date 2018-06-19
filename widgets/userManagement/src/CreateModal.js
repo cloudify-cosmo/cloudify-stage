@@ -103,7 +103,7 @@ export default class CreateModal extends React.Component {
     }
 
     render() {
-        let {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        let {ApproveButton, Button, CancelButton, Icon, Form, Message, Modal} = Stage.Basic;
         let {RolesPicker} = Stage.Common;
 
         const addButton = <Button content='Add' icon='add user' labelPosition='left' className='addUserButton' />;
@@ -140,6 +140,13 @@ export default class CreateModal extends React.Component {
                             <Form.Checkbox label="Admin" name="isAdmin" checked={this.state.isAdmin}
                                            onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
+
+                        {
+                            this.state.isAdmin &&
+                            <Message>
+                                Admin users have full permissions to all tenants on the manager.
+                            </Message>
+                        }
 
                         <Form.Field label='Tenants'>
                             <Form.Dropdown name="tenants" multiple selection options={options}
