@@ -6,7 +6,7 @@ const DEPLOYMENT_NAME = 'nodecellar0';
 const BLUEPRINT_NAME = 'nodecellar';
 const BLUEPRINT_URL = 'https://github.com/cloudify-cosmo/cloudify-nodecellar-example/archive/master.zip';
 const BLUEPRINT_YAML_FILENAME = 'local-blueprint.yaml';
-const BLUEPRINT_INPUTS_FILENAME = 'nodecellarInputs2.yaml'
+const BLUEPRINT_INPUTS_FILENAME = 'nodecellarInputs2.yaml';
 const WORKFLOW_VERIFICATION_TIMEOUT = 20000;
 
 module.exports = {
