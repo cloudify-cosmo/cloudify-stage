@@ -66,6 +66,7 @@
     {
         "name": "Cloudify Console Dashboard",
         "id": "dashboard",
+        "startAt": "/page/dashboard",
         "steps": [
             {
                 "title": "The Cloudify Console Dashboard",
@@ -115,7 +116,7 @@
     },
     {
         "name": "Preliminary Manager Setup",
-        "id": "dashboard",
+        "id": "preliminaryManagerSetup",
         "steps": [
             {
                 "title": "Cloudify Manager Resources",
@@ -129,49 +130,51 @@
                 "title": "Managing tenants and users",
                 "content": "Cloudify Manager use <strong>tenants</strong> for data and user segregation. The Cloudify Manager is installed with a default-tenant. If you need other tenants, make sure you <strong>define the tenants that you need on your manager</strong> before you start using the manager.",
                 "target": ".tenant_managementPageMenuItem",
+                "onNextRedirectTo": "/page/tenant_management",
                 "placement": "right"
             },
             {
                 "title": "Add tenants",
                 "content": "Add tenants to the manager. The tenants let you separate sets of plugins, secrets, blueprints and deployments for each tenant. For more information about sharing resources between tenants, see <strong>resource visibility</strong> in the documenation.",
-                "target": "On tenant page - tenant management - Add button",
+                "target": ".widget.tenantsWidget button > .add.user.icon",
                 "placement": "left"
             },
             {
                 "title": "Add user groups",
-                "content": "You can create user groups and assign them to tenants with roles. Users in a group inherit the roles of the group.",
-                "target": "On tenant page - user groups management - Add button",
+              "content": "You can create user groups and assign them to tenants with roles. Users in a group inherit the roles of the group.",
+                "target": ".widget.userGroupsWidget button > .add.user.icon",
                 "placement": "left"
             },
             {
                 "title": "Add users",
-                "content": "You can add users and assign them to tenants with specific roles. If you import users and groups from an external authentication source, you can only assign user groups to tenants.",
-                "target": "On tenant page - user management - Add button",
+              "content": "You can add users and assign them to tenants with specific roles. If you import users and groups from an external authentication source, you can only assign user groups to tenants.",
+                "target": ".widget.userManagementWidget button > .add.user.icon",
                 "placement": "left"
             },
             {
                 "title": "System Resources",
                 "content": "After you setup your tenants and users, go to <strong>System Resources</strong> to setup the plugins and secrets that you need for your blueprints.",
                 "target": ".system_resourcesPageMenuItem",
+                "onNextRedirectTo": "/page/system_resources",
                 "placement": "right"
             },
             {
                 "title": "Plugins",
-                "content": "Plugins let your blueprints integrate with third-party services and run operations. The plugins required by a blueprint are specified in the blueprint yaml file. You must upload the plugins to the tenant before you upload the blueprint to the tenant.",
-                "target": "System Resources page - Plugins",
+              "content": "Plugins let your blueprints integrate with third-party services and run operations. The plugins required by a blueprint are specified in the blueprint yaml file. You must upload the plugins to the tenant before you upload the blueprint to the tenant.",
+                "target": ".widget.pluginsWidget",
                 "placement": "bottom"
             },
             {
                 "title": "Upload a plugin",
                 "content": "When you know which plugins your blueprints need, upload them to the tenant.",
-                "target": "System Resources page - Plugins - Upload",
-                "placement": "bottom"
+                "target": ".widget.pluginsWidget button > .upload.icon",
+                "placement": "left"
             },
             {
                 "title": "Add secrets",
-                "content": "Blueprints use the <i>get_secret</i> function to get values from the encrypted secrets store. That way you do not have to store sensitive information in plain text in the blueprint. For information about hidden secrets, see the documentation.",
-                "target": "System Resources page - Secrets - Create",
-                "placement": "bottom"
+              "content": "Blueprints use the <i>get_secret</i> function to get values from the encrypted secrets store. That way you do not have to store sensitive information in plain text in the blueprint. For information about hidden secrets, see the documentation.",
+                "target": ".widget.secretsWidget button > .add.icon",
+                "placement": "left"
             },
             {
                 "title": "Check out another tour",
