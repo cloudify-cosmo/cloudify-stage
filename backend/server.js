@@ -48,7 +48,8 @@ var logger = log4js.getLogger('Server');
 
 ServerSettings.init();
 
-var contextPath = config.get().app.contextPath;
+const contextPath = config.get().app.contextPath;
+const oldContextPath = '/stage';
 
 var app = express();
 
@@ -106,12 +107,9 @@ app.use(contextPath +'/wb',WidgetBackend);
 app.use(contextPath +'/plugins',Plugins);
 
 // Redirect URLs with old context path (/stage)
-app.use('/stage*', function (request, response){
-    let pathWithoutStagePrefix = request.originalUrl.replace(/^\/stage/, '');
-    pathWithoutStagePrefix
-        = pathWithoutStagePrefix.charAt(0) === '/' ? pathWithoutStagePrefix.substr(1) : pathWithoutStagePrefix;
-
-    let redirectUrl = `${contextPath}/${pathWithoutStagePrefix}`;
+app.use([oldContextPath, `${oldContextPath}/*`], function (request, response){
+    let pathWithoutOldContextPath = request.originalUrl.replace(new RegExp('^' + oldContextPath), '');
+    let redirectUrl = `${contextPath}${pathWithoutOldContextPath}`;
     logger.info('Old base url detected: "' + request.originalUrl + '". Redirecting to "' + redirectUrl + '".');
 
     response.redirect(redirectUrl);
@@ -119,7 +117,7 @@ app.use('/stage*', function (request, response){
 
 // BrowserHistory code
 app.get('*',function (request, response){
-    logger.info('Unknown URL: "' + request.originalUrl + '". Sending index.html file.');
+    logger.info('URL: "' + request.originalUrl + '". Sending index.html file.');
     response.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
 });
 
