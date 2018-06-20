@@ -185,5 +185,67 @@
                 "arrowOffset": 210
             }
         ]
+    },
+    {
+        "name": "From Blueprint to Execution",
+        "id": "fromBlueprintToExecution",
+        "steps": [
+            {
+                "title": "Get working with Cloudify",
+                "content": "After you setup your manager resources, it's time to use Cloudify to deploy an application. Let's get started...",
+                "target": ".right.menu .helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            },
+            {
+                "title": "Blueprints Catalog",
+                "content": "The blueprints catalog contains prepared blueprints that you can use right out of the box.",
+                "target": ".blueprints_catalogPageMenuItem",
+                "onNextRedirectTo": "/page/blueprints_catalog",
+                "placement": "right"
+            },
+            {
+                "title": "Upload a Blueprint",
+                "content": "When you click <strong>Upload</strong>, the blueprint is uploaded to your Cloudify Manager. The blueprint is available in Local Blueprints.",
+                "onNextRedirectTo": "/page/local_blueprints",
+                "target": "upload button",
+                "placement": "bottom"
+            },
+            {
+                "title": "Deploy Blueprint",
+                "content": "Click <strong>Deploy</strong> to turn the blueprint into a deployment with specific inputs. You can use the deployment multiple times to spin up multiple environments.",
+                "onNextRedirectTo": "/page/deployments",
+                "target": "deploy",
+                "placement": "bottom"
+            },
+            {
+                "title": "Install the Deployment",
+                "content": "From the deployment menu, you can run executions on the deployment. Let's start with the <strong>Install</strong> execution.",
+                "target": "deployment menu",
+                "placement": "left"
+            },
+            {
+                "title": "Deployment Status",
+                "content": "You can see the status of the nodes in the deployment as the deployment is installed.",
+                "target": "status icons",
+                "onNextRedirectTo": "/page/dashboard",
+                "placement": "left"
+            },
+            {
+                "title": "Executions Status",
+                "content": "In the Dashboard you can see the executions that are currently running, including the processes that are installing the deployment.",
+                "target": "executions list",
+                "placement": "bottom"
+            },
+            {
+                "title": "Check out another tour",
+                "content": "Now that you know how to deploy an application, <strong>check out other help resources</strong> to see what else you can do with the Cloudify Console.",
+                "target": ".ui.dropdown.helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            }
+        ]
     }
 ]
