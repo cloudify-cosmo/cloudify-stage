@@ -115,8 +115,8 @@
         ]
     },
     {
-        "name": "Preliminary Manager Setup",
-        "id": "preliminaryManagerSetup",
+        "name": "Initial Manager Setup",
+        "id": "initialManagerSetup",
         "steps": [
             {
                 "title": "Cloudify Manager Resources",
