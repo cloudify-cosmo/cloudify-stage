@@ -141,7 +141,7 @@
             },
             {
                 "title": "Add user groups",
-              "content": "You can create user groups and assign them to tenants with roles. Users in a group inherit the roles of the group.",
+              "content": "You can create user groups and assign them to tenants with roles. <strong>Users in a group inherit the roles of the group</strong>.",
                 "target": ".widget.userGroupsWidget button > .add.user.icon",
                 "placement": "left"
             },
@@ -160,7 +160,7 @@
             },
             {
                 "title": "Plugins",
-              "content": "Plugins let your blueprints integrate with third-party services and run operations. The plugins required by a blueprint are specified in the blueprint yaml file. You must upload the plugins to the tenant before you upload the blueprint to the tenant.",
+              "content": "Plugins let your blueprints integrate with third-party services and run operations. The plugins required by a blueprint are specified in the blueprint yaml file. <strong>You must upload the plugins to the tenant before you upload the blueprint to the tenant</strong>.",
                 "target": ".widget.pluginsWidget",
                 "placement": "bottom"
             },
@@ -171,8 +171,8 @@
                 "placement": "left"
             },
             {
-                "title": "Add secrets",
-              "content": "Blueprints use the <i>get_secret</i> function to get values from the encrypted secrets store. That way you do not have to store sensitive information in plain text in the blueprint. For information about hidden secrets, see the documentation.",
+                "title": "Create secrets",
+              "content": "Blueprints use the <i>get_secret</i> function to get values from the encrypted secrets store. That way you do not have to store sensitive information in plain text in the blueprint. <strong>Create the secrets that your blueprints need.</strong><br>For information about hidden secrets, see the documentation.",
                 "target": ".widget.secretsWidget button > .add.icon",
                 "placement": "left"
             },
