@@ -89,12 +89,14 @@ export default class extends React.Component {
                                  show={fieldsToShow.indexOf('Blueprint') >= 0 && !this.props.data.blueprintId}/>
                     <DataTable.Column label="Deployment" name="deployment_id" width="15%"
                                  show={fieldsToShow.indexOf('Deployment') >= 0 && !this.props.data.deploymentId}/>
-                    <DataTable.Column label="Workflow" name="workflow_id" width="20%"
+                    <DataTable.Column label="Workflow" name="workflow_id" width="15%"
                                  show={fieldsToShow.indexOf('Workflow') >= 0}/>
-                    <DataTable.Column label="Id" name="id" width="15%"
+                    <DataTable.Column label="Id" name="id" width="10%"
                                  show={fieldsToShow.indexOf('Id') >= 0}/>
                     <DataTable.Column label="Created" name="created_at" width="10%"
                                  show={fieldsToShow.indexOf('Created') >= 0}/>
+                    <DataTable.Column label="Ended" name="ended_at" width="10%"
+                                 show={fieldsToShow.indexOf('Ended') >= 0}/>
                     <DataTable.Column label="Creator" name='created_by' width="5%"
                                       show={fieldsToShow.indexOf('Creator') >= 0}/>
                     <DataTable.Column label="IsSystem" name="is_system_workflow" width="5%"
@@ -121,6 +123,7 @@ export default class extends React.Component {
                                     <DataTable.Data>{item.workflow_id}</DataTable.Data>
                                     <DataTable.Data>{item.id}</DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
+                                    <DataTable.Data>{item.ended_at}</DataTable.Data>
                                     <DataTable.Data>{item.created_by}</DataTable.Data>
                                     <DataTable.Data className="center aligned">
                                         <Checkmark value={item.is_system_workflow}/>
