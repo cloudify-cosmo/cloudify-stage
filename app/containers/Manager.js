@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import Manager from '../components/Manager'
 import stageUtils from '../utils/stageUtils';
 import Consts from '../utils/consts';
+import {getStatus} from '../actions/status';
 
 const mapStateToProps = (state, ownProps) => {
     var showServicesStatus = stageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager);
@@ -17,6 +18,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        onServicesStatusOpen: () => {
+            dispatch(getStatus());
+        }
     }
 };
 
