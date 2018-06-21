@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import MaintenanceModeModal from '../basic/maintenance/MaintenanceModeModal';
 import Services from '../../containers/Services';
+import Logo from '../../containers/Logo';
 import Consts from '../../utils/consts';
 import StatusPoller from '../../utils/StatusPoller';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
@@ -48,9 +49,7 @@ export default class MaintenanceModePageMessage extends Component {
 
         return (
             <div className='maintenancePage ui segment basic'>
-                <div className="logo">
-                    <img src={Stage.Utils.url('/app/images/Cloudify-logo.png')}/>
-                </div>
+                <Logo />
 
                 <div className="ui raised very padded text container segment center aligned maintenanceContainer">
 
