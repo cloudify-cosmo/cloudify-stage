@@ -3,10 +3,12 @@
  * Created by kinneretzin on 05/12/2016.
  */
 
-let path = require('path');
-var expressStaticGzip = require('express-static-gzip');
+const path = require('path');
+const expressStaticGzip = require('express-static-gzip');
+const express = require('express');
+const passport = require('passport');
 
-var config = require('./config');
+const config = require('./config');
 
 // Initialize log4js
 var log4js = require('log4js');
@@ -17,8 +19,6 @@ LoggerHandler.init(log4jsConfig);
 // Initialize the DB connection
 var db = require('./db/Connection');
 
-var express = require('express');
-var passport = require('passport');
 var getTokenStrategy = require('./routes/TokenStrategy');
 var getSamlStrategy = require('./routes/SamlStrategy');
 var samlSetup = require('./samlSetup');
@@ -48,9 +48,15 @@ var logger = log4js.getLogger('Server');
 
 ServerSettings.init();
 
-var contextPath = config.get().app.contextPath;
+const contextPath = config.get().app.contextPath;
+const oldContextPath = '/stage';
 
 var app = express();
+
+app.all('/', function (request, response){
+    logger.info('Redirecting to "' + contextPath + '".');
+    response.redirect(contextPath);
+});
 
 app.use(contextPath, expressStaticGzip(path.resolve(__dirname , '../dist'), {enableBrotli: true, indexFromEmptyFile: false}));
 app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'INFO'}));
@@ -100,8 +106,18 @@ app.use(contextPath + '/config',function(req,res){
 app.use(contextPath +'/wb',WidgetBackend);
 app.use(contextPath +'/plugins',Plugins);
 
+// Redirect URLs with old context path (/stage)
+app.use([oldContextPath, `${oldContextPath}/*`], function (request, response){
+    let pathWithoutOldContextPath = request.originalUrl.replace(new RegExp('^' + oldContextPath), '');
+    let redirectUrl = `${contextPath}${pathWithoutOldContextPath}`;
+    logger.info('Old base url detected: "' + request.originalUrl + '". Redirecting to "' + redirectUrl + '".');
+
+    response.redirect(redirectUrl);
+});
+
 // BrowserHistory code
 app.get('*',function (request, response){
+    logger.info('URL: "' + request.originalUrl + '". Sending index.html file.');
     response.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
 });
 

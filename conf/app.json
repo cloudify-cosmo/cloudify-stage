@@ -1,5 +1,5 @@
 {
-  "contextPath": "/stage",
+  "contextPath": "/console",
   "initialTemplate": {
     "*": "initial-template",
     "sys_admin": {

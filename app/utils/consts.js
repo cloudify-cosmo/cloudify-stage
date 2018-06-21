@@ -3,7 +3,7 @@
  */
 
 export default {
-    CONTEXT_PATH: '/stage',
+    CONTEXT_PATH: '/console',
 
     DEFAULT_TENANT: 'default_tenant',
     MODE_MAIN: 'main',

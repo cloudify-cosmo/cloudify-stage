@@ -45,12 +45,12 @@ export default class NodeInstancesFilter extends React.Component {
     static propTypes = {
         name: PropTypes.string.isRequired,
         value: PropTypes.array.isRequired,
-        deploymentId: PropTypes.string.isRequired,
         onChange: PropTypes.func.isRequired,
+        deploymentId: PropTypes.string,
         label: PropTypes.string,
         placeholder: PropTypes.string,
         help: PropTypes.string,
-        upward: PropTypes.boolean,
+        upward: PropTypes.bool,
     };
 
     static defaultProps = {

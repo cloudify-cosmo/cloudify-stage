@@ -10,6 +10,7 @@ a:hover {
 .logo {
   img {
     height: 45px;
+    width: 165px;
     margin: 4px;
   }
 }
@@ -27,6 +28,10 @@ a:hover {
 .dropDownText, .compactBlock
 {
   display: inline-block;
+}
+
+div.headerBar {
+  height: 55px;
 }
 
 .sidebar-button{
@@ -282,9 +287,8 @@ a:hover {
   position: absolute;
   left: 0;
   right: 0;
-  top: 4rem;
+  top: 55px;
   bottom: 0;
-  background-color: #000069;
 
   .ui.text.container.segment404 {
     max-width: 400px !important;
@@ -361,10 +365,6 @@ a:hover {
 .logoPage,.maintenancePage {
   margin: 0 !important;
   padding: 0 !important;
-}
-
-.maintenancePage {
-  background-color: #000069 !important;
 }
 
 .configManager.ui.segment, .logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
