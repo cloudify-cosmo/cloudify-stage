@@ -5,8 +5,12 @@ import { connect } from 'react-redux';
 import Logo from '../components/Logo';
 
 const mapStateToProps = (state, ownProps) => {
+    const defaultPageTitle = 'Cloudify Console';
+
     return {
-        pageTitle: (state.config.app && state.config.app.whiteLabel.enabled) ? state.config.app.whiteLabel.pageTitle : 'Cloudify Console'
+        pageTitle: _.get(state, 'config.app.whiteLabel.enabled', false)
+            ? _.get(state, 'config.app.whiteLabel.pageTitle', defaultPageTitle)
+            : defaultPageTitle
     }
 };
 
