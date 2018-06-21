@@ -247,5 +247,65 @@
                 "arrowOffset": 210
             }
         ]
+    },
+    {
+        "name": "Day-two Processes",
+        "id": "dayTwoProcesses",
+        "steps": [
+            {
+                "title": "Manage your deployments",
+                "content": "After you deploy some applications, you need to monitor them and sometimes you need to run executions on them. Let's see how to do that...",
+                "onNextRedirectTo": "/page/deployments",
+                "target": ".right.menu .helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            },
+            {
+                "title": "Deployments",
+                "content": "All of the deployed applications are listed on the deployments page. In the menu for the deployment you can execute workflows on the deployment, including heal and scale.",
+                "target": "deployment menu",
+                "placement": "bottom"
+            },
+            {
+                "title": "Update a Deployment",
+                "content": "You can click on a deployment to see the workflows available for that deployment.<br>Click on the <strong>Update Deployment</strong> button in a deployment.<br>Notice that you can <strong>change the blueprint, change the inputs, and you can explicitly list the nodes to update</strong>. The Deployment Events/Logs in the deployment show the events on the deployment as they are happening. ",
+                "target": "deployment",
+                "placement": "bottom"
+            },
+            {
+                "title": "Statistics",
+                "content": "The statistics show the memory and CPU load on the deployments.",
+                "onNextRedirectTo": "/page/statistics",
+                "target": "statistics menu item",
+                "placement": "right"
+            },
+            {
+                "title": "Filter the Statistics",
+                "content": "You can select specific parameters in the filters to show statistics for specific, running deployments.",
+                "target": "statistics filters",
+                "placement": "bottom"
+            },
+            {
+                "title": "Customize Pages",
+                "content": "In the user menu, administrators can enable <strong>Edit Mode</strong> and add widgets to pages from the widgets catalog.",
+                "target": "user menu",
+                "placement": "bottom"
+            },
+            {
+                "title": "Custom Templates",
+                "content": "Administrators can also select template management and define the pages that are shown to users when they login.",
+                "target": "user menu",
+                "placement": "bottom"
+            },
+            {
+                "title": "More Information",
+                "content": "Now that you know how to deploy an application, <strong>check out other help resources</strong> to see what else you can do with the Cloudify Console.",
+                "target": ".ui.dropdown.helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            }
+        ]
     }
 ]
