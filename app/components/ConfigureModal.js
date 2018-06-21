@@ -56,7 +56,7 @@ export default class ConfigureModal extends Component {
         return (
             <Modal open={this.props.show} onClose={()=>this.props.onHide()}>
                 <Modal.Header>
-                    Configure UI properties
+                    Configure Console properties
                 </Modal.Header>
                 <Modal.Content>
                     <ErrorMessage error={this.state.error}/>

@@ -10,6 +10,7 @@ import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import Help from '../../containers/Help';
+import Logo from '../../containers/Logo';
 import ResetPagesModal from '../ResetPagesModal.js';
 import ConfigureModal from '../../containers/ConfigureModal';
 import Consts from '../../utils/consts';
@@ -38,8 +39,8 @@ export default class Header extends Component {
 
     componentDidMount() {
         let whiteLabel = this.props.config.app.whiteLabel;
-        if (whiteLabel.enabled) {
-            document.title = whiteLabel.pageTitle || 'Cloudify';
+        if (whiteLabel.enabled && whiteLabel.pageTitle) {
+            document.title = whiteLabel.pageTitle;
         }
         this.props.continueTour();
     }
@@ -68,8 +69,7 @@ export default class Header extends Component {
                     size="large"
                     onClick={() => this.props.onSidebarOpen()}
                 />
-                <div className="logo">
-                </div>
+                <Logo />
 
                 <div className="right menu">
                     {
