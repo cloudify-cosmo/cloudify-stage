@@ -10,6 +10,7 @@ var passport = require('passport');
 var config = require('../config').get();
 var AuthHandler = require('../handler/AuthHandler');
 var logger = require('log4js').getLogger('ClientConfigRouter');
+const contextPath = config.app.contextPath;
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
@@ -51,7 +52,7 @@ router.post('/saml/callback', passport.authenticate('saml', {session: false}), f
 
     AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse).then((token) => {
         res.cookie('XSRF-TOKEN', token.value);
-        res.redirect('/console');
+        res.redirect(contextPath);
     })
     .catch((err) => {
         logger.error(err);
