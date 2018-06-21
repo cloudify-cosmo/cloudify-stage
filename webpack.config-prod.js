@@ -11,6 +11,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const BrotliPlugin = require('brotli-webpack-plugin');
 
+const config = require('./backend/config').get();
+
 const getWidgetEntries = () => {
     return glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
         let name = item.replace('./widgets', '').replace('/src', '');
@@ -107,7 +109,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: '[name].bundle.js',
-            publicPath: '/console'
+            publicPath: config.app.contextPath
         },
         optimization: {
             splitChunks: {
@@ -172,7 +174,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: 'widgets/[name]',
-            publicPath: '/console'
+            publicPath: config.app.contextPath
         },
         plugins: [
             new CopyWebpackPlugin([
@@ -194,7 +196,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist/widgets'),
             filename: 'common/common.js',
-            publicPath: '/console'
+            publicPath: config.app.contextPath
         },
         plugins: compressionPlugins,
         module: {
