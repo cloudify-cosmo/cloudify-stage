@@ -4,7 +4,7 @@
 
 import * as types from './types';
 import Auth from '../utils/auth';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import Manager from '../utils/Manager';
 import {clearContext} from './context';
 

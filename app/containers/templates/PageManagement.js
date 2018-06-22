@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { selectHomePage } from '../../actions/page';
 import { changePageWidgetGridData, savePage, updatePageName, clearPageContext, drillDownWarning} from '../../actions/templateManagement';
 import PageManagement from '../../components/templates/PageManagement';

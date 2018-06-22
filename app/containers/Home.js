@@ -9,7 +9,7 @@ import {setAppError} from '../actions/app';
 import {clearContext,setValue} from '../actions/context';
 import {setDrilldownContext} from '../actions/drilldownContext';
 import {storeCurrentPageId} from '../actions/app';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import Consts from '../utils/consts';
 import { parse } from 'query-string';
 

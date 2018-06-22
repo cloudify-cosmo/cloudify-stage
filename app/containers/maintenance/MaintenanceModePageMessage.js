@@ -3,7 +3,7 @@
  */
 import MaintenanceModePageMessage from '../../components/maintenance/MaintenanceModePageMessage';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import stageUtils from '../../utils/stageUtils';
 import Consts from '../../utils/consts';
 

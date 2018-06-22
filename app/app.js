@@ -31,7 +31,7 @@ import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
-import { ConnectedRouter } from 'react-router-redux';
+import { ConnectedRouter } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
 
 import configureStore  from './configureStore';

@@ -6,7 +6,7 @@ import * as types from './types';
 import {createPagesFromTemplate} from './page';
 import {setAppLoading, setAppError} from './app';
 import Internal from '../utils/Internal';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import Consts from '../utils/consts';
 
 const  CURRENT_APP_DATA_VERSION = 4;

@@ -44,7 +44,7 @@ export default class ClusterManagement extends React.Component {
                     <h3><Icon name='checkmark' color='green'/> Cluster Is initialized</h3> :
                     <h3>
                         Cluster is Not Initialized. Use the Cloudify CLI to create or join a cluster,
-                        see the <a target="_blank" href="http://docs.getcloudify.org/latest/manager/high-availability-clusters/">documentation</a>.
+                        see the <a target="_blank" href="https://docs.cloudify.co/latest/working_with/manager/high-availability-clusters/">documentation</a>.
                     </h3>
                 }
 
