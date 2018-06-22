@@ -9,19 +9,42 @@ import * as types from './types';
 import Tours from '../utils/Tours';
 
 function hopscotchRegisterHelpers(dispatch) {
-    const waitForElement = (selector) => {
-        const rafAsync = () => new Promise(resolve => requestAnimationFrame(resolve));
-        if (document.querySelector(selector) === null) {
-            return rafAsync().then(() => waitForElement(selector));
-        } else {
-            return Promise.resolve(true);
-        }
-    };
+    hopscotch.registerHelper('redirectTo', function(url, selector) {
+        const minVisibilityTime = 500; //ms
+        const maxWaitingTime = 10000; //ms
 
-    hopscotch.registerHelper('redirectTo', function(url, element) {
-        return Promise.resolve(dispatch(push(url)))
-            .then(waitForElement(element))
-            .then(() => hopscotch.nextStep());
+        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        const rafAsync = () => new Promise(resolve => requestAnimationFrame(resolve));
+        const setLoading = () => new Promise((resolve) => $('button.hopscotch-cta').addClass('ui button loading') && resolve());
+
+        let isWaitingTimeExceeded = false;
+        const waitingTimeout = setTimeout(() => isWaitingTimeExceeded = true, maxWaitingTime);
+
+        const waitForElementVisible = (selector, isVisibilityConfirmed = false) => {
+            const element = document.querySelector(selector);
+            const isElementVisible = (element !== null && window.getComputedStyle(element).display !== 'none');
+
+            if (isElementVisible) {
+                if (isVisibilityConfirmed) {
+                    clearTimeout(waitingTimeout);
+                    return Promise.resolve('Element for selector ' + selector + ' found.');
+                } else {
+                    return delay(minVisibilityTime).then(() => waitForElementVisible(selector, true));
+                }
+            } else {
+                if (isWaitingTimeExceeded) {
+                    return Promise.reject('Element for selector ' + selector + ' not found.')
+                } else {
+                    return rafAsync().then(() => waitForElementVisible(selector));
+                }
+            }
+        };
+
+        return setLoading()
+            .then(dispatch(push(url)))
+            .then(() => waitForElementVisible(selector))
+            .catch((msg) => console.error(msg))
+            .finally(() => hopscotch.nextStep())
     });
 }
 
