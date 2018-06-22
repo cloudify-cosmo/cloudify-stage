@@ -199,44 +199,44 @@
                 "arrowOffset": 210
             },
             {
-                "title": "Blueprints Catalog",
-                "content": "The blueprints catalog contains prepared blueprints that you can use right out of the box. By default the catalog shows the examples from the cloudify-examples repository. You can point the widget to your own repository of blueprints.",
-                "target": ".blueprints_catalogPageMenuItem",
-                "onNextRedirectTo": "/page/blueprints_catalog",
+                "title": "Cloudify Catalog",
+                "content": "Cloudify catalog contains prepared blueprints and plugins that you can use right out of the box. By default the bluprints are taken from the cloudify-examples repository. You can point the widget to your own repository of blueprints.",
+                "target": ".cloudify_catalogPageMenuItem",
+                "onNextRedirectTo": "/page/cloudify_catalog",
                 "placement": "right"
             },
             {
                 "title": "Upload a Blueprint",
                 "content": "When you click <strong>Upload</strong>, the blueprint is uploaded to your Cloudify Manager. The blueprint is available in Local Blueprints, where you can also upload other blueprints.",
                 "onNextRedirectTo": "/page/local_blueprints",
-                "target": "upload button",
-                "placement": "bottom"
+                "target": "div.blueprintCatalogWidget div.ui.grid > div.row > div:first-child button.uploadButton",
+                "placement": "right"
             },
             {
                 "title": "Deploy Blueprint",
                 "content": "Click <strong>Deploy</strong> to turn the blueprint into a deployment with specific inputs. You can deploy multiple times to spin up multiple environments.",
                 "onNextRedirectTo": "/page/deployments",
-                "target": "deploy",
-                "placement": "bottom"
+                "target": "div.blueprintsWidget i.rocket.icon",
+                "placement": "left"
             },
             {
                 "title": "Install the Deployment",
                 "content": "In the deployment menu, you can run executions on the deployment. Open the menu and select the <strong>Install</strong> execution.",
-                "target": "deployment menu",
+                "target": "div.deploymentsWidget i.menuAction",
                 "placement": "left"
             },
             {
                 "title": "Deployment Status",
                 "content": "You can see the status of the nodes in the deployment as the deployment is installed. You can click on a deployment to see more details about it, including topology, nodes, inputs and outputs.",
-                "target": "status icons",
+                "target": "div.deploymentsWidget div.nodesStates",
                 "onNextRedirectTo": "/page/dashboard",
                 "placement": "left"
             },
             {
                 "title": "Executions Status",
                 "content": "In the Dashboard you can see the executions that are currently running, including the processes that are installing the deployment.",
-                "target": "executions list",
-                "placement": "bottom"
+                "target": "div.executionsWidget",
+                "placement": "top"
             },
             {
                 "title": "Check out another tour",
@@ -264,44 +264,48 @@
             {
                 "title": "Deployments",
                 "content": "All of the deployed applications are listed on the deployments page. In the menu for the deployment you can execute workflows on the deployment, including heal and scale.",
-                "target": "deployment menu",
-                "placement": "bottom"
+                "target": "div.deploymentsWidget i.menuAction",
+                "placement": "left"
             },
             {
                 "title": "Update a Deployment",
-                "content": "You can click on a deployment to see the workflows available for that deployment.<br>Click on the <strong>Update Deployment</strong> button in a deployment.<br>Notice that you can <strong>change the blueprint, change the inputs, and you can explicitly list the nodes to update</strong>. The Deployment Events/Logs in the deployment show the events on the deployment as they are happening. ",
-                "target": "deployment",
+                "content": "You can click on a deployment to see the workflows available for that deployment.<br />Click on the <strong>Update Deployment</strong> button in a deployment.<br>Notice that you can <strong>change the blueprint, change the inputs, and you can explicitly list the nodes to update</strong>. The Deployment Events/Logs in the deployment show the events on the deployment as they are happening. ",
+                "target": "div.deploymentsWidget div.segment.clickable",
+                "onNextRedirectTo": "/page/statistics",
                 "placement": "bottom"
             },
             {
                 "title": "Statistics",
                 "content": "The statistics show the memory and CPU load on the deployments.",
-                "onNextRedirectTo": "/page/statistics",
-                "target": "statistics menu item",
-                "placement": "right"
+                "target": "div.graphWidget",
+                "placement": "left"
             },
             {
                 "title": "Filter the Statistics",
                 "content": "You can select specific parameters in the filters to show statistics for specific, running deployments.",
-                "target": "statistics filters",
+                "target": "div.filterWidget",
                 "placement": "bottom"
             },
             {
                 "title": "Customize Pages",
                 "content": "In the user menu, administrators can enable <strong>Edit Mode</strong> and add widgets to pages from the widgets catalog.",
-                "target": "user menu",
-                "placement": "bottom"
+                "target": "div.usersMenu",
+                "placement": "bottom",
+                "xOffset": -240,
+                "arrowOffset": 250
             },
             {
                 "title": "Custom Templates",
                 "content": "Administrators can also select template management and define the pages that are shown to users when they login.",
-                "target": "user menu",
-                "placement": "bottom"
+                "target": "div.usersMenu",
+                "placement": "bottom",
+                "xOffset": -240,
+                "arrowOffset": 250
             },
             {
                 "title": "More Information",
                 "content": "Now that you know how to deploy an application, <strong>check out other help resources</strong> to see what else you can do with the Cloudify Console.",
-                "target": ".ui.dropdown.helpMenu",
+                "target": "div.helpMenu",
                 "placement": "bottom",
                 "xOffset": -200,
                 "arrowOffset": 210

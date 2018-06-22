@@ -72,7 +72,7 @@ export default class extends React.Component {
                                     </div>
                                     <div className="four wide column">
                                         <h5 className="ui icon header">Nodes ({item.nodeSize})</h5>
-                                        <div className="ui four column grid">
+                                        <div className="ui four column grid nodesStates">
                                             <div className="column center aligned">
                                                 <NodeState icon="checkmark" title="running" state="started" color="green"
                                                            value={item.nodeStates.started}/>
