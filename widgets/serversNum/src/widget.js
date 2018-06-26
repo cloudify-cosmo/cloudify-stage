@@ -4,8 +4,8 @@
 
 Stage.defineWidget({
     id: "serversNum",
-    name: "Number of servers",
-    description: 'Number of servers',
+    name: "Number of nodes",
+    description: 'Number of nodes',
     initialWidth: 2,
     initialHeight: 8,
     color : "red",
