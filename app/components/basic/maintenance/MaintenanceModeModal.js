@@ -163,7 +163,7 @@ class MaintenanceModeModal extends Component {
                                 <DataTable.Column label="Deployment" width="20%"/>
                                 <DataTable.Column label="Workflow" width="20%"/>
                                 <DataTable.Column label="Id" width="20%"/>
-                                <DataTable.Column label="IsSystem" width="5%"/>
+                                <DataTable.Column label="System" width="5%"/>
                                 <DataTable.Column label="Status" width="15%"/>
 
                                 {
