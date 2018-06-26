@@ -99,8 +99,8 @@ export default class extends React.Component {
                                  show={fieldsToShow.indexOf('Ended') >= 0}/>
                     <DataTable.Column label="Creator" name='created_by' width="5%"
                                       show={fieldsToShow.indexOf('Creator') >= 0}/>
-                    <DataTable.Column label="IsSystem" name="is_system_workflow" width="5%"
-                                 show={fieldsToShow.indexOf('IsSystem') >= 0}/>
+                    <DataTable.Column label="System" name="is_system_workflow" width="5%"
+                                 show={fieldsToShow.indexOf('System') >= 0}/>
                     <DataTable.Column label="Params" name="parameters" width="5%"
                                  show={fieldsToShow.indexOf('Params') >= 0}/>
                     <DataTable.Column label="Status" width="10%" name="status"
