@@ -63,13 +63,19 @@ export default class FormField extends Component {
         return !_.isEqual(this.props, nextProps);
     }
 
-    getFieldWrapper(props) {
+    getFieldWrapper(props, help) {
         let {children, error, label, ...fieldProps} = props;
         error = (_.isBoolean(error) && error) || !_.isEmpty(error);
 
         return (
             <Form.Field {...fieldProps} error={error}>
-                {!_.isEmpty(label) &&  <label>{label}</label>}
+                {
+                    !_.isEmpty(label) &&
+                    <label>
+                        {label}
+                        {!_.isEmpty(help) && <span>&nbsp;<PopupHelp content={help} /></span>}
+                    </label>
+                }
                 {children}
             </Form.Field>
         );
@@ -78,8 +84,6 @@ export default class FormField extends Component {
     render() {
         let {help, ...restOfProps} = this.props;
 
-        return _.isEmpty(help)
-            ? this.getFieldWrapper(restOfProps)
-            : <PopupHelp trigger={this.getFieldWrapper(restOfProps)} content={help} />
+        return this.getFieldWrapper(restOfProps, help);
     }
 }

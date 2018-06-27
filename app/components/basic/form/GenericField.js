@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Icon, Popup, Input, Checkbox, Dropdown, Form} from '../index'
+import {Icon, PopupHelp, Input, Checkbox, Dropdown, Form} from '../index'
 import {getToolbox} from '../../../utils/Toolbox';
 
 /**
@@ -344,22 +344,11 @@ export default class GenericField extends Component {
         }
 
         return (
-            <Form.Field className={this.props.name}>
-                {
-                    this.props.label &&
-                    <label>{this.props.label}{this.props.required && <Icon name='asterisk' color='red' size='tiny' className='superscripted'/>}&nbsp;
-                        {
-                            this.props.description &&
-                            <Popup>
-                                <Popup.Trigger><Icon name="help circle outline"/></Popup.Trigger>
-                                {this.props.description}
-                            </Popup>
-                        }
-                    </label>
-                }
-
+            <Form.Field className={this.props.name}
+                        help={this.props.description}
+                        label={this.props.label}
+                        required={this.props.required}>
                 {field}
-
             </Form.Field>
         );
     }
