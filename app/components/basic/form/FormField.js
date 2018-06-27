@@ -59,31 +59,33 @@ export default class FormField extends Component {
         required: false
     };
 
+    static getLabel(label, help) {
+        return !_.isEmpty(label) &&
+            <label>
+                {label}
+                {!_.isEmpty(help) && <span>&nbsp;<PopupHelp content={help} /></span>}
+            </label>
+    }
+
     shouldComponentUpdate(nextProps) {
         return !_.isEqual(this.props, nextProps);
     }
 
-    getFieldWrapper(props, help) {
-        let {children, error, label, ...fieldProps} = props;
+    getFieldWrapper() {
+        let {children, error, label, help, ...fieldProps} = this.props;
         error = (_.isBoolean(error) && error) || !_.isEmpty(error);
 
         return (
             <Form.Field {...fieldProps} error={error}>
-                {
-                    !_.isEmpty(label) &&
-                    <label>
-                        {label}
-                        {!_.isEmpty(help) && <span>&nbsp;<PopupHelp content={help} /></span>}
-                    </label>
-                }
+                {FormField.getLabel(label, help)}
                 {children}
             </Form.Field>
         );
     };
 
     render() {
-        let {help, ...restOfProps} = this.props;
-
-        return this.getFieldWrapper(restOfProps, help);
+        return (_.isEmpty(this.props.label) && !_.isEmpty(this.props.help))
+            ? <PopupHelp trigger={this.getFieldWrapper()} content={this.props.help} />
+            : this.getFieldWrapper()
     }
 }
