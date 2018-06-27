@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Icon, PopupHelp, Input, Checkbox, Dropdown, Form} from '../index'
+import {Input, Checkbox, Dropdown, Form} from '../index'
 import {getToolbox} from '../../../utils/Toolbox';
 
 /**

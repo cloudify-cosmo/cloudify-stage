@@ -6,6 +6,7 @@ import React from 'react'
 import { shallow , mount} from 'enzyme'
 import {expect} from 'chai';
 import GenericField from '../../../app/components/basic/form/GenericField';
+import {Form, PopupHelp} from '../../../app/components/basic/index';
 import {createToolbox} from '../../../app/utils/Toolbox';
 import configureMockStore from 'redux-mock-store';
 const mockStore = configureMockStore();
@@ -19,14 +20,6 @@ describe('(Component) Field', () => {
         expect(wrapper).to.exist;
 
         expect(wrapper.find('input[name="test"]')).to.have.length(1);
-    });
-
-    it('label popup', () => {
-        let wrapper = mount(<GenericField name="test" label="label" description="popup"/>);
-
-        expect(wrapper.find('input[name="test"]')).to.have.length(1);
-        expect(wrapper.find('label i')).to.have.length(1);
-        expect(wrapper.find('label')).to.have.text('label ');
     });
 
     it('string type', () => {
