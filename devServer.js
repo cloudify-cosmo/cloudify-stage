@@ -40,6 +40,7 @@ const options = {
         [`${contextPath}/clientConfig`]: proxyOptions,
         [`${contextPath}/monitor`]: proxyOptions,
         [`${contextPath}/github`]: proxyOptions,
+        [`${contextPath}/external`]: proxyOptions,
         [`${contextPath}/style`]: proxyOptions,
         [`${contextPath}/widgets`]: proxyOptions,
         [`${contextPath}/templates`]: proxyOptions,

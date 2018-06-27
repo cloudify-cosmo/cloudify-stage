@@ -52,8 +52,8 @@ export default class extends React.Component {
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
                                     <Icon name="info" link title="blueprint Readme" loading={this.props.readmeLoading === item.name}
-                                          onClick={(event)=>{event.stopPropagation();this.props.onReadme(item.name)}} bordered/>
-                                    <Icon name="upload" link title="Upload blueprint" onClick={(event)=>{event.stopPropagation();this.props.onUpload(item.name)}} bordered/>
+                                          onClick={(event)=>{event.stopPropagation();this.props.onReadme(item.name, item.readme_url)}} bordered/>
+                                    <Icon name="upload" link title="Upload blueprint" onClick={(event)=>{event.stopPropagation();this.props.onUpload(item.name, item.zip_url, item.image_url)}} bordered/>
                                 </DataTable.Data>
                             </DataTable.Row>
                         );
