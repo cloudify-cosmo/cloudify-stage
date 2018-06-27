@@ -6,7 +6,6 @@ import React from 'react'
 import { shallow , mount} from 'enzyme'
 import {expect} from 'chai';
 import GenericField from '../../../app/components/basic/form/GenericField';
-import {Form, PopupHelp} from '../../../app/components/basic/index';
 import {createToolbox} from '../../../app/utils/Toolbox';
 import configureMockStore from 'redux-mock-store';
 const mockStore = configureMockStore();

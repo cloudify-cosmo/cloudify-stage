@@ -60,7 +60,7 @@ export default class FormField extends Component {
     };
 
     static getLabel(label, help) {
-        return _.isEmpty(label)
+        return !_.isEmpty(label)
             ?
                 <label>
                     {label}
