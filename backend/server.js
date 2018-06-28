@@ -33,6 +33,7 @@ var Monitoring = require('./routes/Monitoring');
 var clientConfig = require('./routes/ClientConfig');
 var SourceBrowser = require('./routes/SourceBrowser');
 var GitHub = require('./routes/GitHub');
+var External = require('./routes/External');
 var Style = require('./routes/Style');
 var Widgets = require('./routes/Widgets');
 var Templates = require('./routes/Templates');
@@ -99,6 +100,7 @@ app.use(contextPath + '/templates',Templates);
 app.use(contextPath + '/tours',Tours);
 app.use(contextPath + '/clientConfig',clientConfig);
 app.use(contextPath + '/github',GitHub);
+app.use(contextPath + '/external',External);
 app.use(contextPath + '/file',File);
 app.use(contextPath + '/config',function(req,res){
     res.send(config.getForClient(ServerSettings.settings.mode));

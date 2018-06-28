@@ -21,14 +21,6 @@ describe('(Component) Field', () => {
         expect(wrapper.find('input[name="test"]')).to.have.length(1);
     });
 
-    it('label popup', () => {
-        let wrapper = mount(<GenericField name="test" label="label" description="popup"/>);
-
-        expect(wrapper.find('input[name="test"]')).to.have.length(1);
-        expect(wrapper.find('label i')).to.have.length(1);
-        expect(wrapper.find('label')).to.have.text('label ');
-    });
-
     it('string type', () => {
         let wrapper = mount(<GenericField name="test" type="string" label="label" icon="rocket" value="test"/>);
 

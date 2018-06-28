@@ -6,9 +6,10 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import {Form as FormSemanticUiReact, Input as FormInput, TextArea, Radio as FormRadio,
-        Checkbox as FormCheckbox, Button as FormButton} from 'semantic-ui-react';
+        Button as FormButton} from 'semantic-ui-react';
 import ErrorMessage from '../ErrorMessage';
 import FormField from './FormField';
+import FormCheckbox from './FormCheckbox';
 import FormGroup from './FormGroup';
 import FormDivider from './FormDivider';
 import FormFile from './InputFile';
@@ -104,7 +105,7 @@ export default class Form extends Component {
     static Radio = FormRadio;
 
     /**
-     * Form checkbox input, see [Checkbox](https://react.semantic-ui.com/modules/checkbox)
+     * Form checkbox input, {@link FormCheckbox}
      */
     static Checkbox = FormCheckbox;
 

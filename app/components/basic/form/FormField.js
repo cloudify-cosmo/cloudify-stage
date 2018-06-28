@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Form } from 'semantic-ui-react'
 
-import { PopupHelp, Icon } from '../index';
+import { PopupHelp } from '../index';
 
 /**
  * FormField is a component to present field and is used in {@link Form} component
@@ -59,27 +59,36 @@ export default class FormField extends Component {
         required: false
     };
 
+    static getLabel(label, help) {
+        return !_.isEmpty(label)
+            ?
+                <label>
+                    {label}
+                    {!_.isEmpty(help) && <span>&nbsp;<PopupHelp content={help} /></span>}
+                </label>
+            :
+                null;
+    }
+
     shouldComponentUpdate(nextProps) {
         return !_.isEqual(this.props, nextProps);
     }
 
     getFieldWrapper(props) {
-        let {children, error, label, ...fieldProps} = props;
+        let {children, error, label, help, ...fieldProps} = props;
         error = (_.isBoolean(error) && error) || !_.isEmpty(error);
 
         return (
             <Form.Field {...fieldProps} error={error}>
-                {!_.isEmpty(label) &&  <label>{label}</label>}
+                {FormField.getLabel(label, help)}
                 {children}
             </Form.Field>
         );
     };
 
     render() {
-        let {help, ...restOfProps} = this.props;
-
-        return _.isEmpty(help)
-            ? this.getFieldWrapper(restOfProps)
-            : <PopupHelp trigger={this.getFieldWrapper(restOfProps)} content={help} />
+        return (_.isEmpty(this.props.label) && !_.isEmpty(this.props.help))
+            ? <PopupHelp trigger={this.getFieldWrapper(this.props)} content={this.props.help} />
+            : this.getFieldWrapper(this.props);
     }
 }

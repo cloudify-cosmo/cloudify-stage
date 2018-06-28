@@ -199,13 +199,14 @@ export default class DeployModal extends React.Component {
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
 
-                        <Form.Field error={this.state.errors.deploymentName}>
-                            <Form.Input name='deploymentName' placeholder="Deployment name"
-                                        value={this.state.deploymentName} onChange={this._handleInputChange.bind(this)}/>
+                        <Form.Field error={this.state.errors.deploymentName} label='Deployment name' required>
+                            <Form.Input name='deploymentName'
+                                        value={this.state.deploymentName}
+                                        onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field error={this.state.errors.blueprintName}>
-                            <Form.Dropdown search selection value={this.state.blueprint.id} placeholder="Select Blueprint"
+                        <Form.Field error={this.state.errors.blueprintName} label='Blueprint' required>
+                            <Form.Dropdown search selection value={this.state.blueprint.id}
                                            name="blueprintName" options={options} onChange={this._selectBlueprint.bind(this)}/>
                         </Form.Field>
 
@@ -229,8 +230,9 @@ export default class DeployModal extends React.Component {
                                 ?
                                     <Message content="No inputs available for the selected blueprint"/>
                                 :
-                                    <Form.Field error={this.state.errors.yamlFile} help='Provide YAML file with all deployments inputs to automatically fill in the form.'>
-                                        <Form.File name="yamlFile" placeholder="YAML file" ref="yamlFile"
+                                    <Form.Field error={this.state.errors.yamlFile} label='YAML file'
+                                                help='Provide YAML file with all deployments inputs to automatically fill in the form.'>
+                                        <Form.File name="yamlFile" ref="yamlFile"
                                                    onChange={this._handleYamlFileChange.bind(this)} loading={this.state.fileLoading}
                                                    disabled={this.state.fileLoading} />
                                     </Form.Field>

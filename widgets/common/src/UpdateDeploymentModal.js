@@ -254,10 +254,10 @@ class UpdateDeploymentModal extends React.Component {
                                     <Message content="No inputs available for the selected blueprint"/>
                                     :
 
-                                    <Form.Field error={this.state.errors.yamlFile}
+                                    <Form.Field error={this.state.errors.yamlFile} label='YAML file'
                                                 help='Provide YAML file with all deployments inputs
                                                       to automatically fill in the form.'>
-                                        <Form.File name="yamlFile" placeholder="YAML file" ref="yamlFile"
+                                        <Form.File name="yamlFile" ref="yamlFile"
                                                    onChange={this._handleYamlFileChange.bind(this)} loading={this.state.fileLoading}
                                                    disabled={this.state.fileLoading} />
                                     </Form.Field>
@@ -284,34 +284,40 @@ class UpdateDeploymentModal extends React.Component {
                             </Header>
                         </Form.Divider>
 
-                        <Form.Field help='Run install lifecycle operations'>
+                        <Form.Field>
                             <Form.Checkbox label="Run install workflow" toggle name="installWorkflow"
+                                           help='Run install lifecycle operations'
                                            checked={this.state.installWorkflow} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field help='Run uninstall lifecycle operations'>
+                        <Form.Field>
                             <Form.Checkbox label="Run uninstall workflow" toggle name="uninstallWorkflow"
+                                           help='Run uninstall lifecycle operations'
                                            checked={this.state.uninstallWorkflow} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field help='Run install workflow first and then uninstall workflow.
-                                          Default: first uninstall and then install'>
-                            <Form.Checkbox label="Run install workflow first" toggle name="installWorkflowFirst"
+                        <Form.Field>
+                            <Form.Checkbox label="Run install workflow first"
+                                           help='Run install workflow first and then uninstall workflow.
+                                                 Default: first uninstall and then install'
+                                           toggle name="installWorkflowFirst"
                                            checked={this.state.installWorkflowFirst} onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 
-                        <Form.Field help='Supply the parameter `ignore_failure` with
-                                          the value `true` to the uninstall workflow'>
+                        <Form.Field>
                             <Form.Checkbox label="Ignore failures in uninstall workflow" toggle name="ignoreFailure"
+                                           help='Supply the parameter `ignore_failure` with
+                                                 the value `true` to the uninstall workflow'
                                            checked={this.state.ignoreFailure} onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 
-                        <Form.Field help='Automatically reinstall node instances
-                                          that their properties has been modified, as
-                                          part of a deployment update. If not set, then node instances
-                                          that were explicitly given to "Reinstall
-                                          node instances list" will still be reinstalled'>
-                            <Form.Checkbox label="Run automatic reinstall" name="reinstallWorkflow" toggle
+                        <Form.Field>
+                            <Form.Checkbox label="Run automatic reinstall" name="automaticReinstall" toggle
+                                           help='Automatically reinstall node instances
+                                                 that their properties has been modified, as
+                                                 part of a deployment update. If not set, then node instances
+                                                 that were explicitly given to "Reinstall
+                                                 node instances list" will still be reinstalled'
                                            checked={this.state.automaticReinstall}
                                            onChange={this._handleInputChange.bind(this)}  />
                         </Form.Field>
@@ -326,10 +332,11 @@ class UpdateDeploymentModal extends React.Component {
                                                    is not set' />
 
 
-                        <Form.Field help='Force running update in case a previous
-                                          update on this deployment has failed to
-                                          finished successfully'>
+                        <Form.Field>
                             <Form.Checkbox label="Force update" name="force" toggle
+                                           help='Force running update in case a previous
+                                                 update on this deployment has failed to
+                                                 finished successfully'
                                            checked={this.state.force} onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 

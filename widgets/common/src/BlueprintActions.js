@@ -53,7 +53,7 @@ class BlueprintActions {
         return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, null, {visibility: visibility});
     }
 
-    doListYamlFiles(blueprintUrl, file, includeFilename=false) {
+    doListYamlFiles(blueprintUrl, file=null, includeFilename=false) {
         if (file) {
             return this.toolbox.getInternal().doUpload('/source/list/yaml', {includeFilename}, {archive: file});
         } else {

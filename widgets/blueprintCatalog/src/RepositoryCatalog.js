@@ -64,7 +64,7 @@ export default class extends React.Component{
                                     className="readmeButton icon"
                                     onClick={event => {
                                         event.stopPropagation();
-                                        this.props.onReadme(item.name);
+                                        this.props.onReadme(item.name, item.readme_url);
                                     }}/>
                                 <Button
                                     icon="upload"
@@ -72,7 +72,7 @@ export default class extends React.Component{
                                     className="uploadButton labeled icon"
                                     onClick={event => {
                                         event.stopPropagation();
-                                        this.props.onUpload(item.name);
+                                        this.props.onUpload(item.name, item.zip_url, item.image_url);
                                     }}/>
                             </div>
                         </DataSegment.Item>

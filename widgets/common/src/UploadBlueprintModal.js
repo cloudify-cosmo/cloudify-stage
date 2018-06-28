@@ -28,7 +28,9 @@ class UploadBlueprintModal extends React.Component {
         errors: {},
         yamlFiles: [],
         visibility: Stage.Common.Consts.defaultVisibility
-    }
+    };
+
+    static DEFAULT_BLUEPRINT_YAML_FILE = 'blueprint.yaml';
 
     onApprove () {
         this._submitUpload();
@@ -96,11 +98,10 @@ class UploadBlueprintModal extends React.Component {
         this.setState({urlLoading: true, blueprintFile: null});
         this.blueprintFileRef.current && this.blueprintFileRef.current.reset();
         this.actions.doListYamlFiles(this.state.blueprintUrl, null, true).then((data)=>{
-            const defaultBlueprintFileName = 'blueprint.yaml';
             let blueprintName = data.shift();
             let blueprintFileName
-                = _.includes(data, defaultBlueprintFileName)
-                ? defaultBlueprintFileName
+                = _.includes(data, UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE)
+                ? UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE
                 : data[0];
             this.setState({yamlFiles: data, errors: {}, urlLoading: false, blueprintName, blueprintFileName});
         }).catch((err)=>{
@@ -123,11 +124,10 @@ class UploadBlueprintModal extends React.Component {
 
         this.setState({fileLoading: true});
         this.actions.doListYamlFiles(null, file, true).then((data)=>{
-            const defaultBlueprintFileName = 'blueprint.yaml';
             let blueprintName = data.shift();
             let blueprintFileName
-                = _.includes(data, defaultBlueprintFileName)
-                ? defaultBlueprintFileName
+                = _.includes(data, UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE)
+                ? UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE
                 : data[0];
             this.setState({yamlFiles: data, errors: {}, fileLoading: false, blueprintFile: file, blueprintUrl: file.name, blueprintName, blueprintFileName});
         }).catch((err)=>{
