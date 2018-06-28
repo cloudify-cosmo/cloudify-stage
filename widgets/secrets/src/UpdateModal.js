@@ -121,7 +121,7 @@ export default class UpdateModal extends React.Component {
                     <Modal.Actions>
                         <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
                         {
-                            (!this.props.secret.is_hidden_value || !_.isEmpty(this.props.secret.value)) &&
+                            canUpdateSecret &&
                             <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading}
                                            content="Update" icon='edit' color="green"/>
                         }
