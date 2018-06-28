@@ -57,25 +57,30 @@ Stage.defineWidget({
     },
 
     fetchData: function(widget, toolbox, params) {
-        const actions = new Actions(toolbox, widget.configuration.username, widget.configuration.filter);
-        const jsonPath = widget.configuration.jsonPath;
+        const actions = new Actions(toolbox, widget.configuration.username, widget.configuration.filter, widget.configuration.jsonPath);
 
-        if (!_.isEmpty(jsonPath)) {
-            return actions.doGetReposFromJson(jsonPath, params);
-        } else {
-            return actions.doGetRepos(params).then(data => {
-                    let repos = data.items;
-                    let total = data.total_count;
+        return actions.doGetRepos(params)
+            .then(data => {
+                let repos = data.items;
+                let source = data.source;
+                let total = data.total_count;
+                if (data.source === Consts.GITHUB_DATA_SOURCE) {
                     let isAuthenticated = data.isAuth;
 
-            let fetches = _.map(repos, repo => actions.doFindImage(repo.name, Consts.DEFAULT_IMAGE)
-                               .then(imageUrl=>Promise.resolve(Object.assign(repo, {image_url:imageUrl}))));
+                    let fetches = _.map(repos, repo => actions.doFindImage(repo.name, Consts.DEFAULT_IMAGE)
+                        .then(imageUrl => Promise.resolve(Object.assign(repo, {image_url: imageUrl}))));
 
-                    return Promise.all(fetches).then((items)=> {
-                        return Promise.resolve({items, total, isAuthenticated, source: Consts.GITHUB_DATA_SOURCE});
-                    });
-                });
-        }
+                    return Promise.all(fetches).then((items) =>
+                        Promise.resolve({items, total, source, isAuthenticated})
+                    );
+                } else {
+                    repos = _.map(repos, repo => _.isEmpty(repo.image_url)
+                        ? ({...repo, image_url: Consts.DEFAULT_IMAGE})
+                        : ({...repo, image_url: `/external/content?url=${encodeURIComponent(repo.image_url)}`}));
+
+                    return Promise.resolve({items: repos, total, source});
+                }
+            });
     },
 
     render: function(widget, data, error, toolbox) {
@@ -93,11 +98,7 @@ Stage.defineWidget({
                     url: item.url,
                     created_at: Stage.Utils.formatTimestamp(item.created_at),
                     updated_at: Stage.Utils.formatTimestamp(item.updated_at),
-                    image_url: item.image_url
-                        ? data.source === Consts.GITHUB_DATA_SOURCE
-                            ? item.image_url
-                            : `/external/content?url=${encodeURIComponent(item.image_url)}`
-                        : Consts.DEFAULT_IMAGE,
+                    image_url: item.image_url,
                     readme_url: data.source === Consts.GITHUB_DATA_SOURCE
                         ? `/github/content/${widget.configuration.username}/${item.name}/master/README.md`
                         : `/external/content?url=${encodeURIComponent(item.readme_url)}`,

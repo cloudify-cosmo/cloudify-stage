@@ -17,7 +17,10 @@ export default class extends React.Component {
             showReadmeModal: false,
             readmeContent: '',
             readmeLoading: null,
-            files: [],
+            repositoryName: '',
+            yamlFiles: [],
+            zipUrl: '',
+            imageUrl: '',
             error: null
         }
     }
@@ -49,11 +52,11 @@ export default class extends React.Component {
         return this.props.toolbox.refresh(fetchParams);
     }
 
-    _showModal(repo, zipUrl, imageUrl) {
+    _showModal(repositoryName, zipUrl, imageUrl) {
         this.props.toolbox.loading(true);
 
-        this.props.actions.doListYamlFiles(zipUrl, true).then((files)=>{
-            this.setState({error: null, files, zipUrl, imageUrl, showModal: true});
+        this.props.actions.doListYamlFiles(zipUrl).then((yamlFiles)=>{
+            this.setState({error: null, repositoryName, yamlFiles, zipUrl, imageUrl, showModal: true});
             this.props.toolbox.loading(false);
         }).catch((err)=> {
             this.setState({error: err.message});
@@ -65,19 +68,15 @@ export default class extends React.Component {
         this.setState({showModal: false});
     }
 
-    _showReadmeModal(repo, readmeUrl) {
-        this.setState({readmeLoading: repo});
-        this.props.actions.doGetReadme(repo, readmeUrl).then(content => {
+    _showReadmeModal(repositoryName, readmeUrl) {
+        this.setState({readmeLoading: repositoryName});
+        this.props.actions.doGetReadme(repositoryName, readmeUrl).then(content => {
             this.setState({readmeContent: markdown.parse(content) || '', showReadmeModal: true, readmeLoading: null});
         });
     }
 
     _hideReadmeModal() {
         this.setState({showReadmeModal: false});
-    }
-
-    _onErrorDismiss() {
-        this.setState({error: null});
     }
 
     render() {
@@ -126,7 +125,8 @@ export default class extends React.Component {
                 }
 
                 <UploadModal open={this.state.showModal}
-                             files={this.state.files}
+                             repositoryName={this.state.repositoryName}
+                             yamlFiles={this.state.yamlFiles}
                              zipUrl={this.state.zipUrl}
                              imageUrl={this.state.imageUrl}
                              onHide={this._hideModal.bind(this)}

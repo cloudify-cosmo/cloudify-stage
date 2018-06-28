@@ -8,7 +8,7 @@
     },
     {
         "name": "Application (brotli)",
-        "limit": "2.3 MB",
+        "limit": "2.4 MB",
         "gzip": false,
         "webpack": false,
         "path": ["dist/*.br", "dist/widgets/*/widget.js.br", "dist/widgets/*/widget.css", "dist/widgets/*/widget.png", "dist/widgets/*/widget.html", "dist/widgets/*/backend.js", "dist/templates/**", "dist/app/**"]

@@ -13,14 +13,16 @@ export default class UploadModal extends React.Component {
 
     /**
      * propTypes
-     * @property {object} files array containing list of YAML files and repository name
+     * @property {object} yamlFiles array containing list of YAML files and repository name
+     * @property {string} repositoryName string name of the repository used as a blueprint name
      * @property {boolean} open modal open state
      * @property {function} onHide function called when modal is closed
      * @property {object} toolbox Toolbox object
      * @property {object} actions Actions object
      */
     static propTypes = {
-        files: PropTypes.array.isRequired,
+        repositoryName: PropTypes.string.isRequired,
+        yamlFiles: PropTypes.array.isRequired,
         open: PropTypes.bool.isRequired,
         onHide: PropTypes.func.isRequired,
         toolbox: PropTypes.object.isRequired,
@@ -30,9 +32,8 @@ export default class UploadModal extends React.Component {
     static initialState = {
         loading: false,
         blueprintName: '',
-        blueprintFileName: '',
+        blueprintYamlFile: '',
         yamlFiles: [],
-        repository: '',
         visibility: Stage.Common.Consts.defaultVisibility,
         errors: {}
     }
@@ -49,22 +50,20 @@ export default class UploadModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            if (!_.isEmpty(nextProps.files)) {
-                const defaultBlueprintFileName = 'blueprint.yaml';
-                let files = nextProps.files;
-                let blueprintName = files.shift();
-                let yamlFiles = files;
-                let blueprintFileName
-                    = _.includes(yamlFiles, defaultBlueprintFileName)
-                    ? defaultBlueprintFileName
+            if (!_.isEmpty(nextProps.yamlFiles)) {
+                const defaultBlueprintYamlFile = Stage.Common.UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE;
+                let yamlFiles = nextProps.yamlFiles;
+                let blueprintName = nextProps.repositoryName;
+                let blueprintYamlFile
+                    = _.includes(yamlFiles, defaultBlueprintYamlFile)
+                    ? defaultBlueprintYamlFile
                     : yamlFiles[0];
 
                 this.setState({
                     ...UploadModal.initialState,
                     blueprintName,
-                    blueprintFileName,
-                    yamlFiles,
-                    repository: blueprintName
+                    blueprintYamlFile,
+                    yamlFiles
                 });
             } else {
                 this.setState(UploadModal.initialState);
@@ -79,8 +78,8 @@ export default class UploadModal extends React.Component {
             errors['blueprintName']='Please provide blueprint name';
         }
 
-        if (_.isEmpty(this.state.blueprintFileName)) {
-            errors['blueprintFileName']='Please provide blueprint YAML file';
+        if (_.isEmpty(this.state.blueprintYamlFile)) {
+            errors['blueprintYamlFile']='Please provide blueprint YAML file';
         }
 
         if (!_.isEmpty(errors)) {
@@ -92,7 +91,7 @@ export default class UploadModal extends React.Component {
         this.setState({loading: true});
 
         this.props.actions.doUpload(this.state.blueprintName,
-                                    this.state.blueprintFileName,
+                                    this.state.blueprintYamlFile,
                                     this.props.zipUrl,
                                     this.props.imageUrl,
                                     this.state.visibility
@@ -117,7 +116,7 @@ export default class UploadModal extends React.Component {
             <div>
                 <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="uploadModal">
                     <Modal.Header>
-                        <Icon name="upload"/> Upload blueprint from {this.state.repository}
+                        <Icon name="upload"/> Upload blueprint from {this.props.repositoryName}
                         <VisibilityField visibility={this.state.visibility} className="rightFloated"
                                       onVisibilityChange={(visibility)=>this.setState({visibility: visibility})}/>
                     </Modal.Header>
@@ -133,11 +132,11 @@ export default class UploadModal extends React.Component {
                                             value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
                             <Form.Field label='Blueprint YAML file' required
-                                        error={this.state.errors.blueprintFileName}
+                                        error={this.state.errors.blueprintYamlFile}
                                         help='As you can have more than one yaml file in the archive,
                                               you need to specify which is the main one for your application.'>
-                                <Form.Dropdown name='blueprintFileName' search selection options={yamlFiles}
-                                               value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
+                                <Form.Dropdown name='blueprintYamlFile' search selection options={yamlFiles}
+                                               value={this.state.blueprintYamlFile} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>
                         </Form>
                     </Modal.Content>

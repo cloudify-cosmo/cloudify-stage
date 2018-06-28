@@ -28,13 +28,18 @@ export default class FormCheckbox extends Component {
 
     /**
      * propTypes
-     * @property {string} label checkbox label
-     * @property {string} help help description
+     * @property {string} [label=''] checkbox label
+     * @property {string} [help=''] help description
      */
     static propTypes = {
         label: PropTypes.string,
         help: PropTypes.string
     };
+
+    static defaultProps = {
+        label: '',
+        help: ''
+    }
 
     render() {
         let label = Form.Field.getLabel(this.props.label, this.props.help);

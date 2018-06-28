@@ -65,7 +65,7 @@ module.exports = (function() {
     }
 
     function listYamlFiles(query, req) {
-        let includeFilename = !!query.includeFilename;
+        let includeFilename = (query.includeFilename === 'true');
         let promise = query.url ? _saveDataFromUrl(query.url) : _saveMultipartData(req);
 
         return promise.then(data => {
