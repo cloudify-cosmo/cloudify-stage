@@ -3,7 +3,13 @@ Welcome to [Cloudify](http://cloudify.co)’s Widgets Components API Reference d
 
 You can find here documentation for all [ReactJS](https://reactjs.org/) components developed by Cloudify team. All of those can be used in custom widgets development.
 
-Apart from these custom components, the following [Semantic-UI-React](http://react.semantic-ui.com/) components can be used:  Accordion, Breadcrumb, Button, Card, Checkbox, Divider, Grid, Header, Icon, Image, Input, Item, Label, List, Loader, Message, Modal, Radio, Segment, Sidebar, Table.
+### Semantic UI React
+
+All Cloudify built-in widgets were created using [Semantic-UI-React](http://react.semantic-ui.com/) UI development framework. 
+
+The following components from that framework can be used:  Accordion, Breadcrumb, Button, Card, Checkbox, Divider, Grid, Header, Icon, Image, Input, Item, Label, List, Loader, Message, Modal, Radio, Segment, Sidebar, Table. 
+
+They can be accessed using `Stage.Basic` global object. For example if you want to use Message component use `Stage.Basic.Message`. 
 
 ### Useful links
 - [Cloudify Console @ GitHub](https://github.com/cloudify-cosmo/cloudify-stage) - official Git repository with Cloudify Console source code
