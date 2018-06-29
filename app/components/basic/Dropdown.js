@@ -6,7 +6,8 @@ import React from 'react';
 import { Dropdown } from 'semantic-ui-react';
 
 /**
- * Dropdown is a component which extends [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework
+ * Dropdown is a component which extends [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework.
+ *
  * See [Dropdown](https://react.semantic-ui.com/modules/dropdown) component from Semantic-UI-React framework for details about props and usage details.
  *
  * ## Access

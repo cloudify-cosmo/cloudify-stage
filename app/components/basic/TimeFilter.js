@@ -27,7 +27,7 @@ import Popup from './Popup';
  * `Stage.Basic.TimeFilter`
  *
  * ## Usage
- * ![TimeFilter](manual/asset/form/TimeFilter_0.png)
+ * ![TimeFilter](manual/asset/form/InputTimeFilter_0.png)
  *
  * ```
  * <TimeFilter name='timeFilter' defaultValue={TimeFilter.EMPTY_VALUE} />
