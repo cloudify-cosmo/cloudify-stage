@@ -1,12 +1,13 @@
 /**
  * Created by jakubniezgoda on 07/11/2017.
  */
-var _ = require('lodash');
+let _ = require('lodash');
 
 module.exports = {
-    WIDGET_ID_HEADER: 'widget-id',
-    USER_DATA_PATH: '/userData',
     ALLOWED_METHODS_OBJECT: {get: 'GET', post: 'POST', put: 'PUT', delete: 'DELETE', patch: 'PATCH'},
+    CONTEXT_PATH: '/console',
+    USER_DATA_PATH: '/userData',
+    WIDGET_ID_HEADER: 'widget-id'
 };
 
 module.exports.ALLOWED_METHODS_ARRAY = _.values(module.exports.ALLOWED_METHODS_OBJECT);

@@ -2,15 +2,17 @@
  * Created by edenp on 7/30/17.
  */
 
-var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser');
-var db = require('../db/Connection');
-var passport = require('passport');
-var config = require('../config').get();
-var AuthHandler = require('../handler/AuthHandler');
-var logger = require('log4js').getLogger('ClientConfigRouter');
-const contextPath = config.app.contextPath;
+let express = require('express');
+let bodyParser = require('body-parser');
+let passport = require('passport');
+
+let db = require('../db/Connection');
+let AuthHandler = require('../handler/AuthHandler');
+const config = require('../config').get();
+const Consts = require('../consts');
+
+let router = express.Router();
+let logger = require('log4js').getLogger('ClientConfigRouter');
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
@@ -52,7 +54,7 @@ router.post('/saml/callback', passport.authenticate('saml', {session: false}), f
 
     AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse).then((token) => {
         res.cookie('XSRF-TOKEN', token.value);
-        res.redirect(contextPath);
+        res.redirect(Consts.CONTEXT_PATH);
     })
     .catch((err) => {
         logger.error(err);

@@ -3,12 +3,8 @@
  */
 
 exports.command = function() {
-    var section = this.moveToEditMode().page.page().section.sidebar;
+    let section = this.moveToEditMode().page.page().section.sidebar;
 
-    return section.getText('@lastPage', function(result) {
-        if (result.value === section.props.lastPageLabel) {
-            section.moveToElement('@lastPage', 10, 10)
-                .clickElement('@lastPageRemoveButton')
-        }
-    });
+    return section.moveToElement('@lastPage', 10, 10)
+            .clickElement('@lastPageRemoveButton');
 };

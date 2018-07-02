@@ -140,10 +140,14 @@ module.exports = {
                 if (result.value) {
                     client.page.page().section.addWidgetModal.uninstallWidget(backend.props.widgetId);
                 }
-            });
+            })
+            .clickElement('@closeIcon')
+            .waitForElementNotPresent(page.section.addWidgetModal.selector);
     },
 
     after(client) {
-        client.end();
+        client
+            .resetPages()
+            .end();
     }
 };

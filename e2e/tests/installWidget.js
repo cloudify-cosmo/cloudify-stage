@@ -128,10 +128,14 @@ module.exports = {
             .clickElement('@okButton')
             .waitForElementNotPresent('@okButton')
         page.section.addWidgetModal
-            .waitForElementNotPresent('@removeWidgetButton');
+            .waitForElementNotPresent('@removeWidgetButton')
+            .clickElement('@closeIcon')
+            .waitForElementNotPresent(page.section.addWidgetModal.selector);
     },
 
     after(client) {
-        client.end();
+        client
+            .resetPages()
+            .end();
     }
 };

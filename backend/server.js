@@ -9,50 +9,51 @@ const express = require('express');
 const passport = require('passport');
 
 const config = require('./config');
+const Consts = require('./consts');
 
 // Initialize log4js
-var log4js = require('log4js');
-var log4jsConfig = config.get().log4jsConfig;
-var LoggerHandler = require('./handler/LoggerHandler');
+let log4js = require('log4js');
+let log4jsConfig = config.get().log4jsConfig;
+let LoggerHandler = require('./handler/LoggerHandler');
 LoggerHandler.init(log4jsConfig);
 
 // Initialize the DB connection
-var db = require('./db/Connection');
+let db = require('./db/Connection');
 
-var getTokenStrategy = require('./routes/TokenStrategy');
-var getSamlStrategy = require('./routes/SamlStrategy');
-var samlSetup = require('./samlSetup');
-var ServerSettings = require('./serverSettings');
-var AuthHandler = require('./handler/AuthHandler');
-var Auth = require('./routes/Auth');
-var ServerProxy = require('./routes/ServerProxy');
-var UserApp = require('./routes/UserApp');
-var Applications = require('./routes/Applications');
-var BlueprintAdditions = require('./routes/BlueprintAdditions');
-var Monitoring = require('./routes/Monitoring');
-var clientConfig = require('./routes/ClientConfig');
-var SourceBrowser = require('./routes/SourceBrowser');
-var GitHub = require('./routes/GitHub');
-var External = require('./routes/External');
-var Style = require('./routes/Style');
-var Widgets = require('./routes/Widgets');
-var Templates = require('./routes/Templates');
-var Tours = require('./routes/Tours');
-var ToursHandler = require('./handler/ToursHandler');
-var WidgetBackend = require('./routes/WidgetBackend');
-var File = require('./routes/File');
-var Plugins = require('./routes/Plugins');
-var WidgetHandler = require('./handler/WidgetHandler');
-var TemplateHandler = require('./handler/TemplateHandler');
+let getTokenStrategy = require('./routes/TokenStrategy');
+let getSamlStrategy = require('./routes/SamlStrategy');
+let samlSetup = require('./samlSetup');
+let ServerSettings = require('./serverSettings');
+let AuthHandler = require('./handler/AuthHandler');
+let Auth = require('./routes/Auth');
+let ServerProxy = require('./routes/ServerProxy');
+let UserApp = require('./routes/UserApp');
+let Applications = require('./routes/Applications');
+let BlueprintAdditions = require('./routes/BlueprintAdditions');
+let Monitoring = require('./routes/Monitoring');
+let clientConfig = require('./routes/ClientConfig');
+let SourceBrowser = require('./routes/SourceBrowser');
+let GitHub = require('./routes/GitHub');
+let External = require('./routes/External');
+let Style = require('./routes/Style');
+let Widgets = require('./routes/Widgets');
+let Templates = require('./routes/Templates');
+let Tours = require('./routes/Tours');
+let ToursHandler = require('./handler/ToursHandler');
+let WidgetBackend = require('./routes/WidgetBackend');
+let File = require('./routes/File');
+let Plugins = require('./routes/Plugins');
+let WidgetHandler = require('./handler/WidgetHandler');
+let TemplateHandler = require('./handler/TemplateHandler');
 
-var logger = log4js.getLogger('Server');
+let logger = log4js.getLogger('Server');
 
 ServerSettings.init();
 
-const contextPath = config.get().app.contextPath;
+const contextPath = Consts.CONTEXT_PATH;
 const oldContextPath = '/stage';
 
-var app = express();
+let app = express();
 
 app.all('/', function (request, response){
     logger.info('Redirecting to "' + contextPath + '".');
@@ -77,7 +78,7 @@ app.use(contextPath, (req,res,next) => {
     next();
 });
 
-var samlConfig = config.get().app.saml;
+let samlConfig = config.get().app.saml;
 if(samlConfig.enabled){
     samlSetup.validate(samlConfig);
     passport.use(getSamlStrategy());
@@ -138,7 +139,7 @@ AuthHandler.initAuthorization().then(function(){
 app.use(function(err, req, res, next) {
     logger.error('Error has occured ', err);
 
-    var message = err.message;
+    let message = err.message;
     if (err.status === 500) {
         message = 'The server is temporarily unavailable';
     }
