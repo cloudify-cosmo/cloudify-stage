@@ -7,7 +7,7 @@ const glob = require('glob');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const config = require('./backend/config').get();
+const Consts = require('./backend/consts');
 
 const getWidgetEntries = () => {
     return glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
@@ -91,7 +91,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: '[name].js',
-            publicPath: config.app.contextPath
+            publicPath: Consts.CONTEXT_PATH
         },
         plugins: [
             new CopyWebpackPlugin([
@@ -152,7 +152,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: 'widgets/[name]',
-            publicPath: config.app.contextPath
+            publicPath: Consts.CONTEXT_PATH
         },
         plugins: [
             new CopyWebpackPlugin([
@@ -176,7 +176,7 @@ module.exports = [
         output: {
             path: path.join(__dirname, 'dist'),
             filename: 'widgets/common/common.js',
-            publicPath: config.app.contextPath
+            publicPath: Consts.CONTEXT_PATH
         },
         plugins: [
             new webpack.NamedModulesPlugin(),

@@ -6,22 +6,21 @@ const webpack = require('webpack');
 const webpackDevServer = require('webpack-dev-server');
 
 const webpackConfig = require('./webpack.config');
-const config = require('./backend/config').get();
-
-const contextPath = config.app.contextPath;
+const Consts = require('./backend/consts');
 
 const host = 'localhost';
 const devServerPort = 4000;
 
 const proxyPort = 8088;
 const proxyTarget = `http://${host}:${proxyPort}`;
+const contextPath = Consts.CONTEXT_PATH;
 
 const proxyOptions = {
     target: proxyTarget,
     secure: false
 };
 
-const indexHtml = `${contextPath}/index.html`
+const indexHtml = `${contextPath}/index.html`;
 const options = {
     publicPath: webpackConfig[0].output.publicPath,
     hot: true,
