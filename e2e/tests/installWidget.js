@@ -132,6 +132,8 @@ module.exports = {
     },
 
     after(client) {
-        client.end();
+        client
+            .resetPages()
+            .end();
     }
 };

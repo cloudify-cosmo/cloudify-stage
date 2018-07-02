@@ -29,9 +29,12 @@ module.exports = {
         client.page.blueprintSources()
             .waitForElementPresent('@fullScreen')
             .clickElement('@overlay')
+            .api.keys(client.Keys.ESCAPE)
     },
 
     after(client) {
-        client.end();
+        client
+            .removeLastPage()
+            .end();
     }
 };
