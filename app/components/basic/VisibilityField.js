@@ -17,7 +17,9 @@ import consts from '../../utils/consts';
  * `Stage.Basic.VisibilityField`
  *
  * ## Usage
+ * ```
  *  <VisibilityField visibility={CURRENT_AVAILABILITY} onVisibilityChange={(newVisibility) => IMPLEMENT_LOGIC_HERE} disallowGlobal={true} className={ANY_CLASS_NAME}/>
+ *  ```
  */
 export default class VisibilityField extends Component {
 

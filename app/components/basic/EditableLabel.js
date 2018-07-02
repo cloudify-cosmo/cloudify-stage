@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 /**
- * EditableLabel component shows an (optionally) editable label.
- * If the label is editable it can have an optional placeholder and/or default text.
+ * EditableLabel component shows an editable label.
+ * Label can have an optional placeholder and/or default text.
  *
  * ## Access
  * `Stage.Basic.EditableLabel`

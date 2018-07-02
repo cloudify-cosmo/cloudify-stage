@@ -20,8 +20,9 @@ import MetricFilter from './MetricFilter';
 import NodeFilter from './NodeFilter';
 import NodeInstancesFilter from './NodeInstancesFilter';
 import Form from './form/Form';
-import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item, Sidebar, Card,
-         Segment, Accordion, List, Grid, Divider, Label, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
+// NOTE: When you update this list, please also update list in: doc/index.md
+import { Accordion, Breadcrumb, Button, Card, Checkbox, Divider, Grid, Header, Icon, Image, Input, Item,
+         Label, List, Loader, Message, Modal, Radio, Segment, Sidebar, Table } from 'semantic-ui-react'
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
 import Dropdown from './Dropdown';
