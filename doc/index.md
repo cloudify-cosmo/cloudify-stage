@@ -5,11 +5,11 @@ You can find here documentation for all [ReactJS](https://reactjs.org/) componen
 
 ### Semantic UI React
 
-All Cloudify built-in widgets were created using [Semantic-UI-React](http://react.semantic-ui.com/) UI development framework. 
+All Cloudify built-in widgets were created using components from [Semantic-UI-React](http://react.semantic-ui.com/) UI development framework. 
 
-The following components from that framework can be used:  Accordion, Breadcrumb, Button, Card, Checkbox, Divider, Grid, Header, Icon, Image, Input, Item, Label, List, Loader, Message, Modal, Radio, Segment, Sidebar, Table. 
+The following components from Semantic-UI-React can be accessed using `Stage.Basic` global object: [Accordion](https://react.semantic-ui.com/modules/accordion), [Breadcrumb](https://react.semantic-ui.com/collections/breadcrumb), [Button](https://react.semantic-ui.com/elements/button), [Card](https://react.semantic-ui.com/views/card), [Checkbox](https://react.semantic-ui.com/modules/checkbox), [Divider](https://react.semantic-ui.com/elements/divider), [Grid](https://react.semantic-ui.com/collections/grid), [Header](https://react.semantic-ui.com/elements/header), [Icon](https://react.semantic-ui.com/elements/icon), [Image](https://react.semantic-ui.com/elements/image), [Input](https://react.semantic-ui.com/elements/input), [Item](https://react.semantic-ui.com/views/item), [Label](https://react.semantic-ui.com/elements/label), [List](https://react.semantic-ui.com/elements/list), [Loader](https://react.semantic-ui.com/elements/loader), [Message](https://react.semantic-ui.com/collections/message), [Modal](https://react.semantic-ui.com/modules/modal), [Radio](https://react.semantic-ui.com/addons/radio), [Segment](https://react.semantic-ui.com/elements/segment), [Sidebar](https://react.semantic-ui.com/modules/sidebar), [Table](https://react.semantic-ui.com/collections/table). 
 
-They can be accessed using `Stage.Basic` global object. For example if you want to use Message component use `Stage.Basic.Message`. 
+For example if you want to use Message component use `Stage.Basic.Message`. 
 
 ### Useful links
 - [Cloudify Console @ GitHub](https://github.com/cloudify-cosmo/cloudify-stage) - official Git repository with Cloudify Console source code

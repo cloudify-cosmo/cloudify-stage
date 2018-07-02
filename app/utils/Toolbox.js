@@ -34,7 +34,6 @@ class Toolbox {
         this._Internal = new Internal(state.manager || {});
         this._Context = new Context(this.store);
         this.widgetDefinitions = state.widgetDefinitions || [];
-        this._widgetsConfig = state.config.widgets;
     }
 
     drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName) {
@@ -81,10 +80,6 @@ class Toolbox {
 
     getContext() {
         return this._Context;
-    }
-
-    getConfig() {
-        return this._widgetsConfig;
     }
 
     refresh() {}
