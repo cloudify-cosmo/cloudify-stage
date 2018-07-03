@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Consts from '../utils/Consts';
+import Consts from '../utils/consts';
 import Login from '../containers/Login';
 import ErrorPage from '../containers/ErrorPage';
 import NoTenants from '../containers/NoTenants';
