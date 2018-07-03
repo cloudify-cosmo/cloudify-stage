@@ -56,10 +56,10 @@
             {
                 "title": "Next steps...",
                 "content": "Now that you know the structure of the console, <strong>check out other tours</strong> about working with the Cloudify Console.",
-                "target": ".right.menu .helpMenu",
-                "placement": "bottom",
-                "xOffset": -200,
-                "arrowOffset": 210
+                "target": "button#toursButton",
+                "placement": "top",
+                "xOffset": -270,
+                "arrowOffset": 270
             }
         ]
     },
@@ -107,10 +107,10 @@
             {
                 "title": "Check out another tour",
                 "content": "Now that you know how to use the dashboard, <strong>check out another tour</strong> to see what else you can do with the Cloudify Console.",
-                "target": ".ui.dropdown.helpMenu",
-                "placement": "bottom",
-                "xOffset": -200,
-                "arrowOffset": 210
+                "target": "button#toursButton",
+                "placement": "top",
+                "xOffset": -270,
+                "arrowOffset": 270
             }
         ]
     },
@@ -179,10 +179,10 @@
             {
                 "title": "Check out another tour",
                 "content": "Now that you know how to setup your manager resources, <strong>check out other help resources</strong> to see what else you can do with the Cloudify Console.",
-                "target": ".ui.dropdown.helpMenu",
-                "placement": "bottom",
-                "xOffset": -200,
-                "arrowOffset": 210
+                "target": "button#toursButton",
+                "placement": "top",
+                "xOffset": -270,
+                "arrowOffset": 270
             }
         ]
     },
@@ -241,10 +241,10 @@
             {
                 "title": "Check out another tour",
                 "content": "Now that you know how to deploy an application, you can go to the <strong>day-two processes tour</strong> to review the maintenance tasks that you can do on a deployment.",
-                "target": ".ui.dropdown.helpMenu",
-                "placement": "bottom",
-                "xOffset": -200,
-                "arrowOffset": 210
+                "target": "button#toursButton",
+                "placement": "top",
+                "xOffset": -270,
+                "arrowOffset": 270
             }
         ]
     },

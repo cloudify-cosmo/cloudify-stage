@@ -96,6 +96,7 @@ function hopscotchRegisterHelpers(dispatch) {
 
 function hopscotchStartTour(tour) {
     hopscotch.getCalloutManager().removeAllCallouts();
+    hopscotch.endTour();
     hopscotch.startTour(Tours.parseTour(tour));
 }
 

@@ -25,26 +25,26 @@ export default class ToursButton extends React.Component {
         this.props.onTourStart(tour);
     }
 
-    onHover() {
+    _onMouseOver() {
         this.setState({hovered: true})
     }
 
-    onBlur() {
+    _onMouseOut() {
         this.setState({hovered: false})
     }
 
     render() {
-        let {Button, Icon, Menu, PopupMenu, Portal} = Stage.Basic;
+        let {Button, Menu, PopupMenu, Portal} = Stage.Basic;
 
         const buttonTrigger = (
-            <Button title='Take a tour' circular color='blue' size='huge' icon='map signs'
-                    onMouseOver={this.onHover.bind(this)} onMouseOut={this.onBlur.bind(this)}
+            <Button title='Take a tour' circular color='blue' size='huge' icon='map signs' id='toursButton'
+                    onMouseOver={this._onMouseOver.bind(this)} onMouseOut={this._onMouseOut.bind(this)}
                     style={{ right: '20px', position: 'fixed', bottom: '20px', zIndex: 1000, opacity: this.state.hovered ? 1 : 0.5 }} />
         );
 
         return !_.isEmpty(this.props.tours) &&
             <Portal className={this.props.className} open={true}>
-                <PopupMenu trigger={buttonTrigger} onClose={this.onBlur.bind(this)}>
+                <PopupMenu trigger={buttonTrigger} onClose={this._onMouseOut.bind(this)}>
                     <Menu vertical>
                         <Menu.Item header>Tours</Menu.Item>
                         {
