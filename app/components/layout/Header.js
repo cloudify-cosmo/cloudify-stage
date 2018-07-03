@@ -42,7 +42,6 @@ export default class Header extends Component {
         if (whiteLabel.enabled && whiteLabel.pageTitle) {
             document.title = whiteLabel.pageTitle;
         }
-        this.props.continueTour();
     }
 
     _isModeMain() {

@@ -2,7 +2,7 @@
  * Created by edenp on 15/04/2018.
  */
 
-import ToursModal from '../components/ToursModal';
+import ToursButton from '../components/ToursButton';
 import { connect } from 'react-redux';
 import {startTour} from '../actions/tours';
 
@@ -22,4 +22,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ToursModal);
+)(ToursButton);

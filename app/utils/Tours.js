@@ -19,23 +19,41 @@ export default class Tours {
         });
     }
 
-    static parseTour(tour, dispatch) {
-        let hopscotchTour =  _.omit(_.cloneDeep(tour), 'name');
+    static parseTour(tour) {
+        let hopscotchTour =  _.omit(_.cloneDeep(tour), ['name', 'startAt']);
 
-        hopscotchTour = _.omit(hopscotchTour, 'startAt');
+        hopscotchTour.onClose = ['removeClickEventsListener'];
+        hopscotchTour.onStart = ['addClickEventsListener'];
         hopscotchTour.steps =  _.map(hopscotchTour.steps, (step, index) => {
             if(!_.isUndefined(step.onNextRedirectTo)){
-                let nextStep = hopscotchTour.steps[index + 1];
+                const nextStep = hopscotchTour.steps[index + 1];
+                const url
+                    = _.isArray(step.onNextRedirectTo)
+                    ? step.onNextRedirectTo[0]
+                    : step.onNextRedirectTo;
+                const pageName
+                    = _.isArray(step.onNextRedirectTo) && step.onNextRedirectTo.length > 1
+                    ? step.onNextRedirectTo[1]
+                    : url;
+                const noTargetErrorTitle
+                    = _.isArray(step.onNextRedirectTo) && step.onNextRedirectTo.length > 2
+                    ? step.onNextRedirectTo[2]
+                    : undefined;
+                const noTargetErrorMessage
+                    = _.isArray(step.onNextRedirectTo) && step.onNextRedirectTo.length > 3
+                    ? step.onNextRedirectTo[3]
+                    : undefined;
                 if (!_.isUndefined(nextStep)) {
                     step.showCTAButton = true;
                     step.ctaLabel = 'Next (change page)';
-                    step.onCTA = ['redirectTo', step.onNextRedirectTo, nextStep.target];
+                    step.onCTA = ['redirectTo', url, pageName, nextStep.target, noTargetErrorTitle, noTargetErrorMessage];
                     step.showNextButton = false;
                 }
                 return _.omit(step, 'onNextRedirectTo');
             }
             return step;
         });
+
         return hopscotchTour;
     }
 }

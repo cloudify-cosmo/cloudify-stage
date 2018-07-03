@@ -6,8 +6,13 @@ import React, { Component } from 'react';
 
 import SideBar from '../containers/SideBar';
 import Page from '../containers/Page';
+import ToursButton from '../containers/ToursButton';
 
 export default class Home extends Component {
+
+    constructor(props,context){
+        super(props, context);
+    }
 
     componentWillMount() {
         this._handleContext(this.props.selectedPage, this.props.contextParams, this.props.emptyPages);
@@ -60,6 +65,9 @@ export default class Home extends Component {
 
         return (
             <div className='main'>
+
+                <ToursButton />
+
                 <SideBar pageId={pageId}/>
 
                 <div className="page">
