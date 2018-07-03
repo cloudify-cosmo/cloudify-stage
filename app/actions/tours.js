@@ -29,10 +29,12 @@ function hopscotchRegisterHelpers(dispatch) {
     hopscotch.registerHelper('redirectTo', function(url, pageName, selector, noSelectorErrorTitle, noSelectorErrorMessage) {
         const minVisibilityTime = 500; //ms
         const maxWaitingTime = 5000; //ms
+        const hopscotchButtonSelector = 'button.hopscotch-cta';
+        const buttonLoadingClass = 'ui button loading';
 
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         const rafAsync = () => new Promise(resolve => requestAnimationFrame(resolve));
-        const setLoading = () => new Promise((resolve) => $('button.hopscotch-cta').addClass('ui button loading') && resolve());
+        const setLoading = () => new Promise((resolve) => $(hopscotchButtonSelector).addClass(buttonLoadingClass) && resolve());
 
         let isWaitingTimeExceeded = false;
         const waitingTimeout = setTimeout(() => isWaitingTimeExceeded = true, maxWaitingTime);
@@ -44,7 +46,7 @@ function hopscotchRegisterHelpers(dispatch) {
                     target: '.hopscotch-bubble-container',
                     placement: 'bottom',
                     title: 'No page',
-                    content: `Cannot find <strong>${pageName}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
+                    content: `Cannot find <strong>${pageName || pageUrl}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
                 });
 
                 return Promise.reject('Page ' + pageName + ' not found.');
