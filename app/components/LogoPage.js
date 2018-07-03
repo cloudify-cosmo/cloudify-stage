@@ -4,6 +4,7 @@
 
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import Consts from '../utils/Consts';
 import Login from '../containers/Login';
 import ErrorPage from '../containers/ErrorPage';
 import NoTenants from '../containers/NoTenants';
@@ -15,9 +16,9 @@ export default class LogoPage extends Component {
             <div className="logoPage ui segment basic">
                 <Logo />
                 <Switch>
-                    <Route path='/login' component={Login}/>
-                    <Route path='/error' component={ErrorPage}/>
-                    <Route path='/noTenants' component={NoTenants}/>
+                    <Route path={Consts.LOGIN_PAGE_PATH} component={Login}/>
+                    <Route path={Consts.ERROR_PAGE_PATH} component={ErrorPage}/>
+                    <Route path={Consts.ERROR_NO_TENANTS_PAGE_PATH} component={NoTenants}/>
                 </Switch>
             </div>
         );

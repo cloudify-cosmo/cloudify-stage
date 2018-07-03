@@ -5,6 +5,13 @@
 export default {
     CONTEXT_PATH: '/console',
 
+    ERROR_404_PAGE_PATH: '/404',
+    ERROR_NO_TENANTS_PAGE_PATH: '/noTenants',
+    ERROR_PAGE_PATH: '/error',
+    LOGIN_PAGE_PATH: '/login',
+    LOGOUT_PAGE_PATH: '/logout',
+    MAINTENANCE_PAGE_PATH: '/maintenance',
+
     DEFAULT_TENANT: 'default_tenant',
     MODE_MAIN: 'main',
     MODE_CUSTOMER: 'customer',
