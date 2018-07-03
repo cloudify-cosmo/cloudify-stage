@@ -11,6 +11,15 @@ import {UNAUTHORIZED_ERR} from '../utils/ErrorCodes';
 import log from 'loglevel';
 let logger = log.getLogger('External');
 
+/*
+Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofunky/class/draw
+
+[External|doDelete();doDownload();doGet();doPatch();doPost();doPut();doUpload()]<-[Internal|]
+[Internal]<-[WidgetBackend|]
+[Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getIp();getManagerUrl();getSelectedTenant();getSystemRoles()]
+
+*/
+
 export default class External {
 
     constructor(data) {

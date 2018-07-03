@@ -44,6 +44,7 @@ export default class PopupMenu extends Component {
      * @property {number} [offset=12] horizontal offset in pixels to be applied to popup
      * @property {string} [icon='content'] popup trigger icon name (see [Icon](https://react.semantic-ui.com/elements/icon))
      * @property {boolean} [disabled=false] specifies if trigger shall be disabled
+     * @property {object} [trigger=null] custom trigger (when set, then icon, disabled, className props are not used)
      */
     static propTypes = {
         className: PropTypes.string,
@@ -51,7 +52,8 @@ export default class PopupMenu extends Component {
         position: PropTypes.string,
         offset: PropTypes.number,
         icon: PropTypes.string,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        trigger: PropTypes.object
     };
 
     static defaultProps = {
@@ -59,11 +61,12 @@ export default class PopupMenu extends Component {
         position: 'bottom right',
         offset: 12,
         icon: 'content',
-        disabled: false
-    }
+        disabled: false,
+        trigger: null
+    };
 
     render () {
-        let trigger = <Icon link={!this.props.disabled} disabled={this.props.disabled} name={this.props.icon} className={this.props.className} onClick={(e)=>{e.stopPropagation();}}/>;
+        let trigger = this.props.trigger ? this.props.trigger : <Icon link={!this.props.disabled} disabled={this.props.disabled} name={this.props.icon} className={this.props.className} onClick={(e)=>{e.stopPropagation();}}/>;
 
         return (
             <Popup trigger={trigger} on='click' position={this.props.position} className='popupMenu' offset={this.props.offset}

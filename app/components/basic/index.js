@@ -22,7 +22,7 @@ import NodeInstancesFilter from './NodeInstancesFilter';
 import Form from './form/Form';
 // NOTE: When you update this list, please also update list in: doc/index.md
 import { Accordion, Breadcrumb, Button, Card, Checkbox, Divider, Grid, Header, Icon, Image, Input, Item,
-         Label, List, Loader, Message, Modal, Radio, Segment, Sidebar, Table } from 'semantic-ui-react'
+         Label, List, Loader, Message, Modal, Portal, Radio, Segment, Sidebar, Table } from 'semantic-ui-react'
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
 import Dropdown from './Dropdown';
@@ -88,7 +88,7 @@ export {
     PopupConfirm,
     PopupHelp,
     PopupMenu,
-    VisibilityField,
+    Portal,
     ResourceVisibility,
     Radio,
     ReadmeModal,
@@ -96,5 +96,6 @@ export {
     Sidebar,
     SplitterLayout,
     Table,
-    TimeFilter
+    TimeFilter,
+    VisibilityField
 };
