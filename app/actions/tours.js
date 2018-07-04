@@ -10,7 +10,7 @@ import Tours from '../utils/Tours';
 import Consts from '../utils/consts';
 
 
-function handleClicksWhenTourOngoing(event) {
+function _handleClick(event) {
     const isHopscotchElementClicked = _.includes(event.target.className, 'hopscotch');
 
     if (!isHopscotchElementClicked) {
@@ -18,15 +18,26 @@ function handleClicksWhenTourOngoing(event) {
     }
 }
 
-function addClickEventsListener() {
-    document.addEventListener('click', handleClicksWhenTourOngoing);
+function _handleKeyPressed(event) {
+    const isEscapeKeyPressed = event.key === 'Escape';
+
+    if (isEscapeKeyPressed) {
+        hopscotchEndTour(false);
+    }
 }
 
-function removeClickEventsListener() {
-    document.removeEventListener('click', handleClicksWhenTourOngoing);
+
+function addStopTourEventsListeners() {
+    document.addEventListener('click', _handleClick);
+    document.addEventListener('keydown', _handleKeyPressed);
 }
 
-function removeClickEventsListenerWhenNoHopscotchElements() {
+function removeStopTourEventsListeners() {
+    document.removeEventListener('click', _handleClick);
+    document.removeEventListener('keydown', _handleKeyPressed);
+}
+
+function waitForHopscotchElementsToBeClosed() {
     const listenerRemovalTimeout = 1000;
     let listenerRemovalTimeoutObject = null;
 
@@ -37,7 +48,7 @@ function removeClickEventsListenerWhenNoHopscotchElements() {
             listenerRemovalTimeoutObject = setTimeout(checkForRemainingHopscotchElements, listenerRemovalTimeout);
         } else {
             clearTimeout(listenerRemovalTimeoutObject);
-            removeClickEventsListener();
+            removeStopTourEventsListeners();
         }
     };
 
@@ -109,8 +120,8 @@ function hopscotchRegisterHelpers(dispatch) {
             .then(() => hopscotch.nextStep())
             .catch((error) => { console.error(error); hopscotchEndTour(true); } );
     });
-    hopscotch.registerHelper('addClickEventsListener', addClickEventsListener);
-    hopscotch.registerHelper('removeClickEventsListener', removeClickEventsListener);
+    hopscotch.registerHelper('onTourStart', addStopTourEventsListeners);
+    hopscotch.registerHelper('onTourClose', removeStopTourEventsListeners);
 }
 
 function hopscotchStartTour(tour) {
@@ -122,10 +133,10 @@ function hopscotchEndTour(errorOccured) {
     hopscotch.endTour();
 
     if (errorOccured) {
-        removeClickEventsListenerWhenNoHopscotchElements();
+        waitForHopscotchElementsToBeClosed();
     } else {
         hopscotch.getCalloutManager().removeAllCallouts();
-        removeClickEventsListener();
+        removeStopTourEventsListeners();
     }
 }
 
