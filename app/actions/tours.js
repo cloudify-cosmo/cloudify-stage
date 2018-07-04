@@ -9,12 +9,13 @@ import * as types from './types';
 import Tours from '../utils/Tours';
 import Consts from '../utils/consts';
 
+
 function handleClicksWhenTourOngoing(event) {
     const isHopscotchElementClicked = _.includes(event.target.className, 'hopscotch');
 
     if (!isHopscotchElementClicked) {
-        hopscotchEndTour();
-    };
+        hopscotchEndTour(false);
+    }
 }
 
 function addClickEventsListener() {
@@ -23,6 +24,24 @@ function addClickEventsListener() {
 
 function removeClickEventsListener() {
     document.removeEventListener('click', handleClicksWhenTourOngoing);
+}
+
+function removeClickEventsListenerWhenNoHopscotchElements() {
+    const listenerRemovalTimeout = 1000;
+    let listenerRemovalTimeoutObject = null;
+
+    let checkForRemainingHopscotchElements = () => {
+        const hopscotchElementClass = '.hopscotch-bubble';
+
+        if ($(hopscotchElementClass).length > 0) {
+            listenerRemovalTimeoutObject = setTimeout(checkForRemainingHopscotchElements, listenerRemovalTimeout);
+        } else {
+            clearTimeout(listenerRemovalTimeoutObject);
+            removeClickEventsListener();
+        }
+    };
+
+    listenerRemovalTimeoutObject = setTimeout(checkForRemainingHopscotchElements, listenerRemovalTimeout);
 }
 
 function hopscotchRegisterHelpers(dispatch) {
@@ -88,21 +107,26 @@ function hopscotchRegisterHelpers(dispatch) {
             .then(() => checkIfPageIsPresent(url, pageName))
             .then(() => waitForElementVisible(selector))
             .then(() => hopscotch.nextStep())
-            .catch((error) => { console.error(error); hopscotchEndTour(); } );
+            .catch((error) => { console.error(error); hopscotchEndTour(true); } );
     });
     hopscotch.registerHelper('addClickEventsListener', addClickEventsListener);
     hopscotch.registerHelper('removeClickEventsListener', removeClickEventsListener);
 }
 
 function hopscotchStartTour(tour) {
-    hopscotch.getCalloutManager().removeAllCallouts();
-    hopscotch.endTour();
+    hopscotchEndTour(false);
     hopscotch.startTour(Tours.parseTour(tour));
 }
 
-function hopscotchEndTour() {
+function hopscotchEndTour(errorOccured) {
     hopscotch.endTour();
-    removeClickEventsListener();
+
+    if (errorOccured) {
+        removeClickEventsListenerWhenNoHopscotchElements();
+    } else {
+        hopscotch.getCalloutManager().removeAllCallouts();
+        removeClickEventsListener();
+    }
 }
 
 export function storeTours(tours) {
