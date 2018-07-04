@@ -14,6 +14,7 @@ import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import {NO_TENANTS_ERR, UNAUTHORIZED_ERR} from '../../utils/ErrorCodes';
+import Consts from '../../utils/consts';
 import TemplateManagement from '../../containers/templates/TemplateManagement';
 import PageManagement from '../../containers/templates/PageManagement';
 import Home from '../../containers/Home';
@@ -88,7 +89,7 @@ export default class Layout extends Component {
                     }
                     <Route exact path='/page/:pageId/:pageName' component={Home}/>
                     <Route exact path='/page/:pageId' component={Home}/>
-                    <Route exact path='/404' component={NotFound}/>,
+                    <Route exact path={Consts.ERROR_404_PAGE_PATH} component={NotFound}/>,
                     <Route exact path='/' component={Home} />
                     <Route component={NotFound} />
                 </Switch>

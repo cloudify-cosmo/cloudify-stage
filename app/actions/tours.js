@@ -7,18 +7,72 @@ import { push } from 'connected-react-router';
 
 import * as types from './types';
 import Tours from '../utils/Tours';
+import Consts from '../utils/consts';
+
+
+function handleClicksWhenTourOngoing(event) {
+    const isHopscotchElementClicked = _.includes(event.target.className, 'hopscotch');
+
+    if (!isHopscotchElementClicked) {
+        hopscotchEndTour(false);
+    }
+}
+
+function addClickEventsListener() {
+    document.addEventListener('click', handleClicksWhenTourOngoing);
+}
+
+function removeClickEventsListener() {
+    document.removeEventListener('click', handleClicksWhenTourOngoing);
+}
+
+function removeClickEventsListenerWhenNoHopscotchElements() {
+    const listenerRemovalTimeout = 1000;
+    let listenerRemovalTimeoutObject = null;
+
+    let checkForRemainingHopscotchElements = () => {
+        const hopscotchElementClass = '.hopscotch-bubble';
+
+        if ($(hopscotchElementClass).length > 0) {
+            listenerRemovalTimeoutObject = setTimeout(checkForRemainingHopscotchElements, listenerRemovalTimeout);
+        } else {
+            clearTimeout(listenerRemovalTimeoutObject);
+            removeClickEventsListener();
+        }
+    };
+
+    listenerRemovalTimeoutObject = setTimeout(checkForRemainingHopscotchElements, listenerRemovalTimeout);
+}
 
 function hopscotchRegisterHelpers(dispatch) {
-    hopscotch.registerHelper('redirectTo', function(url, selector) {
+    hopscotch.registerHelper('redirectTo', function(url, pageName, selector, noSelectorErrorTitle, noSelectorErrorMessage) {
         const minVisibilityTime = 500; //ms
-        const maxWaitingTime = 10000; //ms
+        const maxWaitingTime = 5000; //ms
+        const hopscotchButtonSelector = 'button.hopscotch-cta';
+        const buttonLoadingClass = 'ui button loading';
 
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         const rafAsync = () => new Promise(resolve => requestAnimationFrame(resolve));
-        const setLoading = () => new Promise((resolve) => $('button.hopscotch-cta').addClass('ui button loading') && resolve());
+        const setLoading = () => new Promise((resolve) => $(hopscotchButtonSelector).addClass(buttonLoadingClass) && resolve());
 
         let isWaitingTimeExceeded = false;
         const waitingTimeout = setTimeout(() => isWaitingTimeExceeded = true, maxWaitingTime);
+
+        const checkIfPageIsPresent = (pageUrl, pageName) => {
+            if (!_.isEqual(window.location.pathname, `${Consts.CONTEXT_PATH}${pageUrl}`)) {
+                hopscotch.getCalloutManager().createCallout({
+                    id: 'error',
+                    target: '.hopscotch-bubble-container',
+                    placement: 'bottom',
+                    title: 'No page',
+                    content: `Cannot find <strong>${pageName || pageUrl}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
+                });
+
+                return Promise.reject('Page ' + pageName + ' not found.');
+            } else {
+                return Promise.resolve('Page ' + pageName + ' found.');
+            }
+        }
 
         const waitForElementVisible = (selector, isVisibilityConfirmed = false) => {
             const element = document.querySelector(selector);
@@ -33,6 +87,14 @@ function hopscotchRegisterHelpers(dispatch) {
                 }
             } else {
                 if (isWaitingTimeExceeded) {
+                    hopscotch.getCalloutManager().createCallout({
+                        id: 'error',
+                        target: '.hopscotch-bubble-container',
+                        placement: 'bottom',
+                        title: noSelectorErrorTitle || 'No element',
+                        content: noSelectorErrorMessage || 'Cannot find element for the next tour step on the screen.'
+                    });
+
                     return Promise.reject('Element for selector ' + selector + ' not found.')
                 } else {
                     return rafAsync().then(() => waitForElementVisible(selector));
@@ -42,18 +104,29 @@ function hopscotchRegisterHelpers(dispatch) {
 
         return setLoading()
             .then(dispatch(push(url)))
+            .then(() => checkIfPageIsPresent(url, pageName))
             .then(() => waitForElementVisible(selector))
-            .catch((msg) => console.error(msg))
-            .finally(() => hopscotch.nextStep())
+            .then(() => hopscotch.nextStep())
+            .catch((error) => { console.error(error); hopscotchEndTour(true); } );
     });
+    hopscotch.registerHelper('addClickEventsListener', addClickEventsListener);
+    hopscotch.registerHelper('removeClickEventsListener', removeClickEventsListener);
 }
 
-function hopscotchStartTour(tour, dispatch) {
-    hopscotch.startTour(Tours.parseTour(tour, dispatch));
+function hopscotchStartTour(tour) {
+    hopscotchEndTour(false);
+    hopscotch.startTour(Tours.parseTour(tour));
 }
 
-function getTourById(tours, tourId) {
-    return _.find(tours, {'id': tourId});
+function hopscotchEndTour(errorOccured) {
+    hopscotch.endTour();
+
+    if (errorOccured) {
+        removeClickEventsListenerWhenNoHopscotchElements();
+    } else {
+        hopscotch.getCalloutManager().removeAllCallouts();
+        removeClickEventsListener();
+    }
 }
 
 export function storeTours(tours) {
@@ -74,31 +147,13 @@ export function loadTours() {
 export function startTour(tour) {
     return function (dispatch, getState) {
         let path = getState().router.location.pathname;
+
         if (!_.isNil(tour.startAt) && tour.startAt !== path) {
             sessionStorage.setItem('startedTour', tour.id);
             return Promise.resolve(dispatch(push(tour.startAt)))
-               .then(() => hopscotchStartTour(tour, dispatch));
+               .then(() => hopscotchStartTour(tour));
         } else {
-            hopscotchStartTour(tour, dispatch);
-        }
-    }
-}
-
-export function continueTour() {
-    return function (dispatch, getState) {
-        let tours = getState().tours;
-
-        // Checks for a initialized tour that redirected to a different page before starting
-        let startedTourId = sessionStorage.getItem('startedTour');
-        if (startedTourId) {
-            sessionStorage.removeItem('startedTour');
-            hopscotchStartTour(getTourById(tours, startedTourId), dispatch);
-        } else {
-            // Checks for a multipage tour in progress
-            let currentTour = hopscotch.getState();
-            if(currentTour){
-                hopscotchStartTour(getTourById(tours, currentTour.split(':')[0]), dispatch);
-            }
+            hopscotchStartTour(tour);
         }
     }
 }

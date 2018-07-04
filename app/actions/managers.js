@@ -4,6 +4,7 @@
 
 import * as types from './types';
 import Auth from '../utils/auth';
+import Consts from '../utils/consts';
 import { push } from 'connected-react-router';
 import Manager from '../utils/Manager';
 import {clearContext} from './context';
@@ -46,7 +47,7 @@ export function login (username, password, redirect) {
                         console.log(err);
                         if(err.status === 403){
                             dispatch(errorLogin(username));
-                            dispatch(push({pathname: '/noTenants', search: redirect ? '?redirect='+redirect : ''}));
+                            dispatch(push({pathname: Consts.ERROR_NO_TENANTS_PAGE_PATH, search: redirect ? '?redirect='+redirect : ''}));
                         } else{
                             dispatch(errorLogin(username, err));
                         }
@@ -85,7 +86,7 @@ function doLogout(err) {
 export function logout(err, path) {
     return function (dispatch, getState) {
         var localLogout = () => {
-            dispatch(push(path || (err ? '/error' : '/logout')));
+            dispatch(push(path || (err ? Consts.ERROR_PAGE_PATH : Consts.LOGOUT_PAGE_PATH)));
             dispatch(clearContext());
             dispatch(doLogout(err));
         };
@@ -137,7 +138,7 @@ export function switchMaintenance(manager, activate) {
         return managerAccessor.doPost(`/maintenance/${activate?'activate':'deactivate'}`)
             .then((data)=>{
                 dispatch(setMaintenanceStatus(data.status));
-                dispatch(push(activate ? 'maintenance' : '/'));
+                dispatch(push(activate ? Consts.MAINTENANCE_PAGE_PATH : '/'));
             });
     }
 }

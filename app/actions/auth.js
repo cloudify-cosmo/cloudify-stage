@@ -5,11 +5,12 @@
 import {push} from 'connected-react-router';
 import {clearContext} from './context';
 import {setAppError} from './app';
+import Consts from './../utils/consts';
 
 export function unauthorized(err) {
     return function (dispatch) {
         dispatch(clearContext());
         dispatch(setAppError(err));
-        dispatch(push('/error'));
+        dispatch(push(Consts.ERROR_PAGE_PATH));
     }
 }
