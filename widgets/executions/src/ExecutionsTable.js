@@ -135,16 +135,25 @@ export default class extends React.Component {
                                         }
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        { _.isEmpty(item.error) ?
-                                            <div>
-                                                <Icon name="check circle" color="green" inverted />
-                                                <ExecutionStatus item={item} showInactiveAsLink={false} onCancelExecution={this._cancelExecution.bind(this)}/>
-                                            </div>
+                                        {
+                                            _.isEmpty(item.error)
+                                            ?
+                                                <div>
+                                                    <Icon name="check circle" color="green" inverted />
+                                                    <ExecutionStatus item={item} showInactiveAsLink={false} onCancelExecution={this._cancelExecution.bind(this)}/>
+                                                </div>
                                             :
-                                            <div>
-                                                <Icon name="remove circle" color="red" link onClick={(event)=>{event.stopPropagation();this.setState({execution: item, errorModalOpen: true, idPopupOpen: false})}} />
-                                                <ExecutionStatus item={item} showInactiveAsLink={true} onCancelExecution={this._cancelExecution.bind(this)}/>
-                                            </div>
+                                                <Popup position='top center'>
+                                                    <Popup.Trigger>
+                                                        <div onClick={(event)=>{event.stopPropagation();this.setState({execution: item, errorModalOpen: true, idPopupOpen: false})}} >
+                                                            <Icon name="remove circle" color="red" link />
+                                                            <ExecutionStatus item={item} showInactiveAsLink={true} onCancelExecution={this._cancelExecution.bind(this)} />
+                                                        </div>
+                                                    </Popup.Trigger>
+                                                    <Popup.Content>
+                                                        Click to see details
+                                                    </Popup.Content>
+                                                </Popup>
                                         }
                                     </DataTable.Data>
                                 </DataTable.Row>

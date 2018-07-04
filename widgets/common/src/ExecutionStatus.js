@@ -42,9 +42,11 @@ export default class ExecutionStatus extends React.Component {
                     <PopupMenu disabled={cancelClicked} icon='delete' >
                         <Menu pointing vertical>
                             <Menu.Item content='Cancel' name={ExecutionUtils.CANCEL_ACTION}
-                                       onClick={this._actionClick.bind(this)}/>
+                                       onClick={this._actionClick.bind(this)} />
                             <Menu.Item content='Force Cancel' name={ExecutionUtils.FORCE_CANCEL_ACTION}
-                                       onClick={this._actionClick.bind(this)}/>
+                                       onClick={this._actionClick.bind(this)} />
+                            <Menu.Item content='Kill' name={ExecutionUtils.KILL_CANCEL_ACTION}
+                                       onClick={this._actionClick.bind(this)} />
                         </Menu>
                     </PopupMenu>
                 </Label>

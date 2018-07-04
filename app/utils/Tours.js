@@ -22,8 +22,8 @@ export default class Tours {
     static parseTour(tour) {
         let hopscotchTour =  _.omit(_.cloneDeep(tour), ['name', 'startAt']);
 
-        hopscotchTour.onClose = ['removeClickEventsListener'];
-        hopscotchTour.onStart = ['addClickEventsListener'];
+        hopscotchTour.onClose = ['onTourClose'];
+        hopscotchTour.onStart = ['onTourStart'];
         hopscotchTour.steps =  _.map(hopscotchTour.steps, (step, index) => {
             if(!_.isUndefined(step.onNextRedirectTo)){
                 const nextStep = hopscotchTour.steps[index + 1];
