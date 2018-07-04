@@ -81,6 +81,7 @@ export default class ExecuteDeploymentModal extends React.Component {
             this.setState({loading: false, errors: {}});
             this.props.onHide();
             this.props.toolbox.getEventBus().trigger('executions:refresh');
+            this.props.toolbox.getEventBus().trigger('deployments:refresh');
         }).catch((err)=>{
             this.setState({loading: false, errors: {error: err.message}});
         })

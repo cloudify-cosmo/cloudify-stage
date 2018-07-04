@@ -43,6 +43,8 @@ export default class ActiveExecutionStatus extends React.Component {
                                    onClick={this._actionClick.bind(this)}/>
                         <Menu.Item content='Force Cancel' name={ExecutionUtils.FORCE_CANCEL_ACTION}
                                    onClick={this._actionClick.bind(this)}/>
+                        <Menu.Item content='Kill' name={ExecutionUtils.KILL_CANCEL_ACTION}
+                                   onClick={this._actionClick.bind(this)}/>
                     </Menu>
                 </PopupMenu>
             </Label>

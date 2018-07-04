@@ -5,9 +5,10 @@
 class ExecutionUtils {
     static CANCEL_ACTION = 'cancel';
     static FORCE_CANCEL_ACTION = 'force-cancel';
+    static KILL_CANCEL_ACTION = 'kill';
 
     static isActiveExecution(execution) {
-        const EXECUTION_STATES = [ 'terminated', 'failed', 'cancelled', 'pending', 'started', 'cancelling', 'force_cancelling' ];
+        const EXECUTION_STATES = [ 'terminated', 'failed', 'cancelled', 'pending', 'started', 'cancelling', 'force_cancelling', 'kill_cancelling' ];
         const END_EXECUTION_STATES = [ 'terminated', 'failed', 'cancelled' ];
         const ACTIVE_EXECUTION_STATES = _.difference(EXECUTION_STATES, END_EXECUTION_STATES);
 
