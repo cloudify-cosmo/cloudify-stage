@@ -15,7 +15,7 @@ export default class extends React.Component {
     render() {
         const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
         const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
-        let {Modal, DataTable, HighlightText, ApproveButton} = Stage.Basic;
+        let {ApproveButton, CopyToClipboardButton, DataTable, HighlightText, Modal} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         let instance = this.props.instance;
@@ -30,7 +30,11 @@ export default class extends React.Component {
 
                     <Modal.Content>
                         <div>
-                            <h3>Relationships</h3>
+                            <h3>
+                                Relationships&nbsp;&nbsp;
+                                <CopyToClipboardButton content='Copy'
+                                                       text={JsonUtils.stringify(instance.relationships, true)} />
+                            </h3>
                             <DataTable className="nodeInstanceRelationshipsTable"
                                        totalSize={instance.relationships.length}
                                        noDataMessage={NO_DATA_MESSAGE_RELATIONSHIPS}>
@@ -52,7 +56,12 @@ export default class extends React.Component {
                                 }
                             </DataTable>
 
-                            <h3>Runtime properties</h3>
+
+                            <h3>
+                                Runtime properties&nbsp;&nbsp;
+                                <CopyToClipboardButton content='Copy'
+                                                       text={JsonUtils.stringify(instance.runtime_properties, true)} />
+                            </h3>
                             <DataTable className="nodeInstanceRuntimePropertiesTable"
                                        totalSize={instanceTotalSize}
                                        noDataMessage={NO_DATA_MESSAGE_RUNTIME_PROPERTIES}>
@@ -83,6 +92,7 @@ export default class extends React.Component {
                                 }
 
                             </DataTable>
+
                         </div>
                     </Modal.Content>
 

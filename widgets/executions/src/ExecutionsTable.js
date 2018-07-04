@@ -19,7 +19,7 @@ export default class extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget, nextProps.widget)
+        return !_.isEqual(this.props.widget.configuration, nextProps.widget.configuration)
             || !_.isEqual(this.state, nextState)
             || !_.isEqual(this.props.data, nextProps.data);
     }
@@ -69,7 +69,8 @@ export default class extends React.Component {
         let {ExecutionStatus} = Stage.Common;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
-        let execution = this.state.execution || {};
+        let execution = this.state.execution || {parameters: {}};
+        let executionParameters = JSON.stringify(execution.parameters, null, 2);
 
         return (
             <div>
@@ -164,7 +165,8 @@ export default class extends React.Component {
 
                 <Modal open={this.state.executionParametersModalOpen} onClose={()=>this.setState({execution: null, executionParametersModalOpen: false})}>
                     <Modal.Content scrolling>
-                        <HighlightText className='json'>{JSON.stringify(execution.parameters, null, 2)}</HighlightText>
+                        <HighlightText className='json'>{executionParameters}</HighlightText>
+                        <CopyToClipboardButton content='Copy Parameters' text={executionParameters} className='rightFloated' />
                     </Modal.Content>
                 </Modal>
 
@@ -176,6 +178,7 @@ export default class extends React.Component {
                 <Modal open={this.state.errorModalOpen} onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
                     <Modal.Content scrolling>
                         <HighlightText className='python'>{execution.error}</HighlightText>
+                        <CopyToClipboardButton content='Copy Error' text={execution.error} className='rightFloated' />
                     </Modal.Content>
                 </Modal>
 
