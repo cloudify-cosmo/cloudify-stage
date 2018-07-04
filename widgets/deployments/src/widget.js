@@ -67,13 +67,14 @@ Stage.defineWidget({
 
                 let formattedData = Object.assign({},deploymentData,{
                     items: _.map (deploymentData.items,(item)=>{
+                        let workflows = Stage.Common.DeploymentUtils.filterWorkflows(_.sortBy(item.workflows, ['name']));
                         return Object.assign({},item,{
                             nodeSize: nodeSize[item.id],
                             nodeStates: _.countBy(nodeInstanceData[item.id], "state"),
                             created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
                             updated_at: Stage.Utils.formatTimestamp(item.updated_at),
                             executions: executionsData[item.id],
-                            workflows: _.sortBy(item.workflows,['name'])
+                            workflows
                         })
                     })
                 });
