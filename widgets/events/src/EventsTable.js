@@ -17,7 +17,7 @@ export default class EventsTable extends React.Component {
     static MAX_MESSAGE_LENGTH = 200;
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget, nextProps.widget)
+        return !_.isEqual(this.props.widget.configuration, nextProps.widget.configuration)
             || !_.isEqual(this.state, nextState)
             || !_.isEqual(this.props.data, nextProps.data);
     }
@@ -45,7 +45,7 @@ export default class EventsTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Events/Logs available. Probably there\'s no deployment created, yet.';
-        let {ErrorMessage, DataTable, Popup, HighlightText} = Stage.Basic;
+        let {CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Popup} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
@@ -102,7 +102,10 @@ export default class EventsTable extends React.Component {
                                                         }
                                                     </span>
                                                 </Popup.Trigger>
-                                                <HighlightText>{JsonUtils.stringify(item.message, true)}</HighlightText>
+                                                <Popup.Content>
+                                                    <HighlightText>{JsonUtils.stringify(item.message, true)}</HighlightText>
+                                                    <CopyToClipboardButton content='Copy Message' text={item.message} className='rightFloated' />
+                                                </Popup.Content>
                                             </Popup>
                                         }
                                     </DataTable.Data>

@@ -58,7 +58,7 @@ Stage.defineWidget({
 
         let selectedExecution = toolbox.getContext().getValue('executionId');
         let params = this.fetchParams(widget, toolbox);
-        let formattedData = {...executions,
+        let formattedData = {
             items: _.map (executions.items,(item)=>{
                 return Object.assign({},item,{
                     blueprint_id: _.get(executionIdToBlueprintIdMap, item.id, item.blueprint_id),

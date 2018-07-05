@@ -38,7 +38,7 @@ export default class extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Inputs available. Probably there\'s no deployment created, yet.';
-        let {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
+        let {CopyToClipboardButton, DataTable, ErrorMessage, Header, HighlightText, Popup} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
         let inputs = this.props.data.items;
         let compareNames = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
@@ -67,11 +67,17 @@ export default class extends React.Component {
                                     {!_.isNil(input.value) &&
                                         <Popup position='top left' wide>
                                             <Popup.Trigger>
-                                                <span>{JsonUtils.getStringValue(input.value)}</span>
+                                                <div>
+                                                    {JsonUtils.getStringValue(input.value)}
+                                                    <CopyToClipboardButton text={JsonUtils.getStringValue(input.value)}
+                                                                           className='rightFloated' />
+                                                </div>
                                             </Popup.Trigger>
-                                            <HighlightText className='json'>
-                                                {JsonUtils.stringify(input.value, true)}
-                                            </HighlightText>
+                                            <Popup.Content>
+                                                <HighlightText className='json'>
+                                                    {JsonUtils.stringify(input.value, true)}
+                                                </HighlightText>
+                                            </Popup.Content>
                                         </Popup>
                                     }
                                 </DataTable.Data>

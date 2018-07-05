@@ -12,14 +12,14 @@ export default class extends React.Component {
             errorModalOpen: false,
             executionParametersModalOpen: false,
             deploymentUpdateModalOpen: false,
-            idPopupOpen: false,
+            hoveredExecution: null,
             deploymentUpdateId: '',
             error: null
         };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget, nextProps.widget)
+        return !_.isEqual(this.props.widget.configuration, nextProps.widget.configuration)
             || !_.isEqual(this.state, nextState)
             || !_.isEqual(this.props.data, nextProps.data);
     }
@@ -37,14 +37,12 @@ export default class extends React.Component {
     }
 
     _selectExecution(item) {
-        var oldSelectedExecutionId = this.props.toolbox.getContext().getValue('executionId');
+        let oldSelectedExecutionId = this.props.toolbox.getContext().getValue('executionId');
         this.props.toolbox.getContext().setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
         if (item.id === oldSelectedExecutionId) {
             this.props.toolbox.getContext().setValue('executionId', null);
-            this.setState({idPopupOpen: false});
         } else {
             this.props.toolbox.getContext().setValue('executionId', item.id);
-            this.setState({idPopupOpen: true});
         }
     }
 
@@ -66,10 +64,11 @@ export default class extends React.Component {
     render() {
         const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
         let {Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Modal, Popup} = Stage.Basic;
-        let {ExecutionStatus} = Stage.Common;
+        let {ExecutionStatus, IdPopup} = Stage.Common;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
-        let execution = this.state.execution || {};
+        let execution = this.state.execution || {parameters: {}};
+        let executionParameters = JSON.stringify(execution.parameters, null, 2);
 
         return (
             <div>
@@ -109,14 +108,11 @@ export default class extends React.Component {
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}>
+                                <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}
+                                               onMouseOver={() => this.state.hoveredExecution !== item.id && this.setState({hoveredExecution: item.id})}
+                                               onMouseOut={() =>  this.state.hoveredExecution === item.id && this.setState({hoveredExecution: null})}>
                                     <DataTable.Data>
-                                        <Popup wide open={this.state.idPopupOpen && item.isSelected} onClose={() => this.setState({idPopupOpen: false})} trigger={<span>&nbsp;</span>}>
-                                            <span className='noWrap'>
-                                                Execution ID: <strong>{item.id}</strong>&nbsp;&nbsp;
-                                                <CopyToClipboardButton content='Copy ID' text={item.id} />
-                                            </span>
-                                        </Popup>
+                                        <IdPopup id={item.id} selected={this.state.hoveredExecution === item.id} />
                                     </DataTable.Data>
                                     <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                     <DataTable.Data>{item.deployment_id}</DataTable.Data>
@@ -129,9 +125,9 @@ export default class extends React.Component {
                                         <Checkmark value={item.is_system_workflow}/>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <Icon name="options" link bordered title="Execution parameters" onClick={(event)=>{event.stopPropagation();this.setState({execution: item, executionParametersModalOpen: true, idPopupOpen: false})}} />
+                                        <Icon name="options" link bordered title="Execution parameters" onClick={(event)=>{event.stopPropagation();this.setState({execution: item, executionParametersModalOpen: true})}} />
                                         {
-                                            item.workflow_id === 'update' && <Icon name="magnify" link bordered title="Update details" onClick={(event)=>{event.stopPropagation();this.setState({deploymentUpdateId: item.parameters.update_id, deploymentUpdateModalOpen: true, idPopupOpen: false})}} />
+                                            item.workflow_id === 'update' && <Icon name="magnify" link bordered title="Update details" onClick={(event)=>{event.stopPropagation();this.setState({deploymentUpdateId: item.parameters.update_id, deploymentUpdateModalOpen: true})}} />
                                         }
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
@@ -145,7 +141,7 @@ export default class extends React.Component {
                                             :
                                                 <Popup position='top center'>
                                                     <Popup.Trigger>
-                                                        <div onClick={(event)=>{event.stopPropagation();this.setState({execution: item, errorModalOpen: true, idPopupOpen: false})}} >
+                                                        <div onClick={(event)=>{event.stopPropagation();this.setState({execution: item, errorModalOpen: true})}} >
                                                             <Icon name="remove circle" color="red" link />
                                                             <ExecutionStatus item={item} showInactiveAsLink={true} onCancelExecution={this._cancelExecution.bind(this)} />
                                                         </div>
@@ -164,7 +160,8 @@ export default class extends React.Component {
 
                 <Modal open={this.state.executionParametersModalOpen} onClose={()=>this.setState({execution: null, executionParametersModalOpen: false})}>
                     <Modal.Content scrolling>
-                        <HighlightText className='json'>{JSON.stringify(execution.parameters, null, 2)}</HighlightText>
+                        <HighlightText className='json'>{executionParameters}</HighlightText>
+                        <CopyToClipboardButton content='Copy Parameters' text={executionParameters} className='rightFloated' />
                     </Modal.Content>
                 </Modal>
 
@@ -176,6 +173,7 @@ export default class extends React.Component {
                 <Modal open={this.state.errorModalOpen} onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
                     <Modal.Content scrolling>
                         <HighlightText className='python'>{execution.error}</HighlightText>
+                        <CopyToClipboardButton content='Copy Error' text={execution.error} className='rightFloated' />
                     </Modal.Content>
                 </Modal>
 

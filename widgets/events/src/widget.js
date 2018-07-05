@@ -83,13 +83,13 @@ Stage.defineWidget({
 
         const CONTEXT_PARAMS = this.fetchParams(widget, toolbox);
 
-        let blueprintId = CONTEXT_PARAMS.blueprint_id
+        let blueprintId = CONTEXT_PARAMS.blueprint_id;
         let deploymentId = CONTEXT_PARAMS.deployment_id;
 
         blueprintId = _.isArray(blueprintId) ? (blueprintId.length === 1 ? blueprintId[0] : "") : "";
         deploymentId = _.isArray(deploymentId) ? (deploymentId.length === 1 ? deploymentId[0] : "") : "";
 
-        let formattedData = Object.assign({}, data, {
+        let formattedData = {
             items: _.map (data.items, (item) => {
                 let id = Stage.Utils.getMD5(item.node_instance_id + item.operation + item.blueprint_id + item.timestamp +
                                             item.message + item.level + item.node_name + item.workflow_id +
@@ -104,7 +104,7 @@ Stage.defineWidget({
             blueprintId,
             deploymentId,
             type: CONTEXT_PARAMS.type
-        });
+        };
 
         return (
             <EventsTable widget={widget} data={formattedData} toolbox={toolbox} />

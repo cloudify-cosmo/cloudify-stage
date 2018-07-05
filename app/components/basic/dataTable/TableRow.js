@@ -62,7 +62,10 @@ export default class TableRow extends Component {
         });
 
         return (
-            <tr id={this.props.id} className={className} onClick={this.props.onClick}>
+            <tr id={this.props.id} className={className}
+                onClick={this.props.onClick}
+                onMouseOver={this.props.onMouseOver}
+                onMouseOut={this.props.onMouseOut}>
                 {children}
             </tr>
         );
