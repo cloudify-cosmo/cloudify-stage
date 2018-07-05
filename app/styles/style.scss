@@ -725,7 +725,10 @@ code.hljs {
 
 /* Modal */
 
-.ui.modal:not(.overlay) > .content {
+.ui.modal {
+  img {
+    max-width: 100% !important;
+  }
 }
 
 .ui.modal.unlimited > .content {

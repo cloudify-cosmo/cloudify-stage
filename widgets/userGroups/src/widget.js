@@ -13,6 +13,7 @@ Stage.defineWidget({
     color: 'violet',
     fetchUrl: '[manager]/user-groups?_get_data=true[params]',
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('userGroups'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     

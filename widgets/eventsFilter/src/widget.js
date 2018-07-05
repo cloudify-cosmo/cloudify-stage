@@ -29,6 +29,7 @@ Stage.defineWidget({
         });
     },
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('eventsFilter'),
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10)

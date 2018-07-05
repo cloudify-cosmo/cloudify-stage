@@ -13,6 +13,7 @@ Stage.defineWidget({
     initialHeight: 16,
     color: "yellow",
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('topology'),
     hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],

@@ -15,6 +15,7 @@ Stage.defineWidget({
     color: 'teal',
     hasStyle: true,
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintCatalog'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
     

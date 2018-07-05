@@ -16,6 +16,7 @@ Stage.defineWidget({
         deploymentUpdates: '[manager]/deployment-updates?_include=old_blueprint_id,execution_id[params:deployment_id]'
     },
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executions'),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],
     

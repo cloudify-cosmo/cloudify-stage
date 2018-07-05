@@ -17,6 +17,7 @@ Stage.defineWidget({
         {id: "url",name: "URL address", default: "", type: Stage.Basic.GenericField.STRING}
     ],
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('buttonLink'),
 
     render: function(widget,data,error,toolbox) {

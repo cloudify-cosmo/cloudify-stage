@@ -34,6 +34,7 @@ Stage.defineWidget({
     },
 
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('filter'),
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
