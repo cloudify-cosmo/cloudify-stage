@@ -64,7 +64,7 @@ export default class extends React.Component {
                                             <Popup.Trigger>
                                                 <div>
                                                     {JsonUtils.getStringValue(output.value)}
-                                                    <CopyToClipboardButton text={JsonUtils.stringify(output.value, true)}
+                                                    <CopyToClipboardButton text={JsonUtils.getStringValue(output.value)}
                                                                            className='rightFloated' />
                                                 </div>
                                             </Popup.Trigger>

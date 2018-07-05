@@ -44,7 +44,7 @@ export default class NodeInstancesTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Node Instances of selected Node available.';
-        let {DataTable, Icon} = Stage.Basic;
+        let {CopyToClipboardButton, DataTable, Icon} = Stage.Basic;
 
         return (
             <div>
@@ -59,7 +59,10 @@ export default class NodeInstancesTable extends React.Component {
                         this.props.instances.map((instance) => {
                             return (
                                 <DataTable.Row key={instance.id} selected={instance.isSelected} onClick={this._selectNodeInstance.bind(this, instance)}>
-                                    <DataTable.Data>{instance.id}</DataTable.Data>
+                                    <DataTable.Data>
+                                        {instance.id}
+                                        <CopyToClipboardButton text={instance.id} className='rightFloated' />
+                                    </DataTable.Data>
                                     <DataTable.Data>{instance.state}</DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
                                         <Icon bordered link className="table"

@@ -28,17 +28,18 @@ export default class CopyToClipboardButton extends Component {
     }
 
     /**
-     * @property {string} text Text to be copied to clipboard
+     * @property {string} [text=''] Text to be copied to clipboard
      * @property {string} [content=''] Button label
      * @property {string} [className=''] Class name to be added to button component
      */
     static propTypes = {
-        text: PropTypes.string.isRequired,
+        text: PropTypes.string,
         content: PropTypes.string,
         className: PropTypes.string
     };
 
     static defaultProps = {
+        text: '',
         content: '',
         className: ''
     };
@@ -49,12 +50,12 @@ export default class CopyToClipboardButton extends Component {
                 {
                     this.props.content
                     ?
-                        <Button animated='vertical' basic compact className={this.props.className}>
+                        <Button animated='vertical' basic compact className={this.props.className} onClick={(event) => event.stopPropagation()}>
                             <Button.Content visible>{this.props.content}</Button.Content>
                             <Button.Content hidden><Icon name='copy' /></Button.Content>
                         </Button>
                     :
-                        <Button basic compact icon='copy' className={this.props.className} />
+                        <Button basic compact icon='copy' className={this.props.className} onClick={(event) => event.stopPropagation()} />
                 }
 
 

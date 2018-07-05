@@ -11,7 +11,7 @@ export default class extends React.Component {
             error: null,
             confirmDelete: false,
             showUploadModal: false,
-            showIdPopup: false
+            hoveredPlugin: false
         }
     }
 
@@ -25,10 +25,8 @@ export default class extends React.Component {
         var oldSelectedPluginId = this.props.toolbox.getContext().getValue('pluginId');
         if (item.id === oldSelectedPluginId) {
             this.props.toolbox.getContext().setValue('pluginId', null);
-            this.setState({showIdPopup: false});
         } else {
             this.props.toolbox.getContext().setValue('pluginId', item.id);
-            this.setState({showIdPopup: true});
         }
     }
 
@@ -107,8 +105,8 @@ export default class extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
-        let {Button, Confirm, CopyToClipboardButton, ErrorMessage, DataTable, Popup, ResourceVisibility} = Stage.Basic;
-        let {UploadPluginModal} = Stage.Common;
+        let {Button, Confirm, DataTable, ErrorMessage, ResourceVisibility} = Stage.Basic;
+        let {IdPopup, UploadPluginModal} = Stage.Common;
 
         return (
             <div>
@@ -124,6 +122,7 @@ export default class extends React.Component {
                            className="pluginsTable"
                            noDataMessage={NO_DATA_MESSAGE} >
 
+                    <DataTable.Column name="id" />
                     <DataTable.Column label="Package name" name="package_name" width="20%"/>
                     <DataTable.Column label="Package version" name="package_version" width="10%"/>
                     <DataTable.Column label="Supported platform" name="supported_platform" width="10%"/>
@@ -136,21 +135,15 @@ export default class extends React.Component {
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectPlugin.bind(this, item)}>
+                                <DataTable.Row key={item.id} selected={item.isSelected}
+                                               onClick={this._selectPlugin.bind(this, item)}
+                                               onMouseOver={() => this.state.hoveredPlugin !== item.id && this.setState({hoveredPlugin: item.id})}
+                                               onMouseOut={() =>  this.state.hoveredPlugin === item.id && this.setState({hoveredPlugin: null})}>
                                     <DataTable.Data>
-                                        <Popup wide open={this.state.showIdPopup && item.isSelected} onClose={() => this.setState({showIdPopup: false})} >
-                                            <Popup.Trigger>
-                                                <span>
-                                                    {item.package_name}
-                                                </span>
-                                            </Popup.Trigger>
-                                            <Popup.Content>
-                                                <span className='noWrap'>
-                                                    Plugin ID: <strong>{item.id}</strong>&nbsp;&nbsp;
-                                                    <CopyToClipboardButton content='Copy ID' text={item.id} />
-                                                </span>
-                                            </Popup.Content>
-                                        </Popup>
+                                        <IdPopup selected={item.id === this.state.hoveredPlugin} id={item.id} />
+                                    </DataTable.Data>
+                                    <DataTable.Data>
+                                        {item.package_name}
                                         <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this._setPluginVisibility(item.id, visibility)} allowedSettingTo={['tenant', 'global']} className="rightFloated"/>
                                     </DataTable.Data>
                                     <DataTable.Data>{item.package_version}</DataTable.Data>
