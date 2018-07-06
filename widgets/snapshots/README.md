@@ -2,7 +2,9 @@
 
 Displays a list of snapshots of the Manager - both snapshots that were created on this manager, and snapshots uploaded to it. This widget is only available to users with the role ‘admin’
 
-> Snapshots are always created with “private” visibility, which cannot be set to a different visibility level.
+
+Snapshots are always created with “private” visibility, which cannot be set to a different visibility level.
+
 
 The widget exposes the following information on each snapshot:
 
@@ -14,16 +16,16 @@ The widget exposes the following information on each snapshot:
 
 In the right column of every snapshot, the widget exposes the following functionalities:
 
-* **Restore snapshot
-* Download snapshot 
-* Delete snapshot**
+* **Restore snapshot**
+* **Download snapshot** 
+* **Delete snapshot**
  
 The widget also exposes the following operations by the buttons on the top right corner:
 
 * **Create** - Create a new snapshot on the current tenant 
 * **Upload** - Upload a snapshot to the current tenant
 
-![snapshots-list]( https://docs.cloudify.co/latest/images/ui/widgets/snapshots-list.png )
+![snapshots-list](https://docs.cloudify.co/staging/next/images/ui/widgets/snapshots-list.png)
 
 #### Widget Settings 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.

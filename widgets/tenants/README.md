@@ -2,9 +2,9 @@
 Displays a list of tenants on the Manager and enables tenant management. This widget is only available to admin users.
 The widget displays the following information regarding each of the tenants:
 
-* Name
-* Number of user-groups assigned to the tenant
-* Number of users directly assigned to the tenant (not as part of groups)
+* **Name**
+* **Number of user-groups assigned to the tenant**
+* **Number of users directly assigned to the tenant** (not as part of groups)
  
 The hamburger menu on the right of every tenant allows performing the following operations:
 
@@ -15,7 +15,7 @@ The hamburger menu on the right of every tenant allows performing the following 
 Also, using the “Add” button on the right top corner of the widget, you will be able to create new tenants. 
 
 
-![tenants-list]( https://docs.cloudify.co/latest/images/ui/widgets/tenants-list.png )
+![tenants-list](https://docs.cloudify.co/staging/next/images/ui/widgets/tenants-list.png)
 
 #### Widget Settings 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.

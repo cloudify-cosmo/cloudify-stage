@@ -1,4 +1,4 @@
-### Event and Logs Filter
+### Events and Logs Filter
 Displays a filter pane for events and logs. The following filtering options are available:
 
 * **Type:** Logs/Events
@@ -9,7 +9,7 @@ Displays a filter pane for events and logs. The following filtering options are 
 * **Message text**
 * **Time Filter**
 
-![events-logs-filter]( https://docs.cloudify.co/latest/images/ui/widgets/events-logs-filter.png )
+![events-logs-filter](https://docs.cloudify.co/staging/next/images/ui/widgets/events-logs-filter.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds

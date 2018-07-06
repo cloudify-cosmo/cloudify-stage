@@ -1,6 +1,6 @@
 {
-  "linksBasePath": "https://docs.cloudify.co/staging/custom-widgtes-page-update",
-  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/custom-widgtes-page-update",
+  "linksBasePath": "https://docs.cloudify.co/staging/next",
+  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/next",
   "files": [
     {"widget": "blueprintActionButtons", "link": "/content/working_with/console/widgets/blueprintActionButtons.md"},
     {"widget": "blueprintCatalog", "link": "/content/working_with/console/widgets/blueprintCatalog.md"},
@@ -10,7 +10,6 @@
     {"widget": "blueprintSources", "link": "/content/working_with/console/widgets/blueprintSources.md"},
     {"widget": "blueprintUploadButton", "link": "/content/working_with/console/widgets/blueprintUploadButton.md"},
     {"widget": "buttonLink", "link": "/content/working_with/console/widgets/buttonLink.md"},
-    {"widget": "common", "link": "/content/working_with/console/widgets/common.md"},
     {"widget": "composerLink", "link": "/content/working_with/console/widgets/composerLink.md"},
     {"widget": "deploymentActionButtons", "link": "/content/working_with/console/widgets/deploymentActionButtons.md"},
     {"widget": "deploymentButton", "link": "/content/working_with/console/widgets/deploymentButton.md"},
