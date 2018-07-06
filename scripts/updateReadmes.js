@@ -27,6 +27,19 @@ function downloadFile(url) {
     });
 }
 
+function updateTitle(content) {
+    return new Promise((resolve, reject) => {
+        const titleRegex = /---\n.*title: ([\w ]*)\n.*---/ms;
+
+        console.info('Updating title:');
+        logChange('title', content.match(titleRegex)[1]);
+
+        content = content.replace(titleRegex, '### $1');
+
+        resolve(content);
+    })
+}
+
 function updateLinks(content) {
     return new Promise((resolve, reject) => {
         const linkRegex = /(\[.*?\])\(\s*(.*?)\s*\)/gm;
@@ -103,6 +116,7 @@ _.forEach(config.files, async (file) => {
 
     console.info(`Adding to queue: '${url}' for '${file.widget}' widget...`);
     await downloadFile(url)
+        .then(updateTitle)
         .then(convertHugoShortcodes)
         .then(updateLinks)
         .then(removeHTMLTags)
