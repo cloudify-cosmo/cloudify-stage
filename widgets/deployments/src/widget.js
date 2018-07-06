@@ -25,6 +25,7 @@ Stage.defineWidget({
             Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
         ],
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
     fetchParams: function(widget, toolbox) {

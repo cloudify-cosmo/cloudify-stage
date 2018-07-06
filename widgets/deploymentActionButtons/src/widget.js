@@ -16,6 +16,7 @@ Stage.defineWidget({
     
     initialConfiguration: [],
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentActionButtons'),
 
     fetchData: function(widget,toolbox) {

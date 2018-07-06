@@ -39,7 +39,7 @@ export default class Tours {
                     step.onCTA = ['redirectTo', url, pageName, nextStep.target, noTargetErrorTitle, noTargetErrorMessage];
                     step.showNextButton = false;
                 }
-                return _.omit(step, 'onNextRedirectTo');
+                step = _.omit(step, 'onNextRedirectTo');
             }
             return step;
         });

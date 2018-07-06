@@ -10,6 +10,7 @@
     "devServer": "node devServer.js",
     "lint": "eslint app test widgets backend e2e --ext .js --ignore-pattern **/widget.js --ignore-pattern **/common.js --ignore-pattern **/node_modules",
     "doc": "esdoc -c ./doc/esdoc.json",
+    "docWidgets": "node scripts/updateReadmes.js",
     "deve2e": "nightwatch -c ./e2e/nightwatch.conf.js --env dev",
     "e2e": "nightwatch -c ./e2e/nightwatch.conf.js",
     "e2ev": "nightwatch -c ./e2e/nightwatch.conf.js --verbose",
