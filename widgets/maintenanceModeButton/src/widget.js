@@ -13,6 +13,7 @@ Stage.defineWidget({
     showHeader: false,
     showBorder: false,
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('maintenanceModeButton'),
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
