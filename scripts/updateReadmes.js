@@ -29,7 +29,7 @@ function downloadFile(url) {
 
 function updateTitle(content) {
     return new Promise((resolve, reject) => {
-        const titleRegex = /---\n.*title: ([\w ]*)\n.*---/ms;
+        const titleRegex = /---[^]*title: ([\w ]*)[^]*---/m;
 
         console.info('Updating title:');
         logChange('title', content.match(titleRegex)[1]);
@@ -57,9 +57,9 @@ function convertHugoShortcodes(content) {
 
     return new Promise((resolve, reject) => {
         // note
-        const noteRegex = /{{%\s*note.*%}}(.*){{%\s*\/note\s*%}}/gms;
-        const tipRegex = /{{%\s*tip.*%}}(.*){{%\s*\/tip\s*%}}/gms;
-        const warningRegex = /{{%\s*warning.*%}}(.*){{%\s*\/warning\s*%}}/gms;
+        const noteRegex = /{{%\s*note.*%}}([^]*){{%\s*\/note\s*%}}/gm;
+        const tipRegex = /{{%\s*tip.*%}}([^]*){{%\s*\/tip\s*%}}/gm;
+        const warningRegex = /{{%\s*warning.*%}}([^]*){{%\s*\/warning\s*%}}/gm;
 
         // relref
         const relrefRegex = /{{<\s*relref\s*"(\S*)"\s*>}}/gms;
@@ -74,7 +74,7 @@ function convertHugoShortcodes(content) {
         content = content
             .replace(noteRegex, '$1')
             .replace(tipRegex, '$1')
-            .replace(warningRegex, '$1')
+            .replace(warningRegex, '$1');
 
         console.info('Converting relref links:');
         logChange('relref shortcodes', content.match(relrefRegex));
