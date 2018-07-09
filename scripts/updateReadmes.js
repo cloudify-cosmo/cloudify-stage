@@ -94,7 +94,7 @@ function convertHugoShortcodes(widget, content) {
 
 function removeHTMLTags(widget, content) {
     return new Promise((resolve, reject) => {
-        const htmlTagRegex = /<[^>]*>/gms;
+        const htmlTagRegex = /<[^>]*>/gm;
 
         log(widget, 'Removing HTML tags:');
         logChange(widget, 'html tags', content.match(htmlTagRegex));
