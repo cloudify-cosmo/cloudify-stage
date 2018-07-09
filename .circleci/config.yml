@@ -29,14 +29,57 @@ jobs:
           name: Build application
           command: npm run build
 
-      - run:
-          name: Run tests
-          command: npm run prodtest
+  test:
+    docker:
+      - image: circleci/node:8.9-stretch
+    working_directory: ~/repo
+      steps:
+        - attach_workspace:
+            at: ~/repo
+        - run:
+            name: Run tests
+            command: npm run prodtest
 
-      - run:
-          name: Check code style
-          command: npm run lint
+  check:
+    docker:
+      - image: circleci/node:8.9-stretch
+    working_directory: ~/repo
+      steps:
+        - attach_workspace:
+            at: ~/repo
+        - run:
+            name: Check code style
+            command: npm run lint
+        - run:
+            name: Check bundle size
+            command: npm run size
 
-      - run:
-          name: Check bundle size
-          command: npm run size
+  docWidgets:
+    docker:
+      - image: circleci/node:8.9-stretch
+    working_directory: ~/repo
+      steps:
+        - attach_workspace:
+            at: ~/repo
+        - run:
+            name: Generate widgets documentation
+            command: npm run docWidgets
+        - run:
+            name: Check differences
+            command: git diff --exit-code
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+
+      - test:
+          requires:
+            - build
+      - check:
+          requires:
+            - build
+      - docWidgets:
+          requires:
+            - build
