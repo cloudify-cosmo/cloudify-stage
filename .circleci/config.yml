@@ -48,7 +48,7 @@ jobs:
           name: Check code style
           command: npm run lint
 
-  checkSize:
+  checkBundleSize:
     docker:
       - image: circleci/node:8.11-stretch
     working_directory: ~/repo
@@ -70,8 +70,8 @@ jobs:
           name: Generate widgets documentation
           command: npm run docWidgets
       - run:
-          name: Check differences
-          command: git diff --exit-code
+          name: Check if widgets documentation is up to date
+          command: git diff --exit-code ./widgets
 
 workflows:
   version: 2
@@ -81,7 +81,7 @@ workflows:
       - test:
           requires:
             - build
-      - checkSize:
+      - checkBundleSize:
           requires:
             - build
       - checkWidgetsDoc:
