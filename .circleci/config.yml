@@ -40,7 +40,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - attach_workspace:
-          at: ~/repo
+          at: ~
       - run:
           name: Run tests
           command: npm run prodtest
@@ -54,7 +54,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - attach_workspace:
-          at: ~/repo
+          at: ~
       - run:
           name: Check bundle size
           command: npm run size
@@ -65,7 +65,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - attach_workspace:
-          at: ~/repo
+          at: ~
       - run:
           name: Generate widgets documentation
           command: npm run docWidgets
