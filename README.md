@@ -42,6 +42,17 @@ Changes in the source code shall be hot loaded to the development development ve
     - define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`
     - upload package to the Cloudify Manager and restart UI services: `npm run upload`
 
+### Widget Development
+
+Once you have configured successfully local deployment of Cloudify Console you are able to start development and testing of your own widgets. All out-of-the-box widgets resides in `widgets` directory. 
+
+To create your own widget:
+- follow the instructions from [here](https://docs.cloudify.co/latest/developer/custom_console/custom-widgets/) and place widget in `widgets` directory
+- restart development server
+- install new widget 
+
+Since now, every single change in widget's code should be reflected in webserver after page reload.
+
 ## Test
 ### Unit tests
 Run `npm run prodtest`.
@@ -60,5 +71,13 @@ export STAGE_E2E_MANAGER_URL=<MANAGER_IP>
 and run: `npm run e2e`.
 
 ## Documentation
+
+### Components
 To create components documentation run: `npm run doc`.
 Documentation is created in `doc/www` directory. Open `doc/www/index.html` in web browser to see it.
+
+### Widgets
+Widgets documentation bases on [Cloudify Documentation](https://docs.cloudify.co/latest/working_with/console/default-widgets-ref/) and is stored in README.md files in widgets' folders.
+
+To update widgets' documentation run `npm run docWidgets`. 
+Configuration for update script can be found in: `scripts/readmesConfig.json`. 
