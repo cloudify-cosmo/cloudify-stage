@@ -30,16 +30,15 @@ jobs:
           command: npm run build
 
       - persist_to_workspace:
-          root: .
+          root: /home/circleci
           paths:
-            - dist
+            - repo
 
   test:
     docker:
       - image: circleci/node:8.9-stretch
     working_directory: ~/repo
     steps:
-      - checkout
       - attach_workspace:
           at: ~/repo
       - run:
@@ -54,7 +53,6 @@ jobs:
       - image: circleci/node:8.9-stretch
     working_directory: ~/repo
     steps:
-      - checkout
       - attach_workspace:
           at: ~/repo
       - run:
@@ -66,7 +64,6 @@ jobs:
       - image: circleci/node:8.9-stretch
     working_directory: ~/repo
     steps:
-      - checkout
       - attach_workspace:
           at: ~/repo
       - run:
