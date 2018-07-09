@@ -30,7 +30,7 @@ jobs:
           command: npm run build
 
       - persist_to_workspace:
-          root: .
+          root: dist
 
   test:
     docker:
