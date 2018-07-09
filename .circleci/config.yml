@@ -29,6 +29,9 @@ jobs:
           name: Build application
           command: npm run build
 
+      - persist_to_workspace:
+          root: .
+
   test:
     docker:
       - image: circleci/node:8.9-stretch
@@ -40,7 +43,8 @@ jobs:
           name: Run tests
           command: npm run prodtest
 
-  check:
+
+  checkStyle:
     docker:
       - image: circleci/node:8.9-stretch
     working_directory: ~/repo
@@ -50,11 +54,19 @@ jobs:
       - run:
           name: Check code style
           command: npm run lint
+
+  checkSize:
+    docker:
+      - image: circleci/node:8.9-stretch
+    working_directory: ~/repo
+    steps:
+      - attach_workspace:
+          at: ~/repo
       - run:
           name: Check bundle size
           command: npm run size
 
-  docWidgets:
+  checkWidgetsDoc:
     docker:
       - image: circleci/node:8.9-stretch
     working_directory: ~/repo
@@ -70,15 +82,18 @@ jobs:
 
 workflows:
   version: 2
-  build-deploy:
+  build-test-check:
     jobs:
       - build
       - test:
           requires:
             - build
-      - check:
+      - checkSize:
           requires:
             - build
-      - docWidgets:
+      - checkStyle:
+          requires:
+            - build
+      - checkWidgetsDoc:
           requires:
             - build
