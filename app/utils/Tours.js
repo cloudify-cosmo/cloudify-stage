@@ -24,6 +24,8 @@ export default class Tours {
 
         hopscotchTour.onClose = ['onTourClose'];
         hopscotchTour.onStart = ['onTourStart'];
+        hopscotchTour.onError = ['showError'];
+        hopscotchTour.skipIfNoElement = false;
         hopscotchTour.steps =  _.map(hopscotchTour.steps, (step, index) => {
             if(!_.isUndefined(step.onNextRedirectTo)){
                 const nextStep = hopscotchTour.steps[index + 1];
@@ -33,7 +35,6 @@ export default class Tours {
                         = _.isArray(step.onNextRedirectTo)
                         ? step.onNextRedirectTo
                         : [step.onNextRedirectTo, step.onNextRedirectTo, undefined, undefined];
-
                     step.showCTAButton = true;
                     step.ctaLabel = 'Next (change page)';
                     step.onCTA = ['redirectTo', url, pageName, nextStep.target, noTargetErrorTitle, noTargetErrorMessage];
