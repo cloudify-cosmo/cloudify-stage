@@ -47,8 +47,7 @@ export default class NodesTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Nodes available. Probably there\'s no deployment created, yet.';
-        let ErrorMessage = Stage.Basic.ErrorMessage;
-        let DataTable = Stage.Basic.DataTable;
+        let {CopyToClipboardButton, DataTable, ErrorMessage, Icon, Popup} = Stage.Basic;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
 
@@ -57,13 +56,13 @@ export default class NodesTable extends React.Component {
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
                 <DataTable fetchData={this.fetchGridData.bind(this)}
-                       totalSize={this.props.data.total}
-                       pageSize={this.props.widget.configuration.pageSize}
-                       sortColumn={this.props.widget.configuration.sortColumn}
-                       sortAscending={this.props.widget.configuration.sortAscending}
-                       selectable={true}
-                       className="nodesTable"
-                       noDataMessage={NO_DATA_MESSAGE}>
+                           totalSize={this.props.data.total}
+                           pageSize={this.props.widget.configuration.pageSize}
+                           sortColumn={this.props.widget.configuration.sortColumn}
+                           sortAscending={this.props.widget.configuration.sortAscending}
+                           selectable={true}
+                           className="nodesTable"
+                           noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column width="5%"/>
                     <DataTable.Column label="Name" name="id" width="15%"
@@ -95,7 +94,24 @@ export default class NodesTable extends React.Component {
                                     <DataTable.Row key={node.id + node.deployment_id} selected={node.isSelected} onClick={this._selectNode.bind(this, node)}>
                                         <DataTable.Data className='center aligned'><NodeTypeIcon typeHierarchy={node.type_hierarchy} /></DataTable.Data>
                                         <DataTable.Data><a className='nodeName' href="javascript:void(0)">{node.id}</a></DataTable.Data>
-                                        <DataTable.Data>{node.type}</DataTable.Data>
+                                        <DataTable.Data>
+                                            <div>
+                                                {node.type}
+                                                <Popup hoverable>
+                                                    <Popup.Trigger>
+                                                        <Icon name='sitemap' link bordered className='rightFloated'
+                                                              onClick={(event) => event.stopPropagation()} />
+                                                    </Popup.Trigger>
+                                                    <Popup.Header>
+                                                        Type Hierarchy
+                                                        <CopyToClipboardButton text={String(node.type_hierarchy)} className='rightFloated' />
+                                                    </Popup.Header>
+                                                    <Popup.Content>
+                                                        <TypeHierarchyTree typeHierarchy={node.type_hierarchy} />
+                                                    </Popup.Content>
+                                                </Popup>
+                                            </div>
+                                        </DataTable.Data>
                                         <DataTable.Data>{node.blueprint_id}</DataTable.Data>
                                         <DataTable.Data>{node.deployment_id}</DataTable.Data>
                                         <DataTable.Data>{node.containedIn}</DataTable.Data>
@@ -145,7 +161,7 @@ function NodeTypeIcon(props) {
         'cloudify.nodes.DBMS':'topology-glyph db-server', //a Database
         'cloudify.nodes.MessageBugServer':'topology-glyph message-bus-server', //a message bus server
         'cloudify.nodes.ApplicationModule':'topology-glyph app-module ', //a base type for any application module or artifact
-    }
+    };
     const DEFAULT_NODE_TYPE_CLASS = NODE_TYPE_CLASS['cloudify.nodes.Root'];
 
     _.eachRight(props.typeHierarchy, type => !(nodeTypeClass = NODE_TYPE_CLASS[type]));
@@ -153,4 +169,29 @@ function NodeTypeIcon(props) {
     return (
         <i className={nodeTypeClass || DEFAULT_NODE_TYPE_CLASS} />
     )
+}
+
+function TypeHierarchyTree(props) {
+    let {Icon, NodesTree} = Stage.Basic;
+
+    const getNodes = (types) => {
+        let type = types[0];
+        if (types.length > 1) {
+            return (
+                <NodesTree.Node key={type} title={<span><Icon name='triangle down' />{type}</span>}>
+                    {getNodes(_.slice(types, 1))}
+                </NodesTree.Node>
+            );
+        } else {
+            return (
+                <NodesTree.Node key={type} title={<span><strong>{type}</strong></span>} />
+            );
+        }
+    };
+
+    return (
+        <NodesTree showLine selectable={false} defaultExpandAll className='typesHierarchy'>
+            {getNodes(props.typeHierarchy)}
+        </NodesTree>
+    );
 }

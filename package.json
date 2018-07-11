@@ -49,7 +49,7 @@
     "prop-types": "^15.6.1",
     "proxy-polyfill": "^0.2.0",
     "query-string": "^6.0.0",
-    "rc-tree": "^1.4.3",
+    "rc-tree": "^1.13.0",
     "react": "^16.4.0",
     "react-color": "^2.14.0",
     "react-copy-to-clipboard": "^5.0.1",
