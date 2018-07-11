@@ -47,8 +47,8 @@ export function resetPages(){
         dispatch(setPages([]));
         return dispatch(createPagesFromTemplate())
             .then(() => {
-                dispatch(setAppLoading(false))
-                dispatch(push('/'));
+                dispatch(setAppLoading(false));
+                dispatch(push(Consts.HOME_PAGE_PATH));
             })
             .catch(err => {
                 dispatch(setAppError(err.message));
@@ -92,11 +92,11 @@ export function reloadUserAppData () {
                 var pages = state.pages;
                 var page = getPageById(pages, currentPageId);
                 if(!page){
-                    dispatch(push('/'));
+                    dispatch(push(Consts.HOME_PAGE_PATH));
                 } else if(page.isDrillDown) {
                     var parent = getPageById(pages, page.parent);
                     if(!parent) {
-                        dispatch(push('/'));
+                        dispatch(push(Consts.HOME_PAGE_PATH));
                     } else {
                         dispatch(push('/page/'+parent.id));
                     }

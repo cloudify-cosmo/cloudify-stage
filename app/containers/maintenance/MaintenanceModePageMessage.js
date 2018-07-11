@@ -19,7 +19,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         navigateToHome: () => {
-            return dispatch(push('/'));
+            return dispatch(push(Consts.HOME_PAGE_PATH));
         }
     }
 };
