@@ -1,41 +1,35 @@
-'use strict';
 /**
  * Created by pposel on 24/02/2017.
  */
 
-var os = require('os');
-var db = require('../db/Connection');
-var fs = require('fs-extra');
-var pathlib = require('path');
-var mkdirp = require('mkdirp');
-var _ = require('lodash');
-var config = require('../config').get();
-var Consts = require('../consts');
-var ArchiveHelper = require('./ArchiveHelper');
-var ResourceTypes = require('../db/types/ResourceTypes');
-var BackendHandler = require('./BackendHandler');
+const os = require('os');
+const db = require('../db/Connection');
+const fs = require('fs-extra');
+const pathlib = require('path');
+const mkdirp = require('mkdirp');
+const _ = require('lodash');
 
-var logger = require('log4js').getLogger('WidgetHandler');
+const logger = require('log4js').getLogger('WidgetHandler');
 
-//TODO: Temporary solution, the approach needs to be think over thoroughly
-var builtInWidgetsFolder = pathlib.resolve('../widgets');
-var userWidgetsFolder = pathlib.resolve(`..${Consts.USER_DATA_PATH}/widgets`);
-if (!fs.existsSync(builtInWidgetsFolder)) {
-    builtInWidgetsFolder = pathlib.resolve('../dist/widgets');
-    userWidgetsFolder = pathlib.resolve(`../dist${Consts.USER_DATA_PATH}/widgets`);
-}
+const config = require('../config').get();
+const Utils = require('../utils');
+const ArchiveHelper = require('./ArchiveHelper');
+const ResourceTypes = require('../db/types/ResourceTypes');
+const BackendHandler = require('./BackendHandler');
 
-var widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
+const builtInWidgetsFolder = Utils.getResourcePath('widgets', false);
+const userWidgetsFolder = Utils.getResourcePath('widgets', true);
+const widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
 
 module.exports = (function() {
 
     function _saveMultipartData(req) {
-        var targetPath = pathlib.join(widgetTempDir, 'widget' + Date.now());
+        const targetPath = pathlib.join(widgetTempDir, 'widget' + Date.now());
         return ArchiveHelper.saveMultipartData(req, targetPath, 'widget');
     }
 
     function _saveDataFromUrl(archiveUrl) {
-        var targetPath = pathlib.join(widgetTempDir, 'widget' + Date.now());
+        const targetPath = pathlib.join(widgetTempDir, 'widget' + Date.now());
         return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
     }
 
@@ -55,7 +49,7 @@ module.exports = (function() {
     }
 
     function _validateUniqueness(widgetId) {
-        var widgets = _getAllWidgets();
+        let widgets = _getAllWidgets();
         if (_.indexOf(widgets, widgetId) >= 0) {
             return Promise.reject({status: 422, message: 'Widget ' + widgetId + ' is already installed'});
         }
@@ -72,7 +66,7 @@ module.exports = (function() {
     }
 
     function _validateWidget(widgetId, extractedDir) {
-        var files = fs.readdirSync(extractedDir);
+        let files = fs.readdirSync(extractedDir);
 
         //remove hidden or junk files
         files = _.filter(files, file => {
@@ -80,7 +74,7 @@ module.exports = (function() {
         });
 
         if (files.length === 1 && fs.statSync(pathlib.join(extractedDir, files[0])).isDirectory()) {
-            var dirName = files[0];
+            let dirName = files[0];
             if (dirName !== widgetId) {
                 return Promise.reject('Incorrect widget folder name not consistent with widget id: ' + widgetId + ' <> ' + dirName);
             }
@@ -89,8 +83,8 @@ module.exports = (function() {
             files = fs.readdirSync(extractedDir);
         }
 
-        var requiredFiles = config.app.widgets.requiredFiles;
-        var missingFiles = _.difference(requiredFiles, files);
+        const requiredFiles = config.app.widgets.requiredFiles;
+        const missingFiles = _.difference(requiredFiles, files);
 
         if (!_.isEmpty(missingFiles)) {
             return Promise.reject('The following files are required for widget registration: ' + _.join(missingFiles, ', '));
@@ -103,7 +97,7 @@ module.exports = (function() {
         logger.debug('installing widget files to the target path', pathlib.resolve(userWidgetsFolder));
         logger.debug('widget temp path', tempPath);
 
-        var installPath = pathlib.resolve(userWidgetsFolder, widgetId);
+        const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
 
         return new Promise((resolve, reject) => {
             fs.removeSync(installPath);
@@ -133,11 +127,11 @@ module.exports = (function() {
         return ArchiveHelper.removeOldExtracts(widgetTempDir)
             .then(() => archiveUrl ? _saveDataFromUrl(archiveUrl) : _saveMultipartData(req))
             .then(data => {
-                var widgetTempPath = data.archiveFolder;
-                var widgetZipFile = data.archiveFile;
-                var widgetId = pathlib.parse(pathlib.parse(widgetZipFile).name).name;
-                var archivePath = pathlib.join(widgetTempPath, widgetZipFile);
-                var extractedDir = pathlib.join(widgetTempPath, widgetId);
+                const widgetTempPath = data.archiveFolder;
+                const widgetZipFile = data.archiveFile;
+                const widgetId = pathlib.parse(pathlib.parse(widgetZipFile).name).name;
+                const archivePath = pathlib.join(widgetTempPath, widgetZipFile);
+                const extractedDir = pathlib.join(widgetTempPath, widgetId);
 
                 return ArchiveHelper.decompressArchive(archivePath, extractedDir)
                     .then(() => _validateUniqueness(widgetId))
@@ -169,11 +163,11 @@ module.exports = (function() {
             .then(() => ArchiveHelper.cleanTempData(pathlib.join(widgetTempDir, updateWidgetId)))
             .then(() => archiveUrl ? _saveDataFromUrl(archiveUrl) : _saveMultipartData(req))
             .then(data => {
-                var widgetTempPath = data.archiveFolder;
-                var widgetZipFile = data.archiveFile;
-                var widgetId = pathlib.parse(pathlib.parse(widgetZipFile).name).name;
-                var archivePath = pathlib.join(widgetTempPath, widgetZipFile);
-                var extractedDir = pathlib.join(widgetTempPath, widgetId);
+                const widgetTempPath = data.archiveFolder;
+                const widgetZipFile = data.archiveFile;
+                const widgetId = pathlib.parse(pathlib.parse(widgetZipFile).name).name;
+                const archivePath = pathlib.join(widgetTempPath, widgetZipFile);
+                const extractedDir = pathlib.join(widgetTempPath, widgetId);
 
                 return _backupWidget(widgetId, widgetTempPath)
                     .then(() =>_validateConsistency(updateWidgetId, widgetId))
@@ -204,8 +198,8 @@ module.exports = (function() {
     }
 
     function _backupWidget(widgetId, tempPath) {
-        var installPath = pathlib.resolve(userWidgetsFolder, widgetId);
-        var backupPath = pathlib.resolve(tempPath, 'backup');
+        const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
+        const backupPath = pathlib.resolve(tempPath, 'backup');
 
         return new Promise((resolve, reject) => {
             fs.copy(installPath, backupPath, err => {
@@ -219,8 +213,8 @@ module.exports = (function() {
     }
 
     function _restoreBackup(widgetId, tempPath) {
-        var installPath = pathlib.resolve(userWidgetsFolder, widgetId);
-        var backupPath = pathlib.resolve(tempPath, 'backup');
+        const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
+        const backupPath = pathlib.resolve(tempPath, 'backup');
 
         return new Promise((resolve, reject) => {
             fs.removeSync(installPath);
@@ -235,14 +229,14 @@ module.exports = (function() {
     }
 
     function listWidgets() {
-        var builtInWidgets = _.map(_getBuiltInWidgets(), (widget) => ({id: widget, isCustom: false}));
-        var userWidgets = _.map(_getUserWidgets(), (widget) => ({id: widget, isCustom: true}));
+        const builtInWidgets = _.map(_getBuiltInWidgets(), (widget) => ({id: widget, isCustom: false}));
+        const userWidgets = _.map(_getUserWidgets(), (widget) => ({id: widget, isCustom: true}));
 
         return Promise.resolve(_.concat(builtInWidgets, userWidgets));
     }
 
     function deleteWidget(widgetId) {
-        var path = pathlib.resolve(userWidgetsFolder, widgetId);
+        const path = pathlib.resolve(userWidgetsFolder, widgetId);
 
         return new Promise((resolve,reject) => {
             fs.remove(path, (err) => {
@@ -261,9 +255,9 @@ module.exports = (function() {
         return db.UserApp
             .findAll({attributes: ['appData', 'managerIp', 'username']})
             .then(userApp => {
-                var result = [];
+                let result = [];
                 _.forEach(userApp, function(row) {
-                    var filter = _.filter(row.appData.pages, {widgets: [{definition: widgetId}]});
+                    let filter = _.filter(row.appData.pages, {widgets: [{definition: widgetId}]});
                     if (!_.isEmpty(filter)) {
                         result.push({username: row.username, managerIp: row.managerIp});
                     }

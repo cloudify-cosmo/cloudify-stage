@@ -2,10 +2,12 @@
  * Created by kinneretzin on 10/11/2016.
  */
 
+import Cookies from 'js-cookie';
+
+import Consts from './consts';
 import StageUtils from './stageUtils';
 import External from './External';
 import Internal from './Internal';
-import Cookies from 'js-cookie';
 
 export default class Auth {
 
@@ -25,7 +27,7 @@ export default class Auth {
     }
 
     static isLoggedIn(){
-        return !!Cookies.get('XSRF-TOKEN');
+        return !!Cookies.get(Consts.TOKEN_COOKIE_NAME);
     }
 
     static getRBACConfig(managerData){

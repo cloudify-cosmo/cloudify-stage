@@ -4,28 +4,28 @@
         "limit": "2.75 MB",
         "gzip": false,
         "webpack": false,
-        "path": ["dist/*.gz", "dist/widgets/*/widget.js.gz", "dist/widgets/*/widget.css", "dist/widgets/*/widget.png", "dist/widgets/*/widget.html", "dist/widgets/*/backend.js", "dist/templates/**", "dist/app/**"]
+        "path": ["dist/js/*.gz", "dist/resources/widgets/*/widget.js.gz", "dist/resources/widgets/*/widget.css", "dist/resources/widgets/*/widget.png", "dist/resources/widgets/*/widget.html", "dist/resources/widgets/*/backend.js", "dist/resources/templates/**", "dist/*", "dist/images/**"]
     },
     {
         "name": "Application (brotli)",
         "limit": "2.4 MB",
         "gzip": false,
         "webpack": false,
-        "path": ["dist/*.br", "dist/widgets/*/widget.js.br", "dist/widgets/*/widget.css", "dist/widgets/*/widget.png", "dist/widgets/*/widget.html", "dist/widgets/*/backend.js", "dist/templates/**", "dist/app/**"]
+        "path": ["dist/js/*.br", "dist/resources/widgets/*/widget.js.br", "dist/resources/widgets/*/widget.css", "dist/resources/widgets/*/widget.png", "dist/resources/widgets/*/widget.html", "dist/resources/widgets/*/backend.js", "dist/resources/templates/**", "dist/*", "dist/images/**"]
     },
     {
         "name": "Main JS bundle",
         "limit": "300 KB",
         "gzip": false,
         "webpack": false,
-        "path": "dist/main.bundle.js"
+        "path": "dist/js/main.bundle.js"
     },
     {
         "name": "Vendor JS bundle",
         "limit": "5 MB",
         "gzip": false,
         "webpack": false,
-        "path": "dist/vendor.bundle.js"
+        "path": "dist/js/vendor.bundle.js"
     },
     {
         "name": "Application package",

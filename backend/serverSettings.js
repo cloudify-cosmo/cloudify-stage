@@ -1,12 +1,11 @@
-'use strict';
 /**
  * Created by kinneretzin on 25/01/2017.
  */
 
-var logger = require('log4js').getLogger('argsReader');
-var _ = require('lodash');
+const _ = require('lodash');
+const logger = require('log4js').getLogger('argsReader');
 
-var ServerSettings = {
+let ServerSettings = {
 
     MODE_MAIN: 'main',
     MODE_CUSTOMER : 'customer',
@@ -18,9 +17,9 @@ var ServerSettings = {
         this.settings = {
             mode: this.MODE_MAIN
         };
-        var modes = [this.MODE_MAIN, this.MODE_CUSTOMER, this.MODE_COMMUNITY];
+        const modes = [this.MODE_MAIN, this.MODE_CUSTOMER, this.MODE_COMMUNITY];
 
-        var displayUsage = ()=>{
+        const displayUsage = () => {
             logger.info('Usage: server.js -mode [' + _.join(modes,'|') + ']');
             process.exit(0);
         };

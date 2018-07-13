@@ -21,7 +21,7 @@ router.post('/login', (req, res) => {
     AuthHandler.getToken(req.headers.authorization).then((token) => {
         AuthHandler.getTenants(token.value).then((tenants) => {
             if(!!tenants && !!tenants.items && tenants.items.length > 0) {
-                res.cookie('XSRF-TOKEN', token.value);
+                res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
                 res.send({
                     role: token.role,
                     serverVersion: config.manager.serverVersion
@@ -53,7 +53,7 @@ router.post('/saml/callback', passport.authenticate('saml', {session: false}), f
     }
 
     AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse).then((token) => {
-        res.cookie('XSRF-TOKEN', token.value);
+        res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
         res.redirect(Consts.CONTEXT_PATH);
     })
     .catch((err) => {
@@ -74,7 +74,7 @@ router.get('/user', passport.authenticate('token', {session: false}), (req, res)
 });
 
 router.post('/logout', passport.authenticate('token', {session: false}), (req, res) => {
-    res.clearCookie('XSRF-TOKEN');
+    res.clearCookie(Consts.TOKEN_COOKIE_NAME);
     res.end();
 });
 
