@@ -25,7 +25,7 @@ You can deploy the stage either by starting the server and connecting to stage l
 
 ### Local deployment
 Start the stage server backend and the webserver:
-- run backend server: `cd backend && npm start`
+- run backend server: `cd backend && npm devStart`
 - run development server: `npm run devServer`
 
 Open browser to see if application is running. It runs by default on `http://localhost:4000`. 
