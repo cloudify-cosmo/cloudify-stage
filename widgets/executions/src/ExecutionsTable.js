@@ -158,11 +158,14 @@ export default class extends React.Component {
                     }
                 </DataTable>
 
-                <Modal open={this.state.executionParametersModalOpen} onClose={()=>this.setState({execution: null, executionParametersModalOpen: false})}>
+                <Modal open={this.state.executionParametersModalOpen} closeIcon
+                       onClose={()=>this.setState({execution: null, executionParametersModalOpen: false})}>
                     <Modal.Content scrolling>
                         <HighlightText className='json'>{executionParameters}</HighlightText>
-                        <CopyToClipboardButton content='Copy Parameters' text={executionParameters} className='rightFloated' />
                     </Modal.Content>
+                    <Modal.Actions>
+                        <CopyToClipboardButton content='Copy Parameters' text={executionParameters} />
+                    </Modal.Actions>
                 </Modal>
 
                 <UpdateDetailsModal open={this.state.deploymentUpdateModalOpen}
@@ -170,11 +173,14 @@ export default class extends React.Component {
                                     onClose={()=>this.setState({execution: null, deploymentUpdateId: '', deploymentUpdateModalOpen: false})}
                                     toolbox={this.props.toolbox} />
 
-                <Modal open={this.state.errorModalOpen} onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
+                <Modal open={this.state.errorModalOpen} closeIcon
+                       onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
                     <Modal.Content scrolling>
                         <HighlightText className='python'>{execution.error}</HighlightText>
-                        <CopyToClipboardButton content='Copy Error' text={execution.error} className='rightFloated' />
                     </Modal.Content>
+                    <Modal.Actions>
+                        <CopyToClipboardButton content='Copy Error' text={execution.error} />
+                    </Modal.Actions>
                 </Modal>
 
             </div>
