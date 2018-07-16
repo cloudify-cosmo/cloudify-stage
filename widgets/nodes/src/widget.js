@@ -67,7 +67,7 @@ Stage.defineWidget({
         let groups = this._getGroups(data.deployments.items);
         let group;
 
-        let formattedData = Object.assign({}, data.nodes, {
+        let formattedData = {
             items: _.map (nodes, (node) => {
                 var group;
                 return Object.assign({}, node, {
@@ -89,7 +89,7 @@ Stage.defineWidget({
             total : _.get(data.nodes, 'metadata.pagination.total', 0),
             blueprintId : params.blueprint_id,
             deploymentId : params.deployment_id
-        });
+        };
 
         return (
             <NodesTable widget={widget} data={formattedData} toolbox={toolbox}/>
