@@ -13,23 +13,19 @@ export default class Help extends Component {
     render() {
         let {Dropdown, Icon} = Stage.Basic;
 
-        const helpMenuTrigger = (
-            <Icon name='help circle' />
-        );
-
-        const ExternalLink = (url, text, icon='external') => (
-            <a href={url} target='_blank' className='ui text'>
-                <Icon name={icon} /> {text}
-            </a>
-        );
+        const redirectToPage = (url) => window.open(url, '_blank');
 
         return (
-            <Dropdown item trigger={helpMenuTrigger} className='helpMenu' scrolling>
+            <Dropdown item trigger={<Icon name='help circle' />} className='helpMenu' scrolling>
                 <Dropdown.Menu>
-                    <Dropdown.Item content={ExternalLink('https://docs.cloudify.co', 'Documentation', 'book')} />
-                    <Dropdown.Item content={ExternalLink('https://cloudify.co/academy', 'Tutorials', 'video camera')} />
-                    <Dropdown.Item content={ExternalLink('https://cloudify.co/knowledge-base/', 'Knowledge Base', 'student')} />
-                    <Dropdown.Item content={ExternalLink('https://cloudify.co/community', 'Contact Us', 'comments')} />
+                    <Dropdown.Item icon='book' text='Documentation'
+                                   onClick={redirectToPage.bind(this, 'https://docs.cloudify.co')} />
+                    <Dropdown.Item icon='video camera' text='Tutorials'
+                                   onClick={redirectToPage.bind(this, 'https://cloudify.co/academy')} />
+                    <Dropdown.Item icon='student' text='Knowledge Base'
+                                   onClick={redirectToPage.bind(this, 'https://cloudify.co/knowledge-base')} />
+                    <Dropdown.Item icon='comments' text='Contact Us'
+                                   onClick={redirectToPage.bind(this, 'https://cloudify.co/community')} />
                 </Dropdown.Menu>
             </Dropdown>
         );

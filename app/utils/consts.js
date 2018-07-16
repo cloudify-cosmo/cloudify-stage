@@ -8,6 +8,7 @@ export default {
     ERROR_404_PAGE_PATH: '/404',
     ERROR_NO_TENANTS_PAGE_PATH: '/noTenants',
     ERROR_PAGE_PATH: '/error',
+    HOME_PAGE_PATH: '/',
     LOGIN_PAGE_PATH: '/login',
     LOGOUT_PAGE_PATH: '/logout',
     MAINTENANCE_PAGE_PATH: '/maintenance',

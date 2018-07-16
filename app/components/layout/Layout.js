@@ -90,7 +90,7 @@ export default class Layout extends Component {
                     <Route exact path='/page/:pageId/:pageName' component={Home}/>
                     <Route exact path='/page/:pageId' component={Home}/>
                     <Route exact path={Consts.ERROR_404_PAGE_PATH} component={NotFound}/>,
-                    <Route exact path='/' component={Home} />
+                    <Route exact path={Consts.HOME_PAGE_PATH} component={Home} />
                     <Route component={NotFound} />
                 </Switch>
             </div>

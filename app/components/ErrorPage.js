@@ -3,20 +3,23 @@
  */
 
 import React, { Component } from 'react';
-import {Message} from 'semantic-ui-react';
+import { Redirect } from 'react-router-dom';
+
+import { Header, Message } from './basic';
+import MessageContainer from './MessageContainer';
 import LinkToLogin from '../containers/LinkToLogin';
+import Consts from '../utils/consts';
 
 export default class ErrorPage extends Component {
-
     render () {
-        return (
-            <div className='coloredContainer'>
-                <div className="ui raised very padded text container segment center aligned segment404">
-                    <h2 className="ui header">Unexpected Error Occurred</h2>
+        return _.isEmpty(this.props.error)
+            ?
+                <Redirect to={Consts.LOGOUT_PAGE_PATH} />
+            :
+                <MessageContainer>
+                    <Header as='h2'>Unexpected Error Occurred</Header>
                     <Message content={this.props.error} error/>
                     <LinkToLogin/>
-                </div>
-            </div>
-        );
+                </MessageContainer>
     }
 }

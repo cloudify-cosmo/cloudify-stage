@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { parse } from 'query-string';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
+import { Button, Input, Message, Form } from './basic';
 
 export default class Login extends Component {
 
@@ -24,21 +25,40 @@ export default class Login extends Component {
 
         this.state = {
             username: props.username || '',
-            password: ''
+            password: '',
+            errors: {}
         };
     }
 
-    onSubmit(e) {
+    onSubmit() {
+        let errors = {};
+
+        if (_.isEmpty(this.state.username)) {
+            errors['username'] = 'Please provide username';
+        }
+        if (_.isEmpty(this.state.password)) {
+            errors['password'] = 'Please provide password';
+        }
+        if (!_.isEmpty(errors)) {
+            this.setState({errors});
+            return false;
+        }
+
         const query = parse(this.props.location.search);
-        e.preventDefault();
-        var redirect = query.redirect || null;
+        let redirect = query.redirect || null;
+
         this.props.onLogin(this.state.username, this.state.password, redirect);
+    }
+
+    _handleInputChange(proxy, field) {
+        let fieldNameValue = Form.fieldNameValue(field);
+        this.setState({...fieldNameValue, errors: {}});
     }
 
     render() {
         SplashLoadingScreen.turnOff();
 
-        var isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
+        let isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
         let loginPageHeader = _.get(this.props,'whiteLabel.loginPageHeader');
         let loginPageHeaderColor = _.get(this.props,'whiteLabel.loginPageHeaderColor','white');
         let loginPageText = _.get(this.props,'whiteLabel.loginPageText');
@@ -51,30 +71,30 @@ export default class Login extends Component {
                     {
                         isHeaderTextPresent &&
                         <div className="loginHeader">
-                            {loginPageHeader && <h2><font color={loginPageHeaderColor}>{loginPageHeader}</font></h2>}
-                            {loginPageText && <p><font color={loginPageTextColor}>{loginPageText}</font></p>}
+                            {loginPageHeader && <h2 style={{color: loginPageHeaderColor}}>{loginPageHeader}</h2>}
+                            {loginPageText && <p style={{color: loginPageTextColor}}>{loginPageText}</p>}
                         </div>
                     }
 
-                    <form className="ui huge form" onSubmit={this.onSubmit.bind(this)}>
-                        <div className="field required">
-                            <input type="text" name="username" placeholder="Enter user name" required autoFocus value={this.state.username} onChange={(e)=>this.setState({username: e.target.value})}/>
-                        </div>
-                        <div className="field required">
-                            <input type="password" name="password" placeholder="Enter user password" required value={this.state.password} onChange={(e)=>this.setState({password: e.target.value})}/>
-                        </div>
+                    <Form size="huge" onSubmit={this.onSubmit.bind(this)}>
+                        <Form.Field required error={this.state.errors.username}>
+                            <Input fluid name="username" type="text" placeholder="Enter user name" autoFocus
+                                   value={this.state.username} onChange={this._handleInputChange.bind(this)} />
+                        </Form.Field>
+
+                        <Form.Field required error={this.state.errors.password}>
+                            <Input fluid name="password" type="password" placeholder="Enter user password"
+                                   value={this.state.password} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
 
                         {
-                            this.props.loginError ?
-                                <div className="ui error message tiny" style={{'display':'block'}}>
-                                    <p>{this.props.loginError}</p>
-                                </div>
-                                :
-                                ''
+                            this.props.loginError &&
+                            <Message error style={{display: 'block'}}>{this.props.loginError}</Message>
                         }
 
-                        <button className={'ui submit huge button ' + (this.props.isLoggingIn ? 'loading disabled' : '')} type="submit" disabled={this.props.isLoggingIn}>Login</button>
-                    </form>
+                        <Button size='huge' disabled={this.props.isLoggingIn} loading={this.props.isLoggingIn} type='submit'>Login</Button>
+                    </Form>
+
                 </div>
         );
     }

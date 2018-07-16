@@ -73,7 +73,7 @@ function hopscotchRegisterHelpers(dispatch) {
             if (!_.isEqual(window.location.pathname, `${Consts.CONTEXT_PATH}${pageUrl}`)) {
                 hopscotch.getCalloutManager().createCallout({
                     id: 'error',
-                    target: '.hopscotch-bubble-container',
+                    target: 'div.logo',
                     placement: 'bottom',
                     title: 'No page',
                     content: `Cannot find <strong>${pageName || pageUrl}</strong> page. Tours are intended to work only on default templates. Reset templates to finish this tour.`
@@ -100,8 +100,10 @@ function hopscotchRegisterHelpers(dispatch) {
                 if (isWaitingTimeExceeded) {
                     hopscotch.getCalloutManager().createCallout({
                         id: 'error',
-                        target: '.hopscotch-bubble-container',
-                        placement: 'bottom',
+                        target: 'button#toursButton',
+                        placement: 'top',
+                        xOffset: -270,
+                        arrowOffset: 270,
                         title: noSelectorErrorTitle || 'No element',
                         content: noSelectorErrorMessage || 'Cannot find element for the next tour step on the screen.'
                     });
@@ -122,6 +124,18 @@ function hopscotchRegisterHelpers(dispatch) {
     });
     hopscotch.registerHelper('onTourStart', addStopTourEventsListeners);
     hopscotch.registerHelper('onTourClose', removeStopTourEventsListeners);
+    hopscotch.registerHelper('showError', (content) => {
+        hopscotch.getCalloutManager().createCallout({
+            id: 'error',
+            target: 'button#toursButton',
+            placement: 'top',
+            xOffset: -270,
+            arrowOffset: 270,
+            title: 'No target element for next step',
+            content: content || 'Cannot find target element. Tours are intended to work only on default templates. ' +
+                     'Reset templates to finish this tour.',
+        });
+    });
 }
 
 function hopscotchStartTour(tour) {

@@ -78,7 +78,7 @@ export default class StageUtils {
     }
 
     static url(path) {
-        if (path === '/') {
+        if (path === Const.HOME_PAGE_PATH) {
             return Const.CONTEXT_PATH;
         }
 
