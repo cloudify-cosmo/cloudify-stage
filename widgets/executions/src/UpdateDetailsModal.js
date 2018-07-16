@@ -67,6 +67,7 @@ export default class UpdateDetailsModal extends React.Component {
 
     render() {
         let {ApproveButton, Form, Header, Icon, Modal, Table, Popup} = Stage.Basic;
+        let {JsonUtils} = Stage.Common;
 
         let deploymentUpdate = this.state.deploymentUpdate;
         let oldInputs = Array.sort(_.keys(deploymentUpdate.old_inputs));
@@ -125,8 +126,8 @@ export default class UpdateDetailsModal extends React.Component {
                                         <Table.Body>
                                             {
                                                 _.map(allInputs, (input) => {
-                                                    let oldValue = _.get(deploymentUpdate.old_inputs, input, '');
-                                                    let newValue = _.get(deploymentUpdate.new_inputs, input, '');
+                                                    let oldValue = JsonUtils.getStringValue(_.get(deploymentUpdate.old_inputs, input, ''));
+                                                    let newValue = JsonUtils.getStringValue(_.get(deploymentUpdate.new_inputs, input, ''));
                                                     let inputChanged = !_.isEqual(oldValue, newValue);
 
                                                     return (
