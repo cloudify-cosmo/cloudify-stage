@@ -60,13 +60,23 @@ const rules = [
             }
         }]
     }, {
-        test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,
+        test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/,
         use: [{
             loader: 'url-loader',
 
             options: {
                 limit: 100000,
-                name: '[name].[ext]'
+                name: 'fonts/[name].[ext]'
+            }
+        }]
+    }, {
+        test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/,
+        use: [{
+            loader: 'url-loader',
+
+            options: {
+                limit: 100000,
+                name: 'images/[name].[ext]'
             }
         }]
     }
@@ -90,33 +100,33 @@ module.exports = [
         },
         output: {
             path: path.join(__dirname, 'dist'),
-            filename: '[name].js',
+            filename: 'js/[name].js',
             publicPath: Consts.CONTEXT_PATH
         },
         plugins: [
             new CopyWebpackPlugin([
                 {
                     from: 'app/images',
-                    to: 'app/images'
+                    to: 'images'
                 }
             ]),
             new CopyWebpackPlugin([
                 {
                     from: 'widgets',
-                    to: 'widgets',
+                    to: 'appData/widgets',
                     ignore: ['**/src/*', '*/widget.js', '*/backend.js', '*/common.js']
                 }
             ]),
             new CopyWebpackPlugin([
                 {
                     from: 'templates',
-                    to: 'templates'
+                    to: 'appData/templates'
                 }
             ]),
             new CopyWebpackPlugin([
                 {
                     from: 'tours',
-                    to: 'tours'
+                    to: 'appData/tours'
                 }
             ]),
             new CopyWebpackPlugin([
@@ -150,7 +160,7 @@ module.exports = [
         devtool: 'eval',
         entry: getWidgetEntries(),
         output: {
-            path: path.join(__dirname, 'dist'),
+            path: path.join(__dirname, 'dist/appData'),
             filename: 'widgets/[name]',
             publicPath: Consts.CONTEXT_PATH
         },
@@ -174,8 +184,8 @@ module.exports = [
         devtool: 'eval',
         entry: glob.sync('./widgets/common/src/*.js'),
         output: {
-            path: path.join(__dirname, 'dist'),
-            filename: 'widgets/common/common.js',
+            path: path.join(__dirname, 'dist/appData/widgets'),
+            filename: 'common/common.js',
             publicPath: Consts.CONTEXT_PATH
         },
         plugins: [

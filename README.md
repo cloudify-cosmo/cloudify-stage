@@ -1,5 +1,9 @@
-# Cloudify Console
-[![CircleCI](https://circleci.com/gh/cloudify-cosmo/cloudify-stage.svg?style=svg)](https://circleci.com/gh/cloudify-cosmo/cloudify-stage)
+# Cloudify Console [![CircleCI](https://circleci.com/gh/cloudify-cosmo/cloudify-stage.svg?style=svg)](https://circleci.com/gh/cloudify-cosmo/cloudify-stage)
+
+The Cloudify Console provides a streamlined experience for managing and analyzing [Cloudify Manager](https://cloudify.co).
+
+![CircleCI](./doc/screenshot.png)
+
 
 ## Prerequisites
 - NodeJS (version >= 8.x) and npm installed
@@ -25,7 +29,7 @@ You can deploy the stage either by starting the server and connecting to stage l
 
 ### Local deployment
 Start the stage server backend and the webserver:
-- run backend server: `cd backend && npm start`
+- run backend server: `cd backend && npm devStart`
 - run development server: `npm run devServer`
 
 Open browser to see if application is running. It runs by default on `http://localhost:4000`. 
@@ -42,7 +46,7 @@ Changes in the source code shall be hot loaded to the development development ve
     - define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`
     - upload package to the Cloudify Manager and restart UI services: `npm run upload`
 
-### Widget Development
+## Widgets development
 
 Once you have configured successfully local deployment of Cloudify Console you are able to start development and testing of your own widgets. All out-of-the-box widgets resides in `widgets` directory. 
 

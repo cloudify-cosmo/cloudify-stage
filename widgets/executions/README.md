@@ -20,4 +20,5 @@ You can also choose to add the following columns from the list:
 * `ID` , which will present the execution id. By default this value is not presented as a column in the table, but as a pop up shown by hovering over ID label. 
 * `Ended` , which will present the execution id. By default this value is not presented as a column in the table, but as a pop up shown  by clicking on a specific execution. 
 ![executions](https://docs.cloudify.co/staging/next/images/ui/widgets/executions_copy_id.png)
+
 * `Show system executions`- allow to include or exclude executions of system workflows in the list. Default: On

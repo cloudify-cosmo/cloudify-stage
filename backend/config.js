@@ -2,26 +2,21 @@
  * Created by kinneretzin on 25/01/2017.
  */
 
-var _ = require('lodash');
-var flatten = require('flat');
-var pathlib = require('path');
-var fs = require('fs-extra');
+const _ = require('lodash');
+const flatten = require('flat');
 
-var Consts = require('./consts');
+const Utils = require('./utils');
 
-var app = require('../conf/app.json');
-var manager = require('../conf/manager.json');
-var log4jsConfig = require('../conf/log4jsConfig.json');
-var userConfig = require('../conf/userConfig.json');
+const app = require('../conf/app.json');
+const manager = require('../conf/manager.json');
+const log4jsConfig = require('../conf/log4jsConfig.json');
+let userConfig = require('../conf/userConfig.json');
 
-var userDataConfigPath = pathlib.resolve(`..${Consts.USER_DATA_PATH}/userConfig.json`);
-if (!fs.existsSync(userDataConfigPath)) {
-    userDataConfigPath = pathlib.resolve(`../dist${Consts.USER_DATA_PATH}/userConfig.json`);
-}
+const userDataConfigPath = Utils.getResourcePath('userConfig.json', true);
 console.log(`Trying to fetch user config from: ${userDataConfigPath}`);
 
 try {
-    var userDataConfig = require(userDataConfigPath);
+    let userDataConfig = require(userDataConfigPath);
     userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig))); // Security reason - get only allowed parameters
     userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration
 } catch(err) {
@@ -30,7 +25,7 @@ try {
     }
 }
 
-var me = null;
+let me = null;
 try {
     me = require('../conf/me.json');
 } catch(err) {
@@ -42,7 +37,7 @@ try {
 
 module.exports = {
     get: function(mode) {
-        var config = {
+        let config = {
             app: _.merge(app, userConfig),
             manager: manager,
             mode: mode,
@@ -57,9 +52,9 @@ module.exports = {
     },
 
     getForClient: function(mode) {
-        var config = this.get(mode);
+        let config = this.get(mode);
         // For client only get from app config the relevant part (and not send passwords and shit)
-        var clientConfig = {
+        let clientConfig = {
             app: {
                 initialTemplate: config.app.initialTemplate,
                 maintenancePollingInterval: config.app.maintenancePollingInterval,

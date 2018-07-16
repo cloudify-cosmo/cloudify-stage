@@ -1,24 +1,20 @@
-'use strict';
 /**
  * Created by edenp on 15/04/2018.
  */
 
-var fs = require('fs-extra');
-var pathlib = require('path');
-var _ = require('lodash');
-var config = require('../config').get();
-var TemplateHandler = require('./TemplateHandler');
-var logger = require('log4js').getLogger('ToursHandler');
+const fs = require('fs-extra');
+const pathlib = require('path');
 
-var builtInToursFolder = pathlib.resolve('../tours');
-if (!fs.existsSync(builtInToursFolder)) {
-    builtInToursFolder = pathlib.resolve('../dist/tours');
-}
+const Utils = require('./../utils');
+const TemplateHandler = require('./TemplateHandler');
+const logger = require('log4js').getLogger('ToursHandler');
 
-var tours = {};
+const builtInToursFolder = Utils.getResourcePath('tours', false);
+
+let tours = {};
 
 function getTemplateTours(templateId) {
-    var templateTour = tours[templateId+'.json'];
+    const templateTour = tours[templateId+'.json'];
     if(templateTour){
         return Promise.resolve(templateTour);
     }
