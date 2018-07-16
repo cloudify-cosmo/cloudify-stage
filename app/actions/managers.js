@@ -40,7 +40,7 @@ export function login (username, password, redirect) {
                             window.location = redirect;
                         } else{
                             dispatch(receiveLogin());
-                            dispatch(push('/'));
+                            dispatch(push(Consts.HOME_PAGE_PATH));
                         }
                     })
                     .catch((err) => {
@@ -138,7 +138,7 @@ export function switchMaintenance(manager, activate) {
         return managerAccessor.doPost(`/maintenance/${activate?'activate':'deactivate'}`)
             .then((data)=>{
                 dispatch(setMaintenanceStatus(data.status));
-                dispatch(push(activate ? Consts.MAINTENANCE_PAGE_PATH : '/'));
+                dispatch(push(activate ? Consts.MAINTENANCE_PAGE_PATH : Consts.HOME_PAGE_PATH));
             });
     }
 }

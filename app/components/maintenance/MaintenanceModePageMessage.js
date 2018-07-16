@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import MaintenanceModeModal from '../basic/maintenance/MaintenanceModeModal';
+import MessageContainer from '../MessageContainer';
 import Services from '../../containers/Services';
 import Logo from '../../containers/Logo';
 import Consts from '../../utils/consts';
@@ -45,15 +46,15 @@ export default class MaintenanceModePageMessage extends Component {
     render () {
         SplashLoadingScreen.turnOff();
 
-        let {Divider, MaintenanceModeActivationButton} = Stage.Basic;
+        let {Divider, Header, MaintenanceModeActivationButton} = Stage.Basic;
 
         return (
             <div className='maintenancePage ui segment basic'>
                 <Logo />
 
-                <div className="ui raised very padded text container segment center aligned maintenanceContainer">
+                <MessageContainer className='maintenanceContainer'>
+                    <Header as='h2'>Maintenance mode</Header>
 
-                    <h2 className="ui header">Maintenance mode</h2>
                     <p>Server is on maintenance mode and is not available at the moment.</p>
 
                     {
@@ -68,7 +69,7 @@ export default class MaintenanceModePageMessage extends Component {
                             <Services />
                         </div>
                     }
-                </div>
+                </MessageContainer>
 
                 {
                     this.props.canMaintenanceMode &&

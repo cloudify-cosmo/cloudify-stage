@@ -3,16 +3,22 @@
  */
 
 import React, { Component } from 'react';
+
+import { Header, Message } from './basic';
 import LinkToLogin from '../containers/LinkToLogin';
+import MessageContainer from './MessageContainer';
 
 export default class NoTenants extends Component {
     render () {
         return (
-                <div className="ui raised very padded text container segment center aligned noTenantsContainer">
-                    <h2 className="ui header">User don't have any tenants</h2>
-                    <p>Unfortunately you cannot login since you don't have any tenants. Ask the admin to assign you to a tenant.</p>
-                    <LinkToLogin/>
-                </div>
+            <MessageContainer>
+                <Header as='h2'>User don't have any tenants</Header>
+                <Message>
+                    Unfortunately you cannot login since you don't have any tenants.
+                    Ask the admin to assign you to a tenant.
+                </Message>
+                <LinkToLogin />
+            </MessageContainer>
         );
     }
 }

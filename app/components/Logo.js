@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import Consts from '../utils/consts';
+
 export default class Logo extends Component {
     static propTypes = {
         pageTitle: PropTypes.string.isRequired
@@ -13,7 +15,7 @@ export default class Logo extends Component {
 
     render () {
         return (
-            <Link to='/' title={this.props.pageTitle}><div className='logo' /></Link>
+            <Link to={Consts.HOME_PAGE_PATH} title={this.props.pageTitle}><div className='logo' /></Link>
         )
     }
 }
