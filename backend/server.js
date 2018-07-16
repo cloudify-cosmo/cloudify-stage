@@ -60,6 +60,8 @@ const oldContextPath = '/stage';
 
 let app = express();
 
+app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'INFO'}));
+
 app.all('/', function (request, response){
     logger.info('Redirecting to "' + contextPath + '".');
     response.redirect(contextPath);
@@ -104,7 +106,6 @@ app.use(contextPath + '/userData',
 
 app.use(contextPath,
     expressStaticGzip(path.resolve(__dirname , '../dist'), {enableBrotli: true, indexFromEmptyFile: false}));
-app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'INFO'}));
 
 
 // API Routes
