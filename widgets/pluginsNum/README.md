@@ -2,7 +2,7 @@
 Displays the total number of plugins in the tenant, according to the user’s permissions and the blueprints’ visibility levels. 
 The widget is clickable, and upon clicking will redirect by default to the "System Resources" page. You can set the widget’s configuration to lead to a different page. 
 
-![number_of_plugins](https://docs.cloudify.co/staging/next/images/ui/widgets/num_of_plugins.png)
+![number_of_plugins](https://docs.cloudify.co/4.4.0/images/ui/widgets/num_of_plugins.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.
