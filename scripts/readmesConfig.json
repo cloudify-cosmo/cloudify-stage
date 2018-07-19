@@ -1,6 +1,6 @@
 {
-  "linksBasePath": "https://docs.cloudify.co/staging/next",
-  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/next",
+  "linksBasePath": "https://docs.cloudify.co/4.4.0",
+  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/4.4.0",
   "files": [
     {"widget": "blueprintActionButtons", "link": "/content/working_with/console/widgets/blueprintActionButtons.md"},
     {"widget": "blueprintCatalog", "link": "/content/working_with/console/widgets/blueprintCatalog.md"},
