@@ -30,7 +30,13 @@ router.get('/browse/:blueprintId/archive', function(req, res, next) {
 });
 
 router.put('/list/yaml', function (req, res, next) {
-    SourceHandler.listYamlFiles(req.query, req)
+    SourceHandler.listYamlFiles(req)
+        .then(data => res.send(data))
+        .catch(next);
+});
+
+router.put('/list/resources', function (req, res, next) {
+    SourceHandler.getBlueprintResources(req)
         .then(data => res.send(data))
         .catch(next);
 });

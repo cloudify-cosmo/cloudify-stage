@@ -1,18 +1,20 @@
-'use strict';
 /**
  * Created by pposel on 24/02/2017.
  */
 
-var _ = require('lodash');
-var os = require('os');
-var fs = require('fs-extra');
-var pathlib = require('path');
-var config = require('../config').get();
-var ArchiveHelper = require('./ArchiveHelper');
+const _ = require('lodash');
+const os = require('os');
+const fs = require('fs-extra');
+const pathlib = require('path');
+const YAML = require('yamljs');
 
-var logger = require('log4js').getLogger('sourceHandler');
-var browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourcesDir);
-var lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
+const config = require('../config').get();
+const ArchiveHelper = require('./ArchiveHelper');
+const Utils = require('../utils');
+
+let logger = require('log4js').getLogger('sourceHandler');
+const browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourcesDir);
+const lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
 
 module.exports = (function() {
 
@@ -64,9 +66,83 @@ module.exports = (function() {
         return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
     }
 
-    function listYamlFiles(query, req) {
-        let includeFilename = (query.includeFilename === 'true');
-        let promise = query.url ? _saveDataFromUrl(query.url) : _saveMultipartData(req);
+    function _convertYamlToJson(path, yamlFile) {
+        let yamlFilePath = '';
+
+        let files = fs.readdirSync(path);
+        if (_.includes(files, yamlFile)) {
+            yamlFilePath = pathlib.resolve(path, yamlFile);
+        } else if (files.length === 1 && fs.statSync(pathlib.join(path, files[0])).isDirectory()) {
+            const directory = files[0];
+            files = fs.readdirSync(pathlib.join(path, directory));
+            if (_.includes(files, yamlFile)) {
+                yamlFilePath = pathlib.resolve(path, directory, yamlFile);
+            }
+        }
+
+        if (!_.isEmpty(yamlFilePath)) {
+            const yaml = fs.readFileSync(yamlFilePath, 'utf8');
+            try {
+                let json = YAML.parse(yaml);
+                return Promise.resolve(json);
+            } catch (error) {
+                let errorMessage = `Cannot parse YAML file ${yamlFile}. Error: ${error}`;
+                logger.error(errorMessage);
+                return Promise.reject(errorMessage);
+            }
+        } else {
+            return Promise.reject(`Cannot find YAML file ${yamlFile} in specified directory.`);
+        }
+    }
+
+    function _getPlugins(imports) {
+        const PLUGIN_KEYWORD = 'plugin:';
+
+        return _
+            .chain(imports)
+            .filter((imp) => String(imp).match(PLUGIN_KEYWORD))
+            .map((plugin) => {
+                const [package_name, pluginQueryString] = _
+                    .chain(plugin)
+                    .replace(PLUGIN_KEYWORD, '')
+                    .split('?')
+                    .value();
+
+                const params = Utils.getParams(pluginQueryString);
+                const pluginObject = {package_name, params};
+
+                return pluginObject;
+            })
+            .reduce((result, pluginObject) => {
+                result[pluginObject.package_name] = _.omit(pluginObject, 'package_name');
+                return result;
+            }, {})
+            .value();
+    }
+
+    function _getSecrets(json) {
+        const SECRET_KEYWORD = 'get_secret';
+
+        return _
+            .chain(Utils.getValuesWithPaths(json, SECRET_KEYWORD))
+            .reduce((result, value) => {
+                const secretName = _.keys(value)[0];
+                const secretPath = value[secretName];
+
+                if (_.isUndefined(result[secretName])) {
+                    result[secretName] = {};
+                }
+
+                (result[secretName].paths || (result[secretName].paths = [])).push(secretPath);
+
+                return result;
+            }, {})
+            .value();
+    }
+
+    function _getBlueprintArchiveContent(request) {
+        const query = request.query;
+        let promise = query.url ? _saveDataFromUrl(query.url) : _saveMultipartData(request);
 
         return promise.then(data => {
             let archiveFolder = data.archiveFolder;
@@ -82,14 +158,39 @@ module.exports = (function() {
                     }
                 })
                 .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
-                .then(() => _scanYamlFiles(extractedDir))
-                .then((data) => includeFilename ? [archiveFileName, ...data] : data)
+                .then((decompressData) => ({archiveFileName, extractedDir, decompressData}))
                 .catch(err => {
                     ArchiveHelper.cleanTempData(archiveFolder);
                     throw err;
                 });
 
         });
+    }
+
+    function getBlueprintResources(request) {
+        const query = request.query;
+        const yamlFile = query.yamlFile;
+
+        return _getBlueprintArchiveContent(request)
+            .then((data) => _convertYamlToJson(data.extractedDir, yamlFile))
+            .then((json) => ({
+                inputs: json.inputs,
+                plugins: _getPlugins(json.imports),
+                secrets: _getSecrets(json)
+            }));
+    }
+
+    function listYamlFiles(request) {
+        const query = request.query;
+        const includeFilename = (query.includeFilename === 'true');
+        let archiveFileName = '';
+
+        return _getBlueprintArchiveContent(request)
+            .then((data) => {
+                archiveFileName = data.archiveFileName;
+                return _scanYamlFiles(data.extractedDir);
+            })
+            .then((data) => includeFilename ? [archiveFileName, ...data] : data);
     }
 
     function _scanYamlFiles(extractedDir) {
@@ -150,6 +251,7 @@ module.exports = (function() {
     return {
         browseArchiveTree,
         browseArchiveFile,
+        getBlueprintResources,
         listYamlFiles
     }
 })();
