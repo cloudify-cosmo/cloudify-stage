@@ -7,13 +7,13 @@ import React, { Component } from 'react';
 
 import Steps from './inputs/Steps';
 
-export default class InstallWizardModal extends Component {
+export default class DeploymentWizardModal extends Component {
 
     constructor(props,context) {
         super(props,context);
 
         this.steps = Steps;
-        this.state = InstallWizardModal.initialState(Steps.length);
+        this.state = DeploymentWizardModal.initialState(Steps.length);
     }
 
     static propTypes = {
@@ -30,9 +30,9 @@ export default class InstallWizardModal extends Component {
 
         let steps = [];
         for (let i = 0; i < numberOfSteps; i++) {
-            steps[i] = new Object({state: InstallWizardModal.DISABLED_STATE});
+            steps[i] = new Object({state: DeploymentWizardModal.DISABLED_STATE});
         }
-        steps[activeStep].state = InstallWizardModal.ACTIVE_STATE;
+        steps[activeStep].state = DeploymentWizardModal.ACTIVE_STATE;
 
         return {
             activeStep,
@@ -42,8 +42,8 @@ export default class InstallWizardModal extends Component {
 
     onNext() {
         let steps = this.state.steps;
-        steps[this.state.activeStep].state = InstallWizardModal.COMPLETED_STATE;
-        steps[this.state.activeStep + 1].state = InstallWizardModal.ACTIVE_STATE;
+        steps[this.state.activeStep].state = DeploymentWizardModal.COMPLETED_STATE;
+        steps[this.state.activeStep + 1].state = DeploymentWizardModal.ACTIVE_STATE;
 
         this.setState({
             activeStep: this.state.activeStep + 1,
@@ -53,8 +53,8 @@ export default class InstallWizardModal extends Component {
 
     onPrev() {
         let steps = this.state.steps;
-        steps[this.state.activeStep].state = InstallWizardModal.DISABLED_STATE;
-        steps[this.state.activeStep - 1].state = InstallWizardModal.ACTIVE_STATE;
+        steps[this.state.activeStep].state = DeploymentWizardModal.DISABLED_STATE;
+        steps[this.state.activeStep - 1].state = DeploymentWizardModal.ACTIVE_STATE;
 
         this.setState({
             activeStep: this.state.activeStep - 1,
@@ -68,18 +68,18 @@ export default class InstallWizardModal extends Component {
 
         return (
             <Modal open={this.props.open}
-                   onClose={()=>this.props.onClose()} className='installWizardModal'>
+                   onClose={()=>this.props.onClose()} className='deploymentWizardModal'>
                 <Modal.Header>
-                    Install Wizard
+                    Deployment Wizard
                 </Modal.Header>
 
                 <Modal.Description>
                     <Step.Group ordered fluid widths={this.steps.length}>
                         {
                             _.map(this.steps, (step, index) =>
-                                <Step active={this.state.steps[index].state === InstallWizardModal.ACTIVE_STATE}
-                                      completed={this.state.steps[index].state === InstallWizardModal.COMPLETED_STATE}
-                                      disabled={this.state.steps[index].state === InstallWizardModal.DISABLED_STATE}
+                                <Step active={this.state.steps[index].state === DeploymentWizardModal.ACTIVE_STATE}
+                                      completed={this.state.steps[index].state === DeploymentWizardModal.COMPLETED_STATE}
+                                      disabled={this.state.steps[index].state === DeploymentWizardModal.DISABLED_STATE}
                                       key={step.title} >
                                     <Step.Content>
                                         <Step.Title>{step.title}</Step.Title>

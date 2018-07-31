@@ -4,9 +4,9 @@
 
 import React, { Component } from 'react';
 
-import InstallWizardModal from './InstallWizardModal';
+import DeploymentWizardModal from './DeploymentWizardModal';
 
-export default class InstallHelloWorldButton extends Component {
+export default class HelloWorldWizardButton extends Component {
 
     constructor(props,context) {
         super(props,context);
@@ -26,8 +26,8 @@ export default class InstallHelloWorldButton extends Component {
 
         return (
             <React.Fragment>
-                <Button content='Install Hello World' color='blue' onClick={this._handleClick.bind(this)} />
-                <InstallWizardModal open={this.state.open} onClose={() => this.setState({open: false})} />
+                <Button content='Hello World Wizard' color='blue' onClick={this._handleClick.bind(this)} />
+                <DeploymentWizardModal open={this.state.open} onClose={() => this.setState({open: false})} />
             </React.Fragment>
         );
     }
