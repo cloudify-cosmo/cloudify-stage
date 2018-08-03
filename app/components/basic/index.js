@@ -39,6 +39,7 @@ import CopyToClipboardButton from './CopyToClipboardButton';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
 import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
 import {Link} from 'react-router-dom';
+import Wizard from './wizard';
 
 export {
     Accordion,
@@ -99,5 +100,6 @@ export {
     Step,
     Table,
     TimeFilter,
-    VisibilityField
+    VisibilityField,
+    Wizard
 };
