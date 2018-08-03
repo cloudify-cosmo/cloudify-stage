@@ -206,7 +206,7 @@ export default class Form extends Component {
 
         return (
             <FormSemanticUiReact {...rest} onSubmit={this._handleSubmit.bind(this)} error={!_.isEmpty(errors)}>
-                <ErrorMessage header="Errors in the form" error={errors} onDismiss={this.props.onErrorsDismiss}/>
+                <ErrorMessage header="Errors in the form" error={errors} onDismiss={onErrorsDismiss}/>
 
                 {this.props.children}
 
