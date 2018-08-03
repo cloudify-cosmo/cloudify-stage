@@ -22,7 +22,7 @@ Stage.defineWidget({
 
     render: function(widget, data, error, toolbox) {
         return (
-            <HelloWorldWizardButton />
+            <HelloWorldWizardButton toolbox={toolbox} />
         );
     }
 

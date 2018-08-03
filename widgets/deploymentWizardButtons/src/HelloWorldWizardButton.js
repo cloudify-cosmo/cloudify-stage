@@ -4,7 +4,12 @@
 
 import React, { Component } from 'react';
 
-import DeploymentWizardModal from './DeploymentWizardModal';
+import InfrastructureStep from './steps/InfrastructureStep';
+import PluginsStep from './steps/PluginsStep';
+import SecretsStep from './steps/SecretsStep';
+import InputsStep from './steps/InputsStep';
+import InstallStep from './steps/InstallStep';
+import PropTypes from 'prop-types';
 
 export default class HelloWorldWizardButton extends Component {
 
@@ -16,18 +21,29 @@ export default class HelloWorldWizardButton extends Component {
         }
     }
 
+    static propTypes = {
+        toolbox: PropTypes.object.isRequired
+    };
+
     _handleClick(event) {
         event.stopPropagation();
         this.setState({open: true});
     }
 
     render() {
-        let {Button} = Stage.Basic;
+        let {Wizard, Button} = Stage.Basic;
+        let steps = [
+            InfrastructureStep,
+            PluginsStep,
+            SecretsStep,
+            InputsStep,
+            InstallStep
+        ];
 
         return (
             <React.Fragment>
                 <Button content='Hello World Wizard' color='blue' onClick={this._handleClick.bind(this)} />
-                <DeploymentWizardModal open={this.state.open} onClose={() => this.setState({open: false})} />
+                <Wizard.Modal open={this.state.open} onClose={() => this.setState({open: false})} steps={steps} toolbox={this.props.toolbox} />
             </React.Fragment>
         );
     }
