@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import {ErrorMessage, Form, Modal, Step} from './../index';
+import '../../styles/Wizard.css';
 
 export default class WizardModal extends Component {
 
