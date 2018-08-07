@@ -8,6 +8,7 @@ import InfrastructureStep from './steps/InfrastructureStep';
 import PluginsStep from './steps/PluginsStep';
 import SecretsStep from './steps/SecretsStep';
 import InputsStep from './steps/InputsStep';
+import ConfirmationStep from './steps/ConfirmationStep';
 import InstallStep from './steps/InstallStep';
 import PropTypes from 'prop-types';
 
@@ -37,13 +38,15 @@ export default class HelloWorldWizardButton extends Component {
             PluginsStep,
             SecretsStep,
             InputsStep,
+            ConfirmationStep,
             InstallStep
         ];
 
         return (
             <React.Fragment>
                 <Button content='Hello World Wizard' color='blue' onClick={this._handleClick.bind(this)} />
-                <Wizard.Modal open={this.state.open} onClose={() => this.setState({open: false})} steps={steps} toolbox={this.props.toolbox} />
+                <Wizard.Modal header='Hello World Wizard' open={this.state.open} steps={steps}
+                              onClose={() => this.setState({open: false})} toolbox={this.props.toolbox} />
             </React.Fragment>
         );
     }
