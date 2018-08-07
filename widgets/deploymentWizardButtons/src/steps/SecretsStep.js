@@ -3,6 +3,23 @@
  */
 
 import { Component } from 'react';
+import React from 'react';
+
+class SecretsStepActions extends Component {
+    static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
+
+    onNext(id) {
+        return this.props.onLoading(id)
+            .then(this.props.fetchData)
+            .then(({stepData}) => this.props.onNext(id, {secrets: {..._.pickBy(stepData, (secret) => secret.status !== SecretsStepContent.defined)}}))
+            .catch((error) => this.props.onError(id, error));
+    }
+
+    render() {
+        let {Wizard} = Stage.Basic;
+        return <Wizard.Step.Actions {...this.props} onNext={this.onNext.bind(this)} />
+    }
+}
 
 class SecretsStepContent extends Component {
     constructor(props, context) {
@@ -20,26 +37,25 @@ class SecretsStepContent extends Component {
     static unDefined = 'unDefined';
 
     componentDidMount() {
-        const secrets = this.props.wizardData.secrets || {};
+        const secrets = _.get(this.props.wizardData, 'blueprint.secrets', {});
 
-        this.props.onLoading(this.props.id, () => {
-            this.props.toolbox.getManager().doGet('/secrets?_include=key')
-                .then((secretsInManager) => {
-                    secretsInManager = secretsInManager.items;
-                    secretsInManager = _.map(secretsInManager, (secretObject) => secretObject.key);
+        this.props.onLoading(this.props.id)
+            .then(() => this.props.toolbox.getManager().doGet('/secrets?_include=key'))
+            .then((secretsInManager) => {
+                secretsInManager = secretsInManager.items;
+                secretsInManager = _.map(secretsInManager, (secretObject) => secretObject.key);
 
-                    this.setState({secretsInManager})
-                })
-                .then(() => {
-                    let stepData = {};
-                    for (let secret of _.keys(secrets)) {
-                        stepData[secret] = this.props.stepData[secret] || '';
-                    }
-                    this.setState({stepData});
-                })
-                .catch((error) => this.props.onError(this.props.id, error))
-                .finally(() => this.props.onReady(this.props.id));
-        });
+                let stepData = {};
+                for (let secret of _.keys(secrets)) {
+                    stepData[secret] = this.props.stepData[secret] || '';
+                }
+
+                return {stepData, secretsInManager};
+            })
+            .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
+            .then(() => this.props.onChange(this.props.id, this.state.stepData))
+            .catch((error) => this.props.onError(this.props.id, error))
+            .finally(() => this.props.onReady(this.props.id));
     }
 
     getSecretStatus(secretKey) {
@@ -83,7 +99,7 @@ class SecretsStepContent extends Component {
                     <span>
                         <strong><Icon name='warning circle' color='yellow' /> Secret not defined. Provide value:</strong>
                         &nbsp;&nbsp;
-                        <Form.Input name={secretKey} value={this.state.stepData[secretKey]}
+                        <Form.Input name={secretKey} value={this.state.stepData[secretKey] || ''}
                                     onChange={this.handleChange.bind(this)} />
                     </span>
                 );
@@ -99,7 +115,7 @@ class SecretsStepContent extends Component {
 
     render() {
         let {Table, Wizard} = Stage.Basic;
-        const secrets = this.props.wizardData.secrets || {};
+        const secrets = _.get(this.props.wizardData, 'blueprint.secrets', {});
 
         return (
             <Wizard.Step.Content {...this.props}>
@@ -129,4 +145,4 @@ class SecretsStepContent extends Component {
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep('secrets', 'Secrets', 'Define secrets', SecretsStepContent);
+export default Stage.Basic.Wizard.Utils.createWizardStep('secrets', 'Secrets', 'Define secrets', SecretsStepContent, SecretsStepActions);

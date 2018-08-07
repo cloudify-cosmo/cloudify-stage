@@ -7,27 +7,22 @@ import React, { Component } from 'react';
 const infrastructureStepId = 'infrastructure';
 
 class InfrastructureActions extends Component {
-    constructor(props, context) {
-        super(props);
-
-        this.state = {
-            loading: false
-        }
-    }
-
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
-        this.props.onLoading(id, () =>
-            this.props.fetchData()
-                .then((data) => this.props.toolbox.getInternal()
+        let fetchedStepData = {};
+
+        this.props.onLoading(id)
+            .then(this.props.fetchData)
+            .then(({stepData}) => fetchedStepData = stepData)
+            .then((stepData) =>
+                this.props.toolbox.getInternal()
                     .doPut('source/list/resources', {
-                        yamlFile: data.stepData.blueprintYaml,
-                        url: data.stepData.blueprintUrl
+                        yamlFile: stepData.blueprintYaml,
+                        url: stepData.blueprintUrl
                     }))
-                .then((resources) => this.props.onReady(id, () => this.props.onNext(id, resources)))
-                .catch((error) => this.props.onError(id, error))
-        )
+            .then((resources) => this.props.onNext(id, {blueprint: {...resources, ...fetchedStepData}}))
+            .catch((error) => this.props.onError(id, error))
     }
 
     render() {
@@ -43,11 +38,13 @@ class InfrastructureContent extends Component {
         this.state = InfrastructureContent.initialState;
     }
 
+    static defaultBlueprintName = 'hello-world';
     static helloWorldBlueprintUrl = 'https://github.com/cloudify-examples/hello-world-blueprint/archive/master.zip';
     static defaultBlueprintYaml = 'aws.yaml';
+
     static initialState = {
         stepData: {
-            blueprintName: '',
+            blueprintName: InfrastructureContent.defaultBlueprintName,
             blueprintUrl: InfrastructureContent.helloWorldBlueprintUrl,
             blueprintYaml: InfrastructureContent.defaultBlueprintYaml,
             blueprintImageUrl: ''

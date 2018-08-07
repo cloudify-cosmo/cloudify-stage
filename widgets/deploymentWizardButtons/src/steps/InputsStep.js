@@ -3,6 +3,23 @@
  */
 
 import { Component } from 'react';
+import React from 'react';
+
+class InputsStepActions extends Component {
+    static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
+
+    onNext(id) {
+        return this.props.onLoading(id)
+            .then(this.props.fetchData)
+            .then(({stepData}) => this.props.onNext(id, {inputs: {...stepData}}))
+            .catch((error) => this.props.onError(id, error));
+    }
+
+    render() {
+        let {Wizard} = Stage.Basic;
+        return <Wizard.Step.Actions {...this.props} onNext={this.onNext.bind(this)} />
+    }
+}
 
 class InputsStepContent extends Component {
     constructor(props, context) {
@@ -18,16 +35,20 @@ class InputsStepContent extends Component {
 
 
     componentDidMount() {
-        const inputs = this.props.wizardData.inputs || {};
+        const inputs = _.get(this.props.wizardData, 'blueprint.inputs', {});
 
-        this.props.onLoading(this.props.id, () => {
-            let stepData = {};
-            for (let input of _.keys(inputs)) {
-                stepData[input] = this.props.stepData[input] || '';
-            }
-            this.setState({stepData});
-            this.props.onReady(this.props.id);
-        });
+        this.props.onLoading(this.props.id)
+            .then(() => {
+                let stepData = {};
+                for (let input of _.keys(inputs)) {
+                    stepData[input] = this.props.stepData[input] || '';
+                }
+                return {stepData};
+            })
+            .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
+            .then(() => this.props.onChange(this.props.id, this.state.stepData))
+            .catch((error) => this.props.onError(this.props.id, error))
+            .finally(() => this.props.onReady(this.props.id));
     }
 
     handleChange(event, {name, value}) {
@@ -39,7 +60,7 @@ class InputsStepContent extends Component {
         let {Form, Wizard} = Stage.Basic;
         let {getStringValue} = Stage.Common.JsonUtils;
 
-        const inputs = this.props.wizardData.inputs || {};
+        const inputs = _.get(this.props.wizardData, 'blueprint.inputs', {});
 
         return (
             <Wizard.Step.Content {...this.props}>
@@ -58,4 +79,4 @@ class InputsStepContent extends Component {
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep('inputs', 'Inputs', 'Provide inputs', InputsStepContent);
+export default Stage.Basic.Wizard.Utils.createWizardStep('inputs', 'Inputs', 'Provide inputs', InputsStepContent, InputsStepActions);
