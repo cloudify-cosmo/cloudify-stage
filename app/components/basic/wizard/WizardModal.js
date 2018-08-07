@@ -10,8 +10,8 @@ import '../../styles/Wizard.css';
 
 export default class WizardModal extends Component {
 
-    constructor(props,wizardData) {
-        super(props,wizardData);
+    constructor(props) {
+        super(props);
 
         this.state = WizardModal.initialState(props.steps);
     }
@@ -61,6 +61,10 @@ export default class WizardModal extends Component {
         return `${id}Step`;
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props.open, nextProps.open) || !_.isEqual(this.state, nextState);
+    }
+
     componentWillReceiveProps(nextProps, nextState) {
         if (!this.props.open && nextProps.open) {
             this.setState({...WizardModal.initialState(nextProps.steps)});
@@ -90,7 +94,8 @@ export default class WizardModal extends Component {
             [activeStepName]: {...this.state[activeStepName], state: WizardModal.ACTIVE_STATE},
             [previousStepName]: {...this.state[previousStepName], state: WizardModal.COMPLETED_STATE},
             wizardData,
-            error: null
+            error: null,
+            loading: false
         });
     }
 
@@ -121,12 +126,12 @@ export default class WizardModal extends Component {
         this.setState({error: message});
     }
 
-    onLoading(id, callback) {
-        this.setState({loading: true}, callback);
+    onLoading(id) {
+        return new Promise((resolve) => this.setState({loading: true}, resolve));
     }
 
-    onReady(id, callback) {
-        this.setState({loading: false}, callback);
+    onReady(id) {
+        return new Promise((resolve) => this.setState({loading: false}, resolve));
     }
 
     onStepClick(event, {id, active, disabled, completed}) {
@@ -158,7 +163,7 @@ export default class WizardModal extends Component {
             <Modal open={this.props.open} onClose={this.props.onClose} className='wizardModal'
                    closeIcon={true} closeOnEscape={false} closeOnDimmerClick={false}>
                 <Modal.Header>
-                    Deployment Wizard
+                    {this.props.header}
                 </Modal.Header>
 
                 <Modal.Description>
