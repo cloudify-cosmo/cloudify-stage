@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 24/03/2017.
  */
 
-import Actions from './actions';
-
 import PropTypes from 'prop-types';
 
 export default class CreateModal extends React.Component {
@@ -63,7 +61,7 @@ export default class CreateModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        let actions = new Actions(this.props.toolbox);
+        let actions = new Stage.Common.SecretActions(this.props.toolbox);
         actions.doCreate(this.state.secretKey, this.state.secretValue, this.state.visibility, this.state.isHiddenValue).then(()=>{
             this.setState({errors: {}, loading: false, open: false});
             this.props.toolbox.refresh();

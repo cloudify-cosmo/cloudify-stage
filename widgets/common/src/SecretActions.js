@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 28/03/2017.
  */
 
-export default class {
+class SecretActions {
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -31,3 +31,9 @@ export default class {
         return this.toolbox.getManager().doPatch(`/secrets/${key}/set-visibility`, null, {visibility});
     }
 }
+
+
+Stage.defineCommon({
+    name: 'SecretActions',
+    common: SecretActions
+});
