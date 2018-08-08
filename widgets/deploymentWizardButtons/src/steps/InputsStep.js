@@ -25,31 +25,21 @@ class InputsStepContent extends Component {
     constructor(props, context) {
         super(props);
 
-        this.state = {
-            stepData: {},
-            errors: {}
-        }
+        this.state = InputsStepContent.initialState(props);
     }
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
 
+    static defaultInputValue = '';
+    static dataPath = 'blueprint.inputs';
 
-    componentDidMount() {
-        const inputs = _.get(this.props.wizardData, 'blueprint.inputs', {});
-
-        this.props.onLoading(this.props.id)
-            .then(() => {
-                let stepData = {};
-                for (let input of _.keys(inputs)) {
-                    stepData[input] = this.props.stepData[input] || '';
-                }
-                return {stepData};
-            })
-            .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
-            .then(() => this.props.onChange(this.props.id, this.state.stepData))
-            .catch((error) => this.props.onError(this.props.id, error))
-            .finally(() => this.props.onReady(this.props.id));
-    }
+    static initialState = (props) => ({
+        errors: {},
+        stepData: _.mapValues(
+            _.get(props.wizardData, InputsStepContent.dataPath, {}),
+            (inputData, inputName) => props.stepData[inputName] || InputsStepContent.defaultInputValue
+        )
+    });
 
     handleChange(event, {name, value}) {
         this.setState({stepData: {...this.state.stepData, [name]: value}},
@@ -60,7 +50,7 @@ class InputsStepContent extends Component {
         let {Form, Wizard} = Stage.Basic;
         let {getStringValue} = Stage.Common.JsonUtils;
 
-        const inputs = _.get(this.props.wizardData, 'blueprint.inputs', {});
+        const inputs = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
 
         return (
             <Wizard.Step.Content {...this.props}>

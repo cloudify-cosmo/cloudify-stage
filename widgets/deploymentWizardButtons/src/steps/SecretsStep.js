@@ -11,7 +11,10 @@ class SecretsStepActions extends Component {
     onNext(id) {
         return this.props.onLoading(id)
             .then(this.props.fetchData)
-            .then(({stepData}) => this.props.onNext(id, {secrets: {..._.pickBy(stepData, (secret) => secret.status !== SecretsStepContent.defined)}}))
+            .then(({stepData}) => {
+                const undefinedSecrets = _.pickBy(stepData, (secret) => secret.status === SecretsStepContent.statusUndefined);
+                return this.props.onNext(id, {secrets: undefinedSecrets});
+            })
             .catch((error) => this.props.onError(id, error));
     }
 
@@ -25,19 +28,35 @@ class SecretsStepContent extends Component {
     constructor(props, context) {
         super(props);
 
-        this.state = {
-            secretsInManager: [],
-            stepData: {}
-        }
+        this.state = SecretsStepContent.initialState(props);
     }
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
 
-    static defined = 'defined';
-    static unDefined = 'unDefined';
+    static statusUnknown = 0;
+    static statusDefined = 1;
+    static statusUndefined = 2;
+    static defaultSecretState = {value: '', status: SecretsStepContent.statusUnknown};
+    static dataPath = 'blueprint.secrets';
+
+    static initialState = (props) => ({
+        secretsInManager: [],
+        stepData: _.mapValues(
+            _.get(props.wizardData, SecretsStepContent.dataPath, {}),
+            (secretData, secretKey) => ({...props.stepData[secretKey] || SecretsStepContent.defaultSecretState})
+        )
+    });
+
+    static getSecretStatus(secretKey, secretsInManager) {
+        if (_.includes(secretsInManager, secretKey)) {
+            return SecretsStepContent.statusDefined;
+        } else {
+            return SecretsStepContent.statusUndefined;
+        }
+    }
 
     componentDidMount() {
-        const secrets = _.get(this.props.wizardData, 'blueprint.secrets', {});
+        const secrets = _.get(this.props.wizardData, SecretsStepContent.dataPath, {});
 
         this.props.onLoading(this.props.id)
             .then(() => this.props.toolbox.getManager().doGet('/secrets?_include=key'))
@@ -47,7 +66,8 @@ class SecretsStepContent extends Component {
 
                 let stepData = {};
                 for (let secret of _.keys(secrets)) {
-                    stepData[secret] = this.props.stepData[secret] || '';
+                    stepData[secret] = this.props.stepData[secret] || {value: '', status: SecretsStepContent.statusUndefined};
+                    stepData[secret].status = SecretsStepContent.getSecretStatus(secret, secretsInManager);
                 }
 
                 return {stepData, secretsInManager};
@@ -58,64 +78,49 @@ class SecretsStepContent extends Component {
             .finally(() => this.props.onReady(this.props.id));
     }
 
-    getSecretStatus(secretKey) {
-        const isSecretInManager = _.includes(this.state.secretsInManager, secretKey);
-        let secretStatus = '';
-
-        if (isSecretInManager) {
-            secretStatus = SecretsStepContent.defined;
-        } else {
-            secretStatus = SecretsStepContent.unDefined;
-        }
-
-        return secretStatus;
-    }
-
     getSecretDefined(secretKey) {
-        const secretStatus = this.getSecretStatus(secretKey);
         let {Checkmark} = Stage.Basic;
+        let secret = this.state.stepData[secretKey];
 
-        switch (secretStatus) {
-            case SecretsStepContent.defined:
+        switch (secret.status) {
+            case SecretsStepContent.statusDefined:
                 return <Checkmark value={true}/>;
-            case SecretsStepContent.unDefined:
+            case SecretsStepContent.statusUndefined:
             default:
                 return <Checkmark value={false}/>;
         }
     }
 
     getSecretAction(secretKey) {
-        const secretStatus = this.getSecretStatus(secretKey);
         let {Form, Icon} = Stage.Basic;
+        let secret = this.state.stepData[secretKey];
 
-        let action = null;
-        switch (secretStatus) {
-            case SecretsStepContent.defined:
-                action = <strong><Icon name='check circle' color='green' /> Secret defined. No action required.</strong>;
-                break;
-            case SecretsStepContent.unDefined:
+        switch (secret.status) {
+            case SecretsStepContent.statusDefined:
+                return <strong><Icon name='check circle' color='green' /> Secret defined. No action required.</strong>
+            case SecretsStepContent.statusUndefined:
             default:
-                action = (
+                return (
                     <span>
                         <strong><Icon name='warning circle' color='yellow' /> Secret not defined. Provide value:</strong>
                         &nbsp;&nbsp;
-                        <Form.Input name={secretKey} value={this.state.stepData[secretKey] || ''}
+                        <Form.Input name={secretKey} value={secret.value}
                                     onChange={this.handleChange.bind(this)} />
                     </span>
                 );
         }
-
-        return action;
     }
 
     handleChange(event, {name, value}) {
-        this.setState({stepData: {...this.state.stepData, [name]: value}},
+        let secret = this.state.stepData[name];
+        secret.value = value;
+        this.setState({stepData: {...this.state.stepData, [name]: secret}},
             () => this.props.onChange(this.props.id, this.state.stepData));
     }
 
     render() {
         let {Table, Wizard} = Stage.Basic;
-        const secrets = _.get(this.props.wizardData, 'blueprint.secrets', {});
+        const secrets = _.get(this.props.wizardData, SecretsStepContent.dataPath, {});
 
         return (
             <Wizard.Step.Content {...this.props}>

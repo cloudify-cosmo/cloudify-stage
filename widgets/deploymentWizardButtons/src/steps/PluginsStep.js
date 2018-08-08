@@ -12,7 +12,7 @@ class PluginsStepActions extends Component {
     onNext(id) {
         return this.props.onLoading(id)
             .then(this.props.fetchData)
-            .then(({stepData}) => this.props.onNext(id, {plugins: {..._.pickBy(stepData, (plugin) => plugin.status !== PluginsStepContent.installed_ParametersMatched)}}))
+            .then(({stepData}) => this.props.onNext(id, {plugins: {..._.pickBy(stepData, (plugin) => plugin.status !== PluginsStepContent.statusInstalledAndParametersMatched)}}))
             .catch((error) => this.props.onError(id, error));
     }
 
@@ -35,11 +35,23 @@ class PluginsStepContent extends Component {
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
 
-    static installed_ParametersMatched = 'installed_ParametersMatched';
-    static installed_ParametersUnmatched = 'installed_ParametersUnmatched';
-    static notInstalled_InCatalog = 'notInstalled_InCatalog';
-    static notInstalled_NotInCatalog = 'notInstalled_NotInCatalog';
+    static statusUnknown = 0;
+    static statusInstalledAndParametersMatched = 1;
+    static statusInstalledAndParametersUnmatched = 2;
+    static statusNotInstalledAndInCatalog = 3;
+    static statusNotInstalledAndNotInCatalog = 4;
+    static defaultPluginState = {yamlUrl: '', yamlFile: null, wagonUrl: '', wagonFile: null, status: PluginsStepContent.statusUnknown};
+    static dataPath = 'blueprint.plugins';
 
+    static initialState = (props) => ({
+        pluginsInCatalog: [],
+        pluginsInManager: [],
+        stepData: _.mapValues(
+            _.get(props.wizardData, PluginsStepContent.dataPath, {}),
+            (pluginData, pluginName) => ({...props.stepData[pluginName] || PluginsStepContent.defaultPluginState})
+        )
+    });
+    
     static getPluginStatus(pluginName, pluginsInBlueprint, pluginsInManager, pluginsInCatalog) {
         const plugin = pluginsInBlueprint[pluginName];
         const version = _.get(plugin, 'params.version');
@@ -53,18 +65,18 @@ class PluginsStepContent extends Component {
         if (!_.isNil(pluginInManager)) {
             if ((_.isNil(version) || _.isEqual(version, pluginInManager.version)) &&
                 (_.isNil(distribution) || _.isEqual(distribution, pluginInManager.distribution))) {
-                pluginStatus = PluginsStepContent.installed_ParametersMatched;
+                pluginStatus = PluginsStepContent.statusInstalledAndParametersMatched;
             } else {
-                pluginStatus = PluginsStepContent.installed_ParametersUnmatched;
+                pluginStatus = PluginsStepContent.statusInstalledAndParametersUnmatched;
             }
         } else if (!_.isNil(pluginInCatalog)) {
             if ((_.isNil(version) || _.isEqual(version, pluginInCatalog.version))) { // TODO: Check distribution
-                pluginStatus = PluginsStepContent.notInstalled_InCatalog;
+                pluginStatus = PluginsStepContent.statusNotInstalledAndInCatalog;
             } else {
-                pluginStatus = PluginsStepContent.notInstalled_NotInCatalog;
+                pluginStatus = PluginsStepContent.statusNotInstalledAndNotInCatalog;
             }
         } else {
-            pluginStatus = PluginsStepContent.notInstalled_NotInCatalog;
+            pluginStatus = PluginsStepContent.statusNotInstalledAndNotInCatalog;
         }
 
         return pluginStatus;
@@ -77,7 +89,7 @@ class PluginsStepContent extends Component {
                 this.props.toolbox.getExternal().doGet('http://repository.cloudifysource.org/cloudify/wagons/plugins.json')
             ]))
             .then(([pluginsInManager, pluginsInCatalog]) => {
-                const pluginsInBlueprint = _.get(this.props.wizardData, 'blueprint.plugins', {});
+                const pluginsInBlueprint = _.get(this.props.wizardData, PluginsStepContent.dataPath, {});
 
                 pluginsInManager = pluginsInManager.items;
                 pluginsInManager = _.reduce(pluginsInManager, (result, pluginObject) => {
@@ -97,24 +109,24 @@ class PluginsStepContent extends Component {
 
                 let stepData = {};
                 for (let plugin of _.keys(pluginsInBlueprint)) {
-                    const status = PluginsStepContent.getPluginStatus(plugin, pluginsInBlueprint, pluginsInManager, pluginsInCatalog);
-                    let wagonUrl = '';
-                    let wagonFile = '';
-                    let yamlUrl = '';
-                    let yamlFile = '';
-                    if (status === PluginsStepContent.notInstalled_InCatalog) {
+                    let pluginState = PluginsStepContent.defaultPluginState;
+                    pluginState.status = PluginsStepContent.getPluginStatus(plugin, pluginsInBlueprint, pluginsInManager, pluginsInCatalog);
+
+                    if (pluginState.status === PluginsStepContent.statusNotInstalledAndInCatalog) {
                         const distro = `${this.props.toolbox.getManager().getDistributionName().toLowerCase()} ${this.props.toolbox.getManager().getDistributionRelease().toLowerCase()}`;
                         const wagon = _.find(pluginsInCatalog[plugin].wagons, (wagon) => {
                             return wagon.name.toLowerCase() === distro || wagon.name.toLowerCase() === 'any';
                         });
 
-                        wagonUrl = wagon.url;
-                        yamlUrl = pluginsInCatalog[plugin].link;
+                        pluginState.wagonUrl = wagon.url;
+                        pluginState.wagonFile = null;
+                        pluginState.yamlUrl = pluginsInCatalog[plugin].link;
+                        pluginState.yamlFile = null;
                     }
 
                     stepData[plugin] = {
-                        yamlUrl, yamlFile, wagonUrl, wagonFile,
-                        status, ...this.props.stepData[plugin]
+                        ...this.state.stepData[plugin],
+                        ...pluginState
                     };
                 }
 
@@ -131,39 +143,35 @@ class PluginsStepContent extends Component {
         let {Checkmark} = Stage.Basic;
 
         switch (status) {
-            case PluginsStepContent.installed_ParametersMatched:
+            case PluginsStepContent.statusInstalledAndParametersMatched:
                 return <Checkmark value={true}/>;
-            case PluginsStepContent.installed_ParametersUnmatched:
-            case PluginsStepContent.notInstalled_NotInCatalog:
-            case PluginsStepContent.notInstalled_InCatalog:
-            default:
+            case PluginsStepContent.statusInstalledAndParametersUnmatched:
+            case PluginsStepContent.statusNotInstalledAndNotInCatalog:
+            case PluginsStepContent.statusNotInstalledAndInCatalog:
                 return <Checkmark value={false}/>;
+            case PluginsStepContent.statusUnknown:
+            default:
+                return null;
         }
     }
 
     getPluginAction(pluginName) {
         const status = _.get(this.state.stepData[pluginName], 'status');
         let {Icon} = Stage.Basic;
-        let action = null;
 
         switch (status) {
-            case PluginsStepContent.installed_ParametersMatched:
-                action = <strong><Icon name='check circle' color='green' /> Plugin already installed. No action required.</strong>;
-                break;
-            case PluginsStepContent.installed_ParametersUnmatched:
-                action = <strong><Icon name='warning circle' color='yellow' /> Plugin installed but with different parameters. Provide details.</strong>;
-                break;
-            case PluginsStepContent.notInstalled_NotInCatalog:
-                action = <strong><Icon name='warning circle' color='yellow' /> Cannot find plugin. Provide details.</strong>;
-                break;
-            case PluginsStepContent.notInstalled_InCatalog:
-                action = <strong><Icon name='check circle' color='green' /> Plugin has been found in catalog and will be installed automatically. No action required.</strong>;
-                break;
+            case PluginsStepContent.statusInstalledAndParametersMatched:
+                return <strong><Icon name='check circle' color='green' /> Plugin already installed. No action required.</strong>;
+            case PluginsStepContent.statusInstalledAndParametersUnmatched:
+                return <strong><Icon name='warning circle' color='yellow' /> Plugin installed but with different parameters. Provide details.</strong>;
+            case PluginsStepContent.statusNotInstalledAndNotInCatalog:
+                return <strong><Icon name='warning circle' color='yellow' /> Cannot find plugin. Provide details.</strong>;
+            case PluginsStepContent.statusNotInstalledAndInCatalog:
+                return <strong><Icon name='check circle' color='green' /> Plugin has been found in catalog and will be installed automatically. No action required.</strong>;
+            case PluginsStepContent.statusUnknown:
             default:
-                action = null;
+                return null;
         }
-
-        return action;
     }
 
     getPluginIcon(pluginName) {
@@ -189,7 +197,7 @@ class PluginsStepContent extends Component {
 
     render() {
         let {Table, Wizard} = Stage.Basic;
-        const plugins = _.get(this.props.wizardData, 'blueprint.plugins', {});
+        const plugins = _.get(this.props.wizardData, PluginsStepContent.dataPath, {});
 
         return (
             <Wizard.Step.Content {...this.props}>
