@@ -123,7 +123,7 @@ export default class WizardModal extends Component {
     }
 
     onError(id, message) {
-        this.setState({error: message});
+        return new Promise((resolve) => this.setState({error: message, loading: false}, resolve));
     }
 
     onLoading(id) {
