@@ -11,6 +11,10 @@ class DeploymentActions {
         return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`);
     }
 
+    doGetDeployments(params = null) {
+        return this.toolbox.getManager().doGet('/deployments?_include=id', params);
+    }
+
     doDelete(deployment) {
         return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`);
     }
