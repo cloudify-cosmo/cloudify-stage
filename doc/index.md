@@ -27,6 +27,7 @@ The following components from Semantic-UI-React can be accessed using `Stage.Bas
 [Message](https://react.semantic-ui.com/collections/message), 
 [Modal](https://react.semantic-ui.com/modules/modal), 
 [Portal](https://react.semantic-ui.com/addons/portal), 
+[Progress](https://react.semantic-ui.com/modules/progress), 
 [Radio](https://react.semantic-ui.com/addons/radio), 
 [Segment](https://react.semantic-ui.com/elements/segment), 
 [Sidebar](https://react.semantic-ui.com/modules/sidebar), 
