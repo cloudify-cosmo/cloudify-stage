@@ -12,11 +12,23 @@ class SecretsStepActions extends Component {
         return this.props.onLoading(id)
             .then(this.props.fetchData)
             .then(({stepData}) => {
+                const {JsonUtils} = Stage.Common;
+
                 const undefinedSecrets = _.chain(stepData)
                     .pickBy((secret) => secret.status === SecretsStepContent.statusUndefined)
                     .mapValues((secretData) => secretData.value)
                     .value();
-                return this.props.onNext(id, {secrets: undefinedSecrets});
+
+                const secretsWithoutValue = _.chain(stepData)
+                    .pickBy((secret) => _.isEmpty(secret.value))
+                    .keys()
+                    .value();
+
+                if (secretsWithoutValue.length > 0) {
+                    return Promise.reject(`No values for the following secrets: ${JsonUtils.getStringValue(secretsWithoutValue)}`);
+                } else {
+                    return this.props.onNext(id, {secrets: undefinedSecrets});
+                }
             })
             .catch((error) => this.props.onError(id, error));
     }
