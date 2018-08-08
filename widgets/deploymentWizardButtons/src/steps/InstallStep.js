@@ -85,7 +85,7 @@ class TaskStatus extends Component {
         const statusIcon = this.getStatusIcon();
         const statusText = this.getStatusText();
 
-        return <span>{statusIcon}{name}... {statusText}</span>
+        return <span>{name}... {statusIcon} {statusText}</span>
     }
 }
 
@@ -99,7 +99,7 @@ class TaskStatusList extends Component {
         let {List} = Stage.Basic;
 
         return (
-            <List>
+            <List ordered relaxed>
                 {
                     _.map(taskStatusList, (taskStatusProps) =>
                         <List.Item key={taskStatusProps.name}>
@@ -171,16 +171,24 @@ class InstallStepContent extends Component {
 
     async handleTasks(tasks) {
         for(let i = 0; i < tasks.length; i++) {
-            await this.handleTask(i)
-                .catch((error) => console.error(error));
+            await this.handleTask(i);
         }
     };
 
     render() {
-        let {Wizard} = Stage.Basic;
+        let {Header, Progress, Wizard} = Stage.Basic;
+        const tasks = this.state.tasks;
+        const endedTasks = _.filter(tasks, (task) => task.status === TaskStatus.finished || task.status === TaskStatus.failed);
+        const allTasksEnded = endedTasks.length === tasks.length;
+        const someTasksFailed = _.filter(tasks, (task) => task.status === TaskStatus.failed).length > 0;
+        const percent = Math.floor(endedTasks.length / tasks.length * 100);
+
         return (
             <Wizard.Step.Content {...this.props}>
-                <TaskStatusList list={this.state.tasks}/>
+                <Header as='h4'>Action list</Header>
+                <TaskStatusList list={tasks}/>
+                <Progress progress percent={percent}
+                          error={someTasksFailed} indicating={!allTasksEnded}  />
             </Wizard.Step.Content>
         );
     }
