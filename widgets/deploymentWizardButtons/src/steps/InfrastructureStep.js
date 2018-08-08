@@ -38,7 +38,7 @@ class InfrastructureContent extends Component {
         this.state = InfrastructureContent.initialState;
     }
 
-    static defaultBlueprintName = 'hello-world';
+    static defaultBlueprintName = 'hello-world-wizard';
     static helloWorldBlueprintUrl = 'https://github.com/cloudify-examples/hello-world-blueprint/archive/master.zip';
     static defaultBlueprintYaml = 'aws.yaml';
 
@@ -67,43 +67,38 @@ class InfrastructureContent extends Component {
     }
 
     render() {
-        let {Form, Image, Radio, Wizard} = Stage.Basic;
+        let {Button, Form, Image, Wizard} = Stage.Basic;
         const {widgetResourceUrl} = Stage.Utils;
 
-        const PlatformRadio = (props) => {
-            const blueprintYaml = `${props.value}.yaml`;
-            const logoFile = `${props.value}_logo.svg`;
+        const blueprintYaml = this.state.stepData.blueprintYaml;
+        const platformsYaml = ['aws.yaml', 'gcp.yaml', 'openstack.yaml', 'azure.yaml'];
+
+        const PlatformButton = (props) => {
+            const platformLogoSrc = (yaml) =>
+                widgetResourceUrl('deploymentWizardButtons', `/images/${_.replace(yaml, '.yaml', '')}_logo.svg`, false);
 
             return (
-                <span>
-                    <Radio label=' ' name='blueprintYaml' value={blueprintYaml}
-                           checked={this.state.stepData.blueprintYaml === blueprintYaml}
-                           onChange={this.onChange.bind(this, blueprintYaml)} />
-                    <Image src={widgetResourceUrl('deploymentWizardButtons', `/images/${logoFile}`, false)}
-                           inline style={{ cursor: 'pointer', height: 35 }}
-                           onClick={this.onChange.bind(this, blueprintYaml)} />
-                </span>
+                <Button fluid basic size='huge' active={props.active} onClick={this.onChange.bind(this, props.value)}>
+                    <Image src={platformLogoSrc(props.value)} inline style={{ cursor: 'pointer', height: 35 }} />
+                </Button>
             );
         };
 
         return (
             <Wizard.Step.Content {...this.props}>
-                <Form.Group widths='equal'>
-                    <Form.Field>
-                        <PlatformRadio value='aws' />
-                    </Form.Field>
-                    <Form.Field>
-                        <PlatformRadio value='azure' />
-                    </Form.Field>
-                </Form.Group>
-                <Form.Group widths='equal'>
-                    <Form.Field>
-                        <PlatformRadio value='gcp' />
-                    </Form.Field>
-                    <Form.Field>
-                        <PlatformRadio value='openstack' />
-                    </Form.Field>
-                </Form.Group>
+                {
+                    _.map(_.chunk(platformsYaml, 2), (group, index) =>
+                         <Form.Group key={`platformGroup${index}`} widths='equal'>
+                             {
+                                 _.map(group, (yaml) =>
+                                     <Form.Field key={yaml}>
+                                         <PlatformButton value={yaml} active={blueprintYaml === yaml} />
+                                     </Form.Field>
+                                 )
+                             }
+                         </Form.Group>
+                     )
+                }
             </Wizard.Step.Content>
         );
     }
