@@ -20,7 +20,7 @@ class SecretsStepActions extends Component {
                     .value();
 
                 const secretsWithoutValue = _.chain(stepData)
-                    .pickBy((secret) => _.isEmpty(secret.value))
+                    .pickBy((secret) => secret.status === SecretsStepContent.statusUndefined && _.isEmpty(secret.value))
                     .keys()
                     .value();
 
