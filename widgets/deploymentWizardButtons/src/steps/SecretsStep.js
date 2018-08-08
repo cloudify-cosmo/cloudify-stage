@@ -12,7 +12,10 @@ class SecretsStepActions extends Component {
         return this.props.onLoading(id)
             .then(this.props.fetchData)
             .then(({stepData}) => {
-                const undefinedSecrets = _.pickBy(stepData, (secret) => secret.status === SecretsStepContent.statusUndefined);
+                const undefinedSecrets = _.chain(stepData)
+                    .pickBy((secret) => secret.status === SecretsStepContent.statusUndefined)
+                    .mapValues((secretData) => secretData.value)
+                    .value();
                 return this.props.onNext(id, {secrets: undefinedSecrets});
             })
             .catch((error) => this.props.onError(id, error));
