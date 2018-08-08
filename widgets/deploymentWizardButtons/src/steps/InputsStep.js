@@ -8,10 +8,33 @@ import React from 'react';
 class InputsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
+    static dataPath = 'blueprint.inputs';
+
     onNext(id) {
+        const {DeployBlueprintModal, JsonUtils} = Stage.Common;
+
         return this.props.onLoading(id)
             .then(this.props.fetchData)
-            .then(({stepData}) => this.props.onNext(id, {inputs: {...stepData}}))
+            .then(({stepData, wizardData}) => {
+                let deploymentInputs = {};
+                _.forEach(_.get(wizardData, InputsStepActions.dataPath, {}), (inputObj, inputName) => {
+                    let stringInputValue = stepData[inputName];
+                    let typedInputValue = JsonUtils.getTypedValue(stringInputValue);
+
+                    if (_.isEmpty(stringInputValue)) {
+                        if (_.isNil(inputObj.default)) {
+                            // TODO: Add error handling
+                            // `Please provide value for: ${inputName}`;
+                        }
+                    } else if (stringInputValue === DeployBlueprintModal.EMPTY_STRING) {
+                        deploymentInputs[inputName] = '';
+                    } else if (!_.isEqual(typedInputValue, inputObj.default)) {
+                        deploymentInputs[inputName] = typedInputValue;
+                    }
+                });
+
+                this.props.onNext(id, {inputs: {...deploymentInputs}})
+            })
             .catch((error) => this.props.onError(id, error));
     }
 
@@ -37,9 +60,13 @@ class InputsStepContent extends Component {
         errors: {},
         stepData: _.mapValues(
             _.get(props.wizardData, InputsStepContent.dataPath, {}),
-            (inputData, inputName) => props.stepData[inputName] || InputsStepContent.defaultInputValue
+            (inputData, inputName) => props.stepData[inputName] || Stage.Common.JsonUtils.getStringValue(inputData.default) || InputsStepContent.defaultInputValue
         )
     });
+
+    componentDidMount() {
+        this.props.onChange(this.props.id, this.state.stepData);
+    }
 
     handleChange(event, {name, value}) {
         this.setState({stepData: {...this.state.stepData, [name]: value}},
