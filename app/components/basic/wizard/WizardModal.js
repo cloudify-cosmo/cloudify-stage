@@ -23,8 +23,8 @@ export default class WizardModal extends Component {
             id: PropTypes.string.isRequired,
             title: PropTypes.string.isRequired,
             description: PropTypes.string.isRequired,
-            Content: PropTypes.element.isRequired,
-            Actions: PropTypes.element.isRequired
+            Content: PropTypes.func.isRequired,
+            Actions: PropTypes.func.isRequired
         })).isRequired,
         toolbox: PropTypes.object.isRequired
     };
