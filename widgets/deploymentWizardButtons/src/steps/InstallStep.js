@@ -181,12 +181,12 @@ class InstallStepContent extends Component {
         const endedTasks = _.filter(tasks, (task) => task.status === TaskStatus.finished || task.status === TaskStatus.failed);
         const allTasksEnded = endedTasks.length === tasks.length;
         const someTasksFailed = _.filter(tasks, (task) => task.status === TaskStatus.failed).length > 0;
-        const percent = Math.floor(endedTasks.length / tasks.length * 100);
+        const percent = tasks.length > 0 ? Math.floor(endedTasks.length / tasks.length * 100) : 0;
 
         return (
             <Wizard.Step.Content {...this.props}>
                 <Header as='h4'>Action list</Header>
-                <TaskStatusList list={tasks}/>
+                <TaskStatusList list={tasks} />
                 <Progress progress percent={percent}
                           error={someTasksFailed} indicating={!allTasksEnded}  />
             </Wizard.Step.Content>
