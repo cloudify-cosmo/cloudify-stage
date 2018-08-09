@@ -5,115 +5,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import TaskStatus from './TaskStatus';
+import TaskList from './TaskList';
+
 const installStepId = 'install';
-
-class TaskStatus extends Component {
-
-    static pending = 0;
-    static inProgress = 1;
-    static finished = 2;
-    static failed = 3;
-
-    static propTypes = {
-        name: PropTypes.string.isRequired,
-        status: PropTypes.oneOf([
-            TaskStatus.pending,
-            TaskStatus.inProgress,
-            TaskStatus.finished,
-            TaskStatus.failed]).isRequired,
-        error: PropTypes.string
-    };
-
-    getStatusIcon() {
-        let {Icon} = Stage.Basic;
-        let iconProps = {
-            color: '',
-            loading: false,
-            name: ''
-        };
-
-        switch (this.props.status) {
-            case TaskStatus.pending:
-                iconProps.color = 'black';
-                iconProps.name = 'clock';
-                break;
-            case TaskStatus.inProgress:
-                iconProps.color = 'grey';
-                iconProps.loading = true;
-                iconProps.name = 'spinner';
-                break;
-            case TaskStatus.finished:
-                iconProps.color = 'green';
-                iconProps.name = 'check';
-                break;
-            case TaskStatus.failed:
-                iconProps.color = 'red';
-                iconProps.name = 'remove';
-                break;
-        }
-
-        return <Icon {...iconProps} />
-    }
-
-    getStatusText() {
-        const {error, status} = this.props;
-        let statusText = '';
-        let errorText = !!error
-            ? <em>{error}</em>
-            : null;
-
-        switch (status) {
-            case TaskStatus.pending:
-                statusText = 'Pending.';
-                break;
-            case TaskStatus.inProgress:
-                statusText = 'In progress.';
-                break;
-            case TaskStatus.finished:
-                statusText = 'Finished successfully.';
-                break;
-            case TaskStatus.failed:
-                statusText = 'Failed with error: ';
-                break;
-        }
-
-        return (
-            <React.Fragment>
-                <strong>{statusText}</strong>{errorText}
-            </React.Fragment>
-        );
-    }
-
-    render() {
-        const name = this.props.name;
-        const statusIcon = this.getStatusIcon();
-        const statusText = this.getStatusText();
-
-        return <span>{name}... {statusIcon} {statusText}</span>
-    }
-}
-
-class TaskStatusList extends Component {
-    static propTypes = {
-        list: PropTypes.arrayOf(PropTypes.shape(TaskStatus.propTypes))
-    };
-
-    render() {
-        const taskStatusList = this.props.list;
-        let {List} = Stage.Basic;
-
-        return (
-            <List ordered relaxed>
-                {
-                    _.map(taskStatusList, (taskStatusProps) =>
-                        <List.Item key={taskStatusProps.name}>
-                            <TaskStatus {...taskStatusProps} />
-                        </List.Item>)
-                }
-            </List>
-        );
-    }
-}
 
 class InstallStepActions extends Component {
 
@@ -227,13 +122,12 @@ class InstallStepContent extends Component {
     };
 
     render() {
-        let {Header, Wizard} = Stage.Basic;
+        let {Wizard} = Stage.Basic;
         const tasks = this.state.tasks;
 
         return (
             <Wizard.Step.Content {...this.props}>
-                <Header as='h4'>Action list</Header>
-                <TaskStatusList list={tasks} />
+                <TaskList list={tasks} withStatus />
             </Wizard.Step.Content>
         );
     }

@@ -133,7 +133,7 @@ class ConfirmationStepContent extends Component {
         };
 
         tasks.push({
-            name: `Deploy ${blueprintId} blueprint as ${deploymentId}`,
+            name: `Create ${deploymentId} deployment from ${blueprintId} blueprint`,
             promise: () => blueprintActions.doDeploy({id: blueprintId}, deploymentId, inputs, ConfirmationStepContent.defaultVisibility)
                 .then(() => waitForDeploymentIsCreated())
         });
@@ -175,21 +175,12 @@ class ConfirmationStepContent extends Component {
     }
 
     render() {
-        let {Header, List, Wizard} = Stage.Basic;
+        let {Wizard} = Stage.Basic;
         const tasks = this.state.stepData.tasks;
 
         return (
             <Wizard.Step.Content {...this.props}>
-                <Header as='h4'>Action list</Header>
-                <List ordered relaxed>
-                    {
-                        _.map(tasks, (task) =>
-                            <List.Item key={task.name}>
-                                {task.name}
-                            </List.Item>
-                        )
-                    }
-                </List>
+                <TaskList tasks={tasks} />
             </Wizard.Step.Content>
         );
     }
