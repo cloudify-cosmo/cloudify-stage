@@ -3,10 +3,9 @@
  */
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
-import TaskStatus from './TaskStatus';
-import TaskList from './TaskList';
+import TaskStatus from './helpers/TaskStatus';
+import TaskList from './helpers/TaskList';
 
 const installStepId = 'install';
 

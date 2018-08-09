@@ -32,7 +32,7 @@ class InfrastructureActions extends Component {
 }
 
 class InfrastructureContent extends Component {
-    constructor(props, context) {
+    constructor(props) {
         super(props);
 
         this.state = InfrastructureContent.initialState;

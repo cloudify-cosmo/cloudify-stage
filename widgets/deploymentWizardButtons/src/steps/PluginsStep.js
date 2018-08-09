@@ -2,11 +2,10 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import { Component } from 'react';
-import React from 'react';
+import React, { Component } from 'react';
 
-import ResourceStatus from './ResourceStatus';
-import ResourceAction from './ResourceAction';
+import ResourceStatus from './helpers/ResourceStatus';
+import ResourceAction from './helpers/ResourceAction';
 
 class PluginsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
@@ -14,7 +13,11 @@ class PluginsStepActions extends Component {
     onNext(id) {
         return this.props.onLoading(id)
             .then(this.props.fetchData)
-            .then(({stepData}) => this.props.onNext(id, {plugins: {..._.pickBy(stepData, (plugin) => plugin.status !== PluginsStepContent.statusInstalledAndParametersMatched)}}))
+            .then(({stepData}) => {
+                let plugins = _.pickBy(stepData, (plugin) =>
+                    plugin.status !== PluginsStepContent.statusInstalledAndParametersMatched);
+                return this.props.onNext(id, {plugins});
+            })
             .catch((error) => this.props.onError(id, error));
     }
 
@@ -25,7 +28,7 @@ class PluginsStepActions extends Component {
 }
 
 class PluginsStepContent extends Component {
-    constructor(props, context) {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -172,7 +175,7 @@ class PluginsStepContent extends Component {
             case PluginsStepContent.statusNotInstalledAndInCatalog:
                 return <ResourceAction>No action required.</ResourceAction>;
             case PluginsStepContent.statusUnknown:
-                return <ResourceAction />
+                return <ResourceAction />;
             default:
                 return <ResourceAction />;
         }
@@ -230,10 +233,6 @@ class PluginsStepContent extends Component {
                         )
                     }
                     </Table.Body>
-
-                    <Table.Footer>
-
-                    </Table.Footer>
                 </Table>
             </Wizard.Step.Content>
         );

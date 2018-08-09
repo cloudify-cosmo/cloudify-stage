@@ -2,10 +2,9 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import { Component } from 'react';
-import React from 'react';
+import React, { Component } from 'react';
 
-import ResourceStatus from './ResourceStatus';
+import ResourceStatus from './helpers/ResourceStatus';
 
 class InputsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
@@ -52,7 +51,7 @@ class InputsStepActions extends Component {
 }
 
 class InputsStepContent extends Component {
-    constructor(props, context) {
+    constructor(props) {
         super(props);
 
         this.state = InputsStepContent.initialState(props);

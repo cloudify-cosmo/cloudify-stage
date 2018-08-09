@@ -2,8 +2,9 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import { Component } from 'react';
-import React from 'react';
+import React, { Component } from 'react';
+
+import TaskList from './helpers/TaskList';
 
 const confirmationStepId = 'confirm';
 

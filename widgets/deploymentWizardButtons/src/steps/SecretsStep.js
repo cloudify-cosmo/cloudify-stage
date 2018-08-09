@@ -2,11 +2,10 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import { Component } from 'react';
-import React from 'react';
+import React, { Component } from 'react';
 
-import ResourceStatus from './ResourceStatus';
-import ResourceAction from './ResourceAction';
+import ResourceStatus from './helpers/ResourceStatus';
+import ResourceAction from './helpers/ResourceAction';
 
 class SecretsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
