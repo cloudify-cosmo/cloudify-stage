@@ -5,20 +5,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class TaskStatus extends Component {
+import Task from './Task';
 
-    static pending = 0;
-    static inProgress = 1;
-    static finished = 2;
-    static failed = 3;
+export default class TaskStatus extends Component {
 
     static propTypes = {
         name: PropTypes.string.isRequired,
         status: PropTypes.oneOf([
-            TaskStatus.pending,
-            TaskStatus.inProgress,
-            TaskStatus.finished,
-            TaskStatus.failed]).isRequired,
+            Task.Status.pending,
+            Task.Status.inProgress,
+            Task.Status.finished,
+            Task.Status.failed]).isRequired,
         error: PropTypes.string
     };
 
@@ -31,20 +28,20 @@ export default class TaskStatus extends Component {
         };
 
         switch (this.props.status) {
-            case TaskStatus.pending:
+            case Task.Status.pending:
                 iconProps.color = 'black';
                 iconProps.name = 'clock';
                 break;
-            case TaskStatus.inProgress:
+            case Task.Status.inProgress:
                 iconProps.color = 'grey';
                 iconProps.loading = true;
                 iconProps.name = 'spinner';
                 break;
-            case TaskStatus.finished:
+            case Task.Status.finished:
                 iconProps.color = 'green';
                 iconProps.name = 'check';
                 break;
-            case TaskStatus.failed:
+            case Task.Status.failed:
                 iconProps.color = 'red';
                 iconProps.name = 'remove';
                 break;
@@ -61,16 +58,16 @@ export default class TaskStatus extends Component {
             : null;
 
         switch (status) {
-            case TaskStatus.pending:
+            case Task.Status.pending:
                 statusText = 'Pending.';
                 break;
-            case TaskStatus.inProgress:
+            case Task.Status.inProgress:
                 statusText = 'In progress.';
                 break;
-            case TaskStatus.finished:
+            case Task.Status.finished:
                 statusText = 'Finished successfully.';
                 break;
-            case TaskStatus.failed:
+            case Task.Status.failed:
                 statusText = 'Failed with error: ';
                 break;
         }

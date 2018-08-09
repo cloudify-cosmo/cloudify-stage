@@ -11,7 +11,7 @@ export default class TaskList extends Component {
 
     static propTypes = {
         header: PropTypes.string,
-        list: PropTypes.arrayOf(PropTypes.shape(TaskStatus.propTypes)),
+        tasks: PropTypes.arrayOf(PropTypes.shape(TaskStatus.propTypes)),
         withStatus: PropTypes.bool
     };
 
@@ -21,20 +21,20 @@ export default class TaskList extends Component {
     };
 
     render() {
-        const taskStatusList = this.props.list;
-        let {List} = Stage.Basic;
+        const tasks = this.props.tasks;
+        let {Header, List} = Stage.Basic;
 
         return (
             <React.Fragment>
                 <Header as='h4'>{this.props.header}</Header>
                 <List ordered relaxed>
                     {
-                        _.map(taskStatusList, (taskStatus) =>
-                            <List.Item key={taskStatus.name}>
+                        _.map(tasks, (task) =>
+                            <List.Item key={task.name}>
                                 {
                                     this.props.withStatus
-                                    ? <TaskStatus {...taskStatus} />
-                                    : taskStatus.name
+                                    ? <TaskStatus {...task} />
+                                    : task.name
                                 }
                             </List.Item>)
                     }
