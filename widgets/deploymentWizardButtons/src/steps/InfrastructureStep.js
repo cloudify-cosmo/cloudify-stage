@@ -38,7 +38,7 @@ class InfrastructureContent extends Component {
         this.state = InfrastructureContent.initialState;
     }
 
-    static defaultBlueprintName = 'hello-world-wizard';
+    static defaultBlueprintName = 'hello-world';
     static helloWorldBlueprintUrl = 'https://github.com/cloudify-examples/hello-world-blueprint/archive/master.zip';
     static defaultBlueprintYaml = 'aws.yaml';
 
