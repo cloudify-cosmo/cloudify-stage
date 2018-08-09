@@ -16,9 +16,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     initialConfiguration: [],
-    permission: Stage.GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ADMIN_ONLY,
-    // TODO: Change permissions to:
-    // permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
 
     render: function(widget, data, error, toolbox) {
         return (
