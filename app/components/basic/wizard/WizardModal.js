@@ -183,7 +183,7 @@ export default class WizardModal extends Component {
                             )
                         }
                     </Step.Group>
-                    {this.state.error && <ErrorMessage error={this.state.error} />}
+                    {this.state.error && <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} />}
                 </Modal.Description>
 
                 <Modal.Content scrolling>
