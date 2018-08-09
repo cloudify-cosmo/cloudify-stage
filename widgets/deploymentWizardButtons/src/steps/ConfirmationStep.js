@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 
 import TaskList from './helpers/TaskList';
+import Task from './helpers/Task';
 
 const confirmationStepId = 'confirm';
 
@@ -68,12 +69,13 @@ class ConfirmationStepContent extends Component {
 
         for (let pluginName of _.keys(plugins)) {
             const plugin = plugins[pluginName];
-            tasks.push({
-                name: `Upload plugin ${pluginName}`,
-                promise: () =>
-                    pluginActions.doUpload(ConfirmationStepContent.defaultVisibility,
-                                           plugin.wagonUrl, plugin.yamlUrl, plugin.wagonFile, plugin.yamlFile)
-            });
+            tasks.push(
+                new Task(
+                    `Upload plugin ${pluginName}`,
+                    () => pluginActions.doUpload(ConfirmationStepContent.defaultVisibility,
+                                                 plugin.wagonUrl, plugin.yamlUrl, plugin.wagonFile, plugin.yamlFile)
+                )
+            );
         }
 
         return Promise.resolve();
@@ -84,10 +86,12 @@ class ConfirmationStepContent extends Component {
 
         for (let secretKey of _.keys(secrets)) {
             const secretValue = secrets[secretKey];
-            tasks.push({
-                name: `Create secret ${secretKey}`,
-                promise: () => secretActions.doCreate(secretKey, secretValue, ConfirmationStepContent.defaultVisibility, false)
-            })
+            tasks.push(
+                new Task(
+                    `Create secret ${secretKey}`,
+                    () => secretActions.doCreate(secretKey, secretValue, ConfirmationStepContent.defaultVisibility, false)
+                )
+            )
         }
 
         return Promise.resolve();
@@ -101,10 +105,12 @@ class ConfirmationStepContent extends Component {
     addBlueprintUploadTask(blueprint, tasks) {
         const blueprintActions = new Stage.Common.BlueprintActions(this.props.toolbox);
 
-        tasks.push({
-            name: `Upload blueprint ${blueprint.blueprintName}`,
-            promise: () => blueprintActions.doUpload(blueprint.blueprintName, blueprint.blueprintYaml, blueprint.blueprintUrl, null, blueprint.blueprintImageUrl, null, ConfirmationStepContent.defaultVisibility)
-        });
+        tasks.push(
+            new Task(
+                `Upload blueprint ${blueprint.blueprintName}`,
+                () => blueprintActions.doUpload(blueprint.blueprintName, blueprint.blueprintYaml, blueprint.blueprintUrl, null, blueprint.blueprintImageUrl, null, ConfirmationStepContent.defaultVisibility)
+            )
+        );
 
         return Promise.resolve();
     }
@@ -133,11 +139,13 @@ class ConfirmationStepContent extends Component {
             }
         };
 
-        tasks.push({
-            name: `Create ${deploymentId} deployment from ${blueprintId} blueprint`,
-            promise: () => blueprintActions.doDeploy({id: blueprintId}, deploymentId, inputs, ConfirmationStepContent.defaultVisibility)
-                .then(() => waitForDeploymentIsCreated())
-        });
+        tasks.push(
+            new Task(
+                `Create ${deploymentId} deployment from ${blueprintId} blueprint`,
+                () => blueprintActions.doDeploy({id: 'fdafdsaf'}, deploymentId, inputs, ConfirmationStepContent.defaultVisibility)
+                    .then(() => waitForDeploymentIsCreated())
+            )
+        );
 
         return Promise.resolve();
     }
@@ -145,10 +153,12 @@ class ConfirmationStepContent extends Component {
     addRunInstallWorkflowTask(deploymentId, tasks) {
         const deploymentActions = new Stage.Common.DeploymentActions(this.props.toolbox);
 
-        tasks.push({
-            name: `Execute install workflow on ${deploymentId} deployment`,
-            promise: () => deploymentActions.doExecute({id: deploymentId}, {name: 'install'}, {}, false)
-        });
+        tasks.push(
+            new Task(
+                `Execute install workflow on ${deploymentId} deployment`,
+                () => deploymentActions.doExecute({id: deploymentId}, {name: 'install'}, {}, false)
+            )
+        );
 
         return Promise.resolve();
     }

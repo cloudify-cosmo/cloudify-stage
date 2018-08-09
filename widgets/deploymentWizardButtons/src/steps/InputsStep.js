@@ -66,7 +66,9 @@ class InputsStepContent extends Component {
         errors: {},
         stepData: _.mapValues(
             _.get(props.wizardData, InputsStepContent.dataPath, {}),
-            (inputData, inputName) => props.stepData[inputName] || Stage.Common.JsonUtils.getStringValue(inputData.default) || InputsStepContent.defaultInputValue
+            (inputData, inputName) => props.stepData[inputName] ||
+                Stage.Common.JsonUtils.getStringValue(inputData.default) ||
+                InputsStepContent.defaultInputValue
         )
     });
 
