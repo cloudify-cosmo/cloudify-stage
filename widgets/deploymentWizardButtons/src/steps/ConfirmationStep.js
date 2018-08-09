@@ -164,7 +164,7 @@ class ConfirmationStepContent extends Component {
             .then(() => this.addSecretsTasks(wizardData.secrets, tasks))
             .then(() => this.chooseBlueprintId(wizardData.blueprint.blueprintName))
             .then((id) => {blueprintId = id; return this.addBlueprintUploadTask({...wizardData.blueprint, blueprintName: id}, tasks)})
-            .then(() => this.chooseDeploymentId(wizardData.blueprint.blueprintName))
+            .then(() => this.chooseDeploymentId(blueprintId))
             .then((id) => {deploymentId = id; this.addDeployBlueprintTask(id, blueprintId, wizardData.inputs, tasks)})
             .then(() => this.addRunInstallWorkflowTask(deploymentId, tasks))
             .then(() => ({stepData: {tasks}}))
