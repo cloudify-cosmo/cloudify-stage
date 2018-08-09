@@ -9,14 +9,18 @@ const installStepId = 'install';
 
 class TaskStatus extends Component {
 
-    static notStarted = 0;
+    static pending = 0;
     static inProgress = 1;
     static finished = 2;
     static failed = 3;
 
     static propTypes = {
         name: PropTypes.string.isRequired,
-        status: PropTypes.oneOf([TaskStatus.notStarted, TaskStatus.inProgress, TaskStatus.finished, TaskStatus.failed]).isRequired,
+        status: PropTypes.oneOf([
+            TaskStatus.pending,
+            TaskStatus.inProgress,
+            TaskStatus.finished,
+            TaskStatus.failed]).isRequired,
         error: PropTypes.string
     };
 
@@ -29,7 +33,7 @@ class TaskStatus extends Component {
         };
 
         switch (this.props.status) {
-            case TaskStatus.notStarted:
+            case TaskStatus.pending:
                 iconProps.color = 'black';
                 iconProps.name = 'clock';
                 break;
@@ -59,8 +63,8 @@ class TaskStatus extends Component {
             : null;
 
         switch (status) {
-            case TaskStatus.notStarted:
-                statusText = 'Not started.';
+            case TaskStatus.pending:
+                statusText = 'Pending.';
                 break;
             case TaskStatus.inProgress:
                 statusText = 'In progress.';
@@ -113,11 +117,47 @@ class TaskStatusList extends Component {
 
 class InstallStepActions extends Component {
 
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = {
+            tasks: []
+        };
+    }
+
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
+    componentWillReceiveProps(nextProps) {
+        nextProps.fetchData()
+            .then(({stepData}) => this.setState({...stepData}))
+    }
+
     render() {
-        let {Wizard} = Stage.Basic;
-        return <Wizard.Step.Actions {...this.props} nextLabel='Exit' nextIcon='close' />
+        let {Button, Link, Progress, Wizard} = Stage.Basic;
+
+        const tasks = this.state.tasks;
+        const endedTasks = _.filter(tasks, (task) => task.status === TaskStatus.finished || task.status === TaskStatus.failed);
+        const allTasksEnded = endedTasks.length === tasks.length;
+        const someTasksFailed = _.filter(tasks, (task) => task.status === TaskStatus.failed).length > 0;
+        const percent = tasks.length > 0 ? Math.floor(endedTasks.length / tasks.length * 100) : 0;
+
+        return (
+            <Wizard.Step.Actions {...this.props} showNext={false} showPrev={false}>
+                {
+                    _.isEmpty(tasks)
+                    ?
+                        null
+                    :
+                        allTasksEnded
+                        ?
+                            <Link to='/page/deployments'>
+                                <Button icon='rocket' content='Go to Deployments page' labelPosition='left' />
+                            </Link>
+                        :
+                            <Progress progress percent={percent} error={someTasksFailed} indicating={!allTasksEnded}  />
+                }
+            </Wizard.Step.Actions>
+        );
     }
 }
 
@@ -135,10 +175,20 @@ class InstallStepContent extends Component {
 
     componentDidMount() {
         let tasks = this.props.wizardData.tasks;
-        tasks = _.map(tasks, (task) => ({...task, status: TaskStatus.notStarted}));
+        tasks = _.map(tasks, (task) => ({...task, status: TaskStatus.pending}));
         this.setState({tasks}, () => {
-            this.handleTasks(tasks)
+            this.updateTasksInWizard()
+                .then(() => this.handleTasks(tasks))
                 .catch((error) => this.props.onError(this.props.id, error));
+        });
+    }
+
+    updateTasksInWizard() {
+        let tasks =  {tasks: _.map(this.state.tasks, (task) => ({status: task.status}))};
+
+        return new Promise((resolve) => {
+            this.props.onChange(this.props.id, tasks);
+            resolve(tasks);
         });
     }
 
@@ -154,7 +204,7 @@ class InstallStepContent extends Component {
 
                 tasks[index].status = TaskStatus.finished;
 
-                this.setState({tasks});
+                return new Promise((resolve) => this.setState({tasks}, resolve));
             })
             .catch((error) => {
                 let tasks = [...this.state.tasks];
@@ -165,8 +215,9 @@ class InstallStepContent extends Component {
                 tasks[index].status = TaskStatus.failed;
                 tasks[index].error = error;
 
-                this.setState({tasks}, () => Promise.reject(error));
-            });
+                return new Promise((resolve, reject) => this.setState({tasks}, reject(error)));
+            })
+            .finally(() => this.updateTasksInWizard());
     }
 
     async handleTasks(tasks) {
@@ -176,19 +227,13 @@ class InstallStepContent extends Component {
     };
 
     render() {
-        let {Header, Progress, Wizard} = Stage.Basic;
+        let {Header, Wizard} = Stage.Basic;
         const tasks = this.state.tasks;
-        const endedTasks = _.filter(tasks, (task) => task.status === TaskStatus.finished || task.status === TaskStatus.failed);
-        const allTasksEnded = endedTasks.length === tasks.length;
-        const someTasksFailed = _.filter(tasks, (task) => task.status === TaskStatus.failed).length > 0;
-        const percent = tasks.length > 0 ? Math.floor(endedTasks.length / tasks.length * 100) : 0;
 
         return (
             <Wizard.Step.Content {...this.props}>
                 <Header as='h4'>Action list</Header>
                 <TaskStatusList list={tasks} />
-                <Progress progress percent={percent}
-                          error={someTasksFailed} indicating={!allTasksEnded}  />
             </Wizard.Step.Content>
         );
     }
