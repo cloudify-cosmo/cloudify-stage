@@ -142,7 +142,7 @@ class ConfirmationStepContent extends Component {
         tasks.push(
             new Task(
                 `Create ${deploymentId} deployment from ${blueprintId} blueprint`,
-                () => blueprintActions.doDeploy({id: 'fdafdsaf'}, deploymentId, inputs, ConfirmationStepContent.defaultVisibility)
+                () => blueprintActions.doDeploy({id: blueprintId}, deploymentId, inputs, ConfirmationStepContent.defaultVisibility)
                     .then(() => waitForDeploymentIsCreated())
             )
         );
