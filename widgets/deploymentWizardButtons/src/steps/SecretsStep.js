@@ -5,6 +5,9 @@
 import { Component } from 'react';
 import React from 'react';
 
+import ResourceStatus from './ResourceStatus';
+import ResourceAction from './ResourceAction';
+
 class SecretsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
@@ -12,8 +15,6 @@ class SecretsStepActions extends Component {
         return this.props.onLoading(id)
             .then(this.props.fetchData)
             .then(({stepData}) => {
-                const {JsonUtils} = Stage.Common;
-
                 const undefinedSecrets = _.chain(stepData)
                     .pickBy((secret) => secret.status === SecretsStepContent.statusUndefined)
                     .mapValues((secretData) => secretData.value)
@@ -25,7 +26,7 @@ class SecretsStepActions extends Component {
                     .value();
 
                 if (secretsWithoutValue.length > 0) {
-                    return Promise.reject(`No values for the following secrets: ${JsonUtils.getStringValue(secretsWithoutValue)}`);
+                    return Promise.reject(`Provide values for the following secrets: ${secretsWithoutValue.join(', ')}`);
                 } else {
                     return this.props.onNext(id, {secrets: undefinedSecrets});
                 }
@@ -40,7 +41,7 @@ class SecretsStepActions extends Component {
 }
 
 class SecretsStepContent extends Component {
-    constructor(props, context) {
+    constructor(props) {
         super(props);
 
         this.state = SecretsStepContent.initialState(props);
@@ -93,36 +94,39 @@ class SecretsStepContent extends Component {
             .finally(() => this.props.onReady(this.props.id));
     }
 
-    getSecretDefined(secretKey) {
-        let {Checkmark} = Stage.Basic;
+    getSecretStatus(secretKey) {
         let secret = this.state.stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:
-                return <Checkmark value={true}/>;
+                return <ResourceStatus status={ResourceStatus.noActionRequired}
+                                       text='Secret defined.' />;
             case SecretsStepContent.statusUndefined:
+                return <ResourceStatus status={ResourceStatus.actionRequired}
+                                       text='Secret not defined. Please provide value for the secret.' />;
             default:
-                return <Checkmark value={false}/>;
+                return <ResourceStatus status={ResourceStatus.unknown}
+                                       text='Unknown status. Internal error.' />;
         }
     }
 
     getSecretAction(secretKey) {
-        let {Form, Icon} = Stage.Basic;
+        let {Form} = Stage.Basic;
         let secret = this.state.stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:
-                return <strong><Icon name='check circle' color='green' /> Secret defined. No action required.</strong>
+                return <ResourceAction>No action required.</ResourceAction>;
             case SecretsStepContent.statusUndefined:
-            default:
                 return (
-                    <span>
-                        <strong><Icon name='warning circle' color='yellow' /> Secret not defined. Provide value:</strong>
-                        &nbsp;&nbsp;
+                    <ResourceAction>
+                        <strong>Provide value:</strong>&nbsp;&nbsp;
                         <Form.Input name={secretKey} value={secret.value}
                                     onChange={this.handleChange.bind(this)} />
-                    </span>
+                    </ResourceAction>
                 );
+            default:
+                return null;
         }
     }
 
@@ -139,11 +143,11 @@ class SecretsStepContent extends Component {
 
         return (
             <Wizard.Step.Content {...this.props}>
-                <Table celled>
+                <Table celled definition>
                     <Table.Header>
                         <Table.Row>
+                            <Table.HeaderCell textAlign='center' width={1} />
                             <Table.HeaderCell>Secret</Table.HeaderCell>
-                            <Table.HeaderCell>Defined</Table.HeaderCell>
                             <Table.HeaderCell>Action</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -152,8 +156,8 @@ class SecretsStepContent extends Component {
                         {
                             _.map(_.keys(secrets), (secretKey) =>
                                 <Table.Row key={secretKey}>
+                                    <Table.Cell>{this.getSecretStatus(secretKey)}</Table.Cell>
                                     <Table.Cell>{secretKey}</Table.Cell>
-                                    <Table.Cell textAlign='center' width={1}>{this.getSecretDefined(secretKey)}</Table.Cell>
                                     <Table.Cell>{this.getSecretAction(secretKey)}</Table.Cell>
                                 </Table.Row>
                             )

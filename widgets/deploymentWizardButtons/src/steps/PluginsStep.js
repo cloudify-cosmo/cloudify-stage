@@ -5,6 +5,8 @@
 import { Component } from 'react';
 import React from 'react';
 
+import ResourceStatus from './ResourceStatus';
+import ResourceAction from './ResourceAction';
 
 class PluginsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
@@ -138,39 +140,41 @@ class PluginsStepContent extends Component {
             .finally(() => this.props.onReady(this.props.id));
     }
 
-    getPluginInstalled(pluginName) {
+    getPluginStatus(pluginName) {
         const status = _.get(this.state.stepData[pluginName], 'status');
-        let {Checkmark} = Stage.Basic;
 
         switch (status) {
             case PluginsStepContent.statusInstalledAndParametersMatched:
-                return <Checkmark value={true}/>;
+                return <ResourceStatus status={ResourceStatus.noActionRequired} text='Plugin already installed. No action required.' />;
             case PluginsStepContent.statusInstalledAndParametersUnmatched:
+                return <ResourceStatus status={ResourceStatus.actionRequired} text='Plugin installed but with different parameters. Provide details.' />;
             case PluginsStepContent.statusNotInstalledAndNotInCatalog:
+                return <ResourceStatus status={ResourceStatus.actionRequired} text='Cannot find plugin. Provide details.' />;
             case PluginsStepContent.statusNotInstalledAndInCatalog:
-                return <Checkmark value={false}/>;
+                return <ResourceStatus status={ResourceStatus.noActionRequired} text='Plugin has been found in catalog and will be installed automatically. No action required.' />;
             case PluginsStepContent.statusUnknown:
+                return <ResourceStatus status={ResourceStatus.unknown} text='Unknown status.' />;
             default:
-                return null;
+                return <ResourceStatus status={ResourceStatus.errorOccurred} text='Error during status calculation.' />;
         }
     }
 
     getPluginAction(pluginName) {
         const status = _.get(this.state.stepData[pluginName], 'status');
-        let {Icon} = Stage.Basic;
 
         switch (status) {
             case PluginsStepContent.statusInstalledAndParametersMatched:
-                return <strong><Icon name='check circle' color='green' /> Plugin already installed. No action required.</strong>;
+                return <ResourceAction>No action required.</ResourceAction>;
             case PluginsStepContent.statusInstalledAndParametersUnmatched:
-                return <strong><Icon name='warning circle' color='yellow' /> Plugin installed but with different parameters. Provide details.</strong>;
+                return <ResourceAction>Not supported, yet.</ResourceAction>;
             case PluginsStepContent.statusNotInstalledAndNotInCatalog:
-                return <strong><Icon name='warning circle' color='yellow' /> Cannot find plugin. Provide details.</strong>;
+                return <ResourceAction>Not supported, yet.</ResourceAction>;
             case PluginsStepContent.statusNotInstalledAndInCatalog:
-                return <strong><Icon name='check circle' color='green' /> Plugin has been found in catalog and will be installed automatically. No action required.</strong>;
+                return <ResourceAction>No action required.</ResourceAction>;
             case PluginsStepContent.statusUnknown:
+                return <ResourceAction />
             default:
-                return null;
+                return <ResourceAction />;
         }
     }
 
@@ -201,14 +205,13 @@ class PluginsStepContent extends Component {
 
         return (
             <Wizard.Step.Content {...this.props}>
-                <Table celled>
+                <Table celled definition>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell></Table.HeaderCell>
-                            <Table.HeaderCell>Plugin</Table.HeaderCell>
+                            <Table.HeaderCell />
+                            <Table.HeaderCell colSpan='2'>Plugin</Table.HeaderCell>
                             <Table.HeaderCell>Version</Table.HeaderCell>
                             <Table.HeaderCell>Distribution</Table.HeaderCell>
-                            <Table.HeaderCell>Installed</Table.HeaderCell>
                             <Table.HeaderCell>Action</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -217,11 +220,11 @@ class PluginsStepContent extends Component {
                     {
                         _.map(_.keys(plugins), (pluginName) =>
                             <Table.Row key={pluginName}>
+                                <Table.Cell collapsing>{this.getPluginStatus(pluginName)}</Table.Cell>
                                 <Table.Cell textAlign='center' width={1}>{this.getPluginIcon(pluginName)}</Table.Cell>
                                 <Table.Cell>{this.getPluginUserFriendlyName(pluginName)}</Table.Cell>
                                 <Table.Cell>{plugins[pluginName].version || '-'}</Table.Cell>
                                 <Table.Cell>{plugins[pluginName].distribution || '-'}</Table.Cell>
-                                <Table.Cell textAlign='center' width={1}>{this.getPluginInstalled(pluginName)}</Table.Cell>
                                 <Table.Cell>{this.getPluginAction(pluginName)}</Table.Cell>
                             </Table.Row>
                         )
