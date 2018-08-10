@@ -5,49 +5,46 @@
 import React, { Component } from 'react';
 
 import TaskList from './helpers/TaskList';
+import Task from './helpers/Task';
 
 const installStepId = 'install';
+const emptyTasksStats = _.reduce(_.values(Task.Status), (acc, status) => ({ ...acc, [status]: 0 }), {});
 
 class InstallStepActions extends Component {
 
     constructor(props, context) {
         super(props, context);
-
-        this.state = {
-            tasks: []
-        };
     }
 
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
-    componentWillReceiveProps(nextProps) {
-        nextProps.fetchData()
-            .then(({stepData}) => this.setState({...stepData}))
-    }
-
     render() {
         let {Button, Link, Progress, Wizard} = Stage.Basic;
 
-        const tasks = this.state.tasks;
-        const endedTasks = _.filter(tasks, (task) => task.isFinished() || task.isFailed());
-        const allTasksEnded = endedTasks.length === tasks.length;
-        const someTasksFailed = _.filter(tasks, (task) => task.isFailed()).length > 0;
-        const percent = tasks.length > 0 ? Math.floor(endedTasks.length / tasks.length * 100) : 0;
+        const tasksStats = _.get(this.props, 'wizardData.tasksStats', emptyTasksStats);
+        const numberOfTasks = _.get(this.props, 'wizardData.tasks.length', 0);
+
+        const numberOfEndedTasks
+            = tasksStats[Task.Status.finished] + tasksStats[Task.Status.failed];
+        const allTasksEnded = numberOfEndedTasks === numberOfTasks;
+        const anyTaskFailed = tasksStats[Task.Status.failed] > 0;
+        const percent = numberOfTasks > 0 ? Math.floor(numberOfEndedTasks / numberOfTasks * 100) : 0;
 
         return (
-            <Wizard.Step.Actions {...this.props} showNext={false} showPrev={someTasksFailed}>
+            <Wizard.Step.Actions {...this.props} showNext={false} showPrev={anyTaskFailed}>
                 {
-                    _.isEmpty(tasks) || someTasksFailed
+                    allTasksEnded && !anyTaskFailed
                     ?
-                        null
+                        <Link to='/page/deployments'>
+                            <Button icon='rocket' content='Go to Deployments page' labelPosition='left' />
+                        </Link>
                     :
-                        allTasksEnded
-                        ?
-                            <Link to='/page/deployments'>
-                                <Button icon='rocket' content='Go to Deployments page' labelPosition='left' />
-                            </Link>
-                        :
-                            <Progress progress percent={percent} error={someTasksFailed} indicating={!allTasksEnded}  />
+                        <Progress progress={!anyTaskFailed} size='large'
+                                  percent={anyTaskFailed ? 100 : percent}
+                                  error={anyTaskFailed}
+                                  indicating={!anyTaskFailed}>
+                            {anyTaskFailed && 'Installation failed. Check details above.'}
+                        </Progress>
                 }
             </Wizard.Step.Actions>
         );
@@ -72,16 +69,20 @@ class InstallStepContent extends Component {
         this.setState({tasks}, () => {
             this.updateTasksInWizard()
                 .then(() => this.handleTasks(tasks))
-                .catch((error) => this.props.onError(this.props.id, error));
+                .catch((error) => this.props.onError(error));
         });
     }
 
     updateTasksInWizard() {
-        let tasks = this.state.tasks;
+        const tasks = this.state.tasks;
 
         return new Promise((resolve) => {
-            this.props.onChange(this.props.id, {tasks});
-            resolve(tasks);
+            const tasksStats = {
+                ...emptyTasksStats,
+                ..._.countBy(tasks, (task) => task.status)
+            };
+            this.props.onChange(this.props.id, {tasksStats}, false);
+            resolve({tasksStats});
         });
     }
 
@@ -107,7 +108,8 @@ class InstallStepContent extends Component {
 
                 tasks[index].changeToFailed(error);
 
-                return new Promise((resolve, reject) => this.setState({tasks}, reject(error)));
+                return new Promise((resolve, reject) =>
+                    this.setState({tasks}, reject(`Task '${task.name}' failed with error: ${error}`)));
             })
             .finally(() => this.updateTasksInWizard());
     }
