@@ -65,9 +65,9 @@ export default class WizardModal extends Component {
         return !_.isEqual(this.props.open, nextProps.open) || !_.isEqual(this.state, nextState);
     }
 
-    componentWillReceiveProps(nextProps, nextState) {
-        if (!this.props.open && nextProps.open) {
-            this.setState({...WizardModal.initialState(nextProps.steps)});
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            this.setState({...WizardModal.initialState(this.props.steps)});
         }
     }
 
@@ -122,15 +122,15 @@ export default class WizardModal extends Component {
         });
     }
 
-    onError(id, message) {
-        return new Promise((resolve) => this.setState({error: message, loading: false}, resolve));
+    onError(error) {
+        return new Promise((resolve) => this.setState({error, loading: false}, resolve));
     }
 
-    onLoading(id) {
+    onLoading() {
         return new Promise((resolve) => this.setState({loading: true}, resolve));
     }
 
-    onReady(id) {
+    onReady() {
         return new Promise((resolve) => this.setState({loading: false}, resolve));
     }
 
@@ -138,19 +138,24 @@ export default class WizardModal extends Component {
         // TODO: Implement step change handling
     }
 
-    onStepDataChanged(id, stepData) {
-        const stepName = WizardModal.getStepNameById(id);
-        const stepState = this.state[stepName];
+    onStepDataChanged(id, data, internal = true) {
+        if (internal) { // internal step data => state[stepId]
+            const stepName = WizardModal.getStepNameById(id);
+            const stepState = this.state[stepName];
 
-        this.setState({[stepName]: {...stepState, data: stepData}});
+            this.setState({[stepName]: {...stepState, data: data}});
+        } else { // step output data => state.wizardData
+            const wizardData = {...this.state.wizardData, ...data};
+
+            this.setState({wizardData});
+        }
     }
 
     fetchStepData(id) {
         const stepName = WizardModal.getStepNameById(id);
         const stepState = this.state[stepName];
-        const wizardData = this.state.wizardData;
 
-        return Promise.resolve({stepData: stepState.data, wizardData: wizardData});
+        return Promise.resolve({stepData: stepState.data});
     }
 
     render() {
@@ -183,10 +188,8 @@ export default class WizardModal extends Component {
                             )
                         }
                     </Step.Group>
-                    {
-                        this.state.error &&
-                        <ErrorMessage autohide error={this.state.error} onDismiss={() => this.setState({error: null})} />
-                    }
+
+                    <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide />
                 </Modal.Description>
 
                 <Modal.Content scrolling>
@@ -210,6 +213,7 @@ export default class WizardModal extends Component {
                                         disabled={this.state.loading}
                                         showPrev={this.state.activeStepIndex !== 0}
                                         fetchData={this.fetchStepData.bind(this, ActiveStep.id)}
+                                        wizardData={this.state.wizardData}
                                         toolbox={this.props.toolbox} />
                 </Modal.Actions>
             </Modal>

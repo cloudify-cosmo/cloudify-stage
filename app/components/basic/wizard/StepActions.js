@@ -23,6 +23,7 @@ export default class StepActions extends Component {
         onLoading: PropTypes.func.isRequired,
         onReady: PropTypes.func.isRequired,
         fetchData: PropTypes.func.isRequired,
+        wizardData: PropTypes.object.isRequired,
         toolbox: PropTypes.object.isRequired,
         disabled: PropTypes.bool,
         prevLabel: PropTypes.string,
