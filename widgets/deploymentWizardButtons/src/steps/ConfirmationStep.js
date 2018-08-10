@@ -14,10 +14,10 @@ class ConfirmationStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
-        return this.props.onLoading(id)
+        return this.props.onLoading()
             .then(this.props.fetchData)
             .then(({stepData}) => this.props.onNext(id, {tasks: stepData.tasks}))
-            .catch((error) => this.props.onError(id, error));
+            .catch((error) => this.props.onError(error));
     }
 
     render() {
@@ -170,7 +170,7 @@ class ConfirmationStepContent extends Component {
         let blueprintId = '';
         let deploymentId = '';
 
-        this.props.onLoading(this.props.id)
+        this.props.onLoading()
             .then(() => this.addPluginsTasks(wizardData.plugins, tasks))
             .then(() => this.addSecretsTasks(wizardData.secrets, tasks))
             .then(() => this.chooseBlueprintId(wizardData.blueprint.blueprintName))
@@ -181,8 +181,8 @@ class ConfirmationStepContent extends Component {
             .then(() => ({stepData: {tasks}}))
             .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
             .then(() => this.props.onChange(this.props.id, this.state.stepData))
-            .catch((error) => this.props.onError(this.props.id, error))
-            .finally(() => this.props.onReady(this.props.id));
+            .catch((error) => this.props.onError(error))
+            .finally(() => this.props.onReady());
     }
 
     render() {

@@ -14,13 +14,13 @@ class InputsStepActions extends Component {
     onNext(id) {
         const {DeployBlueprintModal, JsonUtils} = Stage.Common;
 
-        return this.props.onLoading(id)
+        return this.props.onLoading()
             .then(this.props.fetchData)
-            .then(({stepData, wizardData}) => {
+            .then(({stepData}) => {
                 let deploymentInputs = {};
                 let inputsWithoutValues = [];
 
-                _.forEach(_.get(wizardData, InputsStepActions.dataPath, {}), (inputObj, inputName) => {
+                _.forEach(_.get(this.props.wizardData, InputsStepActions.dataPath, {}), (inputObj, inputName) => {
                     let stringInputValue = stepData[inputName];
                     let typedInputValue = JsonUtils.getTypedValue(stringInputValue);
 
@@ -41,7 +41,7 @@ class InputsStepActions extends Component {
                     return this.props.onNext(id, {inputs: {...deploymentInputs}})
                 }
             })
-            .catch((error) => this.props.onError(id, error));
+            .catch((error) => this.props.onError(error));
     }
 
     render() {

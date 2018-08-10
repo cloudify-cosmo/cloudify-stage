@@ -11,7 +11,7 @@ class SecretsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
-        return this.props.onLoading(id)
+        return this.props.onLoading()
             .then(this.props.fetchData)
             .then(({stepData}) => {
                 const undefinedSecrets = _.chain(stepData)
@@ -30,7 +30,7 @@ class SecretsStepActions extends Component {
                     return this.props.onNext(id, {secrets: undefinedSecrets});
                 }
             })
-            .catch((error) => this.props.onError(id, error));
+            .catch((error) => this.props.onError(error));
     }
 
     render() {
@@ -73,7 +73,7 @@ class SecretsStepContent extends Component {
     componentDidMount() {
         const secrets = _.get(this.props.wizardData, SecretsStepContent.dataPath, {});
 
-        this.props.onLoading(this.props.id)
+        this.props.onLoading()
             .then(() => this.props.toolbox.getManager().doGet('/secrets?_include=key'))
             .then((secretsInManager) => {
                 secretsInManager = secretsInManager.items;
@@ -89,8 +89,8 @@ class SecretsStepContent extends Component {
             })
             .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
             .then(() => this.props.onChange(this.props.id, this.state.stepData))
-            .catch((error) => this.props.onError(this.props.id, error))
-            .finally(() => this.props.onReady(this.props.id));
+            .catch((error) => this.props.onError(error))
+            .finally(() => this.props.onReady());
     }
 
     getSecretStatus(secretKey) {

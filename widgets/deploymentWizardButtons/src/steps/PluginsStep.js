@@ -11,14 +11,14 @@ class PluginsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
-        return this.props.onLoading(id)
+        return this.props.onLoading()
             .then(this.props.fetchData)
             .then(({stepData}) => {
                 let plugins = _.pickBy(stepData, (plugin) =>
                     plugin.status !== PluginsStepContent.statusInstalledAndParametersMatched);
                 return this.props.onNext(id, {plugins});
             })
-            .catch((error) => this.props.onError(id, error));
+            .catch((error) => this.props.onError(error));
     }
 
     render() {
@@ -88,7 +88,7 @@ class PluginsStepContent extends Component {
     }
 
     componentDidMount() {
-        this.props.onLoading(this.props.id)
+        this.props.onLoading()
             .then(() => Promise.all([
                 this.props.toolbox.getManager().doGet('/plugins?_include=distribution,package_name,package_version'),
                 this.props.toolbox.getExternal().doGet('http://repository.cloudifysource.org/cloudify/wagons/plugins.json')
@@ -139,8 +139,8 @@ class PluginsStepContent extends Component {
             })
             .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
             .then(() => this.props.onChange(this.props.id, this.state.stepData))
-            .catch((error) => this.props.onError(this.props.id, error))
-            .finally(() => this.props.onReady(this.props.id));
+            .catch((error) => this.props.onError(error))
+            .finally(() => this.props.onReady());
     }
 
     getPluginStatus(pluginName) {

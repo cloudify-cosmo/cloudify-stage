@@ -12,7 +12,7 @@ class InfrastructureActions extends Component {
     onNext(id) {
         let fetchedStepData = {};
 
-        this.props.onLoading(id)
+        this.props.onLoading()
             .then(this.props.fetchData)
             .then(({stepData}) => fetchedStepData = stepData)
             .then((stepData) =>
@@ -22,7 +22,7 @@ class InfrastructureActions extends Component {
                         url: stepData.blueprintUrl
                     }))
             .then((resources) => this.props.onNext(id, {blueprint: {...resources, ...fetchedStepData}}))
-            .catch((error) => this.props.onError(id, error))
+            .catch((error) => this.props.onError(error))
     }
 
     render() {
