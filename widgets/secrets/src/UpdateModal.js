@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 24/03/2017.
  */
 
-import Actions from './actions';
-
 import PropTypes from 'prop-types';
 
 export default class UpdateModal extends React.Component {
@@ -46,7 +44,7 @@ export default class UpdateModal extends React.Component {
         if (!this.props.open && nextProps.open) {
             this.setState({...UpdateModal.initialState, loading: true});
 
-            let actions = new Actions(this.props.toolbox);
+            let actions = new Stage.Common.SecretActions(this.props.toolbox);
             actions.doGet(nextProps.secret.key).then((secret)=>{
                 let canUpdateSecret = true;
                 if (nextProps.secret.is_hidden_value && _.isEmpty(secret.value)) {
@@ -74,7 +72,7 @@ export default class UpdateModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        let actions = new Actions(this.props.toolbox);
+        let actions = new Stage.Common.SecretActions(this.props.toolbox);
         actions.doUpdate(this.props.secret.key, this.state.secretValue).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.onHide();

@@ -41,9 +41,7 @@ export default class extends Dropdown {
         }
 
         return (
-            <Dropdown {...props}>
-                {this.props.children}
-            </Dropdown>
+            <Dropdown {...props} />
         );
     }
 }

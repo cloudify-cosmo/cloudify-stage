@@ -284,6 +284,7 @@ div.headerBar {
 }
 
 .coloredContainer {
+  position: absolute;
   left: 0;
   right: 0;
   top: 55px;
@@ -490,7 +491,7 @@ table.servicesData button.refreshButton {
 }
 
 .managerMenu:hover {
-  cursor: default;
+  cursor: pointer;
 }
 
 .ui.menu:not(.vertical) .item.configPanel {

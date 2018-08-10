@@ -62,13 +62,14 @@ Stage.defineWidget({
 
         return actions.doGetRepos(params)
             .then(data => {
+                const defaultImagePath = Stage.Utils.widgetResourceUrl('blueprintCatalog', Consts.DEFAULT_IMAGE, false, false);
                 let repos = data.items;
                 let source = data.source;
                 let total = data.total_count;
                 if (data.source === Consts.GITHUB_DATA_SOURCE) {
                     let isAuthenticated = data.isAuth;
 
-                    let fetches = _.map(repos, repo => actions.doFindImage(repo.name, Consts.DEFAULT_IMAGE)
+                    let fetches = _.map(repos, repo => actions.doFindImage(repo.name, defaultImagePath)
                         .then(imageUrl => Promise.resolve(Object.assign(repo, {image_url: imageUrl}))));
 
                     return Promise.all(fetches).then((items) =>
@@ -76,7 +77,7 @@ Stage.defineWidget({
                     );
                 } else {
                     repos = _.map(repos, repo => _.isEmpty(repo.image_url)
-                        ? ({...repo, image_url: Consts.DEFAULT_IMAGE})
+                        ? ({...repo, image_url: defaultImagePath})
                         : ({...repo, image_url: `/external/content?url=${encodeURIComponent(repo.image_url)}`}));
 
                     return Promise.resolve({items: repos, total, source});

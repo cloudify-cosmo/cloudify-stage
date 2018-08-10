@@ -23,6 +23,14 @@ export default class Manager extends Internal {
         return _.get(this,'_data.auth.role', null);
     }
 
+    getDistributionName() {
+        return _.get(this,'_data.distribution', null);
+    }
+
+    getDistributionRelease() {
+        return _.get(this,'_data.distroRelease', null);
+    }
+
     getManagerUrl(url,data) {
         return this._buildActualUrl(url,data);
     }

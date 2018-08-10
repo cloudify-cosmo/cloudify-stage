@@ -87,6 +87,13 @@ export default class StageUtils {
         return Const.CONTEXT_PATH + (_.startsWith(path, '/') ? '' : '/') + path;
     }
 
+    static widgetResourceUrl(widgetId, internalPath, isCustom = true, addContextPath = true) {
+        return addContextPath
+            ? StageUtils.url(
+                `${isCustom ? Const.USER_DATA_PATH : Const.APP_DATA_PATH}/widgets/${widgetId}${_.startsWith(internalPath, '/') ? '' : '/'}${internalPath}`)
+            : `${isCustom ? Const.USER_DATA_PATH : Const.APP_DATA_PATH}/widgets/${widgetId}${_.startsWith(internalPath, '/') ? '' : '/'}${internalPath}`;
+    }
+
     static buildConfig(widgetDefinition) {
         var configs = {};
 

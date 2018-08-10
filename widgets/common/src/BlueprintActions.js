@@ -7,8 +7,8 @@ class BlueprintActions {
         this.toolbox = toolbox;
     }
 
-    doGetBlueprints() {
-        return this.toolbox.getManager().doGet('/blueprints?_include=id');
+    doGetBlueprints(params = null) {
+        return this.toolbox.getManager().doGet('/blueprints?_include=id', params);
     }
 
     doGetFullBlueprintData(blueprint) {

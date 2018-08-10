@@ -16,7 +16,7 @@ export default class Help extends Component {
         const redirectToPage = (url) => window.open(url, '_blank');
 
         return (
-            <Dropdown item trigger={<Icon name='help circle' />} className='helpMenu' scrolling>
+            <Dropdown item pointing='top right' trigger={<Icon name='help circle' />} className='helpMenu' >
                 <Dropdown.Menu>
                     <Dropdown.Item icon='book' text='Documentation'
                                    onClick={redirectToPage.bind(this, 'https://docs.cloudify.co')} />

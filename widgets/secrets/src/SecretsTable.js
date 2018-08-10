@@ -4,7 +4,6 @@
 
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
-import Actions from './actions';
 
 export default class SecretsTable extends React.Component {
     constructor(props, context) {
@@ -61,7 +60,7 @@ export default class SecretsTable extends React.Component {
         let secretKey = secret.key;
         this.setState({secret, showSecretKey: secretKey, showSecretValue: '', showSecretLoading: true});
 
-        let actions = new Actions(this.props.toolbox);
+        let actions = new Stage.Common.SecretActions(this.props.toolbox);
         actions.doGet(secretKey).then((secret)=>{
             let canShowSecret = true;
             if (secret.is_hidden_value && _.isEmpty(secret.value)) {
@@ -79,7 +78,7 @@ export default class SecretsTable extends React.Component {
 
     _deleteSecret() {
         let secretKey = this.state.secret.key;
-        let actions = new Actions(this.props.toolbox);
+        let actions = new Stage.Common.SecretActions(this.props.toolbox);
         const HIDE_DELETE_MODAL_STATE = {modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: false};
 
         actions.doDelete(secretKey).then(()=>{
@@ -91,7 +90,7 @@ export default class SecretsTable extends React.Component {
     }
 
     _setSecretVisibility(secretKey, visibility) {
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.SecretActions(this.props.toolbox);
         this.props.toolbox.loading(true);
         actions.doSetVisibility(secretKey, visibility)
             .then(()=> {
@@ -105,7 +104,7 @@ export default class SecretsTable extends React.Component {
     }
 
     _onIsHiddenValueChange(secretKey, isHiddenValue) {
-        var actions = new Actions(this.props.toolbox);
+        var actions = new Stage.Common.SecretActions(this.props.toolbox);
         this.props.toolbox.loading(true);
         actions.doSetIsHiddenValue(secretKey, isHiddenValue)
             .then(()=> {
