@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 
 const infrastructureStepId = 'infrastructure';
 
-class InfrastructureActions extends Component {
+class InfrastructureStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
@@ -31,11 +31,11 @@ class InfrastructureActions extends Component {
     }
 }
 
-class InfrastructureContent extends Component {
+class InfrastructureStepContent extends Component {
     constructor(props) {
         super(props);
 
-        this.state = InfrastructureContent.initialState;
+        this.state = InfrastructureStepContent.initialState;
     }
 
     static defaultBlueprintName = 'hello-world';
@@ -44,9 +44,9 @@ class InfrastructureContent extends Component {
 
     static initialState = {
         stepData: {
-            blueprintName: InfrastructureContent.defaultBlueprintName,
-            blueprintUrl: InfrastructureContent.helloWorldBlueprintUrl,
-            blueprintYaml: InfrastructureContent.defaultBlueprintYaml,
+            blueprintName: InfrastructureStepContent.defaultBlueprintName,
+            blueprintUrl: InfrastructureStepContent.helloWorldBlueprintUrl,
+            blueprintYaml: InfrastructureStepContent.defaultBlueprintYaml,
             blueprintImageUrl: ''
         }
     };
@@ -104,4 +104,5 @@ class InfrastructureContent extends Component {
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep(infrastructureStepId, 'Infrastructure', 'Select IaaS Provider', InfrastructureContent, InfrastructureActions);
+export default Stage.Basic.Wizard.Utils.createWizardStep(
+    infrastructureStepId, 'Infrastructure', 'Select IaaS Provider', InfrastructureStepContent, InfrastructureStepActions);
