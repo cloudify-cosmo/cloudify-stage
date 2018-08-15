@@ -20,7 +20,7 @@ Stage.defineWidget ({
       id: 'jsonPath',
       name: 'Plugins Catalog JSON Source',
       placeHolder: 'Type JSON Path',
-      default: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json',
+      default: '//repository.cloudifysource.org/cloudify/wagons/plugins.json',
       type: Stage.Basic.GenericField.STRING_TYPE,
     },
   ],
