@@ -104,11 +104,16 @@ class ConfirmationStepContent extends Component {
 
     addBlueprintUploadTask(blueprint, tasks) {
         const blueprintActions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        const blueprintUrl = blueprint.blueprintFile ? '' : blueprint.blueprintUrl;
+        const imageUrl = blueprint.imageFile ? '' : blueprint.imageUrl;
 
         tasks.push(
             new Task(
                 `Upload blueprint ${blueprint.blueprintName}`,
-                () => blueprintActions.doUpload(blueprint.blueprintName, blueprint.blueprintYaml, blueprint.blueprintUrl, null, blueprint.blueprintImageUrl, null, ConfirmationStepContent.defaultVisibility)
+                () => blueprintActions.doUpload(blueprint.blueprintName, blueprint.blueprintFileName,
+                                                blueprintUrl, blueprint.blueprintFile,
+                                                imageUrl, blueprint.imageFile,
+                                                ConfirmationStepContent.defaultVisibility)
             )
         );
 
@@ -125,17 +130,26 @@ class ConfirmationStepContent extends Component {
         const executionActions = new Stage.Common.ExecutionActions(this.props.toolbox);
 
         const waitForDeploymentIsCreated = async () => {
-            const maxNumberOfRetries = 10;
+            const maxNumberOfRetries = 60;
             const waitingInterval = 1000; //ms
 
             let deploymentCreated = false;
             for (let i = 0; i < maxNumberOfRetries && !deploymentCreated; i++) {
-                await new Promise(resolve => setTimeout(resolve, waitingInterval))
+                await new Promise(resolve => {
+                        console.debug('Waiting for deployment is created...', i);
+                        setTimeout(resolve, waitingInterval);
+                    })
                     .then(() => executionActions.doGetExecutions(deploymentId))
                     .then(({items}) => {
-                        deploymentCreated = _.isUndefined(_.find(items, {ended_at: null}));
+                        deploymentCreated = !_.isEmpty(items) && _.isUndefined(_.find(items, {ended_at: null}));
                     });
-                console.error(i, deploymentCreated);
+            }
+
+            if (deploymentCreated) {
+                return Promise.resolve();
+            } else {
+                const timeout = Math.floor(maxNumberOfRetries * waitingInterval / 1000);
+                return Promise.reject(`Timeout exceeded. Deployment was not created after ${timeout} seconds.`);
             }
         };
 
@@ -186,12 +200,14 @@ class ConfirmationStepContent extends Component {
     }
 
     render() {
-        let {Wizard} = Stage.Basic;
+        let {Form, Wizard} = Stage.Basic;
         const tasks = this.state.stepData.tasks;
 
         return (
             <Wizard.Step.Content {...this.props}>
-                <TaskList tasks={tasks} />
+                <Form loading={this.props.loading}>
+                    <TaskList tasks={tasks} />
+                </Form>
             </Wizard.Step.Content>
         );
     }
