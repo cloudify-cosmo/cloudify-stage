@@ -121,12 +121,14 @@ class InstallStepContent extends Component {
     };
 
     render() {
-        let {Wizard} = Stage.Basic;
+        let {Form, Wizard} = Stage.Basic;
         const tasks = this.state.tasks;
 
         return (
             <Wizard.Step.Content {...this.props}>
-                <TaskList tasks={tasks} withStatus />
+                <Form loading={this.props.loading}>
+                    <TaskList tasks={tasks} withStatus />
+                </Form>
             </Wizard.Step.Content>
         );
     }
