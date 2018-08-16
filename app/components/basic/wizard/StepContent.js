@@ -21,6 +21,7 @@ export default class StepContent extends Component {
         onReady: PropTypes.func.isRequired,
         stepData: PropTypes.object.isRequired,
         wizardData: PropTypes.object.isRequired,
+        loading: PropTypes.bool.isRequired,
         toolbox: PropTypes.object.isRequired
     };
 

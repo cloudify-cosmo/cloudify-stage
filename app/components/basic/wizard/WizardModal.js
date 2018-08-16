@@ -193,15 +193,14 @@ export default class WizardModal extends Component {
                 </Modal.Description>
 
                 <Modal.Content scrolling>
-                    <Form loading={this.state.loading}>
-                        <ActiveStep.Content stepData={stepData}
-                                            wizardData={this.state.wizardData}
-                                            onLoading={this.onLoading.bind(this)}
-                                            onReady={this.onReady.bind(this)}
-                                            onError={this.onError.bind(this)}
-                                            onChange={this.onStepDataChanged.bind(this)}
-                                            toolbox={this.props.toolbox} />
-                    </Form>
+                    <ActiveStep.Content stepData={stepData}
+                                        wizardData={this.state.wizardData}
+                                        onLoading={this.onLoading.bind(this)}
+                                        onReady={this.onReady.bind(this)}
+                                        onError={this.onError.bind(this)}
+                                        onChange={this.onStepDataChanged.bind(this)}
+                                        loading={this.state.loading}
+                                        toolbox={this.props.toolbox} />
                 </Modal.Content>
 
                 <Modal.Actions>
