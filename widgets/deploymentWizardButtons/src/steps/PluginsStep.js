@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 
 import ResourceStatus from './helpers/ResourceStatus';
 import ResourceAction from './helpers/ResourceAction';
+import NoResourceMessage from './helpers/NoResourceMessage';
 
 class PluginsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
@@ -203,37 +204,46 @@ class PluginsStepContent extends Component {
     }
 
     render() {
-        let {Table, Wizard} = Stage.Basic;
+        let {Form, Table, Wizard} = Stage.Basic;
         const plugins = _.get(this.props.wizardData, PluginsStepContent.dataPath, {});
+        const noPlugins = _.isEmpty(plugins);
 
         return (
             <Wizard.Step.Content {...this.props}>
-                <Table celled definition>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell />
-                            <Table.HeaderCell colSpan='2'>Plugin</Table.HeaderCell>
-                            <Table.HeaderCell>Version</Table.HeaderCell>
-                            <Table.HeaderCell>Distribution</Table.HeaderCell>
-                            <Table.HeaderCell>Action</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-
-                    <Table.Body>
+                <Form loading={this.props.loading} success={noPlugins}>
                     {
-                        _.map(_.keys(plugins), (pluginName) =>
-                            <Table.Row key={pluginName}>
-                                <Table.Cell collapsing>{this.getPluginStatus(pluginName)}</Table.Cell>
-                                <Table.Cell textAlign='center' width={1}>{this.getPluginIcon(pluginName)}</Table.Cell>
-                                <Table.Cell>{this.getPluginUserFriendlyName(pluginName)}</Table.Cell>
-                                <Table.Cell>{plugins[pluginName].version || '-'}</Table.Cell>
-                                <Table.Cell>{plugins[pluginName].distribution || '-'}</Table.Cell>
-                                <Table.Cell>{this.getPluginAction(pluginName)}</Table.Cell>
-                            </Table.Row>
-                        )
+                        noPlugins
+                        ?
+                            <NoResourceMessage resourceName='plugins' />
+                        :
+                            <Table celled definition>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell />
+                                        <Table.HeaderCell colSpan='2'>Plugin</Table.HeaderCell>
+                                        <Table.HeaderCell>Version</Table.HeaderCell>
+                                        <Table.HeaderCell>Distribution</Table.HeaderCell>
+                                        <Table.HeaderCell>Action</Table.HeaderCell>
+                                    </Table.Row>
+                                </Table.Header>
+
+                                <Table.Body>
+                                    {
+                                        _.map(_.keys(plugins), (pluginName) =>
+                                            <Table.Row key={pluginName}>
+                                                <Table.Cell collapsing>{this.getPluginStatus(pluginName)}</Table.Cell>
+                                                <Table.Cell textAlign='center' width={1}>{this.getPluginIcon(pluginName)}</Table.Cell>
+                                                <Table.Cell>{this.getPluginUserFriendlyName(pluginName)}</Table.Cell>
+                                                <Table.Cell>{plugins[pluginName].version || '-'}</Table.Cell>
+                                                <Table.Cell>{plugins[pluginName].distribution || '-'}</Table.Cell>
+                                                <Table.Cell>{this.getPluginAction(pluginName)}</Table.Cell>
+                                            </Table.Row>
+                                        )
+                                    }
+                                </Table.Body>
+                            </Table>
                     }
-                    </Table.Body>
-                </Table>
+                </Form>
             </Wizard.Step.Content>
         );
     }
