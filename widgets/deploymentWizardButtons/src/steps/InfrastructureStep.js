@@ -18,7 +18,7 @@ class InfrastructureStepActions extends Component {
             .then((stepData) =>
                 this.props.toolbox.getInternal()
                     .doPut('source/list/resources', {
-                        yamlFile: stepData.blueprintYaml,
+                        yamlFile: stepData.blueprintFileName,
                         url: stepData.blueprintUrl
                     }))
             .then((resources) => this.props.onNext(id, {blueprint: {...resources, ...fetchedStepData}}))
@@ -40,13 +40,13 @@ class InfrastructureStepContent extends Component {
 
     static defaultBlueprintName = 'hello-world';
     static helloWorldBlueprintUrl = 'https://github.com/cloudify-examples/hello-world-blueprint/archive/master.zip';
-    static defaultBlueprintYaml = 'aws.yaml';
+    static defaultblueprintFileName = 'aws.yaml';
 
     static initialState = {
         stepData: {
             blueprintName: InfrastructureStepContent.defaultBlueprintName,
             blueprintUrl: InfrastructureStepContent.helloWorldBlueprintUrl,
-            blueprintYaml: InfrastructureStepContent.defaultBlueprintYaml,
+            blueprintFileName: InfrastructureStepContent.defaultblueprintFileName,
             blueprintImageUrl: ''
         }
     };
@@ -61,8 +61,8 @@ class InfrastructureStepContent extends Component {
         }
     }
 
-    onChange(blueprintYaml) {
-        this.setState({stepData: {...this.state.stepData, blueprintYaml}},
+    onChange(blueprintFileName) {
+        this.setState({stepData: {...this.state.stepData, blueprintFileName}},
             () => this.props.onChange(this.props.id, this.state.stepData));
     }
 
@@ -70,7 +70,7 @@ class InfrastructureStepContent extends Component {
         let {Button, Form, Image, Wizard} = Stage.Basic;
         const {widgetResourceUrl} = Stage.Utils;
 
-        const blueprintYaml = this.state.stepData.blueprintYaml;
+        const blueprintFileName = this.state.stepData.blueprintFileName;
         const platformsYaml = ['aws.yaml', 'gcp.yaml', 'openstack.yaml', 'azure.yaml'];
 
         const PlatformButton = (props) => {
@@ -86,19 +86,21 @@ class InfrastructureStepContent extends Component {
 
         return (
             <Wizard.Step.Content {...this.props}>
-                {
-                    _.map(_.chunk(platformsYaml, 2), (group, index) =>
-                         <Form.Group key={`platformGroup${index}`} widths='equal'>
-                             {
-                                 _.map(group, (yaml) =>
-                                     <Form.Field key={yaml}>
-                                         <PlatformButton value={yaml} active={blueprintYaml === yaml} />
-                                     </Form.Field>
-                                 )
-                             }
-                         </Form.Group>
-                     )
-                }
+                <Form loading={this.props.loading}>
+                    {
+                        _.map(_.chunk(platformsYaml, 2), (group, index) =>
+                             <Form.Group key={`platformGroup${index}`} widths='equal'>
+                                 {
+                                     _.map(group, (yaml) =>
+                                         <Form.Field key={yaml}>
+                                             <PlatformButton value={yaml} active={blueprintFileName === yaml} />
+                                         </Form.Field>
+                                     )
+                                 }
+                             </Form.Group>
+                         )
+                    }
+                </Form>
             </Wizard.Step.Content>
         );
     }
