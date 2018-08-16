@@ -51,6 +51,14 @@
       "y": 0
     },
     {
+      "name": "Deployment Wizard Buttons",
+      "width": 2,
+      "height": 8,
+      "definition": "deploymentWizardButtons",
+      "x": 10,
+      "y": 0
+    },
+    {
       "name": "Blueprint Upload Button",
       "width": 2,
       "height": 4,
