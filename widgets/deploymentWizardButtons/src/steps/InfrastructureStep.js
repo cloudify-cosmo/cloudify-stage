@@ -5,8 +5,14 @@
 import React, { Component } from 'react';
 
 const infrastructureStepId = 'infrastructure';
+const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
 class InfrastructureStepActions extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
@@ -32,6 +38,7 @@ class InfrastructureStepActions extends Component {
 }
 
 class InfrastructureStepContent extends Component {
+
     constructor(props) {
         super(props);
 
@@ -67,7 +74,7 @@ class InfrastructureStepContent extends Component {
     }
 
     render() {
-        let {Button, Form, Image, Wizard} = Stage.Basic;
+        let {Button, Form, Image} = Stage.Basic;
         const {widgetResourceUrl} = Stage.Utils;
 
         const blueprintFileName = this.state.stepData.blueprintFileName;
@@ -85,26 +92,27 @@ class InfrastructureStepContent extends Component {
         };
 
         return (
-            <Wizard.Step.Content {...this.props}>
-                <Form loading={this.props.loading}>
-                    {
-                        _.map(_.chunk(platformsYaml, 2), (group, index) =>
-                             <Form.Group key={`platformGroup${index}`} widths='equal'>
-                                 {
-                                     _.map(group, (yaml) =>
-                                         <Form.Field key={yaml}>
-                                             <PlatformButton value={yaml} active={blueprintFileName === yaml} />
-                                         </Form.Field>
-                                     )
-                                 }
-                             </Form.Group>
-                         )
-                    }
-                </Form>
-            </Wizard.Step.Content>
+            <Form loading={this.props.loading}>
+                {
+                    _.map(_.chunk(platformsYaml, 2), (group, index) =>
+                         <Form.Group key={`platformGroup${index}`} widths='equal'>
+                             {
+                                 _.map(group, (yaml) =>
+                                     <Form.Field key={yaml}>
+                                         <PlatformButton value={yaml} active={blueprintFileName === yaml} />
+                                     </Form.Field>
+                                 )
+                             }
+                         </Form.Group>
+                     )
+                }
+            </Form>
         );
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep(
-    infrastructureStepId, 'Infrastructure', 'Select IaaS Provider', InfrastructureStepContent, InfrastructureStepActions);
+export default createWizardStep(infrastructureStepId,
+                                'Infrastructure',
+                                'Select IaaS Provider',
+                                InfrastructureStepContent,
+                                InfrastructureStepActions);

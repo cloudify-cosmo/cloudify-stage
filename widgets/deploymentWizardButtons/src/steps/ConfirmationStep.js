@@ -8,8 +8,13 @@ import TaskList from './helpers/TaskList';
 import Task from './helpers/Task';
 
 const confirmationStepId = 'confirm';
+const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
 class ConfirmationStepActions extends Component {
+
+    constructor(props) {
+        super(props);
+    }
 
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
@@ -29,8 +34,8 @@ class ConfirmationStepActions extends Component {
 
 class ConfirmationStepContent extends Component {
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
 
         this.state = {
             stepData: {
@@ -200,17 +205,19 @@ class ConfirmationStepContent extends Component {
     }
 
     render() {
-        let {Form, Wizard} = Stage.Basic;
+        let {Form} = Stage.Basic;
         const tasks = this.state.stepData.tasks;
 
         return (
-            <Wizard.Step.Content {...this.props}>
-                <Form loading={this.props.loading}>
-                    <TaskList tasks={tasks} />
-                </Form>
-            </Wizard.Step.Content>
+            <Form loading={this.props.loading}>
+                <TaskList tasks={tasks} />
+            </Form>
         );
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep(confirmationStepId, 'Confirm', 'Confirm installation', ConfirmationStepContent, ConfirmationStepActions);
+export default createWizardStep(confirmationStepId,
+                                'Confirm',
+                                'Confirm installation',
+                                ConfirmationStepContent,
+                                ConfirmationStepActions);

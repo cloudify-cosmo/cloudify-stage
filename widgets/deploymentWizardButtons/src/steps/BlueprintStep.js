@@ -5,8 +5,14 @@
 import React, { Component } from 'react';
 
 const blueprintStepId = 'blueprint';
+const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
 class BlueprintStepActions extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
@@ -56,36 +62,37 @@ class BlueprintStepActions extends Component {
 }
 
 class BlueprintStepContent extends Component {
+
     constructor(props) {
         super(props);
     }
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
 
-
     onChange(fields) {
         this.props.onChange(this.props.id, {...this.props.stepData, ...fields});
     }
 
     render() {
-        let {Wizard} = Stage.Basic;
         let {UploadBlueprintForm} = Stage.Common;
 
         return (
-            <Wizard.Step.Content {...this.props}>
-                <UploadBlueprintForm blueprintUrl={this.props.stepData.blueprintUrl}
-                                     blueprintFile={this.props.stepData.blueprintFile}
-                                     blueprintName={this.props.stepData.blueprintName}
-                                     blueprintFileName={this.props.stepData.blueprintFileName}
-                                     imageUrl={this.props.stepData.imageUrl}
-                                     imageFile={this.props.stepData.imageFile}
-                                     loading={this.props.loading}
-                                     errors={{}}
-                                     onChange={this.onChange.bind(this)}
-                                     toolbox={this.props.toolbox} />
-            </Wizard.Step.Content>
+            <UploadBlueprintForm blueprintUrl={this.props.stepData.blueprintUrl}
+                                 blueprintFile={this.props.stepData.blueprintFile}
+                                 blueprintName={this.props.stepData.blueprintName}
+                                 blueprintFileName={this.props.stepData.blueprintFileName}
+                                 imageUrl={this.props.stepData.imageUrl}
+                                 imageFile={this.props.stepData.imageFile}
+                                 loading={this.props.loading}
+                                 errors={{}}
+                                 onChange={this.onChange.bind(this)}
+                                 toolbox={this.props.toolbox} />
         );
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep(blueprintStepId, 'Blueprint', 'Select blueprint', BlueprintStepContent, BlueprintStepActions);
+export default createWizardStep(blueprintStepId,
+                                'Blueprint',
+                                'Select blueprint',
+                                BlueprintStepContent,
+                                BlueprintStepActions);

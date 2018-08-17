@@ -25,15 +25,7 @@ export default class StepContent extends Component {
         toolbox: PropTypes.object.isRequired
     };
 
-    static defaultProps = {
-
-    };
-
     render() {
-        return (
-            <React.Fragment>
-                {this.props.children}
-            </React.Fragment>
-        );
+        return this.props.children || null;
     }
 }

@@ -7,7 +7,15 @@ import React, { Component } from 'react';
 import ResourceStatus from './helpers/ResourceStatus';
 import NoResourceMessage from './helpers/NoResourceMessage';
 
+const inputsStepId = 'inputs';
+const {createWizardStep} = Stage.Basic.Wizard.Utils;
+
 class InputsStepActions extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     static dataPath = 'blueprint.inputs';
@@ -52,6 +60,7 @@ class InputsStepActions extends Component {
 }
 
 class InputsStepContent extends Component {
+
     constructor(props) {
         super(props);
 
@@ -99,7 +108,7 @@ class InputsStepContent extends Component {
     }
 
     render() {
-        let {Form, Table, Wizard} = Stage.Basic;
+        let {Form, Table} = Stage.Basic;
 
         const inputs = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
         const noInputs = _.isEmpty(inputs);
@@ -120,54 +129,56 @@ class InputsStepContent extends Component {
         };
 
         return (
-            <Wizard.Step.Content {...this.props}>
-                <Form loading={this.props.loading} success={noInputs}>
-                    {
-                        noInputs
-                        ?
-                            <NoResourceMessage resourceName='inputs'/>
-                        :
-                            <Table celled definition>
-                                <Table.Header>
-                                    <Table.Row>
-                                        <Table.HeaderCell textAlign='center' width={1}/>
-                                        <Table.HeaderCell width={4}>Input</Table.HeaderCell>
-                                        <Table.HeaderCell width={12}>Value</Table.HeaderCell>
-                                    </Table.Row>
-                                </Table.Header>
+            <Form loading={this.props.loading} success={noInputs}>
+                {
+                    noInputs
+                    ?
+                        <NoResourceMessage resourceName='inputs'/>
+                    :
+                        <Table celled definition>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell textAlign='center' width={1}/>
+                                    <Table.HeaderCell width={4}>Input</Table.HeaderCell>
+                                    <Table.HeaderCell width={12}>Value</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
 
-                                <Table.Body>
-                                    {
-                                        _.map(_.keys(inputs), (inputName) =>
-                                            <Table.Row key={inputName}>
-                                                <Table.Cell>
-                                                    {this.getInputStatus(inputs[inputName].default)}
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Form.Field key={inputName} error={this.state.errors[inputName]}
-                                                                help={inputs[inputName].description}
-                                                                label={inputName}
-                                                                required={_.isNil(inputs[inputName].default)}>
-                                                    </Form.Field>
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Form.Input name={inputName} fluid
-                                                                icon={<ResetToDefaultIcon inputName={inputName}
-                                                                                          value={this.state.stepData[inputName]}
-                                                                                          defaultValue={inputs[inputName].default}/>}
-                                                                value={this.state.stepData[inputName]}
-                                                                onChange={this.handleChange.bind(this)}/>
-                                                </Table.Cell>
-                                            </Table.Row>
-                                        )
-                                    }
-                                </Table.Body>
-                            </Table>
-                    }
-                </Form>
-            </Wizard.Step.Content>
+                            <Table.Body>
+                                {
+                                    _.map(_.keys(inputs), (inputName) =>
+                                        <Table.Row key={inputName}>
+                                            <Table.Cell>
+                                                {this.getInputStatus(inputs[inputName].default)}
+                                            </Table.Cell>
+                                            <Table.Cell>
+                                                <Form.Field key={inputName} error={this.state.errors[inputName]}
+                                                            help={inputs[inputName].description}
+                                                            label={inputName}
+                                                            required={_.isNil(inputs[inputName].default)}>
+                                                </Form.Field>
+                                            </Table.Cell>
+                                            <Table.Cell>
+                                                <Form.Input name={inputName} fluid
+                                                            icon={<ResetToDefaultIcon inputName={inputName}
+                                                                                      value={this.state.stepData[inputName]}
+                                                                                      defaultValue={inputs[inputName].default}/>}
+                                                            value={this.state.stepData[inputName]}
+                                                            onChange={this.handleChange.bind(this)}/>
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    )
+                                }
+                            </Table.Body>
+                        </Table>
+                }
+            </Form>
         );
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep('inputs', 'Inputs', 'Provide inputs', InputsStepContent, InputsStepActions);
+export default createWizardStep(inputsStepId,
+                                'Inputs',
+                                'Provide inputs',
+                                InputsStepContent,
+                                InputsStepActions);
