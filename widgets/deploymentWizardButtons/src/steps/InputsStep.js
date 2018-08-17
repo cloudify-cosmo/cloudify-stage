@@ -63,8 +63,6 @@ class InputsStepContent extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = InputsStepContent.initialState(props);
     }
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
@@ -72,31 +70,26 @@ class InputsStepContent extends Component {
     static defaultInputValue = '';
     static dataPath = 'blueprint.inputs';
 
-    static initialState = (props) => ({
-        errors: {},
-        stepData: _.mapValues(
-            _.get(props.wizardData, InputsStepContent.dataPath, {}),
+    componentDidMount() {
+        let stepData = _.mapValues(
+            _.get(this.props.wizardData, InputsStepContent.dataPath, {}),
             (inputData, inputName) => {
-                if (!_.isUndefined(props.stepData[inputName])) {
-                    return props.stepData[inputName];
+                if (!_.isUndefined(this.props.stepData[inputName])) {
+                    return this.props.stepData[inputName];
                 } else {
                     if (!_.isUndefined(inputData.default)) {
-                       return Stage.Common.JsonUtils.getStringValue(inputData.default);
+                        return Stage.Common.JsonUtils.getStringValue(inputData.default);
                     } else {
-                       return InputsStepContent.defaultInputValue;
+                        return InputsStepContent.defaultInputValue;
                     }
                 }
             }
-        )
-    });
-
-    componentDidMount() {
-        this.props.onChange(this.props.id, this.state.stepData);
+        );
+        this.props.onChange(this.props.id, {...stepData});
     }
 
     handleChange(event, {name, value}) {
-        this.setState({stepData: {...this.state.stepData, [name]: value}},
-            () => this.props.onChange(this.props.id, this.state.stepData));
+        this.props.onChange(this.props.id, {[name]: value});
     }
 
     getInputStatus(defaultValue) {
@@ -152,18 +145,16 @@ class InputsStepContent extends Component {
                                                 {this.getInputStatus(inputs[inputName].default)}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Form.Field key={inputName} error={this.state.errors[inputName]}
-                                                            help={inputs[inputName].description}
-                                                            label={inputName}
-                                                            required={_.isNil(inputs[inputName].default)}>
+                                                <Form.Field key={inputName} help={inputs[inputName].description}
+                                                            label={inputName} required={_.isNil(inputs[inputName].default)}>
                                                 </Form.Field>
                                             </Table.Cell>
                                             <Table.Cell>
                                                 <Form.Input name={inputName} fluid
                                                             icon={<ResetToDefaultIcon inputName={inputName}
-                                                                                      value={this.state.stepData[inputName]}
+                                                                                      value={this.props.stepData[inputName]}
                                                                                       defaultValue={inputs[inputName].default}/>}
-                                                            value={this.state.stepData[inputName]}
+                                                            value={this.props.stepData[inputName]}
                                                             onChange={this.handleChange.bind(this)}/>
                                             </Table.Cell>
                                         </Table.Row>
