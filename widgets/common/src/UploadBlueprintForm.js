@@ -201,7 +201,7 @@ class UploadBlueprintForm extends React.Component {
                                     placeholder="Provide the image file URL or click browse to select a file"
                                     onChangeUrl={this._handleInputChange.bind(this)}
                                     onFocusUrl={this._onBlueprintImageUrlFocus.bind(this)}
-                                    onBlurUrl={() => {}}
+                                    onBlurUrl={_.noop}
                                     onChangeFile={this._onBlueprintImageChange.bind(this)}
                                     onResetFile={this._onBlueprintImageReset.bind(this)}
                                     label={<Label>{!this.props.imageFile ? 'URL' : 'File'}</Label>}
