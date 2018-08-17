@@ -56,13 +56,17 @@ class UploadBlueprintForm extends React.Component {
         this.setState(UploadBlueprintForm.initialState);
         this.resetErrors();
 
-        if (!_.isEmpty(this.props.blueprintUrl)) {
+        if (!_.isEmpty(this.props.blueprintUrl || !_.isNil(this.props.blueprintFile))) {
             this.setState({loading: true});
-            this.actions.doListYamlFiles(this.props.blueprintUrl, null, false).then((data) => {
-                this.setState({yamlFiles: data, loading: false});
-            }).catch((error) => {
-                this.setState({errors: {error}, yamlFiles: [], loading: false});
-            });
+            this.actions.doListYamlFiles(this.props.blueprintUrl, this.props.blueprintFile, false)
+                .then((data) => {
+                    this.setState({yamlFiles: data, loading: false});
+                }).catch((error) => {
+                    this.setState({yamlFiles: [], loading: false});
+                    this.props.onChange({errors: {error}});
+                });
+        } else {
+            this.resetErrors();
         }
     }
 
