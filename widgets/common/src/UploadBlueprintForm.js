@@ -194,7 +194,7 @@ class UploadBlueprintForm extends React.Component {
                                    onChange={this._handleInputChange.bind(this)} />
                 </Form.Field>
 
-                <Form.Field label='Blueprint image'
+                <Form.Field label='Blueprint icon'
                             error={this.props.errors.imageUrl}
                             help='(Optional) The blueprint icon file is shown with the blueprint in the local blueprint widget.'>
                     <Form.UrlOrFile name="image" value={this.props.imageUrl}

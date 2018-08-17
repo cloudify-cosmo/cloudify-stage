@@ -20,15 +20,15 @@ class BlueprintStepActions extends Component {
                 let missingFields = [];
 
                 if (_.isEmpty(blueprintUrl) && !stepData.blueprintFile) {
-                    missingFields.push('blueprint package');
+                    missingFields.push('Blueprint package');
                 }
 
                 if (_.isEmpty(stepData.blueprintName)) {
-                    missingFields.push('blueprint name');
+                    missingFields.push('Blueprint name');
                 }
 
                 if (_.isEmpty(stepData.blueprintFileName)) {
-                    missingFields.push('blueprint YAML file');
+                    missingFields.push('Blueprint YAML file');
                 }
 
                 if (!_.isEmpty(missingFields)) {
