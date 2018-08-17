@@ -74,11 +74,14 @@ class ConfirmationStepContent extends Component {
 
         for (let pluginName of _.keys(plugins)) {
             const plugin = plugins[pluginName];
+            const wagonUrl = plugin.wagonFile ? '' : plugin.wagonUrl;
+            const yamlUrl = plugin.yamlFile ? '' : plugin.yamlUrl;
+
             tasks.push(
                 new Task(
                     `Upload plugin ${pluginName}`,
                     () => pluginActions.doUpload(ConfirmationStepContent.defaultVisibility,
-                                                 plugin.wagonUrl, plugin.yamlUrl, plugin.wagonFile, plugin.yamlFile)
+                                                 wagonUrl, yamlUrl, plugin.wagonFile, plugin.yamlFile)
                 )
             );
         }
