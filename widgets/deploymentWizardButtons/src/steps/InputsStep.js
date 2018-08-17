@@ -89,7 +89,7 @@ class InputsStepContent extends Component {
     }
 
     handleChange(event, {name, value}) {
-        this.props.onChange(this.props.id, {[name]: value});
+        this.props.onChange(this.props.id, {...this.props.stepData, [name]: value});
     }
 
     getInputStatus(defaultValue) {
