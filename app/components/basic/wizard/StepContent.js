@@ -6,11 +6,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class StepContent extends Component {
-    constructor(props, context) {
+    constructor(props) {
         super(props);
-
-        this.state = {
-        }
     }
 
     static propTypes = {

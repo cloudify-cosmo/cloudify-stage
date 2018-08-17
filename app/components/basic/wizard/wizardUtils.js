@@ -19,7 +19,7 @@ function createStepContent(ContentComponent, id) {
             super(props);
         }
 
-        static propTypes = StepContent.propTypes;
+        static propTypes = _.omit(StepContent.propTypes, 'id');
 
         render() {
             return <ContentComponent id={id} {...this.props} />;
@@ -39,7 +39,7 @@ function createStepActions(ActionsComponent, id) {
             super(props);
         }
 
-        static propTypes = StepActions.propTypes;
+        static propTypes = _.omit(StepActions.propTypes, 'id');
 
         render() {
             return <ActionsComponent id={id} {...this.props} />;
