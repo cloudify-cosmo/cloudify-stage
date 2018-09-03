@@ -8,12 +8,13 @@ import TaskList from './helpers/TaskList';
 import Task from './helpers/Task';
 
 const installStepId = 'install';
+const {createWizardStep} = Stage.Basic.Wizard.Utils;
 const emptyTasksStats = _.reduce(_.values(Task.Status), (acc, status) => ({ ...acc, [status]: 0 }), {});
 
 class InstallStepActions extends Component {
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
     }
 
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
@@ -53,8 +54,8 @@ class InstallStepActions extends Component {
 
 class InstallStepContent extends Component {
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
 
         this.state = {
             tasks: []
@@ -121,15 +122,19 @@ class InstallStepContent extends Component {
     };
 
     render() {
-        let {Wizard} = Stage.Basic;
+        let {Form} = Stage.Basic;
         const tasks = this.state.tasks;
 
         return (
-            <Wizard.Step.Content {...this.props}>
+            <Form loading={this.props.loading}>
                 <TaskList tasks={tasks} withStatus />
-            </Wizard.Step.Content>
+            </Form>
         );
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep(installStepId, 'Install', 'Install resources', InstallStepContent, InstallStepActions);
+export default createWizardStep(installStepId,
+                               'Install',
+                               'Install resources',
+                               InstallStepContent,
+                               InstallStepActions);

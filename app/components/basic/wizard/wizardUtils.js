@@ -4,55 +4,65 @@
 
 import React, { Component } from 'react';
 
-import StepContent from './StepContent';
 import StepActions from './StepActions';
+import StepContent from './StepContent';
+
+function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
+
+function createStepContent(ContentComponent, id) {
+
+    class StepContentComponent extends Component {
+
+        constructor(props) {
+            super(props);
+        }
+
+        static propTypes = _.omit(StepContent.propTypes, 'id');
+
+        render() {
+            return <ContentComponent id={id} {...this.props} />;
+        }
+    }
+
+    StepContentComponent.displayName = `StepContent(${getDisplayName(ContentComponent)})`;
+
+    return StepContentComponent;
+}
+
+function createStepActions(ActionsComponent, id) {
+
+    class StepActionsComponent extends Component {
+
+        constructor(props) {
+            super(props);
+        }
+
+        static propTypes = _.omit(StepActions.propTypes, 'id');
+
+        render() {
+            return <ActionsComponent id={id} {...this.props} />;
+        }
+    }
+
+    StepActionsComponent.displayName = `StepActions(${getDisplayName(ActionsComponent)})`;
+
+    return StepActionsComponent;
+}
 
 export function createWizardStep(id,
-                                 title = '',
-                                 description = '',
-                                 ContentComponent = StepContent,
-                                 ActionsComponent = StepActions)
+                                 title,
+                                 description,
+                                 ContentComponent,
+                                 ActionsComponent)
 {
     return {
         id,
         title,
         description,
-        Content: class extends Component {
-            constructor(props) {
-                super(props);
-
-                this.state = {
-                };
-            }
-
-            componentDidMount() {
-            }
-
-            componentWillUnmount() {
-            }
-
-            render() {
-                return <ContentComponent id={id} {...this.props} />;
-            }
-        },
-        Actions: class extends Component {
-            constructor(props) {
-                super(props);
-
-                this.state = {
-                };
-            }
-
-            componentDidMount() {
-            }
-
-            componentWillUnmount() {
-            }
-
-            render() {
-                return <ActionsComponent id={id} {...this.props} />;
-            }
-        }
+        Content: createStepContent(ContentComponent, id),
+        Actions: createStepActions(ActionsComponent, id)
     }
 }
 

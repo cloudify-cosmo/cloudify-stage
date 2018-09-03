@@ -6,17 +6,42 @@ import React, { Component } from 'react';
 
 import ResourceStatus from './helpers/ResourceStatus';
 import ResourceAction from './helpers/ResourceAction';
+import NoResourceMessage from './helpers/NoResourceMessage';
+
+const pluginsStepId = 'plugins';
+const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
 class PluginsStepActions extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
         return this.props.onLoading()
             .then(this.props.fetchData)
             .then(({stepData}) => {
-                let plugins = _.pickBy(stepData, (plugin) =>
+                const plugins = _.pickBy(stepData, (plugin) =>
                     plugin.status !== PluginsStepContent.statusInstalledAndParametersMatched);
-                return this.props.onNext(id, {plugins});
+
+                let missingFields = [];
+                _.forEach(plugins, (pluginObject, pluginName) => {
+                    const wagonUrl = pluginObject.wagonFile ? '' : pluginObject.wagonUrl;
+                    const yamlUrl = pluginObject.yamlFile ? '' : pluginObject.yamlUrl;
+
+                    if (_.isEmpty(wagonUrl) && !pluginObject.wagonFile ||
+                        _.isEmpty(yamlUrl) && !pluginObject.yamlFile) {
+                        missingFields.push(pluginName);
+                    }
+                });
+
+                if (!_.isEmpty(missingFields)) {
+                    return Promise.reject(`Please fill in fields for the following plugins: ${missingFields.join(', ')}.`);
+                } else {
+                    return this.props.onNext(id, {plugins});
+                }
             })
             .catch((error) => this.props.onError(error));
     }
@@ -33,8 +58,7 @@ class PluginsStepContent extends Component {
 
         this.state = {
             pluginsInCatalog: [],
-            pluginsInManager: [],
-            stepData: {}
+            pluginsInManager: []
         }
     }
 
@@ -45,18 +69,15 @@ class PluginsStepContent extends Component {
     static statusInstalledAndParametersUnmatched = 2;
     static statusNotInstalledAndInCatalog = 3;
     static statusNotInstalledAndNotInCatalog = 4;
-    static defaultPluginState = {yamlUrl: '', yamlFile: null, wagonUrl: '', wagonFile: null, status: PluginsStepContent.statusUnknown};
+    static defaultPluginState = {
+        yamlUrl: '',
+        yamlFile: null,
+        wagonUrl: '',
+        wagonFile: null,
+        status: PluginsStepContent.statusUnknown
+    };
     static dataPath = 'blueprint.plugins';
 
-    static initialState = (props) => ({
-        pluginsInCatalog: [],
-        pluginsInManager: [],
-        stepData: _.mapValues(
-            _.get(props.wizardData, PluginsStepContent.dataPath, {}),
-            (pluginData, pluginName) => ({...props.stepData[pluginName] || PluginsStepContent.defaultPluginState})
-        )
-    });
-    
     static getPluginStatus(pluginName, pluginsInBlueprint, pluginsInManager, pluginsInCatalog) {
         const plugin = pluginsInBlueprint[pluginName];
         const version = _.get(plugin, 'params.version');
@@ -129,49 +150,84 @@ class PluginsStepContent extends Component {
                         pluginState.yamlFile = null;
                     }
 
-                    stepData[plugin] = {
-                        ...this.state.stepData[plugin],
-                        ...pluginState
-                    };
+                    stepData[plugin] = {...pluginState};
                 }
 
                 return {stepData, pluginsInManager, pluginsInCatalog};
             })
-            .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
-            .then(() => this.props.onChange(this.props.id, this.state.stepData))
+            .then(({stepData, pluginsInManager, pluginsInCatalog}) =>
+                new Promise((resolve) => this.setState({pluginsInManager, pluginsInCatalog}, () => {
+                    this.props.onChange(this.props.id, stepData);
+                    resolve();
+                })))
             .catch((error) => this.props.onError(error))
             .finally(() => this.props.onReady());
     }
 
     getPluginStatus(pluginName) {
-        const status = _.get(this.state.stepData[pluginName], 'status');
+        const status = _.get(this.props.stepData[pluginName], 'status');
 
         switch (status) {
             case PluginsStepContent.statusInstalledAndParametersMatched:
-                return <ResourceStatus status={ResourceStatus.noActionRequired} text='Plugin already installed. No action required.' />;
+                return <ResourceStatus status={ResourceStatus.noActionRequired}
+                                       text='Plugin already installed. No action required.' />;
             case PluginsStepContent.statusInstalledAndParametersUnmatched:
-                return <ResourceStatus status={ResourceStatus.actionRequired} text='Plugin installed but with different parameters. Provide details.' />;
+                return <ResourceStatus status={ResourceStatus.actionRequired}
+                                       text='Plugin installed but with different parameters. Provide details.' />;
             case PluginsStepContent.statusNotInstalledAndNotInCatalog:
-                return <ResourceStatus status={ResourceStatus.actionRequired} text='Cannot find plugin. Provide details.' />;
+                return <ResourceStatus status={ResourceStatus.actionRequired}
+                                       text='Cannot find plugin. Provide details.' />;
             case PluginsStepContent.statusNotInstalledAndInCatalog:
-                return <ResourceStatus status={ResourceStatus.noActionRequired} text='Plugin has been found in catalog and will be installed automatically. No action required.' />;
+                return <ResourceStatus status={ResourceStatus.noActionRequired}
+                                       text='Plugin has been found in catalog and will be installed automatically. No action required.' />;
             case PluginsStepContent.statusUnknown:
-                return <ResourceStatus status={ResourceStatus.unknown} text='Unknown status.' />;
+                return <ResourceStatus status={ResourceStatus.unknown}
+                                       text='Unknown status.' />;
             default:
-                return <ResourceStatus status={ResourceStatus.errorOccurred} text='Error during status calculation.' />;
+                return <ResourceStatus status={ResourceStatus.errorOccurred}
+                                       text='Error during status calculation.' />;
+        }
+    }
+
+    onChange(pluginName) {
+        return (fields) => {
+            let stepData = {...this.props.stepData};
+            stepData[pluginName] = {...stepData[pluginName], ...fields};
+            return this.props.onChange(this.props.id, {...stepData});
         }
     }
 
     getPluginAction(pluginName) {
-        const status = _.get(this.state.stepData[pluginName], 'status');
+        const status = _.get(this.props.stepData[pluginName], 'status');
+        let {UploadPluginForm} = Stage.Common;
 
         switch (status) {
             case PluginsStepContent.statusInstalledAndParametersMatched:
                 return <ResourceAction>No action required.</ResourceAction>;
             case PluginsStepContent.statusInstalledAndParametersUnmatched:
-                return <ResourceAction>Not supported, yet.</ResourceAction>;
+                return (
+                    <ResourceAction>
+                        <UploadPluginForm wagonUrl={this.props.stepData[pluginName].wagonUrl}
+                                          wagonFile={this.props.stepData[pluginName].wagonFile}
+                                          yamlUrl={this.props.stepData[pluginName].yamlUrl}
+                                          yamlFile={this.props.stepData[pluginName].yamlFile}
+                                          errors={{}}
+                                          loading={this.props.loading}
+                                          onChange={this.onChange(pluginName).bind(this)} />
+                    </ResourceAction>
+                );
             case PluginsStepContent.statusNotInstalledAndNotInCatalog:
-                return <ResourceAction>Not supported, yet.</ResourceAction>;
+                return (
+                    <ResourceAction>
+                        <UploadPluginForm wagonUrl={this.props.stepData[pluginName].wagonUrl}
+                                          wagonFile={this.props.stepData[pluginName].wagonFile}
+                                          yamlUrl={this.props.stepData[pluginName].yamlUrl}
+                                          yamlFile={this.props.stepData[pluginName].yamlFile}
+                                          errors={{}}
+                                          loading={this.props.loading}
+                                          onChange={this.onChange(pluginName).bind(this)} />
+                    </ResourceAction>
+                );
             case PluginsStepContent.statusNotInstalledAndInCatalog:
                 return <ResourceAction>No action required.</ResourceAction>;
             case PluginsStepContent.statusUnknown:
@@ -203,40 +259,51 @@ class PluginsStepContent extends Component {
     }
 
     render() {
-        let {Table, Wizard} = Stage.Basic;
+        let {Form, Table} = Stage.Basic;
         const plugins = _.get(this.props.wizardData, PluginsStepContent.dataPath, {});
+        const noPlugins = _.isEmpty(plugins);
 
         return (
-            <Wizard.Step.Content {...this.props}>
-                <Table celled definition>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell />
-                            <Table.HeaderCell colSpan='2'>Plugin</Table.HeaderCell>
-                            <Table.HeaderCell>Version</Table.HeaderCell>
-                            <Table.HeaderCell>Distribution</Table.HeaderCell>
-                            <Table.HeaderCell>Action</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
+            <Form loading={this.props.loading} success={noPlugins}>
+                {
+                    noPlugins
+                    ?
+                        <NoResourceMessage resourceName='plugins' />
+                    :
+                        <Table celled definition>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell />
+                                    <Table.HeaderCell colSpan='2'>Plugin</Table.HeaderCell>
+                                    <Table.HeaderCell>Version</Table.HeaderCell>
+                                    <Table.HeaderCell>Distribution</Table.HeaderCell>
+                                    <Table.HeaderCell>Action</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
 
-                    <Table.Body>
-                    {
-                        _.map(_.keys(plugins), (pluginName) =>
-                            <Table.Row key={pluginName}>
-                                <Table.Cell collapsing>{this.getPluginStatus(pluginName)}</Table.Cell>
-                                <Table.Cell textAlign='center' width={1}>{this.getPluginIcon(pluginName)}</Table.Cell>
-                                <Table.Cell>{this.getPluginUserFriendlyName(pluginName)}</Table.Cell>
-                                <Table.Cell>{plugins[pluginName].version || '-'}</Table.Cell>
-                                <Table.Cell>{plugins[pluginName].distribution || '-'}</Table.Cell>
-                                <Table.Cell>{this.getPluginAction(pluginName)}</Table.Cell>
-                            </Table.Row>
-                        )
-                    }
-                    </Table.Body>
-                </Table>
-            </Wizard.Step.Content>
+                            <Table.Body>
+                                {
+                                    _.map(_.keys(plugins), (pluginName) =>
+                                        <Table.Row key={pluginName}>
+                                            <Table.Cell collapsing>{this.getPluginStatus(pluginName)}</Table.Cell>
+                                            <Table.Cell textAlign='center' width={1}>{this.getPluginIcon(pluginName)}</Table.Cell>
+                                            <Table.Cell>{this.getPluginUserFriendlyName(pluginName)}</Table.Cell>
+                                            <Table.Cell>{plugins[pluginName].version || '-'}</Table.Cell>
+                                            <Table.Cell>{plugins[pluginName].distribution || '-'}</Table.Cell>
+                                            <Table.Cell>{this.getPluginAction(pluginName)}</Table.Cell>
+                                        </Table.Row>
+                                    )
+                                }
+                            </Table.Body>
+                        </Table>
+                }
+            </Form>
         );
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep('plugins', 'Plugins', 'Select plugins', PluginsStepContent, PluginsStepActions);
+export default createWizardStep(pluginsStepId,
+                                'Plugins',
+                                'Select plugins',
+                                PluginsStepContent,
+                                PluginsStepActions);

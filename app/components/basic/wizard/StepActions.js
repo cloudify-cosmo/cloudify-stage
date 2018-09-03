@@ -8,11 +8,9 @@ import PropTypes from 'prop-types';
 import {Button} from './../index';
 
 export default class StepActions extends Component {
-    constructor(props, context) {
-        super(props);
 
-        this.state = {
-        }
+    constructor(props) {
+        super(props);
     }
 
     static propTypes = {

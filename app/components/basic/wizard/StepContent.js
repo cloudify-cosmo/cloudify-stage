@@ -6,11 +6,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class StepContent extends Component {
-    constructor(props, context) {
+    constructor(props) {
         super(props);
-
-        this.state = {
-        }
     }
 
     static propTypes = {
@@ -21,18 +18,11 @@ export default class StepContent extends Component {
         onReady: PropTypes.func.isRequired,
         stepData: PropTypes.object.isRequired,
         wizardData: PropTypes.object.isRequired,
+        loading: PropTypes.bool.isRequired,
         toolbox: PropTypes.object.isRequired
     };
 
-    static defaultProps = {
-
-    };
-
     render() {
-        return (
-            <React.Fragment>
-                {this.props.children}
-            </React.Fragment>
-        );
+        return this.props.children || null;
     }
 }

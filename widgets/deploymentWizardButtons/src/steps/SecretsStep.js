@@ -6,6 +6,10 @@ import React, { Component } from 'react';
 
 import ResourceStatus from './helpers/ResourceStatus';
 import ResourceAction from './helpers/ResourceAction';
+import NoResourceMessage from './helpers/NoResourceMessage';
+
+const secretsStepId = 'secrets';
+const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
 class SecretsStepActions extends Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
@@ -119,7 +123,6 @@ class SecretsStepContent extends Component {
             case SecretsStepContent.statusUndefined:
                 return (
                     <ResourceAction>
-                        <strong>Provide value:</strong>&nbsp;&nbsp;
                         <Form.Input name={secretKey} value={secret.value}
                                     onChange={this.handleChange.bind(this)} />
                     </ResourceAction>
@@ -137,35 +140,46 @@ class SecretsStepContent extends Component {
     }
 
     render() {
-        let {Table, Wizard} = Stage.Basic;
+        let {Form, Table} = Stage.Basic;
         const secrets = _.get(this.props.wizardData, SecretsStepContent.dataPath, {});
+        const noSecrets = _.isEmpty(secrets);
 
         return (
-            <Wizard.Step.Content {...this.props}>
-                <Table celled definition>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell textAlign='center' width={1} />
-                            <Table.HeaderCell>Secret</Table.HeaderCell>
-                            <Table.HeaderCell>Action</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-
-                    <Table.Body>
-                        {
-                            _.map(_.keys(secrets), (secretKey) =>
-                                <Table.Row key={secretKey}>
-                                    <Table.Cell>{this.getSecretStatus(secretKey)}</Table.Cell>
-                                    <Table.Cell>{secretKey}</Table.Cell>
-                                    <Table.Cell>{this.getSecretAction(secretKey)}</Table.Cell>
+            <Form loading={this.props.loading} success={noSecrets}>
+                {
+                    noSecrets
+                    ?
+                        <NoResourceMessage resourceName='secrets' />
+                    :
+                        <Table celled definition>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell textAlign='center' width={1} />
+                                    <Table.HeaderCell>Secret</Table.HeaderCell>
+                                    <Table.HeaderCell>Action</Table.HeaderCell>
                                 </Table.Row>
-                            )
-                        }
-                    </Table.Body>
-                </Table>
-            </Wizard.Step.Content>
+                            </Table.Header>
+
+                            <Table.Body>
+                                {
+                                    _.map(_.keys(secrets), (secretKey) =>
+                                        <Table.Row key={secretKey}>
+                                            <Table.Cell>{this.getSecretStatus(secretKey)}</Table.Cell>
+                                            <Table.Cell>{secretKey}</Table.Cell>
+                                            <Table.Cell>{this.getSecretAction(secretKey)}</Table.Cell>
+                                        </Table.Row>
+                                    )
+                                }
+                            </Table.Body>
+                        </Table>
+                }
+            </Form>
         );
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep('secrets', 'Secrets', 'Define secrets', SecretsStepContent, SecretsStepActions);
+export default createWizardStep(secretsStepId,
+                                'Secrets',
+                                'Define secrets',
+                                SecretsStepContent,
+                                SecretsStepActions);

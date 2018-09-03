@@ -5,8 +5,14 @@
 import React, { Component } from 'react';
 
 const infrastructureStepId = 'infrastructure';
+const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
-class InfrastructureActions extends Component {
+class InfrastructureStepActions extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
@@ -18,7 +24,7 @@ class InfrastructureActions extends Component {
             .then((stepData) =>
                 this.props.toolbox.getInternal()
                     .doPut('source/list/resources', {
-                        yamlFile: stepData.blueprintYaml,
+                        yamlFile: stepData.blueprintFileName,
                         url: stepData.blueprintUrl
                     }))
             .then((resources) => this.props.onNext(id, {blueprint: {...resources, ...fetchedStepData}}))
@@ -31,11 +37,12 @@ class InfrastructureActions extends Component {
     }
 }
 
-class InfrastructureContent extends Component {
+class InfrastructureStepContent extends Component {
+
     constructor(props) {
         super(props);
 
-        this.state = InfrastructureContent.initialState;
+        this.state = InfrastructureStepContent.initialState;
     }
 
     static defaultBlueprintName = 'hello-world';
@@ -44,9 +51,9 @@ class InfrastructureContent extends Component {
 
     static initialState = {
         stepData: {
-            blueprintName: InfrastructureContent.defaultBlueprintName,
-            blueprintUrl: InfrastructureContent.helloWorldBlueprintUrl,
-            blueprintYaml: InfrastructureContent.defaultBlueprintYaml,
+            blueprintName: InfrastructureStepContent.defaultBlueprintName,
+            blueprintUrl: InfrastructureStepContent.helloWorldBlueprintUrl,
+            blueprintFileName: InfrastructureStepContent.defaultblueprintFileName,
             blueprintImageUrl: ''
         }
     };
@@ -61,16 +68,16 @@ class InfrastructureContent extends Component {
         }
     }
 
-    onChange(blueprintYaml) {
-        this.setState({stepData: {...this.state.stepData, blueprintYaml}},
+    onChange(blueprintFileName) {
+        this.setState({stepData: {...this.state.stepData, blueprintFileName}},
             () => this.props.onChange(this.props.id, this.state.stepData));
     }
 
     render() {
-        let {Button, Form, Image, Wizard} = Stage.Basic;
+        let {Button, Form, Image} = Stage.Basic;
         const {widgetResourceUrl} = Stage.Utils;
 
-        const blueprintYaml = this.state.stepData.blueprintYaml;
+        const blueprintFileName = this.state.stepData.blueprintFileName;
         const platformsYaml = ['aws.yaml', 'gcp.yaml', 'openstack.yaml', 'azure.yaml'];
 
         const PlatformButton = (props) => {
@@ -85,23 +92,27 @@ class InfrastructureContent extends Component {
         };
 
         return (
-            <Wizard.Step.Content {...this.props}>
+            <Form loading={this.props.loading}>
                 {
                     _.map(_.chunk(platformsYaml, 2), (group, index) =>
                          <Form.Group key={`platformGroup${index}`} widths='equal'>
                              {
                                  _.map(group, (yaml) =>
                                      <Form.Field key={yaml}>
-                                         <PlatformButton value={yaml} active={blueprintYaml === yaml} />
+                                         <PlatformButton value={yaml} active={blueprintFileName === yaml} />
                                      </Form.Field>
                                  )
                              }
                          </Form.Group>
                      )
                 }
-            </Wizard.Step.Content>
+            </Form>
         );
     }
 }
 
-export default Stage.Basic.Wizard.Utils.createWizardStep(infrastructureStepId, 'Infrastructure', 'Select IaaS Provider', InfrastructureContent, InfrastructureActions);
+export default createWizardStep(infrastructureStepId,
+                                'Infrastructure',
+                                'Select IaaS Provider',
+                                InfrastructureStepContent,
+                                InfrastructureStepActions);

@@ -955,3 +955,10 @@ a.underline {
 .hopscotch-close {
   cursor: pointer;
 }
+
+.ui.ordered.list .list>.item:before, .ui.ordered.list>.item:before, ol.ui.list li:before {
+  position: relative !important;
+  margin-right: 0.25rem !important;
+  content: counters(ordered,".") "." !important;
+  vertical-align: inherit !important;
+}
