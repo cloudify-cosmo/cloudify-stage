@@ -134,10 +134,6 @@ export default class WizardModal extends Component {
         return new Promise((resolve) => this.setState({loading: false}, resolve));
     }
 
-    onStepClick(event, {id, active, disabled, completed}) {
-        // TODO: Implement step change handling
-    }
-
     onStepDataChanged(id, data, internal = true) {
         if (internal) { // internal step data => state[stepId]
             const stepName = WizardModal.getStepNameById(id);
@@ -178,7 +174,6 @@ export default class WizardModal extends Component {
                                 <Step active={this.state[this.getStepNameByIndex(index)].state === WizardModal.ACTIVE_STATE}
                                       completed={this.state[this.getStepNameByIndex(index)].state === WizardModal.COMPLETED_STATE}
                                       disabled={this.state[this.getStepNameByIndex(index)].state === WizardModal.DISABLED_STATE}
-                                      onClick={this.onStepClick.bind(this)}
                                       id={step.id} key={step.id}>
                                     <Step.Content>
                                         <Step.Title>{step.title}</Step.Title>
