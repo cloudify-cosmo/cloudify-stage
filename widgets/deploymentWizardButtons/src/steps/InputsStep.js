@@ -128,12 +128,11 @@ class InputsStepContent extends Component {
                     ?
                         <NoResourceMessage resourceName='inputs'/>
                     :
-                        <Table celled definition>
+                        <Table celled>
                             <Table.Header>
                                 <Table.Row>
-                                    <Table.HeaderCell textAlign='center' width={1}/>
-                                    <Table.HeaderCell width={4}>Input</Table.HeaderCell>
-                                    <Table.HeaderCell width={12}>Value</Table.HeaderCell>
+                                    <Table.HeaderCell>Input</Table.HeaderCell>
+                                    <Table.HeaderCell colspan='2'>Value</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
@@ -141,13 +140,13 @@ class InputsStepContent extends Component {
                                 {
                                     _.map(_.keys(inputs), (inputName) =>
                                         <Table.Row key={inputName}>
-                                            <Table.Cell>
-                                                {this.getInputStatus(inputs[inputName].default)}
-                                            </Table.Cell>
-                                            <Table.Cell>
+                                            <Table.Cell collapsing>
                                                 <Form.Field key={inputName} help={inputs[inputName].description}
                                                             label={inputName} required={_.isNil(inputs[inputName].default)}>
                                                 </Form.Field>
+                                            </Table.Cell>
+                                            <Table.Cell collapsing>
+                                                {this.getInputStatus(inputs[inputName].default)}
                                             </Table.Cell>
                                             <Table.Cell>
                                                 <Form.Input name={inputName} fluid

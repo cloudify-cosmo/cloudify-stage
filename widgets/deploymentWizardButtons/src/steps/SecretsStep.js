@@ -20,7 +20,6 @@ class SecretsStepActions extends Component {
             .then(({stepData}) => {
                 const undefinedSecrets = _.chain(stepData)
                     .pickBy((secret) => secret.status === SecretsStepContent.statusUndefined)
-                    .mapValues((secretData) => secretData.value)
                     .value();
 
                 const secretsWithoutValue = _.chain(stepData)
@@ -66,27 +65,34 @@ class SecretsStepContent extends Component {
         )
     });
 
-    static getSecretStatus(secretKey, secretsInManager) {
-        if (_.includes(secretsInManager, secretKey)) {
-            return SecretsStepContent.statusDefined;
-        } else {
-            return SecretsStepContent.statusUndefined;
-        }
-    }
-
     componentDidMount() {
         const secrets = _.get(this.props.wizardData, SecretsStepContent.dataPath, {});
 
         this.props.onLoading()
-            .then(() => this.props.toolbox.getManager().doGet('/secrets?_include=key'))
+            .then(() => this.props.toolbox.getManager().doGet('/secrets?_include=key,visibility'))
             .then((secretsInManager) => {
                 secretsInManager = secretsInManager.items;
-                secretsInManager = _.map(secretsInManager, (secretObject) => secretObject.key);
+                secretsInManager = _.reduce(secretsInManager, (result, secretObject) => {
+                    result[secretObject.key] = {
+                        visibility: secretObject.visibility
+                    };
+                    return result;
+                }, {});
 
                 let stepData = {};
                 for (let secret of _.keys(secrets)) {
-                    stepData[secret] = this.props.stepData[secret] || {value: '', status: SecretsStepContent.statusUndefined};
-                    stepData[secret].status = SecretsStepContent.getSecretStatus(secret, secretsInManager);
+                    stepData[secret] = this.props.stepData[secret] || {
+                        value: '',
+                        visibility: Stage.Common.Consts.defaultVisibility,
+                        status: SecretsStepContent.statusUndefined
+                    };
+
+                    if (_.includes(_.keys(secretsInManager), secret)) {
+                        stepData[secret].status = SecretsStepContent.statusDefined;
+                        stepData[secret].visibility = secretsInManager[secret].visibility;
+                    } else {
+                        stepData[secret].status = SecretsStepContent.statusUndefined;
+                    }
                 }
 
                 return {stepData, secretsInManager};
@@ -123,8 +129,8 @@ class SecretsStepContent extends Component {
             case SecretsStepContent.statusUndefined:
                 return (
                     <ResourceAction>
-                        <Form.Input name={secretKey} value={secret.value}
-                                    onChange={this.handleChange.bind(this)} />
+                        <Form.Input name={secretKey} value={secret.value} fluid
+                                    onChange={(event, {name, value}) => this.handleChange(name, 'value', value)} />
                     </ResourceAction>
                 );
             default:
@@ -132,10 +138,33 @@ class SecretsStepContent extends Component {
         }
     }
 
-    handleChange(event, {name, value}) {
-        let secret = this.state.stepData[name];
-        secret.value = value;
-        this.setState({stepData: {...this.state.stepData, [name]: secret}},
+    getSecretVisibility(secretKey) {
+        let {VisibilityField} = Stage.Basic;
+        let secret = this.state.stepData[secretKey];
+
+        switch (secret.status) {
+            case SecretsStepContent.statusDefined:
+                return (
+                    <ResourceAction>
+                        <VisibilityField visibility={secret.visibility} className='large' allowChange={false} />
+                    </ResourceAction>
+                );
+            case SecretsStepContent.statusUndefined:
+                return (
+                    <ResourceAction>
+                        <VisibilityField visibility={secret.visibility} className='large'
+                                         onVisibilityChange={(visibility) => this.handleChange(secretKey, 'visibility', visibility)} />
+                    </ResourceAction>
+                );
+            default:
+                return null;
+        }
+    }
+
+    handleChange(secretKey, fieldName, fieldValue) {
+        let secret = this.state.stepData[secretKey];
+        secret[fieldName] = fieldValue;
+        this.setState({stepData: {...this.state.stepData, [secretKey]: secret}},
             () => this.props.onChange(this.props.id, this.state.stepData));
     }
 
@@ -151,12 +180,11 @@ class SecretsStepContent extends Component {
                     ?
                         <NoResourceMessage resourceName='secrets' />
                     :
-                        <Table celled definition>
+                        <Table celled>
                             <Table.Header>
                                 <Table.Row>
-                                    <Table.HeaderCell textAlign='center' width={1} />
                                     <Table.HeaderCell>Secret</Table.HeaderCell>
-                                    <Table.HeaderCell>Action</Table.HeaderCell>
+                                    <Table.HeaderCell colSpan='3'>Action</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
@@ -164,9 +192,10 @@ class SecretsStepContent extends Component {
                                 {
                                     _.map(_.keys(secrets), (secretKey) =>
                                         <Table.Row key={secretKey}>
-                                            <Table.Cell>{this.getSecretStatus(secretKey)}</Table.Cell>
-                                            <Table.Cell>{secretKey}</Table.Cell>
+                                            <Table.Cell collapsing>{secretKey}</Table.Cell>
+                                            <Table.Cell collapsing>{this.getSecretStatus(secretKey)}</Table.Cell>
                                             <Table.Cell>{this.getSecretAction(secretKey)}</Table.Cell>
+                                            <Table.Cell collapsing>{this.getSecretVisibility(secretKey)}</Table.Cell>
                                         </Table.Row>
                                     )
                                 }

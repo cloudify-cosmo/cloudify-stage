@@ -46,8 +46,6 @@ class ConfirmationStepContent extends Component {
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
 
-    static defaultVisibility = Stage.Common.Consts.defaultVisibility;
-
     chooseId(baseId, promise, idName) {
         const maxSuffixNumber = 1000;
         const isIdInList = (items, id) => !_.isUndefined(_.find(items, {id}));
@@ -80,8 +78,7 @@ class ConfirmationStepContent extends Component {
             tasks.push(
                 new Task(
                     `Upload plugin ${pluginName}`,
-                    () => pluginActions.doUpload(ConfirmationStepContent.defaultVisibility,
-                                                 wagonUrl, yamlUrl, plugin.wagonFile, plugin.yamlFile)
+                    () => pluginActions.doUpload(plugin.visibility, wagonUrl, yamlUrl, plugin.wagonFile, plugin.yamlFile)
                 )
             );
         }
@@ -92,12 +89,14 @@ class ConfirmationStepContent extends Component {
     addSecretsTasks(secrets, tasks) {
         const secretActions = new Stage.Common.SecretActions(this.props.toolbox);
 
-        for (let secretKey of _.keys(secrets)) {
-            const secretValue = secrets[secretKey];
+        for (let secret of _.keys(secrets)) {
+            const secretValue = secrets[secret].value;
+            const secretVisibility = secrets[secret].visibility;
+
             tasks.push(
                 new Task(
-                    `Create secret ${secretKey}`,
-                    () => secretActions.doCreate(secretKey, secretValue, ConfirmationStepContent.defaultVisibility, false)
+                    `Create secret ${secret}`,
+                    () => secretActions.doCreate(secret, secretValue, secretVisibility, false)
                 )
             )
         }
@@ -121,7 +120,7 @@ class ConfirmationStepContent extends Component {
                 () => blueprintActions.doUpload(blueprint.blueprintName, blueprint.blueprintFileName,
                                                 blueprintUrl, blueprint.blueprintFile,
                                                 imageUrl, blueprint.imageFile,
-                                                ConfirmationStepContent.defaultVisibility)
+                                                blueprint.visibility)
             )
         );
 
@@ -133,7 +132,7 @@ class ConfirmationStepContent extends Component {
         return this.chooseId(initialDeploymentId, () => deploymentActions.doGetDeployments({_search: initialDeploymentId}), 'deployment');
     }
 
-    addDeployBlueprintTask(deploymentId, blueprintId, inputs, tasks) {
+    addDeployBlueprintTask(deploymentId, blueprintId, inputs, visibility, tasks) {
         const blueprintActions = new Stage.Common.BlueprintActions(this.props.toolbox);
         const executionActions = new Stage.Common.ExecutionActions(this.props.toolbox);
 
@@ -164,7 +163,7 @@ class ConfirmationStepContent extends Component {
         tasks.push(
             new Task(
                 `Create ${deploymentId} deployment from ${blueprintId} blueprint`,
-                () => blueprintActions.doDeploy({id: blueprintId}, deploymentId, inputs, ConfirmationStepContent.defaultVisibility)
+                () => blueprintActions.doDeploy({id: blueprintId}, deploymentId, inputs, visibility)
                     .then(() => waitForDeploymentIsCreated())
             )
         );
@@ -198,7 +197,7 @@ class ConfirmationStepContent extends Component {
             .then(() => this.chooseBlueprintId(wizardData.blueprint.blueprintName))
             .then((id) => {blueprintId = id; return this.addBlueprintUploadTask({...wizardData.blueprint, blueprintName: id}, tasks)})
             .then(() => this.chooseDeploymentId(blueprintId))
-            .then((id) => {deploymentId = id; this.addDeployBlueprintTask(id, blueprintId, wizardData.inputs, tasks)})
+            .then((id) => {deploymentId = id; this.addDeployBlueprintTask(id, blueprintId, wizardData.inputs, wizardData.blueprint.visibility, tasks)})
             .then(() => this.addRunInstallWorkflowTask(deploymentId, tasks))
             .then(() => ({stepData: {tasks}}))
             .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))

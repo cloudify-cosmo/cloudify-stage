@@ -69,25 +69,48 @@ class BlueprintStepContent extends Component {
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
 
+    static defaultBlueprintState = {
+        blueprintUrl: '',
+        blueprintFile: null,
+        blueprintName: '',
+        blueprintFileName: '',
+        imageUrl: '',
+        imageFile: null,
+        visibility: Stage.Common.Consts.defaultVisibility
+    };
+
+    componentDidMount() {
+        this.props.onChange(this.props.id, {...BlueprintStepContent.defaultBlueprintState, ...this.props.stepData});
+    }
+
     onChange(fields) {
         this.props.onChange(this.props.id, {...this.props.stepData, ...fields});
     }
 
     render() {
+        let {Container, VisibilityField} = Stage.Basic;
         let {UploadBlueprintForm} = Stage.Common;
 
-        return (
-            <UploadBlueprintForm blueprintUrl={this.props.stepData.blueprintUrl}
-                                 blueprintFile={this.props.stepData.blueprintFile}
-                                 blueprintName={this.props.stepData.blueprintName}
-                                 blueprintFileName={this.props.stepData.blueprintFileName}
-                                 imageUrl={this.props.stepData.imageUrl}
-                                 imageFile={this.props.stepData.imageFile}
-                                 loading={this.props.loading}
-                                 errors={{}}
-                                 onChange={this.onChange.bind(this)}
-                                 toolbox={this.props.toolbox} />
-        );
+        return !_.isEmpty(this.props.stepData)
+            ?
+                <React.Fragment>
+                    <Container textAlign='right'>
+                        <VisibilityField visibility={this.props.stepData.visibility} className='large'
+                                         onVisibilityChange={(visibility) => this.onChange({visibility})} />
+                    </Container>
+                    <UploadBlueprintForm blueprintUrl={this.props.stepData.blueprintUrl}
+                                         blueprintFile={this.props.stepData.blueprintFile}
+                                         blueprintName={this.props.stepData.blueprintName}
+                                         blueprintFileName={this.props.stepData.blueprintFileName}
+                                         imageUrl={this.props.stepData.imageUrl}
+                                         imageFile={this.props.stepData.imageFile}
+                                         loading={this.props.loading}
+                                         errors={this.props.stepData.errors}
+                                         onChange={this.onChange.bind(this)}
+                                         toolbox={this.props.toolbox} />
+                </React.Fragment>
+            :
+                null;
     }
 }
 
