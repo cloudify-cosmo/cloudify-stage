@@ -28,7 +28,7 @@ class InfrastructureStepActions extends Component {
                         url: stepData.blueprintUrl
                     }))
             .then((resources) => this.props.onNext(id, {blueprint: {...resources, ...fetchedStepData}}))
-            .catch((error) => this.props.onError(error))
+            .catch((error) => this.props.onError(id, error))
     }
 
     render() {
@@ -51,10 +51,13 @@ class InfrastructureStepContent extends Component {
 
     static initialState = {
         stepData: {
-            blueprintName: InfrastructureStepContent.defaultBlueprintName,
             blueprintUrl: InfrastructureStepContent.helloWorldBlueprintUrl,
-            blueprintFileName: InfrastructureStepContent.defaultblueprintFileName,
-            blueprintImageUrl: ''
+            blueprintFile: null,
+            blueprintName: InfrastructureStepContent.defaultBlueprintName,
+            blueprintFileName: InfrastructureStepContent.defaultBlueprintYaml,
+            imageUrl: '',
+            imageFile: null,
+            visibility: Stage.Common.Consts.defaultVisibility
         }
     };
 
