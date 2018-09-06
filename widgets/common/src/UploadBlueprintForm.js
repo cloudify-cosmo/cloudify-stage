@@ -54,7 +54,6 @@ class UploadBlueprintForm extends React.Component {
         this.blueprintFileRef.current && this.blueprintFileRef.current.reset();
         this.imageFileRef.current && this.imageFileRef.current.reset();
         this.setState(UploadBlueprintForm.initialState);
-        this.resetErrors();
 
         if (!_.isEmpty(this.props.blueprintUrl || !_.isNil(this.props.blueprintFile))) {
             this.setState({loading: true});
@@ -65,8 +64,6 @@ class UploadBlueprintForm extends React.Component {
                     this.setState({yamlFiles: [], loading: false});
                     this.props.onChange({errors: {error}});
                 });
-        } else {
-            this.resetErrors();
         }
     }
 
