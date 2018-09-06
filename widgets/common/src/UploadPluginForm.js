@@ -124,7 +124,7 @@ class UploadPluginForm extends React.Component {
             );
         } else {
             return (
-                <Container>
+                <Container fluid>
                     {formFields}
                 </Container>
             );

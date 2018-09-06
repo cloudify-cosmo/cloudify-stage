@@ -27,6 +27,7 @@ class UploadBlueprintForm extends React.Component {
         imageFile: PropTypes.object,
         errors: PropTypes.object,
         loading: PropTypes.bool,
+        showErrorsSummary: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
         toolbox: PropTypes.object.isRequired
     };
@@ -39,7 +40,8 @@ class UploadBlueprintForm extends React.Component {
         imageUrl: '',
         imageFile: null,
         errors: {},
-        loading: false
+        loading: false,
+        showErrorsSummary: true
     };
 
     static initialState = {
@@ -159,7 +161,7 @@ class UploadBlueprintForm extends React.Component {
 
         return (
             <Form loading={this.state.loading || this.props.loading}
-                  errors={this.props.errors} onErrorsDismiss={this.resetErrors.bind(this)}>
+                  errors={this.props.showErrorsSummary ? this.props.errors : null} onErrorsDismiss={this.resetErrors.bind(this)}>
 
                 <Form.Field label='Blueprint package' required
                             error={this.props.errors.blueprintUrl}
