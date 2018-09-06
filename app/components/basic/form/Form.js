@@ -89,10 +89,10 @@ export default class Form extends Component {
     static Divider = FormDivider;
 
     /**
-     * Form input, see [Input](https://react.semantic-ui.com/elements/input)
+     * Form input, see [Form.Input](https://react.semantic-ui.com/collections/form/)
      */
 
-    static Input = FormInput;
+    static Input = FormSemanticUiReact.Input;
 
     /**
      * Form text area input, see [TextArea](https://react.semantic-ui.com/addons/text-area)
