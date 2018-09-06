@@ -27,23 +27,33 @@ class PluginsStepActions extends Component {
                     plugin.status !== PluginsStepContent.statusInstalledAndParametersMatched);
 
                 let missingFields = [];
+                let errors = {};
                 _.forEach(plugins, (pluginObject, pluginName) => {
                     const wagonUrl = pluginObject.wagonFile ? '' : pluginObject.wagonUrl;
                     const yamlUrl = pluginObject.yamlFile ? '' : pluginObject.yamlUrl;
+                    const wagonNotDefined = _.isEmpty(wagonUrl) && !pluginObject.wagonFile;
+                    const yamlNotDefined = _.isEmpty(yamlUrl) && !pluginObject.yamlFile;
 
-                    if (_.isEmpty(wagonUrl) && !pluginObject.wagonFile ||
-                        _.isEmpty(yamlUrl) && !pluginObject.yamlFile) {
+                    if (wagonNotDefined || yamlNotDefined) {
                         missingFields.push(pluginName);
+
+                        errors[pluginName] = {
+                            wagonUrl: wagonNotDefined,
+                            yamlUrl: yamlNotDefined
+                        }
                     }
                 });
 
                 if (!_.isEmpty(missingFields)) {
-                    return Promise.reject(`Please fill in fields for the following plugins: ${missingFields.join(', ')}.`);
+                    return Promise.reject({
+                        message: `Please fill in fields for the following plugins: ${missingFields.join(', ')}.`,
+                        errors
+                    });
                 } else {
                     return this.props.onNext(id, {plugins});
                 }
             })
-            .catch((error) => this.props.onError(error));
+            .catch((error) => this.props.onError(id, error.message, error.errors));
     }
 
     render() {
@@ -162,7 +172,7 @@ class PluginsStepContent extends Component {
                     this.props.onChange(this.props.id, stepData);
                     resolve();
                 })))
-            .catch((error) => this.props.onError(error))
+            .catch((error) => this.props.onError(this.props.id, error))
             .finally(() => this.props.onReady());
     }
 
@@ -216,7 +226,8 @@ class PluginsStepContent extends Component {
                                           yamlUrl={this.props.stepData[pluginName].yamlUrl}
                                           yamlFile={this.props.stepData[pluginName].yamlFile}
                                           yamlPlaceholder=''
-                                          errors={{}}
+                                          errors={this.props.errors[pluginName]}
+                                          wrapInForm={false}
                                           loading={this.props.loading}
                                           onChange={this.onChange(pluginName).bind(this)} />
                     </ResourceAction>

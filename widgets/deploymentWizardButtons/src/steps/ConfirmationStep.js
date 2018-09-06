@@ -22,7 +22,7 @@ class ConfirmationStepActions extends Component {
         return this.props.onLoading()
             .then(this.props.fetchData)
             .then(({stepData}) => this.props.onNext(id, {tasks: stepData.tasks}))
-            .catch((error) => this.props.onError(error));
+            .catch((error) => this.props.onError(id, error));
     }
 
     render() {
@@ -202,7 +202,7 @@ class ConfirmationStepContent extends Component {
             .then(() => ({stepData: {tasks}}))
             .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
             .then(() => this.props.onChange(this.props.id, this.state.stepData))
-            .catch((error) => this.props.onError(error))
+            .catch((error) => this.props.onError(this.props.id, error))
             .finally(() => this.props.onReady());
     }
 

@@ -23,22 +23,22 @@ class BlueprintStepActions extends Component {
             .then(({stepData}) => {
                 fetchedStepData = stepData;
                 const blueprintUrl = stepData.blueprintFile ? '' : stepData.blueprintUrl;
-                let missingFields = [];
+                let errors = {};
 
                 if (_.isEmpty(blueprintUrl) && !stepData.blueprintFile) {
-                    missingFields.push('Blueprint package');
+                    errors['blueprintUrl'] = 'Blueprint package';
                 }
 
                 if (_.isEmpty(stepData.blueprintName)) {
-                    missingFields.push('Blueprint name');
+                    errors['blueprintName'] = 'Blueprint name';
                 }
 
                 if (_.isEmpty(stepData.blueprintFileName)) {
-                    missingFields.push('Blueprint YAML file');
+                    errors['blueprintFileName'] = 'Blueprint YAML file';
                 }
 
-                if (!_.isEmpty(missingFields)) {
-                    return Promise.reject(`Please fill in the following fields: ${missingFields.join(', ')}.`);
+                if (!_.isEmpty(errors)) {
+                    return Promise.reject({message: `Please fill in the following fields: ${_.values(errors).join(', ')}.`, errors});
                 } else {
                     if (!_.isNil(stepData.blueprintFile)) {
                         return this.props.toolbox.getInternal()
@@ -52,7 +52,7 @@ class BlueprintStepActions extends Component {
                     }
                 }
             }).then((resources) => this.props.onNext(id, {blueprint: {...resources, ...fetchedStepData}}))
-            .catch((error) => this.props.onError(error))
+            .catch((error) => this.props.onError(id, error.message, error.errors))
     }
 
     render() {
@@ -105,7 +105,8 @@ class BlueprintStepContent extends Component {
                                          imageUrl={this.props.stepData.imageUrl}
                                          imageFile={this.props.stepData.imageFile}
                                          loading={this.props.loading}
-                                         errors={this.props.stepData.errors}
+                                         errors={this.props.errors}
+                                         showErrorsSummary={false}
                                          onChange={this.onChange.bind(this)}
                                          toolbox={this.props.toolbox} />
                 </React.Fragment>

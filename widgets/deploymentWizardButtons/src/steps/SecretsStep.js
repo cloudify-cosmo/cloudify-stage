@@ -24,16 +24,19 @@ class SecretsStepActions extends Component {
 
                 const secretsWithoutValue = _.chain(stepData)
                     .pickBy((secret) => secret.status === SecretsStepContent.statusUndefined && _.isEmpty(secret.value))
-                    .keys()
+                    .mapValues((secret) => true)
                     .value();
 
-                if (secretsWithoutValue.length > 0) {
-                    return Promise.reject(`Provide values for the following secrets: ${secretsWithoutValue.join(', ')}`);
+                if (!_.isEmpty(secretsWithoutValue)) {
+                    return Promise.reject({
+                        message: `Provide values for the following secrets: ${_.keys(secretsWithoutValue).join(', ')}`,
+                        errors: secretsWithoutValue
+                    });
                 } else {
                     return this.props.onNext(id, {secrets: undefinedSecrets});
                 }
             })
-            .catch((error) => this.props.onError(error));
+            .catch((error) => this.props.onError(id, error.message, error.errors));
     }
 
     render() {
@@ -99,7 +102,7 @@ class SecretsStepContent extends Component {
             })
             .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
             .then(() => this.props.onChange(this.props.id, this.state.stepData))
-            .catch((error) => this.props.onError(error))
+            .catch((error) => this.props.onError(this.props.id, error))
             .finally(() => this.props.onReady());
     }
 
@@ -129,7 +132,7 @@ class SecretsStepContent extends Component {
             case SecretsStepContent.statusUndefined:
                 return (
                     <ResourceAction>
-                        <Form.Input name={secretKey} value={secret.value} fluid
+                        <Form.Input name={secretKey} value={secret.value} error={this.props.errors[secretKey]} fluid
                                     onChange={(event, {name, value}) => this.handleChange(name, 'value', value)} />
                     </ResourceAction>
                 );

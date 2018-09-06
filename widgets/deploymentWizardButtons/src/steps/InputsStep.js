@@ -27,7 +27,7 @@ class InputsStepActions extends Component {
             .then(this.props.fetchData)
             .then(({stepData}) => {
                 let deploymentInputs = {};
-                let inputsWithoutValues = [];
+                let inputsWithoutValues = {};
 
                 _.forEach(_.get(this.props.wizardData, InputsStepActions.dataPath, {}), (inputObj, inputName) => {
                     let stringInputValue = stepData[inputName];
@@ -35,7 +35,7 @@ class InputsStepActions extends Component {
 
                     if (_.isEmpty(stringInputValue)) {
                         if (_.isNil(inputObj.default)) {
-                            inputsWithoutValues.push(inputName);
+                            inputsWithoutValues[inputName] = true;
                         }
                     } else if (stringInputValue === DeployBlueprintModal.EMPTY_STRING) {
                         deploymentInputs[inputName] = '';
@@ -45,12 +45,15 @@ class InputsStepActions extends Component {
                 });
 
                 if (!_.isEmpty(inputsWithoutValues)) {
-                    return Promise.reject(`Provide values for the following inputs: ${inputsWithoutValues.join(', ')}`);
+                    return Promise.reject({
+                        message: `Provide values for the following inputs: ${_.keys(inputsWithoutValues).join(', ')}`,
+                        errors: inputsWithoutValues
+                    });
                 } else {
                     return this.props.onNext(id, {inputs: {...deploymentInputs}})
                 }
             })
-            .catch((error) => this.props.onError(error));
+            .catch((error) => this.props.onError(id, error.message, error.errors));
     }
 
     render() {
@@ -132,7 +135,7 @@ class InputsStepContent extends Component {
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell>Input</Table.HeaderCell>
-                                    <Table.HeaderCell colspan='2'>Value</Table.HeaderCell>
+                                    <Table.HeaderCell colSpan='2'>Value</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
@@ -149,7 +152,7 @@ class InputsStepContent extends Component {
                                                 {this.getInputStatus(inputs[inputName].default)}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Form.Input name={inputName} fluid
+                                                <Form.Input name={inputName} error={this.props.errors[inputName]} fluid
                                                             icon={<ResetToDefaultIcon inputName={inputName}
                                                                                       value={this.props.stepData[inputName]}
                                                                                       defaultValue={inputs[inputName].default}/>}

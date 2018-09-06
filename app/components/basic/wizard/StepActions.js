@@ -15,6 +15,7 @@ export default class StepActions extends Component {
 
     static propTypes = {
         id: PropTypes.string.isRequired,
+        onStartOver: PropTypes.func.isRequired,
         onPrev: PropTypes.func.isRequired,
         onNext: PropTypes.func.isRequired,
         onError: PropTypes.func.isRequired,
@@ -24,6 +25,10 @@ export default class StepActions extends Component {
         wizardData: PropTypes.object.isRequired,
         toolbox: PropTypes.object.isRequired,
         disabled: PropTypes.bool,
+        startOverLabel: PropTypes.string,
+        startOverIcon: PropTypes.string,
+        showStartOver: PropTypes.bool,
+        resetDataOnStartOver: PropTypes.bool,
         prevLabel: PropTypes.string,
         prevIcon: PropTypes.string,
         showPrev: PropTypes.bool,
@@ -34,6 +39,10 @@ export default class StepActions extends Component {
 
     static defaultProps = {
         disabled: false,
+        startOverLabel: 'Start Over',
+        startOverIcon: 'undo',
+        showStartOver: false,
+        resetDataOnStartOver: false,
         prevLabel: 'Back',
         prevIcon: 'arrow left',
         showPrev: true,
@@ -41,6 +50,10 @@ export default class StepActions extends Component {
         nextIcon: 'arrow right',
         showNext: true
     };
+
+    onStartOver() {
+        return this.props.onStartOver(this.props.resetDataOnStartOver);
+    }
 
     onPrev() {
         return this.props.onPrev(this.props.id);
@@ -54,6 +67,11 @@ export default class StepActions extends Component {
         return (
             <React.Fragment>
                 {this.props.children}
+                {
+                    this.props.showStartOver &&
+                    <Button icon={this.props.startOverIcon} content={this.props.startOverLabel} disabled={this.props.disabled}
+                            labelPosition='left' onClick={this.onStartOver.bind(this)} />
+                }
                 {
                     this.props.showPrev &&
                     <Button icon={this.props.prevIcon} content={this.props.prevLabel} disabled={this.props.disabled}

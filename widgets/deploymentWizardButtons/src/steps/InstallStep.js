@@ -32,7 +32,7 @@ class InstallStepActions extends Component {
         const percent = numberOfTasks > 0 ? Math.floor(numberOfEndedTasks / numberOfTasks * 100) : 0;
 
         return (
-            <Wizard.Step.Actions {...this.props} showNext={false} showPrev={anyTaskFailed}>
+            <Wizard.Step.Actions {...this.props} showNext={false} showPrev={true}>
                 {
                     allTasksEnded && !anyTaskFailed
                     ?
@@ -70,7 +70,7 @@ class InstallStepContent extends Component {
         this.setState({tasks}, () => {
             this.updateTasksInWizard()
                 .then(() => this.handleTasks(tasks))
-                .catch((error) => this.props.onError(error));
+                .catch((error) => this.props.onError(this.props.id, error));
         });
     }
 
