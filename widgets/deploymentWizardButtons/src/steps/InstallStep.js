@@ -29,10 +29,14 @@ class InstallStepActions extends Component {
             = tasksStats[Task.Status.finished] + tasksStats[Task.Status.failed];
         const allTasksEnded = numberOfEndedTasks === numberOfTasks;
         const anyTaskFailed = tasksStats[Task.Status.failed] > 0;
+        const installationEnded = allTasksEnded || anyTaskFailed;
         const percent = numberOfTasks > 0 ? Math.floor(numberOfEndedTasks / numberOfTasks * 100) : 0;
 
         return (
-            <Wizard.Step.Actions {...this.props} showNext={false} showPrev={true}>
+            <Wizard.Step.Actions {...this.props} showNext={false} showPrev={false} showStartOver={installationEnded}
+                                 startOverLabel={!anyTaskFailed ? 'Install another blueprint' : 'Start over to fix'}
+                                 closeFloated={installationEnded ? 'left' : null} closeLabel={!installationEnded ? 'Cancel' : undefined}
+                                 resetDataOnStartOver={!anyTaskFailed}>
                 {
                     allTasksEnded && !anyTaskFailed
                     ?

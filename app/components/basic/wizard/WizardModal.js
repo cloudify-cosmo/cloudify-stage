@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import {ErrorMessage, Modal, Step} from './../index';
+import {ErrorMessage, Confirm, Modal, Step} from './../index';
 import '../../styles/Wizard.css';
 
 export default class WizardModal extends Component {
@@ -53,7 +53,8 @@ export default class WizardModal extends Component {
             ...stepsObject,
             wizardData: {},
             loading: false,
-            error: null
+            error: null,
+            showCloseModal: false
         };
     };
 
@@ -75,21 +76,31 @@ export default class WizardModal extends Component {
         return WizardModal.getStepNameById(this.props.steps[index].id);
     }
 
+    showCloseModal() {
+        this.setState({showCloseModal: true});
+    }
+
+    hideCloseModal() {
+        this.setState({showCloseModal: false});
+    }
+
     onStartOver(resetData) {
         if (resetData) {
             this.setState({...WizardModal.initialState(this.props.steps)});
         } else {
-            const activeStepIndex = 0;
-            const previousStepIndex = this.state.activeStepIndex;
+            const activeStepName = this.getStepNameByIndex(0);
 
-            const activeStepName = this.getStepNameByIndex(activeStepIndex);
-            const previousStepName = this.getStepNameByIndex(previousStepIndex);
+            let stepsObject = {};
+            for (let step of this.props.steps) {
+                const stepName = WizardModal.getStepNameById(step.id);
+                stepsObject[stepName] = {...this.state[stepName], state: WizardModal.DISABLED_STATE, errors: {}};
+            }
+            stepsObject[activeStepName].state = WizardModal.ACTIVE_STATE;
 
             this.setState({
-                activeStepIndex,
-                previousStepIndex,
-                [activeStepName]: {...this.state[activeStepName], state: WizardModal.ACTIVE_STATE},
-                [previousStepName]: {...this.state[previousStepName], state: WizardModal.COMPLETED_STATE},
+                activeStepIndex: 0,
+                previousStepIndex: this.state.activeStepIndex,
+                ...stepsObject,
                 error: null,
                 loading: false
             });
@@ -194,7 +205,7 @@ export default class WizardModal extends Component {
 
         return (
             <Modal open={this.props.open} onClose={this.props.onClose} className='wizardModal'
-                   closeIcon={true} closeOnEscape={false} closeOnDimmerClick={false}>
+                   closeIcon={false} closeOnEscape={false} closeOnDimmerClick={false}>
                 <Modal.Header>
                     {this.props.header}
                 </Modal.Header>
@@ -232,7 +243,8 @@ export default class WizardModal extends Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <ActiveStep.Actions onStartOver={this.onStartOver.bind(this)}
+                    <ActiveStep.Actions onClose={this.showCloseModal.bind(this)}
+                                        onStartOver={this.onStartOver.bind(this)}
                                         onPrev={this.onPrev.bind(this)}
                                         onNext={this.onNext.bind(this)}
                                         onError={this.onError.bind(this)}
@@ -243,6 +255,11 @@ export default class WizardModal extends Component {
                                         fetchData={this.fetchStepData.bind(this, ActiveStep.id)}
                                         wizardData={this.state.wizardData}
                                         toolbox={this.props.toolbox} />
+
+                    <Confirm content='Are you sure you want to close the wizard?'
+                             open={this.state.showCloseModal}
+                             onConfirm={this.props.onClose}
+                             onCancel={this.hideCloseModal.bind(this)} />
                 </Modal.Actions>
             </Modal>
         );
