@@ -114,7 +114,8 @@ class InputsStepContent extends Component {
             let {JsonUtils} = Stage.Common;
 
             const isDefaultValueDefined = !_.isNil(props.defaultValue);
-            const isValueTheSameAsDefaultValue = _.isEqual(JsonUtils.getTypedValue(props.value), props.defaultValue);
+            const isValueTheSameAsDefaultValue = _.isEqual(JsonUtils.getStringValue(props.value),
+                                                           JsonUtils.getStringValue(props.defaultValue));
             const resetToDefault = (event, inputName, defaultValue) =>
                 this.handleChange(event, {name: inputName, value: JsonUtils.getStringValue(defaultValue)});
 
@@ -137,7 +138,7 @@ class InputsStepContent extends Component {
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell>Input</Table.HeaderCell>
-                                    <Table.HeaderCell colSpan='2'>Value</Table.HeaderCell>
+                                    <Table.HeaderCell colSpan='2'>Value (use "" for an empty string)</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
