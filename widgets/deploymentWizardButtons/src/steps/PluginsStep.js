@@ -147,7 +147,7 @@ class PluginsStepContent extends Component {
 
                 let stepData = {};
                 for (let plugin of _.keys(pluginsInBlueprint)) {
-                    let pluginState = {...PluginsStepContent.defaultPluginState};
+                    let pluginState = {...PluginsStepContent.defaultPluginState, ...this.props.stepData[plugin]};
                     pluginState.status = PluginsStepContent.getPluginStatus(plugin, pluginsInBlueprint, pluginsInManager, pluginsInCatalog);
 
                     if (pluginState.status === PluginsStepContent.statusNotInstalledAndInCatalog) {
