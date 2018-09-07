@@ -110,7 +110,7 @@ class InputsStepContent extends Component {
         const noInputs = _.isEmpty(inputs);
 
         const ResetToDefaultIcon = (props) => {
-            let {Icon} = Stage.Basic;
+            let {Icon, Popup} = Stage.Basic;
             let {JsonUtils} = Stage.Common;
 
             const isDefaultValueDefined = !_.isNil(props.defaultValue);
@@ -119,8 +119,10 @@ class InputsStepContent extends Component {
                 this.handleChange(event, {name: inputName, value: JsonUtils.getStringValue(defaultValue)});
 
             return isDefaultValueDefined && !isValueTheSameAsDefaultValue
-                ? <Icon name='refresh' link aria-label='Reset to default value'
-                        onClick={(event) => resetToDefault(event, props.inputName, props.defaultValue)} />
+                ?
+                    <Popup trigger={<Icon name='undo' link onClick={(event) => resetToDefault(event, props.inputName, props.defaultValue)} />}>
+                        Revert to default value
+                    </Popup>
                 : null;
         };
 
