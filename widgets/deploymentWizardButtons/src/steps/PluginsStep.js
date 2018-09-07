@@ -291,7 +291,7 @@ class PluginsStepContent extends Component {
 
                             <Table.Body>
                                 {
-                                    _.map(_.keys(plugins), (pluginName) => {
+                                    _.map(_.keys(this.props.stepData), (pluginName) => {
                                         const pluginInCatalog = this.state.pluginsInCatalog[pluginName];
                                         let {Image} = Stage.Basic;
 

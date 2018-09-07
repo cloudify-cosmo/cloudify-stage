@@ -24,7 +24,7 @@ class SecretsStepActions extends Component {
 
                 const secretsWithoutValue = _.chain(stepData)
                     .pickBy((secret) => secret.status === SecretsStepContent.statusUndefined && _.isEmpty(secret.value))
-                    .mapValues((secret) => true)
+                    .mapValues(() => true)
                     .value();
 
                 if (!_.isEmpty(secretsWithoutValue)) {
@@ -49,7 +49,7 @@ class SecretsStepContent extends Component {
     constructor(props) {
         super(props);
 
-        this.state = SecretsStepContent.initialState(props);
+        this.state = SecretsStepContent.initialState;
     }
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
@@ -57,16 +57,16 @@ class SecretsStepContent extends Component {
     static statusUnknown = 0;
     static statusDefined = 1;
     static statusUndefined = 2;
-    static defaultSecretState = {value: '', status: SecretsStepContent.statusUnknown};
+    static defaultSecretState = {
+        value: '',
+        visibility: Stage.Common.Consts.defaultVisibility,
+        status: SecretsStepContent.statusUnknown
+    };
     static dataPath = 'blueprint.secrets';
 
-    static initialState = (props) => ({
-        secretsInManager: [],
-        stepData: _.mapValues(
-            _.get(props.wizardData, SecretsStepContent.dataPath, {}),
-            (secretData, secretKey) => ({...props.stepData[secretKey] || SecretsStepContent.defaultSecretState})
-        )
-    });
+    static initialState = {
+        secretsInManager: []
+    };
 
     componentDidMount() {
         const secrets = _.get(this.props.wizardData, SecretsStepContent.dataPath, {});
@@ -84,11 +84,7 @@ class SecretsStepContent extends Component {
 
                 let stepData = {};
                 for (let secret of _.keys(secrets)) {
-                    stepData[secret] = this.props.stepData[secret] || {
-                        value: '',
-                        visibility: Stage.Common.Consts.defaultVisibility,
-                        status: SecretsStepContent.statusUndefined
-                    };
+                    stepData[secret] = this.props.stepData[secret] || {...SecretsStepContent.defaultSecretState};
 
                     if (_.includes(_.keys(secretsInManager), secret)) {
                         stepData[secret].status = SecretsStepContent.statusDefined;
@@ -100,14 +96,17 @@ class SecretsStepContent extends Component {
 
                 return {stepData, secretsInManager};
             })
-            .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
-            .then(() => this.props.onChange(this.props.id, this.state.stepData))
+            .then(({stepData, secretsInManager}) =>
+                new Promise((resolve) => this.setState({secretsInManager}, () => {
+                    this.props.onChange(this.props.id, stepData);
+                    resolve();
+                })))
             .catch((error) => this.props.onError(this.props.id, error))
             .finally(() => this.props.onReady());
     }
 
     getSecretStatus(secretKey) {
-        let secret = this.state.stepData[secretKey];
+        let secret = this.props.stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:
@@ -124,7 +123,7 @@ class SecretsStepContent extends Component {
 
     getSecretAction(secretKey) {
         let {Form} = Stage.Basic;
-        let secret = this.state.stepData[secretKey];
+        let secret = this.props.stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:
@@ -133,7 +132,7 @@ class SecretsStepContent extends Component {
                 return (
                     <ResourceAction>
                         <Form.Input name={secretKey} value={secret.value} error={this.props.errors[secretKey]} fluid
-                                    onChange={(event, {name, value}) => this.handleChange(name, 'value', value)} />
+                                    onChange={(event, {name, value}) => this.handleChange(secretKey, 'value', value)} />
                     </ResourceAction>
                 );
             default:
@@ -143,7 +142,7 @@ class SecretsStepContent extends Component {
 
     getSecretVisibility(secretKey) {
         let {VisibilityField} = Stage.Basic;
-        let secret = this.state.stepData[secretKey];
+        let secret = this.props.stepData[secretKey];
 
         switch (secret.status) {
             case SecretsStepContent.statusDefined:
@@ -165,10 +164,10 @@ class SecretsStepContent extends Component {
     }
 
     handleChange(secretKey, fieldName, fieldValue) {
-        let secret = this.state.stepData[secretKey];
+        let secret = {...this.props.stepData[secretKey]};
         secret[fieldName] = fieldValue;
-        this.setState({stepData: {...this.state.stepData, [secretKey]: secret}},
-            () => this.props.onChange(this.props.id, this.state.stepData));
+
+        this.props.onChange(this.props.id, {...this.props.stepData, [secretKey]: secret});
     }
 
     render() {
@@ -193,7 +192,7 @@ class SecretsStepContent extends Component {
 
                             <Table.Body>
                                 {
-                                    _.map(_.keys(secrets), (secretKey) =>
+                                    _.map(_.keys(this.props.stepData), (secretKey) =>
                                         <Table.Row key={secretKey}>
                                             <Table.Cell collapsing>{secretKey}</Table.Cell>
                                             <Table.Cell collapsing>{this.getSecretStatus(secretKey)}</Table.Cell>

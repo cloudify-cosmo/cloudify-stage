@@ -36,12 +36,6 @@ class ConfirmationStepContent extends Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            stepData: {
-                tasks: []
-            }
-        };
     }
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
@@ -200,15 +194,14 @@ class ConfirmationStepContent extends Component {
             .then((id) => {deploymentId = id; this.addDeployBlueprintTask(id, blueprintId, wizardData.inputs, wizardData.blueprint.visibility, tasks)})
             .then(() => this.addRunInstallWorkflowTask(deploymentId, tasks))
             .then(() => ({stepData: {tasks}}))
-            .then((newState) => new Promise((resolve) => this.setState(newState, resolve)))
-            .then(() => this.props.onChange(this.props.id, this.state.stepData))
+            .then(({stepData}) => this.props.onChange(this.props.id, stepData))
             .catch((error) => this.props.onError(this.props.id, error))
             .finally(() => this.props.onReady());
     }
 
     render() {
         let {Form} = Stage.Basic;
-        const tasks = this.state.stepData.tasks;
+        const tasks = _.get(this.props.stepData, 'tasks', []);
 
         return (
             <Form loading={this.props.loading}>

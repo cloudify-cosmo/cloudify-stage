@@ -87,7 +87,7 @@ class UploadPluginForm extends React.Component {
         let {Container, Form, Label} = Stage.Basic;
 
         const formFields = [
-            <Form.Field label="Wagon file" required
+            <Form.Field label="Wagon file" required key='wagon'
                         error={this.props.errors.wagonUrl}>
                 <Form.UrlOrFile name="wagon" value={this.props.wagonUrl}
                                 placeholder={this.props.wagonPlaceholder}
@@ -101,7 +101,7 @@ class UploadPluginForm extends React.Component {
                 />
             </Form.Field>
             ,
-            <Form.Field label="YAML file" required
+            <Form.Field label="YAML file" required key='yaml'
                         error={this.props.errors.yamlUrl}>
                 <Form.UrlOrFile name="yaml" value={this.props.yamlUrl}
                     placeholder={this.props.yamlPlaceholder}
