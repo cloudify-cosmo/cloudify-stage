@@ -230,7 +230,7 @@ export default class WizardModal extends Component {
                     <ErrorMessage error={this.state.error} onDismiss={() => this.setState({[activeStepName]: {...activeStepObject, errors: {}}, error: null})} autoHide />
                 </Modal.Description>
 
-                <Modal.Content scrolling>
+                <Modal.Content>
                     <ActiveStep.Content stepData={activeStepObject.data}
                                         wizardData={this.state.wizardData}
                                         onLoading={this.onLoading.bind(this)}
