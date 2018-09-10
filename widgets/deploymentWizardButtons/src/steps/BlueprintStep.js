@@ -23,10 +23,13 @@ class BlueprintStepActions extends Component {
             .then(({stepData}) => {
                 fetchedStepData = stepData;
                 const blueprintUrl = stepData.blueprintFile ? '' : stepData.blueprintUrl;
+                const imageUrl = stepData.imageFile ? '' : stepData.imageUrl;
                 let errors = {};
 
-                if (_.isEmpty(blueprintUrl) && !stepData.blueprintFile) {
-                    errors['blueprintUrl'] = 'Blueprint package';
+                if (!stepData.blueprintFile) {
+                    if (_.isEmpty(blueprintUrl) || !Stage.Utils.isUrl(blueprintUrl)) {
+                        errors['blueprintUrl'] = 'Blueprint package';
+                    }
                 }
 
                 if (_.isEmpty(stepData.blueprintName)) {
@@ -37,8 +40,15 @@ class BlueprintStepActions extends Component {
                     errors['blueprintFileName'] = 'Blueprint YAML file';
                 }
 
+                if (!_.isEmpty(imageUrl) && !Stage.Utils.isUrl(imageUrl)) {
+                    errors['imageUrl'] = 'Blueprint icon';
+                }
+
                 if (!_.isEmpty(errors)) {
-                    return Promise.reject({message: `Please fill in the following fields: ${_.values(errors).join(', ')}.`, errors});
+                    return Promise.reject({
+                        message: `Please fill in the following fields with valid values: ${_.values(errors).join(', ')}.`,
+                        errors
+                    });
                 } else {
                     if (!_.isNil(stepData.blueprintFile)) {
                         return this.props.toolbox.getInternal()

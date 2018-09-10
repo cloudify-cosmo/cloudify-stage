@@ -49,8 +49,12 @@ class UploadBlueprintModal extends React.Component {
 
         let errors = {};
 
-        if (_.isEmpty(blueprintUrl) && !this.state.blueprintFile) {
-            errors['blueprintUrl']='Please select blueprint package';
+        if (!this.state.blueprintFile) {
+            if (_.isEmpty(blueprintUrl)) {
+                errors['blueprintUrl'] = 'Please select blueprint package';
+            } else if (!Stage.Utils.isUrl(blueprintUrl)) {
+                errors['blueprintUrl'] = 'Please provide valid URL for blueprint package';
+            }
         }
 
         if (_.isEmpty(this.state.blueprintName)) {
@@ -59,6 +63,10 @@ class UploadBlueprintModal extends React.Component {
 
         if (_.isEmpty(this.state.blueprintFileName)) {
             errors['blueprintFileName']='Please provide blueprint YAML file';
+        }
+
+        if (!_.isEmpty(imageUrl) && !Stage.Utils.isUrl(blueprintUrl)) {
+            errors['imageUrl'] = 'Please provide valid URL for blueprint icon';
         }
 
         if (!_.isEmpty(errors)) {

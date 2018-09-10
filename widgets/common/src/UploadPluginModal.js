@@ -47,12 +47,20 @@ class UploadPluginModal extends React.Component {
 
         let errors = {};
 
-        if (_.isEmpty(wagonUrl) && !this.state.wagonFile) {
-            errors['wagonUrl']='Please select wagon file or provide URL to wagon file';
+        if (!this.state.wagonFile) {
+            if (_.isEmpty(wagonUrl)) {
+                errors['wagonUrl'] = 'Please select wagon file or provide URL to wagon file';
+            } else if (!Stage.Utils.isUrl(wagonUrl)) {
+                errors['wagonUrl'] = 'Please provide valid URL for wagon file';
+            }
         }
 
-        if (_.isEmpty(yamlUrl) && !this.state.yamlFile) {
-            errors['yamlUrl']='Please select YAML file or provide URL to YAML file';
+        if (!this.state.yamlFile) {
+            if (_.isEmpty(yamlUrl)) {
+                errors['yamlUrl'] = 'Please select YAML file or provide URL to YAML file';
+            } else if (!Stage.Utils.isUrl(yamlUrl)) {
+                errors['yamlUrl'] = 'Please provide valid URL for YAML file';
+            }
         }
 
         if (!_.isEmpty(errors)) {

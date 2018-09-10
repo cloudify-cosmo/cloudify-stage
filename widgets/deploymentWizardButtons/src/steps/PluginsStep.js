@@ -31,22 +31,22 @@ class PluginsStepActions extends Component {
                 _.forEach(plugins, (pluginObject, pluginName) => {
                     const wagonUrl = pluginObject.wagonFile ? '' : pluginObject.wagonUrl;
                     const yamlUrl = pluginObject.yamlFile ? '' : pluginObject.yamlUrl;
-                    const wagonNotDefined = _.isEmpty(wagonUrl) && !pluginObject.wagonFile;
-                    const yamlNotDefined = _.isEmpty(yamlUrl) && !pluginObject.yamlFile;
+                    const wagonNotValid = _.isEmpty(wagonUrl) ? !pluginObject.wagonFile : !Stage.Utils.isUrl(wagonUrl);
+                    const yamlNotValid = _.isEmpty(yamlUrl) ? !pluginObject.yamlFile : !Stage.Utils.isUrl(yamlUrl);
 
-                    if (wagonNotDefined || yamlNotDefined) {
+                    if (wagonNotValid || yamlNotValid) {
                         missingFields.push(pluginName);
 
                         errors[pluginName] = {
-                            wagonUrl: wagonNotDefined,
-                            yamlUrl: yamlNotDefined
+                            wagonUrl: wagonNotValid,
+                            yamlUrl: yamlNotValid
                         }
                     }
                 });
 
                 if (!_.isEmpty(missingFields)) {
                     return Promise.reject({
-                        message: `Please fill in fields for the following plugins: ${missingFields.join(', ')}.`,
+                        message: `Please correctly fill in fields for the following plugins: ${missingFields.join(', ')}.`,
                         errors
                     });
                 } else {
