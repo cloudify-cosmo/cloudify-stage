@@ -57,7 +57,10 @@ Stage.defineWidget({
                                   steps={helloWorldWizardSteps}
                                   toolbox={toolbox} />
                 }
-                <Divider hidden />
+                {
+                    showHelloWorldWizardButton && showDeploymentWizardButton &&
+                    <Divider hidden />
+                }
                 {
                     showDeploymentWizardButton &&
                     <WizardButton color='red' name='Deployment Wizard'
