@@ -50,7 +50,7 @@ class PluginsStepActions extends Component {
                         errors
                     });
                 } else {
-                    let userDefinedPlugins = _.pickBy(plugins, (plugin) => plugin.userDefined);
+                    let userDefinedPlugins = _.pickBy(plugins, (plugin) => plugin.status === PluginsStepContent.statusUserDefinedPlugin);
                     let userResources = {plugins: _.mapValues(userDefinedPlugins, () => ({params: {}}))};
                     return this.props.onNext(id, {plugins, userResources});
                 }
@@ -257,6 +257,7 @@ class PluginsStepContent extends Component {
                 return <ResourceAction>No action required.</ResourceAction>;
             case PluginsStepContent.statusInstalledAndParametersUnmatched:
             case PluginsStepContent.statusNotInstalledAndNotInCatalog:
+            case PluginsStepContent.statusUserDefinedPlugin:
                 return (
                     <ResourceAction>
                         <UploadPluginForm wagonUrl={this.props.stepData[pluginName].wagonUrl}
@@ -294,6 +295,7 @@ class PluginsStepContent extends Component {
             case PluginsStepContent.statusInstalledAndParametersUnmatched:
             case PluginsStepContent.statusNotInstalledAndNotInCatalog:
             case PluginsStepContent.statusNotInstalledAndInCatalog:
+            case PluginsStepContent.statusUserDefinedPlugin:
                 return (
                     <ResourceAction>
                         <VisibilityField visibility={plugin.visibility} className='large'
