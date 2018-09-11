@@ -296,6 +296,7 @@ class PluginsStepContent extends Component {
                                         let {Image} = Stage.Basic;
 
                                         return (
+                                            !_.isNil(plugins[pluginName]) &&
                                             <Table.Row key={pluginName}>
                                                 <Table.Cell collapsing>
                                                     {

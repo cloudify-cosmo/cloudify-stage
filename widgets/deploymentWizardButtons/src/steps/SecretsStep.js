@@ -193,6 +193,7 @@ class SecretsStepContent extends Component {
                             <Table.Body>
                                 {
                                     _.map(_.keys(this.props.stepData), (secretKey) =>
+                                        !_.isNil(secrets[secretKey]) &&
                                         <Table.Row key={secretKey}>
                                             <Table.Cell collapsing>{secretKey}</Table.Cell>
                                             <Table.Cell collapsing>{this.getSecretStatus(secretKey)}</Table.Cell>
