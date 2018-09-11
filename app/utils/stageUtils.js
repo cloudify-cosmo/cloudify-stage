@@ -118,8 +118,8 @@ export default class StageUtils {
         return configs;
     };
 
-    static getToolbox(onRefresh, onLoading, widgetId) {
-        return getToolbox(onRefresh, onLoading, widgetId);
+    static getToolbox(onRefresh, onLoading, widget) {
+        return getToolbox(onRefresh, onLoading, widget);
     }
 
     static isUserAuthorized(permission, managerData) {

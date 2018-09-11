@@ -21,7 +21,13 @@ class ConfirmationStepActions extends Component {
     onNext(id) {
         return this.props.onLoading()
             .then(this.props.fetchData)
-            .then(({stepData}) => this.props.onNext(id, {tasks: stepData.tasks}))
+            .then(({stepData}) => this.props.onNext(id, {
+                tasks: stepData.tasks,
+                installOutputs: {
+                    deploymentId: stepData.deploymentId,
+                    blueprintId: stepData.blueprintId
+                }
+            }))
             .catch((error) => this.props.onError(id, error));
     }
 
@@ -193,7 +199,7 @@ class ConfirmationStepContent extends Component {
             .then(() => this.chooseDeploymentId(blueprintId))
             .then((id) => {deploymentId = id; this.addDeployBlueprintTask(id, blueprintId, wizardData.inputs, wizardData.blueprint.visibility, tasks)})
             .then(() => this.addRunInstallWorkflowTask(deploymentId, tasks))
-            .then(() => ({stepData: {tasks}}))
+            .then(() => ({stepData: {tasks, blueprintId, deploymentId}}))
             .then(({stepData}) => this.props.onChange(this.props.id, stepData))
             .catch((error) => this.props.onError(this.props.id, error))
             .finally(() => this.props.onReady());
