@@ -25,7 +25,7 @@ module.exports = (function() {
 
     function updateOptions(options, method, timeout, headers, data) {
         if (caFile) {
-            logger.debug('Adding CA file to Agent Options. CA File =', caFile);
+            logger.debug('Adding CA file to Agent Options');
             options.agentOptions = {
                 ca: caFile
             };
@@ -53,7 +53,7 @@ module.exports = (function() {
         var requestOptions = {};
         this.updateOptions(requestOptions, method, timeout, headers, data);
 
-        logger.debug(`Preparing ${method} request to manager with options: ${JSON.stringify(requestOptions)}`);
+        logger.debug(`Preparing ${method} request to manager: ${requestUrl}`);
         return RequestHandler.request(method, requestUrl, requestOptions, onSuccess, onError);
     }
 

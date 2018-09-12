@@ -12,7 +12,7 @@ const config = require('../config').get();
 const Consts = require('../consts');
 
 let router = express.Router();
-let logger = require('log4js').getLogger('ClientConfigRouter');
+let logger = require('log4js').getLogger('Auth');
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));

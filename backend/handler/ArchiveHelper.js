@@ -12,7 +12,7 @@ var multer  = require('multer');
 var ManagerHandler = require('./ManagerHandler');
 var RequestHandler = require('./RequestHandler');
 
-var logger = require('log4js').getLogger('archiveHelper');
+var logger = require('log4js').getLogger('ArchiveHelper');
 
 module.exports = (function() {
 
