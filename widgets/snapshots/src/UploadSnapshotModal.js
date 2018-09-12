@@ -43,8 +43,12 @@ export default class UploadModal extends React.Component {
 
         let errors = {};
 
-        if (_.isEmpty(snapshotUrl) && !this.state.snapshotFile) {
-            errors['snapshotUrl']='Please select snapshot file or url';
+        if (!this.state.snapshotFile) {
+            if (_.isEmpty(snapshotUrl)) {
+                errors['snapshotUrl'] = 'Please select snapshot file or url';
+            } else if (!Stage.Utils.isUrl(snapshotUrl)) {
+                errors['snapshotUrl'] = 'Please provide valid URL for snapshot';
+            }
         }
 
         if (_.isEmpty(this.state.snapshotId)) {

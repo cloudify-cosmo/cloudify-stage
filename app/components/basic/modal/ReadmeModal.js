@@ -55,7 +55,7 @@ export default class ReadmeModal extends Component {
     return (
         <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true}
                onClose={this.onCancel.bind(this)} closeIcon="close"
-               className={`unlimited ${this.props.className}`} size="fullscreen">
+               className={`readmeModal unlimited ${this.props.className}`} size="fullscreen">
           <Modal.Content style={{padding: '50px'}}>
             <div dangerouslySetInnerHTML={this.getContent()} />
           </Modal.Content>

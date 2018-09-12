@@ -27,7 +27,7 @@ class InputsStepActions extends Component {
             .then(this.props.fetchData)
             .then(({stepData}) => {
                 let deploymentInputs = {};
-                let inputsWithoutValues = [];
+                let inputsWithoutValues = {};
 
                 _.forEach(_.get(this.props.wizardData, InputsStepActions.dataPath, {}), (inputObj, inputName) => {
                     let stringInputValue = stepData[inputName];
@@ -35,7 +35,7 @@ class InputsStepActions extends Component {
 
                     if (_.isEmpty(stringInputValue)) {
                         if (_.isNil(inputObj.default)) {
-                            inputsWithoutValues.push(inputName);
+                            inputsWithoutValues[inputName] = true;
                         }
                     } else if (stringInputValue === DeployBlueprintModal.EMPTY_STRING) {
                         deploymentInputs[inputName] = '';
@@ -45,12 +45,15 @@ class InputsStepActions extends Component {
                 });
 
                 if (!_.isEmpty(inputsWithoutValues)) {
-                    return Promise.reject(`Provide values for the following inputs: ${inputsWithoutValues.join(', ')}`);
+                    return Promise.reject({
+                        message: `Provide values for the following inputs: ${_.keys(inputsWithoutValues).join(', ')}`,
+                        errors: inputsWithoutValues
+                    });
                 } else {
                     return this.props.onNext(id, {inputs: {...deploymentInputs}})
                 }
             })
-            .catch((error) => this.props.onError(error));
+            .catch((error) => this.props.onError(id, error.message, error.errors));
     }
 
     render() {
@@ -107,17 +110,20 @@ class InputsStepContent extends Component {
         const noInputs = _.isEmpty(inputs);
 
         const ResetToDefaultIcon = (props) => {
-            let {Icon} = Stage.Basic;
+            let {Icon, Popup} = Stage.Basic;
             let {JsonUtils} = Stage.Common;
 
             const isDefaultValueDefined = !_.isNil(props.defaultValue);
-            const isValueTheSameAsDefaultValue = _.isEqual(JsonUtils.getTypedValue(props.value), props.defaultValue);
+            const isValueTheSameAsDefaultValue = _.isEqual(JsonUtils.getStringValue(props.value),
+                                                           JsonUtils.getStringValue(props.defaultValue));
             const resetToDefault = (event, inputName, defaultValue) =>
                 this.handleChange(event, {name: inputName, value: JsonUtils.getStringValue(defaultValue)});
 
             return isDefaultValueDefined && !isValueTheSameAsDefaultValue
-                ? <Icon name='refresh' link aria-label='Reset to default value'
-                        onClick={(event) => resetToDefault(event, props.inputName, props.defaultValue)} />
+                ?
+                    <Popup trigger={<Icon name='undo' link onClick={(event) => resetToDefault(event, props.inputName, props.defaultValue)} />}>
+                        Revert to default value
+                    </Popup>
                 : null;
         };
 
@@ -128,29 +134,29 @@ class InputsStepContent extends Component {
                     ?
                         <NoResourceMessage resourceName='inputs'/>
                     :
-                        <Table celled definition>
+                        <Table celled>
                             <Table.Header>
                                 <Table.Row>
-                                    <Table.HeaderCell textAlign='center' width={1}/>
-                                    <Table.HeaderCell width={4}>Input</Table.HeaderCell>
-                                    <Table.HeaderCell width={12}>Value</Table.HeaderCell>
+                                    <Table.HeaderCell>Input</Table.HeaderCell>
+                                    <Table.HeaderCell colSpan='2'>Value (use "" for an empty string)</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
                             <Table.Body>
                                 {
-                                    _.map(_.keys(inputs), (inputName) =>
+                                    _.map(_.keys(this.props.stepData), (inputName) =>
+                                        !_.isNil(inputs[inputName]) &&
                                         <Table.Row key={inputName}>
-                                            <Table.Cell>
-                                                {this.getInputStatus(inputs[inputName].default)}
-                                            </Table.Cell>
-                                            <Table.Cell>
+                                            <Table.Cell collapsing>
                                                 <Form.Field key={inputName} help={inputs[inputName].description}
                                                             label={inputName} required={_.isNil(inputs[inputName].default)}>
                                                 </Form.Field>
                                             </Table.Cell>
+                                            <Table.Cell collapsing>
+                                                {this.getInputStatus(inputs[inputName].default)}
+                                            </Table.Cell>
                                             <Table.Cell>
-                                                <Form.Input name={inputName} fluid
+                                                <Form.Input name={inputName} error={this.props.errors[inputName]} fluid
                                                             icon={<ResetToDefaultIcon inputName={inputName}
                                                                                       value={this.props.stepData[inputName]}
                                                                                       defaultValue={inputs[inputName].default}/>}

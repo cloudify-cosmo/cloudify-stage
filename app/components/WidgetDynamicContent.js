@@ -32,7 +32,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     _getToolbox () {
-        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this), this.props.widget.definition.id);
+        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this), this.props.widget);
     }
 
     _beforeFetch() {

@@ -27,6 +27,7 @@ class UploadBlueprintForm extends React.Component {
         imageFile: PropTypes.object,
         errors: PropTypes.object,
         loading: PropTypes.bool,
+        showErrorsSummary: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
         toolbox: PropTypes.object.isRequired
     };
@@ -39,7 +40,8 @@ class UploadBlueprintForm extends React.Component {
         imageUrl: '',
         imageFile: null,
         errors: {},
-        loading: false
+        loading: false,
+        showErrorsSummary: true
     };
 
     static initialState = {
@@ -54,9 +56,9 @@ class UploadBlueprintForm extends React.Component {
         this.blueprintFileRef.current && this.blueprintFileRef.current.reset();
         this.imageFileRef.current && this.imageFileRef.current.reset();
         this.setState(UploadBlueprintForm.initialState);
-        this.resetErrors();
 
-        if (!_.isEmpty(this.props.blueprintUrl || !_.isNil(this.props.blueprintFile))) {
+        if ((!_.isEmpty(this.props.blueprintUrl) && Stage.Utils.isUrl(this.props.blueprintUrl)) ||
+            !_.isNil(this.props.blueprintFile)) {
             this.setState({loading: true});
             this.actions.doListYamlFiles(this.props.blueprintUrl, this.props.blueprintFile, false)
                 .then((data) => {
@@ -65,8 +67,6 @@ class UploadBlueprintForm extends React.Component {
                     this.setState({yamlFiles: [], loading: false});
                     this.props.onChange({errors: {error}});
                 });
-        } else {
-            this.resetErrors();
         }
     }
 
@@ -75,7 +75,7 @@ class UploadBlueprintForm extends React.Component {
     }
 
     _onBlueprintUrlBlur() {
-        if (!this.props.blueprintUrl) {
+        if (_.isEmpty(this.props.blueprintUrl) || !Stage.Utils.isUrl(this.props.blueprintUrl)) {
             this.setState({yamlFiles: []}, this.resetErrors);
             return;
         }
@@ -162,7 +162,7 @@ class UploadBlueprintForm extends React.Component {
 
         return (
             <Form loading={this.state.loading || this.props.loading}
-                  errors={this.props.errors} onErrorsDismiss={this.resetErrors.bind(this)}>
+                  errors={this.props.showErrorsSummary ? this.props.errors : null} onErrorsDismiss={this.resetErrors.bind(this)}>
 
                 <Form.Field label='Blueprint package' required
                             error={this.props.errors.blueprintUrl}

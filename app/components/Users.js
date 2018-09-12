@@ -52,7 +52,7 @@ export default class Users extends Component {
                                            onClick={this.props.onLogout}/>);
 
         return (
-                <Dropdown item pointing='top right' trigger={userMenuTrigger} className='usersMenu' scrolling>
+                <Dropdown item pointing='top right' trigger={userMenuTrigger} className='usersMenu' >
                     {
                         this.props.showAllOptions
                         ?

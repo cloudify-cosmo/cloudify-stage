@@ -27,23 +27,35 @@ class PluginsStepActions extends Component {
                     plugin.status !== PluginsStepContent.statusInstalledAndParametersMatched);
 
                 let missingFields = [];
+                let errors = {};
                 _.forEach(plugins, (pluginObject, pluginName) => {
                     const wagonUrl = pluginObject.wagonFile ? '' : pluginObject.wagonUrl;
                     const yamlUrl = pluginObject.yamlFile ? '' : pluginObject.yamlUrl;
+                    const wagonNotValid = _.isEmpty(wagonUrl) ? !pluginObject.wagonFile : !Stage.Utils.isUrl(wagonUrl);
+                    const yamlNotValid = _.isEmpty(yamlUrl) ? !pluginObject.yamlFile : !Stage.Utils.isUrl(yamlUrl);
 
-                    if (_.isEmpty(wagonUrl) && !pluginObject.wagonFile ||
-                        _.isEmpty(yamlUrl) && !pluginObject.yamlFile) {
+                    if (wagonNotValid || yamlNotValid) {
                         missingFields.push(pluginName);
+
+                        errors[pluginName] = {
+                            wagonUrl: wagonNotValid,
+                            yamlUrl: yamlNotValid
+                        }
                     }
                 });
 
                 if (!_.isEmpty(missingFields)) {
-                    return Promise.reject(`Please fill in fields for the following plugins: ${missingFields.join(', ')}.`);
+                    return Promise.reject({
+                        message: `Please correctly fill in fields for the following plugins: ${missingFields.join(', ')}.`,
+                        errors
+                    });
                 } else {
-                    return this.props.onNext(id, {plugins});
+                    let userDefinedPlugins = _.pickBy(plugins, (plugin) => plugin.status === PluginsStepContent.statusUserDefinedPlugin);
+                    let userResources = {plugins: _.mapValues(userDefinedPlugins, () => ({params: {}}))};
+                    return this.props.onNext(id, {plugins, userResources});
                 }
             })
-            .catch((error) => this.props.onError(error));
+            .catch((error) => this.props.onError(id, error.message, error.errors));
     }
 
     render() {
@@ -68,15 +80,18 @@ class PluginsStepContent extends Component {
     static statusInstalledAndParametersMatched = 1;
     static statusInstalledAndParametersUnmatched = 2;
     static statusNotInstalledAndInCatalog = 3;
-    static statusNotInstalledAndNotInCatalog = 4;
+    static statusUserDefinedPlugin = 4;
+    static statusNotInstalledAndNotInCatalog = 5;
     static defaultPluginState = {
         yamlUrl: '',
         yamlFile: null,
         wagonUrl: '',
         wagonFile: null,
+        visibility: Stage.Common.Consts.defaultVisibility,
         status: PluginsStepContent.statusUnknown
     };
-    static dataPath = 'blueprint.plugins';
+    static blueprintDataPath = 'blueprint.plugins';
+    static userDataPath = 'userResources.plugins';
 
     static getPluginStatus(pluginName, pluginsInBlueprint, pluginsInManager, pluginsInCatalog) {
         const plugin = pluginsInBlueprint[pluginName];
@@ -111,17 +126,19 @@ class PluginsStepContent extends Component {
     componentDidMount() {
         this.props.onLoading()
             .then(() => Promise.all([
-                this.props.toolbox.getManager().doGet('/plugins?_include=distribution,package_name,package_version'),
+                this.props.toolbox.getManager().doGet('/plugins?_include=distribution,package_name,package_version,visibility'),
                 this.props.toolbox.getExternal().doGet('http://repository.cloudifysource.org/cloudify/wagons/plugins.json')
             ]))
             .then(([pluginsInManager, pluginsInCatalog]) => {
-                const pluginsInBlueprint = _.get(this.props.wizardData, PluginsStepContent.dataPath, {});
+                const pluginsInBlueprint = _.get(this.props.wizardData, PluginsStepContent.blueprintDataPath, {});
+                const pluginsInUserResources = _.get(this.props.wizardData, PluginsStepContent.userDataPath, {});
 
                 pluginsInManager = pluginsInManager.items;
                 pluginsInManager = _.reduce(pluginsInManager, (result, pluginObject) => {
                     result[pluginObject.package_name] = {
                         version: pluginObject.package_version,
-                        distribution: pluginObject.distribution
+                        distribution: pluginObject.distribution,
+                        visibility: pluginObject.visibility
                     };
                     return result;
                 }, {});
@@ -135,7 +152,7 @@ class PluginsStepContent extends Component {
 
                 let stepData = {};
                 for (let plugin of _.keys(pluginsInBlueprint)) {
-                    let pluginState = PluginsStepContent.defaultPluginState;
+                    let pluginState = {...PluginsStepContent.defaultPluginState, ...this.props.stepData[plugin]};
                     pluginState.status = PluginsStepContent.getPluginStatus(plugin, pluginsInBlueprint, pluginsInManager, pluginsInCatalog);
 
                     if (pluginState.status === PluginsStepContent.statusNotInstalledAndInCatalog) {
@@ -145,10 +162,16 @@ class PluginsStepContent extends Component {
                         });
 
                         pluginState.wagonUrl = wagon.url;
-                        pluginState.wagonFile = null;
                         pluginState.yamlUrl = pluginsInCatalog[plugin].link;
-                        pluginState.yamlFile = null;
+                    } else if (pluginState.status === PluginsStepContent.statusInstalledAndParametersMatched) {
+                        pluginState.visibility = pluginsInManager[plugin].visibility;
                     }
+
+                    stepData[plugin] = {...pluginState};
+                }
+                for (let plugin of _.keys(pluginsInUserResources)) {
+                    let pluginState = {...PluginsStepContent.defaultPluginState, ...this.props.stepData[plugin]};
+                    pluginState.status = PluginsStepContent.statusUserDefinedPlugin;
 
                     stepData[plugin] = {...pluginState};
                 }
@@ -160,7 +183,7 @@ class PluginsStepContent extends Component {
                     this.props.onChange(this.props.id, stepData);
                     resolve();
                 })))
-            .catch((error) => this.props.onError(error))
+            .catch((error) => this.props.onError(this.props.id, error))
             .finally(() => this.props.onReady());
     }
 
@@ -177,6 +200,9 @@ class PluginsStepContent extends Component {
             case PluginsStepContent.statusNotInstalledAndNotInCatalog:
                 return <ResourceStatus status={ResourceStatus.actionRequired}
                                        text='Cannot find plugin. Provide details.' />;
+            case PluginsStepContent.statusUserDefinedPlugin:
+                return <ResourceStatus status={ResourceStatus.actionRequired}
+                                       text='User defined plugin. Provide details.' />;
             case PluginsStepContent.statusNotInstalledAndInCatalog:
                 return <ResourceStatus status={ResourceStatus.noActionRequired}
                                        text='Plugin has been found in catalog and will be installed automatically. No action required.' />;
@@ -197,6 +223,31 @@ class PluginsStepContent extends Component {
         }
     }
 
+    addUserPlugin() {
+        let stepData = {...this.props.stepData};
+
+        const getPluginName = (baseName = 'user-plugin', maxSuffixNumber = 1000) => {
+            let pluginName = '';
+
+            for (let pluginNameChosen = false, i = 0; i < maxSuffixNumber && !pluginNameChosen; i++) {
+                pluginName = `${baseName}-${i}`;
+                pluginNameChosen = !stepData[pluginName];
+            }
+
+            return pluginName;
+        };
+
+        const pluginName = getPluginName();
+        stepData[pluginName] = {...PluginsStepContent.defaultPluginState};
+        stepData[pluginName].status = PluginsStepContent.statusUserDefinedPlugin;
+        this.props.onChange(this.props.id, stepData);
+    }
+
+    deleteUserPlugin(pluginName) {
+        let stepData = {..._.omit(this.props.stepData, pluginName)};
+        this.props.onChange(this.props.id, stepData);
+    }
+
     getPluginAction(pluginName) {
         const status = _.get(this.props.stepData[pluginName], 'status');
         let {UploadPluginForm} = Stage.Common;
@@ -205,25 +256,18 @@ class PluginsStepContent extends Component {
             case PluginsStepContent.statusInstalledAndParametersMatched:
                 return <ResourceAction>No action required.</ResourceAction>;
             case PluginsStepContent.statusInstalledAndParametersUnmatched:
-                return (
-                    <ResourceAction>
-                        <UploadPluginForm wagonUrl={this.props.stepData[pluginName].wagonUrl}
-                                          wagonFile={this.props.stepData[pluginName].wagonFile}
-                                          yamlUrl={this.props.stepData[pluginName].yamlUrl}
-                                          yamlFile={this.props.stepData[pluginName].yamlFile}
-                                          errors={{}}
-                                          loading={this.props.loading}
-                                          onChange={this.onChange(pluginName).bind(this)} />
-                    </ResourceAction>
-                );
             case PluginsStepContent.statusNotInstalledAndNotInCatalog:
+            case PluginsStepContent.statusUserDefinedPlugin:
                 return (
                     <ResourceAction>
                         <UploadPluginForm wagonUrl={this.props.stepData[pluginName].wagonUrl}
                                           wagonFile={this.props.stepData[pluginName].wagonFile}
+                                          wagonPlaceholder=''
                                           yamlUrl={this.props.stepData[pluginName].yamlUrl}
                                           yamlFile={this.props.stepData[pluginName].yamlFile}
-                                          errors={{}}
+                                          yamlPlaceholder=''
+                                          errors={this.props.errors[pluginName]}
+                                          wrapInForm={false}
                                           loading={this.props.loading}
                                           onChange={this.onChange(pluginName).bind(this)} />
                     </ResourceAction>
@@ -237,31 +281,42 @@ class PluginsStepContent extends Component {
         }
     }
 
-    getPluginIcon(pluginName) {
-        const pluginInCatalog = this.state.pluginsInCatalog[pluginName];
-        let {Image} = Stage.Basic;
+    getPluginVisibility(pluginName) {
+        let {VisibilityField} = Stage.Basic;
+        let plugin = this.props.stepData[pluginName];
 
-        if (!_.isNil(pluginInCatalog)) {
-            return <Image src={pluginInCatalog.icon} inline height='25' />;
-        } else {
-            return null;
+        switch (_.get(plugin, 'status')) {
+            case PluginsStepContent.statusInstalledAndParametersMatched:
+                return (
+                    <ResourceAction>
+                        <VisibilityField visibility={plugin.visibility} className='large' allowChange={false} />
+                    </ResourceAction>
+                );
+            case PluginsStepContent.statusInstalledAndParametersUnmatched:
+            case PluginsStepContent.statusNotInstalledAndNotInCatalog:
+            case PluginsStepContent.statusNotInstalledAndInCatalog:
+            case PluginsStepContent.statusUserDefinedPlugin:
+                return (
+                    <ResourceAction>
+                        <VisibilityField visibility={plugin.visibility} className='large'
+                                         onVisibilityChange={(visibility) => this.onChange(pluginName)({visibility})} />
+                    </ResourceAction>
+                );
+            default:
+                return null;
         }
     }
 
-    getPluginUserFriendlyName(pluginName) {
-        const pluginInCatalog = this.state.pluginsInCatalog[pluginName];
-
-        if (!_.isNil(pluginInCatalog)) {
-            return pluginInCatalog.title;
-        } else {
-            return pluginName;
-        }
+    isUserDefinedPlugin(pluginName) {
+        return _.isEqual(_.get(this.props.stepData[pluginName], 'status', PluginsStepContent.statusUnknown),
+                         PluginsStepContent.statusUserDefinedPlugin);
     }
 
     render() {
-        let {Form, Table} = Stage.Basic;
-        const plugins = _.get(this.props.wizardData, PluginsStepContent.dataPath, {});
-        const noPlugins = _.isEmpty(plugins);
+        let {Button, Form, Popup, Table} = Stage.Basic;
+        const plugins = {..._.get(this.props.wizardData, PluginsStepContent.blueprintDataPath, {}),
+                         ..._.get(this.props.wizardData, PluginsStepContent.userDataPath, {})};
+        const noPlugins = _.isEmpty(this.props.stepData);
 
         return (
             <Form loading={this.props.loading} success={noPlugins}>
@@ -270,33 +325,60 @@ class PluginsStepContent extends Component {
                     ?
                         <NoResourceMessage resourceName='plugins' />
                     :
-                        <Table celled definition>
+                        <Table celled>
                             <Table.Header>
                                 <Table.Row>
-                                    <Table.HeaderCell />
-                                    <Table.HeaderCell colSpan='2'>Plugin</Table.HeaderCell>
+                                    <Table.HeaderCell>Plugin</Table.HeaderCell>
                                     <Table.HeaderCell>Version</Table.HeaderCell>
                                     <Table.HeaderCell>Distribution</Table.HeaderCell>
-                                    <Table.HeaderCell>Action</Table.HeaderCell>
+                                    <Table.HeaderCell colSpan='3'>Action</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
                             <Table.Body>
-                                {
-                                    _.map(_.keys(plugins), (pluginName) =>
-                                        <Table.Row key={pluginName}>
-                                            <Table.Cell collapsing>{this.getPluginStatus(pluginName)}</Table.Cell>
-                                            <Table.Cell textAlign='center' width={1}>{this.getPluginIcon(pluginName)}</Table.Cell>
-                                            <Table.Cell>{this.getPluginUserFriendlyName(pluginName)}</Table.Cell>
-                                            <Table.Cell>{plugins[pluginName].version || '-'}</Table.Cell>
-                                            <Table.Cell>{plugins[pluginName].distribution || '-'}</Table.Cell>
-                                            <Table.Cell>{this.getPluginAction(pluginName)}</Table.Cell>
-                                        </Table.Row>
-                                    )
-                                }
+                            {
+                                noPlugins
+                                ?
+                                    <NoResourceMessage resourceName='plugins' />
+                                :
+                                    _.map(_.keys(this.props.stepData), (pluginName) => {
+                                        const pluginInCatalog = this.state.pluginsInCatalog[pluginName];
+                                        let {Image} = Stage.Basic;
+
+                                        return (
+                                            <Table.Row key={pluginName}>
+                                                <Table.Cell collapsing>
+                                                    {
+                                                        !_.isNil(pluginInCatalog)
+                                                        ?
+                                                            <span>
+                                                                <Image src={pluginInCatalog.icon} height='25' verticalAlign='middle' spaced='right' />
+                                                                {pluginInCatalog.title}
+                                                            </span>
+                                                        :
+                                                            <span>{pluginName} </span>
+                                                    }
+                                                    {
+                                                        this.isUserDefinedPlugin(pluginName) &&
+                                                        <Popup trigger={<Button icon='minus' size='mini'
+                                                                                onClick={this.deleteUserPlugin.bind(this, pluginName)} />}
+                                                               content='Remove plugin' />
+                                                    }
+                                                </Table.Cell>
+                                                <Table.Cell collapsing>{_.get(plugins[pluginName], 'params.version', '-')}</Table.Cell>
+                                                <Table.Cell collapsing>{_.get(plugins[pluginName], 'params.distribution', '-')}</Table.Cell>
+                                                <Table.Cell collapsing>{this.getPluginStatus(pluginName)}</Table.Cell>
+                                                <Table.Cell>{this.getPluginAction(pluginName)}</Table.Cell>
+                                                <Table.Cell collapsing>{this.getPluginVisibility(pluginName)}</Table.Cell>
+                                            </Table.Row>
+                                        )
+                                    })
+                            }
                             </Table.Body>
                         </Table>
                 }
+                <Form.Button content='Add plugin' icon='add' labelPosition='left'
+                             onClick={this.addUserPlugin.bind(this)} />
             </Form>
         );
     }

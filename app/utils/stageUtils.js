@@ -87,6 +87,13 @@ export default class StageUtils {
         return Const.CONTEXT_PATH + (_.startsWith(path, '/') ? '' : '/') + path;
     }
 
+    static isUrl(str) {
+        // RegEx from: https://stackoverflow.com/questions/1410311/regular-expression-for-url-validation-in-javascript#15734347
+        const regexp =  /^(ftp|http|https):\/\/[^ "]+$/;
+
+        return regexp.test(str);
+    }
+
     static widgetResourceUrl(widgetId, internalPath, isCustom = true, addContextPath = true) {
         return addContextPath
             ? StageUtils.url(
@@ -111,8 +118,8 @@ export default class StageUtils {
         return configs;
     };
 
-    static getToolbox(onRefresh, onLoading, widgetId) {
-        return getToolbox(onRefresh, onLoading, widgetId);
+    static getToolbox(onRefresh, onLoading, widget) {
+        return getToolbox(onRefresh, onLoading, widget);
     }
 
     static isUserAuthorized(permission, managerData) {
