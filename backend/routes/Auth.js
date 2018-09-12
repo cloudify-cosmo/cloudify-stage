@@ -24,7 +24,7 @@ router.post('/login', (req, res) => {
                 res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
                 res.send({
                     role: token.role,
-                    serverVersion: config.manager.serverVersion
+                    serverVersion: AuthHandler.getManagerVersion()
                 });
             } else{
                 res.status(403).send({message: 'User has no tenants'});
@@ -69,7 +69,7 @@ router.get('/user', passport.authenticate('token', {session: false}), (req, res)
         role: req.user.role,
         groupSystemRoles: req.user.group_system_roles,
         tenantsRoles: req.user.tenants,
-        serverVersion: config.manager.serverVersion
+        serverVersion: AuthHandler.getManagerVersion()
     })
 });
 

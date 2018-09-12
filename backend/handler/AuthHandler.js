@@ -11,6 +11,7 @@ var path = require('path');
 var ServerSettings = require('../serverSettings');
 
 var authorizationCache = {};
+var versionCache = {};
 
 class AuthHandler {
     static getToken(basicAuth){
@@ -72,6 +73,8 @@ class AuthHandler {
             })
         }).then((token) => {
             return AuthHandler.getVersion(token).then((version) => {
+                versionCache = version;
+                logger.debug('Version loaded successfully: ', versionCache);
                 //set community mode from manager API only if mode is not set from the command line
                 if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN
                     && version.edition === ServerSettings.MODE_COMMUNITY) {
@@ -86,6 +89,10 @@ class AuthHandler {
 
     static getRBAC() {
         return authorizationCache;
+    }
+
+    static getManagerVersion() {
+        return versionCache.version;
     }
 
     static isAuthorized(user, authorizedRoles) {
