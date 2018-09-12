@@ -22,6 +22,7 @@ class UploadPluginForm extends React.Component {
         yamlFile: PropTypes.object,
         yamlPlaceholder: PropTypes.string,
         errors: PropTypes.object,
+        loading: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
         wrapInForm: PropTypes.bool
     };
@@ -34,6 +35,7 @@ class UploadPluginForm extends React.Component {
         yamlFile: null,
         yamlPlaceholder: 'Provide the plugin\'s YAML file URL or click browse to select a file',
         errors: {},
+        loading: false,
         wrapInForm: true
     };
 
@@ -118,7 +120,8 @@ class UploadPluginForm extends React.Component {
 
         if (this.props.wrapInForm) {
             return (
-                <Form errors={this.props.errors} onErrorsDismiss={this.resetErrors.bind(this)}>
+                <Form errors={this.props.errors} onErrorsDismiss={this.resetErrors.bind(this)}
+                      loading={this.props.loading}>
                     {formFields}
                 </Form>
             );
