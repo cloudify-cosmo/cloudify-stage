@@ -149,8 +149,7 @@ class InputsStepContent extends Component {
                                         <Table.Row key={inputName}>
                                             <Table.Cell collapsing>
                                                 <Form.Field key={inputName} help={inputs[inputName].description}
-                                                            label={inputName} required={_.isNil(inputs[inputName].default)}>
-                                                </Form.Field>
+                                                            label={inputName} />
                                             </Table.Cell>
                                             <Table.Cell collapsing>
                                                 {this.getInputStatus(inputs[inputName].default)}

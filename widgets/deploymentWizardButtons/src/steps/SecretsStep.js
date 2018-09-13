@@ -132,6 +132,7 @@ class SecretsStepContent extends Component {
                 return (
                     <ResourceAction>
                         <Form.Input name={secretKey} value={secret.value} error={this.props.errors[secretKey]} fluid
+                                    placeholder='Provide secret value'
                                     onChange={(event, {name, value}) => this.handleChange(secretKey, 'value', value)} />
                     </ResourceAction>
                 );

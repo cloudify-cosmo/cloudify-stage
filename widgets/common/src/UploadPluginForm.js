@@ -24,7 +24,8 @@ class UploadPluginForm extends React.Component {
         errors: PropTypes.object,
         loading: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
-        wrapInForm: PropTypes.bool
+        wrapInForm: PropTypes.bool,
+        addRequiredMarks: PropTypes.bool
     };
 
     static defaultProps = {
@@ -36,7 +37,8 @@ class UploadPluginForm extends React.Component {
         yamlPlaceholder: 'Provide the plugin\'s YAML file URL or click browse to select a file',
         errors: {},
         loading: false,
-        wrapInForm: true
+        wrapInForm: true,
+        addRequiredMarks: true
     };
 
     static NO_ERRORS = {errors: {}};
@@ -89,7 +91,7 @@ class UploadPluginForm extends React.Component {
         let {Container, Form, Label} = Stage.Basic;
 
         const formFields = [
-            <Form.Field label="Wagon file" required key='wagon'
+            <Form.Field label="Wagon file" required={this.props.addRequiredMarks} key='wagon'
                         error={this.props.errors.wagonUrl}>
                 <Form.UrlOrFile name="wagon" value={this.props.wagonUrl}
                                 placeholder={this.props.wagonPlaceholder}
@@ -103,7 +105,7 @@ class UploadPluginForm extends React.Component {
                 />
             </Form.Field>
             ,
-            <Form.Field label="YAML file" required key='yaml'
+            <Form.Field label="YAML file" required={this.props.addRequiredMarks} key='yaml'
                         error={this.props.errors.yamlUrl}>
                 <Form.UrlOrFile name="yaml" value={this.props.yamlUrl}
                     placeholder={this.props.yamlPlaceholder}
