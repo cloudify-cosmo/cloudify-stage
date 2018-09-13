@@ -116,11 +116,12 @@ class UpdateDeploymentModal extends React.Component {
 
     _handleInputChange(proxy, field) {
         let fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
-        if (field.className === Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME) {
-            this.setState({deploymentInputs: {...this.state.deploymentInputs, ...fieldNameValue}});
-        } else {
-            this.setState(fieldNameValue);
-        }
+        this.setState(fieldNameValue);
+    }
+
+    _handleDeploymentInputChange(proxy, field) {
+        let fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
+        this.setState({deploymentInputs: {...this.state.deploymentInputs, ...fieldNameValue}});
     }
 
     _getDeploymentInputs(blueprintPlanInputs) {
@@ -271,8 +272,7 @@ class UpdateDeploymentModal extends React.Component {
                                                 label={input.name} required={_.isNil(input.default)}>
                                         <Form.Input name={input.name} placeholder={Stage.Common.JsonUtils.getStringValue(input.default || '')}
                                                     value={this.state.deploymentInputs[input.name]}
-                                                    onChange={this._handleInputChange.bind(this)}
-                                                    className={Stage.Common.DeployBlueprintModal.DEPLOYMENT_INPUT_CLASSNAME} />
+                                                    onChange={this._handleDeploymentInputChange.bind(this)} />
                                     </Form.Field>
                                 );
                             })
