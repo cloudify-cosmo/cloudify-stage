@@ -24,7 +24,7 @@ class DeployBlueprintModal extends React.Component {
         deploymentInputs: [],
         visibility: Stage.Common.Consts.defaultVisibility,
         skipPluginsValidation: false
-    }
+    };
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired,

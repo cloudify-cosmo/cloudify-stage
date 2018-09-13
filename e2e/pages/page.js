@@ -123,7 +123,7 @@ module.exports = {
             },
             props: {
                 emptyFieldsError: 'Please provide the widget\'s archive URL or select a file',
-                invalidURIError: 'Unable to determine filename from url test',
+                invalidURIError: 'Please provide valid URL for widget\'s archive',
                 incorrectFilesError: 'The following files are required for widget registration: widget.js, widget.png',
                 widgetAlreadyInstalledError: 'Widget testWidget is already installed',
                 fileLabelString: 'File',
