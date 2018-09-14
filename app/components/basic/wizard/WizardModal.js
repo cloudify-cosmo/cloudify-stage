@@ -67,7 +67,7 @@ export default class WizardModal extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        if (prevProps.open && !this.props.open) { // reset wizard on close
             this.setState({...WizardModal.initialState(this.props.steps)});
         }
     }
