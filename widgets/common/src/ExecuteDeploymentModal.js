@@ -31,7 +31,13 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            this.setState(ExecuteDeploymentModal.initialState());
+            let params = _.mapValues(
+                _.get(nextProps.workflow, 'parameters', {}),
+                (parameterData) =>
+                    !_.isUndefined(parameterData.default)
+                    ? Stage.Common.JsonUtils.getStringValue(parameterData.default)
+                    : '');
+            this.setState({...ExecuteDeploymentModal.initialState, params});
         }
     }
 
@@ -51,32 +57,33 @@ export default class ExecuteDeploymentModal extends React.Component {
             return false;
         }
 
-        //Check required parameters has value
-        var errors = {};
+        // Check required parameters has value
+        let errors = {};
         _.forEach(this.props.workflow.parameters, (param, name) => {
-            if(this.isParamRequired(param) && !this.state.params[name]){
-                errors[name] = `Please provide ${name}`;
+            if(this.isParamRequired(param) && _.isEmpty(this.state.params[name])) {
+                errors[name] = `Please provide value for '${name}'`;
             }
         });
-
         if (!_.isEmpty(errors)){
             this.setState({errors: errors});
             return false;
         }
 
         this.setState({loading: true});
+        const {JsonUtils, DeploymentActions} = Stage.Common;
 
-        // Attempt to parse params to json
-        var paramsJson = {};
-        _.map(this.state.params, (param,name) => {
-            paramsJson[name] = Stage.Common.JsonUtils.stringToJson((param));
+        // Parse params to typed values (booleans, integers, objects/arrays or strings)
+        // and remove parameters which are not changed (the same as default values)
+        let paramsJson = {};
+        _.forEach(this.state.params, (value, name) => {
+            const defaultValue = this.props.workflow.parameters[name].default;
+            if (this.isParamRequired(this.props.workflow.parameters[name]) ||
+                !_.isEqual(JsonUtils.getStringValue(value), JsonUtils.getStringValue(defaultValue))) {
+                paramsJson[name] = JsonUtils.getTypedValue(value);
+            }
         });
 
-        // Note that this.setState() is asynchronous and we cannot be sure that
-        // the state changes before we call doExecute
-        this.setState({params: paramsJson});
-
-        var actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        const actions = new DeploymentActions(this.props.toolbox);
         actions.doExecute(this.props.deployment, this.props.workflow, paramsJson, this.state.force).then(()=>{
             this.setState({loading: false, errors: {}});
             this.props.onHide();
@@ -92,7 +99,7 @@ export default class ExecuteDeploymentModal extends React.Component {
 
         switch (parameter.type){
             case 'boolean':
-                return GenericField.BOOLEAN_LIST_TYPE;
+                return GenericField.BOOLEAN_TYPE;
             case 'integer':
                 return GenericField.NUMBER_TYPE;
             default:
@@ -101,11 +108,9 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     getParameterPlaceholder(defaultValue){
-        if(_.isString(defaultValue)){
-            return defaultValue;
-        } else if(!_.isUndefined(defaultValue)){
-            return Stage.Common.JsonUtils.stringify(defaultValue, null, true);
-        }
+        return _.isUndefined(defaultValue)
+            ? null
+            : Stage.Common.JsonUtils.getStringValue(defaultValue);
     }
 
     isParamRequired(parameter){
@@ -117,9 +122,10 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message, ApproveButton, CancelButton, GenericField} = Stage.Basic;
+        let {Modal, Icon, Form, Message, ApproveButton, CancelButton, GenericField, RevertToDefaultIcon} = Stage.Basic;
+        let {JsonUtils} = Stage.Common;
 
-        var workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
+        const workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="executeWorkflowModal">
                 <Modal.Header>
@@ -136,32 +142,37 @@ export default class ExecuteDeploymentModal extends React.Component {
                         }
 
                         {
-                            _.map(workflow.parameters,(parameter,name)=>{
+                            _.map(workflow.parameters, (parameter, name) => {
+                                // TODO: Add RevertToDefaultIcon
+                                // const value = JsonUtils.getStringValue(this.state.params[name]);
+                                // const defaultValue = JsonUtils.getStringValue(parameter.default);
+                                // const revertToDefault = () => this.handleInputChange(null, {name, value: defaultValue});
+                                //
+                                // icon={<RevertToDefaultIcon value={value} defaultValue={defaultValue}
+                                //                            onClick={revertToDefault} />}
+
                                 return (
-                                    <Form.Field key={name} error={this.state.errors[name]}>
-                                        <GenericField name={name}
-                                                      label={name}
-                                                      description={parameter.description}
-                                                      type={this.getGenericFieldType(parameter)}
-                                                      value={this.state.params[name]}
-                                                      placeholder={this.getParameterPlaceholder(parameter.default)}
-                                                      required={this.isParamRequired(parameter)}
-                                                      onChange={this.handleInputChange.bind(this)} />
-                                    </Form.Field>
+                                    <GenericField name={name}
+                                                  label={name}
+                                                  key={name}
+                                                  error={!!this.state.errors[name]}
+                                                  description={parameter.description}
+                                                  type={this.getGenericFieldType(parameter)}
+                                                  value={this.state.params[name]}
+                                                  placeholder={this.getParameterPlaceholder(parameter.default)}
+                                                  required={this.isParamRequired(parameter)}
+                                                  onChange={this.handleInputChange.bind(this)} />
                                 );
                             })
                         }
-                        <Form.Field key="force">
-                            <GenericField
-                                name="force"
-                                label="force"
-                                description=""
-                                type={GenericField.BOOLEAN_TYPE}
-                                value={this.state.force}
-                                onChange={(event, field) => {
-                                    this.setState({force: field.checked});
-                                }} />
-                        </Form.Field>
+
+                        <GenericField name="force"
+                                      label="force"
+                                      key="force"
+                                      description=""
+                                      type={GenericField.BOOLEAN_TYPE}
+                                      value={this.state.force}
+                                      onChange={(event, field) => this.setState({force: field.checked})} />
                     </Form>
                 </Modal.Content>
 
