@@ -36,6 +36,7 @@ import PopupConfirm from './PopupConfirm';
 import PopupHelp from './PopupHelp';
 import PageFilter from './PageFilter';
 import CopyToClipboardButton from './CopyToClipboardButton';
+import RevertToDefaultIcon from './RevertToDefaultIcon';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
 import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
 import {Link} from 'react-router-dom';
@@ -92,9 +93,10 @@ export {
     PopupMenu,
     Portal,
     Progress,
-    ResourceVisibility,
     Radio,
+    ResourceVisibility,
     ReadmeModal,
+    RevertToDefaultIcon,
     Segment,
     Sidebar,
     SplitterLayout,
