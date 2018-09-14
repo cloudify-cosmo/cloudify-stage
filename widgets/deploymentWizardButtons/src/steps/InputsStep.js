@@ -109,19 +109,19 @@ class InputsStepContent extends Component {
         const inputs = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
         const noInputs = _.isEmpty(inputs);
 
-        const ResetToDefaultIcon = (props) => {
+        const RevertToDefaultIcon = (props) => {
             let {Icon, Popup} = Stage.Basic;
             let {JsonUtils} = Stage.Common;
 
             const isDefaultValueDefined = !_.isNil(props.defaultValue);
             const isValueTheSameAsDefaultValue = _.isEqual(JsonUtils.getStringValue(props.value),
                                                            JsonUtils.getStringValue(props.defaultValue));
-            const resetToDefault = (event, inputName, defaultValue) =>
+            const revertToDefault = (event, inputName, defaultValue) =>
                 this.handleChange(event, {name: inputName, value: JsonUtils.getStringValue(defaultValue)});
 
             return isDefaultValueDefined && !isValueTheSameAsDefaultValue
                 ?
-                    <Popup trigger={<Icon name='undo' link onClick={(event) => resetToDefault(event, props.inputName, props.defaultValue)} />}>
+                    <Popup trigger={<Icon name='undo' link onClick={(event) => revertToDefault(event, props.inputName, props.defaultValue)} />}>
                         Revert to default value
                     </Popup>
                 : null;
@@ -156,7 +156,7 @@ class InputsStepContent extends Component {
                                             </Table.Cell>
                                             <Table.Cell>
                                                 <Form.Input name={inputName} error={this.props.errors[inputName]} fluid
-                                                            icon={<ResetToDefaultIcon inputName={inputName}
+                                                            icon={<RevertToDefaultIcon inputName={inputName}
                                                                                       value={this.props.stepData[inputName]}
                                                                                       defaultValue={inputs[inputName].default}/>}
                                                             value={this.props.stepData[inputName]}
