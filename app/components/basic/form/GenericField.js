@@ -175,6 +175,7 @@ export default class GenericField extends Component {
      * @property {string} label field's label to show above the field
      * @property {string} name name of the input field
      * @property {string} [placeholder=''] specifies a short hint that describes the expected value of an input field
+     * @property {string} [error=false] specifies if a field should be marked as field with error
      * @property {string} [type=GenericField.STRING_TYPE] specifies type of the field
      * @property {string} [icon=null] additional icon in right side of the input field
      * @property {string} [description=''] fields description showed in popup when user hovers field
@@ -189,6 +190,7 @@ export default class GenericField extends Component {
         label: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
         placeholder: PropTypes.string,
+        error: PropTypes.bool,
         type: PropTypes.string,
         icon: PropTypes.string,
         description: PropTypes.string,
@@ -205,6 +207,7 @@ export default class GenericField extends Component {
 
     static defaultProps = {
         placeholder: '',
+        error: false,
         type: GenericField.STRING_TYPE,
         icon: null,
         description: '',
@@ -301,7 +304,7 @@ export default class GenericField extends Component {
             this.props.type === GenericField.NUMBER_TYPE ||
             this.props.type === GenericField.PASSWORD_TYPE) {
 
-            field = <Input icon={this.props.icon} iconPosition={this.props.icon?'left':undefined} name={this.props.name}
+            field = <Input icon={this.props.icon} name={this.props.name}
                            type={this.props.type === GenericField.STRING_TYPE?'text':this.props.type}
                            placeholder={this.props.placeholder} value={this.props.value === null ? '' : this.props.value}
                            onChange={this._handleInputChange.bind(this)}
@@ -347,7 +350,8 @@ export default class GenericField extends Component {
             <Form.Field className={this.props.name}
                         help={this.props.description}
                         label={this.props.label}
-                        required={this.props.required}>
+                        required={this.props.required}
+                        error={this.props.error}>
                 {field}
             </Form.Field>
         );
