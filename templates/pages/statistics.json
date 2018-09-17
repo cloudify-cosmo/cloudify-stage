@@ -3,7 +3,7 @@
   "widgets": [{
     "definition": "filter",
     "name": "Nodes filter",
-    "height": 5,
+    "height": 3,
     "width": 8,
     "y": 0,
     "x": 0,
@@ -15,7 +15,7 @@
   }, {
     "definition": "timeFilter",
     "name": "Time filter",
-    "height": 5,
+    "height": 3,
     "width": 4,
     "y": 0,
     "x": 8,

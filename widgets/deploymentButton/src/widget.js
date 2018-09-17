@@ -7,7 +7,7 @@ Stage.defineWidget({
     id: 'deploymentButton',
     name: 'Create deployment button',
     description: 'Adds button to create new deployment',
-    initialWidth: 2,
+    initialWidth: 3,
     initialHeight: 4,
     showHeader: false,
     showBorder: false,

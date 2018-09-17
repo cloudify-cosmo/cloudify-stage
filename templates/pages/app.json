@@ -2,11 +2,19 @@
   "name": "Dashboard",
   "widgets": [
     {
+      "name": "Deployment Wizard Buttons",
+      "width": 2,
+      "height": 14,
+      "definition": "deploymentWizardButtons",
+      "x": 0,
+      "y": 0
+    },
+    {
       "name": "Number of blueprints",
       "width": 2,
       "height": 8,
       "definition": "blueprintNum",
-      "x": 0,
+      "x": 2,
       "y": 0,
       "configuration":{
         "page":"local_blueprints"
@@ -17,7 +25,7 @@
       "width": 2,
       "height": 8,
       "definition": "deploymentNum",
-      "x": 2,
+      "x": 4,
       "y": 0,
       "configuration":{
         "page":"deployments"
@@ -28,7 +36,7 @@
       "width": 2,
       "height": 8,
       "definition": "pluginsNum",
-      "x": 4,
+      "x": 6,
       "y": 0,
       "configuration":{
         "page": "system_resources"
@@ -39,7 +47,7 @@
       "width": 2,
       "height": 8,
       "definition": "serversNum",
-      "x": 6,
+      "x": 8,
       "y": 0
     },
     {
@@ -47,14 +55,6 @@
       "width": 2,
       "height": 8,
       "definition": "executionNum",
-      "x": 8,
-      "y": 0
-    },
-    {
-      "name": "Deployment Wizard Buttons",
-      "width": 2,
-      "height": 8,
-      "definition": "deploymentWizardButtons",
       "x": 10,
       "y": 0
     },
@@ -63,7 +63,7 @@
       "width": 2,
       "height": 4,
       "definition": "blueprintUploadButton",
-      "x": 0,
+      "x": 2,
       "y": 8
     },
     {
@@ -71,7 +71,7 @@
       "width": 2,
       "height": 4,
       "definition": "deploymentButton",
-      "x": 2,
+      "x": 4,
       "y": 8
     },
     {
@@ -79,7 +79,7 @@
       "width": 2,
       "height": 4,
       "definition": "pluginUploadButton",
-      "x": 4,
+      "x": 6,
       "y": 8
     },
     {

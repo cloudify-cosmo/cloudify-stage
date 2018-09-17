@@ -9,7 +9,7 @@ Stage.defineWidget({
     name: 'Resource filter',
     description: 'Adds a filter section for resources - blueprints, deployments, nodes, node instances and executions',
     initialWidth: 12,
-    initialHeight: 5,
+    initialHeight: 3,
     color: 'yellow',
     showHeader: false,
     showBorder: false,
