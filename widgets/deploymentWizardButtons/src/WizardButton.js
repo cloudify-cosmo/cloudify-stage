@@ -19,6 +19,8 @@ export default class WizardButton extends Component {
     static propTypes = {
         color: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
+        icon: PropTypes.string.isRequired,
+        wizardTitle: PropTypes.string.isRequired,
         steps: Stage.Basic.Wizard.Modal.propTypes.steps,
         toolbox: PropTypes.object.isRequired
     };
@@ -33,13 +35,18 @@ export default class WizardButton extends Component {
     }
 
     render() {
-        let {Wizard, Button} = Stage.Basic;
-        const {color, name, steps, toolbox} = this.props;
+        let {Button, Icon, Wizard} = Stage.Basic;
+        const {color, icon, name, steps, toolbox, wizardTitle} = this.props;
 
         return (
             <React.Fragment>
-                <Button content={name} color={color} onClick={this.openWizard.bind(this)} fluid />
-                <Wizard.Modal header={name} open={this.state.open} steps={steps}
+                <Button color={color} onClick={this.openWizard.bind(this)} labelPosition='left'
+                        size='large' icon
+                        className='widgetButton'>
+                    <Icon name={icon} size='large' />
+                    {name}
+                </Button>
+                <Wizard.Modal header={wizardTitle} open={this.state.open} steps={steps}
                               onClose={this.closeWizard.bind(this)} toolbox={toolbox} />
             </React.Fragment>
         );
