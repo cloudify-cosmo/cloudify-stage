@@ -51,6 +51,19 @@ function createStepActions(ActionsComponent, id) {
     return StepActionsComponent;
 }
 
+
+/**
+ * Function creating step object. Can be accessed using: `Stage.Basic.Wizard.Utils.createWizardStep`.
+ *
+ * @param {string} id step ID
+ * @param {string} title step name to be shown in header part (top) of the wizard
+ * @param {string} description step description to be shown in header part (top) of the wizard
+ * @param {React.Component} ContentComponent step component to be shown in content part (middle) of the wizard. Check {@link StepContent} for details about necessary props to provide
+ * @param {React.Component} ActionsComponent step component to be shown in action part (bottom) of the wizard. Check {@link StepActions} for details about necessary props to provide
+ *
+ * @return {{id: string, title: string, description: string, Content: React.Component, Actions: React.Component}}
+ * object describing step compatible with {@link WizardModal} steps prop
+ */
 export function createWizardStep(id,
                                  title,
                                  description,
