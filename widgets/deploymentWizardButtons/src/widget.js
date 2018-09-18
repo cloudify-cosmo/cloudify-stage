@@ -12,6 +12,13 @@ import ConfirmationStep from './steps/ConfirmationStep';
 import InstallStep from './steps/InstallStep';
 import React from 'react';
 
+const configurationDefaults = {
+    showHelloWorldWizardButton: true,
+    helloWorldWizardButtonLabel: 'Hello World Wizard',
+    showDeploymentWizardButton: true,
+    deploymentWizardButtonLabel: 'Deployment Wizard'
+};
+
 Stage.defineWidget({
     id: 'deploymentWizardButtons',
     name: 'Deployment Wizard Buttons',
@@ -26,13 +33,17 @@ Stage.defineWidget({
 
     initialConfiguration: [
         {id: 'showHelloWorldWizardButton', name: 'Show Hello World Wizard button',
-            default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+            default: configurationDefaults.showHelloWorldWizardButton,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: 'helloWorldWizardButtonLabel', name: 'Hello World Wizard button label',
-            default: 'Hello World Wizard', type: Stage.Basic.GenericField.STRING_TYPE},
+            default: configurationDefaults.helloWorldWizardButtonLabel,
+            type: Stage.Basic.GenericField.STRING_TYPE},
         {id: 'showDeploymentWizardButton', name: 'Show Deployment Wizard button',
-            default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+            default: configurationDefaults.showDeploymentWizardButton,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: 'deploymentWizardButtonLabel', name: 'Deployment Wizard button label',
-            default: 'Deployment Wizard', type: Stage.Basic.GenericField.STRING_TYPE}
+            default: configurationDefaults.deploymentWizardButtonLabel,
+            type: Stage.Basic.GenericField.STRING_TYPE}
     ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
 
@@ -56,17 +67,17 @@ Stage.defineWidget({
             InstallStep
         ];
         const {
-            showHelloWorldWizardButton = true,
-            showDeploymentWizardButton = true,
-            helloWorldWizardButtonLabel = 'Hello World Wizard',
-            deploymentWizardButtonLabel = 'Deployment Wizard'
+            showHelloWorldWizardButton = configurationDefaults.showHelloWorldWizardButton,
+            showDeploymentWizardButton = configurationDefaults.showDeploymentWizardButton,
+            helloWorldWizardButtonLabel = configurationDefaults.helloWorldWizardButtonLabel,
+            deploymentWizardButtonLabel = configurationDefaults.deploymentWizardButtonLabel
         } = widget.configuration;
 
         return (
             <React.Fragment>
             {
                 showHelloWorldWizardButton &&
-                <WizardButton color='green' icon='globe' name={helloWorldWizardButtonLabel}
+                <WizardButton color='red' icon='globe' name={helloWorldWizardButtonLabel}
                               wizardTitle='Hello World Wizard'
                               steps={helloWorldWizardSteps} toolbox={toolbox} />
             }
@@ -76,7 +87,7 @@ Stage.defineWidget({
             }
             {
                 showDeploymentWizardButton &&
-                <WizardButton color='violet' icon='wizard' name={deploymentWizardButtonLabel}
+                <WizardButton color='teal' icon='wizard' name={deploymentWizardButtonLabel}
                               wizardTitle='Deployment Wizard'
                               steps={deploymentWizardSteps}
                               toolbox={toolbox} />

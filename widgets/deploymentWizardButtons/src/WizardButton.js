@@ -40,9 +40,8 @@ export default class WizardButton extends Component {
 
         return (
             <React.Fragment>
-                <Button color={color} onClick={this.openWizard.bind(this)} labelPosition='left'
-                        size='large' icon
-                        className='widgetButton'>
+                <Button color={color} onClick={this.openWizard.bind(this)}
+                        labelPosition='left' icon className='widgetButton'>
                     <Icon name={icon} size='large' />
                     {name}
                 </Button>
