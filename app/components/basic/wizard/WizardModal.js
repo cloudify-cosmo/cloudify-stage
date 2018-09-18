@@ -8,6 +8,28 @@ import React, { Component } from 'react';
 import {ErrorMessage, Confirm, Modal, Step} from './../index';
 import '../../styles/Wizard.css';
 
+/**
+ * WizardModal component allows you to present step-by-step process in modal window providing convenient way
+ * to navigate between steps and store step's data during the process.
+ *
+ * Steps have to be constructed using {@link createWizardStep} function.
+ *
+ * ## Access
+ * `Stage.Basic.Wizard.Modal`
+ *
+ * ## Usage
+ *
+ * ![WizardModal](manual/asset/wizard/WizardModal_0.png)
+ * ```
+ * const wizardTitle = 'Hello World Wizard';
+ * const helloWorldWizardSteps = [
+ *     InfrastructureStep, PluginsStep, SecretsStep, InputsStep, ConfirmationStep, InstallStep
+ * ];
+ *
+ * <Wizard.Modal header={wizardTitle} open={this.state.open} steps={helloWorldWizardSteps}
+ *               onClose={this.closeWizard.bind(this)} toolbox={toolbox} />
+ *```
+ */
 export default class WizardModal extends Component {
 
     constructor(props) {
@@ -16,6 +38,12 @@ export default class WizardModal extends Component {
         this.state = WizardModal.initialState(props.steps);
     }
 
+    /**
+     * @property {boolean} open Controls whether or not the wizard modal is displayed
+     * @property {function(event: SyntheticEvent, data: object)} onClose Function called when wizard is to be closed
+     * @property {object[]} steps List of objects describing the steps (@see wizardUtils.createWizardStep function for details)
+     * @property {object} toolbox Toolbox object
+     */
     static propTypes = {
         open: PropTypes.bool.isRequired,
         onClose: PropTypes.func.isRequired,
@@ -29,8 +57,17 @@ export default class WizardModal extends Component {
         toolbox: PropTypes.object.isRequired
     };
 
+    /**
+     * Active step state
+     */
     static ACTIVE_STATE = 'active';
+    /**
+     * Completed step state
+     */
     static COMPLETED_STATE = 'completed';
+    /**
+     * Disabled step state
+     */
     static DISABLED_STATE = 'disabled';
 
     static initialState = (steps) => {
@@ -58,6 +95,10 @@ export default class WizardModal extends Component {
         };
     };
 
+    /**
+     * @param {string} id step ID
+     * @return {string} step name used in wizard state
+     */
     static getStepNameById(id) {
         return `${id}Step`;
     }
@@ -72,6 +113,10 @@ export default class WizardModal extends Component {
         }
     }
 
+    /**
+     * @param {string} index step index in steps list
+     * @return {string} step name used in wizard state
+     */
     getStepNameByIndex(index) {
         return WizardModal.getStepNameById(this.props.steps[index].id);
     }
@@ -84,6 +129,11 @@ export default class WizardModal extends Component {
         this.setState({showCloseModal: false});
     }
 
+    /**
+     * Function called on click on Start Over action button. Changes WizardModal state.
+     *
+     * @param {boolean} resetData If set to true, then wizard data will be reset
+     */
     onStartOver(resetData) {
         if (resetData) {
             this.setState({...WizardModal.initialState(this.props.steps)});
@@ -107,6 +157,13 @@ export default class WizardModal extends Component {
         }
     }
 
+    /**
+     * Function called on click on Next action button. Changes WizardModal state by merging stepOutputData with wizardData
+     * changing state of current step to WizardModal.COMPLETED_STATE and incrementing index of active step.
+     *
+     * @param {string} id step ID
+     * @param {object} [stepOutputData] object with step data to be merged into wizardData
+     */
     onNext(id, stepOutputData) {
         if (this.getStepNameByIndex(this.state.activeStepIndex) !== WizardModal.getStepNameById(id)) {
             return;
@@ -131,6 +188,13 @@ export default class WizardModal extends Component {
         });
     }
 
+    /**
+     * Function called on click on Back action button. Changes WizardModal state by merging stepOutputData with wizardData
+     * changing state of current step to WizardModal.COMPLETED_STATE and decrementing index of active step.
+     *
+     * @param {string} id step ID
+     * @param {object} [stepOutputData] object with step data to be merged into wizardData
+     */
     onPrev(id, stepOutputData) {
         if (this.getStepNameByIndex(this.state.activeStepIndex) !== WizardModal.getStepNameById(id)) {
             return;
@@ -154,6 +218,13 @@ export default class WizardModal extends Component {
         });
     }
 
+    /**
+     * Function called to show error in wizard. Changes WizardModal state to show error message and/or errors in the form
+     *
+     * @param {string} id step ID
+     * @param {string} errorMessage error message to be shown in wizard
+     * @param {object} [errors=undefined] object with errors used to mark fields in form as 'containing errors'
+     */
     onError(id, errorMessage, errors) {
         if (this.getStepNameByIndex(this.state.activeStepIndex) !== WizardModal.getStepNameById(id)) {
             return;
@@ -169,14 +240,27 @@ export default class WizardModal extends Component {
         }
     }
 
+    /**
+     * Function called to turn on loading state
+     */
     onLoading() {
         return new Promise((resolve) => this.setState({loading: true}, resolve));
     }
 
+    /**
+     * Function called to turn off loading state
+     */
     onReady() {
         return new Promise((resolve) => this.setState({loading: false}, resolve));
     }
 
+    /**
+     * Function called on step content update to update wizard state - either stepData or wizardData
+     *
+     * @param {string} id step ID
+     * @param {string} data object with step data
+     * @param {object} [internal=true] If true then data is treated as step internal data, if false, then as wizard global data
+     */
     onStepDataChanged(id, data, internal = true) {
         if (internal) { // internal step data => state[stepId]
             const stepName = WizardModal.getStepNameById(id);
@@ -190,6 +274,12 @@ export default class WizardModal extends Component {
         }
     }
 
+    /**
+     * Function called to provide current step data from wizard
+     *
+     * @param {string} id step ID
+     * @return {Promise<{stepData: object}, error>} Promise containing step data object
+     */
     fetchStepData(id) {
         const stepName = WizardModal.getStepNameById(id);
         const stepState = this.state[stepName];
