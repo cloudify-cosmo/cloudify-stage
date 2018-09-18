@@ -40,7 +40,7 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
-                <Button color='green' icon='rocket' content='Create Deployment' labelPosition='left' fluid
+                <Button color='green' icon='rocket' content='Create Deployment' labelPosition='left' className='widgetButton'
                         loading={this.state.loading} onClick={this._createDeployment.bind(this)} />
 
                 <DeployModal open={this.state.open} blueprints={this.state.blueprints}

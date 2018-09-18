@@ -20,9 +20,9 @@ Stage.defineWidget({
         const composerUrl = `${location.protocol}//${location.hostname}/composer`;
 
         return (
-            <Button className="labeled icon" color="blue" fluid icon="external"
+            <Button labelPosition='left' color='blue' className='widgetButton' icon='external'
                     onClick={()=>{window.open(composerUrl, '_blank')}}
-                    content="Cloudify Composer"/>
+                    content="Cloudify Composer" />
         );
 
     }

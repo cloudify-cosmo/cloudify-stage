@@ -18,8 +18,8 @@ export default class extends Component {
         const content = this.props.activate ? 'Activate Maintenance Mode' : 'Dectivate Maintenance Mode';
 
         return (
-                <Button color='orange' icon='doctor' content={content}
-                        labelPosition='left' fluid onClick={this.props.onClick} />
+                <Button color='orange' icon='doctor' content={content} className='widgetButton'
+                        labelPosition='left' onClick={this.props.onClick} />
         );
     }
 }
