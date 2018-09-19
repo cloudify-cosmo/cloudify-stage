@@ -292,9 +292,10 @@ export default class WizardModal extends Component {
         let ActiveStep = steps[this.state.activeStepIndex];
         const activeStepName = this.getStepNameByIndex(this.state.activeStepIndex);
         const activeStepObject = this.state[activeStepName];
+        const className = `wizardModal ${activeStepName}`;
 
         return (
-            <Modal open={this.props.open} onClose={this.props.onClose} className='wizardModal'
+            <Modal open={this.props.open} onClose={this.props.onClose} className={className}
                    closeIcon={false} closeOnEscape={false} closeOnDimmerClick={false}>
                 <Modal.Header>
                     {this.props.header}
