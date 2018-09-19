@@ -9,7 +9,7 @@ Displays the following information about a specific blueprint:
 * **Creator user-name**
 * **Main blueprint file name** (as the blueprint archive can contain multiple files)
 
-![blueprint-info](https://docs.cloudify.co/staging/next/images/ui/widgets/blueprint-info.png)
+![blueprint-info](https://docs.cloudify.co/staging/dev/images/ui/widgets/blueprint-info.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds
