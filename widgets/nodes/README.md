@@ -3,7 +3,7 @@ Displays a list of the existing nodes in the current tenant, according to the us
 
 The nodes are listed by name. When you select a node, either by clicking its name in the table or by clicking it in the Topology pane, additional data about the node’s instances is displayed: The instances names, statuses, relationships and runtime properties. 
 
-![nodes-list](https://docs.cloudify.co/staging/next/images/ui/widgets/nodes-list-2.png)
+![nodes-list](https://docs.cloudify.co/staging/dev/images/ui/widgets/nodes-list-2.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds

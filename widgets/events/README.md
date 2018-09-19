@@ -1,7 +1,7 @@
 ### Events and Logs
 Displays the logs and events of all the executions in the current tenant, according to the user’s permissions. You can configure the fields that are displayed and can choose to indicate in colors success and failure messages.
 
-![events-logs](https://docs.cloudify.co/staging/next/images/ui/widgets/events-logs-2.png)
+![events-logs](https://docs.cloudify.co/staging/dev/images/ui/widgets/events-logs-2.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 2 seconds

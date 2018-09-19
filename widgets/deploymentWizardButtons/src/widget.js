@@ -25,6 +25,7 @@ Stage.defineWidget({
     description: 'Shows buttons to start deployment wizard',
     initialWidth: 2,
     initialHeight: 8,
+    hasReadme: true,
     hasStyle: true,
     isReact: true,
     showHeader: false,
