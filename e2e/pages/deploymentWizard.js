@@ -77,6 +77,8 @@ module.exports = {
             selector: 'div.wizardModal.blueprintStep',
             elements: {
                 blueprintFile: "input[name='blueprintFile']",
+                blueprintYamlDropdownTriggerElement: "div[name='blueprintFileName']",
+                blueprintYamlDropdownElement: "div[name='blueprintFileName'] div[role='listbox']",
                 loadingBlock: 'form.ui.loading'
             },
             commands: [
@@ -84,6 +86,12 @@ module.exports = {
                     setBlueprintPackage: function (fileName) {
                         this.setElementValue('@blueprintFile', fileName)
                             .waitForElementNotPresent('@loadingBlock');
+                        return this;
+                    },
+                    setBlueprintYamlFile: function (yamlFile) {
+                        this.selectOptionInDropdown('@blueprintYamlDropdownTriggerElement',
+                                                    this.elements.blueprintYamlDropdownElement.selector,
+                                                    yamlFile);
                         return this;
                     }
                 }

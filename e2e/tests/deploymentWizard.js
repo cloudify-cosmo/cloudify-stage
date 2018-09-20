@@ -125,7 +125,8 @@ module.exports = {
             .goToNextStep('blueprintStep')
             .checkIfErrorPresent(expectedBlueprintErrorMessage);
         deploymentWizard.section.blueprintStep
-            .setBlueprintPackage(blueprintPackage);
+            .setBlueprintPackage(blueprintPackage)
+            .setBlueprintYamlFile('ec2-blueprint.yaml');
         deploymentWizard
             .goToNextStep('pluginsStep');
 
@@ -140,12 +141,10 @@ module.exports = {
         // Inputs step
         deploymentWizard.section.inputsStep
             .checkIfInputPresent('webserver_port', false)
-            .checkIfInputPresent('agent_user', true)
-            .setInputValue('agent_user', 'user')
-            .checkIfInputPresent('image', true)
-            .setInputValue('image', 'circle')
-            .checkIfInputPresent('flavor', true)
-            .setInputValue('flavor', 'sweet');
+            .checkIfInputPresent('agent_user', false)
+            .checkIfInputPresent('image_id', true)
+            .setInputValue('image_id', 'circle')
+            .checkIfInputPresent('instance_type', false);
         deploymentWizard
             .goToNextStep('confirmStep');
 
@@ -159,7 +158,7 @@ module.exports = {
 
         // Install step
         const expectedInstallErrorMessage
-            = 'Required plugin cloudify-openstack-plugin, version 2.0.1 is not installed on the manager';
+            = 'Required plugin cloudify-aws-plugin, version 1.4.3 is not installed on the manager';
         deploymentWizard.section.installStep
             .checkIfInstallInProgress()
             .checkIfInstallFailed();
