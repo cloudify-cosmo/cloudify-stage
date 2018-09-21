@@ -8,7 +8,7 @@ import MenuAction from './MenuAction';
 import ActiveExecutionStatus from './ActiveExecutionStatus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 
-export default class extends React.Component {
+export default class DeploymentsSegment extends React.Component {
 
     static propTypes = {
         data: PropTypes.object.isRequired,
@@ -36,6 +36,7 @@ export default class extends React.Component {
 
     render() {
         let {DataSegment, ResourceVisibility} = Stage.Basic;
+        const {NodeInstancesConsts} = Stage.Common;
 
         return (
             <DataSegment totalSize={this.props.data.total}
@@ -71,24 +72,18 @@ export default class extends React.Component {
                                         <p>{item.created_by}</p>
                                     </div>
                                     <div className="four wide column">
-                                        <h5 className="ui icon header">Nodes ({item.nodeSize})</h5>
+                                        <h5 className="ui icon header">Node Instances ({item.nodeSize})</h5>
                                         <div className="ui four column grid nodesStates">
-                                            <div className="column center aligned">
-                                                <NodeState icon="checkmark" title="running" state="started" color="green"
-                                                           value={item.nodeStates.started}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="spinner" title="in progress" state="uninitialized or created" color="yellow"
-                                                           value={_.add(item.nodeStates.uninitialized, item.nodeStates.created)}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="exclamation" title="warning" state="undefined" color="orange"
-                                                           value={0}/>
-                                            </div>
-                                            <div className="column center aligned">
-                                                <NodeState icon="remove" title="error" state="deleted or stopped" color="red"
-                                                           value={_.add(item.nodeStates.deleted, item.nodeStates.stopped)}/>
-                                            </div>
+                                            {
+                                                _.map(NodeInstancesConsts.groupStates, (groupState) =>
+                                                    <div key={groupState.name} className="column center aligned">
+                                                        <NodeState icon={groupState.icon} title={groupState.name}
+                                                                   state={_.join(groupState.states, ', ')} color={groupState.color}
+                                                                   value={_.sum(_.map(groupState.states, (state) =>
+                                                                       _.isNumber(item.nodeStates[state]) ? item.nodeStates[state] : 0))}/>
+                                                    </div>
+                                                )
+                                            }
                                         </div>
                                     </div>
 
@@ -116,10 +111,11 @@ function NodeState(props) {
     let value = props.value ? props.value : 0;
     let disabled = value === 0;
     let color = disabled ? 'grey' : props.color;
+    const areManyStates = _.size(_.words(props.state)) > 1;
 
     return (
         <Popup header={_.capitalize(props.title)}
-               content={`${value} node instances in ${props.state} state`}
+               content={<span><strong>{value}</strong> node instances in <strong>{props.state}</strong> state{areManyStates && 's'}</span>}
                trigger={
                    <Segment.Group className='nodeState' disabled={disabled}>
                        <Segment color={color} disabled={disabled} inverted>

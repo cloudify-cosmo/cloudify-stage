@@ -31,13 +31,11 @@ Stage.defineWidget({
         }
 
         let {PieGraph} = Stage.Basic.Graphs;
+        let {NodeInstancesConsts} = Stage.Common;
         let states = _.countBy(data.items, 'state');
-        let formattedData = [
-            {name: 'Started',     color: '#21ba45', value: _.get(states, 'started', 0)},
-            {name: 'In progress', color: '#fbbd08', value: _.get(states, 'uninitialized', 0) + _.get(states, 'created', 0)},
-            {name: 'Warning',     color: '#f2711c', value: 0},
-            {name: 'Error',       color: '#db2828', value: _.get(states, 'deleted', 0) + _.get(states, 'stopped', 0)}
-        ];
+        let formattedData = _.map(NodeInstancesConsts.groupStates, (groupState) =>
+            ({name: _.upperFirst(groupState.name), color: groupState.color, value: _.sum(_.map(groupState.states, (state) => _.isNumber(states[state]) ? states[state] : 0))})
+        );
 
         return (
             <PieGraph widget={widget} data={formattedData} toolbox={toolbox}/>
