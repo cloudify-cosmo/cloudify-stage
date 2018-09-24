@@ -71,8 +71,8 @@ export default class EventsTable extends React.Component {
                                             fieldsToShow.indexOf('Deployment') >= 0} />
                     <DataTable.Column label="Workflow" name="workflow_id" show={!this.props.data.executionId && fieldsToShow.indexOf('Workflow') >= 0} />
                     <DataTable.Column label="Operation" name="operation" show={fieldsToShow.indexOf('Operation') >= 0}/>
-                    <DataTable.Column label="Node Name" name="node_name" show={fieldsToShow.indexOf('Node Name') >= 0}/>
-                    <DataTable.Column label="Node Id" name="node_instance_id" show={fieldsToShow.indexOf('Node Id') >= 0}/>
+                    <DataTable.Column label="Node Id" name="node_name" show={fieldsToShow.indexOf('Node Id') >= 0}/>
+                    <DataTable.Column label="Node Instance Id" name="node_instance_id" show={fieldsToShow.indexOf('Node Instance Id') >= 0}/>
                     <DataTable.Column label="Message" show={fieldsToShow.indexOf('Message') >= 0}/>
 
                     {

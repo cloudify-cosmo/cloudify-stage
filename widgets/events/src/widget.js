@@ -24,8 +24,8 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_COLUMN_CONFIG('timestamp'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
-            items: ["Icon","Timestamp","Type","Blueprint","Deployment","Workflow","Operation","Node Name","Node Id","Message"],
-            default: 'Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node Name,Node Id,Message',
+            items: ["Icon","Timestamp","Type","Blueprint","Deployment","Workflow","Operation","Node Id","Node Instance Id","Message"],
+            default: 'Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node Id,Node Instance Id,Message',
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
         {id: "colorLogs", name: "Color message based on type", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "maxMessageLength", name: "Maximum message length before truncation", default: EventsTable.MAX_MESSAGE_LENGTH, type: Stage.Basic.GenericField.NUMBER_TYPE, min: 10}
@@ -48,7 +48,7 @@ Stage.defineWidget({
 
         let messageText = eventFilter.messageText;
         if (!_.isEmpty(messageText)) {
-            params.message = messageText;
+            params.message = `%${messageText}%`;
         }
 
         let logLevel = eventFilter.logLevel;
