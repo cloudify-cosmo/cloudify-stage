@@ -101,23 +101,6 @@
       "definition": "executions",
       "x": 0,
       "y": 12
-    },
-    {
-      "name": "Events/Logs Filter",
-      "width": 12,
-      "height": 5,
-      "definition": "eventsFilter",
-      "x": 0,
-      "y": 37
-    },
-    {
-      "name": "Events/Logs",
-      "width": 12,
-      "height": 29,
-      "definition": "events",
-      "x": 0,
-      "y": 42
     }
-
   ]
 }
