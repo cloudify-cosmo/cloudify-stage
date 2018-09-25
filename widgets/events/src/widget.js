@@ -36,14 +36,19 @@ Stage.defineWidget({
 
         let eventFilter = toolbox.getContext().getValue('eventFilter') || {};
 
-        let deploymentId = toolbox.getContext().getValue('deploymentId') || eventFilter.deploymentId;
+        let blueprintId = toolbox.getContext().getValue('blueprintId');
+        if (!_.isEmpty(blueprintId)) {
+            params.blueprint_id = blueprintId;
+        }
+
+        let deploymentId = toolbox.getContext().getValue('deploymentId');
         if (!_.isEmpty(deploymentId)) {
             params.deployment_id = deploymentId;
         }
 
-        let blueprintId = toolbox.getContext().getValue('blueprintId') || eventFilter.blueprintId;
-        if (!_.isEmpty(blueprintId)) {
-            params.blueprint_id = blueprintId;
+        let executionId = toolbox.getContext().getValue('executionId');
+        if (!_.isEmpty(executionId)) {
+            params.execution_id = executionId;
         }
 
         let messageText = eventFilter.messageText;
@@ -86,9 +91,7 @@ Stage.defineWidget({
 
         let blueprintId = CONTEXT_PARAMS.blueprint_id;
         let deploymentId = CONTEXT_PARAMS.deployment_id;
-
-        blueprintId = _.isArray(blueprintId) ? (blueprintId.length === 1 ? blueprintId[0] : "") : "";
-        deploymentId = _.isArray(deploymentId) ? (deploymentId.length === 1 ? deploymentId[0] : "") : "";
+        let executionId = CONTEXT_PARAMS.execution_id;
 
         let formattedData = {
             items: _.map (data.items, (item) => {
@@ -104,6 +107,7 @@ Stage.defineWidget({
             total : _.get(data, 'metadata.pagination.total', 0),
             blueprintId,
             deploymentId,
+            executionId,
             type: CONTEXT_PARAMS.type
         };
 
