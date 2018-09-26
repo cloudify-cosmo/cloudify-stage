@@ -186,17 +186,23 @@ export default class Filter extends React.Component {
         const configuration = this.props.configuration;
         const data = this.props.data;
 
-        let blueprintOptions = _.map(data.blueprints.items,
-            blueprint => ({ text: blueprint.id, value: blueprint.id }));
-        if (!configuration.allowMultipleSelection) {
-            blueprintOptions.unshift(EMPTY_OPTION);
+        let blueprintOptions = [];
+        if (configuration.filterByBlueprints) {
+            blueprintOptions = _.map(data.blueprints.items,
+                blueprint => ({text: blueprint.id, value: blueprint.id}));
+            if (!configuration.allowMultipleSelection) {
+                blueprintOptions.unshift(EMPTY_OPTION);
+            }
         }
         let blueprintId = this._getDropdownValue(data.blueprintId);
 
-        let deploymentOptions = _.map(data.deployments.items,
-            deployment => ({ text: deployment.id, value: deployment.id }));
-        if (!configuration.allowMultipleSelection) {
-            deploymentOptions.unshift(EMPTY_OPTION);
+        let deploymentOptions = [];
+        if (configuration.filterByDeployments) {
+            deploymentOptions = _.map(data.deployments.items,
+                deployment => ({text: deployment.id, value: deployment.id}));
+            if (!configuration.allowMultipleSelection) {
+                deploymentOptions.unshift(EMPTY_OPTION);
+            }
         }
         let deploymentId = this._getDropdownValue(data.deploymentId);
 
@@ -236,22 +242,28 @@ export default class Filter extends React.Component {
 
                 <Form size="small">
                     <Form.Group inline widths='equal'>
-                        <Form.Field>
-                            <Form.Dropdown search selection placeholder="Select Blueprint" fluid
-                                           value={blueprintId} id="blueprintFilterField"
-                                           options={blueprintOptions} onChange={this._selectBlueprint.bind(this)}
-                                           multiple={configuration.allowMultipleSelection} />
-                        </Form.Field>
-                        <Form.Field>
-                            <Form.Dropdown search selection placeholder="Select Deployment" fluid
-                                           value={deploymentId} id="deploymentFilterField"
-                                           options={deploymentOptions} onChange={this._selectDeployment.bind(this)}
-                                           multiple={configuration.allowMultipleSelection} />
-                        </Form.Field>
+                        {
+                            configuration.filterByBlueprints &&
+                            <Form.Field>
+                                <Form.Dropdown search selection placeholder="Blueprint" fluid
+                                               value={blueprintId} id="blueprintFilterField"
+                                               options={blueprintOptions} onChange={this._selectBlueprint.bind(this)}
+                                               multiple={configuration.allowMultipleSelection}/>
+                            </Form.Field>
+                        }
+                        {
+                            configuration.filterByDeployments &&
+                            <Form.Field>
+                                <Form.Dropdown search selection placeholder="Deployment" fluid
+                                               value={deploymentId} id="deploymentFilterField"
+                                               options={deploymentOptions} onChange={this._selectDeployment.bind(this)}
+                                               multiple={configuration.allowMultipleSelection}/>
+                            </Form.Field>
+                        }
                         {
                             configuration.filterByNodes &&
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Select Node" fluid
+                                <Form.Dropdown search selection placeholder="Node" fluid
                                                value={nodeId} id="nodeFilterField"
                                                options={nodeOptions} onChange={this._selectNode.bind(this)}
                                                multiple={configuration.allowMultipleSelection} />
@@ -260,7 +272,7 @@ export default class Filter extends React.Component {
                         {
                             configuration.filterByNodeInstances &&
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Select Node Instance" fluid
+                                <Form.Dropdown search selection placeholder="Node Instance" fluid
                                                value={nodeInstanceId} id="nodeInstanceFilterField"
                                                options={nodeInstanceOptions} onChange={this._selectNodeInstance.bind(this)}
                                                multiple={configuration.allowMultipleSelection} />
@@ -269,7 +281,7 @@ export default class Filter extends React.Component {
                         {
                             configuration.filterByExecutions &&
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Select Execution" fluid
+                                <Form.Dropdown search selection placeholder="Execution" fluid
                                                value={executionId} id="executionFilterField"
                                                options={executionOptions} onChange={this._selectExecution.bind(this)}
                                                multiple={configuration.allowMultipleSelection} />

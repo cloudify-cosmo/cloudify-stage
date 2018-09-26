@@ -17,8 +17,8 @@ Stage.defineWidget({
     
     fetchData:(widget,toolbox,params)=>{
         return Promise.all([
-            toolbox.getManager().doGetFull('/blueprints?_include=id'),
-            toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id'),
+            widget.configuration.filterByBlueprints ? toolbox.getManager().doGetFull('/blueprints?_include=id') : Promise.resolve({}),
+            widget.configuration.filterByDeployments ? toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id') : Promise.resolve({}),
             widget.configuration.filterByNodes ? toolbox.getManager().doGetFull('/nodes?_include=id,blueprint_id,deployment_id') : Promise.resolve({}),
             widget.configuration.filterByNodeInstances ? toolbox.getManager().doGetFull('/node-instances?_include=id,deployment_id,node_id') : Promise.resolve({}),
             widget.configuration.filterByExecutions ? toolbox.getManager().doGetFull('/executions?_include=id,blueprint_id,deployment_id,workflow_id') : Promise.resolve({})
@@ -38,6 +38,8 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('filter'),
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        {id: "filterByBlueprints",name: "Show blueprint filter", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: "filterByDeployments",name: "Show deployment filter", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "filterByExecutions",name: "Show execution filter", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "filterByNodes",name: "Show node filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "filterByNodeInstances",name: "Show node instance filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
