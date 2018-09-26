@@ -12,7 +12,7 @@ export default class Filter extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget, nextProps.widget)
+        return !_.isEqual(this.props.configuration, nextProps.configuration)
             || !_.isEqual(this.state, nextState)
             || !_.isEqual(this.props.data, nextProps.data);
     }
@@ -26,6 +26,8 @@ export default class Filter extends React.Component {
         this.props.toolbox.getEventBus().on('deployments:refresh', this._refreshData, this);
         this.props.toolbox.getEventBus().on('nodes:refresh', this._refreshData, this);
         this.props.toolbox.getEventBus().on('executions:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('events:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('topology:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
@@ -33,144 +35,200 @@ export default class Filter extends React.Component {
         this.props.toolbox.getEventBus().off('deployments:refresh', this._refreshData);
         this.props.toolbox.getEventBus().off('nodes:refresh', this._refreshData);
         this.props.toolbox.getEventBus().off('executions:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('events:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('topology:refresh', this._refreshData);
+    }
+
+    componentDidUpdate(prevProps) {
+        const oldAllowMultipleSelection = prevProps.configuration.allowMultipleSelection;
+        const newAllowMultipleSelection = this.props.configuration.allowMultipleSelection;
+
+        if (oldAllowMultipleSelection !== newAllowMultipleSelection) {
+            this.props.toolbox.getContext().setValue('blueprintId', null);
+            this.props.toolbox.getContext().setValue('deploymentId', null);
+            this.props.toolbox.getContext().setValue('nodeId', null);
+            this.props.toolbox.getContext().setValue('nodeInstanceId', null);
+            this.props.toolbox.getContext().setValue('executionId', null);
+            this.props.toolbox.getContext().setValue('depNodeId', null);
+        }
+    }
+
+    _updateResourceValue(valueName, resourcesName, changedIdNameInResource, changedIds) {
+        const data = this.props.data;
+        const context = this.props.toolbox.getContext();
+        const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
+        let value = context.getValue(valueName);
+
+        if (!_.isEmpty(data[valueName]) && !_.isEmpty(changedIds)) {
+            const selectedResources = _.filter(data[resourcesName].items,
+                (resource) => _.includes(data[valueName], resource.id));
+            let selectedResourceId = _.castArray(data[valueName]);
+
+            _.forEach(selectedResources, (resource) => {
+                if (!_.includes(changedIds, resource[changedIdNameInResource])) {
+                    if (allowMultipleSelection) {
+                        _.pull(selectedResourceId, resource.id);
+                    } else {
+                        selectedResourceId = null
+                    }
+                }
+            });
+
+            value = _.isEmpty(selectedResourceId)
+                ? null
+                : (allowMultipleSelection ? selectedResourceId : selectedResourceId[0]);
+            context.setValue(valueName, value);
+        }
+
+        return value;
+    }
+
+    _updateDeplomentNodeIdValue(selectedDeploymentId, selectedNodeId) {
+        const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
+        const context = this.props.toolbox.getContext();
+
+        if (!allowMultipleSelection) {
+            if (!_.isEmpty(selectedDeploymentId) && !_.isEmpty(selectedNodeId)) {
+                let oldDepNodeId = context.getValue('depNodeId');
+                let newDepNodeId = selectedNodeId + selectedDeploymentId;
+                if (oldDepNodeId !== newDepNodeId) {
+                    context.setValue('depNodeId', newDepNodeId);
+                }
+            } else {
+                context.setValue('depNodeId', null);
+            }
+        }
+    }
+    
+    _updateTopologyWidget(selectedNodeId) {
+        const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
+        
+        if (!allowMultipleSelection) {
+            this.props.toolbox.getEventBus().trigger('topology:selectNode', selectedNodeId);
+        }
     }
 
     _selectBlueprint(proxy, field){
-        var blueprintId = field.value;
-        if (_.isEmpty(blueprintId)) {
-            blueprintId = null;
+        let blueprintIds = !_.isEmpty(field.value) ? field.value : null;
+
+        if (!_.isEmpty(blueprintIds)) {
+            let selectedBlueprintIds =  _.castArray(blueprintIds);
+            let deploymentIds = this._updateResourceValue('deploymentId', 'deployments', 'blueprint_id', selectedBlueprintIds);
+            let nodeIds = this._updateResourceValue('nodeId', 'nodes', 'blueprint_id', selectedBlueprintIds);
+            this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'deployment_id', deploymentIds);
+            this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'node_id', nodeIds);
+            this._updateResourceValue('executionId', 'executions', 'blueprint_id', selectedBlueprintIds);
+
+            this._updateDeplomentNodeIdValue(deploymentIds, nodeIds);
         }
 
-        // Clear the selected deployment && execution if its not related to the selected blueprint
-        if (!_.isEmpty(blueprintId)) {
-            if (this.props.data.deploymentId) {
-                var currDeployment = _.find(this.props.data.deployments.items,{id:this.props.data.deploymentId});
-                if (currDeployment.blueprint_id !== blueprintId) {
-                    this.props.toolbox.getContext().setValue('deploymentId',null);
-                }
-            }
-
-            if (this.props.data.nodeId) {
-                var currNode = _.find(this.props.data.nodes.items,{id:this.props.data.nodeId});
-                if (currNode.blueprint_id !== blueprintId) {
-                    this.props.toolbox.getContext().setValue('nodeId',null);
-                    this.props.toolbox.getContext().setValue('nodeInstanceId',null);
-                }
-            }
-
-            if (this.props.data.executionId) {
-                var currExecution = _.find(this.props.data.executions.items,{id:this.props.data.executionId});
-                if (currExecution.blueprint_id !== blueprintId) {
-                    this.props.toolbox.getContext().setValue('executionId',null);
-                }
-            }
-        }
-
-        this.props.toolbox.getContext().setValue('blueprintId',blueprintId);
+        this.props.toolbox.getContext().setValue('blueprintId',blueprintIds);
     }
 
     _selectDeployment(proxy, field) {
-        var deploymentId = field.value;
-        if (_.isEmpty(deploymentId)) {
-            deploymentId = null;
+        let deploymentIds = !_.isEmpty(field.value) ? field.value : null;
+
+        if (!_.isEmpty(deploymentIds)) {
+            let selectedDeploymentIds =  _.castArray(deploymentIds);
+
+            let nodeIds = this._updateResourceValue('nodeId', 'nodes', 'deployment_id', selectedDeploymentIds);
+            this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'deployment_id', selectedDeploymentIds);
+            this._updateResourceValue('executionId', 'executions', 'deployment_id', selectedDeploymentIds);
+
+            this._updateDeplomentNodeIdValue(deploymentIds, nodeIds);
         }
 
-        if (!_.isEmpty(deploymentId)) {
-            if (this.props.data.nodeId) {
-                var node = _.find(this.props.data.nodes.items, {id: this.props.data.nodeId});
-                if (node.deployment_id !== deploymentId) {
-                    this.props.toolbox.getContext().setValue('depNodeId', null);
-                    this.props.toolbox.getContext().setValue('nodeId', null);
-                }
-            }
-
-            if (this.props.data.nodeInstanceId) {
-                var nodeInstance = _.find(this.props.data.nodeInstances.items, {id: this.props.data.nodeInstanceId});
-                if (nodeInstance.deployment_id !== deploymentId) {
-                    this.props.toolbox.getContext().setValue('nodeInstanceId', null);
-                }
-            }
-
-            // Clear the selected execution if its not related to the selected deployment
-            if (this.props.data.executionId) {
-                var currExecution = _.find(this.props.data.executions.items,{id:this.props.data.executionId});
-                if (currExecution.deployment_id !== deploymentId) {
-                    this.props.toolbox.getContext().setValue('executionId',null);
-                }
-            }
-        }
-
-        this.props.toolbox.getContext().setValue('deploymentId',deploymentId);
+        this.props.toolbox.getContext().setValue('deploymentId', deploymentIds);
     }
 
     _selectNode(proxy, field) {
-        var nodeId = field.value;
-        if (_.isEmpty(nodeId)) {
-            nodeId = null;
+        let nodeIds = !_.isEmpty(field.value) ? field.value : null;
+
+        if (!_.isEmpty(nodeIds)) {
+            let selectedNodeIds = _.castArray(nodeIds);
+
+            this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'node_id', selectedNodeIds);
+
+            this._updateDeplomentNodeIdValue(this.props.data.deploymentId, nodeIds);
         }
 
-        if (this.props.data.nodeInstanceId && !_.isEmpty(nodeId)) {
-            var nodeInstance = _.find(this.props.data.nodeInstances.items, {id: this.props.data.nodeInstanceId});
-            if (nodeInstance.node_id !== nodeId) {
-                this.props.toolbox.getContext().setValue('nodeInstanceId', null);
-            }
-        }
-
-        this.props.toolbox.getContext().setValue('nodeId', nodeId);
-        if (!_.isEmpty(this.props.data.deploymentId)) {
-            let depNodeId = nodeId + this.props.data.deploymentId;
-            this.props.toolbox.getContext().setValue('depNodeId', depNodeId);
-        }
+        this.props.toolbox.getContext().setValue('nodeId', nodeIds);
+        this._updateTopologyWidget(nodeIds);
     }
 
     _selectNodeInstance(proxy, field) {
-        var nodeInstanceId = field.value;
-        if (_.isEmpty(nodeInstanceId)) {
-            nodeInstanceId = null;
-        }
+        let nodeInstanceIds = !_.isEmpty(field.value) ? field.value : null;
 
-        this.props.toolbox.getContext().setValue('nodeInstanceId', nodeInstanceId);
+        this.props.toolbox.getContext().setValue('nodeInstanceId', nodeInstanceIds);
     }
 
     _selectExecution(proxy, field) {
-        var executionId = field.value;
-        if (_.isEmpty(executionId)) {
-            executionId = null;
+        let executionIds = !_.isEmpty(field.value) ? field.value : null;
+
+        this.props.toolbox.getContext().setValue('executionId', executionIds);
+    }
+
+    _getDropdownValue(value) {
+        const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
+
+        if (_.isString(value)) {
+            return allowMultipleSelection ? [value]: value;
+        } else if (_.isArray(value)) {
+            return allowMultipleSelection ? value: value[0];
+        } else {
+            return allowMultipleSelection ? [] : '';
         }
-        this.props.toolbox.getContext().setValue('executionId',executionId);
     }
 
     render() {
-        var {ErrorMessage, Form} = Stage.Basic;
+        let {ErrorMessage, Form} = Stage.Basic;
         const EMPTY_OPTION = {text:'', value:''};
+        const configuration = this.props.configuration;
+        const data = this.props.data;
 
-        let blueprintOptions = _.map(this.props.data.blueprints.items, blueprint => {
-            return { text: blueprint.id, value: blueprint.id }
-        });
-        blueprintOptions.unshift(EMPTY_OPTION);
+        let blueprintOptions = _.map(data.blueprints.items,
+            blueprint => ({ text: blueprint.id, value: blueprint.id }));
+        if (!configuration.allowMultipleSelection) {
+            blueprintOptions.unshift(EMPTY_OPTION);
+        }
+        let blueprintId = this._getDropdownValue(data.blueprintId);
 
-        let deploymentOptions = _.map(this.props.data.deployments.items, deployment => {
-            return { text: deployment.id, value: deployment.id }
-        });
-        deploymentOptions.unshift(EMPTY_OPTION);
+        let deploymentOptions = _.map(data.deployments.items,
+            deployment => ({ text: deployment.id, value: deployment.id }));
+        if (!configuration.allowMultipleSelection) {
+            deploymentOptions.unshift(EMPTY_OPTION);
+        }
+        let deploymentId = this._getDropdownValue(data.deploymentId);
 
-        let nodeOptions = _.map(this.props.data.nodes.items, node => {
-            return { text: node.id, value: node.id }
-        });
-        nodeOptions.unshift(EMPTY_OPTION);
+        let nodeOptions = [];
+        if (configuration.filterByNodes) {
+            nodeOptions = _.map(_.sortedUniqBy(data.nodes.items, 'id'),
+                node => ({text: node.id, value: node.id}));
+            if (!configuration.allowMultipleSelection) {
+                nodeOptions.unshift(EMPTY_OPTION);
+            }
+        }
+        let nodeId = this._getDropdownValue(data.nodeId);
 
-        let nodeInstanceOptions = _.map(this.props.data.nodeInstances.items, nodeInstance => {
-            return { text: nodeInstance.id, value: nodeInstance.id }
-        });
-        nodeInstanceOptions.unshift(EMPTY_OPTION);
+        let nodeInstanceOptions = [];
+        if (configuration.filterByNodeInstances) {
+            nodeInstanceOptions = _.map(data.nodeInstances.items,
+                nodeInstance => ({text: nodeInstance.id, value: nodeInstance.id}));
+            if (!configuration.allowMultipleSelection) {
+                nodeInstanceOptions.unshift(EMPTY_OPTION);
+            }
+        }
+        let nodeInstanceId = this._getDropdownValue(data.nodeInstanceId);
 
         let executionOptions = [];
-        if (this.props.widget.configuration.filterByExecutions) {
-            executionOptions = _.map(this.props.data.executions.items, execution => {
-                return {text: execution.id + '-' + execution.workflow_id, value: execution.id}
-            });
+        if (configuration.filterByExecutions) {
+            executionOptions = _.map(data.executions.items,
+                execution => ({text: `${execution.id} (${execution.workflow_id})`, value: execution.id}));
+            if (!configuration.allowMultipleSelection) {
+                executionOptions.unshift(EMPTY_OPTION);
+            }
         }
-        executionOptions.unshift(EMPTY_OPTION);
+        let executionId = this._getDropdownValue(data.executionId);
 
         return (
             <div>
@@ -179,34 +237,42 @@ export default class Filter extends React.Component {
                 <Form size="small">
                     <Form.Group inline widths='equal'>
                         <Form.Field>
-                            <Form.Dropdown search selection value={this.props.data.blueprintId || ''} placeholder="Select Blueprint" fluid
-                                           options={blueprintOptions} onChange={this._selectBlueprint.bind(this)} id="blueprintFilterField"/>
+                            <Form.Dropdown search selection placeholder="Select Blueprint" fluid
+                                           value={blueprintId} id="blueprintFilterField"
+                                           options={blueprintOptions} onChange={this._selectBlueprint.bind(this)}
+                                           multiple={configuration.allowMultipleSelection} />
                         </Form.Field>
                         <Form.Field>
-                            <Form.Dropdown search selection value={this.props.data.deploymentId || ''} placeholder="Select Deployment" fluid
-                                           options={deploymentOptions} onChange={this._selectDeployment.bind(this)} id="deploymentFilterField"/>
+                            <Form.Dropdown search selection placeholder="Select Deployment" fluid
+                                           value={deploymentId} id="deploymentFilterField"
+                                           options={deploymentOptions} onChange={this._selectDeployment.bind(this)}
+                                           multiple={configuration.allowMultipleSelection} />
                         </Form.Field>
                         {
-                            this.props.widget.configuration.filterByNodes &&
+                            configuration.filterByNodes &&
                             <Form.Field>
-                                <Form.Dropdown search selection value={this.props.data.nodeId || ''}
-                                               placeholder="Select Node" fluid
+                                <Form.Dropdown search selection placeholder="Select Node" fluid
+                                               value={nodeId} id="nodeFilterField"
                                                options={nodeOptions} onChange={this._selectNode.bind(this)}
-                                               id="nodeFilterField"/>
+                                               multiple={configuration.allowMultipleSelection} />
                             </Form.Field>
                         }
                         {
-                            this.props.widget.configuration.filterByNodeInstances &&
+                            configuration.filterByNodeInstances &&
                             <Form.Field>
-                                <Form.Dropdown search selection value={this.props.data.nodeInstanceId || ''} placeholder="Select Node Instance" fluid
-                                               options={nodeInstanceOptions} onChange={this._selectNodeInstance.bind(this)} id="nodeInstanceFilterField"/>
+                                <Form.Dropdown search selection placeholder="Select Node Instance" fluid
+                                               value={nodeInstanceId} id="nodeInstanceFilterField"
+                                               options={nodeInstanceOptions} onChange={this._selectNodeInstance.bind(this)}
+                                               multiple={configuration.allowMultipleSelection} />
                             </Form.Field>
                         }
                         {
-                            this.props.widget.configuration.filterByExecutions &&
+                            configuration.filterByExecutions &&
                             <Form.Field>
-                                <Form.Dropdown search selection value={this.props.data.executionId || ''} placeholder="Select Execution" fluid
-                                               options={executionOptions} onChange={this._selectExecution.bind(this)} id="executionFilterField"/>
+                                <Form.Dropdown search selection placeholder="Select Execution" fluid
+                                               value={executionId} id="executionFilterField"
+                                               options={executionOptions} onChange={this._selectExecution.bind(this)}
+                                               multiple={configuration.allowMultipleSelection} />
                             </Form.Field>
                         }
                     </Form.Group>
