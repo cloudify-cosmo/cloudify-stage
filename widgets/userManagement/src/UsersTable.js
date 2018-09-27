@@ -204,6 +204,7 @@ export default class UsersTable extends React.Component {
                            pageSize={this.props.widget.configuration.pageSize}
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
+                           searchable={true}
                            className={tableName}
                            noDataMessage={NO_DATA_MESSAGE}>
 
