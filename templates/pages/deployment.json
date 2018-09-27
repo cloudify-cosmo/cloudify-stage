@@ -10,7 +10,7 @@
       "y": 0
     },
     {
-      "name": "Topology",
+      "name": "Deployment Topology",
       "definition": "topology",
       "width": 12,
       "height": 30,
@@ -18,7 +18,7 @@
       "y": 5
     },
     {
-      "name": "Nodes",
+      "name": "Deployment Nodes",
       "definition": "nodes",
       "width": 12,
       "height": 24,

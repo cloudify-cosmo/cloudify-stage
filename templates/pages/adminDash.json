@@ -99,6 +99,9 @@
       "width": 12,
       "height": 29,
       "definition": "executions",
+      "configuration": {
+        "pageSize": 10
+      },
       "x": 0,
       "y": 12
     }
