@@ -4,7 +4,7 @@
 
 import PropTypes from 'prop-types';
 
-export default class ExecutionStatus extends React.Component {
+class ExecutionStatus extends React.Component {
 
     constructor(props,context) {
         super(props,context);
@@ -17,7 +17,13 @@ export default class ExecutionStatus extends React.Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
         onCancelExecution: PropTypes.func.isRequired,
-        showInactiveAsLink: PropTypes.bool
+        showInactiveAsLink: PropTypes.bool,
+        displayCancelIcon: PropTypes.bool
+    };
+
+    static defaultProps = {
+        showInactiveAsLink: false,
+        displayCancelIcon: true
     };
 
     _actionClick(event, {name}) {
@@ -39,23 +45,40 @@ export default class ExecutionStatus extends React.Component {
                 <Label>
                     <Icon name="spinner" loading />
                     {executionStatusDisplay}
-                    <PopupMenu disabled={cancelClicked} icon='delete' >
-                        <Menu pointing vertical>
-                            <Menu.Item content='Cancel' name={ExecutionUtils.CANCEL_ACTION}
-                                       onClick={this._actionClick.bind(this)} />
-                            <Menu.Item content='Force Cancel' name={ExecutionUtils.FORCE_CANCEL_ACTION}
-                                       onClick={this._actionClick.bind(this)} />
-                            <Menu.Item content='Kill' name={ExecutionUtils.KILL_CANCEL_ACTION}
-                                       onClick={this._actionClick.bind(this)} />
-                        </Menu>
-                    </PopupMenu>
+                    {
+                        this.props.displayCancelIcon &&
+                        <PopupMenu disabled={cancelClicked} icon='delete' >
+                            <Menu pointing vertical>
+                                <Menu.Item content='Cancel'
+                                           icon='cancel'
+                                           name={ExecutionUtils.CANCEL_ACTION}
+                                           onClick={this._actionClick.bind(this)} />
+                                <Menu.Item content='Force Cancel'
+                                           icon={<Icon name='cancel' color='red' />}
+                                           name={ExecutionUtils.FORCE_CANCEL_ACTION}
+                                           onClick={this._actionClick.bind(this)}/>
+                                <Menu.Item content='Kill Cancel'
+                                           icon={<Icon name='stop' color='red' />}
+                                           name={ExecutionUtils.KILL_CANCEL_ACTION}
+                                           onClick={this._actionClick.bind(this)} />
+
+                            </Menu>
+                        </PopupMenu>
+                    }
                 </Label>
             )
         } else {
             let inactiveExecutionStatus
                 = this.props.showInactiveAsLink ? (<a href="javascript:void(0)">{executionStatusDisplay}</a>) : executionStatusDisplay;
             return (
-                <Label>{inactiveExecutionStatus}</Label>
+                <Label>
+                    {
+                        _.isEmpty(execution.error)
+                        ? <Icon name="check circle" color="green" inverted />
+                        : <Icon name="remove circle" color="red" link />
+                    }
+                    {inactiveExecutionStatus}
+                </Label>
             )
         }
     }
