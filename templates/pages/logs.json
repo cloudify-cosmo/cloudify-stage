@@ -1,0 +1,22 @@
+{
+  "name": "Logs",
+  "widgets": [
+    {
+      "name": "Events/logs filter widget",
+      "definition": "eventsFilter",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "name": "Events and logs",
+      "width": 12,
+      "height": 29,
+      "definition": "events",
+      "configuration": {
+        "pageSize": 10
+      },
+      "x": 0,
+      "y": 10
+    }
+  ]
+}
