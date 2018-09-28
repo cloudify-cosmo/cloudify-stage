@@ -5,8 +5,8 @@
 import PropTypes from 'prop-types';
 
 import MenuAction from './MenuAction';
-import ActiveExecutionStatus from './ActiveExecutionStatus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
+import LastExecutionStatusIcon from './LastExecutionStatusIcon';
 
 export default class DeploymentsSegment extends React.Component {
 
@@ -15,27 +15,33 @@ export default class DeploymentsSegment extends React.Component {
         widget: PropTypes.object.isRequired,
         fetchData: PropTypes.func,
         onSelectDeployment: PropTypes.func,
+        onShowLogs: PropTypes.func,
+        onShowUpdateDetails: PropTypes.func,
         onCancelExecution: PropTypes.func,
         onMenuAction: PropTypes.func,
         onError: PropTypes.func,
         onSetVisibility: PropTypes.func,
         allowedSettingTo: PropTypes.array,
-        noDataMessage: PropTypes.string
+        noDataMessage: PropTypes.string,
+        showExecutionStatusLabel: PropTypes.bool
     };
 
     static defaultProps = {
         fetchData: ()=>{},
         onSelectDeployment: ()=>{},
+        onShowLogs: ()=>{},
+        onShowUpdateDetails: ()=>{},
         onCancelExecution: ()=>{},
         onMenuAction: ()=>{},
         onError: ()=>{},
         onSetVisibility: ()=>{},
         allowedSettingTo: ['tenant'],
-        noDataMessage: ''
+        noDataMessage: '',
+        showExecutionStatusLabel: false
     };
 
     render() {
-        let {DataSegment, ResourceVisibility} = Stage.Basic;
+        let {DataSegment, Divider, Grid, Header, ResourceVisibility} = Stage.Basic;
         const {NodeInstancesConsts} = Stage.Common;
 
         return (
@@ -48,59 +54,77 @@ export default class DeploymentsSegment extends React.Component {
                     this.props.data.items.map((item) => {
                         return (
                             <DataSegment.Item key={item.id} selected={item.isSelected} className={item.id}
-                                          onClick={()=>this.props.onSelectDeployment(item)}>
-                                <div className="ui grid">
-                                    <div className="three wide center aligned column rightDivider">
-                                        <h3 className="ui icon header verticalCenter breakWord"><a href="javascript:void(0)" className="breakWord">{item.id}</a></h3>
-                                        <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility) => this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="topRightCorner"/>
-                                        <DeploymentUpdatedIcon show={item.isUpdated} className="rightFloated" />
-                                    </div>
-                                    <div className="two wide column">
-                                        <h5 className="ui icon header">Blueprint</h5>
-                                        <p>{item.blueprint_id}</p>
-                                    </div>
-                                    <div className="two wide column">
-                                        <h5 className="ui icon header">Created</h5>
-                                        <p>{item.created_at}</p>
-                                    </div>
-                                    <div className="two wide column">
-                                        <h5 className="ui icon header">Updated</h5>
-                                        <p>{item.updated_at}</p>
-                                    </div>
-                                    <div className="two wide column">
-                                        <h5 className="ui icon header">Creator</h5>
-                                        <p>{item.created_by}</p>
-                                    </div>
-                                    <div className="four wide column">
-                                        <h5 className="ui icon header">Node Instances ({item.nodeSize})</h5>
-                                        <div className="ui four column grid nodesStates">
-                                            {
-                                                _.map(NodeInstancesConsts.groupStates, (groupState) =>
-                                                    <div key={groupState.name} className="column center aligned">
-                                                        <NodeState icon={groupState.icon} title={groupState.name}
-                                                                   state={_.join(groupState.states, ', ')} color={groupState.color}
-                                                                   value={_.sum(_.map(groupState.states, (state) =>
-                                                                       _.isNumber(item.nodeStates[state]) ? item.nodeStates[state] : 0))}/>
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
-                                    </div>
+                                              onClick={()=>this.props.onSelectDeployment(item)}>
 
-                                    <div className="column action">
-                                        {
-                                            _.isEmpty(item.executions)
-                                            ?
-                                            <MenuAction item={item} onSelectAction={this.props.onMenuAction}/>
-                                            :
-                                            <ActiveExecutionStatus item={item.executions[0]} onCancelExecution={this.props.onCancelExecution}/>
-                                        }
-                                    </div>
-                                </div>
+                                <Grid>
+                                    <Grid.Row>
+                                        <Grid.Column width={4}>
+                                            <LastExecutionStatusIcon execution={item.lastExecution}
+                                                                     onShowLogs={() => this.props.onShowLogs(item.id, item.lastExecution.id)}
+                                                                     onShowUpdateDetails={this.props.onShowUpdateDetails}
+                                                                     onCancelExecution={this.props.onCancelExecution}
+                                                                     showLabel={this.props.showExecutionStatusLabel} />
+                                            <Divider hidden />
+                                            <Header as='h3' textAlign='center'>
+                                                {item.id}
+                                            </Header>
+                                        </Grid.Column>
+
+                                        <Grid.Column width={1} verticalAlign='top' textAlign='right'>
+                                            <ResourceVisibility visibility={item.visibility}
+                                                                onSetVisibility={(visibility) =>
+                                                                    this.props.onSetVisibility(item.id, visibility)}
+                                                                allowedSettingTo={this.props.allowedSettingTo} />
+                                        </Grid.Column>
+
+                                        <Grid.Column width={2}>
+                                            <Header as='h5'>Blueprint</Header>
+                                            <span>{item.blueprint_id}</span>
+                                        </Grid.Column>
+
+                                        <Grid.Column width={2}>
+                                            <Header as='h5'>Created</Header>
+                                            <span>{item.created_at}&nbsp;<DeploymentUpdatedIcon deployment={item} /></span>
+                                        </Grid.Column>
+
+                                        <Grid.Column width={2}>
+                                            <Header as='h5'>Creator</Header>
+                                            <span>{item.created_by}</span>
+                                        </Grid.Column>
+
+                                        <Grid.Column width={4}>
+                                            <Header as='h5'>Node Instances ({item.nodeSize})</Header>
+                                            <Grid columns={4}>
+                                                <Grid.Row>
+                                                {
+                                                    _.map(NodeInstancesConsts.groupStates, (groupState) =>
+                                                        <Grid.Column key={groupState.name} textAlign='center'>
+                                                            <NodeState icon={groupState.icon} title={groupState.name}
+                                                                       state={_.join(groupState.states, ', ')}
+                                                                       color={groupState.colorSUI}
+                                                                       value={_.sum(_.map(groupState.states, (state) =>
+                                                                           _.isNumber(item.nodeStates[state])
+                                                                               ? item.nodeStates[state]
+                                                                               : 0))} />
+                                                        </Grid.Column>
+                                                    )
+                                                }
+                                                </Grid.Row>
+                                            </Grid>
+                                        </Grid.Column>
+
+                                        <Grid.Column width={1}>
+                                            <MenuAction item={item} disabled={!_.isEmpty(item.executions)}
+                                                        onSelectAction={this.props.onMenuAction}/>
+                                        </Grid.Column>
+                                    </Grid.Row>
+                                </Grid>
+
                             </DataSegment.Item>
                         );
                     })
                 }
+
             </DataSegment>
         );
     }
