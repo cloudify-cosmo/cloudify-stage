@@ -32,8 +32,8 @@ class IdPopup extends React.Component {
                 </Popup.Trigger>
                 <Popup.Content>
                     <div className='noWrap'>
-                        <strong>{this.props.id}</strong>&nbsp;&nbsp;
                         <CopyToClipboardButton content={`Copy ${this.props.label}`} text={this.props.id} />
+                        &nbsp;&nbsp;<strong>{this.props.id}</strong>
                     </div>
                 </Popup.Content>
             </Popup>
