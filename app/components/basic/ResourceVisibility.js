@@ -34,7 +34,8 @@ export default class ResourceVisibility extends Component {
         super(props, context);
         this.state = {
             openConfirm: false,
-            visibility: null
+            visibility: null,
+            popupOpened: false
         }
     }
 
@@ -63,11 +64,12 @@ export default class ResourceVisibility extends Component {
         let setGlobalAllowed = _.includes(this.props.allowedSettingTo, consts.visibility.GLOBAL.name) && !_.isEqual(this.props.visibility, consts.visibility.GLOBAL.name);
         let canChangeVisibility = setGlobalAllowed || setTenantAllowed;
         let icon = <VisibilityIcon visibility={this.props.visibility}
-                                     className={this.props.className}
-                                     link={setGlobalAllowed}
-                                     onClick={e => e.stopPropagation()}
-                                     bordered
-                                     disabled={!canChangeVisibility}/>;
+                                   className={this.props.className}
+                                   link={setGlobalAllowed}
+                                   onClick={e => e.stopPropagation()}
+                                   bordered
+                                   disabled={!canChangeVisibility}
+                                   showTitle={!this.state.popupOpened} />;
 
         let closePopup = ()=>{};
         let popupContent =
@@ -98,6 +100,7 @@ export default class ResourceVisibility extends Component {
         </div>;
 
         let popup = <Popup wide trigger={icon} on='click' header="Change resource visibility" content={popupContent}
+                           onOpen={() => this.setState({popupOpened: true})} onClose={() => this.setState({popupOpened: false})}
                            ref={(popup) => {
                                closePopup = () => {
                                    popup.setState({closed: true});
