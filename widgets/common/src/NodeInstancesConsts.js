@@ -5,14 +5,16 @@
 const groupStates = [
     {
         name: 'uninitialized',
-        icon: 'ban',
-        color: 'grey',
+        icon: 'cancel',
+        colorSUI: 'blue',
+        colorHTML: '#2185d0',
         states: ['uninitialized']
     },
     {
         name: 'in progress',
         icon: 'spinner',
-        color: 'orange',
+        colorSUI: 'yellow',
+        colorHTML: '#fbbd08',
         states: [
             'initializing',
             'creating',
@@ -28,13 +30,15 @@ const groupStates = [
     {
         name: 'started',
         icon: 'checkmark',
-        color: 'green',
+        colorSUI: 'green',
+        colorHTML: '#21ba45',
         states: ['started']
     },
     {
         name: 'deleted',
         icon: 'trash',
-        color: 'black',
+        colorSUI: 'black',
+        colorHTML: '#1b1c1d',
         states: ['deleted']
     },
 ];
