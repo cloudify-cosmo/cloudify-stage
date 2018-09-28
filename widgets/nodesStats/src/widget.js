@@ -34,7 +34,11 @@ Stage.defineWidget({
         let {NodeInstancesConsts} = Stage.Common;
         let states = _.countBy(data.items, 'state');
         let formattedData = _.map(NodeInstancesConsts.groupStates, (groupState) =>
-            ({name: _.upperFirst(groupState.name), color: groupState.color, value: _.sum(_.map(groupState.states, (state) => _.isNumber(states[state]) ? states[state] : 0))})
+            ({
+                name: _.upperFirst(groupState.name),
+                color: groupState.colorHTML,
+                value: _.sum(_.map(groupState.states, (state) => _.isNumber(states[state]) ? states[state] : 0))
+            })
         );
 
         return (
