@@ -134,10 +134,10 @@ export default class ExecutionsTable extends React.Component {
                                       show={fieldsToShow.indexOf('Creator') >= 0}/>
                     <DataTable.Column label="System" name="is_system_workflow" width="5%"
                                       show={fieldsToShow.indexOf('System') >= 0}/>
-                    <DataTable.Column label="Status" width="15%" name="status"
+                    <DataTable.Column label="Status" width="15%"
                                       show={fieldsToShow.indexOf('Status') >= 0}/>
-                    <DataTable.Column name="actions" width="5%"
-                                      show={fieldsToShow.indexOf('Actions') >= 0}/>
+                    <DataTable.Column width="5%"
+                                      show={fieldsToShow.indexOf('Params') >= 0 || fieldsToShow.indexOf('Actions') >= 0}/>
 
                     {
                         this.props.data.items.map((item)=>{
