@@ -5,22 +5,27 @@
 import DeploymentsList from './DeploymentsList';
 
 Stage.defineWidget({
-    id: "deployments",
+    id: 'deployments',
     name: 'Blueprint deployments',
     description: 'Shows blueprint deployments list',
     initialWidth: 8,
     initialHeight: 24,
-    color : "purple",
+    color : 'purple',
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
     initialConfiguration:
         [
             Stage.GenericConfig.POLLING_TIME_CONFIG(10),
             Stage.GenericConfig.PAGE_SIZE_CONFIG(),
-            {id: "clickToDrillDown", name: "Enable click to drill down", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-            {id: "blueprintIdFilter", name: "Blueprint ID to filter by", placeHolder: "Enter the blueprint id you wish to filter by", type: Stage.Basic.GenericField.STRING_TYPE},
-            {id: "showExecutionStatusLabel", name: "Show execution status label", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-            {id: "displayStyle", name: "Display style", items: [{name:'Table', value:'table'}, {name:'List', value:'list'}],
+            {id: "clickToDrillDown", name: "Enable click to drill down",
+                default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+            {id: "showExecutionStatusLabel", name: "Show execution status label",
+                description: "Show last execution workflow ID and status",
+                default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+            {id: "blueprintIdFilter", name: "Blueprint ID to filter by",
+                placeHolder: "Enter the blueprint id you wish to filter by", type: Stage.Basic.GenericField.STRING_TYPE},
+            {id: "displayStyle", name: "Display style",
+                items: [{name:'Table', value:'table'}, {name:'List', value:'list'}],
                 default: "table", type: Stage.Basic.GenericField.LIST_TYPE},
             Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
             Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
@@ -58,7 +63,6 @@ Stage.defineWidget({
 
         let executionsData = deploymentIds.then(ids=>{
             return toolbox.getManager().doGet('/executions', {
-                _include: 'id,workflow_id,status,deployment_id,created_at,ended_at,parameters,error',
                 _sort: '-ended_at',
                 deployment_id: ids
             });

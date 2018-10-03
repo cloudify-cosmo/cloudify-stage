@@ -163,7 +163,8 @@ export default class DeploymentsList extends React.Component {
                                       onError={this._setError.bind(this)}
                                       onSetVisibility={this._setDeploymentVisibility.bind(this)}
                                       allowedSettingTo={['tenant']}
-                                      noDataMessage={NO_DATA_MESSAGE}/>
+                                      noDataMessage={NO_DATA_MESSAGE}
+                                      showExecutionStatusLabel={this.props.widget.configuration.showExecutionStatusLabel} />
                     :
                     <DeploymentsSegment widget={this.props.widget} data={this.props.data}
                                         fetchData={this.fetchData.bind(this)}
@@ -176,7 +177,7 @@ export default class DeploymentsList extends React.Component {
                                         onSetVisibility={this._setDeploymentVisibility.bind(this)}
                                         allowedSettingTo={['tenant']}
                                         noDataMessage={NO_DATA_MESSAGE}
-                                        showExecutionStatusLabel={this.props.widget.configuration.showExecutionStatusLabel}/>
+                                        showExecutionStatusLabel={this.props.widget.configuration.showExecutionStatusLabel} />
                 }
 
                 <Confirm content={`Are you sure you want to remove deployment ${this.state.deployment.id}?`}

@@ -27,7 +27,7 @@ export default class DeploymentUpdatedIcon extends React.Component {
         return deployment.isUpdated
             ? <Popup wide on='hover'>
                   <Popup.Trigger>
-                      <Icon.Group size='large' className={this.props.className}>
+                      <Icon.Group size='large' className={this.props.className} style={{marginLeft: '6px', marginTop: '-4px'}}>
                           <Icon name='cube' color='blue' />
                           <Icon corner name='refresh' color='blue' />
                       </Icon.Group>

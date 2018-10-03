@@ -87,7 +87,8 @@ export default class DeploymentsSegment extends React.Component {
 
                                         <Grid.Column width={2}>
                                             <Header as='h5'>Created</Header>
-                                            <span>{item.created_at}&nbsp;<DeploymentUpdatedIcon deployment={item} /></span>
+                                            <span>{item.created_at}
+                                            <DeploymentUpdatedIcon deployment={item} /></span>
                                         </Grid.Column>
 
                                         <Grid.Column width={2}>

@@ -46,7 +46,8 @@ export default class LastExecutionStatusIcon extends React.Component {
         onShowLogs: PropTypes.func,
         onShowUpdateDetails: PropTypes.func,
         onCancelExecution: PropTypes.func,
-        showLabel: PropTypes.bool
+        showLabel: PropTypes.bool,
+        labelAttached: PropTypes.bool
     };
 
     static defaultProps = {
@@ -54,7 +55,8 @@ export default class LastExecutionStatusIcon extends React.Component {
         onShowLogs: _.noop,
         onShowUpdateDetails: _.noop,
         onCancelExecution: _.noop,
-        showLabel: false
+        showLabel: false,
+        labelAttached: true
     };
 
     render() {
@@ -83,7 +85,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                             {
                                 this.props.showLabel
                                     ?
-                                    <Label attached='top left'>
+                                    <Label attached={this.props.labelAttached ? 'top left' : undefined}>
                                         <Icon name={statusParams[status].icon} color={statusParams[status].color}
                                               loading={statusParams[status].loading} size='large'/>
                                         <span>{execution.workflow_id} {execution.status_display || execution.status}</span>
