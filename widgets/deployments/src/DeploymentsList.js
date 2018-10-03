@@ -47,7 +47,7 @@ export default class DeploymentsList extends React.Component {
     }
 
     _showLogs(deploymentId, executionId) {
-        this.props.toolbox.drillDown(this.props.widget,'logs',{deploymentId, executionId}, `Logs ${executionId}`);
+        this.props.toolbox.drillDown(this.props.widget,'logs',{deploymentId, executionId}, `Execution Logs - ${executionId}`);
     }
 
     _deleteDeployment() {

@@ -64,7 +64,10 @@ export default class DeploymentsSegment extends React.Component {
                                                                      onShowUpdateDetails={this.props.onShowUpdateDetails}
                                                                      onCancelExecution={this.props.onCancelExecution}
                                                                      showLabel={this.props.showExecutionStatusLabel} />
-                                            <Divider hidden />
+                                            {
+                                                this.props.showExecutionStatusLabel &&
+                                                <Divider hidden />
+                                            }
                                             <Header as='h3' textAlign='center'>
                                                 {item.id}
                                             </Header>
