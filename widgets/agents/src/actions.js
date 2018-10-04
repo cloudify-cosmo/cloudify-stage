@@ -6,4 +6,12 @@ export default class {
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
+
+    doInstallAgent() {
+
+    }
+
+    doValidateAgent() {
+
+    }
 }

@@ -1,3 +1,5 @@
+import CreateModal from '../../userManagement/src/CreateModal';
+
 /**
  * Created by jakub.niezgoda on 04/10/2018.
  */
@@ -7,27 +9,18 @@ export default class AgentsTable extends React.Component {
         super(props, context);
 
         this.state = {
-            execution: null,
-            errorModalOpen: false,
-            executionParametersModalOpen: false,
-            deploymentUpdateModalOpen: false,
-            hoveredExecution: null,
-            deploymentUpdateId: '',
             error: null
         };
     }
 
     static MenuAction = {
-        SHOW_EXECUTION_PARAMETERS: 'execution_parameters',
-        SHOW_UPDATE_DETAILS: 'update_details',
-        SHOW_ERROR_DETAILS: 'error_details',
-        CANCEL_EXECUTION: Stage.Common.ExecutionUtils.CANCEL_ACTION,
-        FORCE_CANCEL_EXECUTION: Stage.Common.ExecutionUtils.FORCE_CANCEL_ACTION,
-        KILL_CANCEL_EXECUTION: Stage.Common.ExecutionUtils.KILL_CANCEL_ACTION
+        INSTALL_AGENT: 'install_agent',
+        VALIDATE_AGENT: 'validate_agent',
+        STOP_AGENT: 'stop_agent'
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget.configuration, nextProps.widget.configuration)
+        return !_.isEqual(this.props.configuration, nextProps.configuration)
             || !_.isEqual(this.state, nextState)
             || !_.isEqual(this.props.data, nextProps.data);
     }
@@ -37,202 +30,106 @@ export default class AgentsTable extends React.Component {
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('executions:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('agents:refresh', this._refreshData, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('executions:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('agents:refresh', this._refreshData);
     }
 
-    _selectExecution(item) {
-        let oldSelectedExecutionId = this.props.toolbox.getContext().getValue('executionId');
-        this.props.toolbox.getContext().setValue('executionId',item.id === oldSelectedExecutionId ? null : item.id);
-        if (item.id === oldSelectedExecutionId) {
-            this.props.toolbox.getContext().setValue('executionId', null);
+    _selectAgent(item) {
+        let oldSelectedAgentId = this.props.toolbox.getContext().getValue('agentId');
+        this.props.toolbox.getContext().setValue('agentId', item.id === oldSelectedAgentId ? null : item.id);
+        if (item.id === oldSelectedAgentId) {
+            this.props.toolbox.getContext().setValue('agentId', null);
         } else {
-            this.props.toolbox.getContext().setValue('executionId', item.id);
+            this.props.toolbox.getContext().setValue('agentId', item.id);
         }
     }
 
-    _cancelExecution(execution, action) {
-        let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
-        actions.doCancel(execution, action)
-            .then(() => {
-                this.setState({error: null});
-                this.props.toolbox.getEventBus().trigger('deployments:refresh');
-                this.props.toolbox.getEventBus().trigger('executions:refresh');
-            })
-            .catch((err) => {this.setState({error: err.message});});
-    }
-
-    _actionClick(execution, proxy, {name}) {
-        const MenuAction = ExecutionsTable.MenuAction;
+    _actionClick(agent, proxy, {name}) {
+        const MenuAction = AgentsTable.MenuAction;
 
         switch(name) {
-            case MenuAction.SHOW_EXECUTION_PARAMETERS:
-                this.setState({execution, executionParametersModalOpen: true, idPopupOpen: false});
+            case MenuAction.INSTALL_AGENT:
                 break;
-
-            case MenuAction.SHOW_UPDATE_DETAILS:
-                this.setState({deploymentUpdateId: execution.parameters.update_id, deploymentUpdateModalOpen: true});
+            case MenuAction.VALIDATE_AGENT:
                 break;
-
-            case MenuAction.SHOW_ERROR_DETAILS:
-                this.setState({execution, errorModalOpen: true, idPopupOpen: false});
-                break;
-
-            case MenuAction.CANCEL_EXECUTION:
-            case MenuAction.FORCE_CANCEL_EXECUTION:
-            case MenuAction.KILL_CANCEL_EXECUTION:
-                this._cancelExecution(execution, name);
+            case MenuAction.STOP_AGENT:
                 break;
         }
-    }
-
-    fetchGridData(fetchParams) {
-        return this.props.toolbox.refresh(fetchParams);
     }
 
     render() {
-        const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
-        let {Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal, PopupMenu} = Stage.Basic;
-        let {ExecutionStatus, ExecutionUtils, IdPopup} = Stage.Common;
-        const MenuAction = ExecutionsTable.MenuAction;
+        const NO_DATA_MESSAGE = 'There are no Agents available.';
+        const configuration = this.props.configuration;
+        const fieldsToShow = configuration.fieldsToShow;
+        const totalSize = this.props.data.total > 0 ? undefined : 0;
 
-        let fieldsToShow = this.props.widget.configuration.fieldsToShow;
-        let execution = this.state.execution || {parameters: {}};
-        let executionParameters = JSON.stringify(execution.parameters, null, 2);
+        let {Button, DataTable, ErrorMessage, Menu, PopupMenu} = Stage.Basic;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true} />
 
-                <DataTable fetchData={this.fetchGridData.bind(this)}
-                           totalSize={this.props.data.total}
-                           pageSize={this.props.widget.configuration.pageSize}
-                           sortColumn={this.props.widget.configuration.sortColumn}
-                           sortAscending={this.props.widget.configuration.sortAscending}
-                           selectable={true}
-                           className="executionsTable"
-                           noDataMessage={NO_DATA_MESSAGE}>
+                <DataTable selectable={true} className="agentsTable" noDataMessage={NO_DATA_MESSAGE} totalSize={totalSize}>
 
-                    <DataTable.Column label="" width="1%" />
-                    <DataTable.Column label="Blueprint" name="blueprint_id" width="15%"
-                                      show={fieldsToShow.indexOf('Blueprint') >= 0 && !this.props.data.blueprintId}/>
-                    <DataTable.Column label="Deployment" name="deployment_id" width="15%"
-                                      show={fieldsToShow.indexOf('Deployment') >= 0 && !this.props.data.deploymentId}/>
-                    <DataTable.Column label="Workflow" name="workflow_id" width="15%"
-                                      show={fieldsToShow.indexOf('Workflow') >= 0}/>
-                    <DataTable.Column label="Id" name="id" width="10%"
+                    <DataTable.Column label="Id"
                                       show={fieldsToShow.indexOf('Id') >= 0}/>
-                    <DataTable.Column label="Created" name="created_at" width="10%"
-                                      show={fieldsToShow.indexOf('Created') >= 0}/>
-                    <DataTable.Column label="Ended" name="ended_at" width="10%"
-                                      show={fieldsToShow.indexOf('Ended') >= 0}/>
-                    <DataTable.Column label="Creator" name='created_by' width="5%"
-                                      show={fieldsToShow.indexOf('Creator') >= 0}/>
-                    <DataTable.Column label="System" name="is_system_workflow" width="5%"
+                    <DataTable.Column label="IP"
+                                      show={fieldsToShow.indexOf('IP') >= 0}/>
+                    <DataTable.Column label="Deployment"
+                                      show={fieldsToShow.indexOf('Deployment') >= 0 &&
+                                      !this.props.data.deploymentId && !this.props.data.nodeId && !this.props.data.nodeInstanceId}/>
+                    <DataTable.Column label="Node"
+                                      show={fieldsToShow.indexOf('Node') >= 0 &&
+                                      !this.props.data.nodeId && !this.props.data.nodeInstanceId}/>
+                    <DataTable.Column label="System"
                                       show={fieldsToShow.indexOf('System') >= 0}/>
-                    <DataTable.Column label="Status" width="15%" name="status"
-                                      show={fieldsToShow.indexOf('Status') >= 0}/>
-                    <DataTable.Column name="actions" width="5%"
-                                      show={fieldsToShow.indexOf('Actions') >= 0}/>
+                    <DataTable.Column label="Version"
+                                      show={fieldsToShow.indexOf('Version') >= 0}/>
+                    <DataTable.Column label="Install Method"
+                                      show={fieldsToShow.indexOf('Install Method') >= 0}/>
+                    <DataTable.Column show={fieldsToShow.indexOf('Actions') >= 0}/>
 
                     {
-                        this.props.data.items.map((item)=>{
-                            return (
-                                <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}
-                                               onMouseOver={() => this.state.hoveredExecution !== item.id && this.setState({hoveredExecution: item.id})}
-                                               onMouseOut={() =>  this.state.hoveredExecution === item.id && this.setState({hoveredExecution: null})}>
-                                    <DataTable.Data>
-                                        <IdPopup id={item.id} selected={this.state.hoveredExecution === item.id} />
-                                    </DataTable.Data>
-                                    <DataTable.Data>{item.blueprint_id}</DataTable.Data>
-                                    <DataTable.Data>{item.deployment_id}</DataTable.Data>
-                                    <DataTable.Data>{item.workflow_id}</DataTable.Data>
-                                    <DataTable.Data>{item.id}</DataTable.Data>
-                                    <DataTable.Data>{item.created_at}</DataTable.Data>
-                                    <DataTable.Data>{item.ended_at}</DataTable.Data>
-                                    <DataTable.Data>{item.created_by}</DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-                                        <Checkmark value={item.is_system_workflow}/>
-                                    </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-                                        <ExecutionStatus item={item} displayCancelIcon={false} onCancelExecution={_.noop} />
-                                    </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-
-                                        <PopupMenu className="menuAction">
-                                            <Menu pointing vertical>
-                                                <Menu.Item content='Show Execution Parameters'
-                                                           icon='options'
-                                                           name={MenuAction.SHOW_EXECUTION_PARAMETERS}
-                                                           onClick={this._actionClick.bind(this, item)} />
-                                                {
-                                                    item.workflow_id === 'update' &&
-                                                    <Menu.Item content='Show Update Details'
-                                                               icon='magnify'
-                                                               name={MenuAction.SHOW_UPDATE_DETAILS}
-                                                               onClick={this._actionClick.bind(this, item)} />
-                                                }
-                                                {
-                                                    !_.isEmpty(item.error) &&
-                                                    <Menu.Item content='Show Error Details'
-                                                               icon={<Icon name='exclamation circle' color='red' />}
-                                                               name={MenuAction.SHOW_ERROR_DETAILS}
-                                                               onClick={this._actionClick.bind(this, item)} />
-                                                }
-                                                {
-                                                    ExecutionUtils.isActiveExecution(item) &&
-                                                    <Menu.Item content='Cancel'
-                                                               icon='cancel'
-                                                               name={MenuAction.CANCEL_EXECUTION}
-                                                               onClick={this._actionClick.bind(this, item)} />
-                                                }
-                                                {
-                                                    ExecutionUtils.isActiveExecution(item) &&
-                                                    <Menu.Item content='Force Cancel'
-                                                               icon={<Icon name='cancel' color='red' />}
-                                                               name={MenuAction.FORCE_CANCEL_EXECUTION}
-                                                               onClick={this._actionClick.bind(this, item)}/>
-                                                }
-                                                <Menu.Item content='Kill Cancel'
-                                                           icon={<Icon name='stop' color='red' />}
-                                                           name={MenuAction.KILL_CANCEL_EXECUTION}
-                                                           onClick={this._actionClick.bind(this, item)} />
-                                            </Menu>
-                                        </PopupMenu>
-                                    </DataTable.Data>
-                                </DataTable.Row>
-                            );
-                        })
+                        _.map(this.props.data.items, (item) =>
+                            <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectAgent.bind(this, item)}>
+                                <DataTable.Data>{item.id}</DataTable.Data>
+                                <DataTable.Data>{item.ip}</DataTable.Data>
+                                <DataTable.Data>{item.deployment}</DataTable.Data>
+                                <DataTable.Data>{item.node}</DataTable.Data>
+                                <DataTable.Data>{item.system}</DataTable.Data>
+                                <DataTable.Data>{item.version}</DataTable.Data>
+                                <DataTable.Data>{item.install_method}</DataTable.Data>
+                                <DataTable.Data className="center aligned">
+                                    <PopupMenu className="menuAction">
+                                        <Menu pointing vertical>
+                                            <Menu.Item content='Install'
+                                                       icon='download'
+                                                       name={AgentsTable.MenuAction.INSTALL_AGENT}
+                                                       onClick={this._actionClick.bind(this, item)} />
+                                            <Menu.Item content='Validate'
+                                                       icon='checkmark box'
+                                                       name={AgentsTable.MenuAction.VALIDATE_AGENT}
+                                                       onClick={this._actionClick.bind(this, item)} />
+                                            <Menu.Item content='Stop'
+                                                       icon='cancel'
+                                                       name={AgentsTable.MenuAction.STOP_AGENT}
+                                                       onClick={this._actionClick.bind(this, item)} />
+                                        </Menu>
+                                    </PopupMenu>
+                                </DataTable.Data>
+                            </DataTable.Row>
+                        )
                     }
+
+                    <DataTable.Action>
+                        <Button content='Install' icon='download' labelPosition='left' onClick={_.noop}/>
+                        <Button content='Validate' icon='checkmark' labelPosition='left' onClick={_.noop}/>
+                    </DataTable.Action>
+
                 </DataTable>
-
-                <Modal open={this.state.executionParametersModalOpen} closeIcon
-                       onClose={()=>this.setState({execution: null, executionParametersModalOpen: false})}>
-                    <Modal.Content scrolling>
-                        <HighlightText className='json'>{executionParameters}</HighlightText>
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <CopyToClipboardButton content='Copy Parameters' text={executionParameters} />
-                    </Modal.Actions>
-                </Modal>
-
-                <UpdateDetailsModal open={this.state.deploymentUpdateModalOpen}
-                                    deploymentUpdateId={this.state.deploymentUpdateId}
-                                    onClose={()=>this.setState({execution: null, deploymentUpdateId: '', deploymentUpdateModalOpen: false})}
-                                    toolbox={this.props.toolbox} />
-
-                <Modal open={this.state.errorModalOpen} closeIcon
-                       onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
-                    <Modal.Content scrolling>
-                        <HighlightText className='python'>{execution.error}</HighlightText>
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <CopyToClipboardButton content='Copy Error' text={execution.error} />
-                    </Modal.Actions>
-                </Modal>
 
             </div>
         );

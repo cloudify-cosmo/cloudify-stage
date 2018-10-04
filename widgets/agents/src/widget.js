@@ -8,70 +8,71 @@ Stage.defineWidget({
     id: 'agents',
     name: 'Agents',
     description: 'This widget shows list of installed agents',
-    initialWidth: 8,
+    initialWidth: 12,
     initialHeight: 24,
     color : 'olive',
-    fetchUrl: '[manager]/agents?[params]',
+    fetchUrl: '[manager]/agents?[params:deployment_id,node_ids,node_instance_ids,install_methods]',
     isReact: true,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('agents'),
-    categories: [Stage.GenericConfig.CATEGORY.],
+    permission: Stage.GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ALL,//Stage.GenericConfig.WIDGET_PERMISSION('agents'),
+    categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
     initialConfiguration:
         [
-            Stage.GenericConfig.POLLING_TIME_CONFIG(5),
-            Stage.GenericConfig.PAGE_SIZE_CONFIG(),
-            {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
-                items: ["Blueprint","Deployment","Workflow","Id","Created","Ended","Creator","System","Status","Actions"],
-                default: 'Blueprint,Deployment,Workflow,Created,Ended,Creator,System,Actions,Status', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
-            {id: "showSystemExecutions", name: "Show system executions", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-            Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
-            Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
+            Stage.GenericConfig.POLLING_TIME_CONFIG(15),
+            {
+                id: 'fieldsToShow', name: 'List of fields to show in the table',
+                description: 'Some of the fields may be hidden depending on the context, ' +
+                             'eg. when Deployment ID is set in context then Deployment field will be hidden.',
+                placeHolder: 'Select fields from the list',
+                items: ['Id','Node','Deployment','IP','Install Method','System','Version','Actions'],
+                default: 'Id,Node,Deployment,IP,Install Method,System,Version,Actions', 
+                type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+            },
+            {
+                id: 'installMethod', name: 'Filter Agents by Install Method',
+                description: 'Choose Install Methods to filter Agents. Unset all options to disable this type of filtering.',
+                placeHolder: 'Select Install Methods from the list',
+                items: [
+                    {name:'Remote', value:'remote'},
+                    {name:'Plugin', value:'plugin'},
+                    {name:'Init Script', value:'init_script'},
+                    {name:'Provided', value:'provided'}
+                ],
+                default: '',
+                type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+            }
         ],
 
     fetchParams: function(widget, toolbox) {
         return {
-            blueprint_id: toolbox.getContext().getValue('blueprintId'),
             deployment_id: toolbox.getContext().getValue('deploymentId'),
-            _include_system_workflows: (
-                widget.configuration.showSystemExecutions &&
-                !toolbox.getContext().getValue('blueprintId') &&
-                !toolbox.getContext().getValue('deploymentId')
-            )
+            node_ids: toolbox.getContext().getValue('nodeId'),
+            node_instance_ids: toolbox.getContext().getValue('nodeInstanceId'),
+            install_methods: !_.isEmpty(widget.configuration.installMethod)
+                ? _.reject(widget.configuration.installMethod, _.isEmpty)
+                : undefined
         };
     },
 
-    render: function(widget,data,error,toolbox) {
+    render: function(widget, data, error, toolbox) {
 
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading/>;
         }
 
-        let {executions, deploymentUpdates} = data;
-
-        // Create map from deployments updates items where execution_id is a key and blueprint_id is a value
-        let executionIdToBlueprintIdMap = {};
-        _.forEach(deploymentUpdates.items, (deploymentUpdate) =>
-            executionIdToBlueprintIdMap[deploymentUpdate.execution_id] = deploymentUpdate.old_blueprint_id);
-
-        let selectedExecution = toolbox.getContext().getValue('executionId');
+        let selectedAgent = toolbox.getContext().getValue('agentId');
         let params = this.fetchParams(widget, toolbox);
         let formattedData = {
-            items: _.map (executions.items,(item)=>{
-                return Object.assign({},item,{
-                    blueprint_id: _.get(executionIdToBlueprintIdMap, item.id, item.blueprint_id),
-                    created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
-                    ended_at: Stage.Utils.formatTimestamp(item.ended_at),
-                    isSelected: item.id === selectedExecution
-                })
-            }),
-            total: _.get(executions, 'metadata.pagination.total', 0),
-            blueprintId: params.blueprint_id,
-            deploymentId: params.deployment_id
+            items: _.map(data.items, (item) => ({...item, isSelected: item.id === selectedAgent})),
+            total: _.get(data, 'metadata.pagination.total', 0),
+            deploymentId: params.deployment_id,
+            nodeId: params.node_ids,
+            nodeInstanceId: params.node_instance_ids
         };
 
         return (
-            <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox}/>
+            <AgentsTable configuration={widget.configuration} data={formattedData} toolbox={toolbox} />
         );
     }
 });
