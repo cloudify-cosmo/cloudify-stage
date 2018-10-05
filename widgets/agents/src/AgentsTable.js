@@ -1,22 +1,23 @@
-import CreateModal from '../../userManagement/src/CreateModal';
-
 /**
  * Created by jakub.niezgoda on 04/10/2018.
  */
+
+import ValidateAgentsModal from './ValidateAgentsModal';
 
 export default class AgentsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
-            error: null
+            error: null,
+            showModal: false,
+            modal: ''
         };
     }
 
-    static MenuAction = {
+    static Modals = {
         INSTALL_AGENT: 'install_agent',
-        VALIDATE_AGENT: 'validate_agent',
-        STOP_AGENT: 'stop_agent'
+        VALIDATE_AGENT: 'validate_agent'
     };
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -47,18 +48,13 @@ export default class AgentsTable extends React.Component {
         }
     }
 
-    _actionClick(agent, proxy, {name}) {
-        const MenuAction = AgentsTable.MenuAction;
+    openModal(modal) {
+        this.setState({showModal: true, modal});
+    };
 
-        switch(name) {
-            case MenuAction.INSTALL_AGENT:
-                break;
-            case MenuAction.VALIDATE_AGENT:
-                break;
-            case MenuAction.STOP_AGENT:
-                break;
-        }
-    }
+    hideModal() {
+        this.setState({showModal: false});
+    };
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Agents available.';
@@ -66,7 +62,7 @@ export default class AgentsTable extends React.Component {
         const fieldsToShow = configuration.fieldsToShow;
         const totalSize = this.props.data.total > 0 ? undefined : 0;
 
-        let {Button, DataTable, ErrorMessage, Menu, PopupMenu} = Stage.Basic;
+        let {Button, DataTable, ErrorMessage} = Stage.Basic;
 
         return (
             <div>
@@ -90,7 +86,6 @@ export default class AgentsTable extends React.Component {
                                       show={fieldsToShow.indexOf('Version') >= 0}/>
                     <DataTable.Column label="Install Method"
                                       show={fieldsToShow.indexOf('Install Method') >= 0}/>
-                    <DataTable.Column show={fieldsToShow.indexOf('Actions') >= 0}/>
 
                     {
                         _.map(this.props.data.items, (item) =>
@@ -102,35 +97,26 @@ export default class AgentsTable extends React.Component {
                                 <DataTable.Data>{item.system}</DataTable.Data>
                                 <DataTable.Data>{item.version}</DataTable.Data>
                                 <DataTable.Data>{item.install_method}</DataTable.Data>
-                                <DataTable.Data className="center aligned">
-                                    <PopupMenu className="menuAction">
-                                        <Menu pointing vertical>
-                                            <Menu.Item content='Install'
-                                                       icon='download'
-                                                       name={AgentsTable.MenuAction.INSTALL_AGENT}
-                                                       onClick={this._actionClick.bind(this, item)} />
-                                            <Menu.Item content='Validate'
-                                                       icon='checkmark box'
-                                                       name={AgentsTable.MenuAction.VALIDATE_AGENT}
-                                                       onClick={this._actionClick.bind(this, item)} />
-                                            <Menu.Item content='Stop'
-                                                       icon='cancel'
-                                                       name={AgentsTable.MenuAction.STOP_AGENT}
-                                                       onClick={this._actionClick.bind(this, item)} />
-                                        </Menu>
-                                    </PopupMenu>
-                                </DataTable.Data>
                             </DataTable.Row>
                         )
                     }
 
                     <DataTable.Action>
-                        <Button content='Install' icon='download' labelPosition='left' onClick={_.noop}/>
-                        <Button content='Validate' icon='checkmark' labelPosition='left' onClick={_.noop}/>
+                        <Button content='Install' icon='download' labelPosition='left'
+                                onClick={this.openModal.bind(this, AgentsTable.Modals.INSTALL_AGENT)}/>
+                        <Button content='Validate' icon='checkmark' labelPosition='left'
+                                onClick={this.openModal.bind(this, AgentsTable.Modals.VALIDATE_AGENT)}/>
                     </DataTable.Action>
 
                 </DataTable>
 
+                <ValidateAgentsModal toolbox={this.props.toolbox}
+                                     open={this.state.showModal && this.state.modal === AgentsTable.Modals.VALIDATE_AGENT}
+                                     deploymentId={this.props.data.deploymentId} nodeId={this.props.data.nodeId}
+                                     nodeInstanceId={this.props.data.nodeInstanceId}
+                                     agents={this.props.data.items}
+                                     installMethods={_.without(configuration.installMethods, '')}
+                                     onHide={this.hideModal.bind(this)} />
             </div>
         );
     }

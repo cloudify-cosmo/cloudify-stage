@@ -3,6 +3,7 @@
  */
 
 import AgentsTable from './AgentsTable';
+import Consts from './consts';
 
 Stage.defineWidget({
     id: 'agents',
@@ -30,15 +31,10 @@ Stage.defineWidget({
                 type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
             },
             {
-                id: 'installMethod', name: 'Filter Agents by Install Method',
+                id: 'installMethods', name: 'Filter Agents by Install Method',
                 description: 'Choose Install Methods to filter Agents. Unset all options to disable this type of filtering.',
                 placeHolder: 'Select Install Methods from the list',
-                items: [
-                    {name:'Remote', value:'remote'},
-                    {name:'Plugin', value:'plugin'},
-                    {name:'Init Script', value:'init_script'},
-                    {name:'Provided', value:'provided'}
-                ],
+                items: Consts.installMethodsOptions,
                 default: '',
                 type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
             }
@@ -49,8 +45,8 @@ Stage.defineWidget({
             deployment_id: toolbox.getContext().getValue('deploymentId'),
             node_ids: toolbox.getContext().getValue('nodeId'),
             node_instance_ids: toolbox.getContext().getValue('nodeInstanceId'),
-            install_methods: !_.isEmpty(widget.configuration.installMethod)
-                ? _.reject(widget.configuration.installMethod, _.isEmpty)
+            install_methods: !_.isEmpty(widget.configuration.installMethods)
+                ? _.reject(widget.configuration.installMethods, _.isEmpty)
                 : undefined
         };
     },
