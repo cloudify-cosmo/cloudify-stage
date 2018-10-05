@@ -17,8 +17,8 @@ Stage.defineWidget({
     
     fetchData:(widget,toolbox,params)=>{
         return Promise.all([
-            toolbox.getManager().doGetFull('/blueprints?_include=id'),
-            toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id'),
+            widget.configuration.filterByBlueprints ? toolbox.getManager().doGetFull('/blueprints?_include=id') : Promise.resolve({}),
+            widget.configuration.filterByDeployments ? toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id') : Promise.resolve({}),
             widget.configuration.filterByNodes ? toolbox.getManager().doGetFull('/nodes?_include=id,blueprint_id,deployment_id') : Promise.resolve({}),
             widget.configuration.filterByNodeInstances ? toolbox.getManager().doGetFull('/node-instances?_include=id,deployment_id,node_id') : Promise.resolve({}),
             widget.configuration.filterByExecutions ? toolbox.getManager().doGetFull('/executions?_include=id,blueprint_id,deployment_id,workflow_id') : Promise.resolve({})
@@ -38,46 +38,64 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('filter'),
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        {id: "filterByBlueprints",name: "Show blueprint filter", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: "filterByDeployments",name: "Show deployment filter", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "filterByExecutions",name: "Show execution filter", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "filterByNodes",name: "Show node filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-        {id: "filterByNodeInstances",name: "Show node instance filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
+        {id: "filterByNodeInstances",name: "Show node instance filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: "allowMultipleSelection", name: "Allow multiple selection",
+         description: "Allows selecting more than one blueprint, deployment, node, node instance and execution in the filter",
+         default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
     ],
 
-    _processData(blueprintId,deploymentId,nodeId,nodeInstanceId,executionId,data) {
-        var processedData = Object.assign({},data,{
+    _processData(blueprintId, deploymentId, nodeId, nodeInstanceId, executionId, data) {
+        let processedData = {
             blueprintId,
             deploymentId,
             nodeId,
             nodeInstanceId,
             executionId,
             blueprints: {
-                items: data.blueprints.items
+                items: _.sortBy(data.blueprints.items, 'id')
             },
-            deployments:{
-                items: data.deployments.items
+            deployments: {
+                items: _.sortBy(data.deployments.items, 'id')
             },
-            nodes:{
-                items: data.nodes.items
+            nodes: {
+                items: _.sortBy(data.nodes.items, 'id')
             },
-            nodeInstances:{
-                items: data.nodeInstances.items
+            nodeInstances: {
+                items: _.sortBy(data.nodeInstances.items, 'id')
             },
             executions: {
-                items: data.executions.items
+                items: _.sortBy(data.executions.items, 'id')
             }
-        });
+        };
 
-        if (blueprintId) {
-            processedData.deployments.items = _.filter(processedData.deployments.items, {blueprint_id: blueprintId});
-            processedData.nodes.items = _.filter(processedData.nodes.items, {blueprint_id: blueprintId});
+        if (!_.isNil(blueprintId)) {
+            let blueprintIdArray = _.castArray(blueprintId);
+            processedData.deployments.items
+                = _.filter(processedData.deployments.items, (deployment) => _.includes(blueprintIdArray, deployment.blueprint_id));
+            processedData.nodes.items
+                = _.filter(processedData.nodes.items, (node) => _.includes(blueprintIdArray, node.blueprint_id));
+            processedData.executions.items
+                = _.filter(processedData.executions.items, (execution) => _.includes(blueprintIdArray, execution.blueprint_id));
         }
-        if (deploymentId) {
-            processedData.nodes.items = _.filter(processedData.nodes.items, {deployment_id: deploymentId});
-            processedData.nodeInstances.items = _.filter(processedData.nodeInstances.items, {deployment_id: deploymentId});
-            processedData.executions.items = _.filter(processedData.executions.items, {deployment_id: deploymentId});
+
+        if (!_.isNil(deploymentId)) {
+            const deploymentIdArray = _.castArray(deploymentId);
+            processedData.nodes.items
+                = _.filter(processedData.nodes.items, (node) => _.includes(deploymentIdArray, node.deployment_id));
+            processedData.nodeInstances.items
+                = _.filter(processedData.nodeInstances.items, (nodeInstance) => _.includes(deploymentIdArray, nodeInstance.deployment_id));
+            processedData.executions.items
+                = _.filter(processedData.executions.items, (execution) => _.includes(deploymentIdArray, execution.deployment_id));
         }
-        if (nodeId) {
-            processedData.nodeInstances.items = _.filter(processedData.nodeInstances.items, {node_id: nodeId});
+
+        if (!_.isNil(nodeId)) {
+            const nodeIdArray = _.castArray(nodeId);
+            processedData.nodeInstances.items
+                = _.filter(processedData.nodeInstances.items, (nodeInstance) => _.includes(nodeIdArray, nodeInstance.node_id));
         }
 
         return processedData;
@@ -87,16 +105,19 @@ Stage.defineWidget({
             return <Stage.Basic.Loading/>;
         }
 
-        var selectedBlueprint = toolbox.getContext().getValue('blueprintId');
-        var selectedDeployment = toolbox.getContext().getValue('deploymentId');
-        var selectedNode = toolbox.getContext().getValue('nodeId');
-        var selectedNodeInstance = toolbox.getContext().getValue('nodeInstanceId');
-        var selectedExecution = toolbox.getContext().getValue('executionId');
+        const context = toolbox.getContext();
+        const selectedBlueprintIds = context.getValue('blueprintId');
+        const selectedDeploymentIds = context.getValue('deploymentId');
+        const selectedNodeIds = context.getValue('nodeId');
+        const selectedNodeInstanceIds = context.getValue('nodeInstanceId');
+        const selectedExecutionIds = context.getValue('executionId');
 
-        var processedData = this._processData(selectedBlueprint,selectedDeployment,selectedNode,selectedNodeInstance,selectedExecution,data);
+        let processedData
+            = this._processData(selectedBlueprintIds, selectedDeploymentIds, selectedNodeIds,
+                                selectedNodeInstanceIds, selectedExecutionIds, data);
 
         return (
-            <Filter widget={widget} data={processedData} toolbox={toolbox}/>
+            <Filter configuration={widget.configuration} data={processedData} toolbox={toolbox}/>
         );
 
     }

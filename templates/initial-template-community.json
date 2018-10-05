@@ -3,5 +3,6 @@
   "catalog-community",
   "blueprints-community",
   "deploy",
-  "systemResources-community"
+  "systemResources-community",
+  "logs"
 ]

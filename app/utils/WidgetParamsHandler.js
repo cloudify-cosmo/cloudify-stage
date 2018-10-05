@@ -39,7 +39,7 @@ export default class WidgetParamsHandler {
         if (!_.isEmpty(userRequestedParams)) {
 
             // If user stated he wanted gridParams, then add the grid params fields
-            userRequestedParams = _.replace(userRequestedParams, 'gridParams', '_sort,_size,_offset').split(',');
+            userRequestedParams = _.replace(userRequestedParams, 'gridParams', '_sort,_size,_offset,_search').split(',');
 
             // Pick only the values that the user asked for
             params = _.pick(params, userRequestedParams);

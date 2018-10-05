@@ -13,7 +13,8 @@
       "x": 0,
       "y": 3,
       "configuration": {
-        "filterByExecutions":false
+        "filterByDeployments": false,
+        "filterByExecutions": false
       }
     },
     {
@@ -24,7 +25,7 @@
       "x": 0,
       "y": 7,
       "configuration":{
-        "displayStyle":"list"
+        "displayStyle": "list"
       }
     }
   ]

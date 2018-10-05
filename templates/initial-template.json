@@ -3,5 +3,6 @@
   "catalog",
   "blueprints",
   "deploy",
-  "systemResources"
+  "systemResources",
+  "logs"
 ]
