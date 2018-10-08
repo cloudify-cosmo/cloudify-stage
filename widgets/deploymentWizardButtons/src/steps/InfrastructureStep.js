@@ -88,7 +88,8 @@ class InfrastructureStepContent extends Component {
                 widgetResourceUrl('deploymentWizardButtons', `/images/${_.replace(yaml, '.yaml', '')}_logo.svg`, false);
 
             return (
-                <Button fluid basic size='huge' active={props.active} onClick={this.onChange.bind(this, props.value)}>
+                <Button fluid basic size='huge' active={props.active} name={props.value}
+                        onClick={this.onChange.bind(this, props.value)}>
                     <Image src={platformLogoSrc(props.value)} inline style={{ cursor: 'pointer', height: 35 }} />
                 </Button>
             );

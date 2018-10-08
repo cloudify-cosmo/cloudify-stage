@@ -60,6 +60,7 @@ export default class NodesTable extends React.Component {
                            pageSize={this.props.widget.configuration.pageSize}
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
+                           searchable={true}
                            selectable={true}
                            className="nodesTable"
                            noDataMessage={NO_DATA_MESSAGE}>

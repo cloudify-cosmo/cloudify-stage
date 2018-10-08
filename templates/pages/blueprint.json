@@ -5,12 +5,12 @@
       "name": "Blueprint Actions",
       "definition": "blueprintActionButtons",
       "width": 7,
-      "height": 5,
+      "height": 3,
       "x": 0,
       "y": 0
     },
     {
-      "name": "Topology",
+      "name": "Blueprint Topology",
       "definition": "topology",
       "width": 12,
       "height": 30,
@@ -18,7 +18,7 @@
       "y": 5
     },
     {
-      "name": "Deployments",
+      "name": "Blueprint Deployments",
       "width": 12,
       "height": 24,
       "definition": "deployments",

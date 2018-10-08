@@ -19,6 +19,7 @@ import TemplateManagement from '../../containers/templates/TemplateManagement';
 import PageManagement from '../../containers/templates/PageManagement';
 import Home from '../../containers/Home';
 import NotFound from '../NotFound';
+import ScrollToTop from './ScrollToTop';
 
 export default class Layout extends Component {
     constructor(props,context) {
@@ -76,7 +77,7 @@ export default class Layout extends Component {
         }
 
         return (
-            <div>
+            <ScrollToTop>
                 <Header />
                 <Switch>
                     {
@@ -93,7 +94,7 @@ export default class Layout extends Component {
                     <Route exact path={Consts.HOME_PAGE_PATH} component={Home} />
                     <Route component={NotFound} />
                 </Switch>
-            </div>
+            </ScrollToTop>
         );
     }
 }

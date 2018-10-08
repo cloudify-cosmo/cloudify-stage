@@ -132,6 +132,7 @@ class SecretsStepContent extends Component {
                 return (
                     <ResourceAction>
                         <Form.Input name={secretKey} value={secret.value} error={this.props.errors[secretKey]} fluid
+                                    placeholder='Provide secret value'
                                     onChange={(event, {name, value}) => this.handleChange(secretKey, 'value', value)} />
                     </ResourceAction>
                 );
@@ -194,7 +195,7 @@ class SecretsStepContent extends Component {
                                 {
                                     _.map(_.keys(this.props.stepData), (secretKey) =>
                                         !_.isNil(secrets[secretKey]) &&
-                                        <Table.Row key={secretKey}>
+                                        <Table.Row key={secretKey} name={secretKey}>
                                             <Table.Cell collapsing>{secretKey}</Table.Cell>
                                             <Table.Cell collapsing>{this.getSecretStatus(secretKey)}</Table.Cell>
                                             <Table.Cell>{this.getSecretAction(secretKey)}</Table.Cell>

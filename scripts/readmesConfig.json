@@ -1,6 +1,6 @@
 {
-  "linksBasePath": "https://docs.cloudify.co/staging/next",
-  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/next",
+  "linksBasePath": "https://docs.cloudify.co/4.5.0",
+  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/4.5.0-build",
   "files": [
     {"widget": "blueprintActionButtons", "link": "/content/working_with/console/widgets/blueprintActionButtons.md"},
     {"widget": "blueprintCatalog", "link": "/content/working_with/console/widgets/blueprintCatalog.md"},
@@ -15,6 +15,7 @@
     {"widget": "deploymentButton", "link": "/content/working_with/console/widgets/deploymentButton.md"},
     {"widget": "deploymentNum", "link": "/content/working_with/console/widgets/deploymentNum.md"},
     {"widget": "deployments", "link": "/content/working_with/console/widgets/deployments.md"},
+    {"widget": "deploymentWizardButtons", "link": "/content/working_with/console/widgets/deploymentWizardButtons.md"},
     {"widget": "events", "link": "/content/working_with/console/widgets/events.md"},
     {"widget": "eventsFilter", "link": "/content/working_with/console/widgets/eventsFilter.md"},
     {"widget": "executionNum", "link": "/content/working_with/console/widgets/executionNum.md"},

@@ -3,7 +3,7 @@
 This widget provides the ability to filter the data presented in other widgets on the page according to a specific resource. 
 By default, the widget allows filtering by blueprint, deployment and execution, and you can also add fields to filter by node or node instance, by configuring the widget’s settings. 
 
-![resource-filter](https://docs.cloudify.co/staging/next/images/ui/widgets/resource_filter.png)
+![resource-filter](https://docs.cloudify.co/4.5.0/images/ui/widgets/resource_filter.png)
 
 
 #### Widget Settings 

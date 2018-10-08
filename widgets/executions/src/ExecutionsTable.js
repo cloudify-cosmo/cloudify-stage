@@ -3,7 +3,7 @@
  */
 import UpdateDetailsModal from './UpdateDetailsModal';
 
-export default class extends React.Component {
+export default class ExecutionsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -17,6 +17,15 @@ export default class extends React.Component {
             error: null
         };
     }
+
+    static MenuAction = {
+        SHOW_EXECUTION_PARAMETERS: 'execution_parameters',
+        SHOW_UPDATE_DETAILS: 'update_details',
+        SHOW_ERROR_DETAILS: 'error_details',
+        CANCEL_EXECUTION: Stage.Common.ExecutionUtils.CANCEL_ACTION,
+        FORCE_CANCEL_EXECUTION: Stage.Common.ExecutionUtils.FORCE_CANCEL_ACTION,
+        KILL_CANCEL_EXECUTION: Stage.Common.ExecutionUtils.KILL_CANCEL_ACTION
+    };
 
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props.widget.configuration, nextProps.widget.configuration)
@@ -57,14 +66,39 @@ export default class extends React.Component {
             .catch((err) => {this.setState({error: err.message});});
     }
 
+    _actionClick(execution, proxy, {name}) {
+        const MenuAction = ExecutionsTable.MenuAction;
+
+        switch(name) {
+            case MenuAction.SHOW_EXECUTION_PARAMETERS:
+                this.setState({execution, executionParametersModalOpen: true, idPopupOpen: false});
+                break;
+
+            case MenuAction.SHOW_UPDATE_DETAILS:
+                this.setState({deploymentUpdateId: execution.parameters.update_id, deploymentUpdateModalOpen: true});
+                break;
+
+            case MenuAction.SHOW_ERROR_DETAILS:
+                this.setState({execution, errorModalOpen: true, idPopupOpen: false});
+                break;
+
+            case MenuAction.CANCEL_EXECUTION:
+            case MenuAction.FORCE_CANCEL_EXECUTION:
+            case MenuAction.KILL_CANCEL_EXECUTION:
+                this._cancelExecution(execution, name);
+                break;
+        }
+    }
+
     fetchGridData(fetchParams) {
         return this.props.toolbox.refresh(fetchParams);
     }
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
-        let {Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Modal, Popup} = Stage.Basic;
-        let {ExecutionStatus, IdPopup} = Stage.Common;
+        let {Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal, PopupMenu} = Stage.Basic;
+        let {ExecutionStatus, ExecutionUtils, IdPopup} = Stage.Common;
+        const MenuAction = ExecutionsTable.MenuAction;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
         let execution = this.state.execution || {parameters: {}};
@@ -85,25 +119,25 @@ export default class extends React.Component {
 
                     <DataTable.Column label="" width="1%" />
                     <DataTable.Column label="Blueprint" name="blueprint_id" width="15%"
-                                 show={fieldsToShow.indexOf('Blueprint') >= 0 && !this.props.data.blueprintId}/>
+                                      show={fieldsToShow.indexOf('Blueprint') >= 0 && !this.props.data.blueprintId && !this.props.data.deploymentId}/>
                     <DataTable.Column label="Deployment" name="deployment_id" width="15%"
-                                 show={fieldsToShow.indexOf('Deployment') >= 0 && !this.props.data.deploymentId}/>
+                                      show={fieldsToShow.indexOf('Deployment') >= 0 && !this.props.data.deploymentId}/>
                     <DataTable.Column label="Workflow" name="workflow_id" width="15%"
-                                 show={fieldsToShow.indexOf('Workflow') >= 0}/>
+                                      show={fieldsToShow.indexOf('Workflow') >= 0}/>
                     <DataTable.Column label="Id" name="id" width="10%"
-                                 show={fieldsToShow.indexOf('Id') >= 0}/>
+                                      show={fieldsToShow.indexOf('Id') >= 0}/>
                     <DataTable.Column label="Created" name="created_at" width="10%"
-                                 show={fieldsToShow.indexOf('Created') >= 0}/>
+                                      show={fieldsToShow.indexOf('Created') >= 0}/>
                     <DataTable.Column label="Ended" name="ended_at" width="10%"
-                                 show={fieldsToShow.indexOf('Ended') >= 0}/>
+                                      show={fieldsToShow.indexOf('Ended') >= 0}/>
                     <DataTable.Column label="Creator" name='created_by' width="5%"
                                       show={fieldsToShow.indexOf('Creator') >= 0}/>
                     <DataTable.Column label="System" name="is_system_workflow" width="5%"
-                                 show={fieldsToShow.indexOf('System') >= 0}/>
-                    <DataTable.Column label="Params" name="parameters" width="5%"
-                                 show={fieldsToShow.indexOf('Params') >= 0}/>
-                    <DataTable.Column label="Status" width="10%" name="status"
-                                 show={fieldsToShow.indexOf('Status') >= 0}/>
+                                      show={fieldsToShow.indexOf('System') >= 0}/>
+                    <DataTable.Column label="Status" width="15%"
+                                      show={fieldsToShow.indexOf('Status') >= 0}/>
+                    <DataTable.Column width="5%"
+                                      show={fieldsToShow.indexOf('Params') >= 0 || fieldsToShow.indexOf('Actions') >= 0}/>
 
                     {
                         this.props.data.items.map((item)=>{
@@ -125,32 +159,50 @@ export default class extends React.Component {
                                         <Checkmark value={item.is_system_workflow}/>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <Icon name="options" link bordered title="Execution parameters" onClick={(event)=>{event.stopPropagation();this.setState({execution: item, executionParametersModalOpen: true})}} />
-                                        {
-                                            item.workflow_id === 'update' && <Icon name="magnify" link bordered title="Update details" onClick={(event)=>{event.stopPropagation();this.setState({deploymentUpdateId: item.parameters.update_id, deploymentUpdateModalOpen: true})}} />
-                                        }
+                                        <ExecutionStatus item={item} displayCancelIcon={false} onCancelExecution={_.noop} />
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        {
-                                            _.isEmpty(item.error)
-                                            ?
-                                                <div>
-                                                    <Icon name="check circle" color="green" inverted />
-                                                    <ExecutionStatus item={item} showInactiveAsLink={false} onCancelExecution={this._cancelExecution.bind(this)}/>
-                                                </div>
-                                            :
-                                                <Popup position='top center'>
-                                                    <Popup.Trigger>
-                                                        <div onClick={(event)=>{event.stopPropagation();this.setState({execution: item, errorModalOpen: true})}} >
-                                                            <Icon name="remove circle" color="red" link />
-                                                            <ExecutionStatus item={item} showInactiveAsLink={true} onCancelExecution={this._cancelExecution.bind(this)} />
-                                                        </div>
-                                                    </Popup.Trigger>
-                                                    <Popup.Content>
-                                                        Click to see details
-                                                    </Popup.Content>
-                                                </Popup>
-                                        }
+
+                                        <PopupMenu className="menuAction">
+                                            <Menu pointing vertical>
+                                                <Menu.Item content='Show Execution Parameters'
+                                                           icon='options'
+                                                           name={MenuAction.SHOW_EXECUTION_PARAMETERS}
+                                                           onClick={this._actionClick.bind(this, item)} />
+                                                {
+                                                    item.workflow_id === 'update' &&
+                                                    <Menu.Item content='Show Update Details'
+                                                               icon='magnify'
+                                                               name={MenuAction.SHOW_UPDATE_DETAILS}
+                                                               onClick={this._actionClick.bind(this, item)} />
+                                                }
+                                                {
+                                                    !_.isEmpty(item.error) &&
+                                                    <Menu.Item content='Show Error Details'
+                                                               icon={<Icon name='exclamation circle' color='red' />}
+                                                               name={MenuAction.SHOW_ERROR_DETAILS}
+                                                               onClick={this._actionClick.bind(this, item)} />
+                                                }
+                                                {
+                                                    ExecutionUtils.isActiveExecution(item) &&
+                                                    <Menu.Item content='Cancel'
+                                                               icon='cancel'
+                                                               name={MenuAction.CANCEL_EXECUTION}
+                                                               onClick={this._actionClick.bind(this, item)} />
+                                                }
+                                                {
+                                                    ExecutionUtils.isActiveExecution(item) &&
+                                                    <Menu.Item content='Force Cancel'
+                                                               icon={<Icon name='cancel' color='red' />}
+                                                               name={MenuAction.FORCE_CANCEL_EXECUTION}
+                                                               onClick={this._actionClick.bind(this, item)}/>
+                                                }
+                                                <Menu.Item content='Kill Cancel'
+                                                           icon={<Icon name='stop' color='red' />}
+                                                           name={MenuAction.KILL_CANCEL_EXECUTION}
+                                                           onClick={this._actionClick.bind(this, item)} />
+                                            </Menu>
+                                        </PopupMenu>
                                     </DataTable.Data>
                                 </DataTable.Row>
                             );

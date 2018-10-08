@@ -268,6 +268,7 @@ class PluginsStepContent extends Component {
                                           yamlPlaceholder=''
                                           errors={this.props.errors[pluginName]}
                                           wrapInForm={false}
+                                          addRequiredMarks={false}
                                           loading={this.props.loading}
                                           onChange={this.onChange(pluginName).bind(this)} />
                     </ResourceAction>
@@ -346,7 +347,7 @@ class PluginsStepContent extends Component {
                                         let {Image} = Stage.Basic;
 
                                         return (
-                                            <Table.Row key={pluginName}>
+                                            <Table.Row key={pluginName} name={pluginName}>
                                                 <Table.Cell collapsing>
                                                     {
                                                         !_.isNil(pluginInCatalog)

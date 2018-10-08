@@ -7,12 +7,41 @@ import PropTypes from 'prop-types';
 
 import {Button} from './../index';
 
+/**
+ * StepActions component is interface for components implementing step actions for {@link WizardModal}
+ *
+ * ## Access
+ * `Stage.Basic.Wizard.Step.Actions`
+ */
 export default class StepActions extends Component {
 
     constructor(props) {
         super(props);
     }
-
+    /**
+     * @property {string} id step ID
+     * @property {function} onClose function calling wizard to close
+     * @property {function} onStartOver function calling wizard to start over wizard process
+     * @property {function} onPrev function calling wizard to move to the previous step
+     * @property {function} onNext function calling wizard to move to the next step
+     * @property {function} onError function setting wizard in error state
+     * @property {function} onLoading function setting wizard in loading state
+     * @property {function} onReady function setting wizard in ready state
+     * @property {function} fetchData function providing step data from step content
+     * @property {Object} wizardData wizard data object
+     * @property {Object} toolbox Toolbox object
+     * @property {boolean} [disabled=false] if set then action buttons will be disabled
+     * @property {string} [startOverLabel='Start Over'] label for Start Over button
+     * @property {string} [startOverIcon='undo'] icon to be added to Start Over button
+     * @property {boolean} [showStartOver=false] if set to true, then Start Over button will be shown
+     * @property {boolean} [resetDataOnStartOver=false] if set to true, then wizard data will be reset on Start Over button click
+     * @property {string} [prevLabel='Back'] label for Back button
+     * @property {string} [prevIcon='arrow left'] icon to be added to Back button
+     * @property {boolean} [showPrev=true] if set to true, then Back button will be shown
+     * @property {string} [nextLabel='Next'] label for Next button
+     * @property {string} [nextIcon='arrow right'] icon to be added to Next button
+     * @property {boolean} [showNext=true] if set to true, then Next button will be shown
+     */
     static propTypes = {
         id: PropTypes.string.isRequired,
         onClose: PropTypes.func.isRequired,
