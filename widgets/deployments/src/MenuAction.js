@@ -38,7 +38,7 @@ export default class MenuAction extends React.Component {
                     </Menu.Item>
                     <Menu.Item icon='edit' content='Update' name={MenuAction.UPDATE_ACTION}
                                    onClick={this._actionClick.bind(this, false)}/>
-                    <Menu.Item icon='trash outline' content='Delete' name={MenuAction.DELETE_ACTION}
+                    <Menu.Item icon='trash alternate' content='Delete' name={MenuAction.DELETE_ACTION}
                                    onClick={this._actionClick.bind(this, false)}/>
                     <Menu.Item icon='trash' content='Force Delete' name={MenuAction.FORCE_DELETE_ACTION}
                                onClick={this._actionClick.bind(this, false)}/>
