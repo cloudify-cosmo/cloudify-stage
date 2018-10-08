@@ -27,6 +27,7 @@ Object.keys(document.defaultView).forEach((property) => {
 global.$ = global.jQuery = global.window.$ = global.window.jQuery = $(window);
 global._ = _;
 global.d3 = d3;
+global.HTMLElement = window.HTMLElement;
 
 chai.use(require('chai-enzyme')());
 chai.use(require('sinon-chai'));
