@@ -33,7 +33,7 @@ export default class LastExecutionStatusIcon extends React.Component {
     };
 
     render() {
-        let {Button, CopyToClipboardButton, HighlightText, Icon, Label, Table, Modal, Popup} = Stage.Basic;
+        let {Button, CopyToClipboardButton, HighlightText, Icon, Table, Modal, Popup} = Stage.Basic;
         let {ExecutionStatus, ExecutionUtils} = Stage.Common;
         let execution = {workflow_id: '', status: '', ...this.props.execution};
 
@@ -45,11 +45,13 @@ export default class LastExecutionStatusIcon extends React.Component {
                            onClick={() => this.setState({open: false})}>
 
                         <Popup.Trigger>
-                            <ExecutionStatus item={execution}
-                                             showLabel={this.props.showLabel}
-                                             showWorkflowId={this.props.showLabel}
-                                             labelProps={{attached: this.props.labelAttached ? 'top left' : undefined}}
-                                             iconProps={{attached: this.props.showLabel ? undefined : 'top left', size: 'large'}} />
+                            <div>
+                                <ExecutionStatus item={execution}
+                                                 showLabel={this.props.showLabel}
+                                                 showWorkflowId={this.props.showLabel}
+                                                 labelProps={{attached: this.props.labelAttached ? 'top left' : undefined}}
+                                                 iconProps={{attached: this.props.showLabel ? undefined : 'top left', size: 'large'}} />
+                            </div>
                         </Popup.Trigger>
 
                         <Popup.Header>
