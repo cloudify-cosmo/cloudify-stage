@@ -4,33 +4,6 @@
 
 import PropTypes from 'prop-types';
 
-const executionSuccessful = 'success';
-const executionFailed = 'failed';
-const executionCancelled = 'cancelled';
-const executionInProgress = 'inprogress';
-const statusParams = {
-    [executionSuccessful]: {
-        icon: 'checkmark',
-        color: 'green',
-        loading: false
-    },
-    [executionFailed]: {
-        icon: 'remove',
-        color: 'red',
-        loading: false
-    },
-    [executionCancelled]: {
-        icon: 'ban',
-        color: 'orange',
-        loading: false
-    },
-    [executionInProgress]: {
-        icon: 'spinner',
-        color: 'yellow',
-        loading: true
-    }
-};
-
 export default class LastExecutionStatusIcon extends React.Component {
 
     constructor(props, context){
@@ -61,44 +34,28 @@ export default class LastExecutionStatusIcon extends React.Component {
 
     render() {
         let {Button, CopyToClipboardButton, HighlightText, Icon, Label, Table, Modal, Popup} = Stage.Basic;
-        let {ExecutionUtils} = Stage.Common;
+        let {ExecutionStatus, ExecutionUtils} = Stage.Common;
         let execution = {workflow_id: '', status: '', ...this.props.execution};
 
-        let status = '';
-        if (ExecutionUtils.isFailedExecution(execution)) {
-            status = executionFailed;
-        } else if (ExecutionUtils.isSuccessfulExecution(execution)) {
-            status = executionSuccessful;
-        } else if (ExecutionUtils.isCancelledExecution(execution)) {
-            status = executionCancelled;
-        } else {
-            status = executionInProgress;
-        }
-
-        return !_.isEmpty(status)
+        return !_.isEmpty(execution.status)
             ?
                 <React.Fragment>
                     <Popup flowing on='hover' hoverable open={this.state.open}
                            onOpen={() => this.setState({open: true})} onClose={() => this.setState({open: false})}
                            onClick={() => this.setState({open: false})}>
+
                         <Popup.Trigger>
-                            {
-                                this.props.showLabel
-                                    ?
-                                    <Label attached={this.props.labelAttached ? 'top left' : undefined}>
-                                        <Icon name={statusParams[status].icon} color={statusParams[status].color}
-                                              loading={statusParams[status].loading} size='large'/>
-                                        <span>{execution.workflow_id} {execution.status_display || execution.status}</span>
-                                    </Label>
-                                    :
-                                    <Icon name={statusParams[status].icon} color={statusParams[status].color}
-                                          attached='top left'
-                                          loading={statusParams[status].loading} size='large'/>
-                            }
+                            <ExecutionStatus item={execution}
+                                             showLabel={this.props.showLabel}
+                                             showWorkflowId={this.props.showLabel}
+                                             labelProps={{attached: this.props.labelAttached ? 'top left' : undefined}}
+                                             iconProps={{attached: this.props.showLabel ? undefined : 'top left', size: 'large'}} />
                         </Popup.Trigger>
+
                         <Popup.Header>
                             Last Execution
                         </Popup.Header>
+
                         <Popup.Content>
                             <Table compact celled >
                                 <Table.Header>
@@ -123,7 +80,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                     <Table.Row textAlign='center'>
                                         <Table.HeaderCell colSpan='4'>
                                             {
-                                                status === executionFailed &&
+                                                ExecutionUtils.isFailedExecution(execution) &&
                                                 <Button icon labelPosition='left' color='red'
                                                         onClick={() => this.setState({errorModalOpen: true})}>
                                                     <Icon name='remove'/>
@@ -136,7 +93,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                                 Show Logs
                                             </Button>
                                             {
-                                                Stage.Common.ExecutionUtils.isUpdateExecution(execution) &&
+                                                ExecutionUtils.isUpdateExecution(execution) &&
                                                 <Button icon labelPosition='left' color='blue'
                                                         onClick={() => this.props.onShowUpdateDetails(_.get(execution, 'parameters.update_id'))}>
                                                     <Icon name='magnify'/>
@@ -175,7 +132,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                         </Popup.Content>
                     </Popup>
                     {
-                        status === executionFailed &&
+                        ExecutionUtils.isFailedExecution(execution) &&
                         <Modal open={this.state.errorModalOpen} onClose={() => this.setState({errorModalOpen: false})}>
                             <Modal.Header>
                                 Error message from '{execution.workflow_id}' worfklow execution on '{execution.deployment_id}' deployment

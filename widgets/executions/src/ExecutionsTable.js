@@ -158,7 +158,7 @@ export default class ExecutionsTable extends React.Component {
                                         <Checkmark value={item.is_system_workflow}/>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <ExecutionStatus item={item} displayCancelIcon={false} onCancelExecution={_.noop} />
+                                        <ExecutionStatus item={item} />
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
 
