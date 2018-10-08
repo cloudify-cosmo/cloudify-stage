@@ -6,5 +6,6 @@
   "tmm",
   "ha",
   "systemResources-admin",
-  "statistics"
+  "statistics",
+  "logs"
 ]

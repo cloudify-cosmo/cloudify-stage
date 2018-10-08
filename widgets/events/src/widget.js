@@ -24,8 +24,8 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_COLUMN_CONFIG('timestamp'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
-            items: ["Icon","Timestamp","Type","Blueprint","Deployment","Workflow","Operation","Node Name","Node Id","Message"],
-            default: 'Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node Name,Node Id,Message',
+            items: ["Icon","Timestamp","Type","Blueprint","Deployment","Workflow","Operation","Node Id","Node Instance Id","Message"],
+            default: 'Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node Id,Node Instance Id,Message',
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
         {id: "colorLogs", name: "Color message based on type", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "maxMessageLength", name: "Maximum message length before truncation", default: EventsTable.MAX_MESSAGE_LENGTH, type: Stage.Basic.GenericField.NUMBER_TYPE, min: 10}
@@ -36,19 +36,24 @@ Stage.defineWidget({
 
         let eventFilter = toolbox.getContext().getValue('eventFilter') || {};
 
-        let deploymentId = toolbox.getContext().getValue('deploymentId') || eventFilter.deploymentId;
-        if (!_.isEmpty(deploymentId)) {
-            params.deployment_id = deploymentId;
-        }
-
-        let blueprintId = toolbox.getContext().getValue('blueprintId') || eventFilter.blueprintId;
+        let blueprintId = toolbox.getContext().getValue('blueprintId');
         if (!_.isEmpty(blueprintId)) {
             params.blueprint_id = blueprintId;
         }
 
+        let deploymentId = toolbox.getContext().getValue('deploymentId');
+        if (!_.isEmpty(deploymentId)) {
+            params.deployment_id = deploymentId;
+        }
+
+        let executionId = toolbox.getContext().getValue('executionId');
+        if (!_.isEmpty(executionId)) {
+            params.execution_id = executionId;
+        }
+
         let messageText = eventFilter.messageText;
         if (!_.isEmpty(messageText)) {
-            params.message = messageText;
+            params.message = `%${messageText}%`;
         }
 
         let logLevel = eventFilter.logLevel;
@@ -86,9 +91,7 @@ Stage.defineWidget({
 
         let blueprintId = CONTEXT_PARAMS.blueprint_id;
         let deploymentId = CONTEXT_PARAMS.deployment_id;
-
-        blueprintId = _.isArray(blueprintId) ? (blueprintId.length === 1 ? blueprintId[0] : "") : "";
-        deploymentId = _.isArray(deploymentId) ? (deploymentId.length === 1 ? deploymentId[0] : "") : "";
+        let executionId = CONTEXT_PARAMS.execution_id;
 
         let formattedData = {
             items: _.map (data.items, (item) => {
@@ -104,6 +107,7 @@ Stage.defineWidget({
             total : _.get(data, 'metadata.pagination.total', 0),
             blueprintId,
             deploymentId,
+            executionId,
             type: CONTEXT_PARAMS.type
         };
 

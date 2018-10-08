@@ -7,7 +7,7 @@ Presents the names and values of the outputs of a specific deployment. The deplo
 
 If only a blueprint was selected, the widget will present the default values for the outputs, defined in the blueprint itself. 
 
-![deployment-outputs](https://docs.cloudify.co/staging/dev/images/ui/widgets/deployment-outputs.png)
+![deployment-outputs](https://docs.cloudify.co/4.5.0/images/ui/widgets/deployment-outputs.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds

@@ -20,7 +20,7 @@ The hamburger menu on the right of every tenant allows performing the following 
 Also, using the “Add” button on the right top corner of the widget, you will be able to create new users.
 Please notice that if you choose to  authenticate the users in front of an external user management system, you will not be able to create or delete the users in cloudify, nor to assigned them to Cloudify user groups,  to prevent conflicts between the two systems which might cause security problems. 
 
-![manage-users](https://docs.cloudify.co/staging/dev/images/ui/widgets/manage-users.png)
+![manage-users](https://docs.cloudify.co/4.5.0/images/ui/widgets/manage-users.png)
 
 #### Widget Settings 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.

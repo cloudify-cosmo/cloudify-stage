@@ -19,7 +19,6 @@ Stage.defineWidget({
     fetchData: function(widget,toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId');
         let blueprintId = toolbox.getContext().getValue('blueprintId');
-        let _stringify = this._stringify;
 
         if (deploymentId) {
             let deploymentOutputsPromise = toolbox.getManager().doGet(`/deployments/${deploymentId}/outputs`);

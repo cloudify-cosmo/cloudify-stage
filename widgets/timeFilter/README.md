@@ -3,7 +3,7 @@ Displays a time filter for deployment metric graphs. It allows to define:
 
 * **Time range** - Enables you to choose start (`From`) and end (`To`) dates
      * by defining custom range
-         * using text input - Influx-compatible date/time is allowed. It is possible to define both absolute and relative date/time. For details, see the [Influx documentation - Date time strings](https://docs.cloudify.co/staging/devhttps://docs.influxdata.com/influxdb/v0.8/api/query_language/#date-time-strings). Examples: `now() - 15m`  or `2017-09-21 10:10`
+         * using text input - Influx-compatible date/time is allowed. It is possible to define both absolute and relative date/time. For details, see the [Influx documentation - Date time strings](https://docs.cloudify.co/4.5.0https://docs.influxdata.com/influxdb/v0.8/api/query_language/#date-time-strings). Examples: `now() - 15m`  or `2017-09-21 10:10`
          * using calendar picker - You can choose date and time from the calendar/time pickers
      * by choosing predefined range - There are few predefined time ranges available. You can apply them with one click using the buttons on the left side of the filter
 
@@ -17,7 +17,7 @@ The filter provides also the following features:
 
 * **Data validation** - When you click `Apply` button time range is validated. If invalid data is provided, then appropriate input field is marked with red color and time filter window will not be closed.  
 
-![Time Filter](https://docs.cloudify.co/staging/dev/images/ui/widgets/time-filter.png)
+![Time Filter](https://docs.cloudify.co/4.5.0/images/ui/widgets/time-filter.png)
 
 #### Widget Settings 
 None

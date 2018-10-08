@@ -19,7 +19,12 @@ export default class extends React.Component {
         let {JsonUtils} = Stage.Common;
 
         let instance = this.props.instance;
-        let instanceTotalSize = _.size(instance.runtime_properties);
+
+        // Setting totalSize on DataTable components to:
+        // 1. Show no-data message when there's no elements
+        // 2. Don't show pagination
+        const runtimePropertiesTotalSize = _.size(instance.runtime_properties) > 0 ? undefined : 0;
+        const relationshipsTotalSize = _.size(instance.relationships) > 0 ? undefined : 0;
 
         return (
             <div>
@@ -36,7 +41,7 @@ export default class extends React.Component {
                                                        text={JsonUtils.stringify(instance.relationships, true)} />
                             </h3>
                             <DataTable className="nodeInstanceRelationshipsTable"
-                                       totalSize={instance.relationships.length}
+                                       totalSize={relationshipsTotalSize}
                                        noDataMessage={NO_DATA_MESSAGE_RELATIONSHIPS}>
 
                                 <DataTable.Column label="Target node" name="target" width="30%"/>
@@ -63,11 +68,11 @@ export default class extends React.Component {
                                                        text={JsonUtils.stringify(instance.runtime_properties, true)} />
                             </h3>
                             <DataTable className="nodeInstanceRuntimePropertiesTable"
-                                       totalSize={instanceTotalSize}
+                                       totalSize={runtimePropertiesTotalSize}
                                        noDataMessage={NO_DATA_MESSAGE_RUNTIME_PROPERTIES}>
 
-                                <DataTable.Column label="Key" name="key" width="50%"/>
-                                <DataTable.Column label="Value" name="value" width="50%"/>
+                                <DataTable.Column label="Key" name="key" />
+                                <DataTable.Column label="Value" name="value" />
 
                                 {
                                     Object.keys(instance.runtime_properties).map(function (key) {

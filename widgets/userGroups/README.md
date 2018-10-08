@@ -16,7 +16,7 @@ The hamburger menu on the right of every tenant allows performing the following 
 * **Deleting the user groups** - possible only if there are no users who are members in the groups, and the group is not assigned with any tenants. 
 Also, using the “Add” button on the right top corner of the widget, you will be able to create new user groups. 
 
-![manage-usergroups](https://docs.cloudify.co/staging/dev/images/ui/widgets/manage-usergroups.png)
+![manage-usergroups](https://docs.cloudify.co/4.5.0/images/ui/widgets/manage-usergroups.png)
 
 #### Widget Settings 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.
