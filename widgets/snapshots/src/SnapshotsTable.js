@@ -106,6 +106,7 @@ export default class extends React.Component {
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
                            selectable={true}
+                           searchable={true}
                            className="snapshotsTable"
                            noDataMessage={NO_DATA_MESSAGE}>
 

@@ -94,22 +94,22 @@ export default class CreateModal extends React.Component {
                         </Form.Field>
 
                         <Form.Field>
-                            <Form.Checkbox label="Include metrics stored in InfluxDB" name="includeMetrics"
+                            <Form.Checkbox toggle label="Include metrics stored in InfluxDB" name="includeMetrics"
                                            checked={this.state.includeMetrics} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field>
-                            <Form.Checkbox label="Include agent SSH keys (including those specified in uploaded blueprints)" name="includeCredentials"
+                        <Form.Field help='Includes SSH keys specified in uploaded blueprints'>
+                            <Form.Checkbox toggle label="Include credentials" name="includeCredentials"
                                            checked={this.state.includeCredentials} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
                         <Form.Field>
-                            <Form.Checkbox label="Exclude logs" name="excludeLogs"
+                            <Form.Checkbox toggle label="Exclude logs" name="excludeLogs"
                             checked={this.state.excludeLogs} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
                         <Form.Field>
-                            <Form.Checkbox label="Exclude events" name="excludeEvents"
+                            <Form.Checkbox toggle label="Exclude events" name="excludeEvents"
                             checked={this.state.excludeEvents} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 

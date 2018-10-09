@@ -38,8 +38,8 @@ export default class NodeInstancesTable extends React.Component {
     _selectNodeInstance(item){
         let selectedNodeInstanceId = this.props.toolbox.getContext().getValue('nodeInstanceId');
         let clickedNodeInstanceId = item.id;
-        this.props.toolbox.getContext().setValue('nodeInstanceId', clickedNodeInstanceId === selectedNodeInstanceId ? null : clickedNodeInstanceId);
-        this.props.toolbox.getEventBus().trigger('topology:selectNode', item.id);
+        this.props.toolbox.getContext().setValue('nodeInstanceId',
+            clickedNodeInstanceId === selectedNodeInstanceId ? null : clickedNodeInstanceId);
     }
 
     render() {

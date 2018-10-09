@@ -10,6 +10,8 @@ let ejs = require('ejs');
 let config = require('../config').get();
 let router = express.Router();
 const Consts = require('../consts');
+const Utils = require('../utils');
+var logger = require('log4js').getLogger('Style');
 
 let styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
 
@@ -40,6 +42,19 @@ router.get('/', function(req, res, next) {
         sideBarHoverActiveColor: shadeColor(whiteLabel.enabled && whiteLabel.sidebarColor || DEFAULT_SIDEBAR_COLOR,0.1),
         sidebarTextColor: whiteLabel.enabled && whiteLabel.sidebarTextColor || DEFAULT_SIDEBAR_TEXT_COLOR
     });
+
+    if (whiteLabel.enabled && !!whiteLabel.customCssPath) {
+        const customCssPath = Utils.getResourcePath(whiteLabel.customCssPath, true);
+        try {
+            const customCss = fs.readFileSync(customCssPath, 'utf8');
+            logger.log('Adding CSS content from', customCssPath);
+            stylesheet += '\n/* START - CUSTOM CSS */\n';
+            stylesheet += customCss;
+            stylesheet += '\n/* END - CUSTOM CSS */\n';
+        } catch (e) {
+            logger.error('Custom CSS file cannot be found in', customCssPath);
+        }
+    }
 
     res.header('content-type', 'text/css');
     res.send(stylesheet);

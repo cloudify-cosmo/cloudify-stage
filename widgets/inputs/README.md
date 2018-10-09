@@ -7,7 +7,7 @@ Presents the names and values of the inputs of a specific deployment. The deploy
 
 If only a blueprint was selected, the widget will present the default values for the inputs, defined in the blueprint itself. 
 
-![deployment-inputs](https://docs.cloudify.co/staging/next/images/ui/widgets/deployment-inputs.png)
+![deployment-inputs](https://docs.cloudify.co/4.5.0/images/ui/widgets/deployment-inputs.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds

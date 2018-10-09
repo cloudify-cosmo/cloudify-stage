@@ -146,7 +146,7 @@ class InputsStepContent extends Component {
                                 {
                                     _.map(_.keys(this.props.stepData), (inputName) =>
                                         !_.isNil(inputs[inputName]) &&
-                                        <Table.Row key={inputName}>
+                                        <Table.Row key={inputName} name={inputName}>
                                             <Table.Cell collapsing>
                                                 <Form.Field key={inputName} help={inputs[inputName].description}
                                                             label={inputName} />

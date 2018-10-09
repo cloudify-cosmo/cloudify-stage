@@ -98,7 +98,7 @@ class InstallStepActions extends Component {
             return (
                 <Wizard.Step.Actions {...this.props} showNext={false} showPrev={false} showStartOver={false} showClose={false}>
                     <Progress size='large' percent={percent} autoSuccess>
-                        Installation successful! Redirecting to deployment page in {this.state.secondsRemaining} seconds...
+                        Installation started! Redirecting to deployment page in {this.state.secondsRemaining} seconds...
                     </Progress>
                     <Button content='Cancel' icon='cancel' labelPosition='left'
                             onClick={this.cancelRedirection.bind(this)} />
@@ -109,7 +109,7 @@ class InstallStepActions extends Component {
                 <Wizard.Step.Actions {...this.props} showNext={false} showPrev={false} showStartOver
                                      startOverLabel={'Install another blueprint'} resetDataOnStartOver>
                     <Progress size='large' percent={percent} autoSuccess>
-                        Installation successful!
+                        Installation started!
                     </Progress>
                     <Button icon='rocket' labelPosition='left'
                             content={'Go to Deployment page'}

@@ -29,6 +29,7 @@ export default class ClusterNodesList extends React.Component {
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
                            className="nodesTable"
+                           searchable={true}
                            noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Name" name="name" width="25%"/>

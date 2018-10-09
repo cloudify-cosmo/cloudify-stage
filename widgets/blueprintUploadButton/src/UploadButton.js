@@ -26,7 +26,7 @@ export default class extends React.Component {
 
         return (
             <div>
-                <Button color='blue' icon='upload' content='Upload Blueprint' labelPosition='left' fluid
+                <Button color='blue' icon='upload' content='Upload Blueprint' labelPosition='left' className='widgetButton'
                         loading={this.state.loading} onClick={this._showModal.bind(this)} />
 
                 <UploadBlueprintModal open={this.state.open} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>

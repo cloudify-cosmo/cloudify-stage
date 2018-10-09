@@ -216,6 +216,7 @@ div.headerBar {
     top: 0px;
     right : 0px;
     display: none;
+    z-index: 1000;
 
     a {
       color: inherit !important;
@@ -273,7 +274,7 @@ div.headerBar {
     padding: 15px;
 
     &.noHeader {
-      top: 25px;
+      top: 0px;
     }
 
     &.noBorder {
@@ -519,10 +520,8 @@ table.servicesData button.refreshButton {
 /* Customize Highlight styles */
 code.hljs {
   background: white;
-}
-
-.ui.popup code.hljs {
   white-space: pre-wrap;
+  word-break: break-word;
 }
 
 /* Grid table */
@@ -961,4 +960,8 @@ a.underline {
   margin-right: 0.25rem !important;
   content: counters(ordered,".") "." !important;
   vertical-align: inherit !important;
+}
+
+.widgetButton {
+  width: 100%;
 }

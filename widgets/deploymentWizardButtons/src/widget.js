@@ -10,6 +10,14 @@ import SecretsStep from './steps/SecretsStep';
 import InputsStep from './steps/InputsStep';
 import ConfirmationStep from './steps/ConfirmationStep';
 import InstallStep from './steps/InstallStep';
+import React from 'react';
+
+const configurationDefaults = {
+    showHelloWorldWizardButton: true,
+    helloWorldWizardButtonLabel: 'Hello World Wizard',
+    showDeploymentWizardButton: true,
+    deploymentWizardButtonLabel: 'Deployment Wizard'
+};
 
 Stage.defineWidget({
     id: 'deploymentWizardButtons',
@@ -17,14 +25,26 @@ Stage.defineWidget({
     description: 'Shows buttons to start deployment wizard',
     initialWidth: 2,
     initialHeight: 8,
+    hasReadme: true,
+    hasStyle: true,
     isReact: true,
     showHeader: false,
     showBorder: false,
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     initialConfiguration: [
-        {id: 'showHelloWorldWizardButton', name: 'Show Hello World Wizard button', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-        {id: 'showDeploymentWizardButton', name: 'Show Deployment Wizard button', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
+        {id: 'showHelloWorldWizardButton', name: 'Show Hello World Wizard button',
+            default: configurationDefaults.showHelloWorldWizardButton,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: 'helloWorldWizardButtonLabel', name: 'Hello World Wizard button label',
+            default: configurationDefaults.helloWorldWizardButtonLabel,
+            type: Stage.Basic.GenericField.STRING_TYPE},
+        {id: 'showDeploymentWizardButton', name: 'Show Deployment Wizard button',
+            default: configurationDefaults.showDeploymentWizardButton,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: 'deploymentWizardButtonLabel', name: 'Deployment Wizard button label',
+            default: configurationDefaults.deploymentWizardButtonLabel,
+            type: Stage.Basic.GenericField.STRING_TYPE}
     ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
 
@@ -47,28 +67,33 @@ Stage.defineWidget({
             ConfirmationStep,
             InstallStep
         ];
-        const {showHelloWorldWizardButton = true, showDeploymentWizardButton = true} = widget.configuration;
+        const {
+            showHelloWorldWizardButton = configurationDefaults.showHelloWorldWizardButton,
+            showDeploymentWizardButton = configurationDefaults.showDeploymentWizardButton,
+            helloWorldWizardButtonLabel = configurationDefaults.helloWorldWizardButtonLabel,
+            deploymentWizardButtonLabel = configurationDefaults.deploymentWizardButtonLabel
+        } = widget.configuration;
 
         return (
             <React.Fragment>
-                {
-                    showHelloWorldWizardButton &&
-                    <WizardButton color='blue' name='Hello World Wizard'
-                                  steps={helloWorldWizardSteps}
-                                  toolbox={toolbox} />
-                }
-                {
-                    showHelloWorldWizardButton && showDeploymentWizardButton &&
-                    <Divider hidden />
-                }
-                {
-                    showDeploymentWizardButton &&
-                    <WizardButton color='red' name='Deployment Wizard'
-                                  steps={deploymentWizardSteps}
-                                  toolbox={toolbox} />
-                }
+            {
+                showHelloWorldWizardButton &&
+                <WizardButton color='red' icon='globe' name={helloWorldWizardButtonLabel}
+                              wizardTitle='Hello World Wizard'
+                              steps={helloWorldWizardSteps} toolbox={toolbox} />
+            }
+            {
+                showHelloWorldWizardButton && showDeploymentWizardButton &&
+                <Divider hidden />
+            }
+            {
+                showDeploymentWizardButton &&
+                <WizardButton color='teal' icon='wizard' name={deploymentWizardButtonLabel}
+                              wizardTitle='Deployment Wizard'
+                              steps={deploymentWizardSteps}
+                              toolbox={toolbox} />
+            }
             </React.Fragment>
-
         );
     }
 

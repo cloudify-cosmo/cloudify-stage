@@ -83,7 +83,8 @@ export default class Topology extends React.Component {
 
      _setSelectedNode(selectedNode) {
         if (this.props.data.deploymentId) {
-            this.props.toolbox.getContext().setValue('nodeId', selectedNode.name + this.props.data.deploymentId);
+            this.props.toolbox.getContext().setValue('depNodeId', selectedNode.name + this.props.data.deploymentId);
+            this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
         }
     }
 
