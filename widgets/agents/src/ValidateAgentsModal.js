@@ -125,7 +125,7 @@ export default class ValidateAgentsModal extends React.Component {
                         {
                             !this.state.executionStarted &&
                             <React.Fragment>
-                                <Form.Field label='Nodes filter'
+                                <Form.Field label='Nodes filter' required
                                             help='Filter agents by deployment, nodes and node instances. Filtering turned off when none selected.'>
                                     <NodeFilter name='nodeFilter' value={this.state.nodeFilter}
                                                 showBlueprints={false} allowMultipleNodes allowMultipleNodeInstances
