@@ -101,33 +101,34 @@ class EventUtils {
 
     static logLevelOptions = {
         'debug': {
-            icon: 'info',
+            icon: 'bug',
             circular: true,
-            color: 'blue',
+            color: 'green',
             class: 'row-debug',
             text: 'Debug'
         },
         'info': {
             icon: 'info',
             circular: true,
+            color: 'blue',
             text: 'Info'
         },
         'warning': {
             icon: 'warning sign',
-            circular: false,
+            circular: true,
             color: 'yellow',
             class: 'row-warning',
             text: 'Warning'
         },
         'error': {
-            icon: 'warning circle',
-            circular: false,
+            icon: 'remove',
+            circular: true,
             color: 'red',
             class: 'row-error',
             text: 'Error'
         },
         'critical': {
-            icon: 'remove',
+            icon: 'warning',
             circular: true,
             color: 'red',
             class: 'row-error',

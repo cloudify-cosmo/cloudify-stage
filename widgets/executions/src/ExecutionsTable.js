@@ -1,7 +1,6 @@
 /**
  * Created by kinneretzin on 20/10/2016.
  */
-import UpdateDetailsModal from './UpdateDetailsModal';
 
 export default class ExecutionsTable extends React.Component {
     constructor(props, context) {
@@ -96,8 +95,8 @@ export default class ExecutionsTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
-        let {Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal, PopupMenu} = Stage.Basic;
-        let {ExecutionStatus, ExecutionUtils, IdPopup} = Stage.Common;
+        let {CancelButton, Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal, PopupMenu} = Stage.Basic;
+        let {ExecutionStatus, ExecutionUtils, IdPopup, UpdateDetailsModal} = Stage.Common;
         const MenuAction = ExecutionsTable.MenuAction;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
@@ -159,7 +158,7 @@ export default class ExecutionsTable extends React.Component {
                                         <Checkmark value={item.is_system_workflow}/>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <ExecutionStatus item={item} displayCancelIcon={false} onCancelExecution={_.noop} />
+                                        <ExecutionStatus item={item} />
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
 
@@ -170,14 +169,14 @@ export default class ExecutionsTable extends React.Component {
                                                            name={MenuAction.SHOW_EXECUTION_PARAMETERS}
                                                            onClick={this._actionClick.bind(this, item)} />
                                                 {
-                                                    item.workflow_id === 'update' &&
+                                                    ExecutionUtils.isUpdateExecution(item) &&
                                                     <Menu.Item content='Show Update Details'
                                                                icon='magnify'
                                                                name={MenuAction.SHOW_UPDATE_DETAILS}
                                                                onClick={this._actionClick.bind(this, item)} />
                                                 }
                                                 {
-                                                    !_.isEmpty(item.error) &&
+                                                    ExecutionUtils.isFailedExecution(item) &&
                                                     <Menu.Item content='Show Error Details'
                                                                icon={<Icon name='exclamation circle' color='red' />}
                                                                name={MenuAction.SHOW_ERROR_DETAILS}
@@ -210,13 +209,15 @@ export default class ExecutionsTable extends React.Component {
                     }
                 </DataTable>
 
-                <Modal open={this.state.executionParametersModalOpen} closeIcon
+                <Modal open={this.state.executionParametersModalOpen}
                        onClose={()=>this.setState({execution: null, executionParametersModalOpen: false})}>
                     <Modal.Content scrolling>
                         <HighlightText className='json'>{executionParameters}</HighlightText>
                     </Modal.Content>
                     <Modal.Actions>
                         <CopyToClipboardButton content='Copy Parameters' text={executionParameters} />
+                        <CancelButton onClick={(e) => {e.stopPropagation(); this.setState({executionParametersModalOpen: false})}}
+                                      content="Close" />
                     </Modal.Actions>
                 </Modal>
 
@@ -225,13 +226,15 @@ export default class ExecutionsTable extends React.Component {
                                     onClose={()=>this.setState({execution: null, deploymentUpdateId: '', deploymentUpdateModalOpen: false})}
                                     toolbox={this.props.toolbox} />
 
-                <Modal open={this.state.errorModalOpen} closeIcon
+                <Modal open={this.state.errorModalOpen}
                        onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
                     <Modal.Content scrolling>
                         <HighlightText className='python'>{execution.error}</HighlightText>
                     </Modal.Content>
                     <Modal.Actions>
                         <CopyToClipboardButton content='Copy Error' text={execution.error} />
+                        <CancelButton onClick={(e) => {e.stopPropagation(); this.setState({errorModalOpen: false})}}
+                                      content="Close" />
                     </Modal.Actions>
                 </Modal>
 

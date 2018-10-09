@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 10/05/2018.
  */
 
-export default class {
+class DeploymentUpdatesActions {
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -11,3 +11,8 @@ export default class {
         return this.toolbox.getManager().doGet(`/deployment-updates/${id}`);
     }
 }
+
+Stage.defineCommon({
+    name: 'DeploymentUpdatesActions',
+    common: DeploymentUpdatesActions
+});

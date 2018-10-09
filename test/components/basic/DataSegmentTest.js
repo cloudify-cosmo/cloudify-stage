@@ -49,12 +49,12 @@ describe('(Component) DataSegment', () => {
     });
 
     it('renders selected row', () => {
-        expect(wrapper.find('.segmentList .secondary.inverted.segment')).to.have.length(1);
-        expect(wrapper.find('.segmentList .secondary.inverted.segment').childAt(0)).to.have.text('Data 3');
+        expect(wrapper.find('.segmentList .secondary.segment')).to.have.length(1);
+        expect(wrapper.find('.segmentList .secondary.segment').childAt(0)).to.have.text('Data 3');
     });
 
     it('clicks selected row', () => {
-        wrapper.find('.segmentList .secondary.inverted.segment').simulate('click');
+        wrapper.find('.segmentList .secondary.segment').simulate('click');
         expect(selectSpy).to.have.been.calledOnce;
         selectSpy.reset();
     });

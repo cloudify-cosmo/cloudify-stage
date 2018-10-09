@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import VisibilityIcon from '../VisibilityIcon';
+import VisibilityIcon from './VisibilityIcon';
 import Popup from './Popup';
 import consts from '../../utils/consts';
 
@@ -75,7 +75,7 @@ export default class VisibilityField extends Component {
             <Popup>
                 <Popup.Trigger>
                     <VisibilityIcon visibility={this.props.visibility} link={this.props.allowChange} disabled={!this.props.allowChange}
-                                    title={null} className={this.props.className} onClick={this.onClick.bind(this)} />
+                                    showTitle={false} title={null} className={this.props.className} onClick={this.onClick.bind(this)} />
                 </Popup.Trigger>
                 <Popup.Header>
                     Visibility

@@ -30,6 +30,7 @@ import Menu from './Menu';
 import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
+import VisibilityIcon from './VisibilityIcon';
 import VisibilityField from '../../containers/VisibilityField';
 import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
@@ -103,6 +104,7 @@ export {
     Step,
     Table,
     TimeFilter,
+    VisibilityIcon,
     VisibilityField,
     Wizard
 };

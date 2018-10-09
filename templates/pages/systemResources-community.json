@@ -16,6 +16,14 @@
       "height": 24,
       "x": 0,
       "y": 24
+    },
+    {
+      "name": "Agents Management",
+      "definition": "agents",
+      "width": 12,
+      "height": 24,
+      "x": 0,
+      "y": 48
     }
   ]
 }
