@@ -45,7 +45,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                            onClick={() => this.setState({open: false})}>
 
                         <Popup.Trigger>
-                            <div>
+                            <div style={{display: 'inline-block'}}>
                                 <ExecutionStatus item={execution}
                                                  showLabel={this.props.showLabel}
                                                  showWorkflowId={this.props.showLabel}

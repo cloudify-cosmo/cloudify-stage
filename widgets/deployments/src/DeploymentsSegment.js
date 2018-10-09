@@ -56,7 +56,7 @@ export default class DeploymentsSegment extends React.Component {
                             <DataSegment.Item key={item.id} selected={item.isSelected} className={item.id}
                                               onClick={()=>this.props.onSelectDeployment(item)}>
 
-                                <Grid>
+                                <Grid stackable>
                                     <Grid.Row>
                                         <Grid.Column width={4}>
                                             <LastExecutionStatusIcon execution={item.lastExecution}
@@ -69,8 +69,9 @@ export default class DeploymentsSegment extends React.Component {
                                                 <Divider hidden />
                                             }
                                             <Header as='h3' textAlign='center'>
-                                                {item.id}
+                                                <a href="javascript:void(0)" className="breakWord">{item.id}</a>
                                             </Header>
+
                                         </Grid.Column>
 
                                         <Grid.Column width={1} verticalAlign='top' textAlign='right'>

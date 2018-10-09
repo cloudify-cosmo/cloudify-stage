@@ -34,14 +34,15 @@ class ExecutionStatus extends React.Component {
 
         return this.props.showLabel
             ?
-            <Label {...this.props.labelProps}>
+            <Label {...this.props.labelProps} onClick={(e) => e.stopPropagation()}>
                 <Icon {...ExecutionUtils.getExecutionStatusIconParams(execution)} {...this.props.iconProps} />
                 {this.props.showWorkflowId && execution.workflow_id}
                 {this.props.showWorkflowId && ' '}
                 {executionStatusDisplay}
             </Label>
             :
-            <Icon {...ExecutionUtils.getExecutionStatusIconParams(execution)} {...this.props.iconProps} />
+            <Icon {...ExecutionUtils.getExecutionStatusIconParams(execution)} {...this.props.iconProps}
+                  onClick={(e) => e.stopPropagation()} />
     }
 }
 
