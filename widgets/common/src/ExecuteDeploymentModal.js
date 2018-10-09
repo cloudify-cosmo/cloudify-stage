@@ -121,9 +121,21 @@ export default class ExecuteDeploymentModal extends React.Component {
         this.setState({params: {...this.state.params, ...Stage.Basic.Form.fieldNameValue(field)}});
     }
 
-    render() {
-        let {Modal, Icon, Form, Message, ApproveButton, CancelButton, GenericField, RevertToDefaultIcon} = Stage.Basic;
+    getRevertToDefaultIcon(parameter, name) {
+        let {RevertToDefaultIcon} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
+
+        const value = JsonUtils.getStringValue(this.state.params[name]);
+        const defaultValue = JsonUtils.getStringValue(parameter.default);
+        const revertToDefault = () => this.handleInputChange(null, {name, value: defaultValue});
+
+        return _.isNil(parameter.default)
+            ? undefined
+            : <RevertToDefaultIcon value={value} defaultValue={defaultValue} onClick={revertToDefault} />;
+    }
+
+    render() {
+        let {Modal, Icon, Form, Message, ApproveButton, CancelButton} = Stage.Basic;
 
         const workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
         return (
@@ -140,39 +152,52 @@ export default class ExecuteDeploymentModal extends React.Component {
                             &&
                             <Message content="No parameters available for the execution"/>
                         }
-
                         {
                             _.map(workflow.parameters, (parameter, name) => {
-                                // TODO: Add RevertToDefaultIcon
-                                // const value = JsonUtils.getStringValue(this.state.params[name]);
-                                // const defaultValue = JsonUtils.getStringValue(parameter.default);
-                                // const revertToDefault = () => this.handleInputChange(null, {name, value: defaultValue});
-                                //
-                                // icon={<RevertToDefaultIcon value={value} defaultValue={defaultValue}
-                                //                            onClick={revertToDefault} />}
+                                const icon = this.getRevertToDefaultIcon(parameter, name);
 
-                                return (
-                                    <GenericField name={name}
-                                                  label={name}
-                                                  key={name}
-                                                  error={!!this.state.errors[name]}
-                                                  description={parameter.description}
-                                                  type={this.getGenericFieldType(parameter)}
-                                                  value={this.state.params[name]}
-                                                  placeholder={this.getParameterPlaceholder(parameter.default)}
-                                                  required={this.isParamRequired(parameter)}
-                                                  onChange={this.handleInputChange.bind(this)} />
-                                );
+                                switch (parameter.type){
+                                    case 'boolean':
+                                        return (
+                                            <Form.Field required={this.isParamRequired(parameter)}
+                                                        help={parameter.description}>
+                                                <Form.Checkbox name={name} toggle label={name}
+                                                               checked={this.state.params[name]}
+                                                               onChange={this.handleInputChange.bind(this)} />
+                                            </Form.Field>
+                                        );
+                                    case 'integer':
+                                        return (
+                                            <Form.Field required={this.isParamRequired(parameter)}
+                                                        label={name}
+                                                        help={parameter.description}
+                                                        error={!!this.state.errors[name]}>
+                                                <Form.Input name={name} type='number' fluid icon={icon}
+                                                            value={this.state.params[name]}
+                                                            onChange={this.handleInputChange.bind(this)} />
+                                            </Form.Field>
+                                        );
+                                    default:
+                                        return (
+                                            <Form.Field required={this.isParamRequired(parameter)}
+                                                        label={name}
+                                                        help={parameter.description}
+                                                        error={!!this.state.errors[name]}>
+                                                <Form.Input name={name} fluid icon={icon}
+                                                            value={this.state.params[name]}
+                                                            onChange={this.handleInputChange.bind(this)}
+                                                            placeholder={this.getParameterPlaceholder(parameter.default)} />
+                                            </Form.Field>
+                                        );
+                                }
                             })
                         }
 
-                        <GenericField name="force"
-                                      label="force"
-                                      key="force"
-                                      description=""
-                                      type={GenericField.BOOLEAN_TYPE}
-                                      value={this.state.force}
-                                      onChange={(event, field) => this.setState({force: field.checked})} />
+                        <Form.Field>
+                            <Form.Checkbox name='force' toggle label='force'
+                                           checked={this.state.force}
+                                           onChange={(event, field) => this.setState({force: field.checked})} />
+                        </Form.Field>
                     </Form>
                 </Modal.Content>
 
