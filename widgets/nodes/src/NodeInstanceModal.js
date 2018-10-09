@@ -15,7 +15,7 @@ export default class extends React.Component {
     render() {
         const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
         const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
-        let {ApproveButton, CopyToClipboardButton, DataTable, HighlightText, Modal} = Stage.Basic;
+        let {CancelButton, CopyToClipboardButton, DataTable, HighlightText, Modal} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         let instance = this.props.instance;
@@ -102,7 +102,7 @@ export default class extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <ApproveButton onClick={this.props.onClose} content="Close" color="green"/>
+                        <CancelButton onClick={this.props.onClose} content="Close" />
                     </Modal.Actions>
                 </Modal>
             </div>

@@ -3,7 +3,6 @@
  */
 
 import PropTypes from 'prop-types';
-import Actions from './actions';
 import {diffChars} from 'diff';
 
 export default class UpdateDetailsModal extends React.Component {
@@ -30,14 +29,13 @@ export default class UpdateDetailsModal extends React.Component {
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
         open: PropTypes.bool.isRequired,
-        deploymentUpdateId: PropTypes.string,
-        execution: PropTypes.object,
+        deploymentUpdateId: PropTypes.string
     };
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
             this.setState({loading: true});
-            var actions = new Actions(this.props.toolbox);
+            let actions = new Stage.Common.DeploymentUpdatesActions(this.props.toolbox);
             actions.doGetUpdate(nextProps.deploymentUpdateId).then((deploymentUpdate)=>{
                 this.setState({loading: false, error: null, deploymentUpdate});
             }).catch((err)=> {
@@ -66,7 +64,7 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     render() {
-        let {ApproveButton, Form, Header, Icon, Modal, Table, Popup} = Stage.Basic;
+        let {CancelButton, Form, Header, Icon, Modal, Table, Popup} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         let deploymentUpdate = this.state.deploymentUpdate;
@@ -165,7 +163,7 @@ export default class UpdateDetailsModal extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <ApproveButton onClick={this.props.onClose} content="Close" color="green"/>
+                        <CancelButton onClick={this.props.onClose} content="Close"  />
                     </Modal.Actions>
                 </Modal>
             </div>
@@ -173,3 +171,8 @@ export default class UpdateDetailsModal extends React.Component {
         );
     }
 };
+
+Stage.defineCommon({
+    name: 'UpdateDetailsModal',
+    common: UpdateDetailsModal
+});

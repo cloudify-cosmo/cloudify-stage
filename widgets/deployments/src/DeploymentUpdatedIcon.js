@@ -8,30 +8,36 @@ export default class DeploymentUpdatedIcon extends React.Component {
 
     constructor(props, context){
         super(props, context);
-        this.state = {
-        }
     }
 
     static propTypes = {
-        show: PropTypes.bool,
+        deployment: PropTypes.object,
         className: PropTypes.string
     };
 
     static defaultProps = {
-        show: true,
+        deployment: {isUpdated: false, updated_at: null},
         className: '',
     };
 
     render() {
         let {Icon, Popup} = Stage.Basic;
+        const deployment = this.props.deployment;
 
-        return this.props.show
+        return deployment.isUpdated
             ? <Popup wide on='hover'>
                   <Popup.Trigger>
-                      <Icon name='exclamation triangle' color='yellow' bordered className={this.props.className}/>
+                      <Icon.Group size='large' className={this.props.className} style={{marginLeft: '6px', marginTop: '-4px'}}>
+                          <Icon name='cube' color='blue' />
+                          <Icon corner name='refresh' color='blue' />
+                      </Icon.Group>
                   </Popup.Trigger>
+                  <Popup.Header>
+                      Deployment updated
+                  </Popup.Header>
                   <Popup.Content>
-                      This deployment was updated after creation
+                      <p>This deployment has been updated at least once since creation.</p>
+                      <p>Last update was on: <strong>{deployment.updated_at}</strong>.</p>
                   </Popup.Content>
               </Popup>
             : null;

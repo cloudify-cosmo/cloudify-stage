@@ -89,13 +89,42 @@ export default class EventsTable extends React.Component {
                                     <DataTable.Data className="alignCenter">
                                         {
                                             item.type === EventUtils.eventType &&
-                                            <span className={`eventsType ${eventOrLogOption.icon}`} />
+                                            (
+                                                _.isEmpty(eventOrLogOption.text)
+                                                ?
+                                                    <span className={`eventsType ${eventOrLogOption.icon}`} />
+                                                :
+                                                    <Popup>
+                                                        <Popup.Trigger>
+                                                            <span className={`eventsType ${eventOrLogOption.icon}`} />
+                                                        </Popup.Trigger>
+                                                        <Popup.Content>
+                                                            <span>{eventOrLogOption.text}</span>
+                                                        </Popup.Content>
+                                                    </Popup>
+                                            )
                                         }
                                         {
                                             item.type === EventUtils.logType &&
-                                            <Icon name={eventOrLogOption.icon} circular={eventOrLogOption.circular}
-                                                  color={eventOrLogOption.color} className={`eventsType ${eventOrLogOption.class}`}
-                                                  title={eventOrLogOption.text} />
+                                            (
+                                                _.isEmpty(eventOrLogOption.text)
+                                                    ?
+                                                    <Icon name={eventOrLogOption.icon} circular={eventOrLogOption.circular}
+                                                          color={eventOrLogOption.color} className={`eventsType ${eventOrLogOption.class}`}
+                                                          title={eventOrLogOption.text} inverted />
+                                                    :
+                                                    <Popup>
+                                                        <Popup.Trigger>
+                                                            <Icon name={eventOrLogOption.icon} circular={eventOrLogOption.circular}
+                                                                  color={eventOrLogOption.color} className={`eventsType ${eventOrLogOption.class}`}
+                                                                  title={eventOrLogOption.text} inverted />
+                                                        </Popup.Trigger>
+                                                        <Popup.Content>
+                                                            <span>{eventOrLogOption.text}</span>
+                                                        </Popup.Content>
+                                                    </Popup>
+                                            )
+
                                         }
                                     </DataTable.Data>
                                     <DataTable.Data className="alignCenter noWrap">{item.timestamp}</DataTable.Data>

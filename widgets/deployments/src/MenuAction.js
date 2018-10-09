@@ -23,7 +23,7 @@ export default class MenuAction extends React.Component {
         var {PopupMenu, Menu} = Stage.Basic;
 
         return (
-            <PopupMenu className="menuAction">
+            <PopupMenu className="menuAction segmentMenuAction" disabled={this.props.disabled}>
                 <Menu pointing vertical>
                     <Menu.Item header>Execute workflow
                         <Menu.Menu>

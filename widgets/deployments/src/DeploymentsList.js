@@ -6,7 +6,7 @@ import MenuAction from './MenuAction';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 
-export default class extends React.Component {
+export default class DeploymentsList extends React.Component {
 
     constructor(props,context) {
         super(props,context);
@@ -16,9 +16,12 @@ export default class extends React.Component {
             modalType: '',
             showModal: false,
             deployment: {},
+            deploymentUpdateId: null,
             workflow: {}
         }
     }
+
+    static DEPLOYMENT_UPDATE_DETAILS_MODAL = 'deploymentUpdateDetailsModal';
 
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props.widget, nextProps.widget)
@@ -41,6 +44,10 @@ export default class extends React.Component {
             var oldSelectedDeploymentId = this.props.toolbox.getContext().getValue('deploymentId');
             this.props.toolbox.getContext().setValue('deploymentId',item.id === oldSelectedDeploymentId ? null : item.id);
         }
+    }
+
+    _showLogs(deploymentId, executionId) {
+        this.props.toolbox.drillDown(this.props.widget,'logs',{deploymentId, executionId}, `Execution Logs - ${executionId}`);
     }
 
     _deleteDeployment() {
@@ -119,6 +126,10 @@ export default class extends React.Component {
                        modalType: workflow?MenuAction.WORKFLOW_ACTION:value, showModal: true});
     }
 
+    _showDeploymentUpdateDetailsModal(deploymentUpdateId) {
+        this.setState({deploymentUpdateId, modalType: DeploymentsList.DEPLOYMENT_UPDATE_DETAILS_MODAL, showModal: true});
+    }
+
     _hideModal() {
         this.setState({showModal: false});
     }
@@ -134,7 +145,7 @@ export default class extends React.Component {
     render() {
         const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
         let {ErrorMessage, Confirm} = Stage.Basic;
-        let {ExecuteDeploymentModal, UpdateDeploymentModal} = Stage.Common;
+        let {ExecuteDeploymentModal, UpdateDeploymentModal, UpdateDetailsModal} = Stage.Common;
         let showTableComponent = this.props.widget.configuration['displayStyle'] === 'table';
 
         return (
@@ -145,22 +156,28 @@ export default class extends React.Component {
                     <DeploymentsTable widget={this.props.widget} data={this.props.data}
                                       fetchData={this.fetchData.bind(this)}
                                       onSelectDeployment={this._selectDeployment.bind(this)}
+                                      onShowLogs={this._showLogs.bind(this)}
+                                      onShowUpdateDetails={this._showDeploymentUpdateDetailsModal.bind(this)}
                                       onMenuAction={this._showModal.bind(this)}
                                       onCancelExecution={this._cancelExecution.bind(this)}
                                       onError={this._setError.bind(this)}
                                       onSetVisibility={this._setDeploymentVisibility.bind(this)}
                                       allowedSettingTo={['tenant']}
-                                      noDataMessage={NO_DATA_MESSAGE}/>
+                                      noDataMessage={NO_DATA_MESSAGE}
+                                      showExecutionStatusLabel={this.props.widget.configuration.showExecutionStatusLabel} />
                     :
                     <DeploymentsSegment widget={this.props.widget} data={this.props.data}
                                         fetchData={this.fetchData.bind(this)}
                                         onSelectDeployment={this._selectDeployment.bind(this)}
+                                        onShowLogs={this._showLogs.bind(this)}
+                                        onShowUpdateDetails={this._showDeploymentUpdateDetailsModal.bind(this)}
                                         onMenuAction={this._showModal.bind(this)}
                                         onCancelExecution={this._cancelExecution.bind(this)}
                                         onError={this._setError.bind(this)}
                                         onSetVisibility={this._setDeploymentVisibility.bind(this)}
                                         allowedSettingTo={['tenant']}
-                                        noDataMessage={NO_DATA_MESSAGE}/>
+                                        noDataMessage={NO_DATA_MESSAGE}
+                                        showExecutionStatusLabel={this.props.widget.configuration.showExecutionStatusLabel} />
                 }
 
                 <Confirm content={`Are you sure you want to remove deployment ${this.state.deployment.id}?`}
@@ -187,6 +204,12 @@ export default class extends React.Component {
                     deployment={this.state.deployment}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}/>
+
+                <UpdateDetailsModal
+                    open={this.state.modalType === DeploymentsList.DEPLOYMENT_UPDATE_DETAILS_MODAL && this.state.showModal}
+                    deploymentUpdateId={this.state.deploymentUpdateId}
+                    onClose={this._hideModal.bind(this)}
+                    toolbox={this.props.toolbox} />
             </div>
 
         );

@@ -11,9 +11,8 @@ export default class EventFilter extends React.Component {
         this.eventTypeOptions = _.sortBy(_.map(_.keys(EventUtils.eventTypeOptions), event =>
             ({..._.pick(EventUtils.eventTypeOptions[event], ['text']), value: event})),
             event => event.text);
-        this.logLevelOptions = _.sortBy(_.map(_.keys(EventUtils.logLevelOptions), log =>
-            ({..._.pick(EventUtils.logLevelOptions[log], ['text', 'icon']), value: log})),
-            log => log.text);
+        this.logLevelOptions = _.map(_.keys(EventUtils.logLevelOptions), log =>
+            ({..._.pick(EventUtils.logLevelOptions[log], ['text', 'icon']), value: log}));
 
         this.debouncedContextUpdate = _.noop();
 

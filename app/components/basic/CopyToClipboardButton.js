@@ -50,7 +50,7 @@ export default class CopyToClipboardButton extends Component {
                 {
                     this.props.content
                     ?
-                        <Button animated='vertical' basic compact className={this.props.className} onClick={(event) => event.stopPropagation()}>
+                        <Button animated='vertical' basic className={this.props.className} onClick={(event) => event.stopPropagation()}>
                             <Button.Content visible>{this.props.content}</Button.Content>
                             <Button.Content hidden><Icon name='copy' /></Button.Content>
                         </Button>
