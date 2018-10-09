@@ -155,7 +155,7 @@ export default class ValidateAgentsModal extends React.Component {
                     {
                         !this.state.executionStarted &&
                         <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading}
-                                       content="Install" icon="download" color="green"/>
+                                       content="Validate" icon="checkmark" color="green"/>
                     }
                     {
                         this.state.executionStarted &&
