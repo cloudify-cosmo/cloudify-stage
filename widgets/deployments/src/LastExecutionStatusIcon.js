@@ -42,7 +42,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                 <React.Fragment>
                     <Popup flowing on='hover' hoverable open={this.state.open}
                            onOpen={() => this.setState({open: true})} onClose={() => this.setState({open: false})}
-                           onClick={() => this.setState({open: false})}>
+                           onClick={(e) => {e.stopPropagation(); this.setState({open: false})}}>
 
                         <Popup.Trigger>
                             <div style={{display: 'inline-block'}}>
