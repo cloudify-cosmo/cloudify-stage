@@ -45,7 +45,7 @@ export default class CreateTemplateModal extends Component {
         templateName: '',
         pages: [],
         roles: [],
-        tenants: [],
+        tenants: [Consts.DEFAULT_ALL],
         availablePages: [],
         availableRoles: []
     };
@@ -146,8 +146,10 @@ export default class CreateTemplateModal extends Component {
     render() {
         var {Modal, Button, Icon, Form, Segment, ApproveButton, CancelButton, Message, Divider, List} = Stage.Basic;
 
-        let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name, icon: 'radio'}});
-        tenantOptions.push({text: 'All tenants', value: Consts.DEFAULT_ALL, icon: 'selected radio'});
+        let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name}});
+        tenantOptions.push({text: 'All tenants', value: Consts.DEFAULT_ALL});
+
+        let rolesOptions = this.props.availableRoles;
 
         let editMode = !_.isEmpty(this.props.templateName);
 
@@ -171,12 +173,12 @@ export default class CreateTemplateModal extends Component {
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.roles}>
-                            <Form.Dropdown placeholder='Roles' multiple selection closeOnChange options={this.props.availableRoles} name="roles"
+                            <Form.Dropdown placeholder='Roles' multiple selection options={rolesOptions} name="roles"
                                            value={this.state.roles} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.tenants}>
-                            <Form.Dropdown placeholder='Tenants' multiple selection closeOnChange options={tenantOptions} name="tenants"
+                            <Form.Dropdown placeholder='Tenants' multiple selection options={tenantOptions} name="tenants"
                                            value={this.state.tenants} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 

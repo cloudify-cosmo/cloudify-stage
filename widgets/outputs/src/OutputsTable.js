@@ -59,7 +59,7 @@ export default class extends React.Component {
                                     </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {output.value &&
+                                    {!_.isNil(output.value) &&
                                         <Popup position='top left' wide>
                                             <Popup.Trigger>
                                                 <div>
