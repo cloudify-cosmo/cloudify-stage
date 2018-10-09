@@ -15,7 +15,7 @@ Stage.defineWidget({
     fetchUrl: '[manager]/agents?[params:deployment_id,node_ids,node_instance_ids,install_methods]',
     isReact: true,
     hasReadme: true,
-    permission: Stage.GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ALL,//Stage.GenericConfig.WIDGET_PERMISSION('agents'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('agents'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     
     initialConfiguration:
