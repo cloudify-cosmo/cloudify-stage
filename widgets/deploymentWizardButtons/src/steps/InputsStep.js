@@ -103,29 +103,24 @@ class InputsStepContent extends Component {
         }
     }
 
+    getRevertToDefaultIcon(name, value, defaultValue) {
+        let {RevertToDefaultIcon} = Stage.Basic;
+        let {JsonUtils} = Stage.Common;
+
+        const valueString = JsonUtils.getStringValue(value);
+        const defaultValueString = JsonUtils.getStringValue(defaultValue);
+        const revertToDefault = () => this.handleChange(null, {name, value: defaultValueString});
+
+        return _.isNil(defaultValue)
+            ? undefined
+            : <RevertToDefaultIcon value={valueString} defaultValue={defaultValueString} onClick={revertToDefault} />;
+    }
+
     render() {
         let {Form, Table} = Stage.Basic;
 
         const inputs = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
         const noInputs = _.isEmpty(inputs);
-
-        const RevertToDefaultIcon = (props) => {
-            let {Icon, Popup} = Stage.Basic;
-            let {JsonUtils} = Stage.Common;
-
-            const isDefaultValueDefined = !_.isNil(props.defaultValue);
-            const isValueTheSameAsDefaultValue = _.isEqual(JsonUtils.getStringValue(props.value),
-                                                           JsonUtils.getStringValue(props.defaultValue));
-            const revertToDefault = (event, inputName, defaultValue) =>
-                this.handleChange(event, {name: inputName, value: JsonUtils.getStringValue(defaultValue)});
-
-            return isDefaultValueDefined && !isValueTheSameAsDefaultValue
-                ?
-                    <Popup trigger={<Icon name='undo' link onClick={(event) => revertToDefault(event, props.inputName, props.defaultValue)} />}>
-                        Revert to default value
-                    </Popup>
-                : null;
-        };
 
         return (
             <Form loading={this.props.loading} success={noInputs}>
@@ -156,9 +151,9 @@ class InputsStepContent extends Component {
                                             </Table.Cell>
                                             <Table.Cell>
                                                 <Form.Input name={inputName} error={this.props.errors[inputName]} fluid
-                                                            icon={<RevertToDefaultIcon inputName={inputName}
-                                                                                      value={this.props.stepData[inputName]}
-                                                                                      defaultValue={inputs[inputName].default}/>}
+                                                            icon={this.getRevertToDefaultIcon(inputName,
+                                                                                              this.props.stepData[inputName],
+                                                                                              inputs[inputName].default)}
                                                             value={this.props.stepData[inputName]}
                                                             onChange={this.handleChange.bind(this)}/>
                                             </Table.Cell>
