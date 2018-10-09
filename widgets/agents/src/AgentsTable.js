@@ -3,6 +3,7 @@
  */
 
 import ValidateAgentsModal from './ValidateAgentsModal';
+import InstallAgentsModal from './InstallAgentsModal';
 
 export default class AgentsTable extends React.Component {
     constructor(props, context) {
@@ -21,7 +22,7 @@ export default class AgentsTable extends React.Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.configuration, nextProps.configuration)
+        return !_.isEqual(this.props.widget, nextProps.widget)
             || !_.isEqual(this.state, nextState)
             || !_.isEqual(this.props.data, nextProps.data);
     }
@@ -58,7 +59,7 @@ export default class AgentsTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Agents available.';
-        const configuration = this.props.configuration;
+        const configuration = this.props.widget.configuration;
         const fieldsToShow = configuration.fieldsToShow;
         const totalSize = this.props.data.total > 0 ? undefined : 0;
 
@@ -110,13 +111,21 @@ export default class AgentsTable extends React.Component {
 
                 </DataTable>
 
-                <ValidateAgentsModal toolbox={this.props.toolbox}
+                <ValidateAgentsModal toolbox={this.props.toolbox} widget={this.props.widget}
                                      open={this.state.showModal && this.state.modal === AgentsTable.Modals.VALIDATE_AGENT}
                                      deploymentId={this.props.data.deploymentId} nodeId={this.props.data.nodeId}
                                      nodeInstanceId={this.props.data.nodeInstanceId}
                                      agents={this.props.data.items}
                                      installMethods={_.without(configuration.installMethods, '')}
                                      onHide={this.hideModal.bind(this)} />
+
+                <InstallAgentsModal toolbox={this.props.toolbox} widget={this.props.widget}
+                                    open={this.state.showModal && this.state.modal === AgentsTable.Modals.INSTALL_AGENT}
+                                    deploymentId={this.props.data.deploymentId} nodeId={this.props.data.nodeId}
+                                    nodeInstanceId={this.props.data.nodeInstanceId}
+                                    agents={this.props.data.items}
+                                    installMethods={_.without(configuration.installMethods, '')}
+                                    onHide={this.hideModal.bind(this)} />
             </div>
         );
     }

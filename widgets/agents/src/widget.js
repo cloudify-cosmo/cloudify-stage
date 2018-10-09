@@ -68,7 +68,7 @@ Stage.defineWidget({
         };
 
         return (
-            <AgentsTable configuration={widget.configuration} data={formattedData} toolbox={toolbox} />
+            <AgentsTable widget={widget} data={formattedData} toolbox={toolbox} />
         );
     }
 });
