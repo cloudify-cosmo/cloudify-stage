@@ -94,19 +94,6 @@ export default class ExecuteDeploymentModal extends React.Component {
         })
     }
 
-    getGenericFieldType(parameter){
-        const {GenericField} = Stage.Basic;
-
-        switch (parameter.type){
-            case 'boolean':
-                return GenericField.BOOLEAN_TYPE;
-            case 'integer':
-                return GenericField.NUMBER_TYPE;
-            default:
-                return GenericField.STRING_TYPE;
-        }
-    }
-
     getParameterPlaceholder(defaultValue){
         return _.isUndefined(defaultValue)
             ? null
