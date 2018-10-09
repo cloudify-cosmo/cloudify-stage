@@ -95,7 +95,7 @@ export default class ExecutionsTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
-        let {Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal, PopupMenu} = Stage.Basic;
+        let {CancelButton, Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal, PopupMenu} = Stage.Basic;
         let {ExecutionStatus, ExecutionUtils, IdPopup, UpdateDetailsModal} = Stage.Common;
         const MenuAction = ExecutionsTable.MenuAction;
 
@@ -209,13 +209,15 @@ export default class ExecutionsTable extends React.Component {
                     }
                 </DataTable>
 
-                <Modal open={this.state.executionParametersModalOpen} closeIcon
+                <Modal open={this.state.executionParametersModalOpen}
                        onClose={()=>this.setState({execution: null, executionParametersModalOpen: false})}>
                     <Modal.Content scrolling>
                         <HighlightText className='json'>{executionParameters}</HighlightText>
                     </Modal.Content>
                     <Modal.Actions>
                         <CopyToClipboardButton content='Copy Parameters' text={executionParameters} />
+                        <CancelButton onClick={(e) => {e.stopPropagation(); this.setState({executionParametersModalOpen: false})}}
+                                      content="Close" />
                     </Modal.Actions>
                 </Modal>
 
@@ -224,13 +226,15 @@ export default class ExecutionsTable extends React.Component {
                                     onClose={()=>this.setState({execution: null, deploymentUpdateId: '', deploymentUpdateModalOpen: false})}
                                     toolbox={this.props.toolbox} />
 
-                <Modal open={this.state.errorModalOpen} closeIcon
+                <Modal open={this.state.errorModalOpen}
                        onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
                     <Modal.Content scrolling>
                         <HighlightText className='python'>{execution.error}</HighlightText>
                     </Modal.Content>
                     <Modal.Actions>
                         <CopyToClipboardButton content='Copy Error' text={execution.error} />
+                        <CancelButton onClick={(e) => {e.stopPropagation(); this.setState({errorModalOpen: false})}}
+                                      content="Close" />
                     </Modal.Actions>
                 </Modal>
 

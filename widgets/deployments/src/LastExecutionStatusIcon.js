@@ -33,7 +33,7 @@ export default class LastExecutionStatusIcon extends React.Component {
     };
 
     render() {
-        let {Button, CopyToClipboardButton, HighlightText, Icon, Table, Modal, Popup} = Stage.Basic;
+        let {CancelButton, Button, CopyToClipboardButton, HighlightText, Icon, Table, Modal, Popup} = Stage.Basic;
         let {ExecutionStatus, ExecutionUtils} = Stage.Common;
         let execution = {workflow_id: '', status: '', ...this.props.execution};
 
@@ -135,7 +135,8 @@ export default class LastExecutionStatusIcon extends React.Component {
                     </Popup>
                     {
                         ExecutionUtils.isFailedExecution(execution) &&
-                        <Modal open={this.state.errorModalOpen} onClose={() => this.setState({errorModalOpen: false})}>
+                        <Modal open={this.state.errorModalOpen}
+                               onClose={() => this.setState({errorModalOpen: false})}>
                             <Modal.Header>
                                 Error message from '{execution.workflow_id}' worfklow execution on '{execution.deployment_id}' deployment
                             </Modal.Header>
@@ -146,6 +147,8 @@ export default class LastExecutionStatusIcon extends React.Component {
                             </Modal.Content>
                             <Modal.Actions>
                                 <CopyToClipboardButton content='Copy Error' text={execution.error} />
+                                <CancelButton onClick={(e) => {e.stopPropagation(); this.setState({errorModalOpen: false})}}
+                                              content="Close" />
                             </Modal.Actions>
                         </Modal>
                     }

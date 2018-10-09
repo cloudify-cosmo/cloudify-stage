@@ -64,7 +64,7 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     render() {
-        let {ApproveButton, Form, Header, Icon, Modal, Table, Popup} = Stage.Basic;
+        let {CancelButton, Form, Header, Icon, Modal, Table, Popup} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         let deploymentUpdate = this.state.deploymentUpdate;
@@ -163,7 +163,7 @@ export default class UpdateDetailsModal extends React.Component {
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <ApproveButton onClick={this.props.onClose} content="Close" color="green"/>
+                        <CancelButton onClick={this.props.onClose} content="Close"  />
                     </Modal.Actions>
                 </Modal>
             </div>
