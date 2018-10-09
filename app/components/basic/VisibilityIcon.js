@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import _ from 'lodash';
-import {Icon} from 'semantic-ui-react';
-import consts from '../utils/consts';
+import {Icon} from './index';
+import consts from '../../utils/consts';
 
 /**
  * VisibilityIcon - a component showing an visibility icon depending on resource visibility.
