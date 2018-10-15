@@ -41,6 +41,34 @@ export default class EventsTable extends React.Component {
         this.props.toolbox.getContext().setValue('eventId', eventId === selectedEventId ? null : eventId);
     }
 
+    getHighlightedText(text) {
+        let eventFilter = this.props.toolbox.getContext().getValue('eventFilter') || {};
+        let messageText = eventFilter.messageText;
+
+        if (!_.isEmpty(messageText)) {
+            let parts = text.split(new RegExp(`(${messageText})`, 'gi'));
+            return (
+                <span>
+                    {
+                        parts.map((part, i) =>
+                            <span key={i}
+                                  style={part.toLowerCase() === messageText.toLowerCase() ? { backgroundColor: 'yellow' } : {} }>
+                            {part}
+                            </span>
+                        )
+                    }
+                </span>
+            );
+        } else {
+            return (
+                <span>
+                    {text}
+                </span>
+            );
+        }
+
+    }
+
     render() {
         const NO_DATA_MESSAGE = 'There are no Events/Logs available. Probably there\'s no deployment created, yet.';
         let {CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Popup} = Stage.Basic;
@@ -141,7 +169,7 @@ export default class EventsTable extends React.Component {
                                                 <Popup.Trigger>
                                                     <span>
                                                         {
-                                                            _.truncate(JsonUtils.stringify(item.message, false), truncateOptions)
+                                                           this.getHighlightedText(_.truncate(JsonUtils.stringify(item.message, false), truncateOptions))
                                                         }
                                                     </span>
                                                 </Popup.Trigger>
