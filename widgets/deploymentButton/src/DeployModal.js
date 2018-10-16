@@ -108,8 +108,8 @@ export default class DeployModal extends React.Component {
                 if (_.isNil(inputObj.default)) {
                     errors[inputName] = `Please provide ${inputName}`;
                 }
-            } else if (stringInputValue === Stage.Common.DeployBlueprintModal.EMPTY_STRING) {
-                deploymentInputs[inputName] = '';
+            } else if (_.first(stringInputValue) === '"' && _.last(stringInputValue) === '"') {
+                deploymentInputs[inputName] = _.trim(stringInputValue, '"');
             } else {
                 deploymentInputs[inputName] = typedInputValue;
             }
@@ -165,6 +165,12 @@ export default class DeployModal extends React.Component {
                 } else if (stringValue === '') {
                     deploymentInputs[inputName] = Stage.Common.DeployBlueprintModal.EMPTY_STRING;
                 } else {
+                    let valueType = Stage.Common.JsonUtils.toType(inputs[inputName]);
+                    let castedValue = Stage.Common.JsonUtils.getTypedValue(stringValue);
+                    let castedValueType = Stage.Common.JsonUtils.toType(castedValue);
+                    if (valueType !== castedValueType) {
+                        stringValue = `"${stringValue}"`;
+                    }
                     deploymentInputs[inputName] = stringValue;
                 }
             });
@@ -180,7 +186,8 @@ export default class DeployModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, Message, Header, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
+        let {ApproveButton, CancelButton, Form, Icon, Message, Modal, VisibilityField} = Stage.Basic;
+        let {DeploymentInputsHeader} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.props.blueprints);
         let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -215,12 +222,7 @@ export default class DeployModal extends React.Component {
                             this.state.blueprint.id
                             &&
                             <Form.Divider>
-                                <Header size="tiny">
-                                    Deployment inputs
-                                    <Header.Subheader>
-                                        Use "" for an empty string
-                                    </Header.Subheader>
-                                </Header>
+                                <DeploymentInputsHeader />
                             </Form.Divider>
                         }
 
