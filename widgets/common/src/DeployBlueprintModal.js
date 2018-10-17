@@ -172,7 +172,7 @@ class DeployBlueprintModal extends React.Component {
 
     render() {
         let {ApproveButton, CancelButton, Form, Icon, Message, Modal, VisibilityField} = Stage.Basic;
-        let {DeploymentInputsHeader} = Stage.Common;
+        let {InputsHeader} = Stage.Common;
 
         let blueprint = Object.assign({}, DeployBlueprintModal.EMPTY_BLUEPRINT, this.props.blueprint);
         let deploymentInputs = _.sortBy(_.map(blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
@@ -199,9 +199,7 @@ class DeployBlueprintModal extends React.Component {
                         {
                             blueprint.id
                             &&
-                            <Form.Divider>
-                                <DeploymentInputsHeader />
-                            </Form.Divider>
+                            <InputsHeader />
                         }
 
                         {

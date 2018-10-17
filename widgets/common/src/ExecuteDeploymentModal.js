@@ -31,12 +31,24 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
+            let {JsonUtils} = Stage.Common;
             let params = _.mapValues(
                 _.get(nextProps.workflow, 'parameters', {}),
-                (parameterData) =>
-                    !_.isUndefined(parameterData.default)
-                    ? Stage.Common.JsonUtils.getStringValue(parameterData.default)
-                    : '');
+                (parameterData) => {
+                    if (!_.isUndefined(parameterData.default)) {
+                        const defaultValueString = JsonUtils.getStringValue(parameterData.default);
+                        const defaultValueType = JsonUtils.toType(parameterData.default);
+                        const castedDefaultValue = JsonUtils.getTypedValue(defaultValueString);
+                        const castedDefaultValueType = JsonUtils.toType(castedDefaultValue);
+                        if (defaultValueType !== castedDefaultValueType) {
+                            return `"${defaultValueString}"`;
+                        } else {
+                            return defaultValueString;
+                        }
+                    } else {
+                        return ''
+                    }
+                });
             this.setState({...ExecuteDeploymentModal.initialState, params});
         }
     }
@@ -78,8 +90,12 @@ export default class ExecuteDeploymentModal extends React.Component {
         _.forEach(this.state.params, (value, name) => {
             const defaultValue = this.props.workflow.parameters[name].default;
             if (this.isParamRequired(this.props.workflow.parameters[name]) ||
-                !_.isEqual(JsonUtils.getStringValue(value), JsonUtils.getStringValue(defaultValue))) {
-                paramsJson[name] = JsonUtils.getTypedValue(value);
+                !_.isEqual(_.trim(value, '"'), JsonUtils.getStringValue(defaultValue))) {
+                if (_.first(value) === '"' && _.last(value) === '"') {
+                    paramsJson[name] = _.trim(value, '"');
+                } else {
+                    paramsJson[name] = JsonUtils.getTypedValue(value);
+                }
             }
         });
 
@@ -123,12 +139,14 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     render() {
         let {Modal, Icon, Form, Message, ApproveButton, CancelButton} = Stage.Basic;
+        let {InputsHeader} = Stage.Common;
 
         const workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
+        const deployment = Object.assign({},{id:''}, this.props.deployment);
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="executeWorkflowModal">
                 <Modal.Header>
-                    <Icon name="road"/> Execute workflow {workflow.name}
+                    <Icon name="road"/> Execute workflow {workflow.name} on {deployment.id}
                 </Modal.Header>
 
                 <Modal.Content>
@@ -136,8 +154,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                           onErrorsDismiss={() => this.setState({errors: {}})}>
                         {
                             _.isEmpty(workflow.parameters)
-                            &&
-                            <Message content="No parameters available for the execution"/>
+                            ? <Message content="No parameters available for the execution" />
+                            : <InputsHeader header="Execution parameters" style={{marginTop: 0}} />
                         }
                         {
                             _.map(workflow.parameters, (parameter, name) => {
