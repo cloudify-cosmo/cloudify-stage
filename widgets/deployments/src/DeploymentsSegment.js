@@ -64,24 +64,21 @@ export default class DeploymentsSegment extends React.Component {
                                                                      onShowUpdateDetails={this.props.onShowUpdateDetails}
                                                                      onCancelExecution={this.props.onCancelExecution}
                                                                      showLabel={this.props.showExecutionStatusLabel} />
+                                            <ResourceVisibility visibility={item.visibility} className='rightFloated'
+                                                                onSetVisibility={(visibility) =>
+                                                                    this.props.onSetVisibility(item.id, visibility)}
+                                                                allowedSettingTo={this.props.allowedSettingTo} />
                                             {
                                                 this.props.showExecutionStatusLabel &&
                                                 <Divider hidden />
                                             }
-                                            <Header as='h3' textAlign='center'>
+                                            <Header as='h3' textAlign='center'
+                                                    style={this.props.showExecutionStatusLabel ? {} : {marginTop: 5}}>
                                                 <a href="javascript:void(0)" className="breakWord">{item.id}</a>
                                             </Header>
-
                                         </Grid.Column>
 
-                                        <Grid.Column width={1} verticalAlign='top' textAlign='right'>
-                                            <ResourceVisibility visibility={item.visibility}
-                                                                onSetVisibility={(visibility) =>
-                                                                    this.props.onSetVisibility(item.id, visibility)}
-                                                                allowedSettingTo={this.props.allowedSettingTo} />
-                                        </Grid.Column>
-
-                                        <Grid.Column width={2}>
+                                        <Grid.Column width={3}>
                                             <Header as='h5'>Blueprint</Header>
                                             <span>{item.blueprint_id}</span>
                                         </Grid.Column>
