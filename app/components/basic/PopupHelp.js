@@ -24,7 +24,7 @@ export default class PopupHelp extends React.Component {
      */
     static propTypes = {
         trigger: PropTypes.object,
-        content: PropTypes.string.isRequired
+        content: PropTypes.any.isRequired
     };
 
     static defaultProps = {
