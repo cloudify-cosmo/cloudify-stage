@@ -1,19 +1,29 @@
+import PropTypes from 'prop-types';
+
 /**
  * Created by jakubniezgoda on 16/10/2018.
  */
 
-class DeploymentInputsHeader extends React.Component {
+class InputsHeader extends React.Component {
 
     constructor(props,context) {
         super(props,context);
     }
 
+    static propTypes = {
+        header: PropTypes.string
+    };
+
+    static defaultProps = {
+        header: 'Deployment inputs'
+    };
+
     render () {
         let {Header, List, PopupHelp} = Stage.Basic;
 
         return (
-            <Header size="tiny">
-                Deployment inputs
+            <Header size="tiny" dividing {..._.omit(this.props, _.keys(InputsHeader.propTypes))}>
+                {this.props.header}
                 <Header.Subheader>
                     See values typing details:&nbsp;
                     <PopupHelp flowing content={
@@ -38,6 +48,6 @@ class DeploymentInputsHeader extends React.Component {
 }
 
 Stage.defineCommon({
-    name: 'DeploymentInputsHeader',
-    common: DeploymentInputsHeader
+    name: 'InputsHeader',
+    common: InputsHeader
 });

@@ -218,7 +218,7 @@ class UpdateDeploymentModal extends React.Component {
 
     render() {
         let {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
-        let {DeploymentInputsHeader} = Stage.Common;
+        let {InputsHeader} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
         let blueprintsOptions = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -244,9 +244,7 @@ class UpdateDeploymentModal extends React.Component {
                         {
                             this.state.blueprint.id
                             &&
-                            <Form.Divider>
-                                <DeploymentInputsHeader />
-                            </Form.Divider>
+                            <InputsHeader />
                         }
 
                         {

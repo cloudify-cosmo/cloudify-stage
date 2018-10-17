@@ -187,7 +187,7 @@ export default class DeployModal extends React.Component {
 
     render() {
         let {ApproveButton, CancelButton, Form, Icon, Message, Modal, VisibilityField} = Stage.Basic;
-        let {DeploymentInputsHeader} = Stage.Common;
+        let {InputsHeader} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.props.blueprints);
         let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -221,9 +221,7 @@ export default class DeployModal extends React.Component {
                         {
                             this.state.blueprint.id
                             &&
-                            <Form.Divider>
-                                <DeploymentInputsHeader />
-                            </Form.Divider>
+                            <InputsHeader />
                         }
 
                         {
