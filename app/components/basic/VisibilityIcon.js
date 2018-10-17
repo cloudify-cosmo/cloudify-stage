@@ -35,7 +35,7 @@ export default class VisibilityIcon extends Component {
         let data = _.find(consts.visibility, {name: this.props.visibility});
         return this.props.showTitle
             ? <Popup trigger={<Icon name={data.icon} color={data.color} {..._.omit(this.props, _.keys(VisibilityIcon.propTypes))}/>} content={data.title} />
-            : <Icon name={data.icon} color={data.color} {..._.omit(this.props, 'visibility')}/>;
+            : <Icon name={data.icon} color={data.color} {..._.omit(this.props, _.keys(VisibilityIcon.propTypes))}/>;
     }
 }
 

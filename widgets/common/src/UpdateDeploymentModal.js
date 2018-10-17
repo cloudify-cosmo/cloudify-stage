@@ -76,8 +76,8 @@ class UpdateDeploymentModal extends React.Component {
                 if (_.isNil(inputObj.default)) {
                     errors[inputName] = `Please provide ${inputName}`;
                 }
-            } else if (stringInputValue === Stage.Common.DeployBlueprintModal.EMPTY_STRING) {
-                deploymentInputs[inputName] = '';
+            } else if (_.first(stringInputValue) === '"' && _.last(stringInputValue) === '"') {
+                deploymentInputs[inputName] = _.trim(stringInputValue, '"');
             } else {
                 deploymentInputs[inputName] = typedInputValue;
             }
@@ -160,8 +160,8 @@ class UpdateDeploymentModal extends React.Component {
                         // Optional input
                         deploymentInputs[inputName] = '';
                     }
-                } else if (stringValue === '') {
-                    deploymentInputs[inputName] = Stage.Common.DeployBlueprintModal.EMPTY_STRING;
+                } else if (_.first(stringValue) === '"' && _.last(stringValue) === '"') {
+                    deploymentInputs[inputName] = _.trim(stringValue, '"');
                 } else {
                     deploymentInputs[inputName] = stringValue;
                 }
@@ -194,6 +194,12 @@ class UpdateDeploymentModal extends React.Component {
                         if (stringValue === '') {
                             deploymentInputs[inputName] = Stage.Common.DeployBlueprintModal.EMPTY_STRING;
                         } else {
+                            let valueType = Stage.Common.JsonUtils.toType(deploymentInputs[inputName]);
+                            let castedValue = Stage.Common.JsonUtils.getTypedValue(stringValue);
+                            let castedValueType = Stage.Common.JsonUtils.toType(castedValue);
+                            if (valueType !== castedValueType) {
+                                stringValue = `"${stringValue}"`;
+                            }
                             deploymentInputs[inputName] = stringValue;
                         }
                     } else {
@@ -212,6 +218,7 @@ class UpdateDeploymentModal extends React.Component {
 
     render() {
         let {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
+        let {DeploymentInputsHeader} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
         let blueprintsOptions = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -238,12 +245,7 @@ class UpdateDeploymentModal extends React.Component {
                             this.state.blueprint.id
                             &&
                             <Form.Divider>
-                                <Header size="tiny">
-                                    Deployment inputs
-                                    <Header.Subheader>
-                                        Use "" for an empty string
-                                    </Header.Subheader>
-                                </Header>
+                                <DeploymentInputsHeader />
                             </Form.Divider>
                         }
 
