@@ -24,16 +24,17 @@ export default class PopupHelp extends React.Component {
      */
     static propTypes = {
         trigger: PropTypes.object,
-        content: PropTypes.string.isRequired
+        content: PropTypes.any.isRequired
     };
 
     static defaultProps = {
         trigger: (<Icon name="help circle"/>)
-    }
+    };
 
     render() {
+        let popupProps = _.omit(this.props, _.keys(PopupHelp.propTypes));
         return (
-            <Popup on={['hover', 'focus']}>
+            <Popup on={['hover', 'focus']} {...popupProps}>
                 <Popup.Trigger>
                     {this.props.trigger}
                 </Popup.Trigger>

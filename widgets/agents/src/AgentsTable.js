@@ -39,16 +39,6 @@ export default class AgentsTable extends React.Component {
         this.props.toolbox.getEventBus().off('agents:refresh', this._refreshData);
     }
 
-    _selectAgent(item) {
-        let oldSelectedAgentId = this.props.toolbox.getContext().getValue('agentId');
-        this.props.toolbox.getContext().setValue('agentId', item.id === oldSelectedAgentId ? null : item.id);
-        if (item.id === oldSelectedAgentId) {
-            this.props.toolbox.getContext().setValue('agentId', null);
-        } else {
-            this.props.toolbox.getContext().setValue('agentId', item.id);
-        }
-    }
-
     openModal(modal) {
         this.setState({showModal: true, modal});
     };
@@ -69,7 +59,7 @@ export default class AgentsTable extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true} />
 
-                <DataTable selectable={true} className="agentsTable" noDataMessage={NO_DATA_MESSAGE} totalSize={totalSize}>
+                <DataTable selectable={false} className="agentsTable" noDataMessage={NO_DATA_MESSAGE} totalSize={totalSize}>
 
                     <DataTable.Column label="Id"
                                       show={fieldsToShow.indexOf('Id') >= 0}/>
@@ -90,7 +80,7 @@ export default class AgentsTable extends React.Component {
 
                     {
                         _.map(this.props.data.items, (item) =>
-                            <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectAgent.bind(this, item)}>
+                            <DataTable.Row key={item.id}>
                                 <DataTable.Data>{item.id}</DataTable.Data>
                                 <DataTable.Data>{item.ip}</DataTable.Data>
                                 <DataTable.Data>{item.deployment}</DataTable.Data>

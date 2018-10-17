@@ -57,10 +57,9 @@ Stage.defineWidget({
             return <Stage.Basic.Loading/>;
         }
 
-        let selectedAgent = toolbox.getContext().getValue('agentId');
         let params = this.fetchParams(widget, toolbox);
         let formattedData = {
-            items: _.map(data.items, (item) => ({...item, isSelected: item.id === selectedAgent})),
+            items: data.items,
             total: _.get(data, 'metadata.pagination.total', 0),
             deploymentId: params.deployment_id,
             nodeId: params.node_ids,

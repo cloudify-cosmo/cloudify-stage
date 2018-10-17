@@ -38,7 +38,7 @@ module.exports = {
             props: {
                 deploymentRow : (name) => `tr#deploymentsTable_${name}`,
                 deploymentMenu : (name) => `tr#deploymentsTable_${name} td.rowActions i.menuAction`,
-                workflowExecutionLabel : (name) => `tr#deploymentsTable_${name} td.rowActions div.label`,
+                executionInProgressIcon : (name) => `tr#deploymentsTable_${name} i.spinner.loading.icon`,
                 updateOption: 'update',
                 deleteOption: 'delete',
                 forceDeleteOption: 'forceDelete'
@@ -78,13 +78,13 @@ module.exports = {
                     },
 
                     checkIfWorkflowStartedOnDeployment: function(deploymentId, timeout) {
-                        return this.waitForElementPresent(this.props.workflowExecutionLabel(deploymentId), timeout, (result) => {
+                        return this.waitForElementPresent(this.props.executionInProgressIcon(deploymentId), timeout, (result) => {
                             this.assert.equal(result.status, 0, 'Workflow execution on ' + deploymentId + ' in progress.');
                         });
                     },
 
                     checkIfWorkflowFinishedOnDeployment: function(deploymentId, timeout) {
-                        return this.waitForElementNotPresent(this.props.workflowExecutionLabel(deploymentId), timeout, (result) => {
+                        return this.waitForElementNotPresent(this.props.executionInProgressIcon(deploymentId), timeout, (result) => {
                             this.assert.equal(result.status, 0, 'Workflow execution on ' + deploymentId + ' finished.');
                         });
                     }

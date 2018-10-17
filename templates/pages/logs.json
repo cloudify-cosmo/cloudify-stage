@@ -20,12 +20,12 @@
     {
       "name": "Events and logs",
       "width": 12,
-      "height": 35,
+      "height": 40,
       "definition": "events",
       "x": 0,
       "y": 10,
       "configuration": {
-        "pageSize": 10
+        "pageSize": 15
       }
     }
   ]
