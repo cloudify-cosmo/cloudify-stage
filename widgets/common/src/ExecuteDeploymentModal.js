@@ -36,17 +36,27 @@ export default class ExecuteDeploymentModal extends React.Component {
                 _.get(nextProps.workflow, 'parameters', {}),
                 (parameterData) => {
                     if (!_.isUndefined(parameterData.default)) {
-                        const defaultValueString = JsonUtils.getStringValue(parameterData.default);
-                        const defaultValueType = JsonUtils.toType(parameterData.default);
-                        const castedDefaultValue = JsonUtils.getTypedValue(defaultValueString);
-                        const castedDefaultValueType = JsonUtils.toType(castedDefaultValue);
-                        if (defaultValueType !== castedDefaultValueType) {
-                            return `"${defaultValueString}"`;
+                        if (parameterData.type === 'boolean' || parameterData.type === 'integer') {
+                            return parameterData.default;
                         } else {
-                            return defaultValueString;
+                            const defaultValueString = JsonUtils.getStringValue(parameterData.default);
+                            const defaultValueType = JsonUtils.toType(parameterData.default);
+                            const castedDefaultValue = JsonUtils.getTypedValue(defaultValueString);
+                            const castedDefaultValueType = JsonUtils.toType(castedDefaultValue);
+                            if (defaultValueType !== castedDefaultValueType) {
+                                return `"${defaultValueString}"`;
+                            } else {
+                                return defaultValueString;
+                            }
                         }
                     } else {
-                        return ''
+                        if (parameterData.type === 'boolean') {
+                            return false;
+                        } else if (parameterData.type === 'integer') {
+                            return 0;
+                        } else {
+                            return '';
+                        }
                     }
                 });
             this.setState({...ExecuteDeploymentModal.initialState, params});
@@ -166,7 +176,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                                 switch (parameter.type){
                                     case 'boolean':
                                         return (
-                                            <Form.Field required={this.isParamRequired(parameter)}
+                                            <Form.Field key={name}
+                                                        required={this.isParamRequired(parameter)}
                                                         help={parameter.description}>
                                                 <Form.Checkbox name={name} toggle label={name}
                                                                checked={this.state.params[name]}
@@ -175,7 +186,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                                         );
                                     case 'integer':
                                         return (
-                                            <Form.Field required={this.isParamRequired(parameter)}
+                                            <Form.Field key={name}
+                                                        required={this.isParamRequired(parameter)}
                                                         label={name}
                                                         help={parameter.description}
                                                         error={!!this.state.errors[name]}>
@@ -186,7 +198,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                                         );
                                     default:
                                         return (
-                                            <Form.Field required={this.isParamRequired(parameter)}
+                                            <Form.Field key={name}
+                                                        required={this.isParamRequired(parameter)}
                                                         label={name}
                                                         help={parameter.description}
                                                         error={!!this.state.errors[name]}>
