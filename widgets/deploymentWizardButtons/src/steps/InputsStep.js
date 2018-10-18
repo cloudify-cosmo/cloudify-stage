@@ -80,11 +80,7 @@ class InputsStepContent extends Component {
                 if (!_.isUndefined(this.props.stepData[inputName])) {
                     return this.props.stepData[inputName];
                 } else {
-                    if (!_.isUndefined(inputData.default)) {
-                        return Stage.Common.JsonUtils.getStringValue(inputData.default);
-                    } else {
-                        return InputsStepContent.defaultInputValue;
-                    }
+                    return Stage.Common.InputsUtils.getInputFieldInitialValue(inputData.default);
                 }
             }
         );
@@ -103,21 +99,9 @@ class InputsStepContent extends Component {
         }
     }
 
-    getRevertToDefaultIcon(name, value, defaultValue) {
-        let {RevertToDefaultIcon} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
-
-        const valueString = JsonUtils.getStringValue(value);
-        const defaultValueString = JsonUtils.getStringValue(defaultValue);
-        const revertToDefault = () => this.handleChange(null, {name, value: defaultValueString});
-
-        return _.isNil(defaultValue)
-            ? undefined
-            : <RevertToDefaultIcon value={valueString} defaultValue={defaultValueString} onClick={revertToDefault} />;
-    }
-
     render() {
         let {Form, Table} = Stage.Basic;
+        let {InputsUtils} = Stage.Common;
 
         const inputs = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
         const noInputs = _.isEmpty(inputs);
@@ -150,12 +134,13 @@ class InputsStepContent extends Component {
                                                 {this.getInputStatus(inputs[inputName].default)}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Form.Input name={inputName} error={this.props.errors[inputName]} fluid
-                                                            icon={this.getRevertToDefaultIcon(inputName,
-                                                                                              this.props.stepData[inputName],
-                                                                                              inputs[inputName].default)}
-                                                            value={this.props.stepData[inputName]}
-                                                            onChange={this.handleChange.bind(this)}/>
+                                                {
+                                                    InputsUtils.getInputField(inputName,
+                                                                              this.props.stepData[inputName],
+                                                                              inputs[inputName].default,
+                                                                              this.handleChange.bind(this),
+                                                                              this.props.errors[inputName])
+                                                }
                                             </Table.Cell>
                                         </Table.Row>
                                     )

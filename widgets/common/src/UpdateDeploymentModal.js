@@ -67,21 +67,9 @@ class UpdateDeploymentModal extends React.Component {
             errors['blueprintName']='Please select blueprint';
         }
 
-        let deploymentInputs = {};
-        _.forEach(this.state.blueprint.plan.inputs, (inputObj, inputName) => {
-            let stringInputValue = this.state.deploymentInputs[inputName];
-            let typedInputValue = Stage.Common.JsonUtils.getTypedValue(stringInputValue);
-
-            if (_.isEmpty(stringInputValue)) {
-                if (_.isNil(inputObj.default)) {
-                    errors[inputName] = `Please provide ${inputName}`;
-                }
-            } else if (_.first(stringInputValue) === '"' && _.last(stringInputValue) === '"') {
-                deploymentInputs[inputName] = _.trim(stringInputValue, '"');
-            } else {
-                deploymentInputs[inputName] = typedInputValue;
-            }
-        });
+        let deploymentInputs = Stage.Common.InputsUtils.getInputsToSend(this.state.blueprint.plan.inputs,
+                                                                        this.state.deploymentInputs,
+                                                                        errors);
 
         if (!_.isEmpty(errors)) {
             this.setState({errors});
@@ -124,49 +112,21 @@ class UpdateDeploymentModal extends React.Component {
         this.setState({deploymentInputs: {...this.state.deploymentInputs, ...fieldNameValue}});
     }
 
-    _getDeploymentInputs(blueprintPlanInputs) {
-        let deploymentInputs = {};
-
-        _.forEach(blueprintPlanInputs,
-            (inputObj, inputName) => deploymentInputs[inputName] = '');
-
-        return deploymentInputs;
-    }
-
     _handleYamlFileChange(file) {
+        let {FileActions, InputsUtils} = Stage.Common;
         let blueprintPlanInputs = this.state.blueprint.plan.inputs;
 
         if (!file) {
-            let deploymentInputs = this._getDeploymentInputs(blueprintPlanInputs);
+            let deploymentInputs = InputsUtils.getInputsFromPlan(blueprintPlanInputs);
             this.setState({errors: {}, deploymentInputs});
             return;
         }
 
         this.setState({fileLoading: true});
-        let actions = new Stage.Common.FileActions(this.props.toolbox);
+        let actions = new FileActions(this.props.toolbox);
         actions.doGetYamlFileContent(file).then((inputs) => {
             let notFoundInputs = [];
-            let deploymentInputs = {};
-
-            _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
-                let stringValue = Stage.Common.JsonUtils.getStringValue(inputs[inputName]);
-
-                if (_.isNil(inputs[inputName])) {
-                    // Input not present in YAML file
-                    if (_.isNil(inputObj.default)) {
-                        // Mandatory input
-                        notFoundInputs.push(inputName);
-                    } else {
-                        // Optional input
-                        deploymentInputs[inputName] = '';
-                    }
-                } else if (_.first(stringValue) === '"' && _.last(stringValue) === '"') {
-                    deploymentInputs[inputName] = _.trim(stringValue, '"');
-                } else {
-                    deploymentInputs[inputName] = stringValue;
-                }
-            });
-            
+            let deploymentInputs = InputsUtils.getInputsFromYaml(blueprintPlanInputs, inputs, notFoundInputs);
 
             if (_.isEmpty(notFoundInputs)) {
                 this.setState({errors: {}, deploymentInputs, fileLoading: false});
@@ -188,23 +148,8 @@ class UpdateDeploymentModal extends React.Component {
                 let currentDeploymentInputs = this.props.deployment.inputs;
 
                 _.forEach(blueprint.plan.inputs, (inputObj, inputName) => {
-                    if (!_.isUndefined(currentDeploymentInputs[inputName])) {
-                        let stringValue = Stage.Common.JsonUtils.getStringValue(currentDeploymentInputs[inputName]);
-
-                        if (stringValue === '') {
-                            deploymentInputs[inputName] = Stage.Common.DeployBlueprintModal.EMPTY_STRING;
-                        } else {
-                            let valueType = Stage.Common.JsonUtils.toType(deploymentInputs[inputName]);
-                            let castedValue = Stage.Common.JsonUtils.getTypedValue(stringValue);
-                            let castedValueType = Stage.Common.JsonUtils.toType(castedValue);
-                            if (valueType !== castedValueType) {
-                                stringValue = `"${stringValue}"`;
-                            }
-                            deploymentInputs[inputName] = stringValue;
-                        }
-                    } else {
-                        deploymentInputs[inputName] = '';
-                    }
+                    deploymentInputs[inputName]
+                        = Stage.Common.InputsUtils.getInputFieldInitialValue(currentDeploymentInputs[inputName]);
                 });
 
                 this.setState({deploymentInputs, blueprint, errors: {}, loading: false});
@@ -218,13 +163,10 @@ class UpdateDeploymentModal extends React.Component {
 
     render() {
         let {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
-        let {InputsHeader} = Stage.Common;
+        let {InputsHeader, InputsUtils} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
         let blueprintsOptions = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
-
-        let deploymentInputs = _.sortBy(_.map(this.state.blueprint.plan.inputs, (input, name) => ({'name': name, ...input})),
-            [(input => !_.isNil(input.default)), 'name']);
 
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="updateDeploymentModal">
@@ -266,16 +208,10 @@ class UpdateDeploymentModal extends React.Component {
                         }
 
                         {
-                            _.map(deploymentInputs, (input) => {
-                                return (
-                                    <Form.Field key={input.name} error={this.state.errors[input.name]} help={input.description}
-                                                label={input.name} required={_.isNil(input.default)}>
-                                        <Form.Input name={input.name} placeholder={Stage.Common.JsonUtils.getStringValue(input.default || '')}
-                                                    value={this.state.deploymentInputs[input.name]}
-                                                    onChange={this._handleDeploymentInputChange.bind(this)} />
-                                    </Form.Field>
-                                );
-                            })
+                            InputsUtils.getInputFields(this.state.blueprint.plan.inputs,
+                                this._handleDeploymentInputChange.bind(this),
+                                this.state.deploymentInputs,
+                                this.state.errors)
                         }
 
                         <Form.Divider>
