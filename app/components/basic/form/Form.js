@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Form as FormSemanticUiReact, Input as FormInput, TextArea, Radio as FormRadio,
+import {Form as FormSemanticUiReact, Radio as FormRadio,
         Button as FormButton} from 'semantic-ui-react';
 import ErrorMessage from '../ErrorMessage';
 import FormField from './FormField';
@@ -97,7 +97,7 @@ export default class Form extends Component {
     /**
      * Form text area input, see [TextArea](https://react.semantic-ui.com/addons/text-area)
      */
-    static TextArea = TextArea;
+    static TextArea = FormSemanticUiReact.TextArea;
 
     /**
      * Form radio button, see [Input](https://react.semantic-ui.com/addons/radio)

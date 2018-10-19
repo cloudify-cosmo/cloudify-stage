@@ -25,13 +25,13 @@ export default class RevertToDefaultIcon extends Component {
 
     /**
      * propTypes
-     * @property {string} value field value
-     * @property {string} defaultValue field default value
+     * @property {any} value typed field value
+     * @property {any} defaultValue typed field default value
      * @property {function} onClick function to be called on revert icon click
      */
     static propTypes = {
-        value: PropTypes.string.isRequired,
-        defaultValue: PropTypes.string.isRequired,
+        value: PropTypes.any.isRequired,
+        defaultValue: PropTypes.any.isRequired,
         onClick: PropTypes.func.isRequired,
     };
 

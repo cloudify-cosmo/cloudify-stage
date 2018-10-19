@@ -31,32 +31,16 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.open && nextProps.open) {
-            let {JsonUtils} = Stage.Common;
+            let {InputsUtils} = Stage.Common;
             let params = _.mapValues(
-                _.get(nextProps.workflow, 'parameters', {}),
-                (parameterData) => {
-                    if (!_.isUndefined(parameterData.default)) {
-                        if (parameterData.type === 'boolean' || parameterData.type === 'integer') {
-                            return parameterData.default;
-                        } else {
-                            const defaultValueString = JsonUtils.getStringValue(parameterData.default);
-                            const defaultValueType = JsonUtils.toType(parameterData.default);
-                            const castedDefaultValue = JsonUtils.getTypedValue(defaultValueString);
-                            const castedDefaultValueType = JsonUtils.toType(castedDefaultValue);
-                            if (defaultValueType !== castedDefaultValueType) {
-                                return `"${defaultValueString}"`;
-                            } else {
-                                return defaultValueString;
-                            }
-                        }
-                    } else {
-                        if (parameterData.type === 'boolean') {
-                            return false;
-                        } else if (parameterData.type === 'integer') {
-                            return 0;
-                        } else {
-                            return '';
-                        }
+                _.get(nextProps.workflow, 'parameters', {}), (parameterData) => {
+                    switch (parameterData.type) {
+                        case 'boolean':
+                            return parameterData.default || false;
+                        case 'integer':
+                            return parameterData.default || 0;
+                        default:
+                            return InputsUtils.getInputFieldInitialValue(parameterData.default)
                     }
                 });
             this.setState({...ExecuteDeploymentModal.initialState, params});
@@ -74,43 +58,28 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     _submitExecute () {
+        const {InputsUtils, DeploymentActions} = Stage.Common;
+        let errors = {};
+
         if (!this.props.deployment || !this.props.workflow) {
             this.setState({errors: {error: 'Missing workflow or deployment'}});
             return false;
         }
 
-        // Check required parameters has value
-        let errors = {};
-        _.forEach(this.props.workflow.parameters, (param, name) => {
-            if(this.isParamRequired(param) && _.isEmpty(this.state.params[name])) {
-                errors[name] = `Please provide value for '${name}'`;
-            }
-        });
+        let inputsWithoutValue = {};
+        const workflowParameters = InputsUtils.getInputsToSend(this.props.workflow.parameters,
+                                                               this.state.params,
+                                                               inputsWithoutValue);
+        InputsUtils.addErrors(inputsWithoutValue, errors);
+
         if (!_.isEmpty(errors)){
             this.setState({errors: errors});
             return false;
         }
 
         this.setState({loading: true});
-        const {JsonUtils, DeploymentActions} = Stage.Common;
-
-        // Parse params to typed values (booleans, integers, objects/arrays or strings)
-        // and remove parameters which are not changed (the same as default values)
-        let paramsJson = {};
-        _.forEach(this.state.params, (value, name) => {
-            const defaultValue = this.props.workflow.parameters[name].default;
-            if (this.isParamRequired(this.props.workflow.parameters[name]) ||
-                !_.isEqual(_.trim(value, '"'), JsonUtils.getStringValue(defaultValue))) {
-                if (_.first(value) === '"' && _.last(value) === '"') {
-                    paramsJson[name] = _.trim(value, '"');
-                } else {
-                    paramsJson[name] = JsonUtils.getTypedValue(value);
-                }
-            }
-        });
-
         const actions = new DeploymentActions(this.props.toolbox);
-        actions.doExecute(this.props.deployment, this.props.workflow, paramsJson,
+        actions.doExecute(this.props.deployment, this.props.workflow, workflowParameters,
                           this.state.force, this.state.dryRun, this.state.queue).then(()=>{
             this.setState({loading: false, errors: {}});
             this.props.onHide();
@@ -121,36 +90,13 @@ export default class ExecuteDeploymentModal extends React.Component {
         })
     }
 
-    getParameterPlaceholder(defaultValue){
-        return _.isUndefined(defaultValue)
-            ? null
-            : Stage.Common.JsonUtils.getStringValue(defaultValue);
-    }
-
-    isParamRequired(parameter){
-        return _.isUndefined(parameter.default);
-    }
-
     handleInputChange(event, field) {
         this.setState({params: {...this.state.params, ...Stage.Basic.Form.fieldNameValue(field)}});
     }
 
-    getRevertToDefaultIcon(parameter, name) {
-        let {RevertToDefaultIcon} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
-
-        const value = JsonUtils.getStringValue(this.state.params[name]);
-        const defaultValue = JsonUtils.getStringValue(parameter.default);
-        const revertToDefault = () => this.handleInputChange(null, {name, value: defaultValue});
-
-        return _.isNil(parameter.default)
-            ? undefined
-            : <RevertToDefaultIcon value={value} defaultValue={defaultValue} onClick={revertToDefault} />;
-    }
-
     render() {
         let {ApproveButton, CancelButton, Form, Header, Icon, Modal, Message} = Stage.Basic;
-        let {InputsHeader} = Stage.Common;
+        let {InputsHeader, InputsUtils} = Stage.Common;
 
         const workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
         const deployment = Object.assign({},{id:''}, this.props.deployment);
@@ -170,47 +116,10 @@ export default class ExecuteDeploymentModal extends React.Component {
                             && <Message content="No parameters available for the execution" />
                         }
                         {
-                            _.map(workflow.parameters, (parameter, name) => {
-                                const icon = this.getRevertToDefaultIcon(parameter, name);
-
-                                switch (parameter.type){
-                                    case 'boolean':
-                                        return (
-                                            <Form.Field key={name}
-                                                        required={this.isParamRequired(parameter)}
-                                                        help={parameter.description}>
-                                                <Form.Checkbox name={name} toggle label={name}
-                                                               checked={this.state.params[name]}
-                                                               onChange={this.handleInputChange.bind(this)} />
-                                            </Form.Field>
-                                        );
-                                    case 'integer':
-                                        return (
-                                            <Form.Field key={name}
-                                                        required={this.isParamRequired(parameter)}
-                                                        label={name}
-                                                        help={parameter.description}
-                                                        error={!!this.state.errors[name]}>
-                                                <Form.Input name={name} type='number' fluid icon={icon}
-                                                            value={this.state.params[name]}
-                                                            onChange={this.handleInputChange.bind(this)} />
-                                            </Form.Field>
-                                        );
-                                    default:
-                                        return (
-                                            <Form.Field key={name}
-                                                        required={this.isParamRequired(parameter)}
-                                                        label={name}
-                                                        help={parameter.description}
-                                                        error={!!this.state.errors[name]}>
-                                                <Form.Input name={name} fluid icon={icon}
-                                                            value={this.state.params[name]}
-                                                            onChange={this.handleInputChange.bind(this)}
-                                                            placeholder={this.getParameterPlaceholder(parameter.default)} />
-                                            </Form.Field>
-                                        );
-                                }
-                            })
+                            InputsUtils.getInputFields(workflow.parameters,
+                                                       this.handleInputChange.bind(this),
+                                                       this.state.params,
+                                                       this.state.errors)
                         }
 
                         <Form.Divider>

@@ -40,7 +40,7 @@ import { PopupHelp } from '../index';
 export default class FormField extends Component {
     /**
      * propTypes
-     * @property {boolean} [error=null] error indicator (true - field has error, false - field has no errors)
+     * @property {any} [error=false] error indicator: true - field has error, false - field has no errors (value casted to boolean by !!error)
      * @property {string} [help=''] if not empty, then help description is shown in popup on field's hover and focus
      * @property {string} [label=''] if not empty, then it's content is shown on top of field
      * @property {boolean} [required] if true and label is set, then red asterisk icon is presented near label
@@ -53,7 +53,7 @@ export default class FormField extends Component {
     };
 
     static defaultProps = {
-        error: null,
+        error: false,
         help: '',
         label: '',
         required: false
@@ -76,10 +76,9 @@ export default class FormField extends Component {
 
     getFieldWrapper(props) {
         let {children, error, label, help, ...fieldProps} = props;
-        error = (_.isBoolean(error) && error) || !_.isEmpty(error);
 
         return (
-            <Form.Field {...fieldProps} error={error}>
+            <Form.Field {...fieldProps} error={!!error}>
                 {FormField.getLabel(label, help)}
                 {children}
             </Form.Field>

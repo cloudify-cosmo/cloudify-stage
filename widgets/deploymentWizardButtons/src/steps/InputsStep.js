@@ -21,28 +21,14 @@ class InputsStepActions extends Component {
     static dataPath = 'blueprint.inputs';
 
     onNext(id) {
-        const {DeployBlueprintModal, JsonUtils} = Stage.Common;
+        const {InputsUtils} = Stage.Common;
 
         return this.props.onLoading()
             .then(this.props.fetchData)
             .then(({stepData}) => {
-                let deploymentInputs = {};
                 let inputsWithoutValues = {};
-
-                _.forEach(_.get(this.props.wizardData, InputsStepActions.dataPath, {}), (inputObj, inputName) => {
-                    let stringInputValue = stepData[inputName];
-                    let typedInputValue = JsonUtils.getTypedValue(stringInputValue);
-
-                    if (_.isEmpty(stringInputValue)) {
-                        if (_.isNil(inputObj.default)) {
-                            inputsWithoutValues[inputName] = true;
-                        }
-                    } else if (stringInputValue === DeployBlueprintModal.EMPTY_STRING) {
-                        deploymentInputs[inputName] = '';
-                    } else if (!_.isEqual(typedInputValue, inputObj.default)) {
-                        deploymentInputs[inputName] = typedInputValue;
-                    }
-                });
+                const blueprintInputsPlan = _.get(this.props.wizardData, InputsStepActions.dataPath, {});
+                const deploymentInputs = InputsUtils.getInputsToSend(blueprintInputsPlan, stepData, inputsWithoutValues);
 
                 if (!_.isEmpty(inputsWithoutValues)) {
                     return Promise.reject({
@@ -70,7 +56,6 @@ class InputsStepContent extends Component {
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
 
-    static defaultInputValue = '';
     static dataPath = 'blueprint.inputs';
 
     componentDidMount() {
@@ -80,11 +65,7 @@ class InputsStepContent extends Component {
                 if (!_.isUndefined(this.props.stepData[inputName])) {
                     return this.props.stepData[inputName];
                 } else {
-                    if (!_.isUndefined(inputData.default)) {
-                        return Stage.Common.JsonUtils.getStringValue(inputData.default);
-                    } else {
-                        return InputsStepContent.defaultInputValue;
-                    }
+                    return Stage.Common.InputsUtils.getInputFieldInitialValue(inputData.default);
                 }
             }
         );
@@ -103,21 +84,9 @@ class InputsStepContent extends Component {
         }
     }
 
-    getRevertToDefaultIcon(name, value, defaultValue) {
-        let {RevertToDefaultIcon} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
-
-        const valueString = JsonUtils.getStringValue(value);
-        const defaultValueString = JsonUtils.getStringValue(defaultValue);
-        const revertToDefault = () => this.handleChange(null, {name, value: defaultValueString});
-
-        return _.isNil(defaultValue)
-            ? undefined
-            : <RevertToDefaultIcon value={valueString} defaultValue={defaultValueString} onClick={revertToDefault} />;
-    }
-
     render() {
         let {Form, Table} = Stage.Basic;
+        let {InputsUtils, InputsHeader} = Stage.Common;
 
         const inputs = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
         const noInputs = _.isEmpty(inputs);
@@ -133,7 +102,7 @@ class InputsStepContent extends Component {
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell>Input</Table.HeaderCell>
-                                    <Table.HeaderCell colSpan='2'>Value (use "" for an empty string)</Table.HeaderCell>
+                                    <Table.HeaderCell colSpan='2'><InputsHeader header='Value' dividing={false} /></Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
@@ -150,12 +119,13 @@ class InputsStepContent extends Component {
                                                 {this.getInputStatus(inputs[inputName].default)}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Form.Input name={inputName} error={this.props.errors[inputName]} fluid
-                                                            icon={this.getRevertToDefaultIcon(inputName,
-                                                                                              this.props.stepData[inputName],
-                                                                                              inputs[inputName].default)}
-                                                            value={this.props.stepData[inputName]}
-                                                            onChange={this.handleChange.bind(this)}/>
+                                                {
+                                                    InputsUtils.getInputField(inputName,
+                                                                              this.props.stepData[inputName],
+                                                                              inputs[inputName].default,
+                                                                              this.handleChange.bind(this),
+                                                                              this.props.errors[inputName])
+                                                }
                                             </Table.Cell>
                                         </Table.Row>
                                     )
