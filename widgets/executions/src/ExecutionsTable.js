@@ -2,6 +2,9 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
+import SystemWorkflowIcon from './SystemWorkflowIcon';
+import DryRunIcon from './DryRunIcon';
+
 export default class ExecutionsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -95,7 +98,7 @@ export default class ExecutionsTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
-        let {CancelButton, Checkmark, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal, PopupMenu} = Stage.Basic;
+        let {CancelButton, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal, PopupMenu} = Stage.Basic;
         let {ExecutionStatus, ExecutionUtils, IdPopup, UpdateDetailsModal} = Stage.Common;
         const MenuAction = ExecutionsTable.MenuAction;
 
@@ -131,8 +134,8 @@ export default class ExecutionsTable extends React.Component {
                                       show={fieldsToShow.indexOf('Ended') >= 0}/>
                     <DataTable.Column label="Creator" name='created_by' width="5%"
                                       show={fieldsToShow.indexOf('Creator') >= 0}/>
-                    <DataTable.Column label="System" name="is_system_workflow" width="5%"
-                                      show={fieldsToShow.indexOf('System') >= 0}/>
+                    <DataTable.Column label="Attributes" width="5%"
+                                      show={fieldsToShow.indexOf('System') >= 0 || fieldsToShow.indexOf('Attributes') >= 0}/>
                     <DataTable.Column label="Status" width="15%"
                                       show={fieldsToShow.indexOf('Status') >= 0}/>
                     <DataTable.Column width="5%"
@@ -155,7 +158,8 @@ export default class ExecutionsTable extends React.Component {
                                     <DataTable.Data>{item.ended_at}</DataTable.Data>
                                     <DataTable.Data>{item.created_by}</DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <Checkmark value={item.is_system_workflow}/>
+                                        <SystemWorkflowIcon execution={item} />
+                                        <DryRunIcon execution={item} />
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
                                         <ExecutionStatus item={item} />

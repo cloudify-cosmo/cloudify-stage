@@ -9,16 +9,16 @@ export default class ExecuteDeploymentModal extends React.Component {
     constructor(props,context) {
         super(props,context);
 
-        this.state = ExecuteDeploymentModal.initialState();
+        this.state = ExecuteDeploymentModal.initialState;
     }
 
-    static initialState = () => {
-        return {
-            errors: {},
-            loading: false,
-            force: false,
-            params: {}
-        }
+    static initialState = {
+        errors: {},
+        loading: false,
+        dryRun: false,
+        force: false,
+        queue: false,
+        params: {}
     };
 
     static propTypes = {
@@ -36,17 +36,27 @@ export default class ExecuteDeploymentModal extends React.Component {
                 _.get(nextProps.workflow, 'parameters', {}),
                 (parameterData) => {
                     if (!_.isUndefined(parameterData.default)) {
-                        const defaultValueString = JsonUtils.getStringValue(parameterData.default);
-                        const defaultValueType = JsonUtils.toType(parameterData.default);
-                        const castedDefaultValue = JsonUtils.getTypedValue(defaultValueString);
-                        const castedDefaultValueType = JsonUtils.toType(castedDefaultValue);
-                        if (defaultValueType !== castedDefaultValueType) {
-                            return `"${defaultValueString}"`;
+                        if (parameterData.type === 'boolean' || parameterData.type === 'integer') {
+                            return parameterData.default;
                         } else {
-                            return defaultValueString;
+                            const defaultValueString = JsonUtils.getStringValue(parameterData.default);
+                            const defaultValueType = JsonUtils.toType(parameterData.default);
+                            const castedDefaultValue = JsonUtils.getTypedValue(defaultValueString);
+                            const castedDefaultValueType = JsonUtils.toType(castedDefaultValue);
+                            if (defaultValueType !== castedDefaultValueType) {
+                                return `"${defaultValueString}"`;
+                            } else {
+                                return defaultValueString;
+                            }
                         }
                     } else {
-                        return ''
+                        if (parameterData.type === 'boolean') {
+                            return false;
+                        } else if (parameterData.type === 'integer') {
+                            return 0;
+                        } else {
+                            return '';
+                        }
                     }
                 });
             this.setState({...ExecuteDeploymentModal.initialState, params});
@@ -100,7 +110,8 @@ export default class ExecuteDeploymentModal extends React.Component {
         });
 
         const actions = new DeploymentActions(this.props.toolbox);
-        actions.doExecute(this.props.deployment, this.props.workflow, paramsJson, this.state.force).then(()=>{
+        actions.doExecute(this.props.deployment, this.props.workflow, paramsJson,
+                          this.state.force, this.state.dryRun, this.state.queue).then(()=>{
             this.setState({loading: false, errors: {}});
             this.props.onHide();
             this.props.toolbox.getEventBus().trigger('executions:refresh');
@@ -138,7 +149,7 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     render() {
-        let {Modal, Icon, Form, Message, ApproveButton, CancelButton} = Stage.Basic;
+        let {ApproveButton, CancelButton, Form, Header, Icon, Modal, Message} = Stage.Basic;
         let {InputsHeader} = Stage.Common;
 
         const workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
@@ -152,10 +163,11 @@ export default class ExecuteDeploymentModal extends React.Component {
                 <Modal.Content>
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
+
+                        <InputsHeader header="Parameters" compact />
                         {
                             _.isEmpty(workflow.parameters)
-                            ? <Message content="No parameters available for the execution" />
-                            : <InputsHeader header="Execution parameters" style={{marginTop: 0}} />
+                            && <Message content="No parameters available for the execution" />
                         }
                         {
                             _.map(workflow.parameters, (parameter, name) => {
@@ -164,7 +176,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                                 switch (parameter.type){
                                     case 'boolean':
                                         return (
-                                            <Form.Field required={this.isParamRequired(parameter)}
+                                            <Form.Field key={name}
+                                                        required={this.isParamRequired(parameter)}
                                                         help={parameter.description}>
                                                 <Form.Checkbox name={name} toggle label={name}
                                                                checked={this.state.params[name]}
@@ -173,7 +186,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                                         );
                                     case 'integer':
                                         return (
-                                            <Form.Field required={this.isParamRequired(parameter)}
+                                            <Form.Field key={name}
+                                                        required={this.isParamRequired(parameter)}
                                                         label={name}
                                                         help={parameter.description}
                                                         error={!!this.state.errors[name]}>
@@ -184,7 +198,8 @@ export default class ExecuteDeploymentModal extends React.Component {
                                         );
                                     default:
                                         return (
-                                            <Form.Field required={this.isParamRequired(parameter)}
+                                            <Form.Field key={name}
+                                                        required={this.isParamRequired(parameter)}
                                                         label={name}
                                                         help={parameter.description}
                                                         error={!!this.state.errors[name]}>
@@ -198,10 +213,37 @@ export default class ExecuteDeploymentModal extends React.Component {
                             })
                         }
 
+                        <Form.Divider>
+                            <Header size="tiny">
+                                Actions
+                            </Header>
+                        </Form.Divider>
+
                         <Form.Field>
-                            <Form.Checkbox name='force' toggle label='force'
+                            <Form.Checkbox name='force' toggle label='Force'
+                                           help='Execute the workflow even if there is an ongoing
+                                                 execution for the given deployment.
+                                                 You cannot use this option with "Queue".'
                                            checked={this.state.force}
-                                           onChange={(event, field) => this.setState({force: field.checked})} />
+                                           onChange={(event, field) => this.setState({force: field.checked, queue: false})} />
+                        </Form.Field>
+
+                        <Form.Field>
+                            <Form.Checkbox name='dryRun' toggle label='Dry run'
+                                           help='If set, no actual operations will be performed.
+                                                 Executed tasks will be logged without side effects.
+                                                 You cannot use this option with "Queue".'
+                                           checked={this.state.dryRun}
+                                           onChange={(event, field) => this.setState({dryRun: field.checked, queue: false})} />
+                        </Form.Field>
+
+                        <Form.Field>
+                            <Form.Checkbox name='queue' toggle label='Queue'
+                                           help='If set, executions that can`t currently run will
+                                                 be queued and run automatically when possible.
+                                                 You cannot use this option with "Force" and "Dry run".'
+                                           checked={this.state.queue}
+                                           onChange={(event, field) => this.setState({queue: field.checked, force: false, dryRun: false})} />
                         </Form.Field>
                     </Form>
                 </Modal.Content>

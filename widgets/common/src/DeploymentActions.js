@@ -30,11 +30,13 @@ class DeploymentActions {
         });
     }
 
-    doExecute(deployment, workflow, params, force) {
+    doExecute(deployment, workflow, params, force = false, dry_run = false, queue = false) {
         return this.toolbox.getManager().doPost('/executions',null,{
             'deployment_id': deployment.id,
             'workflow_id' : workflow.name,
+            dry_run,
             force,
+            queue,
             parameters: params
         });
     }
