@@ -209,9 +209,9 @@ class UpdateDeploymentModal extends React.Component {
 
                         {
                             InputsUtils.getInputFields(this.state.blueprint.plan.inputs,
-                                this._handleDeploymentInputChange.bind(this),
-                                this.state.deploymentInputs,
-                                this.state.errors)
+                                                       this._handleDeploymentInputChange.bind(this),
+                                                       this.state.deploymentInputs,
+                                                       this.state.errors)
                         }
 
                         <Form.Divider>

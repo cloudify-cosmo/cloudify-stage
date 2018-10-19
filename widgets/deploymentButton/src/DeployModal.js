@@ -196,9 +196,9 @@ export default class DeployModal extends React.Component {
 
                         {
                             InputsUtils.getInputFields(this.state.blueprint.plan.inputs,
-                                    this._handleDeploymentInputChange.bind(this),
-                                    this.state.deploymentInputs,
-                                    this.state.errors)
+                                                       this._handleDeploymentInputChange.bind(this),
+                                                       this.state.deploymentInputs,
+                                                       this.state.errors)
                         }
                         <Form.Field className='skipPluginsValidationCheckbox'>
                             <Form.Checkbox toggle
