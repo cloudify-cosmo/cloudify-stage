@@ -45,15 +45,20 @@ class InputsUtils {
         let {RevertToDefaultIcon} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
-        const valueString = _.trim(JsonUtils.getStringValue(value), InputsUtils.STRING_VALUE_SURROUND_CHAR);
-        const defaultValueString = JsonUtils.getStringValue(defaultValue);
-        const revertToDefault = () => inputChangeFunction(null, {name, value: defaultValueString});
+        const stringValue = JsonUtils.getStringValue(value);
+        const typedValue = _.startsWith(stringValue, InputsUtils.STRING_VALUE_SURROUND_CHAR) &&
+                           _.endsWith(stringValue, InputsUtils.STRING_VALUE_SURROUND_CHAR)
+            ? stringValue.slice(1, -1)
+            : JsonUtils.getTypedValue(value);
 
-        return _.isNil(defaultValue)
+        const stringDefaultValue = InputsUtils.getInputFieldInitialValue(defaultValue);
+        const typedDefaultValue = defaultValue;
+
+        const revertToDefault = () => inputChangeFunction(null, {name, value: stringDefaultValue});
+
+        return _.isNil(typedDefaultValue)
             ? undefined
-            : <RevertToDefaultIcon value={valueString}
-                                   defaultValue={defaultValueString}
-                                   onClick={revertToDefault} />;
+            : <RevertToDefaultIcon value={typedValue} defaultValue={typedDefaultValue} onClick={revertToDefault} />;
     }
 
     static getFormInputField(name, value, defaultValue, description, onChange, error) {
@@ -69,11 +74,20 @@ class InputsUtils {
     static getInputField(name, value, defaultValue, onChange, error) {
         let {Form} = Stage.Basic;
 
-        return (
-            <Form.Input name={name} value={value} fluid error={error}
+        return _.includes(value, '\n')
+            ?
+            <Form.Group >
+                <Form.Field width={15}>
+                    <Form.TextArea name={name} value={value} onChange={onChange} />
+                </Form.Field>
+                <Form.Field width={1} style={{textAlign: 'center'}}>
+                    {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                </Form.Field>
+            </Form.Group>
+            :
+            <Form.Input name={name} value={value} fluid error={!!error}
                         icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
-                        onChange={onChange} />
-        );
+                        onChange={onChange} />;
     }
 
     static getInputFields(blueprintPlanInputs, onChange, inputsState, errorsState) {
@@ -124,7 +138,7 @@ class InputsUtils {
 
     /* Inputs for REST API (typed values) */
 
-    static getInputsToSend(blueprintPlanInputs, inputsValues, errors, inputsWithoutValues = {}) {
+    static getInputsToSend(blueprintPlanInputs, inputsValues, inputsWithoutValues) {
         let {JsonUtils} = Stage.Common;
         let deploymentInputs = {};
 
@@ -133,11 +147,10 @@ class InputsUtils {
             let typedInputValue = JsonUtils.getTypedValue(stringInputValue);
 
             if (_.isEmpty(stringInputValue) && _.isNil(inputObj.default)) {
-                errors[inputName] = `Please provide ${inputName}`;
                 inputsWithoutValues[inputName] = true;
-            } else if (_.first(stringInputValue) === InputsUtils.STRING_VALUE_SURROUND_CHAR &&
-                _.last(stringInputValue) === InputsUtils.STRING_VALUE_SURROUND_CHAR) {
-                typedInputValue = _.trim(stringInputValue, InputsUtils.STRING_VALUE_SURROUND_CHAR);
+            } else if (_.startsWith(stringInputValue, InputsUtils.STRING_VALUE_SURROUND_CHAR) &&
+                       _.endsWith(stringInputValue, InputsUtils.STRING_VALUE_SURROUND_CHAR)) {
+                typedInputValue = stringInputValue.slice(1, -1);
             }
 
             if (!_.isEqual(typedInputValue, inputObj.default)) {
@@ -146,6 +159,10 @@ class InputsUtils {
         });
 
         return deploymentInputs;
+    }
+
+    static addErrors(inputsWithoutValues, errors) {
+        _.forEach(_.keys(inputsWithoutValues), (inputName) => errors[inputName] = `Please provide ${inputName}`);
     }
 
 }

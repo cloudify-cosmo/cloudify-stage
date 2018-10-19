@@ -79,6 +79,7 @@ export default class DeployModal extends React.Component {
     }
 
     _submitDeploy () {
+        let {InputsUtils} = Stage.Common;
         let errors = {};
 
         if (_.isEmpty(this.state.blueprint.id)) {
@@ -89,10 +90,11 @@ export default class DeployModal extends React.Component {
             errors['deploymentName']='Please provide deployment name';
         }
 
-        let deploymentInputs
-            = Stage.Common.InputsUtils.getInputsToSend(this.state.blueprint.plan.inputs,
-                                                       this.state.deploymentInputs,
-                                                       errors);
+        let inputsWithoutValue = {};
+        const deploymentInputs = InputsUtils.getInputsToSend(this.state.blueprint.plan.inputs,
+                                                             this.state.deploymentInputs,
+                                                             inputsWithoutValue);
+        InputsUtils.addErrors(inputsWithoutValue, errors);
 
         if (!_.isEmpty(errors)) {
             this.setState({errors});

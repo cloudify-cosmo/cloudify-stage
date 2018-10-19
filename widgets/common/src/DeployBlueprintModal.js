@@ -13,7 +13,6 @@ class DeployBlueprintModal extends React.Component {
     }
 
     static EMPTY_BLUEPRINT = {id: '', plan: {inputs: {}}};
-    static EMPTY_STRING = '""';
 
     static initialState = {
         loading: false,
@@ -55,6 +54,7 @@ class DeployBlueprintModal extends React.Component {
     }
 
     _submitDeploy() {
+        let {InputsUtils} = Stage.Common;
         let errors = {};
 
         if (!this.props.blueprint) {
@@ -65,10 +65,11 @@ class DeployBlueprintModal extends React.Component {
             errors['deploymentName']='Please provide deployment name';
         }
 
-        let deploymentInputs
-            = Stage.Common.InputsUtils.getInputsToSend(this.props.blueprint.plan.inputs,
-                                                       this.state.deploymentInputs,
-                                                       errors);
+        let inputsWithoutValue = {};
+        const deploymentInputs = InputsUtils.getInputsToSend(this.props.blueprint.plan.inputs,
+                                                             this.state.deploymentInputs,
+                                                             inputsWithoutValue);
+        InputsUtils.addErrors(inputsWithoutValue, errors);
 
         if (!_.isEmpty(errors)) {
             this.setState({errors});
