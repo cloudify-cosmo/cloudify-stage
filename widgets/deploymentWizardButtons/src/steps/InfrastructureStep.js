@@ -28,7 +28,7 @@ class InfrastructureStepActions extends Component {
                         url: stepData.blueprintUrl
                     }))
             .then((resources) => this.props.onNext(id, {blueprint: {...resources, ...fetchedStepData}}))
-            .catch((error) => this.props.onError(id, error))
+            .catch(() => this.props.onError(id, 'Error during fetching data for the next step'))
     }
 
     render() {
