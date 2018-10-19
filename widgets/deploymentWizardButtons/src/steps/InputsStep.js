@@ -21,28 +21,14 @@ class InputsStepActions extends Component {
     static dataPath = 'blueprint.inputs';
 
     onNext(id) {
-        const {DeployBlueprintModal, JsonUtils} = Stage.Common;
+        const {InputsUtils} = Stage.Common;
 
         return this.props.onLoading()
             .then(this.props.fetchData)
             .then(({stepData}) => {
-                let deploymentInputs = {};
                 let inputsWithoutValues = {};
-
-                _.forEach(_.get(this.props.wizardData, InputsStepActions.dataPath, {}), (inputObj, inputName) => {
-                    let stringInputValue = stepData[inputName];
-                    let typedInputValue = JsonUtils.getTypedValue(stringInputValue);
-
-                    if (_.isEmpty(stringInputValue)) {
-                        if (_.isNil(inputObj.default)) {
-                            inputsWithoutValues[inputName] = true;
-                        }
-                    } else if (stringInputValue === DeployBlueprintModal.EMPTY_STRING) {
-                        deploymentInputs[inputName] = '';
-                    } else if (!_.isEqual(typedInputValue, inputObj.default)) {
-                        deploymentInputs[inputName] = typedInputValue;
-                    }
-                });
+                const blueprintInputsPlan = _.get(this.props.wizardData, InputsStepActions.dataPath, {});
+                const deploymentInputs = InputsUtils.getInputsToSend(blueprintInputsPlan, stepData, inputsWithoutValues);
 
                 if (!_.isEmpty(inputsWithoutValues)) {
                     return Promise.reject({
@@ -70,7 +56,6 @@ class InputsStepContent extends Component {
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
 
-    static defaultInputValue = '';
     static dataPath = 'blueprint.inputs';
 
     componentDidMount() {
@@ -101,7 +86,7 @@ class InputsStepContent extends Component {
 
     render() {
         let {Form, Table} = Stage.Basic;
-        let {InputsUtils} = Stage.Common;
+        let {InputsUtils, InputsHeader} = Stage.Common;
 
         const inputs = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
         const noInputs = _.isEmpty(inputs);
@@ -117,7 +102,7 @@ class InputsStepContent extends Component {
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell>Input</Table.HeaderCell>
-                                    <Table.HeaderCell colSpan='2'>Value (use "" for an empty string)</Table.HeaderCell>
+                                    <Table.HeaderCell colSpan='2'><InputsHeader header='Value' dividing={false} /></Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
