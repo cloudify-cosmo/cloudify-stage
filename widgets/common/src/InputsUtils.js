@@ -174,11 +174,11 @@ class InputsUtils {
 
     /* Inputs for REST API (typed values) */
 
-    static getInputsToSend(blueprintPlanInputs, inputsValues, inputsWithoutValues) {
+    static getInputsToSend(inputs, inputsValues, inputsWithoutValues) {
         let {JsonUtils} = Stage.Common;
         let deploymentInputs = {};
 
-        _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
+        _.forEach(inputs, (inputObj, inputName) => {
             let stringInputValue = inputsValues[inputName];
             let typedInputValue = JsonUtils.getTypedValue(stringInputValue);
 
