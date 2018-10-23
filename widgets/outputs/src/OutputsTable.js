@@ -36,6 +36,7 @@ export default class extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Outputs available. Probably there\'s no deployment created, yet.';
         let {CopyToClipboardButton, DataTable, ErrorMessage, Header, HighlightText, Popup} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
+        let {ParameterValue} = Stage.Utils;
         let outputs = this.props.data.items;
         let compareNames = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
 
@@ -63,7 +64,7 @@ export default class extends React.Component {
                                         <Popup position='top left' wide>
                                             <Popup.Trigger>
                                                 <div>
-                                                    {JsonUtils.getStringValue(output.value)}
+                                                    <ParameterValue value={JsonUtils.getStringValue(output.value)} />
                                                     <CopyToClipboardButton text={JsonUtils.getStringValue(output.value)}
                                                                            className='rightFloated' />
                                                 </div>
