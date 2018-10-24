@@ -38,8 +38,8 @@ export default class extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Inputs available. Probably there\'s no deployment created, yet.';
-        let {CopyToClipboardButton, DataTable, ErrorMessage, Header, HighlightText, Popup} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
+        let {DataTable, ErrorMessage, Header, ParameterValue} = Stage.Basic;
+
         let inputs = this.props.data.items;
         let compareNames = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
 
@@ -64,22 +64,7 @@ export default class extends React.Component {
                                     </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {!_.isNil(input.value) &&
-                                        <Popup position='top left' wide>
-                                            <Popup.Trigger>
-                                                <div>
-                                                    {JsonUtils.getStringValue(input.value)}
-                                                    <CopyToClipboardButton text={JsonUtils.getStringValue(input.value)}
-                                                                           className='rightFloated' />
-                                                </div>
-                                            </Popup.Trigger>
-                                            <Popup.Content>
-                                                <HighlightText className='json'>
-                                                    {JsonUtils.stringify(input.value, true)}
-                                                </HighlightText>
-                                            </Popup.Content>
-                                        </Popup>
-                                    }
+                                    <ParameterValue value={input.value} />
                                 </DataTable.Data>
                             </DataTable.Row>
                         )

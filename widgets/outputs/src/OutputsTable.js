@@ -34,9 +34,8 @@ export default class extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Outputs available. Probably there\'s no deployment created, yet.';
-        let {CopyToClipboardButton, DataTable, ErrorMessage, Header, HighlightText, Popup} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
-        let {ParameterValue} = Stage.Utils;
+        let {DataTable, ErrorMessage, Header, ParameterValue} = Stage.Basic;
+
         let outputs = this.props.data.items;
         let compareNames = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
 
@@ -60,22 +59,7 @@ export default class extends React.Component {
                                     </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {!_.isNil(output.value) &&
-                                        <Popup position='top left' wide>
-                                            <Popup.Trigger>
-                                                <div>
-                                                    <ParameterValue value={JsonUtils.getStringValue(output.value)} />
-                                                    <CopyToClipboardButton text={JsonUtils.getStringValue(output.value)}
-                                                                           className='rightFloated' />
-                                                </div>
-                                            </Popup.Trigger>
-                                            <Popup.Content>
-                                                <HighlightText className='json'>
-                                                    {JsonUtils.stringify(output.value, true)}
-                                                </HighlightText>
-                                            </Popup.Content>
-                                        </Popup>
-                                    }
+                                    <ParameterValue value={output.value} />
                                 </DataTable.Data>
                             </DataTable.Row>
                         )

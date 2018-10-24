@@ -36,6 +36,7 @@ import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
 import PopupHelp from './PopupHelp';
 import PageFilter from './PageFilter';
+import ParameterValue from './ParameterValue';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import RevertToDefaultIcon from './RevertToDefaultIcon';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
@@ -87,6 +88,7 @@ export {
     NodeFilter,
     NodeInstancesFilter,
     NodesTree,
+    ParameterValue,
     PageFilter,
     Popup,
     PopupConfirm,

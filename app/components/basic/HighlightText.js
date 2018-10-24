@@ -5,7 +5,8 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import Highlight from 'react-highlight';
+import Highlight from 'react-syntax-highlighter';
+import { idea } from 'react-syntax-highlighter/styles/hljs';
 
 /**
  * HighlightText component displays code with language-specific keyword highlighting
@@ -62,7 +63,7 @@ export default class HighlightText extends Component {
     };
 
     render() {
-        return <Highlight className={this.props.className}>{this.props.children}</Highlight>;
+        return <Highlight language={this.props.className} style={idea}>{this.props.children}</Highlight>;
     }
 }
  

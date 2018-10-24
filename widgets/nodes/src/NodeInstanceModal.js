@@ -15,7 +15,7 @@ export default class extends React.Component {
     render() {
         const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
         const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
-        let {CancelButton, CopyToClipboardButton, DataTable, HighlightText, Modal} = Stage.Basic;
+        let {CancelButton, CopyToClipboardButton, DataTable, Modal, ParameterValue} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         let instance = this.props.instance;
@@ -81,15 +81,7 @@ export default class extends React.Component {
                                             <DataTable.Row key={key}>
                                                 <DataTable.Data>{key}</DataTable.Data>
                                                 <DataTable.Data>
-                                                    {
-                                                        _.isObject(value)
-                                                        ?
-                                                            <HighlightText className='json'>
-                                                                {JsonUtils.stringify(value, true)}
-                                                            </HighlightText>
-                                                        :
-                                                            value
-                                                    }
+                                                    <ParameterValue value={value} />
                                                 </DataTable.Data>
                                             </DataTable.Row>
                                         );
