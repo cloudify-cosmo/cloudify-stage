@@ -120,11 +120,11 @@ export default class EventsTable extends React.Component {
                                             (
                                                 _.isEmpty(eventOrLogOption.text)
                                                 ?
-                                                    <span className={`eventsType ${eventOrLogOption.icon}`} />
+                                                    <i className={`eventsType icon big ${eventOrLogOption.icon}`} />
                                                 :
                                                     <Popup>
                                                         <Popup.Trigger>
-                                                            <span className={`eventsType ${eventOrLogOption.icon}`} />
+                                                            <i className={`eventsType icon big ${eventOrLogOption.icon}`} />
                                                         </Popup.Trigger>
                                                         <Popup.Content>
                                                             <span>{eventOrLogOption.text}</span>
