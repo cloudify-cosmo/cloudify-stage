@@ -75,12 +75,6 @@ export default class StageUtils {
         return message;
     }
 
-    static ParameterValue({value}) {
-        return StageUtils.isUrl(value)
-            ? <a target="_blank" href={value}>{value}</a>
-            : <span>{value}</span>;
-    }
-
     static getMD5(str) {
         return md5(str);
     }

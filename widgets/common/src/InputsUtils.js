@@ -57,7 +57,6 @@ class InputsUtils {
 
         const revertToDefault = () => inputChangeFunction(null, {name, value: typedRevert ? typedDefaultValue : stringDefaultValue});
 
-        console.error(name, value, defaultValue);
         return _.isNil(typedDefaultValue)
             ? undefined
             : <RevertToDefaultIcon value={typedValue} defaultValue={typedDefaultValue} onClick={revertToDefault} />;
