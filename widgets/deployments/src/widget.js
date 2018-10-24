@@ -53,10 +53,6 @@ Stage.defineWidget({
 
         var deploymentIds = deploymentData.then(data=>Promise.resolve([...new Set(data.items.map(item=>item.id))]));
 
-        var nodeData = deploymentIds.then(ids=>{
-                    return toolbox.getManager().doGet('/nodes?_include=id,deployment_id', {deployment_id: ids});
-                });
-
         var nodeInstanceData = deploymentIds.then(ids=>{
                     return toolbox.getManager().doGet('/node-instances?_include=id,state,deployment_id', {deployment_id: ids});
                 });
@@ -68,17 +64,17 @@ Stage.defineWidget({
             });
         });
 
-        return Promise.all([deploymentData, nodeData, nodeInstanceData, executionsData]).then(function(data) {
+        return Promise.all([deploymentData, nodeInstanceData, executionsData]).then(function(data) {
                 let deploymentData = data[0];
-                let nodeSize = _.countBy(data[1].items, "deployment_id");
-                let nodeInstanceData = _.groupBy(data[2].items, "deployment_id");
-                let executionsData = _.groupBy(data[3].items, "deployment_id");
+                let nodeInstancesSize = _.countBy(data[1].items, "deployment_id");
+                let nodeInstanceData = _.groupBy(data[1].items, "deployment_id");
+                let executionsData = _.groupBy(data[2].items, "deployment_id");
 
                 let formattedData = Object.assign({},deploymentData,{
                     items: _.map (deploymentData.items,(item)=>{
                         let workflows = Stage.Common.DeploymentUtils.filterWorkflows(_.sortBy(item.workflows, ['name']));
                         return Object.assign({},item,{
-                            nodeSize: nodeSize[item.id],
+                            nodeSize: nodeInstancesSize[item.id],
                             nodeStates: _.countBy(nodeInstanceData[item.id], "state"),
                             created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
                             updated_at: Stage.Utils.formatTimestamp(item.updated_at),
