@@ -63,7 +63,12 @@ export default class HighlightText extends Component {
     };
 
     render() {
-        return <Highlight language={this.props.className} style={idea}>{this.props.children}</Highlight>;
+        return (
+            <Highlight language={this.props.className} style={idea}
+                       codeTagProps={{style: {whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}}>
+                {this.props.children}
+            </Highlight>
+        );
     }
 }
  
