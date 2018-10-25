@@ -57,7 +57,7 @@ export default class Popup extends Component {
         let children = this.props.children;
 
         React.Children.forEach(this.props.children, function (child) {
-            if (child.type && areComponentsEqual(child.type, Wrapper)) {
+            if (child && child.type && areComponentsEqual(child.type, Wrapper)) {
                 trigger = child.props.children;
                 children = _.without(props.children, child);
             }
