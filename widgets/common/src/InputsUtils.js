@@ -70,8 +70,8 @@ class InputsUtils {
             ? stringValue.slice(1, -1)
             : JsonUtils.getTypedValue(value);
 
-        const cloudifyTypedDefaultValue = InputsUtils.getInputFieldInitialValue(defaultValue, JsonUtils.toCloudifyType(typedValue));
         const typedDefaultValue = defaultValue;
+        const cloudifyTypedDefaultValue = InputsUtils.getInputFieldInitialValue(defaultValue, JsonUtils.toCloudifyType(typedDefaultValue));
 
         const revertToDefault = () => inputChangeFunction(null, {name, value: cloudifyTypedDefaultValue});
 
