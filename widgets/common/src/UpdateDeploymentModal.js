@@ -149,7 +149,7 @@ class UpdateDeploymentModal extends React.Component {
 
                 _.forEach(blueprint.plan.inputs, (inputObj, inputName) => {
                     deploymentInputs[inputName]
-                        = Stage.Common.InputsUtils.getInputFieldInitialValue(currentDeploymentInputs[inputName]);
+                        = Stage.Common.InputsUtils.getInputFieldInitialValue(currentDeploymentInputs[inputName], inputObj.type);
                 });
 
                 this.setState({deploymentInputs, blueprint, errors: {}, loading: false});
