@@ -5,6 +5,9 @@
 class InputsUtils {
 
     static DEFAULT_VALUE_STRING = '';
+    static DEFAULT_VALUE_NUMBER = 0;
+    static DEFAULT_VALUE_BOOLEAN = false;
+
     static STRING_VALUE_SURROUND_CHAR = '"';
     static EMPTY_STRING = '""';
 
@@ -30,18 +33,33 @@ class InputsUtils {
         }
     }
 
-    static getInputFieldInitialValue(defaultValue) {
+    static getInputFieldInitialValue(defaultValue, type = undefined) {
         if (_.isNil(defaultValue)) {
-            return InputsUtils.DEFAULT_VALUE_STRING;
+            switch (type) {
+                case 'boolean':
+                    return InputsUtils.DEFAULT_VALUE_BOOLEAN;
+                case 'integer':
+                    return InputsUtils.DEFAULT_VALUE_NUMBER;
+                case 'string':
+                default:
+                    return InputsUtils.DEFAULT_VALUE_STRING;
+            }
         } else {
-            return InputsUtils.getEnhancedStringValue(defaultValue);
+            switch (type) {
+                case 'boolean':
+                case 'integer':
+                    return defaultValue;
+                case 'string':
+                default:
+                    return InputsUtils.getEnhancedStringValue(defaultValue);
+            }
         }
     }
 
 
     /* Components */
 
-    static getRevertToDefaultIcon(name, value, defaultValue, inputChangeFunction, typedRevert = false) {
+    static getRevertToDefaultIcon(name, value, defaultValue, inputChangeFunction) {
         let {RevertToDefaultIcon} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
@@ -52,10 +70,10 @@ class InputsUtils {
             ? stringValue.slice(1, -1)
             : JsonUtils.getTypedValue(value);
 
-        const stringDefaultValue = InputsUtils.getInputFieldInitialValue(defaultValue);
+        const cloudifyTypedDefaultValue = InputsUtils.getInputFieldInitialValue(defaultValue, JsonUtils.toCloudifyType(typedValue));
         const typedDefaultValue = defaultValue;
 
-        const revertToDefault = () => inputChangeFunction(null, {name, value: typedRevert ? typedDefaultValue : stringDefaultValue});
+        const revertToDefault = () => inputChangeFunction(null, {name, value: cloudifyTypedDefaultValue});
 
         return _.isNil(typedDefaultValue)
             ? undefined
@@ -78,6 +96,7 @@ class InputsUtils {
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type)}
                     </Form.Field>
                 );
+            case 'string':
             default:
                 return (
                     <Form.Field key={name} error={error} help={description} required={_.isNil(defaultValue)} label={name}>
@@ -93,12 +112,11 @@ class InputsUtils {
         switch (type) {
             case 'boolean':
                 return (
-                    <Form.Group>
+                    <React.Fragment>
                         <Form.Checkbox name={name} toggle label={name} checked={value} onChange={onChange} />
-                        <Form.Field width={1}>
-                            {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange, true)}
-                        </Form.Field>
-                    </Form.Group>
+                        &nbsp;&nbsp;&nbsp;
+                        {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                    </React.Fragment>
                 );
 
             case 'integer':
@@ -106,10 +124,11 @@ class InputsUtils {
                                    icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                                    onChange={onChange} />;
 
+            case 'string':
             default:
                 return _.includes(value, '\n')
                     ?
-                    <Form.Group >
+                    <Form.Group>
                         <Form.Field width={15}>
                             <Form.TextArea name={name} value={value} onChange={onChange} />
                         </Form.Field>
@@ -137,7 +156,7 @@ class InputsUtils {
                                           input.description,
                                           onChange,
                                           errorsState[input.name],
-                                          input.type) // only valid for workflow parameters
+                                          input.type)
         );
     }
 
@@ -148,7 +167,7 @@ class InputsUtils {
         let deploymentInputs = {};
 
         _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
-            deploymentInputs[inputName] = InputsUtils.getInputFieldInitialValue(inputObj.default);
+            deploymentInputs[inputName] = InputsUtils.getInputFieldInitialValue(inputObj.default, inputObj.type);
         });
 
         return deploymentInputs;
@@ -163,7 +182,7 @@ class InputsUtils {
             if (_.isNil(inputValue) && _.isNil(inputObj.default)) {
                 notFoundInputs.push(inputName);
             } else {
-                deploymentInputs[inputName] = InputsUtils.getInputFieldInitialValue(inputValue);
+                deploymentInputs[inputName] = InputsUtils.getInputFieldInitialValue(inputValue, inputObj.type);
             }
         });
 

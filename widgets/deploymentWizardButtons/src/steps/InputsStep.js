@@ -65,15 +65,15 @@ class InputsStepContent extends Component {
                 if (!_.isUndefined(this.props.stepData[inputName])) {
                     return this.props.stepData[inputName];
                 } else {
-                    return Stage.Common.InputsUtils.getInputFieldInitialValue(inputData.default);
+                    return Stage.Common.InputsUtils.getInputFieldInitialValue(inputData.default, inputData.type);
                 }
             }
         );
         this.props.onChange(this.props.id, {...stepData});
     }
 
-    handleChange(event, {name, value}) {
-        this.props.onChange(this.props.id, {...this.props.stepData, [name]: value});
+    handleChange(event, field) {
+        this.props.onChange(this.props.id, {...this.props.stepData, ...Stage.Basic.Form.fieldNameValue(field)});
     }
 
     getInputStatus(defaultValue) {
@@ -124,7 +124,8 @@ class InputsStepContent extends Component {
                                                                               this.props.stepData[inputName],
                                                                               inputs[inputName].default,
                                                                               this.handleChange.bind(this),
-                                                                              this.props.errors[inputName])
+                                                                              this.props.errors[inputName],
+                                                                              inputs[inputName].type)
                                                 }
                                             </Table.Cell>
                                         </Table.Row>

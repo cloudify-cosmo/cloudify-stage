@@ -30,9 +30,15 @@ export default class RevertToDefaultIcon extends Component {
      * @property {function} onClick function to be called on revert icon click
      */
     static propTypes = {
-        value: PropTypes.any.isRequired,
-        defaultValue: PropTypes.any.isRequired,
-        onClick: PropTypes.func.isRequired,
+        value: PropTypes.any,
+        defaultValue: PropTypes.any,
+        onClick: PropTypes.func,
+    };
+
+    static defaultProps = {
+        // value can be null/undefined
+        // defaultValue can be null/undefined
+        onClick: _.noop
     };
 
     render() {

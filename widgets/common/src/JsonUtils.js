@@ -30,6 +30,22 @@ class JsonUtils {
         return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
     }
 
+    static toCloudifyType(obj) {
+        let type = JsonUtils.toType(obj);
+
+        switch (type) {
+            case 'boolean':
+            case 'string':
+                return type;
+            case 'number':
+                return 'integer';
+            case 'array':
+            case 'object':
+            default:
+                return undefined;
+        }
+    }
+
     static getStringValue(value) {
         let ret = null;
 
