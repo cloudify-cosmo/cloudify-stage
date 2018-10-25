@@ -38,7 +38,7 @@ export default class extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Inputs available. Probably there\'s no deployment created, yet.';
-        let {DataTable, ErrorMessage, Header, ParameterValue} = Stage.Basic;
+        let {DataTable, ErrorMessage, Header, ParameterValue, ParameterValueDescription} = Stage.Basic;
 
         let inputs = this.props.data.items;
         let compareNames = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
@@ -50,7 +50,7 @@ export default class extends React.Component {
                 <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Name" width="35%"/>
-                    <DataTable.Column label="Value" width="65%"/>
+                    <DataTable.Column label={<span>Value <ParameterValueDescription /></span>} width="65%" />
 
                     {
                         inputs.sort(compareNames).map((input) =>
