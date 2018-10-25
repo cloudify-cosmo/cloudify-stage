@@ -33,13 +33,13 @@ export default class ParameterValueDescription extends Component {
                         <ParameterValue value={3.14} showCopyButton={false} />
                     </List.Item>
                     <List.Item>Object:
-                        <ParameterValue value={{"sku": "14.04.5-LTS", "publisher": "Canonical", "version": "latest", "offer": "UbuntuServer"}} showCopyButton={false} />
+                        <ParameterValue value={{'sku': '14.04.5-LTS', 'publisher': 'Canonical', 'version': 'latest', 'offer': 'UbuntuServer'}} showCopyButton={false} />
                     </List.Item>
                     <List.Item>Array:
-                        <ParameterValue value={["node_f73mxd", "vm_32jdfg", "host_f92mv7"]} showCopyButton={false} />
+                        <ParameterValue value={['node_f73mxd', 'vm_32jdfg', 'host_f92mv7']} showCopyButton={false} />
                     </List.Item>
                     <List.Item>Link:&nbsp;&nbsp;
-                        <ParameterValue value="https://cloudify.co" showCopyButton={false} />
+                        <ParameterValue value='https://cloudify.co' showCopyButton={false} />
                     </List.Item>
                     <List.Item>Null:
                         <ParameterValue value={null} showCopyButton={false} />
