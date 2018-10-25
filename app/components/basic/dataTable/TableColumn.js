@@ -21,13 +21,13 @@ import React, { Component } from 'react';
 export default class TableColumn extends Component {
 
     /**
-     * @property {string} label - column label
+     * @property {any} label - column label
      * @property {string} [name] - data property, enables column sorting
      * @property {string} [width] - width style
      * @property {boolean} [show=true] - if false then column is hidden
      */
     static propTypes = {
-        label: PropTypes.string,
+        label: PropTypes.any,
         name: PropTypes.string,
         width: PropTypes.string,
         show: PropTypes.bool
