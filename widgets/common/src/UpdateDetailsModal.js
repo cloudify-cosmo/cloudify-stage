@@ -64,7 +64,7 @@ export default class UpdateDetailsModal extends React.Component {
     }
 
     render() {
-        let {CancelButton, Form, Header, Icon, Modal, Table, Popup} = Stage.Basic;
+        let {CancelButton, Form, Header, Icon, Modal, Table, Popup, ParameterValue, ParameterValueDescription} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         let deploymentUpdate = this.state.deploymentUpdate;
@@ -116,17 +116,19 @@ export default class UpdateDetailsModal extends React.Component {
                                         <Table.Header>
                                             <Table.Row>
                                                 <Table.HeaderCell></Table.HeaderCell>
-                                                <Table.HeaderCell>Old</Table.HeaderCell>
-                                                <Table.HeaderCell>New</Table.HeaderCell>
+                                                <Table.HeaderCell>Old <ParameterValueDescription /></Table.HeaderCell>
+                                                <Table.HeaderCell>New <ParameterValueDescription /></Table.HeaderCell>
                                             </Table.Row>
                                         </Table.Header>
 
                                         <Table.Body>
                                             {
                                                 _.map(allInputs, (input) => {
-                                                    let oldValue = JsonUtils.getStringValue(_.get(deploymentUpdate.old_inputs, input, ''));
-                                                    let newValue = JsonUtils.getStringValue(_.get(deploymentUpdate.new_inputs, input, ''));
-                                                    let inputChanged = !_.isEqual(oldValue, newValue);
+                                                    let oldValue = _.get(deploymentUpdate.old_inputs, input, '');
+                                                    let oldValueString = JsonUtils.getStringValue(oldValue);
+                                                    let newValue = _.get(deploymentUpdate.new_inputs, input, '');
+                                                    let newValueString = JsonUtils.getStringValue(newValue);
+                                                    let inputChanged = !_.isEqual(oldValueString, newValueString);
 
                                                     return (
                                                         <Table.Row key={input}>
@@ -134,10 +136,10 @@ export default class UpdateDetailsModal extends React.Component {
                                                                 {input}
                                                             </Table.Cell>
                                                             <Table.Cell>
-                                                                {oldValue}
+                                                                <ParameterValue value={oldValue} showCopyButton={false} />
                                                             </Table.Cell>
                                                             <Table.Cell>
-                                                                <span>{newValue} </span>
+                                                                <ParameterValue value={newValue} showCopyButton={false} />
                                                                 {
                                                                     inputChanged &&
                                                                     <Popup>
@@ -145,7 +147,7 @@ export default class UpdateDetailsModal extends React.Component {
                                                                             <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
                                                                         </Popup.Trigger>
                                                                         <Popup.Content>
-                                                                            {this._getDiff(oldValue, newValue)}
+                                                                            {this._getDiff(oldValueString, newValueString)}
                                                                         </Popup.Content>
                                                                     </Popup>
                                                                 }

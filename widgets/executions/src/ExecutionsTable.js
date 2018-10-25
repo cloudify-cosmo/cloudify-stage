@@ -98,13 +98,13 @@ export default class ExecutionsTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
-        let {CancelButton, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal, PopupMenu} = Stage.Basic;
+        let {CancelButton, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal,
+             ParameterValue, ParameterValueDescription, PopupMenu, Table} = Stage.Basic;
         let {ExecutionStatus, ExecutionUtils, IdPopup, UpdateDetailsModal} = Stage.Common;
         const MenuAction = ExecutionsTable.MenuAction;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
         let execution = this.state.execution || {parameters: {}};
-        let executionParameters = JSON.stringify(execution.parameters, null, 2);
 
         return (
             <div>
@@ -215,11 +215,42 @@ export default class ExecutionsTable extends React.Component {
 
                 <Modal open={this.state.executionParametersModalOpen}
                        onClose={()=>this.setState({execution: null, executionParametersModalOpen: false})}>
+                    <Modal.Header>
+                        Execution parameters
+                    </Modal.Header>
                     <Modal.Content scrolling>
-                        <HighlightText className='json'>{executionParameters}</HighlightText>
+                        {
+                            !_.isEmpty(execution.parameters)
+                            ?
+                                <Table>
+                                    <Table.Header>
+                                        <Table.Row>
+                                            <Table.HeaderCell>Parameter</Table.HeaderCell>
+                                            <Table.HeaderCell>Value <ParameterValueDescription /></Table.HeaderCell>
+                                        </Table.Row>
+                                    </Table.Header>
+
+                                    <Table.Body>
+                                        {
+                                            _.map(_.keys(execution.parameters), (parameterName) =>
+                                                <Table.Row key={parameterName}>
+                                                    <Table.Cell>
+                                                        {parameterName}
+                                                    </Table.Cell>
+                                                    <Table.Cell>
+                                                        <ParameterValue value={execution.parameters[parameterName]} />
+                                                    </Table.Cell>
+                                                </Table.Row>
+                                            )
+                                        }
+                                    </Table.Body>
+                                </Table>
+                            :
+                                <span>No execution parameters.</span>
+                        }
                     </Modal.Content>
                     <Modal.Actions>
-                        <CopyToClipboardButton content='Copy Parameters' text={executionParameters} />
+                        <CopyToClipboardButton content='Copy Parameters' text={JSON.stringify(execution.parameters, null, 2)} />
                         <CancelButton onClick={(e) => {e.stopPropagation(); this.setState({executionParametersModalOpen: false})}}
                                       content="Close" />
                     </Modal.Actions>
@@ -232,6 +263,9 @@ export default class ExecutionsTable extends React.Component {
 
                 <Modal open={this.state.errorModalOpen}
                        onClose={()=>this.setState({execution: null, errorModalOpen: false})}>
+                    <Modal.Header>
+                        Error details
+                    </Modal.Header>
                     <Modal.Content scrolling>
                         <HighlightText className='python'>{execution.error}</HighlightText>
                     </Modal.Content>
