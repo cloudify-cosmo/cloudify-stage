@@ -22,6 +22,10 @@ class InputsHeader extends React.Component {
         header: 'Deployment inputs'
     };
 
+    shouldComponentUpdate(nextProps) {
+        return !_.isEqual(this.props, nextProps);
+    }
+
     render () {
         let {Form, Header, List, PopupHelp} = Stage.Basic;
 
@@ -30,7 +34,7 @@ class InputsHeader extends React.Component {
                 {this.props.header}
                 <Header.Subheader>
                     See values typing details:&nbsp;
-                    <PopupHelp flowing content={
+                    <PopupHelp flowing header='Value type' content={
                         <div>
                             Values are casted to types, e.g.:
                             <List bulleted>
