@@ -42,7 +42,7 @@ export default class BlueprintSources extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doGetFileContent(path).then(data => {
-            var type = 'basic';
+            let type = '';
             if (_.endsWith(path, '.yaml') || _.endsWith(path, '.yml')) {
                 type = 'yaml';
             } else if (_.endsWith(path, '.py')) {
