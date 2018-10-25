@@ -19,15 +19,18 @@ export default class PopupHelp extends React.Component {
 
     /**
      * propTypes
-     * @property {object} [trigger=<Icon name="help circle" />] help popup triggering element (on hover and focus)
-     * @property {object} content help popup content
+     * @property {any} content help popup content
+     * @property {any} [header=''] help popup header
+     * @property {any} [trigger=<Icon name="help circle" />] help popup triggering element (on hover and focus)
      */
     static propTypes = {
-        trigger: PropTypes.object,
-        content: PropTypes.any.isRequired
+        content: PropTypes.any.isRequired,
+        header: PropTypes.any,
+        trigger: PropTypes.any
     };
 
     static defaultProps = {
+        header: '',
         trigger: (<Icon name="help circle"/>)
     };
 
@@ -35,6 +38,13 @@ export default class PopupHelp extends React.Component {
         let popupProps = _.omit(this.props, _.keys(PopupHelp.propTypes));
         return (
             <Popup on={['hover', 'focus']} {...popupProps}>
+                {
+                    !_.isEmpty(this.props.header) && (
+                        <Popup.Header>
+                            {this.props.header}
+                        </Popup.Header>
+                    )
+                }
                 <Popup.Trigger>
                     {this.props.trigger}
                 </Popup.Trigger>
