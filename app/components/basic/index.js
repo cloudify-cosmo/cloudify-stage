@@ -37,6 +37,7 @@ import PopupConfirm from './PopupConfirm';
 import PopupHelp from './PopupHelp';
 import PageFilter from './PageFilter';
 import ParameterValue from './ParameterValue';
+import ParameterValueDescription from './ParameterValueDescription';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import RevertToDefaultIcon from './RevertToDefaultIcon';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
@@ -89,6 +90,7 @@ export {
     NodeInstancesFilter,
     NodesTree,
     ParameterValue,
+    ParameterValueDescription,
     PageFilter,
     Popup,
     PopupConfirm,
