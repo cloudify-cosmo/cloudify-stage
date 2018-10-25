@@ -14,7 +14,7 @@ import React, { Component } from 'react';
  *
  * ## Usage
  * ```
- * <ParameterValue value={value}>
+ * <ParameterValue value={value} />
  * ```
  *
  * ### ParameterValue for JSON
@@ -28,39 +28,65 @@ export default class ParameterValue extends Component {
 
     /**
      * propTypes
-     * @property {any} [value=''] parameter value
+     * @property {any} [value=''] parameter value (original type)
+     * @property {bool} [showCopyButton=true] if set to true, then CopyToClipboardButton will be shown
      */
     static propTypes = {
-        value: PropTypes.any
+        value: PropTypes.any,
+        showCopyButton: PropTypes.bool,
     };
 
     static defaultProps = {
-        value: ''
+        value: '',
+        showCopyButton: true,
     };
 
-    render() {
-        let {CopyToClipboardButton, HighlightText} = Stage.Basic;
+    shouldComponentUpdate(nextProps) {
+        return !_.isEqual(this.props, nextProps);
+    }
+
+    getValueElement(stringValue) {
+        let {HighlightText} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
         let {isUrl} = Stage.Utils;
 
-        const value = this.props.value;
-        const stringValue = _.isObject(value) ? JsonUtils.stringify(value, true) : JsonUtils.getStringValue(value);
+        const commonStyle = {padding: '0.5em', whiteSpace: 'pre-wrap', wordBreak: 'break-word'};
+        const typedValue = this.props.value;
 
-        return (
-            <div>
-                <CopyToClipboardButton text={stringValue} className='rightFloated' />
-                {
-                    _.isObject(value)
-                    ?
-                        <HighlightText>{stringValue}</HighlightText>
-                    :
-                            _.isString(value) && isUrl(stringValue)
-                            ?
-                                <a target="_blank" href={stringValue}>{stringValue}</a>
-                            :
-                                <code style={{padding: '0.5em'}}>{stringValue}</code>
-                }
-            </div>
-        );
+        switch (JsonUtils.toType(typedValue)) {
+            case 'array':
+            case 'object':
+                return <HighlightText className='json'>{stringValue}</HighlightText>;
+            case 'boolean':
+                return <code style={commonStyle} className='hljs-keyword'>{stringValue}</code>;
+            case 'number':
+                return <code style={commonStyle} className='hljs-number'>{stringValue}</code>;
+            case 'null':
+                return <code style={commonStyle} className='hljs-keyword'>{stringValue}</code>;
+            case 'string':
+                return isUrl(stringValue)
+                    ? <a target="_blank" href={stringValue}>{stringValue}</a>
+                    : <code style={commonStyle} className='hljs-string'>{stringValue}</code>;
+            default:
+                return <code style={commonStyle} className='hljs-literal'>{stringValue}</code>;
+        }
+    }
+
+    render() {
+        let {CopyToClipboardButton} = Stage.Basic;
+        let {JsonUtils} = Stage.Common;
+
+        const stringValue = _.isObject(this.props.value)
+            ? JsonUtils.stringify(this.props.value, true)
+            : JsonUtils.getStringValue(this.props.value);
+
+        return this.props.showCopyButton
+            ?
+                <div>
+                    <CopyToClipboardButton text={stringValue} className='rightFloated' />
+                    {this.getValueElement(stringValue)}
+                </div>
+            :
+                this.getValueElement(stringValue);
     }
 }
