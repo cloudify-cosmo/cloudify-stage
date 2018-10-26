@@ -94,6 +94,10 @@ export default class StageUtils {
         return regexp.test(str);
     }
 
+    static redirectToPage(url) {
+        window.open(url, '_blank');
+    }
+
     static widgetResourceUrl(widgetId, internalPath, isCustom = true, addContextPath = true) {
         return addContextPath
             ? StageUtils.url(
