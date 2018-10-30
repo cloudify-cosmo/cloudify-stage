@@ -2,13 +2,18 @@
  * Created by kinneretzin on 20/10/2016.
  */
 
+import ErrorCausesModal from './ErrorCausesModal';
+import ErrorCausesIcon from './ErrorCausesIcon';
+
 export default class EventsTable extends React.Component {
 
     constructor(props, context) {
         super(props, context);
 
         this.state = {
-            error: null
+            error: null,
+            errorCauses: [],
+            showErrorCausesModal: false,
         };
     }
 
@@ -39,6 +44,14 @@ export default class EventsTable extends React.Component {
     _selectEvent(eventId) {
         let selectedEventId = this.props.toolbox.getContext().getValue('eventId');
         this.props.toolbox.getContext().setValue('eventId', eventId === selectedEventId ? null : eventId);
+    }
+
+    showErrorCausesModal(errorCauses) {
+        this.setState({errorCauses, showErrorCausesModal: true});
+    }
+
+    hideErrorCausesModal() {
+        this.setState({errorCauses: [], showErrorCausesModal: false});
     }
 
     getHighlightedText(text) {
@@ -73,6 +86,7 @@ export default class EventsTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Events/Logs available. Probably there\'s no deployment created, yet.';
         let {CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Popup} = Stage.Basic;
         let {JsonUtils, EventUtils} = Stage.Common;
+        const EmptySpace = () => <span>&nbsp;&nbsp;</span>;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
         let colorLogs = this.props.widget.configuration.colorLogs;
@@ -164,7 +178,8 @@ export default class EventsTable extends React.Component {
                                     <DataTable.Data>{item.workflow_id}</DataTable.Data>
                                     <DataTable.Data>{item.operation}</DataTable.Data>
                                     <DataTable.Data>
-                                        {item.message &&
+                                        {
+                                            item.message &&
                                             <Popup position='top left' hoverable wide="very">
                                                 <Popup.Trigger>
                                                     <span>
@@ -179,12 +194,18 @@ export default class EventsTable extends React.Component {
                                                 </Popup.Content>
                                             </Popup>
                                         }
+                                        {!!item.error_causes && <EmptySpace />}
+                                        <ErrorCausesIcon show={!!item.error_causes}
+                                                         onClick={this.showErrorCausesModal.bind(this, item.error_causes)} />
                                     </DataTable.Data>
                                 </DataTable.Row>
                             );
                         })
                     }
                 </DataTable>
+                <ErrorCausesModal errorCauses={this.state.errorCauses}
+                                  open={this.state.showErrorCausesModal}
+                                  onClose={this.hideErrorCausesModal.bind(this)} />
             </div>
         );
     }
