@@ -3,7 +3,6 @@
  */
 
 import PropTypes from 'prop-types';
-import React from 'react';
 
 export default class RefreshIcon extends React.Component {
 
