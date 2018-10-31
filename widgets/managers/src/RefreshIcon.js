@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export default class ManagerRefreshIcon extends React.Component {
+export default class RefreshIcon extends React.Component {
 
     constructor(props, context){
         super(props, context);

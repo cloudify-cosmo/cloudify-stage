@@ -31,10 +31,12 @@ Stage.defineWidget({
 
     fetchData: function(widget, toolbox) {
 
+        let momDeployments = [];
 
-        return toolbox.getManager().doGet('/deployments', {_include: 'id,outputs'})
+        // FIXME: Temporaraly fetching all fields from deployments as _include=workflows is not working properly
+        return toolbox.getManager().doGet('/deployments')
             .then((deployments) => {
-                const momDeployments = _.filter(_.get(deployments, 'items', []), (deployment) =>
+                momDeployments = _.filter(_.get(deployments, 'items', []), (deployment) =>
                     !!deployment.outputs.cluster_ips && !!deployment.outputs.cluster_status);
 
                 let outputsPromises = _.map(momDeployments, (deployment) =>
@@ -47,6 +49,8 @@ Stage.defineWidget({
                     items: _.map(momDeploymentsOutputs, (deploymentOutputs) => {
                         const managerId = deploymentOutputs.deployment_id;
                         const managerIp = _.get(deploymentOutputs.outputs.cluster_ips, 'Master', '');
+                        const deployment = _.find(momDeployments, (deployment) => deployment.id === deploymentOutputs.deployment_id);
+                        const workflows = _.get(deployment, 'workflows', []);
 
                         return {
                             id: managerId,
@@ -60,7 +64,8 @@ Stage.defineWidget({
                                 ip: slaveIp,
                                 status: _.find(_.get(deploymentOutputs.outputs.cluster_status, 'cluster_status', []),
                                     (clusterStatusItem) => clusterStatusItem.name === slaveIp)
-                            }))
+                            })),
+                            workflows
                         }
                     }),
                     total: _.size(momDeploymentsOutputs)

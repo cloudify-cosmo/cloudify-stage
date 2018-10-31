@@ -3,9 +3,9 @@
  */
 
 import PropTypes from 'prop-types';
-import ManagerStatusIcon from './ManagerStatusIcon';
+import StatusIcon from './StatusIcon';
 
-export default class ManagerSlavesDetails extends React.Component {
+export default class SlavesDetails extends React.Component {
 
     constructor(props, context) {
         super(props, context);
@@ -55,7 +55,7 @@ export default class ManagerSlavesDetails extends React.Component {
                                                 {_.get(slave.status, 'host_ip', '')}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <ManagerStatusIcon status={slave.status} />
+                                                <StatusIcon status={slave.status} />
                                             </Table.Cell>
                                         </Table.Row>
                                     )

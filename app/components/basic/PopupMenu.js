@@ -44,6 +44,8 @@ export default class PopupMenu extends Component {
      * @property {number} [offset=12] horizontal offset in pixels to be applied to popup
      * @property {string} [icon='content'] popup trigger icon name (see [Icon](https://react.semantic-ui.com/elements/icon))
      * @property {boolean} [disabled=false] specifies if trigger shall be disabled
+     * @property {boolean} [bordered=false] specifies if icon shall be bordered
+     * @property {string} [help=''] additional popup help message shown on trigger hover
      */
     static propTypes = {
         className: PropTypes.string,
@@ -52,6 +54,8 @@ export default class PopupMenu extends Component {
         offset: PropTypes.number,
         icon: PropTypes.string,
         disabled: PropTypes.bool,
+        bordered: PropTypes.bool,
+        help: PropTypes.string
     };
 
     static defaultProps = {
@@ -60,11 +64,21 @@ export default class PopupMenu extends Component {
         offset: 12,
         icon: 'content',
         disabled: false,
+        bordered: false,
+        help: ''
     };
 
     render () {
-        let trigger = <Icon link={!this.props.disabled} disabled={this.props.disabled} name={this.props.icon}
-                            className={this.props.className} onClick={(e) => {e.stopPropagation();}} />;
+        let trigger = _.isEmpty(this.props.help)
+            ?
+                <Icon link={!this.props.disabled} disabled={this.props.disabled} name={this.props.icon}
+                      bordered={this.props.bordered} className={this.props.className} onClick={(e) => {e.stopPropagation();}} />
+            :
+                <span onClick={(e) => {e.stopPropagation();}}>
+                    <Popup trigger={<Icon name={this.props.icon} bordered={this.props.bordered}
+                                          link={!this.props.disabled} className={this.props.className} />}
+                           content={this.props.help} />
+                </span>;
 
         return (
             <Popup trigger={trigger} on='click' position={this.props.position} className='popupMenu' offset={this.props.offset}

@@ -2,17 +2,22 @@
  * Created by jakub.niezgoda on 25/10/2018.
  */
 
-import ManagerStatusIcon from './ManagerStatusIcon';
-import ManagerConsoleIcon from './ManagerConsoleIcon';
-import ManagerRefreshIcon from './ManagerRefreshIcon';
-import ManagerSlavesDetails from './ManagerSlavesDetails';
+import ConsoleIcon from './ConsoleIcon';
+import RefreshIcon from './RefreshIcon';
+import SlavesDetails from './SlavesDetails';
+import StatusIcon from './StatusIcon';
+import ExecuteWorkflowIcon from './ExecuteWorkflowIcon';
+import ExecuteDeploymentModal from '../../common/src/ExecuteDeploymentModal';
 
 export default class ManagersTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
-            selectedManagerId: null
+            selectedManagerId: null,
+            showExecuteWorkflowModal: false,
+            deployment: {id: ''},
+            workflow: {name:'', parameters:[]}
         };
     }
 
@@ -34,11 +39,19 @@ export default class ManagersTable extends React.Component {
         this.props.toolbox.getEventBus().off('managers:refresh', this.refreshData);
     }
 
-    selectManager(manager){
+    selectManager(manager) {
         let selectedManagerId = this.state.selectedManagerId;
         let clickedManagerId = manager.id;
         let clickedAlreadySelectedManager = clickedManagerId === selectedManagerId;
         this.setState({selectedManagerId: clickedAlreadySelectedManager ? null : manager.id});
+    }
+
+    openExecuteWorkflowModal(id, workflow) {
+        this.setState({deployment: {id}, workflow: workflow, showExecuteWorkflowModal: true});
+    }
+
+    hideExecuteWorkflowModal() {
+        this.setState({deployment: {id: ''}, workflow: {name: '', parameters: []}, showExecuteWorkflowModal: false});
     }
 
     render() {
@@ -59,9 +72,9 @@ export default class ManagersTable extends React.Component {
                                       show={fieldsToShow.indexOf('Deployment') >= 0}/>
                     <DataTable.Column label="IP"
                                       show={fieldsToShow.indexOf('IP') >= 0}/>
-                    <DataTable.Column label="Status"
+                    <DataTable.Column label="Status" width="50px"
                                       show={fieldsToShow.indexOf('Status') >= 0}/>
-                    <DataTable.Column label="Actions"
+                    <DataTable.Column label="Actions" width="150px"
                                       show={fieldsToShow.indexOf('Actions') >= 0}/>
 
                     {
@@ -78,16 +91,18 @@ export default class ManagersTable extends React.Component {
                                             {manager.ip}
                                         </DataTable.Data>
                                         <DataTable.Data>
-                                            <ManagerStatusIcon status={manager.status} error={manager.error} />
+                                            <StatusIcon status={manager.status} error={manager.error} />
                                         </DataTable.Data>
                                         <DataTable.Data>
-                                            <ManagerConsoleIcon manager={manager} />
-                                            <ManagerRefreshIcon manager={manager} toolbox={this.props.toolbox} />
+                                            <ConsoleIcon manager={manager} />
+                                            <RefreshIcon manager={manager} toolbox={this.props.toolbox} />
+                                            <ExecuteWorkflowIcon show={!!manager.workflows} workflows={manager.workflows}
+                                                                 onClick={this.openExecuteWorkflowModal.bind(this, manager.id)} />
                                         </DataTable.Data>
                                     </DataTable.Row>
 
                                     <DataTable.DataExpandable key={manager.id}>
-                                        <ManagerSlavesDetails slaves={manager.slaves} />
+                                        <SlavesDetails slaves={manager.slaves} />
                                     </DataTable.DataExpandable>
 
                                 </DataTable.RowExpandable>
@@ -96,6 +111,11 @@ export default class ManagersTable extends React.Component {
                     }
 
                 </DataTable>
+                <ExecuteDeploymentModal toolbox={this.props.toolbox}
+                                        open={this.state.showExecuteWorkflowModal}
+                                        deployment={this.state.deployment}
+                                        workflow={this.state.workflow}
+                                        onHide={this.hideExecuteWorkflowModal.bind(this)} />
             </div>
         );
     }
