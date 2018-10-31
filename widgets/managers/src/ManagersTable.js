@@ -3,18 +3,21 @@
  */
 
 import ConsoleIcon from './ConsoleIcon';
+import ExecuteWorkflowButton from './ExecuteWorkflowButton';
+import ExecuteWorkflowIcon from './ExecuteWorkflowIcon';
+import RefreshButton from './RefreshButton';
 import RefreshIcon from './RefreshIcon';
 import SlavesDetails from './SlavesDetails';
 import StatusIcon from './StatusIcon';
-import ExecuteWorkflowIcon from './ExecuteWorkflowIcon';
-import ExecuteDeploymentModal from '../../common/src/ExecuteDeploymentModal';
 
 export default class ManagersTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
+            bulkOperation: false,
             selectedManagerId: null,
+            selectedManagers: [],
             showExecuteWorkflowModal: false,
             deployment: {id: ''},
             workflow: {name:'', parameters:[]}
@@ -46,8 +49,8 @@ export default class ManagersTable extends React.Component {
         this.setState({selectedManagerId: clickedAlreadySelectedManager ? null : manager.id});
     }
 
-    openExecuteWorkflowModal(id, workflow) {
-        this.setState({deployment: {id}, workflow: workflow, showExecuteWorkflowModal: true});
+    openExecuteWorkflowModal(id, bulk, workflow) {
+        this.setState({deployment: {id}, workflow: workflow, showExecuteWorkflowModal: true, bulkOperation: bulk});
     }
 
     hideExecuteWorkflowModal() {
@@ -60,7 +63,15 @@ export default class ManagersTable extends React.Component {
         const fieldsToShow = configuration.fieldsToShow;
         const totalSize = this.props.data.total > 0 ? undefined : 0;
 
-        let {DataTable, ErrorMessage} = Stage.Basic;
+        const allManagers = _.map(this.props.data.items, (manager) => manager.id);
+        const selectedManagers = this.state.selectedManagers;
+        const allManagersSelected = _.isEqual(selectedManagers, allManagers);
+        const workflows = !_.isEmpty(selectedManagers)
+            ? this.props.data.items[0].workflows
+            : [];
+
+        let {Checkbox, DataTable, ErrorMessage} = Stage.Basic;
+        let {ExecuteDeploymentModal} = Stage.Common;
 
         return (
             <div>
@@ -68,6 +79,16 @@ export default class ManagersTable extends React.Component {
 
                 <DataTable selectable={false} noDataMessage={NO_DATA_MESSAGE} totalSize={totalSize}>
 
+                    <DataTable.Column width="20px"
+                                      label={<Checkbox checked={allManagersSelected}
+                                                       indeterminate={!allManagersSelected && !_.isEmpty(selectedManagers)}
+                                                       onChange={() =>
+                                                           allManagersSelected
+                                                               ? this.setState({selectedManagers: []})
+                                                               : this.setState({selectedManagers: allManagers})
+                                                       }
+                                                       onClick={(e) => e.stopPropagation()} />}
+                    />
                     <DataTable.Column label="Deployment"
                                       show={fieldsToShow.indexOf('Deployment') >= 0}/>
                     <DataTable.Column label="IP"
@@ -79,25 +100,37 @@ export default class ManagersTable extends React.Component {
 
                     {
                         _.map(this.props.data.items, (manager) => {
+                            const inSelectedManagers = _.includes(selectedManagers, manager.id);
+
                             return (
                                 <DataTable.RowExpandable key={manager.id} expanded={manager.id === this.state.selectedManagerId}>
 
                                     <DataTable.Row key={manager.id} selected={manager.id === this.state.selectedManagerId}
                                                    onClick={this.selectManager.bind(this, manager)}>
                                         <DataTable.Data>
+                                            <Checkbox checked={inSelectedManagers}
+                                                      onChange={() =>
+                                                          inSelectedManagers
+                                                              ? this.setState({selectedManagers: _.filter(selectedManagers, (id) => id !== manager.id)})
+                                                              : this.setState({selectedManagers: [...selectedManagers, manager.id]})
+                                                      }
+                                                      onClick={(e) => e.stopPropagation()}
+                                            />
+                                        </DataTable.Data>
+                                        <DataTable.Data>
                                             {manager.id}
                                         </DataTable.Data>
                                         <DataTable.Data>
                                             {manager.ip}
                                         </DataTable.Data>
-                                        <DataTable.Data>
+                                        <DataTable.Data className="center aligned">
                                             <StatusIcon status={manager.status} error={manager.error} />
                                         </DataTable.Data>
-                                        <DataTable.Data>
+                                        <DataTable.Data className="center aligned">
                                             <ConsoleIcon manager={manager} />
                                             <RefreshIcon manager={manager} toolbox={this.props.toolbox} />
-                                            <ExecuteWorkflowIcon show={!!manager.workflows} workflows={manager.workflows}
-                                                                 onClick={this.openExecuteWorkflowModal.bind(this, manager.id)} />
+                                            <ExecuteWorkflowIcon workflows={manager.workflows}
+                                                                 onClick={this.openExecuteWorkflowModal.bind(this, manager.id, false)} />
                                         </DataTable.Data>
                                     </DataTable.Row>
 
@@ -110,10 +143,19 @@ export default class ManagersTable extends React.Component {
                         })
                     }
 
+                    <DataTable.Action>
+                        <RefreshButton managers={selectedManagers}
+                                       toolbox={this.props.toolbox} />
+                        <ExecuteWorkflowButton managers={selectedManagers}
+                                               workflows={workflows}
+                                               onClick={this.openExecuteWorkflowModal.bind(this, selectedManagers[0], true)} />
+                    </DataTable.Action>
                 </DataTable>
+
                 <ExecuteDeploymentModal toolbox={this.props.toolbox}
                                         open={this.state.showExecuteWorkflowModal}
                                         deployment={this.state.deployment}
+                                        deployments={this.state.bulkOperation ? this.state.selectedManagers : []}
                                         workflow={this.state.workflow}
                                         onHide={this.hideExecuteWorkflowModal.bind(this)} />
             </div>

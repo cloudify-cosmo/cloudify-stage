@@ -3,7 +3,6 @@
  */
 
 import PropTypes from 'prop-types';
-import React from 'react';
 
 export default class ExecuteWorkflowIcon extends React.Component {
 
@@ -12,13 +11,11 @@ export default class ExecuteWorkflowIcon extends React.Component {
     }
 
     static propTypes = {
-        show: PropTypes.bool,
         onClick: PropTypes.func,
         workflows: PropTypes.array
     };
 
     static defaultProps = {
-        show: false,
         onClick: _.noop,
         workflows: []
     };
@@ -30,20 +27,22 @@ export default class ExecuteWorkflowIcon extends React.Component {
     render () {
         var {Menu, PopupMenu} = Stage.Basic;
 
-        return (
-            <PopupMenu icon='cogs' help='Execute Workflow' bordered>
-                <Menu vertical>
-                    {
-                        _.map(this.props.workflows, (workflow) =>
-                            <Menu.Item name={workflow.name} onClick={(event) => this.handleClick(event, workflow)}
-                                       key={workflow.name}>
-                                {_.capitalize(_.lowerCase(workflow.name))}
-                            </Menu.Item>
-                        )
-                    }
-                </Menu>
-            </PopupMenu>
-        );
+        return !_.isEmpty(this.props.workflows)
+            ?
+                <PopupMenu icon='cogs' help='Execute Workflow' bordered>
+                    <Menu vertical>
+                        {
+                            _.map(this.props.workflows, (workflow) =>
+                                <Menu.Item name={workflow.name} onClick={(event) => this.handleClick(event, workflow)}
+                                           key={workflow.name}>
+                                    {_.capitalize(_.lowerCase(workflow.name))}
+                                </Menu.Item>
+                            )
+                        }
+                    </Menu>
+                </PopupMenu>
+            :
+                null;
     }
 }
 

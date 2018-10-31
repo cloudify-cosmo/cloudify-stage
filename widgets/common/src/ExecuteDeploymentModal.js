@@ -25,8 +25,13 @@ export default class ExecuteDeploymentModal extends React.Component {
         toolbox: PropTypes.object.isRequired,
         open: PropTypes.bool.isRequired,
         deployment: PropTypes.object.isRequired,
+        deployments: PropTypes.array,
         workflow: PropTypes.object.isRequired,
         onHide: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        deployments: []
     };
 
     componentWillReceiveProps(nextProps) {
@@ -71,15 +76,34 @@ export default class ExecuteDeploymentModal extends React.Component {
 
         this.setState({loading: true});
         const actions = new DeploymentActions(this.props.toolbox);
-        actions.doExecute(this.props.deployment, this.props.workflow, workflowParameters,
-                          this.state.force, this.state.dryRun, this.state.queue).then(()=>{
-            this.setState({loading: false, errors: {}});
-            this.props.onHide();
-            this.props.toolbox.getEventBus().trigger('executions:refresh');
-            this.props.toolbox.getEventBus().trigger('deployments:refresh');
-        }).catch((err)=>{
-            this.setState({loading: false, errors: {error: err.message}});
-        })
+
+        if (_.isEmpty(this.props.deployments)) {
+            return actions.doExecute(this.props.deployment, this.props.workflow, workflowParameters,
+                this.state.force, this.state.dryRun, this.state.queue).then(()=>{
+                this.setState({loading: false, errors: {}});
+                this.props.onHide();
+                this.props.toolbox.getEventBus().trigger('executions:refresh');
+                this.props.toolbox.getEventBus().trigger('deployments:refresh');
+            }).catch((err)=>{
+                this.setState({loading: false, errors: {error: err.message}});
+            })
+        } else {
+            let executePromises = _.map((this.props.deployments), (deploymentId) =>
+                actions.doExecute({id: deploymentId}, this.props.workflow, workflowParameters,
+                    this.state.force, this.state.dryRun, this.state.queue).then(()=>{
+                    this.setState({loading: false, errors: {}});
+                    this.props.onHide();
+                    this.props.toolbox.getEventBus().trigger('executions:refresh');
+                    this.props.toolbox.getEventBus().trigger('deployments:refresh');
+                })
+            );
+
+            return Promise.all(executePromises)
+                .catch((err)=>{
+                    this.setState({loading: false, errors: {error: err.message}});
+                });
+        }
+
     }
 
     handleInputChange(event, field) {
