@@ -112,17 +112,14 @@ module.exports = {
     'Blueprint remove': function (client) {
         let page = client.page.blueprints();
 
-        client.saveScreenshot('0_beforeModal.png');
         page.section.blueprintsTable
             .checkIfBlueprintPresent(BLUEPRINT_NAME)
             .clickRemove(BLUEPRINT_NAME);
-        client.saveScreenshot('1_removeModal.png');
         page.section.removeBlueprintModal
             .clickYes();
-        client.saveScreenshot('2_afterYes.png');
+
         page.section.blueprintsTable
             .checkIfBlueprintRemoved(BLUEPRINT_NAME);
-        client.saveScreenshot('3_afterCheck.png');
     },
 
     after(client) {
