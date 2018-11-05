@@ -28,7 +28,7 @@ module.exports = {
             elements: {
                 endpoint: 'input[name="endpoint"]',
                 fireBtn: '.basic.compact.table .ui.button',
-                jsonResult: '.widgetContent .ui.segment pre code.hljs.json',
+                jsonResult: '.widgetContent .ui.segment pre code',
                 urlIcon: '.widgetContent .ui.labeled.input .ui.label',
                 urlInput: 'input[name="url"]',
                 xmlResult: '.widgetContent .ui.segment pre code.hljs.xml',

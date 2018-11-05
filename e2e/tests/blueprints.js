@@ -99,9 +99,14 @@ module.exports = {
         // Wait for widget to fetch data and update deployment count
         client.pause(5000);
         page.section.blueprintsTable
-                .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 1)
+                .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 1);
 
         page.removeDeployment(DEPLOYMENT_NAME);
+
+        // Wait for widget to fetch data and update deployment count
+        client.pause(5000);
+        page.section.blueprintsTable
+            .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 0);
     },
 
     'Blueprint remove': function (client) {
