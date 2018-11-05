@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 
 import MenuAction from './MenuAction';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
-import LastExecutionStatusIcon from './LastExecutionStatusIcon';
 
 export default class DeploymentsSegment extends React.Component {
 
@@ -42,7 +41,7 @@ export default class DeploymentsSegment extends React.Component {
 
     render() {
         let {DataSegment, Divider, Grid, Header, ResourceVisibility} = Stage.Basic;
-        const {NodeInstancesConsts} = Stage.Common;
+        let {NodeInstancesConsts, LastExecutionStatusIcon} = Stage.Common;
 
         return (
             <DataSegment totalSize={this.props.data.total}

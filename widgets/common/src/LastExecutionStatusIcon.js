@@ -158,3 +158,7 @@ export default class LastExecutionStatusIcon extends React.Component {
     }
 }
 
+Stage.defineCommon({
+    name: 'LastExecutionStatusIcon',
+    common: LastExecutionStatusIcon
+});

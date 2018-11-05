@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 
 import MenuAction from './MenuAction';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
-import LastExecutionStatusIcon from './LastExecutionStatusIcon';
 
 export default class extends React.Component {
 
@@ -38,7 +37,8 @@ export default class extends React.Component {
     };
 
     render() {
-        var {DataTable, ResourceVisibility} = Stage.Basic;
+        let {DataTable, ResourceVisibility} = Stage.Basic;
+        let {LastExecutionStatusIcon} = Stage.Common;
         let tableName = 'deploymentsTable';
 
         return (
