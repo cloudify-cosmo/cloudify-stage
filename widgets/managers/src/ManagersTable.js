@@ -16,10 +16,11 @@ export default class ManagersTable extends React.Component {
 
         this.state = {
             bulkOperation: false,
+            deployment: {id: ''},
+            error: null,
             selectedManagerId: null,
             selectedManagers: [],
             showExecuteWorkflowModal: false,
-            deployment: {id: ''},
             workflow: {name:'', parameters:[]}
         };
     }
@@ -57,6 +58,25 @@ export default class ManagersTable extends React.Component {
         this.setState({deployment: {id: ''}, workflow: {name: '', parameters: []}, showExecuteWorkflowModal: false});
     }
 
+    cancelExecution(execution, action) {
+        let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
+        actions.doCancel(execution, action).then(() => {
+            this.setState({error: null});
+            this.props.toolbox.getEventBus().trigger('deployments:refresh');
+            this.props.toolbox.getEventBus().trigger('executions:refresh');
+        }).catch((err) => {
+            this.setState({error: err.message});
+        });
+    }
+
+    showLogs(managerId, executionId) {
+        this.props.toolbox.drillDown(this.props.widget, 'logs', {deploymentId: managerId, executionId}, `Execution Logs - ${executionId}`);
+    }
+
+    showError(errorMessage) {
+        this.setState({error: `Last action has failed with error: ${errorMessage}`});
+    }
+
     render() {
         const NO_DATA_MESSAGE = 'There are no Managers available.';
         const configuration = this.props.widget.configuration;
@@ -71,7 +91,7 @@ export default class ManagersTable extends React.Component {
             : [];
 
         let {Checkbox, DataTable, ErrorMessage} = Stage.Basic;
-        let {ExecuteDeploymentModal} = Stage.Common;
+        let {ExecuteDeploymentModal, LastExecutionStatusIcon} = Stage.Common;
 
         return (
             <div>
@@ -93,6 +113,8 @@ export default class ManagersTable extends React.Component {
                                       show={fieldsToShow.indexOf('Deployment') >= 0}/>
                     <DataTable.Column label="IP"
                                       show={fieldsToShow.indexOf('IP') >= 0}/>
+                    <DataTable.Column label="Last Execution"
+                                      show={fieldsToShow.indexOf('Last Execution') >= 0}/>
                     <DataTable.Column label="Status" width="50px"
                                       show={fieldsToShow.indexOf('Status') >= 0}/>
                     <DataTable.Column label="Actions" width="150px"
@@ -124,11 +146,19 @@ export default class ManagersTable extends React.Component {
                                             {manager.ip}
                                         </DataTable.Data>
                                         <DataTable.Data className="center aligned">
+                                            <LastExecutionStatusIcon execution={manager.lastExecution}
+                                                                     onShowLogs={() => this.showLogs(manager.id, manager.lastExecution.id)}
+                                                                     onShowUpdateDetails={_.noop/*this.props.onShowUpdateDetails*/}
+                                                                     onCancelExecution={this.cancelExecution}
+                                                                     showLabel labelAttached={false} />
+                                        </DataTable.Data>
+                                        <DataTable.Data className="center aligned">
                                             <StatusIcon status={manager.status} error={manager.error} />
                                         </DataTable.Data>
                                         <DataTable.Data className="center aligned">
                                             <ConsoleIcon manager={manager} />
-                                            <RefreshIcon manager={manager} toolbox={this.props.toolbox} />
+                                            <RefreshIcon manager={manager} toolbox={this.props.toolbox}
+                                                         onSuccess={this.refreshData.bind(this)} onFail={this.showError.bind(this)} />
                                             <ExecuteWorkflowIcon workflows={manager.workflows}
                                                                  onClick={this.openExecuteWorkflowModal.bind(this, manager.id, false)} />
                                         </DataTable.Data>
@@ -145,7 +175,9 @@ export default class ManagersTable extends React.Component {
 
                     <DataTable.Action>
                         <RefreshButton managers={selectedManagers}
-                                       toolbox={this.props.toolbox} />
+                                       toolbox={this.props.toolbox}
+                                       onSuccess={this.refreshData.bind(this)}
+                                       onFail={this.showError.bind(this)} />
                         <ExecuteWorkflowButton managers={selectedManagers}
                                                workflows={workflows}
                                                onClick={this.openExecuteWorkflowModal.bind(this, selectedManagers[0], true)} />
