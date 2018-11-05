@@ -20,6 +20,7 @@ export default class ManagersTable extends React.Component {
             error: null,
             selectedManagerId: null,
             selectedManagers: [],
+            showDeploymentUpdateDetailsModal: false,
             showExecuteWorkflowModal: false,
             workflow: {name:'', parameters:[]}
         };
@@ -58,6 +59,14 @@ export default class ManagersTable extends React.Component {
         this.setState({deployment: {id: ''}, workflow: {name: '', parameters: []}, showExecuteWorkflowModal: false});
     }
 
+    openDeploymentUpdateDetailsModal(deploymentUpdateId) {
+        this.setState({deploymentUpdateId, showDeploymentUpdateDetailsModal: true});
+    }
+
+    hideDeploymentUpdateDetailsModal() {
+        this.setState({deploymentUpdateId: null, showDeploymentUpdateDetailsModal: false});
+    }
+
     cancelExecution(execution, action) {
         let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
         actions.doCancel(execution, action).then(() => {
@@ -91,7 +100,7 @@ export default class ManagersTable extends React.Component {
             : [];
 
         let {Checkbox, DataTable, ErrorMessage} = Stage.Basic;
-        let {ExecuteDeploymentModal, LastExecutionStatusIcon} = Stage.Common;
+        let {ExecuteDeploymentModal, LastExecutionStatusIcon, UpdateDetailsModal} = Stage.Common;
 
         return (
             <div>
@@ -148,8 +157,8 @@ export default class ManagersTable extends React.Component {
                                         <DataTable.Data className="center aligned">
                                             <LastExecutionStatusIcon execution={manager.lastExecution}
                                                                      onShowLogs={() => this.showLogs(manager.id, manager.lastExecution.id)}
-                                                                     onShowUpdateDetails={_.noop/*this.props.onShowUpdateDetails*/}
-                                                                     onCancelExecution={this.cancelExecution}
+                                                                     onShowUpdateDetails={this.openDeploymentUpdateDetailsModal.bind(this)}
+                                                                     onCancelExecution={this.cancelExecution.bind(this)}
                                                                      showLabel labelAttached={false} />
                                         </DataTable.Data>
                                         <DataTable.Data className="center aligned">
@@ -190,6 +199,11 @@ export default class ManagersTable extends React.Component {
                                         deployments={this.state.bulkOperation ? this.state.selectedManagers : []}
                                         workflow={this.state.workflow}
                                         onHide={this.hideExecuteWorkflowModal.bind(this)} />
+
+                <UpdateDetailsModal open={this.state.showDeploymentUpdateDetailsModal}
+                                    deploymentUpdateId={this.state.deploymentUpdateId}
+                                    onClose={this.hideDeploymentUpdateDetailsModal.bind(this)}
+                                    toolbox={this.props.toolbox} />
             </div>
         );
     }
