@@ -77,32 +77,26 @@ export default class ExecuteDeploymentModal extends React.Component {
         this.setState({loading: true});
         const actions = new DeploymentActions(this.props.toolbox);
 
-        if (_.isEmpty(this.props.deployments)) {
-            return actions.doExecute(this.props.deployment, this.props.workflow, workflowParameters,
+        let deployments = this.props.deployments;
+        if (_.isEmpty(deployments)) {
+            deployments = [this.props.deployment.id];
+
+        }
+
+        let executePromises = _.map(deployments, (deploymentId) =>
+            actions.doExecute({id: deploymentId}, this.props.workflow, workflowParameters,
                 this.state.force, this.state.dryRun, this.state.queue).then(()=>{
                 this.setState({loading: false, errors: {}});
                 this.props.onHide();
                 this.props.toolbox.getEventBus().trigger('executions:refresh');
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
-            }).catch((err)=>{
-                this.setState({loading: false, errors: {error: err.message}});
             })
-        } else {
-            let executePromises = _.map((this.props.deployments), (deploymentId) =>
-                actions.doExecute({id: deploymentId}, this.props.workflow, workflowParameters,
-                    this.state.force, this.state.dryRun, this.state.queue).then(()=>{
-                    this.setState({loading: false, errors: {}});
-                    this.props.onHide();
-                    this.props.toolbox.getEventBus().trigger('executions:refresh');
-                    this.props.toolbox.getEventBus().trigger('deployments:refresh');
-                })
-            );
+        );
 
-            return Promise.all(executePromises)
-                .catch((err)=>{
-                    this.setState({loading: false, errors: {error: err.message}});
-                });
-        }
+        return Promise.all(executePromises)
+            .catch((err)=>{
+                this.setState({loading: false, errors: {error: err.message}});
+            });
 
     }
 
@@ -116,10 +110,14 @@ export default class ExecuteDeploymentModal extends React.Component {
 
         const workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
         const deployment = Object.assign({},{id:''}, this.props.deployment);
+        const deploymentName = !_.isEmpty(this.props.deployments)
+            ? _.size(this.props.deployments) > 1 ? 'multiple deployments' : this.props.deployments[0]
+            : deployment.id;
+
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="executeWorkflowModal">
                 <Modal.Header>
-                    <Icon name="road"/> Execute workflow {workflow.name} on {deployment.id}
+                    <Icon name="road"/> Execute workflow {workflow.name} on {deploymentName}
                 </Modal.Header>
 
                 <Modal.Content>
