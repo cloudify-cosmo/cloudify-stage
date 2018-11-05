@@ -31,7 +31,7 @@ module.exports = {
                 jsonResult: '.widgetContent .ui.segment pre code',
                 urlIcon: '.widgetContent .ui.labeled.input .ui.label',
                 urlInput: 'input[name="url"]',
-                xmlResult: '.widgetContent .ui.segment pre code.hljs.xml',
+                xmlResult: '.widgetContent .ui.segment pre code',
                 header: 'div.widget.BackendWidgetWidget > div.widgetItem > h5.header',
                 loader: 'div.widget.BackendWidgetWidget div.widgetLoader',
                 editWidgetButton: 'div.widget.BackendWidgetWidget .widgetEditButtons i.editWidgetIcon'
