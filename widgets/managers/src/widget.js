@@ -53,7 +53,7 @@ Stage.defineWidget({
                 let executionsData = _.groupBy(executions.items, 'deployment_id');
 
                 return Promise.resolve({
-                    items: _.map(momDeploymentsOutputs, (deploymentOutputs) => {
+                    items: _.sortBy(_.map(momDeploymentsOutputs, (deploymentOutputs) => {
                         const managerId = deploymentOutputs.deployment_id;
                         const managerIp = _.get(deploymentOutputs.outputs.cluster_ips, 'Master', '');
                         const deployment = _.find(momDeployments, (deployment) => deployment.id === deploymentOutputs.deployment_id);
@@ -75,7 +75,7 @@ Stage.defineWidget({
                             workflows,
                             lastExecution: _.first(executionsData[managerId])
                         }
-                    }),
+                    }), 'id'),
                     total: _.size(momDeploymentsOutputs)
                 });
             });
