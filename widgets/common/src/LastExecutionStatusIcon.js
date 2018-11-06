@@ -40,7 +40,7 @@ export default class LastExecutionStatusIcon extends React.Component {
         return !_.isEmpty(execution.status)
             ?
                 <React.Fragment>
-                    <Popup flowing on='hover' hoverable open={this.state.open}
+                    <Popup wide='very' on='hover' hoverable open={this.state.open}
                            onOpen={() => this.setState({open: true})} onClose={() => this.setState({open: false})}
                            onClick={(e) => {e.stopPropagation(); this.setState({open: false})}}>
 
@@ -158,3 +158,7 @@ export default class LastExecutionStatusIcon extends React.Component {
     }
 }
 
+Stage.defineCommon({
+    name: 'LastExecutionStatusIcon',
+    common: LastExecutionStatusIcon
+});

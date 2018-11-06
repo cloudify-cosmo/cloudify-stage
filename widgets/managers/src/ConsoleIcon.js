@@ -3,9 +3,8 @@
  */
 
 import PropTypes from 'prop-types';
-import React from 'react';
 
-export default class ManagerConsoleIcon extends React.Component {
+export default class ConsoleIcon extends React.Component {
 
     constructor(props, context){
         super(props, context);

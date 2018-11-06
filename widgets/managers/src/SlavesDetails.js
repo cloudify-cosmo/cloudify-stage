@@ -3,9 +3,9 @@
  */
 
 import PropTypes from 'prop-types';
-import ManagerStatusIcon from './ManagerStatusIcon';
+import StatusIcon from './StatusIcon';
 
-export default class ManagerSlavesDetails extends React.Component {
+export default class SlavesDetails extends React.Component {
 
     constructor(props, context) {
         super(props, context);
@@ -39,8 +39,8 @@ export default class ManagerSlavesDetails extends React.Component {
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell>Name</Table.HeaderCell>
-                                    <Table.HeaderCell>Host IP</Table.HeaderCell>
-                                    <Table.HeaderCell>Status</Table.HeaderCell>
+                                    <Table.HeaderCell width='three' textAlign='center'>Host IP</Table.HeaderCell>
+                                    <Table.HeaderCell width='one' textAlign='center'>Status</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
@@ -51,11 +51,11 @@ export default class ManagerSlavesDetails extends React.Component {
                                             <Table.Cell>
                                                 {_.get(slave.status, 'name', '')}
                                             </Table.Cell>
-                                            <Table.Cell>
+                                            <Table.Cell textAlign='center'>
                                                 {_.get(slave.status, 'host_ip', '')}
                                             </Table.Cell>
-                                            <Table.Cell>
-                                                <ManagerStatusIcon status={slave.status} />
+                                            <Table.Cell textAlign='center'>
+                                                <StatusIcon status={slave.status} />
                                             </Table.Cell>
                                         </Table.Row>
                                     )

@@ -39,7 +39,7 @@ export default class FormCheckbox extends Component {
     static defaultProps = {
         label: '',
         help: ''
-    }
+    };
 
     render() {
         let label = Form.Field.getLabel(this.props.label, this.props.help);

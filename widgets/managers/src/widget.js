@@ -18,12 +18,12 @@ Stage.defineWidget({
     
     initialConfiguration:
         [
-            Stage.GenericConfig.POLLING_TIME_CONFIG(15),
+            Stage.GenericConfig.POLLING_TIME_CONFIG(10),
             {
                 id: 'fieldsToShow', name: 'List of fields to show in the table',
                 placeHolder: 'Select fields from the list',
-                items: ['Deployment','IP','Status','Actions'],
-                default: 'Deployment,IP,Status,Actions',
+                items: ['Deployment','IP','Last Execution','Status','Actions'],
+                default: 'Deployment,IP,Last Execution,Status,Actions',
                 type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
             }
         ],
@@ -31,22 +31,33 @@ Stage.defineWidget({
 
     fetchData: function(widget, toolbox) {
 
+        let momDeployments = [];
 
-        return toolbox.getManager().doGet('/deployments', {_include: 'id,outputs'})
+        // FIXME: Temporaraly fetching all fields from deployments as _include=workflows is not working properly
+        return toolbox.getManager().doGet('/deployments')
             .then((deployments) => {
-                const momDeployments = _.filter(_.get(deployments, 'items', []), (deployment) =>
+                momDeployments = _.filter(_.get(deployments, 'items', []), (deployment) =>
                     !!deployment.outputs.cluster_ips && !!deployment.outputs.cluster_status);
 
                 let outputsPromises = _.map(momDeployments, (deployment) =>
                     toolbox.getManager().doGet(`/deployments/${deployment.id}/outputs`));
 
-                return Promise.all(outputsPromises);
+                let executionsPromise = toolbox.getManager().doGet('/executions', {
+                    _sort: '-ended_at',
+                    deployment_id: _.map(momDeployments, (deployment) => deployment.id)
+                });
+
+                return Promise.all([executionsPromise, ...outputsPromises]);
             })
-            .then((momDeploymentsOutputs) => {
+            .then(([executions, ...momDeploymentsOutputs]) => {
+                let executionsData = _.groupBy(executions.items, 'deployment_id');
+
                 return Promise.resolve({
-                    items: _.map(momDeploymentsOutputs, (deploymentOutputs) => {
+                    items: _.sortBy(_.map(momDeploymentsOutputs, (deploymentOutputs) => {
                         const managerId = deploymentOutputs.deployment_id;
                         const managerIp = _.get(deploymentOutputs.outputs.cluster_ips, 'Master', '');
+                        const deployment = _.find(momDeployments, (deployment) => deployment.id === deploymentOutputs.deployment_id);
+                        const workflows = _.get(deployment, 'workflows', []);
 
                         return {
                             id: managerId,
@@ -60,9 +71,11 @@ Stage.defineWidget({
                                 ip: slaveIp,
                                 status: _.find(_.get(deploymentOutputs.outputs.cluster_status, 'cluster_status', []),
                                     (clusterStatusItem) => clusterStatusItem.name === slaveIp)
-                            }))
+                            })),
+                            workflows,
+                            lastExecution: _.first(executionsData[managerId])
                         }
-                    }),
+                    }), 'id'),
                     total: _.size(momDeploymentsOutputs)
                 });
             });
