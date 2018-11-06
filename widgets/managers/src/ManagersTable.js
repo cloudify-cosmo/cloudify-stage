@@ -94,9 +94,9 @@ export default class ManagersTable extends React.Component {
 
         const allManagers = _.map(this.props.data.items, (manager) => manager.id);
         const selectedManagers = this.state.selectedManagers;
-        const allManagersSelected = _.isEqual(selectedManagers, allManagers);
+        const allManagersSelected = _.isEmpty(_.difference(allManagers, selectedManagers));
         const workflows = !_.isEmpty(selectedManagers)
-            ? this.props.data.items[0].workflows
+            ? _.get(this.props.data, 'items[0].workflows', [])
             : [];
 
         let {Checkbox, DataTable, ErrorMessage} = Stage.Basic;
@@ -120,13 +120,13 @@ export default class ManagersTable extends React.Component {
                     />
                     <DataTable.Column label="Deployment"
                                       show={fieldsToShow.indexOf('Deployment') >= 0}/>
-                    <DataTable.Column label="IP"
+                    <DataTable.Column label="IP" centerAligned
                                       show={fieldsToShow.indexOf('IP') >= 0}/>
-                    <DataTable.Column label="Last Execution"
+                    <DataTable.Column label="Last Execution" centerAligned
                                       show={fieldsToShow.indexOf('Last Execution') >= 0}/>
-                    <DataTable.Column label="Status" width="50px"
+                    <DataTable.Column label="Status" width="50px" centerAligned
                                       show={fieldsToShow.indexOf('Status') >= 0}/>
-                    <DataTable.Column label="Actions" width="150px"
+                    <DataTable.Column label="Actions" width="150px" centerAligned
                                       show={fieldsToShow.indexOf('Actions') >= 0}/>
 
                     {
@@ -151,7 +151,7 @@ export default class ManagersTable extends React.Component {
                                         <DataTable.Data>
                                             {manager.id}
                                         </DataTable.Data>
-                                        <DataTable.Data>
+                                        <DataTable.Data className="center aligned">
                                             {manager.ip}
                                         </DataTable.Data>
                                         <DataTable.Data className="center aligned">

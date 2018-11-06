@@ -24,12 +24,12 @@ export default class Manager extends Component {
                 if (instance.state !== runningState) {
                     allServicesRunning = false;
                     return false;
-                };
+                }
             });
             if (!allServicesRunning) {
                 return false;
             }
-        })
+        });
 
         return allServicesRunning;
     }
