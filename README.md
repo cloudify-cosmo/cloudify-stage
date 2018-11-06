@@ -10,6 +10,11 @@ The Cloudify Console provides a streamlined experience for managing and analyzin
 - PostgreSQL installed and running on your machine
     - Make a database named `stage` 
     - Make a user named `cloudify` with `cloudify` as password
+    - You can do this easily with docker:
+        ```bash
+        docker pull postgres
+        docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
+        ```
 - Cloudify Manager (version => 4.x) running
 
 ## Setup
