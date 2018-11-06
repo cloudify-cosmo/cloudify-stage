@@ -57,6 +57,7 @@ export default class ManagersTable extends React.Component {
 
     hideExecuteWorkflowModal() {
         this.setState({deployment: {id: ''}, workflow: {name: '', parameters: []}, showExecuteWorkflowModal: false});
+        this.refreshData();
     }
 
     openDeploymentUpdateDetailsModal(deploymentUpdateId) {
