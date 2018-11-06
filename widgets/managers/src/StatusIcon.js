@@ -24,7 +24,7 @@ export default class StatusIcon extends React.Component {
     static numberOfServices = StatusIcon.knownServices.length;
 
     static managerStatusRunning = 'running';
-    static managerStatusStopped = 'stopped';
+    static managerStatusWarning = 'warning';
     static managerStatusError = 'error';
     static managerStatusUnknown = 'unknown';
 
@@ -34,10 +34,10 @@ export default class StatusIcon extends React.Component {
             color: 'green',
             text: 'Running'
         },
-        [StatusIcon.managerStatusStopped]: {
+        [StatusIcon.managerStatusWarning]: {
             icon: 'signal',
             color: 'orange',
-            text: 'Stopped'
+            text: 'Warning'
         },
         [StatusIcon.managerStatusError]: {
             icon: 'signal',
@@ -52,6 +52,11 @@ export default class StatusIcon extends React.Component {
     };
 
     static okStatusString = 'OK';
+    static failStatusString = 'FAIL';
+
+    static leaderStateString = 'leader';
+    static replicaStateString = 'replica';
+    static offlineStateString = 'offline';
 
     getServices() {
         return _.pick(this.props.status, StatusIcon.knownServices);
@@ -61,12 +66,12 @@ export default class StatusIcon extends React.Component {
         const services = this.getServices();
 
         if (!_.isEmpty(this.props.error)) {
-            return StatusIcon.managerStatusError
+            return StatusIcon.managerStatusError;
         }
 
         if (_.size(services) === StatusIcon.numberOfServices) {
-            if (!!_.find(services, (service) => service !== StatusIcon.okStatusString)) {
-                return StatusIcon.managerStatusStopped;
+            if (!_.isEmpty(_.find(services, (service) => service !== StatusIcon.okStatusString))) {
+                return StatusIcon.managerStatusWarning;
             } else {
                 return StatusIcon.managerStatusRunning;
             }
@@ -77,15 +82,16 @@ export default class StatusIcon extends React.Component {
     }
 
     render() {
-        let {Icon, Message, Popup, Table} = Stage.Basic;
-        const status = StatusIcon.statusParameters[this.getStatus()];
-        const services = this.getServices();
+        let {Icon, Header, Message, Popup, Table} = Stage.Basic;
+        const nodeStatusParams = StatusIcon.statusParameters[this.getStatus()];
+        const nodeState = _.get(this.props.status, 'state', '');
+        const nodeServices = this.getServices();
         const error = this.props.error;
 
         return (
-            <Popup on='hover' wide trigger={<Icon name={status.icon} color={status.color} circular inverted />}>
+            <Popup on='hover' wide trigger={<Icon name={nodeStatusParams.icon} color={nodeStatusParams.color} circular inverted />}>
                 <Popup.Header>
-                    Status: {status.text}
+                    Status: {nodeStatusParams.text}
                 </Popup.Header>
                 <Popup.Content>
                     {
@@ -93,18 +99,40 @@ export default class StatusIcon extends React.Component {
                             <Message error>{error}</Message>
                     }
                     {
-                        !_.isEmpty(services) &&
+                        !_.isEmpty(nodeServices) &&
                         <Table celled basic='very' collapsing className='servicesData'>
                             <Table.Body>
                                 {
-                                    _.map(services, (status, service) =>
+                                    !_.isEmpty(nodeState) &&
+                                    <Table.Row key='state'>
+                                        <Table.Cell collapsing>
+                                            State
+                                        </Table.Cell>
+                                        <Table.Cell textAlign="center">
+                                            <Header as='h5'>
+                                                <Icon name={nodeState === StatusIcon.leaderStateString
+                                                            ? 'users'
+                                                            : nodeState === StatusIcon.replicaStateString
+                                                                ? 'copy'
+                                                                :  nodeState === StatusIcon.offlineStateString
+                                                                    ? 'remove'
+                                                                    : 'question'} />
+                                                {_.upperFirst(nodeState)}
+                                            </Header>
+                                        </Table.Cell>
+                                    </Table.Row>
+                                }
+                                {
+                                    _.map(nodeServices, (status, service) =>
                                         <Table.Row key={service}>
                                             <Table.Cell collapsing>
                                                 {_.upperFirst(service)}
                                             </Table.Cell>
                                             <Table.Cell textAlign="center">
-                                                <Icon name={status === StatusIcon.okStatusString ? 'checkmark' : 'warning'}
-                                                      color={status === StatusIcon.okStatusString ? 'green' : 'red'}/>
+                                                <Header as='h5' color={status === StatusIcon.okStatusString ? 'green' : 'red'}>
+                                                    <Icon name={status === StatusIcon.okStatusString ? 'checkmark' : 'warning'} />
+                                                    {status}
+                                                </Header>
                                             </Table.Cell>
                                         </Table.Row>
                                     )
