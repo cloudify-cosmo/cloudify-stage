@@ -15,7 +15,9 @@ export default class BlueprintList extends React.Component {
             showUploadModal: false,
             blueprint: {},
             confirmDelete:false,
-            error: null
+            error: null,
+            force: false,
+            item: {id: ''}
         }
     }
 
@@ -47,7 +49,8 @@ export default class BlueprintList extends React.Component {
     _deleteBlueprintConfirm(item){
         this.setState({
             confirmDelete : true,
-            item: item
+            item: item,
+            force: false
         });
     }
 
@@ -59,7 +62,7 @@ export default class BlueprintList extends React.Component {
 
         var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         this.setState({confirmDelete: false});
-        actions.doDelete(this.state.item)
+        actions.doDelete(this.state.item, this.state.force)
             .then(()=> {
                 this.setState({error: null});
                 this.props.toolbox.refresh();
@@ -107,14 +110,18 @@ export default class BlueprintList extends React.Component {
         this.setState({showUploadModal: false});
     }
 
+    _handleForceChange(event, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    }
+
     fetchGridData(fetchParams) {
         return this.props.toolbox.refresh(fetchParams);
     }
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        let {Button, Confirm, ErrorMessage} = Stage.Basic;
-        let {DeployBlueprintModal, UploadBlueprintModal} = Stage.Common;
+        let {Button, ErrorMessage} = Stage.Basic;
+        let {DeleteConfirm, DeployBlueprintModal, UploadBlueprintModal} = Stage.Common;
 
         var shouldShowTable = this.props.widget.configuration['displayStyle'] === 'table';
 
@@ -151,10 +158,12 @@ export default class BlueprintList extends React.Component {
 
                 }
 
-                <Confirm content='Are you sure you want to remove this blueprint?'
-                         open={this.state.confirmDelete}
-                         onConfirm={this._deleteBlueprint.bind(this)}
-                         onCancel={()=>this.setState({confirmDelete : false})} />
+                <DeleteConfirm resourceName={`blueprint ${_.get(this.state.item, 'id', '')}`}
+                               force={this.state.force}
+                               open={this.state.confirmDelete}
+                               onConfirm={this._deleteBlueprint.bind(this)}
+                               onCancel={() => this.setState({confirmDelete : false})}
+                               onForceChange={this._handleForceChange.bind(this)} />
 
                 <DeployBlueprintModal open={this.state.showDeploymentModal}
                                       blueprint={this.state.blueprint}
