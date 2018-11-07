@@ -26,7 +26,6 @@ let getTokenStrategy = require('./routes/TokenStrategy');
 let getSamlStrategy = require('./routes/SamlStrategy');
 let samlSetup = require('./samlSetup');
 
-let AuthHandler = require('./handler/AuthHandler');
 let Auth = require('./routes/Auth');
 
 let ServerSettings = require('./serverSettings');
@@ -145,17 +144,14 @@ app.get('*',function (request, response){
     response.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
 });
 
-// Initialize authorization data (fetch from manager)
-AuthHandler.initAuthorization().then(function(){
-    ToursHandler.init().then(function(){
-        // Only after we have all the data in place start the server
-        app.listen(8088, function () {
-            logger.info('Server started in mode '+ServerSettings.settings.mode);
-            if (process.env.NODE_ENV === 'development') {
-                logger.info('Server started for development');
-            }
-            logger.info('Stage runs on port 8088!');
-        });
+ToursHandler.init().then(function(){
+    // Only after we have all the data in place start the server
+    app.listen(8088, function () {
+        logger.info('Server started in mode ' + ServerSettings.settings.mode);
+        if (process.env.NODE_ENV === 'development') {
+            logger.info('Server started for development');
+        }
+        logger.info('Stage runs on port 8088!');
     });
 });
 
