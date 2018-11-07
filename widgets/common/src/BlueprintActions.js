@@ -15,12 +15,12 @@ class BlueprintActions {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprint.id}`);
     }
 
-    doDelete(blueprint) {
-        return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`)
-            .then(()=>this.doDeleteImage(blueprint.id));
+    doDelete(blueprint, force = false) {
+        return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`, {force})
+            .then(() => this.doDeleteImage(blueprint.id));
     }
 
-    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation=false) {
+    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation = false) {
         return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null, {
             'blueprint_id': blueprint.id,
             inputs,
