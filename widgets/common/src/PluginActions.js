@@ -8,8 +8,8 @@ class PluginActions {
         this.toolbox = toolbox;
     }
 
-    doDelete(plugin) {
-        return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`,null,{force:true});
+    doDelete(plugin, force = true) {
+        return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`, null, {force});
 
     }
 

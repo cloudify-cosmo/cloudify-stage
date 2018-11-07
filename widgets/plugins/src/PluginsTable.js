@@ -9,6 +9,7 @@ export default class extends React.Component {
 
         this.state = {
             error: null,
+            force: true,
             confirmDelete: false,
             showUploadModal: false,
             hoveredPlugin: false
@@ -35,7 +36,8 @@ export default class extends React.Component {
 
         this.setState({
             confirmDelete: true,
-            item: item
+            item: item,
+            force: true
         });
     }
 
@@ -55,7 +57,7 @@ export default class extends React.Component {
         }
 
         var actions = new Stage.Common.PluginActions(this.props.toolbox);
-        actions.doDelete(this.state.item)
+        actions.doDelete(this.state.item, this.state.force)
             .then(()=> {
                 this.setState({confirmDelete: false, error: null});
                 this.props.toolbox.getEventBus().trigger('plugins:refresh');
@@ -91,6 +93,10 @@ export default class extends React.Component {
         this.props.toolbox.refresh();
     }
 
+    _handleForceChange(event, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    }
+
     componentDidMount() {
         this.props.toolbox.getEventBus().on('plugins:refresh',this._refreshData,this);
     }
@@ -105,8 +111,8 @@ export default class extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
-        let {Button, Confirm, DataTable, ErrorMessage, ResourceVisibility} = Stage.Basic;
-        let {IdPopup, UploadPluginModal} = Stage.Common;
+        let {Button, DataTable, ErrorMessage, ResourceVisibility} = Stage.Basic;
+        let {DeleteConfirm, IdPopup, UploadPluginModal} = Stage.Common;
 
         return (
             <div>
@@ -168,11 +174,13 @@ export default class extends React.Component {
                 </DataTable>
 
                 <UploadPluginModal open={this.state.showUploadModal} toolbox={this.props.toolbox} onHide={this._hideUploadModal.bind(this)} />
-                
-                <Confirm content='Are you sure you want to remove this plugin?'
-                         open={this.state.confirmDelete}
-                         onConfirm={this._deletePlugin.bind(this)}
-                         onCancel={()=>this.setState({confirmDelete : false})} />
+
+                <DeleteConfirm resourceName={`plugin ${_.get(this.state.item, 'package_name', '')} v${_.get(this.state.item, 'package_version', '')}`}
+                               force={this.state.force}
+                               open={this.state.confirmDelete}
+                               onConfirm={this._deletePlugin.bind(this)}
+                               onCancel={() => this.setState({confirmDelete : false})}
+                               onForceChange={this._handleForceChange.bind(this)} />
             </div>
 
         );
