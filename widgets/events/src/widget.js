@@ -46,6 +46,16 @@ Stage.defineWidget({
             params.deployment_id = deploymentId;
         }
 
+        let nodeId = toolbox.getContext().getValue('nodeId');
+        if (!_.isEmpty(nodeId)) {
+            params.node_id = nodeId;
+        }
+
+        let nodeInstanceId = toolbox.getContext().getValue('nodeInstanceId');
+        if (!_.isEmpty(nodeInstanceId)) {
+            params.node_instance_id = nodeInstanceId;
+        }
+
         let executionId = toolbox.getContext().getValue('executionId');
         if (!_.isEmpty(executionId)) {
             params.execution_id = executionId;
@@ -91,6 +101,8 @@ Stage.defineWidget({
 
         let blueprintId = CONTEXT_PARAMS.blueprint_id;
         let deploymentId = CONTEXT_PARAMS.deployment_id;
+        let nodeId = CONTEXT_PARAMS.node_id;
+        let nodeInstanceId = CONTEXT_PARAMS.node_instance_id;
         let executionId = CONTEXT_PARAMS.execution_id;
 
         let formattedData = {
@@ -107,6 +119,8 @@ Stage.defineWidget({
             total : _.get(data, 'metadata.pagination.total', 0),
             blueprintId,
             deploymentId,
+            nodeId,
+            nodeInstanceId,
             executionId,
             type: CONTEXT_PARAMS.type
         };
