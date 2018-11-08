@@ -16,6 +16,7 @@ export default class ExecuteDeploymentModal extends React.Component {
         errors: {},
         loading: false,
         dryRun: false,
+        fileLoading: false,
         force: false,
         queue: false,
         params: {}
@@ -100,13 +101,31 @@ export default class ExecuteDeploymentModal extends React.Component {
 
     }
 
+    handleYamlFileChange(file) {
+        if (!file) {
+            return;
+        }
+
+        let {FileActions, InputsUtils} = Stage.Common;
+        let actions = new FileActions(this.props.toolbox);
+        this.setState({fileLoading: true});
+
+        actions.doGetYamlFileContent(file).then((yamlInputs) => {
+            let params = InputsUtils.getUpdatedInputs(this.props.workflow.parameters, this.state.params, yamlInputs);
+            this.setState({errors: {}, params, fileLoading: false});
+        }).catch((err) => {
+            const errorMessage = `Loading values from YAML file failed: ${_.isString(err) ? err : err.message}`;
+            this.setState({errors: {yamlFile: errorMessage}, fileLoading: false});
+        });
+    }
+
     handleInputChange(event, field) {
         this.setState({params: {...this.state.params, ...Stage.Basic.Form.fieldNameValue(field)}});
     }
 
     render() {
         let {ApproveButton, CancelButton, Form, Header, Icon, Modal, Message} = Stage.Basic;
-        let {InputsHeader, InputsUtils} = Stage.Common;
+        let {InputsHeader, InputsUtils, YamlFileButton} = Stage.Common;
 
         const workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
         const deployment = Object.assign({},{id:''}, this.props.deployment);
@@ -124,11 +143,19 @@ export default class ExecuteDeploymentModal extends React.Component {
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
 
-                        <InputsHeader header="Parameters" compact />
                         {
-                            _.isEmpty(workflow.parameters)
-                            && <Message content="No parameters available for the execution" />
+                            !_.isEmpty(workflow.parameters) &&
+                            <YamlFileButton onChange={this.handleYamlFileChange.bind(this)}
+                                            dataType='execution parameters' fileLoading={this.state.fileLoading} />
                         }
+
+                        <InputsHeader header="Parameters" compact />
+
+                        {
+                            _.isEmpty(workflow.parameters) &&
+                            <Message content="No parameters available for the execution" />
+                        }
+
                         {
                             InputsUtils.getInputFields(workflow.parameters,
                                                        this.handleInputChange.bind(this),

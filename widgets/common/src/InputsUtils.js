@@ -163,30 +163,56 @@ class InputsUtils {
 
     /* Inputs for field values (string values) */
 
-    static getInputsFromPlan(blueprintPlanInputs) {
-        let deploymentInputs = {};
+    static getInputsInitialValuesFrom(plan) {
+        let inputs = {};
 
-        _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
-            deploymentInputs[inputName] = InputsUtils.getInputFieldInitialValue(inputObj.default, inputObj.type);
+        _.forEach(plan, (inputObj, inputName) => {
+            inputs[inputName] = InputsUtils.getInputFieldInitialValue(inputObj.default, inputObj.type);
         });
 
-        return deploymentInputs;
+        return inputs;
     }
 
-    static getInputsFromYaml(blueprintPlanInputs, inputsValues, notFoundInputs) {
-        let deploymentInputs = {};
+    static validateInputTypes(plan, inputs) {
+        let errors = [];
+        let inputsAreValid = true;
 
-        _.forEach(blueprintPlanInputs, (inputObj, inputName) => {
-            let inputValue = inputsValues[inputName];
+        _.forEach(plan, (inputObj, inputName) => {
+            const expectedValueType = inputObj.type;
+            const inputValue = inputs[inputName];
 
-            if (_.isNil(inputValue) && _.isNil(inputObj.default)) {
-                notFoundInputs.push(inputName);
-            } else {
-                deploymentInputs[inputName] = InputsUtils.getInputFieldInitialValue(inputValue, inputObj.type);
+            if (!_.isUndefined(expectedValueType) && !_.isUndefined(inputValue)) {
+                const inputValueType = Stage.Common.JsonUtils.toCloudifyType(inputValue);
+                if ((expectedValueType === 'boolean' || expectedValueType === 'integer') &&
+                    (expectedValueType !== inputValueType)) {
+                    errors.push(inputName);
+                    inputsAreValid = false;
+                }
             }
         });
 
-        return deploymentInputs;
+        if (!inputsAreValid) {
+            throw new Error(`The following fields have invalid types: ${_.join(errors, ', ')}.`);
+        }
+    }
+
+    static getUpdatedInputs(plan, currentValues, newValues) {
+        let inputs = {};
+
+        InputsUtils.validateInputTypes(plan, newValues);
+
+        _.forEach(plan, (inputObj, inputName) => {
+            let newValue = newValues[inputName];
+            let currentValue = currentValues[inputName];
+
+            if (_.isNil(newValue)) {
+                inputs[inputName] = currentValue;
+            } else {
+                inputs[inputName] = InputsUtils.getInputFieldInitialValue(newValue, inputObj.type);
+            }
+        });
+
+        return inputs;
     }
 
 
