@@ -58,7 +58,7 @@ export default class DeployModal extends React.Component {
 
             var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
             actions.doGetFullBlueprintData({id: data.value}).then((blueprint)=>{
-                let deploymentInputs = Stage.Common.InputsUtils.getInputsFromPlan(blueprint.plan.inputs);
+                let deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(blueprint.plan.inputs);
                 this.setState({deploymentInputs, blueprint, errors: {}, loading: false});
             }).catch((err)=> {
                 this.setState({blueprint: Stage.Common.DeployBlueprintModal.EMPTY_BLUEPRINT, loading: false, errors: {error: err.message}});
@@ -117,34 +117,26 @@ export default class DeployModal extends React.Component {
     }
 
     _handleYamlFileChange(file) {
-        let {FileActions, InputsUtils} = Stage.Common;
-        let blueprintPlanInputs = this.state.blueprint.plan.inputs;
-
         if (!file) {
-            let deploymentInputs = InputsUtils.getInputsFromPlan(blueprintPlanInputs);
-            this.setState({errors: {}, deploymentInputs});
             return;
         }
 
-        this.setState({fileLoading: true});
+        let {FileActions, InputsUtils} = Stage.Common;
         let actions = new FileActions(this.props.toolbox);
-        actions.doGetYamlFileContent(file).then((inputs) => {
-            let notFoundInputs = [];
-            let deploymentInputs = InputsUtils.getInputsFromYaml(blueprintPlanInputs, inputs, notFoundInputs);
+        this.setState({fileLoading: true});
 
-            if (_.isEmpty(notFoundInputs)) {
-                this.setState({errors: {}, deploymentInputs, fileLoading: false});
-            } else {
-                this.setState({errors: {yamlFile: `Mandatory input(s) (${notFoundInputs}) not provided in YAML file.`}, fileLoading: false});
-            }
-        }).catch((err)=>{
-            this.setState({errors: {yamlFile: err.message}, fileLoading: false});
+        actions.doGetYamlFileContent(file).then((yamlInputs) => {
+            let deploymentInputs = InputsUtils.getUpdatedInputs(this.state.blueprint.plan.inputs, this.state.deploymentInputs, yamlInputs);
+            this.setState({errors: {}, deploymentInputs, fileLoading: false});
+        }).catch((err) => {
+            const errorMessage = `Loading values from YAML file failed: ${_.isString(err) ? err : err.message}`;
+            this.setState({errors: {yamlFile: errorMessage}, fileLoading: false});
         });
     }
 
     render() {
         let {ApproveButton, CancelButton, Form, Icon, Message, Modal, VisibilityField} = Stage.Basic;
-        let {InputsHeader, InputsUtils} = Stage.Common;
+        let {InputsHeader, InputsUtils, YamlFileButton} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.props.blueprints);
         let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -173,25 +165,20 @@ export default class DeployModal extends React.Component {
                         </Form.Field>
 
                         {
-                            this.state.blueprint.id
-                            &&
-                            <InputsHeader />
-                        }
-
-                        {
                             this.state.blueprint.id &&
-                            (
-                                _.isEmpty(this.state.blueprint.plan.inputs)
-                                ?
+                            <React.Fragment>
+                                {
+                                    !_.isEmpty(this.state.blueprint.plan.inputs) &&
+                                    <YamlFileButton onChange={this._handleYamlFileChange.bind(this)}
+                                                    dataType="deployment's inputs"
+                                                    fileLoading={this.state.fileLoading}/>
+                                }
+                                <InputsHeader/>
+                                {
+                                    _.isEmpty(this.state.blueprint.plan.inputs) &&
                                     <Message content="No inputs available for the selected blueprint"/>
-                                :
-                                    <Form.Field error={this.state.errors.yamlFile} label='YAML file'
-                                                help='Provide YAML file with all deployments inputs to automatically fill in the form.'>
-                                        <Form.File name="yamlFile" ref="yamlFile"
-                                                   onChange={this._handleYamlFileChange.bind(this)} loading={this.state.fileLoading}
-                                                   disabled={this.state.fileLoading} />
-                                    </Form.Field>
-                            )
+                                }
+                            </React.Fragment>
                         }
 
                         {
