@@ -20,7 +20,7 @@ module.exports = (function() {
     }
 
     function _preConfigureLog4js(log4jsConfig) {
-        let logFiles = _.filter(_.map(log4jsConfig.appenders[0].appenders, _getAppenderFile), _.isString);
+        let logFiles = _.filter(_.map(_.keys(log4jsConfig.appenders), (appender) => _getAppenderFile(log4jsConfig.appenders[appender])), _.isString);
         let logDirectories = _.uniq(_.map(logFiles, _getLogDirectory));
 
         try {
