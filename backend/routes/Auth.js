@@ -7,7 +7,6 @@ let bodyParser = require('body-parser');
 let passport = require('passport');
 
 let AuthHandler = require('../handler/AuthHandler');
-const config = require('../config').get();
 const Consts = require('../consts');
 
 let router = express.Router();
@@ -16,18 +15,18 @@ let logger = require('log4js').getLogger('Auth');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
-router.post('/login', (req, res) => {
-    let token = {};
-    return AuthHandler.getToken(req.headers.authorization)
-        .then((newToken) => token = newToken)
-        .then(() => AuthHandler.getAndCacheManagerConfig(token.value))
-        .then(() => AuthHandler.getTenants(token.value))
-        .then((tenants) => {
+router.post('/login', (req, res) =>
+    AuthHandler.getToken(req.headers.authorization)
+        .then((token) => Promise.all([AuthHandler.getTenants(token.value),
+                                      AuthHandler.getManagerVersion(token.value),
+                                      AuthHandler.getAndCacheConfig(token.value),
+                                      Promise.resolve(token)]))
+        .then(([tenants, managerVersion, config, token]) => {
             if(!!tenants && !!tenants.items && tenants.items.length > 0) {
                 res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
                 res.send({
                     role: token.role,
-                    serverVersion: AuthHandler.getManagerVersion()
+                    serverVersion: managerVersion
                 });
             } else{
                 return Promise.reject({message: 'User has no tenants', error_code: 'no_tenants'});
@@ -43,21 +42,18 @@ router.post('/login', (req, res) => {
                 res.status(500).send({message: `Failed to authenticate with manager: ${err.message}`, error: err});
             }
         })
-});
+);
 
 router.post('/saml/callback', passport.authenticate('saml', {session: false}), function (req, res) {
     if (!req.body || !req.body.SAMLResponse || !req.user) {
         res.status(401).send('Invalid Request');
     }
 
-    let token = {};
     AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
-        .then((newToken) => token = newToken)
-        .then(() => AuthHandler.getAndCacheManagerConfig(token.value))
-        .then(() => {
+        .then((token) => Promise.all([AuthHandler.getAndCacheConfig(token.value), () => {
             res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
             res.redirect(Consts.CONTEXT_PATH);
-        })
+        }]))
         .catch((err) => {
             logger.error(err);
             res.status(500).send({message: 'Failed to authenticate with manager', error: err});
@@ -66,13 +62,16 @@ router.post('/saml/callback', passport.authenticate('saml', {session: false}), f
 });
 
 router.get('/user', passport.authenticate('token', {session: false}), (req, res) => {
-    res.send({
-        username: req.user.username,
-        role: req.user.role,
-        groupSystemRoles: req.user.group_system_roles,
-        tenantsRoles: req.user.tenants,
-        serverVersion: AuthHandler.getManagerVersion()
-    })
+    AuthHandler.getManagerVersion(req.headers['authentication-token'])
+        .then((managerVersion) => {
+            res.send({
+                username: req.user.username,
+                role: req.user.role,
+                groupSystemRoles: req.user.group_system_roles,
+                tenantsRoles: req.user.tenants,
+                serverVersion: managerVersion
+            });
+        })
 });
 
 router.post('/logout', passport.authenticate('token', {session: false}), (req, res) => {

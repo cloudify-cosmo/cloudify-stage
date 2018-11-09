@@ -2,47 +2,27 @@
  * Created by edenp on 7/30/17.
  */
 
-var config = require('../config').get();
-var ManagerHandler = require('./ManagerHandler');
-var logger = require('log4js').getLogger('AuthHandler');
-var _ = require('lodash');
-var ServerSettings = require('../serverSettings');
+let ManagerHandler = require('./ManagerHandler');
+let logger = require('log4js').getLogger('AuthHandler');
+let _ = require('lodash');
+let ServerSettings = require('../serverSettings');
 
-var authorizationCache = {};
-var versionCache = {};
+let authorizationCache = {};
 
 class AuthHandler {
-    static getToken(basicAuth){
+    static getToken(basicAuth) {
         return ManagerHandler.jsonRequest('GET', '/tokens', {
             'Authorization': basicAuth
         });
     }
 
-    static getTenants(token){
+    static getTenants(token) {
         return ManagerHandler.jsonRequest('GET', '/tenants?_get_all_results=true&_include=name', {
             'Authentication-Token': token
         });
     }
 
-    static getAndCacheVersion(token){
-        return ManagerHandler.jsonRequest('GET', '/version', {
-            'Authentication-Token': token
-        })
-        .then((version) => {
-            versionCache = version;
-            logger.debug('Version cached successfully.');
-
-            //set community mode from manager API only if mode is not set from the command line
-            if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN
-                && version.edition === ServerSettings.MODE_COMMUNITY) {
-                ServerSettings.settings.mode = ServerSettings.MODE_COMMUNITY;
-            }
-
-            return Promise.resolve(version);
-        });
-    }
-
-    static getUser(token){
+    static getUser(token) {
         return ManagerHandler.jsonRequest('GET', '/user?_get_data=true', {
             'Authentication-Token': token
         });
@@ -65,18 +45,25 @@ class AuthHandler {
         })
     }
 
-    static getAndCacheManagerConfig(token) {
-        return AuthHandler.getAndCacheConfig(token)
-            .then(() => AuthHandler.getAndCacheVersion(token))
-
-    }
-
     static getRBAC() {
+        if (_.isEmpty(authorizationCache)) {
+            logger.error('No RBAC data in cache. Have you tried to get cached RBAC before getting Manager config?');
+        }
+
         return authorizationCache;
     }
 
-    static getManagerVersion() {
-        return versionCache.version;
+    static getManagerVersion(token) {
+        return ManagerHandler.jsonRequest('GET', '/version', {'Authentication-Token': token})
+            .then((version) => {
+                //set community mode from manager API only if mode is not set from the command line
+                if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN
+                    && version.edition === ServerSettings.MODE_COMMUNITY) {
+                    ServerSettings.settings.mode = ServerSettings.MODE_COMMUNITY;
+                }
+
+                return Promise.resolve(version.version);
+            });
     }
 
     static isAuthorized(user, authorizedRoles) {
