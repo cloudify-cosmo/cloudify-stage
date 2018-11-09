@@ -20,9 +20,7 @@ The Cloudify Console provides a streamlined experience for managing and analyzin
 ## Setup
 
 ### Configuration
-Create the resources needed to connect to the Cloudify Manager:
-- create `conf/me.json` file basing on `conf/me.json.template` - provide IP of your Cloudify Manager there
-- copy `/opt/cloudify-stage/resources/admin_token` from Cloudify Manager machine to `resources/admin_token` in repo main directory 
+Create `conf/me.json` file basing on `conf/me.json.template` and change `<MANAGER_IP>` into real IP of your Cloudify Manager.
 
 ### Installation
 Install application dependencies and initialize database:
