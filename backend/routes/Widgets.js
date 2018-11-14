@@ -5,7 +5,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var WidgetHandler = require('../handler/WidgetHandler');
-var _ = require('lodash');
 var passport = require('passport');
 var AuthHandler = require('../handler/AuthHandler');
 

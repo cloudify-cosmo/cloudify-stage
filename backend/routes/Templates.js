@@ -5,7 +5,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var TemplateHandler = require('../handler/TemplateHandler');
-var _ = require('lodash');
 var passport = require('passport');
 
 var router = express.Router();

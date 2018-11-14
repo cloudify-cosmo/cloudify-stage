@@ -11,7 +11,6 @@ var router = express.Router();
 var ManagerHandler = require('../handler/ManagerHandler');
 
 var logger = require('log4js').getLogger('ServerProxy');
-var fs = require('fs');
 
 function _errorHandler(res,err) {
     var isTimeout = err.code === 'ETIMEDOUT';

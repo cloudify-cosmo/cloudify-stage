@@ -21,9 +21,9 @@ LoggerHandler.init(log4jsConfig);
 // Initialize the DB connection
 let db = require('./db/Connection');
 
-let getCookieStrategy = require('./routes/CookieStrategy');
-let getTokenStrategy = require('./routes/TokenStrategy');
-let getSamlStrategy = require('./routes/SamlStrategy');
+let getCookieStrategy = require('./auth/CookieStrategy');
+let getTokenStrategy = require('./auth/TokenStrategy');
+let getSamlStrategy = require('./auth/SamlStrategy');
 let samlSetup = require('./samlSetup');
 
 let Auth = require('./routes/Auth');
