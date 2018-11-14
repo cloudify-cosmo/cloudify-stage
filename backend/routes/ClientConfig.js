@@ -3,7 +3,6 @@
  */
 
 var express = require('express');
-var request = require('request');
 var db = require('../db/Connection');
 var router = express.Router();
 var bodyParser = require('body-parser');

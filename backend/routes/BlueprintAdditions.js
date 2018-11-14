@@ -2,7 +2,6 @@
  * Created by pposel on 09/03/2017.
  */
 var express = require('express');
-var request = require('request');
 var db = require('../db/Connection');
 var router = express.Router();
 var bodyParser = require('body-parser');

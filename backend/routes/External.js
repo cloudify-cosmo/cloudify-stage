@@ -3,7 +3,6 @@
  */
 const express = require('express');
 const request = require('request');
-const _ = require('lodash');
 
 let router = express.Router();
 let logger = require('log4js').getLogger('External');
