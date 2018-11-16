@@ -111,7 +111,7 @@
     "mocha": "^5.2.0",
     "mocha-pretty-spec-reporter": "latest",
     "nightwatch": "^0.9.21",
-    "node-sass": "^4.9.2",
+    "node-sass": "^4.10.0",
     "react-hot-loader": "^4.0.1",
     "redux-devtools-extension": "^2.13.5",
     "redux-mock-store": "^1.2.1",
