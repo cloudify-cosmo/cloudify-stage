@@ -4,7 +4,6 @@
 
 var express = require('express');
 var ToursHandler = require('../handler/ToursHandler');
-var _ = require('lodash');
 var passport = require('passport');
 
 var router = express.Router();

@@ -25,16 +25,16 @@ let widgetDefinitions = [];
 export default class WidgetDefinitionsLoader {
     static init() {
         window.Stage = {
-            defineWidget: (widgetDefinition)=> {
+            defineWidget: (widgetDefinition) => {
                 widgetDefinitions.push(new WidgetDefinition({...widgetDefinition, id: document.currentScript.id}));
             },
             Basic: BasicComponents,
-            ComponentToHtmlString: (component)=>{
+            ComponentToHtmlString: (component) => {
                 return ReactDOMServer.renderToString(component);
             },
             GenericConfig,
             Common: [],
-            defineCommon: (def) =>{
+            defineCommon: (def) => {
                 Stage.Common[def.name] = def.common;
             },
             Utils: StageUtils

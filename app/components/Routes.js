@@ -19,12 +19,12 @@ class Routes extends Component {
                 <Route exact path={Consts.LOGIN_PAGE_PATH} render={() =>
                     this.props.isSamlEnabled
                         ? <ExternalRedirect url={this.props.samlSsoUrl} />
-                        : <LogoPage/>
+                        : <LogoPage />
                 } />
                 <Route exact path={Consts.LOGOUT_PAGE_PATH} render={() =>
                     this.props.isSamlEnabled
                         ? <ExternalRedirect url={this.props.samlPortalUrl} />
-                        : <Redirect to={Consts.LOGIN_PAGE_PATH}/>
+                        : <Redirect to={Consts.LOGIN_PAGE_PATH} />
                 } />
                 <Route exact path={Consts.ERROR_PAGE_PATH} component={LogoPage} />
                 <Route exact path={Consts.ERROR_NO_TENANTS_PAGE_PATH} component={LogoPage} />
@@ -32,7 +32,7 @@ class Routes extends Component {
                 <Route render={(props) => (
                     this.props.isLoggedIn
                         ? this.props.isInMaintenanceMode
-                            ? ( <Redirect to={Consts.MAINTENANCE_PAGE_PATH}/> )
+                            ? ( <Redirect to={Consts.MAINTENANCE_PAGE_PATH} /> )
                             : ( <Layout {...props} /> )
                         : ( <Redirect to={Consts.LOGIN_PAGE_PATH} /> )
                 )} />
