@@ -38,32 +38,37 @@ Stage.defineWidget({
 
         let blueprintId = toolbox.getContext().getValue('blueprintId');
         if (!_.isEmpty(blueprintId)) {
-            params.blueprint_id = blueprintId;
+            params.blueprint_id = _.castArray(blueprintId);
         }
 
         let deploymentId = toolbox.getContext().getValue('deploymentId');
         if (!_.isEmpty(deploymentId)) {
-            params.deployment_id = deploymentId;
+            params.deployment_id = _.castArray(deploymentId);
         }
 
         let nodeId = toolbox.getContext().getValue('nodeId');
         if (!_.isEmpty(nodeId)) {
-            params.node_id = nodeId;
+            params.node_id = _.castArray(nodeId);
         }
 
         let nodeInstanceId = toolbox.getContext().getValue('nodeInstanceId');
         if (!_.isEmpty(nodeInstanceId)) {
-            params.node_instance_id = nodeInstanceId;
+            params.node_instance_id = _.castArray(nodeInstanceId);
         }
 
         let executionId = toolbox.getContext().getValue('executionId');
         if (!_.isEmpty(executionId)) {
-            params.execution_id = executionId;
+            params.execution_id = _.castArray(executionId);
         }
 
         let messageText = eventFilter.messageText;
         if (!_.isEmpty(messageText)) {
             params.message = `%${messageText}%`;
+        }
+
+        let operationText = eventFilter.operationText;
+        if (!_.isEmpty(operationText)) {
+            params.operation = `%${operationText}%`;
         }
 
         let logLevel = eventFilter.logLevel;
@@ -96,6 +101,7 @@ Stage.defineWidget({
 
         const SELECTED_EVENT_ID = toolbox.getContext().getValue('eventId');
         const SELECTED_LOG_ID = toolbox.getContext().getValue('logId');
+        const eventFilter = toolbox.getContext().getValue('eventFilter') || {};
 
         const CONTEXT_PARAMS = this.fetchParams(widget, toolbox);
 
@@ -122,7 +128,7 @@ Stage.defineWidget({
             nodeId,
             nodeInstanceId,
             executionId,
-            type: CONTEXT_PARAMS.type
+            eventFilter
         };
 
         return (
