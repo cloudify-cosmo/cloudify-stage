@@ -30,7 +30,7 @@ export default class NodesTable extends React.Component {
         this.props.toolbox.getContext().setValue('depNodeId', clickedAlreadySelectedNode ? null : clickedDepNodeId);
         this.props.toolbox.getContext().setValue('nodeId', clickedAlreadySelectedNode ? null : item.id);
         this.props.toolbox.getContext().setValue('nodeInstanceId', null);
-        this.props.toolbox.getEventBus().trigger('topology:selectNode', item.id);
+        this.props.toolbox.getEventBus().trigger('topology:selectNode', clickedAlreadySelectedNode ? null : item.id);
     }
 
     componentDidMount() {
@@ -123,9 +123,8 @@ export default class NodesTable extends React.Component {
                                         <DataTable.Data>{node.groups}</DataTable.Data>
                                     </DataTable.Row>
 
-                                    <DataTable.DataExpandable>
-                                        <NodeInstancesTable instances={node.instances} widget={this.props.widget} toolbox={this.props.toolbox}>
-                                        </NodeInstancesTable>
+                                    <DataTable.DataExpandable key={`${node.id + node.deployment_id}_Expanded`}>
+                                        <NodeInstancesTable instances={node.instances} widget={this.props.widget} toolbox={this.props.toolbox} />
                                     </DataTable.DataExpandable>
 
                                 </DataTable.RowExpandable>
