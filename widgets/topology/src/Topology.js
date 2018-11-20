@@ -76,14 +76,20 @@ export default class Topology extends React.Component {
 
      _selectNode(nodeId) {
         if (this._topology && this._processedTopologyData && this._processedTopologyData.nodes) {
-            let selectedNode = _.find(this._processedTopologyData.nodes, (topologyNode) => topologyNode.name === nodeId);
-            this._topology.setSelectNode(selectedNode);
+            if (_.isEmpty(nodeId)) {
+                this._topology.clearSelectedNodes();
+            } else {
+                let selectedNode = _.find(this._processedTopologyData.nodes, (topologyNode) => topologyNode.name === nodeId);
+                this._topology.setSelectNode(selectedNode);
+            }
         }
     }
 
      _setSelectedNode(selectedNode) {
         if (this.props.data.deploymentId) {
             this.props.toolbox.getContext().setValue('depNodeId', selectedNode.name + this.props.data.deploymentId);
+            this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
+        } else if (this.props.data.blueprintId) {
             this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
         }
     }
