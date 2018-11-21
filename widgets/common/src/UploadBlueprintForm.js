@@ -166,8 +166,10 @@ class UploadBlueprintForm extends React.Component {
 
                 <Form.Field label='Blueprint package' required
                             error={this.props.errors.blueprintUrl}
-                            help='The archive package must contain exactly one directory
-                                  that includes a yaml file for the main blueprint.'>
+                            help='You can provide single YAML file or blueprint archive.
+                                  Supported types are: yml, yaml, zip, tar, tar.gz and tar.bz2.
+                                  The archive package must contain exactly one directory
+                                  that includes at least one YAML file.'>
                     <Form.UrlOrFile name="blueprint" value={this.props.blueprintUrl}
                                     placeholder="Provide the blueprint's URL or click browse to select a file"
                                     onChangeUrl={this._handleInputChange.bind(this)}
@@ -191,8 +193,9 @@ class UploadBlueprintForm extends React.Component {
 
                 <Form.Field label='Blueprint YAML file' required
                             error={this.props.errors.blueprintFileName}
-                            help='You must specify the blueprint yaml file for your environment
-                                  because the archive can contain more than one yaml file.'>
+                            help='If you choose archive as blueprint package, you must specify
+                                  the blueprint YAML file for your environment,
+                                  because the archive can contain more than one YAML file.'>
                     <Form.Dropdown name="blueprintFileName" search selection options={options}
                                    value={this.props.blueprintFileName}
                                    onChange={this._handleInputChange.bind(this)} />
