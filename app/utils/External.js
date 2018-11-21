@@ -155,6 +155,8 @@ export default class External {
                     });
                     xhr.send(formData);
                 }
+            } else {
+                xhr.send(formData);
             }
 
         });
