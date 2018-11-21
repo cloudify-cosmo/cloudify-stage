@@ -30,7 +30,7 @@ class BlueprintActions {
     }
 
     doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, visibility) {
-        var params = {visibility: visibility};
+        let params = {visibility: visibility};
 
         if (!_.isEmpty(blueprintFileName)) {
             params['application_file_name'] = blueprintFileName;
@@ -39,9 +39,11 @@ class BlueprintActions {
             params['blueprint_archive_url'] = blueprintUrl;
         }
 
-        var promise;
+        let promise;
         if (file) {
-            promise = this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, params, file);
+            const compressFile = _.endsWith(file.name, '.yaml') || _.endsWith(file.name, '.yml');
+            promise = this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, params, file,
+                                                         undefined, undefined, compressFile);
         } else {
             promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
         }

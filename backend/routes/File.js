@@ -24,7 +24,7 @@ router.post('/text', passport.authenticate('token', {session: false}), upload.si
     logger.debug(`Text file uploaded, name: ${req.file.originalname}, size: ${req.file.size}`);
     var data = req.file.buffer.toString();
     res.contentType('application/text').send(data);
-})
+});
 
 router.post('/yaml', passport.authenticate('token', {session: false}), upload.single('file'), checkIfFileUploaded, function (req, res, next) {
     logger.debug(`YAML file uploaded, name: ${req.file.originalname}, size: ${req.file.size}`);
@@ -38,6 +38,6 @@ router.post('/yaml', passport.authenticate('token', {session: false}), upload.si
         return;
     }
     res.contentType('application/json').send(json);
-})
+});
 
 module.exports = router;
