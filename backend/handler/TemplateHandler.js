@@ -286,9 +286,12 @@ module.exports = (function() {
 
         let promise;
         if (mode === ServerSettings.MODE_MAIN) {
+            const escTenant = db.sequelize.escape(tenant);
+            const escRole = db.sequelize.escape(role);
+
             promise = db.Resources
                 .findOne({where: {type: ResourceTypes.TEMPLATE,
-                    data: db.sequelize.literal(`data->'roles' ? '${role}' and (data->'tenants' ? '${tenant}' or data->'tenants' ? '${DEFAULT_KEY}')`)},
+                    data: db.sequelize.literal(`data->'roles' ? ${escRole} and (data->'tenants' ? ${escTenant} or data->'tenants' ? '${DEFAULT_KEY}')`)},
                           attributes: ['resourceId'], raw: true})
                 .then(entity => entity ? entity.resourceId : null);
         } else {
