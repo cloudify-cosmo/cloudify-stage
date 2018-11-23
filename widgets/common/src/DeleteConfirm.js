@@ -17,13 +17,15 @@ class DeleteConfirm extends React.Component {
         open: PropTypes.bool.isRequired,
         className: PropTypes.string,
         force: PropTypes.bool,
-        onForceChange: PropTypes.func
+        onForceChange: PropTypes.func,
+        content: PropTypes.any
     };
 
     static defaultProps = {
         className: '',
         force: false,
-        onForceChange: _.noop
+        onForceChange: _.noop,
+        content: null
     };
 
     render () {
@@ -33,6 +35,7 @@ class DeleteConfirm extends React.Component {
                         header={`Are you sure you want to remove ${this.props.resourceName}?`}
                         content={
                             <Segment basic>
+                                {this.props.content}
                                 <Form.Field>
                                     <Form.Checkbox name='force' toggle label='Force'
                                                    checked={this.props.force}

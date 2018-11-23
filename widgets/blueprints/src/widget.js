@@ -29,7 +29,7 @@ Stage.defineWidget({
 
     fetchData(widget,toolbox,params) {
         var result = {};
-        return toolbox.getManager().doGet('/blueprints?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name',params)
+        return toolbox.getManager().doGet('/blueprints?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name,plan',params)
             .then(data=>{
                 result.blueprints = data;
                 var blueprintIds = data.items.map(item=>item.id);
@@ -48,10 +48,28 @@ Stage.defineWidget({
         var blueprintsData = data.blueprints;
         var deploymentData = data.deployments;
 
-      var depCount = _.countBy(deploymentData.items,'blueprint_id');
-        // Count deployments
-        _.each(blueprintsData.items,(blueprint)=>{
-            blueprint.depCount = depCount[blueprint.id] || 0;
+        var depCount = _.countBy(deploymentData.items,'blueprint_id');
+
+        // Count deployments and check imports
+        let imports = {}, importedBy = {};
+        _.each(blueprintsData.items,(blueprint) => {
+            const blueprintId = blueprint.id;
+            const blueprintImportPrefix = 'blueprint:';
+            blueprint.depCount = depCount[blueprintId] || 0;
+            if (!_.isEmpty(blueprint.plan.imported)) {
+                _.forEach(blueprint.plan.imported, (imp) => {
+                    if (_.startsWith(imp, blueprintImportPrefix)) {
+                        const importedBlueprintId = _.replace(imp, blueprintImportPrefix, '');
+                        imports[blueprintId] = !_.isArray(imports[blueprintId])
+                            ? [importedBlueprintId]
+                            : [...imports[blueprintId], importedBlueprintId];
+                        importedBy[importedBlueprintId] = !_.isArray(importedBy[importedBlueprintId])
+                            ? [blueprintId]
+                            : [...importedBy[importedBlueprintId], blueprintId];
+                    }
+                });
+
+            }
         });
 
         var selectedBlueprint = toolbox.getContext().getValue('blueprintId');
@@ -60,7 +78,9 @@ Stage.defineWidget({
                 return Object.assign({},item,{
                     created_at: Stage.Utils.formatTimestamp(item.created_at),
                     updated_at: Stage.Utils.formatTimestamp(item.updated_at),
-                    isSelected: selectedBlueprint === item.id
+                    isSelected: selectedBlueprint === item.id,
+                    imports: _.sortBy(imports[item.id]),
+                    importedBy: _.sortBy(importedBy[item.id])
                 })
             }),
             total: _.get(blueprintsData, "metadata.pagination.total", 0)

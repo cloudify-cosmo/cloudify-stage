@@ -4,6 +4,7 @@
 
 import BlueprintsTable from './BlueprintsTable';
 import BlueprintsCatalog from './BlueprintsCatalog';
+import ImportsWarningMessage from './ImportsWarningMessage';
 
 export default class BlueprintList extends React.Component {
 
@@ -122,8 +123,7 @@ export default class BlueprintList extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
         let {Button, ErrorMessage} = Stage.Basic;
         let {DeleteConfirm, DeployBlueprintModal, UploadBlueprintModal} = Stage.Common;
-
-        var shouldShowTable = this.props.widget.configuration['displayStyle'] === 'table';
+        let shouldShowTable = this.props.widget.configuration['displayStyle'] === 'table';
 
         return (
             <div>
@@ -159,6 +159,7 @@ export default class BlueprintList extends React.Component {
                 }
 
                 <DeleteConfirm resourceName={`blueprint ${_.get(this.state.item, 'id', '')}`}
+                               content={<ImportsWarningMessage list={_.get(this.state.item, 'importedBy', [])} />}
                                force={this.state.force}
                                open={this.state.confirmDelete}
                                onConfirm={this._deleteBlueprint.bind(this)}

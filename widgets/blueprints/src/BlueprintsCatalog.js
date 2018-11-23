@@ -4,6 +4,7 @@
 
 
 import PropTypes from 'prop-types';
+import ImportsIcon from './ImportsIcon';
 
 export default class BlueprintsCatalog extends React.Component{
     static propTypes = {
@@ -44,7 +45,13 @@ export default class BlueprintsCatalog extends React.Component{
                                 <Grid.Row className="bottomDivider">
                                     <Grid.Column width="16">
                                         <Image src={Stage.Utils.url(`/ba/image/${item.id}`)}/>
-                                        <Header><a href="javascript:void(0)" className="breakWord">{item.id}</a></Header>
+                                        <Header>
+                                            <ImportsIcon header='Imported By' list={item.importedBy} icon='arrow down' className="rightFloated" />
+                                            <ImportsIcon header='Imports' list={item.imports} icon='arrow up' className="rightFloated" />
+                                            <Header.Content>
+                                                <a href="javascript:void(0)" className="breakWord">{item.id}</a>
+                                            </Header.Content>
+                                        </Header>
                                         <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility)=>this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
                                     </Grid.Column>
                                 </Grid.Row>

@@ -3,6 +3,7 @@
  */
 
 import PropTypes from 'prop-types';
+import ImportsIcon from './ImportsIcon';
 
 export default class BlueprintsTable extends React.Component{
     static propTypes = {
@@ -56,7 +57,10 @@ export default class BlueprintsTable extends React.Component{
                         return (
                             <DataTable.Row id={`${tableName}_${item.id}`} key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
                                 <DataTable.Data>
-                                    <Image src={Stage.Utils.url(`/ba/image/${item.id}`)} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
+                                    <Image src={Stage.Utils.url(`/ba/image/${item.id}`)} width="30px" height="auto" inline/>&nbsp;
+                                    <a className='blueprintName' href="javascript:void(0)">{item.id}</a>&nbsp;
+                                    <ImportsIcon header='Imports' list={item.imports} icon='arrow up' />
+                                    <ImportsIcon header='Imported By' list={item.importedBy} icon='arrow down' />
                                     <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility)=>this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
