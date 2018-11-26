@@ -24,7 +24,7 @@ export default class BlueprintsTable extends React.Component{
         onDeleteBlueprint: ()=>{},
         onCreateDeployment: ()=>{},
         onSetVisibility: ()=>{},
-        allowedSettingTo: ['Tenant'],
+        allowedSettingTo: ['tenant', 'global'],
         noDataMessage: ''
     };
 

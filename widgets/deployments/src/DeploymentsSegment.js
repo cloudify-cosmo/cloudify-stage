@@ -34,7 +34,7 @@ export default class DeploymentsSegment extends React.Component {
         onMenuAction: ()=>{},
         onError: ()=>{},
         onSetVisibility: ()=>{},
-        allowedSettingTo: ['tenant'],
+        allowedSettingTo: ['tenant', 'global'],
         noDataMessage: '',
         showExecutionStatusLabel: false
     };

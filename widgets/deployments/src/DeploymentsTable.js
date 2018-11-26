@@ -32,7 +32,7 @@ export default class extends React.Component {
         onMenuAction: ()=>{},
         onError: ()=>{},
         onSetVisibility: ()=>{},
-        allowedSettingTo: ['tenant'],
+        allowedSettingTo: ['tenant', 'global'],
         noDataMessage: ''
     };
 
