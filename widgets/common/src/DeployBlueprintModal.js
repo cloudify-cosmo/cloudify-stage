@@ -130,7 +130,7 @@ class DeployBlueprintModal extends React.Component {
                 <Modal.Header>
                     <Icon name="rocket"/> Deploy blueprint {blueprint.id}
                     <VisibilityField visibility={this.state.visibility} className="rightFloated"
-                                  onVisibilityChange={(visibility)=>this.setState({visibility: visibility})} disallowGlobal={true}/>
+                                     onVisibilityChange={(visibility)=>this.setState({visibility: visibility})} />
                 </Modal.Header>
 
                 <Modal.Content>

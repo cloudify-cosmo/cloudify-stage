@@ -51,18 +51,18 @@ Stage.defineWidget({
     fetchData: function(widget,toolbox,params) {
         var deploymentData = toolbox.getManager().doGet('/deployments', params);
 
-        var deploymentIds = deploymentData.then(data=>Promise.resolve([...new Set(data.items.map(item=>item.id))]));
+        var deploymentIds = deploymentData.then(data =>
+            Promise.resolve([...new Set(data.items.map(item=>item.id))]));
 
-        var nodeInstanceData = deploymentIds.then(ids=>{
-                    return toolbox.getManager().doGet('/node-instances?_include=id,state,deployment_id', {deployment_id: ids});
-                });
+        var nodeInstanceData = deploymentIds.then(ids =>
+            toolbox.getManager().doGet('/node-instances?_include=id,state,deployment_id', {deployment_id: ids}));
 
-        let executionsData = deploymentIds.then(ids=>{
-            return toolbox.getManager().doGet('/executions', {
+        let executionsData = deploymentIds.then(ids =>
+            toolbox.getManager().doGet('/executions', {
                 _sort: '-ended_at',
                 deployment_id: ids
-            });
-        });
+            })
+        );
 
         return Promise.all([deploymentData, nodeInstanceData, executionsData]).then(function(data) {
                 let deploymentData = data[0];

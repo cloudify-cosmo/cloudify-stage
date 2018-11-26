@@ -162,7 +162,6 @@ export default class DeploymentsList extends React.Component {
                                       onCancelExecution={this._cancelExecution.bind(this)}
                                       onError={this._setError.bind(this)}
                                       onSetVisibility={this._setDeploymentVisibility.bind(this)}
-                                      allowedSettingTo={['tenant']}
                                       noDataMessage={NO_DATA_MESSAGE}
                                       showExecutionStatusLabel={this.props.widget.configuration.showExecutionStatusLabel} />
                     :
@@ -175,7 +174,6 @@ export default class DeploymentsList extends React.Component {
                                         onCancelExecution={this._cancelExecution.bind(this)}
                                         onError={this._setError.bind(this)}
                                         onSetVisibility={this._setDeploymentVisibility.bind(this)}
-                                        allowedSettingTo={['tenant']}
                                         noDataMessage={NO_DATA_MESSAGE}
                                         showExecutionStatusLabel={this.props.widget.configuration.showExecutionStatusLabel} />
                 }

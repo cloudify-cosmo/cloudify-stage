@@ -146,7 +146,7 @@ export default class DeployModal extends React.Component {
                 <Modal.Header>
                     <Icon name="rocket"/> Create new deployment
                     <VisibilityField visibility={this.state.visibility} className="rightFloated"
-                                  onVisibilityChange={(visibility)=>this.setState({visibility:visibility})} disallowGlobal={true}/>
+                                     onVisibilityChange={(visibility)=>this.setState({visibility:visibility})} />
                 </Modal.Header>
 
                 <Modal.Content>
