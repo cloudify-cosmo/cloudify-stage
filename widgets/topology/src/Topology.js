@@ -2,6 +2,7 @@
  * Created by kinneretzin on 06/11/2016.
  */
 
+import 'cloudify-blueprint-topology';
 var BlueprintTopology = cloudifyTopology.Topology;
 var DataProcessingService = cloudifyTopology.DataProcessingService;
 
