@@ -22,7 +22,7 @@
     },
     {
         "name": "Vendor JS bundle",
-        "limit": "5.0 MB",
+        "limit": "3.8 MB",
         "gzip": false,
         "webpack": false,
         "path": "dist/js/vendor.bundle.js"
