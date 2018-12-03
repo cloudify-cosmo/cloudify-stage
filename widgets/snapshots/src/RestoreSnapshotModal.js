@@ -40,8 +40,7 @@ export default class RestoreSnapshotModal extends React.Component {
         return true;
     }
 
-
-    componentWillUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState) {
         if (!prevState.open && this.state.open) {
             this.setState(RestoreSnapshotModal.initialState);
         }

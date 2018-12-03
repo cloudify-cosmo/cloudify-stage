@@ -14,19 +14,17 @@ export default class Home extends Component {
         super(props, context);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this._handleContext(this.props.selectedPage, this.props.contextParams, this.props.emptyPages);
         this.props.onStorePageId(this.props.pageId);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.pageId !== this.props.pageId) {
-            this.props.onStorePageId(nextProps.pageId);
-            this._handleContext(nextProps.selectedPage, nextProps.contextParams, nextProps.emptyPages);
+    componentDidUpdate(prevProps) {
+        if (this.props.pageId !== prevProps.pageId) {
+            this.props.onStorePageId(this.props.pageId);
+            this._handleContext(this.props.selectedPage, this.props.contextParams, this.props.emptyPages);
         }
-    }
 
-    componentDidUpdate() {
         if (this.props.isMaintenance) {
             this.props.navigateToMaintenancePage();
         }

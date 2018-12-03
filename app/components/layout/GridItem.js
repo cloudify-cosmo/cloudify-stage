@@ -42,11 +42,7 @@ export default class GridItem extends Component {
 
     render() {
         return (
-            <div 
-                id={this.props.id}
-                ref='item'
-                className={this.props.className}
-            >
+            <div id={this.props.id} className={this.props.className}>
                 {this.props.children}
             </div>
         );

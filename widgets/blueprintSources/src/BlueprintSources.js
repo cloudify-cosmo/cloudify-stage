@@ -16,7 +16,7 @@ export default class BlueprintSources extends React.Component {
         filename: '',
         error: '',
         type: 'json'
-    }
+    };
 
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props.widget, nextProps.widget)
@@ -24,8 +24,8 @@ export default class BlueprintSources extends React.Component {
             || !_.isEqual(this.props.data, nextProps.data);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.data !== nextProps.data ) {
+    componentDidUpdate(prevProps) {
+        if (prevProps.data !== this.props.data) {
             this.setState(BlueprintSources.initialState);
         }
     }

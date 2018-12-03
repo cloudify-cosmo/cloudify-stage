@@ -17,7 +17,6 @@ export default class Users extends Component {
         canConfigure: PropTypes.bool.isRequired,
         canTemplateManagement: PropTypes.bool.isRequired,
         onEditModeChange: PropTypes.func.isRequired,
-        onConfigure: PropTypes.func,
         onLogout: PropTypes.func.isRequired,
         onReset: PropTypes.func,
         onTemplates: PropTypes.func
@@ -57,12 +56,6 @@ export default class Users extends Component {
                         this.props.showAllOptions
                         ?
                         <Dropdown.Menu>
-                            {/*Currently configure has no configurations, so hidding it*/}
-                            {/*{*/}
-                              {/*this.props.canConfigure &&*/}
-                                  {/*<Dropdown.Item key='configure' id='configureMenuItem' icon='options' text='Configure'*/}
-                                                 {/*value='configure' onClick={this.props.onConfigure}/>*/}
-                            {/*}*/}
                             {
                                 this.props.canEditMode &&
                                     <Dropdown.Item icon='configure' selected={this.props.isEditMode} active={this.props.isEditMode}

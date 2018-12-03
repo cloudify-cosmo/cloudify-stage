@@ -72,14 +72,14 @@ export default class NodeInstancesFilter extends React.Component {
             || !_.isEqual(this.state, nextState);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.deploymentId !== nextProps.deploymentId) {
-            this.setState({...NodeInstancesFilter.initialState(nextProps)});
+    componentDidUpdate(prevProps) {
+        if (prevProps.deploymentId !== this.props.deploymentId) {
+            this.setState({...NodeInstancesFilter.initialState(this.props)});
             this._fetchData();
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this._fetchData();
     }
 

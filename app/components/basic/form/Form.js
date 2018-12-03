@@ -73,6 +73,12 @@ import '../../styles/Form.css';
  */
 export default class Form extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.submitFormBtnRef = React.createRef();
+    }
+
     /**
      * Form field, see {@link FormField}
      */
@@ -186,7 +192,7 @@ export default class Form extends Component {
     }
 
     submit() {
-        $(this.refs.submitFormBtn).click();
+        $(this.submitFormBtnRef.current).click();
     }
 
     _handleSubmit(e, data) {
@@ -210,7 +216,7 @@ export default class Form extends Component {
 
                 {this.props.children}
 
-                <input type='submit' name="submitFormBtn" style={{'display': 'none'}} ref='submitFormBtn'/>
+                <input type='submit' name="submitFormBtn" style={{'display': 'none'}} ref={this.submitFormBtnRef} />
             </FormSemanticUiReact>
         );
     }

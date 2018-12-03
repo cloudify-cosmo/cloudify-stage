@@ -16,7 +16,7 @@ export default class CreateModal extends React.Component {
         loading: false,
         tenantName: '',
         errors: {}
-    }
+    };
 
     onApprove () {
         this._createTenant();
@@ -28,8 +28,8 @@ export default class CreateModal extends React.Component {
         return true;
     }
 
-    componentWillUpdate(prevProps, prevState) {
-        if (this.state.open && prevState.open != this.state.open) {
+    componentDidUpdate(prevProps, prevState) {
+        if (!prevState.open && this.state.open) {
             this.setState(CreateModal.initialState);
         }
     }

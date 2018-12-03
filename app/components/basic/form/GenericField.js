@@ -225,14 +225,16 @@ export default class GenericField extends Component {
         super(props,context);
 
         this.toolbox = getToolbox(()=>{}, ()=>{}, null);
-        this._initOptions(props);
+        this.state = GenericField.isListType(props.type)
+        ? {options: []}
+        : {};
     }
 
     _initOptions(props) {
         if(props.type === GenericField.BOOLEAN_LIST_TYPE){
-            this.state = {
+            this.setState({
                 options: [{text: 'false', value: false}, {text: 'true', value: true}]
-            };
+            });
         } else if (GenericField.isListType(props.type) && props.items) {
             let valueAlreadyInOptions = false;
             let options = _.map(props.items, item => {
@@ -250,7 +252,7 @@ export default class GenericField extends Component {
                 options.push({ text: props.value, value: props.value });
             }
 
-            this.state = {options};
+            this.setState({options});
         }
     }
 
@@ -266,15 +268,16 @@ export default class GenericField extends Component {
         this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}));
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if (this.props.storeValueInContext) {
             this._storeValueInContext(this.props.name, this.props.value);
         }
+        this._initOptions(this.props);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps !== this.props && nextProps.items !== this.props.items) {
-            this._initOptions(nextProps);
+    componentDidUpdate(prevProps) {
+        if (this.props.items !== prevProps.items) {
+            this._initOptions(this.props);
         }
     }
 
@@ -338,7 +341,7 @@ export default class GenericField extends Component {
 
             if (_.isUndefined(CustomComponent)) {
                 return new Error('For `' + this.props.type + '` type `component` prop have to be supplied.')
-            };
+            }
 
             field = <CustomComponent name={this.props.name}
                                      value={_.isUndefined(this.props.value) ? this.props.default : this.props.value}

@@ -40,14 +40,14 @@ export default class UpdateModal extends React.Component {
         return true;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             this.setState({...UpdateModal.initialState, loading: true});
 
             let actions = new Stage.Common.SecretActions(this.props.toolbox);
-            actions.doGet(nextProps.secret.key).then((secret)=>{
+            actions.doGet(this.props.secret.key).then((secret)=>{
                 let canUpdateSecret = true;
-                if (nextProps.secret.is_hidden_value && _.isEmpty(secret.value)) {
+                if (this.props.secret.is_hidden_value && _.isEmpty(secret.value)) {
                     canUpdateSecret = false;
                 }
                 this.setState({secretValue: secret.value, loading: false, errors: {}, canUpdateSecret});

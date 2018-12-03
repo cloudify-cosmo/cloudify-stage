@@ -20,7 +20,7 @@ export default class CreateModal extends React.Component {
         errors: {},
         visibility: Stage.Common.Consts.defaultVisibility,
         isHiddenValue: false
-    }
+    };
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired
@@ -36,8 +36,8 @@ export default class CreateModal extends React.Component {
         return true;
     }
 
-    componentWillUpdate(prevProps, prevState) {
-        if (this.state.open && prevState.open != this.state.open) {
+    componentDidUpdate(prevProps, prevState) {
+        if (!prevState.open && this.state.open) {
             this.setState(CreateModal.initialState);
         }
     }

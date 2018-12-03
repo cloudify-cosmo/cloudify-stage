@@ -36,9 +36,9 @@ export default class TenantModal extends React.Component {
         this.setState({tenants: newTenants});
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
-            var tenants = _.mapValues(_.pickBy(nextProps.user.tenants, (rolesObj) => {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            var tenants = _.mapValues(_.pickBy(this.props.user.tenants, (rolesObj) => {
                 return !_.isEmpty(rolesObj['tenant-role']);
             }), (rolesObj) => {
                 return rolesObj['tenant-role'];
@@ -102,7 +102,8 @@ export default class TenantModal extends React.Component {
                             <Form.Dropdown placeholder='Tenants' multiple selection options={options} name="tenants"
                                            value={Object.keys(this.state.tenants)} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
-                        <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.tenants} resourceName="tenant" toolbox={this.props.toolbox}></RolesPicker>
+                        <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.tenants}
+                                     resourceName="tenant" toolbox={this.props.toolbox} />
                     </Form>
                 </Modal.Content>
 

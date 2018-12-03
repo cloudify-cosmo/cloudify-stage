@@ -41,12 +41,12 @@ class MaintenanceModeModal extends Component {
         activeExecutions: {}
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.show && nextProps.show) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.show && this.props.show) {
             this.setState(MaintenanceModeModal.initialState);
 
             this._loadPendingExecutions();
-        } else if (this.props.show && !nextProps.show) {
+        } else if (prevProps.show && !this.props.show) {
             this._stopPolling();
             this._stopFetchingData();
             this.props.onClose();

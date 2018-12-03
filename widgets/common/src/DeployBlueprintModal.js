@@ -36,9 +36,9 @@ class DeployBlueprintModal extends React.Component {
         onHide: ()=>{}
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
-            let deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(nextProps.blueprint.plan.inputs);
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            let deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(this.props.blueprint.plan.inputs);
             this.setState({...DeployBlueprintModal.initialState, deploymentInputs});
         }
     }
