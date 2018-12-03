@@ -225,14 +225,16 @@ export default class GenericField extends Component {
         super(props,context);
 
         this.toolbox = getToolbox(()=>{}, ()=>{}, null);
-        this._initOptions(props);
+        this.state = GenericField.isListType(props.type)
+        ? {options: []}
+        : {};
     }
 
     _initOptions(props) {
         if(props.type === GenericField.BOOLEAN_LIST_TYPE){
-            this.state = {
+            this.setState({
                 options: [{text: 'false', value: false}, {text: 'true', value: true}]
-            };
+            });
         } else if (GenericField.isListType(props.type) && props.items) {
             let valueAlreadyInOptions = false;
             let options = _.map(props.items, item => {
@@ -250,7 +252,7 @@ export default class GenericField extends Component {
                 options.push({ text: props.value, value: props.value });
             }
 
-            this.state = {options};
+            this.setState({options});
         }
     }
 
@@ -270,10 +272,11 @@ export default class GenericField extends Component {
         if (this.props.storeValueInContext) {
             this._storeValueInContext(this.props.name, this.props.value);
         }
+        this._initOptions(this.props);
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props !== prevProps && this.props.items !== prevProps.items) {
+        if (this.props.items !== prevProps.items) {
             this._initOptions(this.props);
         }
     }
