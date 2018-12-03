@@ -42,6 +42,12 @@ function deg2rad(deg) {
  */
 export default class Gauge extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.svgRef = React.createRef();
+    }
+
     /**
      * propTypes
      * @property {number} value actual value to be marked on the gauge
@@ -118,8 +124,8 @@ export default class Gauge extends Component {
     }
 
     componentDidMount() {
-        this._initGauge(this.refs.svg);
-        $(window).resize(()=>this._initGauge(this.refs.svg));
+        this._initGauge(this.svgRef.current);
+        $(window).resize(()=>this._initGauge(this.svgRef.current));
     }
 
     componentWillUnmount() {
@@ -128,13 +134,15 @@ export default class Gauge extends Component {
 
     componentDidUpdate() {
         setTimeout(()=>{
-            this._initGauge(this.refs.svg);
+            this._initGauge(this.svgRef.current);
         },100);
     }
 
     _initGauge (svgComponent) {
 
-        if (svgComponent === null) return;
+        if (svgComponent === null) {
+            return;
+        }
 
         var opts = this._buildProps(svgComponent);
 
@@ -210,7 +218,7 @@ export default class Gauge extends Component {
     render () {
         return (
             <div className='gaugeContainer'>
-                <svg className='gauge' ref='svg'/>
+                <svg className='gauge' ref={this.svgRef} />
             </div>
         );
     }

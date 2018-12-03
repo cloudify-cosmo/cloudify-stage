@@ -266,15 +266,15 @@ export default class GenericField extends Component {
         this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}));
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if (this.props.storeValueInContext) {
             this._storeValueInContext(this.props.name, this.props.value);
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps !== this.props && nextProps.items !== this.props.items) {
-            this._initOptions(nextProps);
+    componentDidUpdate(prevProps) {
+        if (this.props !== prevProps && this.props.items !== prevProps.items) {
+            this._initOptions(this.props);
         }
     }
 
@@ -338,7 +338,7 @@ export default class GenericField extends Component {
 
             if (_.isUndefined(CustomComponent)) {
                 return new Error('For `' + this.props.type + '` type `component` prop have to be supplied.')
-            };
+            }
 
             field = <CustomComponent name={this.props.name}
                                      value={_.isUndefined(this.props.value) ? this.props.default : this.props.value}

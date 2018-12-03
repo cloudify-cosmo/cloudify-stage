@@ -43,9 +43,9 @@ export default class AddWidgetModal extends Component {
         onWidgetUsed: PropTypes.func.isRequired
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!_.isEqual(this.props.widgetDefinitions, nextProps.widgetDefinitions)) {
-            this.setState(AddWidgetModal.initialState(nextProps))
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(prevProps.widgetDefinitions, this.props.widgetDefinitions)) {
+            this.setState(AddWidgetModal.initialState(this.props))
         }
     }
 

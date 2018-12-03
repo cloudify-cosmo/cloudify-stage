@@ -32,16 +32,16 @@ export default class UpdateDetailsModal extends React.Component {
         deploymentUpdateId: PropTypes.string
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             this.setState({loading: true});
             let actions = new Stage.Common.DeploymentUpdatesActions(this.props.toolbox);
-            actions.doGetUpdate(nextProps.deploymentUpdateId).then((deploymentUpdate)=>{
+            actions.doGetUpdate(this.props.deploymentUpdateId).then((deploymentUpdate)=>{
                 this.setState({loading: false, error: null, deploymentUpdate});
             }).catch((err)=> {
                 this.setState({loading: false, error: err.message, deploymentUpdate: UpdateDetailsModal.EMPTY_DEPLOYMENT_UPDATE});
             });
-        } else if (this.props.open && !nextProps.open) {
+        } else if (prevProps.open && !this.props.open) {
             this.setState({...UpdateDetailsModal.initialState});
         }
     }

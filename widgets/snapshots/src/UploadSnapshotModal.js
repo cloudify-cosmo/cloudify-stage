@@ -31,7 +31,7 @@ export default class UploadModal extends React.Component {
         return true;
     }
 
-    componentWillUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState) {
         if (!prevState.open && this.state.open) {
             this.snapshotFileRef.current && this.snapshotFileRef.current.reset();
             this.setState(UploadModal.initialState);

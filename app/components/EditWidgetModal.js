@@ -34,8 +34,10 @@ export default class EditWidgetModal extends Component {
         return {fields};
     };
 
-    componentWillReceiveProps(nextProps) {
-        this.setState(EditWidgetModal.initialState(nextProps));
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            this.setState(EditWidgetModal.initialState(this.props));
+        }
     }
 
     onApprove() {

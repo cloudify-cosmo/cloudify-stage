@@ -13,7 +13,6 @@ export default class CreateModal extends React.Component {
     }
 
     static initialState = {
-        open: false,
         loading: false,
         username: '',
         password: '',
@@ -21,7 +20,7 @@ export default class CreateModal extends React.Component {
         isAdmin: false,
         tenants: {},
         errors: {}
-    }
+    };
 
     onApprove () {
         this._submitCreate();
@@ -33,7 +32,7 @@ export default class CreateModal extends React.Component {
         return true;
     }
 
-    componentWillUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState) {
         if (!prevState.open && this.state.open) {
             this.setState(CreateModal.initialState);
         }

@@ -33,11 +33,11 @@ export default class DeployModal extends React.Component {
     };
 
     static defaultProps = {
-        onHide: ()=>{}
+        onHide: _.noop
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             this.setState(DeployModal.initialState);
         }
     }
