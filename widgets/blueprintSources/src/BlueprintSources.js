@@ -26,7 +26,6 @@ export default class BlueprintSources extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.data !== this.props.data) {
-            console.error('dataChanged, resetting');
             this.setState(BlueprintSources.initialState);
         }
     }
