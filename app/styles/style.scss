@@ -16,7 +16,7 @@ a:hover {
 }
 .loadingSegment {
     height: 100%;
-    z-index: 100 !important;
+    z-index: 5 !important;
 }
 
 .ui.top.menu .right.menu .ui.dropdown.item{
@@ -216,7 +216,7 @@ div.headerBar {
     top: 0px;
     right : 0px;
     display: none;
-    z-index: 1000;
+    z-index: 5;
 
     a {
       color: inherit !important;
@@ -342,7 +342,6 @@ div.headerBar {
           transition: all 500ms ease-in-out;
           &:hover{
             transform: scale(1.3);
-            z-index: 100;
             box-shadow: 0px 8px 20px -6px rgba(0, 0, 0, 0.75);          
           }
         }
@@ -505,14 +504,14 @@ table.servicesData button.refreshButton {
   left: auto;
   bottom: auto;
   display: none;
+  right: 50px;
+  z-index: 5;
 
   &.header {
-    right: 35px;
     top: 4px;
   }
 
   &.noheader {
-    right: 35px;
     top: 5px;
   }
 }
@@ -860,19 +859,6 @@ a.underline {
   .highColor {
     fill: #23804D;
   }
-}
-
-/* Maintenance mode */
-
-.ui.maintenance.message {
-  float: right;
-  position: fixed;
-  z-index: 1000;
-  top: 14px;
-  left: 13rem;
-  margin: 0px;
-  padding: 5px 20px;
-  box-shadow: none !important;
 }
 
 /* NodesTree */
