@@ -257,7 +257,7 @@ export default class WidgetDynamicContent extends Component {
     render() {
         return (
             <div>
-                <div className={`ui ${this.state.loading?'active':''} small inline loader widgetLoader ${this.props.widget.definition.showHeader?'header':'noheader'}`}></div>
+                <div className={`ui ${this.state.loading?'active':''} small inline loader widgetLoader ${this.props.widget.definition.showHeader?'header':'noheader'}`} />
 
                 {
                     this.props.widget.definition.isReact ?
