@@ -40,7 +40,7 @@ export default class ToursButton extends React.Component {
             position: 'fixed',
             right: '20px',
             bottom: '20px',
-            zIndex: 1000,
+            zIndex: 9,
             opacity: this.state.hovered ? 1 : 0.5
         };
 
