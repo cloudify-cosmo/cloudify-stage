@@ -49,7 +49,7 @@
       "name": "Number of nodes",
       "width": 2,
       "height": 8,
-      "definition": "serversNum",
+      "definition": "nodesComputeNum",
       "x": 8,
       "y": 0
     },
