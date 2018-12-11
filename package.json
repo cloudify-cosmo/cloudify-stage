@@ -67,7 +67,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.83.0",
+    "semantic-ui-react": "^0.84.0",
     "tinycolor2": "^1.4.1",
     "yamljs": "^0.3.0"
   },
