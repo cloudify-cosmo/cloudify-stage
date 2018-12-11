@@ -5,13 +5,15 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Icon, Button, Divider, Form, Modal, Message} from './basic/index'
+import {Icon, Button, Form, Label, Modal, Message} from './basic/index'
 import EventBus from '../utils/EventBus';
 
 export default class InstallWidgetModal extends Component {
 
     constructor(props,context){
         super(props, context);
+
+        this.widgetFileRef = React.createRef();
 
         this.state = InstallWidgetModal.initialState;
     }
@@ -20,6 +22,7 @@ export default class InstallWidgetModal extends Component {
         open: false,
         loading: false,
         widgetUrl: '',
+        widgetFile: '',
         errors: {},
         scriptError: ''
     }
@@ -35,17 +38,24 @@ export default class InstallWidgetModal extends Component {
         onWidgetInstalled: ()=>Promise.resolve()
     };
 
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            this.widgetFileRef.current && this.widgetFileRef.current.reset();
+            this.setState(InstallWidgetModal.initialState);
+        }
+    }
+
     _installWidget() {
-        let widgetFile = this.refs.widgetFile.file();
+        let widgetUrl = this.state.widgetFile ? '' : this.state.widgetUrl;
 
         let errors = {};
 
-        if (_.isEmpty(this.state.widgetUrl) && !widgetFile) {
-            errors['widgetUrl']='Please select widget file or url';
-        }
-
-        if (!_.isEmpty(this.state.widgetUrl) && widgetFile) {
-            errors['widgetUrl']='Either widget file or url must be selected, not both';
+        if (!this.state.widgetFile) {
+            if (_.isEmpty(widgetUrl)) {
+                errors['widgetUrl'] = "Please provide the widget's archive URL or select a file";
+            } else if (!Stage.Utils.isUrl(widgetUrl)) {
+                errors['widgetUrl'] = "Please provide valid URL for widget's archive";
+            }
         }
 
         if (!_.isEmpty(errors)) {
@@ -56,7 +66,7 @@ export default class InstallWidgetModal extends Component {
         this.setState({loading: true, errors: {}, scriptError: ''});
 
         EventBus.on('window:error', this._showScriptError, this);
-        this.props.onWidgetInstalled(widgetFile, this.state.widgetUrl)
+        this.props.onWidgetInstalled(this.state.widgetFile, widgetUrl)
             .then(()=>{
                 EventBus.off('window:error', this._showScriptError);
                 this.setState({loading: false, open: false});
@@ -83,6 +93,23 @@ export default class InstallWidgetModal extends Component {
         this.setState(Form.fieldNameValue(field));
     }
 
+    _onWidgetUrlFocus() {
+        if (this.state.widgetFile) {
+            this.widgetFileRef.current && this.widgetFileRef.current.reset();
+            this._onWidgetFileReset();
+        }
+    }
+
+    _onWidgetFileChange(file) {
+        if (file) {
+            this.setState({errors: {}, widgetUrl: file.name, widgetFile: file});
+        }
+    }
+
+    _onWidgetFileReset() {
+        this.setState({errors: {}, widgetUrl: '', widgetFile: null});
+    }
+
     render() {
         return (
             <Modal trigger={this.props.trigger} dimmer="blurring" open={this.state.open} className="installWidgetModal"
@@ -90,18 +117,19 @@ export default class InstallWidgetModal extends Component {
                 <Modal.Header><Icon name="puzzle"/> {this.props.header}</Modal.Header>
                 <Modal.Content>
                     <Form errors={this.state.errors} ref="installForm" loading={this.state.loading}>
-                        <Form.Group>
-                            <Form.Field width="9" error={this.state.errors.widgetUrl}>
-                                <Form.Input label="URL" placeholder="Enter widget url" name="widgetUrl"
-                                            value={this.state.widgetUrl} onChange={this._handleInputChange.bind(this)}/>
-                            </Form.Field>
-                            <Form.Field width="1" style={{position:'relative'}}>
-                                <Divider vertical>Or</Divider>
-                            </Form.Field>
-                            <Form.Field width="8" error={this.state.errors.widgetUrl}>
-                                <Form.File placeholder="Select widget file" name="widgetFile" ref="widgetFile"/>
-                            </Form.Field>
-                        </Form.Group>
+                        <Form.Field label='Widget package' required
+                                    error={this.state.errors.widgetUrl}>
+                            <Form.UrlOrFile name="widget" value={this.state.widgetUrl}
+                                            placeholder="Provide the widget's archive URL or click browse to select a file"
+                                            onChangeUrl={this._handleInputChange.bind(this)}
+                                            onFocusUrl={this._onWidgetUrlFocus.bind(this)}
+                                            onBlurUrl={() => {}}
+                                            onChangeFile={this._onWidgetFileChange.bind(this)}
+                                            onResetFile={this._onWidgetFileReset.bind(this)}
+                                            label={<Label>{!this.state.widgetFile ? 'URL' : 'File'}</Label>}
+                                            fileInputRef={this.widgetFileRef}
+                            />
+                        </Form.Field>
                     </Form>
 
                     {this.state.scriptError && <Message error>{this.state.scriptError}</Message>}

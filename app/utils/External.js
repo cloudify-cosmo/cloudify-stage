@@ -11,6 +11,15 @@ import {UNAUTHORIZED_ERR} from '../utils/ErrorCodes';
 import log from 'loglevel';
 let logger = log.getLogger('External');
 
+/*
+Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofunky/class/draw
+
+[External|doDelete();doDownload();doGet();doPatch();doPost();doPut();doUpload()]<-[Internal|]
+[Internal]<-[WidgetBackend|]
+[Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getIp();getManagerUrl();getSelectedTenant();getSystemRoles()]
+
+*/
+
 export default class External {
 
     constructor(data) {
@@ -41,7 +50,7 @@ export default class External {
         return this._ajaxCall(url,'get',null,null,null,null,fileName);
     }
 
-    doUpload(url,params,files,method,parseResponse=true) {
+    doUpload(url,params,files,method,parseResponse=true,compressFile=false) {
         var actualUrl = this._buildActualUrl(url,params);
 
         logger.debug('Uploading file for url: '+url);
@@ -100,15 +109,56 @@ export default class External {
 
             if (files) {
                 if (files instanceof File) {
-                    formData = files; // Single file, simply pass it
+                    // Single file
+                    if (compressFile) {
+                        const JSZip = require('jszip');
+                        let reader = new FileReader();
+                        let zip = new JSZip();
+
+                        reader.onload = function(event) {
+                            let fileContent = event.target.result;
+                            zip
+                                .folder(files.name)
+                                .file(files.name, fileContent);
+                            zip
+                                .generateAsync({
+                                    type: 'blob',
+                                    compression: 'DEFLATE',
+                                    compressionOptions : {
+                                        level: 6
+                                    }
+                                })
+                                .then(function success(blob) {
+                                    formData = new File([blob], `${files.name}.zip`);
+                                    xhr.send(formData);
+                                }, function error(error) {
+                                    const errorMessage = `Cannot compress file. Error: ${error}`;
+                                    logger.error(errorMessage);
+                                    reject({message: errorMessage});
+                                });
+                        };
+
+                        reader.onerror = function(event) {
+                            const errorMessage = `Cannot read file. Error code: ${event.target.error.code}`;
+                            logger.error(errorMessage);
+                            reject({message: errorMessage});
+                        };
+
+                        reader.readAsText(files);
+                    } else {
+                        formData = files;
+                        xhr.send(formData);
+                    }
                 } else {
                     _.forEach(files, function (value, key) {
                         formData.append(key, value);
                     });
+                    xhr.send(formData);
                 }
+            } else {
+                xhr.send(formData);
             }
 
-            xhr.send(formData);
         });
     }
 

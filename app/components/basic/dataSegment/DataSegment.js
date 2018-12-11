@@ -141,12 +141,18 @@ export default class DataSegment extends Component {
     constructor(props,context) {
         super(props,context);
 
+        this.paginationRef = React.createRef();
+
         this.state = {
-            searchText: ''
+            searchText: '',
+            searching: false
         };
 
         this.debouncedSearch = _.debounce(() => {
-            this.refs.pagination.reset(this._fetchData.bind(this));
+            this.paginationRef.current.reset(() => {
+                return Promise.resolve(this._fetchData())
+                              .then(() => this.setState({searching: false}));
+            });
         }, 300, {'maxWait': 2000});
     }
 
@@ -171,7 +177,8 @@ export default class DataSegment extends Component {
         pageSize: PropTypes.number,
         className: PropTypes.string,
         sizeMultiplier: PropTypes.number,
-        searchable: PropTypes.bool
+        searchable: PropTypes.bool,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -181,14 +188,15 @@ export default class DataSegment extends Component {
         fetchSize: -1,
         pageSize: 0,
         sizeMultiplier: 3,
-        searchable: false
+        searchable: false,
+        noDataMessage: 'No data available'
     };
 
     _fetchData() {
         return this.props.fetchData({gridParams: {
             _search: this.state.searchText,
-            currentPage: this.refs.pagination.state.currentPage,
-            pageSize: this.refs.pagination.state.pageSize
+            currentPage: this.paginationRef.current.state.currentPage,
+            pageSize: this.paginationRef.current.state.pageSize
         }});
     }
 
@@ -212,24 +220,29 @@ export default class DataSegment extends Component {
                     (segmentAction || this.props.searchable) &&
                     <Form size="small" as="div">
                         <Form.Group inline>
-                            {this.props.searchable && <TableSearch search={this.state.searchText} onSearch={(searchText) => {
-                                this.setState({searchText}, this.debouncedSearch);
-                            }}/>}
+                            {
+                                this.props.searchable &&
+                                <TableSearch search={this.state.searchText}
+                                             searching={this.state.searching}
+                                             onSearch={(searchText) => this.setState({searchText, searching: true},
+                                                                                     this.debouncedSearch)}
+                                />
+                            }
                             {segmentAction}
                         </Form.Group>
                     </Form>
                 }
 
                 <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} sizeMultiplier={this.props.sizeMultiplier}
-                            fetchData={this._fetchData.bind(this)} fetchSize={this.props.fetchSize} ref="pagination">
+                            fetchData={this._fetchData.bind(this)} fetchSize={this.props.fetchSize} ref={this.paginationRef}>
                     {this.props.totalSize <= 0 && this.props.fetchSize <= 0 &&
                      (this.props.totalSize === 0 || this.props.fetchSize === 0) ?
                         <Message icon>
                             <Icon name="ban" />
-                            {this.props.fetchSize === 0 && this.refs.pagination && this.refs.pagination.state.currentPage > 1 ?
+                            {this.props.fetchSize === 0 && this.paginationRef.current && this.paginationRef.current.state.currentPage > 1 ?
                                 <span>No more data available</span>
                                 :
-                                <span>No data available</span>
+                                <span>{this.props.noDataMessage}</span>
                             }
                         </Message>
                         :

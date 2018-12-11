@@ -16,7 +16,8 @@ export default class BlueprintActionButtons extends React.Component {
             showModal: false,
             modalType: '',
             loading: false,
-            error: null
+            error: null,
+            force: false
         }
     }
 
@@ -27,7 +28,7 @@ export default class BlueprintActionButtons extends React.Component {
     }
 
     _showModal(type) {
-        this.setState({modalType: type, showModal: true});
+        this.setState({modalType: type, showModal: true, force: false});
     }
 
     _hideModal() {
@@ -38,11 +39,15 @@ export default class BlueprintActionButtons extends React.Component {
         return this.state.modalType === type && this.state.showModal;
     }
 
+    _handleForceChange(event, field) {
+        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    }
+
     _deleteBlueprint() {
         this.props.toolbox.loading(true);
         this.setState({loading: true});
         let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions.doDelete(this.props.blueprint).then(()=> {
+        actions.doDelete(this.props.blueprint, this.state.force).then(()=> {
             this.props.toolbox.getEventBus().trigger('blueprints:refresh');
             this.setState({loading: false, error: null});
             this._hideModal();
@@ -60,8 +65,8 @@ export default class BlueprintActionButtons extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, Button, Confirm} = Stage.Basic;
-        let {DeployBlueprintModal} = Stage.Common;
+        let {ErrorMessage, Button} = Stage.Basic;
+        let {DeleteConfirm, DeployBlueprintModal} = Stage.Common;
 
         let blueprintId = this.props.blueprint.id;
 
@@ -82,10 +87,13 @@ export default class BlueprintActionButtons extends React.Component {
                                       onHide={this._hideModal.bind(this)}
                                       toolbox={this.props.toolbox}/>
 
-                <Confirm content={`Are you sure you want to remove blueprint ${blueprintId}?`}
-                         open={this._isShowModal(BlueprintActionButtons.DELETE_ACTION)}
-                         onConfirm={this._deleteBlueprint.bind(this, blueprintId)}
-                         onCancel={this._hideModal.bind(this)} className="blueprintRemoveConfirm"/>
+                <DeleteConfirm resourceName={`blueprint ${blueprintId}`}
+                               force={this.state.force}
+                               open={this._isShowModal(BlueprintActionButtons.DELETE_ACTION)}
+                               onConfirm={this._deleteBlueprint.bind(this)}
+                               onCancel={this._hideModal.bind(this)}
+                               onForceChange={this._handleForceChange.bind(this)}
+                               className="blueprintRemoveConfirm" />
 
             </div>
         );

@@ -11,6 +11,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const BrotliPlugin = require('brotli-webpack-plugin');
 
+const Consts = require('./backend/consts');
+
 const getWidgetEntries = () => {
     return glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
         let name = item.replace('./widgets', '').replace('/src', '');
@@ -62,13 +64,23 @@ const rules = [
             }
         }]
     }, {
-        test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif)(\?\S*)?$/,
+        test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/,
         use: [{
             loader: 'url-loader',
 
             options: {
                 limit: 100000,
-                name: '[name].[ext]'
+                name: 'fonts/[name].[ext]'
+            }
+        }]
+    }, {
+        test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/,
+        use: [{
+            loader: 'url-loader',
+
+            options: {
+                limit: 100000,
+                name: 'images/[name].[ext]'
             }
         }]
     }
@@ -106,8 +118,8 @@ module.exports = [
         ],
         output: {
             path: path.join(__dirname, 'dist'),
-            filename: '[name].bundle.js',
-            publicPath: '/stage'
+            filename: 'js/[name].bundle.js',
+            publicPath: Consts.CONTEXT_PATH
         },
         optimization: {
             splitChunks: {
@@ -126,26 +138,26 @@ module.exports = [
             new CopyWebpackPlugin([
                 {
                     from: 'app/images',
-                    to: 'app/images'
+                    to: 'images'
                 }
             ]),
             new CopyWebpackPlugin([
                 {
                     from: 'widgets',
-                    to: 'widgets',
+                    to: 'appData/widgets',
                     ignore: ['**/src/*']
                 }
             ]),
             new CopyWebpackPlugin([
                 {
                     from: 'templates',
-                    to: 'templates'
+                    to: 'appData/templates'
                 }
             ]),
             new CopyWebpackPlugin([
                 {
                     from: 'tours',
-                    to: 'tours'
+                    to: 'appData/tours'
                 }
             ]),
             new HtmlWebpackPlugin({
@@ -170,9 +182,9 @@ module.exports = [
         context: path.join(__dirname),
         entry: getWidgetEntries(),
         output: {
-            path: path.join(__dirname, 'dist'),
+            path: path.join(__dirname, 'dist/appData'),
             filename: 'widgets/[name]',
-            publicPath: '/stage'
+            publicPath: Consts.CONTEXT_PATH
         },
         plugins: [
             new CopyWebpackPlugin([
@@ -192,9 +204,9 @@ module.exports = [
         context: path.join(__dirname),
         entry: glob.sync('./widgets/common/src/*.js'),
         output: {
-            path: path.join(__dirname, 'dist/widgets'),
+            path: path.join(__dirname, 'dist/appData/widgets'),
             filename: 'common/common.js',
-            publicPath: '/stage'
+            publicPath: Consts.CONTEXT_PATH
         },
         plugins: compressionPlugins,
         module: {

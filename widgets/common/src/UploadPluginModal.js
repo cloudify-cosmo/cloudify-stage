@@ -2,52 +2,65 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
+import PropTypes from 'prop-types';
+import React from 'react';
+
 class UploadPluginModal extends React.Component {
 
-    constructor(props,context) {
-        super(props,context);
+    constructor(props) {
+        super(props);
 
-        this.state = {...UploadPluginModal.initialState}
+        this.state = {...UploadPluginModal.initialState};
     }
+
+    static propTypes = {
+        open: PropTypes.bool.isRequired,
+        onHide: PropTypes.func.isRequired,
+        toolbox: PropTypes.object.isRequired
+    };
 
     static initialState = {
         loading: false,
         wagonUrl: '',
+        wagonFile: null,
         yamlUrl: '',
+        yamlFile: null,
         errors: {},
         visibility: Stage.Common.Consts.defaultVisibility
+    };
+
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            this.setState(UploadPluginModal.initialState);
+        }
     }
 
-    onApprove() {
-        this._submitUpload();
-        return false;
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props.open, nextProps.open) || !_.isEqual(this.state, nextState);
     }
+    
 
-    onCancel() {
-        this.props.onHide();
-        return true;
-    }
-
-    _submitUpload() {
-        let wagonFile = this.refs.wagonFile.file();
-        let yamlFile = this.refs.yamlFile.file();
+    uploadPlugin() {
+        let wagonUrl = this.state.wagonFile ? '' : this.state.wagonUrl;
+        let yamlUrl = this.state.yamlFile ? '' : this.state.yamlUrl;
 
         let errors = {};
 
-        if (_.isEmpty(this.state.wagonUrl) && !wagonFile) {
-            errors['wagon']='Please select wagon file or url';
+        if (!this.state.wagonFile) {
+            if (_.isEmpty(wagonUrl)) {
+                errors['wagonUrl'] = 'Please select wagon file or provide URL to wagon file';
+            } else if (!Stage.Utils.isUrl(wagonUrl)) {
+                errors['wagonUrl'] = 'Please provide valid URL for wagon file';
+            }
         }
 
-        if (!_.isEmpty(this.state.wagonUrl) && wagonFile) {
-            errors['wagon']='Either wagon file or url must be selected, not both';
-        }
-
-        if (_.isEmpty(this.state.yamlUrl) && !yamlFile) {
-            errors['yaml']='Please select yaml file or url';
-        }
-
-        if (!_.isEmpty(this.state.yamlUrl) && yamlFile) {
-            errors['yaml']='Either yaml file or url must be selected, not both';
+        if (!this.state.yamlFile) {
+            if (_.isEmpty(yamlUrl)) {
+                errors['yamlUrl'] = 'Please select YAML file or provide URL to YAML file';
+            } else if (!Stage.Utils.isUrl(yamlUrl)) {
+                errors['yamlUrl'] = 'Please provide valid URL for YAML file';
+            }
         }
 
         if (!_.isEmpty(errors)) {
@@ -59,21 +72,21 @@ class UploadPluginModal extends React.Component {
         this.setState({loading: true});
 
         let actions = new Stage.Common.PluginActions(this.props.toolbox);
-        actions.doUpload(this.state.visibility, this.state.wagonUrl, this.state.yamlUrl, wagonFile, yamlFile).then(()=>{
-            this.setState({errors: {}, loading: false, open: false});
-            this.props.onHide();
+        actions.doUpload(this.state.visibility, wagonUrl, yamlUrl, this.state.wagonFile, this.state.yamlFile).then(()=>{
+            this.setState({errors: {}, loading: false}, this.props.onHide);
             this.props.toolbox.refresh();
         }).catch(err=>{
             this.setState({errors: {error: err.message}, loading: false});
         });
     }
 
-    _handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    onFormFieldChange(fields) {
+        this.setState(fields);
     }
-
+    
     render() {
-        let {Modal, Icon, Form, ApproveButton, CancelButton, VisibilityField} = Stage.Basic;
+        let {ApproveButton, CancelButton, Icon, Modal, VisibilityField} = Stage.Basic;
+        let {UploadPluginForm} = Stage.Common;
 
         return (
             <Modal open={this.props.open} onClose={this.props.onHide}>
@@ -84,56 +97,23 @@ class UploadPluginModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}
-                          onErrorsDismiss={() => this.setState({errors: {}})}>
-
-                        <Form.Group>
-                            <Form.Field width="9" error={this.state.errors.wagon}>
-                                <Form.Input label="URL" placeholder="Enter wagon url" name="wagonUrl"
-                                            value={this.state.wagonUrl} onChange={this._handleInputChange.bind(this)}
-                                            onBlur={()=>this.state.wagonUrl ? this.refs.wagonFile.reset() : ''}/>
-                            </Form.Field>
-                            <Form.Field width="1" style={{position:'relative'}}>
-                                <div className="ui vertical divider">
-                                    Or
-                                </div>
-                            </Form.Field>
-                            <Form.Field width="8" error={this.state.errors.wagon}>
-                                <Form.File placeholder="Select wagon file" name="wagonFile" ref="wagonFile"
-                                           onChange={(file)=>file ? this.setState({wagonUrl: ''}) : ''}/>
-
-                            </Form.Field>
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Field width="9" error={this.state.errors.yaml}>
-                                <Form.Input label="URL" placeholder="Enter yaml url" name="yamlUrl"
-                                            value={this.state.yamlUrl} onChange={this._handleInputChange.bind(this)}
-                                            onBlur={()=>this.state.yamlUrl ? this.refs.yamlFile.reset() : ''}/>
-                            </Form.Field>
-                            <Form.Field width="1" style={{position:'relative'}}>
-                                <div className="ui vertical divider">
-                                    Or
-                                </div>
-                            </Form.Field>
-                            <Form.Field width="8" error={this.state.errors.yaml}>
-                                <Form.File placeholder="Select yaml file" name="yamlFile" ref="yamlFile"
-                                           onChange={(file)=>file ? this.setState({yamlUrl: ''}) : ''}/>
-
-                            </Form.Field>
-                        </Form.Group>
-
-                    </Form>
+                    <UploadPluginForm wagonUrl={this.state.wagonUrl}
+                                      wagonFile={this.state.wagonFile}
+                                      yamlUrl={this.state.yamlUrl}
+                                      yamlFile={this.state.yamlFile}
+                                      errors={this.state.errors}
+                                      loading={this.state.loading}
+                                      onChange={this.onFormFieldChange.bind(this)} />
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Upload" icon="upload" color="green"/>
+                    <CancelButton onClick={this.props.onHide} disabled={this.state.loading} />
+                    <ApproveButton onClick={this.uploadPlugin.bind(this)} disabled={this.state.loading} content="Upload" icon="upload" color="green"/>
                 </Modal.Actions>
             </Modal>
         );
     }
-};
+}
 
 Stage.defineCommon({
     name: 'UploadPluginModal',

@@ -6,6 +6,7 @@ const DEPLOYMENT_NAME = 'nodecellar0';
 const BLUEPRINT_NAME = 'nodecellar';
 const BLUEPRINT_URL = 'https://github.com/cloudify-cosmo/cloudify-nodecellar-example/archive/master.zip';
 const BLUEPRINT_YAML_FILENAME = 'local-blueprint.yaml';
+const BLUEPRINT_INPUTS_FILENAME = 'nodecellarInputs2.yaml';
 const WORKFLOW_VERIFICATION_TIMEOUT = 20000;
 
 module.exports = {
@@ -83,20 +84,20 @@ module.exports = {
             .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
     },
 
-    // TODO: Implement when backend is ready
-    // 'Deployment update': function (client) {
-    //     let page = client.page.deployments();
-    //
-    //     page.section.deploymentsTable
-    //         .checkIfDeploymentPresent(DEPLOYMENT_NAME)
-    //         .clickEdit(DEPLOYMENT_NAME);
-    //     page.section.updateDeploymentModal
-    //         .fillIn(BLUEPRINT_URL, BLUEPRINT_YAML_FILENAME)
-    //         .clickUpdate();
-    //     client.pause(2000);
-    //     page.section.deploymentsTable
-    //         .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
-    // },
+    'Deployment update': function (client) {
+        let page = client.page.deployments();
+
+        page.section.deploymentsTable
+            .checkIfDeploymentPresent(DEPLOYMENT_NAME)
+            .clickUpdate(DEPLOYMENT_NAME);
+        page.section.updateDeploymentModal
+            .selectOptionInDropdown('@blueprint', page.section.updateDeploymentModal.elements.blueprint.selector, BLUEPRINT_NAME)
+            .setElementValue('@inputsFile', client.page.resources().props.fileByName(BLUEPRINT_INPUTS_FILENAME, client.globals))
+            .clickUpdate();
+        client.pause(2000);
+        page.section.deploymentsTable
+            .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
+    },
 
     'Deployment remove': function (client) {
         let page = client.page.deployments();
@@ -117,8 +118,11 @@ module.exports = {
 
     after(client) {
         client
+            .moveToEditMode()
+            .addPage() // To remove deployment and blueprint with fresh data in filter widgets
             .removeDeployment(DEPLOYMENT_NAME)
             .removeBlueprint(BLUEPRINT_NAME)
+            .resetPages()
             .end();
     }
 };

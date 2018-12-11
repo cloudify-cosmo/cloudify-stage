@@ -34,7 +34,6 @@ class Toolbox {
         this._Internal = new Internal(state.manager || {});
         this._Context = new Context(this.store);
         this.widgetDefinitions = state.widgetDefinitions || [];
-        this._widgetsConfig = state.config.widgets;
     }
 
     drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName) {
@@ -66,8 +65,9 @@ class Toolbox {
     }
 
     getWidgetBackend() {
-        var state = this.store.getState();
-        return new WidgetBackend(this.getWidgetDefinitionId(), state.manager || {});
+        let state = this.store.getState();
+        let widget = this.getWidget();
+        return new WidgetBackend(_.get(widget, 'definition.id', ''), state.manager || {});
     }
 
     getExternal(basicAuth) {
@@ -83,15 +83,11 @@ class Toolbox {
         return this._Context;
     }
 
-    getConfig() {
-        return this._widgetsConfig;
-    }
-
     refresh() {}
 
     loading(show) {}
 
-    getWidgetDefinitionId() {}
+    getWidget() {}
 }
 
 var toolbox = null;
@@ -100,15 +96,15 @@ let createToolbox = (store) =>{
     toolbox = new Toolbox(store);
 };
 
-let getToolbox = (onRefresh, onLoading, widgetDefinitionId)=>{
+let getToolbox = (onRefresh, onLoading, widget)=>{
     return new Proxy(toolbox,{
         get: (target, name)=> {
             if (name === 'refresh') {
                 return onRefresh;
             } else if (name === 'loading') {
                 return onLoading;
-            } else if (name === 'getWidgetDefinitionId') {
-                return () => widgetDefinitionId;
+            } else if (name === 'getWidget') {
+                return () => widget;
             } else {
                 return target[name];
             }

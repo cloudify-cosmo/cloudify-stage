@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 24/03/2017.
  */
 
-import Actions from './actions';
-
 import PropTypes from 'prop-types';
 
 export default class UpdateModal extends React.Component {
@@ -42,14 +40,14 @@ export default class UpdateModal extends React.Component {
         return true;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             this.setState({...UpdateModal.initialState, loading: true});
 
-            let actions = new Actions(this.props.toolbox);
-            actions.doGet(nextProps.secret.key).then((secret)=>{
+            let actions = new Stage.Common.SecretActions(this.props.toolbox);
+            actions.doGet(this.props.secret.key).then((secret)=>{
                 let canUpdateSecret = true;
-                if (nextProps.secret.is_hidden_value && _.isEmpty(secret.value)) {
+                if (this.props.secret.is_hidden_value && _.isEmpty(secret.value)) {
                     canUpdateSecret = false;
                 }
                 this.setState({secretValue: secret.value, loading: false, errors: {}, canUpdateSecret});
@@ -74,7 +72,7 @@ export default class UpdateModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        let actions = new Actions(this.props.toolbox);
+        let actions = new Stage.Common.SecretActions(this.props.toolbox);
         actions.doUpdate(this.props.secret.key, this.state.secretValue).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.onHide();
@@ -121,7 +119,7 @@ export default class UpdateModal extends React.Component {
                     <Modal.Actions>
                         <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
                         {
-                            (!this.props.secret.is_hidden_value || !_.isEmpty(this.props.secret.value)) &&
+                            canUpdateSecret &&
                             <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading}
                                            content="Update" icon='edit' color="green"/>
                         }

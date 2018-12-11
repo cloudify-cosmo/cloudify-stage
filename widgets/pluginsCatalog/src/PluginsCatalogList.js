@@ -67,11 +67,12 @@ export default class PluginsCatalogList extends React.Component {
   |--------------------------------------------------------------------------
   */
   render () {
-    let {DataTable, Image, Label, Message, Button} = Stage.Basic;
+    const NO_DATA_MESSAGE = 'There are no Plugins available in catalog. Check widget\'s configuration.';
+    let {DataTable, Image, Message, Button} = Stage.Basic;
 
-    let distro = `${this.props.toolbox.getManager()._data.distribution.toLowerCase()} ${this.props.toolbox.getManager()._data.distroRelease.toLowerCase()}`;
+    const distro = `${this.props.toolbox.getManager().getDistributionName().toLowerCase()} ${this.props.toolbox.getManager().getDistributionRelease().toLowerCase()}`;
     let items = _.map (this.props.items, item => {
-      var wagon = _.find(item.wagons, (wagon) => {
+      let wagon = _.find(item.wagons, (wagon) => {
           return wagon.name.toLowerCase() === distro || wagon.name.toLowerCase() === 'any';
       });
 
@@ -94,7 +95,9 @@ export default class PluginsCatalogList extends React.Component {
             {this.state.success}
           </Message>}
 
-        <DataTable noDataAvailable={items.length === 0} selectable={true}>
+        <DataTable noDataAvailable={items.length === 0}
+                   selectable={true}
+                   noDataMessage={NO_DATA_MESSAGE}>
           <DataTable.Column  width="2%" />
           <DataTable.Column label="Name" name="plugin" width="20%" />
           <DataTable.Column label="Description" name="description" width="60%" />

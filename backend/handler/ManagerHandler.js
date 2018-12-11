@@ -25,7 +25,7 @@ module.exports = (function() {
 
     function updateOptions(options, method, timeout, headers, data) {
         if (caFile) {
-            logger.debug('Adding CA file to Agent Options. CA File =', caFile);
+            logger.debug('Adding CA file to Agent Options');
             options.agentOptions = {
                 ca: caFile
             };
@@ -41,7 +41,7 @@ module.exports = (function() {
             options.json = data;
             try {
                 data = JSON.stringify(data);
-                options.headers['content-length'] = Buffer.byteLength(data);
+                options.headers = {...options.headers, 'content-length':  Buffer.byteLength(data)};
             } catch (error) {
                 logger.error('Invalid payload data. Error:', error)
             }
@@ -53,7 +53,7 @@ module.exports = (function() {
         var requestOptions = {};
         this.updateOptions(requestOptions, method, timeout, headers, data);
 
-        logger.debug(`Preparing ${method} request to manager with options: ${JSON.stringify(requestOptions)}`);
+        logger.debug(`Preparing ${method} request to manager: ${requestUrl}`);
         return RequestHandler.request(method, requestUrl, requestOptions, onSuccess, onError);
     }
 

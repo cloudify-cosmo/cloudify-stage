@@ -11,13 +11,14 @@ Stage.defineWidget({
     color : 'blue',
     showHeader: false,
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintNum'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {id: 'page', name: 'Page to open on click', description: 'Page to open when user clicks on widget content',
-         type: Stage.Basic.GenericField.CUSTOM_TYPE, component: Stage.Basic.PageFilter}
+         type: Stage.Basic.GenericField.CUSTOM_TYPE, default: 'local_blueprints', component: Stage.Basic.PageFilter}
     ],
     fetchUrl: '[manager]/blueprints?_include=id&_size=1',
 

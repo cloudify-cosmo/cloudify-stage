@@ -9,19 +9,17 @@ import { setEditMode } from '../actions/config';
 import { minimizeWidgets } from '../actions/widgets';
 import Consts from '../utils/consts';
 import stageUtils from '../utils/stageUtils';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 const mapStateToProps = (state, ownProps) => {
     var isTemplateManagementActive = !!state.templateManagement.templates || !!state.templateManagement.page;
 
     var canEditMode = !isTemplateManagementActive && stageUtils.isUserAuthorized(Consts.permissions.STAGE_EDIT_MODE, state.manager);
-    var canMaintenanceMode = !isTemplateManagementActive && stageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager);
     var canConfigure = stageUtils.isUserAuthorized(Consts.permissions.STAGE_CONFIGURE, state.manager);
     var canTemplateManagement = state.config.mode === Consts.MODE_MAIN && stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager);
     return {
         isEditMode: canEditMode ? (state.config.isEditMode || false) : false,
         canEditMode,
-        canMaintenanceMode,
         canConfigure,
         canTemplateManagement
     }
@@ -41,9 +39,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onTemplates: () => {
             dispatch(push('/template_management'));
         },
-        onReset: ownProps.onReset,
-        onMaintenance: ownProps.onMaintenance,
-        onConfigure: ownProps.onConfigure
+        onReset: ownProps.onReset
     }
 };
 

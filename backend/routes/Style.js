@@ -2,21 +2,24 @@
  * Created by jakubniezgoda on 03/04/2017.
  */
 
-var express = require('express');
-var path = require('path');
-var fs = require('fs');
-var ejs = require('ejs');
-var config = require('../config').get();
+let express = require('express');
+let path = require('path');
+let fs = require('fs');
+let ejs = require('ejs');
 
-var router = express.Router();
+let config = require('../config').get();
+let router = express.Router();
+const Consts = require('../consts');
+const Utils = require('../utils');
+var logger = require('log4js').getLogger('Style');
 
-var styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
+let styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
 
-var DEFAULT_MAIN_COLOR = '#000069';
-var DEFAULT_HEADER_TEXT_COLOR = '#d8e3e8';
-var DEFAULT_LOGO_URL = config.app.contextPath + '/app/images/Cloudify-logo.png';
-var DEFAULT_SIDEBAR_COLOR = '#d8e3e8';
-var DEFAULT_SIDEBAR_TEXT_COLOR = '#000000';
+const DEFAULT_MAIN_COLOR = '#000069';
+const DEFAULT_HEADER_TEXT_COLOR = '#d8e3e8';
+const DEFAULT_LOGO_URL = Consts.CONTEXT_PATH + '/images/Cloudify-logo.png';
+const DEFAULT_SIDEBAR_COLOR = '#d8e3e8';
+const DEFAULT_SIDEBAR_TEXT_COLOR = '#000000';
 
 function shadeColor(color, percent) {
     var num=parseInt(color.slice(1),16); // Remove the '#'
@@ -28,10 +31,10 @@ function shadeColor(color, percent) {
 }
 
 router.get('/', function(req, res, next) {
-    var whiteLabel = config.app.whiteLabel;
-    var stylesheetTemplate = fs.readFileSync(styleTemplateFile, 'utf8');
+    let whiteLabel = config.app.whiteLabel;
+    let stylesheetTemplate = fs.readFileSync(styleTemplateFile, 'utf8');
 
-    var stylesheet = ejs.render(stylesheetTemplate, {
+    let stylesheet = ejs.render(stylesheetTemplate, {
         logoUrl: whiteLabel.enabled && whiteLabel.logoUrl || DEFAULT_LOGO_URL,
         mainColor: whiteLabel.enabled && whiteLabel.mainColor || DEFAULT_MAIN_COLOR,
         headerTextColor: whiteLabel.enabled && whiteLabel.headerTextColor || DEFAULT_HEADER_TEXT_COLOR,
@@ -39,6 +42,19 @@ router.get('/', function(req, res, next) {
         sideBarHoverActiveColor: shadeColor(whiteLabel.enabled && whiteLabel.sidebarColor || DEFAULT_SIDEBAR_COLOR,0.1),
         sidebarTextColor: whiteLabel.enabled && whiteLabel.sidebarTextColor || DEFAULT_SIDEBAR_TEXT_COLOR
     });
+
+    if (whiteLabel.enabled && !!whiteLabel.customCssPath) {
+        const customCssPath = Utils.getResourcePath(whiteLabel.customCssPath, true);
+        try {
+            const customCss = fs.readFileSync(customCssPath, 'utf8');
+            logger.log('Adding CSS content from', customCssPath);
+            stylesheet += '\n/* START - CUSTOM CSS */\n';
+            stylesheet += customCss;
+            stylesheet += '\n/* END - CUSTOM CSS */\n';
+        } catch (e) {
+            logger.error('Custom CSS file cannot be found in', customCssPath);
+        }
+    }
 
     res.header('content-type', 'text/css');
     res.send(stylesheet);

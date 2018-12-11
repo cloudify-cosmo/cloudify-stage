@@ -61,9 +61,13 @@ export default class FormDivider extends Component {
         className: PropTypes.string
     };
 
+    static defaultProps = {
+        className: ''
+    };
+
     render() {
         return (
-            <h4 className={`ui dividing header ${this.props.className}`}>
+            <h4 className={`ui dividing header ${this.props.className}`} {..._.omit(this.props, _.keys(FormDivider.propTypes))}>
                 {this.props.children}
             </h4>
         );

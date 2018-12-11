@@ -29,8 +29,8 @@ export default class PasswordModal extends React.Component {
         return true;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             this.setState(PasswordModal.initialState);
         }
     }

@@ -18,9 +18,11 @@ import GenericField from './form/GenericField';
 import TimeFilter from './TimeFilter';
 import MetricFilter from './MetricFilter';
 import NodeFilter from './NodeFilter';
+import NodeInstancesFilter from './NodeInstancesFilter';
 import Form from './form/Form';
-import { Input, Radio, Checkbox, Button, Icon, Message, Table, Header, Item, Sidebar, Card,
-         Segment, Accordion, List, Grid, Divider, Label, Loader, Image, Modal, Breadcrumb } from 'semantic-ui-react'
+// NOTE: When you update this list, please also update list in: doc/index.md
+import { Accordion, Breadcrumb, Button, Card, Checkbox, Container, Divider, Grid, Header, Icon, Image, Input, Item,
+         Label, List, Loader, Message, Modal, Portal, Progress, Radio, Segment, Sidebar, Step, Table } from 'semantic-ui-react';
 import Graphs from './graphs';
 import PopupMenu from './PopupMenu';
 import Dropdown from './Dropdown';
@@ -28,11 +30,20 @@ import Menu from './Menu';
 import NodesTree from './NodesTree';
 import SplitterLayout from 'react-splitter-layout';
 import Popup from './Popup';
+import VisibilityIcon from './VisibilityIcon';
 import VisibilityField from '../../containers/VisibilityField';
 import ResourceVisibility from '../../containers/ResourceVisibility';
 import PopupConfirm from './PopupConfirm';
+import PopupHelp from './PopupHelp';
 import PageFilter from './PageFilter';
+import ParameterValue from './ParameterValue';
+import ParameterValueDescription from './ParameterValueDescription';
+import CopyToClipboardButton from './CopyToClipboardButton';
+import RevertToDefaultIcon from './RevertToDefaultIcon';
+import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
+import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
 import {Link} from 'react-router-dom';
+import Wizard from './wizard';
 
 export {
     Accordion,
@@ -45,6 +56,8 @@ export {
     Checkbox,
     Checkmark,
     Confirm,
+    Container,
+    CopyToClipboardButton,
     DataSegment,
     DataTable,
     Divider,
@@ -67,23 +80,35 @@ export {
     Link,
     Loader,
     Loading,
+    MaintenanceModeActivationButton,
+    MaintenanceModeModal,
     Menu,
     Message,
     MetricFilter,
     Modal,
     NodeFilter,
+    NodeInstancesFilter,
     NodesTree,
+    ParameterValue,
+    ParameterValueDescription,
     PageFilter,
     Popup,
     PopupConfirm,
+    PopupHelp,
     PopupMenu,
-    VisibilityField,
-    ResourceVisibility,
+    Portal,
+    Progress,
     Radio,
+    ResourceVisibility,
     ReadmeModal,
+    RevertToDefaultIcon,
     Segment,
     Sidebar,
     SplitterLayout,
+    Step,
     Table,
-    TimeFilter
+    TimeFilter,
+    VisibilityIcon,
+    VisibilityField,
+    Wizard
 };

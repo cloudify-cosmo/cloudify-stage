@@ -16,7 +16,7 @@ export default class BlueprintSources extends React.Component {
         filename: '',
         error: '',
         type: 'json'
-    }
+    };
 
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props.widget, nextProps.widget)
@@ -24,8 +24,8 @@ export default class BlueprintSources extends React.Component {
             || !_.isEqual(this.props.data, nextProps.data);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.data !== nextProps.data ) {
+    componentDidUpdate(prevProps) {
+        if (prevProps.data !== this.props.data) {
             this.setState(BlueprintSources.initialState);
         }
     }
@@ -42,7 +42,7 @@ export default class BlueprintSources extends React.Component {
 
         var actions = new Actions(this.props.toolbox);
         actions.doGetFileContent(path).then(data => {
-            var type = 'basic';
+            let type = '';
             if (_.endsWith(path, '.yaml') || _.endsWith(path, '.yml')) {
                 type = 'yaml';
             } else if (_.endsWith(path, '.py')) {
@@ -95,7 +95,7 @@ export default class BlueprintSources extends React.Component {
                             <div className="alignHighlight">
                                 <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
                                 <Label attached='top right' size="small" onClick={()=> this.setState({maximized: true})}>
-                                    <Icon name="maximize" link/>{this.state.filename}
+                                    <Icon name="expand" link/>{this.state.filename}
                                 </Label>
                                 <Modal open={this.state.maximized} onClose={()=> this.setState({maximized: false})} >
                                     <HighlightText className={this.state.type}>{this.state.content}</HighlightText>

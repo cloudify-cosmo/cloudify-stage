@@ -49,15 +49,13 @@ export default class Popup extends Component {
     static Content = PopupSemanticUiReact.Content;
     static Header = PopupSemanticUiReact.Header;
 
-    static propTypes = Popup.propTypes;
-
     render() {
         let props = this.props;
         let trigger = this.props.trigger;
         let children = this.props.children;
 
         React.Children.forEach(this.props.children, function (child) {
-            if (child.type && areComponentsEqual(child.type, Wrapper)) {
+            if (!!child && !!child.type && areComponentsEqual(child.type, Wrapper)) {
                 trigger = child.props.children;
                 children = _.without(props.children, child);
             }

@@ -13,6 +13,7 @@ Stage.defineWidget({
     showHeader: false,
     showBorder: false,
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintUploadButton'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 

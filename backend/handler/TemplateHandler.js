@@ -1,28 +1,24 @@
-'use strict';
 /**
  * Created by pposel on 24/02/2017.
  */
 
-var db = require('../db/Connection');
-var fs = require('fs-extra');
-var pathlib = require('path');
-var mkdirp = require('mkdirp');
-var _ = require('lodash');
-var config = require('../config').get();
-var ServerSettings = require('../serverSettings');
-var Consts = require('../consts');
-var ResourceTypes = require('../db/types/ResourceTypes');
-var AuthHandler = require('./AuthHandler');
+const db = require('../db/Connection');
+const fs = require('fs-extra');
+const pathlib = require('path');
+const mkdirp = require('mkdirp');
+const _ = require('lodash');
 
-var logger = require('log4js').getLogger('TemplateHandler');
+const config = require('../config').get();
 
-//TODO: Temporary solution, the approach needs to be think over thoroughly
-var builtInTemplatesFolder = pathlib.resolve('../templates');
-var userTemplatesFolder = pathlib.resolve(`..${Consts.USER_DATA_PATH}/templates`);
-if (!fs.existsSync(builtInTemplatesFolder)) {
-    builtInTemplatesFolder = pathlib.resolve('../dist/templates');
-    userTemplatesFolder = pathlib.resolve(`../dist${Consts.USER_DATA_PATH}/templates`);
-}
+const ServerSettings = require('../serverSettings');
+const Utils = require('../utils');
+const ResourceTypes = require('../db/types/ResourceTypes');
+const AuthHandler = require('./AuthHandler');
+
+const logger = require('log4js').getLogger('TemplateHandler');
+
+const builtInTemplatesFolder = Utils.getResourcePath('templates', false);
+const userTemplatesFolder = Utils.getResourcePath('templates', true);
 const builtInPagesFolder = pathlib.resolve(builtInTemplatesFolder, 'pages');
 const userPagesFolder = pathlib.resolve(userTemplatesFolder, 'pages');
 
@@ -34,14 +30,14 @@ module.exports = (function() {
     }
 
     function _getBuiltInTemplates() {
-        var initials = [];
+        let initials = [];
         if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN) {
             initials = _.pick(config.app.initialTemplate, [ServerSettings.MODE_COMMUNITY, ServerSettings.MODE_CUSTOMER]);
         } else {
             initials = _.omit(config.app.initialTemplate, ServerSettings.settings.mode);
         }
 
-        var excludes = _.reduce(initials, (result, value) => _.concat(result, _.isObject(value) ? _.values(value) : value), []);
+        const excludes = _.reduce(initials, (result, value) => _.concat(result, _.isObject(value) ? _.values(value) : value), []);
 
         return fs.readdirSync(pathlib.resolve(builtInTemplatesFolder))
             .filter(file => fs.lstatSync(pathlib.resolve(builtInTemplatesFolder, file)).isFile()
@@ -50,11 +46,11 @@ module.exports = (function() {
     }
 
     function _getInitialTemplateConfig() {
-        var data = {};
+        let data = {};
         _.forOwn(config.app.initialTemplate, function(value, role) {
             if (_.isObject(value)) {
                 _.forOwn(value, function(template, tenant) {
-                    var item = data[template] || {roles: [], tenants: []};
+                    let item = data[template] || {roles: [], tenants: []};
                     item.tenants.push(tenant);
                     if (_.indexOf(item.roles, role) < 0) {
                         item.roles.push(role);
@@ -62,7 +58,7 @@ module.exports = (function() {
                     data[template] = item;
                 });
             } else {
-                var item = data[value] || {roles: [], tenants: []};
+                let item = data[value] || {roles: [], tenants: []};
                 item.roles.push(role);
                 data[value] = item;
             }
@@ -72,8 +68,8 @@ module.exports = (function() {
     }
 
     function listTemplates() {
-        var initial = _getInitialTemplateConfig();
-        var builtInTemplates = _.map(_getBuiltInTemplates(), (template) => ({id: template, data: initial[template], custom: false}));
+        const initial = _getInitialTemplateConfig();
+        const builtInTemplates = _.map(_getBuiltInTemplates(), (template) => ({id: template, data: initial[template], custom: false}));
 
         return _getUserTemplates()
             .then(userTemplates => _.map(userTemplates, (template) => _.extend(template, {custom: true})))
@@ -91,17 +87,17 @@ module.exports = (function() {
     }
 
     function _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant) {
-        var rbac = AuthHandler.getRBAC();
-        var roles = rbac.roles;
+        const rbac = AuthHandler.getRBAC();
+        const roles = rbac.roles;
 
         logger.debug('Inputs for role calculation: ' + 'systemRole=' + systemRole +
                      ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
 
-        var userRoles = _.compact(_.concat(_.get(tenantsRoles[tenant], 'roles', []), systemRole, _.keys(groupSystemRoles)));
+        const userRoles = _.compact(_.concat(_.get(tenantsRoles[tenant], 'roles', []), systemRole, _.keys(groupSystemRoles)));
 
-        var result = null;
-        for (var i = 0; i < roles.length; i++) {
-            var role = roles[i].name;
+        let result = null;
+        for (let i = 0; i < roles.length; i++) {
+            const role = roles[i].name;
             if (_.includes(userRoles, role)) {
                 result = role;
                 break;
@@ -113,7 +109,7 @@ module.exports = (function() {
     }
 
     function listPages() {
-        var builtInPages = _.map(_getBuiltInPages(), (page) => ({id: page, custom: false}));
+        const builtInPages = _.map(_getBuiltInPages(), (page) => ({id: page, custom: false}));
 
         return _getUserPages()
             .then(userPages => _.map(userPages, (page) => _.extend(page, {custom: true})))
@@ -121,7 +117,7 @@ module.exports = (function() {
     }
 
     function createTemplate(username, template) {
-        var path = pathlib.resolve(userTemplatesFolder, template.id + '.json');
+        const path = pathlib.resolve(userTemplatesFolder, template.id + '.json');
         if (fs.existsSync(path)) {
             return Promise.reject('Template name "' + template.id + '" already exists');
         }
@@ -133,7 +129,7 @@ module.exports = (function() {
     }
 
     function updateTemplate(username, template) {
-        var path = pathlib.resolve(userTemplatesFolder, template.id + '.json');
+        const path = pathlib.resolve(userTemplatesFolder, template.id + '.json');
 
         return checkTemplateExistence(template.data, template.oldId)
         .then(() =>
@@ -162,11 +158,11 @@ module.exports = (function() {
     }
 
     function checkTemplateExistence(data, excludeTemplateId) {
-        var incomingAllTenants =  _.indexOf(data.tenants, '*') >= 0;
-        var textRoles = _.replace(JSON.stringify(data.roles), /"/g, "'");
-        var textTenants = _.replace(JSON.stringify(_.concat(data.tenants, '*')), /"/g, "'");
+        const incomingAllTenants =  _.indexOf(data.tenants, '*') >= 0;
+        const textRoles = _.replace(JSON.stringify(data.roles), /"/g, "'");
+        const textTenants = _.replace(JSON.stringify(_.concat(data.tenants, '*')), /"/g, "'");
 
-        var where = {
+        const where = {
             type: ResourceTypes.TEMPLATE,
             data: incomingAllTenants ?
                 db.sequelize.literal(`data->'roles' ?| array${textRoles}`)
@@ -183,17 +179,17 @@ module.exports = (function() {
                 .findOne({where, attributes: ['data'], raw: true})
                 .then(entity => {
                     if (entity) {
-                        var commonRoles = _.join(_.intersection(data.roles, entity.data.roles), ', ');
-                        var allTenantsExists = _.indexOf(entity.data.tenants, '*') >= 0;
+                        const commonRoles = _.join(_.intersection(data.roles, entity.data.roles), ', ');
+                        const allTenantsExists = _.indexOf(entity.data.tenants, '*') >= 0;
 
                         if (incomingAllTenants) {
-                            var existingTenants = entity.data.tenants;
+                            const existingTenants = entity.data.tenants;
                             reject(`Template cannot be created for all tenants because there is already template for roles [${commonRoles}] and tenants [${existingTenants}]`);
                         } else if (allTenantsExists) {
-                            var incomingTenants = _.join(data.tenants, ', ');
+                            const incomingTenants = _.join(data.tenants, ', ');
                             reject(`Template cannot be created for roles [${commonRoles}] and tenants [${incomingTenants}] because there is already template for these roles and all tenants`);
                         } else {
-                            var commonTenants = _.join(_.intersection(data.tenants, entity.data.tenants), ', ');
+                            const commonTenants = _.join(_.intersection(data.tenants, entity.data.tenants), ', ');
                             reject(`Template for roles [${commonRoles}] and tenants [${commonTenants}] already exists`);
                         }
                     } else {
@@ -204,7 +200,7 @@ module.exports = (function() {
     }
 
     function deleteTemplate(templateId) {
-        var path = pathlib.resolve(userTemplatesFolder, templateId + '.json');
+        const path = pathlib.resolve(userTemplatesFolder, templateId + '.json');
 
         return new Promise((resolve,reject) => {
             fs.remove(path, (err) => {
@@ -218,15 +214,15 @@ module.exports = (function() {
     }
 
     function createPage(username, page) {
-        var path = pathlib.resolve(userPagesFolder, page.id + '.json');
+        const path = pathlib.resolve(userPagesFolder, page.id + '.json');
         if (fs.existsSync(path)) {
             return Promise.reject('Page id "' + page.id + '" already exists');
         }
 
-        var content = {
+        const content = {
             'name': page.name,
             'widgets': page.widgets
-        }
+        };
 
         return fs.writeJson(path, content, {spaces: '  '})
             .then(() => db.Resources.destroy({ where:{resourceId: page.id, type:ResourceTypes.PAGE}}))
@@ -234,9 +230,9 @@ module.exports = (function() {
     }
 
     function updatePage(username, page) {
-        var path = pathlib.resolve(userPagesFolder, page.id + '.json');
+        const path = pathlib.resolve(userPagesFolder, page.id + '.json');
 
-        var content = {
+        const content = {
             'name': page.name,
             'widgets': page.widgets
         }
@@ -280,19 +276,22 @@ module.exports = (function() {
     }
 
     function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant) {
-        var DEFAULT_KEY = '*';
+        const DEFAULT_KEY = '*';
 
-        var initialTemplateObj = config.app.initialTemplate;
-        var role = _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant);
-        var mode = ServerSettings.settings.mode;
+        const initialTemplateObj = config.app.initialTemplate;
+        const role = _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant);
+        const mode = ServerSettings.settings.mode;
 
         logger.debug('Template inputs: mode=' + mode + ', role=' + role + ', tenant=' + tenant);
 
-        var promise;
+        let promise;
         if (mode === ServerSettings.MODE_MAIN) {
+            const escTenant = db.sequelize.escape(tenant);
+            const escRole = db.sequelize.escape(role);
+
             promise = db.Resources
                 .findOne({where: {type: ResourceTypes.TEMPLATE,
-                    data: db.sequelize.literal(`data->'roles' ? '${role}' and (data->'tenants' ? '${tenant}' or data->'tenants' ? '${DEFAULT_KEY}')`)},
+                    data: db.sequelize.literal(`data->'roles' ? ${escRole} and (data->'tenants' ? ${escTenant} or data->'tenants' ? '${DEFAULT_KEY}')`)},
                           attributes: ['resourceId'], raw: true})
                 .then(entity => entity ? entity.resourceId : null);
         } else {
@@ -303,7 +302,7 @@ module.exports = (function() {
             logger.debug('Custom template: ' + templateId);
 
             if (!templateId) {
-                var initialTemplateModeRole = (initialTemplateObj[mode === ServerSettings.MODE_MAIN ? role : mode]) || initialTemplateObj[DEFAULT_KEY];
+                const initialTemplateModeRole = (initialTemplateObj[mode === ServerSettings.MODE_MAIN ? role : mode]) || initialTemplateObj[DEFAULT_KEY];
 
                 if (_.isObject(initialTemplateModeRole)) {
                     templateId = _.get(

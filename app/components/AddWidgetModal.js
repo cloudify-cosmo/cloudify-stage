@@ -7,7 +7,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import {Input, Segment, Divider, Item, Button, DataTable, Modal, Confirm, ErrorMessage, Icon, Checkbox, Grid, Menu, Label} from './basic/index';
 import InstallWidgetModal from './InstallWidgetModal';
-import Consts from '../utils/consts';
+import LoaderUtils from '../utils/LoaderUtils';
+import StageUtils from '../utils/stageUtils';
 
 export default class AddWidgetModal extends Component {
 
@@ -42,9 +43,9 @@ export default class AddWidgetModal extends Component {
         onWidgetUsed: PropTypes.func.isRequired
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!_.isEqual(this.props.widgetDefinitions, nextProps.widgetDefinitions)) {
-            this.setState(AddWidgetModal.initialState(nextProps))
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(prevProps.widgetDefinitions, this.props.widgetDefinitions)) {
+            this.setState(AddWidgetModal.initialState(this.props))
         }
     }
 
@@ -215,11 +216,13 @@ export default class AddWidgetModal extends Component {
                         <Item.Group divided className="widgetsList">
                             {
                                 this.state.filteredWidgetDefinitions.map(function(widget){
+                                    const imageSrc
+                                        = StageUtils.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
                                     return (
                                         <Item key={widget.id} data-id={widget.id} onClick={()=>{this._toggleWidgetInstall(widget)}}>
                                             <Checkbox className="addWidgetCheckbox" readOnly={true} title="Add widget to page" 
                                                       checked={this.state.widgetsToAdd.includes(widget)}/>
-                                            <Item.Image as="div" size="small" bordered src={Stage.Utils.url(`${widget.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widget.id}/widget.png`)}/>
+                                            <Item.Image as="div" size="small" bordered src={imageSrc} />
                                             <Item.Content>
                                                 <Item.Header as='div'>{widget.name}</Item.Header>
                                                 <Item.Meta>{widget.description}</Item.Meta>

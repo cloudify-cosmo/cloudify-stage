@@ -115,17 +115,19 @@ module.exports = {
             elements: {
                 urlField: 'input[name="widgetUrl"]',
                 fileField: 'input[name="widgetFile"]',
+                fieldLabel: 'div.ui.label',
                 okButton: '.ui.green.button',
                 cancelButton: '.ui.basic.button',
-                errorMessage: '.ui.error.message',
+                errorMessage: '.ui.error.message .content',
                 loader: '.ui.loading'
             },
             props: {
-                emptyFieldsError: 'Please select widget file or url',
-                invalidURIError: 'Unable to determine filename from url test',
-                bothFieldsError: 'Either widget file or url must be selected, not both',
+                emptyFieldsError: 'Please provide the widget\'s archive URL or select a file',
+                invalidURIError: 'Please provide valid URL for widget\'s archive',
                 incorrectFilesError: 'The following files are required for widget registration: widget.js, widget.png',
-                widgetAlreadyInstalledError: 'Widget testWidget is already installed'
+                widgetAlreadyInstalledError: 'Widget testWidget is already installed',
+                fileLabelString: 'File',
+                urlLabelString: 'URL'
             }
         },
         removeWidgetConfirm: {

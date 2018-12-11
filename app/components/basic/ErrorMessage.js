@@ -47,6 +47,7 @@ export default class ErrorMessage extends Component {
      * @property {function} [onDismiss=()=>{}] function called when either error message visibility timeout (see {@link ErrorMessage.MESSAGE_VISIBLE_TIMEOUT}) expires or user dismiss manually error message
      * @property {string} [header='Error Occured'] header of error text message
      * @property {string} [className=''] additional CSS classes to [Message](https://react.semantic-ui.com/elements/message) component
+     * @property {boolean} [autoHide=false] if set, then message will be hidden after visibility timeout
      */
     static propTypes = {
         error: PropTypes.any,
@@ -69,10 +70,10 @@ export default class ErrorMessage extends Component {
      */
     static MESSAGE_VISIBLE_TIMEOUT = 10000;
 
-    componentWillReceiveProps(nextProps) {
-        if (!_.isEqual(nextProps.error, this.props.error)) {
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(this.props.error, prevProps.error)) {
             this.setState({hidden: false});
-            if (nextProps.error) {
+            if (this.props.error) {
                 this._setVisibilityTimeout(ErrorMessage.MESSAGE_VISIBLE_TIMEOUT);
             }
         }

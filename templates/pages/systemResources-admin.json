@@ -10,16 +10,16 @@
       "y": 0
     },
     {
-      "name": "Snapshots",
-      "definition": "snapshots",
+      "name": "Secret Store Management",
+      "definition": "secrets",
       "width": 12,
       "height": 24,
       "x": 0,
       "y": 24
     },
     {
-      "name": "Secret Store Management",
-      "definition": "secrets",
+      "name": "Agents Management",
+      "definition": "agents",
       "width": 12,
       "height": 24,
       "x": 0,

@@ -40,7 +40,7 @@ export default class DeploymentActionButtons extends React.Component {
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
             if (_.isEqual(this.props.deployment.id, this.props.toolbox.getContext().getValue('deploymentId'))) {
                 this.props.toolbox.getContext().setValue('deploymentId', null);
-            };
+            }
             this.props.toolbox.goToParentPage();
         }).catch((err) => {
             this.setState({loading: false, error: err.message});
@@ -67,7 +67,7 @@ export default class DeploymentActionButtons extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, Button, Confirm, PopupMenu, Popup, Menu} = Stage.Basic;
+        let {ErrorMessage, Button, Confirm, Popup, PopupMenu, Menu} = Stage.Basic;
         let {ExecuteDeploymentModal, UpdateDeploymentModal} = Stage.Common;
         let deploymentId = this.props.deployment.id;
 

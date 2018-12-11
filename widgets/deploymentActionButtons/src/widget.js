@@ -16,6 +16,7 @@ Stage.defineWidget({
     
     initialConfiguration: [],
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentActionButtons'),
 
     fetchData: function(widget,toolbox) {
@@ -26,11 +27,9 @@ Stage.defineWidget({
             return toolbox.getManager().doGet(`/deployments/${deploymentId}`)
                 .then(deployment => {
                     toolbox.loading(false);
+                    let workflows = Stage.Common.DeploymentUtils.filterWorkflows(_.sortBy(deployment.workflows, ['name']));
 
-                    var dep = Object.assign({},deployment,{
-                        workflows: _.sortBy(deployment.workflows,['name'])
-                    });
-                    return Promise.resolve(dep);
+                    return Promise.resolve({...deployment, workflows});
                 });
         }
 

@@ -1,7 +1,7 @@
 {
   "whiteLabel": {
     "enabled": false,
-    "logoUrl": "/stage/app/images/Cloudify-icon.png",
+    "logoUrl": "/console/images/Cloudify-icon.png",
     "mainColor": "black",
     "pagesLocation": "",
     "headerTextColor": "white",
@@ -11,7 +11,8 @@
     "loginPageTextColor": "white",
     "sidebarColor": "#ffffff",
     "sidebarTextColor" : "#000000",
-    "pageTitle": "Cloudify"
+    "pageTitle": "Cloudify",
+    "customCssPath": ""
   },
   "widgets": {
     "allowedModules": ["lodash", "body/json"]

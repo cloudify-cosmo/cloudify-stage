@@ -3,21 +3,23 @@
  */
 import MaintenanceModePageMessage from '../../components/maintenance/MaintenanceModePageMessage';
 import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import stageUtils from '../../utils/stageUtils';
 import Consts from '../../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
-    var canMaintenanceMode = stageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager);
+    let canMaintenanceMode = stageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager);
+    let showServicesStatus = stageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager);
     return {
         manager: state.manager,
-        canMaintenanceMode
+        canMaintenanceMode,
+        showServicesStatus
     }
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         navigateToHome: () => {
-            return dispatch(push('/'));
+            return dispatch(push(Consts.HOME_PAGE_PATH));
         }
     }
 };

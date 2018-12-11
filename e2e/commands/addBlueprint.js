@@ -35,10 +35,14 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
                 let blueprintYamlFileDropdownSelector = blueprints.section.uploadModal.elements.blueprintYamlFile.selector;
                 blueprints.section.uploadModal
                     .waitForElementVisible('@okButton')
-                    .setElementValue('@blueprintName', blueprintName)
                     .setElementValue('@blueprintUrl', [blueprintUrl, api.Keys.TAB])
+                    .waitForElementNotPresent('@loading')
+                    .resetValue('@blueprintName')
+                    .setElementValue('@blueprintName', blueprintName)
                     .waitForElementPresent(blueprintYamlFileOptionElement)
-                    .selectOptionInDropdown(blueprintYamlFileDropdownSelector, blueprintYamlFileDropdownSelector, blueprintYamlFile)
+                    .selectOptionInDropdown(blueprintYamlFileDropdownSelector,
+                                            blueprintYamlFileDropdownSelector,
+                                            blueprintYamlFile)
                     .clickElement('@okButton');
 
                 blueprints.waitForElementNotPresent('@uploadModal');

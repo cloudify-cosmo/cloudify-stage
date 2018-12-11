@@ -2,51 +2,37 @@
  * Created by kinneretzin on 08/09/2016.
  */
 
-import fetch from 'isomorphic-fetch'
-import Internal from './Internal'
+import Internal from './Internal';
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
 
-var ReactDOMServer = require('react-dom/server');
+const ReactDOMServer = require('react-dom/server');
 
 import 'd3';
 import momentImport from 'moment';
 import markdownImport from 'markdown';
 
-import 'cloudify-blueprint-topology';
-
 import * as BasicComponents from '../components/basic';
 import StageUtils from './stageUtils';
-import Consts from './consts';
+import LoaderUtils from './LoaderUtils';
 import Pagination from '../components/basic/pagination/Pagination';
 
 import WidgetDefinition from './WidgetDefinition';
-var widgetDefinitions = [];
-
-function fetchWidgetTextFile(path) {
-    return fetch(StageUtils.url(path))
-        .then((response)=>{
-            if (response.status >= 400) {
-                console.error(response.statusText);
-                return;
-            }
-            return response.text();
-        });
-}
+let widgetDefinitions = [];
 
 export default class WidgetDefinitionsLoader {
     static init() {
         window.Stage = {
-            defineWidget: (widgetDefinition)=> {
+            defineWidget: (widgetDefinition) => {
                 widgetDefinitions.push(new WidgetDefinition({...widgetDefinition, id: document.currentScript.id}));
             },
             Basic: BasicComponents,
-            ComponentToHtmlString: (component)=>{
+            ComponentToHtmlString: (component) => {
                 return ReactDOMServer.renderToString(component);
             },
             GenericConfig,
             Common: [],
-            defineCommon: (def) =>{
+            defineCommon: (def) => {
                 Stage.Common[def.name] = def.common;
             },
             Utils: StageUtils
@@ -61,7 +47,7 @@ export default class WidgetDefinitionsLoader {
 
         var internal = new Internal(manager);
         return Promise.all([
-                new ScriptLoader('/widgets/common/common.js').load(), // Commons has to load before the widgets
+                new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets
                 internal.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
             ])
             .then((results)=> {
@@ -77,7 +63,7 @@ export default class WidgetDefinitionsLoader {
     }
 
     static _loadWidget(widget, rejectOnError) {
-        var scriptPath = `${widget.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widget.id}/widget.js`;
+        var scriptPath = `${LoaderUtils.getResourceUrl('widgets', widget.isCustom)}/${widget.id}/widget.js`;
         return new ScriptLoader(scriptPath).load(widget.id, rejectOnError);
     }
 
@@ -91,7 +77,7 @@ export default class WidgetDefinitionsLoader {
 
             if (widgetDefinition.hasTemplate) {
                 promises.push(
-                    fetchWidgetTextFile(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/widget.html`)
+                    LoaderUtils.fetchResource(`widgets/${widgetDefinition.id}/widget.html`, widgetDefinition.isCustom)
                         .then((widgetHtml)=> {
                             if (widgetHtml) {
                                 widgetDefinition.template = widgetHtml;
@@ -99,12 +85,12 @@ export default class WidgetDefinitionsLoader {
                         }));
             }
             if (widgetDefinition.hasStyle) {
-                promises.push(new StyleLoader(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/widget.css`).load());
+                promises.push(new StyleLoader(LoaderUtils.getResourceUrl(`widgets/${widgetDefinition.id}/widget.css`, widgetDefinition.isCustom)).load());
             }
 
             if (widgetDefinition.hasReadme) {
                 promises.push(
-                    fetchWidgetTextFile(`${widgetDefinition.isCustom ? Consts.USER_DATA_PATH : ''}/widgets/${widgetDefinition.id}/README.md`)
+                    LoaderUtils.fetchResource(`widgets/${widgetDefinition.id}/README.md`, widgetDefinition.isCustom)
                         .then((widgetReadme) => {
                             if (widgetReadme) {
                                 widgetDefinition.readme = widgetReadme;

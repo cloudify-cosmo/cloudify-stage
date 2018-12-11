@@ -1,0 +1,34 @@
+{
+  "name": "Logs",
+  "widgets": [
+    {
+      "name": "Resource Filter",
+      "definition": "filter",
+      "x": 0,
+      "y": 0,
+      "configuration": {
+        "filterByNodes": true,
+        "filterByNodeInstances": true,
+        "filterByExecutions": true,
+        "allowMultipleSelection": true
+      }
+    },
+    {
+      "name": "Events/logs filter widget",
+      "definition": "eventsFilter",
+      "x": 0,
+      "y": 5
+    },
+    {
+      "name": "Events and logs",
+      "width": 12,
+      "height": 40,
+      "definition": "events",
+      "x": 0,
+      "y": 10,
+      "configuration": {
+        "pageSize": 15
+      }
+    }
+  ]
+}

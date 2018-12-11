@@ -20,4 +20,4 @@ tar -cvzf stage.tar.gz **
 #tar -cvzf stage.tar.gz dist/** backend/** conf/** package.json
 cd ..
 cp .tmp/stage.tar.gz .
-rm -R .tmp/**
+rm -R .tmp

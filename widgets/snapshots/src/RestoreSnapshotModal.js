@@ -17,8 +17,9 @@ export default class RestoreSnapshotModal extends React.Component {
         loading: false,
         errors: {},
         isFromTenantlessEnv : false,
-        shouldForceRestore: false
-    }
+        shouldForceRestore: false,
+        ignorePluginFailure: false
+    };
 
     static propTypes = {
         snapshot: PropTypes.object.isRequired,
@@ -26,7 +27,7 @@ export default class RestoreSnapshotModal extends React.Component {
     };
 
     static defaultProps = {
-        onHide: ()=>{}
+        onHide: _.noop
     };
 
     onApprove () {
@@ -39,8 +40,7 @@ export default class RestoreSnapshotModal extends React.Component {
         return true;
     }
 
-
-    componentWillUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState) {
         if (!prevState.open && this.state.open) {
             this.setState(RestoreSnapshotModal.initialState);
         }
@@ -58,7 +58,7 @@ export default class RestoreSnapshotModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Actions(this.props.toolbox);
-        actions.doRestore(this.props.snapshot,this.state.shouldForceRestore).then(()=>{
+        actions.doRestore(this.props.snapshot, this.state.shouldForceRestore, this.state.ignorePluginFailure).then(()=>{
             this.setState({errors: {}, loading: false});
             this.props.toolbox.refresh();
             this.props.toolbox.getEventBus().trigger('snapshots:refresh');
@@ -88,7 +88,7 @@ export default class RestoreSnapshotModal extends React.Component {
 
                         <Form.Field>
                             <Form.Checkbox toggle
-                                           label="Is Snapshot from a tenant-less environment?"
+                                           label="Snapshot from a tenant-less environment"
                                            name='isFromTenantlessEnv'
                                            checked={this.state.isFromTenantlessEnv}
                                            onChange={this._handleFieldChange.bind(this)}/>
@@ -104,9 +104,16 @@ export default class RestoreSnapshotModal extends React.Component {
                         }
                         <Form.Field>
                             <Form.Checkbox toggle
-                                           label="Force restore even if manager is non-empty? (It will delete all data)"
+                                           label="Force restore even if manager is non-empty (it will delete all data)"
                                            name='shouldForceRestore'
                                            checked={this.state.shouldForceRestore}
+                                           onChange={this._handleFieldChange.bind(this)}/>
+                        </Form.Field>
+                        <Form.Field help='Ignore plugin installation failures and deployment environment creation failures due to missing plugins'>
+                            <Form.Checkbox toggle
+                                           label='Ignore plugin failures'
+                                           name='ignorePluginFailure'
+                                           checked={this.state.ignorePluginFailure}
                                            onChange={this._handleFieldChange.bind(this)}/>
                         </Form.Field>
 

@@ -37,8 +37,9 @@ export default class extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
+        const NO_DATA_MESSAGE = 'There are no Inputs available. Probably there\'s no deployment created, yet.';
+        let {DataTable, ErrorMessage, Header, ParameterValue, ParameterValueDescription} = Stage.Basic;
+
         let inputs = this.props.data.items;
         let compareNames = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
 
@@ -46,10 +47,10 @@ export default class extends React.Component {
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
-                <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)}>
+                <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Name" width="35%"/>
-                    <DataTable.Column label="Value" width="65%"/>
+                    <DataTable.Column label={<span>Value <ParameterValueDescription /></span>} width="65%" />
 
                     {
                         inputs.sort(compareNames).map((input) =>
@@ -63,13 +64,7 @@ export default class extends React.Component {
                                     </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {input.value &&
-                                        <Popup position='top left' wide>
-                                            <Popup.Trigger><span>{JsonUtils.stringify(input.value, false)}</span></Popup.Trigger>
-                                            <HighlightText
-                                                className='json'>{JsonUtils.stringify(input.value, true)}</HighlightText>
-                                        </Popup>
-                                    }
+                                    <ParameterValue value={input.value} />
                                 </DataTable.Data>
                             </DataTable.Row>
                         )

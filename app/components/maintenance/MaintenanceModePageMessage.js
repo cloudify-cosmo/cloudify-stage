@@ -5,7 +5,10 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import MaintenanceMode from '../../containers/maintenance/MaintenanceMode';
+import MaintenanceModeModal from '../basic/maintenance/MaintenanceModeModal';
+import MessageContainer from '../MessageContainer';
+import Services from '../../containers/Services';
+import Logo from '../../containers/Logo';
 import Consts from '../../utils/consts';
 import StatusPoller from '../../utils/StatusPoller';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
@@ -21,7 +24,8 @@ export default class MaintenanceModePageMessage extends Component {
 
     static propTypes = {
         manager: PropTypes.object.isRequired,
-        canMaintenanceMode: PropTypes.bool.isRequired
+        canMaintenanceMode: PropTypes.bool.isRequired,
+        showServicesStatus: PropTypes.bool.isRequired,
     };
 
 
@@ -42,32 +46,35 @@ export default class MaintenanceModePageMessage extends Component {
     render () {
         SplashLoadingScreen.turnOff();
 
-        var {Label,Icon} = Stage.Basic;
+        let {Divider, Header, MaintenanceModeActivationButton} = Stage.Basic;
+
         return (
             <div className='maintenancePage ui segment basic'>
-                <div className="logo">
-                    <img src={Stage.Utils.url('/app/images/Cloudify-logo.png')}/>
-                </div>
+                <Logo />
 
-                <div className="ui raised very padded text container segment center aligned maintenanceContainer">
+                <MessageContainer className='maintenanceContainer'>
+                    <Header as='h2'>Maintenance mode</Header>
 
-                    <h2 className="ui header">Maintenance mode</h2>
                     <p>Server is on maintenance mode and is not available at the moment.</p>
 
                     {
                         this.props.canMaintenanceMode &&
-                        <Label as='a' onClick={()=> this.setState({showMaintenanceModal: true})}>
-                            <Icon name='doctor'/>
-                            Deactivate maintenance mode
-                        </Label>
-
+                        <MaintenanceModeActivationButton activate={false} onClick={()=> this.setState({showMaintenanceModal: true})} />
                     }
-                </div>
+
+                    {
+                        this.props.showServicesStatus &&
+                        <div>
+                            <Divider />
+                            <Services />
+                        </div>
+                    }
+                </MessageContainer>
 
                 {
                     this.props.canMaintenanceMode &&
-                    <MaintenanceMode show={this.state.showMaintenanceModal}
-                                     onHide={()=> this.setState({showMaintenanceModal: false})}/>
+                    <MaintenanceModeModal show={this.state.showMaintenanceModal}
+                                          onHide={()=> this.setState({showMaintenanceModal: false})} />
 
                 }
 

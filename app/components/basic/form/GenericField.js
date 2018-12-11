@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Icon, Popup, Input, Checkbox, Dropdown, Form} from '../index'
+import {Input, Checkbox, Dropdown, Form} from '../index'
 import {getToolbox} from '../../../utils/Toolbox';
 
 /**
@@ -175,6 +175,7 @@ export default class GenericField extends Component {
      * @property {string} label field's label to show above the field
      * @property {string} name name of the input field
      * @property {string} [placeholder=''] specifies a short hint that describes the expected value of an input field
+     * @property {string} [error=false] specifies if a field should be marked as field with error
      * @property {string} [type=GenericField.STRING_TYPE] specifies type of the field
      * @property {string} [icon=null] additional icon in right side of the input field
      * @property {string} [description=''] fields description showed in popup when user hovers field
@@ -189,6 +190,7 @@ export default class GenericField extends Component {
         label: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
         placeholder: PropTypes.string,
+        error: PropTypes.bool,
         type: PropTypes.string,
         icon: PropTypes.string,
         description: PropTypes.string,
@@ -205,6 +207,7 @@ export default class GenericField extends Component {
 
     static defaultProps = {
         placeholder: '',
+        error: false,
         type: GenericField.STRING_TYPE,
         icon: null,
         description: '',
@@ -222,14 +225,16 @@ export default class GenericField extends Component {
         super(props,context);
 
         this.toolbox = getToolbox(()=>{}, ()=>{}, null);
-        this._initOptions(props);
+        this.state = GenericField.isListType(props.type)
+        ? {options: []}
+        : {};
     }
 
     _initOptions(props) {
         if(props.type === GenericField.BOOLEAN_LIST_TYPE){
-            this.state = {
+            this.setState({
                 options: [{text: 'false', value: false}, {text: 'true', value: true}]
-            };
+            });
         } else if (GenericField.isListType(props.type) && props.items) {
             let valueAlreadyInOptions = false;
             let options = _.map(props.items, item => {
@@ -247,7 +252,7 @@ export default class GenericField extends Component {
                 options.push({ text: props.value, value: props.value });
             }
 
-            this.state = {options};
+            this.setState({options});
         }
     }
 
@@ -263,15 +268,16 @@ export default class GenericField extends Component {
         this.props.onChange(proxy, Object.assign({}, field, {genericType: this.props.type}));
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if (this.props.storeValueInContext) {
             this._storeValueInContext(this.props.name, this.props.value);
         }
+        this._initOptions(this.props);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps !== this.props && nextProps.items !== this.props.items) {
-            this._initOptions(nextProps);
+    componentDidUpdate(prevProps) {
+        if (this.props.items !== prevProps.items) {
+            this._initOptions(this.props);
         }
     }
 
@@ -301,7 +307,7 @@ export default class GenericField extends Component {
             this.props.type === GenericField.NUMBER_TYPE ||
             this.props.type === GenericField.PASSWORD_TYPE) {
 
-            field = <Input icon={this.props.icon} iconPosition={this.props.icon?'left':undefined} name={this.props.name}
+            field = <Input icon={this.props.icon} name={this.props.name}
                            type={this.props.type === GenericField.STRING_TYPE?'text':this.props.type}
                            placeholder={this.props.placeholder} value={this.props.value === null ? '' : this.props.value}
                            onChange={this._handleInputChange.bind(this)}
@@ -335,7 +341,7 @@ export default class GenericField extends Component {
 
             if (_.isUndefined(CustomComponent)) {
                 return new Error('For `' + this.props.type + '` type `component` prop have to be supplied.')
-            };
+            }
 
             field = <CustomComponent name={this.props.name}
                                      value={_.isUndefined(this.props.value) ? this.props.default : this.props.value}
@@ -344,22 +350,12 @@ export default class GenericField extends Component {
         }
 
         return (
-            <Form.Field className={this.props.name}>
-                {
-                    this.props.label &&
-                    <label>{this.props.label}{this.props.required && <Icon name='asterisk' color='red' size='tiny' className='superscripted'/>}&nbsp;
-                        {
-                            this.props.description &&
-                            <Popup>
-                                <Popup.Trigger><Icon name="help circle outline"/></Popup.Trigger>
-                                {this.props.description}
-                            </Popup>
-                        }
-                    </label>
-                }
-
+            <Form.Field className={this.props.name}
+                        help={this.props.description}
+                        label={this.props.label}
+                        required={this.props.required}
+                        error={this.props.error}>
                 {field}
-
             </Form.Field>
         );
     }

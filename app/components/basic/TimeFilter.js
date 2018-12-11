@@ -27,7 +27,7 @@ import Popup from './Popup';
  * `Stage.Basic.TimeFilter`
  *
  * ## Usage
- * ![TimeFilter](manual/asset/form/TimeFilter_0.png)
+ * ![TimeFilter](manual/asset/form/InputTimeFilter_0.png)
  *
  * ```
  * <TimeFilter name='timeFilter' defaultValue={TimeFilter.EMPTY_VALUE} />
@@ -40,6 +40,7 @@ export default class TimeFilter extends React.Component {
         super(props,context);
 
         this.state = TimeFilter.initialState(props);
+        _.extend(this._getStartDateState(this.state.start), this._getEndDateState(this.state.end));
     }
 
     /*
@@ -51,7 +52,7 @@ export default class TimeFilter extends React.Component {
         end: '',
         resolution: 1,
         unit: 'm'
-    }
+    };
     /*
      *
      */
@@ -72,7 +73,7 @@ export default class TimeFilter extends React.Component {
         'Last 2 Hours': {start: 'now()-2h', end: 'now()'},
         'Last Day': {start: 'now()-1d', end: 'now()'},
         'Last Week': {start: 'now()-1w', end: 'now()'}
-    }
+    };
     /*
      *
      */
@@ -128,6 +129,7 @@ export default class TimeFilter extends React.Component {
 
     static initialState = (props) => ({
         ...props.defaultValue,
+        ...props.value,
         startDate: moment(),
         endDate: moment(),
         isOpen: false,
@@ -150,7 +152,7 @@ export default class TimeFilter extends React.Component {
 
     componentDidMount() {
         let state = TimeFilter.initialState(this.props);
-        _.extend(state, this._getResetState(false));
+        _.extend(state, this._getStartDateState(state.start), this._getEndDateState(state.end));
         this.setState(state);
     }
 

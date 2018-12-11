@@ -3,14 +3,13 @@
  */
 
 var express = require('express');
-var request = require('request');
 var db = require('../db/Connection');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var config = require('../config').get();
 
-var logger = require('log4js').getLogger('ClientConfigRouter');
+var logger = require('log4js').getLogger('ClientConfig');
 
 router.use(passport.authenticate('token', {session: false}));
 router.use(bodyParser.json());

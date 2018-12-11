@@ -12,6 +12,7 @@ import 'jquery-ui/ui/widgets/draggable.js';
 import 'jquery-ui/ui/widgets/droppable.js';
 
 import './styles/style.scss';
+import 'gs-ui-infra/app/styles/main-light.scss';
 
 // Import semantic
 import 'semantic-ui-css/semantic.min.css';
@@ -31,7 +32,7 @@ import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
-import { ConnectedRouter } from 'react-router-redux';
+import { ConnectedRouter } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
 
 import configureStore  from './configureStore';

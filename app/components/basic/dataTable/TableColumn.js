@@ -21,21 +21,24 @@ import React, { Component } from 'react';
 export default class TableColumn extends Component {
 
     /**
-     * @property {string} label - column label
+     * @property {any} label - column label
      * @property {string} [name] - data property, enables column sorting
      * @property {string} [width] - width style
      * @property {boolean} [show=true] - if false then column is hidden
+     * @property {boolean} [centerAligned=false] - if true then column label is center aligned
      */
     static propTypes = {
-        label: PropTypes.string,
+        label: PropTypes.any,
         name: PropTypes.string,
         width: PropTypes.string,
-        show: PropTypes.bool
+        show: PropTypes.bool,
+        centerAligned: PropTypes.bool
     };
 
     static defaultProps = {
         width: '',
-        show: true
+        show: true,
+        centerAligned: false
     };
 
     static contextTypes = {
@@ -56,6 +59,10 @@ export default class TableColumn extends Component {
         if (this.context.getSortColumn() === this.props.name) {
             cssClass += ' sorted';
             cssClass += this.context.isSortAscending() ? ' ascending' : ' descending ';
+        }
+
+        if (this.props.centerAligned) {
+            cssClass += ' center aligned';
         }
 
         return cssClass;

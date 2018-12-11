@@ -13,9 +13,13 @@ export default class {
 
     }
 
-    doRestore(snapshot,shouldForceRestore) {
-        return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`,null,
-            {force: shouldForceRestore, recreate_deployments_envs: false, tenant_name: ''});
+    doRestore(snapshot, shouldForceRestore, ignorePluginFailure = false) {
+        return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`,null, {
+            force: shouldForceRestore,
+            recreate_deployments_envs: false,
+            tenant_name: '',
+            ignore_plugin_failure: ignorePluginFailure
+        });
     }
 
     doUpload(snapshotUrl, snapshotId, file) {

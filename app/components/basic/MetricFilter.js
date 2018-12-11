@@ -59,18 +59,15 @@ export default class MetricFilter extends React.Component {
             || !_.isEqual(this.state, nextState);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.state.metricId !== nextProps.value) {
-            this.setState({...MetricFilter.initialState(nextProps)});
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.metricId !== this.props.value) {
+            this.setState({...MetricFilter.initialState(this.props)});
             this._fetchMetrics();
         }
     }
 
-    componentWillMount() {
-        this._fetchMetrics();
-    }
-
     componentDidMount() {
+        this._fetchMetrics();
         this.toolbox.getEventBus().on(`${this.props.filterContextName}:change`, this._fetchMetrics, this);
     }
 

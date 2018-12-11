@@ -2,12 +2,16 @@
  * Created by kinneretzin on 06/11/2016.
  */
 
+import 'cloudify-blueprint-topology';
 var BlueprintTopology = cloudifyTopology.Topology;
 var DataProcessingService = cloudifyTopology.DataProcessingService;
 
 export default class Topology extends React.Component {
     constructor(props, context) {
         super(props, context);
+
+        this.glassRef = React.createRef();
+        this.topologyParentContainerRef = React.createRef();
 
         this._topologyData = null;
         this._topology = null;
@@ -76,14 +80,21 @@ export default class Topology extends React.Component {
 
      _selectNode(nodeId) {
         if (this._topology && this._processedTopologyData && this._processedTopologyData.nodes) {
-            let selectedNode = _.find(this._processedTopologyData.nodes, (topologyNode) => topologyNode.name === nodeId);
-            this._topology.setSelectNode(selectedNode);
+            if (_.isEmpty(nodeId)) {
+                this._topology.clearSelectedNodes();
+            } else {
+                let selectedNode = _.find(this._processedTopologyData.nodes, (topologyNode) => topologyNode.name === nodeId);
+                this._topology.setSelectNode(selectedNode);
+            }
         }
     }
 
      _setSelectedNode(selectedNode) {
         if (this.props.data.deploymentId) {
-            this.props.toolbox.getContext().setValue('nodeId', selectedNode.name + this.props.data.deploymentId);
+            this.props.toolbox.getContext().setValue('depNodeId', selectedNode.name + this.props.data.deploymentId);
+            this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
+        } else if (this.props.data.blueprintId) {
+            this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
         }
     }
 
@@ -126,7 +137,7 @@ export default class Topology extends React.Component {
             this._topologyData = null;
             this.props.toolbox.refresh();
         } else {
-            var isFirstTimeLoading = this._topologyData == null;
+            var isFirstTimeLoading = this._topologyData === null;
             var oldTopologyData = this._topologyData;
             this._topologyData = this._buildTopologyData();
 
@@ -141,7 +152,7 @@ export default class Topology extends React.Component {
 
     _releaseScroller () {
         this.isMouseOver = true;
-        $(this.refs.glass).addClass('unlocked');
+        $(this.glassRef.current).addClass('unlocked');
     }
 
     _timerReleaseScroller() {
@@ -155,17 +166,17 @@ export default class Topology extends React.Component {
 
     _reactivateScroller () {
         this.isMouseOver = false;
-        $(this.refs.glass).removeClass('unlocked');
+        $(this.glassRef.current).removeClass('unlocked');
     }
 
     render () {
         return (
-            <div ref='topologyParentContainer'
+            <div ref={this.topologyParentContainerRef}
                  onClick={this._releaseScroller.bind(this)}
                  onMouseEnter={this._timerReleaseScroller.bind(this)}
                  onMouseLeave={this._reactivateScroller.bind(this)}>
-                <div className='scrollGlass' ref='glass'><span className='message'>Click to release scroller</span></div>
-                <div id='topologyContainer'></div>
+                <div className='scrollGlass' ref={this.glassRef}><span className='message'>Click to release scroller</span></div>
+                <div id='topologyContainer' />
             </div>
         );
 

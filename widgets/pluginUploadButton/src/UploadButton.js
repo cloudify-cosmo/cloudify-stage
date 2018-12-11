@@ -26,10 +26,10 @@ export default class extends React.Component {
 
         return (
             <div>
-                <Button color='yellow' icon='upload' content='Upload Plugin' labelPosition='left' fluid
+                <Button color='yellow' icon='upload' content='Upload Plugin' labelPosition='left' className='widgetButton'
                         loading={this.state.loading} onClick={this._showModal.bind(this)} />
 
-                <UploadPluginModal open={this.state.open} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
+                <UploadPluginModal open={this.state.open} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox} />
             </div>
         );
     }

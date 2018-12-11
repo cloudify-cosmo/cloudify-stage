@@ -15,6 +15,7 @@ Stage.defineWidget({
     isReact: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintSources'),
     hasStyle: true,
+    hasReadme: true,
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
 
     initialConfiguration: [

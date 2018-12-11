@@ -15,6 +15,7 @@ module.exports = {
         pluginsTable: {
             selector: '.pluginsTable',
             elements: {
+                searchInput: 'input',
                 packageName: 'tr.clickable td:nth-child(2)',
                 deleteButton: '.rowActions i.trash'
             }
@@ -37,10 +38,15 @@ module.exports = {
                     .waitForElementVisible(this.section.uploadModal.selector);
             },
             fillWagonUrl: function(url) {
-                return this.section.uploadModal.setValue('@wagonUrl', url).parent;
+                return this.section.uploadModal.setElementValue('@wagonUrl', url).parent;
             },
             fillYamlUrl: function(url) {
-                return this.section.uploadModal.setValue('@yamlUrl', url).parent;
+                return this.section.uploadModal.setElementValue('@yamlUrl', url).parent;
+            },
+            searchFor: function(text) {
+                this.section.pluginsTable.setElementValue('@searchInput', text)
+                    .api.pause(2000);
+                return this;
             },
             uploadPlugin: function() {
                 return this.section.uploadModal.clickElement('@uploadButton')

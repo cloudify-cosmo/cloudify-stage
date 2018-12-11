@@ -6,6 +6,7 @@ import React, {Component} from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { hot } from 'react-hot-loader'
 
+import Consts from '../utils/consts';
 import Layout from '../containers/layout/Layout';
 import LogoPage from './LogoPage';
 import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
@@ -15,25 +16,25 @@ class Routes extends Component {
     render() {
         return (
             <Switch>
-                <Route exact path='/login' render={() =>
+                <Route exact path={Consts.LOGIN_PAGE_PATH} render={() =>
                     this.props.isSamlEnabled
                         ? <ExternalRedirect url={this.props.samlSsoUrl} />
-                        : <LogoPage/>
+                        : <LogoPage />
                 } />
-                <Route exact path='/logout' render={() =>
+                <Route exact path={Consts.LOGOUT_PAGE_PATH} render={() =>
                     this.props.isSamlEnabled
                         ? <ExternalRedirect url={this.props.samlPortalUrl} />
-                        : <Redirect to='/login'/>
+                        : <Redirect to={Consts.LOGIN_PAGE_PATH} />
                 } />
-                <Route exact path='/error' component={LogoPage} />
-                <Route exact path='/noTenants' component={LogoPage} />
-                <Route exact path='/maintenance' component={MaintenanceMode} />
+                <Route exact path={Consts.ERROR_PAGE_PATH} component={LogoPage} />
+                <Route exact path={Consts.ERROR_NO_TENANTS_PAGE_PATH} component={LogoPage} />
+                <Route exact path={Consts.MAINTENANCE_PAGE_PATH} component={MaintenanceMode} />
                 <Route render={(props) => (
                     this.props.isLoggedIn
                         ? this.props.isInMaintenanceMode
-                            ? ( <Redirect to='/maintenance'/> )
+                            ? ( <Redirect to={Consts.MAINTENANCE_PAGE_PATH} /> )
                             : ( <Layout {...props} /> )
-                        : ( <Redirect to='/login' /> )
+                        : ( <Redirect to={Consts.LOGIN_PAGE_PATH} /> )
                 )} />
             </Switch>
         );

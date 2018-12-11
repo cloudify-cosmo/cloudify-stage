@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Consts from '../utils/consts';
 
 export default class LinkToLogin extends Component {
     static propTypes = {
@@ -17,7 +18,7 @@ export default class LinkToLogin extends Component {
             this.props.portalUrl ?
                 <a href={this.props.portalUrl}>Back to apps</a>
             :
-                <Link to={{pathname: '/login', search: this.props.searchQuery}}>Back to login</Link>
+                <Link to={{pathname: Consts.LOGIN_PAGE_PATH, search: this.props.searchQuery}}>Back to login</Link>
         )
     }
 }

@@ -2,11 +2,10 @@
  * Created by kinneretzin on 02/04/2017.
  */
 
-let path = require('path');
-let fs = require('fs');
-
 const BLUEPRINT_NAME = 'TestBlueprint123';
 const BLUEPRINT_FILENAME = 'simple-blueprint.yaml';
+const BLUEPRINT_SINGLE_YAML_NAME = 'SingleYamlBlueprint';
+const BLUEPRINT_SINGLE_YAML_FILENAME = 'singleYamlBlueprint.yaml';
 
 module.exports = {
 
@@ -17,7 +16,7 @@ module.exports = {
             .prepareTestWidget(client.page.blueprints().props.widgetId);
     },
 
-    'Blueprint upload': function (client) {
+    'Blueprint upload - archive file': function (client) {
         let blueprintUrl = client.page.blueprints().props.testBlueprintUrl;
 
         let page = client.page.blueprints();
@@ -78,7 +77,7 @@ module.exports = {
             agent_private_key_path: 'agentpath',
             agent_user: 'agentuser',
             host_ip: 'IP'
-        }
+        };
 
         let page = client.page.blueprints();
 
@@ -99,12 +98,17 @@ module.exports = {
         // Wait for widget to fetch data and update deployment count
         client.pause(5000);
         page.section.blueprintsTable
-                .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 1)
+                .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 1);
 
         page.removeDeployment(DEPLOYMENT_NAME);
+
+        // Wait for widget to fetch data and update deployment count
+        client.pause(5000);
+        page.section.blueprintsTable
+            .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 0);
     },
 
-    'Blueprint remove': function (client) {
+    'Blueprint remove - archive file': function (client) {
         let page = client.page.blueprints();
 
         page.section.blueprintsTable
@@ -117,8 +121,37 @@ module.exports = {
             .checkIfBlueprintRemoved(BLUEPRINT_NAME);
     },
 
+    'Blueprint upload - single YAML file': function (client) {
+        const blueprintSingleYamlFile
+            = client.page.resources().props.fileByName(BLUEPRINT_SINGLE_YAML_FILENAME, client.globals);
+
+        let page = client.page.blueprints();
+
+        page.clickElement('@uploadButton');
+        page.section.uploadModal
+            .fillInForSingleYaml(blueprintSingleYamlFile, BLUEPRINT_SINGLE_YAML_NAME)
+            .clickUpload();
+        page.section.blueprintsTable
+            .checkIfBlueprintPresent(BLUEPRINT_SINGLE_YAML_NAME);
+    },
+
+    'Blueprint remove - single YAML file': function (client) {
+        let page = client.page.blueprints();
+
+        page.section.blueprintsTable
+            .checkIfBlueprintPresent(BLUEPRINT_SINGLE_YAML_NAME)
+            .clickRemove(BLUEPRINT_SINGLE_YAML_NAME);
+        page.section.removeBlueprintModal
+            .clickYes();
+
+        page.section.blueprintsTable
+            .checkIfBlueprintRemoved(BLUEPRINT_SINGLE_YAML_NAME);
+    },
+
     after(client) {
-        client.end();
+        client
+            .removeLastPage()
+            .end();
     }
 };
 

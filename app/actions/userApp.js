@@ -6,7 +6,7 @@ import * as types from './types';
 import {createPagesFromTemplate} from './page';
 import {setAppLoading, setAppError} from './app';
 import Internal from '../utils/Internal';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import Consts from '../utils/consts';
 
 const  CURRENT_APP_DATA_VERSION = 4;
@@ -47,12 +47,12 @@ export function resetPages(){
         dispatch(setPages([]));
         return dispatch(createPagesFromTemplate())
             .then(() => {
-                dispatch(setAppLoading(false))
-                dispatch(push('/'));
+                dispatch(setAppLoading(false));
+                dispatch(push(Consts.HOME_PAGE_PATH));
             })
             .catch(err => {
                 dispatch(setAppError(err.message));
-                dispatch(push('/error'));
+                dispatch(push(Consts.ERROR_PAGE_PATH));
                 throw err;
             });
     }
@@ -92,11 +92,11 @@ export function reloadUserAppData () {
                 var pages = state.pages;
                 var page = getPageById(pages, currentPageId);
                 if(!page){
-                    dispatch(push('/'));
+                    dispatch(push(Consts.HOME_PAGE_PATH));
                 } else if(page.isDrillDown) {
                     var parent = getPageById(pages, page.parent);
                     if(!parent) {
-                        dispatch(push('/'));
+                        dispatch(push(Consts.HOME_PAGE_PATH));
                     } else {
                         dispatch(push('/page/'+parent.id));
                     }

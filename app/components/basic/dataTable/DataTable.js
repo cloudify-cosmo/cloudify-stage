@@ -227,14 +227,20 @@ export default class DataTable extends Component {
     constructor(props, context) {
         super(props, context);
 
+        this.paginationRef = React.createRef();
+
         this.state = {
             sortColumn: props.sortColumn,
             sortAscending: props.sortAscending,
-            searchText: ''
+            searchText: '',
+            searching: false
         };
 
         this.debouncedSearch = _.debounce(() => {
-            this.refs.pagination.reset(this._fetchData.bind(this));
+            this.paginationRef.current.reset(() => {
+                return Promise.resolve(this._fetchData())
+                              .then(() => this.setState({searching: false}));
+            });
         }, 300, {'maxWait': 2000});
     }
 
@@ -266,7 +272,8 @@ export default class DataTable extends Component {
         selectable: PropTypes.bool,
         className: PropTypes.string,
         noDataAvailable: PropTypes.bool,
-        sizeMultiplier: PropTypes.number
+        sizeMultiplier: PropTypes.number,
+        noDataMessage: PropTypes.string
     };
 
     static defaultProps = {
@@ -280,7 +287,8 @@ export default class DataTable extends Component {
         selectable: false,
         className: '',
         noDataAvailable: false,
-        sizeMultiplier: 5
+        sizeMultiplier: 5,
+        noDataMessage: 'No data available'
     };
 
     static childContextTypes = {
@@ -308,17 +316,17 @@ export default class DataTable extends Component {
 
         var fetchData = {sortColumn: name, sortAscending: ascending, currentPage: 1};
         this.setState(fetchData, () => {
-            this.refs.pagination.reset(this._fetchData.bind(this));
+            this.paginationRef.current.reset(this._fetchData.bind(this));
         });
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps) {
         let changedProps = {};
-        if (this.props.sortColumn != nextProps.sortColumn) {
-            changedProps.sortColumn = nextProps.sortColumn;
+        if (prevProps.sortColumn !== this.props.sortColumn) {
+            changedProps.sortColumn = this.props.sortColumn;
         }
-        if (this.props.sortAscending != nextProps.sortAscending) {
-            changedProps.sortAscending = nextProps.sortAscending;
+        if (prevProps.sortAscending !== this.props.sortAscending) {
+            changedProps.sortAscending = this.props.sortAscending;
         }
 
         if (!_.isEmpty(changedProps)) {
@@ -329,8 +337,8 @@ export default class DataTable extends Component {
     _fetchData() {
         return this.props.fetchData({gridParams: {
             _search: this.state.searchText,
-            currentPage: this.refs.pagination.state.currentPage,
-            pageSize: this.refs.pagination.state.pageSize,
+            currentPage: this.paginationRef.current.state.currentPage,
+            pageSize: this.paginationRef.current.state.pageSize,
             sortColumn: this.state.sortColumn,
             sortAscending: this.state.sortAscending
         }});
@@ -375,9 +383,14 @@ export default class DataTable extends Component {
                 { (this.props.searchable || !_.isEmpty(gridFilters) || gridAction) &&
                 <Form size="small" as="div">
                     <Form.Group inline>
-                        {this.props.searchable && <TableSearch search={this.state.searchText} onSearch={(searchText) => {
-                            this.setState({searchText}, this.debouncedSearch);
-                        }}/>}
+                        {
+                            this.props.searchable &&
+                            <TableSearch search={this.state.searchText}
+                                         searching={this.state.searching}
+                                         onSearch={(searchText) => this.setState({searchText, searching: true},
+                                                                                 this.debouncedSearch)}
+                            />
+                        }
                         {gridFilters}
                         {gridAction}
                     </Form.Group>
@@ -385,7 +398,7 @@ export default class DataTable extends Component {
                 }
 
                 <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} sizeMultiplier={this.props.sizeMultiplier}
-                            fetchSize={this.props.fetchSize} fetchData={this._fetchData.bind(this)} ref="pagination">
+                            fetchSize={this.props.fetchSize} fetchData={this._fetchData.bind(this)} ref={this.paginationRef}>
                     <table
                         className={`ui very compact table sortable ${this.props.selectable ? 'selectable' : ''} ${this.props.className}`}
                         cellSpacing="0" cellPadding="0">
@@ -399,10 +412,10 @@ export default class DataTable extends Component {
                             <tbody>
                                 <tr className="noDataRow">
                                     <td colSpan={headerColumns.length} className="center aligned">
-                                    {this.props.fetchSize === 0 && this.refs.pagination && this.refs.pagination.state.currentPage > 1 ?
+                                    {this.props.fetchSize === 0 && this.paginationRef.current && this.paginationRef.current.state.currentPage > 1 ?
                                         <span>No more data available</span>
                                         :
-                                        <span>No data available</span>
+                                        <span>{this.props.noDataMessage}</span>
                                     }
                                     </td>
                                 </tr>

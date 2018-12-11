@@ -2,9 +2,9 @@
  * Created by jakubniezgoda on 01/02/2017.
  */
 
+import PropTypes from 'prop-types';
 import Actions from './actions';
 
-import PropTypes from 'prop-types';
 const RolesPicker = Stage.Common.RolesPicker;
 const RolesUtil = Stage.Common.RolesUtil;
 
@@ -22,7 +22,7 @@ export default class GroupsModal extends React.Component {
         userGroups: {},
         loading: false,
         errors: {}
-    }
+    };
 
     static propTypes = {
         tenant: PropTypes.object.isRequired,
@@ -32,7 +32,7 @@ export default class GroupsModal extends React.Component {
     };
 
     static defaultProps = {
-        onHide: ()=>{}
+        onHide: _.noop
     };
 
     onApprove () {
@@ -51,18 +51,16 @@ export default class GroupsModal extends React.Component {
         this.setState({userGroups: newUserGroups});
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             this.setState({
                 ...GroupsModal.initialState,
-                userGroups: nextProps.tenant.groups
+                userGroups: this.props.tenant.groups
             });
         }
     }
 
     _updateTenant() {
-        let errors = {};
-
         // Disable the form
         this.setState({loading: true});
 

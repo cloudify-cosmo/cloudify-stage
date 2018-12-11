@@ -11,33 +11,40 @@ export default class Tours {
     static load(manager) {
         console.log('Load tours');
 
-        var tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
+        let tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
-        var internal = new Internal(manager);
+        let internal = new Internal(manager);
         return internal.doGet('/tours', {tenant}).then(tours => {
             return tours;
         });
     }
 
-    static shouldRedirectBeforeStarting(tour, startAt) {
-        var startAt = _.get(tour, 'startAt', null);
-        return !_.isNil(startAt) && window.location.pathname !== startAt;
-    }
-
     static parseTour(tour) {
-        var hopscotchTour =  _.omit(_.cloneDeep(tour), 'name');
-        hopscotchTour = _.omit(hopscotchTour, 'startAt');
-        hopscotchTour.steps =  _.map(hopscotchTour.steps, (step) => {
+        let hopscotchTour =  _.omit(_.cloneDeep(tour), ['name', 'startAt']);
+
+        hopscotchTour.onClose = ['onTourClose'];
+        hopscotchTour.onStart = ['onTourStart'];
+        hopscotchTour.onError = ['showError'];
+        hopscotchTour.skipIfNoElement = false;
+        hopscotchTour.steps =  _.map(hopscotchTour.steps, (step, index) => {
             if(!_.isUndefined(step.onNextRedirectTo)){
-                var redirectionUrl = step.onNextRedirectTo;
-                step.onNext = () => {
-                    window.location = redirectionUrl;
-                };
-                step.multipage = true;
-                return _.omit(step, 'onNextRedirectTo');
+                const nextStep = hopscotchTour.steps[index + 1];
+
+                if (!_.isUndefined(nextStep)) {
+                    const [url, pageName, noTargetErrorTitle, noTargetErrorMessage]
+                        = _.isArray(step.onNextRedirectTo)
+                        ? step.onNextRedirectTo
+                        : [step.onNextRedirectTo, step.onNextRedirectTo, undefined, undefined];
+                    step.showCTAButton = true;
+                    step.ctaLabel = 'Next (change page)';
+                    step.onCTA = ['redirectTo', url, pageName, nextStep.target, noTargetErrorTitle, noTargetErrorMessage];
+                    step.showNextButton = false;
+                }
+                step = _.omit(step, 'onNextRedirectTo');
             }
             return step;
         });
+
         return hopscotchTour;
     }
 }

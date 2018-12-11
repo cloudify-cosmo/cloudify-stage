@@ -26,9 +26,9 @@ export default class RoleModal extends React.Component {
         return true;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
-            this.setState({...RoleModal.initialState, role: nextProps.resource.role});
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            this.setState({...RoleModal.initialState, role: this.props.resource.role});
         }
     }
 

@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 /**
  * Created by pposel on 07/02/2017.
  */
@@ -9,16 +11,35 @@ export default class UploadModal extends React.Component {
         this.state = UploadModal.initialState;
     }
 
+    /**
+     * propTypes
+     * @property {object} yamlFiles array containing list of YAML files and repository name
+     * @property {string} repositoryName string name of the repository used as a blueprint name
+     * @property {boolean} open modal open state
+     * @property {function} onHide function called when modal is closed
+     * @property {object} toolbox Toolbox object
+     * @property {object} actions Actions object
+     */
+    static propTypes = {
+        repositoryName: PropTypes.string.isRequired,
+        yamlFiles: PropTypes.array.isRequired,
+        open: PropTypes.bool.isRequired,
+        onHide: PropTypes.func.isRequired,
+        toolbox: PropTypes.object.isRequired,
+        actions: PropTypes.object.isRequired
+    };
+
     static initialState = {
         loading: false,
         blueprintName: '',
-        blueprintFileName: '',
+        blueprintYamlFile: '',
+        yamlFiles: [],
         visibility: Stage.Common.Consts.defaultVisibility,
         errors: {}
     }
 
     onApprove () {
-        this._submitUpload()
+        this._submitUpload();
         return false;
     }
 
@@ -27,9 +48,26 @@ export default class UploadModal extends React.Component {
         return true;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
-            this.setState(UploadModal.initialState);
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            if (!_.isEmpty(this.props.yamlFiles)) {
+                const defaultBlueprintYamlFile = Stage.Common.UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE;
+                let yamlFiles = this.props.yamlFiles;
+                let blueprintName = this.props.repositoryName;
+                let blueprintYamlFile
+                    = _.includes(yamlFiles, defaultBlueprintYamlFile)
+                    ? defaultBlueprintYamlFile
+                    : yamlFiles[0];
+
+                this.setState({
+                    ...UploadModal.initialState,
+                    blueprintName,
+                    blueprintYamlFile,
+                    yamlFiles
+                });
+            } else {
+                this.setState(UploadModal.initialState);
+            }
         }
     }
 
@@ -38,6 +76,10 @@ export default class UploadModal extends React.Component {
 
         if (_.isEmpty(this.state.blueprintName)) {
             errors['blueprintName']='Please provide blueprint name';
+        }
+
+        if (_.isEmpty(this.state.blueprintYamlFile)) {
+            errors['blueprintYamlFile']='Please provide blueprint YAML file';
         }
 
         if (!_.isEmpty(errors)) {
@@ -49,8 +91,9 @@ export default class UploadModal extends React.Component {
         this.setState({loading: true});
 
         this.props.actions.doUpload(this.state.blueprintName,
-                                    this.state.blueprintFileName,
-                                    this.props.files.repo,
+                                    this.state.blueprintYamlFile,
+                                    this.props.zipUrl,
+                                    this.props.imageUrl,
                                     this.state.visibility
         ).then(()=>{
             this.setState({errors: {}, loading: false});
@@ -66,18 +109,14 @@ export default class UploadModal extends React.Component {
     }
 
     render() {
-        var {Modal, CancelButton, ApproveButton, Icon, Form, VisibilityField, Popup} = Stage.Basic;
-
-        var files = Object.assign({},{tree:[], repo:''}, this.props.files);
-        files.tree = _.filter(files.tree, x => x.type === 'blob' && x.path.endsWith('.yaml'));
-
-        var options = _.map(files.tree, item => { return {text: item.path, value: item.path} });
+        let {Modal, CancelButton, ApproveButton, Icon, Form, VisibilityField} = Stage.Basic;
+        let yamlFiles = _.map(this.state.yamlFiles, item => { return {text: item, value: item} });
 
         return (
             <div>
                 <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="uploadModal">
                     <Modal.Header>
-                        <Icon name="upload"/> Upload blueprint from {files.repo}
+                        <Icon name="upload"/> Upload blueprint from {this.props.repositoryName}
                         <VisibilityField visibility={this.state.visibility} className="rightFloated"
                                       onVisibilityChange={(visibility)=>this.setState({visibility: visibility})}/>
                     </Modal.Header>
@@ -85,27 +124,20 @@ export default class UploadModal extends React.Component {
                     <Modal.Content>
                         <Form loading={this.state.loading} errors={this.state.errors}
                               onErrorsDismiss={() => this.setState({errors: {}})}>
-                            <Form.Group>
-                                <Form.Field width="16" error={this.state.errors.blueprintName}>
-                                    <Form.Input name='blueprintName' placeholder="Blueprint name"
-                                                value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
-                                </Form.Field>
-                                <Form.Field width="1">
-                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
-                                           content='The package will be uploaded to the Manager as a Blueprint resource, under the name you specify here.'/>
-                                </Form.Field>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Field width="16">
-                                    <Form.Dropdown placeholder='Blueprint filename' search selection options={options}
-                                                   name="blueprintFileName"
-                                                   value={this.state.blueprintFileName} onChange={this._handleInputChange.bind(this)}/>
-                                </Form.Field>
-                                <Form.Field width="1">
-                                    <Popup trigger={<Icon name="help circle outline"/>} position='top left' wide
-                                           content='As you can have more than one yaml file in the archive, you need to specify which is the main one for your application.'/>
-                                </Form.Field>
-                            </Form.Group>
+                            <Form.Field label='Blueprint name' required
+                                        error={this.state.errors.blueprintName}
+                                        help='The package will be uploaded to the Manager as a Blueprint resource,
+                                              under the name you specify here.'>
+                                <Form.Input name='blueprintName'
+                                            value={this.state.blueprintName} onChange={this._handleInputChange.bind(this)}/>
+                            </Form.Field>
+                            <Form.Field label='Blueprint YAML file' required
+                                        error={this.state.errors.blueprintYamlFile}
+                                        help='As you can have more than one yaml file in the archive,
+                                              you need to specify which is the main one for your application.'>
+                                <Form.Dropdown name='blueprintYamlFile' search selection options={yamlFiles}
+                                               value={this.state.blueprintYamlFile} onChange={this._handleInputChange.bind(this)}/>
+                            </Form.Field>
                         </Form>
                     </Modal.Content>
 

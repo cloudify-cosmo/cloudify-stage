@@ -3,7 +3,6 @@
  */
 
 import PropTypes from 'prop-types';
-const {Form} = Stage.Basic;
 
 export default class RolesPicker extends React.Component {
 
@@ -18,12 +17,13 @@ export default class RolesPicker extends React.Component {
         toolbox: PropTypes.object.isRequired
     };
 
-    _handleInputChange(proxy, field){
+    _handleInputChange(proxy, field) {
         this.props.onUpdate(field.name, field.value);
     }
 
-    render(){
-        var roleOptions = _.reverse(_.map(_.filter(this.props.toolbox.getManager()._data.roles, {type: 'tenant_role'}), (role) => {
+    render() {
+        const {Form} = Stage.Basic;
+        let roleOptions = _.reverse(_.map(_.filter(this.props.toolbox.getManager()._data.roles, {type: 'tenant_role'}), (role) => {
             return {text: role.name, value: role.name};
         }));
 
@@ -32,8 +32,7 @@ export default class RolesPicker extends React.Component {
                 {
                     _.map(this.props.resources, (role, resource) => {
                         return (
-                            <Form.Field key={resource}>
-                                <label> Choose a role for {this.props.resourceName} {resource}:</label>
+                            <Form.Field key={resource} label={`Choose a role for ${this.props.resourceName} ${resource}:`}>
                                 <Form.Dropdown placeholder='Choose a role' selection options={roleOptions} name={resource}
                                                value={role} onChange={this._handleInputChange.bind(this)}/>
                             </Form.Field>

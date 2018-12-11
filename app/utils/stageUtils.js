@@ -30,11 +30,13 @@ export default class StageUtils {
     };
 
     static formatTimestamp(timestamp, outputPattern='DD-MM-YYYY HH:mm', inputPattern='YYYY-MM-DD HH:mm:ss') {
-        return moment.utc(timestamp, inputPattern).local().format(outputPattern);
+        let timestampMoment = moment.utc(timestamp, inputPattern).local();
+        return timestampMoment.isValid() ? timestampMoment.format(outputPattern) : '';
     }
 
     static formatLocalTimestamp(timestamp, outputPattern='DD-MM-YYYY HH:mm', inputPattern=undefined) {
-        return moment(timestamp, inputPattern).format(outputPattern);
+        let timestampMoment = moment(timestamp, inputPattern);
+        return timestampMoment.isValid() ? timestampMoment.format(outputPattern) : '';
     }
 
     /**
@@ -78,11 +80,29 @@ export default class StageUtils {
     }
 
     static url(path) {
-        if (path === '/') {
+        if (path === Const.HOME_PAGE_PATH) {
             return Const.CONTEXT_PATH;
         }
 
         return Const.CONTEXT_PATH + (_.startsWith(path, '/') ? '' : '/') + path;
+    }
+
+    static isUrl(str) {
+        // RegEx from: https://stackoverflow.com/questions/1410311/regular-expression-for-url-validation-in-javascript#15734347
+        const regexp =  /^(ftp|http|https):\/\/[^ "]+$/;
+
+        return regexp.test(str);
+    }
+
+    static redirectToPage(url) {
+        window.open(url, '_blank');
+    }
+
+    static widgetResourceUrl(widgetId, internalPath, isCustom = true, addContextPath = true) {
+        return addContextPath
+            ? StageUtils.url(
+                `${isCustom ? Const.USER_DATA_PATH : Const.APP_DATA_PATH}/widgets/${widgetId}${_.startsWith(internalPath, '/') ? '' : '/'}${internalPath}`)
+            : `${isCustom ? Const.USER_DATA_PATH : Const.APP_DATA_PATH}/widgets/${widgetId}${_.startsWith(internalPath, '/') ? '' : '/'}${internalPath}`;
     }
 
     static buildConfig(widgetDefinition) {
@@ -102,8 +122,8 @@ export default class StageUtils {
         return configs;
     };
 
-    static getToolbox(onRefresh, onLoading, widgetId) {
-        return getToolbox(onRefresh, onLoading, widgetId);
+    static getToolbox(onRefresh, onLoading, widget) {
+        return getToolbox(onRefresh, onLoading, widget);
     }
 
     static isUserAuthorized(permission, managerData) {

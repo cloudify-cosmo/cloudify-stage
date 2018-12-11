@@ -32,7 +32,7 @@ export default class WidgetDynamicContent extends Component {
     }
 
     _getToolbox () {
-        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this), this.props.widget.definition.id);
+        return getToolbox(this._fetchData.bind(this), this._loadingIndicator.bind(this), this.props.widget);
     }
 
     _beforeFetch() {
@@ -257,7 +257,7 @@ export default class WidgetDynamicContent extends Component {
     render() {
         return (
             <div>
-                <div className={`ui ${this.state.loading?'active':''} small inline loader widgetLoader ${this.props.widget.definition.showHeader?'header':'noheader'}`}></div>
+                <div className={`ui ${this.state.loading?'active':''} small inline loader widgetLoader ${this.props.widget.definition.showHeader?'header':'noheader'}`} />
 
                 {
                     this.props.widget.definition.isReact ?

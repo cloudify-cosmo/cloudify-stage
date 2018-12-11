@@ -10,12 +10,13 @@ a:hover {
 .logo {
   img {
     height: 45px;
+    width: 165px;
     margin: 4px;
   }
 }
 .loadingSegment {
     height: 100%;
-    z-index: 100 !important;
+    z-index: 5 !important;
 }
 
 .ui.top.menu .right.menu .ui.dropdown.item{
@@ -27,6 +28,10 @@ a:hover {
 .dropDownText, .compactBlock
 {
   display: inline-block;
+}
+
+div.headerBar {
+  height: 55px;
 }
 
 .sidebar-button{
@@ -211,6 +216,7 @@ a:hover {
     top: 0px;
     right : 0px;
     display: none;
+    z-index: 5;
 
     a {
       color: inherit !important;
@@ -268,7 +274,7 @@ a:hover {
     padding: 15px;
 
     &.noHeader {
-      top: 25px;
+      top: 0px;
     }
 
     &.noBorder {
@@ -282,13 +288,13 @@ a:hover {
   position: absolute;
   left: 0;
   right: 0;
-  top: 4rem;
+  top: 55px;
   bottom: 0;
-  background-color: #000069;
 
-  .ui.text.container.segment404 {
+  .ui.segment.messageSegment {
     max-width: 400px !important;
-    top: 170px;
+    top: 120px;
+    margin: auto;
   }
 }
 
@@ -336,7 +342,6 @@ a:hover {
           transition: all 500ms ease-in-out;
           &:hover{
             transform: scale(1.3);
-            z-index: 100;
             box-shadow: 0px 8px 20px -6px rgba(0, 0, 0, 0.75);          
           }
         }
@@ -363,10 +368,6 @@ a:hover {
   padding: 0 !important;
 }
 
-.maintenancePage {
-  background-color: #000069 !important;
-}
-
 .configManager.ui.segment, .logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
   position: absolute;
   left: 0;
@@ -374,7 +375,7 @@ a:hover {
   top: 0;
   bottom: 0;
 
-  .configManagerContainer, .loginContainer, .maintenanceContainer, .noTenantsContainer {
+  .configManagerContainer, .loginContainer {
     margin: auto;
     width: 400px;
     height: 170px;
@@ -383,6 +384,11 @@ a:hover {
     right: 0;
     top: 0;
     bottom: 0;
+  }
+
+  .maintenanceContainer {
+    margin: auto;
+    width: 600px;
   }
 
   .loginContainer {
@@ -394,10 +400,6 @@ a:hover {
 
   .loginContainerExtended {
     height: 400px;
-  }
-
-  .maintenanceContainer, .noTenantsContainer {
-    height: 220px;
   }
 
   button {
@@ -463,6 +465,15 @@ a:hover {
   }
 }
 
+table.servicesData {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+table.servicesData button.refreshButton {
+  width: auto !important;
+}
+
 .helpMenu {
   .help.icon {
     margin: 0 !important;
@@ -480,7 +491,7 @@ a:hover {
 }
 
 .managerMenu:hover {
-  cursor: default;
+  cursor: pointer;
 }
 
 .ui.menu:not(.vertical) .item.configPanel {
@@ -493,25 +504,16 @@ a:hover {
   left: auto;
   bottom: auto;
   display: none;
+  right: 50px;
+  z-index: 5;
 
   &.header {
-    right: 35px;
     top: 4px;
   }
 
   &.noheader {
-    right: 35px;
     top: 5px;
   }
-}
-
-/* Customize Highlight styles */
-code.hljs {
-  background: white;
-}
-
-.ui.popup code.hljs {
-  white-space: pre-wrap;
 }
 
 /* Grid table */
@@ -602,6 +604,10 @@ code.hljs {
     .nodeState .icon {
       margin-right: 0px;
     }
+  }
+
+  .segment:hover {
+    background-color: #f3f4f5;
   }
 
   .menuAction {
@@ -711,7 +717,10 @@ code.hljs {
 
 /* Modal */
 
-.ui.modal:not(.overlay) > .content {
+.ui.modal.readmeModal {
+  img {
+    max-width: 100% !important;
+  }
 }
 
 .ui.modal.unlimited > .content {
@@ -775,6 +784,10 @@ code.hljs {
 
 .ui.dropdown .menu>.item.indent {
   padding-left: 30px !important;
+}
+
+.ui.dropdown > a.label {
+  text-decoration: none !important;
 }
 
 .ui.divided.light.list>.item {
@@ -848,23 +861,14 @@ a.underline {
   }
 }
 
-/* Maintenance mode */
-
-.ui.maintenance.message {
-  float: right;
-  position: fixed;
-  z-index: 1000;
-  top: 14px;
-  left: 13rem;
-  margin: 0px;
-  padding: 5px 20px;
-  box-shadow: none !important;
-}
-
 /* NodesTree */
 
 .nodes-tree li .rc-tree-node-content-wrapper {
   display: inline !important;
+}
+
+.typesHierarchy .rc-tree-switcher_open {
+  display: none !important;
 }
 
 /* Splitter */
@@ -928,4 +932,19 @@ a.underline {
 .setVisibility{
   margin-top: 10px;
   text-align: center;
+}
+
+.hopscotch-close {
+  cursor: pointer;
+}
+
+.ui.ordered.list .list>.item:before, .ui.ordered.list>.item:before, ol.ui.list li:before {
+  position: relative !important;
+  margin-right: 0.25rem !important;
+  content: counters(ordered,".") "." !important;
+  vertical-align: inherit !important;
+}
+
+.widgetButton {
+  width: 100%;
 }

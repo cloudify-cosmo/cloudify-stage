@@ -14,13 +14,10 @@ export default class Users extends Component {
         showAllOptions: PropTypes.bool.isRequired,
         isEditMode: PropTypes.bool.isRequired,
         canEditMode: PropTypes.bool.isRequired,
-        canMaintenanceMode: PropTypes.bool.isRequired,
         canConfigure: PropTypes.bool.isRequired,
         canTemplateManagement: PropTypes.bool.isRequired,
         onEditModeChange: PropTypes.func.isRequired,
-        onConfigure: PropTypes.func,
         onLogout: PropTypes.func.isRequired,
-        onMaintenance: PropTypes.func,
         onReset: PropTypes.func,
         onTemplates: PropTypes.func
     };
@@ -54,25 +51,11 @@ export default class Users extends Component {
                                            onClick={this.props.onLogout}/>);
 
         return (
-                <Dropdown item trigger={userMenuTrigger} className='usersMenu' scrolling>
+                <Dropdown item pointing='top right' trigger={userMenuTrigger} className='usersMenu' >
                     {
                         this.props.showAllOptions
                         ?
                         <Dropdown.Menu>
-                            {
-                                this.props.canMaintenanceMode &&
-                                    [
-                                        <Dropdown.Item key='maintenance' id='maintenanceMenuItem' icon='doctor'
-                                                       text='Maintenance Mode' value='maintenance' onClick={this.props.onMaintenance}/>,
-                                        <Dropdown.Divider key='divider'/>
-                                    ]
-                            }
-                            {/*Currently configure has no configurations, so hidding it*/}
-                            {/*{*/}
-                              {/*this.props.canConfigure &&*/}
-                                  {/*<Dropdown.Item key='configure' id='configureMenuItem' icon='options' text='Configure'*/}
-                                                 {/*value='configure' onClick={this.props.onConfigure}/>*/}
-                            {/*}*/}
                             {
                                 this.props.canEditMode &&
                                     <Dropdown.Item icon='configure' selected={this.props.isEditMode} active={this.props.isEditMode}

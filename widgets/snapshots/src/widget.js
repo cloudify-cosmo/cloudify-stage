@@ -12,6 +12,7 @@ Stage.defineWidget({
     initialHeight: 16,
     color : "blue",
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('snapshots'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 

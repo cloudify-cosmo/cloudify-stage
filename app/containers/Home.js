@@ -9,7 +9,7 @@ import {setAppError} from '../actions/app';
 import {clearContext,setValue} from '../actions/context';
 import {setDrilldownContext} from '../actions/drilldownContext';
 import {storeCurrentPageId} from '../actions/app';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import Consts from '../utils/consts';
 import { parse } from 'query-string';
 
@@ -44,14 +44,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(setDrilldownContext(drilldownContext));
         },
         navigateTo404: () =>{
-            dispatch(push('/404'));
+            dispatch(push(Consts.ERROR_404_PAGE_PATH));
         },
         navigateToError: (message) =>{
             dispatch(setAppError(message));
-            dispatch(push('/error'));
+            dispatch(push(Consts.ERROR_PAGE_PATH));
         },
         navigateToMaintenancePage: () => {
-            dispatch(push('/maintenance'));
+            dispatch(push(Consts.MAINTENANCE_PAGE_PATH));
         },
         onStorePageId: (pageId) => {
             dispatch(storeCurrentPageId(pageId));

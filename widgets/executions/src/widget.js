@@ -16,6 +16,7 @@ Stage.defineWidget({
         deploymentUpdates: '[manager]/deployment-updates?_include=old_blueprint_id,execution_id[params:deployment_id]'
     },
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executions'),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],
     
@@ -24,8 +25,8 @@ Stage.defineWidget({
             Stage.GenericConfig.POLLING_TIME_CONFIG(5),
             Stage.GenericConfig.PAGE_SIZE_CONFIG(),
             {id: "fieldsToShow",name: "List of fields to show in the table", placeHolder: "Select fields from the list",
-                items: ["Blueprint","Deployment","Workflow","Id","Created","Creator","IsSystem","Params","Status"],
-                default: 'Blueprint,Deployment,Workflow,Id,Created,Creator,IsSystem,Params,Status', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
+                items: ["Blueprint","Deployment","Workflow","Id","Created","Ended","Creator","Attributes","Status","Actions"],
+                default: 'Blueprint,Deployment,Workflow,Created,Ended,Creator,Attributes,Actions,Status', type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE},
             {id: "showSystemExecutions", name: "Show system executions", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
             Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
             Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
@@ -58,11 +59,12 @@ Stage.defineWidget({
 
         let selectedExecution = toolbox.getContext().getValue('executionId');
         let params = this.fetchParams(widget, toolbox);
-        let formattedData = {...executions,
+        let formattedData = {
             items: _.map (executions.items,(item)=>{
                 return Object.assign({},item,{
                     blueprint_id: _.get(executionIdToBlueprintIdMap, item.id, item.blueprint_id),
                     created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
+                    ended_at: Stage.Utils.formatTimestamp(item.ended_at),
                     isSelected: item.id === selectedExecution
                 })
             }),

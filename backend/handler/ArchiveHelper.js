@@ -12,7 +12,7 @@ var multer  = require('multer');
 var ManagerHandler = require('./ManagerHandler');
 var RequestHandler = require('./RequestHandler');
 
-var logger = require('log4js').getLogger('archiveHelper');
+var logger = require('log4js').getLogger('ArchiveHelper');
 
 module.exports = (function() {
 
@@ -128,6 +128,15 @@ module.exports = (function() {
         return match[1];
     }
 
+    function storeSingleYamlFile(archivePath, archiveFile, targetDir) {
+        logger.debug('storing single YAML file', pathlib.resolve(archivePath), targetDir);
+
+        fs.mkdirsSync(targetDir);
+        fs.renameSync(archivePath, pathlib.join(targetDir, archiveFile));
+
+        return {};
+    }
+
     function decompressArchive(archivePath, targetDir) {
         logger.debug('extracting archive', pathlib.resolve(archivePath), targetDir);
 
@@ -186,6 +195,7 @@ module.exports = (function() {
         saveMultipartData,
         saveDataFromUrl,
         decompressArchive,
+        storeSingleYamlFile,
         removeOldExtracts,
         cleanTempData
     }

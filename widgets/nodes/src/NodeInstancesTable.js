@@ -38,17 +38,18 @@ export default class NodeInstancesTable extends React.Component {
     _selectNodeInstance(item){
         let selectedNodeInstanceId = this.props.toolbox.getContext().getValue('nodeInstanceId');
         let clickedNodeInstanceId = item.id;
-        this.props.toolbox.getContext().setValue('nodeInstanceId', clickedNodeInstanceId === selectedNodeInstanceId ? null : clickedNodeInstanceId);
-        this.props.toolbox.getEventBus().trigger('topology:selectNode', item.id);
+        this.props.toolbox.getContext().setValue('nodeInstanceId',
+            clickedNodeInstanceId === selectedNodeInstanceId ? null : clickedNodeInstanceId);
     }
 
     render() {
-        let {DataTable, Icon} = Stage.Basic;
+        const NO_DATA_MESSAGE = 'There are no Node Instances of selected Node available.';
+        let {CopyToClipboardButton, DataTable, Icon} = Stage.Basic;
 
         return (
             <div>
 
-                <DataTable className="nodesInstancesTable">
+                <DataTable className="nodesInstancesTable" noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Instance" name="id" width="40%"/>
                     <DataTable.Column label="Status" name="state" width="30%"/>
@@ -58,7 +59,10 @@ export default class NodeInstancesTable extends React.Component {
                         this.props.instances.map((instance) => {
                             return (
                                 <DataTable.Row key={instance.id} selected={instance.isSelected} onClick={this._selectNodeInstance.bind(this, instance)}>
-                                    <DataTable.Data>{instance.id}</DataTable.Data>
+                                    <DataTable.Data>
+                                        {instance.id}
+                                        <CopyToClipboardButton text={instance.id} className='rightFloated' />
+                                    </DataTable.Data>
                                     <DataTable.Data>{instance.state}</DataTable.Data>
                                     <DataTable.Data className="center aligned rowActions">
                                         <Icon bordered link className="table"

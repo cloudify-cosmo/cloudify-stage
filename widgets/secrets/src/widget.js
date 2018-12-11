@@ -6,13 +6,14 @@ import SecretsTable from './SecretsTable';
 
 Stage.defineWidget({
     id: 'secrets',
-    name: 'Secrets management',
+    name: 'Secret Store Management',
     description: 'This widget shows a list of available secrets and allow managing them',
     initialWidth: 5,
     initialHeight: 16,
     color: 'red',
     fetchUrl: '[manager]/secrets[params]',
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('secrets'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     

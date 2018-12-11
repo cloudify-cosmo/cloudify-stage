@@ -45,8 +45,8 @@ module.exports = {
             .addWidget('blueprints')
             .page.page().section.page
             .waitForElementVisible('@firstWidget')
-            .assert.containsText('@firstWidgetName','Blueprints').removeLastPage()
-            .moveOutOfEditMode();
+            .assert.containsText('@firstWidgetName','Blueprints')
+            .removeLastPage();
 
         client.end();
     }

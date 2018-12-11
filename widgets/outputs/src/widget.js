@@ -2,40 +2,56 @@ import OutputsTable from './OutputsTable';
 
 Stage.defineWidget({
     id: "outputs",
-    name: "Deployment Outputs",
-    description: 'This widget shows the deployment outputs',
+    name: "Deployment Outputs/Capabilities",
+    description: 'This widget shows the deployment outputs and capabilities',
     initialWidth: 8,
     initialHeight: 20,
     color : "blue",
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('outputs'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
     
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(10)
+        Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        {id: 'showCapabilities', name: 'Show Capabilities', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
     ],
 
     fetchData: function(widget,toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId');
         let blueprintId = toolbox.getContext().getValue('blueprintId');
-        let _stringify = this._stringify;
 
         if (deploymentId) {
             let deploymentOutputsPromise = toolbox.getManager().doGet(`/deployments/${deploymentId}/outputs`);
-            let deploymentPromise = toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=outputs`);
+            let deploymentCapabilitiesPromise =
+                widget.configuration.showCapabilities
+                    ? toolbox.getManager().doGet(`/deployments/${deploymentId}/capabilities`)
+                    : Promise.resolve({});
+            let deploymentPromise = toolbox.getManager().doGet(`/deployments/${deploymentId}`,
+                {_include: widget.configuration.showCapabilities ? 'outputs,capabilities' : 'outputs'});
 
-            return Promise.all([deploymentOutputsPromise, deploymentPromise])
+            return Promise.all([deploymentOutputsPromise, deploymentCapabilitiesPromise, deploymentPromise])
                           .then(data => {
-                let deploymentOutputs = _.get(data[0], 'outputs', {});
-                let deployment = _.get(data[1], 'outputs', {});
+                const deploymentOutputs = _.get(data[0], 'outputs', {});
+                const deploymentCapabilities = _.get(data[1], 'capabilities', {});
+                const outputs = _.get(data[2], 'outputs', {});
+                const capabilities = _.get(data[2], 'capabilities', {});
+
                 return Promise.resolve({
-                    outputs: _.map(deployment, (outputObject, outputName) => (
-                        {
+                    outputsAndCapabilities: [
+                        ..._.map(outputs, (outputObject, outputName) => ({
                             name: outputName,
                             value: deploymentOutputs[outputName],
-                            description: outputObject.description || ''
-                        })
-                    )
+                            description: outputObject.description || '',
+                            isCapability: false
+                        })),
+                        ..._.map(capabilities, (capabilityObject, capabilityName) => ({
+                            name: capabilityName,
+                            value: deploymentCapabilities[capabilityName],
+                            description: capabilityObject.description || '',
+                            isCapability: true
+                        }))
+                    ]
                 });
             });
         }
@@ -43,20 +59,33 @@ Stage.defineWidget({
         if (blueprintId) {
             return toolbox.getManager().doGet(`/blueprints/${blueprintId}?_include=plan`)
                 .then(data => {
-                    let blueprintOutputs = _.get(data, 'plan.outputs', {});
+                    const blueprintOutputs = _.get(data, 'plan.outputs', {});
+                    const blueprintCapabilities = widget.configuration.showCapabilities
+                        ? _.get(data, 'plan.capabilities', {})
+                        : {};
+
                     return Promise.resolve({
-                        outputs: _.map(blueprintOutputs, (outputObject, outputName) => (
+                        outputsAndCapabilities: [
+                            ..._.map(blueprintOutputs, (outputObject, outputName) => (
                             {
                                 name: outputName,
                                 value: outputObject.value,
-                                description: outputObject.description || ''
-                            })
-                        )
+                                description: outputObject.description || '',
+                                isCapability: false
+                            })),
+                            ..._.map(blueprintCapabilities, (capabilityObject, capabilityName) => (
+                            {
+                                name: capabilityName,
+                                value: capabilityObject.value,
+                                description: capabilityObject.description || '',
+                                isCapability: true
+                            }))
+                        ]
                     })
                 })
-        };
+        }
 
-        return Promise.resolve({outputs:[]});
+        return Promise.resolve({outputsAndCapabilities: []});
     },
 
     render: function(widget,data,error,toolbox) {
@@ -65,7 +94,7 @@ Stage.defineWidget({
         }
 
         let formattedData = Object.assign({}, {
-            items: data.outputs,
+            outputsAndCapabilities: data.outputsAndCapabilities,
             deploymentId: toolbox.getContext().getValue('deploymentId'),
             blueprintId: toolbox.getContext().getValue('blueprintId')
         });

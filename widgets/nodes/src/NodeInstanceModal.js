@@ -13,11 +13,18 @@ export default class extends React.Component {
     }
 
     render() {
-        let {Modal, DataTable, HighlightText, ApproveButton} = Stage.Basic;
+        const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
+        const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
+        let {CancelButton, CopyToClipboardButton, DataTable, Modal, ParameterValue, ParameterValueDescription} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         let instance = this.props.instance;
-        let instanceTotalSize = _.size(instance.runtime_properties);
+
+        // Setting totalSize on DataTable components to:
+        // 1. Show no-data message when there's no elements
+        // 2. Don't show pagination
+        const runtimePropertiesTotalSize = _.size(instance.runtime_properties) > 0 ? undefined : 0;
+        const relationshipsTotalSize = _.size(instance.relationships) > 0 ? undefined : 0;
 
         return (
             <div>
@@ -28,8 +35,14 @@ export default class extends React.Component {
 
                     <Modal.Content>
                         <div>
-                            <h3>Relationships</h3>
-                            <DataTable className="nodeInstanceRelationshipsTable" totalSize={instance.relationships.length}>
+                            <h3>
+                                Relationships&nbsp;&nbsp;
+                                <CopyToClipboardButton content='Copy'
+                                                       text={JsonUtils.stringify(instance.relationships, true)} />
+                            </h3>
+                            <DataTable className="nodeInstanceRelationshipsTable"
+                                       totalSize={relationshipsTotalSize}
+                                       noDataMessage={NO_DATA_MESSAGE_RELATIONSHIPS}>
 
                                 <DataTable.Column label="Target node" name="target" width="30%"/>
                                 <DataTable.Column label="Relationship type" name="relationship" width="40%"/>
@@ -48,11 +61,18 @@ export default class extends React.Component {
                                 }
                             </DataTable>
 
-                            <h3>Runtime properties</h3>
-                            <DataTable className="nodeInstanceRuntimePropertiesTable" totalSize={instanceTotalSize}>
 
-                                <DataTable.Column label="Key" name="key" width="50%"/>
-                                <DataTable.Column label="Value" name="value" width="50%"/>
+                            <h3>
+                                Runtime properties&nbsp;&nbsp;
+                                <CopyToClipboardButton content='Copy'
+                                                       text={JsonUtils.stringify(instance.runtime_properties, true)} />
+                            </h3>
+                            <DataTable className="nodeInstanceRuntimePropertiesTable"
+                                       totalSize={runtimePropertiesTotalSize}
+                                       noDataMessage={NO_DATA_MESSAGE_RUNTIME_PROPERTIES}>
+
+                                <DataTable.Column label="Key" name="key" />
+                                <DataTable.Column label={<span>Value <ParameterValueDescription /></span>} name="value" />
 
                                 {
                                     Object.keys(instance.runtime_properties).map(function (key) {
@@ -61,15 +81,7 @@ export default class extends React.Component {
                                             <DataTable.Row key={key}>
                                                 <DataTable.Data>{key}</DataTable.Data>
                                                 <DataTable.Data>
-                                                    {
-                                                        _.isObject(value)
-                                                        ?
-                                                            <HighlightText className='json'>
-                                                                {JsonUtils.stringify(value, true)}
-                                                            </HighlightText>
-                                                        :
-                                                            value
-                                                    }
+                                                    <ParameterValue value={value} />
                                                 </DataTable.Data>
                                             </DataTable.Row>
                                         );
@@ -77,11 +89,12 @@ export default class extends React.Component {
                                 }
 
                             </DataTable>
+
                         </div>
                     </Modal.Content>
 
                     <Modal.Actions>
-                        <ApproveButton onClick={this.props.onClose} content="Close" color="green"/>
+                        <CancelButton onClick={this.props.onClose} content="Close" />
                     </Modal.Actions>
                 </Modal>
             </div>

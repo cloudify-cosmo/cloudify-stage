@@ -7,20 +7,20 @@ class BlueprintActions {
         this.toolbox = toolbox;
     }
 
-    doGetBlueprints() {
-        return this.toolbox.getManager().doGet('/blueprints?_include=id');
+    doGetBlueprints(params = null) {
+        return this.toolbox.getManager().doGet('/blueprints?_include=id', params);
     }
 
     doGetFullBlueprintData(blueprint) {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprint.id}`);
     }
 
-    doDelete(blueprint) {
-        return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`)
-            .then(()=>this.doDeleteImage(blueprint.id));
+    doDelete(blueprint, force = false) {
+        return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`, {force})
+            .then(() => this.doDeleteImage(blueprint.id));
     }
 
-    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation=false) {
+    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation = false) {
         return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null, {
             'blueprint_id': blueprint.id,
             inputs,
@@ -30,7 +30,7 @@ class BlueprintActions {
     }
 
     doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, visibility) {
-        var params = {visibility: visibility};
+        let params = {visibility: visibility};
 
         if (!_.isEmpty(blueprintFileName)) {
             params['application_file_name'] = blueprintFileName;
@@ -39,9 +39,11 @@ class BlueprintActions {
             params['blueprint_archive_url'] = blueprintUrl;
         }
 
-        var promise;
+        let promise;
         if (file) {
-            promise = this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, params, file);
+            const compressFile = _.endsWith(file.name, '.yaml') || _.endsWith(file.name, '.yml');
+            promise = this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, params, file,
+                                                         undefined, undefined, compressFile);
         } else {
             promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
         }
@@ -53,11 +55,11 @@ class BlueprintActions {
         return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, null, {visibility: visibility});
     }
 
-    doListYamlFiles(blueprintUrl, file) {
+    doListYamlFiles(blueprintUrl, file=null, includeFilename=false) {
         if (file) {
-            return this.toolbox.getInternal().doUpload('/source/list/yaml', null, {archive: file});
+            return this.toolbox.getInternal().doUpload('/source/list/yaml', {includeFilename}, {archive: file});
         } else {
-            return this.toolbox.getInternal().doPut('/source/list/yaml', {url: blueprintUrl});
+            return this.toolbox.getInternal().doPut('/source/list/yaml', {url: blueprintUrl, includeFilename});
         }
     }
 

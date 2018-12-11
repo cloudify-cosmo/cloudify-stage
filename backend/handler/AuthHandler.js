@@ -1,44 +1,31 @@
 /**
  * Created by edenp on 7/30/17.
  */
-'use strict';
-var config = require('../config').get();
-var ManagerHandler = require('./ManagerHandler');
-var logger = require('log4js').getLogger('AuthHandler');
-var fs = require('fs');
-var _ = require('lodash');
-var path = require('path');
-var ServerSettings = require('../serverSettings');
 
-var authorizationCache = {};
+let ManagerHandler = require('./ManagerHandler');
+let logger = require('log4js').getLogger('AuthHandler');
+let _ = require('lodash');
+let ServerSettings = require('../serverSettings');
+
+let authorizationCache = {};
 
 class AuthHandler {
-    static getToken(basicAuth){
+    static getToken(basicAuth) {
         return ManagerHandler.jsonRequest('GET', '/tokens', {
-                'Authorization': basicAuth
-            }
-        );
+            'Authorization': basicAuth
+        });
     }
 
-    static getTenants(token){
+    static getTenants(token) {
         return ManagerHandler.jsonRequest('GET', '/tenants?_get_all_results=true&_include=name', {
-                'authentication-token': token
-            }
-        );
+            'Authentication-Token': token
+        });
     }
 
-    static getVersion(token){
-        return ManagerHandler.jsonRequest('GET', '/version', {
-                'API-Authentication-Token': token
-            }
-        );
-    }
-
-    static getUser(token){
+    static getUser(token) {
         return ManagerHandler.jsonRequest('GET', '/user?_get_data=true', {
-                'authentication-token': token
-            }
-        );
+            'Authentication-Token': token
+        });
     }
 
     static getTokenViaSamlResponse(samlResponse) {
@@ -47,45 +34,36 @@ class AuthHandler {
         });
     }
 
-    static initAuthorization() {
-        return new Promise(function(resolve,reject){
-            // Read rest-security file to get system-admin user and pass
-            var token = '';
-            var tokenPath = path.resolve(__dirname, '../../resources/admin_token');
-            try {
-                token = fs.readFileSync(tokenPath, 'utf8');
-            } catch (err) {
-                logger.error(`Could not setup authorization, error loading admin_token file at ${tokenPath}`, err);
-                return reject(err);
-            }
+    static getAndCacheConfig(token) {
+        return ManagerHandler.jsonRequest('GET', '/config', {
+            'Authentication-Token': token
+        })
+        .then(config => {
+            authorizationCache = config.authorization;
+            logger.debug('Authorization config cached successfully.');
+            return Promise.resolve(config);
+        })
+    }
 
-            // Read the authorization info
-            return ManagerHandler.jsonRequest('GET', '/config', {
-                'API-Authentication-Token': token
-            }).then(authConfig => {
-                authorizationCache = authConfig.authorization;
-                logger.debug('Authorization config loaded successfully: ',authorizationCache);
-                resolve(token);
-            }).catch(err => {
-                logger.error('Failed to fetch auth config. Error:', err);
-                return reject(err);
-            })
-        }).then((token) => {
-            return AuthHandler.getVersion(token).then((version) => {
+    static getRBAC() {
+        if (_.isEmpty(authorizationCache)) {
+            logger.error('No RBAC data in cache. Have you tried to get cached RBAC before getting Manager config?');
+        }
+
+        return authorizationCache;
+    }
+
+    static getManagerVersion(token) {
+        return ManagerHandler.jsonRequest('GET', '/version', {'Authentication-Token': token})
+            .then((version) => {
                 //set community mode from manager API only if mode is not set from the command line
                 if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN
                     && version.edition === ServerSettings.MODE_COMMUNITY) {
                     ServerSettings.settings.mode = ServerSettings.MODE_COMMUNITY;
                 }
-            });
-        }).catch(err => {
-            logger.error('Init authorization error: ', err);
-            process.exit(1);
-        });
-    }
 
-    static getRBAC() {
-        return authorizationCache;
+                return Promise.resolve(version.version);
+            });
     }
 
     static isAuthorized(user, authorizedRoles) {

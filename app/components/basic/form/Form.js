@@ -5,13 +5,15 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Form as FormSemanticUiReact, Input as FormInput, TextArea, Radio as FormRadio,
-        Checkbox as FormCheckbox, Button as FormButton} from 'semantic-ui-react';
+import {Form as FormSemanticUiReact, Radio as FormRadio,
+        Button as FormButton} from 'semantic-ui-react';
 import ErrorMessage from '../ErrorMessage';
 import FormField from './FormField';
+import FormCheckbox from './FormCheckbox';
 import FormGroup from './FormGroup';
 import FormDivider from './FormDivider';
 import FormFile from './InputFile';
+import FormUrlOrFile from './InputUrlOrFile';
 import FormInputDate from './InputDate';
 import FormInputTime from './InputTime';
 import FormDropdown from '../Dropdown';
@@ -71,6 +73,12 @@ import '../../styles/Form.css';
  */
 export default class Form extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.submitFormBtnRef = React.createRef();
+    }
+
     /**
      * Form field, see {@link FormField}
      */
@@ -87,15 +95,15 @@ export default class Form extends Component {
     static Divider = FormDivider;
 
     /**
-     * Form input, see [Input](https://react.semantic-ui.com/elements/input)
+     * Form input, see [Form.Input](https://react.semantic-ui.com/collections/form/)
      */
 
-    static Input = FormInput;
+    static Input = FormSemanticUiReact.Input;
 
     /**
      * Form text area input, see [TextArea](https://react.semantic-ui.com/addons/text-area)
      */
-    static TextArea = TextArea;
+    static TextArea = FormSemanticUiReact.TextArea;
 
     /**
      * Form radio button, see [Input](https://react.semantic-ui.com/addons/radio)
@@ -103,7 +111,7 @@ export default class Form extends Component {
     static Radio = FormRadio;
 
     /**
-     * Form checkbox input, see [Checkbox](https://react.semantic-ui.com/modules/checkbox)
+     * Form checkbox input, {@link FormCheckbox}
      */
     static Checkbox = FormCheckbox;
 
@@ -111,6 +119,11 @@ export default class Form extends Component {
      * Form file input, see {@link InputFile}
      */
     static File = FormFile;
+
+    /**
+     * Form URL or file input, see {@link InputUrlOrFile}
+     */
+    static UrlOrFile = FormUrlOrFile;
 
     /**
      * Dropdown field, see {@link Dropdown}
@@ -179,7 +192,7 @@ export default class Form extends Component {
     }
 
     submit() {
-        $(this.refs.submitFormBtn).click();
+        $(this.submitFormBtnRef.current).click();
     }
 
     _handleSubmit(e, data) {
@@ -199,11 +212,11 @@ export default class Form extends Component {
 
         return (
             <FormSemanticUiReact {...rest} onSubmit={this._handleSubmit.bind(this)} error={!_.isEmpty(errors)}>
-                <ErrorMessage header="Errors in the form" error={errors} onDismiss={this.props.onErrorsDismiss}/>
+                <ErrorMessage header="Errors in the form" error={errors} onDismiss={onErrorsDismiss}/>
 
                 {this.props.children}
 
-                <input type='submit' name="submitFormBtn" style={{'display': 'none'}} ref='submitFormBtn'/>
+                <input type='submit' name="submitFormBtn" style={{'display': 'none'}} ref={this.submitFormBtnRef} />
             </FormSemanticUiReact>
         );
     }

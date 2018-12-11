@@ -33,38 +33,38 @@ export default class extends React.Component {
     }
 
     render() {
-        var {ErrorMessage, DataTable, Popup, HighlightText, Header} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
-        let outputs = this.props.data.items;
+        const NO_DATA_MESSAGE = 'There are no Outputs/Capabilities available. Probably there\'s no deployment created, yet.';
+        let {DataTable, ErrorMessage, Header, Label, ParameterValue, ParameterValueDescription} = Stage.Basic;
+
+        const outputsAndCapabilities = this.props.data.outputsAndCapabilities;
+
         let compareNames = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
 
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
-                <DataTable className="outputsTable" noDataAvailable={_.isEmpty(outputs)}>
+                <DataTable className="outputsTable" noDataAvailable={_.isEmpty(outputsAndCapabilities)} noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Name" width="35%"/>
-                    <DataTable.Column label="Value" width="65%"/>
+                    <DataTable.Column label={<span>Value <ParameterValueDescription /></span>} width="65%"/>
                     {
-                        outputs.sort(compareNames).map((output) =>
-                            <DataTable.Row key={output.name}>
+                        outputsAndCapabilities.sort(compareNames).map((outputOrCapability) =>
+                            <DataTable.Row key={outputOrCapability.name}>
                                 <DataTable.Data>
                                     <Header size="tiny">
-                                        {output.name}
+                                        {outputOrCapability.name}
+                                        {
+                                            outputOrCapability.isCapability &&
+                                            <Label size='mini' color='blue' content='capability' />
+                                        }
                                         <Header.Subheader>
-                                            {output.description}
+                                            {outputOrCapability.description}
                                         </Header.Subheader>
                                     </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {output.value &&
-                                        <Popup position='top left' wide>
-                                            <Popup.Trigger><span>{JsonUtils.stringify(output.value, false)}</span></Popup.Trigger>
-                                            <HighlightText
-                                                className='json'>{JsonUtils.stringify(output.value, true)}</HighlightText>
-                                        </Popup>
-                                    }
+                                    <ParameterValue value={outputOrCapability.value} />
                                 </DataTable.Data>
                             </DataTable.Row>
                         )

@@ -16,7 +16,9 @@ export default class ClusterNodesList extends React.Component {
     }
 
     render () {
+        const NO_DATA_MESSAGE = 'There are no Cluster Nodes available.';
         let {DataTable,Checkmark,ErrorMessage} = Stage.Basic;
+
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
@@ -26,7 +28,9 @@ export default class ClusterNodesList extends React.Component {
                            pageSize={this.props.widget.configuration.pageSize}
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
-                           className="nodesTable">
+                           className="nodesTable"
+                           searchable={true}
+                           noDataMessage={NO_DATA_MESSAGE}>
 
                     <DataTable.Column label="Name" name="name" width="25%"/>
                     <DataTable.Column label="Host IP" name="host_ip" width="20%"/>

@@ -13,12 +13,13 @@ Stage.defineWidget({
     color : "blue",
     hasStyle: true,
     isReact: true,
+    hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprints'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
     
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
-        Stage.GenericConfig.PAGE_SIZE_CONFIG(3),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {id: "clickToDrillDown", name: "Enable click to drill down", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "displayStyle",name: "Display style", items: [{name:'Table', value:'table'}, {name:'Catalog', value:'catalog'}],
             default: "table", type: Stage.Basic.GenericField.LIST_TYPE},

@@ -18,7 +18,9 @@ module.exports = {
         client.selectBlueprint()
             .page.blueprintSources().section.source
             .waitForElementPresent('@tree')
+            .waitForElementPresent('@blueprintHeader')
             .assert.containsText('@blueprintHeader', client.page.blueprints().props.testBlueprint)
+            .waitForElementPresent('@blueprintYaml')
             .assert.containsText('@blueprintYaml', client.page.blueprintSources().props.blueprintYaml)
             .waitForElementPresent('@emptyContent')
             .clickElement('@blueprintYaml')
@@ -29,9 +31,12 @@ module.exports = {
         client.page.blueprintSources()
             .waitForElementPresent('@fullScreen')
             .clickElement('@overlay')
+            .api.keys(client.Keys.ESCAPE)
     },
 
     after(client) {
-        client.end();
+        client
+            .removeLastPage()
+            .end();
     }
 };

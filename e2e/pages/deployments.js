@@ -38,8 +38,8 @@ module.exports = {
             props: {
                 deploymentRow : (name) => `tr#deploymentsTable_${name}`,
                 deploymentMenu : (name) => `tr#deploymentsTable_${name} td.rowActions i.menuAction`,
-                workflowExecutionLabel : (name) => `tr#deploymentsTable_${name} td.rowActions div.label`,
-                editOption: 'edit',
+                executionInProgressIcon : (name) => `tr#deploymentsTable_${name} i.spinner.loading.icon`,
+                updateOption: 'update',
                 deleteOption: 'delete',
                 forceDeleteOption: 'forceDelete'
             },
@@ -53,8 +53,8 @@ module.exports = {
                         return this.selectOptionInPopupMenu(this.props.deploymentMenu(deploymentId), workflowId);
                     },
 
-                    clickEdit: function (deploymentId) {
-                        return this.selectOptionInPopupMenu(this.props.deploymentMenu(deploymentId), this.props.editOption);
+                    clickUpdate: function (deploymentId) {
+                        return this.selectOptionInPopupMenu(this.props.deploymentMenu(deploymentId), this.props.updateOption, '> div.menu >');
                     },
 
                     clickDelete: function (deploymentId) {
@@ -78,13 +78,13 @@ module.exports = {
                     },
 
                     checkIfWorkflowStartedOnDeployment: function(deploymentId, timeout) {
-                        return this.waitForElementPresent(this.props.workflowExecutionLabel(deploymentId), timeout, (result) => {
+                        return this.waitForElementPresent(this.props.executionInProgressIcon(deploymentId), timeout, (result) => {
                             this.assert.equal(result.status, 0, 'Workflow execution on ' + deploymentId + ' in progress.');
                         });
                     },
 
                     checkIfWorkflowFinishedOnDeployment: function(deploymentId, timeout) {
-                        return this.waitForElementNotPresent(this.props.workflowExecutionLabel(deploymentId), timeout, (result) => {
+                        return this.waitForElementNotPresent(this.props.executionInProgressIcon(deploymentId), timeout, (result) => {
                             this.assert.equal(result.status, 0, 'Workflow execution on ' + deploymentId + ' finished.');
                         });
                     }
@@ -152,26 +152,13 @@ module.exports = {
         updateDeploymentModal: {
             selector: '.updateDeploymentModal',
             elements: {
-                blueprintFile: '.content input[name="blueprintFile"]',
-                blueprintUrl: '.content input[name="blueprintUrl"]',
-                blueprintInputsFile: '.content input[name="inputsFile"]',
-                blueprintYamlFile: '.content div.dropdown',
+                blueprint: '.content div[name="blueprintName"]',
+                inputsFile: '.content input[name="yamlFile"]',
                 updateButton: '.actions button.button.ok',
                 cancelButton: '.actions button.button.cancel'
             },
             commands: [
                 {
-                    fillIn: function(blueprintUrl, blueprintYamlFile = 'blueprint.yaml') {
-                        let blueprintFileOptionElement = `div[name="applicationFileName"] div[option-value="${blueprintYamlFile}"]`;
-                        // var pathlib = require("path");
-                        return this
-                            .waitForElementVisible(this.selector)
-                            .setElementValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB], (result) => this.log('Setting blueprintUrl field value. Status =', result.status))
-                            // TODO: Make inputs.yaml file accessible from the server
-                            // .setElementValue('@blueprintInputsFile', pathlib.resolve('e2e/resources/' + blueprintName + 'Inputs.yaml'))
-                            .waitForElementPresent(blueprintFileOptionElement)
-                            .selectOptionInDropdown('@blueprintYamlFile', this.elements.blueprintYamlFile.selector, blueprintYamlFile);
-                    },
                     clickUpdate: function () {
                         return this.waitForElementVisible(this.selector)
                             .clickElement('@updateButton')

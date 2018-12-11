@@ -1,112 +1,309 @@
 [
     {
-        "name": "My first tour",
-        "id": "firstTour",
+        "name": "Cloudify Console Overview",
+        "id": "overview",
         "steps": [
-           {
-                "title": "The future is HERE!",
-                "content": "Cloudify is Future Technology. We found a wormhole in the galaxy and hijacked a brain chip from the year 2074.<br/><br/>It took some time to crack the encryption but when we did we uncovered the code to automate thoughts. Until the hardware for thought-automation is developed, we found that we can implement this technology in the Cloudify Console to orchestrate cloud environments!",
-                "target": ".logo",
-                "placement": "bottom"
-            },
             {
-                "title": "Take the tour!",
-                "content": "This tour shows you how to use Cloudify Console, but don’t get any ideas about hacking into someone’s brain!",
-                "target": ".logo",
-                "placement": "bottom"
-            },
-            {
-                "title": "Pages of the console",
-                "content": "Cloudify Console is divided into pages, just as the brain is divided into lobes. Each page is responsible for a set of Console capabilities, such as blueprints or deployments.\nYou can create customized pages that match your operational needs. You can’t do that with a brain… YET!",
-                "target": ".pages .pageMenuItem",
-                "placement": "right"
-            },
-            {
-                "title": "Widgets on the pages",
-                "content": "On each page is a set of widgets. Each widget shows can either configure or report on Cloudify Manager operations, much like the frontal lobe of your brain can show emotions or communicate with words.\nYou can add and remove widgets on the pages to create the best experience for your Cloudify users to do what they need to do.",
-                "target": ".widgetItem",
-                "placement": "bottom"
-            },
-            {
-                "title": "Cloudify Manager vital signs",
-                "content": "We replaced the brain function indicators with indicators that show the active services on the Cloudify Manager.\nThe brain chip we found tried to influx a rabbit to the celery of Mr. Riemann but it postgressed into a rest-service so he got logstashed with the stage composer. ;-)",
-                "target": ".right.menu .item",
-                "placement": "bottom"
-            },
-            {
-                "title": "Multi-tenant personalities",
-                "content": "Based the multiple-personality mode, you can switch to a different tenant. The pages and widgets are saved for each tenant so, when you switch tenants, the Console can have a totally different personality.",
-                "target": ".right.menu .tenantsMenu",
-                "placement": "bottom",
-                "xOffset": -200,
-                "arrowOffset": 250
-            },
-            {
-                "title": "Where to go for HELP",
-                "content": "When you have trouble using the Console, you can find links to documentation and videos.\nWe wish we could use this function today with brains. Imagine… if someone is giving you trouble, you just give him a light tap on the head and you get usage instructions. Guess we’ll have to wait.",
+                "title": "The Cloudify Console",
+                "content": "This tour reviews the areas of the Cloudify Console. Let's get started...",
                 "target": ".right.menu .helpMenu",
                 "placement": "bottom",
                 "xOffset": -200,
                 "arrowOffset": 210
             },
             {
-                "title": "User Configuration and Logout",
-                "content": "To do all of the customization that we mentioned, you need to go to the user menu. This menu lets you edit the pages and widgets; manage page templates per tenant; and reset the templates. This is also where you logout.\nOh, and if you want the manager to take a break from working, use maintenance mode. It’s like telling the manager to take a time out!",
+                "title": "Console pages",
+                "content": "Here you can click on a page to work with a specific group of Cloudify actions, such as <strong>Local Blueprints</strong> or <strong>Deployments</strong>. Administrators can customize the pages to help streamline your work.",
+                "target": ".pages .pageMenuItem",
+                "placement": "right"
+            },
+            {
+                "title": "Widgets on the pages",
+                "content": "On each page is a set of widgets. Each widget lets you do a specific Cloudify action. Widgets are grouped on the page so that you can easily access related actions. <strong>Administrators can also customize the widgets on each page</strong> to meet your needs.",
+                "target": ".widgetItem",
+                "placement": "bottom"
+            },
+            {
+                "title": "Manager services status",
+                "content": "Here you can quickly review the status of the Cloudify services to see if there is anything that needs attention.",
+                "target": ".right.menu .item",
+                "placement": "bottom"
+            },
+            {
+                "title": "Switch to other tenants",
+                "content": "If you can access <strong>multiple tenants</strong> on the Cloudify Manager, here you can select the tenant that you want to work on.",
+                "target": ".right.menu .tenantsMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 250
+            },
+            {
+                "title": "Get help",
+                "content": "If you need more information about using the Console or the Cloudify Manager, here you can find links to <strong>documentation</strong>, <strong>video tutorials</strong>, and <strong>knowledge base articles</strong>.",
+                "target": ".right.menu .helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            },
+            {
+                "title": "User menu",
+                "content": "The user menu here gives you access to <strong>customizing pages and page templates</strong> if your user roles allow those actions. It is also where you logout.",
                 "target": ".right.menu .usersMenu",
                 "placement": "bottom",
                 "xOffset": -230,
                 "arrowOffset": 250
+            },
+            {
+                "title": "Next steps...",
+                "content": "Now that you know the structure of the console, <strong>check out other tours</strong> about working with the Cloudify Console.",
+                "target": "button#toursButton",
+                "placement": "top",
+                "xOffset": -270,
+                "arrowOffset": 270
             }
         ]
     },
     {
-        "name": "My second tour",
-        "startAt": "/stage/page/blueprints_catalog",
-        "id": "secondTour",
+        "name": "Cloudify Console Dashboard",
+        "id": "dashboard",
+        "startAt": "/page/dashboard",
         "steps": [
             {
-                "title": "Let’s deploy some blueprints!",
-                "content": "Here we go. Grab yourself a blueprint from the catalog, upload it to the local collection of blueprints (Upload? Whatever..), and deploy the blueprint to a… wait for it… DEPLOYMENT!",
-                "target": ".tourButton",
+                "title": "The Cloudify Console Dashboard",
+                "content": "The Cloudify Console dashboard contains <strong>widgets that do basic actions and show the status</strong> of selected tenant. Let's see what the widgets are...",
+                "target": ".dashboardPageMenuItem",
+                "placement": "right"
+            },
+            {
+                "title": "Tenant resource load",
+                "content": "Here you can see how many blueprints, deployments, plugins are available, and you can see how many nodes and executions are running currently. <strong>These statistics can indicate the load on the tenant</strong>.",
+                "target": ".widget.pluginsNumWidget",
                 "placement": "bottom"
             },
             {
-                "title": "Catalog of blueprints in the sky",
-                "content": "This is the catalog of blueprints. It’s a list of blueprints stored in the cloud that you can use in your manager. Don’t be confused. These blueprints aren’t actually on the manager until you click Upload. So obvious, right?",
-                "target": ".blueprintCatalogWidget",
-                "placement": "bottom",
-                "width": 350
+                "title": "Resource actions",
+                "content": "You can <strong>upload blueprints, create deployments and upload plugins</strong> straight from the dashboard.",
+                "target": ".widget.deploymentButtonWidget",
+                "placement": "bottom"
             },
             {
-                "title": "Upload the blueprint to the manager",
-                "content": "When you click this button, a galactic star command fleet is ordered to capture the blueprint from the evil Cloud Master and return it to its rightful place in the manager storage. And if you believe that...",
-                "target": ".uploadButton",
-                "placement": "top",
-                "multipage": true,
-                "onNextRedirectTo": "/stage/page/local_blueprints"
+                "title": "Execution filters",
+                "content": "Here you can filter the executions and events to <strong>show only those that are related to a specific blueprint or deployment</strong>.",
+                "target": ".widget.filterWidget",
+                "placement": "top"
             },
             {
-                "title": "List of local blueprints",
-                "content": "The list of blueprints shows the name and icon of each blueprint, its visibility level, creation date, update date, creator, name of main blueprint .yaml file and the number of deployments created from it.",
-                "target": ".blueprintsWidget",
-                "placement": "top",
-                "delay": 200
+                "title": "Executions",
+                "content": "These are the executions that the tenant is implementing currently.",
+                "target": ".widget.executionsWidget",
+                "placement": "top"
             },
             {
-                "title": "Where are my deployments?",
-                "content": "When you click on Deploy, you need to enter the input values for the deployment, or else you are mocked by the crowd that’s watching on reality TV. Are you ready?",
-                "target": ".deployButton",
+                "title": "Check out another tour",
+                "content": "Now that you know how to use the dashboard, <strong>check out another tour</strong> to see what else you can do with the Cloudify Console.",
+                "target": "button#toursButton",
                 "placement": "top",
-                "multipage": true,
-                "onNextRedirectTo": "/stage/page/deployments"
-            },
-            {
-                "title": "Here are your deployments",
-                "content": "There you have it -- Deployments! Are you happy now? Isn’t that what you wanted this whole time?\nThose are the basics of deploying. Anything more complicated than that is extra charge. Payment is accepted in dollars, sterling, bitcoin, or any other current or future currency.\nHave fun!",
-                "target": ".deploymentsWidget",
-                "placement": "top",
-                "delay": 200
+                "xOffset": -270,
+                "arrowOffset": 270
             }
         ]
-  }
+    },
+    {
+        "name": "Initial Manager Setup",
+        "id": "initialManagerSetup",
+        "steps": [
+            {
+                "title": "Cloudify Manager Resources",
+                "content": "Before you start working with blueprints and deployments, you <strong>must setup the resources that the blueprints use</strong>. Let's get started...",
+                "target": ".right.menu .helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            },
+            {
+                "title": "Managing tenants and users",
+                "content": "Cloudify Manager use <strong>tenants</strong> for data and user segregation. The Cloudify Manager is installed with a default-tenant. If you need other tenants, make sure you <strong>define the tenants that you need on your manager</strong> before you start using the manager.",
+                "target": ".tenant_managementPageMenuItem",
+                "onNextRedirectTo": ["/page/tenant_management", "Tenant Management", "No Tenants Management widget", "You need to have Tenants Management widget present on current page to proceed to the next step."],
+                "placement": "right"
+            },
+            {
+                "title": "Add tenants",
+                "content": "Add tenants to the manager. The tenants let you separate sets of plugins, secrets, blueprints and deployments for each tenant. For more information about sharing resources between tenants, see <strong>resource visibility</strong> in the documenation.",
+                "target": ".widget.tenantsWidget button > .add.user.icon",
+                "placement": "left"
+            },
+            {
+                "title": "Add user groups",
+              "content": "You can create user groups and assign them to tenants with roles. <strong>Users in a group inherit the roles of the group</strong>.",
+                "target": ".widget.userGroupsWidget button > .add.user.icon",
+                "placement": "left"
+            },
+            {
+                "title": "Add users",
+              "content": "You can add users and assign them to tenants with specific roles. If you import users and groups from an external authentication source, you can only assign user groups to tenants.",
+                "target": ".widget.userManagementWidget button > .add.user.icon",
+                "placement": "left"
+            },
+            {
+                "title": "System Resources",
+                "content": "After you setup your tenants and users, go to <strong>System Resources</strong> to setup the plugins and secrets that you need for your blueprints.",
+                "target": ".system_resourcesPageMenuItem",
+                "onNextRedirectTo": ["/page/system_resources", "System Resources", "No Plugins widget", "You need to have <strong>Plugins</strong> widget present on current page to proceed to the next step."],
+                "placement": "right"
+            },
+            {
+                "title": "Plugins",
+              "content": "Plugins let your blueprints integrate with third-party services and run operations. The plugins required by a blueprint are specified in the blueprint yaml file. <strong>You must upload the plugins to the tenant before you upload the blueprint to the tenant</strong>.",
+                "target": ".widget.pluginsWidget",
+                "placement": "bottom"
+            },
+            {
+                "title": "Upload a plugin",
+                "content": "When you know which plugins your blueprints need, upload them to the tenant.",
+                "target": ".widget.pluginsWidget button > .upload.icon",
+                "placement": "left"
+            },
+            {
+                "title": "Create secrets",
+              "content": "Blueprints use the <i>get_secret</i> function to get values from the encrypted secrets store. That way you do not have to store sensitive information in plain text in the blueprint. <strong>Create the secrets that your blueprints need.</strong><br>For information about hidden secrets, see the documentation.",
+                "target": ".widget.secretsWidget button > .add.icon",
+                "placement": "left"
+            },
+            {
+                "title": "Check out another tour",
+                "content": "Now that you know how to setup your manager resources, <strong>check out other help resources</strong> to see what else you can do with the Cloudify Console.",
+                "target": "button#toursButton",
+                "placement": "top",
+                "xOffset": -270,
+                "arrowOffset": 270
+            }
+        ]
+    },
+    {
+        "name": "From Blueprint to Execution",
+        "id": "fromBlueprintToExecution",
+        "steps": [
+            {
+                "title": "Get working with Cloudify",
+                "content": "After you setup your manager resources, it's time to use Cloudify to deploy an application. Let's get started...",
+                "target": ".right.menu .helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            },
+            {
+                "title": "Cloudify Catalog",
+                "content": "Cloudify catalog contains prepared blueprints and plugins that you can use right out of the box. By default the bluprints are taken from the cloudify-examples repository. You can point the widget to your own repository of blueprints.",
+                "target": ".cloudify_catalogPageMenuItem",
+                "onNextRedirectTo": ["/page/cloudify_catalog", "Cloudify Catalog", "No Blueprints", "You need to have <strong>Blueprints Catalog</strong> widget present on current page with at least one blueprint to proceed to the next step."],
+                "placement": "right"
+            },
+            {
+                "title": "Upload a Blueprint",
+                "content": "When you click <strong>Upload</strong>, the blueprint is uploaded to your Cloudify Manager. The blueprint is available in Local Blueprints, where you can also upload other blueprints.",
+                "onNextRedirectTo": ["/page/local_blueprints", "Local Blueprints", "No Blueprints", "You need to have <strong>Blueprints</strong> widget present on current page with at least one blueprint to proceed to the next step."],
+                "target": "div.blueprintCatalogWidget div.ui.grid > div.row > div:first-child button.uploadButton",
+                "placement": "right"
+            },
+            {
+                "title": "Deploy Blueprint",
+                "content": "Click <strong>Deploy</strong> to turn the blueprint into a deployment with specific inputs. You can deploy multiple times to spin up multiple environments.",
+                "onNextRedirectTo": ["/page/deployments", "Deployments", "No Deployments", "You need to have <strong>Deployments</strong> widget present on current page with at least one deployment to proceed to the next step."],
+                "target": "div.blueprintsWidget i.rocket.icon",
+                "placement": "left"
+            },
+            {
+                "title": "Install the Deployment",
+                "content": "In the deployment menu, you can run executions on the deployment. Open the menu and select the <strong>Install</strong> execution.",
+                "target": "div.deploymentsWidget i.menuAction",
+                "placement": "left"
+            },
+            {
+                "title": "Deployment Status",
+                "content": "You can see the status of the nodes in the deployment as the deployment is installed. You can click on a deployment to see more details about it, including topology, nodes, inputs and outputs.",
+                "target": "div.deploymentsWidget div.nodeState",
+                "onNextRedirectTo": ["/page/dashboard", "Dashboard", "No Executions widget", "You need to have <strong>Executions</strong> widget present on current page to proceed to the next step."],
+                "placement": "left"
+            },
+            {
+                "title": "Executions Status",
+                "content": "In the Dashboard you can see the executions that are currently running, including the processes that are installing the deployment.",
+                "target": "div.executionsWidget",
+                "placement": "top"
+            },
+            {
+                "title": "Check out another tour",
+                "content": "Now that you know how to deploy an application, you can go to the <strong>day-two processes tour</strong> to review the maintenance tasks that you can do on a deployment.",
+                "target": "button#toursButton",
+                "placement": "top",
+                "xOffset": -270,
+                "arrowOffset": 270
+            }
+        ]
+    },
+    {
+        "name": "Day-two Processes",
+        "id": "dayTwoProcesses",
+        "steps": [
+            {
+                "title": "Manage your deployments",
+                "content": "After you deploy some applications, you need to monitor them and sometimes you need to run executions on them. Let's see how to do that...",
+                "onNextRedirectTo": ["/page/deployments", "Deployments", "No Deployments", "You need to have <strong>Deployments</strong> widget present on current page with at least one deployment to proceed to the next step."],
+                "target": ".right.menu .helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            },
+            {
+                "title": "Deployments",
+                "content": "All of the deployed applications are listed on the deployments page. In the menu for the deployment you can execute workflows on the deployment, including heal and scale.",
+                "target": "div.deploymentsWidget i.menuAction",
+                "placement": "left"
+            },
+            {
+                "title": "Update a Deployment",
+                "content": "You can click on a deployment to see the workflows available for that deployment.<br />Click on the <strong>Update Deployment</strong> button in a deployment.<br>Notice that you can <strong>change the blueprint, change the inputs, and you can explicitly list the nodes to update</strong>. The Deployment Events/Logs in the deployment show the events on the deployment as they are happening. ",
+                "target": "div.deploymentsWidget div.segment.clickable",
+                "onNextRedirectTo": ["/page/statistics", "Statistics", "No Deployment Metric Graph widget", "You need to have at least one <strong>Deployment Metric Graph</strong> widget to proceed to the next step."],
+                "placement": "bottom"
+            },
+            {
+                "title": "Statistics",
+                "content": "The statistics show the memory and CPU load on the deployments.",
+                "target": "div.graphWidget",
+                "placement": "left"
+            },
+            {
+                "title": "Filter the Statistics",
+                "content": "You can select specific parameters in the filters to show statistics for specific, running deployments.",
+                "target": "div.filterWidget",
+                "placement": "bottom"
+            },
+            {
+                "title": "Customize Pages",
+                "content": "In the user menu, administrators can enable <strong>Edit Mode</strong> and add widgets to pages from the widgets catalog.",
+                "target": "div.usersMenu",
+                "placement": "bottom",
+                "xOffset": -240,
+                "arrowOffset": 250
+            },
+            {
+                "title": "Custom Templates",
+                "content": "Administrators can also select template management and define the pages that are shown to users when they login.",
+                "target": "div.usersMenu",
+                "placement": "bottom",
+                "xOffset": -240,
+                "arrowOffset": 250
+            },
+            {
+                "title": "More Information",
+                "content": "Now that you know how to deploy an application, <strong>check out other help resources</strong> to see what else you can do with the Cloudify Console.",
+                "target": "div.helpMenu",
+                "placement": "bottom",
+                "xOffset": -200,
+                "arrowOffset": 210
+            }
+        ]
+    }
 ]

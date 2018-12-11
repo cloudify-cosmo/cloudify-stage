@@ -15,9 +15,35 @@ export default class Manager extends Component {
         showServicesStatus: PropTypes.bool.isRequired
     };
 
-    renderStatusIcon(status, maintenance) {
-        var color = status ? (status === Consts.MANAGER_RUNNING ?
-                    (maintenance !== Consts.MAINTENANCE_DEACTIVATED ? 'yellow' : 'green') : 'red') : 'grey';
+    _areAllServicesRunning(services) {
+        const runningState = 'running';
+        let allServicesRunning = true;
+
+        _.forEach(services, (service) => {
+            _.forEach(service.instances, (instance) => {
+                if (instance.state !== runningState) {
+                    allServicesRunning = false;
+                    return false;
+                }
+            });
+            if (!allServicesRunning) {
+                return false;
+            }
+        });
+
+        return allServicesRunning;
+    }
+
+    _renderStatusIcon(status, maintenance) {
+        const allServicesRunning = this._areAllServicesRunning(status.services);
+
+        const color = status.status
+            ? (status.status === Consts.MANAGER_RUNNING
+                ? (maintenance !== Consts.MAINTENANCE_DEACTIVATED || !allServicesRunning
+                    ? 'yellow'
+                    : 'green')
+                : 'red')
+            : 'grey';
 
         return <Icon name='signal' circular inverted size="small" color={color} className='statusIcon'/>;
     }
@@ -25,16 +51,16 @@ export default class Manager extends Component {
     render() {
         let managerInfo = () =>
             <div className="managerMenu">
-                {this.renderStatusIcon(this.props.manager.status.status, this.props.manager.maintenance)}
+                {this._renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
                 <span className="managerVersion">v{this.props.manager.serverVersion}</span>
             </div>;
 
         return (
             this.props.showServicesStatus
             ?
-                <Popup wide hoverable position='bottom right'>
+                <Popup wide hoverable position='bottom right' onOpen={this.props.onServicesStatusOpen}>
                     <Popup.Trigger>{managerInfo()}</Popup.Trigger>
-                    <Services/>
+                    <Services />
                 </Popup>
             :
                 managerInfo()

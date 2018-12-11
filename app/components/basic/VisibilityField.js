@@ -5,7 +5,8 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import VisibilityIcon from '../VisibilityIcon';
+import VisibilityIcon from './VisibilityIcon';
+import Popup from './Popup';
 import consts from '../../utils/consts';
 
 /**
@@ -17,7 +18,9 @@ import consts from '../../utils/consts';
  * `Stage.Basic.VisibilityField`
  *
  * ## Usage
+ * ```
  *  <VisibilityField visibility={CURRENT_AVAILABILITY} onVisibilityChange={(newVisibility) => IMPLEMENT_LOGIC_HERE} disallowGlobal={true} className={ANY_CLASS_NAME}/>
+ *  ```
  */
 export default class VisibilityField extends Component {
 
@@ -31,6 +34,7 @@ export default class VisibilityField extends Component {
      * @property {string} [visibility] the current visibility, one from ['tenant', 'private', 'global'].
      * @property {function} [onVisibilityChange=()=>{}] the callback to be called with the new visibility
      * @property {bool} [disallowGlobal=false] should the component not allow changing the global
+     * @property {bool} [allowChange=true] should the component allow changing visibility
      * @property {string} [className=''] Name of the style class to be added
      */
     static propTypes = {
@@ -40,14 +44,21 @@ export default class VisibilityField extends Component {
             consts.visibility.GLOBAL.name]).isRequired,
         onVisibilityChange: PropTypes.func,
         disallowGlobal: PropTypes.bool,
+        allowChange: PropTypes.bool,
         className: PropTypes.string
     };
 
     static defaultProps = {
         onVisibilityChange: () => {},
         disallowGlobal: false,
+        allowChange: true,
         className: ''
     };
+
+    static visibilityTitle = _.reduce(consts.visibility, (result, visibilityObject) => {
+        result[visibilityObject.name] = visibilityObject.title;
+        return result;
+    }, {});
 
     onClick(){
         let visibilities = this.props.disallowGlobal? _.dropRight(VisibilityField.visibilitiesOrder) : VisibilityField.visibilitiesOrder;
@@ -61,7 +72,18 @@ export default class VisibilityField extends Component {
 
     render() {
         return (
-            <VisibilityIcon visibility={this.props.visibility} link className={this.props.className} onClick={this.onClick.bind(this)} />
+            <Popup>
+                <Popup.Trigger>
+                    <VisibilityIcon visibility={this.props.visibility} link={this.props.allowChange} disabled={!this.props.allowChange}
+                                    showTitle={false} title={null} className={this.props.className} onClick={this.onClick.bind(this)} />
+                </Popup.Trigger>
+                <Popup.Header>
+                    Visibility
+                </Popup.Header>
+                <Popup.Content>
+                    {VisibilityField.visibilityTitle[this.props.visibility]}
+                </Popup.Content>
+            </Popup>
         );
     }
 }

@@ -37,9 +37,9 @@ export default class TenantsModal extends React.Component {
     }
 
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
-            this.setState({...TenantsModal.initialState, tenants: nextProps.group.tenants});
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            this.setState({...TenantsModal.initialState, tenants: this.props.group.tenants});
         }
     }
 
@@ -95,10 +95,10 @@ export default class TenantsModal extends React.Component {
                 <Modal.Content>
                     <Form loading={this.state.loading} errors={this.state.errors}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
-                            <Form.Field>
-                                <Form.Dropdown placeholder='Tenants' multiple selection options={options} name="tenants"
-                                               value={Object.keys(this.state.tenants)} onChange={this._handleInputChange.bind(this)}/>
-                            </Form.Field>
+                        <Form.Field>
+                            <Form.Dropdown placeholder='Tenants' multiple selection options={options} name="tenants"
+                                           value={Object.keys(this.state.tenants)} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
                         <RolesPicker onUpdate={this.onRoleChange.bind(this)} resources={this.state.tenants} resourceName="tenant" toolbox={this.props.toolbox}></RolesPicker>
                     </Form>
                 </Modal.Content>

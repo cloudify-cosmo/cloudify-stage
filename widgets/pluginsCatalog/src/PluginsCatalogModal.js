@@ -37,10 +37,10 @@ export default class PluginsCatalogModal extends React.Component {
   /**
    * update state with initialState if not sended yet
    * 
-   * @param {any} nextProps 
+   * @param {any} prevProps
    */
-  componentWillReceiveProps (nextProps) {
-    if (!this.props.open && nextProps.open) {
+  componentDidUpdate(prevProps) {
+    if (!prevProps.open && this.props.open) {
       this.setState (PluginsCatalogModal.initialState);
     }
   }

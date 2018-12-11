@@ -3,7 +3,20 @@
  */
 
 export default {
-    CONTEXT_PATH: '/stage',
+    CONTEXT_PATH: '/console',
+
+    ERROR_404_PAGE_PATH: '/404',
+    ERROR_NO_TENANTS_PAGE_PATH: '/noTenants',
+    ERROR_PAGE_PATH: '/error',
+    HOME_PAGE_PATH: '/',
+    LOGIN_PAGE_PATH: '/login',
+    LOGOUT_PAGE_PATH: '/logout',
+    MAINTENANCE_PAGE_PATH: '/maintenance',
+
+    USER_DATA_PATH: '/userData',
+    APP_DATA_PATH: '/appData',
+
+    TOKEN_COOKIE_NAME: 'XSRF-TOKEN',
 
     DEFAULT_TENANT: 'default_tenant',
     MODE_MAIN: 'main',
@@ -31,6 +44,5 @@ export default {
     PAGE_MANAGEMENT_VIEW: 'view',
     PAGE_MANAGEMENT_EDIT: 'edit',
     PRIVATE_RESOURCE: 'private',
-    WIDGET_ID_HEADER: 'widget-id',
-    USER_DATA_PATH: '/userData'
+    WIDGET_ID_HEADER: 'widget-id'
 };
