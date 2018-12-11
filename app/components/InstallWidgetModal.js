@@ -38,7 +38,7 @@ export default class InstallWidgetModal extends Component {
         onWidgetInstalled: ()=>Promise.resolve()
     };
 
-    componentWillUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (!prevProps.open && this.props.open) {
             this.widgetFileRef.current && this.widgetFileRef.current.reset();
             this.setState(InstallWidgetModal.initialState);

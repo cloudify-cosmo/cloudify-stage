@@ -2,6 +2,7 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
+import { connectRouter } from 'connected-react-router';
 import { combineReducers } from 'redux';
 import pages from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
@@ -15,7 +16,8 @@ import app from './appReducer';
 import widgetData from './widgetDataReducer';
 import drilldownContext from './drilldownContextReducer';
 
-const rootReducer = combineReducers({
+export default (history) => combineReducers({
+    router: connectRouter(history),
     app,
     manager,
     pages,
@@ -28,5 +30,3 @@ const rootReducer = combineReducers({
     config,
     widgetData
 });
-
-export default rootReducer;

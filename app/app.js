@@ -12,6 +12,7 @@ import 'jquery-ui/ui/widgets/draggable.js';
 import 'jquery-ui/ui/widgets/droppable.js';
 
 import './styles/style.scss';
+import 'gs-ui-infra/app/styles/main-light.scss';
 
 // Import semantic
 import 'semantic-ui-css/semantic.min.css';

@@ -41,7 +41,7 @@ module.exports = (function() {
             options.json = data;
             try {
                 data = JSON.stringify(data);
-                options.headers['content-length'] = Buffer.byteLength(data);
+                options.headers = {...options.headers, 'content-length':  Buffer.byteLength(data)};
             } catch (error) {
                 logger.error('Invalid payload data. Error:', error)
             }

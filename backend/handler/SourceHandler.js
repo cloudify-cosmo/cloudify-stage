@@ -145,19 +145,26 @@ module.exports = (function() {
         let promise = query.url ? _saveDataFromUrl(query.url) : _saveMultipartData(request);
 
         return promise.then(data => {
-            let archiveFolder = data.archiveFolder;
-            let archiveFile = data.archiveFile; // filename with extension
-            let archiveFileName = pathlib.parse(archiveFile).name; // filename without extension
-            let archivePath = pathlib.join(archiveFolder, archiveFile);
-            let extractedDir = pathlib.join(archiveFolder, 'extracted');
+            const archiveFolder = data.archiveFolder;
+            const archiveFile = data.archiveFile; // filename with extension
+            const archiveFileName = pathlib.parse(archiveFile).name; // filename without extension
+            const extractedDir = pathlib.join(archiveFolder, 'extracted');
 
             return ArchiveHelper.removeOldExtracts(lookupYamlsDir)
                 .then(() => {
                     if (_.isEmpty(archiveFile)) {
                         throw 'No archive file provided';
+                    } else {
+                        const archivePath = pathlib.join(archiveFolder, archiveFile);
+                        const archiveExtension = pathlib.parse(archiveFile).ext; // file extension
+
+                        if (archiveExtension === '.yml' || archiveExtension === '.yaml') {
+                            return ArchiveHelper.storeSingleYamlFile(archivePath, archiveFile, extractedDir);
+                        } else {
+                            return ArchiveHelper.decompressArchive(archivePath, extractedDir)
+                        }
                     }
                 })
-                .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
                 .then((decompressData) => ({archiveFileName, extractedDir, decompressData}))
                 .catch(err => {
                     ArchiveHelper.cleanTempData(archiveFolder);
@@ -239,9 +246,10 @@ module.exports = (function() {
 
                 return item;
             } catch(ex) {
-                if (ex.code == 'EACCES')
+                if (ex.code === 'EACCES') {
                     //User does not have permissions, ignore directory
                     return null;
+                }
             }
         } else {
             return null;

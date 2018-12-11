@@ -12,8 +12,6 @@ import 'd3';
 import momentImport from 'moment';
 import markdownImport from 'markdown';
 
-import 'cloudify-blueprint-topology';
-
 import * as BasicComponents from '../components/basic';
 import StageUtils from './stageUtils';
 import LoaderUtils from './LoaderUtils';
@@ -25,16 +23,16 @@ let widgetDefinitions = [];
 export default class WidgetDefinitionsLoader {
     static init() {
         window.Stage = {
-            defineWidget: (widgetDefinition)=> {
+            defineWidget: (widgetDefinition) => {
                 widgetDefinitions.push(new WidgetDefinition({...widgetDefinition, id: document.currentScript.id}));
             },
             Basic: BasicComponents,
-            ComponentToHtmlString: (component)=>{
+            ComponentToHtmlString: (component) => {
                 return ReactDOMServer.renderToString(component);
             },
             GenericConfig,
             Common: [],
-            defineCommon: (def) =>{
+            defineCommon: (def) => {
                 Stage.Common[def.name] = def.common;
             },
             Utils: StageUtils

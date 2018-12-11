@@ -12,7 +12,7 @@ var _ = require('lodash');
 module.exports = (function() {
 
     function _getAppenderFile(appenderObject) {
-        return _.get(appenderObject, 'filename') || _.get(appenderObject, 'appender.filename');
+        return _.get(appenderObject, 'filename');
     }
 
     function _getLogDirectory(logFile) {
@@ -20,8 +20,9 @@ module.exports = (function() {
     }
 
     function _preConfigureLog4js(log4jsConfig) {
-        let logFiles = _.filter(_.map(log4jsConfig.appenders[0].appenders, _getAppenderFile), _.isString);
-        let logDirectories = _.uniq(_.map(logFiles, _getLogDirectory));
+        const appenders = _.keys(log4jsConfig.appenders);
+        const logFiles = _.filter(_.map(appenders, (appender) => _getAppenderFile(log4jsConfig.appenders[appender])), _.isString);
+        const logDirectories = _.uniq(_.map(logFiles, _getLogDirectory));
 
         try {
             _.forEach(logDirectories, function (logDirectory) {

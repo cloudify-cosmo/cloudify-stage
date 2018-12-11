@@ -20,7 +20,7 @@ export default class CreateModal extends React.Component {
         excludeLogs: false,
         excludeEvents: false,
         errors: {}
-    }
+    };
 
     onApprove () {
         this._submitCreate();
@@ -32,7 +32,7 @@ export default class CreateModal extends React.Component {
         return true;
     }
 
-    componentWillUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState) {
         if (!prevState.open && this.state.open) {
             this.setState(CreateModal.initialState);
         }

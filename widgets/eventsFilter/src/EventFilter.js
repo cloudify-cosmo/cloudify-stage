@@ -27,6 +27,7 @@ export default class EventFilter extends React.Component {
             timeEnd: '',
             type: '',
             messageText: '',
+            operationText: '',
             logLevel: []
         },
         eventTypeOptions,
@@ -147,8 +148,10 @@ export default class EventFilter extends React.Component {
                     </Form.Field>
                 </Form.Group>
                 <Form.Group inline widths='equal'>
-                    <Form.Input placeholder='Message Text' name="messageText" fluid
-                                value={this.state.fields.messageText} onChange={this._handleInputChange.bind(this)}/>
+                    <Form.Input placeholder='Operation' name="operationText" fluid
+                                value={this.state.fields.operationText} onChange={this._handleInputChange.bind(this)} />
+                    <Form.Input placeholder='Message' name="messageText" fluid
+                                value={this.state.fields.messageText} onChange={this._handleInputChange.bind(this)} />
                     <Form.Field>
                         <TimeFilter fluid placeholder='Time Range' name="timeRange"
                                     addTimeResolution={false} ranges={timeRanges} dateSyntax={TimeFilter.ISO_8601_DATE_SYNTAX}

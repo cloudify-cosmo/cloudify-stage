@@ -70,9 +70,9 @@ export default class InputTime extends Component {
         this._parseAndSetState(this.props.value);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(!_.isEqual(nextProps.value, this.props.value)) {
-            this._parseAndSetState(nextProps.value);
+    componentDidUpdate(prevProps) {
+        if(!_.isEqual(this.props.value, prevProps.value)) {
+            this._parseAndSetState(this.props.value);
         }
     }
 

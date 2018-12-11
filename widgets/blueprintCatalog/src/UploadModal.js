@@ -48,12 +48,12 @@ export default class UploadModal extends React.Component {
         return true;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
-            if (!_.isEmpty(nextProps.yamlFiles)) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            if (!_.isEmpty(this.props.yamlFiles)) {
                 const defaultBlueprintYamlFile = Stage.Common.UploadBlueprintModal.DEFAULT_BLUEPRINT_YAML_FILE;
-                let yamlFiles = nextProps.yamlFiles;
-                let blueprintName = nextProps.repositoryName;
+                let yamlFiles = this.props.yamlFiles;
+                let blueprintName = this.props.repositoryName;
                 let blueprintYamlFile
                     = _.includes(yamlFiles, defaultBlueprintYamlFile)
                     ? defaultBlueprintYamlFile

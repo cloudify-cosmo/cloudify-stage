@@ -25,7 +25,7 @@ export default class BlueprintsCatalog extends React.Component{
         onDeleteBlueprint: ()=>{},
         onCreateDeployment: ()=>{},
         onSetVisibility: ()=>{},
-        allowedSettingTo: ['tenant'],
+        allowedSettingTo: ['tenant', 'global'],
         noDataMessage: ''
     };
 

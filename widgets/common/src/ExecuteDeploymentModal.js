@@ -35,11 +35,11 @@ export default class ExecuteDeploymentModal extends React.Component {
         deployments: []
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             let {InputsUtils} = Stage.Common;
             let params = _.mapValues(
-                _.get(nextProps.workflow, 'parameters', {}), (parameterData) =>
+                _.get(this.props.workflow, 'parameters', {}), (parameterData) =>
                     InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type));
             this.setState({...ExecuteDeploymentModal.initialState, params});
         }

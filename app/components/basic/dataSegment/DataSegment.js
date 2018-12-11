@@ -141,13 +141,15 @@ export default class DataSegment extends Component {
     constructor(props,context) {
         super(props,context);
 
+        this.paginationRef = React.createRef();
+
         this.state = {
             searchText: '',
             searching: false
         };
 
         this.debouncedSearch = _.debounce(() => {
-            this.refs.pagination.reset(() => {
+            this.paginationRef.current.reset(() => {
                 return Promise.resolve(this._fetchData())
                               .then(() => this.setState({searching: false}));
             });
@@ -193,8 +195,8 @@ export default class DataSegment extends Component {
     _fetchData() {
         return this.props.fetchData({gridParams: {
             _search: this.state.searchText,
-            currentPage: this.refs.pagination.state.currentPage,
-            pageSize: this.refs.pagination.state.pageSize
+            currentPage: this.paginationRef.current.state.currentPage,
+            pageSize: this.paginationRef.current.state.pageSize
         }});
     }
 
@@ -232,12 +234,12 @@ export default class DataSegment extends Component {
                 }
 
                 <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} sizeMultiplier={this.props.sizeMultiplier}
-                            fetchData={this._fetchData.bind(this)} fetchSize={this.props.fetchSize} ref="pagination">
+                            fetchData={this._fetchData.bind(this)} fetchSize={this.props.fetchSize} ref={this.paginationRef}>
                     {this.props.totalSize <= 0 && this.props.fetchSize <= 0 &&
                      (this.props.totalSize === 0 || this.props.fetchSize === 0) ?
                         <Message icon>
                             <Icon name="ban" />
-                            {this.props.fetchSize === 0 && this.refs.pagination && this.refs.pagination.state.currentPage > 1 ?
+                            {this.props.fetchSize === 0 && this.paginationRef.current && this.paginationRef.current.state.currentPage > 1 ?
                                 <span>No more data available</span>
                                 :
                                 <span>{this.props.noDataMessage}</span>

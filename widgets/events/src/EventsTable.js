@@ -54,18 +54,19 @@ export default class EventsTable extends React.Component {
         this.setState({errorCauses: [], showErrorCausesModal: false});
     }
 
-    getHighlightedText(text) {
-        let eventFilter = this.props.toolbox.getContext().getValue('eventFilter') || {};
-        let messageText = eventFilter.messageText;
+    getHighlightedText(text, parameterName, highlightColor = 'yellow') {
+        const eventFilter = this.props.toolbox.getContext().getValue('eventFilter') || {};
+        const highlightedTextFragment = eventFilter[parameterName];
+        text = _.isString(text) ? text : '';
 
-        if (!_.isEmpty(messageText)) {
-            let parts = text.split(new RegExp(`(${messageText})`, 'gi'));
+        if (!_.isEmpty(highlightedTextFragment)) {
+            let parts = text.split(new RegExp(`(${highlightedTextFragment})`, 'gi'));
             return (
                 <span>
                     {
                         parts.map((part, i) =>
                             <span key={i}
-                                  style={part.toLowerCase() === messageText.toLowerCase() ? { backgroundColor: 'yellow' } : {} }>
+                                  style={part.toLowerCase() === highlightedTextFragment.toLowerCase() ? { backgroundColor: highlightColor } : {} }>
                             {part}
                             </span>
                         )
@@ -104,20 +105,36 @@ export default class EventsTable extends React.Component {
                            className="eventsTable"
                            noDataMessage={NO_DATA_MESSAGE}>>
 
-                    <DataTable.Column label="" width="40px" show={fieldsToShow.indexOf('Icon') >= 0}/>
-                    <DataTable.Column label="Timestamp" name="timestamp" width="10%" show={fieldsToShow.indexOf('Timestamp') >= 0}/>
-                    <DataTable.Column label="Type" name="event_type" show={fieldsToShow.indexOf('Type') >= 0}/>
+                    <DataTable.Column label="" width="40px"
+                                      show={fieldsToShow.indexOf('Icon') >= 0} />
+                    <DataTable.Column label="Timestamp" name="timestamp" width="10%"
+                                      show={fieldsToShow.indexOf('Timestamp') >= 0} />
+                    <DataTable.Column label="Type" name="event_type"
+                                      show={fieldsToShow.indexOf('Type') >= 0} />
                     <DataTable.Column label="Blueprint" name="blueprint_id"
-                                      show={!this.props.data.blueprintId && !this.props.data.deploymentId &&
-                                            !this.props.data.executionId && fieldsToShow.indexOf('Blueprint') >= 0} />
+                                      show={_.size(this.props.data.blueprintId) !== 1 &&
+                                            _.size(this.props.data.deploymentId) !== 1 &&
+                                            _.size(this.props.data.nodeInstanceId) !== 1 &&
+                                            _.size(this.props.data.executionId) !== 1 &&
+                                            fieldsToShow.indexOf('Blueprint') >= 0} />
                     <DataTable.Column label="Deployment" name="deployment_id"
-                                      show={!this.props.data.deploymentId && !this.props.data.executionId &&
+                                      show={_.size(this.props.data.deploymentId) !== 1 &&
+                                            _.size(this.props.data.nodeInstanceId) !== 1 &&
+                                            _.size(this.props.data.executionId) !== 1 &&
                                             fieldsToShow.indexOf('Deployment') >= 0} />
-                    <DataTable.Column label="Node Id" name="node_name" show={fieldsToShow.indexOf('Node Id') >= 0}/>
-                    <DataTable.Column label="Node Instance Id" name="node_instance_id" show={fieldsToShow.indexOf('Node Instance Id') >= 0}/>
-                    <DataTable.Column label="Workflow" name="workflow_id" show={!this.props.data.executionId && fieldsToShow.indexOf('Workflow') >= 0} />
-                    <DataTable.Column label="Operation" name="operation" show={fieldsToShow.indexOf('Operation') >= 0}/>
-                    <DataTable.Column label="Message" show={fieldsToShow.indexOf('Message') >= 0}/>
+                    <DataTable.Column label="Node Id" name="node_name"
+                                      show={_.size(this.props.data.nodeInstanceId) !== 1 &&
+                                            fieldsToShow.indexOf('Node Id') >= 0} />
+                    <DataTable.Column label="Node Instance Id" name="node_instance_id"
+                                      show={_.size(this.props.data.nodeInstanceId) !== 1 &&
+                                            fieldsToShow.indexOf('Node Instance Id') >= 0} />
+                    <DataTable.Column label="Workflow" name="workflow_id"
+                                      show={_.size(this.props.data.executionId) !== 1 &&
+                                            fieldsToShow.indexOf('Workflow') >= 0} />
+                    <DataTable.Column label="Operation" name="operation"
+                                      show={fieldsToShow.indexOf('Operation') >= 0} />
+                    <DataTable.Column label="Message"
+                                      show={fieldsToShow.indexOf('Message') >= 0} />
 
                     {
                         this.props.data.items.map((item, index) => {
@@ -176,7 +193,11 @@ export default class EventsTable extends React.Component {
                                     <DataTable.Data>{item.node_name}</DataTable.Data>
                                     <DataTable.Data>{item.node_instance_id}</DataTable.Data>
                                     <DataTable.Data>{item.workflow_id}</DataTable.Data>
-                                    <DataTable.Data>{item.operation}</DataTable.Data>
+                                    <DataTable.Data>
+                                        {
+                                            this.getHighlightedText(item.operation, 'operationText', 'lawngreen')
+                                        }
+                                    </DataTable.Data>
                                     <DataTable.Data>
                                         {
                                             item.message &&
@@ -184,7 +205,7 @@ export default class EventsTable extends React.Component {
                                                 <Popup.Trigger>
                                                     <span>
                                                         {
-                                                           this.getHighlightedText(_.truncate(JsonUtils.stringify(item.message, false), truncateOptions))
+                                                           this.getHighlightedText(_.truncate(JsonUtils.stringify(item.message, false), truncateOptions), 'messageText')
                                                         }
                                                     </span>
                                                 </Popup.Trigger>

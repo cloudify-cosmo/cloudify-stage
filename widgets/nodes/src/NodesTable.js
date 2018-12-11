@@ -30,7 +30,7 @@ export default class NodesTable extends React.Component {
         this.props.toolbox.getContext().setValue('depNodeId', clickedAlreadySelectedNode ? null : clickedDepNodeId);
         this.props.toolbox.getContext().setValue('nodeId', clickedAlreadySelectedNode ? null : item.id);
         this.props.toolbox.getContext().setValue('nodeInstanceId', null);
-        this.props.toolbox.getEventBus().trigger('topology:selectNode', item.id);
+        this.props.toolbox.getEventBus().trigger('topology:selectNode', clickedAlreadySelectedNode ? null : item.id);
     }
 
     componentDidMount() {
@@ -123,9 +123,8 @@ export default class NodesTable extends React.Component {
                                         <DataTable.Data>{node.groups}</DataTable.Data>
                                     </DataTable.Row>
 
-                                    <DataTable.DataExpandable>
-                                        <NodeInstancesTable instances={node.instances} widget={this.props.widget} toolbox={this.props.toolbox}>
-                                        </NodeInstancesTable>
+                                    <DataTable.DataExpandable key={`${node.id + node.deployment_id}_Expanded`}>
+                                        <NodeInstancesTable instances={node.instances} widget={this.props.widget} toolbox={this.props.toolbox} />
                                     </DataTable.DataExpandable>
 
                                 </DataTable.RowExpandable>
@@ -142,26 +141,26 @@ export default class NodesTable extends React.Component {
 function NodeTypeIcon(props) {
     let nodeTypeClass = null;
     const NODE_TYPE_CLASS = {
-        'cloudify.nodes.Root':'topology-glyph app-module', //The base type for all built-in types.
-        'cloudify.nodes.Tier':'topology-glyph tier', //A marker for a future scale group
-        'cloudify.nodes.Compute':'topology-glyph host', //A compute resource either a virtual or a physical host
-        'cloudify.nodes.Container':'topology-glyph ', //A logical partition in a host such as linux container or docker
-        'cloudify.nodes.Network':'topology-glyph switch', //A virtual network
-        'cloudify.nodes.Subnet':'topology-glyph subnet', //A virtual segment of IP addresses in a network
-        'cloudify.nodes.Router':'topology-glyph router', //A virtual layer 3 router
-        'cloudify.nodes.Port':'topology-glyph port', //An entry in a virtual subnet. Can be used in some clouds to secure a static private IP
-        'cloudify.nodes.VirtualIP':'topology-glyph floating-ip', //A virtual IP implemented as NAT or in another manner
-        'cloudify.nodes.SecurityGroup':'topology-glyph security-group', //A cloud security group (VM network access rules)
-        'cloudify.nodes.LoadBalancer':'topology-glyph load-balancer', //A virtualized Load Balancer
-        'cloudify.nodes.Volume':'topology-glyph volume', //A persistent block storage volume
-        'cloudify.nodes.FileSystem':'topology-glyph blob-storage', //A Writable File System. This type must be used in conjunction with a Volume type and a Compute type.
-        'cloudify.nodes.ObjectStorage':'topology-glyph blob-storage', //A BLOB storage segment
-        'cloudify.nodes.SoftwareComponent':'topology-glyph ', //A base type for all middleware level types
-        'cloudify.nodes.WebServer':'topology-glyph web-server', //A web server
+        'cloudify.nodes.ApplicationModule':'topology-glyph app-module', //a base type for any application module or artifact
         'cloudify.nodes.ApplicationServer':'topology-glyph app-server', //An application server
+        'cloudify.nodes.Compute':'topology-glyph host', //A compute resource either a virtual or a physical host
+        'cloudify.nodes.Database':'topology-glyph db-server', //a Database
         'cloudify.nodes.DBMS':'topology-glyph db-server', //a Database
-        'cloudify.nodes.MessageBugServer':'topology-glyph message-bus-server', //a message bus server
-        'cloudify.nodes.ApplicationModule':'topology-glyph app-module ', //a base type for any application module or artifact
+        'cloudify.nodes.FileSystem':'topology-glyph blob-storage', //A Writable File System. This type must be used in conjunction with a Volume type and a Compute type.
+        'cloudify.nodes.LoadBalancer':'topology-glyph load-balancer', //A virtualized Load Balancer
+        'cloudify.nodes.MessageBusServer':'topology-glyph message-bus-server', //a message bus server
+        'cloudify.nodes.Network':'topology-glyph switch', //A virtual network
+        'cloudify.nodes.ObjectStorage':'topology-glyph blob-storage', //A BLOB storage segment
+        'cloudify.nodes.Port':'topology-glyph port', //An entry in a virtual subnet. Can be used in some clouds to secure a static private IP
+        'cloudify.nodes.Root':'topology-glyph app-module', //The base type for all built-in types.
+        'cloudify.nodes.Router':'topology-glyph router', //A virtual layer 3 router
+        'cloudify.nodes.SecurityGroup':'topology-glyph security-group', //A cloud security group (VM network access rules)
+        'cloudify.nodes.SoftwareComponent':'topology-glyph app-server', //A base type for all middleware level types
+        'cloudify.nodes.Subnet':'topology-glyph subnet', //A virtual segment of IP addresses in a network
+        'cloudify.nodes.Tier':'topology-glyph tier', //A marker for a future scale group
+        'cloudify.nodes.VirtualIP':'topology-glyph floating-ip', //A virtual IP implemented as NAT or in another manner
+        'cloudify.nodes.Volume':'topology-glyph volume', //A persistent block storage volume
+        'cloudify.nodes.WebServer':'topology-glyph web-server' //A web server
     };
     const DEFAULT_NODE_TYPE_CLASS = NODE_TYPE_CLASS['cloudify.nodes.Root'];
 

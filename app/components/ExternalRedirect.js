@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 
 export class ExternalRedirect extends Component {
-    componentWillMount(){
+    componentDidMount(){
         window.location = this.props.url;
     }
     render(){

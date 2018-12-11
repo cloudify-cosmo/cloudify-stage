@@ -38,22 +38,37 @@ Stage.defineWidget({
 
         let blueprintId = toolbox.getContext().getValue('blueprintId');
         if (!_.isEmpty(blueprintId)) {
-            params.blueprint_id = blueprintId;
+            params.blueprint_id = _.castArray(blueprintId);
         }
 
         let deploymentId = toolbox.getContext().getValue('deploymentId');
         if (!_.isEmpty(deploymentId)) {
-            params.deployment_id = deploymentId;
+            params.deployment_id = _.castArray(deploymentId);
+        }
+
+        let nodeId = toolbox.getContext().getValue('nodeId');
+        if (!_.isEmpty(nodeId)) {
+            params.node_id = _.castArray(nodeId);
+        }
+
+        let nodeInstanceId = toolbox.getContext().getValue('nodeInstanceId');
+        if (!_.isEmpty(nodeInstanceId)) {
+            params.node_instance_id = _.castArray(nodeInstanceId);
         }
 
         let executionId = toolbox.getContext().getValue('executionId');
         if (!_.isEmpty(executionId)) {
-            params.execution_id = executionId;
+            params.execution_id = _.castArray(executionId);
         }
 
         let messageText = eventFilter.messageText;
         if (!_.isEmpty(messageText)) {
             params.message = `%${messageText}%`;
+        }
+
+        let operationText = eventFilter.operationText;
+        if (!_.isEmpty(operationText)) {
+            params.operation = `%${operationText}%`;
         }
 
         let logLevel = eventFilter.logLevel;
@@ -86,11 +101,14 @@ Stage.defineWidget({
 
         const SELECTED_EVENT_ID = toolbox.getContext().getValue('eventId');
         const SELECTED_LOG_ID = toolbox.getContext().getValue('logId');
+        const eventFilter = toolbox.getContext().getValue('eventFilter') || {};
 
         const CONTEXT_PARAMS = this.fetchParams(widget, toolbox);
 
         let blueprintId = CONTEXT_PARAMS.blueprint_id;
         let deploymentId = CONTEXT_PARAMS.deployment_id;
+        let nodeId = CONTEXT_PARAMS.node_id;
+        let nodeInstanceId = CONTEXT_PARAMS.node_instance_id;
         let executionId = CONTEXT_PARAMS.execution_id;
 
         let formattedData = {
@@ -107,8 +125,10 @@ Stage.defineWidget({
             total : _.get(data, 'metadata.pagination.total', 0),
             blueprintId,
             deploymentId,
+            nodeId,
+            nodeInstanceId,
             executionId,
-            type: CONTEXT_PARAMS.type
+            eventFilter
         };
 
         return (

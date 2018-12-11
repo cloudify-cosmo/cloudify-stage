@@ -97,6 +97,15 @@ module.exports = {
                                                     blueprintYamlFile);
 
                     },
+                    fillInForSingleYaml: function(blueprintSingleYamlFile, blueprintName) {
+                        return this
+                            .waitForElementVisible(this.selector)
+                            .setElementValue('@blueprintFile', blueprintSingleYamlFile)
+                            .waitForElementNotPresent('@loading')
+                            .resetValue('@blueprintName')
+                            .setElementValue('@blueprintName', blueprintName);
+
+                    },
                     clickUpload: function() {
                         return this
                             .clickElement('@okButton')

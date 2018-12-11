@@ -12,7 +12,6 @@ import Users from '../../containers/Users';
 import Help from '../../containers/Help';
 import Logo from '../../containers/Logo';
 import ResetPagesModal from '../ResetPagesModal.js';
-import ConfigureModal from '../../containers/ConfigureModal';
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {
@@ -82,22 +81,11 @@ export default class Header extends Component {
                         <Tenants manager={this.props.manager}/>
                     }
                     <Help />
-                    {
-                        this._isModeCustomer()
-                        ?
-                        <Users manager={this.props.manager}
-                               showAllOptions={false}
-                               onReset={this._handleReset.bind(this)}/>
-                        :
-                        <Users manager={this.props.manager}
-                               showAllOptions={true}
-                               onConfigure={()=> this.setState({showConfigureModal: true})}
-                               onReset={this._handleReset.bind(this)}/>
-                    }
-                </div>
 
-                <ConfigureModal show={this.state.showConfigureModal}
-                                onHide={()=> this.setState({showConfigureModal: false})}/>
+                    <Users manager={this.props.manager}
+                           showAllOptions={!this._isModeCustomer()}
+                           onReset={this._handleReset.bind(this)} />
+                </div>
 
                 <ResetPagesModal open={this.state.showResetPagesConfirm}
                                  tenants={this.props.manager.tenants}

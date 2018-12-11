@@ -70,10 +70,10 @@ export default class ErrorMessage extends Component {
      */
     static MESSAGE_VISIBLE_TIMEOUT = 10000;
 
-    componentWillReceiveProps(nextProps) {
-        if (!_.isEqual(nextProps.error, this.props.error)) {
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(this.props.error, prevProps.error)) {
             this.setState({hidden: false});
-            if (nextProps.error) {
+            if (this.props.error) {
                 this._setVisibilityTimeout(ErrorMessage.MESSAGE_VISIBLE_TIMEOUT);
             }
         }
