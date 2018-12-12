@@ -14,31 +14,35 @@ export default class Home extends Component {
         super(props, context);
     }
 
-    componentDidMount() {
-        this._handleContext(this.props.selectedPage, this.props.contextParams, this.props.emptyPages);
+    // TODO: Context handling should not be here. Currently necessary to use depracated methods.
+    UNSAFE_componentWillMount() {
         this.props.onStorePageId(this.props.pageId);
+        this._handleContext(this.props.contextParams);
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.pageId !== prevProps.pageId) {
-            this.props.onStorePageId(this.props.pageId);
-            this._handleContext(this.props.selectedPage, this.props.contextParams, this.props.emptyPages);
+    // TODO: Context handling should not be here. Currently necessary to use depracated methods.
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.pageId !== this.props.pageId) {
+            this.props.onStorePageId(nextProps.pageId);
+            this._handleContext(nextProps.contextParams);
         }
+    }
 
+    componentDidUpdate() {
         if (this.props.isMaintenance) {
             this.props.navigateToMaintenancePage();
         }
+
+        if (this.props.emptyPages) {
+            this.props.navigateToError('No pages available to display. Please try to reset application to the default settings.');
+        }
+
+        if (!this.props.selectedPage) {
+            this.props.navigateTo404();
+        }
     }
 
-    _handleContext(selectedPage, contextParams, emptyPages) {
-        if (emptyPages) {
-            this.props.navigateToError('No pages available to display. Please try to reset application to the default settings.');
-            return;
-        }
-        if (!selectedPage) {
-            this.props.navigateTo404();
-            return;
-        }
+    _handleContext(contextParams) {
         // Always clear the context. Whatever is relevant to the drilldown should be passed as drilldown context
         this.props.onClearContext();
         
@@ -50,7 +54,6 @@ export default class Home extends Component {
         });
 
         this.props.onSetDrilldownContext(contextParams);
-
     }
 
     render() {
