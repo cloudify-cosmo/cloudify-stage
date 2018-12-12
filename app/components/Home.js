@@ -14,13 +14,13 @@ export default class Home extends Component {
         super(props, context);
     }
 
-    // TODO: Context handling should not be here. Currently necessary to use depracated methods.
+    // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
     UNSAFE_componentWillMount() {
         this.props.onStorePageId(this.props.pageId);
         this._handleContext(this.props.contextParams);
     }
 
-    // TODO: Context handling should not be here. Currently necessary to use depracated methods.
+    // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.pageId !== this.props.pageId) {
             this.props.onStorePageId(nextProps.pageId);
