@@ -17,7 +17,7 @@ Stage.defineWidget({
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10)
     ],
-    fetchUrl: '[manager]/node-instances?_include=id,node_id,deployment_id,state,relationships,runtime_properties[params:deployment_id]',
+    fetchUrl: '[manager]/summary/node_instances?_target_field=state[params:deployment_id]',
 
     fetchParams: function(widget, toolbox) {
         return {
@@ -32,8 +32,13 @@ Stage.defineWidget({
 
         let {PieGraph} = Stage.Basic.Graphs;
         let {NodeInstancesConsts} = Stage.Common;
-        let states = _.countBy(data.items, 'state');
-        let formattedData = _.map(NodeInstancesConsts.groupStates, (groupState) =>
+
+        const states = _.reduce(data.items, (result, item) => {
+            result[item.state] = item.node_instances;
+            return result;
+        }, {});
+
+        const formattedData = _.map(NodeInstancesConsts.groupStates, (groupState) =>
             ({
                 name: _.upperFirst(groupState.name),
                 color: groupState.colorHTML,
@@ -42,7 +47,7 @@ Stage.defineWidget({
         );
 
         return (
-            <PieGraph widget={widget} data={formattedData} toolbox={toolbox}/>
+            <PieGraph widget={widget} data={formattedData} toolbox={toolbox} />
         );
     }
 });

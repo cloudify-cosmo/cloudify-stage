@@ -46,11 +46,8 @@ import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
  * ```
  */
 export default class PieGraph extends Component {
-    constructor(props,context) {
-        super(props,context);
-
-        this.state = {
-        };
+    constructor(props) {
+        super(props);
     }
 
     /**
@@ -77,9 +74,9 @@ export default class PieGraph extends Component {
         return (
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                    <Pie data={data} labelLine={true} label={true} isAnimationActive={false} cx="40%">
+                    <Pie dataKey="value" data={data} labelLine={true} label={true} isAnimationActive={false} cx="40%">
                         {
-                            data.map((entry, index) => <Cell fill={entry.color}/>)
+                            data.map((entry, index) => <Cell key={index} fill={entry.color}/>)
                         }
                     </Pie>
                     <Legend layout="vertical" verticalAlign="middle" align="right" />
