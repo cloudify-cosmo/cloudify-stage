@@ -3,14 +3,14 @@
  */
 
 import thunkMiddleware from 'redux-thunk';
-import { routerMiddleware } from 'connected-react-router';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import StatePersister from './utils/StatePersister';
 import throttle from 'lodash/throttle';
 
-import createReducers from './reducers';
+import reducers from './reducers';
 
 export default (history,config) => {
 
@@ -30,7 +30,7 @@ export default (history,config) => {
     initialState.manager.isLoggingIn = false;
 
     let store = createStore(
-        createReducers(history),
+        connectRouter(history)(reducers),
         initialState,
         composeWithDevTools(applyMiddleware(thunkMiddleware, routerMiddleware(history)))
     );
