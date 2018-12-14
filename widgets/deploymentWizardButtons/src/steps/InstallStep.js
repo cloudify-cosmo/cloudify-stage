@@ -100,7 +100,7 @@ class InstallStepActions extends Component {
                     <Progress size='large' percent={percent} autoSuccess>
                         Installation started! Redirecting to deployment page in {this.state.secondsRemaining} seconds...
                     </Progress>
-                    <Button content='Cancel' icon='cancel' labelPosition='left'
+                    <Button content='Stay on this page' icon='hand paper' labelPosition='left'
                             onClick={this.cancelRedirection.bind(this)} />
                 </Wizard.Step.Actions>
             );
