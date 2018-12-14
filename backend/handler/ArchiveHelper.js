@@ -58,7 +58,7 @@ module.exports = (function() {
             var getRequest = null;
             var onErrorFetch = function (error) {
                 reject(error);
-            }
+            };
             var onSuccessFetch = function (response) {
                 var archiveFile = _extractFilename(response.headers['content-disposition']);
 
@@ -150,7 +150,7 @@ module.exports = (function() {
 
         fs.readdir(tempDir, function (err, files) {
             if (err) {
-                logger.error(err);
+                logger.warn('Cannot remove old extracts. Error:', err);
                 return;
             }
 
