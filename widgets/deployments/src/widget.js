@@ -50,6 +50,11 @@ Stage.defineWidget({
 
     fetchData: function(widget,toolbox,params) {
         let deploymentData = toolbox.getManager().doGet('/deployments', params);
+        // FIXME: Improve data fetching when CY-760 is implemented.
+        // let deploymentData = toolbox.getManager().doGet('/deployments', {
+        //         _include: 'id,blueprint_id,visibility,created_at,created_by,updated_at,workflows',
+        //         ...params
+        //     });
         let deploymentIds = deploymentData.then(data => _.map(data.items, item => item.id));
 
         let nodeInstanceData = deploymentIds.then(ids =>
