@@ -798,6 +798,10 @@ table.servicesData button.refreshButton {
   border-top: none;
 }
 
+// FIXME: Remove this when Semantic-UI-CSS 2.4.2 it's ready
+.ui.fullscreen.modal.readmeModal {
+  left: auto !important;
+}
 /* A href underscore */
 a.underline {
   text-decoration: none !important;
