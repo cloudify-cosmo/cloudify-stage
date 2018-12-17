@@ -33,7 +33,8 @@ export default class Header extends Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.manager, nextProps.manager) || this.state != nextState;
+        return !_.isEqual(this.props.manager, nextProps.manager)
+            || !_.isEqual(this.state, nextState);
     }
 
     componentDidMount() {
