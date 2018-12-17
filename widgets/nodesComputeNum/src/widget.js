@@ -27,7 +27,7 @@ Stage.defineWidget({
         let KeyIndicator = Stage.Basic.KeyIndicator;
         const numberOfComputeNodes = _.chain(data.items)
             .filter((item) => !_.isNil(item.host_id))
-            .sumBy('node_instances')
+            .size()
             .value();
 
         return <KeyIndicator title="Compute Nodes" icon="server" number={numberOfComputeNodes} />;
