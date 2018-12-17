@@ -26,25 +26,25 @@ export default class Topology extends React.Component {
     }
 
     componentDidMount() {
-
         this._startTopology();
 
         this.props.toolbox.getEventBus().on('topology:selectNode', this._selectNode, this);
     }
 
     componentWillUnmount() {
-        if (this._topology) {
-            this._topology.destroy();
-            this._topology = null;
-        }
+        this._destroyTopology();
         this.props.toolbox.getEventBus().off('topology:selectNode');
     }
 
-    _startTopology() {
-        if (this._topology) {
+    _destroyTopology() {
+        if (!_.isNil(this._topology)) {
             this._topology.destroy();
+            this._topology = null;
         }
+    }
 
+    _startTopology() {
+        this._destroyTopology();
         this._topology = new BlueprintTopology({
             isLoading: true,
             selector: '#topologyContainer',
@@ -67,15 +67,19 @@ export default class Topology extends React.Component {
     }
 
     _buildTopologyData() {
+        let result = null;
+
         if (this.props.data && this.props.data.data) {
-            var topologyData = {
+            const topologyData = {
                 data: this.props.data.data,
                 instances: this.props.data.instances,
                 executions: this.props.data.executions
             };
 
-            return DataProcessingService.encodeTopologyFromRest(topologyData);
+            result = DataProcessingService.encodeTopologyFromRest(topologyData);
         }
+
+        return result;
     }
 
      _selectNode(nodeId) {
@@ -125,7 +129,7 @@ export default class Topology extends React.Component {
             this.props.data.topologyConfig.showToolbar !== prevProps.data.topologyConfig.showToolbar)) {
 
             if (this._topology) {
-                this._topology.destroy();
+                this._destroyTopology();
                 this._startTopology();
             }
         }
@@ -141,7 +145,7 @@ export default class Topology extends React.Component {
             var oldTopologyData = this._topologyData;
             this._topologyData = this._buildTopologyData();
 
-            if (isFirstTimeLoading || this._isNodesChanged(oldTopologyData.nodes,this._topologyData.nodes)) {
+            if (isFirstTimeLoading || this._isNodesChanged(oldTopologyData.nodes, this._topologyData.nodes)) {
                 this._topology.setTopology(this._topologyData);
                 this._topology.setLoading(false);
             } else {

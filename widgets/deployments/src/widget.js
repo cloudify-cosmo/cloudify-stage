@@ -85,8 +85,8 @@ Stage.defineWidget({
                     items: _.map (deploymentData.items,(item) => {
                         let workflows = Stage.Common.DeploymentUtils.filterWorkflows(_.sortBy(item.workflows, ['name']));
                         return Object.assign({},item,{
-                            nodeInstancesCount: nodeInstanceData[item.id].count,
-                            nodeInstancesStates: nodeInstanceData[item.id].states,
+                            nodeInstancesCount: !!nodeInstanceData[item.id] ? nodeInstanceData[item.id].count : 0,
+                            nodeInstancesStates: !!nodeInstanceData[item.id] ? nodeInstanceData[item.id].states : {},
                             created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
                             updated_at: Stage.Utils.formatTimestamp(item.updated_at),
                             executions: _.filter(executionsData[item.id], Stage.Common.ExecutionUtils.isActiveExecution),
