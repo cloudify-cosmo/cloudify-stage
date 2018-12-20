@@ -230,7 +230,7 @@ module.exports = {
                 successProgressBar: 'div.progress.success',
                 failedProgressBar: 'div.progress.error',
                 progressBarLabel: 'div.progress div.label',
-                cancelButton: 'i.icon.cancel',
+                stayOnThisPageButton: 'i.icon.hand.paper',
             },
             props: {
                 installationTimeout: 2*60*1000 // 2 minutes
@@ -248,7 +248,7 @@ module.exports = {
                             .assert.containsText('@progressBarLabel', 'Installation started!');
                     },
                     cancelRedirection: function () {
-                        return this.clickElement('@cancelButton');
+                        return this.clickElement('@stayOnThisPageButton');
                     },
                     checkIfInstallFailed: function () {
                         return this
