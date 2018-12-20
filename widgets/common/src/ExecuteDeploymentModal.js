@@ -3,6 +3,7 @@
  */
 
 import PropTypes from 'prop-types';
+import React from 'react';
 
 export default class ExecuteDeploymentModal extends React.Component {
 
@@ -19,6 +20,8 @@ export default class ExecuteDeploymentModal extends React.Component {
         fileLoading: false,
         force: false,
         queue: false,
+        schedule: false,
+        scheduledTime: '',
         params: {}
     };
 
@@ -70,6 +73,14 @@ export default class ExecuteDeploymentModal extends React.Component {
                                                                inputsWithoutValue);
         InputsUtils.addErrors(inputsWithoutValue, errors);
 
+        if (this.state.schedule) {
+            const scheduledTimeMoment = moment(this.state.scheduledTime);
+            if (!scheduledTimeMoment.isValid() ||
+                !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), this.state.scheduledTime)) {
+                errors.scheduledTime = 'Please provide valid scheduled time';
+            }
+        }
+
         if (!_.isEmpty(errors)){
             this.setState({errors: errors});
             return false;
@@ -84,15 +95,18 @@ export default class ExecuteDeploymentModal extends React.Component {
 
         }
 
-        let executePromises = _.map(deployments, (deploymentId) =>
-            actions.doExecute({id: deploymentId}, this.props.workflow, workflowParameters,
-                this.state.force, this.state.dryRun, this.state.queue).then(()=>{
+        let executePromises = _.map(deployments, (deploymentId) => {
+            const scheduledTime = this.state.schedule
+                ? moment(this.state.scheduledTime).format('YYYYMMDDHHmmZ')
+                : undefined;
+            return actions.doExecute({id: deploymentId}, this.props.workflow, workflowParameters,
+                this.state.force, this.state.dryRun, this.state.queue, scheduledTime).then(()=>{
                 this.setState({loading: false, errors: {}});
                 this.props.onHide();
                 this.props.toolbox.getEventBus().trigger('executions:refresh');
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
             })
-        );
+        });
 
         return Promise.all(executePromises)
             .catch((err)=>{
@@ -124,7 +138,7 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     render() {
-        let {ApproveButton, CancelButton, Form, Header, Icon, Modal, Message} = Stage.Basic;
+        let {ApproveButton, CancelButton, Divider, Form, Header, Icon, Modal, Message, TimePicker} = Stage.Basic;
         let {InputsHeader, InputsUtils, YamlFileButton} = Stage.Common;
 
         const workflow = Object.assign({},{name:'', parameters:[]}, this.props.workflow);
@@ -175,7 +189,7 @@ export default class ExecuteDeploymentModal extends React.Component {
                                                  execution for the given deployment.
                                                  You cannot use this option with "Queue".'
                                            checked={this.state.force}
-                                           onChange={(event, field) => this.setState({force: field.checked, queue: false})} />
+                                           onChange={(event, field) => this.setState({force: field.checked, queue: false, errors: {}})} />
                         </Form.Field>
 
                         <Form.Field>
@@ -184,7 +198,7 @@ export default class ExecuteDeploymentModal extends React.Component {
                                                  Executed tasks will be logged without side effects.
                                                  You cannot use this option with "Queue".'
                                            checked={this.state.dryRun}
-                                           onChange={(event, field) => this.setState({dryRun: field.checked, queue: false})} />
+                                           onChange={(event, field) => this.setState({dryRun: field.checked, queue: false, errors: {}})} />
                         </Form.Field>
 
                         <Form.Field>
@@ -193,7 +207,25 @@ export default class ExecuteDeploymentModal extends React.Component {
                                                  be queued and run automatically when possible.
                                                  You cannot use this option with "Force" and "Dry run".'
                                            checked={this.state.queue}
-                                           onChange={(event, field) => this.setState({queue: field.checked, force: false, dryRun: false})} />
+                                           onChange={(event, field) => this.setState({queue: field.checked, force: false, dryRun: false, schedule: false, scheduledTime: '', errors: {}})} />
+                        </Form.Field>
+
+                        <Form.Field error={!!this.state.errors.scheduledTime}>
+                            <Form.Checkbox name='schedule' toggle label='Schedule'
+                                           help='If set, workflow will be executed at specific time (local timezone)
+                                                 provided below. You cannot use this option with "Queue".'
+                                           checked={this.state.schedule}
+                                           onChange={(event, field) => this.setState({schedule: field.checked, queue: false, errors: {}})} />
+                            {
+                                this.state.schedule &&
+                                <Divider hidden />
+                            }
+                            {
+                                this.state.schedule &&
+                                <TimePicker name='scheduledTime' value={this.state.scheduledTime} defaultValue=''
+                                              minDate={moment()} maxDate={moment().add(1, 'Y')}
+                                              onChange={(event, field) => this.setState({scheduledTime: field.value, queue: false, errors: {}})} />
+                            }
                         </Form.Field>
                     </Form>
                 </Modal.Content>

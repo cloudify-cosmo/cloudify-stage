@@ -16,6 +16,7 @@ import DataSegment from './dataSegment/DataSegment';
 import Loading from './Loading';
 import GenericField from './form/GenericField';
 import TimeFilter from './TimeFilter';
+import TimePicker from './TimePicker';
 import MetricFilter from './MetricFilter';
 import NodeFilter from './NodeFilter';
 import NodeInstancesFilter from './NodeInstancesFilter';
@@ -108,6 +109,7 @@ export {
     Step,
     Table,
     TimeFilter,
+    TimePicker,
     VisibilityIcon,
     VisibilityField,
     Wizard
