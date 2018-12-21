@@ -152,10 +152,12 @@ module.exports = {
         updateDeploymentModal: {
             selector: '.updateDeploymentModal',
             elements: {
+                formLoading: 'form.ui.form:not(.loading)',
+                formNotLoading: 'form.ui.form.loading',
                 blueprint: '.content div[name="blueprintName"]',
                 inputsFile: '.content input[name="yamlFile"]',
-                updateButton: '.actions button.button.ok',
-                cancelButton: '.actions button.button.cancel'
+                updateButton: '.actions button.button.ok:not(.disabled)',
+                cancelButton: '.actions button.button.cancel:not(.loading)'
             },
             commands: [
                 {
@@ -163,6 +165,10 @@ module.exports = {
                         return this.waitForElementVisible(this.selector)
                             .clickElement('@updateButton')
                             .waitForElementNotPresent(this.selector);
+                    },
+                    waitUntilFormLoaded: function () {
+                        return this.waitForElementPresent('@formLoading')
+                                   .waitForElementNotPresent('@formNotLoading')
                     }
                 }
             ]
