@@ -31,7 +31,7 @@ export default class VisibilityField extends Component {
 
 
     /**
-     * @property {string} [visibility] the current visibility, one from ['tenant', 'private', 'global'].
+     * @property {string} [visibility='unkown'] the current visibility, one from ['tenant', 'private', 'global'].
      * @property {function} [onVisibilityChange=()=>{}] the callback to be called with the new visibility
      * @property {bool} [disallowGlobal=false] should the component not allow changing the global
      * @property {bool} [allowChange=true] should the component allow changing visibility
@@ -41,7 +41,8 @@ export default class VisibilityField extends Component {
         visibility: PropTypes.oneOf([
             consts.visibility.PRIVATE.name,
             consts.visibility.TENANT.name,
-            consts.visibility.GLOBAL.name]).isRequired,
+            consts.visibility.GLOBAL.name,
+            consts.visibility.UNKNOWN.name]),
         onVisibilityChange: PropTypes.func,
         disallowGlobal: PropTypes.bool,
         allowChange: PropTypes.bool,
@@ -49,6 +50,7 @@ export default class VisibilityField extends Component {
     };
 
     static defaultProps = {
+        visibility: consts.visibility.UNKNOWN.name,
         onVisibilityChange: () => {},
         disallowGlobal: false,
         allowChange: true,
