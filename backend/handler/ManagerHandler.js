@@ -63,22 +63,16 @@ module.exports = (function() {
             this.request(method, url, headers, data, (res) => {
                 var isSuccess = res.statusCode >= 200 && res.statusCode <300;
 
-                RequestHandler.getResponseJson(res).then((data) => {
-                    if (isSuccess) {
-                        resolve(data)
-                    } else {
-                        reject(data);
-                    }
-                }).catch((e) => {
-                    if (isSuccess) {
-                        reject('response data could not be parsed to JSON: ' + e);
-                    } else {
-                        reject(res.statusMessage);
-                    }
-                });
-            }, (err) => {
-                reject(err);
-            }, timeout);
+                RequestHandler.getResponseJson(res).then((data) =>
+                    isSuccess
+                        ? resolve(data)
+                        : reject(data)
+                ).catch((e) =>
+                    isSuccess
+                        ? reject('response data could not be parsed to JSON: ' + e)
+                        : reject(res.statusMessage)
+                );
+            }, (err) => reject(err), timeout);
         });
     }
 

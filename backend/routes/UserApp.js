@@ -38,12 +38,10 @@ router.post('/', function (req, res, next) {
             mode: ServerSettings.settings.mode,
             tenant: req.headers.tenant
         }, defaults: {appData: {},appDataVersion:req.body.version}})
-        .spread(function(userApp, created) {
-            userApp.update({ appData: req.body.appData,appDataVersion:req.body.version}, {fields: ['appData','appDataVersion']}).then(function(ua) {
-                res.send(ua);
-            })
-        })
-        .catch(next);
+        .spread((userApp, created) =>
+            userApp.update({ appData: req.body.appData,appDataVersion:req.body.version}, {fields: ['appData','appDataVersion']})
+                .then((ua) => res.send(ua))
+        ).catch(next);
 });
 
 router.get('/clear-pages', function (req, res, next) {
@@ -61,9 +59,7 @@ router.get('/clear-pages', function (req, res, next) {
                 return Promise.reject('Could not clear pages. Row not found');
             }
         })
-        .then(function() {
-            res.send({status:'ok'})
-        })
+        .then(() => res.send({status:'ok'}))
         .catch(next);
 });
 

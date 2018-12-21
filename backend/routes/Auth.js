@@ -24,7 +24,7 @@ router.post('/login', (req, res) =>
         .then(([tenants, managerVersion, config, token]) => {
             if(!!tenants && !!tenants.items && tenants.items.length > 0) {
                 res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
-                res.send({
+                return res.send({
                     role: token.role,
                     serverVersion: managerVersion
                 });
@@ -63,15 +63,15 @@ router.post('/saml/callback', passport.authenticate('saml', {session: false}), f
 
 router.get('/user', passport.authenticate('token', {session: false}), (req, res) => {
     AuthHandler.getManagerVersion(req.headers['authentication-token'])
-        .then((managerVersion) => {
+        .then((managerVersion) =>
             res.send({
                 username: req.user.username,
                 role: req.user.role,
                 groupSystemRoles: req.user.group_system_roles,
                 tenantsRoles: req.user.tenants,
                 serverVersion: managerVersion
-            });
-        })
+            })
+        )
 });
 
 router.post('/logout', passport.authenticate('token', {session: false}), (req, res) => {
