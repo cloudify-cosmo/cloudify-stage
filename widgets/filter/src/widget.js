@@ -21,7 +21,8 @@ Stage.defineWidget({
             widget.configuration.filterByDeployments ? toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id') : Promise.resolve({}),
             widget.configuration.filterByNodes ? toolbox.getManager().doGetFull('/nodes?_include=id,blueprint_id,deployment_id') : Promise.resolve({}),
             widget.configuration.filterByNodeInstances ? toolbox.getManager().doGetFull('/node-instances?_include=id,deployment_id,node_id') : Promise.resolve({}),
-            widget.configuration.filterByExecutions ? toolbox.getManager().doGetFull('/executions?_include=id,blueprint_id,deployment_id,workflow_id') : Promise.resolve({})
+            widget.configuration.filterByExecutions || widget.configuration.filterByExecutionsStatus ?
+                toolbox.getManager().doGetFull('/executions?_include=id,blueprint_id,deployment_id,workflow_id,status_display') : Promise.resolve({}),
         ]).then(results=>{
             return {
                 blueprints: results[0],
@@ -43,18 +44,20 @@ Stage.defineWidget({
         {id: "filterByExecutions",name: "Show execution filter", default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "filterByNodes",name: "Show node filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "filterByNodeInstances",name: "Show node instance filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: "filterByExecutionsStatus",name: "Show execution status filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "allowMultipleSelection", name: "Allow multiple selection",
          description: "Allows selecting more than one blueprint, deployment, node, node instance and execution in the filter",
          default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
     ],
 
-    _processData(blueprintId, deploymentId, nodeId, nodeInstanceId, executionId, data) {
+    _processData(blueprintId, deploymentId, nodeId, nodeInstanceId, executionId, executionStatus, data) {
         let processedData = {
             blueprintId,
             deploymentId,
             nodeId,
             nodeInstanceId,
             executionId,
+            executionStatus,
             blueprints: {
                 items: _.sortBy(data.blueprints.items, 'id')
             },
@@ -69,6 +72,9 @@ Stage.defineWidget({
             },
             executions: {
                 items: _.sortBy(data.executions.items, 'id')
+            },
+            executionsStatuses: {
+                items: _.sortBy(data.executions.items, 'status_display')
             }
         };
 
@@ -98,6 +104,12 @@ Stage.defineWidget({
                 = _.filter(processedData.nodeInstances.items, (nodeInstance) => _.includes(nodeIdArray, nodeInstance.node_id));
         }
 
+        if (!_.isNil(executionStatus)) {
+            const executionStatusArray = _.castArray(executionStatus);
+            processedData.executionsStatuses.items
+                = _.filter(processedData.executionsStatuses.items, (execution) => _.includes(executionStatusArray, execution.status_display));
+        }
+
         return processedData;
     },
     render: function(widget,data,error,toolbox) {
@@ -111,10 +123,11 @@ Stage.defineWidget({
         const selectedNodeIds = context.getValue('nodeId');
         const selectedNodeInstanceIds = context.getValue('nodeInstanceId');
         const selectedExecutionIds = context.getValue('executionId');
+        const selectedExecutionStatus = context.getValue('executionStatus');
 
         let processedData
             = this._processData(selectedBlueprintIds, selectedDeploymentIds, selectedNodeIds,
-                                selectedNodeInstanceIds, selectedExecutionIds, data);
+                                selectedNodeInstanceIds, selectedExecutionIds, selectedExecutionStatus, data);
 
         return (
             <Filter configuration={widget.configuration} data={processedData} toolbox={toolbox}/>

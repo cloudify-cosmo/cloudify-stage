@@ -168,6 +168,11 @@ export default class Filter extends React.Component {
         this.props.toolbox.getContext().setValue('executionId', executionIds);
     }
 
+    _selectExecutionStatus(proxy, field) {
+        let executionStatuses = !_.isEmpty(field.value) ? field.value : null;
+        this.props.toolbox.getContext().setValue('executionStatus', executionStatuses);
+    }
+
     _getDropdownValue(value) {
         const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
 
@@ -236,6 +241,16 @@ export default class Filter extends React.Component {
         }
         let executionId = this._getDropdownValue(data.executionId);
 
+        let executionStatusOptions = [];
+        if (configuration.filterByExecutionsStatus) {
+            executionStatusOptions = _.map(_.sortedUniqBy(data.executionsStatuses.items, 'status_display'),
+                execution => ({text: execution.status_display, value: execution.status_display}));
+            if (!configuration.allowMultipleSelection) {
+                executionStatusOptions.unshift(EMPTY_OPTION);
+            }
+        }
+        let executionStatus = this._getDropdownValue(data.executionStatus);
+
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
@@ -284,6 +299,15 @@ export default class Filter extends React.Component {
                                 <Form.Dropdown search selection placeholder="Execution" fluid
                                                value={executionId} id="executionFilterField"
                                                options={executionOptions} onChange={this._selectExecution.bind(this)}
+                                               multiple={configuration.allowMultipleSelection} />
+                            </Form.Field>
+                        }
+                        {
+                            configuration.filterByExecutionsStatus &&
+                            <Form.Field>
+                                <Form.Dropdown search selection placeholder="Execution Status" fluid
+                                               value={executionStatus} id="executionStatusFilterField"
+                                               options={executionStatusOptions} onChange={this._selectExecutionStatus.bind(this)}
                                                multiple={configuration.allowMultipleSelection} />
                             </Form.Field>
                         }
