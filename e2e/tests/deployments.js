@@ -91,6 +91,7 @@ module.exports = {
             .checkIfDeploymentPresent(DEPLOYMENT_NAME)
             .clickUpdate(DEPLOYMENT_NAME);
         page.section.updateDeploymentModal
+            .waitUntilFormLoaded()
             .selectOptionInDropdown('@blueprint', page.section.updateDeploymentModal.elements.blueprint.selector, BLUEPRINT_NAME)
             .setElementValue('@inputsFile', client.page.resources().props.fileByName(BLUEPRINT_INPUTS_FILENAME, client.globals))
             .clickUpdate();
