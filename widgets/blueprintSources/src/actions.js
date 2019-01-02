@@ -16,6 +16,11 @@ export default class {
         return this.toolbox.getInternal().doGet(`/source/browse/${blueprintId}/archive`);
     }
 
+    doGetImportedBlueprints(blueprintId) {
+        return this.toolbox.getManager().doGet(`/blueprints?id=${blueprintId}&_include=plan`)
+            .then((data) => data.items[0].plan.imported_blueprints || []);
+    }
+
     doGetFileContent(path) {
         return this.toolbox.getInternal().doGet('/source/browse/file',{path});
     }

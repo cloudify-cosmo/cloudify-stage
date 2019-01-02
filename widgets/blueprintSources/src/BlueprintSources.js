@@ -79,16 +79,40 @@ export default class BlueprintSources extends React.Component {
                                        title={<span><Icon className="treeIcon" name="file outline"/>{item.title}</span>}/>;
             });
         };
+        const data = this.props.data;
 
         return (
             <div>
-                {this.props.data.blueprintId ?
+                {!_.isEmpty(data.blueprintId) ?
                     <SplitterLayout primaryIndex={0} percentage secondaryInitialSize={this.props.widget.configuration.contentPaneWidth}>
                         <div>
-                            <NodesTree showLine selectable defaultExpandAll onSelect={this._selectFile.bind(this)}>
-                                <NodesTree.Node title={<Label color='purple' horizontal>{this.props.data.blueprintId}</Label>} key="0">
-                                    {loop(this.props.data.tree.children)}
+                            <NodesTree showLine selectable defaultExpandAll
+                                       onSelect={this._selectFile.bind(this)}>
+                                <NodesTree.Node key='blueprint' title={
+                                    <Label color='purple' horizontal>
+                                        {data.blueprintId}
+                                    </Label>}>
+                                    {loop(data.blueprintTree.children)}
                                 </NodesTree.Node>
+                                {
+                                    _.size(data.importedBlueprintIds) > 0 &&
+                                    <NodesTree.Node key='imported' style={{marginTop: '5px'}} title={
+                                        <Label color='pink' horizontal>
+                                            Imported Blueprints
+                                            <Label.Detail>{_.size(data.importedBlueprintIds)}</Label.Detail>
+                                        </Label>}>
+                                        {
+                                            _.map(data.importedBlueprintTrees, (tree, index) =>
+                                                <NodesTree.Node key={data.importedBlueprintIds[index]} style={{marginTop: '3px'}} title={
+                                                    <Label color='pink' horizontal>
+                                                        {data.importedBlueprintIds[index]}
+                                                    </Label>}>
+                                                    {loop(tree.children)}
+                                                </NodesTree.Node>
+                                            )
+                                        }
+                                    </NodesTree.Node>
+                                }
                             </NodesTree>
                         </div>
                         {this.state.content ?

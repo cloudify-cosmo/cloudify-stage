@@ -10,7 +10,7 @@ class UploadBlueprintModal extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {...UploadBlueprintModal.initialState};
+        this.state = UploadBlueprintModal.initialState;
 
         this.actions = new Stage.Common.BlueprintActions(props.toolbox);
     }
@@ -34,7 +34,7 @@ class UploadBlueprintModal extends React.Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        if (prevProps.open && !this.props.open) {
             this.setState(UploadBlueprintModal.initialState);
         }
     }
