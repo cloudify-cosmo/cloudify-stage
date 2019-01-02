@@ -18,17 +18,7 @@ export default class {
 
     doGetImportedBlueprints(blueprintId) {
         return this.toolbox.getManager().doGet(`/blueprints?id=${blueprintId}&_include=plan`)
-            .then((data) => {
-                const imported = data.items[0].plan.imported;
-                const importedBlueprintPrefix = 'blueprint:';
-
-                return _.isEmpty(imported)
-                    ? []
-                    : _.chain(imported)
-                        .filter((i) => _.startsWith(i, importedBlueprintPrefix))
-                        .map((i) => _.replace(i, importedBlueprintPrefix, ''))
-                        .value();
-            });
+            .then((data) => data.items[0].plan.imported_blueprints || []);
     }
 
     doGetFileContent(path) {
