@@ -37,6 +37,9 @@ export default class LastExecutionStatusIcon extends React.Component {
         let {ExecutionStatus, ExecutionUtils} = Stage.Common;
         let execution = {workflow_id: '', status: '', ...this.props.execution};
 
+        const showScheduledColumn = !!execution.scheduled_for;
+        const colSpan = showScheduledColumn ? 5 : 4;
+
         return !_.isEmpty(execution.status)
             ?
                 <React.Fragment>
@@ -46,7 +49,7 @@ export default class LastExecutionStatusIcon extends React.Component {
 
                         <Popup.Trigger>
                             <div style={{display: 'inline-block'}}>
-                                <ExecutionStatus item={execution}
+                                <ExecutionStatus item={execution} allowShowingPopup={false}
                                                  showLabel={this.props.showLabel}
                                                  showWorkflowId={this.props.showLabel}
                                                  labelProps={{attached: this.props.labelAttached ? 'top left' : undefined}}
@@ -65,6 +68,10 @@ export default class LastExecutionStatusIcon extends React.Component {
                                         <Table.HeaderCell>Workflow</Table.HeaderCell>
                                         <Table.HeaderCell>Status</Table.HeaderCell>
                                         <Table.HeaderCell>Created</Table.HeaderCell>
+                                        {
+                                            showScheduledColumn &&
+                                            <Table.HeaderCell>Scheduled</Table.HeaderCell>
+                                        }
                                         <Table.HeaderCell>Ended</Table.HeaderCell>
                                     </Table.Row>
                                 </Table.Header>
@@ -74,13 +81,18 @@ export default class LastExecutionStatusIcon extends React.Component {
                                         <Table.Cell>{execution.workflow_id}</Table.Cell>
                                         <Table.Cell>{execution.status_display || execution.status}</Table.Cell>
                                         <Table.Cell>{Stage.Utils.formatTimestamp(execution.created_at)}</Table.Cell>
-                                        <Table.Cell>{Stage.Utils.formatTimestamp(execution.ended_at)}</Table.Cell>
+                                        {
+                                            showScheduledColumn &&
+                                            <Table.Cell>{Stage.Utils.formatTimestamp(execution.scheduled_for)}</Table.Cell>
+                                        }
+                                        <Table.Cell>{Stage.Utils.formatTimestamp(execution.ended_at)}
+                                        </Table.Cell>
                                     </Table.Row>
                                 </Table.Body>
 
                                 <Table.Footer fullWidth>
                                     <Table.Row textAlign='center'>
-                                        <Table.HeaderCell colSpan='4'>
+                                        <Table.HeaderCell colSpan={colSpan}>
                                             {
                                                 ExecutionUtils.isFailedExecution(execution) &&
                                                 <Button icon labelPosition='left' color='red'
@@ -105,9 +117,9 @@ export default class LastExecutionStatusIcon extends React.Component {
                                         </Table.HeaderCell>
                                     </Table.Row>
                                     <Table.Row textAlign='center'>
-                                        <Table.HeaderCell colSpan='4'>
+                                        <Table.HeaderCell colSpan={colSpan}>
                                             {
-                                                Stage.Common.ExecutionUtils.isActiveExecution(execution) &&
+                                                (ExecutionUtils.isActiveExecution(execution) || ExecutionUtils.isWaitingExecution(execution)) &&
                                                 <Button icon labelPosition='left' color='yellow'
                                                         onClick={() => this.props.onCancelExecution(execution, ExecutionUtils.CANCEL_ACTION)}>
                                                     <Icon name='cancel' />
@@ -115,7 +127,7 @@ export default class LastExecutionStatusIcon extends React.Component {
                                                 </Button>
                                             }
                                             {
-                                                Stage.Common.ExecutionUtils.isActiveExecution(execution) &&
+                                                (ExecutionUtils.isActiveExecution(execution) || ExecutionUtils.isWaitingExecution(execution)) &&
                                                 <Button icon labelPosition='left' color='orange'
                                                         onClick={() => this.props.onCancelExecution(execution, ExecutionUtils.FORCE_CANCEL_ACTION)}>
                                                     <Icon name='cancel' />

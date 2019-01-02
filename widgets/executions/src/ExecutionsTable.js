@@ -130,6 +130,8 @@ export default class ExecutionsTable extends React.Component {
                                       show={fieldsToShow.indexOf('Id') >= 0}/>
                     <DataTable.Column label="Created" name="created_at" width="10%"
                                       show={fieldsToShow.indexOf('Created') >= 0}/>
+                    <DataTable.Column label="Scheduled" name="scheduled_for" width="10%"
+                                      show={fieldsToShow.indexOf('Scheduled') >= 0}/>
                     <DataTable.Column label="Ended" name="ended_at" width="10%"
                                       show={fieldsToShow.indexOf('Ended') >= 0}/>
                     <DataTable.Column label="Creator" name='created_by' width="5%"
@@ -155,6 +157,7 @@ export default class ExecutionsTable extends React.Component {
                                     <DataTable.Data>{item.workflow_id}</DataTable.Data>
                                     <DataTable.Data>{item.id}</DataTable.Data>
                                     <DataTable.Data>{item.created_at}</DataTable.Data>
+                                    <DataTable.Data>{item.scheduled_for}</DataTable.Data>
                                     <DataTable.Data>{item.ended_at}</DataTable.Data>
                                     <DataTable.Data>{item.created_by}</DataTable.Data>
                                     <DataTable.Data className="center aligned">
@@ -187,14 +190,14 @@ export default class ExecutionsTable extends React.Component {
                                                                onClick={this._actionClick.bind(this, item)} />
                                                 }
                                                 {
-                                                    ExecutionUtils.isActiveExecution(item) &&
+                                                    (ExecutionUtils.isActiveExecution(item) || ExecutionUtils.isWaitingExecution(item)) &&
                                                     <Menu.Item content='Cancel'
                                                                icon='cancel'
                                                                name={MenuAction.CANCEL_EXECUTION}
                                                                onClick={this._actionClick.bind(this, item)} />
                                                 }
                                                 {
-                                                    ExecutionUtils.isActiveExecution(item) &&
+                                                    (ExecutionUtils.isActiveExecution(item) || ExecutionUtils.isWaitingExecution(item)) &&
                                                     <Menu.Item content='Force Cancel'
                                                                icon={<Icon name='cancel' color='red' />}
                                                                name={MenuAction.FORCE_CANCEL_EXECUTION}

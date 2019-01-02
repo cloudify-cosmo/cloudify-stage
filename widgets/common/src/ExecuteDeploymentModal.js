@@ -76,8 +76,9 @@ export default class ExecuteDeploymentModal extends React.Component {
         if (this.state.schedule) {
             const scheduledTimeMoment = moment(this.state.scheduledTime);
             if (!scheduledTimeMoment.isValid() ||
-                !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), this.state.scheduledTime)) {
-                errors.scheduledTime = 'Please provide valid scheduled time';
+                !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), this.state.scheduledTime) ||
+                scheduledTimeMoment.isBefore(moment())) {
+                errors.scheduledTime = 'Please provide valid scheduled time (in the future, using format: YYYY-MM-DD HH:mm)';
             }
         }
 

@@ -65,7 +65,7 @@ Stage.defineWidget({
 
         let executionsData = deploymentIds.then(ids =>
             toolbox.getManager().doGet('/executions', {
-                _include: 'id,deployment_id,workflow_id,status,status_display,created_at,ended_at',
+                _include: 'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at',
                 _sort: '-ended_at',
                 deployment_id: ids
             })

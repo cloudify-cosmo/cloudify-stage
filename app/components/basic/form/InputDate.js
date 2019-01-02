@@ -75,8 +75,8 @@ export default class InputDate extends Component {
     }
 
     getMinMaxTime(minMaxDate, defaultValue) {
-        if (!!minMaxDate && !!this.props.value &&
-            minMaxDate.isSame(this.props.value, 'day')) {
+        const value = this.props.value || moment();
+        if (!!minMaxDate && minMaxDate.isSame(value, 'day')) {
             return minMaxDate;
         } else {
             return defaultValue;
