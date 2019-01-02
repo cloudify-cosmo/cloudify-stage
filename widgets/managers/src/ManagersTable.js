@@ -68,9 +68,9 @@ export default class ManagersTable extends React.Component {
         this.setState({deploymentUpdateId: null, showDeploymentUpdateDetailsModal: false});
     }
 
-    cancelExecution(execution, action) {
+    actOnExecution(execution, action) {
         let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
-        actions.doCancel(execution, action).then(() => {
+        actions.doAct(execution, action).then(() => {
             this.setState({error: null});
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
             this.props.toolbox.getEventBus().trigger('executions:refresh');
@@ -159,7 +159,7 @@ export default class ManagersTable extends React.Component {
                                             <LastExecutionStatusIcon execution={manager.lastExecution}
                                                                      onShowLogs={() => this.showLogs(manager.id, manager.lastExecution.id)}
                                                                      onShowUpdateDetails={this.openDeploymentUpdateDetailsModal.bind(this)}
-                                                                     onCancelExecution={this.cancelExecution.bind(this)}
+                                                                     onActOnExecution={this.actOnExecution.bind(this)}
                                                                      showLabel labelAttached={false} />
                                         </DataTable.Data>
                                         <DataTable.Data className="center aligned">
