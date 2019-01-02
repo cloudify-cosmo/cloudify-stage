@@ -10,7 +10,7 @@ class UploadBlueprintForm extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {...UploadBlueprintForm.initialState};
+        this.state = UploadBlueprintForm.initialState;
 
         this.blueprintFileRef = React.createRef();
         this.imageFileRef = React.createRef();
