@@ -37,7 +37,7 @@ class ExecutionStatus extends React.Component {
 
         return this.props.showLabel
             ?
-            <Popup on={showPopup ? 'hover' : ''}>
+            <Popup on={showPopup ? 'hover' : []}>
                 <Popup.Trigger>
                     <Label {...this.props.labelProps} onClick={(e) => e.stopPropagation()}>
                         <Icon {...ExecutionUtils.getExecutionStatusIconParams(execution)} {...this.props.iconProps} />

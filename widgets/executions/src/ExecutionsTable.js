@@ -24,6 +24,7 @@ export default class ExecutionsTable extends React.Component {
         SHOW_EXECUTION_PARAMETERS: 'execution_parameters',
         SHOW_UPDATE_DETAILS: 'update_details',
         SHOW_ERROR_DETAILS: 'error_details',
+        RESUME_EXECUTION: Stage.Common.ExecutionUtils.FORCE_RESUME_ACTION,
         CANCEL_EXECUTION: Stage.Common.ExecutionUtils.CANCEL_ACTION,
         FORCE_CANCEL_EXECUTION: Stage.Common.ExecutionUtils.FORCE_CANCEL_ACTION,
         KILL_CANCEL_EXECUTION: Stage.Common.ExecutionUtils.KILL_CANCEL_ACTION
@@ -57,9 +58,9 @@ export default class ExecutionsTable extends React.Component {
         }
     }
 
-    _cancelExecution(execution, action) {
+    actOnExecution(execution, action) {
         let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
-        actions.doCancel(execution, action)
+        actions.doAct(execution, action)
             .then(() => {
                 this.setState({error: null});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -84,10 +85,11 @@ export default class ExecutionsTable extends React.Component {
                 this.setState({execution, errorModalOpen: true, idPopupOpen: false});
                 break;
 
+            case MenuAction.RESUME_EXECUTION:
             case MenuAction.CANCEL_EXECUTION:
             case MenuAction.FORCE_CANCEL_EXECUTION:
             case MenuAction.KILL_CANCEL_EXECUTION:
-                this._cancelExecution(execution, name);
+                this.actOnExecution(execution, name);
                 break;
         }
     }
@@ -187,6 +189,13 @@ export default class ExecutionsTable extends React.Component {
                                                     <Menu.Item content='Show Error Details'
                                                                icon={<Icon name='exclamation circle' color='red' />}
                                                                name={MenuAction.SHOW_ERROR_DETAILS}
+                                                               onClick={this._actionClick.bind(this, item)} />
+                                                }
+                                                {
+                                                    (ExecutionUtils.isCancelledExecution(item) || ExecutionUtils.isFailedExecution(item)) &&
+                                                    <Menu.Item content='Resume'
+                                                               icon={<Icon name='play' color='green' />}
+                                                               name={MenuAction.RESUME_EXECUTION}
                                                                onClick={this._actionClick.bind(this, item)} />
                                                 }
                                                 {

@@ -18,7 +18,7 @@ export default class LastExecutionStatusIcon extends React.Component {
         execution: PropTypes.object,
         onShowLogs: PropTypes.func,
         onShowUpdateDetails: PropTypes.func,
-        onCancelExecution: PropTypes.func,
+        onActOnExecution: PropTypes.func,
         showLabel: PropTypes.bool,
         labelAttached: PropTypes.bool
     };
@@ -27,7 +27,7 @@ export default class LastExecutionStatusIcon extends React.Component {
         execution: {workflow_id: '', status: ''},
         onShowLogs: _.noop,
         onShowUpdateDetails: _.noop,
-        onCancelExecution: _.noop,
+        onActOnExecution: _.noop,
         showLabel: false,
         labelAttached: true
     };
@@ -119,9 +119,17 @@ export default class LastExecutionStatusIcon extends React.Component {
                                     <Table.Row textAlign='center'>
                                         <Table.HeaderCell colSpan={colSpan}>
                                             {
+                                                (ExecutionUtils.isCancelledExecution(execution) || ExecutionUtils.isFailedExecution(execution)) &&
+                                                <Button icon labelPosition='left' color='green'
+                                                        onClick={() => this.props.onActOnExecution(execution, ExecutionUtils.FORCE_RESUME_ACTION)}>
+                                                    <Icon name='play' />
+                                                    Resume
+                                                </Button>
+                                            }
+                                            {
                                                 (ExecutionUtils.isActiveExecution(execution) || ExecutionUtils.isWaitingExecution(execution)) &&
                                                 <Button icon labelPosition='left' color='yellow'
-                                                        onClick={() => this.props.onCancelExecution(execution, ExecutionUtils.CANCEL_ACTION)}>
+                                                        onClick={() => this.props.onActOnExecution(execution, ExecutionUtils.CANCEL_ACTION)}>
                                                     <Icon name='cancel' />
                                                     Cancel
                                                 </Button>
@@ -129,13 +137,13 @@ export default class LastExecutionStatusIcon extends React.Component {
                                             {
                                                 (ExecutionUtils.isActiveExecution(execution) || ExecutionUtils.isWaitingExecution(execution)) &&
                                                 <Button icon labelPosition='left' color='orange'
-                                                        onClick={() => this.props.onCancelExecution(execution, ExecutionUtils.FORCE_CANCEL_ACTION)}>
+                                                        onClick={() => this.props.onActOnExecution(execution, ExecutionUtils.FORCE_CANCEL_ACTION)}>
                                                     <Icon name='cancel' />
                                                     Force Cancel
                                                 </Button>
                                             }
                                             <Button icon labelPosition='left' color='red'
-                                                    onClick={() => this.props.onCancelExecution(execution, ExecutionUtils.KILL_CANCEL_ACTION)}>
+                                                    onClick={() => this.props.onActOnExecution(execution, ExecutionUtils.KILL_CANCEL_ACTION)}>
                                                 <Icon name='stop' />
                                                 Kill Cancel
                                             </Button>

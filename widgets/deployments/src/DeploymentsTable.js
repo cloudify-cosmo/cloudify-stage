@@ -16,7 +16,7 @@ export default class extends React.Component {
         onSelectDeployment: PropTypes.func,
         onShowLogs: PropTypes.func,
         onShowUpdateDetails: PropTypes.func,
-        onCancelExecution: PropTypes.func,
+        onActOnExecution: PropTypes.func,
         onMenuAction: PropTypes.func,
         onError: PropTypes.func,
         onSetVisibility: PropTypes.func,
@@ -28,7 +28,7 @@ export default class extends React.Component {
     static defaultProps = {
         fetchData: ()=>{},
         onSelectDeployment: ()=>{},
-        onCancelExecution: ()=>{},
+        onActOnExecution: ()=>{},
         onMenuAction: ()=>{},
         onError: ()=>{},
         onSetVisibility: ()=>{},
@@ -76,7 +76,7 @@ export default class extends React.Component {
                                     <LastExecutionStatusIcon execution={item.lastExecution}
                                                              onShowLogs={() => this.props.onShowLogs(item.id, item.lastExecution.id)}
                                                              onShowUpdateDetails={this.props.onShowUpdateDetails}
-                                                             onCancelExecution={this.props.onCancelExecution}
+                                                             onActOnExecution={this.props.onActOnExecution}
                                                              showLabel={this.props.showExecutionStatusLabel}
                                                              labelAttached={false} />
                                 </DataTable.Data>

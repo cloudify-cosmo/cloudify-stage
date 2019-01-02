@@ -3,6 +3,10 @@
  */
 
 class ExecutionUtils {
+    /* Execution resume types */
+    static FORCE_RESUME_ACTION = 'force-resume';
+    static RESUME_ACTION = 'resume';
+
     /* Execution cancellation types */
     static CANCEL_ACTION = 'cancel';
     static FORCE_CANCEL_ACTION = 'force-cancel';
