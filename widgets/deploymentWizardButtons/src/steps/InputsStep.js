@@ -52,6 +52,10 @@ class InputsStepContent extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            fileLoading: false
+        }
     }
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
@@ -72,8 +76,29 @@ class InputsStepContent extends Component {
         this.props.onChange(this.props.id, {...stepData});
     }
 
-    handleChange(event, field) {
+    handleInputChange(event, field) {
         this.props.onChange(this.props.id, {...this.props.stepData, ...Stage.Basic.Form.fieldNameValue(field)});
+    }
+
+    handleYamlFileChange(file) {
+        if (!file) {
+            return;
+        }
+
+        let {FileActions, InputsUtils} = Stage.Common;
+        let actions = new FileActions(this.props.toolbox);
+        this.setState({fileLoading: true});
+
+        actions.doGetYamlFileContent(file).then((yamlInputs) => {
+            const plan = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
+            let deploymentInputs = InputsUtils.getUpdatedInputs(plan, this.props.stepData, yamlInputs);
+            this.props.onChange(this.props.id, {...deploymentInputs});
+            this.setState({fileLoading: false});
+        }).catch((err) => {
+            const errorMessage = `Loading values from YAML file failed: ${_.isString(err) ? err : err.message}`;
+            this.props.onError(this.props.id, errorMessage, {yamlFile: errorMessage});
+            this.setState({fileLoading: false});
+        });
     }
 
     getInputStatus(defaultValue) {
@@ -85,8 +110,8 @@ class InputsStepContent extends Component {
     }
 
     render() {
-        let {Form, Table} = Stage.Basic;
-        let {InputsUtils, InputsHeader} = Stage.Common;
+        let {Divider, Form, Table} = Stage.Basic;
+        let {InputsUtils, InputsHeader, YamlFileButton} = Stage.Common;
 
         const inputs = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
         const noInputs = _.isEmpty(inputs);
@@ -98,41 +123,49 @@ class InputsStepContent extends Component {
                     ?
                         <NoResourceMessage resourceName='inputs'/>
                     :
-                        <Table celled>
-                            <Table.Header>
-                                <Table.Row>
-                                    <Table.HeaderCell>Input</Table.HeaderCell>
-                                    <Table.HeaderCell colSpan='2'><InputsHeader header='Value' dividing={false} /></Table.HeaderCell>
-                                </Table.Row>
-                            </Table.Header>
+                        <div>
+                            <YamlFileButton onChange={this.handleYamlFileChange.bind(this)}
+                                            dataType="deployment's inputs"
+                                            fileLoading={this.state.fileLoading}/>
+                            <Divider hidden style={{clear: 'both'}} />
+                            <Table celled>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell>Input</Table.HeaderCell>
+                                        <Table.HeaderCell colSpan='2'>
+                                            <InputsHeader header='Value' dividing={false} />
+                                        </Table.HeaderCell>
+                                    </Table.Row>
+                                </Table.Header>
 
-                            <Table.Body>
-                                {
-                                    _.map(_.keys(this.props.stepData), (inputName) =>
-                                        !_.isNil(inputs[inputName]) &&
-                                        <Table.Row key={inputName} name={inputName}>
-                                            <Table.Cell collapsing>
-                                                <Form.Field key={inputName} help={inputs[inputName].description}
-                                                            label={inputName} />
-                                            </Table.Cell>
-                                            <Table.Cell collapsing>
-                                                {this.getInputStatus(inputs[inputName].default)}
-                                            </Table.Cell>
-                                            <Table.Cell>
-                                                {
-                                                    InputsUtils.getInputField(inputName,
-                                                                              this.props.stepData[inputName],
-                                                                              inputs[inputName].default,
-                                                                              this.handleChange.bind(this),
-                                                                              this.props.errors[inputName],
-                                                                              inputs[inputName].type)
-                                                }
-                                            </Table.Cell>
-                                        </Table.Row>
-                                    )
-                                }
-                            </Table.Body>
-                        </Table>
+                                <Table.Body>
+                                    {
+                                        _.map(_.keys(this.props.stepData), (inputName) =>
+                                            !_.isNil(inputs[inputName]) &&
+                                            <Table.Row key={inputName} name={inputName}>
+                                                <Table.Cell collapsing>
+                                                    <Form.Field key={inputName} help={inputs[inputName].description}
+                                                                label={inputName} />
+                                                </Table.Cell>
+                                                <Table.Cell collapsing>
+                                                    {this.getInputStatus(inputs[inputName].default)}
+                                                </Table.Cell>
+                                                <Table.Cell>
+                                                    {
+                                                        InputsUtils.getInputField(inputName,
+                                                            this.props.stepData[inputName],
+                                                            inputs[inputName].default,
+                                                            this.handleInputChange.bind(this),
+                                                            this.props.errors[inputName],
+                                                            inputs[inputName].type)
+                                                    }
+                                                </Table.Cell>
+                                            </Table.Row>
+                                        )
+                                    }
+                                </Table.Body>
+                            </Table>
+                        </div>
                 }
             </Form>
         );

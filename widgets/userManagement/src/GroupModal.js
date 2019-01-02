@@ -16,7 +16,7 @@ export default class GroupModal extends React.Component {
         loading: false,
         groups: [],
         errors: {}
-    }
+    };
 
     onApprove () {
         this._submitGroup();
@@ -28,9 +28,9 @@ export default class GroupModal extends React.Component {
         return true;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
-            this.setState({...GroupModal.initialState, groups: nextProps.user.groups});
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            this.setState({...GroupModal.initialState, groups: this.props.user.groups});
         }
     }
 

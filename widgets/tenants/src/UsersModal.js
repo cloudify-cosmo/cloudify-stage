@@ -51,10 +51,10 @@ export default class UsersModal extends React.Component {
         this.setState({users: newUsers});
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
 
-            var users = _.mapValues(_.pickBy(nextProps.tenant.users, (rolesObj) => {
+            var users = _.mapValues(_.pickBy(this.props.tenant.users, (rolesObj) => {
                 return !_.isEmpty(rolesObj['tenant-role']);
             }), (rolesObj) => {
                 return rolesObj['tenant-role'];
@@ -68,8 +68,6 @@ export default class UsersModal extends React.Component {
     }
 
     _updateTenant() {
-        let errors = {};
-
         // Disable the form
         this.setState({loading: true});
 

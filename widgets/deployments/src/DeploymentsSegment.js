@@ -34,7 +34,7 @@ export default class DeploymentsSegment extends React.Component {
         onMenuAction: ()=>{},
         onError: ()=>{},
         onSetVisibility: ()=>{},
-        allowedSettingTo: ['tenant'],
+        allowedSettingTo: ['tenant', 'global'],
         noDataMessage: '',
         showExecutionStatusLabel: false
     };
@@ -94,7 +94,7 @@ export default class DeploymentsSegment extends React.Component {
                                         </Grid.Column>
 
                                         <Grid.Column width={4}>
-                                            <Header as='h5'>Node Instances ({item.nodeSize})</Header>
+                                            <Header as='h5'>Node Instances ({item.nodeInstancesCount})</Header>
                                             <Grid columns={4}>
                                                 <Grid.Row>
                                                 {
@@ -104,8 +104,8 @@ export default class DeploymentsSegment extends React.Component {
                                                                        state={_.join(groupState.states, ', ')}
                                                                        color={groupState.colorSUI}
                                                                        value={_.sum(_.map(groupState.states, (state) =>
-                                                                           _.isNumber(item.nodeStates[state])
-                                                                               ? item.nodeStates[state]
+                                                                           _.isNumber(item.nodeInstancesStates[state])
+                                                                               ? item.nodeInstancesStates[state]
                                                                                : 0))} />
                                                         </Grid.Column>
                                                     )

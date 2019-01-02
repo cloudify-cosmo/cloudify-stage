@@ -11,7 +11,7 @@ var logger = require('log4js').getLogger('DBConnection');
 
 var excludes = ['.', 'Connection.js', 'types'];
 
-var options = _.assign({
+var options = _.merge({
         dialect: 'postgres',
         pool: {
             max: 5,

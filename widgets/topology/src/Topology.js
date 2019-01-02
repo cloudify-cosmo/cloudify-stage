@@ -2,12 +2,16 @@
  * Created by kinneretzin on 06/11/2016.
  */
 
+import 'cloudify-blueprint-topology';
 var BlueprintTopology = cloudifyTopology.Topology;
 var DataProcessingService = cloudifyTopology.DataProcessingService;
 
 export default class Topology extends React.Component {
     constructor(props, context) {
         super(props, context);
+
+        this.glassRef = React.createRef();
+        this.topologyParentContainerRef = React.createRef();
 
         this._topologyData = null;
         this._topology = null;
@@ -22,25 +26,25 @@ export default class Topology extends React.Component {
     }
 
     componentDidMount() {
-
         this._startTopology();
 
         this.props.toolbox.getEventBus().on('topology:selectNode', this._selectNode, this);
     }
 
     componentWillUnmount() {
-        if (this._topology) {
-            this._topology.destroy();
-            this._topology = null;
-        }
+        this._destroyTopology();
         this.props.toolbox.getEventBus().off('topology:selectNode');
     }
 
-    _startTopology() {
-        if (this._topology) {
+    _destroyTopology() {
+        if (!_.isNil(this._topology)) {
             this._topology.destroy();
+            this._topology = null;
         }
+    }
 
+    _startTopology() {
+        this._destroyTopology();
         this._topology = new BlueprintTopology({
             isLoading: true,
             selector: '#topologyContainer',
@@ -63,15 +67,19 @@ export default class Topology extends React.Component {
     }
 
     _buildTopologyData() {
+        let result = null;
+
         if (this.props.data && this.props.data.data) {
-            var topologyData = {
+            const topologyData = {
                 data: this.props.data.data,
                 instances: this.props.data.instances,
                 executions: this.props.data.executions
             };
 
-            return DataProcessingService.encodeTopologyFromRest(topologyData);
+            result = DataProcessingService.encodeTopologyFromRest(topologyData);
         }
+
+        return result;
     }
 
      _selectNode(nodeId) {
@@ -121,7 +129,7 @@ export default class Topology extends React.Component {
             this.props.data.topologyConfig.showToolbar !== prevProps.data.topologyConfig.showToolbar)) {
 
             if (this._topology) {
-                this._topology.destroy();
+                this._destroyTopology();
                 this._startTopology();
             }
         }
@@ -133,11 +141,11 @@ export default class Topology extends React.Component {
             this._topologyData = null;
             this.props.toolbox.refresh();
         } else {
-            var isFirstTimeLoading = this._topologyData == null;
+            var isFirstTimeLoading = this._topologyData === null;
             var oldTopologyData = this._topologyData;
             this._topologyData = this._buildTopologyData();
 
-            if (isFirstTimeLoading || this._isNodesChanged(oldTopologyData.nodes,this._topologyData.nodes)) {
+            if (isFirstTimeLoading || this._isNodesChanged(oldTopologyData.nodes, this._topologyData.nodes)) {
                 this._topology.setTopology(this._topologyData);
                 this._topology.setLoading(false);
             } else {
@@ -148,7 +156,7 @@ export default class Topology extends React.Component {
 
     _releaseScroller () {
         this.isMouseOver = true;
-        $(this.refs.glass).addClass('unlocked');
+        $(this.glassRef.current).addClass('unlocked');
     }
 
     _timerReleaseScroller() {
@@ -162,17 +170,17 @@ export default class Topology extends React.Component {
 
     _reactivateScroller () {
         this.isMouseOver = false;
-        $(this.refs.glass).removeClass('unlocked');
+        $(this.glassRef.current).removeClass('unlocked');
     }
 
     render () {
         return (
-            <div ref='topologyParentContainer'
+            <div ref={this.topologyParentContainerRef}
                  onClick={this._releaseScroller.bind(this)}
                  onMouseEnter={this._timerReleaseScroller.bind(this)}
                  onMouseLeave={this._reactivateScroller.bind(this)}>
-                <div className='scrollGlass' ref='glass'><span className='message'>Click to release scroller</span></div>
-                <div id='topologyContainer'></div>
+                <div className='scrollGlass' ref={this.glassRef}><span className='message'>Click to release scroller</span></div>
+                <div id='topologyContainer' />
             </div>
         );
 

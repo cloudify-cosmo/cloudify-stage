@@ -201,7 +201,11 @@ export default class WidgetDynamicContent extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props, nextProps)
+        return !_.isEqual(this.props.widget, nextProps.widget)
+            || !_.isEqual(this.props.context, nextProps.context)
+            || !_.isEqual(this.props.manager, nextProps.manager)
+            || !_.isEqual(this.props.data, nextProps.data)
+            || !_.isEqual(this.props.pageId, nextProps.pageId)
             || !_.isEqual(this.state, nextState);
     }
 
@@ -257,7 +261,7 @@ export default class WidgetDynamicContent extends Component {
     render() {
         return (
             <div>
-                <div className={`ui ${this.state.loading?'active':''} small inline loader widgetLoader ${this.props.widget.definition.showHeader?'header':'noheader'}`}></div>
+                <div className={`ui ${this.state.loading?'active':''} small inline loader widgetLoader ${this.props.widget.definition.showHeader?'header':'noheader'}`} />
 
                 {
                     this.props.widget.definition.isReact ?

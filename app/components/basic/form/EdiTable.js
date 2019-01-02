@@ -59,7 +59,7 @@ export default class EdiTable extends Component {
     static defaultProps = {
         value: {},
         onChange: ()=>{}
-    }
+    };
 
     static initialState = (props) => {
         var fields = [];
@@ -82,11 +82,11 @@ export default class EdiTable extends Component {
             || JSON.stringify(this.state) !== JSON.stringify(nextState);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value) ||
-            this.props.rows !== nextProps.rows)
+    componentDidUpdate(prevProps) {
+        if (JSON.stringify(prevProps.value) !== JSON.stringify(this.props.value) ||
+            prevProps.rows !== this.props.rows)
         {
-            this.setState(EdiTable.initialState(nextProps));
+            this.setState(EdiTable.initialState(this.props));
         }
     }
 
@@ -103,7 +103,7 @@ export default class EdiTable extends Component {
             name: this.props.name,
             genericType: GenericField.EDITABLE_TABLE_TYPE,
             value: fields
-        }
+        };
 
         // Parent component update
         this.props.onChange(proxy, ediTableField);
@@ -123,7 +123,7 @@ export default class EdiTable extends Component {
                                         {
                                             column.description &&
                                             <Popup>
-                                                <Popup.Trigger><Icon name="help circle outline"/></Popup.Trigger>
+                                                <Popup.Trigger><Icon name="help circle"/></Popup.Trigger>
                                                 {column.description}
                                             </Popup>
                                         }
@@ -133,6 +133,7 @@ export default class EdiTable extends Component {
                         }
                     </Table.Row>
                 </Table.Header>
+
                 <Table.Body>
                     {
                         _.times(this.props.rows, (index) =>

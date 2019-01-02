@@ -33,11 +33,11 @@ export default class DeployModal extends React.Component {
     };
 
     static defaultProps = {
-        onHide: ()=>{}
+        onHide: _.noop
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             this.setState(DeployModal.initialState);
         }
     }
@@ -146,7 +146,7 @@ export default class DeployModal extends React.Component {
                 <Modal.Header>
                     <Icon name="rocket"/> Create new deployment
                     <VisibilityField visibility={this.state.visibility} className="rightFloated"
-                                  onVisibilityChange={(visibility)=>this.setState({visibility:visibility})} disallowGlobal={true}/>
+                                     onVisibilityChange={(visibility)=>this.setState({visibility:visibility})} />
                 </Modal.Header>
 
                 <Modal.Content>

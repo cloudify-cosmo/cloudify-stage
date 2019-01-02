@@ -29,9 +29,9 @@ export default class UsersModal extends React.Component {
         return true;
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
-            this.setState({...UsersModal.initialState, users: nextProps.group.users});
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            this.setState({...UsersModal.initialState, users: this.props.group.users});
         }
     }
 

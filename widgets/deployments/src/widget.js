@@ -49,45 +49,58 @@ Stage.defineWidget({
     },
 
     fetchData: function(widget,toolbox,params) {
-        var deploymentData = toolbox.getManager().doGet('/deployments', params);
+        let deploymentData = toolbox.getManager().doGet('/deployments', {
+                _include: 'id,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows',
+                ...params
+            });
+        let deploymentIds = deploymentData.then(data => _.map(data.items, item => item.id));
 
-        var deploymentIds = deploymentData.then(data=>Promise.resolve([...new Set(data.items.map(item=>item.id))]));
+        let nodeInstanceData = deploymentIds.then(ids =>
+            toolbox.getManager().doGet('/summary/node_instances', {
+                _target_field: 'deployment_id',
+                _sub_field: 'state',
+                deployment_id: ids
+            })
+        );
 
-        var nodeInstanceData = deploymentIds.then(ids=>{
-                    return toolbox.getManager().doGet('/node-instances?_include=id,state,deployment_id', {deployment_id: ids});
-                });
-
-        let executionsData = deploymentIds.then(ids=>{
-            return toolbox.getManager().doGet('/executions', {
+        let executionsData = deploymentIds.then(ids =>
+            toolbox.getManager().doGet('/executions', {
+                _include: 'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at',
                 _sort: '-ended_at',
                 deployment_id: ids
-            });
-        });
+            })
+        );
 
         return Promise.all([deploymentData, nodeInstanceData, executionsData]).then(function(data) {
-                let deploymentData = data[0];
-                let nodeInstancesSize = _.countBy(data[1].items, "deployment_id");
-                let nodeInstanceData = _.groupBy(data[1].items, "deployment_id");
-                let executionsData = _.groupBy(data[2].items, "deployment_id");
+                const deploymentData = data[0];
+                const nodeInstanceData = _.reduce(data[1].items, (result, item) => {
+                    result[item.deployment_id] = {
+                        states: _.reduce(item['by state'], (result, state) => {
+                                result[state.state] = state.node_instances;
+                                return result;
+                            }, {}),
+                        count: item.node_instances
+                    };
+                    return result;
+                }, {});
+                const executionsData = _.groupBy(data[2].items, 'deployment_id');
 
-                let formattedData = Object.assign({},deploymentData,{
-                    items: _.map (deploymentData.items,(item)=>{
+                return Object.assign({}, deploymentData, {
+                    items: _.map (deploymentData.items,(item) => {
                         let workflows = Stage.Common.DeploymentUtils.filterWorkflows(_.sortBy(item.workflows, ['name']));
                         return Object.assign({},item,{
-                            nodeSize: nodeInstancesSize[item.id],
-                            nodeStates: _.countBy(nodeInstanceData[item.id], "state"),
+                            nodeInstancesCount: !!nodeInstanceData[item.id] ? nodeInstanceData[item.id].count : 0,
+                            nodeInstancesStates: !!nodeInstanceData[item.id] ? nodeInstanceData[item.id].states : {},
                             created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
                             updated_at: Stage.Utils.formatTimestamp(item.updated_at),
                             executions: _.filter(executionsData[item.id], Stage.Common.ExecutionUtils.isActiveExecution),
                             lastExecution: _.first(executionsData[item.id]),
                             workflows
                         })
-                    })
+                    }),
+                    total: _.get(deploymentData, 'metadata.pagination.total', 0),
+                    blueprintId: params.blueprint_id
                 });
-                formattedData.total =  _.get(deploymentData, "metadata.pagination.total", 0);
-                formattedData.blueprintId = params.blueprint_id;
-
-                return Promise.resolve(formattedData);
             });
     },
 

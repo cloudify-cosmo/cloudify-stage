@@ -20,7 +20,7 @@
 }
 
 .react-datepicker__time-container {
-    width: 120px;
+    width: 100px;
 }
 
 .react-datepicker__day--outside-month {
@@ -71,7 +71,7 @@
 }
 
 .react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {
-    right: 110px;
+    right: 105px;
 }
 
 /*Handle smaller viewports*/

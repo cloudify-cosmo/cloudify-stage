@@ -16,6 +16,7 @@ export default class Widget extends Component {
     constructor(props,context) {
         super(props,context);
 
+        this.widgetItemRef = React.createRef();
         this.state = {
             showReadmeModal: false,
             readmeContent: ''
@@ -70,15 +71,21 @@ export default class Widget extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.widget.maximized) {
-            $(this.refs.widgetItem).focus();
+            this.widgetItemRef.current.focus();
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props, nextProps)
+            || !_.isEqual(this.state, nextState);
     }
 
     render() {
 
         if (!this.props.widget.definition) {
             return (
-                <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className='widgetItem ui segment widgetWithoutContent'>
+                <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)}
+                     ref={this.widgetItemRef} className='widgetItem ui segment widgetWithoutContent'>
                     <div className='widgetButtons' onMouseDown={e => e.stopPropagation()}>
                     {
                         this.props.isEditMode &&
@@ -109,7 +116,8 @@ export default class Widget extends Component {
         );
 
         return (
-            <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)} ref="widgetItem" className={`widgetItem ui segment
+            <div tabIndex={this.props.widget.maximized?'-1':''} onKeyDown={this._onKeyDown.bind(this)}
+                 ref={this.widgetItemRef} className={`widgetItem ui segment
                             ${this.props.widget.definition && !this.props.widget.definition.showBorder ? 'basic' : ''}
                             ${this.props.isEditMode && this.props.widget.definition && !this.props.widget.definition.showBorder ? 'borderOnHover ' : ''}
                             ${this.props.widget.definition && this.props.widget.definition.color && this.props.widget.definition.showBorder ? this.props.widget.definition.color : ''}`

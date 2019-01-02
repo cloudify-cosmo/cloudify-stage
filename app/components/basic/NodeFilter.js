@@ -121,13 +121,13 @@ export default class NodeFilter extends React.Component {
             || !_.isEqual(this.state, nextState);
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.state.blueprintId !== nextProps.value.blueprintId ||
-            this.state.deploymentId !== nextProps.value.deploymentId ||
-            this.state.nodeId !== nextProps.value.nodeId ||
-            this.state.nodeInstanceId !== nextProps.value.nodeInstanceId)
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.blueprintId !== this.props.value.blueprintId ||
+            prevState.deploymentId !== this.props.value.deploymentId ||
+            prevState.nodeId !== this.props.value.nodeId ||
+            prevState.nodeInstanceId !== this.props.value.nodeInstanceId)
         {
-            this.setState({...NodeFilter.initialState(nextProps)});
+            this.setState({...NodeFilter.initialState(this.props)});
             this._fetchBlueprints();
             this._fetchDeployments();
             this._fetchNodes();
@@ -135,7 +135,7 @@ export default class NodeFilter extends React.Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this._fetchBlueprints();
         this._fetchDeployments();
         this._fetchNodes();

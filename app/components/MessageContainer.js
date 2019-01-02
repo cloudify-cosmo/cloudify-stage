@@ -11,7 +11,7 @@ import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 export default class MessageContainer extends Component {
 
     static propTypes = {
-        children: PropTypes.object.isRequired,
+        children: PropTypes.any.isRequired,
         className: PropTypes.string
     };
 

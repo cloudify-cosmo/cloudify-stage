@@ -30,8 +30,8 @@ class UploadPluginModal extends React.Component {
     };
 
 
-    componentWillUpdate(prevProps) {
-        if (!_.isEqual(this.props.open, prevProps.open)) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             this.setState(UploadPluginModal.initialState);
         }
     }

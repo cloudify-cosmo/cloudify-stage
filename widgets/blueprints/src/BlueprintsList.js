@@ -141,7 +141,6 @@ export default class BlueprintList extends React.Component {
                             onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
                             onCreateDeployment={this._createDeployment.bind(this)}
                             onSetVisibility={this._setBlueprintVisibility.bind(this)}
-                            allowedSettingTo={['tenant','global']}
                             noDataMessage={NO_DATA_MESSAGE}
                             />
                         :
@@ -152,7 +151,6 @@ export default class BlueprintList extends React.Component {
                             onDeleteBlueprint={this._deleteBlueprintConfirm.bind(this)}
                             onCreateDeployment={this._createDeployment.bind(this)}
                             onSetVisibility={this._setBlueprintVisibility.bind(this)}
-                            allowedSettingTo={['tenant','global']}
                             noDataMessage={NO_DATA_MESSAGE}
                             />
 

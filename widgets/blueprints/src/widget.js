@@ -32,9 +32,11 @@ Stage.defineWidget({
         return toolbox.getManager().doGet('/blueprints?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name',params)
             .then(data=>{
                 result.blueprints = data;
-                var blueprintIds = data.items.map(item=>item.id);
 
-                return toolbox.getManager().doGetFull(`/deployments?_include=id,blueprint_id`,{blueprint_id: blueprintIds});
+                return toolbox.getManager().doGetFull('/summary/deployments', {
+                    _target_field: 'blueprint_id',
+                    blueprint_id: _.map(data.items, item => item.id)
+                });
             })
             .then(data=>{
                 result.deployments = data;
@@ -45,28 +47,30 @@ Stage.defineWidget({
         toolbox.getContext().getValue('onlyMyResources') ? {created_by: toolbox.getManager().getCurrentUsername()} : {},
 
     _processData(data,toolbox) {
-        var blueprintsData = data.blueprints;
-        var deploymentData = data.deployments;
+        let blueprintsData = data.blueprints;
+        let deploymentData = data.deployments;
 
-      var depCount = _.countBy(deploymentData.items,'blueprint_id');
         // Count deployments
-        _.each(blueprintsData.items,(blueprint)=>{
+        const depCount = _.reduce(deploymentData.items, (result, item) => {
+            result[item.blueprint_id] = item.deployments;
+            return result;
+        }, {});
+        _.each(blueprintsData.items, (blueprint) => {
             blueprint.depCount = depCount[blueprint.id] || 0;
         });
 
-        var selectedBlueprint = toolbox.getContext().getValue('blueprintId');
-        var formattedData = Object.assign({},blueprintsData,{
-            items: _.map (blueprintsData.items,(item)=>{
-                return Object.assign({},item,{
+        const selectedBlueprint = toolbox.getContext().getValue('blueprintId');
+
+        return Object.assign({}, blueprintsData, {
+            items: _.map(blueprintsData.items,(item) => {
+                return Object.assign({}, item, {
                     created_at: Stage.Utils.formatTimestamp(item.created_at),
                     updated_at: Stage.Utils.formatTimestamp(item.updated_at),
                     isSelected: selectedBlueprint === item.id
                 })
             }),
-            total: _.get(blueprintsData, "metadata.pagination.total", 0)
+            total: _.get(blueprintsData, 'metadata.pagination.total', 0)
         });
-
-        return formattedData;
     },
 
     render: function(widget,data,error,toolbox) {

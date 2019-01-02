@@ -37,9 +37,9 @@ export default class TenantsModal extends React.Component {
     }
 
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
-            this.setState({...TenantsModal.initialState, tenants: nextProps.group.tenants});
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
+            this.setState({...TenantsModal.initialState, tenants: this.props.group.tenants});
         }
     }
 

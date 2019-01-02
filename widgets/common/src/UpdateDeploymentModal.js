@@ -36,16 +36,16 @@ class UpdateDeploymentModal extends React.Component {
         onHide: PropTypes.func.isRequired
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.open && nextProps.open) {
+    componentDidUpdate(prevProps) {
+        if (!prevProps.open && this.props.open) {
             this.setState({loading: true});
             let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-            actions.doGetBlueprints().then((blueprints)=>{
-                this.setState({...UpdateDeploymentModal.initialState(nextProps), blueprints});
+            actions.doGetBlueprints().then((blueprints) => {
+                this.setState({...UpdateDeploymentModal.initialState(this.props), blueprints});
             }).catch((err)=> {
                 this.setState({loading: false, error: err.message});
             }).then(()=> {
-                this._selectBlueprint({}, {value: nextProps.deployment.blueprint_id});
+                this._selectBlueprint({}, {value: this.props.deployment.blueprint_id});
             });
         }
     }

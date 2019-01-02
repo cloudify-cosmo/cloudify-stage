@@ -8,7 +8,12 @@ import React, { Component } from 'react';
 import 'jquery-ui/ui/widgets/sortable';
 
 export default class PagesList extends Component {
+    constructor(props) {
+        super(props);
 
+        this.pagesRef = React.createRef();
+    }
+    
     static propTypes = {
         onPageSelected: PropTypes.func.isRequired,
         onPageRemoved: PropTypes.func.isRequired,
@@ -20,7 +25,7 @@ export default class PagesList extends Component {
     };
 
     componentDidMount() {
-        $(this.refs.pages).sortable({
+        $(this.pagesRef.current).sortable({
             placeholder: 'ui-sortable-placeholder',
             helper: 'clone',
             forcePlaceholderSize: true,
@@ -37,12 +42,12 @@ export default class PagesList extends Component {
 
     _enableReorderInEditMode() {
         if (this.props.isEditMode) {
-            if ($(this.refs.pages).sortable( 'option', 'disabled' )) {
-                $(this.refs.pages).sortable('enable');
+            if ($(this.pagesRef.current).sortable( 'option', 'disabled' )) {
+                $(this.pagesRef.current).sortable('enable');
             }
         } else {
-            if (!$(this.refs.pages).sortable( 'option', 'disabled' )) {
-                $(this.refs.pages).sortable('disable');
+            if (!$(this.pagesRef.current).sortable( 'option', 'disabled' )) {
+                $(this.pagesRef.current).sortable('disable');
             }
         }
     }
@@ -56,7 +61,7 @@ export default class PagesList extends Component {
         });
 
         return (
-            <div className="pages" ref="pages">
+            <div className="pages" ref={this.pagesRef}>
                 {
                     _.filter(this.props.pages, (p)=>{return !p.isDrillDown}).map(function(page){
                         return <div 

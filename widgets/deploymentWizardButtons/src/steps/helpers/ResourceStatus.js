@@ -21,6 +21,11 @@ export default class ResourceStatus extends Component {
         text: PropTypes.string.isRequired
     };
 
+    shouldComponentUpdate(nextProps) {
+        return this.props.status !== nextProps.status
+            || this.props.text !== nextProps.text;
+    }
+
     render() {
         let {Icon, Popup} = Stage.Basic;
 
