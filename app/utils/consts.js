@@ -33,7 +33,8 @@ export default {
     visibility: {
         PRIVATE: {name: 'private', icon: 'lock', color: 'red', title: 'Private resource'},
         TENANT: {name: 'tenant', icon: 'user', color: 'green', title: 'Tenant resource'},
-        GLOBAL: {name: 'global', icon: 'globe', color: 'blue', title: 'Global resource'}
+        GLOBAL: {name: 'global', icon: 'globe', color: 'blue', title: 'Global resource'},
+        UNKNOWN: {name: 'unknown', icon: 'question', color: 'grey', title: 'Unknown resource visibility'},
     },
     MANAGER_RUNNING: 'running',
     MAINTENANCE_ACTIVATING: 'activating',

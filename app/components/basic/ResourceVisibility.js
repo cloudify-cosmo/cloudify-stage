@@ -40,7 +40,7 @@ export default class ResourceVisibility extends Component {
     }
 
     /**
-     * @property {string} visibility resource visibility - in ['private', 'tenant, 'global']
+     * @property {string} [visibility='unknown'] resource visibility - in ['private', 'tenant, 'global', 'unknown']
      * @property {func} [onSetVisibility(visibility)] function to be called when user confirm changing visibility
      * @property {array} [allowedSettingTo=['tenant']] array of visibilities the item is allowed to change to
      * @property {string} [className=''] Name of the style class to be added
@@ -49,13 +49,15 @@ export default class ResourceVisibility extends Component {
         visibility: PropTypes.oneOf([
             consts.visibility.PRIVATE.name,
             consts.visibility.TENANT.name,
-            consts.visibility.GLOBAL.name]).isRequired,
+            consts.visibility.GLOBAL.name,
+            consts.visibility.UNKNOWN.name]),
         onSetVisibility: PropTypes.func,
         allowedSettingTo: PropTypes.array,
         className: PropTypes.string
     };
 
     static defaultProps = {
+        visibility: consts.visibility.UNKNOWN.name,
         className: '',
     };
 
@@ -64,12 +66,12 @@ export default class ResourceVisibility extends Component {
         let setGlobalAllowed = _.includes(this.props.allowedSettingTo, consts.visibility.GLOBAL.name) && !_.isEqual(this.props.visibility, consts.visibility.GLOBAL.name);
         let canChangeVisibility = setGlobalAllowed || setTenantAllowed;
         const icon = <VisibilityIcon visibility={this.props.visibility}
-                                   className={this.props.className}
-                                   link={setGlobalAllowed}
-                                   onClick={e => e.stopPropagation()}
-                                   bordered
-                                   disabled={!canChangeVisibility}
-                                   showTitle={!this.state.popupOpened} />;
+                                     className={this.props.className}
+                                     link={setGlobalAllowed}
+                                     onClick={e => e.stopPropagation()}
+                                     bordered
+                                     disabled={!canChangeVisibility}
+                                     showTitle={!this.state.popupOpened} />;
 
         let popupContent =
         <div className="setVisibility">
