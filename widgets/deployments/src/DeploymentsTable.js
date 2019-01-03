@@ -88,8 +88,7 @@ export default class extends React.Component {
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data>{item.created_by}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
-                                    <MenuAction item={item} disabled={!_.isEmpty(item.executions)}
-                                                onSelectAction={this.props.onMenuAction} />
+                                    <MenuAction item={item} onSelectAction={this.props.onMenuAction} />
                                 </DataTable.Data>
                             </DataTable.Row>
                         );
