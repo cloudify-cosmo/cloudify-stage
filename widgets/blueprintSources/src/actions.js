@@ -18,7 +18,7 @@ export default class {
 
     doGetImportedBlueprints(blueprintId) {
         return this.toolbox.getManager().doGet(`/blueprints?id=${blueprintId}&_include=plan`)
-            .then((data) => data.items[0].plan.imported_blueprints || []);
+            .then((data) => _.get(data, 'items[0].plan.imported_blueprints', []));
     }
 
     doGetFileContent(path) {
