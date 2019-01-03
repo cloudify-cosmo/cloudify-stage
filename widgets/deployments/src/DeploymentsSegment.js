@@ -115,8 +115,7 @@ export default class DeploymentsSegment extends React.Component {
                                         </Grid.Column>
 
                                         <Grid.Column width={1}>
-                                            <MenuAction item={item} disabled={!_.isEmpty(item.executions)}
-                                                        onSelectAction={this.props.onMenuAction}/>
+                                            <MenuAction item={item} onSelectAction={this.props.onMenuAction}/>
                                         </Grid.Column>
                                     </Grid.Row>
                                 </Grid>
