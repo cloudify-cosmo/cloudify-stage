@@ -88,7 +88,7 @@ export default class BlueprintSources extends React.Component {
                         <div>
                             <NodesTree showLine selectable defaultExpandAll
                                        onSelect={this._selectFile.bind(this)}>
-                                <NodesTree.Node key='blueprint' title={
+                                <NodesTree.Node key='blueprint' disabled title={
                                     <Label color='purple' horizontal>
                                         {data.blueprintId}
                                     </Label>}>
@@ -96,14 +96,15 @@ export default class BlueprintSources extends React.Component {
                                 </NodesTree.Node>
                                 {
                                     _.size(data.importedBlueprintIds) > 0 &&
-                                    <NodesTree.Node key='imported' style={{marginTop: '5px'}} title={
+                                    <NodesTree.Node key='imported' style={{marginTop: '5px'}} disabled title={
                                         <Label color='pink' horizontal>
                                             Imported Blueprints
                                             <Label.Detail>{_.size(data.importedBlueprintIds)}</Label.Detail>
                                         </Label>}>
                                         {
                                             _.map(data.importedBlueprintTrees, (tree, index) =>
-                                                <NodesTree.Node key={data.importedBlueprintIds[index]} style={{marginTop: '3px'}} title={
+                                                <NodesTree.Node key={data.importedBlueprintIds[index]}
+                                                                style={{marginTop: '3px'}} disabled title={
                                                     <Label color='pink' horizontal>
                                                         {data.importedBlueprintIds[index]}
                                                     </Label>}>
