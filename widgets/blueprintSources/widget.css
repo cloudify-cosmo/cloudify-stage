@@ -14,3 +14,7 @@
     margin-top: 2rem;
     margin-bottom: 0rem;
 }
+
+.rc-tree-treenode-disabled>a, .rc-tree-treenode-disabled>a span, .rc-tree-treenode-disabled>span:not(.rc-tree-switcher) {
+    cursor: default;
+}
