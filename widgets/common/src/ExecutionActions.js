@@ -15,7 +15,7 @@ class ExecutionActions {
         return this.toolbox.getManager().doGet('/executions?_include=id,status', {id: executionId});
     }
 
-    doCancel(execution, action) {
+    doAct(execution, action) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
             'deployment_id': execution.deployment_id,
             'action': action

@@ -53,7 +53,7 @@ export default class Services extends Component {
                                             </Header>
                                         </Table.Cell>
                                         <Table.Cell textAlign="center">
-                                            <Icon name={instance.state === 'running' ? 'checkmark' : 'warning'}/>
+                                            <Icon name={instance.state === 'running' || instance.state === 'remote' ? 'checkmark' : 'warning'}/>
                                             {instance.state}
                                         </Table.Cell>
                                     </Table.Row>

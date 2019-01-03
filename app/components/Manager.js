@@ -17,11 +17,12 @@ export default class Manager extends Component {
 
     _areAllServicesRunning(services) {
         const runningState = 'running';
+        const remoteState = 'remote';
         let allServicesRunning = true;
 
         _.forEach(services, (service) => {
             _.forEach(service.instances, (instance) => {
-                if (instance.state !== runningState) {
+                if (instance.state !== runningState && instance.state !== remoteState) {
                     allServicesRunning = false;
                     return false;
                 }

@@ -3,6 +3,10 @@
  */
 
 class ExecutionUtils {
+    /* Execution resume types */
+    static FORCE_RESUME_ACTION = 'force-resume';
+    static RESUME_ACTION = 'resume';
+
     /* Execution cancellation types */
     static CANCEL_ACTION = 'cancel';
     static FORCE_CANCEL_ACTION = 'force-cancel';
@@ -12,6 +16,7 @@ class ExecutionUtils {
     static EXECUTION_SUCCESSFUL = 'success';
     static EXECUTION_FAILED = 'failed';
     static EXECUTION_CANCELLED = 'cancelled';
+    static EXECUTION_WAITING = 'waiting';
     static EXECUTION_IN_PROGRESS = 'inprogress';
     static STATUS_ICON_PARAMS = {
         [ExecutionUtils.EXECUTION_SUCCESSFUL]: {
@@ -29,6 +34,11 @@ class ExecutionUtils {
             color: 'orange',
             loading: false
         },
+        [ExecutionUtils.EXECUTION_WAITING]: {
+            name: 'clock',
+            color: 'black',
+            loading: false
+        },
         [ExecutionUtils.EXECUTION_IN_PROGRESS]: {
             name: 'spinner',
             color: 'yellow',
@@ -38,15 +48,22 @@ class ExecutionUtils {
 
     /* Execution statuses */
     static EXECUTION_STATUSES
-        = ['terminated', 'failed', 'cancelled', 'pending', 'started', 'cancelling', 'force_cancelling', 'kill_cancelling'];
+        = ['terminated', 'failed', 'cancelled', 'scheduled', 'queued', 'pending', 'started', 'cancelling', 'force_cancelling', 'kill_cancelling'];
+    static WAITING_EXECUTION_STATUSES
+        = ['scheduled', 'queued'];
     static END_EXECUTION_STATUSES
-        = [ 'terminated', 'failed', 'cancelled' ];
+        = ['terminated', 'failed', 'cancelled'];
     static ACTIVE_EXECUTION_STATUSES
-        = _.difference(ExecutionUtils.EXECUTION_STATUSES, ExecutionUtils.END_EXECUTION_STATUSES);
+        = _.difference(ExecutionUtils.EXECUTION_STATUSES,
+                       [...ExecutionUtils.END_EXECUTION_STATUSES, ...ExecutionUtils.WAITING_EXECUTION_STATUSES]);
 
     /* Helper methods */
     static isCancelledExecution(execution) {
         return execution.status === 'cancelled';
+    }
+
+    static isWaitingExecution(execution) {
+        return _.includes(ExecutionUtils.WAITING_EXECUTION_STATUSES, execution.status);
     }
 
     static isFailedExecution(execution) {
@@ -72,6 +89,8 @@ class ExecutionUtils {
             return ExecutionUtils.EXECUTION_SUCCESSFUL;
         } else if (ExecutionUtils.isCancelledExecution(execution)) {
             return ExecutionUtils.EXECUTION_CANCELLED;
+        } else if (ExecutionUtils.isWaitingExecution(execution)) {
+            return ExecutionUtils.EXECUTION_WAITING;
         } else {
             return ExecutionUtils.EXECUTION_IN_PROGRESS;
         }

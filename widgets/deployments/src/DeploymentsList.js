@@ -92,9 +92,9 @@ export default class DeploymentsList extends React.Component {
         });
     }
 
-    _cancelExecution(execution, action) {
+    actOnExecution(execution, action) {
         let actions = new Stage.Common.ExecutionActions(this.props.toolbox);
-        actions.doCancel(execution, action).then(() => {
+        actions.doAct(execution, action).then(() => {
             this._setError(null);
             this.props.toolbox.getEventBus().trigger('deployments:refresh');
             this.props.toolbox.getEventBus().trigger('executions:refresh');
@@ -159,7 +159,7 @@ export default class DeploymentsList extends React.Component {
                                       onShowLogs={this._showLogs.bind(this)}
                                       onShowUpdateDetails={this._showDeploymentUpdateDetailsModal.bind(this)}
                                       onMenuAction={this._showModal.bind(this)}
-                                      onCancelExecution={this._cancelExecution.bind(this)}
+                                      onActOnExecution={this.actOnExecution.bind(this)}
                                       onError={this._setError.bind(this)}
                                       onSetVisibility={this._setDeploymentVisibility.bind(this)}
                                       noDataMessage={NO_DATA_MESSAGE}
@@ -171,7 +171,7 @@ export default class DeploymentsList extends React.Component {
                                         onShowLogs={this._showLogs.bind(this)}
                                         onShowUpdateDetails={this._showDeploymentUpdateDetailsModal.bind(this)}
                                         onMenuAction={this._showModal.bind(this)}
-                                        onCancelExecution={this._cancelExecution.bind(this)}
+                                        onActOnExecution={this.actOnExecution.bind(this)}
                                         onError={this._setError.bind(this)}
                                         onSetVisibility={this._setDeploymentVisibility.bind(this)}
                                         noDataMessage={NO_DATA_MESSAGE}
