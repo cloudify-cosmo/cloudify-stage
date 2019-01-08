@@ -11,7 +11,7 @@ Displays all the blueprints on the tenant, according to the user’s permissions
 * **Main blueprint file name** (as the blueprint archive can contain multiple files)
 * **Number of deployments derived from the blueprint**
 
-![blueprints-list](https://docs.cloudify.co/staging/dev/images/ui/widgets/blueprints-list.png)
+![blueprints-list](https://docs.cloudify.co/4.5.5/images/ui/widgets/blueprints-list.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds

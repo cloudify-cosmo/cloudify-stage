@@ -1,7 +1,7 @@
 ### Blueprint deployments
-Displays the list of the deployments in the current tenant, according to the user’s permissions. The data can be displayed as a table or list. In the case of a list view, the status of each deployment is also displayed. For information about deployment status, [click here](https://docs.cloudify.co/staging/dev/working_with/console/deployments-page)
+Displays the list of the deployments in the current tenant, according to the user’s permissions. The data can be displayed as a table or list. In the case of a list view, the status of each deployment is also displayed. For information about deployment status, [click here](https://docs.cloudify.co/4.5.5/working_with/console/deployments-page)
 
-![blueprint-deployments](https://docs.cloudify.co/staging/dev/images/ui/widgets/blueprint-deployments.png)
+![blueprint-deployments](https://docs.cloudify.co/4.5.5/images/ui/widgets/blueprint-deployments.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds

@@ -1,5 +1,5 @@
 {
-  "linksBasePath": "https://docs.cloudify.co/staging/dev",
+  "linksBasePath": "https://docs.cloudify.co/4.5.5",
   "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/master",
   "files": [
     {"widget": "agents", "link": "/content/working_with/console/widgets/agents.md"},
