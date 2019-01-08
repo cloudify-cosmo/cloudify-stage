@@ -69,7 +69,6 @@ export default class PagesList extends Component {
                                 onClick={(event) => {
                                     event.stopPropagation();
                                     this.props.onPageSelected(page);
-                                    this.props.onSidebarClose();
                                 }}>
                         {page.name}
                         {

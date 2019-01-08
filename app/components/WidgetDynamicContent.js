@@ -167,11 +167,10 @@ export default class WidgetDynamicContent extends Component {
             })
         }
 
-        if (prevProps.manager.tenants.selected !== this.props.manager.tenants.selected) {
-            requiresFetch = true;
-        }
-
-        if (this._paramsHandler.updateFetchParams()) {
+        if ((prevProps.manager.tenants.selected !== this.props.manager.tenants.selected) ||
+            // Fetch data after WIDGET_DATA_CLEAR action was dispatched (Fix for CY-957)
+            (!_.isEmpty(prevProps.data) && _.isEmpty(this.props.data)) ||
+            (this._paramsHandler.updateFetchParams())) {
             requiresFetch = true;
         }
 
