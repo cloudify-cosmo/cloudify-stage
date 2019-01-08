@@ -12,10 +12,11 @@ export default class NoTenants extends Component {
     render () {
         return (
             <MessageContainer>
-                <Header as='h2'>User don't have any tenants</Header>
+                <Header as='h2'>User is not associated with any tenants.</Header>
                 <Message>
-                    Unfortunately you cannot login since you don't have any tenants.
-                    Ask the admin to assign you to a tenant.
+                    Unfortunately you cannot login since your account is not
+                    associated with any tenants. Please ask the administrator to assign
+                    at least one tenant to your account.
                 </Message>
                 <LinkToLogin />
             </MessageContainer>
