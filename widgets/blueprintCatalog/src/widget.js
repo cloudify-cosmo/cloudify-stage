@@ -46,8 +46,12 @@ Stage.defineWidget({
             default: 'catalog',
             type: Stage.Basic.GenericField.LIST_TYPE
         },
-        Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
-        Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
+        {
+            id: 'sortByName', name: 'Sort by name',
+            description: 'If set to true, then blueprints will be sorted by name.',
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        }
     ],
 
     mapGridParams: function(gridParams) {
@@ -79,6 +83,10 @@ Stage.defineWidget({
                     repos = _.map(repos, repo => _.isEmpty(repo.image_url)
                         ? ({...repo, image_url: defaultImagePath})
                         : ({...repo, image_url: `/external/content?url=${encodeURIComponent(repo.image_url)}`}));
+
+                    if (_.get(widget.configuration, 'sortByName', false)) {
+                        repos = _.sortBy(repos, 'name');
+                    }
 
                     return Promise.resolve({items: repos, total, source});
                 }

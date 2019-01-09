@@ -44,6 +44,7 @@ export default class extends React.Component {
 
                 {
                     this.props.data.items.map((item)=>{
+                        const isLoading = this.props.readmeLoading === item.name;
                         return (
                             <DataTable.Row key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelect(item)}>
                                 <DataTable.Data><Image src={Stage.Utils.url(item.image_url)} width="30px" height="auto" inline/> <a href={item.html_url} target="_blank">{item.name}</a></DataTable.Data>
@@ -51,9 +52,11 @@ export default class extends React.Component {
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
-                                    <Icon name="info" link title="blueprint Readme" loading={this.props.readmeLoading === item.name}
-                                          onClick={(event)=>{event.stopPropagation();this.props.onReadme(item.name, item.readme_url)}} bordered/>
-                                    <Icon name="upload" link title="Upload blueprint" onClick={(event)=>{event.stopPropagation();this.props.onUpload(item.name, item.zip_url, item.image_url)}} bordered/>
+                                    <Icon name={isLoading ? 'spinner' : 'info'} link={!isLoading} title="Blueprint Readme"
+                                          loading={isLoading} bordered={!isLoading}
+                                          onClick={(event)=>{event.stopPropagation();this.props.onReadme(item.name, item.readme_url)}} />
+                                    <Icon name="upload" link title="Upload blueprint" bordered
+                                          onClick={(event)=>{event.stopPropagation();this.props.onUpload(item.name, item.zip_url, item.image_url)}} />
                                 </DataTable.Data>
                             </DataTable.Row>
                         );
