@@ -50,7 +50,7 @@ export default class AddWidgetModal extends Component {
     }
 
     _openModal() {
-        this.setState({...AddWidgetModal.initialState(this.props), open: true});
+        this.setState({...AddWidgetModal.initialState(this.props), open: true, widgetsToAdd: []});
     }
 
     _closeModal() {
@@ -84,9 +84,16 @@ export default class AddWidgetModal extends Component {
         });
     }
 
+    _getWidgetsToAddWithout(widgetId) {
+        return _.filter(this.state.widgetsToAdd, (w) => w.id !== widgetId);
+    }
+
     _uninstallWidget() {
+        const widgetId = this.state.widget.id;
+
         this.setState({showConfirm:false});
-        this.props.onWidgetUninstalled(this.state.widget.id);
+        this.props.onWidgetUninstalled(widgetId)
+            .then(() => this.setState({widgetsToAdd: this._getWidgetsToAddWithout(widgetId)}));
     }
 
     _updateWidget(widget, widgetFile, widgetUrl) {
