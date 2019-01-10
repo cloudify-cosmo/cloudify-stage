@@ -49,7 +49,7 @@ Stage.defineWidget({
         {
             id: 'sortByName', name: 'Sort by name',
             description: 'If set to true, then blueprints will be sorted by name.',
-            default: true,
+            default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
     ],

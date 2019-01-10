@@ -13,7 +13,7 @@ Stage.defineWidget ({
   initialHeight: 20,
   color: 'teal',
   isReact: true,
-    hasReadme: true,
+  hasReadme: true,
   permission: Stage.GenericConfig.WIDGET_PERMISSION('pluginsCatalog'),
   initialConfiguration: [
     {
@@ -26,7 +26,7 @@ Stage.defineWidget ({
     {
       id: 'sortByName', name: 'Sort by name',
       description: 'If set to true, then plugins will be sorted by name.',
-      default: true,
+      default: false,
       type: Stage.Basic.GenericField.BOOLEAN_TYPE
     }
   ],
