@@ -109,7 +109,7 @@ export default class WidgetDefinitionsLoader {
             if (w.init && typeof w.init === 'function') {
                 w.init();
             }
-        })
+        });
 
         var loadedWidgetDefinitions = _.sortBy(widgetDefinitions, ['name']);
         widgetDefinitions = []; // Clear for next time
@@ -151,24 +151,49 @@ export default class WidgetDefinitionsLoader {
         }
     }
 
+    static _validateWidget(widgetId, manager) {
+        let errors = [];
+
+        if (_.isEmpty(widgetDefinitions)) {
+            errors.push('Widget not properly initialized. Please check if widget.js is correctly defined.');
+        } else if (widgetDefinitions.length > 1) {
+            errors.push('Only single widget should be defined within widget.js');
+        } else {
+            const widgetDefinition = widgetDefinitions[0];
+
+            if (!_.includes(_.keys(manager.permissions), widgetDefinition.permission)) {
+                errors.push(`Specified widget permission ('${widgetDefinition.permission}') not found in available permissions list.`);
+            }
+
+            if (_.isEmpty(widgetDefinition.id)) {
+                errors.push("Mandatory field - 'id' - not specified in widget definition.");
+            }
+
+            if (_.isEmpty(widgetDefinition.name)) {
+                errors.push("Mandatory field - 'name' - not specified in widget definition.");
+            }
+        }
+
+        if (!_.isEmpty(errors)) {
+            let errorMessage = errors.length > 1
+                ? `Multiple errors occured: ${_.join(errors, ' ')}`
+                : errors[0];
+
+            return WidgetDefinitionsLoader.uninstall(widgetId, manager).then(() => { throw new Error(errorMessage) });
+        }
+
+        return Promise.resolve();
+    }
+
     static install(widgetFile, widgetUrl, manager) {
+        let widgetData = {};
+
         return WidgetDefinitionsLoader._installWidget(widgetFile, widgetUrl, manager)
-            .then(data => WidgetDefinitionsLoader._loadWidget(data, true)
-                .then(() => {
-                    var error = '';
-                    if (_.isEmpty(widgetDefinitions)) {
-                        error = 'Widget not properly initialized. Please check if widget.js is correctly defined.';
-                    } else if (widgetDefinitions.length > 1) {
-                        error = 'Only single widget should be defined within widget.js';
-                    };
-
-                    if (error) {
-                        return WidgetDefinitionsLoader.uninstall(data.id).then(() => { throw new Error(error) });
-                    };
-
-                    return Promise.resolve();
-                })
-                .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([data], 'id'))))
+            .then(data => {
+                widgetData = data;
+                return WidgetDefinitionsLoader._loadWidget(data, true);
+            }).then(() => WidgetDefinitionsLoader._validateWidget(widgetData.id, manager))
+            .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([widgetData], 'id')))
             .then(() => WidgetDefinitionsLoader._initWidgets())
             .catch(err => {
                 widgetDefinitions = []; // Clear for next time
@@ -178,9 +203,14 @@ export default class WidgetDefinitionsLoader {
     }
 
     static update(widgetId, widgetFile, widgetUrl, manager) {
+        let widgetData = {};
+
         return WidgetDefinitionsLoader._updateWidget(widgetId, widgetFile, widgetUrl, manager)
-            .then(data => WidgetDefinitionsLoader._loadWidget(data, true)
-                .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([data], 'id'))))
+            .then(data => {
+                widgetData = data;
+                return WidgetDefinitionsLoader._loadWidget(data, true);
+            }).then(() => WidgetDefinitionsLoader._validateWidget(widgetData.id, manager))
+            .then(() => WidgetDefinitionsLoader._loadWidgetsResources(_.keyBy([widgetData], 'id')))
             .then(() => WidgetDefinitionsLoader._initWidgets())
             .catch(err => {
                 widgetDefinitions = []; // Clear for next time

@@ -19,7 +19,7 @@ module.exports = (function() {
     function saveMultipartData(req, targetDir, multipartId) {
         var storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                logger.debug('saving file on disk', file);
+                logger.debug('Saving file on disk', file);
 
                 var archiveFolder = _.isFunction(targetDir) ? targetDir(file.originalname) : targetDir;
 
@@ -41,7 +41,7 @@ module.exports = (function() {
                 if (err) {
                     reject(err);
                 } else {
-                    logger.debug('archive saved from multipart data, archiveFolder:', req.archiveFolder, 'archiveFile:', req.archiveFile);
+                    logger.debug('Archive saved from multipart data, archiveFolder:', req.archiveFolder, 'archiveFile:', req.archiveFile);
                     resolve({archiveFolder: req.archiveFolder, archiveFile: req.archiveFile});
                 }
             })
@@ -53,7 +53,7 @@ module.exports = (function() {
             const HEADERS = {'User-Agent': 'Cloudify'};
             archiveUrl = decodeURIComponent(archiveUrl.trim());
 
-            logger.debug('fetching file from url', archiveUrl);
+            logger.debug('Fetching file from url', archiveUrl);
 
             var getRequest = null;
             var onErrorFetch = function (error) {
@@ -62,8 +62,8 @@ module.exports = (function() {
             var onSuccessFetch = function (response) {
                 var archiveFile = _extractFilename(response.headers['content-disposition']);
 
-                logger.debug('filename extracted from content-disposition', archiveFile);
-                logger.debug('content length', response.headers['content-length']);
+                logger.debug('Filename extracted from content-disposition', archiveFile);
+                logger.debug('Content length', response.headers['content-length']);
 
                 if (!archiveFile) {
                     var details = pathlib.parse(archiveUrl);
@@ -78,7 +78,7 @@ module.exports = (function() {
                         return reject('Unable to determine filename from url ' + archiveUrl);
                     }
 
-                    logger.debug('filename build from url', archiveFile);
+                    logger.debug('Filename build from url', archiveFile);
                 }
 
                 //remove not allowed characters
@@ -88,7 +88,7 @@ module.exports = (function() {
                 fs.mkdirsSync(archiveFolder);
                 var archivePath = pathlib.join(archiveFolder, archiveFile);
 
-                logger.debug('streaming to file', archivePath);
+                logger.debug('Streaming to file', archivePath);
 
                 response.pipe(fs.createWriteStream(archivePath)
                     .on('error', reject)
@@ -129,7 +129,7 @@ module.exports = (function() {
     }
 
     function storeSingleYamlFile(archivePath, archiveFile, targetDir) {
-        logger.debug('storing single YAML file', pathlib.resolve(archivePath), targetDir);
+        logger.debug('Storing single YAML file', pathlib.resolve(archivePath), targetDir);
 
         fs.mkdirsSync(targetDir);
         fs.renameSync(archivePath, pathlib.join(targetDir, archiveFile));
@@ -138,7 +138,7 @@ module.exports = (function() {
     }
 
     function decompressArchive(archivePath, targetDir) {
-        logger.debug('extracting archive', pathlib.resolve(archivePath), targetDir);
+        logger.debug('Extracting archive', pathlib.resolve(archivePath), targetDir);
 
         fs.mkdirsSync(targetDir);
 
@@ -171,15 +171,16 @@ module.exports = (function() {
     }
 
     function cleanTempData(tempPath) {
-        logger.debug('removing temp data', tempPath);
+        logger.debug('Removing temporary data from', tempPath);
 
         return new Promise((resolve, reject) => {
             fs.pathExists(tempPath).then(exists => {
                 if (exists) {
                     fs.remove(tempPath, err => {
                         if (err) {
-                            console.error('Error removing temporary path ', tempPath);
-                            reject();
+                            const errorMessage = `Error removing temporary path ${tempPath}: ${err}`;
+                            console.error(errorMessage);
+                            reject(errorMessage);
                         } else {
                             resolve();
                         }
