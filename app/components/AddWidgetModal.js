@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Input, Segment, Divider, Item, Button, DataTable, Modal, Confirm, ErrorMessage, Icon, Checkbox, Grid, Menu, Label} from './basic/index';
+import {Input, Segment, Divider, Item, Image, Button, DataTable, Modal, Confirm, ErrorMessage, Icon, Checkbox, Grid, Menu, Label} from './basic/index';
 import InstallWidgetModal from './InstallWidgetModal';
 import LoaderUtils from '../utils/LoaderUtils';
 import StageUtils from '../utils/stageUtils';
@@ -28,6 +28,8 @@ export default class AddWidgetModal extends Component {
             search: '',
             showConfirm : false,
             widget: {},
+            showThumbnail: false,
+            thumbnailWidget: {},
             usedByList: [],
             categories: AddWidgetModal.generateCategories(props.widgetDefinitions),
             selectedCategory: Stage.GenericConfig.CATEGORY.ALL
@@ -55,6 +57,15 @@ export default class AddWidgetModal extends Component {
 
     _closeModal() {
         this.setState({open: false});
+    }
+
+    _openThumbnailModal(event, widget) {
+        event.stopPropagation();
+        this.setState({showThumbnail: true, thumbnailWidget: widget});
+    }
+
+    _closeThumbnailModal() {
+        this.setState({showThumbnail: false, thumbnailWidget: {}});
     }
 
     _addWidgets() {
@@ -101,20 +112,22 @@ export default class AddWidgetModal extends Component {
     }
 
     static generateCategories(widgets){
-        return widgets.reduce((curr,next) => {
+        let categories = widgets.reduce((curr,next) => {
                 (next.categories || [Stage.GenericConfig.CATEGORY.OTHERS]).map(category => {
                     let idx = curr.findIndex(current => current.name === category);
                     idx === -1 ? curr.push({name: category, count: 1}) : curr[idx].count++;
                 });
                 return curr
             }, []);
+
+        return _.sortBy(categories, 'name');
     }
 
     updateCategoriesCounter(widgets){
         let categories = this.state.categories.map(category => {
             category.count = widgets.filter(widget => 
                 (widget.categories || [Stage.GenericConfig.CATEGORY.OTHERS]).indexOf(category.name) !== -1
-            ).length
+            ).length;
             return category;
         });
         this.setState({categories: categories});
@@ -125,7 +138,7 @@ export default class AddWidgetModal extends Component {
             item.categories = item.categories || [Stage.GenericConfig.CATEGORY.OTHERS];
             return category === Stage.GenericConfig.CATEGORY.ALL || item.categories.indexOf(category) !== -1;
         });
-        
+
         return filtered;
     }
 
@@ -201,6 +214,9 @@ export default class AddWidgetModal extends Component {
                                             </Menu.Item>
                                 })}
                             </Menu>)
+
+        const imageSrc = (widget) => StageUtils.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
+
         return (
             <div className={this.props.className}>
                 <Modal trigger={addWidgetBtn} className="addWidgetModal" open={this.state.open} closeIcon
@@ -222,18 +238,17 @@ export default class AddWidgetModal extends Component {
 
                         <Item.Group divided className="widgetsList">
                             {
-                                this.state.filteredWidgetDefinitions.map(function(widget){
-                                    const imageSrc
-                                        = StageUtils.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
+                                this.state.filteredWidgetDefinitions.map(function(widget) {
                                     return (
                                         <Item key={widget.id} data-id={widget.id} onClick={()=>{this._toggleWidgetInstall(widget)}}>
-                                            <Checkbox className="addWidgetCheckbox" readOnly={true} title="Add widget to page" 
+                                            <Checkbox className="addWidgetCheckbox" readOnly={true} title="Add widget to page"
                                                       checked={this.state.widgetsToAdd.includes(widget)}/>
-                                            <Item.Image as="div" size="small" bordered src={imageSrc} />
+                                            <Item.Image as="div" size="small" bordered src={imageSrc(widget)}
+                                                        onClick={(event) => this._openThumbnailModal(event, widget)} />
                                             <Item.Content>
                                                 <Item.Header as='div'>{widget.name}</Item.Header>
                                                 <Item.Meta>{widget.description}</Item.Meta>
-                                                <Item.Description></Item.Description>
+                                                <Item.Description />
                                                 <Item.Extra>
                                                     {widget.isCustom && this.props.canInstallWidgets &&
                                                         <div>
@@ -249,7 +264,7 @@ export default class AddWidgetModal extends Component {
                                             </Item.Content>
                                         </Item>
                                     );
-                                },this)
+                                }, this)
                             }
 
                             {_.isEmpty(this.state.filteredWidgetDefinitions) && <Item className="alignCenter" content="No widgets available"/>}
@@ -281,6 +296,15 @@ export default class AddWidgetModal extends Component {
                          onConfirm={this._uninstallWidget.bind(this)}
                          header={`Are you sure to remove widget ${this.state.widget.name}?`}
                          content={confirmContent} className="removeWidgetConfirm"/>
+
+                <Modal open={this.state.showThumbnail} basic closeOnDimmerClick closeOnDocumentClick
+                       onClose={this._closeThumbnailModal.bind(this)}>
+
+                    <div>
+                        <Image centered src={imageSrc(this.state.thumbnailWidget)} />
+                    </div>
+
+                </Modal>
 
             </div>
         );
