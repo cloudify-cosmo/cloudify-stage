@@ -28,7 +28,7 @@ module.exports = {
             });
     },
 
-    'Validate install fields': function (client) {
+    'Install widget - error handling': function (client) {
         var page = client.page.page();
 
         page.section.addWidgetModal
@@ -37,28 +37,34 @@ module.exports = {
         page.section.installWidgetModal
             .clickElement('@okButton')
             .waitForElementVisible('@errorMessage')
-            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.emptyFieldsError)
+            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.emptyFieldsError);
 
         page.section.installWidgetModal
             .setElementValue('@urlField', 'test')
             .clickElement('@okButton')
             .waitForElementVisible('@errorMessage')
-            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError)
+            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError);
 
-        page.section.installWidgetModal
-            .resetValue('@urlField')
-            .setElementValue('@fileField', client.page.resources().props.testWidgetInvalid(client.globals))
-            .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
-            .clickElement('@okButton')
-            .waitForElementVisible('@errorMessage')
-            .assert.containsText('@errorMessage', page.section.installWidgetModal.props.incorrectFilesError);
+        const errors = ['IncorrectFiles', 'InvalidPermission', 'InstallIncorrectDirectoryName', 'MandatoryFieldMissingName'];
+
+        for (let error of errors) {
+            let errorMessage = page.section.installWidgetModal.props[`widget${error}Error`];
+
+            page.section.installWidgetModal
+                .resetValue('@urlField')
+                .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals, error))
+                .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
+                .clickElement('@okButton')
+                .waitForElementVisible('@errorMessage')
+                .assert.containsText('@errorMessage', errorMessage);
+        }
 
         page.section.installWidgetModal
             .clickElement('@cancelButton')
             .waitForElementNotPresent('@okButton');
     },
 
-    'Install widget': function (client) {
+    'Install and update widget': function (client) {
         var page = client.page.page();
 
         page.section.addWidgetModal
@@ -68,6 +74,25 @@ module.exports = {
             .waitForElementPresent('@okButton')
             .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals))
             .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
+            .clickElement('@okButton')
+            .waitForElementNotPresent('@okButton');
+
+        page.section.addWidgetModal
+            .waitForElementPresent('@testWidget')
+            .clickElement('@updateWidgetButton');
+
+        // Check update error handling
+        let errorMessage = page.section.updateWidgetModal.props.widgetUpdateIncorrectDirectoryNameError;
+        page.section.updateWidgetModal
+            .resetValue('@urlField')
+            .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals, 'InvalidPermission'))
+            .clickElement('@okButton')
+            .waitForElementVisible('@errorMessage')
+            .assert.containsText('@errorMessage', errorMessage);
+
+        page.section.updateWidgetModal
+            .resetValue('@urlField')
+            .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals, ''))
             .clickElement('@okButton')
             .waitForElementNotPresent('@okButton');
     },
@@ -102,7 +127,7 @@ module.exports = {
             .clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
-            .clickElement('@installWidgetBtn')
+            .clickElement('@installWidgetBtn');
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
@@ -126,7 +151,7 @@ module.exports = {
             .waitForElementPresent('@okButton')
             .assert.containsText('@widgetIsUsedLabel', page.section.removeWidgetConfirm.props.widgetIsUsed)
             .clickElement('@okButton')
-            .waitForElementNotPresent('@okButton')
+            .waitForElementNotPresent('@okButton');
         page.section.addWidgetModal
             .waitForElementNotPresent('@removeWidgetButton')
             .clickElement('@closeIcon')
