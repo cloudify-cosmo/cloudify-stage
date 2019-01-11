@@ -17,6 +17,7 @@ export default class WidgetDefinition {
         this.initialConfiguration = [];
         this.initialHeight = 12;
         this.initialWidth = 3;
+        this.isReact = true;
         this.permission = Stage.GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ALL;
         this.showBorder = true;
         this.showHeader = true;
