@@ -254,6 +254,7 @@ export default class AddWidgetModal extends Component {
                                                         <div>
                                                             <InstallWidgetModal onWidgetInstalled={this._updateWidget.bind(this,widget)}
                                                                                 trigger={updateWidgetBtn} buttonLabel="Update Widget"
+                                                                                className='updateWidgetModal'
                                                                                 header="Update widget definition"/>
 
                                                             <Button floated='left' size="small" compact basic content="Remove"

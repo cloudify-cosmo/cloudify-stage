@@ -124,10 +124,33 @@ module.exports = {
             props: {
                 emptyFieldsError: 'Please provide the widget\'s archive URL or select a file',
                 invalidURIError: 'Please provide valid URL for widget\'s archive',
-                incorrectFilesError: 'The following files are required for widget registration: widget.js, widget.png',
+                widgetIncorrectFilesError: 'The following files are required for widget registration: widget.js, widget.png',
                 widgetAlreadyInstalledError: 'Widget testWidget is already installed',
+                widgetInvalidPermissionError: 'Specified widget permission (\'invalid_permission_name\') ' +
+                    'not found in available permissions list.',
+                widgetUpdateIncorrectDirectoryNameError: 'Updated widget directory name invalid. ' +
+                    'Expected: \'testWidget\'. Received: \'testWidgetInvalidPermiss\n' +
+                    'ion\'',
+                widgetInstallIncorrectDirectoryNameError: 'Incorrect widget folder name not consistent with widget id. ' +
+                    'Widget ID: \'testWidgetInstallIncorrectDirectoryName\'. Directory name: \'testWidget\'',
+                widgetMandatoryFieldMissingNameError: 'Mandatory field - \'name\' - not specified in widget definition.',
                 fileLabelString: 'File',
                 urlLabelString: 'URL'
+            }
+        },
+        updateWidgetModal : {
+            selector: '.updateWidgetModal',
+            elements: {
+                urlField: 'input[name="widgetUrl"]',
+                fileField: 'input[name="widgetFile"]',
+                okButton: '.ui.green.button',
+                cancelButton: '.ui.basic.button',
+                errorMessage: '.ui.error.message .content',
+                loader: '.ui.loading'
+            },
+            props: {
+                widgetUpdateIncorrectDirectoryNameError: 'Updated widget directory name invalid. ' +
+                    'Expected: \'testWidget\'. Received: \'testWidgetInvalidPermission\'',
             }
         },
         removeWidgetConfirm: {
