@@ -72,9 +72,6 @@ Stage.defineWidget({
             },
             executions: {
                 items: _.sortBy(data.executions.items, 'id')
-            },
-            executionsStatuses: {
-                items: _.sortBy(data.executions.items, 'status_display')
             }
         };
 
@@ -106,8 +103,8 @@ Stage.defineWidget({
 
         if (!_.isNil(executionStatus)) {
             const executionStatusArray = _.castArray(executionStatus);
-            processedData.executionsStatuses.items
-                = _.filter(processedData.executionsStatuses.items, (execution) => _.includes(executionStatusArray, execution.status_display));
+            processedData.executions.items = _.filter(processedData.executions.items,
+                (execution) => _.includes(executionStatusArray, execution.status_display));
         }
 
         return processedData;

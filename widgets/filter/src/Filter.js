@@ -53,7 +53,7 @@ export default class Filter extends React.Component {
         }
     }
 
-    _updateResourceValue(valueName, resourcesName, changedIdNameInResource, changedIds) {
+    _updateResourceValue(valueName, resourcesName, changedIdNameInResource, changedIds, fieldName = 'id') {
         const data = this.props.data;
         const context = this.props.toolbox.getContext();
         const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
@@ -61,13 +61,13 @@ export default class Filter extends React.Component {
 
         if (!_.isEmpty(data[valueName]) && !_.isEmpty(changedIds)) {
             const selectedResources = _.filter(data[resourcesName].items,
-                (resource) => _.includes(data[valueName], resource.id));
+                (resource) => _.includes(data[valueName], resource[fieldName]));
             let selectedResourceId = _.castArray(data[valueName]);
 
             _.forEach(selectedResources, (resource) => {
                 if (!_.includes(changedIds, resource[changedIdNameInResource])) {
                     if (allowMultipleSelection) {
-                        _.pull(selectedResourceId, resource.id);
+                        _.pull(selectedResourceId, resource[fieldName]);
                     } else {
                         selectedResourceId = null
                     }
@@ -118,6 +118,8 @@ export default class Filter extends React.Component {
             this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'deployment_id', deploymentIds);
             this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'node_id', nodeIds);
             this._updateResourceValue('executionId', 'executions', 'blueprint_id', selectedBlueprintIds);
+            this._updateResourceValue('executionStatus', 'executions', 'blueprint_id', selectedBlueprintIds,
+                'status_display');
 
             this._updateDeplomentNodeIdValue(deploymentIds, nodeIds);
         }
@@ -134,6 +136,8 @@ export default class Filter extends React.Component {
             let nodeIds = this._updateResourceValue('nodeId', 'nodes', 'deployment_id', selectedDeploymentIds);
             this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'deployment_id', selectedDeploymentIds);
             this._updateResourceValue('executionId', 'executions', 'deployment_id', selectedDeploymentIds);
+            this._updateResourceValue('executionStatus', 'executions', 'deployment_id', selectedDeploymentIds,
+                'status_display');
 
             this._updateDeplomentNodeIdValue(deploymentIds, nodeIds);
         }
@@ -243,7 +247,7 @@ export default class Filter extends React.Component {
 
         let executionStatusOptions = [];
         if (configuration.filterByExecutionsStatus) {
-            executionStatusOptions = _.map(_.sortedUniqBy(data.executionsStatuses.items, 'status_display'),
+            executionStatusOptions = _.map(_.uniqBy(data.executions.items, 'status_display'),
                 execution => ({text: execution.status_display, value: execution.status_display}));
             if (!configuration.allowMultipleSelection) {
                 executionStatusOptions.unshift(EMPTY_OPTION);
