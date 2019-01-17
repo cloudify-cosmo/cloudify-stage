@@ -1,6 +1,6 @@
 {
-  "linksBasePath": "https://docs.cloudify.co/staging/dev",
-  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/master",
+  "linksBasePath": "https://docs.cloudify.co/4.5.5",
+  "rawContentBasePath": "https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/4.5.5-build",
   "files": [
     {"widget": "agents", "link": "/content/working_with/console/widgets/agents.md"},
     {"widget": "blueprintActionButtons", "link": "/content/working_with/console/widgets/blueprintActionButtons.md"},
