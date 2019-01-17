@@ -99,7 +99,7 @@ export default class BlueprintSources extends React.Component {
                                     <NodesTree.Node key='imported' style={{marginTop: '5px'}} disabled title={
                                         <Label color='pink' horizontal>
                                             Imported Blueprints
-                                            <Label.Detail>{_.size(data.importedBlueprintIds)}</Label.Detail>
+                                            <Label.Detail>({_.size(data.importedBlueprintIds)})</Label.Detail>
                                         </Label>}>
                                         {
                                             _.map(data.importedBlueprintTrees, (tree, index) =>
