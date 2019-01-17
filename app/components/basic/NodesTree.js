@@ -93,7 +93,7 @@ export default class NodesTree extends Component {
         if (!_.isEmpty(this.props.children)) {
             return (
                 <Tree {...this.props} className={`nodes-tree ${this.props.className}`}>
-                    {_.compact(this.props.children)}
+                    {_.compact(_.castArray(this.props.children))}
                 </Tree>
             )
         } else {
