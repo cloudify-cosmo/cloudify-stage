@@ -212,7 +212,7 @@ export default class Graph extends Component {
         const MARGIN = {top: 5, right: 30, left: 20, bottom: 5};
         const INTERPOLATION_TYPE = 'monotone';
         const STROKE_DASHARRAY = '3 3';
-
+        const IS_KEY_TIME = this.props.xDataKey === Graph.DEFAULT_X_DATA_KEY;
 
         // Code copied from re-charts GitHub, see: https://github.com/recharts/recharts/issues/184
         const AxisLabel = ({ vertical, x, y, width, height, children, fill }) => {
@@ -264,17 +264,26 @@ export default class Graph extends Component {
                 var COLOR = COLORS[index++];
                 var STYLE = {stroke: COLOR};
 
-                chartElements.push(
-                    <YAxis key={'yaxis'+chart.name}
-                           dataKey={chart.name}
-                           yAxisId={chart.name}
-                           width={50}
-                           axisLine={STYLE}
-                           tick={STYLE}
-                           tickLine={STYLE}
-                           tickFormatter={VALUE_FORMATTER}
-                           label={<AxisLabel vertical fill={COLOR}>{chart.axisLabel}</AxisLabel>} />
-                );
+                if (IS_KEY_TIME) {
+                    chartElements.push(
+                        <YAxis key={'yaxis'+chart.name}
+                               dataKey={chart.name}
+                               yAxisId={chart.name}
+                               width={50}
+                               axisLine={STYLE}
+                               tick={STYLE}
+                               tickLine={STYLE}
+                               tickFormatter={VALUE_FORMATTER}
+                               label={<AxisLabel vertical fill={COLOR}>{chart.axisLabel}</AxisLabel>} />
+                    );
+                } else {
+                    chartElements.push(
+                        <YAxis key={'yaxis'+chart.name}
+                               dataKey={chart.name}
+                               yAxisId={chart.name}
+                               width={50} axisLine={STYLE} />
+                    );
+                }
 
                 chartElements.push(
                     <DrawingComponent key={chart.name}
@@ -301,7 +310,13 @@ export default class Graph extends Component {
                                 onClick={this.props.onClick}>
                     {chartElements}
                     <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
-                    {this.props.showXAxis && <XAxis dataKey={this.props.xDataKey} tickFormatter={xAxisDataFormatter} tick={this.props.xAxisTick}/> }
+                    {
+                        this.props.showXAxis && IS_KEY_TIME &&
+                        <XAxis dataKey={this.props.xDataKey} tickFormatter={xAxisDataFormatter} tick={this.props.xAxisTick} />
+                    }
+                    {
+                        this.props.showXAxis && !IS_KEY_TIME && <XAxis dataKey={this.props.xDataKey} />
+                    }
                     {this.props.showTooltip && <Tooltip isAnimationActive={false} formatter={VALUE_FORMATTER} labelFormatter={xAxisDataFormatter}/>}
                     {this.props.showLegend && <Legend />}
                     {this.props.showBrush &&  <Brush />}
