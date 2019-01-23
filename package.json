@@ -34,6 +34,7 @@
     "d3": "^3.5.17",
     "d3-format": "^1.3.2",
     "diff": "^3.5.0",
+    "elkjs": "^0.4.1",
     "file-saver": "^1.3.3",
     "gs-ui-infra": "cloudify-cosmo/gs-ui-infra#4.5.5",
     "history": "^4.7.2",
