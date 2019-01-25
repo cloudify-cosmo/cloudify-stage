@@ -1,6 +1,6 @@
 {
   "name": "cloudify-stage",
-  "version": "4.5.5",
+  "version": "5.0.0-.dev1",
   "description": "Cloudify Console",
   "main": "app/main.js",
   "scripts": {
