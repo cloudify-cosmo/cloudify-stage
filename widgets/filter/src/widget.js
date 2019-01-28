@@ -75,6 +75,7 @@ Stage.defineWidget({
             }
         };
 
+        processedData.allExecutions = Object.assign({}, processedData.executions);
         if (!_.isNil(blueprintId)) {
             let blueprintIdArray = _.castArray(blueprintId);
             processedData.deployments.items
@@ -101,10 +102,11 @@ Stage.defineWidget({
                 = _.filter(processedData.nodeInstances.items, (nodeInstance) => _.includes(nodeIdArray, nodeInstance.node_id));
         }
 
-        if (!_.isNil(executionStatus)) {
-            const executionStatusArray = _.castArray(executionStatus);
-            processedData.executions.items = _.filter(processedData.executions.items,
-                (execution) => _.includes(executionStatusArray, execution.status_display));
+        processedData.executionStatuses = Object.assign({}, processedData.executions);
+        if (!_.isNil(executionId)) {
+            const executionIdArray = _.castArray(executionId);
+            processedData.executionStatuses.items
+                = _.filter(processedData.executionStatuses.items, (execution) => _.includes(executionIdArray, execution.id));
         }
 
         return processedData;
