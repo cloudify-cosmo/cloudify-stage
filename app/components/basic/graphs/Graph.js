@@ -264,8 +264,9 @@ export default class Graph extends Component {
                 var COLOR = COLORS[index++];
                 var STYLE = {stroke: COLOR};
 
-                if (IS_KEY_TIME) {
-                    chartElements.push(
+                let yaxisComponent =
+                    IS_KEY_TIME
+                    ?
                         <YAxis key={'yaxis'+chart.name}
                                dataKey={chart.name}
                                yAxisId={chart.name}
@@ -275,16 +276,13 @@ export default class Graph extends Component {
                                tickLine={STYLE}
                                tickFormatter={VALUE_FORMATTER}
                                label={<AxisLabel vertical fill={COLOR}>{chart.axisLabel}</AxisLabel>} />
-                    );
-                } else {
-                    chartElements.push(
+                    :
                         <YAxis key={'yaxis'+chart.name}
                                dataKey={chart.name}
                                yAxisId={chart.name}
-                               width={50} axisLine={STYLE} />
-                    );
-                }
-
+                               width={50}
+                               axisLine={STYLE} />;
+                chartElements.push(yaxisComponent);
                 chartElements.push(
                     <DrawingComponent key={chart.name}
                                       isAnimationActive={false}
