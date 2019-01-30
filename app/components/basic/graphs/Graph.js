@@ -311,24 +311,27 @@ export default class Graph extends Component {
                     {chartElements}
                     <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
                     {
-                        this.props.showXAxis && IS_KEY_TIME &&
-                        <XAxis dataKey={this.props.xDataKey}
-                               tickFormatter={xAxisDataFormatter}
-                               tick={this.props.xAxisTick} />
+                        this.props.showXAxis &&
+                        IS_KEY_TIME
+                        ?
+                            <XAxis dataKey={this.props.xDataKey}
+                                   tickFormatter={xAxisDataFormatter}
+                                   tick={this.props.xAxisTick} />
+                        :
+                            <XAxis dataKey={this.props.xDataKey} />
                     }
                     {
-                        this.props.showXAxis && !IS_KEY_TIME && <XAxis dataKey={this.props.xDataKey} />
-                    }
-                    {
-                        this.props.showTooltip && IS_KEY_TIME &&
-                        <Tooltip isAnimationActive={false}
-                                 formatter={VALUE_FORMATTER}
-                                 labelFormatter={xAxisDataFormatter}
-                                 cursor={false}/>
-                    }
-                    {
-                        this.props.showTooltip && !IS_KEY_TIME &&
-                        <Tooltip isAnimationActive={false} formatter={VALUE_FORMATTER} cursor={false}/>
+                        this.props.showTooltip &&
+                        IS_KEY_TIME
+                        ?
+                            <Tooltip isAnimationActive={false}
+                                     formatter={VALUE_FORMATTER}
+                                     labelFormatter={xAxisDataFormatter}
+                                     cursor={false}/>
+                        :
+                            <Tooltip isAnimationActive={false}
+                                     formatter={VALUE_FORMATTER}
+                                     cursor={false}/>
                     }
                     {this.props.showLegend && <Legend />}
                     {this.props.showBrush &&  <Brush />}

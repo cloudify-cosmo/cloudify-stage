@@ -97,14 +97,25 @@
     },
     {
       "name": "Executions",
-      "width": 12,
-      "height": 29,
+      "width": 8,
+      "height": 24,
       "definition": "executions",
       "configuration": {
         "pageSize": 10
       },
       "x": 0,
-      "y": 12
+      "y": 14
+    },
+    {
+      "name": "Executions Statuses Graph",
+      "width": 4,
+      "height": 24,
+      "definition": "executionsStatus",
+      "configuration": {
+        "pageSize": 10
+      },
+      "x": 8,
+      "y": 14
     }
   ]
 }

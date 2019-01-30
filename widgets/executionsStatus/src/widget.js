@@ -27,9 +27,8 @@ Stage.defineWidget({
         if (_.isEmpty(data) || _.isEmpty(data.items)) {
             return <Stage.Basic.Loading/>;
         }
-        const status_data = _.groupBy(data.items, 'status_display');
-        const formatted_data = _.map(status_data,
-            (executions, status) => ({'status': _.startCase(status), 'number_of_executions': executions.length}));
+        const formatted_data = _.map(data.items, (status_sum) => ({'status': _.startCase(status_sum.status_display),
+            'number_of_executions': status_sum.executions}));
         let {Graph} = Stage.Basic.Graphs;
         const charts = [{name:'number_of_executions', label:'Number of executions', axisLabel:'status'}];
         return (<Graph type={Graph.BAR_CHART_TYPE} data={formatted_data} charts={charts} xDataKey='status' />);
