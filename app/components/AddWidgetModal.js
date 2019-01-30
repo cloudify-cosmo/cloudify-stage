@@ -69,21 +69,20 @@ export default class AddWidgetModal extends Component {
     }
 
     _addWidgets() {
-        this.state.widgetsToAdd.forEach(widget => {this.props.onWidgetAdded(widget)});
+        _.forEach(this.state.widgetsToAdd, (widgetId) => {
+            let widget = _.find(this.props.widgetDefinitions, (widgetDefinition) => widgetId === widgetDefinition.id);
+            if (!!widget) {
+                this.props.onWidgetAdded(widget);
+            }
+        });
         this.setState({...this.state, widgetsToAdd: []});
         this._closeModal();
     }
 
-    _toggleWidgetInstall(widget) {
-        let index = this.state.widgetsToAdd.indexOf(widget);
-        if (index > -1){
-            this.state.widgetsToAdd.splice(index, 1);
-            this.setState({widgetsToAdd: this.state.widgetsToAdd});
-        } else {
-            var updatedWidgetsToAdd = this.state.widgetsToAdd;
-            updatedWidgetsToAdd.push(widget);
-            this.setState({widgetsToAdd: updatedWidgetsToAdd});
-        }
+    _toggleWidgetInstall(widgetId) {
+        this.setState({widgetsToAdd: _.includes(this.state.widgetsToAdd, widgetId)
+                ? _.without(this.state.widgetsToAdd, widgetId)
+                : [...this.state.widgetsToAdd, widgetId]});
     }
 
     _confirmRemove(event, widget) {
@@ -96,7 +95,7 @@ export default class AddWidgetModal extends Component {
     }
 
     _getWidgetsToAddWithout(widgetId) {
-        return _.filter(this.state.widgetsToAdd, (w) => w.id !== widgetId);
+        return _.without(this.state.widgetsToAdd, widgetId);
     }
 
     _uninstallWidget() {
@@ -108,7 +107,8 @@ export default class AddWidgetModal extends Component {
     }
 
     _updateWidget(widget, widgetFile, widgetUrl) {
-        return this.props.onWidgetUpdated(widget.id, widgetFile, widgetUrl);
+        return this.props.onWidgetUpdated(widget.id, widgetFile, widgetUrl)
+            .then(() => this.setState({widgetsToAdd: this._getWidgetsToAddWithout(widget.id)}));
     }
 
     static generateCategories(widgets){
@@ -240,9 +240,9 @@ export default class AddWidgetModal extends Component {
                             {
                                 this.state.filteredWidgetDefinitions.map(function(widget) {
                                     return (
-                                        <Item key={widget.id} data-id={widget.id} onClick={()=>{this._toggleWidgetInstall(widget)}}>
+                                        <Item key={widget.id} data-id={widget.id} onClick={()=>{this._toggleWidgetInstall(widget.id)}}>
                                             <Checkbox className="addWidgetCheckbox" readOnly={true} title="Add widget to page"
-                                                      checked={this.state.widgetsToAdd.includes(widget)}/>
+                                                      checked={this.state.widgetsToAdd.includes(widget.id)}/>
                                             <Item.Image as="div" size="small" bordered src={imageSrc(widget)}
                                                         onClick={(event) => this._openThumbnailModal(event, widget)} />
                                             <Item.Content>
