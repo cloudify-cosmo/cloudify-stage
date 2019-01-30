@@ -8,7 +8,7 @@ Stage.defineWidget({
     color : 'blue',
     isReact: true,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('executionNum'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('executionsStatus'),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10)
@@ -19,7 +19,8 @@ Stage.defineWidget({
         return {
             blueprint_id: toolbox.getContext().getValue('blueprintId'),
             deployment_id: toolbox.getContext().getValue('deploymentId'),
-            id: toolbox.getContext().getValue('executionId')
+            id: toolbox.getContext().getValue('executionId'),
+            status_display: toolbox.getContext().getValue('executionStatus')
         };
     },
 
