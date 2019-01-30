@@ -22,7 +22,7 @@ export default class InstallWidgetModal extends Component {
         open: false,
         loading: false,
         widgetUrl: '',
-        widgetFile: '',
+        widgetFile: null,
         errors: {},
         scriptError: ''
     };
@@ -137,8 +137,10 @@ export default class InstallWidgetModal extends Component {
                     {this.state.scriptError && <Message error>{this.state.scriptError}</Message>}
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button icon='remove' basic content='Cancel' onClick={this._closeModal.bind(this)}/>
-                    <Button icon='puzzle' content={this.props.buttonLabel} color="green" onClick={this._installWidget.bind(this)} />
+                    <Button icon='remove' basic content='Cancel'
+                            onClick={(event) => { event.stopPropagation(); this._closeModal() } } />
+                    <Button icon='puzzle' content={this.props.buttonLabel} color="green"
+                            onClick={(event) => { event.stopPropagation(); this._installWidget() } } />
                 </Modal.Actions>
             </Modal>
         );
