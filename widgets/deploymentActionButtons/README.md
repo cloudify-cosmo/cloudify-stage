@@ -4,7 +4,7 @@ Buttons which allow running workflows of a specific deployment, updating it or d
 * By placing the deployment action buttons in the deployments drill-down page, meaning the deployment has been selected before entering the page, and its id is included in the page’s context. 
 * By adding to the page a widget allowing to select deployments, such as the resources filter or the blueprint deployments
  
-![deployment-action-buttons.png](https://docs.cloudify.co/staging/dev/images/ui/widgets/deployment-action-buttons.png)
+![deployment-action-buttons.png](https://docs.cloudify.co/4.5.5/images/ui/widgets/deployment-action-buttons.png)
 
 #### Widget Settings
 None

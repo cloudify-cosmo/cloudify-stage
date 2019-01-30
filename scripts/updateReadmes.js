@@ -46,7 +46,7 @@ function updateTitle(widget, content) {
 
 function updateLinks(widget, content) {
     return new Promise((resolve, reject) => {
-        const linkRegex = /(\[.*?\])\(\s*(.*?)\s*\)/gm;
+        const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
 
         log(widget, 'Updating markdown links:');
         logChange(widget, 'markdown links', content.match(linkRegex));
