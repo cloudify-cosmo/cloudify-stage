@@ -1,7 +1,7 @@
 ### Blueprint upload button
 This Button allows uploading a blueprint to the manager. Clicking on it opens a dialog for providing the following details:
 
-* **Blueprint visibility** - represented by a colourful icon, and can be set by clicking on it. See [resource’s visibility](https://docs.cloudify.co/staging/dev/working_with/manager/resource-visibility). Default: tenant
+* **Blueprint visibility** - represented by a colourful icon, and can be set by clicking on it. See [resource’s visibility](https://docs.cloudify.co/4.5.5/working_with/manager/resource-visibility). Default: tenant
 * **Blueprint archive path** (local or URL) 
 * **Name** to identify the blueprint on the manager (“Blueprint name”).
 * **Main .yaml file in the blueprint archive** (“Blueprint filename”). Default: blueprint.yaml

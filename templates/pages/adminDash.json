@@ -91,7 +91,8 @@
       "x": 0,
       "y": 10,
       "configuration": {
-        "filterByExecutions":false
+        "filterByExecutions":false,
+        "filterByExecutionsStatus":true
       }
     },
     {

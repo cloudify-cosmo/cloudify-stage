@@ -60,7 +60,7 @@ export default class EventsTable extends React.Component {
         text = _.isString(text) ? text : '';
 
         if (!_.isEmpty(highlightedTextFragment)) {
-            let parts = text.split(new RegExp(`(${highlightedTextFragment})`, 'gi'));
+            let parts = text.split(new RegExp(`(${_.escapeRegExp(highlightedTextFragment)})`, 'gi'));
             return (
                 <span>
                     {

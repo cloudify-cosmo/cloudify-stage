@@ -36,6 +36,7 @@ Stage.defineWidget({
         return {
             blueprint_id: toolbox.getContext().getValue('blueprintId'),
             deployment_id: toolbox.getContext().getValue('deploymentId'),
+            status_display: toolbox.getContext().getValue('executionStatus'),
             _include_system_workflows: (
                 widget.configuration.showSystemExecutions &&
                 !toolbox.getContext().getValue('blueprintId') &&
