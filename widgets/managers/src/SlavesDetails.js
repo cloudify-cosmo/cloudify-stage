@@ -27,19 +27,19 @@ export default class SlavesDetails extends React.Component {
 
         return (
             <Segment>
-                <Icon name="disk"/> Slaves
-                <Divider/>
+                <Icon name="disk" /> Slaves
+                <Divider />
 
                 {
                     _.isEmpty(this.props.slaves)
                     ?
-                        <Message content="No slaves available"/>
+                        <Message content="No slaves available" />
                     :
                         <Table>
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell>Name</Table.HeaderCell>
-                                    <Table.HeaderCell width='three' textAlign='center'>Host IP</Table.HeaderCell>
+                                    <Table.HeaderCell width='three'>Host IP</Table.HeaderCell>
                                     <Table.HeaderCell width='one' textAlign='center'>Status</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
@@ -51,7 +51,7 @@ export default class SlavesDetails extends React.Component {
                                             <Table.Cell>
                                                 {_.get(slave.status, 'name', '')}
                                             </Table.Cell>
-                                            <Table.Cell textAlign='center'>
+                                            <Table.Cell>
                                                 {_.get(slave.status, 'host_ip', '')}
                                             </Table.Cell>
                                             <Table.Cell textAlign='center'>

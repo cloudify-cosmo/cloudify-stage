@@ -120,15 +120,15 @@ export default class ManagersTable extends React.Component {
                                                        onClick={(e) => e.stopPropagation()} />}
                     />
                     <DataTable.Column label="Deployment"
-                                      show={fieldsToShow.indexOf('Deployment') >= 0}/>
-                    <DataTable.Column label="IP" centerAligned
-                                      show={fieldsToShow.indexOf('IP') >= 0}/>
-                    <DataTable.Column label="Last Execution" centerAligned
-                                      show={fieldsToShow.indexOf('Last Execution') >= 0}/>
+                                      show={fieldsToShow.indexOf('Deployment') >= 0} />
+                    <DataTable.Column label="IP"
+                                      show={fieldsToShow.indexOf('IP') >= 0} />
+                    <DataTable.Column label="Last Execution"
+                                      show={fieldsToShow.indexOf('Last Execution') >= 0} />
                     <DataTable.Column label="Status" width="50px" centerAligned
-                                      show={fieldsToShow.indexOf('Status') >= 0}/>
+                                      show={fieldsToShow.indexOf('Status') >= 0} />
                     <DataTable.Column label="Actions" width="150px" centerAligned
-                                      show={fieldsToShow.indexOf('Actions') >= 0}/>
+                                      show={fieldsToShow.indexOf('Actions') >= 0} />
 
                     {
                         _.map(this.props.data.items, (manager) => {
@@ -152,10 +152,10 @@ export default class ManagersTable extends React.Component {
                                         <DataTable.Data>
                                             {manager.id}
                                         </DataTable.Data>
-                                        <DataTable.Data className="center aligned">
+                                        <DataTable.Data>
                                             {manager.ip}
                                         </DataTable.Data>
-                                        <DataTable.Data className="center aligned">
+                                        <DataTable.Data>
                                             <LastExecutionStatusIcon execution={manager.lastExecution}
                                                                      onShowLogs={() => this.showLogs(manager.id, manager.lastExecution.id)}
                                                                      onShowUpdateDetails={this.openDeploymentUpdateDetailsModal.bind(this)}
