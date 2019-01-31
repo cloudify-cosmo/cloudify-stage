@@ -11,7 +11,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executionsStatus'),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(10)
+        Stage.GenericConfig.POLLING_TIME_CONFIG(5)
     ],
     fetchUrl: '[manager]/summary/executions?_target_field=status_display&[params]',
 
@@ -25,8 +25,11 @@ Stage.defineWidget({
     },
 
     render: function(widget, data, error, toolbox) {
-        if (_.isEmpty(data) || _.isEmpty(data.items)) {
+        if (_.isEmpty(data)) {
             return <Stage.Basic.Loading/>;
+        }
+        if (_.isEmpty(data.items)) {
+            return <p>There are no Executions available.</p>;
         }
         const formatted_data = _.map(data.items, (status_sum) => ({'status': _.startCase(status_sum.status_display),
             'number_of_executions': status_sum.executions}));
