@@ -103,7 +103,8 @@
       "y": 37,
       "configuration": {
         "filterByExecutions":false,
-        "filterByExecutionsStatus":true
+        "filterByExecutionsStatus":true,
+        "allowMultipleSelection":true
       }
     },
     {
