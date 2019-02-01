@@ -9,39 +9,33 @@ export default class MenuAction extends React.Component {
     static FORCE_DELETE_ACTION='forceDelete';
     static WORKFLOW_ACTION='workflow';
 
-    _actionClick(workflowAction, proxy, {name}) {
-        if (workflowAction) {
-            var workflow = _.find(this.props.item.workflows,{name});
-            console.log('selected workflow '+ name,workflow);
-            this.props.onSelectAction(name, this.props.item, workflow);
-        } else {
-            this.props.onSelectAction(name, this.props.item);
-        }
+    actionClick(event, {name}) {
+        this.props.onSelectAction(name, this.props.item);
+    }
+
+    workflowClick(workflow) {
+        this.props.onSelectAction(MenuAction.WORKFLOW_ACTION, this.props.item, workflow);
     }
 
     render () {
-        var {PopupMenu, Menu} = Stage.Basic;
+        let {PopupMenu, Menu} = Stage.Basic;
+        let {WorkflowsMenu} = Stage.Common;
 
         return (
             <PopupMenu className="menuAction segmentMenuAction" disabled={this.props.disabled}>
                 <Menu pointing vertical>
                     <Menu.Item header>Execute workflow
                         <Menu.Menu>
-                            {
-                                this.props.item.workflows.map((workflow) => {
-                                    return <Menu.Item name={workflow.name} onClick={this._actionClick.bind(this, true)} key={workflow.name}>
-                                                {_.capitalize(_.lowerCase(workflow.name))}
-                                           </Menu.Item>
-                                })
-                            }
+                            <WorkflowsMenu workflows={this.props.item.workflows} showInPopup={false}
+                                           dropdownDirection='left' onClick={this.workflowClick.bind(this)} />
                         </Menu.Menu>
                     </Menu.Item>
                     <Menu.Item icon='edit' content='Update' name={MenuAction.UPDATE_ACTION}
-                                   onClick={this._actionClick.bind(this, false)}/>
+                               onClick={this.actionClick.bind(this)}/>
                     <Menu.Item icon='trash alternate' content='Delete' name={MenuAction.DELETE_ACTION}
-                                   onClick={this._actionClick.bind(this, false)}/>
+                               onClick={this.actionClick.bind(this)}/>
                     <Menu.Item icon='trash' content='Force Delete' name={MenuAction.FORCE_DELETE_ACTION}
-                               onClick={this._actionClick.bind(this, false)}/>
+                               onClick={this.actionClick.bind(this)}/>
                 </Menu>
             </PopupMenu>
         );

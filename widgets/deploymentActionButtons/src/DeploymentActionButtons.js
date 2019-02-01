@@ -67,29 +67,18 @@ export default class DeploymentActionButtons extends React.Component {
     }
 
     render() {
-        let {ErrorMessage, Button, Confirm, Popup, PopupMenu, Menu} = Stage.Basic;
-        let {ExecuteDeploymentModal, UpdateDeploymentModal} = Stage.Common;
+        let {Button, Confirm, ErrorMessage} = Stage.Basic;
+        let {ExecuteDeploymentModal, UpdateDeploymentModal, WorkflowsMenu} = Stage.Common;
         let deploymentId = this.props.deployment.id;
 
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
 
-                <PopupMenu className="workflowAction" position="bottom center" offset={0}>
-                    <Popup.Trigger>
-                        <Button className="labeled icon" color="teal" icon="content" id="executeWorkflowButton"
-                                disabled={_.isEmpty(deploymentId) || this.state.loading} content="Execute workflow" />
-                    </Popup.Trigger>
-                    
-                    <Menu vertical>
-                        {
-                            _.map(this.props.deployment.workflows, (workflow) =>
-                                <Menu.Item name={_.capitalize(_.lowerCase(workflow.name))} key={workflow.name}
-                                           onClick={this._showExecuteWorkflowModal.bind(this, workflow)} />
-                            )
-                        }
-                    </Menu>
-                </PopupMenu>
+                <WorkflowsMenu workflows={this.props.deployment.workflows} dropdownDirection='right'
+                               trigger={<Button className="labeled icon" color="teal" icon="cogs" id="executeWorkflowButton"
+                                                disabled={_.isEmpty(deploymentId) || this.state.loading} content="Execute workflow" />}
+                               onClick={(workflow) => this._showExecuteWorkflowModal(workflow)} />
 
                 <Button className="labeled icon" color="teal" icon="edit" disabled={_.isEmpty(deploymentId) || this.state.loading}
                         onClick={this._showModal.bind(this, DeploymentActionButtons.EDIT_ACTION)}

@@ -22,12 +22,9 @@ export default class ExecuteWorkflowButton extends React.Component {
         workflows: [],
     };
 
-    handleClick(event, workflow) {
-        this.props.onClick(workflow);
-    }
-
     render () {
-        let {Button, Popup, PopupMenu, Menu} = Stage.Basic;
+        let {Button, Popup} = Stage.Basic;
+        let {WorkflowsMenu} = Stage.Common;
         let managers = this.props.managers;
 
         return (
@@ -35,23 +32,10 @@ export default class ExecuteWorkflowButton extends React.Component {
                    open={_.isEmpty(managers) ? undefined : false}>
                 <Popup.Trigger>
                     <div>
-                        <PopupMenu className="workflowAction" offset={0}>
-                            <Popup.Trigger>
-                                <Button icon='cogs' content='Execute Workflow'
-                                        labelPosition='left' disabled={_.isEmpty(managers)} />
-                            </Popup.Trigger>
-
-                            <Menu vertical>
-                                {
-                                    _.map(this.props.workflows, (workflow) =>
-                                        <Menu.Item name={workflow.name} onClick={(event) => this.handleClick(event, workflow)}
-                                                   key={workflow.name}>
-                                            {_.capitalize(_.lowerCase(workflow.name))}
-                                        </Menu.Item>
-                                    )
-                                }
-                            </Menu>
-                        </PopupMenu>
+                        <WorkflowsMenu workflows={this.props.workflows} dropdownDirection='left'
+                                       trigger={<Button icon='cogs' content='Execute Workflow' labelPosition='left' disabled={_.isEmpty(managers)} />}
+                                       onClick={(workflow) => this.props.onClick(workflow)}
+                        />
                     </div>
                 </Popup.Trigger>
 
