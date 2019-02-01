@@ -18,27 +18,15 @@ export default class ExecuteWorkflowIcon extends React.Component {
         workflows: []
     };
 
-    handleClick(event, workflow) {
-        this.props.onClick(workflow);
-    }
-
     render () {
-        var {Menu, PopupMenu} = Stage.Basic;
+        let {WorkflowsMenu} = Stage.Common;
 
         return !_.isEmpty(this.props.workflows)
             ?
-                <PopupMenu icon='cogs' help='Execute Workflow' bordered>
-                    <Menu vertical>
-                        {
-                            _.map(this.props.workflows, (workflow) =>
-                                <Menu.Item name={workflow.name} onClick={(event) => this.handleClick(event, workflow)}
-                                           key={workflow.name}>
-                                    {_.capitalize(_.lowerCase(workflow.name))}
-                                </Menu.Item>
-                            )
-                        }
-                    </Menu>
-                </PopupMenu>
+                <WorkflowsMenu workflows={this.props.workflows} dropdownDirection='left'
+                               popupMenuProps={{icon: 'cogs', help: 'Execute Workflow', bordered: true}}
+                               onClick={(workflow) => this.props.onClick(workflow)}
+                />
             :
                 null;
     }
