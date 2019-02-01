@@ -2,8 +2,6 @@
  * Created by pposel on 08/02/2017.
  */
 
-import PropTypes from 'prop-types';
-
 export default class extends React.Component {
 
     static propTypes = {

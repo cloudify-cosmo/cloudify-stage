@@ -2,8 +2,6 @@
  * Created by kinneretzin on 08/01/2017.
  */
 
-import PropTypes from 'prop-types';
-
 export default class BlueprintsTable extends React.Component{
     static propTypes = {
         data: PropTypes.object.isRequired,

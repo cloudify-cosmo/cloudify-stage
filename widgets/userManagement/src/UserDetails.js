@@ -4,8 +4,6 @@
 
 import Actions from './actions';
 
-import PropTypes from 'prop-types';
-
 export default class UserDetails extends React.Component {
 
     constructor(props, context) {

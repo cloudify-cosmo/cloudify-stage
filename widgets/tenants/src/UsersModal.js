@@ -4,7 +4,6 @@
 
 import Actions from './actions';
 
-import PropTypes from 'prop-types';
 const RolesPicker = Stage.Common.RolesPicker;
 const RolesUtil = Stage.Common.RolesUtil;
 

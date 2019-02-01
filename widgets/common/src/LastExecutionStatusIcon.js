@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 27/09/2018.
  */
 
-import PropTypes from 'prop-types';
-
 export default class LastExecutionStatusIcon extends React.Component {
 
     constructor(props, context){

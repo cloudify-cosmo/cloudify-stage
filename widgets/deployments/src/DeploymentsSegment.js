@@ -2,8 +2,6 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
-import PropTypes from 'prop-types';
-
 import MenuAction from './MenuAction';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 

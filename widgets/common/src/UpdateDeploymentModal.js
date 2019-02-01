@@ -2,8 +2,6 @@
  * Created by pposel on 18/01/2017.
  */
 
-import PropTypes from 'prop-types';
-
 class UpdateDeploymentModal extends React.Component {
 
     constructor(props,context) {

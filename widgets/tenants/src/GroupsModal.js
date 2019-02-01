@@ -2,7 +2,6 @@
  * Created by jakubniezgoda on 01/02/2017.
  */
 
-import PropTypes from 'prop-types';
 import Actions from './actions';
 
 const RolesPicker = Stage.Common.RolesPicker;

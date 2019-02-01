@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 24/03/2017.
  */
 
-import PropTypes from 'prop-types';
-
 export default class UpdateModal extends React.Component {
 
     constructor(props,context) {

@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 05/07/2018.
  */
 
-import PropTypes from 'prop-types';
-
 class YamlFileButton extends React.Component {
 
     constructor(props,context) {

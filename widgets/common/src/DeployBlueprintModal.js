@@ -2,8 +2,6 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
-import PropTypes from 'prop-types';
-
 class DeployBlueprintModal extends React.Component {
 
     constructor(props,context) {

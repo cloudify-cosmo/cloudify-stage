@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 18/10/2018.
  */
 
-import PropTypes from 'prop-types';
-
 export default class DryRunIcon extends React.Component {
 
     constructor(props, context){

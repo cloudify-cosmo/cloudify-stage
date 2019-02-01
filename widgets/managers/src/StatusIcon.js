@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 25/10/2018.
  */
 
-import PropTypes from 'prop-types';
-
 export default class StatusIcon extends React.Component {
 
     constructor(props, context){

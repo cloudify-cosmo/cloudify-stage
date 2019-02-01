@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 01/02/2017.
  */
 
-import PropTypes from 'prop-types';
-
 export default class MenuAction extends React.Component {
 
     static EDIT_USERS_ACTION = 'users';
