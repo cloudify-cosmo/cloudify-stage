@@ -2,9 +2,6 @@
  * Created by kinneretzin on 05/10/2016.
  */
 
-import PropTypes from 'prop-types';
-import React from 'react';
-
 class UploadBlueprintModal extends React.Component {
 
     constructor(props) {

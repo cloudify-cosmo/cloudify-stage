@@ -10,7 +10,6 @@ import SecretsStep from './steps/SecretsStep';
 import InputsStep from './steps/InputsStep';
 import ConfirmationStep from './steps/ConfirmationStep';
 import InstallStep from './steps/InstallStep';
-import React from 'react';
 
 const configurationDefaults = {
     showHelloWorldWizardButton: true,

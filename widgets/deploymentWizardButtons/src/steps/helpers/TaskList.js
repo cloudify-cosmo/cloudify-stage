@@ -2,12 +2,9 @@
  * Created by jakub.niezgoda on 09/08/2018.
  */
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
 import TaskStatus from './TaskStatus';
 
-export default class TaskList extends Component {
+export default class TaskList extends React.Component {
 
     static propTypes = {
         header: PropTypes.string,

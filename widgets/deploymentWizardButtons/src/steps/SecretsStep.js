@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import React, { Component } from 'react';
-
 import ResourceStatus from './helpers/ResourceStatus';
 import ResourceAction from './helpers/ResourceAction';
 import NoResourceMessage from './helpers/NoResourceMessage';
@@ -11,7 +9,7 @@ import NoResourceMessage from './helpers/NoResourceMessage';
 const secretsStepId = 'secrets';
 const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
-class SecretsStepActions extends Component {
+class SecretsStepActions extends React.Component {
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
     onNext(id) {
@@ -45,7 +43,7 @@ class SecretsStepActions extends Component {
     }
 }
 
-class SecretsStepContent extends Component {
+class SecretsStepContent extends React.Component {
     constructor(props) {
         super(props);
 

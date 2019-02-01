@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import React, { Component } from 'react';
-
 import TaskList from './helpers/TaskList';
 import Task from './helpers/Task';
 
@@ -11,7 +9,7 @@ const installStepId = 'install';
 const {createWizardStep} = Stage.Basic.Wizard.Utils;
 const emptyTasksStats = _.reduce(_.values(Task.Status), (acc, status) => ({ ...acc, [status]: 0 }), {});
 
-class InstallStepActions extends Component {
+class InstallStepActions extends React.Component {
 
     constructor(props) {
         super(props);
@@ -131,7 +129,7 @@ class InstallStepActions extends Component {
     }
 }
 
-class InstallStepContent extends Component {
+class InstallStepContent extends React.Component {
 
     constructor(props) {
         super(props);

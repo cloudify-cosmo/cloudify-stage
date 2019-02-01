@@ -29,6 +29,7 @@ import 'hopscotch/dist/css/hopscotch.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
@@ -55,6 +56,7 @@ const browserHistory = createHistory({
 export default class app{
     static load (){
         window.React = React;
+        window.PropTypes = PropTypes;
 
         window.onerror = function (message, source, lineno, colno, error) {
             EventBus.trigger('window:error', message, source, lineno, colno, error);
