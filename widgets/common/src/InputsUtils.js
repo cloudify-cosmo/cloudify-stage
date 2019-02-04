@@ -151,7 +151,8 @@ class InputsUtils {
 
         return _.map(enhancedInputs, (input) =>
             InputsUtils.getFormInputField(input.name,
-                                          inputsState[input.name],
+                                          inputsState[input.name] // Always return defined value to avoid rendering uncontrolled inputs
+                                          || InputsUtils.getInputFieldInitialValue(undefined, input.type),
                                           input.default,
                                           input.description,
                                           onChange,
