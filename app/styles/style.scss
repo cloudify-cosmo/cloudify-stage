@@ -790,6 +790,15 @@ table.servicesData button.refreshButton {
   text-decoration: none !important;
 }
 
+.ui.dropdown.multiple[role=combobox][aria-expanded=false] {
+  overflow-y: auto;
+  max-height: 35px;
+}
+
+.ui.form .inline.fields {
+  align-items: unset !important;
+}
+
 .ui.divided.light.list>.item {
   border-top: 1px solid #F0F0F0;
 }
