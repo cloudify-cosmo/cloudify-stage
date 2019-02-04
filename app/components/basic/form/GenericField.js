@@ -331,7 +331,7 @@ export default class GenericField extends Component {
                               this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
                               placeholder={this.props.placeholder || 'Please select'} options={this.state.options}
                               onAddItem={(e, { value }) => {this.setState({options: [{ text: value, value }, ...this.state.options]})}}
-                              onChange={this._handleInputChange.bind(this)} />;
+                              onChange={this._handleInputChange.bind(this)} clearable={false} />;
 
         } else if (this.props.type === GenericField.CUSTOM_TYPE) {
             let optionalProps = _.keys(GenericField.defaultProps);
