@@ -13,7 +13,7 @@ Stage.defineWidget ({
   initialHeight: 20,
   color: 'teal',
   isReact: true,
-    hasReadme: true,
+  hasReadme: true,
   permission: Stage.GenericConfig.WIDGET_PERMISSION('pluginsCatalog'),
   initialConfiguration: [
     {
@@ -23,6 +23,12 @@ Stage.defineWidget ({
       default: '//repository.cloudifysource.org/cloudify/wagons/plugins.json',
       type: Stage.Basic.GenericField.STRING_TYPE,
     },
+    {
+      id: 'sortByName', name: 'Sort by name',
+      description: 'If set to true, then plugins will be sorted by name.',
+      default: false,
+      type: Stage.Basic.GenericField.BOOLEAN_TYPE
+    }
   ],
 
   /**
@@ -60,6 +66,10 @@ Stage.defineWidget ({
       toolbox,
       ...widget.configuration,
     });
+
+    if (_.get(widget.configuration, 'sortByName', false)) {
+      data = _.sortBy(data, 'title');
+    }
 
     return (
       <PluginsCatalogList

@@ -99,9 +99,9 @@ export default class PluginsCatalogList extends React.Component {
                    selectable={true}
                    noDataMessage={NO_DATA_MESSAGE}>
           <DataTable.Column  width="2%" />
-          <DataTable.Column label="Name" name="plugin" width="20%" />
-          <DataTable.Column label="Description" name="description" width="60%" />
-          <DataTable.Column label="Version" name="plugin" width="10%" />
+          <DataTable.Column label="Name" width="20%" />
+          <DataTable.Column label="Description" width="60%" />
+          <DataTable.Column label="Version" width="10%" />
           <DataTable.Column width="5%" />
 
             {items.map (item => {
