@@ -4,6 +4,9 @@
 
 import React, { Component } from 'react';
 
+import {Dropdown, Icon} from './basic';
+import StageUtils from './../utils/stageUtils';
+
 export default class Help extends Component {
 
     constructor(props,context) {
@@ -11,8 +14,7 @@ export default class Help extends Component {
     }
 
     render() {
-        let {Dropdown, Icon} = Stage.Basic;
-        let {redirectToPage} = Stage.Utils;
+        let {redirectToPage} = StageUtils;
 
         return (
             <Dropdown item pointing='top right' trigger={<Icon name='help circle' />} className='helpMenu' >

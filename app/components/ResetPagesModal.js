@@ -3,6 +3,8 @@
  */
 import React from 'react';
 
+import {Modal, Icon, ApproveButton, CancelButton, Checkbox, List, Card, Confirm} from './basic';
+
 export default class ResetPagesModal extends React.Component {
 
     constructor(props,context) {
@@ -16,7 +18,7 @@ export default class ResetPagesModal extends React.Component {
         loading: false,
         tenants: [],
         errors: {}
-    }
+    };
 
     toggleCheckbox(event, elem){
         let clickedTenant = elem.name;
@@ -32,7 +34,6 @@ export default class ResetPagesModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, ApproveButton, CancelButton, Checkbox, List, Card, Confirm} = Stage.Basic;
 
         return (
             this.props.tenants.items.length > 1

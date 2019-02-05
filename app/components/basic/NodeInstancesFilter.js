@@ -3,9 +3,10 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React from 'react';
+
 import Form from './form/Form';
+import StageUtils from './../../utils/stageUtils';
 
 /**
  * NodeInstancesFilter - a component showing dropdown with nodes instances of specified deployment.
@@ -28,7 +29,7 @@ export default class NodeInstancesFilter extends React.Component {
         super(props,context);
 
         this.state = NodeInstancesFilter.initialState(props);
-        this.toolbox = Stage.Utils.getToolbox(()=>{}, ()=>{}, null);
+        this.toolbox = StageUtils.getToolbox(()=>{}, ()=>{}, null);
     }
 
     /**

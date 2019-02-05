@@ -3,9 +3,10 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import Const from '../../utils/consts';
+import {Segment, Icon, Divider, List, Message, PopupConfirm} from './../basic';
 
 export default class TenantList extends Component {
 
@@ -21,7 +22,6 @@ export default class TenantList extends Component {
     };
 
     render () {
-        let {Segment, Icon, Divider, List, Message, PopupConfirm} = Stage.Basic;
 
         return (
             <Segment style={this.props.style}>

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import {Input, Segment, Divider, Item, Image, Button, DataTable, Modal, Confirm, ErrorMessage, Icon, Checkbox, Grid, Menu, Label} from './basic/index';
 import InstallWidgetModal from './InstallWidgetModal';
+import GenericConfig from '../utils/GenericConfig';
 import LoaderUtils from '../utils/LoaderUtils';
 import StageUtils from '../utils/stageUtils';
 
@@ -32,7 +33,7 @@ export default class AddWidgetModal extends Component {
             thumbnailWidget: {},
             usedByList: [],
             categories: AddWidgetModal.generateCategories(props.widgetDefinitions),
-            selectedCategory: Stage.GenericConfig.CATEGORY.ALL
+            selectedCategory: GenericConfig.CATEGORY.ALL
         }
     };
 
@@ -113,7 +114,7 @@ export default class AddWidgetModal extends Component {
 
     static generateCategories(widgets){
         let categories = widgets.reduce((curr,next) => {
-                (next.categories || [Stage.GenericConfig.CATEGORY.OTHERS]).map(category => {
+                (next.categories || [GenericConfig.CATEGORY.OTHERS]).map(category => {
                     let idx = curr.findIndex(current => current.name === category);
                     idx === -1 ? curr.push({name: category, count: 1}) : curr[idx].count++;
                 });
@@ -126,7 +127,7 @@ export default class AddWidgetModal extends Component {
     updateCategoriesCounter(widgets){
         let categories = this.state.categories.map(category => {
             category.count = widgets.filter(widget => 
-                (widget.categories || [Stage.GenericConfig.CATEGORY.OTHERS]).indexOf(category.name) !== -1
+                (widget.categories || [GenericConfig.CATEGORY.OTHERS]).indexOf(category.name) !== -1
             ).length;
             return category;
         });
@@ -135,8 +136,8 @@ export default class AddWidgetModal extends Component {
 
     getWidgetsByCategory(widgets, category){
         let filtered = widgets.filter(item => {
-            item.categories = item.categories || [Stage.GenericConfig.CATEGORY.OTHERS];
-            return category === Stage.GenericConfig.CATEGORY.ALL || item.categories.indexOf(category) !== -1;
+            item.categories = item.categories || [GenericConfig.CATEGORY.OTHERS];
+            return category === GenericConfig.CATEGORY.ALL || item.categories.indexOf(category) !== -1;
         });
 
         return filtered;
@@ -199,8 +200,8 @@ export default class AddWidgetModal extends Component {
 
         const menuContent = (<Menu fluid vertical tabular>
                                 <Menu.Item 
-                                    name={Stage.GenericConfig.CATEGORY.ALL}
-                                    active={this.state.selectedCategory === Stage.GenericConfig.CATEGORY.ALL}
+                                    name={GenericConfig.CATEGORY.ALL}
+                                    active={this.state.selectedCategory === GenericConfig.CATEGORY.ALL}
                                     onClick={this._filterByCategory.bind(this)}/>
 
                                 {this.state.categories.map(category => {

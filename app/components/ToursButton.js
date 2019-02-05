@@ -5,6 +5,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import {Button, Menu, Popup, PopupMenu} from './basic';
+
 export default class ToursButton extends React.Component {
 
     constructor(props,context) {
@@ -34,7 +36,6 @@ export default class ToursButton extends React.Component {
     }
 
     render() {
-        let {Button, Menu, Popup, PopupMenu} = Stage.Basic;
 
         const buttonStyle = {
             position: 'fixed',

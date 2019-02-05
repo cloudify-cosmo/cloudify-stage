@@ -2,12 +2,14 @@
  * Created by kinneretzin on 16/01/2017.
  */
 
+import GenericConfig from './../utils/GenericConfig';
+
 export default class WidgetDefinition {
 
     constructor(data) {
         // Set default values for optional properties
         this.color = 'blue';
-        this.categories = [Stage.GenericConfig.CATEGORY.OTHERS];
+        this.categories = [GenericConfig.CATEGORY.OTHERS];
         //this.description = undefined;
         //this.fetchUrl = undefined;
         this.hasReadme = false;
@@ -18,7 +20,7 @@ export default class WidgetDefinition {
         this.initialHeight = 12;
         this.initialWidth = 3;
         this.isReact = true;
-        this.permission = Stage.GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ALL;
+        this.permission = GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ALL;
         this.showBorder = true;
         this.showHeader = true;
 

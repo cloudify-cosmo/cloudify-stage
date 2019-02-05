@@ -4,6 +4,8 @@
 
 import React, { Component } from 'react';
 
+import {List, ParameterValue, PopupHelp} from './index';
+
 export default class ParameterValueDescription extends Component {
 
     constructor(props,context) {
@@ -15,7 +17,6 @@ export default class ParameterValueDescription extends Component {
     }
 
     render () {
-        let {List, ParameterValue, PopupHelp} = Stage.Basic;
 
         return (
             <PopupHelp flowing header='Value style' content={

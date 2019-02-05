@@ -5,9 +5,6 @@
 import Internal from './Internal';
 import ScriptLoader from './scriptLoader';
 import StyleLoader from './StyleLoader';
-
-const ReactDOMServer = require('react-dom/server');
-
 import 'd3';
 import momentImport from 'moment';
 import markdownImport from 'markdown';
@@ -15,9 +12,12 @@ import markdownImport from 'markdown';
 import * as BasicComponents from '../components/basic';
 import StageUtils from './stageUtils';
 import LoaderUtils from './LoaderUtils';
-import Pagination from '../components/basic/pagination/Pagination';
 
+import GenericConfig from './GenericConfig';
 import WidgetDefinition from './WidgetDefinition';
+
+const ReactDOMServer = require('react-dom/server');
+
 let widgetDefinitions = [];
 
 export default class WidgetDefinitionsLoader {
@@ -224,59 +224,5 @@ export default class WidgetDefinitionsLoader {
         return internal.doDelete(`/widgets/${widgetId}`)
     }
 
-}
-
-class GenericConfig {
-    static POLLING_TIME_CONFIG = (pollingTime = 0) => {
-        return {id: 'pollingTime',
-                name: 'Refresh time interval',
-                default: pollingTime,
-                placeHolder: 'Enter time interval in seconds',
-                description: 'Data of the widget will be refreshed per provided interval time in seconds',
-                type: BasicComponents.GenericField.NUMBER_TYPE}
-    };
-
-    static PAGE_SIZE_CONFIG = (pageSize = Pagination.PAGE_SIZE_LIST(5)[0]) => {
-        return {id: 'pageSize',
-                default: pageSize,
-                hidden: true}
-    };
-
-    static SORT_COLUMN_CONFIG = (sortColumn) => {
-        return {id: 'sortColumn',
-                default: sortColumn,
-                hidden: true}
-    };
-
-    static SORT_ASCENDING_CONFIG = (sortAscending) => {
-        return {id: 'sortAscending',
-                default: sortAscending,
-                hidden: true}
-    };
-    
-    static get CATEGORY ()  {
-        return {
-            BLUEPRINTS: 'Blueprints',
-            DEPLOYMENTS: 'Deployments',
-            BUTTONS_AND_FILTERS: 'Buttons and Filters',
-            CHARTS_AND_STATISTICS: 'Charts and Statistics',
-            EXECUTIONS_NODES: 'Executions/Nodes',
-            SYSTEM_RESOURCES: 'System Resources',
-            OTHERS: 'Others',
-            ALL: 'All'
-        };
-    }
-
-    static get CUSTOM_WIDGET_PERMISSIONS () {
-        return {
-            CUSTOM_ADMIN_ONLY: 'widget_custom_admin',
-            CUSTOM_SYS_ADMIN_ONLY: 'widget_custom_sys_admin',
-            CUSTOM_ALL: 'widget_custom_all'
-        };
-    }
-
-    static WIDGET_PERMISSION = (widgetId) => {
-        return 'widget_'+widgetId
-    }
 }
 

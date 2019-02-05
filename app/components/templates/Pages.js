@@ -3,10 +3,12 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import CreatePageModal from './CreatePageModal';
 import TemplateList from './TemplateList';
+import {Segment, Header, DataTable, Icon, PopupConfirm, Label} from '../basic';
+import StageUtils from './../../utils/stageUtils';
 
 export default class Pages extends Component {
 
@@ -18,14 +20,13 @@ export default class Pages extends Component {
         onCanDeletePage: PropTypes.func,
         onEditPage: PropTypes.func,
         onPreviewPage: PropTypes.func
-    }
+    };
 
     static defaultProps = {
         pages: []
-    }
+    };
 
     render () {
-        let {Segment, Header, DataTable, Icon, PopupConfirm, Label} = Stage.Basic;
 
         return (
             <Segment color="red">
@@ -48,7 +49,7 @@ export default class Pages extends Component {
                                         <DataTable.Data><Header as='a' size="small">{item.id}</Header></DataTable.Data>
                                         <DataTable.Data>{item.name}</DataTable.Data>
                                         <DataTable.Data><Label color="blue" horizontal>{_.size(item.templates)}</Label></DataTable.Data>
-                                        <DataTable.Data>{item.createdAt && Stage.Utils.formatTimestamp(item.createdAt)}</DataTable.Data>
+                                        <DataTable.Data>{item.createdAt && StageUtils.formatTimestamp(item.createdAt)}</DataTable.Data>
                                         <DataTable.Data>{item.creator}</DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
                                             {item.custom ?

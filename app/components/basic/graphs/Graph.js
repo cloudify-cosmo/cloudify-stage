@@ -3,10 +3,11 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
 import {LineChart, Line, BarChart,  Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,Brush} from 'recharts';
 import {format as d3format} from 'd3-format';
+
+import StageUtils from './../../../utils/stageUtils';
 
 /**
  * Graph is a component to present data in form of line or bar charts.
@@ -306,7 +307,7 @@ export default class Graph extends Component {
         });
 
         var xAxisDataFormatter = (value) => {
-            return Stage.Utils.formatLocalTimestamp(value, this.props.xAxisTimeFormat, this.props.dataTimeFormat)
+            return StageUtils.formatLocalTimestamp(value, this.props.xAxisTimeFormat, this.props.dataTimeFormat)
         };
 
         return (

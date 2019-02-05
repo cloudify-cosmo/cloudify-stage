@@ -3,11 +3,12 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import Templates from './Templates';
 import Pages from './Pages';
 import Const from '../../utils/consts';
+import {Breadcrumb, Segment, Divider, ErrorMessage, Button} from './../basic';
 
 export default class TemplateManagement extends Component {
 
@@ -122,7 +123,6 @@ export default class TemplateManagement extends Component {
     }
 
     render () {
-        let {Breadcrumb, Segment, Divider, ErrorMessage, Button} = Stage.Basic;
 
         return (
             <div className='main'>

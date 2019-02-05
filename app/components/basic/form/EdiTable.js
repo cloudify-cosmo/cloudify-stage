@@ -1,5 +1,3 @@
-
-
 /**
  * Created by jakubniezgoda on 24/07/2017.
  */
@@ -92,7 +90,7 @@ export default class EdiTable extends Component {
 
     _handleInputChange(proxy, field) {
         let [row,column] = _.split(field.name, '|');
-        let value = GenericField.formatValue(field.genericType, field.genericType === Stage.Basic.GenericField.BOOLEAN_TYPE ? field.checked : field.value);
+        let value = GenericField.formatValue(field.genericType, field.genericType === GenericField.BOOLEAN_TYPE ? field.checked : field.value);
 
         // Component state update
         let fields = Object.assign({}, this.state.fields, {[row]: {...this.state.fields[row], [column]: value}});

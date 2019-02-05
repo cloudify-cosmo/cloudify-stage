@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Consts from '../../utils/consts';
 
+import {Modal, Button, Icon, Form, Segment, ApproveButton, CancelButton, Message, Divider, List} from '../basic/index';
+
 export default class CreateTemplateModal extends Component {
 
     constructor(props,context) {
@@ -122,7 +124,7 @@ export default class CreateTemplateModal extends Component {
             }
         }
 
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        this.setState(Form.fieldNameValue(field));
     }
 
     _addPage(item) {
@@ -144,8 +146,6 @@ export default class CreateTemplateModal extends Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form, Segment, ApproveButton, CancelButton, Message, Divider, List} = Stage.Basic;
-
         let tenantOptions = _.map(this.props.availableTenants.items,item => {return {text: item.name, value: item.name}});
         tenantOptions.push({text: 'All tenants', value: Consts.DEFAULT_ALL});
 

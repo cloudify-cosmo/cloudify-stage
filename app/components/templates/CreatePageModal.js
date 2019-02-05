@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 
+import {Modal, Button, Icon, Form, ApproveButton, CancelButton} from '../basic/index';
+
 export default class CreatePageModal extends Component {
 
     constructor(props,context) {
@@ -55,12 +57,10 @@ export default class CreatePageModal extends Component {
     }
 
     _handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        this.setState(Form.fieldNameValue(field));
     }
 
     render() {
-        var {Modal, Button, Icon, Form, Segment, ApproveButton, CancelButton, Message, Divider, List} = Stage.Basic;
-
         const trigger = <Button content='Create page' icon='block layout' labelPosition='left' className='createPageButton'/>;
 
         return (

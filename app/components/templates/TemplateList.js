@@ -3,8 +3,9 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
+import {Segment, Icon, Divider, List, Message} from './../basic';
 
 export default class TemplateList extends Component {
 
@@ -18,7 +19,6 @@ export default class TemplateList extends Component {
     };
 
     render () {
-        let {Segment, Icon, Divider, List, Message} = Stage.Basic;
 
         return (
             <Segment style={this.props.style}>

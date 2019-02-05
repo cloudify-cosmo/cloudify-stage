@@ -3,10 +3,10 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
 import _ from 'lodash';
-import {Icon} from './index';
+
+import {Icon, Popup} from './index';
 import consts from '../../utils/consts';
 
 /**
@@ -33,7 +33,6 @@ export default class VisibilityIcon extends Component {
     };
 
     render() {
-        let {Popup} = Stage.Basic;
         let data = _.find(consts.visibility, {name: this.props.visibility}) || consts.visibility.UNKNOWN;
 
         return this.props.showTitle
@@ -41,4 +40,3 @@ export default class VisibilityIcon extends Component {
             : <Icon name={data.icon} color={data.color} {..._.omit(this.props, _.keys(VisibilityIcon.propTypes))}/>;
     }
 }
-

@@ -3,13 +3,15 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import PageList from './PageList';
 import RoleList from './RoleList';
 import TenantList from './TenantList';
 import CreateTemplateModal from './CreateTemplateModal';
 import Const from '../../utils/consts';
+import {Segment, Icon, Header, DataTable, PopupConfirm, Label} from './../basic';
+import StageUtils from './../../utils/stageUtils';
 
 export default class Templates extends Component {
 
@@ -25,16 +27,15 @@ export default class Templates extends Component {
         onCreateTemplate: PropTypes.func,
         onModifyTemplate: PropTypes.func,
         onDeleteTemplate: PropTypes.func,
-    }
+    };
 
     static defaultProps = {
         templates: [],
         pages: [],
         tenants: {items:[]}
-    }
+    };
 
     render () {
-        let {Segment, Icon, Header, DataTable, PopupConfirm, Label} = Stage.Basic;
 
         return (
             <Segment color="blue">
@@ -67,7 +68,7 @@ export default class Templates extends Component {
                                             }
                                         </DataTable.Data>
                                         <DataTable.Data><Label color="green" horizontal>{tenantsCount}</Label></DataTable.Data>
-                                        <DataTable.Data>{item.createdAt && Stage.Utils.formatTimestamp(item.createdAt)}</DataTable.Data>
+                                        <DataTable.Data>{item.createdAt && StageUtils.formatTimestamp(item.createdAt)}</DataTable.Data>
                                         <DataTable.Data>{item.creator}</DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
                                             {item.custom &&
