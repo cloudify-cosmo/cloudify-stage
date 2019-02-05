@@ -2,8 +2,6 @@
  * Created by edenp on 22/10/2017.
  */
 
-import PropTypes from 'prop-types';
-
 export default class RolesPicker extends React.Component {
 
     constructor(props, context) {

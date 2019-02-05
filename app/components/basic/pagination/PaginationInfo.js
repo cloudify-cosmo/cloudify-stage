@@ -56,7 +56,7 @@ export default class PaginationInfo extends Component {
                 Page size:&nbsp;
 
                 <Dropdown compact upward search selection allowAdditions value={this.props.pageSize} additionLabel="Set "
-                          options={options} onChange={this._handleChange.bind(this)} id="pageSizeField"/>
+                          options={options} clearable={false} onChange={this._handleChange.bind(this)} id="pageSizeField"/>
 
                 &nbsp;&nbsp;{start} to {stop}
 

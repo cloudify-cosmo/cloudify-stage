@@ -2,9 +2,6 @@
  * Created by kinneretzin on 19/10/2016.
  */
 
-import PropTypes from 'prop-types';
-import React from 'react';
-
 export default class ExecuteDeploymentModal extends React.Component {
 
     constructor(props,context) {

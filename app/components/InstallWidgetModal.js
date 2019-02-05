@@ -22,19 +22,21 @@ export default class InstallWidgetModal extends Component {
         open: false,
         loading: false,
         widgetUrl: '',
-        widgetFile: '',
+        widgetFile: null,
         errors: {},
         scriptError: ''
-    }
+    };
 
     static propTypes = {
         trigger: PropTypes.object.isRequired,
         header: PropTypes.string.isRequired,
         buttonLabel: PropTypes.string.isRequired,
-        onWidgetInstalled: PropTypes.func.isRequired
+        onWidgetInstalled: PropTypes.func.isRequired,
+        className: PropTypes.string
     };
 
     static defaultProps = {
+        className: 'installWidgetModal',
         onWidgetInstalled: ()=>Promise.resolve()
     };
 
@@ -112,7 +114,7 @@ export default class InstallWidgetModal extends Component {
 
     render() {
         return (
-            <Modal trigger={this.props.trigger} dimmer="blurring" open={this.state.open} className="installWidgetModal"
+            <Modal trigger={this.props.trigger} dimmer="blurring" open={this.state.open} className={this.props.className}
                    onOpen={this._openModal.bind(this)} onClose={this._closeModal.bind(this)}>
                 <Modal.Header><Icon name="puzzle"/> {this.props.header}</Modal.Header>
                 <Modal.Content>
@@ -135,8 +137,10 @@ export default class InstallWidgetModal extends Component {
                     {this.state.scriptError && <Message error>{this.state.scriptError}</Message>}
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button icon='remove' basic content='Cancel' onClick={this._closeModal.bind(this)}/>
-                    <Button icon='puzzle' content={this.props.buttonLabel} color="green" onClick={this._installWidget.bind(this)} />
+                    <Button icon='remove' basic content='Cancel'
+                            onClick={(event) => { event.stopPropagation(); this._closeModal() } } />
+                    <Button icon='puzzle' content={this.props.buttonLabel} color="green"
+                            onClick={(event) => { event.stopPropagation(); this._installWidget() } } />
                 </Modal.Actions>
             </Modal>
         );

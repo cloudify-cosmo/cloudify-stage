@@ -17,6 +17,8 @@ export default class WidgetDefinition {
         this.initialConfiguration = [];
         this.initialHeight = 12;
         this.initialWidth = 3;
+        this.isReact = true;
+        this.permission = Stage.GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ALL;
         this.showBorder = true;
         this.showHeader = true;
 
@@ -24,13 +26,10 @@ export default class WidgetDefinition {
         Object.assign(this,data);
 
         if (!this.name) {
-            throw new Error('Missing widget name. Widget data is :',data);
+            console.error('Missing widget name. Widget data is :',data);
         }
         if (!this.id) {
-            throw new Error('Missing widget id. Widget data is :',data);
-        }
-        if (!this.permission){
-            throw new Error('Missing widget permission. No user would be authorized for this widget.')
+            console.error('Missing widget id. Widget data is :',data);
         }
     }
 

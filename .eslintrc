@@ -13,12 +13,12 @@
   "globals": {
     "_": true,
     "Stage": true,
-    "StageUtils": true,
     "$": true,
     "moment": true,
     "markdown": true,
     "d3": true,
     "React": true,
+    "PropTypes": true,
     "describe": true,
     "it": true,
     "before": true,

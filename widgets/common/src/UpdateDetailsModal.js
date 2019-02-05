@@ -2,7 +2,6 @@
  * Created by jakubniezgoda on 10/05/2018.
  */
 
-import PropTypes from 'prop-types';
 import {diffChars} from 'diff';
 
 export default class UpdateDetailsModal extends React.Component {

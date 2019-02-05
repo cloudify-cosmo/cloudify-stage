@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 07/11/2018.
  */
 
-import PropTypes from 'prop-types';
-
 class DeleteConfirm extends React.Component {
 
     constructor(props,context) {

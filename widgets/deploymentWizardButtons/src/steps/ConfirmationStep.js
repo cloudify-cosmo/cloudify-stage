@@ -2,15 +2,13 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import React, { Component } from 'react';
-
 import TaskList from './helpers/TaskList';
 import Task from './helpers/Task';
 
 const confirmationStepId = 'confirm';
 const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
-class ConfirmationStepActions extends Component {
+class ConfirmationStepActions extends React.Component {
 
     constructor(props) {
         super(props);
@@ -55,7 +53,7 @@ class ConfirmationStepActions extends Component {
     }
 }
 
-class ConfirmationStepContent extends Component {
+class ConfirmationStepContent extends React.Component {
 
     constructor(props) {
         super(props);

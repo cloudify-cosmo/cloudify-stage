@@ -2,12 +2,10 @@
  * Created by jakub.niezgoda on 10/08/2018.
  */
 
-import React, { Component } from 'react';
-
 const blueprintStepId = 'blueprint';
 const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
-class BlueprintStepActions extends Component {
+class BlueprintStepActions extends React.Component {
 
     constructor(props) {
         super(props);
@@ -71,7 +69,7 @@ class BlueprintStepActions extends Component {
     }
 }
 
-class BlueprintStepContent extends Component {
+class BlueprintStepContent extends React.Component {
 
     constructor(props) {
         super(props);

@@ -33,6 +33,21 @@ module.exports = (function() {
         return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
     }
 
+    // Credits to: https://geedew.com/remove-a-directory-that-is-not-empty-in-nodejs/
+    function _rmdirSync(path) {
+        if (fs.existsSync(path)) {
+            fs.readdirSync(path).forEach(function(file,index){
+                const curPath = path + '/' + file;
+                if (fs.lstatSync(curPath).isDirectory()) { // recurse
+                    _rmdirSync(curPath);
+                } else { // delete file
+                    fs.unlinkSync(curPath);
+                }
+            });
+            fs.rmdirSync(path);
+        }
+    }
+
     function _getUserWidgets() {
         return fs.readdirSync(pathlib.resolve(userWidgetsFolder))
                 .filter(dir => fs.lstatSync(pathlib.resolve(userWidgetsFolder, dir)).isDirectory());
@@ -49,6 +64,8 @@ module.exports = (function() {
     }
 
     function _validateUniqueness(widgetId) {
+        logger.debug('Validating widget ' + widgetId + ' uniqueness.');
+
         let widgets = _getAllWidgets();
         if (_.indexOf(widgets, widgetId) >= 0) {
             return Promise.reject({status: 422, message: 'Widget ' + widgetId + ' is already installed'});
@@ -58,14 +75,18 @@ module.exports = (function() {
     }
 
     function _validateConsistency(widgetId, dirName) {
+        logger.debug('Validating widget ' + widgetId + ' consistency.');
+
         if (widgetId !== dirName) {
-            return Promise.reject('Updated widget does not complies with directory name: ' + widgetId + ' <> ' + dirName);
+            return Promise.reject({status: 400, message: 'Updated widget directory name invalid. Expected: \'' + widgetId + '\'. Received: \'' + dirName + '\''});
         }
 
         return Promise.resolve();
     }
 
     function _validateWidget(widgetId, extractedDir) {
+        logger.debug('Validating widget ' + widgetId + '.');
+
         let files = fs.readdirSync(extractedDir);
 
         //remove hidden or junk files
@@ -76,7 +97,7 @@ module.exports = (function() {
         if (files.length === 1 && fs.statSync(pathlib.join(extractedDir, files[0])).isDirectory()) {
             let dirName = files[0];
             if (dirName !== widgetId) {
-                return Promise.reject('Incorrect widget folder name not consistent with widget id: ' + widgetId + ' <> ' + dirName);
+                return Promise.reject({status: 400, message: 'Incorrect widget folder name not consistent with widget id. Widget ID: \'' + widgetId + '\'. Directory name: \'' + dirName + '\''});
             }
 
             extractedDir = pathlib.join(extractedDir, dirName);
@@ -87,20 +108,20 @@ module.exports = (function() {
         const missingFiles = _.difference(requiredFiles, files);
 
         if (!_.isEmpty(missingFiles)) {
-            return Promise.reject('The following files are required for widget registration: ' + _.join(missingFiles, ', '));
+            return Promise.reject({status: 400, message: 'The following files are required for widget registration: ' + _.join(missingFiles, ', ')});
         } else {
             return Promise.resolve(extractedDir);
         }
     }
 
     function _installFiles(widgetId, tempPath) {
-        logger.debug('installing widget files to the target path', pathlib.resolve(userWidgetsFolder));
-        logger.debug('widget temp path', tempPath);
+        logger.debug('Installing widget files to the target path:', pathlib.resolve(userWidgetsFolder));
+        logger.debug('Widget temp path:', tempPath);
 
         const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
 
         return new Promise((resolve, reject) => {
-            fs.removeSync(installPath);
+            _rmdirSync(installPath);
             fs.move(tempPath, installPath, err => {
                 if (err) {
                     reject(err);
@@ -124,6 +145,8 @@ module.exports = (function() {
     }
 
     function installWidget(archiveUrl, username, req) {
+        logger.debug('Installing widget from', archiveUrl ? archiveUrl : 'file');
+
         return ArchiveHelper.removeOldExtracts(widgetTempDir)
             .then(() => archiveUrl ? _saveDataFromUrl(archiveUrl) : _saveMultipartData(req))
             .then(data => {
@@ -133,8 +156,8 @@ module.exports = (function() {
                 const archivePath = pathlib.join(widgetTempPath, widgetZipFile);
                 const extractedDir = pathlib.join(widgetTempPath, widgetId);
 
-                return ArchiveHelper.decompressArchive(archivePath, extractedDir)
-                    .then(() => _validateUniqueness(widgetId))
+                return _validateUniqueness(widgetId)
+                    .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
                     .then(() => _validateWidget(widgetId, extractedDir))
                     .then((tempPath) => _installFiles(widgetId, tempPath))
                     .then(() => BackendHandler.importWidgetBackend(widgetId))
@@ -159,8 +182,9 @@ module.exports = (function() {
     }
 
     function updateWidget(updateWidgetId, archiveUrl, req) {
+        logger.debug('Updating widget', updateWidgetId, 'from', archiveUrl ? archiveUrl : 'file');
+
         return ArchiveHelper.removeOldExtracts(widgetTempDir)
-            .then(() => ArchiveHelper.cleanTempData(pathlib.join(widgetTempDir, updateWidgetId)))
             .then(() => archiveUrl ? _saveDataFromUrl(archiveUrl) : _saveMultipartData(req))
             .then(data => {
                 const widgetTempPath = data.archiveFolder;
@@ -169,7 +193,7 @@ module.exports = (function() {
                 const archivePath = pathlib.join(widgetTempPath, widgetZipFile);
                 const extractedDir = pathlib.join(widgetTempPath, widgetId);
 
-                return _backupWidget(widgetId, widgetTempPath)
+                return _backupWidget(updateWidgetId, widgetTempPath)
                     .then(() =>_validateConsistency(updateWidgetId, widgetId))
                     .then(() => ArchiveHelper.decompressArchive(archivePath, extractedDir))
                     .then(() => _validateWidget(widgetId, extractedDir))
@@ -180,15 +204,15 @@ module.exports = (function() {
                         var widgetPath = pathlib.resolve(userWidgetsFolder, widgetId);
 
                         logger.info('Widget updated');
-                        logger.info('Widget id: ', widgetId);
-                        logger.info('Widget path: ', pathlib.resolve(widgetPath));
+                        logger.info('Widget id:', widgetId);
+                        logger.info('Widget path:', pathlib.resolve(widgetPath));
                         
                         ArchiveHelper.cleanTempData(widgetTempPath);
 
                         return Promise.resolve({id: widgetId, isCustom: true});
                     })
                     .catch(err => {
-                        _restoreBackup(widgetId, widgetTempPath)
+                        _restoreBackup(updateWidgetId, widgetTempPath)
                         .then(() => BackendHandler.removeWidgetBackend(widgetId))
                         .then(() => BackendHandler.importWidgetBackend(widgetId))
                         .then(() => ArchiveHelper.cleanTempData(widgetTempPath));
@@ -201,6 +225,7 @@ module.exports = (function() {
         const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
         const backupPath = pathlib.resolve(tempPath, 'backup');
 
+        logger.debug('Creating backup of widget ' + widgetId + ' in ' + backupPath);
         return new Promise((resolve, reject) => {
             fs.copy(installPath, backupPath, err => {
                 if (err) {
@@ -216,6 +241,7 @@ module.exports = (function() {
         const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
         const backupPath = pathlib.resolve(tempPath, 'backup');
 
+        logger.debug('Restoring backup of widget ' + widgetId + ' from ' + backupPath);
         return new Promise((resolve, reject) => {
             fs.removeSync(installPath);
             fs.move(backupPath, installPath, err => {
@@ -238,6 +264,7 @@ module.exports = (function() {
     function deleteWidget(widgetId) {
         const path = pathlib.resolve(userWidgetsFolder, widgetId);
 
+        logger.debug('Deleting widget ' + widgetId + ' from ' + path);
         return new Promise((resolve,reject) => {
             fs.remove(path, (err) => {
                 if (err) {

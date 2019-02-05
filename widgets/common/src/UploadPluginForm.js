@@ -2,9 +2,6 @@
  * Created by jakub.niezgoda on 17/08/2018.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-
 class UploadPluginForm extends React.Component {
 
     constructor(props) {

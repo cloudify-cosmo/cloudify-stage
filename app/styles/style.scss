@@ -790,6 +790,15 @@ table.servicesData button.refreshButton {
   text-decoration: none !important;
 }
 
+.ui.dropdown.multiple[role=combobox][aria-expanded=false] {
+  overflow-y: auto;
+  max-height: 35px;
+}
+
+.ui.form .inline.fields {
+  align-items: unset !important;
+}
+
 .ui.divided.light.list>.item {
   border-top: 1px solid #F0F0F0;
 }
@@ -799,6 +808,7 @@ table.servicesData button.refreshButton {
 }
 
 // FIXME: Remove this when Semantic-UI-CSS 2.4.2 it's ready
+.ui.fullscreen.scrolling.modal.readmeModal,
 .ui.fullscreen.modal.readmeModal {
   left: auto !important;
 }

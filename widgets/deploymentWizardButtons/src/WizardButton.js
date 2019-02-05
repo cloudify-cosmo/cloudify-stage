@@ -2,11 +2,7 @@
  * Created by jakub.niezgoda on 13/08/2018.
  */
 
-import React, { Component } from 'react';
-
-import PropTypes from 'prop-types';
-
-export default class WizardButton extends Component {
+export default class WizardButton extends React.Component {
 
     constructor(props,context) {
         super(props,context);
