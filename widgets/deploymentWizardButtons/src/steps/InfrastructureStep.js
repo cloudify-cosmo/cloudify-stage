@@ -2,12 +2,10 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import React, { Component } from 'react';
-
 const infrastructureStepId = 'infrastructure';
 const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
-class InfrastructureStepActions extends Component {
+class InfrastructureStepActions extends React.Component {
 
     constructor(props) {
         super(props);
@@ -37,7 +35,7 @@ class InfrastructureStepActions extends Component {
     }
 }
 
-class InfrastructureStepContent extends Component {
+class InfrastructureStepContent extends React.Component {
 
     constructor(props) {
         super(props);

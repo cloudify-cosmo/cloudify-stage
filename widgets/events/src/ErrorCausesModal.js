@@ -2,9 +2,6 @@
  * Created by jakub.niezgoda on 29/10/2018.
  */
 
-import PropTypes from 'prop-types';
-import React from 'react';
-
 export default class ErrorCausesModal extends React.Component {
 
     constructor(props, context){

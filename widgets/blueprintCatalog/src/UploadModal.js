@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 /**
  * Created by pposel on 07/02/2017.
  */

@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 30/10/2018.
  */
 
-import PropTypes from 'prop-types';
-
 export default class ExecuteWorkflowButton extends React.Component {
 
     constructor(props, context){

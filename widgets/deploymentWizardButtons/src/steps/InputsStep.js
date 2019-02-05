@@ -2,15 +2,13 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import React, { Component } from 'react';
-
 import ResourceStatus from './helpers/ResourceStatus';
 import NoResourceMessage from './helpers/NoResourceMessage';
 
 const inputsStepId = 'inputs';
 const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
-class InputsStepActions extends Component {
+class InputsStepActions extends React.Component {
 
     constructor(props) {
         super(props);
@@ -48,7 +46,7 @@ class InputsStepActions extends Component {
     }
 }
 
-class InputsStepContent extends Component {
+class InputsStepContent extends React.Component {
 
     constructor(props) {
         super(props);

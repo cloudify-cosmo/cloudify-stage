@@ -2,10 +2,7 @@
  * Created by jakub.niezgoda on 09/08/2018.
  */
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
-export default class ResourceStatus extends Component {
+export default class ResourceStatus extends React.Component {
 
     static unknown = 0;
     static noActionRequired = 1;

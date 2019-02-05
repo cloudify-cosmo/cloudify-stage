@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 31/10/2018.
  */
 
-import PropTypes from 'prop-types';
-
 export default class RefreshButton extends React.Component {
 
     constructor(props, context){

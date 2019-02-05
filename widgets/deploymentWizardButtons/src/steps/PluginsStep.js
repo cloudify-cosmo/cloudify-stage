@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
-import React, { Component } from 'react';
-
 import ResourceStatus from './helpers/ResourceStatus';
 import ResourceAction from './helpers/ResourceAction';
 import NoResourceMessage from './helpers/NoResourceMessage';
@@ -11,7 +9,7 @@ import NoResourceMessage from './helpers/NoResourceMessage';
 const pluginsStepId = 'plugins';
 const {createWizardStep} = Stage.Basic.Wizard.Utils;
 
-class PluginsStepActions extends Component {
+class PluginsStepActions extends React.Component {
 
     constructor(props) {
         super(props);
@@ -64,7 +62,7 @@ class PluginsStepActions extends Component {
     }
 }
 
-class PluginsStepContent extends Component {
+class PluginsStepContent extends React.Component {
     constructor(props) {
         super(props);
 

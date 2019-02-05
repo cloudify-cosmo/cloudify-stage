@@ -2,8 +2,6 @@
  * Created by jakub.niezgoda on 09/05/2018.
  */
 
-import PropTypes from 'prop-types';
-
 export default class DeploymentUpdatedIcon extends React.Component {
 
     constructor(props, context){

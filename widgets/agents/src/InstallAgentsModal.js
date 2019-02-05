@@ -2,9 +2,7 @@
  * Created by jakub.niezgoda on 09/10/2018.
  */
 
-import PropTypes from 'prop-types';
 import Consts from './consts';
-import React from 'react';
 
 export default class InstallAgentsModal extends React.Component {
 

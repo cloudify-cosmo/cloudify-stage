@@ -2,8 +2,6 @@
  * Created by edenp on 07/01/2018.
  */
 
-import PropTypes from 'prop-types';
-
 export default class UserRoles extends React.Component {
 
     static propTypes = {
