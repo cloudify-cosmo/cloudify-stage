@@ -4,14 +4,15 @@
 
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import Help from '../../containers/Help';
 import Logo from '../../containers/Logo';
 import ResetPagesModal from '../ResetPagesModal.js';
+import {Icon} from './../basic';
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {
@@ -57,7 +58,6 @@ export default class Header extends Component {
     }
 
     render() {
-        let {Icon} = Stage.Basic;
 
         return (
             <div className="ui top fixed menu inverted secondary headerBar">

@@ -7,6 +7,8 @@ import Const from './consts';
 import {getToolbox} from './Toolbox';
 import _ from 'lodash';
 
+import GenericField from './../components/basic/form/GenericField';
+
 export default class StageUtils {
 
     static makeCancelable(promise) {
@@ -116,7 +118,7 @@ export default class StageUtils {
 
             var value = config.default && !config.value ? config.default : (_.isUndefined(config.value) ? null : config.value );
 
-            configs[config.id] = Stage.Basic.GenericField.formatValue(config.type, value);
+            configs[config.id] = GenericField.formatValue(config.type, value);
         });
 
         return configs;

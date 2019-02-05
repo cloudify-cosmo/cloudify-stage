@@ -2,11 +2,12 @@
  * Created by Alex on 22/02/2017.
  */
 
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import 'rc-tree/assets/index.css';
 import Tree, { TreeNode } from 'rc-tree';
+
+import { Loading } from './index';
 
 /**
  * NodesTree is a tree component, it wraps [rc-tree](http://react-component.github.io/tree/) component.
@@ -114,7 +115,7 @@ export default class NodesTree extends Component {
                 <Tree {...this.props} className={`nodes-tree ${this.props.className}`}>
                     {loop(this.props.treeData)}
                 </Tree> :
-                <Stage.Basic.Loading/>;
+                <Loading />;
         }
     }
 }

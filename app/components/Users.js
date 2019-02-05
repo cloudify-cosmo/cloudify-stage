@@ -3,9 +3,10 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import EventBus from '../utils/EventBus';
+import {Dropdown, Icon} from './basic';
 
 export default class Users extends Component {
 
@@ -31,7 +32,6 @@ export default class Users extends Component {
     }
 
     render() {
-        let {Dropdown, Icon} = Stage.Basic;
 
         const userMenuTrigger = (
             <span>

@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import WidgetsList from '../WidgetsList';
 import Const from '../../utils/consts';
 import EditModeBubble from '../EditModeBubble';
+import {Breadcrumb, Segment, Divider, ErrorMessage, EditableLabel, Alert} from '../basic';
 
 export default class PageManagement extends Component {
 
@@ -34,7 +35,6 @@ export default class PageManagement extends Component {
     }
 
     render () {
-        let {Breadcrumb, Segment, Divider, ErrorMessage, EditableLabel, Alert} = Stage.Basic;
         var pageManagementMode = this.props.isPageEditMode ? Const.PAGE_MANAGEMENT_EDIT : Const.PAGE_MANAGEMENT_VIEW;
 
         var maximizeWidget = _.findIndex(this.props.page.widgets, { 'maximized': true }) >= 0;

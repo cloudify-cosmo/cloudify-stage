@@ -3,9 +3,10 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React from 'react';
+
 import Form from './form/Form';
+import StageUtils from './../../utils/stageUtils';
 
 /**
  * MetricFilter  - a simple component showing InfluxDB metric names filtered using context variable
@@ -29,7 +30,7 @@ export default class MetricFilter extends React.Component {
 
         this.state = MetricFilter.initialState(props);
 
-        this.toolbox = Stage.Utils.getToolbox(()=>{}, ()=>{}, null);
+        this.toolbox = StageUtils.getToolbox(()=>{}, ()=>{}, null);
     }
 
     /**

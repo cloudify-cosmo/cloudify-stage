@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Icon, Popup } from './index';
 
-
 /**
  * RevertToDefaultIcon is a component showing undo icon. It is desired to be used in input fields.
  *
@@ -42,7 +41,6 @@ export default class RevertToDefaultIcon extends Component {
     };
 
     render() {
-        let {Icon, Popup} = Stage.Basic;
 
         return !_.isNil(this.props.defaultValue) && !_.isEqual(this.props.value, this.props.defaultValue)
             ?

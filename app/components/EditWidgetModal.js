@@ -3,8 +3,9 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
+import {Modal, ApproveButton, CancelButton, GenericField, Form, Message} from './basic';
 
 export default class EditWidgetModal extends Component {
 
@@ -63,13 +64,12 @@ export default class EditWidgetModal extends Component {
 
     _handleInputChange(proxy, field) {
         var name = field.name;
-        var value = Stage.Basic.GenericField.formatValue(field.genericType, field.genericType === Stage.Basic.GenericField.BOOLEAN_TYPE ? field.checked : field.value);
+        var value = GenericField.formatValue(field.genericType, field.genericType === GenericField.BOOLEAN_TYPE ? field.checked : field.value);
 
         this.setState({fields: Object.assign({}, this.state.fields, {[name]: value})});
     }
 
     render() {
-        var {Modal, ApproveButton, CancelButton, GenericField, Form, Message} = Stage.Basic;
 
         return (
             <Modal open={this.props.show} onClose={()=>this.props.onHideConfig()} className='editWidgetModal'>

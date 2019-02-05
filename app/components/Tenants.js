@@ -3,9 +3,10 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import EventBus from '../utils/EventBus';
+import {Dropdown, Loader, Icon} from './basic';
 
 export default class Tenants extends Component {
     static propTypes = {
@@ -23,7 +24,6 @@ export default class Tenants extends Component {
     }
 
     render() {
-        let {Dropdown, Loader, Icon} = Stage.Basic;
 
         let tenants = this.props.manager.tenants;
         if (!tenants || !tenants.items || tenants.isFetching) {

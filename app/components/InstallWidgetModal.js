@@ -3,10 +3,11 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+
 import {Icon, Button, Form, Label, Modal, Message} from './basic/index'
 import EventBus from '../utils/EventBus';
+import StageUtils from '../utils/stageUtils';
 
 export default class InstallWidgetModal extends Component {
 
@@ -55,7 +56,7 @@ export default class InstallWidgetModal extends Component {
         if (!this.state.widgetFile) {
             if (_.isEmpty(widgetUrl)) {
                 errors['widgetUrl'] = "Please provide the widget's archive URL or select a file";
-            } else if (!Stage.Utils.isUrl(widgetUrl)) {
+            } else if (!StageUtils.isUrl(widgetUrl)) {
                 errors['widgetUrl'] = "Please provide valid URL for widget's archive";
             }
         }

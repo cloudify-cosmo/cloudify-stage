@@ -5,6 +5,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
+import {CopyToClipboardButton, HighlightText} from './index';
+import StageUtils from '../../utils/stageUtils';
+
 /**
  * ParameterValue is a component which shows parameters (e.g. deployment/blueprint inputs, outputs, runtime properties, ...)
  * in nice user-friendly formatted manner with copy to clipboard button.
@@ -46,9 +49,8 @@ export default class ParameterValue extends Component {
     }
 
     getValueElement(stringValue) {
-        let {HighlightText} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
-        let {isUrl} = Stage.Utils;
+        let {isUrl} = StageUtils;
 
         const commonStyle = {padding: '0.5em', whiteSpace: 'pre-wrap', wordBreak: 'break-word'};
         const typedValue = this.props.value;
@@ -73,7 +75,6 @@ export default class ParameterValue extends Component {
     }
 
     render() {
-        let {CopyToClipboardButton} = Stage.Basic;
         let {JsonUtils} = Stage.Common;
 
         const stringValue = _.isObject(this.props.value)

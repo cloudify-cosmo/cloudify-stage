@@ -3,15 +3,15 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
-import MaintenanceModeModal from '../basic/maintenance/MaintenanceModeModal';
+
 import MessageContainer from '../MessageContainer';
 import Services from '../../containers/Services';
 import Logo from '../../containers/Logo';
 import Consts from '../../utils/consts';
 import StatusPoller from '../../utils/StatusPoller';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import {Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal} from '../basic';
 
 export default class MaintenanceModePageMessage extends Component {
     constructor(props,context) {
@@ -45,8 +45,6 @@ export default class MaintenanceModePageMessage extends Component {
 
     render () {
         SplashLoadingScreen.turnOff();
-
-        let {Divider, Header, MaintenanceModeActivationButton} = Stage.Basic;
 
         return (
             <div className='maintenancePage ui segment basic'>
