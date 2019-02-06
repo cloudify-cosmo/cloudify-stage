@@ -15,7 +15,7 @@
     },
     {
         "name": "Main JS bundle",
-        "limit": "300 KB",
+        "limit": "310 KB",
         "gzip": false,
         "webpack": false,
         "path": "dist/js/main.bundle.js"
