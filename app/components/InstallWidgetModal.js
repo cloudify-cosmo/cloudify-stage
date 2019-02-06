@@ -56,7 +56,7 @@ export default class InstallWidgetModal extends Component {
         if (!this.state.widgetFile) {
             if (_.isEmpty(widgetUrl)) {
                 errors['widgetUrl'] = "Please provide the widget's archive URL or select a file";
-            } else if (!StageUtils.isUrl(widgetUrl)) {
+            } else if (!StageUtils.Url.isUrl(widgetUrl)) {
                 errors['widgetUrl'] = "Please provide valid URL for widget's archive";
             }
         }

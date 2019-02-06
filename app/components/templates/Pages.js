@@ -49,7 +49,7 @@ export default class Pages extends Component {
                                         <DataTable.Data><Header as='a' size="small">{item.id}</Header></DataTable.Data>
                                         <DataTable.Data>{item.name}</DataTable.Data>
                                         <DataTable.Data><Label color="blue" horizontal>{_.size(item.templates)}</Label></DataTable.Data>
-                                        <DataTable.Data>{item.createdAt && StageUtils.formatTimestamp(item.createdAt)}</DataTable.Data>
+                                        <DataTable.Data>{item.createdAt && StageUtils.Time.formatTimestamp(item.createdAt)}</DataTable.Data>
                                         <DataTable.Data>{item.creator}</DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
                                             {item.custom ?

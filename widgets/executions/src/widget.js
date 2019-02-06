@@ -64,9 +64,9 @@ Stage.defineWidget({
             items: _.map (executions.items,(item)=>{
                 return Object.assign({},item,{
                     blueprint_id: _.get(executionIdToBlueprintIdMap, item.id, item.blueprint_id),
-                    created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
-                    scheduled_for: Stage.Utils.formatTimestamp(item.scheduled_for),
-                    ended_at: Stage.Utils.formatTimestamp(item.ended_at),
+                    created_at: Stage.Utils.Time.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
+                    scheduled_for: Stage.Utils.Time.formatTimestamp(item.scheduled_for),
+                    ended_at: Stage.Utils.Time.formatTimestamp(item.ended_at),
                     isSelected: item.id === selectedExecution
                 })
             }),

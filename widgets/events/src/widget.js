@@ -118,7 +118,7 @@ Stage.defineWidget({
                                             item.reported_timestamp + item.deployment_id + item.type + item.execution_id);
                 return Object.assign({}, item, {
                     id: id,
-                    timestamp: Stage.Utils.formatTimestamp(item.timestamp),
+                    timestamp: Stage.Utils.Time.formatTimestamp(item.timestamp),
                     isSelected: id === SELECTED_EVENT_ID || (widget.configuration.showLogs && id === SELECTED_LOG_ID)
                 })
             }),

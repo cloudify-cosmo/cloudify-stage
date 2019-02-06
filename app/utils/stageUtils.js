@@ -3,13 +3,26 @@
  */
 
 import md5 from 'blueimp-md5';
-import Const from './consts';
 import {getToolbox} from './Toolbox';
 import _ from 'lodash';
 
 import GenericField from './../components/basic/form/GenericField';
 
+import ExecutionUtils from './shared/ExecutionUtils';
+import JsonUtils from './shared/JsonUtils';
+import TimeUtils from './shared/TimeUtils';
+import UrlUtils from './shared/UrlUtils';
+
+import InfluxActions from './shared/InfluxActions';
+
 export default class StageUtils {
+
+    static Execution = ExecutionUtils;
+    static Json = JsonUtils;
+    static Time = TimeUtils;
+    static Url = UrlUtils;
+
+    static InfluxActions = InfluxActions;
 
     static makeCancelable(promise) {
         let hasCanceled_ = false;
@@ -31,14 +44,18 @@ export default class StageUtils {
         };
     };
 
+    /**
+     * @deprecated use TimeUtils.formatTimestamp
+     */
     static formatTimestamp(timestamp, outputPattern='DD-MM-YYYY HH:mm', inputPattern='YYYY-MM-DD HH:mm:ss') {
-        let timestampMoment = moment.utc(timestamp, inputPattern).local();
-        return timestampMoment.isValid() ? timestampMoment.format(outputPattern) : '';
+        return TimeUtils.formatTimestamp(timestamp, outputPattern, inputPattern);
     }
 
+    /**
+     * @deprecated use TimeUtils.formatTimestamp
+     */
     static formatLocalTimestamp(timestamp, outputPattern='DD-MM-YYYY HH:mm', inputPattern=undefined) {
-        let timestampMoment = moment(timestamp, inputPattern);
-        return timestampMoment.isValid() ? timestampMoment.format(outputPattern) : '';
+        return TimeUtils.formatTimestamp(timestamp, outputPattern, inputPattern);
     }
 
     /**
@@ -81,30 +98,32 @@ export default class StageUtils {
         return md5(str);
     }
 
+    /**
+     * @deprecated use UrlUtils.url
+     */
     static url(path) {
-        if (path === Const.HOME_PAGE_PATH) {
-            return Const.CONTEXT_PATH;
-        }
-
-        return Const.CONTEXT_PATH + (_.startsWith(path, '/') ? '' : '/') + path;
+        return UrlUtils.url(path);
     }
 
+    /**
+     * @deprecated use UrlUtils.isUrl
+     */
     static isUrl(str) {
-        // RegEx from: https://stackoverflow.com/questions/1410311/regular-expression-for-url-validation-in-javascript#15734347
-        const regexp =  /^(ftp|http|https):\/\/[^ "]+$/;
-
-        return regexp.test(str);
+        return UrlUtils.isUrl(str);
     }
 
+    /**
+     * @deprecated use UrlUtils.redirectToPage
+     */
     static redirectToPage(url) {
-        window.open(url, '_blank');
+        return UrlUtils.redirectToPage(url);
     }
 
+    /**
+     * @deprecated use UrlUtils.widgetResourceUrl
+     */
     static widgetResourceUrl(widgetId, internalPath, isCustom = true, addContextPath = true) {
-        return addContextPath
-            ? StageUtils.url(
-                `${isCustom ? Const.USER_DATA_PATH : Const.APP_DATA_PATH}/widgets/${widgetId}${_.startsWith(internalPath, '/') ? '' : '/'}${internalPath}`)
-            : `${isCustom ? Const.USER_DATA_PATH : Const.APP_DATA_PATH}/widgets/${widgetId}${_.startsWith(internalPath, '/') ? '' : '/'}${internalPath}`;
+        return UrlUtils.widgetResourceUrl(widgetId, internalPath, isCustom, addContextPath);
     }
 
     static buildConfig(widgetDefinition) {

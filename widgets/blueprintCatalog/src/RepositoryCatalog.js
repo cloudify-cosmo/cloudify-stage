@@ -34,7 +34,7 @@ export default class extends React.Component{
                             <Grid className="contentBlock">
                                 <Grid.Row className="bottomDivider">
                                     <Grid.Column width="16">
-                                        <Image src={Stage.Utils.url(item.image_url)}/>
+                                        <Image src={Stage.Utils.Url.url(item.image_url)}/>
                                         <Header><a href={item.html_url} target="_blank">{item.name}</a></Header>
                                     </Grid.Column>
                                 </Grid.Row>

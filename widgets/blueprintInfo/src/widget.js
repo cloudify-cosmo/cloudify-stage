@@ -54,8 +54,8 @@ Stage.defineWidget({
                     return actions.doGetBlueprintDeployments(blueprintId).then(deps => {
                         return {
                             ...data,
-                            created_at: Stage.Utils.formatTimestamp(data.created_at),
-                            updated_at: Stage.Utils.formatTimestamp(data.updated_at),
+                            created_at: Stage.Utils.Time.formatTimestamp(data.created_at),
+                            updated_at: Stage.Utils.Time.formatTimestamp(data.updated_at),
                             deployments: deps.items.length
                         }
                     });

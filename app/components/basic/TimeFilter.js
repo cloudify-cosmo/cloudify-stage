@@ -8,6 +8,7 @@ import {Button, Dropdown, Grid, Label, List, Segment, Table} from 'semantic-ui-r
 import {ApproveButton, CancelButton} from './modal/ModalButtons';
 import Form from './form/Form';
 import Popup from './Popup';
+import StageUtils from './../../utils/stageUtils';
 
 /**
  * TimeFilter is a component showing time range and optionally time resolution selectors
@@ -478,12 +479,12 @@ export default class TimeFilter extends React.Component {
                                             <Table.Row>
                                                 <Table.Cell>
                                                     <Form.Input type='number' name="resolution" fluid
-                                                                max={Stage.Common.TimeConsts.MAX_TIME_RESOLUTION_VALUE}
-                                                                min={Stage.Common.TimeConsts.MIN_TIME_RESOLUTION_VALUE}
+                                                                max={StageUtils.Time.MAX_TIME_RESOLUTION_VALUE}
+                                                                min={StageUtils.Time.MIN_TIME_RESOLUTION_VALUE}
                                                                 value={this.state.resolution} onChange={this._handleInputChange.bind(this)} />
                                                 </Table.Cell>
                                                 <Table.Cell>
-                                                    <Dropdown search options={Stage.Common.TimeConsts.TIME_RESOLUTION_UNITS} name="unit" selection
+                                                    <Dropdown search options={StageUtils.Time.TIME_RESOLUTION_UNITS} name="unit" selection
                                                               fluid value={this.state.unit} onChange={this._handleInputChange.bind(this)} />
                                                 </Table.Cell>
                                                 <Table.Cell collapsing>

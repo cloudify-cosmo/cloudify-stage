@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Consts from '../../../utils/consts';
-import {Modal, Icon, ErrorMessage, DataTable, Checkmark, ApproveButton, CancelButton} from '../index';
+import {Modal, Icon, ErrorMessage, ExecutionStatus, DataTable, Checkmark, ApproveButton, CancelButton} from '../index';
 import StageUtils from '../../../utils/stageUtils';
 import {switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExecution} from '../../../actions/managers';
 
@@ -176,7 +176,7 @@ class MaintenanceModeModal extends Component {
                                                 <DataTable.Data>{item.id}</DataTable.Data>
                                                 <DataTable.Data><Checkmark value={item.is_system_workflow}/></DataTable.Data>
                                                 <DataTable.Data>
-                                                    <Stage.Common.ExecutionStatus item={item} onCancelExecution={this._cancelExecution.bind(this)}/>
+                                                    <ExecutionStatus execution={item} onCancelExecution={this._cancelExecution.bind(this)}/>
                                                 </DataTable.Data>
                                             </DataTable.Row>
                                         );

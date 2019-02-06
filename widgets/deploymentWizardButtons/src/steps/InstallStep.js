@@ -182,7 +182,7 @@ class InstallStepContent extends React.Component {
                 let tasks = [...this.state.tasks];
                 error = _.isString(error)
                     ? error
-                    : _.get(error, 'message', Stage.Common.JsonUtils.getStringValue(error));
+                    : _.get(error, 'message', Stage.Utils.Json.getStringValue(error));
 
                 tasks[index].changeToFailed(error);
 

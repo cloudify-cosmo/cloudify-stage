@@ -6,7 +6,7 @@ import StageUtils from './stageUtils';
 
 export default class StyleLoader {
     constructor(stylePath) {
-        this.path = StageUtils.url(stylePath);
+        this.path = StageUtils.Url.url(stylePath);
         this.loaded = false;
     }
 

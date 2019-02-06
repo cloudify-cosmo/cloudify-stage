@@ -16,7 +16,7 @@ export default class extends React.Component {
         const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
         const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
         let {CancelButton, CopyToClipboardButton, DataTable, Modal, ParameterValue, ParameterValueDescription} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
+        let {Json} = Stage.Utils;
 
         let instance = this.props.instance;
 
@@ -38,7 +38,7 @@ export default class extends React.Component {
                             <h3>
                                 Relationships&nbsp;&nbsp;
                                 <CopyToClipboardButton content='Copy'
-                                                       text={JsonUtils.stringify(instance.relationships, true)} />
+                                                       text={Json.stringify(instance.relationships, true)} />
                             </h3>
                             <DataTable className="nodeInstanceRelationshipsTable"
                                        totalSize={relationshipsTotalSize}
@@ -65,7 +65,7 @@ export default class extends React.Component {
                             <h3>
                                 Runtime properties&nbsp;&nbsp;
                                 <CopyToClipboardButton content='Copy'
-                                                       text={JsonUtils.stringify(instance.runtime_properties, true)} />
+                                                       text={Json.stringify(instance.runtime_properties, true)} />
                             </h3>
                             <DataTable className="nodeInstanceRuntimePropertiesTable"
                                        totalSize={runtimePropertiesTotalSize}

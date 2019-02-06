@@ -2,7 +2,9 @@
  * Created by jakubniezgoda on 31/01/2017.
  */
 
-class ExecutionUtils {
+import _ from 'lodash';
+
+export default class ExecutionUtils {
     /* Execution resume types */
     static FORCE_RESUME_ACTION = 'force-resume';
     static RESUME_ACTION = 'resume';
@@ -100,8 +102,3 @@ class ExecutionUtils {
         return ExecutionUtils.STATUS_ICON_PARAMS[ExecutionUtils.getExecutionStatusGroup(execution)];
     }
 }
-
-Stage.defineCommon({
-    name: 'ExecutionUtils',
-    common: ExecutionUtils
-});

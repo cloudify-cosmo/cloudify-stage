@@ -25,7 +25,7 @@ class BlueprintStepActions extends React.Component {
                 let errors = {};
 
                 if (!stepData.blueprintFile) {
-                    if (_.isEmpty(blueprintUrl) || !Stage.Utils.isUrl(blueprintUrl)) {
+                    if (_.isEmpty(blueprintUrl) || !Stage.Utils.Url.isUrl(blueprintUrl)) {
                         errors['blueprintUrl'] = 'Blueprint package';
                     }
                 }
@@ -38,7 +38,7 @@ class BlueprintStepActions extends React.Component {
                     errors['blueprintFileName'] = 'Blueprint YAML file';
                 }
 
-                if (!_.isEmpty(imageUrl) && !Stage.Utils.isUrl(imageUrl)) {
+                if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(imageUrl)) {
                     errors['imageUrl'] = 'Blueprint icon';
                 }
 

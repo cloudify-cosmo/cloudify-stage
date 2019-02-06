@@ -66,7 +66,7 @@ Stage.defineWidget({
 
         return actions.doGetRepos(params)
             .then(data => {
-                const defaultImagePath = Stage.Utils.widgetResourceUrl('blueprintCatalog', Consts.DEFAULT_IMAGE, false, false);
+                const defaultImagePath = Stage.Utils.Url.widgetResourceUrl('blueprintCatalog', Consts.DEFAULT_IMAGE, false, false);
                 let repos = data.items;
                 let source = data.source;
                 let total = data.total_count;
@@ -106,8 +106,8 @@ Stage.defineWidget({
                     name: item.name,
                     description: item.description,
                     url: item.url,
-                    created_at: Stage.Utils.formatTimestamp(item.created_at),
-                    updated_at: Stage.Utils.formatTimestamp(item.updated_at),
+                    created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
+                    updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
                     image_url: item.image_url,
                     readme_url: data.source === Consts.GITHUB_DATA_SOURCE
                         ? `/github/content/${widget.configuration.username}/${item.name}/master/README.md`

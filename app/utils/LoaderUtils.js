@@ -13,7 +13,7 @@ export default class LoaderUtils {
     }
 
     static fetchResource(path, isUserResource, parseResponse = true) {
-        return fetch(StageUtils.url(LoaderUtils.getResourceUrl(path, isUserResource)), { credentials: 'same-origin' })
+        return fetch(StageUtils.Url.url(LoaderUtils.getResourceUrl(path, isUserResource)), { credentials: 'same-origin' })
             .then((response) => {
                 if (response.status >= 400) {
                     console.error(response.statusText);

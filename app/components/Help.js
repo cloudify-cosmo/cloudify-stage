@@ -14,7 +14,7 @@ export default class Help extends Component {
     }
 
     render() {
-        let {redirectToPage} = StageUtils;
+        let {redirectToPage} = StageUtils.Url;
 
         return (
             <Dropdown item pointing='top right' trigger={<Icon name='help circle' />} className='helpMenu' >

@@ -8,7 +8,7 @@ import StageUtils from './stageUtils';
 
 export default class ConfigLoader {
     static load() {
-        return fetch(StageUtils.url('/config'))
+        return fetch(StageUtils.Url.url('/config'))
             .then(response => response.json())
             .catch((e)=>{
                 console.log('Error fetching configuration file',e);
