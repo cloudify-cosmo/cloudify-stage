@@ -6,9 +6,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Consts from '../../../utils/consts';
-import {Modal, Icon, ErrorMessage, ExecutionStatus, DataTable, Checkmark, ApproveButton, CancelButton} from '../index';
+import {Modal, Icon, ErrorMessage, ExecutionStatus, DataTable, Button, Checkmark, ApproveButton, CancelButton} from '../index';
 import StageUtils from '../../../utils/stageUtils';
 import {switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExecution} from '../../../actions/managers';
+import ExecutionUtils from '../../../utils/shared/ExecutionUtils';
 
 
 const POLLING_INTERVAL = 2000;
@@ -23,9 +24,10 @@ class MaintenanceModeModal extends Component {
     }
 
     static initialState = {
+        cancelling: [],
         loading: false,
         error: '',
-    }
+    };
 
     static propTypes = {
         show: PropTypes.bool.isRequired,
@@ -130,12 +132,15 @@ class MaintenanceModeModal extends Component {
     }
 
     _cancelExecution(execution, action) {
-        this.props.onCancelExecution(execution, action).then(() => {
-            this._loadPendingExecutions();
-            this.setState({error:''});
-        }).catch((err) => {
-            this.setState({error:err.message});
-        });
+        this.setState({cancelling: [...this.state.cancelling, execution.id]}, () =>
+            this.props.onCancelExecution(execution, action)
+                .then(() => {
+                    this._loadPendingExecutions();
+                    this.setState({error:'', cancelling: _.without(this.state.cancelling, execution.id)});
+                }).catch((err) => {
+                    this.setState({error:err.message});
+                })
+        );
     }
 
     render() {
@@ -159,12 +164,13 @@ class MaintenanceModeModal extends Component {
 
                         {!_.isEmpty(this.props.activeExecutions.items) &&
                             <DataTable>
-                                <DataTable.Column label="Blueprint" width="20%"/>
-                                <DataTable.Column label="Deployment" width="20%"/>
-                                <DataTable.Column label="Workflow" width="20%"/>
+                                <DataTable.Column label="Blueprint" width="15%"/>
+                                <DataTable.Column label="Deployment" width="15%"/>
+                                <DataTable.Column label="Workflow" width="15%"/>
                                 <DataTable.Column label="Id" width="20%"/>
                                 <DataTable.Column label="System" width="5%"/>
                                 <DataTable.Column label="Status" width="15%"/>
+                                <DataTable.Column label="Action" width="15%"/>
 
                                 {
                                     this.props.activeExecutions.items.map((item) => {
@@ -176,7 +182,14 @@ class MaintenanceModeModal extends Component {
                                                 <DataTable.Data>{item.id}</DataTable.Data>
                                                 <DataTable.Data><Checkmark value={item.is_system_workflow}/></DataTable.Data>
                                                 <DataTable.Data>
-                                                    <ExecutionStatus execution={item} onCancelExecution={this._cancelExecution.bind(this)}/>
+                                                    <ExecutionStatus execution={item} />
+                                                </DataTable.Data>
+                                                <DataTable.Data>
+                                                    <Button content='Cancel' icon='cancel'
+                                                            loading={_.includes(this.state.cancelling, item.id)}
+                                                            disabled={_.includes(this.state.cancelling, item.id)}
+                                                            name={ExecutionUtils.CANCEL_ACTION}
+                                                            onClick={() => this._cancelExecution(item, ExecutionUtils.CANCEL_ACTION)} />
                                                 </DataTable.Data>
                                             </DataTable.Row>
                                         );
@@ -234,7 +247,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         onFetchActiveExecutions: ()=>dispatchProps.onFetchActiveExecutions(stateProps.manager),
         onCancelExecution: (execution, action)=>dispatchProps.onCancelExecution(stateProps.manager,execution, action)
     });
-}
+};
 
 export default connect(
     mapStateToProps,
