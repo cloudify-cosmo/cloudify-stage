@@ -144,8 +144,9 @@ export default class TenantsTable extends React.Component {
                                         </DataTable.Data>
                                     </DataTable.Row>
 
-                                    <DataTable.DataExpandable>
-                                        <TenantDetails tenant={tenant} toolbox={this.props.toolbox} onError={(err)=>this.setState({error: err})} />
+                                    <DataTable.DataExpandable key={tenant.name}>
+                                        <TenantDetails tenant={tenant}
+                                                       toolbox={this.props.toolbox} onError={(err)=>this.setState({error: err})} />
                                     </DataTable.DataExpandable>
                                 </DataTable.RowExpandable>
                             );

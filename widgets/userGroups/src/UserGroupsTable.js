@@ -195,7 +195,7 @@ export default class UserGroupsTable extends React.Component {
                                             <MenuAction item={item} onSelectAction={this._showModal.bind(this)}/>
                                         </DataTable.Data>
                                     </DataTable.Row>
-                                    <DataTable.DataExpandable>
+                                    <DataTable.DataExpandable key={item.name}>
                                         <GroupDetails data={item} groups={this.props.data.items} toolbox={this.props.toolbox} onError={this._handleError.bind(this)}/>
                                     </DataTable.DataExpandable>
                                 </DataTable.RowExpandable>

@@ -85,7 +85,7 @@ export default class Templates extends Component {
                                         </DataTable.Data>
                                     </DataTable.Row>
 
-                                    <DataTable.DataExpandable>
+                                    <DataTable.DataExpandable key={item.id}>
                                         <Segment.Group horizontal>
                                             <PageList pages={item.pages} custom={item.custom}
                                                    onDelete={page => this.props.onRemoveTemplatePage(item, page)} style={{width: '33%'}}/>

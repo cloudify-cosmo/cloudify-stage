@@ -69,7 +69,7 @@ export default class Pages extends Component {
                                         </DataTable.Data>
                                     </DataTable.Row>
 
-                                    <DataTable.DataExpandable>
+                                    <DataTable.DataExpandable key={item.id}>
                                         <TemplateList templates={item.templates}/>
                                     </DataTable.DataExpandable>
 
