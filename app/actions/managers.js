@@ -2,12 +2,14 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
+import { push } from 'connected-react-router';
+
 import * as types from './types';
 import Auth from '../utils/auth';
 import Consts from '../utils/consts';
-import { push } from 'connected-react-router';
 import Manager from '../utils/Manager';
-import ExecutionUtils from './../utils/shared/ExecutionUtils';
+import ExecutionUtils from '../utils/shared/ExecutionUtils';
+import {clearContext} from './context';
 
 function requestLogin() {
     return {
