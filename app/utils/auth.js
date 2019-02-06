@@ -13,7 +13,7 @@ export default class Auth {
 
     static login(username,password) {
         var external = new External({basicAuth: btoa(`${username}:${password}`)});
-        return external.doPost(StageUtils.url('/auth/login'), null, null, true, null, true);
+        return external.doPost(StageUtils.Url.url('/auth/login'), null, null, true, null, true);
     }
 
     static getUserData(managerData){

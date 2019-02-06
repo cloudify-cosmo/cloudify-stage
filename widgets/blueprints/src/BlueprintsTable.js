@@ -54,7 +54,7 @@ export default class BlueprintsTable extends React.Component{
                         return (
                             <DataTable.Row id={`${tableName}_${item.id}`} key={item.id} selected={item.isSelected} onClick={()=>this.props.onSelectBlueprint(item)}>
                                 <DataTable.Data>
-                                    <Image src={Stage.Utils.url(`/ba/image/${item.id}`)} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
+                                    <Image src={Stage.Utils.Url.url(`/ba/image/${item.id}`)} width="30px" height="auto" inline/> <a className='blueprintName' href="javascript:void(0)">{item.id}</a>
                                     <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility)=>this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>

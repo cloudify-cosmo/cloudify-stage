@@ -83,7 +83,7 @@ export default class MetricFilter extends React.Component {
         let nodeInstanceId = filter && filter.nodeInstanceId;
 
         this.setState({loading: true, metrics: [], error: null});
-        let actions = new Stage.Common.InfluxActions(this.toolbox);
+        let actions = new StageUtils.InfluxActions(this.toolbox);
         actions.doGetMetrics(deploymentId, nodeId, nodeInstanceId)
             .then((data) => {
                 let metrics = _.chain(data ||  {})

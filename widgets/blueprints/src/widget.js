@@ -64,8 +64,8 @@ Stage.defineWidget({
         return Object.assign({}, blueprintsData, {
             items: _.map(blueprintsData.items,(item) => {
                 return Object.assign({}, item, {
-                    created_at: Stage.Utils.formatTimestamp(item.created_at),
-                    updated_at: Stage.Utils.formatTimestamp(item.updated_at),
+                    created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
+                    updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
                     isSelected: selectedBlueprint === item.id
                 })
             }),

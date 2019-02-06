@@ -64,7 +64,7 @@ export default class UpdateDetailsModal extends React.Component {
 
     render() {
         let {CancelButton, Form, Header, Icon, Modal, Table, Popup, ParameterValue, ParameterValueDescription} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
+        let {Json} = Stage.Utils;
 
         let deploymentUpdate = this.state.deploymentUpdate;
         let oldInputs = Array.sort(_.keys(deploymentUpdate.old_inputs));
@@ -124,9 +124,9 @@ export default class UpdateDetailsModal extends React.Component {
                                             {
                                                 _.map(allInputs, (input) => {
                                                     let oldValue = _.get(deploymentUpdate.old_inputs, input, '');
-                                                    let oldValueString = JsonUtils.getStringValue(oldValue);
+                                                    let oldValueString = Json.getStringValue(oldValue);
                                                     let newValue = _.get(deploymentUpdate.new_inputs, input, '');
-                                                    let newValueString = JsonUtils.getStringValue(newValue);
+                                                    let newValueString = Json.getStringValue(newValue);
                                                     let inputChanged = !_.isEqual(oldValueString, newValueString);
 
                                                     return (

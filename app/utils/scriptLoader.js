@@ -6,7 +6,7 @@ import StageUtils from './stageUtils';
 
 export default class ScriptLoader {
     constructor(scriptPath) {
-        this.path = StageUtils.url(scriptPath);
+        this.path = StageUtils.Url.url(scriptPath);
         this.loaded = false;
     }
 

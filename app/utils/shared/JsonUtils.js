@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 03/03/2017.
  */
 
-class JsonUtils {
+export default class JsonUtils {
     static stringify(value, indented = false, ignoreEmpty = false) {
         if (!ignoreEmpty && value === '') {
             return '';
@@ -97,8 +97,3 @@ class JsonUtils {
         }
     }
 }
-
-Stage.defineCommon({
-    name: 'JsonUtils',
-    common: JsonUtils
-});

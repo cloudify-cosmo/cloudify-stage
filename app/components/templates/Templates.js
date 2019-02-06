@@ -68,7 +68,7 @@ export default class Templates extends Component {
                                             }
                                         </DataTable.Data>
                                         <DataTable.Data><Label color="green" horizontal>{tenantsCount}</Label></DataTable.Data>
-                                        <DataTable.Data>{item.createdAt && StageUtils.formatTimestamp(item.createdAt)}</DataTable.Data>
+                                        <DataTable.Data>{item.createdAt && StageUtils.Time.formatTimestamp(item.createdAt)}</DataTable.Data>
                                         <DataTable.Data>{item.creator}</DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
                                             {item.custom &&

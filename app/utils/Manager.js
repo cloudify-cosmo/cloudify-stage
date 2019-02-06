@@ -60,7 +60,7 @@ export default class Manager extends Internal {
             var queryString =  data ? (url.indexOf('?') > 0?'&':'?') + $.param(data, true) : '';
             var urlInServer = encodeURIComponent(url + queryString);
 
-            return StageUtils.url(`/sp/?su=${urlInServer}`);
+            return StageUtils.Url.url(`/sp/?su=${urlInServer}`);
         }
     }
 

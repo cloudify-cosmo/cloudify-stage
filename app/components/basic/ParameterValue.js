@@ -49,13 +49,12 @@ export default class ParameterValue extends Component {
     }
 
     getValueElement(stringValue) {
-        let {JsonUtils} = Stage.Common;
-        let {isUrl} = StageUtils;
+        let {Url, Json} = StageUtils;
 
         const commonStyle = {padding: '0.5em', whiteSpace: 'pre-wrap', wordBreak: 'break-word'};
         const typedValue = this.props.value;
 
-        switch (JsonUtils.toType(typedValue)) {
+        switch (Json.toType(typedValue)) {
             case 'array':
             case 'object':
                 return <HighlightText className='json'>{stringValue}</HighlightText>;
@@ -66,7 +65,7 @@ export default class ParameterValue extends Component {
             case 'null':
                 return <code style={commonStyle} className='hljs-keyword'>{stringValue}</code>;
             case 'string':
-                return isUrl(stringValue)
+                return Url.isUrl(stringValue)
                     ? <a target="_blank" href={stringValue}>{stringValue}</a>
                     : <code style={commonStyle} className='hljs-string'>{stringValue}</code>;
             default:
@@ -75,11 +74,11 @@ export default class ParameterValue extends Component {
     }
 
     render() {
-        let {JsonUtils} = Stage.Common;
+        let {Json} = StageUtils;
 
         const stringValue = _.isObject(this.props.value)
-            ? JsonUtils.stringify(this.props.value, true)
-            : JsonUtils.getStringValue(this.props.value);
+            ? Json.stringify(this.props.value, true)
+            : Json.getStringValue(this.props.value);
 
         return this.props.showCopyButton
             ?

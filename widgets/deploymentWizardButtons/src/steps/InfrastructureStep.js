@@ -76,7 +76,7 @@ class InfrastructureStepContent extends React.Component {
 
     render() {
         let {Button, Form, Image} = Stage.Basic;
-        const {widgetResourceUrl} = Stage.Utils;
+        const {widgetResourceUrl} = Stage.Utils.Url;
 
         const blueprintFileName = this.state.stepData.blueprintFileName;
         const platformsYaml = ['aws.yaml', 'gcp.yaml', 'openstack.yaml', 'azure.yaml'];

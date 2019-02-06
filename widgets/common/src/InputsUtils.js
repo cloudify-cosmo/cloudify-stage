@@ -15,15 +15,15 @@ class InputsUtils {
     /* Helper functions */
 
     static getEnhancedStringValue(value) {
-        let {JsonUtils} = Stage.Common;
-        let stringValue = JsonUtils.getStringValue(value);
+        let {Json} = Stage.Utils;
+        let stringValue = Json.getStringValue(value);
 
         if (stringValue === '') {
             return InputsUtils.EMPTY_STRING;
         } else {
-            let valueType = JsonUtils.toType(value);
-            let castedValue = JsonUtils.getTypedValue(stringValue);
-            let castedValueType = JsonUtils.toType(castedValue);
+            let valueType = Json.toType(value);
+            let castedValue = Json.getTypedValue(stringValue);
+            let castedValueType = Json.toType(castedValue);
 
             if (valueType !== castedValueType) {
                 stringValue = `"${stringValue}"`;
@@ -61,17 +61,17 @@ class InputsUtils {
 
     static getRevertToDefaultIcon(name, value, defaultValue, inputChangeFunction) {
         let {RevertToDefaultIcon} = Stage.Basic;
-        let {JsonUtils} = Stage.Common;
+        let {Json} = Stage.Utils;
 
-        const stringValue = JsonUtils.getStringValue(value);
+        const stringValue = Json.getStringValue(value);
         const typedValue = _.startsWith(stringValue, InputsUtils.STRING_VALUE_SURROUND_CHAR) &&
                            _.endsWith(stringValue, InputsUtils.STRING_VALUE_SURROUND_CHAR) &&
                            _.size(stringValue) > 1
             ? stringValue.slice(1, -1)
-            : JsonUtils.getTypedValue(value);
+            : Json.getTypedValue(value);
 
         const typedDefaultValue = defaultValue;
-        const cloudifyTypedDefaultValue = InputsUtils.getInputFieldInitialValue(defaultValue, JsonUtils.toCloudifyType(typedDefaultValue));
+        const cloudifyTypedDefaultValue = InputsUtils.getInputFieldInitialValue(defaultValue, Json.toCloudifyType(typedDefaultValue));
 
         const revertToDefault = () => inputChangeFunction(null, {name, value: cloudifyTypedDefaultValue});
 
@@ -183,7 +183,7 @@ class InputsUtils {
             const inputValue = inputs[inputName];
 
             if (!_.isUndefined(expectedValueType) && !_.isUndefined(inputValue)) {
-                const inputValueType = Stage.Common.JsonUtils.toCloudifyType(inputValue);
+                const inputValueType = Stage.Utils.Json.toCloudifyType(inputValue);
                 if ((expectedValueType === 'boolean' || expectedValueType === 'integer') &&
                     (expectedValueType !== inputValueType)) {
                     errors.push(inputName);
@@ -220,12 +220,12 @@ class InputsUtils {
     /* Inputs for REST API (typed values) */
 
     static getInputsToSend(inputs, inputsValues, inputsWithoutValues) {
-        let {JsonUtils} = Stage.Common;
+        let {Json} = Stage.Utils;
         let deploymentInputs = {};
 
         _.forEach(inputs, (inputObj, inputName) => {
             let stringInputValue = inputsValues[inputName];
-            let typedInputValue = JsonUtils.getTypedValue(stringInputValue);
+            let typedInputValue = Json.getTypedValue(stringInputValue);
 
             if (_.isEmpty(stringInputValue) && _.isNil(inputObj.default)) {
                 inputsWithoutValues[inputName] = true;

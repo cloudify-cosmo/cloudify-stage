@@ -33,8 +33,8 @@ Stage.defineWidget({
         formattedData = Object.assign({}, formattedData, {
             items: _.map (formattedData.items, (item) => {
                 return Object.assign({}, item, {
-                    created_at: Stage.Utils.formatTimestamp(item.created_at),
-                    updated_at: Stage.Utils.formatTimestamp(item.updated_at)
+                    created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
+                    updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at)
                 })
             }),
             total : _.get(data, 'metadata.pagination.total', 0)

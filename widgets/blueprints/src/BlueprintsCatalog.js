@@ -40,7 +40,7 @@ export default class BlueprintsCatalog extends React.Component{
                             <Grid>
                                 <Grid.Row className="bottomDivider">
                                     <Grid.Column width="16">
-                                        <Image src={Stage.Utils.url(`/ba/image/${item.id}`)}/>
+                                        <Image src={Stage.Utils.Url.url(`/ba/image/${item.id}`)}/>
                                         <Header><a href="javascript:void(0)" className="breakWord">{item.id}</a></Header>
                                         <ResourceVisibility visibility={item.visibility} onSetVisibility={(visibility)=>this.props.onSetVisibility(item.id, visibility)} allowedSettingTo={this.props.allowedSettingTo} className="rightFloated"/>
                                     </Grid.Column>

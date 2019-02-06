@@ -57,7 +57,7 @@ Stage.defineWidget({
         // Data conversion to recharts format
         // As a reference time points list, metric no. REFERENCE_METRIC_INDEX is taken
         for (let i = 0; i < NUMBER_OF_POINTS; i++) {
-            let point = { [xDataKey]: Stage.Utils.formatTimestamp(data[REFERENCE_METRIC_INDEX].points[i][TIME_INDEX], TIME_FORMAT, null) };
+            let point = { [xDataKey]: Stage.Utils.Time.formatTimestamp(data[REFERENCE_METRIC_INDEX].points[i][TIME_INDEX], TIME_FORMAT, null) };
             for (let j = 0; j < NUMBER_OF_METRICS; j++) {
                 if (data[j].points[i] &&
                     data[REFERENCE_METRIC_INDEX].points[i][TIME_INDEX] === data[j].points[i][TIME_INDEX])
@@ -187,7 +187,7 @@ Stage.defineWidget({
     },
 
     fetchData: function(widget, toolbox, params) {
-        const actions = new Stage.Common.InfluxActions(toolbox);
+        const actions = new Stage.Utils.InfluxActions(toolbox);
         const deploymentId = params.deploymentId;
         const nodeId = params.nodeId;
         const nodeInstanceId = params.nodeInstanceId;

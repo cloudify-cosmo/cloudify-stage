@@ -91,9 +91,9 @@ Stage.defineWidget({
                         return Object.assign({},item,{
                             nodeInstancesCount: !!nodeInstanceData[item.id] ? nodeInstanceData[item.id].count : 0,
                             nodeInstancesStates: !!nodeInstanceData[item.id] ? nodeInstanceData[item.id].states : {},
-                            created_at: Stage.Utils.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
-                            updated_at: Stage.Utils.formatTimestamp(item.updated_at),
-                            executions: _.filter(executionsData[item.id], Stage.Common.ExecutionUtils.isActiveExecution),
+                            created_at: Stage.Utils.Time.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
+                            updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
+                            executions: _.filter(executionsData[item.id], Stage.Utils.Execution.isActiveExecution),
                             lastExecution: _.first(executionsData[item.id]),
                             workflows
                         })

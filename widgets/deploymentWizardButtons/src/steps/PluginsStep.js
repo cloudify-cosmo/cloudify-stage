@@ -29,8 +29,8 @@ class PluginsStepActions extends React.Component {
                 _.forEach(plugins, (pluginObject, pluginName) => {
                     const wagonUrl = pluginObject.wagonFile ? '' : pluginObject.wagonUrl;
                     const yamlUrl = pluginObject.yamlFile ? '' : pluginObject.yamlUrl;
-                    const wagonNotValid = _.isEmpty(wagonUrl) ? !pluginObject.wagonFile : !Stage.Utils.isUrl(wagonUrl);
-                    const yamlNotValid = _.isEmpty(yamlUrl) ? !pluginObject.yamlFile : !Stage.Utils.isUrl(yamlUrl);
+                    const wagonNotValid = _.isEmpty(wagonUrl) ? !pluginObject.wagonFile : !Stage.Utils.Url.isUrl(wagonUrl);
+                    const yamlNotValid = _.isEmpty(yamlUrl) ? !pluginObject.yamlFile : !Stage.Utils.Url.isUrl(yamlUrl);
 
                     if (wagonNotValid || yamlNotValid) {
                         missingFields.push(pluginName);

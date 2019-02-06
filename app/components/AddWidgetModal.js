@@ -216,7 +216,7 @@ export default class AddWidgetModal extends Component {
                                 })}
                             </Menu>)
 
-        const imageSrc = (widget) => StageUtils.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
+        const imageSrc = (widget) => StageUtils.Url.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
 
         return (
             <div className={this.props.className}>

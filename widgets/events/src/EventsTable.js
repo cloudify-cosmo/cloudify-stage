@@ -86,7 +86,8 @@ export default class EventsTable extends React.Component {
     render() {
         const NO_DATA_MESSAGE = 'There are no Events/Logs available. Probably there\'s no deployment created, yet.';
         let {CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Popup} = Stage.Basic;
-        let {JsonUtils, EventUtils} = Stage.Common;
+        let {EventUtils} = Stage.Common;
+        let {Json} = Stage.Utils;
         const EmptySpace = () => <span>&nbsp;&nbsp;</span>;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
@@ -205,12 +206,12 @@ export default class EventsTable extends React.Component {
                                                 <Popup.Trigger>
                                                     <span>
                                                         {
-                                                           this.getHighlightedText(_.truncate(JsonUtils.stringify(item.message, false), truncateOptions), 'messageText')
+                                                           this.getHighlightedText(_.truncate(Json.stringify(item.message, false), truncateOptions), 'messageText')
                                                         }
                                                     </span>
                                                 </Popup.Trigger>
                                                 <Popup.Content>
-                                                    <HighlightText>{JsonUtils.stringify(item.message, true)}</HighlightText>
+                                                    <HighlightText>{Json.stringify(item.message, true)}</HighlightText>
                                                     <CopyToClipboardButton content='Copy Message' text={item.message} className='rightFloated' />
                                                 </Popup.Content>
                                             </Popup>

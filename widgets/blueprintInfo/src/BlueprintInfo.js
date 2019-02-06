@@ -37,7 +37,7 @@ export default class BlueprintInfo extends React.Component {
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
                 <Grid>
                     <Grid.Row className="bottomDivider">
-                        <Grid.Column width="4"><Image src={Stage.Utils.url(`/ba/image/${blueprint.id}`)} centered={true}/></Grid.Column>
+                        <Grid.Column width="4"><Image src={Stage.Utils.Url.url(`/ba/image/${blueprint.id}`)} centered={true}/></Grid.Column>
                         <Grid.Column width="12">
                             <h3 className="ui icon header verticalCenter">
                                 <a className="underline blueprintInfoName" href="javascript:void(0)">{blueprint.id}</a>

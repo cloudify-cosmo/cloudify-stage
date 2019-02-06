@@ -21,7 +21,7 @@ export default class ErrorCausesModal extends React.Component {
     };
 
     render() {
-        let {JsonUtils} = Stage.Common;
+        let {Json} = Stage.Utils;
         let {CancelButton, CopyToClipboardButton, Divider, Header, HighlightText, Message, Modal, Segment} = Stage.Basic;
         const numberOfErrorCauses = _.size(this.props.errorCauses);
 
@@ -53,7 +53,7 @@ export default class ErrorCausesModal extends React.Component {
                         }
                     </Modal.Content>
                     <Modal.Actions>
-                        <CopyToClipboardButton content='Copy Error Causes' text={JsonUtils.stringify(this.props.errorCauses, true)} />
+                        <CopyToClipboardButton content='Copy Error Causes' text={Json.stringify(this.props.errorCauses, true)} />
                         <CancelButton onClick={(e) => {e.stopPropagation(); this.props.onClose()}} content="Close" />
                     </Modal.Actions>
                 </Modal>

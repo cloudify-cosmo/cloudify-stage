@@ -2,7 +2,7 @@
  * Created by jakubniezgoda on 16/03/2017.
  */
 
-class InfluxActions {
+export default class InfluxActions {
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -31,8 +31,3 @@ class InfluxActions {
         return this.toolbox.getInternal().doGet('/monitor/query', {qSelect, qFrom, qWhere});
     }
 }
-
-Stage.defineCommon({
-    name: 'InfluxActions',
-    common: InfluxActions
-});

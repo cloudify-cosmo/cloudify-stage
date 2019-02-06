@@ -292,7 +292,7 @@ export default class Graph extends Component {
         });
 
         var xAxisDataFormatter = (value) => {
-            return StageUtils.formatLocalTimestamp(value, this.props.xAxisTimeFormat, this.props.dataTimeFormat)
+            return StageUtils.Time.formatLocalTimestamp(value, this.props.xAxisTimeFormat, this.props.dataTimeFormat)
         };
 
         return (

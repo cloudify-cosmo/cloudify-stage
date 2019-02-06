@@ -24,10 +24,10 @@ export default class ExecutionsTable extends React.Component {
         SHOW_EXECUTION_PARAMETERS: 'execution_parameters',
         SHOW_UPDATE_DETAILS: 'update_details',
         SHOW_ERROR_DETAILS: 'error_details',
-        RESUME_EXECUTION: Stage.Common.ExecutionUtils.FORCE_RESUME_ACTION,
-        CANCEL_EXECUTION: Stage.Common.ExecutionUtils.CANCEL_ACTION,
-        FORCE_CANCEL_EXECUTION: Stage.Common.ExecutionUtils.FORCE_CANCEL_ACTION,
-        KILL_CANCEL_EXECUTION: Stage.Common.ExecutionUtils.KILL_CANCEL_ACTION
+        RESUME_EXECUTION: Stage.Utils.Execution.FORCE_RESUME_ACTION,
+        CANCEL_EXECUTION: Stage.Utils.Execution.CANCEL_ACTION,
+        FORCE_CANCEL_EXECUTION: Stage.Utils.Execution.FORCE_CANCEL_ACTION,
+        KILL_CANCEL_EXECUTION: Stage.Utils.Execution.KILL_CANCEL_ACTION
     };
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -100,9 +100,11 @@ export default class ExecutionsTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Executions available. Probably there\'s no deployment created, yet.';
-        let {CancelButton, CopyToClipboardButton, DataTable, ErrorMessage, HighlightText, Icon, Menu, Modal,
-             ParameterValue, ParameterValueDescription, PopupMenu, Table} = Stage.Basic;
-        let {ExecutionStatus, ExecutionUtils, IdPopup, UpdateDetailsModal} = Stage.Common;
+        let {CancelButton, CopyToClipboardButton, DataTable, ErrorMessage, ExecutionStatus, HighlightText, Icon, Menu,
+             Modal, ParameterValue, ParameterValueDescription, PopupMenu, Table} = Stage.Basic;
+        let {IdPopup, UpdateDetailsModal} = Stage.Common;
+        let Utils = Stage.Utils;
+        
         const MenuAction = ExecutionsTable.MenuAction;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
@@ -167,7 +169,7 @@ export default class ExecutionsTable extends React.Component {
                                         <DryRunIcon execution={item} />
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <ExecutionStatus item={item} />
+                                        <ExecutionStatus execution={item} />
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
 
@@ -178,35 +180,35 @@ export default class ExecutionsTable extends React.Component {
                                                            name={MenuAction.SHOW_EXECUTION_PARAMETERS}
                                                            onClick={this._actionClick.bind(this, item)} />
                                                 {
-                                                    ExecutionUtils.isUpdateExecution(item) &&
+                                                    Utils.Execution.isUpdateExecution(item) &&
                                                     <Menu.Item content='Show Update Details'
                                                                icon='magnify'
                                                                name={MenuAction.SHOW_UPDATE_DETAILS}
                                                                onClick={this._actionClick.bind(this, item)} />
                                                 }
                                                 {
-                                                    ExecutionUtils.isFailedExecution(item) &&
+                                                    Utils.Execution.isFailedExecution(item) &&
                                                     <Menu.Item content='Show Error Details'
                                                                icon={<Icon name='exclamation circle' color='red' />}
                                                                name={MenuAction.SHOW_ERROR_DETAILS}
                                                                onClick={this._actionClick.bind(this, item)} />
                                                 }
                                                 {
-                                                    (ExecutionUtils.isCancelledExecution(item) || ExecutionUtils.isFailedExecution(item)) &&
+                                                    (Utils.Execution.isCancelledExecution(item) || Utils.Execution.isFailedExecution(item)) &&
                                                     <Menu.Item content='Resume'
                                                                icon={<Icon name='play' color='green' />}
                                                                name={MenuAction.RESUME_EXECUTION}
                                                                onClick={this._actionClick.bind(this, item)} />
                                                 }
                                                 {
-                                                    (ExecutionUtils.isActiveExecution(item) || ExecutionUtils.isWaitingExecution(item)) &&
+                                                    (Utils.Execution.isActiveExecution(item) || Utils.Execution.isWaitingExecution(item)) &&
                                                     <Menu.Item content='Cancel'
                                                                icon='cancel'
                                                                name={MenuAction.CANCEL_EXECUTION}
                                                                onClick={this._actionClick.bind(this, item)} />
                                                 }
                                                 {
-                                                    (ExecutionUtils.isActiveExecution(item) || ExecutionUtils.isWaitingExecution(item)) &&
+                                                    (Utils.Execution.isActiveExecution(item) || Utils.Execution.isWaitingExecution(item)) &&
                                                     <Menu.Item content='Force Cancel'
                                                                icon={<Icon name='cancel' color='red' />}
                                                                name={MenuAction.FORCE_CANCEL_EXECUTION}

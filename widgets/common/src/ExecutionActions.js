@@ -24,7 +24,7 @@ class ExecutionActions {
 
     async waitUntilFinished(executionIds, interval) {
         let executions = await this.doGetStatus(executionIds);
-        let activeExecutions = _.filter(executions.items, Stage.Common.ExecutionUtils.isActiveExecution);
+        let activeExecutions = _.filter(executions.items, Stage.Utils.Execution.isActiveExecution);
 
         if (!_.isEmpty(activeExecutions)) {
             await new Promise(resolve => setTimeout(resolve, interval));
