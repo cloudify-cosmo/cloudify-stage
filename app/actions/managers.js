@@ -7,7 +7,7 @@ import Auth from '../utils/auth';
 import Consts from '../utils/consts';
 import { push } from 'connected-react-router';
 import Manager from '../utils/Manager';
-import {clearContext} from './context';
+import ExecutionUtils from './../utils/shared/ExecutionUtils';
 
 function requestLogin() {
     return {
@@ -152,9 +152,14 @@ export function setActiveExecutions(activeExecutions) {
 
 export function getActiveExecutions(manager) {
     var managerAccessor = new Manager(manager);
+
     return function(dispatch) {
-        return managerAccessor.doGet('/executions?_include=id,workflow_id,status,deployment_id',
-                                     {status: ['pending', 'started', 'cancelling', 'force_cancelling']})
+        const maintenanceModeActivationBlockingStatuses = [
+            ...ExecutionUtils.WAITING_EXECUTION_STATUSES,
+            ...ExecutionUtils.ACTIVE_EXECUTION_STATUSES
+        ];
+        return managerAccessor.doGet('/executions?_include=id,workflow_id,status,status_display,blueprint_id,deployment_id',
+                                     {status: maintenanceModeActivationBlockingStatuses})
             .then((data)=>{
                 dispatch(setActiveExecutions(data));
             });
