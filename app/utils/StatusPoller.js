@@ -17,9 +17,13 @@ export default class StatusPoller {
         this.interval = store.getState().config.app.maintenancePollingInterval;
     }
 
+    getManagerIp() {
+        return _.get(this._store.getState(), 'config.manager.ip');
+    }
+
     start() {
         if (!this._isActive) {
-            console.log(`Starting status polling for manager ${this._store.getState().manager.ip}`);
+            console.log(`Starting status polling for manager ${this.getManagerIp()}`);
 
             this._isActive = true;
 
@@ -31,7 +35,7 @@ export default class StatusPoller {
 
     stop() {
         if (this._isActive) {
-            console.log(`Stopping status polling for manager ${this._store.getState().manager.ip}`);
+            console.log(`Stopping status polling for manager ${this.getManagerIp()}`);
 
             this._isActive = false;
             this._stop();
@@ -48,7 +52,7 @@ export default class StatusPoller {
     _start() {
         this._stop();
 
-        console.log(`Polling status for manager ${this._store.getState().manager.ip} - time interval: ${this.interval} sec`);
+        console.log(`Polling status for manager ${this.getManagerIp()} - time interval: ${this.interval} sec`);
         this._pollerTimer = setTimeout(()=>{this._fetchStatus().then(this._start.bind(this))}, this.interval);
     }
 
