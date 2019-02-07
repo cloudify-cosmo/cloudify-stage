@@ -20,7 +20,7 @@ class WorkflowsMenuItems extends React.Component {
         const { onClick, workflows } = this.props;
 
         return _.map(workflows, (workflow) =>
-            <Menu.Item content={_.capitalize(_.lowerCase(workflow.name))} key={workflow.name}
+            <Menu.Item name={workflow.name} content={_.capitalize(_.lowerCase(workflow.name))} key={workflow.name}
                        onClick={() => onClick(workflow)} />
         )
     }
