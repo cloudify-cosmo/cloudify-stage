@@ -122,9 +122,6 @@
       "width": 4,
       "height": 24,
       "definition": "executionsStatus",
-      "configuration": {
-        "pageSize": 10
-      },
       "x": 8,
       "y": 42
     }

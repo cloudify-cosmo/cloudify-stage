@@ -182,6 +182,9 @@ export default class Graph extends Component {
      * @property {string} [xAxisTimeFormat='DD-MM-YYYY HH:mm'] format of X-axis tick label
      * @property {object} [xAxisTick={fontSize:'10px'}] stylesheet for X-axis tick
      * @property {object} [yAxisTick={fontSize:'10px'}] stylesheet for Y-axis tick
+     * @property {object} [tooltipFormatter=undefined] callback function to format the text of the tooltip
+     * @property {boolean} [yAxisAllowDecimals=true] whether to allow decimals in Y-axis tick
+     * @property {object} [yAxisDataFormatter=undefined] format of Y-axis tick label
      */
     static propTypes = {
         data: PropTypes.array.isRequired,
@@ -200,7 +203,10 @@ export default class Graph extends Component {
         dataTimeFormat: undefined,
         xAxisTimeFormat: 'DD-MM-YYYY HH:mm',
         xAxisTick: {fontSize:'10px'},
-        yAxisTick: {fontSize:'10px'}
+        yAxisTick: {fontSize:'10px'},
+        tooltipFormatter: undefined,
+        yAxisAllowDecimals: true,
+        yAxisDataFormatter: undefined
     };
 
     render () {
@@ -280,8 +286,10 @@ export default class Graph extends Component {
                         <YAxis key={'yaxis'+chart.name}
                                dataKey={chart.name}
                                yAxisId={chart.name}
-                               width={50}
-                               axisLine={STYLE} />;
+                               axisLine={STYLE}
+                               width={30}
+                               allowDecimals={this.props.yAxisAllowDecimals}
+                               tickFormatter={this.props.yAxisDataFormatter}/>;
                 chartElements.push(yaxisComponent);
                 chartElements.push(
                     <DrawingComponent key={chart.name}
@@ -328,7 +336,7 @@ export default class Graph extends Component {
                                      cursor={false}/>
                         :
                             <Tooltip isAnimationActive={false}
-                                     formatter={VALUE_FORMATTER}
+                                     formatter={this.props.tooltipFormatter}
                                      cursor={false}/>
                     }
                     {this.props.showLegend && <Legend />}
