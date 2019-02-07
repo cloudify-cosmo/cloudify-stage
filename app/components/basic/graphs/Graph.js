@@ -182,6 +182,9 @@ export default class Graph extends Component {
      * @property {string} [xAxisTimeFormat='DD-MM-YYYY HH:mm'] format of X-axis tick label
      * @property {object} [xAxisTick={fontSize:'10px'}] stylesheet for X-axis tick
      * @property {object} [yAxisTick={fontSize:'10px'}] stylesheet for Y-axis tick
+     * @property {object} [tooltipFormatter=undefined] callback function to format the text of the tooltip
+     * @property {boolean} [yAxisAllowDecimals=true] whether to allow decimals in Y-axis tick
+     * @property {object} [yAxisDataFormatter=undefined] format of Y-axis tick label
      */
     static propTypes = {
         data: PropTypes.array.isRequired,
@@ -200,7 +203,10 @@ export default class Graph extends Component {
         dataTimeFormat: undefined,
         xAxisTimeFormat: 'DD-MM-YYYY HH:mm',
         xAxisTick: {fontSize:'10px'},
-        yAxisTick: {fontSize:'10px'}
+        yAxisTick: {fontSize:'10px'},
+        tooltipFormatter: undefined,
+        yAxisAllowDecimals: true,
+        yAxisDataFormatter: undefined
     };
 
     render () {
@@ -212,7 +218,7 @@ export default class Graph extends Component {
         const MARGIN = {top: 5, right: 30, left: 20, bottom: 5};
         const INTERPOLATION_TYPE = 'monotone';
         const STROKE_DASHARRAY = '3 3';
-
+        const IS_KEY_TIME = this.props.xDataKey === Graph.DEFAULT_X_DATA_KEY;
 
         // Code copied from re-charts GitHub, see: https://github.com/recharts/recharts/issues/184
         const AxisLabel = ({ vertical, x, y, width, height, children, fill }) => {
@@ -264,18 +270,27 @@ export default class Graph extends Component {
                 var COLOR = COLORS[index++];
                 var STYLE = {stroke: COLOR};
 
-                chartElements.push(
-                    <YAxis key={'yaxis'+chart.name}
-                           dataKey={chart.name}
-                           yAxisId={chart.name}
-                           width={50}
-                           axisLine={STYLE}
-                           tick={STYLE}
-                           tickLine={STYLE}
-                           tickFormatter={VALUE_FORMATTER}
-                           label={<AxisLabel vertical fill={COLOR}>{chart.axisLabel}</AxisLabel>} />
-                );
-
+                let yaxisComponent =
+                    IS_KEY_TIME
+                    ?
+                        <YAxis key={'yaxis'+chart.name}
+                               dataKey={chart.name}
+                               yAxisId={chart.name}
+                               width={50}
+                               axisLine={STYLE}
+                               tick={STYLE}
+                               tickLine={STYLE}
+                               tickFormatter={VALUE_FORMATTER}
+                               label={<AxisLabel vertical fill={COLOR}>{chart.axisLabel}</AxisLabel>} />
+                    :
+                        <YAxis key={'yaxis'+chart.name}
+                               dataKey={chart.name}
+                               yAxisId={chart.name}
+                               axisLine={STYLE}
+                               width={30}
+                               allowDecimals={this.props.yAxisAllowDecimals}
+                               tickFormatter={this.props.yAxisDataFormatter}/>;
+                chartElements.push(yaxisComponent);
                 chartElements.push(
                     <DrawingComponent key={chart.name}
                                       isAnimationActive={false}
@@ -301,8 +316,29 @@ export default class Graph extends Component {
                                 onClick={this.props.onClick}>
                     {chartElements}
                     <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
-                    {this.props.showXAxis && <XAxis dataKey={this.props.xDataKey} tickFormatter={xAxisDataFormatter} tick={this.props.xAxisTick}/> }
-                    {this.props.showTooltip && <Tooltip isAnimationActive={false} formatter={VALUE_FORMATTER} labelFormatter={xAxisDataFormatter}/>}
+                    {
+                        this.props.showXAxis &&
+                        IS_KEY_TIME
+                        ?
+                            <XAxis dataKey={this.props.xDataKey}
+                                   tickFormatter={xAxisDataFormatter}
+                                   tick={this.props.xAxisTick} />
+                        :
+                            <XAxis dataKey={this.props.xDataKey} />
+                    }
+                    {
+                        this.props.showTooltip &&
+                        IS_KEY_TIME
+                        ?
+                            <Tooltip isAnimationActive={false}
+                                     formatter={VALUE_FORMATTER}
+                                     labelFormatter={xAxisDataFormatter}
+                                     cursor={false}/>
+                        :
+                            <Tooltip isAnimationActive={false}
+                                     formatter={this.props.tooltipFormatter}
+                                     cursor={false}/>
+                    }
                     {this.props.showLegend && <Legend />}
                     {this.props.showBrush &&  <Brush />}
                 </ChartComponent>
