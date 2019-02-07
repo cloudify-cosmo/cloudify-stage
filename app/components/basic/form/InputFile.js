@@ -142,7 +142,7 @@ export default class InputFile extends Component {
             this.props.showInput
             ?
                 <React.Fragment>
-                    <Input type="text" readOnly='true' value={this.state.value} title={this.state.title}
+                    <Input readOnly value={this.state.value} title={this.state.title}
                            name={'fileName' + this.props.name} placeholder={this.props.placeholder}
                            onClick={this._openFileSelection.bind(this)} disabled={this.props.disabled} action>
                         <input />

@@ -46,7 +46,7 @@ async function proxyRequest(req,res,next) {
         timeout = config.app.proxy.timeouts.blueprintUpload;
     }
     //if is a maintenance status fetch then update RBAC cache if empty
-    else if(!!req.query.su.match(/^\/maintenance$/) &&  req.method === 'GET' && !AuthHandler.isRbacInCache()) {
+    else if (!!req.query.su.match(/^\/maintenance$/) &&  req.method === 'GET' && !AuthHandler.isRbacInCache()) {
         await AuthHandler.getAndCacheConfig(req.headers['authentication-token']);
     }
 
