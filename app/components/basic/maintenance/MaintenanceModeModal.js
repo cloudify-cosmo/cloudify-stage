@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Consts from '../../../utils/consts';
-import {Modal, Icon, ErrorMessage, ExecutionStatus, DataTable, Button, Checkmark, ApproveButton, CancelButton} from '../index';
+import {ApproveButton, CancelButton, Checkmark, DataTable, ErrorMessage, ExecutionStatus, Icon, Menu, Modal, PopupMenu} from '../index';
 import StageUtils from '../../../utils/stageUtils';
 import {switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExecution} from '../../../actions/managers';
 import ExecutionUtils from '../../../utils/shared/ExecutionUtils';
@@ -170,7 +170,7 @@ class MaintenanceModeModal extends Component {
                                 <DataTable.Column label="Id" width="20%"/>
                                 <DataTable.Column label="System" width="5%"/>
                                 <DataTable.Column label="Status" width="15%"/>
-                                <DataTable.Column label="Action" width="15%"/>
+                                <DataTable.Column label="Action" />
 
                                 {
                                     this.props.activeExecutions.items.map((item) => {
@@ -184,12 +184,23 @@ class MaintenanceModeModal extends Component {
                                                 <DataTable.Data>
                                                     <ExecutionStatus execution={item} />
                                                 </DataTable.Data>
-                                                <DataTable.Data>
-                                                    <Button content='Cancel' icon='cancel'
-                                                            loading={_.includes(this.state.cancelling, item.id)}
-                                                            disabled={_.includes(this.state.cancelling, item.id)}
-                                                            name={ExecutionUtils.CANCEL_ACTION}
-                                                            onClick={() => this._cancelExecution(item, ExecutionUtils.CANCEL_ACTION)} />
+                                                <DataTable.Data className='center aligned'>
+                                                    <PopupMenu className="menuAction">
+                                                        <Menu pointing vertical>
+                                                            <Menu.Item content='Cancel'
+                                                                       icon='cancel'
+                                                                       name={ExecutionUtils.CANCEL_ACTION}
+                                                                       onClick={() => this._cancelExecution(item, ExecutionUtils.CANCEL_ACTION)} />
+                                                            <Menu.Item content='Force Cancel'
+                                                                       icon={<Icon name='cancel' color='red' />}
+                                                                       name={ExecutionUtils.FORCE_CANCEL_ACTION}
+                                                                       onClick={() => this._cancelExecution(item, ExecutionUtils.FORCE_CANCEL_ACTION)}/>
+                                                            <Menu.Item content='Kill Cancel'
+                                                                       icon={<Icon name='stop' color='red' />}
+                                                                       name={ExecutionUtils.KILL_CANCEL_EXECUTION}
+                                                                       onClick={() => this._cancelExecution(item, ExecutionUtils.KILL_CANCEL_EXECUTION)} />
+                                                        </Menu>
+                                                    </PopupMenu>
                                                 </DataTable.Data>
                                             </DataTable.Row>
                                         );
