@@ -38,15 +38,13 @@ export function intialPageLoad() {
                     return Promise.reject(NO_TENANTS_ERR);
                 }
             })
-            .then(() => {
-                return dispatch(getUserData());
-            })
+            .then(() => dispatch(getRBACConfig()))
+            .then(() => dispatch(getUserData()))
             .then(() => {
                 return Promise.all([
                     dispatch(loadTemplates()),
                     dispatch(loadTours()),
                     dispatch(loadWidgetDefinitions()),
-                    dispatch(getRBACConfig()),
                     dispatch(getClientConfig()),
                     dispatch(getStatus()),
                     dispatch(getVersion())

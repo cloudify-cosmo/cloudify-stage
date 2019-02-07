@@ -6,8 +6,10 @@
 
 var express = require('express');
 var request = require('request');
+var _ = require('lodash');
 var config = require('../config').get();
 var router = express.Router();
+var AuthHandler = require('../handler/AuthHandler');
 var ManagerHandler = require('../handler/ManagerHandler');
 
 var logger = require('log4js').getLogger('ServerProxy');
@@ -35,13 +37,17 @@ function buildManagerUrl(req,res,next) {
     }
 }
 
-function proxyRequest(req,res,next) {
+async function proxyRequest(req,res,next) {
     var options = {};
     var timeout;
 
     //if is a blueprint upload request = set higher timeout
-    if(!!req.query.su.match(/\/blueprints/) &&  req.method === 'PUT'){
+    if (!!req.query.su.match(/\/blueprints/) && req.method === 'PUT') {
         timeout = config.app.proxy.timeouts.blueprintUpload;
+    }
+    //if is a maintenance status fetch then update RBAC cache if empty
+    else if(!!req.query.su.match(/^\/maintenance$/) &&  req.method === 'GET' && !AuthHandler.isRbacInCache()) {
+        await AuthHandler.getAndCacheConfig(req.headers['authentication-token']);
     }
 
     ManagerHandler.updateOptions(options, req.method, timeout);

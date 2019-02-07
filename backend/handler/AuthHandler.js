@@ -45,9 +45,13 @@ class AuthHandler {
         })
     }
 
+    static isRbacInCache() {
+        return !_.isEmpty(authorizationCache);
+    }
+
     static getRBAC() {
-        if (_.isEmpty(authorizationCache)) {
-            logger.error('No RBAC data in cache. Have you tried to get cached RBAC before getting Manager config?');
+        if (!AuthHandler.isRbacInCache()) {
+            logger.error('No RBAC data in cache.');
         }
 
         return authorizationCache;
