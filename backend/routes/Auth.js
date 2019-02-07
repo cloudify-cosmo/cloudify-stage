@@ -80,7 +80,16 @@ router.post('/logout', passport.authenticate('token', {session: false}), (req, r
 });
 
 router.get('/RBAC', passport.authenticate('token', {session: false}), (req, res) => {
-    res.send(AuthHandler.getRBAC());
+    if (AuthHandler.isRbacInCache()) {
+        res.send(AuthHandler.getRBAC());
+    } else {
+        AuthHandler.getAndCacheConfig(req.headers['authentication-token'])
+            .then((config) => res.send(config.authorization))
+            .catch((err) => {
+                logger.error(err);
+                res.status(500).send({message: 'Failed to get RBAC configuration', error: err});
+            });
+    }
 });
 
 module.exports = router;
