@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import PaginationInfo from './PaginationInfo';
 import TotalSizePaginator from './TotalSizePaginator';
 import FetchSizePaginator from './FetchSizePaginator';
+import {Icon, Message, Popup} from '../index';
 
 export default class Pagination extends Component {
 
@@ -18,8 +19,9 @@ export default class Pagination extends Component {
 
         this.state = {
             pageSize: props.pageSize,
-            currentPage: 1
-        }
+            currentPage: 1,
+            showWarningPopup: false
+        };
 
         this.disableStateUpdate = false;
     }
@@ -41,13 +43,25 @@ export default class Pagination extends Component {
     };
 
     _changePageSize(size){
-        this.setState({pageSize: parseInt(size) || Pagination.PAGE_SIZE_LIST(this.props.sizeMultiplier)[0], currentPage: 1}, () => {
-            this.props.fetchData();
+        const minPageSize = 1, maxPageSize = 500, popupShowTimeout = 3000;
+        let pageSize = parseInt(size);
+        let showWarningPopup = false;
+
+        if (_.isNaN(pageSize) || pageSize < minPageSize || pageSize > maxPageSize) {
+            pageSize = Pagination.PAGE_SIZE_LIST(this.props.sizeMultiplier)[0];
+            showWarningPopup = true;
+        }
+
+        this.setState({pageSize, currentPage: 1, showWarningPopup}, () => {
+            if (showWarningPopup) {
+                setTimeout(() => this.setState({showWarningPopup: false}), popupShowTimeout);
+            }
+            return this.props.fetchData();
         });
     }
 
-    _changePage(page){
-        this.setState({currentPage: page, pageSize: this.state.pageSize}, () => {
+    _changePage(page, pageSize){
+        this.setState({currentPage: page, pageSize: pageSize || this.state.pageSize}, () => {
             this.props.fetchData();
         });
     }
@@ -63,7 +77,7 @@ export default class Pagination extends Component {
             changedProps.pageSize = this.props.pageSize;
         }
 
-        if (this.props.totalSize > 0) {
+        if (this.props.totalSize >= 0 && this.state.currentPage !== 1) {
             let pageCount = Math.ceil(this.props.totalSize / this.props.pageSize);
             if (this.state.currentPage > pageCount) {
                 changedProps.currentPage = 1;
@@ -71,7 +85,7 @@ export default class Pagination extends Component {
         }
 
         if (!_.isEmpty(changedProps)) {
-            this.setState(changedProps);
+            this._changePage(changedProps.currentPage || this.state.currentPage, changedProps.pageSize);
         }
     }
 
@@ -83,9 +97,20 @@ export default class Pagination extends Component {
                 { (this.props.totalSize > Pagination.PAGE_SIZE_LIST(this.props.sizeMultiplier)[0] || this.props.fetchSize > 0 || this.state.currentPage > 1) &&
                     <div className="ui two column grid gridPagination">
                         <div className="column">
-                            <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                            totalSize={this.props.totalSize} fetchSize={this.props.fetchSize}
-                                            onPageSizeChange={this._changePageSize.bind(this)} sizeMultiplier={this.props.sizeMultiplier}/>
+                            <Popup open={this.state.showWarningPopup} wide='very'>
+                                <Popup.Trigger>
+                                    <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}
+                                                    totalSize={this.props.totalSize} fetchSize={this.props.fetchSize}
+                                                    onPageSizeChange={this._changePageSize.bind(this)} sizeMultiplier={this.props.sizeMultiplier}/>
+                                </Popup.Trigger>
+                                <Popup.Content>
+                                    <Message warning>
+                                        <Icon name='warning sign' />
+                                        Only integer values between 1 and 500 are allowed.
+                                    </Message>
+                                </Popup.Content>
+                            </Popup>
+
                         </div>
                         <div className="right aligned column">
                             {
