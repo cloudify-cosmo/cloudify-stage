@@ -39,7 +39,6 @@ export default class UsersTable extends React.Component {
 
     componentDidMount() {
         this.props.toolbox.getEventBus().on('users:refresh', this._refreshData, this);
-        this._getAvailableTenants(null, null, false);
     }
 
     componentWillUnmount() {
@@ -275,7 +274,7 @@ export default class UsersTable extends React.Component {
                         })
                     }
                     <DataTable.Action>
-                        <CreateModal roles={this.props.roles} tenants={this.state.tenants} toolbox={this.props.toolbox}/>
+                        <CreateModal roles={this.props.roles} toolbox={this.props.toolbox}/>
                     </DataTable.Action>
                 </DataTable>
 
