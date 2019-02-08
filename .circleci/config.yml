@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:10-slim
+      - image: circleci/node:10-stretch
 
     working_directory: ~/repo
 
@@ -36,7 +36,7 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:10-slim
+      - image: circleci/node:10-stretch
     working_directory: ~/repo
     steps:
       - attach_workspace:
@@ -50,7 +50,7 @@ jobs:
 
   checkBundleSize:
     docker:
-      - image: circleci/node:10-slim
+      - image: circleci/node:10-stretch
     working_directory: ~/repo
     steps:
       - attach_workspace:
@@ -61,7 +61,7 @@ jobs:
 
   checkWidgetsDoc:
     docker:
-      - image: circleci/node:10-slim
+      - image: circleci/node:10-stretch
     working_directory: ~/repo
     steps:
       - attach_workspace:
