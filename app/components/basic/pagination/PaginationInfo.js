@@ -32,7 +32,7 @@ export default class PaginationInfo extends Component {
     }
 
     render() {
-        if (this.props.totalSize <= 0 && this.props.fetchSize <= 0 && this.props.currentPage == 1) {
+        if (this.props.totalSize <= 0 && this.props.fetchSize <= 0 && this.props.currentPage === 1) {
             return null;
         }
 
