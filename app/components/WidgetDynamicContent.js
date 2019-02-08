@@ -46,18 +46,20 @@ export default class WidgetDynamicContent extends Component {
     }
 
     _loadingIndicator(show) {
-        this.setState({loading: show})
+        if (this.mounted) {
+            this.setState({loading: show})
+        }
     }
 
     _showLoading() {
         clearTimeout(this.loadingTimeout);
-        this.loadingTimeout = setTimeout(()=>{this.setState({loading: true});}, 1000);
+        this.loadingTimeout = setTimeout(() => this._loadingIndicator(true), 1000);
     }
 
     _hideLoading() {
         clearTimeout(this.loadingTimeout);
         if (this.state.loading) {
-            this.setState({loading: false});
+            this._loadingIndicator(false);
         }
     }
 

@@ -9,6 +9,7 @@ export default class CreateModal extends React.Component {
     constructor(props,context) {
         super(props,context);
 
+        this.availableTenantsPromise = null;
         this.state = {...CreateModal.initialState, open: false}
     }
 
@@ -34,7 +35,24 @@ export default class CreateModal extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (!prevState.open && this.state.open) {
-            this.setState(CreateModal.initialState);
+            this.setState({...CreateModal.initialState, loading: true});
+
+            let actions = new Actions(this.props.toolbox);
+            this.availableTenantsPromise = Stage.Utils.makeCancelable(actions.doGetTenants());
+
+            this.availableTenantsPromise.promise.then((availableTenants) => {
+                this.setState({error: null, availableTenants, loading: false});
+            }).catch((err)=> {
+                if (!err.isCanceled) {
+                    this.setState({error: err.message, availableTenants: {items:[]}, loading: false});
+                }
+            });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.availableTenantsPromise) {
+            this.availableTenantsPromise.cancel();
         }
     }
 
@@ -107,7 +125,7 @@ export default class CreateModal extends React.Component {
 
         const addButton = <Button content='Add' icon='add user' labelPosition='left' className='addUserButton' />;
 
-        let tenants = {items:[], ...this.props.tenants};
+        let tenants = {items:[], ...this.state.availableTenants};
         let options = _.map(tenants.items, item => { return {text: item.name, value: item.name, key: item.name} });
 
         return (
