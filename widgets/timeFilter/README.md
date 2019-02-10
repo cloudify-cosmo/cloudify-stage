@@ -17,7 +17,7 @@ The filter provides also the following features:
 
 * **Data validation** - When you click `Apply` button time range is validated. If invalid data is provided, then appropriate input field is marked with red color and time filter window will not be closed.  
 
-![Time Filter](https://docs.cloudify.co/4.5.5/images/ui/widgets/time-filter.png)
+![Time Filter](https://docs.cloudify.co/staging/dev/images/ui/widgets/time-filter.png)
 
 #### Widget Settings 
 None
