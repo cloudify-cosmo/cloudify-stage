@@ -1,5 +1,6 @@
-
-
+/**
+ * Created by barucoh on 23/1/2019.
+ */
 export default class GraphEdge extends React.Component {
     /**
      * @property {Any} [graphEdge] - A Graph Edge to render

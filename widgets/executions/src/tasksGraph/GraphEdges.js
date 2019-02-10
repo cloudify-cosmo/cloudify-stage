@@ -1,3 +1,6 @@
+/**
+ * Created by barucoh on 23/1/2019.
+ */
 import GraphEdge from './GraphEdge';
 
 export default class GraphEdges extends React.Component {

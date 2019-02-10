@@ -4,7 +4,7 @@
 
 import SystemWorkflowIcon from './SystemWorkflowIcon';
 import DryRunIcon from './DryRunIcon';
-import ExecutionWorkflowGraph from './ExecutionWorkflowGraph';
+import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 
 export default class ExecutionsTable extends React.Component {
     constructor(props, context) {
@@ -224,7 +224,7 @@ export default class ExecutionsTable extends React.Component {
                                         </DataTable.Data>
                                     </DataTable.Row>
                                     <DataTable.DataExpandable key={item.id}>
-                                        <ExecutionWorkflowGraph selectedExecution={item}/>
+                                        <ExecutionWorkflowGraph selectedExecution={item} toolbox={this.props.toolbox} widgetBackend={this.props.widgetBackend} />
                                     </DataTable.DataExpandable>
                                 </DataTable.RowExpandable>
                             );
