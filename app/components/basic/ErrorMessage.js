@@ -36,7 +36,7 @@ export default class ErrorMessage extends Component {
 
         this.state = {
             hidden: false
-        }
+        };
 
         this.visibilityTimeout = null;
     }
