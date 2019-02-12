@@ -8,9 +8,9 @@ export default class GraphNodes extends React.Component {
     /**
      * @property {Any} [graphNodes] - Array of Graph Nodes to render
      */
-    /*static propTypes = {
+    static propTypes = {
         graphNodes: PropTypes.any.isRequired
-    };*/
+    };
     constructor(props, context) {
         super(props, context);
         this.state = {

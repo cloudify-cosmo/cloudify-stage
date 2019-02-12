@@ -7,9 +7,9 @@ export default class GraphEdges extends React.Component {
     /**
      * @property {Any} [graphEdges] - Array of Graph Edges to render
      */
-    /*static propTypes = {
+    static propTypes = {
         graphEdges: PropTypes.any.isRequired,
-    };*/
+    };
     constructor(props, context) {
         super(props, context);
         this.state = {

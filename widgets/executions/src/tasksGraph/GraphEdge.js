@@ -5,9 +5,9 @@ export default class GraphEdge extends React.Component {
     /**
      * @property {Any} [graphEdge] - A Graph Edge to render
      */
-    /*static propTypes = {
+    static propTypes = {
         graphEdge: PropTypes.any.isRequired
-    };*/
+    };
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -15,10 +15,10 @@ export default class GraphEdge extends React.Component {
         };
     }
     render() {
-        let edge = this.state.graphEdge;
-        let startPoint = edge.sections[0].startPoint;
-        let bendPoints = edge.sections[0].bendPoints;
-        let endPoint = edge.sections[0].endPoint;
+        const edge = this.state.graphEdge;
+        const startPoint = edge.sections[0].startPoint;
+        const bendPoints = edge.sections[0].bendPoints;
+        const endPoint = edge.sections[0].endPoint;
         let drawingPath = {
             x: 0,
             y: 0
@@ -47,7 +47,7 @@ export default class GraphEdge extends React.Component {
         } else {
             // At least 1 Bend Point exists
             // Start point to first bend point - Bend point to bend point - Bend point to end point
-            let lastBendPoint = {...bendPoints[bendPoints.length - 1]}
+            const lastBendPoint = {...bendPoints[bendPoints.length - 1]}
             let lastDrawingPath = {...drawingPath}
             drawingPath.x = bendPoints[0].x - startPoint.x
             drawingPath.y = bendPoints[0].y - startPoint.y
