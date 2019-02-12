@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "devStart": "cross-env NODE_ENV=development node --trace-warnings server.js",
+    "devDebug": "cross-env NODE_ENV=development node --inspect server.js",
     "db-migrate-create": "sequelize migration:create --config ../conf/app.json",
     "db-migrate": "node migration up",
     "db-migrate-status": "node migration status",
