@@ -1,7 +1,3 @@
-import {ErrorMessage} from '../../../app/components/basic';
-import {Modal} from 'semantic-ui-react/dist/commonjs/modules/Modal';
-import React from 'react';
-
 /**
  * Created by pposel on 18/01/2017.
  */
