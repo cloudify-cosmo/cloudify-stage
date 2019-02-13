@@ -138,10 +138,10 @@ export default class UpdateDetailsModal extends React.Component {
 
         // Node Instances
         const nodeInstancesTypes = [
-            {name: 'added', icon: 'plus'},
-            {name: 'removed', icon: 'minus'},
-            {name: 'extended', icon: 'expand'},
-            {name: 'reduced', icon: 'compress'}
+            {name: 'added', icon: 'plus', color: 'green'},
+            {name: 'removed', icon: 'minus', color: 'red'},
+            {name: 'extended', icon: 'expand', color: 'olive'},
+            {name: 'reduced', icon: 'compress', color: 'orange'}
         ];
         const nodeInstancesChanged = this.areNodeInstancesChanged(deploymentUpdate);
 
@@ -292,10 +292,10 @@ export default class UpdateDetailsModal extends React.Component {
                                     <Card.Group itemsPerRow={2}>
                                         {
                                             _.map(nodeInstancesTypes, (type) =>
-                                                <Card key={type.name}>
+                                                <Card key={type.name} color={type.color} >
                                                     <Card.Content>
                                                         <Card.Header>
-                                                            <Icon name={type.icon} />
+                                                            <Icon name={type.icon} color={type.color} />
                                                             {_.capitalize(type.name)}
                                                         </Card.Header>
                                                         <Card.Description>
@@ -312,13 +312,20 @@ export default class UpdateDetailsModal extends React.Component {
 
                             <Header>
                                 Steps
+                                {
+                                    stepsPresent &&
+                                    <Header.Subheader>
+                                        Action steps to be taken during update.
+                                    </Header.Subheader>
+                                }
                             </Header>
                             {
                                 stepsPresent
                                 ?
-                                    <Table striped>
+                                    <Table striped definition>
                                         <Table.Header>
                                             <Table.Row>
+                                                <Table.HeaderCell collapsing/>
                                                 <Table.HeaderCell>Action</Table.HeaderCell>
                                                 <Table.HeaderCell>Entity Type</Table.HeaderCell>
                                                 <Table.HeaderCell>Entity ID</Table.HeaderCell>
@@ -327,8 +334,11 @@ export default class UpdateDetailsModal extends React.Component {
 
                                         <Table.Body>
                                             {
-                                                _.map(steps, (step) =>
+                                                _.map(steps, (step, index) =>
                                                     <Table.Row key={step.id}>
+                                                        <Table.Cell>
+                                                            {index + 1}
+                                                        </Table.Cell>
                                                         <Table.Cell>
                                                             {step.action}
                                                         </Table.Cell>
