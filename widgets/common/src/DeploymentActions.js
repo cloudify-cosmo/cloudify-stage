@@ -46,7 +46,7 @@ class DeploymentActions {
              shouldRunInstallWorkflow=true, shouldRunUninstallWorkflow=true,
              installWorkflowFirst=false, ignoreFailure=false,
              shouldRunReinstall=true, reinstallList=[],
-             forceUpdate=false) {
+             forceUpdate=false, preview=false) {
         let data = {};
 
         if (!_.isEmpty(blueprintName)) {
@@ -60,6 +60,7 @@ class DeploymentActions {
         data['skip_reinstall'] = !shouldRunReinstall;
         data['reinstall_list'] = reinstallList;
         data['force'] = forceUpdate;
+        data['preview'] = preview;
 
         if (!_.isEmpty(deploymentInputs)) {
             data['inputs'] = deploymentInputs;

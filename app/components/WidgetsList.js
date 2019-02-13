@@ -66,7 +66,7 @@ export default class WidgetsList extends Component {
                             },this)
                         }
                     </Grid>
-                    {(this.props.isEditMode || this.props.pageManagementMode) && <div className="gridStackBottomSpace"></div>}
+                    {(this.props.isEditMode || this.props.pageManagementMode) && <div className="gridStackBottomSpace" />}
                 </div>
         );
     }

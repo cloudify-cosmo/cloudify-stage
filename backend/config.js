@@ -17,7 +17,7 @@ console.log(`Trying to fetch user config from: ${userDataConfigPath}`);
 
 try {
     let userDataConfig = require(userDataConfigPath);
-    userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig))); // Security reason - get only allowed parameters
+    userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig, {safe: true}))); // Security reason - get only allowed parameters
     userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration
 } catch(err) {
     if (err.code !== 'MODULE_NOT_FOUND') {

@@ -12,27 +12,42 @@ export default class UpdateDetailsModal extends React.Component {
         this.state = {...UpdateDetailsModal.initialState};
     }
 
-    static initialState = {
-        loading: false,
-        error: null,
-        deploymentUpdate: {...UpdateDetailsModal.EMPTY_DEPLOYMENT_UPDATE}
-    };
-
     static EMPTY_DEPLOYMENT_UPDATE = {
         old_inputs: {},
         new_inputs: {},
         old_blueprint_id: '',
-        new_blueprint_id: ''
+        new_blueprint_id: '',
+        steps: []
+    };
+
+    static initialState = {
+        loading: false,
+        error: null,
+        deploymentUpdate: {...UpdateDetailsModal.EMPTY_DEPLOYMENT_UPDATE},
+        showOnlyChanged: false
     };
 
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
         open: PropTypes.bool.isRequired,
-        deploymentUpdateId: PropTypes.string
+        isPreview: PropTypes.bool,
+        deploymentUpdateId: PropTypes.string,
+        deploymentUpdate: PropTypes.object
     };
 
+    static defaultProps = {
+        isPreview: false,
+        deploymentUpdateId: '',
+        deploymentUpdate: {}
+    };
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props, nextProps)
+            || !_.isEqual(this.state, nextState);
+    }
+
     componentDidUpdate(prevProps) {
-        if (!prevProps.open && this.props.open) {
+        if (!_.isEmpty(this.props.deploymentUpdateId) && !prevProps.open && this.props.open) {
             this.setState({loading: true});
             let actions = new Stage.Common.DeploymentUpdatesActions(this.props.toolbox);
             actions.doGetUpdate(this.props.deploymentUpdateId).then((deploymentUpdate)=>{
@@ -62,32 +77,91 @@ export default class UpdateDetailsModal extends React.Component {
         );
     }
 
+    areNodeInstancesChanged(deploymentUpdate) {
+        const nodeInstancesTypes = _.get(deploymentUpdate, 'deployment_update_node_instances', {});
+        let areNodeInstancesChanged = false;
+
+        _.forEach(_.keys(nodeInstancesTypes), type => {
+            if (!_.isEmpty(nodeInstancesTypes[type])) {
+                areNodeInstancesChanged = true;
+            }
+        });
+
+        return areNodeInstancesChanged;
+    }
+
+    getNodeInstances(deploymentUpdate, type) {
+        let {List} = Stage.Basic;
+        const typedNodeInstances = _.get(deploymentUpdate, `deployment_update_node_instances.${type}_and_related`, {});
+
+        return !_.isEmpty(typedNodeInstances) && !_.isEmpty(typedNodeInstances['affected'])
+            ?
+                <List bulleted>
+                    {
+                        _.map(typedNodeInstances['affected'], (nodeInstance) =>
+                            <List.Item key={nodeInstance.id}>
+                                <strong>{nodeInstance.id}</strong> ({nodeInstance.node_id})
+                            </List.Item>
+                        )
+                    }
+                </List>
+            :
+                <span>No {type} node instances</span>
+    }
+
     render() {
-        let {CancelButton, Form, Header, Icon, Modal, Table, Popup, ParameterValue, ParameterValueDescription} = Stage.Basic;
+        let {Card, CancelButton, Form, Header, Icon, List, Modal, Table,
+             Popup, ParameterValue, ParameterValueDescription, PopupHelp} = Stage.Basic;
         let {Json} = Stage.Utils;
 
-        let deploymentUpdate = this.state.deploymentUpdate;
-        let oldInputs = Array.sort(_.keys(deploymentUpdate.old_inputs));
-        let newInputs = Array.sort(_.keys(deploymentUpdate.new_inputs));
-        let allInputs = _.uniq([...oldInputs, ...newInputs]);
-        let inputsChanged = !_.isEqual(deploymentUpdate.old_inputs, deploymentUpdate.new_inputs);
+        const deploymentUpdate = !_.isEmpty(this.props.deploymentUpdateId)
+            ? this.state.deploymentUpdate
+            : this.props.deploymentUpdate;
 
-        let oldBlueprint = deploymentUpdate.old_blueprint_id;
-        let newBlueprint = deploymentUpdate.new_blueprint_id;
-        let blueprintChanged = oldBlueprint !== newBlueprint;
+        // Inputs
+        const newInputs = Array.sort(_.keys(deploymentUpdate.new_inputs));
+        const onlyChangedInputs = _.chain(newInputs)
+            .filter((inputName) => !_.isEqual(Json.getStringValue(deploymentUpdate.new_inputs[inputName] || ''),
+                                              Json.getStringValue(deploymentUpdate.old_inputs[inputName] || '')))
+            .uniq()
+            .value();
+        const inputsChanged = !_.isEqual(deploymentUpdate.old_inputs, deploymentUpdate.new_inputs);
+
+        // Blueprint
+        const oldBlueprint = deploymentUpdate.old_blueprint_id;
+        const newBlueprint = deploymentUpdate.new_blueprint_id;
+        const blueprintChanged = oldBlueprint !== newBlueprint;
+
+        // Steps
+        const steps = deploymentUpdate.steps;
+        const stepsPresent = !_.isEmpty(steps);
+
+        // Node Instances
+        const nodeInstancesTypes = [
+            {name: 'added', icon: 'plus', color: 'green'},
+            {name: 'removed', icon: 'minus', color: 'red'},
+            {name: 'extended', icon: 'expand', color: 'olive'},
+            {name: 'reduced', icon: 'compress', color: 'orange'}
+        ];
+        const nodeInstancesChanged = this.areNodeInstancesChanged(deploymentUpdate);
 
         return (
             <div>
                 <Modal open={this.props.open} onClose={()=>this.props.onClose()} className='updateDetailsModal'>
                     <Modal.Header>
-                        Update details
+                        <Icon name='zoom' /> Deployment Update details
+                        {
+                            this.props.isPreview
+                                ? ' preview'
+                                : deploymentUpdate.id ? ` - ${deploymentUpdate.id}` : ''
+                        }
                     </Modal.Header>
 
-                    <Modal.Content>
+                    <Modal.Content scrolling>
                         <Form loading={this.state.loading} errors={this.state.errors}
                               onErrorsDismiss={() => this.setState({errors: {}})}>
 
-                            <Header size="tiny">
+                            <Header>
                                 Blueprint
                             </Header>
 
@@ -97,13 +171,48 @@ export default class UpdateDetailsModal extends React.Component {
                                 : <span>Not changed.</span>
                             }
 
-                            <Header size="tiny">
+                            <Header>
+                                {
+                                    inputsChanged &&
+                                    <Form.Checkbox name='showOnlyChanged' toggle label='Show only changed'
+                                                   help='Show only inputs which have different values'
+                                                   className='rightFloated' checked={this.state.showOnlyChanged}
+                                                   onChange={() => this.setState({showOnlyChanged: !this.state.showOnlyChanged})} />
+                                }
                                 Inputs
                                 {
                                     inputsChanged &&
                                     <Header.Subheader>
-                                        To see difference between old and new inputs hover over&nbsp;
-                                        <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
+                                        See details:&nbsp;
+                                        <PopupHelp content={
+                                            <div>
+                                                <div>
+                                                    To show only changed inputs use <strong>Show only changed</strong> toggle.
+                                                </div>
+                                                <br/>
+                                                <div>
+                                                    To see difference between old and new inputs hover over&nbsp;
+                                                    <Icon name='asterisk' color='red' size='tiny' className='superscripted' />
+                                                    &nbsp;character on the right side of changed input
+                                                    to open popup with change details.
+                                                </div>
+                                                <br/>
+                                                <div>
+                                                    Inside popup you will see text in:
+                                                    <List bulleted>
+                                                        <List.Item>
+                                                            <span style={{color: 'green'}}>green</span> - added characters
+                                                        </List.Item>
+                                                        <List.Item>
+                                                            <span style={{color: 'red'}}>red</span> - removed characters
+                                                        </List.Item>
+                                                        <List.Item>
+                                                            <span style={{color: 'black'}}>black</span> - unchanged characters
+                                                        </List.Item>
+                                                    </List>
+                                                </div>
+                                            </div>
+                                        } />
                                     </Header.Subheader>
                                 }
                             </Header>
@@ -111,23 +220,24 @@ export default class UpdateDetailsModal extends React.Component {
                             {
                                 inputsChanged
                                 ?
-                                    <Table>
+                                    <Table striped>
                                         <Table.Header>
                                             <Table.Row>
-                                                <Table.HeaderCell></Table.HeaderCell>
-                                                <Table.HeaderCell>Old <ParameterValueDescription /></Table.HeaderCell>
-                                                <Table.HeaderCell>New <ParameterValueDescription /></Table.HeaderCell>
+                                                <Table.HeaderCell width={4}>Input</Table.HeaderCell>
+                                                <Table.HeaderCell width={6}>Old <ParameterValueDescription /></Table.HeaderCell>
+                                                <Table.HeaderCell width={6}>New <ParameterValueDescription /></Table.HeaderCell>
                                             </Table.Row>
                                         </Table.Header>
 
                                         <Table.Body>
                                             {
-                                                _.map(allInputs, (input) => {
-                                                    let oldValue = _.get(deploymentUpdate.old_inputs, input, '');
-                                                    let oldValueString = Json.getStringValue(oldValue);
-                                                    let newValue = _.get(deploymentUpdate.new_inputs, input, '');
-                                                    let newValueString = Json.getStringValue(newValue);
-                                                    let inputChanged = !_.isEqual(oldValueString, newValueString);
+                                                _.map(this.state.showOnlyChanged ? onlyChangedInputs : newInputs,
+                                                    (input) => {
+                                                    const oldValue = _.get(deploymentUpdate.old_inputs, input, '');
+                                                    const oldValueString = Json.getStringValue(oldValue);
+                                                    const newValue = _.get(deploymentUpdate.new_inputs, input, '');
+                                                    const newValueString = Json.getStringValue(newValue);
+                                                    const inputChanged = !_.isEqual(oldValueString, newValueString);
 
                                                     return (
                                                         <Table.Row key={input}>
@@ -158,6 +268,93 @@ export default class UpdateDetailsModal extends React.Component {
                                         </Table.Body>
                                     </Table>
                                 : <span>No inputs changed.</span>
+                            }
+
+                            <Header>
+                                Node Instances
+                                {
+                                    nodeInstancesChanged &&
+                                    <Header.Subheader>
+                                        See details:&nbsp;
+                                        <PopupHelp content={
+                                            <div>
+                                                Four different categories present added/removed/extended/reduced node instances.
+                                                Bulleted list contain modified node instance ID and node ID in round brackets.
+                                            </div>
+                                        } />
+                                    </Header.Subheader>
+                                }
+                            </Header>
+
+                            {
+                                nodeInstancesChanged
+                                ?
+                                    <Card.Group itemsPerRow={2}>
+                                        {
+                                            _.map(nodeInstancesTypes, (type) =>
+                                                <Card key={type.name} color={type.color} >
+                                                    <Card.Content>
+                                                        <Card.Header>
+                                                            <Icon name={type.icon} color={type.color} />
+                                                            {_.capitalize(type.name)}
+                                                        </Card.Header>
+                                                        <Card.Description>
+                                                            {this.getNodeInstances(deploymentUpdate, type.name)}
+                                                        </Card.Description>
+                                                    </Card.Content>
+                                                </Card>
+                                            )
+                                        }
+                                    </Card.Group>
+                                :
+                                    <span>No node instances changed.</span>
+                            }
+
+                            <Header>
+                                Steps
+                                {
+                                    stepsPresent &&
+                                    <Header.Subheader>
+                                        Action steps to be taken during update.
+                                    </Header.Subheader>
+                                }
+                            </Header>
+                            {
+                                stepsPresent
+                                ?
+                                    <Table striped definition>
+                                        <Table.Header>
+                                            <Table.Row>
+                                                <Table.HeaderCell collapsing/>
+                                                <Table.HeaderCell>Action</Table.HeaderCell>
+                                                <Table.HeaderCell>Entity Type</Table.HeaderCell>
+                                                <Table.HeaderCell>Entity ID</Table.HeaderCell>
+                                            </Table.Row>
+                                        </Table.Header>
+
+                                        <Table.Body>
+                                            {
+                                                _.map(steps, (step, index) =>
+                                                    <Table.Row key={step.id}>
+                                                        <Table.Cell>
+                                                            {index + 1}
+                                                        </Table.Cell>
+                                                        <Table.Cell>
+                                                            {step.action}
+                                                        </Table.Cell>
+                                                        <Table.Cell>
+                                                            {step.entity_type}
+                                                        </Table.Cell>
+                                                        <Table.Cell>
+                                                            {step.entity_id}
+                                                        </Table.Cell>
+                                                    </Table.Row>
+                                                )
+                                            }
+                                        </Table.Body>
+                                    </Table>
+                                :
+                                    <span>No action steps.</span>
                             }
 
                         </Form>
