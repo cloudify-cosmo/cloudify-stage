@@ -168,7 +168,7 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     render() {
-        let {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
+        let {ApproveButton, CancelButton, ErrorMessage, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
         let {InputsHeader, InputsUtils, YamlFileButton, UpdateDetailsModal} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
