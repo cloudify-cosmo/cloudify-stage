@@ -156,7 +156,7 @@ module.exports = {
                 formNotLoading: 'form.ui.form.loading',
                 blueprint: '.content div[name="blueprintName"]',
                 inputsFile: '.content input[name="yamlFile"]',
-                updateButton: '.actions button.button.ok:not(.disabled)',
+                updateButton: '.actions button.button:nth-child(3):not(.disabled)',
                 cancelButton: '.actions button.button.cancel:not(.loading)'
             },
             commands: [
