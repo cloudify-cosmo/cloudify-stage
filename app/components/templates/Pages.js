@@ -37,8 +37,8 @@ export default class Pages extends Component {
                     <DataTable.Column label="Page id" width="25%"/>
                     <DataTable.Column label="Page name" width="25%"/>
                     <DataTable.Column label="Templates" width="10%"/>
-                    <DataTable.Column label="Created at" width="15%"/>
-                    <DataTable.Column label="Creator" width="15%"/>
+                    <DataTable.Column label="Updated at" width="15%"/>
+                    <DataTable.Column label="Updated by" width="15%"/>
                     <DataTable.Column width="10%"/>
 
                     {
@@ -49,8 +49,8 @@ export default class Pages extends Component {
                                         <DataTable.Data><Header as='a' size="small">{item.id}</Header></DataTable.Data>
                                         <DataTable.Data>{item.name}</DataTable.Data>
                                         <DataTable.Data><Label color="blue" horizontal>{_.size(item.templates)}</Label></DataTable.Data>
-                                        <DataTable.Data>{item.createdAt && StageUtils.Time.formatTimestamp(item.createdAt)}</DataTable.Data>
-                                        <DataTable.Data>{item.creator}</DataTable.Data>
+                                        <DataTable.Data>{item.updatedAt && StageUtils.Time.formatLocalTimestamp(item.updatedAt)}</DataTable.Data>
+                                        <DataTable.Data>{item.updatedBy}</DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
                                             {item.custom ?
                                                 <div>

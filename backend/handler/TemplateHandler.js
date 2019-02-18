@@ -7,6 +7,7 @@ const fs = require('fs-extra');
 const pathlib = require('path');
 const mkdirp = require('mkdirp');
 const _ = require('lodash');
+const moment = require('moment');
 
 const config = require('../config').get();
 
@@ -76,14 +77,37 @@ module.exports = (function() {
             .then(userTemplates => _.concat(builtInTemplates, userTemplates));
     }
 
+    function _getPages(folder, isCustom) {
+
+        return _.chain(fs.readdirSync(pathlib.resolve(folder)))
+            .map((pageFile) => {
+                const pageFilePath = pathlib.resolve(folder, pageFile);
+
+                try {
+                    const pageFileContent = fs.readJsonSync(pageFilePath);
+                    const id = pathlib.basename(pageFile, '.json');
+
+                    const name = _.get(pageFileContent, 'name', id);
+                    const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Cloudify');
+                    const updatedAt = _.get(pageFileContent, 'updatedAt', '');
+
+                    return {id, name, custom: isCustom, updatedBy, updatedAt};
+                } catch (error) {
+                    logger.error(`Error when trying to parse ${pageFilePath} file to JSON.`, error);
+
+                    return null;
+                }
+            })
+            .reject(_.isNull)
+            .value();
+    }
+
     function _getUserPages() {
-        return db.Resources
-            .findAll({where: {type: ResourceTypes.PAGE}, attributes: [['resourceId','id'], 'createdAt', 'creator'], raw: true});
+        return _getPages(userPagesFolder, true);
     }
 
     function _getBuiltInPages() {
-        return fs.readdirSync(pathlib.resolve(builtInPagesFolder))
-            .map((pageFile) => pathlib.basename(pageFile, '.json'));
+        return _getPages(builtInPagesFolder, false);
     }
 
     function _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant) {
@@ -109,11 +133,7 @@ module.exports = (function() {
     }
 
     function listPages() {
-        const builtInPages = _.map(_getBuiltInPages(), (page) => ({id: page, custom: false}));
-
-        return _getUserPages()
-            .then(userPages => _.map(userPages, (page) => _.extend(page, {custom: true})))
-            .then(userPages => _.concat(builtInPages, userPages));
+        return Promise.resolve(_.concat(_getBuiltInPages(), _getUserPages()));
     }
 
     function createTemplate(username, template) {
@@ -221,12 +241,12 @@ module.exports = (function() {
 
         const content = {
             'name': page.name,
+            'updatedBy': username,
+            'updatedAt': moment().format(),
             'widgets': page.widgets
         };
 
-        return fs.writeJson(path, content, {spaces: '  '})
-            .then(() => db.Resources.destroy({ where:{resourceId: page.id, type:ResourceTypes.PAGE}}))
-            .then(() => db.Resources.create({resourceId:page.id, type:ResourceTypes.PAGE, creator: username}));
+        return fs.writeJson(path, content, {spaces: '  '});
     }
 
     function updatePage(username, page) {
@@ -234,8 +254,10 @@ module.exports = (function() {
 
         const content = {
             'name': page.name,
+            'updatedBy': username,
+            'updatedAt': moment().format(),
             'widgets': page.widgets
-        }
+        };
 
         return new Promise((resolve, reject) => {
             if (page.oldId && page.id !== page.oldId) {
@@ -250,15 +272,7 @@ module.exports = (function() {
                 resolve();
             }
         })
-        .then(() => fs.writeJson(path, content, {spaces: '  '}))
-        .then(() => db.Resources.findOne({ where: {resourceId:page.id, type:ResourceTypes.PAGE} }))
-        .then(entity => {
-            if(entity) {
-                return Promise.resolve();
-            } else {
-                return db.Resources.create({resourceId:page.id, type:ResourceTypes.PAGE, creator: username});
-            }
-        });
+        .then(() => fs.writeJson(path, content, {spaces: '  '}));
     }
 
     function deletePage(pageId) {
@@ -272,7 +286,7 @@ module.exports = (function() {
                     resolve();
                 }
             })
-        }).then(() => db.Resources.destroy({ where: {resourceId: pageId, type:ResourceTypes.PAGE}}));
+        });
     }
 
     function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant) {
