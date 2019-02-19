@@ -1,6 +1,8 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
+import PropTypes from 'prop-types';
+
 export default class GraphNode extends React.Component {
     /**
      * @property {Any} [graphNode] - A Graph Node to render

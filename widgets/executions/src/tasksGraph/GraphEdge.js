@@ -1,6 +1,8 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
+import PropTypes from 'prop-types';
+
 export default class GraphEdge extends React.Component {
     /**
      * @property {Any} [graphEdge] - A Graph Edge to render

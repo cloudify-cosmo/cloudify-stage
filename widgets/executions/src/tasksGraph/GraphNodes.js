@@ -1,6 +1,8 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
+import PropTypes from 'prop-types';
+
 import GraphNode from './GraphNode';
 import GraphEdges from './GraphEdges';
 

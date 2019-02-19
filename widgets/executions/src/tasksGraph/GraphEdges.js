@@ -2,6 +2,7 @@
  * Created by barucoh on 23/1/2019.
  */
 import GraphEdge from './GraphEdge';
+import PropTypes from 'prop-types';
 
 export default class GraphEdges extends React.Component {
     /**
