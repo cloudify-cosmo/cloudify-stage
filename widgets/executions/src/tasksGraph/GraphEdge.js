@@ -31,7 +31,7 @@ export default class GraphEdge extends React.Component {
             drawingPath.x = endPoint.x - startPoint.x
             drawingPath.y = endPoint.y - startPoint.y
             return (
-                <g fill='none' stroke='black' strokeWidth='2'>                                            
+                <g className='g-tasks-graph-general g-tasks-graph-edge'>                                            
                     <path
                         key={`${startPoint.x + startPoint.y}`}
                         d={`m${startPoint.x} ${startPoint.y} l${drawingPath.x} ${drawingPath.y}`}
@@ -56,7 +56,7 @@ export default class GraphEdge extends React.Component {
             lastDrawingPath.x = endPoint.x - lastBendPoint.x
             lastDrawingPath.y = endPoint.y - lastBendPoint.y
             return (
-                <g fill='none' stroke='black' strokeWidth='2'>
+                <g className='g-tasks-graph-general g-tasks-graph-edge'>
                     <path
                         key={`${startPoint.x + startPoint.y}`}
                         d={`m${startPoint.x} ${startPoint.y} l${drawingPath.x} ${drawingPath.y}`}

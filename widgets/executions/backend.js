@@ -72,22 +72,36 @@ module.exports = (r) => {
         
         const elk = new ELK();
 
-        const TasksGraphsFetchUrl = '/tasks_graphs';
-        const OperationsFetchUrl = '/operations';
+        const tasksGraphsFetchUrl = '/tasks_graphs';
+        const operationsFetchUrl = '/operations';
         
-        const LocalWorkflowTask = 'LocalWorkflowTask';
-        const NOPLocalWorkflowTask = 'NOPLocalWorkflowTask';
+        const localWorkflowTask = 'LocalWorkflowTask';
+        const nopLocalWorkflowTask = 'NOPLocalWorkflowTask';
+
+        // ELK Tasks graph skeleton
+        let tasksGraph = {
+            id: 'tasksGraph',
+            layoutOptions: { 
+                'elk.algorithm': 'layered',
+                'elk.spacing.nodeNode': '30f', // Vertical spacing
+                'layered.spacing.nodeNodeBetweenLayers': '50f' // Horizontal spacing
+            },
+            children: [],
+            edges: []
+        }
+
+        const subGraphLayoutOptions = { 'elk.padding': '[top=20,left=12,bottom=16,right=12]' }
 
         const runGraphCreation = () => {
             const tasksGraphParams = {...req.query};
             
             let headers = req.headers;
             let operationsList = []
-            helper.Manager.doGet(TasksGraphsFetchUrl, tasksGraphParams, headers)
+            helper.Manager.doGet(tasksGraphsFetchUrl, tasksGraphParams, headers)
                 .then((data) => {
                     headers = _.omit(headers, 'accept-encoding'); // Required otherwise the data is returned in bytes and screwed up
-                    const OperationsPromises = _.map(data.items, (graph) => helper.Manager.doGet(OperationsFetchUrl, {graph_id: graph.id}, headers));
-                    Promise.all(OperationsPromises)
+                    const operationsPromises = _.map(data.items, (graph) => helper.Manager.doGet(operationsFetchUrl, {graph_id: graph.id}, headers));
+                    Promise.all(operationsPromises)
                     .then((results) => {
                         _.map(results[0].items, (item) => {
                             operationsList.push(item);
@@ -120,30 +134,45 @@ module.exports = (r) => {
             // TODO: Add description to why all the subgraphs are in the same list
             let allSubgraphs = {};
             _.map(operationsList, (task) => {
-                let subGraph = {
+                let taskName = _.split(task.name, 'cloudify.interfaces.');
+                taskName = taskName.length > 1 ? taskName[1] : taskName[0];
+
+                let taskOperation = undefined;
+                if (task.parameters.task_kwargs.cloudify_context && task.parameters.task_kwargs.cloudify_context.operation) {
+                    taskOperation = task.parameters.task_kwargs.cloudify_context.operation.name;
+                    taskOperation = _.split(taskOperation, 'cloudify.interfaces.');
+                    taskOperation = taskOperation.length > 1 ? taskOperation[1] : taskOperation[0];
+                    taskOperation = _.capitalize(_.lowerCase(taskOperation));
+                }
+
+                let subGraph = { // subGraph can be a subGraph or a 'leaf'
                     id: task.id,
                     labels: [{
-                            text: task.parameters.info,
+                            text: taskName,
                             retry: 0,
                             type: task.type,
-                            state: task.state
+                            state: task.state,
+                            operation: taskOperation
                         }],
                     children: [],
                     edges: [],
-                    containing_subgraph: null // Needed to distinguish which nodes to keep (=not null will be removed)
+                    containing_subgraph: null // Needed to distinguish which nodes to keep (=not null -> not root-level subgraphs -> will be removed)
                 }
                 if (!allSubgraphs.hasOwnProperty(task.id)) {
                     allSubgraphs[task.id] = subGraph;
                 }
                 else {
-                    allSubgraphs[task.id].labels[0].text = task.parameters.info;
+                    allSubgraphs[task.id].labels[0].text = taskName;
                     allSubgraphs[task.id].labels[0].type = task.type;
+                    allSubgraphs[task.id].labels[0].operation = taskOperation;
                     subGraph = allSubgraphs[task.id];
                 }
                 if (task.parameters.containing_subgraph) {
+                    // Task is inside a Subgraph (could be subgraph in subgraph)
+                    // Need to create its parent and update self as its child
                     let containing_subgraph = task.parameters.containing_subgraph;
                     subGraph.containing_subgraph = containing_subgraph;
-                    if (!allSubgraphs.hasOwnProperty(containing_subgraph)) {
+                    if (!allSubgraphs.hasOwnProperty(containing_subgraph)) { // Parent does not exist - creating parent skeleton to be filled later
                         let parentGraph = {
                             id: containing_subgraph,
                             labels: [{state: undefined}],
@@ -165,7 +194,6 @@ module.exports = (r) => {
         const _constructDependencies = (operationsList, allSubgraphs) => {
             allSubgraphs['edges'] = [];
             _.map(operationsList, (task) => {
-                allSubgraphs[task.id].labels[0].text = task.name;
                 if (task.parameters.current_retries > 0)
                     allSubgraphs[task.id].labels[0].retry = task.parameters.current_retries;
                 if (allSubgraphs[task.id].containing_subgraph) {
@@ -200,8 +228,8 @@ module.exports = (r) => {
                 if (subGraph.children && subGraph.children.length > 0) { // Go through all the subgraphs
                     subGraph.children = _.map(subGraph.children, (workflowTask) => {
                         // For each subgraph, go through all the tasks
-                        if (workflowTask.labels[0].type === LocalWorkflowTask ||
-                            workflowTask.labels[0].type === NOPLocalWorkflowTask ||
+                        if (workflowTask.labels[0].type === localWorkflowTask ||
+                            workflowTask.labels[0].type === nopLocalWorkflowTask ||
                             workflowTask.labels[0].retry > 0) {
                             // Remove all LocalWorkflowTasks and NOPWorkflowTasks from the subgraph
                             // Connect its 'target' edges to it's parents' 'target' edges
@@ -248,25 +276,18 @@ module.exports = (r) => {
         const _cleanSubgraphsList = (allSubgraphs) => {
             allSubgraphs = _safeDeleteIrrelevantGraphVertices(allSubgraphs);
             allSubgraphs = _.omitBy(allSubgraphs, (subGraph) => {
-                // Return all the nodes that are subgraphs
+                // Return all the nodes that are root-level subgraphs
                 let containing_subgraph = subGraph.containing_subgraph;
+                if (subGraph.containing_subgraph !== null && subGraph.labels)
+                    subGraph.labels[0].text = _.capitalize(_.lowerCase(subGraph.labels[0].text));
+                if (subGraph.children && subGraph.children.length !== 0)
+                    subGraph.layoutOptions = subGraphLayoutOptions;
                 delete subGraph.containing_subgraph;
                 return containing_subgraph;
             });
             return allSubgraphs;
         }
         const _createELKTasksGraphs = (allSubgraphs) => {
-            // ELK Tasks graph skeleton
-            let tasksGraph = {
-                id: 'tasksGraph',
-                layoutOptions: { 
-                    'elk.algorithm': 'layered',
-                    'elk.spacing.nodeNode': '20f',
-                    'layered.spacing.nodeNodeBetweenLayers': '30f'
-                },
-                children: [],
-                edges: []
-            }
             tasksGraph.edges = allSubgraphs.edges;
             allSubgraphs = _.omit(allSubgraphs, ['edges']);
             _.map(allSubgraphs, (subGraph) => {

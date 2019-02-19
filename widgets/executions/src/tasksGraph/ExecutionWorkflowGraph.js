@@ -16,12 +16,23 @@ export default class ExecutionWorkflowGraph extends React.Component {
         this.cancelablePromise = null;
     }
     componentDidMount() {
+        // Running once the first time - otherwise will wait the first time 5 seconds for nothing
+        this._getTasksGraphPromise()
+            .then((tasksGraph) => {
+                if (this.state.graphResult !== tasksGraph) {
+                    this.setState({
+                        graphResult: tasksGraph
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         // Polling the tasks graph every 5 seconds for any updates
         this.timer = setInterval(() => {
             this.cancelablePromise = Stage.Utils.makeCancelable(this._getTasksGraphPromise());
             this.cancelablePromise.promise
                 .then((tasksGraph) => {
-                    debugger;
                     if (this.state.graphResult !== tasksGraph) {
                         this.setState({
                             graphResult: tasksGraph

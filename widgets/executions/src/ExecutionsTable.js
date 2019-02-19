@@ -224,7 +224,7 @@ export default class ExecutionsTable extends React.Component {
                                         </DataTable.Data>
                                     </DataTable.Row>
                                     <DataTable.DataExpandable key={item.id}>
-                                        <ExecutionWorkflowGraph selectedExecution={item} toolbox={this.props.toolbox} widgetBackend={this.props.widgetBackend} />
+                                        <ExecutionWorkflowGraph selectedExecution={item} widgetBackend={this.props.toolbox.getWidgetBackend()} />
                                     </DataTable.DataExpandable>
                                 </DataTable.RowExpandable>
                             );

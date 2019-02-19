@@ -19,46 +19,20 @@ export default class GraphNodes extends React.Component {
             graphNodes: props.graphNodes
         };
     }
-    renderChildren(subgraphChildren) {
-        if (!subgraphChildren)
-            return null;
-        else
-            return <GraphNodes graphNodes={subgraphChildren} />
-    }
     render() {
         return (
-            this.props.graphNodes.map((graphNode) => {
-                if (graphNode.children && graphNode.children.length !== 0) {
-                    return (
-                        <g
-                            key={graphNode.id}
-                            transform={
-                                `translate(
-                                    ${graphNode.x},
-                                    ${graphNode.y + 5}
-                                )`}
-                        >
-                            <GraphNode graphNode={graphNode} />
-                            { this.renderChildren(graphNode.children, graphNode) }
+            this.props.graphNodes.map((graphNode) => 
+                <g key={graphNode.id} transform={`translate(${graphNode.x}, ${graphNode.y + 5})`}>
+                    <GraphNode graphNode={graphNode} />
+                    {
+                        !_.isEmpty(graphNode.children) && 
+                        <React.Fragment>
+                            <GraphNodes graphNodes={graphNode.children} />
                             <GraphEdges graphEdges={graphNode.edges} />
-                        </g>
-                    )
-                }
-                else {
-                    return (
-                        <g
-                            key={graphNode.id}
-                            transform={
-                                `translate(
-                                    ${graphNode.x},
-                                    ${graphNode.y + 5}
-                                )`}
-                        >
-                            <GraphNode graphNode={graphNode} />
-                        </g>
-                    )
-                }
-            })
+                        </React.Fragment>
+                     }
+                </g>
+            )
         )
     }
 }

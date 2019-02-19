@@ -76,7 +76,7 @@ Stage.defineWidget({
         };
 
         return (
-            <ExecutionsTable widget={widget} widgetBackend={toolbox.getWidgetBackend()} data={formattedData} toolbox={toolbox}/>
+            <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox}/>
         );
     }
 });
