@@ -43,26 +43,26 @@ export default class ErrorMessage extends Component {
 
     /**
      * propTypes
-     * @property {object} [error=null] string, array or object containing error text message/messages
-     * @property {function} [onDismiss=()=>{}] function called when either error message visibility timeout (see {@link ErrorMessage.MESSAGE_VISIBLE_TIMEOUT}) expires or user dismiss manually error message
-     * @property {string} [header='Error Occured'] header of error text message
-     * @property {string} [className=''] additional CSS classes to [Message](https://react.semantic-ui.com/elements/message) component
      * @property {boolean} [autoHide=false] if set, then message will be hidden after visibility timeout
+     * @property {string} [className=''] additional CSS classes to [Message](https://react.semantic-ui.com/elements/message) component
+     * @property {object} [error=null] string, array or object containing error text message/messages
+     * @property {string} [header='Error Occured'] header of error text message
+     * @property {function} [onDismiss=()=>{}] function called when either error message visibility timeout (see {@link ErrorMessage.MESSAGE_VISIBLE_TIMEOUT}) expires or user dismiss manually error message
      */
     static propTypes = {
-        error: PropTypes.any,
-        onDismiss: PropTypes.func,
-        header: PropTypes.string,
+        autoHide: PropTypes.bool,
         className: PropTypes.string,
-        autoHide: PropTypes.bool
+        error: PropTypes.any,
+        header: PropTypes.string,
+        onDismiss: PropTypes.func
     };
 
     static defaultProps = {
-        error: null,
-        onDismiss: () => {},
-        header: 'Error Occured',
+        autoHide: false,
         className: '',
-        autoHide: false
+        error: null,
+        header: 'Error Occured',
+        onDismiss: () => {}
     };
 
     /**
@@ -71,7 +71,7 @@ export default class ErrorMessage extends Component {
     static MESSAGE_VISIBLE_TIMEOUT = 10000;
 
     componentDidUpdate(prevProps) {
-        if (!_.isEqual(this.props.error, prevProps.error)) {
+        if (!!this.props.error && !_.isEqual(this.props.error, prevProps.error)) {
             this.setState({hidden: false});
             if (this.props.error) {
                 this._setVisibilityTimeout(ErrorMessage.MESSAGE_VISIBLE_TIMEOUT);
