@@ -51,12 +51,12 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     onApprove () {
-        this._submitUpdate();
+        this.setState({errors: {}}, () => this._submitUpdate(false));
         return false;
     }
 
     onPreview () {
-        this._submitUpdate(true);
+        this.setState({errors: {}}, () => this._submitUpdate(true));
         return true;
     }
 
@@ -168,7 +168,7 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     render() {
-        let {ApproveButton, CancelButton, ErrorMessage, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
+        let {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
         let {InputsHeader, InputsUtils, YamlFileButton, UpdateDetailsModal} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
@@ -180,13 +180,9 @@ class UpdateDeploymentModal extends React.Component {
                     <Icon name="edit"/> Update deployment {this.props.deployment.id}
                 </Modal.Header>
 
-                <Modal.Description>
-                    <ErrorMessage error={_.isEmpty(this.state.errors) ? null : _.valuesIn(this.state.errors)}
-                                  onDismiss={() => this.setState({errors: {}})} autoHide />
-                </Modal.Description>
-
-                <Modal.Content scrolling>
-                    <Form loading={this.state.loading}>
+                <Modal.Content>
+                    <Form loading={this.state.loading} errors={this.state.errors} scrollToError
+                          onErrorsDismiss={() => this.setState({errors: {}})}>
 
                         <Form.Field error={this.state.errors.blueprintName} label='Blueprint' required>
                             <Form.Dropdown search selection value={this.state.blueprint.id} placeholder="Select Blueprint"

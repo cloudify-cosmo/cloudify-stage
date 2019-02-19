@@ -42,7 +42,7 @@ class DeployBlueprintModal extends React.Component {
     }
 
     onApprove () {
-        this._submitDeploy();
+        this.setState({errors: {}}, this._submitDeploy);
         return false;
     }
 
@@ -132,7 +132,7 @@ class DeployBlueprintModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}
+                    <Form loading={this.state.loading} errors={this.state.errors} scrollToError
                           onErrorsDismiss={() => this.setState({errors: {}})}>
 
                         <Form.Field error={this.state.errors.deploymentName} label="Deployment name" required>
