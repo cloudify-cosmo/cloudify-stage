@@ -146,7 +146,7 @@ module.exports = [
                 {
                     from: 'widgets',
                     to: 'appData/widgets',
-                    ignore: ['**/src/*']
+                    ignore: ['**/src/**']
                 }
             ]),
             new CopyWebpackPlugin([
