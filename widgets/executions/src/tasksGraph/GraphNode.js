@@ -18,8 +18,15 @@ export default class GraphNode extends React.Component {
         };
     }
     render() {
+        const textHeight = 18;
+        let currentTextPlacement_Y = -2;
         let rectClassName = 'rect-tasks-graph-general';
-        let state = undefined;
+        let title = this.props.graphNode.labels && this.props.graphNode.labels[0].display_title ? this.props.graphNode.labels[0].display_title : this.props.graphNode.labels[0].text;
+        if (typeof title === 'string') {
+            title = [title];
+        }
+        let display_text = this.props.graphNode.labels && this.props.graphNode.labels[0].display_text ? this.props.graphNode.labels[0].display_text : null;
+        let state = null;
         if (this.props.graphNode.labels && this.props.graphNode.labels[0].state) {
             state = this.props.graphNode.labels[0].state;
             switch(state) {
@@ -37,10 +44,6 @@ export default class GraphNode extends React.Component {
                     rectClassName += ' rect-tasks-graph-failed';
                     break;
             }
-            if (this.props.graphNode.labels[0].retry)
-                state += ` - retry count ${this.props.graphNode.labels[0].retry}`;
-            if (this.props.graphNode.labels[0].operation)
-                state = `${this.props.graphNode.labels[0].operation} - ${state}`
         }
         return (
             <g
@@ -51,26 +54,33 @@ export default class GraphNode extends React.Component {
                     width={this.props.graphNode.width}
                     className={rectClassName}
                 />
-                <text
-                    className='text-tasks-graph-subgraph-title'
-                    transform={
-                        this.props.graphNode.children && this.props.graphNode.children.length === 0 ? // Placing text according to subgraph tier
-                        `translate(10, ${(this.props.graphNode.height / 2) - 5})` :
-                        `translate(0, -5)`
-                    }
-                >
-                    {this.props.graphNode.labels ? this.props.graphNode.labels[0].text : 'No text'}
-                </text>
                 {
-                    state !== undefined && 
-                    <text
-                        className='text-tasks-graph-operation-and-state'
-                        transform={
-                            `translate(10, ${(this.props.graphNode.height / 2) + 13})`
-                        }
-                    >
-                        {state}
-                    </text>
+                    title !== null && title.map((line) => (
+                        <text
+                            key={currentTextPlacement_Y}
+                            className='text-tasks-graph-subgraph-title'
+                            transform={
+                                this.props.graphNode.children && this.props.graphNode.children.length === 0 ? // Placing text according to subgraph tier
+                                `translate(10, ${currentTextPlacement_Y += textHeight})` :
+                                `translate(0, -5)`
+                            }
+                        >
+                            {line}
+                        </text>
+                    ))
+                }
+                {
+                    display_text !== null && display_text.map((line) => (
+                        <text
+                            key={currentTextPlacement_Y}
+                            className='text-tasks-graph-operation-and-state'
+                            transform={
+                                `translate(10, ${currentTextPlacement_Y += textHeight})`
+                            }
+                        >
+                            {line}
+                        </text>
+                    ))
                 }
             </g>
         )

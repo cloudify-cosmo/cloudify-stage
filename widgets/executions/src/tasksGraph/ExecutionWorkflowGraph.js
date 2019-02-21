@@ -47,7 +47,8 @@ export default class ExecutionWorkflowGraph extends React.Component {
     componentWillUnmount() {
         clearInterval(this.timer);
         this.timer = null;
-        this.cancelablePromise.cancel();
+        if (this.cancelablePromise)
+            this.cancelablePromise.cancel();
     }
     _getTasksGraphPromise() {
         const tasksGraphParams = {
