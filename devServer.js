@@ -7,6 +7,7 @@ const webpackDevServer = require('webpack-dev-server');
 
 const webpackConfig = require('./webpack.config');
 const Consts = require('./backend/consts');
+const startWidgetBackendWatcher = require('./scripts/widgetBackendWatcher');
 
 const host = 'localhost';
 const devServerPort = 4000;
@@ -61,3 +62,5 @@ server.listen(devServerPort, host, (err) => {
 
     console.log(`Listening at http://${host}:${devServerPort}/`);
 });
+
+startWidgetBackendWatcher();

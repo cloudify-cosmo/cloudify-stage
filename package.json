@@ -87,6 +87,7 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",
     "chai-enzyme": "^1.0.0-beta.0",
+    "chokidar": "^2.1.2",
     "chrome-driver-standalone": "^2.37.0",
     "clean-webpack-plugin": "^0.1.19",
     "compression-webpack-plugin": "^1.1.11",
