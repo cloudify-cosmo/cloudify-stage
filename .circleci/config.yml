@@ -10,10 +10,10 @@ jobs:
       - checkout
 
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}-{{ checksum "backend/package.json" }}
-          - v1-dependencies-
+#      - restore_cache:
+#          keys:
+#          - v1-dependencies-{{ checksum "package.json" }}-{{ checksum "backend/package.json" }}
+#          - v1-dependencies-
 
       - run:
           name: Install dependencies
