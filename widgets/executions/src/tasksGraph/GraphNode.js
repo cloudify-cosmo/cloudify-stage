@@ -2,7 +2,6 @@
  * Created by barucoh on 23/1/2019.
  */
 import PropTypes from 'prop-types';
-import { throws } from 'assert';
 
 export default class GraphNode extends React.Component {
     /**
@@ -62,7 +61,7 @@ export default class GraphNode extends React.Component {
                             transform={
                                 this.props.graphNode.children && this.props.graphNode.children.length === 0 ? // Placing text according to subgraph tier
                                 `translate(10, ${currentTextPlacement_Y += textHeight})` :
-                                `translate(0, -5)`
+                                'translate(0, -5)'
                             }
                         >
                             {line}

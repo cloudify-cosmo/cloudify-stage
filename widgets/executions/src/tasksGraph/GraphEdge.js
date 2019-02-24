@@ -33,15 +33,15 @@ export default class GraphEdge extends React.Component {
             return (
                 <g className='g-tasks-graph-general g-tasks-graph-edge'>                                            
                     <path
-                        key={`${startPoint.x + startPoint.y}`}
+                        key={`${startPoint.x + startPoint.y + drawingPath.x + drawingPath.y}`}
                         d={`m${startPoint.x} ${startPoint.y} l${drawingPath.x} ${drawingPath.y}`}
                     />
                     <path
-                        key={`${endPoint.x-0.9 + endPoint.y+5}`}
+                        key={`${endPoint.x-0.9 + endPoint.y+5 -5 +5}`}
                         d={`m${endPoint.x-0.9} ${endPoint.y} l-5 5`}
                     />
                     <path
-                        key={`${endPoint.x-0.9 + endPoint.y-5}`}
+                        key={`${endPoint.x-0.9 + endPoint.y-5 -5 -5}`}
                         d={`m${endPoint.x-0.9} ${endPoint.y} l-5 -5`}
                     />
                 </g>
@@ -58,7 +58,7 @@ export default class GraphEdge extends React.Component {
             return (
                 <g className='g-tasks-graph-general g-tasks-graph-edge'>
                     <path
-                        key={`${startPoint.x + startPoint.y}`}
+                        key={`${startPoint.x + startPoint.y + drawingPath.x + drawingPath.y}`}
                         d={`m${startPoint.x} ${startPoint.y} l${drawingPath.x} ${drawingPath.y}`}
                     />
                     {
@@ -71,7 +71,7 @@ export default class GraphEdge extends React.Component {
                                 drawingPath.y = bendPoint.y - prevBendPoint.y
                                 return (
                                     <path
-                                        key={`${bendPoint.x + bendPoint.y}`}
+                                        key={`${bendPoint.x + bendPoint.y + drawingPath.x + drawingPath.y}`}
                                         d={`m${prevBendPoint.x} ${prevBendPoint.y} l${drawingPath.x} ${drawingPath.y}`}
                                     />
                                 )
@@ -79,15 +79,15 @@ export default class GraphEdge extends React.Component {
                         })
                     }
                     <path
-                        key={`${endPoint.x + endPoint.y}`}
+                        key={`${endPoint.x + endPoint.y + drawingPath.x + drawingPath.y}`}
                         d={`m${lastBendPoint.x} ${lastBendPoint.y} l${lastDrawingPath.x} ${lastDrawingPath.y}`}
                     />
                     <path
-                        key={`${endPoint.x-0.9 + endPoint.y+5}`}
+                        key={`${endPoint.x-0.9 + endPoint.y+5 -5 +5}`}
                         d={`m${endPoint.x-0.9} ${endPoint.y} l-5 5`}
                     />
                     <path
-                        key={`${endPoint.x-0.9 + endPoint.y-5}`}
+                        key={`${endPoint.x-0.9 + endPoint.y-5 -5 -5}`}
                         d={`m${endPoint.x-0.9} ${endPoint.y} l-5 -5`}
                     />
                 </g>

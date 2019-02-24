@@ -1,51 +1,60 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
+import PropTypes from 'prop-types';
+
 import GraphNodes from './GraphNodes';
 import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000
 
+let self = null; // Required for the setTimeout function which changes the scope for 'this'
+
 export default class ExecutionWorkflowGraph extends React.Component {
+    /**
+     * @property {Any} [selectedExecution] - Used to pull the execution's tasks graphs and corresponding operations' lists
+     */
+    static propTypes = {
+        selectedExecution: PropTypes.any.isRequired
+    };
     constructor(props, context) {
         super(props, context);
         this.state = {
-            graphResult: undefined
+            graphResult: null,
+            error: ''
         };
         this.timer = null;
         this.cancelablePromise = null;
+        self = this;
     }
     componentDidMount() {
-        // Running once the first time - otherwise will wait the first time 5 seconds for nothing
-        this._getTasksGraphPromise()
+        this._startPolling();
+    }
+    componentWillUnmount() {
+        this._stopPolling();
+    }
+    _startPolling() {
+        self.cancelablePromise = Stage.Utils.makeCancelable(self._getTasksGraphPromise());
+        self.cancelablePromise.promise
             .then((tasksGraph) => {
-                if (this.state.graphResult !== tasksGraph) {
-                    this.setState({
+                if (self.state.graphResult !== tasksGraph) {
+                    self.setState({
                         graphResult: tasksGraph
                     })
                 }
             })
             .catch((error) => {
-                console.log(error);
+                let errorMessage = error.message;
+                if (error.status === 404)
+                    errorMessage = 'The selected execution does not have a tasks graph';
+                self.setState({error: errorMessage});
+                console.debug(error);
+                self._stopPolling();
             });
-        // Polling the tasks graph every 5 seconds for any updates
-        this.timer = setInterval(() => {
-            this.cancelablePromise = Stage.Utils.makeCancelable(this._getTasksGraphPromise());
-            this.cancelablePromise.promise
-                .then((tasksGraph) => {
-                    if (this.state.graphResult !== tasksGraph) {
-                        this.setState({
-                            graphResult: tasksGraph
-                        })
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }, POLLING_INTERVAL);
+        self.timer = setTimeout(self._startPolling, POLLING_INTERVAL);
     }
-    componentWillUnmount() {
-        clearInterval(this.timer);
+    _stopPolling() {
+        clearTimeout(this.timer);
         this.timer = null;
         if (this.cancelablePromise)
             this.cancelablePromise.cancel();
@@ -58,7 +67,8 @@ export default class ExecutionWorkflowGraph extends React.Component {
         return this.props.widgetBackend.doGet('get_tasks_graph', {...tasksGraphParams});
     }
     render() {
-        if (this.state.graphResult !== undefined) {
+        let {ErrorMessage, Loading} = Stage.Basic;
+        if (this.state.graphResult !== null) {
             return (
                 <div id='graphContainer'>
                     <svg
@@ -71,10 +81,17 @@ export default class ExecutionWorkflowGraph extends React.Component {
                 </div>
             )
         }
-        else {
+        else if (this.state.error) {
             return (
                 <div id='graphContainer'>
-                    <label>Loading...</label>
+                    <ErrorMessage error={this.state.error} />
+                </div>
+            )
+        }
+        else {
+            return (
+                <div id='graphContainerLoading'>
+                    <Loading />
                 </div>
             )
         }

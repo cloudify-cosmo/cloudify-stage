@@ -122,8 +122,6 @@ module.exports = (r) => {
                         let allSubgraphs = _constructSubgraphs(operationsList);
                         // Constructing Dependencies
                         allSubgraphs = _constructDependencies(operationsList, allSubgraphs);
-                        // Removing irrelevant vertices (when a task is rescheduled due to failure mostly)
-                        allSubgraphs = _safeDeleteIrrelevantGraphVertices(allSubgraphs);
                         // Increase the Node's rectangle height based on inner texts
                         allSubgraphs = _adjustingNodeSizes(allSubgraphs);
                         // Remove LocalWorkflow & NOPWorkflowTasks from the graph while keeping it connected
@@ -138,15 +136,20 @@ module.exports = (r) => {
                         })
                     })
                     .catch((error) => {
+                        console.log(error);
                         next(error);
                     });
                 })
                 .catch((error) => {
+                    console.log(error);
                     next(error);
                 });
         };
         const _constructSubgraphs = (operationsList) => {
-            // TODO: Add description to why all the subgraphs are in the same list
+            // All the subgraphs and leaves are in the same list for better time-complexity performance, meaning - 
+            // For every subgraph - instead of traversing its children until we find the desired subgraph/leaf, we simply
+            // keep the child (or grand child) subgraph/leaf in the first-tier list as a pointer to the real child.
+            // When we're done creating the skeleton for ELK, we remove all the pointers and only keep the root subgraphs.
             let allSubgraphs = {};
             _.map(operationsList, (task) => {
                 let taskName = _.split(task.name, 'cloudify.interfaces.');
@@ -208,6 +211,8 @@ module.exports = (r) => {
             return allSubgraphs;
         }
         const _constructDependencies = (operationsList, allSubgraphs) => {
+            // Connecting all the operations into a graph
+            // *IMPORTANT NOTE* - Retrying tasks depend on their previous failed task
             allSubgraphs['edges'] = [];
             _.map(operationsList, (task) => {
                 if (task.parameters.current_retries > 0)
@@ -237,7 +242,7 @@ module.exports = (r) => {
             return allSubgraphs;
         }
         const _safeDeleteIrrelevantGraphVertices = (allSubgraphs) => {
-            // Remove LocalWorkflow & NOPWorkflowTasks from the graph
+            // Remove LocalWorkflow, NOPWorkflowTasks and retrying-tasks from the graph
             // while keeping it connected
             let existingEdges = new Set(); // Used to remove deuplicate edges
             _.map(allSubgraphs, (subGraph) => {
@@ -264,6 +269,7 @@ module.exports = (r) => {
                                 else if (targetNode === workflowTask.id) {
                                     sourceNodes.push(sourceNode);
                                     if (workflowTask.labels[0].retry > 0) {
+                                        // If a task is retrying - delete it and combine it with its father
                                         allSubgraphs[sourceNode].labels[0].retry = workflowTask.labels[0].retry;
                                         allSubgraphs[sourceNode].labels[0].state = workflowTask.labels[0].state;
                                     }
@@ -343,13 +349,13 @@ module.exports = (r) => {
                     numberOfSplits += textToCalculate.length - 1;
                     if (numberOfSplits > 0)
                         subGraph.height += textHeight * numberOfSplits;
-                    /*else
-                        subGraph.labels.operation = [textToCalculate];*/
                 }
             })
             return allSubgraphs;
         }
         const _cleanSubgraphsList = (allSubgraphs) => {
+            // Removing irrelevant vertices (when a task is rescheduled due to failure mostly)
+            allSubgraphs = _safeDeleteIrrelevantGraphVertices(allSubgraphs);
             allSubgraphs = _.omitBy(allSubgraphs, (subGraph) => {
                 // Return all the nodes that are root-level subgraphs
                 let containing_subgraph = subGraph.containing_subgraph;
