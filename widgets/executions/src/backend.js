@@ -119,15 +119,15 @@ module.exports = (r) => {
                     })
                     .then((operationsList) => {
                         // Constructing SubGraphs
-                        let allSubgraphs = _constructSubgraphs(operationsList);
+                        let allSubgraphs = constructSubgraphs(operationsList);
                         // Constructing Dependencies
-                        allSubgraphs = _constructDependencies(operationsList, allSubgraphs);
+                        allSubgraphs = constructDependencies(operationsList, allSubgraphs);
                         // Increase the Node's rectangle height based on inner texts
-                        allSubgraphs = _adjustingNodeSizes(allSubgraphs);
+                        allSubgraphs = adjustingNodeSizes(allSubgraphs);
                         // Remove LocalWorkflow & NOPWorkflowTasks from the graph while keeping it connected
-                        allSubgraphs = _cleanSubgraphsList(allSubgraphs);
+                        allSubgraphs = cleanSubgraphsList(allSubgraphs);
                         // Creating the ELK-formatted graph
-                        return _createELKTasksGraphs(allSubgraphs);
+                        return createELKTasksGraphs(allSubgraphs);
                     })
                     .then((tasksGraph) => {
                         elk.layout(tasksGraph)
@@ -145,7 +145,7 @@ module.exports = (r) => {
                     next(error);
                 });
         };
-        const _constructSubgraphs = (operationsList) => {
+        const constructSubgraphs = (operationsList) => {
             // All the subgraphs and leaves are in the same list for better time-complexity performance, meaning - 
             // For every subgraph - instead of traversing its children until we find the desired subgraph/leaf, we simply
             // keep the child (or grand child) subgraph/leaf in the first-tier list as a pointer to the real child.
@@ -210,7 +210,7 @@ module.exports = (r) => {
             });
             return allSubgraphs;
         }
-        const _constructDependencies = (operationsList, allSubgraphs) => {
+        const constructDependencies = (operationsList, allSubgraphs) => {
             // Connecting all the operations into a graph
             // *IMPORTANT NOTE* - Retrying tasks depend on their previous failed task
             allSubgraphs['edges'] = [];
@@ -241,7 +241,7 @@ module.exports = (r) => {
             });
             return allSubgraphs;
         }
-        const _safeDeleteIrrelevantGraphVertices = (allSubgraphs) => {
+        const safeDeleteIrrelevantGraphVertices = (allSubgraphs) => {
             // Remove LocalWorkflow, NOPWorkflowTasks and retrying-tasks from the graph
             // while keeping it connected
             let existingEdges = new Set(); // Used to remove deuplicate edges
@@ -297,11 +297,11 @@ module.exports = (r) => {
             });
             return allSubgraphs;
         }
-        const _adjustingNodeSizes = (allSubgraphs) => {
+        const adjustingNodeSizes = (allSubgraphs) => {
             // Since some operations' inner text may exceed its Node's width
             // we need to increase the Node's height accordingly and split the text
             // This process must be here after all the nodes are in the list
-            const _textSplitCalculation = (nodeWidth, textToCalculate) => {
+            const textSplitCalculation = (nodeWidth, textToCalculate) => {
                 let maximumLength = _.floor((nodeWidth - (paddingLeftRight * 2)) / textSizingFactor);
                 if (textToCalculate.length > maximumLength) {
                     let indexOfSplitLocation;
@@ -310,7 +310,7 @@ module.exports = (r) => {
                         if (textToCalculate[indexOfSplitLocation] == ' ')
                             break;
                     }
-                    let textArr = _textSplitCalculation(
+                    let textArr = textSplitCalculation(
                         nodeWidth,
                         textToCalculate.substring(indexOfSplitLocation + 1)
                     )
@@ -329,7 +329,7 @@ module.exports = (r) => {
                     let textToCalculate = '';
                     if (subGraph.labels[0].text) {
                         textToCalculate = subGraph.labels[0].text;
-                        textToCalculate = _textSplitCalculation(subGraph.width, textToCalculate);
+                        textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
                         // Each element in the resulting array will be rendered in a separate <text> element 
                         subGraph.labels[0].display_title = textToCalculate;
                         numberOfSplits += textToCalculate.length - 1;
@@ -343,7 +343,7 @@ module.exports = (r) => {
                     if (subGraph.labels[0].retry)
                         tempArr.push(subGraph.labels[0].retry);
                     textToCalculate = tempArr.join(' - ');
-                    textToCalculate = _textSplitCalculation(subGraph.width, textToCalculate);
+                    textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
                     // Each element in the resulting array will be rendered in a separate <text> element 
                     subGraph.labels[0].display_text = textToCalculate;
                     numberOfSplits += textToCalculate.length - 1;
@@ -353,9 +353,9 @@ module.exports = (r) => {
             })
             return allSubgraphs;
         }
-        const _cleanSubgraphsList = (allSubgraphs) => {
+        const cleanSubgraphsList = (allSubgraphs) => {
             // Removing irrelevant vertices (when a task is rescheduled due to failure mostly)
-            allSubgraphs = _safeDeleteIrrelevantGraphVertices(allSubgraphs);
+            allSubgraphs = safeDeleteIrrelevantGraphVertices(allSubgraphs);
             allSubgraphs = _.omitBy(allSubgraphs, (subGraph) => {
                 // Return all the nodes that are root-level subgraphs
                 let containing_subgraph = subGraph.containing_subgraph;
@@ -364,7 +364,7 @@ module.exports = (r) => {
             });
             return allSubgraphs;
         }
-        const _createELKTasksGraphs = (allSubgraphs) => {
+        const createELKTasksGraphs = (allSubgraphs) => {
             tasksGraph.edges = allSubgraphs.edges;
             allSubgraphs = _.omit(allSubgraphs, ['edges']);
             _.map(allSubgraphs, (subGraph) => {

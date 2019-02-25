@@ -1,14 +1,10 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
-import PropTypes from 'prop-types';
-
 import GraphNodes from './GraphNodes';
 import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000
-
-let self = null; // Required for the setTimeout function which changes the scope for 'this'
 
 export default class ExecutionWorkflowGraph extends React.Component {
     /**
@@ -25,20 +21,20 @@ export default class ExecutionWorkflowGraph extends React.Component {
         };
         this.timer = null;
         this.cancelablePromise = null;
-        self = this;
+        this.startPolling.bind(this); // Required for the setTimeout function which changes the scope for 'this'
     }
     componentDidMount() {
-        this._startPolling();
+        this.startPolling();
     }
     componentWillUnmount() {
-        this._stopPolling();
+        this.stopPolling();
     }
-    _startPolling() {
-        self.cancelablePromise = Stage.Utils.makeCancelable(self._getTasksGraphPromise());
-        self.cancelablePromise.promise
+    startPolling() {
+        this.cancelablePromise = Stage.Utils.makeCancelable(this.getTasksGraphPromise());
+        this.cancelablePromise.promise
             .then((tasksGraph) => {
-                if (self.state.graphResult !== tasksGraph) {
-                    self.setState({
+                if (this.state.graphResult !== tasksGraph) {
+                    this.setState({
                         graphResult: tasksGraph
                     })
                 }
@@ -47,19 +43,19 @@ export default class ExecutionWorkflowGraph extends React.Component {
                 let errorMessage = error.message;
                 if (error.status === 404)
                     errorMessage = 'The selected execution does not have a tasks graph';
-                self.setState({error: errorMessage});
+                this.setState({error: errorMessage});
                 console.debug(error);
-                self._stopPolling();
+                this.stopPolling();
             });
-        self.timer = setTimeout(self._startPolling, POLLING_INTERVAL);
+        this.timer = setTimeout(this._startPolling, POLLING_INTERVAL);
     }
-    _stopPolling() {
+    stopPolling() {
         clearTimeout(this.timer);
         this.timer = null;
         if (this.cancelablePromise)
             this.cancelablePromise.cancel();
     }
-    _getTasksGraphPromise() {
+    getTasksGraphPromise() {
         const tasksGraphParams = {
             execution_id: this.props.selectedExecution.id,
             name: this.props.selectedExecution.workflow_id
