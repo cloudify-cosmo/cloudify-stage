@@ -146,12 +146,12 @@ app.get('*',function (request, response){
 
 ToursHandler.init().then(function(){
     // Only after we have all the data in place start the server
-    app.listen(8088, function () {
+    app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST, function () {
         logger.info('Server started in mode ' + ServerSettings.settings.mode);
         if (process.env.NODE_ENV === 'development') {
             logger.info('Server started for development');
         }
-        logger.info('Stage runs on port 8088!');
+        logger.info(`Stage runs on ${Consts.SERVER_HOST}:${Consts.SERVER_PORT}!`);
     });
 });
 
