@@ -16,3 +16,5 @@ selenium-debug.log
 
 /resources
 /userData
+
+/widgets/*/backend.js
