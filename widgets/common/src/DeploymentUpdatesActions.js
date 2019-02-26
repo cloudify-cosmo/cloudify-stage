@@ -10,6 +10,10 @@ class DeploymentUpdatesActions {
     doGetUpdate(id) {
         return this.toolbox.getManager().doGet(`/deployment-updates/${id}`);
     }
+
+    doGetExecutionParameters(id) {
+        return this.toolbox.getManager().doGet(`/executions/${id}?_include=parameters`);
+    }
 }
 
 Stage.defineCommon({
