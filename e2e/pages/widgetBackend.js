@@ -38,7 +38,7 @@ module.exports = {
             },
             props: {
                 urlLabel: 'URL',
-                blankUrl: 'http://blank.org/'
+                blankUrl: 'https://this-page-intentionally-left-blank.org/'
             },
             commands: [
                 {
