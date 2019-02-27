@@ -27,6 +27,7 @@
     "cross-env": "^5.2.0",
     "decompress": "^4.0.0",
     "ejs": "^2.5.9",
+    "elkjs": "^0.4.1",
     "express": "^4.14.0",
     "express-static-gzip": "^0.3.2",
     "flat": "^4.0.0",

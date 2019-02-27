@@ -10,6 +10,7 @@ Stage.defineWidget({
     description: 'This widget shows the deployment executions',
     initialWidth: 8,
     initialHeight: 24,
+    hasStyle: true,
     color : "teal",
     fetchUrl: {
         executions: '[manager]/executions?[params]',

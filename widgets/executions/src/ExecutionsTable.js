@@ -4,6 +4,7 @@
 
 import SystemWorkflowIcon from './SystemWorkflowIcon';
 import DryRunIcon from './DryRunIcon';
+import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 
 export default class ExecutionsTable extends React.Component {
     constructor(props, context) {
@@ -104,12 +105,11 @@ export default class ExecutionsTable extends React.Component {
              Modal, ParameterValue, ParameterValueDescription, PopupMenu, Table} = Stage.Basic;
         let {IdPopup, UpdateDetailsModal} = Stage.Common;
         let Utils = Stage.Utils;
-        
+
         const MenuAction = ExecutionsTable.MenuAction;
 
         let fieldsToShow = this.props.widget.configuration.fieldsToShow;
         let execution = this.state.execution || {parameters: {}};
-
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
@@ -150,78 +150,83 @@ export default class ExecutionsTable extends React.Component {
                     {
                         this.props.data.items.map((item)=>{
                             return (
-                                <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}
-                                               onMouseOver={() => this.state.hoveredExecution !== item.id && this.setState({hoveredExecution: item.id})}
-                                               onMouseOut={() =>  this.state.hoveredExecution === item.id && this.setState({hoveredExecution: null})}>
-                                    <DataTable.Data>
-                                        <IdPopup id={item.id} selected={this.state.hoveredExecution === item.id} />
-                                    </DataTable.Data>
-                                    <DataTable.Data>{item.blueprint_id}</DataTable.Data>
-                                    <DataTable.Data>{item.deployment_id}</DataTable.Data>
-                                    <DataTable.Data>{item.workflow_id}</DataTable.Data>
-                                    <DataTable.Data>{item.id}</DataTable.Data>
-                                    <DataTable.Data>{item.created_at}</DataTable.Data>
-                                    <DataTable.Data>{item.scheduled_for}</DataTable.Data>
+                                <DataTable.RowExpandable key={item.id} expanded={item.isSelected}>
+                                    <DataTable.Row key={item.id} selected={item.isSelected} onClick={this._selectExecution.bind(this,item)}
+                                                onMouseOver={() => this.state.hoveredExecution !== item.id && this.setState({hoveredExecution: item.id})}
+                                                onMouseOut={() =>  this.state.hoveredExecution === item.id && this.setState({hoveredExecution: null})}>
+                                        <DataTable.Data>
+                                            <IdPopup id={item.id} selected={this.state.hoveredExecution === item.id} />
+                                        </DataTable.Data>
+                                        <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+                                        <DataTable.Data>{item.deployment_id}</DataTable.Data>
+                                        <DataTable.Data>{item.workflow_id}</DataTable.Data>
+                                        <DataTable.Data>{item.id}</DataTable.Data>
+                                        <DataTable.Data>{item.created_at}</DataTable.Data>
+                                        <DataTable.Data>{item.scheduled_for}</DataTable.Data>
                                     <DataTable.Data>{item.ended_at}</DataTable.Data>
-                                    <DataTable.Data>{item.created_by}</DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-                                        <SystemWorkflowIcon execution={item} />
-                                        <DryRunIcon execution={item} />
-                                    </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-                                        <ExecutionStatus execution={item} />
-                                    </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
+                                        <DataTable.Data>{item.created_by}</DataTable.Data>
+                                        <DataTable.Data className="center aligned">
+                                            <SystemWorkflowIcon execution={item} />
+                                            <DryRunIcon execution={item} />
+                                        </DataTable.Data>
+                                        <DataTable.Data className="center aligned">
+                                            <ExecutionStatus execution={item} />
+                                        </DataTable.Data>
+                                        <DataTable.Data className="center aligned">
 
-                                        <PopupMenu className="menuAction">
-                                            <Menu pointing vertical>
-                                                <Menu.Item content='Show Execution Parameters'
-                                                           icon='options'
-                                                           name={MenuAction.SHOW_EXECUTION_PARAMETERS}
-                                                           onClick={this._actionClick.bind(this, item)} />
-                                                {
-                                                    Utils.Execution.isUpdateExecution(item) &&
-                                                    <Menu.Item content='Show Update Details'
-                                                               icon='magnify'
-                                                               name={MenuAction.SHOW_UPDATE_DETAILS}
-                                                               onClick={this._actionClick.bind(this, item)} />
-                                                }
-                                                {
-                                                    Utils.Execution.isFailedExecution(item) &&
-                                                    <Menu.Item content='Show Error Details'
-                                                               icon={<Icon name='exclamation circle' color='red' />}
-                                                               name={MenuAction.SHOW_ERROR_DETAILS}
-                                                               onClick={this._actionClick.bind(this, item)} />
-                                                }
-                                                {
-                                                    (Utils.Execution.isCancelledExecution(item) || Utils.Execution.isFailedExecution(item)) &&
+                                            <PopupMenu className="menuAction">
+                                                <Menu pointing vertical>
+                                                    <Menu.Item content='Show Execution Parameters'
+                                                            icon='options'
+                                                            name={MenuAction.SHOW_EXECUTION_PARAMETERS}
+                                                            onClick={this._actionClick.bind(this, item)} />
+                                                    {
+                                                        Utils.Execution.isUpdateExecution(item) &&
+                                                        <Menu.Item content='Show Update Details'
+                                                                icon='magnify'
+                                                                name={MenuAction.SHOW_UPDATE_DETAILS}
+                                                                onClick={this._actionClick.bind(this, item)} />
+                                                    }
+                                                    {
+                                                        Utils.Execution.isFailedExecution(item) &&
+                                                        <Menu.Item content='Show Error Details'
+                                                                icon={<Icon name='exclamation circle' color='red' />}
+                                                                name={MenuAction.SHOW_ERROR_DETAILS}
+                                                                onClick={this._actionClick.bind(this, item)} />
+                                                    }
+                                                    {
+                                                        (Utils.Execution.isCancelledExecution(item) || Utils.Execution.isFailedExecution(item)) &&
                                                     <Menu.Item content='Resume'
                                                                icon={<Icon name='play' color='green' />}
                                                                name={MenuAction.RESUME_EXECUTION}
                                                                onClick={this._actionClick.bind(this, item)} />
                                                 }
                                                 {
-                                                    (Utils.Execution.isActiveExecution(item) || Utils.Execution.isWaitingExecution(item)) &&
-                                                    <Menu.Item content='Cancel'
-                                                               icon='cancel'
-                                                               name={MenuAction.CANCEL_EXECUTION}
-                                                               onClick={this._actionClick.bind(this, item)} />
-                                                }
-                                                {
-                                                    (Utils.Execution.isActiveExecution(item) || Utils.Execution.isWaitingExecution(item)) &&
-                                                    <Menu.Item content='Force Cancel'
-                                                               icon={<Icon name='cancel' color='red' />}
-                                                               name={MenuAction.FORCE_CANCEL_EXECUTION}
-                                                               onClick={this._actionClick.bind(this, item)}/>
-                                                }
-                                                <Menu.Item content='Kill Cancel'
-                                                           icon={<Icon name='stop' color='red' />}
-                                                           name={MenuAction.KILL_CANCEL_EXECUTION}
-                                                           onClick={this._actionClick.bind(this, item)} />
-                                            </Menu>
-                                        </PopupMenu>
-                                    </DataTable.Data>
-                                </DataTable.Row>
+                                                    (Utils.Execution.isActiveExecution(item) || Utils.Execution.isWaitingExecution(item))&&
+                                                        <Menu.Item content='Cancel'
+                                                                icon='cancel'
+                                                                name={MenuAction.CANCEL_EXECUTION}
+                                                                onClick={this._actionClick.bind(this, item)} />
+                                                    }
+                                                    {
+                                                        (Utils.Execution.isActiveExecution(item) || Utils.Execution.isWaitingExecution(item))&&
+                                                        <Menu.Item content='Force Cancel'
+                                                                icon={<Icon name='cancel' color='red' />}
+                                                                name={MenuAction.FORCE_CANCEL_EXECUTION}
+                                                                onClick={this._actionClick.bind(this, item)}/>
+                                                    }
+                                                    <Menu.Item content='Kill Cancel'
+                                                            icon={<Icon name='stop' color='red' />}
+                                                            name={MenuAction.KILL_CANCEL_EXECUTION}
+                                                            onClick={this._actionClick.bind(this, item)} />
+                                                </Menu>
+                                            </PopupMenu>
+                                        </DataTable.Data>
+                                    </DataTable.Row>
+                                    <DataTable.DataExpandable key={item.id}>
+                                        <ExecutionWorkflowGraph selectedExecution={item} widgetBackend={this.props.toolbox.getWidgetBackend()} />
+                                    </DataTable.DataExpandable>
+                                </DataTable.RowExpandable>
                             );
                         })
                     }
