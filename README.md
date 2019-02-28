@@ -37,7 +37,10 @@ Start the stage server backend and the webserver:
 
 Open browser to see if application is running. It runs by default on `http://localhost:4000`. 
 
-Changes in the source code shall be hot loaded to the development development version of the application. For changes `app` directory you don't need to reload page, for changes in `widgets` directory you need to reload page to see your updates.
+Changes in the source code shall be hot loaded to the development version of the application:
+- for changes in `app` directory you don't need to reload page, 
+- for changes in `widgets` directory you need to reload page to see your updates,
+- for changes in `backend` directory you don't need to reload page as backend server will automatically be restarted.
 
 ### Remote deployment
 - create application package:
