@@ -14,16 +14,17 @@ var ManagerHandler = require('../handler/ManagerHandler');
 
 var logger = require('log4js').getLogger('ServerProxy');
 
-function _errorHandler(res,err) {
-    var isTimeout = err.code === 'ETIMEDOUT';
-    var isConnTimeout = err.connect;
+function _errorHandler(url, res, err) {
+    const isTimeout = err.code === 'ETIMEDOUT';
+    const isConnTimeout = err.connect;
 
-    var exMsg = isConnTimeout ?
+    const urlMsg = `Requested URL: ${url}.`;
+    const exMsg = isConnTimeout ?
                 'Manager is not available' :
                 ( isTimeout ? 'Request timed out' : 'An unexpected error has occurred: ' + err.message);
 
-    logger.error(exMsg, err);
-    res.status(500).send({message: exMsg});
+    logger.error(`${urlMsg} ${exMsg}`, err);
+    res.status(500).send({message: `${urlMsg} ${exMsg}`});
 }
 
 function buildManagerUrl(req,res,next) {
@@ -56,7 +57,7 @@ async function proxyRequest(req,res,next) {
             req.su,
             options
         )
-        .on('error',function(err){_errorHandler(res,err)}))
+        .on('error',function(err){_errorHandler(req.su,res,err)}))
         .pipe(res);
 }
 
