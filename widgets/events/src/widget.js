@@ -86,7 +86,7 @@ Stage.defineWidget({
         if (timeStart || timeEnd) {
             timeStart = timeStart?timeStart.utc().toISOString():'';
             timeEnd = timeEnd?timeEnd.utc().toISOString():'';
-            params._range = `@timestamp,${timeStart},${timeEnd}`;
+            params._range = `@reported_timestamp,${timeStart},${timeEnd}`;
         }
 
         params.type = eventFilter.type;
@@ -118,7 +118,7 @@ Stage.defineWidget({
                                             item.reported_timestamp + item.deployment_id + item.type + item.execution_id);
                 return Object.assign({}, item, {
                     id: id,
-                    timestamp: Stage.Utils.Time.formatTimestamp(item.timestamp),
+                    timestamp: Stage.Utils.Time.formatTimestamp(item.reported_timestamp, 'DD-MM-YYYY HH:mm:ss.SSS', moment.ISO_8601),
                     isSelected: id === SELECTED_EVENT_ID || (widget.configuration.showLogs && id === SELECTED_LOG_ID)
                 })
             }),
