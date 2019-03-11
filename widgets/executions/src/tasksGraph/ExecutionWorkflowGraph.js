@@ -21,7 +21,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
         };
         this.timer = null;
         this.cancelablePromise = null;
-        this.startPolling.bind(this); // Required for the setTimeout function which changes the scope for 'this'
+        this.startPolling = this.startPolling.bind(this); // Required for the setTimeout function which changes the scope for 'this'
     }
     componentDidMount() {
         this.startPolling();
@@ -47,7 +47,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                 console.debug(error);
                 this.stopPolling();
             });
-        this.timer = setTimeout(this._startPolling, POLLING_INTERVAL);
+        this.timer = setTimeout(this.startPolling, POLLING_INTERVAL);
     }
     stopPolling() {
         clearTimeout(this.timer);
