@@ -28,13 +28,22 @@ class Routes extends Component {
                 } />
                 <Route exact path={Consts.ERROR_PAGE_PATH} component={LogoPage} />
                 <Route exact path={Consts.ERROR_NO_TENANTS_PAGE_PATH} component={LogoPage} />
-                <Route exact path={Consts.MAINTENANCE_PAGE_PATH} component={MaintenanceMode} />
+                {
+                    this.props.isLoggedIn && this.props.isLicenseRequired &&
+                    <Route exact path={Consts.LICENSE_PAGE_PATH} component={LogoPage} />
+                }
+                {
+                    this.props.isLoggedIn &&
+                    <Route exact path={Consts.MAINTENANCE_PAGE_PATH} component={MaintenanceMode}/>
+                }
                 <Route render={(props) => (
                     this.props.isLoggedIn
                         ? this.props.isInMaintenanceMode
-                            ? ( <Redirect to={Consts.MAINTENANCE_PAGE_PATH} /> )
-                            : ( <Layout {...props} /> )
-                        : ( <Redirect to={Consts.LOGIN_PAGE_PATH} /> )
+                            ? <Redirect to={Consts.MAINTENANCE_PAGE_PATH} />
+                            : this.props.isProductOperational
+                                ? <Layout {...props} />
+                                : <Redirect to={Consts.LICENSE_PAGE_PATH} />
+                        : <Redirect to={Consts.LOGIN_PAGE_PATH} />
                 )} />
             </Switch>
         );

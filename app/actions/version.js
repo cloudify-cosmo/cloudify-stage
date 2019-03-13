@@ -4,12 +4,10 @@
 import * as types from './types';
 import Manager from '../utils/Manager';
 
-export function setVersion(version, distribution, distroRelease) {
+export function setVersion(version) {
     return {
         type: types.SET_MANAGER_VERSION,
-        version,
-        distribution,
-        distroRelease
+        version
     }
 }
 
@@ -17,8 +15,8 @@ export function getVersion () {
     return function(dispatch, getState) {
         var managerAccessor = new Manager(getState().manager);
         return managerAccessor.doGet('/version')
-            .then((data)=>{
-                dispatch(setVersion(data.version, data.distribution, data.distro_release));
+            .then((version)=>{
+                dispatch(setVersion(version));
             });
     }
 }

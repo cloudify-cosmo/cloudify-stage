@@ -13,6 +13,11 @@ module.exports = {
 
     WIDGET_ID_HEADER: 'widget-id',
     TOKEN_COOKIE_NAME: 'XSRF-TOKEN',
+
+    EDITION: {
+        PREMIUM: 'premium',
+        COMMUNITY: 'community'
+    },
 };
 
 module.exports.ALLOWED_METHODS_ARRAY = _.values(module.exports.ALLOWED_METHODS_OBJECT);
