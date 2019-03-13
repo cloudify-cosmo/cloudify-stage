@@ -15,8 +15,11 @@ function requestLogin() {
     }
 }
 
-function receiveLogin() {
+function receiveLogin(version, license) {
     return {
+        version,
+        license,
+        licenseRequired: !_.isNull(license),
         type: types.RES_LOGIN,
         receivedAt: Date.now()
     }
@@ -31,39 +34,40 @@ function errorLogin(username,err) {
     }
 }
 
+
 export function login (username, password, redirect) {
-    return function (dispatch) {
+    return function (dispatch, getState) {
         dispatch(requestLogin());
         return Auth.login(username,password)
-                    .then(() => {
-                        if(redirect){
-                            window.location = redirect;
-                        } else{
-                            dispatch(receiveLogin());
-                            dispatch(push(Consts.HOME_PAGE_PATH));
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        if(err.status === 403){
-                            dispatch(errorLogin(username));
-                            dispatch(push({pathname: Consts.ERROR_NO_TENANTS_PAGE_PATH, search: redirect ? '?redirect='+redirect : ''}));
-                        } else{
-                            dispatch(errorLogin(username, err));
-                        }
-                    });
+            .then(({version, license}) => {
+                dispatch(receiveLogin(version, license));
+
+                if(redirect){
+                    window.location = redirect;
+                } else{
+                    dispatch(push(Consts.HOME_PAGE_PATH));
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                if(err.status === 403){
+                    dispatch(errorLogin(username));
+                    dispatch(push({pathname: Consts.ERROR_NO_TENANTS_PAGE_PATH, search: redirect ? '?redirect='+redirect : ''}));
+                } else{
+                    dispatch(errorLogin(username, err));
+                }
+            });
     }
 }
 
 
-function responseUserData(username, systemRole, groupSystemRoles, tenantsRoles, serverVersion){
+function responseUserData(username, systemRole, groupSystemRoles, tenantsRoles){
     return {
         type: types.SET_USER_DATA,
         username,
         role: systemRole,
         groupSystemRoles,
-        tenantsRoles,
-        serverVersion
+        tenantsRoles
     }
 }
 
@@ -71,7 +75,7 @@ export function getUserData() {
     return function (dispatch, getState) {
         return Auth.getUserData(getState().manager)
             .then(data => {
-                dispatch(responseUserData(data.username, data.role, data.groupSystemRoles, data.tenantsRoles, data.serverVersion));
+                dispatch(responseUserData(data.username, data.role, data.groupSystemRoles, data.tenantsRoles));
             });
     }
 }

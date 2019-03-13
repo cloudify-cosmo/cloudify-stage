@@ -2,11 +2,12 @@
  * Created by edenp on 7/30/17.
  */
 
-let ManagerHandler = require('./ManagerHandler');
-let logger = require('log4js').getLogger('AuthHandler');
-let _ = require('lodash');
-let ServerSettings = require('../serverSettings');
+const _ = require('lodash');
+const Consts = require('../consts');
+const ManagerHandler = require('./ManagerHandler');
 
+let ServerSettings = require('../serverSettings');
+let logger = require('log4js').getLogger('AuthHandler');
 let authorizationCache = {};
 
 class AuthHandler {
@@ -24,6 +25,16 @@ class AuthHandler {
 
     static getUser(token) {
         return ManagerHandler.jsonRequest('GET', '/user?_get_data=true', {
+            'Authentication-Token': token
+        });
+    }
+
+    static isProductLicensed(version) {
+        return !_.isEqual(version.edition, Consts.EDITION.COMMUNITY);
+    }
+
+    static getLicense(token) {
+        return ManagerHandler.jsonRequest('GET', '/license', {
             'Authentication-Token': token
         });
     }
@@ -62,7 +73,7 @@ class AuthHandler {
                     ServerSettings.settings.mode = ServerSettings.MODE_COMMUNITY;
                 }
 
-                return Promise.resolve(version.version);
+                return Promise.resolve(version);
             });
     }
 
