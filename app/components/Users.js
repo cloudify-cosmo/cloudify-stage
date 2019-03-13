@@ -45,6 +45,11 @@ export default class Users extends Component {
                                            icon='undo' text='Reset Templates' value='reset'
                                            title='Reset application screens'
                                            onClick={this.props.onReset} />);
+        if (this.props.isLicenseRequired) {
+            commonElements.push(<Dropdown.Item key='license' id='licenseMenuItem'
+                                               icon='key' text='License Management' value='license'
+                                               onClick={this.props.onLicense} />);
+        }
         commonElements.push(<Dropdown.Divider key='log-out-divider'/>);
         commonElements.push(<Dropdown.Item key='log-out' id='logoutMenuItem'
                                            icon='log out' text='Logout' value='logout'
@@ -64,7 +69,7 @@ export default class Users extends Component {
                             }
                             {
                                 this.props.canTemplateManagement &&
-                                    <Dropdown.Item icon='list layout' text='Template management' value='templates' title='Template management'
+                                    <Dropdown.Item icon='list layout' text='Template Management' value='templates' title='Template management'
                                                onClick={this.props.onTemplates} id='templatesMenuItem'/>
                             }
                             {commonElements}
