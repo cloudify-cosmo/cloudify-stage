@@ -284,20 +284,6 @@ div.headerBar {
   }
 }
 
-.coloredContainer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 55px;
-  bottom: 0;
-
-  .ui.segment.messageSegment {
-    max-width: 400px !important;
-    top: 120px;
-    margin: auto;
-  }
-}
-
 .uploadSnapshot {
   float: right;
 }
@@ -366,16 +352,17 @@ div.headerBar {
 .logoPage,.maintenancePage {
   margin: 0 !important;
   padding: 0 !important;
+  overflow: auto;
 }
 
-.configManager.ui.segment, .logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
+.logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
 
-  .configManagerContainer, .loginContainer {
+  .loginContainer {
     margin: auto;
     width: 400px;
     height: 170px;
@@ -384,17 +371,14 @@ div.headerBar {
     right: 0;
     top: 0;
     bottom: 0;
-  }
 
-  .maintenanceContainer {
-    margin: auto;
-    width: 600px;
-  }
-
-  .loginContainer {
     .loginHeader {
       text-align: center;
       margin-bottom: 30px;
+    }
+
+    button {
+      width: 100%;
     }
   }
 
@@ -402,9 +386,6 @@ div.headerBar {
     height: 400px;
   }
 
-  button {
-    width: 100%;
-  }
 
 }
 

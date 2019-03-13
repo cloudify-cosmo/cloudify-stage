@@ -50,7 +50,7 @@ export default class MaintenanceModePageMessage extends Component {
             <div className='maintenancePage ui segment basic'>
                 <Logo />
 
-                <MessageContainer className='maintenanceContainer'>
+                <MessageContainer wide>
                     <Header as='h2'>Maintenance mode</Header>
 
                     <p>Server is on maintenance mode and is not available at the moment.</p>
