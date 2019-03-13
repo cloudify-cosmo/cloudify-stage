@@ -175,7 +175,12 @@ export default class External {
 
         if (data) {
             try {
-                options.body = JSON.stringify(data)
+                if (_.isString(data)) {
+                    options.body = data;
+                    _.merge(options.headers, this._contentType('text/plain'));
+                } else {
+                    options.body = JSON.stringify(data);
+                }
             } catch (e) {
                 logger.error('Error stringifying data. URL: '+actualUrl+' data ',data);
             }
@@ -242,8 +247,8 @@ export default class External {
         return `${url}${queryString}`;
     }
 
-    _contentType() {
-        return {'content-type': 'application/json'};
+    _contentType(type) {
+        return {'content-type': type || 'application/json'};
     }
 
     _buildHeaders() {
