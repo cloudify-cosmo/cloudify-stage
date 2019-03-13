@@ -2,11 +2,12 @@
  * Created by edenp on 7/30/17.
  */
 
-let express = require('express');
-let bodyParser = require('body-parser');
-let passport = require('passport');
+const express = require('express');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const _ = require('lodash');
 
-let AuthHandler = require('../handler/AuthHandler');
+const AuthHandler = require('../handler/AuthHandler');
 const Consts = require('../consts');
 
 let router = express.Router();
@@ -21,17 +22,30 @@ router.post('/login', (req, res) =>
                                       AuthHandler.getManagerVersion(token.value),
                                       AuthHandler.getAndCacheConfig(token.value),
                                       Promise.resolve(token)]))
-        .then(([tenants, managerVersion, config, token]) => {
+        .then(([tenants, version, config, token]) => {
             if(!!tenants && !!tenants.items && tenants.items.length > 0) {
                 res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
-                return res.send({
-                    role: token.role,
-                    serverVersion: managerVersion
-                });
+
+                return AuthHandler.isProductLicensed(version)
+                ?
+                    AuthHandler.getLicense(token.value)
+                        .then((data) => ({
+                            license: _.get(data, 'items[0]', {}),
+                            version
+                        }))
+                :
+                    Promise.resolve(
+                        {
+                            license: null,
+                            version
+                        }
+                    );
+
             } else{
                 return Promise.reject({message: 'User has no tenants', error_code: 'no_tenants'});
             }
         })
+        .then(({license, version}) => res.send({license, version}))
         .catch((err) => {
             logger.error(err);
             if(err.error_code === 'unauthorized_error'){
@@ -63,13 +77,13 @@ router.post('/saml/callback', passport.authenticate('saml', {session: false}), f
 
 router.get('/user', passport.authenticate('token', {session: false}), (req, res) => {
     AuthHandler.getManagerVersion(req.headers['authentication-token'])
-        .then((managerVersion) =>
+        .then((version) =>
             res.send({
                 username: req.user.username,
                 role: req.user.role,
                 groupSystemRoles: req.user.group_system_roles,
                 tenantsRoles: req.user.tenants,
-                serverVersion: managerVersion
+                serverVersion: version.version
             })
         )
 });

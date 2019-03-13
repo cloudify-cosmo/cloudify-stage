@@ -15,7 +15,12 @@ module.exports = {
     TOKEN_COOKIE_NAME: 'XSRF-TOKEN',
 
     SERVER_HOST: 'localhost',
-    SERVER_PORT: 8088
+    SERVER_PORT: 8088,
+
+    EDITION: {
+        PREMIUM: 'premium',
+        COMMUNITY: 'community'
+    },
 };
 
 module.exports.ALLOWED_METHODS_ARRAY = _.values(module.exports.ALLOWED_METHODS_OBJECT);
