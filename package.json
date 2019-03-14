@@ -29,7 +29,7 @@
   "dependencies": {
     "better-console": "^0.2.4",
     "blueimp-md5": "^2.7.0",
-    "cloudify-blueprint-topology": "http://repository.cloudifysource.org/cloudify/4.5.5/.dev1-build/cloudify-blueprint-topology-4.5.5-.dev1.tar",
+    "cloudify-blueprint-topology": "http://repository.cloudifysource.org/cloudify/4.5.5/ga-build/cloudify-blueprint-topology-4.5.5-ga.tar",
     "connected-react-router": "^4.5.0",
     "d3": "^3.5.17",
     "d3-format": "^1.3.2",
