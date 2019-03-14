@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 
 function CurrentLicense({license}) {
     const formatTrial = (isTrial) => isTrial ? 'Yes' : 'No';
-    const formatExpirationDate = StageUtils.Time.formatLocalTimestamp;
+    const formatExpirationDate = StageUtils.formatLocalTimestamp;
     const formatVersion = (version) => _.isEmpty(version) ? 'All' : String(version);
     const formatCapabilities = (capabilities) => _.join(capabilities, ', ');
     const isFalse = (boolValue) => !boolValue;
@@ -152,7 +152,7 @@ export default class LicensePage extends Component {
         manager: PropTypes.object.isRequired,
         isProductOperational: PropTypes.bool.isRequired,
         license: PropTypes.object.isRequired,
-        status: PropTypes.oneOf(Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED),
+        status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]),
     };
 
     static defaultProps = {};
@@ -194,7 +194,7 @@ export default class LicensePage extends Component {
         const isTrial = !_.isEmpty(licenseObject) ? licenseObject.trial : false;
 
         return (
-            <MessageContainer wide size='normal' textAlign='left' loading={isLoading}>
+            <MessageContainer wide size='large' textAlign='left' loading={isLoading}>
                 <Header as='h2'><Icon name='key' /> License Management</Header>
 
                 <DescriptionMessage isTrial={isTrial} status={status} isEditLicenseActive={isEditLicenseActive}
