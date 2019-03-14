@@ -17,7 +17,10 @@ describe('(Component) Manager', () => {
     beforeEach(() => {
         manager = {
             maintenance: 'deactivated',
-            status: {status: 'running'}
+            status: {status: 'running'},
+            version: {
+                version: '4.6'
+            }
         };
 
         wrapper = mount(<Manager manager={manager}/>);

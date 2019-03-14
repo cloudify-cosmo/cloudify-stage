@@ -40,7 +40,8 @@ export default {
         STAGE_MAINTENANCE_MODE: 'stage_maintenance_mode',
         STAGE_CONFIGURE: 'stage_configure',
         STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management',
-        CREATE_GLOBAL_RESOURCE: 'create_global_resource'
+        CREATE_GLOBAL_RESOURCE: 'create_global_resource',
+        LICENSE_MANAGEMENT: 'license'
     },
     visibility: {
         PRIVATE: {name: 'private', icon: 'lock', color: 'red', title: 'Private resource'},
