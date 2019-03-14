@@ -8,6 +8,10 @@ export default class {
         this.toolbox = toolbox;
     }
 
+    doGetBlueprintYamlFile(blueprintId) {
+        return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}?_include=main_file_name`);
+    }
+
     doGetBlueprintId(deploymentId) {
         return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,blueprint_id`);
     }

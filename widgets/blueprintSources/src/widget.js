@@ -43,27 +43,28 @@ Stage.defineWidget({
             promise = actions.doGetBlueprintId(deploymentId);
         }
 
-        return promise.then(({blueprint_id})=>{
-            blueprintId = blueprint_id;
-
-            if (blueprintId) {
-                return actions.doGetImportedBlueprints(blueprintId)
-                    .then((imports) =>
-                        Promise.all(_.map([blueprintId, ...imports], (bp) => actions.doGetFilesTree(bp)))
-                               .then((data) => ({imports, data})))
-                    .then(({imports, data}) => {
-                        const [blueprintTree, ...importedBlueprintTrees] = data;
-                        return {blueprintTree, importedBlueprintTrees, blueprintId, importedBlueprintIds: imports};
-                    });
-            } else {
-                return {
-                    blueprintTree: {},
-                    importedBlueprintsTrees: [],
-                    blueprintId: '',
-                    importedBlueprintIds: []
-                };
-            }
-        });
+        return promise.then(({blueprint_id}) => blueprintId = blueprint_id)
+            .then(() => actions.doGetBlueprintYamlFile(blueprintId))
+            .then(({main_file_name}) => {
+                if (blueprintId) {
+                    return actions.doGetImportedBlueprints(blueprintId)
+                        .then((imports) =>
+                            Promise.all(_.map([blueprintId, ...imports], (bp) => actions.doGetFilesTree(bp)))
+                                   .then((data) => ({imports, data})))
+                        .then(({imports, data}) => {
+                            const [blueprintTree, ...importedBlueprintTrees] = data;
+                            return {blueprintTree, importedBlueprintTrees, blueprintId, importedBlueprintIds: imports, yamlFileName: main_file_name};
+                        });
+                } else {
+                    return {
+                        blueprintTree: {},
+                        importedBlueprintsTrees: [],
+                        blueprintId: '',
+                        importedBlueprintIds: [],
+                        yamlFileName: ''
+                    };
+                }
+            });
     },
 
     render: function(widget,data,error,toolbox) {

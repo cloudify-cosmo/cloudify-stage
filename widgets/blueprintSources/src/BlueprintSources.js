@@ -65,8 +65,9 @@ export default class BlueprintSources extends React.Component {
     render() {
         var {NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon, SplitterLayout} = Stage.Basic;
 
-        const loop = data => {
-            return data.map(item => {
+        const data = this.props.data;
+        const loop = items => {
+            return items.map(item => {
                 if (item.children) {
                     return (
                         <NodesTree.Node key={item.key}
@@ -75,11 +76,12 @@ export default class BlueprintSources extends React.Component {
                         </NodesTree.Node>
                     );
                 }
+                const label = data.yamlFileName === item.title ? <strong>{item.title}</strong> : item.title;
                 return <NodesTree.Node key={item.key}
-                                       title={<span><Icon className="treeIcon" name="file outline"/>{item.title}</span>}/>;
+                                       title={<span><Icon className="treeIcon" name="file outline"/>{label}</span>}/>;
             });
         };
-        const data = this.props.data;
+
 
         return (
             <div>
