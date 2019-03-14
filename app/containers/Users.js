@@ -15,15 +15,14 @@ const mapStateToProps = (state, ownProps) => {
     var isTemplateManagementActive = !!state.templateManagement.templates || !!state.templateManagement.page;
 
     var canEditMode = !isTemplateManagementActive && stageUtils.isUserAuthorized(Consts.permissions.STAGE_EDIT_MODE, state.manager);
-    var canConfigure = stageUtils.isUserAuthorized(Consts.permissions.STAGE_CONFIGURE, state.manager);
     var canTemplateManagement = state.config.mode === Consts.MODE_MAIN && stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager);
+    var canLicenseManagement = state.config.mode === Consts.MODE_MAIN && stageUtils.isUserAuthorized(Consts.permissions.LICENSE_MANAGEMENT, state.manager) && _.get(state, 'manager.license.isRequired', false);
 
     return {
         isEditMode: canEditMode ? (state.config.isEditMode || false) : false,
-        isLicenseRequired: _.get(state, 'manager.license.isRequired', false),
         canEditMode,
-        canConfigure,
-        canTemplateManagement
+        canTemplateManagement,
+        canLicenseManagement
     }
 };
 
