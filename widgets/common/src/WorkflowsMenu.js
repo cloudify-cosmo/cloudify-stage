@@ -110,7 +110,7 @@ class WorkflowsMenu extends React.Component {
         const workflowsGroups = _.chain(workflows)
             .groupBy('plugin')
             .map((value, key) => ({name: key, workflows: value}))
-            .sortBy('group')
+            .sortBy('name')
             .value();
         const showOnlyDefaultWorkflows = _.size(workflowsGroups) === 1;
 
