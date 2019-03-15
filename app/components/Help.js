@@ -6,8 +6,8 @@ import React, { Component } from 'react';
 
 export default class Help extends Component {
 
-    constructor(props,context) {
-        super(props,context);
+    constructor(props) {
+        super(props);
     }
 
     render() {
@@ -25,6 +25,9 @@ export default class Help extends Component {
                                    onClick={redirectToPage.bind(this, 'https://cloudify.co/knowledge-base')} />
                     <Dropdown.Item icon='comments' text='Contact Us'
                                    onClick={redirectToPage.bind(this, 'https://cloudify.co/community')} />
+                    <Dropdown.Divider />
+                    <Dropdown.Item icon='info circle' text='About'
+                                   onClick={this.props.onAbout} />
                 </Dropdown.Menu>
             </Dropdown>
         );
