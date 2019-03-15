@@ -11,6 +11,7 @@ import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import Help from '../../containers/Help';
 import Banner from '../../containers/banner/Banner';
+import AboutModal from '../../containers/AboutModal';
 import ResetPagesModal from '../ResetPagesModal.js';
 import Consts from '../../utils/consts';
 
@@ -21,7 +22,8 @@ export default class Header extends Component {
 
         this.state = {
             showConfigureModal: false,
-            showResetPagesConfirm: false
+            showResetPagesConfirm: false,
+            showAboutModal: false
         }
     }
 
@@ -52,10 +54,6 @@ export default class Header extends Component {
         return this.props.mode === Consts.MODE_CUSTOMER;
     }
 
-    _handleReset() {
-        this.setState({showResetPagesConfirm: true});
-    }
-
     render() {
         let {Icon} = Stage.Basic;
 
@@ -81,17 +79,20 @@ export default class Header extends Component {
                         this._isModeMain() &&
                         <Tenants manager={this.props.manager}/>
                     }
-                    <Help />
+                    <Help onAbout={() => this.setState({showAboutModal: true})} />
 
                     <Users manager={this.props.manager}
                            showAllOptions={!this._isModeCustomer()}
-                           onReset={this._handleReset.bind(this)} />
+                           onReset={() => this.setState({showResetPagesConfirm: true})} />
                 </div>
 
                 <ResetPagesModal open={this.state.showResetPagesConfirm}
                                  tenants={this.props.manager.tenants}
                                  onConfirm={(tenantList)=>{this.setState({showResetPagesConfirm: false}); this.props.onResetPages(tenantList)}}
                                  onHide={()=> this.setState({showResetPagesConfirm: false})} />
+
+                <AboutModal open={this.state.showAboutModal}
+                            onHide={()=> this.setState({showAboutModal: false})} />
             </div>
         );
     }
