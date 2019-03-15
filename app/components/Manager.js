@@ -53,7 +53,6 @@ export default class Manager extends Component {
         let managerInfo = () =>
             <div className="managerMenu">
                 {this._renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
-                <span className="managerVersion">v{this.props.manager.version.version}</span>
             </div>;
 
         return (
