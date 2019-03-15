@@ -8,10 +8,11 @@ import React, { Component } from 'react';
 import MaintenanceModeModal from '../basic/maintenance/MaintenanceModeModal';
 import MessageContainer from '../MessageContainer';
 import Services from '../../containers/Services';
-import Logo from '../../containers/Logo';
+import Banner from '../../containers/banner/Banner';
 import Consts from '../../utils/consts';
 import StatusPoller from '../../utils/StatusPoller';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import FullScreenSegment from '../layout/FullScreenSegment';
 
 export default class MaintenanceModePageMessage extends Component {
     constructor(props,context) {
@@ -49,8 +50,8 @@ export default class MaintenanceModePageMessage extends Component {
         let {Divider, Header, MaintenanceModeActivationButton} = Stage.Basic;
 
         return (
-            <div className='maintenancePage ui segment basic'>
-                <Logo />
+            <FullScreenSegment>
+                <Banner />
 
                 <MessageContainer wide>
                     <Header as='h2'>Maintenance mode</Header>
@@ -78,7 +79,7 @@ export default class MaintenanceModePageMessage extends Component {
 
                 }
 
-            </div>
+            </FullScreenSegment>
         );
     }
 }

@@ -7,13 +7,6 @@ a:hover {
   cursor: pointer;
 }
 
-.logo {
-  img {
-    height: 45px;
-    width: 165px;
-    margin: 4px;
-  }
-}
 .loadingSegment {
     height: 100%;
     z-index: 5 !important;
@@ -349,18 +342,17 @@ div.headerBar {
   }
 }
 
-.logoPage,.maintenancePage {
+.logoPage.ui.segment {
   margin: 0 !important;
   padding: 0 !important;
   overflow: auto;
-}
-
-.logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
+  border: none !important;
+  border-radius: 0 !important;
 
   .loginContainer {
     margin: auto;
@@ -385,8 +377,6 @@ div.headerBar {
   .loginContainerExtended {
     height: 400px;
   }
-
-
 }
 
 .keyIndicator {

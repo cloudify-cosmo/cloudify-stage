@@ -3,13 +3,17 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Consts from '../utils/consts';
 import StageUtils from '../utils/stageUtils';
 import Manager from '../utils/Manager';
 import {Button, Form, Grid, Header, Icon, Message, Segment, Table} from './basic';
 import MessageContainer from './MessageContainer';
-import PropTypes from 'prop-types';
+import Banner from '../containers/banner/Banner';
+import FullScreenSegment from './layout/FullScreenSegment';
+import Logo from './banner/Logo';
+
 
 function CurrentLicense({license}) {
     const formatTrial = (isTrial) => isTrial ? 'Yes' : 'No';
@@ -194,36 +198,40 @@ export default class LicensePage extends Component {
         const isTrial = !_.isEmpty(licenseObject) ? licenseObject.trial : false;
 
         return (
-            <MessageContainer wide size='large' textAlign='left' loading={isLoading}>
-                <Header as='h2'><Icon name='key' /> License Management</Header>
+            <FullScreenSegment>
+                <Banner />
 
-                <DescriptionMessage isTrial={isTrial} status={status} isEditLicenseActive={isEditLicenseActive}
-                                    onLicenseButtonClick={this.onLicenseButtonClick} />
+                <MessageContainer wide size='large' textAlign='left' loading={isLoading}>
+                    <Header as='h2'><Icon name='key' /> License Management</Header>
 
-                <Segment>
-                    {
-                        isEditLicenseActive
-                        ?
-                            <UploadLicense error={error} isLoading={isLoading} license={licenseString}
-                                        onChange={this.onLicenseEdit} onErrorDismiss={this.onErrorDismiss}
-                                        onUpload={this.onLicenseUpload} />
-                        :
-                            <CurrentLicense license={licenseObject}/>
-                    }
-                </Segment>
+                    <DescriptionMessage isTrial={isTrial} status={status} isEditLicenseActive={isEditLicenseActive}
+                                        onLicenseButtonClick={this.onLicenseButtonClick} />
 
-                <Grid columns={'equal'}>
-                    <Grid.Column textAlign='left' verticalAlign='middle'>
-                        <a href='https://cloudify.co/license' target='_blank'> End User License Agreement</a>
-                    </Grid.Column>
+                    <Segment>
+                        {
+                            isEditLicenseActive
+                            ?
+                                <UploadLicense error={error} isLoading={isLoading} license={licenseString}
+                                            onChange={this.onLicenseEdit} onErrorDismiss={this.onErrorDismiss}
+                                            onUpload={this.onLicenseUpload} />
+                            :
+                                <CurrentLicense license={licenseObject}/>
+                        }
+                    </Segment>
 
-                    <Grid.Column textAlign='right' verticalAlign='middle'>
-                        <Button content='Go to app' icon='arrow right' color='green' labelPosition='right' fluid={false}
-                                disabled={!isProductOperational} onClick={onGoToApp} />
-                    </Grid.Column>
-                </Grid>
+                    <Grid columns={'equal'}>
+                        <Grid.Column textAlign='left' verticalAlign='middle'>
+                            <a href='https://cloudify.co/license' target='_blank'> End User License Agreement</a>
+                        </Grid.Column>
 
-            </MessageContainer>
+                        <Grid.Column textAlign='right' verticalAlign='middle'>
+                            <Button content='Go to app' icon='arrow right' color='green' labelPosition='right' fluid={false}
+                                    disabled={!isProductOperational} onClick={onGoToApp} />
+                        </Grid.Column>
+                    </Grid>
+
+                </MessageContainer>
+            </FullScreenSegment>
         );
     }
 }
