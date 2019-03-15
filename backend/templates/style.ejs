@@ -20,24 +20,25 @@ div.headerBar .right.menu > .item .dropdown .icon {
 }
 div.splashPage,
 div.logoPage,
-div.maintenancePage,
-div.headerBar,
-div.coloredContainer {
+div.headerBar {
     background-color: <%= mainColor %> !important;
 }
-div.splashPage div.logo,
-div.logoPage div.logo,
-div.maintenancePage div.logo,
-div.headerBar div.logo,
-div.coloredContainer  div.logo {
+div.logo {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
     top: 0;
     left: 0;
     height: 45px;
-    width: 165px;
-    margin: 4px;
+    width: 45px;
+    margin: 8px 10px;
     background-size: contain;
     background-repeat: no-repeat;
     background-image: url("<%= logoUrl %>");
+}
+div.splashPage div.logo,
+div.logoPage div.logo {
+    margin: 4px 10px;
 }
 div.splashPage.active div#loader,
 div.splashPage.active div#loader:after {
@@ -46,11 +47,11 @@ div.splashPage.active div#loader:after {
     height: 10em;
 }
 div.splashPage.active div#loader {
-    margin: 10px auto;
-    top: 35%;
+    top: calc(50% - 75px);
+    left: calc(50% - 75px);
     transform: translateY(-35%);
     font-size: 10px;
-    position: relative;
+    position: absolute;
     text-indent: -9999em;
     border-top: 1.1em solid rgba(255, 255, 255, 0.2);
     border-right: 1.1em solid rgba(255, 255, 255, 0.2);

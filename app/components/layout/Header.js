@@ -10,7 +10,7 @@ import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import Help from '../../containers/Help';
-import Logo from '../../containers/Logo';
+import Banner from '../../containers/banner/Banner';
 import ResetPagesModal from '../ResetPagesModal.js';
 import Consts from '../../utils/consts';
 
@@ -68,7 +68,7 @@ export default class Header extends Component {
                     size="large"
                     onClick={() => this.props.onSidebarOpen()}
                 />
-                <Logo />
+                <Banner />
 
                 <div className="right menu">
                     {
