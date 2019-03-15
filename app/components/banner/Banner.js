@@ -25,6 +25,7 @@ export default class Banner extends Component {
         productName: PropTypes.string,
         productVersion: PropTypes.string,
         licenseEdition: PropTypes.string,
+        inverted: PropTypes.bool
     };
 
     static defaultProps = {
@@ -34,6 +35,7 @@ export default class Banner extends Component {
         productName: '',
         productVersion: '',
         licenseEdition: '',
+        inverted: false
     };
 
     render () {
@@ -42,7 +44,8 @@ export default class Banner extends Component {
                 <Link to={Consts.HOME_PAGE_PATH}>
                     <Header as='h1' style={{textDecoration: 'none', display: 'inline-block'}}>
                         <Logo />
-                        <ProductFullName edition={this.props.licenseEdition} name={this.props.productName} />
+                        <ProductFullName edition={this.props.licenseEdition} name={this.props.productName}
+                                         inverted={this.props.inverted} />
                         <ProductVersion version={this.props.productVersion} />
                     </Header>
                 </Link>

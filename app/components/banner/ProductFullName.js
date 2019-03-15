@@ -4,8 +4,8 @@
 
 import React from 'react';
 
-export default function ProductFullName({name, edition}) {
+export default function ProductFullName({name, edition, inverted}) {
     const fullName = _.join(_.words([name, edition]), ' ');
 
-    return <span style={{color: 'white', verticalAlign: 'middle'}}>{fullName}</span>
+    return <span style={{color: inverted ? 'black' : 'white', verticalAlign: 'middle'}}>{fullName}</span>
 }
