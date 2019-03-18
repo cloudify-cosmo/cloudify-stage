@@ -30,6 +30,7 @@ export default class Header extends Component {
     static propTypes = {
         manager: PropTypes.any.isRequired,
         mode: PropTypes.string.isRequired,
+        pageTitle: PropTypes.string.isRequired,
         onResetPages: PropTypes.func.isRequired,
         onSidebarOpen : PropTypes.func.isRequired,
     };
@@ -40,10 +41,7 @@ export default class Header extends Component {
     }
 
     componentDidMount() {
-        let whiteLabel = this.props.config.app.whiteLabel;
-        if (whiteLabel.enabled && whiteLabel.pageTitle) {
-            document.title = whiteLabel.pageTitle;
-        }
+        document.title = this.props.pageTitle;
     }
 
     _isModeMain() {
