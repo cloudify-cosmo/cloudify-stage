@@ -12,8 +12,9 @@ import Consts from '../../utils/consts';
 import { Header } from '../basic';
 import LicenseTag from './LicenseTag';
 import Logo from './Logo';
-import ProductFullName from './ProductFullName';
+import ProductName from './ProductName';
 import ProductVersion from './ProductVersion';
+import LicenseEdition from './LicenseEdition';
 
 
 export default class Banner extends Component {
@@ -48,17 +49,22 @@ export default class Banner extends Component {
                 <Link to={Consts.HOME_PAGE_PATH}>
                     <Header as='h1' style={{textDecoration: 'none', display: 'inline-block'}}>
                         <Logo />
-                        <ProductFullName edition={this.props.licenseEdition} name={this.props.productName}
-                                         inverted={this.props.inverted} className={className} />
+                        <ProductName name={this.props.productName} className={className} />
                         {
-                            !this.props.isCommunity &&
-                            <ProductVersion version={this.props.productVersion}
-                                            className={className} />
+                            this.props.showVersionDetails &&
+                            <LicenseEdition edition={this.props.licenseEdition} className={className} />
+                        }
+                        {
+                            this.props.showVersionDetails && !this.props.isCommunity &&
+                            <ProductVersion version={this.props.productVersion} className={className} />
                         }
                     </Header>
                 </Link>
-                <LicenseTag isCommunity={this.props.isCommunity} isExpired={this.props.isExpired}
-                            isTrial={this.props.isTrial} className={className} />
+                {
+                    this.props.showVersionDetails &&
+                    <LicenseTag isCommunity={this.props.isCommunity} isExpired={this.props.isExpired}
+                                isTrial={this.props.isTrial} className={className} />
+                }
             </div>
         )
     }
