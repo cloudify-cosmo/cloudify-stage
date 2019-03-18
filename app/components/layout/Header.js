@@ -71,7 +71,7 @@ export default class Header extends Component {
                 <div className="right menu">
                     {
                         !this._isModeCustomer() &&
-                        <div className='item'>
+                        <div className='item' style={{margin:0, padding: 0}}>
                             <Manager manager={this.props.manager}/>
                         </div>
                     }

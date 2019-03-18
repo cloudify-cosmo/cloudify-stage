@@ -40,13 +40,16 @@ export default class Banner extends Component {
 
     render () {
         return (
-            <div>
+            <div style={{lineHeight: '55px'}}>
                 <Link to={Consts.HOME_PAGE_PATH}>
                     <Header as='h1' style={{textDecoration: 'none', display: 'inline-block'}}>
                         <Logo />
                         <ProductFullName edition={this.props.licenseEdition} name={this.props.productName}
                                          inverted={this.props.inverted} />
-                        <ProductVersion version={this.props.productVersion} />
+                        {
+                            !this.props.isCommunity &&
+                            <ProductVersion version={this.props.productVersion} />
+                        }
                     </Header>
                 </Link>
                 <LicenseTag isCommunity={this.props.isCommunity} isExpired={this.props.isExpired} isTrial={this.props.isTrial} />
