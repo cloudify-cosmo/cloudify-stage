@@ -8,11 +8,12 @@ import {Icon, Header, Message, Table} from '../basic';
 
 export default function CurrentVersion({version = {}}) {
     version.distro = _.join([version.distribution, version.distro_release], ' ');
-    version.full_version =  _.join(_.compact([version.version, version.build, version.date, version.commit]), ' ');
+    version.full_version =
+        `${_.join(_.compact([version.version, version.build, version.date, version.commit]), ' ')}
+         (${_.capitalize(version.edition)})`;
 
     const fields = [
-        {name: 'full_version', header: 'Full Version', icon: 'star', format: String},
-        {name: 'edition', header: 'Edition', icon: 'file alternate outline', format: _.capitalize},
+        {name: 'full_version', header: 'Version', icon: 'star', format: String},
         {name: 'distro', header: 'Distribution', icon: 'linux', format: _.startCase, hide: _.isEmpty}
     ];
 
