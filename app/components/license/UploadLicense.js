@@ -9,7 +9,9 @@ import {Button, Form} from '../basic';
 export default function UploadLicense({error, isLoading, license, onChange, onErrorDismiss, onUpload}) {
     return (
         <Form errors={error} errorMessageHeader='License error' onErrorsDismiss={onErrorDismiss}>
-            <Form.TextArea name='license' autoHeight placeholder='License in YAML format' error={!!error}
+            <Form.TextArea name='license' autoHeight error={!!error}
+                           placeholder='Paste the complete license string,
+                                        including the license signature ending with ”==”'
                            value={license} onChange={onChange} disabled={isLoading} />
 
             <Button content='Upload' icon='upload' color='yellow' labelPosition='left'
