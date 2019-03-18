@@ -26,9 +26,18 @@ a:hover {
 .sidebar-button{
   color: white;
   padding: 15px;
+}
+
+.show-on-small-screen {
   @media (min-width: 992px) {
     display: none !important;
-   }
+  }
+}
+
+.hide-on-small-screen {
+  @media (max-width: 800px) {
+    display: none !important;
+  }
 }
 
 .main {

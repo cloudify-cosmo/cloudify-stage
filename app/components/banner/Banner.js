@@ -25,7 +25,8 @@ export default class Banner extends Component {
         productName: PropTypes.string,
         productVersion: PropTypes.string,
         licenseEdition: PropTypes.string,
-        inverted: PropTypes.bool
+        inverted: PropTypes.bool,
+        hideOnSmallScreen: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -35,24 +36,29 @@ export default class Banner extends Component {
         productName: '',
         productVersion: '',
         licenseEdition: '',
-        inverted: false
+        inverted: false,
+        hideOnSmallScreen: true
     };
 
     render () {
+        const className = this.props.hideOnSmallScreen ? 'hide-on-small-screen' : '';
+
         return (
             <div style={{lineHeight: '55px'}}>
                 <Link to={Consts.HOME_PAGE_PATH}>
                     <Header as='h1' style={{textDecoration: 'none', display: 'inline-block'}}>
                         <Logo />
                         <ProductFullName edition={this.props.licenseEdition} name={this.props.productName}
-                                         inverted={this.props.inverted} />
+                                         inverted={this.props.inverted} className={className} />
                         {
                             !this.props.isCommunity &&
-                            <ProductVersion version={this.props.productVersion} />
+                            <ProductVersion version={this.props.productVersion}
+                                            className={className} />
                         }
                     </Header>
                 </Link>
-                <LicenseTag isCommunity={this.props.isCommunity} isExpired={this.props.isExpired} isTrial={this.props.isTrial} />
+                <LicenseTag isCommunity={this.props.isCommunity} isExpired={this.props.isExpired}
+                            isTrial={this.props.isTrial} className={className} />
             </div>
         )
     }

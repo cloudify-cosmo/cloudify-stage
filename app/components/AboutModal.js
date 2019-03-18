@@ -36,7 +36,7 @@ export default class AboutModal extends Component {
             <Modal open={this.props.open} onClose={this.props.onHide}>
 
                 <Modal.Header className='mainBackgroundColor'>
-                    <Banner />
+                    <Banner hideOnSmallScreen={false} />
                 </Modal.Header>
 
                 <Modal.Content>
