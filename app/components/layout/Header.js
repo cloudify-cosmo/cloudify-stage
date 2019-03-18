@@ -59,13 +59,8 @@ export default class Header extends Component {
 
         return (
             <div className="ui top fixed menu inverted secondary headerBar">
-                <Icon
-                    link
-                    name="content"
-                    className="sidebar-button"
-                    size="large"
-                    onClick={() => this.props.onSidebarOpen()}
-                />
+                <Icon link name="content" className="sidebar-button show-on-small-screen" size="large"
+                      onClick={this.props.onSidebarOpen} />
                 <Banner />
 
                 <div className="right menu">
