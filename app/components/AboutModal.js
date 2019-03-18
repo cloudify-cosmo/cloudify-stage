@@ -35,19 +35,19 @@ export default class AboutModal extends Component {
         return (
             <Modal open={this.props.open} onClose={this.props.onHide}>
 
-                <Modal.Header>
-                    <Banner inverted />
+                <Modal.Header className='mainBackgroundColor'>
+                    <Banner />
                 </Modal.Header>
 
                 <Modal.Content>
                     <Header>
-                        Version
+                        Version Details
                     </Header>
                     <Divider />
                     <CurrentVersion version={this.props.version} />
 
                     <Header>
-                        License
+                        License Details
                     </Header>
                     <Divider />
                     <CurrentLicense license={this.props.license} />

@@ -15,7 +15,7 @@ const getWidgetEntries = () => {
         acc[name] = item;
         return acc;
     }, {});
-}
+};
 
 const rules = [
     {
