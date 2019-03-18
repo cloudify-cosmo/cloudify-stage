@@ -34,8 +34,10 @@ function DescriptionMessage({isTrial, isEditLicenseActive, onLicenseButtonClick,
                     <Icon name='ban' />
                     <Message.Content>
                         <Message.Header>No active license</Message.Header>
-                        If you don't have license, please visit&nbsp;
-                        <a target='_blank'>Cloudify site</a>, register the product and get the email with license.
+                        To activate this product, please enter the license key provided by Cloudify below and press upload.
+                        Visit the Cloudify <a target='_blank' href='https://cloudify.co'>web site</a>
+                        &nbsp;to learn more and acquire a free&nbsp;
+                        <a target='_blank' href='https://cloudify.co/download/#trial'>trial license</a>.
                     </Message.Content>
                 </Message>
             );
@@ -45,18 +47,22 @@ function DescriptionMessage({isTrial, isEditLicenseActive, onLicenseButtonClick,
                     <Message negative {...commonMessageProps}>
                         <Icon name='clock outline' />
                         <Message.Content>
-                            <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive} onClick={onLicenseButtonClick} color='red' />
-                            <Message.Header>Your trial license has expired</Message.Header>
-                            Please upload new license to continue using product.
+                            <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
+                                                 onClick={onLicenseButtonClick} color='red' />
+                            <Message.Header>The trial license has expired</Message.Header>
+                            Please contact <a target='_blank' href='https://cloudify.co/contact'>Cloudify</a> to obtain a license key.
+
                         </Message.Content>
                     </Message>
                 :
                     <Message warning {...commonMessageProps}>
                         <Icon name='clock outline' />
                         <Message.Content>
-                            <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive} onClick={onLicenseButtonClick} color='brown' />
-                            <Message.Header>Your license has expired</Message.Header>
-                            Please upload new license.
+                            <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
+                                                 onClick={onLicenseButtonClick} color='brown' />
+                            <Message.Header>Product license has expired</Message.Header>
+                            Please contact <a target='_blank' href='https://cloudify.co/support'>Cloudify support</a>
+                            &nbsp;to obtain a new license key.
                         </Message.Content>
                     </Message>;
         case Consts.LICENSE.ACTIVE:
@@ -64,8 +70,9 @@ function DescriptionMessage({isTrial, isEditLicenseActive, onLicenseButtonClick,
                 <Message positive {...commonMessageProps}>
                     <Icon name='checkmark' />
                     <Message.Content>
-                        <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive} onClick={onLicenseButtonClick} color='green' />
-                        <Message.Header>License is valid and active</Message.Header>
+                        <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
+                                             onClick={onLicenseButtonClick} color='green' />
+                        <Message.Header>License is valid</Message.Header>
                         No action required.
                     </Message.Content>
                 </Message>
