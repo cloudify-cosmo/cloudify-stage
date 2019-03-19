@@ -24,7 +24,7 @@ function LicenseSwitchButton({isEditLicenseActive, onClick, color}) {
     )
 }
 
-function DescriptionMessage({isTrial, isEditLicenseActive, onLicenseButtonClick, status}) {
+function DescriptionMessage({canUploadLicense, isTrial, isEditLicenseActive, onLicenseButtonClick, status}) {
     const commonMessageProps = {icon: true};
 
     switch (status) {
@@ -44,34 +44,44 @@ function DescriptionMessage({isTrial, isEditLicenseActive, onLicenseButtonClick,
         case Consts.LICENSE.EXPIRED:
             return isTrial
                 ?
-                    <Message negative {...commonMessageProps}>
-                        <Icon name='clock outline' />
-                        <Message.Content>
+                <Message negative {...commonMessageProps}>
+                    <Icon name='clock outline' />
+                    <Message.Content>
+                        {
+                            canUploadLicense &&
                             <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
                                                  onClick={onLicenseButtonClick} color='red' />
-                            <Message.Header>The trial license has expired</Message.Header>
-                            Please contact <a target='_blank' href='https://cloudify.co/contact'>Cloudify</a> to obtain a license key.
+                        }
+                        <Message.Header>The trial license has expired</Message.Header>
+                        Please contact <a target='_blank' href='https://cloudify.co/contact'>Cloudify</a> to obtain a license key.
 
-                        </Message.Content>
-                    </Message>
+                    </Message.Content>
+                </Message>
                 :
-                    <Message warning {...commonMessageProps}>
-                        <Icon name='clock outline' />
-                        <Message.Content>
+                <Message warning {...commonMessageProps}>
+                    <Icon name='clock outline' />
+                    <Message.Content>
+                        {
+                            canUploadLicense &&
                             <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
                                                  onClick={onLicenseButtonClick} color='brown' />
-                            <Message.Header>Product license has expired</Message.Header>
-                            Please contact <a target='_blank' href='https://cloudify.co/support'>Cloudify support</a>
-                            &nbsp;to obtain a new license key.
-                        </Message.Content>
-                    </Message>;
+                        }
+
+                        <Message.Header>Product license has expired</Message.Header>
+                        Please contact <a target='_blank' href='https://cloudify.co/support'>Cloudify support</a>
+                        &nbsp;to obtain a new license key.
+                    </Message.Content>
+                </Message>;
         case Consts.LICENSE.ACTIVE:
             return (
                 <Message positive {...commonMessageProps}>
                     <Icon name='checkmark' />
                     <Message.Content>
-                        <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
-                                             onClick={onLicenseButtonClick} color='green' />
+                        {
+                            canUploadLicense &&
+                            <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
+                                                 onClick={onLicenseButtonClick} color='green'/>
+                        }
                         <Message.Header>License is valid</Message.Header>
                         No action required.
                     </Message.Content>
@@ -137,7 +147,7 @@ export default class LicensePage extends Component {
     }
 
     render () {
-        const {license: licenseObject, isProductOperational, onGoToApp, status} = this.props;
+        const {license: licenseObject, canUploadLicense, isProductOperational, onGoToApp, status} = this.props;
         const {license: licenseString, error, isLoading, isEditLicenseActive} = this.state;
 
         const isTrial = !_.isEmpty(licenseObject) ? licenseObject.trial : false;
@@ -149,17 +159,18 @@ export default class LicensePage extends Component {
                 <MessageContainer wide size='large' textAlign='left' loading={isLoading}>
                     <Header as='h2'><Icon name='key' /> License Management</Header>
 
-                    <DescriptionMessage isTrial={isTrial} status={status} isEditLicenseActive={isEditLicenseActive}
+                    <DescriptionMessage isTrial={isTrial} status={status} canUploadLicense={canUploadLicense}
+                                        isEditLicenseActive={isEditLicenseActive}
                                         onLicenseButtonClick={this.onLicenseButtonClick} />
 
                     <Segment>
                         {
-                            isEditLicenseActive
-                            ?
+                            canUploadLicense && isEditLicenseActive
+                                ?
                                 <UploadLicense error={error} isLoading={isLoading} license={licenseString}
-                                            onChange={this.onLicenseEdit} onErrorDismiss={this.onErrorDismiss}
-                                            onUpload={this.onLicenseUpload} />
-                            :
+                                               onChange={this.onLicenseEdit} onErrorDismiss={this.onErrorDismiss}
+                                               onUpload={this.onLicenseUpload} />
+                                :
                                 <CurrentLicense license={licenseObject}/>
                         }
                     </Segment>
