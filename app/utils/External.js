@@ -6,7 +6,7 @@ import 'isomorphic-fetch';
 import {saveAs} from 'file-saver';
 import StageUtils from './stageUtils';
 import Interceptor from './Interceptor';
-import {UNAUTHORIZED_ERR} from '../utils/ErrorCodes';
+import {LICENSE_ERR, UNAUTHORIZED_ERR} from '../utils/ErrorCodes';
 
 import log from 'loglevel';
 let logger = log.getLogger('External');
@@ -214,6 +214,10 @@ export default class External {
         return false;
     }
 
+    _isLicenseError(response, body){
+        return false;
+    }
+
     _checkStatus(response) {
         if (response.ok) {
             return response;
@@ -230,11 +234,16 @@ export default class External {
         return response.text()
             .then(resText=>{
                 try {
-                    var resJson = JSON.parse(resText);
+                    let resJson = JSON.parse(resText);
+                    let message = StageUtils.resolveMessage(resJson.message);
 
-                    var message = StageUtils.resolveMessage(resJson.message);
-
-                    return Promise.reject({message: message || response.statusText, status: response.status});
+                    if (this._isLicenseError(response, resJson)) {
+                        let interceptor = Interceptor.getInterceptor();
+                        interceptor.handleLicenseError(resJson.error_code);
+                        return Promise.reject(LICENSE_ERR);
+                    } else {
+                        return Promise.reject({message: message || response.statusText, status: response.status});
+                    }
                 } catch (e) {
                     logger.error(e);
                     return Promise.reject({message: response.statusText, status: response.status});

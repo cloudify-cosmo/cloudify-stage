@@ -29,6 +29,8 @@ export default {
         EXPIRED: 'expired_license',
         ACTIVE: 'active_license',
     },
+    NO_LICENSE_ERROR_CODE: 'missing_cloudify_license',
+    EXPIRED_LICENSE_ERROR_CODE: 'expired_cloudify_license',
 
     DEFAULT_TENANT: 'default_tenant',
     MODE_MAIN: 'main',
