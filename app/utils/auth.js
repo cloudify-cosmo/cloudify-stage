@@ -45,7 +45,7 @@ export default class Auth {
     static getLicenseStatus(licenseData) {
         if (_.isEmpty(licenseData)) {
             return Consts.LICENSE.EMPTY;
-        } else if (moment().isAfter(licenseData.expiration_date)) { // TODO: Change after API update
+        } else if (licenseData.expired) {
             return Consts.LICENSE.EXPIRED;
         } else {
             return Consts.LICENSE.ACTIVE;
