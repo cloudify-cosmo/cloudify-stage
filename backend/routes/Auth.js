@@ -31,13 +31,15 @@ router.post('/login', (req, res) =>
                     AuthHandler.getLicense(token.value)
                         .then((data) => ({
                             license: _.get(data, 'items[0]', {}),
-                            version
+                            version,
+                            role: token.role
                         }))
                 :
                     Promise.resolve(
                         {
                             license: null,
-                            version
+                            version,
+                            role: token.role
                         }
                     );
 
@@ -45,7 +47,7 @@ router.post('/login', (req, res) =>
                 return Promise.reject({message: 'User has no tenants', error_code: 'no_tenants'});
             }
         })
-        .then(({license, version}) => res.send({license, version}))
+        .then(({license, version, role}) => res.send({license, version, role}))
         .catch((err) => {
             logger.error(err);
             if(err.error_code === 'unauthorized_error'){
@@ -76,16 +78,12 @@ router.post('/saml/callback', passport.authenticate('saml', {session: false}), f
 });
 
 router.get('/user', passport.authenticate('token', {session: false}), (req, res) => {
-    AuthHandler.getManagerVersion(req.headers['authentication-token'])
-        .then((version) =>
-            res.send({
-                username: req.user.username,
-                role: req.user.role,
-                groupSystemRoles: req.user.group_system_roles,
-                tenantsRoles: req.user.tenants,
-                serverVersion: version.version
-            })
-        )
+    res.send({
+        username: req.user.username,
+        role: req.user.role,
+        groupSystemRoles: req.user.group_system_roles,
+        tenantsRoles: req.user.tenants
+    })
 });
 
 router.post('/logout', passport.authenticate('token', {session: false}), (req, res) => {

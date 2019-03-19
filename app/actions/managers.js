@@ -15,12 +15,14 @@ function requestLogin() {
     }
 }
 
-function receiveLogin(version, license) {
+function receiveLogin(username, role, version, license) {
     return {
+        type: types.RES_LOGIN,
+        username,
+        role,
         version,
         license,
         licenseRequired: !_.isNull(license),
-        type: types.RES_LOGIN,
         receivedAt: Date.now()
     }
 }
@@ -39,8 +41,8 @@ export function login (username, password, redirect) {
     return function (dispatch, getState) {
         dispatch(requestLogin());
         return Auth.login(username,password)
-            .then(({version, license}) => {
-                dispatch(receiveLogin(version, license));
+            .then(({role, version, license}) => {
+                dispatch(receiveLogin(username, role, version, license));
 
                 if(redirect){
                     window.location = redirect;
