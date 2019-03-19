@@ -41,7 +41,8 @@ export default {
         STAGE_CONFIGURE: 'stage_configure',
         STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management',
         CREATE_GLOBAL_RESOURCE: 'create_global_resource',
-        LICENSE_MANAGEMENT: 'license'
+        LICENSE_LIST: 'license_list',
+        LICENSE_UPLOAD: 'license_upload'
     },
     visibility: {
         PRIVATE: {name: 'private', icon: 'lock', color: 'red', title: 'Private resource'},

@@ -8,14 +8,17 @@ import {setLicense} from '../actions/license';
 import {push} from 'connected-react-router';
 import Consts from '../utils/consts';
 import Auth from '../utils/auth';
+import stageUtils from '../utils/stageUtils';
 
 const mapStateToProps = (state, ownProps) => {
-    const license = _.get(state, 'manager.license', {});
+    const manager = _.get(state, 'manager', {});
+    const license = _.get(manager, 'license', {});
 
     return {
-        manager: state.manager,
+        canUploadLicense: stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, manager),
         isProductOperational:  Auth.isProductOperational(license),
         license: _.get(license, 'data', {}),
+        manager,
         status: _.get(license, 'status', Consts.LICENSE.EMPTY)
     }
 };

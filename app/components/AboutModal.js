@@ -56,7 +56,10 @@ export default class AboutModal extends Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <Button content='License Management' icon='key' color='yellow' onClick={this.props.onLicenseManagment} />
+                    {
+                        this.props.canLicenseManagement &&
+                        <Button content='License Management' icon='key' color='yellow' onClick={this.props.onLicenseManagment} />
+                    }
                     <CancelButton content='Close' onClick={this.props.onHide} />
                 </Modal.Actions>
             </Modal>

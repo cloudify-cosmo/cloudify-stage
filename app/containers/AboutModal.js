@@ -8,11 +8,15 @@ import { push } from 'connected-react-router';
 import Consts from '../utils/consts';
 
 import AboutModal from '../components/AboutModal'
+import stageUtils from '../utils/stageUtils';
 
 const mapStateToProps = (state, ownProps) => {
+    const manager = _.get(state, 'manager', {});
+
     return {
-        version: _.get(state, 'manager.version', {}),
-        license: _.get(state, 'manager.license.data', {})
+        canLicenseManagement: stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, manager),
+        version: _.get(manager, 'version', {}),
+        license: _.get(manager, 'license.data', {})
     };
 };
 

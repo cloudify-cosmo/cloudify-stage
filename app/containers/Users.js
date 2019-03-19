@@ -12,11 +12,11 @@ import stageUtils from '../utils/stageUtils';
 import { push } from 'connected-react-router';
 
 const mapStateToProps = (state, ownProps) => {
-    var isTemplateManagementActive = !!state.templateManagement.templates || !!state.templateManagement.page;
+    const isTemplateManagementActive = !!state.templateManagement.templates || !!state.templateManagement.page;
 
-    var canEditMode = !isTemplateManagementActive && stageUtils.isUserAuthorized(Consts.permissions.STAGE_EDIT_MODE, state.manager);
-    var canTemplateManagement = state.config.mode === Consts.MODE_MAIN && stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager);
-    var canLicenseManagement = state.config.mode === Consts.MODE_MAIN && stageUtils.isUserAuthorized(Consts.permissions.LICENSE_MANAGEMENT, state.manager) && _.get(state, 'manager.license.isRequired', false);
+    const canEditMode = !isTemplateManagementActive && stageUtils.isUserAuthorized(Consts.permissions.STAGE_EDIT_MODE, state.manager);
+    const canTemplateManagement = state.config.mode === Consts.MODE_MAIN && stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager);
+    const canLicenseManagement = state.config.mode === Consts.MODE_MAIN && stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, state.manager) && _.get(state, 'manager.license.isRequired', false);
 
     return {
         isEditMode: canEditMode ? (state.config.isEditMode || false) : false,
