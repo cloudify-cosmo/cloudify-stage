@@ -5,7 +5,6 @@
 import React from 'react'
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import sinon from 'sinon';
 
 import Consts from '../../app/utils/consts.js';
 import ConnectedLicensePage from '../../app/containers/LicensePage.js';
@@ -60,7 +59,7 @@ describe('(Component) LicensePage', () => {
 
     const verifyUploadLicense = (isPresent) => {
         const uploadLicense = messageContainerComponent.find('UploadLicense');
-        expect(uploadLicense).to.have.length(isPresent ? 1 : 0)
+        expect(uploadLicense).to.have.length(isPresent ? 1 : 0);
     };
 
     const verifyFooter = (isGoToAppButtonEnabled) => {
@@ -71,12 +70,10 @@ describe('(Component) LicensePage', () => {
         expect(goToAppButton.props().disabled).to.be.eql(!isGoToAppButtonEnabled);
     };
 
-    const verifySwitchToUpload = (isEnabled) => {
-        // TODO: Click on button, check state and call verifyUploadLicense
-    };
-
-    const verifyGoToApp = (isEnabled) => {
-        // TODO: Click on button, check function was called
+    const verifySwitchToUpload = (isButtonPresent) => {
+        const descriptionMessage = messageContainerComponent.find('DescriptionMessage');
+        const licenseSwitchButton = descriptionMessage.find('LicenseSwitchButton');
+        expect(licenseSwitchButton).to.have.length(isButtonPresent ? 1 : 0);
     };
 
     const getLicenseState = (data, isRequired, status) => {
@@ -136,11 +133,10 @@ describe('(Component) LicensePage', () => {
             verifyProps(true, true, licenses.activePayingLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', true);
+            verifySwitchToUpload(true);
             verifyCurrentLicense('24-11-2019 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
-
-            verifySwitchToUpload(true);
         });
 
         it('allows license management when trial license is active', () => {
@@ -150,11 +146,10 @@ describe('(Component) LicensePage', () => {
             verifyProps(true, true, licenses.activeTrialLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', true);
+            verifySwitchToUpload(true);
             verifyCurrentLicense('24-11-2019 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
-
-            verifySwitchToUpload(true);
         });
 
         it('allows license management when paying license has expired', () => {
@@ -164,11 +159,10 @@ describe('(Component) LicensePage', () => {
             verifyProps(true, true, licenses.expiredPayingLicense, Consts.LICENSE.EXPIRED);
             verifyHeader();
             verifyMessage('Product license has expired', 'clock outline', true);
+            verifySwitchToUpload(true);
             verifyCurrentLicense('24-11-2018 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
-
-            verifySwitchToUpload(true);
         });
 
         it('allows license management when trial license has expired', () => {
@@ -178,11 +172,10 @@ describe('(Component) LicensePage', () => {
             verifyProps(true, false, licenses.expiredTrialLicense, Consts.LICENSE.EXPIRED);
             verifyHeader();
             verifyMessage('The trial license has expired', 'clock outline', true);
+            verifySwitchToUpload(true);
             verifyCurrentLicense('24-11-2018 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(false);
-
-            verifySwitchToUpload(true);
         });
 
         it('allows license management when no license is active', () => {
@@ -192,6 +185,7 @@ describe('(Component) LicensePage', () => {
             verifyProps(true, false, {}, Consts.LICENSE.EMPTY);
             verifyHeader();
             verifyMessage('No active license', 'ban', false);
+            verifySwitchToUpload(false);
             verifyUploadLicense(true);
             verifyFooter(false);
         });
@@ -206,6 +200,7 @@ describe('(Component) LicensePage', () => {
             verifyProps(false, true, licenses.activePayingLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
+            verifySwitchToUpload(false);
             verifyCurrentLicense('24-11-2019 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
@@ -218,6 +213,7 @@ describe('(Component) LicensePage', () => {
             verifyProps(false, true, licenses.activeTrialLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
+            verifySwitchToUpload(false);
             verifyCurrentLicense('24-11-2019 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
@@ -230,6 +226,7 @@ describe('(Component) LicensePage', () => {
             verifyProps(false, true, licenses.expiredPayingLicense, Consts.LICENSE.EXPIRED);
             verifyHeader();
             verifyMessage('Product license has expired', 'clock outline', false);
+            verifySwitchToUpload(false);
             verifyCurrentLicense('24-11-2018 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
@@ -242,6 +239,7 @@ describe('(Component) LicensePage', () => {
             verifyProps(false, false, licenses.expiredTrialLicense, Consts.LICENSE.EXPIRED);
             verifyHeader();
             verifyMessage('The trial license has expired', 'clock outline', false);
+            verifySwitchToUpload(false);
             verifyCurrentLicense('24-11-2018 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(false);
@@ -254,28 +252,9 @@ describe('(Component) LicensePage', () => {
             verifyProps(false, false, {}, Consts.LICENSE.EMPTY);
             verifyHeader();
             verifyMessage('No active license', 'ban', false);
+            verifySwitchToUpload(false);
             verifyUploadLicense(false);
             verifyFooter(false);
         });
     })
-
-
-    // it('onEditModeChange is called',()=>{
-    //     let onEditModeChange = sinon.spy();
-    //     wrapper.setProps({onEditModeChange});
-    //
-    //     wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Edit Mode').simulate('click');
-    //
-    //     expect(onEditModeChange.calledOnce).to.equal(true);
-    // });
-    //
-    // it('onLogout is called',()=>{
-    //     let onLogout = sinon.spy();
-    //     wrapper.setProps({onLogout});
-    //
-    //     wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Logout').simulate('click');
-    //
-    //     expect(onLogout.calledOnce).to.equal(true);
-    // });
-
 });
