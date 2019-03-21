@@ -51,9 +51,4 @@ export default class Auth {
             return Consts.LICENSE.ACTIVE;
         }
     }
-
-    static getRBACConfig(managerData){
-        var internal = new Internal(managerData);
-        return internal.doGet('/auth/RBAC', null, true);
-    }
 }

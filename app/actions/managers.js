@@ -8,6 +8,8 @@ import Consts from '../utils/consts';
 import { push } from 'connected-react-router';
 import Manager from '../utils/Manager';
 import {clearContext} from './context';
+import {setLicense} from './license';
+import {setVersion} from './version';
 
 function requestLogin() {
     return {
@@ -15,14 +17,12 @@ function requestLogin() {
     }
 }
 
-function receiveLogin(username, role, version, license) {
+function receiveLogin(username, role, licenseRequired) {
     return {
         type: types.RES_LOGIN,
         username,
         role,
-        version,
-        license,
-        licenseRequired: !_.isNull(license),
+        licenseRequired,
         receivedAt: Date.now()
     }
 }
@@ -41,9 +41,13 @@ export function login (username, password, redirect) {
     return function (dispatch, getState) {
         dispatch(requestLogin());
         return Auth.login(username,password)
-            .then(({role, version, license}) => {
-                dispatch(receiveLogin(username, role, version, license));
-
+            .then(({role, version, license, rbac}) => {
+                dispatch(receiveLogin(username, role, !_.isNull(license)));
+                dispatch(setVersion(version));
+                dispatch(setLicense(license));
+                dispatch(storeRBAC(rbac));
+            })
+            .then(() => {
                 if(redirect){
                     window.location = redirect;
                 } else{
@@ -107,15 +111,6 @@ export function storeRBAC(RBAC) {
         roles: RBAC.roles,
         permissions: RBAC.permissions
     }
-}
-
-export function getRBACConfig() {
-    return function (dispatch, getState) {
-        return Auth.getRBACConfig(getState().manager)
-            .then(RBAC => {
-                dispatch(storeRBAC(RBAC));
-            });
-    };
 }
 
 export function setMaintenanceStatus(maintenance) {

@@ -32,14 +32,16 @@ router.post('/login', (req, res) =>
                         .then((data) => ({
                             license: _.get(data, 'items[0]', {}),
                             version,
-                            role: token.role
+                            role: token.role,
+                            rbac: AuthHandler.getRBAC()
                         }))
                 :
                     Promise.resolve(
                         {
                             license: null,
                             version,
-                            role: token.role
+                            role: token.role,
+                            rbac: AuthHandler.getRBAC()
                         }
                     );
 
@@ -47,7 +49,7 @@ router.post('/login', (req, res) =>
                 return Promise.reject({message: 'User has no tenants', error_code: 'no_tenants'});
             }
         })
-        .then(({license, version, role}) => res.send({license, version, role}))
+        .then(({license, version, role, rbac}) => res.send({license, version, role, rbac}))
         .catch((err) => {
             logger.error(err);
             if(err.error_code === 'unauthorized_error'){
