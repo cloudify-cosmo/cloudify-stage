@@ -24,7 +24,7 @@ describe('(Component) LicensePage', () => {
     let licensePageComponent = null;
     let messageContainerComponent = null;
     global.Stage = {Basic: BasicComponents};
-    global.moment = moment;
+    global.moment = (timestamp, inputPattern) => moment(timestamp, inputPattern).utcOffset(0);
 
     const verifyProps = (canUploadLicense, isProductOperational, license, status) => {
         expect(licensePageComponent.props().canUploadLicense).to.be.eql(canUploadLicense);
@@ -134,7 +134,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2019 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
+            verifyCurrentLicense('24-11-2019 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -147,7 +147,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2019 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2019 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -160,7 +160,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('Product license has expired', 'clock outline', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2018 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
+            verifyCurrentLicense('24-11-2018 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -173,7 +173,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('The trial license has expired', 'clock outline', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2018 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2018 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(false);
         });
@@ -201,7 +201,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2019 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
+            verifyCurrentLicense('24-11-2019 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -214,7 +214,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2019 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2019 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -227,7 +227,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('Product license has expired', 'clock outline', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2018 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
+            verifyCurrentLicense('24-11-2018 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -240,7 +240,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('The trial license has expired', 'clock outline', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2018 01:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2018 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(false);
         });
