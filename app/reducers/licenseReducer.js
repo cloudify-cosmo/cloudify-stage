@@ -9,8 +9,8 @@ const license = (state = {}, action) => {
     switch (action.type) {
         case types.RES_LOGIN:
             return Object.assign({}, state, {
-                data: action.license,
-                status: Auth.getLicenseStatus(action.license),
+                data: {},
+                status: '',
                 isRequired: action.licenseRequired
             });
         case types.SET_MANAGER_LICENSE:
