@@ -26,6 +26,7 @@ function LicenseSwitchButton({isEditLicenseActive, onClick, color}) {
 
 function DescriptionMessage({canUploadLicense, isTrial, isEditLicenseActive, onLicenseButtonClick, status}) {
     const commonMessageProps = {icon: true};
+    const SpanMessage = ({children}) => <span>{children}</span>;
 
     switch (status) {
         case Consts.LICENSE.EMPTY:
@@ -34,10 +35,21 @@ function DescriptionMessage({canUploadLicense, isTrial, isEditLicenseActive, onL
                     <Icon name='ban' />
                     <Message.Content>
                         <Message.Header>No active license</Message.Header>
-                        To activate this product, please enter the license key provided by Cloudify below and press upload.
-                        Visit the Cloudify <a target='_blank' href='https://cloudify.co'>web site</a>
-                        &nbsp;to learn more and acquire a free&nbsp;
-                        <a target='_blank' href='https://cloudify.co/download/#trial'>trial license</a>.
+                        {
+                            canUploadLicense
+                            ?
+                                <SpanMessage>
+                                    To activate this product, please enter the license key provided by Cloudify below
+                                    and press upload. Visit the Cloudify <a target='_blank' href='https://cloudify.co'>
+                                    web site</a> &nbsp;to learn more and acquire a free&nbsp;
+                                    <a target='_blank' href='https://cloudify.co/download/#trial'>trial license</a>.
+                                </SpanMessage>
+                            :
+                                <SpanMessage>
+                                    To activate this product, please contact your Cloudify administrator.
+                                </SpanMessage>
+                        }
+
                     </Message.Content>
                 </Message>
             );
@@ -53,7 +65,18 @@ function DescriptionMessage({canUploadLicense, isTrial, isEditLicenseActive, onL
                                                  onClick={onLicenseButtonClick} color='red' />
                         }
                         <Message.Header>The trial license has expired</Message.Header>
-                        Please contact <a target='_blank' href='https://cloudify.co/contact'>Cloudify</a> to obtain a license key.
+                        {
+                            canUploadLicense
+                            ?
+                                <SpanMessage>
+                                    Please contact <a target='_blank' href='https://cloudify.co/contact'>Cloudify</a>
+                                    &nbsp;to obtain a license key.
+                                </SpanMessage>
+                            :
+                                <SpanMessage>
+                                    Please contact your Cloudify administrator.
+                                </SpanMessage>
+                        }
 
                     </Message.Content>
                 </Message>
@@ -68,8 +91,19 @@ function DescriptionMessage({canUploadLicense, isTrial, isEditLicenseActive, onL
                         }
 
                         <Message.Header>Product license has expired</Message.Header>
-                        Please contact <a target='_blank' href='https://cloudify.co/support'>Cloudify support</a>
-                        &nbsp;to obtain a new license key.
+                        {
+                            canUploadLicense
+                            ?
+                                <SpanMessage>
+                                    Please contact <a target='_blank' href='https://cloudify.co/support'>Cloudify support</a>
+                                    &nbsp;to obtain a new license key.
+                                </SpanMessage>
+                            :
+                                <SpanMessage>
+                                    Please contact your Cloudify administrator.
+                                </SpanMessage>
+                        }
+
                     </Message.Content>
                 </Message>;
         case Consts.LICENSE.ACTIVE:
@@ -83,7 +117,7 @@ function DescriptionMessage({canUploadLicense, isTrial, isEditLicenseActive, onL
                                                  onClick={onLicenseButtonClick} color='green'/>
                         }
                         <Message.Header>License is valid</Message.Header>
-                        No action required.
+                        <SpanMessage>No action required.</SpanMessage>
                     </Message.Content>
                 </Message>
             );
@@ -164,17 +198,15 @@ export default class LicensePage extends Component {
                                         isEditLicenseActive={isEditLicenseActive}
                                         onLicenseButtonClick={this.onLicenseButtonClick} />
 
-                    <Segment>
-                        {
-                            canUploadLicense && isEditLicenseActive
-                                ?
-                                <UploadLicense error={error} isLoading={isLoading} license={licenseString}
-                                               onChange={this.onLicenseEdit} onErrorDismiss={this.onErrorDismiss}
-                                               onUpload={this.onLicenseUpload} />
-                                :
-                                <CurrentLicense license={licenseObject}/>
-                        }
-                    </Segment>
+                    {
+                        canUploadLicense && isEditLicenseActive
+                        ?
+                            <UploadLicense error={error} isLoading={isLoading} license={licenseString}
+                                           onChange={this.onLicenseEdit} onErrorDismiss={this.onErrorDismiss}
+                                           onUpload={this.onLicenseUpload} />
+                        :
+                            <CurrentLicense license={licenseObject}/>
+                    }
 
                     <Grid columns={'equal'}>
                         <Grid.Column textAlign='left' verticalAlign='middle'>

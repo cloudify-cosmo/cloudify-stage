@@ -5,7 +5,7 @@
 import React from 'react';
 import StageUtils from '../../utils/stageUtils';
 
-import {Icon, Header, Message, Table} from '../basic';
+import {Icon, Header, Segment, Table} from '../basic';
 
 export default function CurrentLicense({license}) {
     const formatTrial = (isTrial) => isTrial ? 'Yes' : 'No';
@@ -23,36 +23,35 @@ export default function CurrentLicense({license}) {
         {name: 'customer_id', header: 'Licensed To', icon: 'handshake', format: String, hide: _.isEmpty},
     ];
 
-    return !_.isEmpty(license)
-        ?
-        <Table basic='very' size='large' celled >
-            <Table.Body>
-                {
-                    _.map(fields, (field) => {
-                        const value = license[field.name];
+    return !_.isEmpty(license) &&
+        <Segment>
+            <Table basic='very' size='large' celled >
+                <Table.Body>
+                    {
+                        _.map(fields, (field) => {
+                            const value = license[field.name];
 
-                        return !!field.hide && field.hide(value)
-                            ?
-                            null
-                            :
-                            <Table.Row key={field.header}>
-                                <Table.Cell width={5}>
-                                    <Header as='h4'>
-                                        <Icon name={field.icon} size='large'
-                                              style={{display: 'inline-block', float: 'left'}}/>
-                                        <Header.Content>
-                                            {field.header}
-                                        </Header.Content>
-                                    </Header>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {field.format(license[field.name])}
-                                </Table.Cell>
-                            </Table.Row>
-                    })
-                }
-            </Table.Body>
-        </Table>
-        :
-        <Message>There is no license.</Message>
+                            return !!field.hide && field.hide(value)
+                                ?
+                                null
+                                :
+                                <Table.Row key={field.header}>
+                                    <Table.Cell width={5}>
+                                        <Header as='h4'>
+                                            <Icon name={field.icon} size='large'
+                                                  style={{display: 'inline-block', float: 'left'}}/>
+                                            <Header.Content>
+                                                {field.header}
+                                            </Header.Content>
+                                        </Header>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {field.format(license[field.name])}
+                                    </Table.Cell>
+                                </Table.Row>
+                        })
+                    }
+                </Table.Body>
+            </Table>
+        </Segment>
 }
