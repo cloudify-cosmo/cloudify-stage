@@ -4,18 +4,20 @@
 
 import React from 'react';
 
-import {Button, Form} from '../basic';
+import {Button, Form, Segment} from '../basic';
 
 export default function UploadLicense({error, isLoading, license, onChange, onErrorDismiss, onUpload}) {
     return (
-        <Form errors={error} errorMessageHeader='License error' onErrorsDismiss={onErrorDismiss}>
-            <Form.TextArea name='license' autoHeight error={!!error}
-                           placeholder='Paste the complete license string,
-                                        including the license signature ending with ”==”'
-                           value={license} onChange={onChange} disabled={isLoading} />
+        <Segment>
+            <Form errors={error} errorMessageHeader='License error' onErrorsDismiss={onErrorDismiss}>
+                <Form.TextArea name='license' autoHeight error={!!error}
+                               placeholder='Paste the complete license string,
+                                            including the license signature ending with ”==”'
+                               value={license} onChange={onChange} disabled={isLoading} />
 
-            <Button content='Upload' icon='upload' color='yellow' labelPosition='left'
-                    disabled={_.isEmpty(license)} loading={isLoading} onClick={onUpload} />
-        </Form>
+                <Button content='Upload' icon='upload' color='yellow' labelPosition='left'
+                        disabled={_.isEmpty(license)} loading={isLoading} onClick={onUpload} />
+            </Form>
+        </Segment>
     );
 }
