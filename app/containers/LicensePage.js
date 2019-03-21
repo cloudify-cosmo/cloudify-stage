@@ -18,15 +18,14 @@ const mapStateToProps = (state, ownProps) => {
         canUploadLicense: stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, manager),
         isProductOperational:  Auth.isProductOperational(license),
         license: _.get(license, 'data', {}),
-        manager,
         status: _.get(license, 'status', Consts.LICENSE.EMPTY)
     }
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onLicenseUpload: (key) => {
-            dispatch(setLicense(key));
+        onLicenseUpload: (license) => {
+            dispatch(setLicense(license));
         },
         onGoToApp: () => {
             dispatch(push(Consts.HOME_PAGE_PATH));

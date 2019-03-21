@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Consts from '../utils/consts';
-import Manager from '../utils/Manager';
+import StageUtils from '../utils/stageUtils';
 import {Button, Form, Grid, Header, Icon, Message, Segment} from './basic';
 import MessageContainer from './MessageContainer';
 import Banner from '../containers/banner/Banner';
@@ -130,22 +130,24 @@ export default class LicensePage extends Component {
 
         this.state = {
             error: null,
-            license: '',
             isLoading: false,
-            isEditLicenseActive: false
+            isEditLicenseActive: false,
+            license: ''
         };
 
         this.onErrorDismiss = this.onErrorDismiss.bind(this);
         this.onLicenseButtonClick = this.onLicenseButtonClick.bind(this);
         this.onLicenseEdit = this.onLicenseEdit.bind(this);
         this.onLicenseUpload = this.onLicenseUpload.bind(this);
+        this.toolbox = StageUtils.getToolbox(()=>{}, ()=>{}, null);
     }
 
     static propTypes = {
-        manager: PropTypes.object.isRequired,
         isProductOperational: PropTypes.bool.isRequired,
         license: PropTypes.object.isRequired,
-        status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]),
+        onLicenseUpload: PropTypes.func.isRequired,
+        onGoToApp: PropTypes.func.isRequired,
+        status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired,
     };
 
     static defaultProps = {};
@@ -167,8 +169,7 @@ export default class LicensePage extends Component {
     onLicenseUpload() {
         this.setState({isLoading: true});
 
-        const managerAccessor = new Manager(this.props.manager);
-        return managerAccessor.doPut('/license', null, this.state.license)
+        return this.toolbox.getManager().doPut('/license', null, this.state.license)
             .then((data) => {
                 this.setState({isLoading: false, error: null, isEditLicenseActive: false});
                 this.props.onLicenseUpload(data);
