@@ -27,12 +27,9 @@ describe('(Component) Users', () => {
                                 showAllOptions={true}
                                 isEditMode={false}
                                 canEditMode={true}
-                                canConfigure={true}
                                 canTemplateManagement={true}
                                 canLicenseManagement={true}
                                 onEditModeChange={()=>{}}
-                                onConfigure={()=>{}}
-                                onResetPages={()=>{}}
                                 onReset={()=>{}}
                                 onTemplates={()=>{}}
                                 onLogout={()=>{}}
@@ -45,7 +42,7 @@ describe('(Component) Users', () => {
 
     it('renders user menu with full options list ',()=>{
         expect(wrapper.find(Dropdown)).to.have.length(1); // Showing the users menu
-        expect(wrapper.find(Dropdown.Item).length).to.equal(5); // 4 menu options
+        expect(wrapper.find(Dropdown.Item).length).to.equal(5); // 5 menu options
         expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Edit Mode'); // Having Edit Mode option
         expect(wrapper.find(Dropdown.Item).get(0).props.icon).to.equal('configure'); // Having configure icon for Edit Mode option
         expect(wrapper.find(Dropdown.Item).get(1).props.text).to.equal('Template Management'); // Having Template management option
@@ -56,6 +53,15 @@ describe('(Component) Users', () => {
         expect(wrapper.find(Dropdown.Item).get(3).props.icon).to.equal('key'); // Having key icon for License Management option
         expect(wrapper.find(Dropdown.Item).get(4).props.text).to.equal('Logout'); // Having Logout option
         expect(wrapper.find(Dropdown.Item).get(4).props.icon).to.equal('log out'); // Having log out icon for Logout option
+    });
+
+    it('renders user menu with full options list and edit mode selected ',()=>{
+        wrapper.setProps({isEditMode: true});
+
+        expect(wrapper.find(Dropdown)).to.have.length(1); // Showing the users menu
+        expect(wrapper.find(Dropdown.Item).length).to.equal(5); // 5 menu options
+        expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Exit Edit Mode'); // Having Exit Edit Mode option
+        expect(wrapper.find(Dropdown.Item).get(0).props.selected).to.equal(true); // Having Edit Mode option selected
     });
 
     it('renders user menu with limited options list ',()=>{
@@ -69,15 +75,6 @@ describe('(Component) Users', () => {
         expect(wrapper.find(Dropdown.Item).get(1).props.icon).to.equal('log out'); // Having log out icon for Logout option
     });
 
-    it('renders user menu with full options list and edit mode selected ',()=>{
-        wrapper.setProps({isEditMode: true});
-
-        expect(wrapper.find(Dropdown)).to.have.length(1); // Showing the users menu
-        expect(wrapper.find(Dropdown.Item).length).to.equal(5); // 4 menu options
-        expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Exit Edit Mode'); // Having Exit Edit Mode option
-        expect(wrapper.find(Dropdown.Item).get(0).props.selected).to.equal(true); // Having Edit Mode option selected
-    });
-
     it('onEditModeChange is called',()=>{
         let onEditModeChange = sinon.spy();
         wrapper.setProps({onEditModeChange});
@@ -85,6 +82,33 @@ describe('(Component) Users', () => {
         wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Edit Mode').simulate('click');
 
         expect(onEditModeChange.calledOnce).to.equal(true);
+    });
+
+    it('onTemplates is called',()=>{
+        let onTemplates = sinon.spy();
+        wrapper.setProps({onTemplates});
+
+        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Template Management').simulate('click');
+
+        expect(onTemplates.calledOnce).to.equal(true);
+    });
+
+    it('onReset is called',()=>{
+        let onReset = sinon.spy();
+        wrapper.setProps({onReset});
+
+        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Reset Templates').simulate('click');
+
+        expect(onReset.calledOnce).to.equal(true);
+    });
+
+    it('onLicense is called',()=>{
+        let onLicense = sinon.spy();
+        wrapper.setProps({onLicense});
+
+        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'License Management').simulate('click');
+
+        expect(onLicense.calledOnce).to.equal(true);
     });
 
     it('onLogout is called',()=>{

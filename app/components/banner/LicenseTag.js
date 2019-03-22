@@ -11,7 +11,7 @@ import Consts from '../../utils/consts';
 export default function LicenseTag({isCommunity, isExpired, isTrial, className = ''}) {
     const labelProps
         = isCommunity
-        ? {content: 'Community', color: 'gray'}
+        ? {content: 'Community', color: 'grey'}
         : isExpired
             ? {content: 'Expired', color: 'red'}
             : isTrial

@@ -3,12 +3,17 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class Help extends Component {
 
     constructor(props) {
         super(props);
     }
+
+    static propTypes = {
+        onAbout: PropTypes.func.isRequired
+    };
 
     render() {
         let {Dropdown, Icon} = Stage.Basic;
