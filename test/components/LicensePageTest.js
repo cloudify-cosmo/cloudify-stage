@@ -134,7 +134,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2019 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -147,7 +147,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2019 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -160,7 +160,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('Product license has expired', 'clock outline', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2018 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
+            verifyCurrentLicense('24-11-2018', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -173,7 +173,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('The trial license has expired', 'clock outline', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2018 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2018', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(false);
         });
@@ -201,7 +201,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2019 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -214,7 +214,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2019 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -227,7 +227,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('Product license has expired', 'clock outline', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2018 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
+            verifyCurrentLicense('24-11-2018', '4.6', 'Spire', 'HA, Awesomeness', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -240,7 +240,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('The trial license has expired', 'clock outline', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2018 00:00', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2018', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
             verifyUploadLicense(false);
             verifyFooter(false);
         });
@@ -255,6 +255,45 @@ describe('(Component) LicensePage', () => {
             verifySwitchToUpload(false);
             verifyUploadLicense(false);
             verifyFooter(false);
+        });
+
+        it('allows to view license when license without expiration date is active', () => {
+            const license = getLicenseState(licenses.noExpirationDateLicense, true, Consts.LICENSE.ACTIVE);
+            mockStoreAndRender('default', license, versions.premium);
+
+            verifyProps(false, true, licenses.noExpirationDateLicense, Consts.LICENSE.ACTIVE);
+            verifyHeader();
+            verifyMessage('License is valid', 'checkmark', false);
+            verifySwitchToUpload(false);
+            verifyCurrentLicense('Never', '4.6', 'Spire', 'Mock1, Mock2', 'Yes','CloudifyMock');
+            verifyUploadLicense(false);
+            verifyFooter(true);
+        });
+
+        it('allows to view license when license without capabilities is active', () => {
+            const license = getLicenseState(licenses.noCapabilitiesLicense, true, Consts.LICENSE.ACTIVE);
+            mockStoreAndRender('default', license, versions.premium);
+
+            verifyProps(false, true, licenses.noCapabilitiesLicense, Consts.LICENSE.ACTIVE);
+            verifyHeader();
+            verifyMessage('License is valid', 'checkmark', false);
+            verifySwitchToUpload(false);
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire',  'Yes','customer123');
+            verifyUploadLicense(false);
+            verifyFooter(true);
+        });
+
+        it('allows to view license when license without version is active', () => {
+            const license = getLicenseState(licenses.noCapabilitiesLicense, true, Consts.LICENSE.ACTIVE);
+            mockStoreAndRender('default', license, versions.premium);
+
+            verifyProps(false, true, licenses.noCapabilitiesLicense, Consts.LICENSE.ACTIVE);
+            verifyHeader();
+            verifyMessage('License is valid', 'checkmark', false);
+            verifySwitchToUpload(false);
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire',  'Yes','customer123');
+            verifyUploadLicense(false);
+            verifyFooter(true);
         });
     })
 });
