@@ -19,7 +19,7 @@ export default class Pagination extends Component {
         this.state = {
             pageSize: props.pageSize,
             currentPage: 1
-        }
+        };
 
         this.disableStateUpdate = false;
     }

@@ -16,11 +16,8 @@ describe('(Component) Help', () => {
     let onAbout = sinon.spy();
     global.Stage = {Basic: BasicComponents, Utils: { redirectToPage }};
     let {Dropdown} = Stage.Basic;
-
-    beforeEach(() => {
-        wrapper = mount(<Help onAbout={onAbout} />);
-        dropdownItemComponents = wrapper.find(Dropdown.Item);
-    });
+    wrapper = mount(<Help onAbout={onAbout} />);
+    dropdownItemComponents = wrapper.find(Dropdown.Item);
 
     it('renders help menu', () => {
         expect(wrapper.find(Dropdown)).to.have.length(1);

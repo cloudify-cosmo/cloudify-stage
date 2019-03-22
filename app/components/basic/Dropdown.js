@@ -33,8 +33,8 @@ import { Dropdown } from 'semantic-ui-react';
 export default class extends Dropdown {
     render() {
         const addOptionValueAttribute = (options) => {
-            return _.map(options, (option) => ({...option, 'option-value': option.value || 'empty-option'}));
-        }
+            return _.map(options, (option) => ({...option, 'option-value': String(option.value) || 'empty-option'}));
+        };
         let props = {...this.props};
         if (props.options) {
             props.options = addOptionValueAttribute(props.options);
