@@ -20,7 +20,7 @@ describe('(Component) Manager', () => {
             status: {status: 'running'}
         };
 
-        wrapper = mount(<Manager manager={manager} />);
+        wrapper = mount(<Manager manager={manager} showServicesStatus={false} />);
     });
 
     it('renders manager component with available status ',()=>{

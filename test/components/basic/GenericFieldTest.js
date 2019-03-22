@@ -12,7 +12,7 @@ const mockStore = configureMockStore();
 const store = mockStore({config: { widgets: {} }});
 createToolbox(store);
 
-describe('(Component) Field', () => {
+describe('(Component) GenericField', () => {
 
     it('default type', () => {
         let wrapper = mount(<GenericField name="test" label="label" />);
@@ -39,8 +39,7 @@ describe('(Component) Field', () => {
     });
 
     it('boolean type', () => {
-        let wrapper = mount(<GenericField name="test" type="boolean" label="label" value="true"/>);
-
+        let wrapper = mount(<GenericField name="test" type="boolean" label="label" value={true} />);
         expect(wrapper.find('input[name="test"]')).to.have.length(1);
         expect(wrapper.find('input[type="checkbox"]')).to.have.length(1);
         expect(wrapper.find('input[checked]')).to.have.length(1);
@@ -57,20 +56,20 @@ describe('(Component) Field', () => {
     });
 
     it('list type', () => {
-        let wrapper = mount(<GenericField name="test" type="list" items={[1,2,3]} label="label" value="2" placeholder="placeholder"/>);
+        let wrapper = mount(<GenericField name="test" type="list" items={['1','2','3']} label="label" value="2" placeholder="placeholder"/>);
 
         expect(wrapper.find('div[role="option"].selected span')).to.have.text('2');
         expect(wrapper.find('div[role="listbox"].multiple')).to.have.length(0);
-        expect(wrapper.find('div[role="listbox"] div[role="option"]')).to.have.length(4);
+        expect(wrapper.find('div[role="listbox"] div[role="option"]')).to.have.length(3);
         expect(wrapper.find('div[role="listbox"] div.menu').childAt(1)).to.have.text('2');
 
-        wrapper.setProps({items:[{value:1, name:'one'}, {value:2, name:'two'}, {value:3, name:'three'}]});
+        wrapper.setProps({items:[{value:'1', name:'one'}, {value:'2', name:'two'}, {value:'3', name:'three'}]});
         expect(wrapper.find('div[role="listbox"] div.menu').childAt(1)).to.have.text('two');
     });
 
     it('multi selection list type', () => {
-        let wrapper = mount(<GenericField name="test" type="multiSelectList" items={[1,2,3,{value:4, name:'four'}, {value:5, name:'five'}]}
-                                          label="label" value={[2,3,4]} placeholder="placeholder"/>);
+        let wrapper = mount(<GenericField name="test" type="multiSelectList" items={['1','2','3',{value:'4', name:'four'}, {value:'5', name:'five'}]}
+                                          label="label" value={['2','3','4']} placeholder="placeholder"/>);
 
         expect(wrapper.find('div[role="listbox"].multiple')).to.have.length(1);
 

@@ -2,8 +2,8 @@
  * Created by pawelposel on 24/11/2016.
  */
 
-import React from 'react'
-import { shallow , mount} from 'enzyme'
+import React from 'react';
+import { mount} from 'enzyme';
 import {expect} from 'chai';
 import sinon from 'sinon';
 import Pagination from '../../../app/components/basic/pagination/Pagination';
@@ -12,12 +12,11 @@ describe('(Component) Pagination', () => {
 
     var wrapper;
     var fetchSpy = sinon.spy();
-    var selectSpy = sinon.spy();
     before(()=>{
         let div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Pagination fetchData={fetchSpy} pageSize={25}/>, { attachTo: div.get(0) }
+            <Pagination fetchData={fetchSpy} pageSize={25}><div /></Pagination>, { attachTo: div.get(0) }
         );
     });
 
@@ -96,7 +95,7 @@ describe('(Component) Pagination', () => {
 
         const pagination = wrapper.find('.pagination');
         pagination.childAt(2).simulate('click');
-        expect(fetchSpy).to.have.been.calledOnce;
+        expect(fetchSpy.calledOnce).to.be.eql(true);
         sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 2, pageSize: 5}});
         fetchSpy.reset();
 
@@ -130,7 +129,7 @@ describe('(Component) Pagination', () => {
         const pagination = wrapper.find('.pagination');
 
         pagination.childAt(7).simulate('click');
-        expect(fetchSpy).to.have.been.calledOnce;
+        expect(fetchSpy.calledOnce).to.be.eql(true);
         sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 3, pageSize: 5}});
         fetchSpy.reset();
 
@@ -147,7 +146,7 @@ describe('(Component) Pagination', () => {
         expect(page3).to.have.className('active');
 
         pagination.childAt(0).simulate('click');
-        expect(fetchSpy).to.have.been.calledOnce;
+        expect(fetchSpy.calledOnce).to.be.eql(true);
         sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 2, pageSize: 5}});
         fetchSpy.reset();
 
@@ -166,7 +165,7 @@ describe('(Component) Pagination', () => {
 
         const page4 = pagination.childAt(4);
         page4.simulate('click');
-        expect(fetchSpy).to.have.been.calledOnce;
+        expect(fetchSpy.calledOnce).to.be.eql(true);
         sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 4, pageSize: 5}});
         fetchSpy.reset();
 

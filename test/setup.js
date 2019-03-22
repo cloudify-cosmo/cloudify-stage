@@ -2,8 +2,6 @@
  * Created by kinneretzin on 17/11/2016.
  */
 
-'use strict';
-
 import jsdom from 'jsdom';
 import _ from 'lodash';
 import $ from 'jquery';
