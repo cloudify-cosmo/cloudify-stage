@@ -12,10 +12,10 @@ export default function UploadLicense({error, isLoading, license, onChange, onEr
             <Form errors={error} errorMessageHeader='License error' onErrorsDismiss={onErrorDismiss}>
                 <Form.TextArea name='license' autoHeight error={!!error}
                                placeholder='Paste the complete license string,
-                                            including the license signature ending with ”==”'
+                                            including the license signature'
                                value={license} onChange={onChange} disabled={isLoading} />
 
-                <Button content='Upload' icon='upload' color='yellow' labelPosition='left'
+                <Button content='Update' icon='upload' color='yellow' labelPosition='left'
                         disabled={_.isEmpty(license)} loading={isLoading} onClick={onUpload} />
             </Form>
         </Segment>

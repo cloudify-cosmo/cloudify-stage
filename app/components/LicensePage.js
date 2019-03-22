@@ -40,7 +40,7 @@ function DescriptionMessage({canUploadLicense, isTrial, isEditLicenseActive, onL
                             ?
                                 <SpanMessage>
                                     To activate this product, please enter the license key provided by Cloudify below
-                                    and press upload. Visit the Cloudify <a target='_blank' href='https://cloudify.co'>
+                                    and press update. Visit the Cloudify <a target='_blank' href='https://cloudify.co'>
                                     web site</a> &nbsp;to learn more and acquire a free&nbsp;
                                     <a target='_blank' href='https://cloudify.co/download/#trial'>trial license</a>.
                                 </SpanMessage>
