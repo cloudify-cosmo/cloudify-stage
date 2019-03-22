@@ -26,7 +26,6 @@ export default class Banner extends Component {
         productName: PropTypes.string,
         productVersion: PropTypes.string,
         licenseEdition: PropTypes.string,
-        inverted: PropTypes.bool,
         hideOnSmallScreen: PropTypes.bool,
     };
 
@@ -37,7 +36,6 @@ export default class Banner extends Component {
         productName: '',
         productVersion: '',
         licenseEdition: '',
-        inverted: false,
         hideOnSmallScreen: true
     };
 
@@ -51,12 +49,11 @@ export default class Banner extends Component {
                         <Logo />
                         <ProductName name={this.props.productName} className={className} />
                         {
-                            this.props.showVersionDetails &&
-                            <LicenseEdition edition={this.props.licenseEdition} className={className} />
-                        }
-                        {
                             this.props.showVersionDetails && !this.props.isCommunity &&
-                            <ProductVersion version={this.props.productVersion} className={className} />
+                            <React.Fragment>
+                                <LicenseEdition edition={this.props.licenseEdition} className={className} />
+                                <ProductVersion version={this.props.productVersion} className={className} />
+                            </React.Fragment>
                         }
                     </Header>
                 </Link>
