@@ -9,7 +9,10 @@ import {Icon, Header, Segment, Table} from '../basic';
 
 export default function CurrentLicense({license}) {
     const formatTrial = (isTrial) => isTrial ? 'Yes' : 'No';
-    const formatExpirationDate = StageUtils.formatLocalTimestamp;
+    const formatExpirationDate
+        = (stringDate) => _.isEmpty(stringDate)
+            ? 'Never'
+            : StageUtils.formatLocalTimestamp(stringDate, 'DD-MM-YYYY');
     const formatVersion = (version) => _.isEmpty(version) ? 'All' : String(version);
     const formatCapabilities = (capabilities) => _.join(capabilities, ', ');
     const isFalse = (boolValue) => !boolValue;
