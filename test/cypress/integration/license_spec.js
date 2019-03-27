@@ -54,17 +54,18 @@ describe('License Management', () => {
                 cy.get('@updateButton')
                     .click();
             }).then(() => {
-                cy.get('div.loader')
+                cy.get('div.loading')
                     .should('be.not.visible', true);
             });
     };
 
     before(() => {
         cy.login('admin', 'admin');
-        cy.visit('/console/license');
-        goToEditLicense();
         uploadLicense('valid_paying_license.yaml')
-            .then(() => cy.saveLocalStorage());
+            .then(() => {
+                console.error(JSON.parse(localStorage.getItem('state-main')).manager.license);
+                cy.saveLocalStorage()
+            });
     });
 
     beforeEach(function () {
