@@ -1,0 +1,15 @@
+license:
+  capabilities:
+  - HA
+  - Awesomeness
+  cloudify_version: '4.6'
+  customer_id: customer123
+  expiration_date: 11/24/2018
+  license_edition: Spire
+  trial: true
+signature: !!binary |
+  IfC4Og3a2y/4kFEUTrGZLzYQMQ2gsUQmvI60TxkgppSvsoMz9YprxN9vHfWG4grNYbRZnAlDU0Qg
+  e06DeFaCBTOVAdzYzm7y90+uDdkFpL11YOmS9nyL3oiZfl2XBc4yl7lYIBlyIdBMT2LCdkIEI2CC
+  X1wCLjMsZ12yZ+k4vj5zerCks3//QmAKRiejNWgRzvH2xCDnZzYgOgbNUdg2VsuACK3z5jWPHWEg
+  CTUtgGC3Rkkx+vgpnWIC3VacybJyefXtdCByjZAOlVEwNYHDAdqCp475RbxDtOVNfs483pQeHFzR
+  T4nxw6dW/9O8kTwkZEPZIQ19p5etgm1JcTD84w==
