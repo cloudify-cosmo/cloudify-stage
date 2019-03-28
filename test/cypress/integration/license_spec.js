@@ -26,7 +26,9 @@ describe('License Management', () => {
             .should('have.text', header);
     };
     const verifyError = (error) => {
-        cy.get('.form > .message').within(() => {
+        cy.get('.form > .message')
+            .scrollIntoView()
+            .within(() => {
             cy.get('.header')
                 .should('be.visible')
                 .should('have.text', 'License error');
