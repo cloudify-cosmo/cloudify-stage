@@ -66,6 +66,10 @@ describe('License Management', () => {
             .login();
     });
 
+    after(() => {
+        cy.activate();
+    });
+
     beforeEach(function () {
         cy.restoreState();
     });
