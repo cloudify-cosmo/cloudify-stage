@@ -8,8 +8,36 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-Cypress.Commands.add('login', (username, password) => {
-    cy.visit('/console/login');
+import './localStorage';
+
+
+Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
+
+Cypress.Commands.add('waitUntilLoaded', () => {
+    cy.get('#loader', {timeout: 20000})
+        .should('be.not.visible', true);
+});
+
+Cypress.Commands.add('activate', () =>
+    cy.fixture('license/valid_paying_license.yaml')
+        .then((license) =>
+            cy.request({
+                method: 'PUT',
+                url: '/console/sp',
+                qs: {
+                    su: '/license'
+                },
+                headers: {
+                    'Authorization': `Basic ${btoa('admin:admin')}`,
+                    'Content-Type': 'text/plain'
+                },
+                body: license
+            }))
+);
+
+Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
+    cy.visit('/console/login')
+        .waitUntilLoaded()
 
     cy.get('.form > :nth-child(1) > .ui > input').type(username);
     cy.get('.form > :nth-child(2) > .ui > input').type(password);
@@ -24,21 +52,6 @@ Cypress.Commands.add('login', (username, password) => {
             expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
         });
 
-    cy.get('#loader',{ timeout: 20000 })
-        .should('be.not.visible', true);
-});
-
-
-let LOCAL_STORAGE_MEMORY = {};
-
-Cypress.Commands.add('saveLocalStorage', () => {
-    Object.keys(localStorage).forEach(key => {
-        LOCAL_STORAGE_MEMORY[key] = localStorage[key];
-    });
-});
-
-Cypress.Commands.add('restoreLocalStorage', () => {
-    Object.keys(LOCAL_STORAGE_MEMORY).forEach(key => {
-        localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
-    });
+    cy.waitUntilLoaded()
+        .then(() => cy.saveLocalStorage());
 });

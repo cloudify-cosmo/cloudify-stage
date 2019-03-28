@@ -24,3 +24,7 @@ Cypress.on('window:before:load', window => {
     // Uncomment for testing HTTP Requests from client-side
     // window.fetch = null;
 });
+
+Cypress.Cookies.defaults({
+    whitelist: 'XSRF-TOKEN'
+});

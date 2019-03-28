@@ -11,7 +11,7 @@
     "lint": "eslint app backend widgets test --ext .js --ignore-pattern **/widget.js --ignore-pattern **/common.js --ignore-pattern **/node_modules",
     "doc": "esdoc -c ./doc/esdoc.json",
     "docWidgets": "node scripts/updateReadmes.js",
-    "e2e": "npm run e2e:old && npm run e2e:new",
+    "e2e": "npm run e2e:new && npm run e2e:old",
     "e2e:old": "nightwatch -c ./test/nightwatch/nightwatch.conf.js",
     "e2e:old:dev": "nightwatch -c ./test/nightwatch/nightwatch.conf.js --env dev",
     "e2e:new": "cypress run --reporter spec",
