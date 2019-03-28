@@ -60,23 +60,19 @@ describe('License Management', () => {
     };
 
     before(() => {
-        cy.login('admin', 'admin');
-        uploadLicense('valid_paying_license.yaml')
-            .then(() => {
-                console.error(JSON.parse(localStorage.getItem('state-main')).manager.license);
-                cy.saveLocalStorage()
-            });
+        cy.activate()
+            .login();
     });
 
     beforeEach(function () {
-        Cypress.Cookies.preserveOnce('XSRF-TOKEN');
-        cy.restoreLocalStorage();
+        cy.restoreState();
     });
 
     it('is accessible from users menu', () => {
-        cy.visit('/');
+        cy.visit('/console')
+            .waitUntilLoaded();
 
-        cy.get('.usersMenu', {timeout: 20000}).click();
+        cy.get('.usersMenu').click();
         cy.get('.usersMenu').contains('License Management').click();
 
         cy.location('pathname')
@@ -84,9 +80,10 @@ describe('License Management', () => {
     });
 
     it('is accessible from About modal', () => {
-        cy.visit('/');
+        cy.visit('/console')
+            .waitUntilLoaded();
 
-        cy.get('.helpMenu', {timeout: 20000}).click();
+        cy.get('.helpMenu').click();
         cy.get('.helpMenu').contains('About').click();
 
         cy.get('.actions > button.yellow')
@@ -122,7 +119,7 @@ describe('License Management', () => {
     });
 
     for(let license of validLicenses) {
-        it(`Allows ${license.name} license upload`, () => {
+        it(`allows ${license.name} license upload`, () => {
             cy.visit('/console/license');
             goToEditLicense();
             uploadLicense(license.file)
@@ -139,14 +136,4 @@ describe('License Management', () => {
                 .then(() => verifyError(license.error));
         });
     }
-
-    after(() => {
-        Cypress.Cookies.preserveOnce('XSRF-TOKEN');
-        cy.restoreLocalStorage();
-        cy.visit('/console/license');
-
-        goToEditLicense();
-        uploadLicense(validLicenses[0].file)
-            .then(() => verifyMessageHeader(validLicenses[0].header));
-    });
 });
