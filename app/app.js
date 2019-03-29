@@ -32,7 +32,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import { Provider } from 'react-redux';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
 
@@ -49,7 +49,7 @@ import Interceptor from './utils/Interceptor';
 
 import Routes from './containers/Routes';
 
-const browserHistory = createHistory({
+const browserHistory = createBrowserHistory({
     basename: Consts.CONTEXT_PATH
 });
 

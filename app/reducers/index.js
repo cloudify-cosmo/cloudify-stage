@@ -3,6 +3,8 @@
  */
 
 import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
+
 import pages from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
 import tours from './toursReducer';
@@ -15,7 +17,8 @@ import app from './appReducer';
 import widgetData from './widgetDataReducer';
 import drilldownContext from './drilldownContextReducer';
 
-const rootReducer = combineReducers({
+export default (history) => combineReducers({
+    router: connectRouter(history),
     app,
     manager,
     pages,
@@ -28,5 +31,3 @@ const rootReducer = combineReducers({
     config,
     widgetData
 });
-
-export default rootReducer;
