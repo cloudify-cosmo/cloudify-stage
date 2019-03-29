@@ -77,6 +77,7 @@ module.exports = (r) => {
         
         const localWorkflowTask = 'LocalWorkflowTask';
         const nopLocalWorkflowTask = 'NOPLocalWorkflowTask';
+        const subgraphTask = 'SubgraphTask';
 
         // ELK Tasks graph skeleton
         let tasksGraph = {
@@ -356,6 +357,10 @@ module.exports = (r) => {
         const cleanSubgraphsList = (allSubgraphs) => {
             // Removing irrelevant vertices (when a task is rescheduled due to failure mostly)
             allSubgraphs = safeDeleteIrrelevantGraphVertices(allSubgraphs);
+            // Removing subgraphs with 0 children
+            allSubgraphs = _.omitBy(allSubgraphs, (subGraph) =>
+                _.isEmpty(subGraph.children) && !_.isEmpty(subGraph.labels) && subGraph.labels[0].type == subgraphTask
+            );
             allSubgraphs = _.omitBy(allSubgraphs, (subGraph) => {
                 // Return all the nodes that are root-level subgraphs
                 let containing_subgraph = subGraph.containing_subgraph;
