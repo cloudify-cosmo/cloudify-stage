@@ -36,11 +36,7 @@ const rules = [
         use: [{
             loader: 'style-loader'
         }, {
-            loader: 'css-loader',
-
-            options: {
-                minimize: true
-            }
+            loader: 'css-loader'
         }, {
             loader: 'sass-loader',
 
@@ -57,8 +53,7 @@ const rules = [
             loader: 'css-loader',
 
             options: {
-                importLoaders: 1,
-                minimize: true
+                importLoaders: 1
             }
         }]
     }, {
