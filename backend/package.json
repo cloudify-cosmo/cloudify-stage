@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "devStart": "cross-env NODE_ENV=development node --trace-warnings server.js",
+    "devStart": "cross-env NODE_ENV=development nodemon --trace-warnings server.js",
+    "devDebug": "cross-env NODE_ENV=development nodemon --inspect server.js",
     "db-migrate-create": "sequelize migration:create --config ../conf/app.json",
     "db-migrate": "node migration up",
     "db-migrate-status": "node migration status",
@@ -26,6 +27,7 @@
     "cross-env": "^5.2.0",
     "decompress": "^4.0.0",
     "ejs": "^2.5.9",
+    "elkjs": "^0.4.1",
     "express": "^4.14.0",
     "express-static-gzip": "^0.3.2",
     "flat": "^4.0.0",
@@ -52,5 +54,11 @@
     "umzug": "^1.12.0",
     "vm2": "^3.5.2",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  },
+  "nodemonConfig": {
+    "delay": "2000"
   }
 }

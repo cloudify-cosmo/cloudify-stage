@@ -46,7 +46,7 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     onApprove () {
-        this._submitExecute();
+        this.setState({errors: {}}, this._submitExecute);
         return false;
     }
 
@@ -152,7 +152,7 @@ export default class ExecuteDeploymentModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}
+                    <Form loading={this.state.loading} errors={this.state.errors} scrollToError
                           onErrorsDismiss={() => this.setState({errors: {}})}>
 
                         {

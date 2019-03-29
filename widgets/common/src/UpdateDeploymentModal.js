@@ -24,6 +24,8 @@ class UpdateDeploymentModal extends React.Component {
         ignoreFailure: false,
         automaticReinstall: true,
         reinstallList: [],
+        showPreview: false,
+        previewData: {},
         force: false
     });
 
@@ -48,9 +50,14 @@ class UpdateDeploymentModal extends React.Component {
         }
     }
 
-    onApprove () {
-        this._submitUpdate();
+    onUpdate () {
+        this.setState({errors: {}, loading: true, showPreview: false}, () => this._submitUpdate(false));
         return false;
+    }
+
+    onPreview () {
+        this.setState({errors: {}, loading: true, showPreview: false}, () => this._submitUpdate(true));
+        return true;
     }
 
     onCancel () {
@@ -58,7 +65,7 @@ class UpdateDeploymentModal extends React.Component {
         return true;
     }
 
-    _submitUpdate() {
+    _submitUpdate(preview) {
         let {InputsUtils} = Stage.Common;
         let errors = {};
 
@@ -67,18 +74,17 @@ class UpdateDeploymentModal extends React.Component {
         }
 
         let inputsWithoutValue = {};
-        let deploymentInputs = Stage.Common.InputsUtils.getInputsToSend(this.state.blueprint.plan.inputs,
-                                                                        this.state.deploymentInputs,
-                                                                        inputsWithoutValue);
+        const inputsPlanForUpdate = InputsUtils.getPlanForUpdate(this.state.blueprint.plan.inputs,
+                                                                 this.props.deployment.inputs);
+        const deploymentInputs = InputsUtils.getInputsToSend(inputsPlanForUpdate,
+                                                             this.state.deploymentInputs,
+                                                             inputsWithoutValue);
         InputsUtils.addErrors(inputsWithoutValue, errors);
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors});
+            this.setState({errors, loading: false});
             return false;
         }
-
-         // Disable the form
-        this.setState({loading: true});
 
         let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
         actions.doUpdate(this.props.deployment.id,
@@ -90,17 +96,21 @@ class UpdateDeploymentModal extends React.Component {
                          this.state.ignoreFailure,
                          this.state.automaticReinstall,
                          this.state.reinstallList,
-                         this.state.force).then(()=>{
-            this.setState({errors: {}, loading: false});
-            this.props.toolbox.refresh();
-            this.props.onHide();
-            this.props.toolbox.getEventBus().trigger('nodes:refresh');
-            this.props.toolbox.getEventBus().trigger('inputs:refresh');
-            this.props.toolbox.getEventBus().trigger('outputs:refresh');
-            this.props.toolbox.getEventBus().trigger('executions:refresh');
-        }).catch((err)=>{
-            this.setState({errors: {error: err.message}, loading: false});
-        });
+                         this.state.force,
+                         preview)
+            .then((data) => {
+                if (preview) {
+                    this.setState({errors: {}, loading: false, showPreview: true, previewData: data});
+                } else {
+                    this.setState({errors: {}, loading: false});
+                    this.props.toolbox.refresh();
+                    this.props.onHide();
+                    this.props.toolbox.getEventBus().trigger('nodes:refresh');
+                    this.props.toolbox.getEventBus().trigger('inputs:refresh');
+                    this.props.toolbox.getEventBus().trigger('outputs:refresh');
+                    this.props.toolbox.getEventBus().trigger('executions:refresh');
+                }
+            }).catch((err) => this.setState({errors: {error: err.message}, loading: false}));
     }
 
     _handleInputChange(proxy, field) {
@@ -156,10 +166,19 @@ class UpdateDeploymentModal extends React.Component {
 
     render() {
         let {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
-        let {InputsHeader, InputsUtils, YamlFileButton} = Stage.Common;
+        let {InputsHeader, InputsUtils, YamlFileButton, UpdateDetailsModal} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
         let blueprintsOptions = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
+        const executionParameters = this.state.showPreview
+        ?
+            {
+                skip_install: !this.state.installWorkflow,
+                skip_uninstall: !this.state.uninstallWorkflow,
+                skip_reinstall: !this.state.automaticReinstall,
+                reinstall_list: this.state.reinstallList
+            }
+        : {};
 
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="updateDeploymentModal">
@@ -168,7 +187,7 @@ class UpdateDeploymentModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}
+                    <Form loading={this.state.loading} errors={this.state.errors} scrollToError
                           onErrorsDismiss={() => this.setState({errors: {}})}>
 
                         <Form.Field error={this.state.errors.blueprintName} label='Blueprint' required>
@@ -263,11 +282,20 @@ class UpdateDeploymentModal extends React.Component {
                         </Form.Field>
 
                     </Form>
+
+                    <UpdateDetailsModal open={this.state.showPreview} isPreview={true}
+                                        deploymentUpdate={this.state.previewData}
+                                        executionParameters={executionParameters}
+                                        onClose={() => this.setState({showPreview: false})}
+                                        onUpdate={this.onUpdate.bind(this)}
+                                        toolbox={this.props.toolbox} />
                 </Modal.Content>
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Update" icon="edit" color="green" />
+                    <ApproveButton onClick={this.onPreview.bind(this)} disabled={this.state.loading} content="Preview" icon="zoom" color="blue" />
+                    <ApproveButton onClick={this.onUpdate.bind(this)} disabled={this.state.loading} content="Update" icon="edit" color="green" />
+
                 </Modal.Actions>
             </Modal>
         );

@@ -1,5 +1,3 @@
-'use strict';
-
 const webpack = require('webpack');
 const path = require('path');
 const glob = require('glob');
@@ -15,7 +13,7 @@ const getWidgetEntries = () => {
         acc[name] = item;
         return acc;
     }, {});
-}
+};
 
 const rules = [
     {
@@ -114,7 +112,7 @@ module.exports = [
                 {
                     from: 'widgets',
                     to: 'appData/widgets',
-                    ignore: ['**/src/*', '*/widget.js', '*/backend.js', '*/common.js']
+                    ignore: ['**/src/**', '*/widget.js', '*/backend.js', '*/common.js']
                 }
             ]),
             new CopyWebpackPlugin([

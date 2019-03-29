@@ -219,6 +219,18 @@ class InputsUtils {
 
     /* Inputs for REST API (typed values) */
 
+    static getPlanForUpdate(plan, inputsValues) {
+        let newPlan = _.cloneDeep(plan);
+
+        _.forEach(newPlan, (inputObj, inputName) => {
+            if (!_.isUndefined(inputsValues[inputName]) && !_.isUndefined(newPlan[inputName].default)) {
+                newPlan[inputName].default = inputsValues[inputName];
+            }
+        });
+
+        return newPlan;
+    }
+
     static getInputsToSend(inputs, inputsValues, inputsWithoutValues) {
         let {Json} = Stage.Utils;
         let deploymentInputs = {};

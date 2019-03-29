@@ -5,7 +5,7 @@ By default, the widget presents the blueprints under cloudify-examples repositor
 You can filter the presented blueprints by creating a filter query in the widget’s settings.  
 You can and should enter Github credentials for fetching data, as the defaults used by the widgets can reach the restricted query limit of GitHub (~50) . These parameters are pulled from secrets) as the github-username and github-password keys. These parameters are a must if you want to configure the widget to access private repositories.
 
-![blueprints-catalog](https://docs.cloudify.co/4.5.5/images/ui/widgets/blueprints-catalog.png)
+![blueprints-catalog](https://docs.cloudify.co/staging/dev/images/ui/widgets/blueprints-catalog.png)
 
 #### Widget Settings
 * `Blueprint Examples URL` - Specifies the json file from which the Cloudify examples URLs are being read
