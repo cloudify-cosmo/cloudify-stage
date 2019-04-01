@@ -43,11 +43,11 @@ export default class Templates extends Component {
 
                 <DataTable>
 
-                    <DataTable.Column label="Template name" width="25%"/>
+                    <DataTable.Column label="Template id" width="25%"/>
                     <DataTable.Column label="Roles" width="25%"/>
                     <DataTable.Column label="Tenants" width="10%"/>
-                    <DataTable.Column label="Created at" width="15%"/>
-                    <DataTable.Column label="Creator" width="15%"/>
+                    <DataTable.Column label="Updated at" width="15%"/>
+                    <DataTable.Column label="Updated by" width="15%"/>
                     <DataTable.Column width="10%"/>
 
                     {
@@ -68,8 +68,8 @@ export default class Templates extends Component {
                                             }
                                         </DataTable.Data>
                                         <DataTable.Data><Label color="green" horizontal>{tenantsCount}</Label></DataTable.Data>
-                                        <DataTable.Data>{item.createdAt && StageUtils.Time.formatTimestamp(item.createdAt)}</DataTable.Data>
-                                        <DataTable.Data>{item.creator}</DataTable.Data>
+                                        <DataTable.Data>{item.updatedAt && StageUtils.Time.formatLocalTimestamp(item.updatedAt)}</DataTable.Data>
+                                        <DataTable.Data>{item.updatedBy}</DataTable.Data>
                                         <DataTable.Data className="center aligned rowActions">
                                             {item.custom &&
                                             <div>

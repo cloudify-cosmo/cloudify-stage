@@ -1,0 +1,16 @@
+{
+  "roles": ["sys_admin"],
+  "tenants": ["*"],
+
+  "pages": [
+    "adminDash",
+    "catalog",
+    "blueprints",
+    "deploy",
+    "tmm",
+    "ha",
+    "systemResources-admin",
+    "statistics",
+    "logs"
+  ]
+}

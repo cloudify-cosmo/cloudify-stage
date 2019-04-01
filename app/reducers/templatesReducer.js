@@ -10,7 +10,7 @@ const templates = (state = {}, action) => {
             return {...action.templates};
         case types.ADD_TEMPLATE:
         case types.EDIT_TEMPLATE:
-            return {...state, templatesDef: {...state.templatesDef, [action.templateId]: action.pages}};
+            return {...state, templatesDef: {...state.templatesDef, [action.templateId]: {...[action.templateId], pages: action.pages}}};
         case types.REMOVE_TEMPLATE:
             return {...state, templatesDef: _.omit(state.templatesDef, [action.templateId])};
         case types.ADD_TEMPLATE_PAGE:

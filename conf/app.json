@@ -1,15 +1,4 @@
 {
-  "initialTemplate": {
-    "*": "initial-template",
-    "sys_admin": {
-      "*": "initial-template-admin"
-    },
-    "user": {
-      "*": "initial-template"
-    },
-    "customer": "initial-template-customer",
-    "community": "initial-template-community"
-  },
   "maintenancePollingInterval": 10000,
   "singleManager": true,
 

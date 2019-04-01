@@ -45,7 +45,7 @@ export function fetchTemplates() {
                 var pageList = data[1];
 
                 var templates = _.map(templateList, template => {
-                    return {...template, pages: storeTemplates.templatesDef[template.id]}
+                    return {...template, pages: storeTemplates.templatesDef[template.id].pages}
                 });
                 if (selectedTemplate) {
                     (_.find(templates, {'id': selectedTemplate.id}) || {}).selected = true;
