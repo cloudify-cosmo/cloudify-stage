@@ -8,5 +8,7 @@ module.exports = {
     TEMPLATE: 'template',
     PAGE: 'page',
 
-    values: [this.WIDGET, this.TEMPLATE, this.PAGE]
+    get values () {
+        return [this.WIDGET, this.TEMPLATE, this.PAGE];
+    }
 };

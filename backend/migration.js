@@ -7,7 +7,9 @@ var db = require('./db/Connection');
 var Umzug = require('umzug');
 var _ = require('lodash');
 
-var logger = require('log4js').getLogger('DBMigration');
+var log4js = require('log4js');
+var logger = log4js.getLogger('DBMigration');
+logger.level = 'debug';
 var sequelize = db.sequelize;
 
 const umzug = new Umzug({
@@ -21,6 +23,7 @@ const umzug = new Umzug({
         params: [
             sequelize.getQueryInterface(), // queryInterface
             sequelize.constructor, // DataTypes
+            logger,
             function() {
                 throw new Error('Migration tried to use old style "done" callback. Please upgrade to "umzug" and return a promise instead.');
             }
