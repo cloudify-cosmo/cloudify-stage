@@ -6,7 +6,7 @@ The Cloudify Console provides a streamlined experience for managing and analyzin
 
 
 ## Prerequisites
-- NodeJS (version >= 8.x) and npm installed
+- NodeJS (version >= 10.x) and npm installed
 - PostgreSQL installed and running on your machine
     - Make a database named `stage` 
     - Make a user named `cloudify` with `cloudify` as password
