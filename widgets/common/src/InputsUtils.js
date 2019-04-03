@@ -80,26 +80,58 @@ class InputsUtils {
             : <RevertToDefaultIcon value={typedValue} defaultValue={typedDefaultValue} onClick={revertToDefault} />;
     }
 
-    static getFormInputField(name, value, defaultValue, description, onChange, error, type) {
-        let {Form} = Stage.Basic;
+    static getFormInputField(name, value, defaultValue, description, constraints, onChange, error, type) {
+        let {Form, List} = Stage.Basic;
+
+        let formattedDescription =
+            <div>
+                {
+                    !_.isEmpty(description) &&
+                    <React.Fragment>
+                        <h4>Description</h4>
+                        <p>{description}</p>
+                    </React.Fragment>
+                }
+                {
+                    !_.isEmpty(type) &&
+                    <React.Fragment>
+                        <h4>Type</h4>
+                        <p>{type}</p>
+                    </React.Fragment>
+                }
+                {
+                    !_.isEmpty(constraints) &&
+                    <React.Fragment>
+                        <h4>Constraints</h4>
+                        <List bulleted>
+                            {
+                                _.map(constraints, (constraint) => {
+                                    const key = _.first(_.keys(constraint));
+                                    return <List.Item key={key}>{_.capitalize(_.lowerCase(key))}: {String(constraint[key])}</List.Item>
+                                })
+                            }
+                        </List>
+                    </React.Fragment>
+                }
+            </div>;
 
         switch (type) {
             case 'boolean':
                 return (
-                    <Form.Field key={name} help={description} required={_.isNil(defaultValue)}>
+                    <Form.Field key={name} help={formattedDescription} required={_.isNil(defaultValue)}>
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type)}
                     </Form.Field>
                 );
             case 'integer':
                 return (
-                    <Form.Field key={name} error={error} help={description} required={_.isNil(defaultValue)} label={name}>
+                    <Form.Field key={name} error={error} help={formattedDescription} required={_.isNil(defaultValue)} label={name}>
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type)}
                     </Form.Field>
                 );
             case 'string':
             default:
                 return (
-                    <Form.Field key={name} error={error} help={description} required={_.isNil(defaultValue)} label={name}>
+                    <Form.Field key={name} error={error} help={formattedDescription} required={_.isNil(defaultValue)} label={name}>
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type)}
                     </Form.Field>
                 );
@@ -126,7 +158,7 @@ class InputsUtils {
 
             case 'string':
             default:
-                return _.includes(value, '\n')
+                return _.includes(value, '\n') || type === 'list' || type === 'dict'
                     ?
                     <Form.Group>
                         <Form.Field width={15}>
@@ -155,6 +187,7 @@ class InputsUtils {
                                           || InputsUtils.getInputFieldInitialValue(undefined, input.type),
                                           input.default,
                                           input.description,
+                                          input.constraints,
                                           onChange,
                                           errorsState[input.name],
                                           input.type)
@@ -259,6 +292,22 @@ class InputsUtils {
         _.forEach(_.keys(inputsWithoutValues), (inputName) => errors[inputName] = `Please provide ${inputName}`);
     }
 
+    static getErrorObject(message) {
+        const typeValidationMatch = message.match(/Property type validation failed in '(.[^']+)'/);
+        const propertyMissingMatch = message.match(/Value of input (.[^ ]+) is missing/);
+        const constraintValidationMatch = message.match(/of input (.[^ ]+) violates constraint/);
+
+        let errorFieldKey = 'error';
+        if (typeValidationMatch) {
+            errorFieldKey = typeValidationMatch[1];
+        } else if (propertyMissingMatch) {
+            errorFieldKey = propertyMissingMatch[1];
+        } else if (constraintValidationMatch) {
+            errorFieldKey = constraintValidationMatch[1];
+        }
+
+        return {[errorFieldKey]: message};
+    }
 }
 
 Stage.defineCommon({

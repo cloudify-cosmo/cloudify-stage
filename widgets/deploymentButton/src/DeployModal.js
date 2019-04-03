@@ -110,7 +110,8 @@ export default class DeployModal extends React.Component {
                 this.props.onHide();
             })
             .catch((err)=>{
-                this.setState({loading: false, errors: {error: err.message}});
+                const errors = InputsUtils.getErrorObject(err.message);
+                this.setState({loading: false, errors});
             });
     }
 
