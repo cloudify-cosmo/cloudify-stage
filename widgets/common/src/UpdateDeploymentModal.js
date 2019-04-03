@@ -110,7 +110,10 @@ class UpdateDeploymentModal extends React.Component {
                     this.props.toolbox.getEventBus().trigger('outputs:refresh');
                     this.props.toolbox.getEventBus().trigger('executions:refresh');
                 }
-            }).catch((err) => this.setState({errors: {error: err.message}, loading: false}));
+            }).catch((err) => {
+                const errors = InputsUtils.getErrorObject(err.message);
+                this.setState({loading: false, errors});
+        });
     }
 
     _handleInputChange(proxy, field) {

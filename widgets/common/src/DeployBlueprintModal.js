@@ -84,8 +84,9 @@ class DeployBlueprintModal extends React.Component {
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
                 this.props.onHide();
             })
-            .catch((err)=>{
-                this.setState({loading: false, errors: {error: err.message}});
+            .catch((err) => {
+                const errors = InputsUtils.getErrorObject(err.message);
+                this.setState({loading: false, errors});
             });
     }
 
