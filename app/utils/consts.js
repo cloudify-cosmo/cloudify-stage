@@ -40,7 +40,7 @@ export default {
     MAINTENANCE_ACTIVATING: 'activating',
     MAINTENANCE_ACTIVATED: 'activated',
     MAINTENANCE_DEACTIVATED: 'deactivated',
-    DEFAULT_INITIAL_TEMPLATE: 'initial-template',
+
     DEFAULT_ALL: '*',
     PAGE_MANAGEMENT_VIEW: 'view',
     PAGE_MANAGEMENT_EDIT: 'edit',

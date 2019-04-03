@@ -45,7 +45,7 @@ export function fetchTemplates() {
                 var pageList = data[1];
 
                 var templates = _.map(templateList, template => {
-                    return {...template, pages: storeTemplates.templatesDef[template.id]}
+                    return {...template, pages: storeTemplates.templatesDef[template.id].pages}
                 });
                 if (selectedTemplate) {
                     (_.find(templates, {'id': selectedTemplate.id}) || {}).selected = true;
@@ -224,13 +224,28 @@ export function showPage(pageId, pageName, isPageEditMode) {
         var pagesDef = getState().templates.pagesDef;
         var widgetDefinitions = getState().widgetDefinitions;
         var page = pagesDef[pageId];
+        let invalidWidgets = [];
 
-        _.each(page.widgets, (widget) => {
-            var widgetDefinition = _.find(widgetDefinitions, {id: widget.definition});
-            dispatch(addPageWidget(pageId, widget.name, widgetDefinition, widget.width, widget.height, widget.x, widget.y, widget.configuration));
+        _.each(page.widgets, (widget, index) => {
+            const widgetDefinition = _.find(widgetDefinitions, {id: widget.definition});
+
+            try {
+                dispatch(addPageWidget(pageId, widget.name, widgetDefinition,
+                                       widget.width, widget.height, widget.x, widget.y, widget.configuration));
+            } catch (error) {
+                const widgetName = `${index + 1} (${widget.name || 'Unknown name'})`;
+
+                console.error(`Error occurred when adding widget - ${widgetName} - to page.`, error);
+                invalidWidgets.push(widgetName);
+            }
+
         });
 
         dispatch(push('/page_management'));
+
+        if (!_.isEmpty(invalidWidgets)) {
+            dispatch(errorTemplateManagement(`Page template contains invalid widgets definitions: ${_.join(invalidWidgets, ', ')}`));
+        }
     }
 }
 

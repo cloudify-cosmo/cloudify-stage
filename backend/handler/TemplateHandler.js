@@ -2,17 +2,14 @@
  * Created by pposel on 24/02/2017.
  */
 
-const db = require('../db/Connection');
 const fs = require('fs-extra');
 const pathlib = require('path');
 const mkdirp = require('mkdirp');
 const _ = require('lodash');
-
-const config = require('../config').get();
+const moment = require('moment');
 
 const ServerSettings = require('../serverSettings');
 const Utils = require('../utils');
-const ResourceTypes = require('../db/types/ResourceTypes');
 const AuthHandler = require('./AuthHandler');
 
 const logger = require('log4js').getLogger('TemplateHandler');
@@ -22,68 +19,97 @@ const userTemplatesFolder = Utils.getResourcePath('templates', true);
 const builtInPagesFolder = pathlib.resolve(builtInTemplatesFolder, 'pages');
 const userPagesFolder = pathlib.resolve(userTemplatesFolder, 'pages');
 
+const allTenants = '*';
+
 module.exports = (function() {
 
+    function _getTemplates(folder, isCustom, filter) {
+        const compareTemplates = (templateA, templateB) => {
+            const conflictingTemplates
+                = !_.isEmpty(_.intersection(templateA.data.roles, templateB.data.roles)) &&
+                  !_.isEmpty(_.intersection(templateA.data.tenants, templateB.data.tenants));
+            if (conflictingTemplates) {
+                logger.warn(
+                    `Templates '${templateA.id}' and '${templateB.id}' are in conflict (roles and tenants). ` +
+                    `Not including '${templateA.id}'.`
+                );
+            }
+            return conflictingTemplates;
+        };
+
+
+        return _.chain(fs.readdirSync(pathlib.resolve(folder)))
+            .filter(fileName => fs.lstatSync(pathlib.resolve(folder, fileName)).isFile() && filter(fileName))
+            .map(templateFile => {
+                const templateFilePath = pathlib.resolve(folder, templateFile);
+
+                try {
+                    const pageFileContent = fs.readJsonSync(templateFilePath);
+                    const id = pathlib.basename(templateFile, '.json');
+
+                    const name = _.get(pageFileContent, 'name', id);
+                    const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Cloudify');
+                    const updatedAt = _.get(pageFileContent, 'updatedAt', '');
+                    const data = {
+                        roles: _.get(pageFileContent, 'roles', []),
+                        tenants: _.get(pageFileContent, 'tenants', [])
+                    };
+
+                    return {id, name, custom: isCustom, data, updatedBy, updatedAt};
+                } catch (error) {
+                    logger.error(`Error when trying to parse ${templateFilePath} file to JSON.`, error);
+
+                    return null;
+                }
+            })
+            .uniqWith(compareTemplates)
+            .value();
+    }
+
     function _getUserTemplates() {
-        return db.Resources
-            .findAll({where: {type: ResourceTypes.TEMPLATE}, attributes: [['resourceId','id'], 'createdAt', 'creator', 'data'], raw: true});
+        return _getTemplates(userTemplatesFolder, true, () => true);
     }
 
     function _getBuiltInTemplates() {
-        let initials = [];
-        if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN) {
-            initials = _.pick(config.app.initialTemplate, [ServerSettings.MODE_COMMUNITY, ServerSettings.MODE_CUSTOMER]);
-        } else {
-            initials = _.omit(config.app.initialTemplate, ServerSettings.settings.mode);
-        }
-
-        const excludes = _.reduce(initials, (result, value) => _.concat(result, _.isObject(value) ? _.values(value) : value), []);
-
-        return fs.readdirSync(pathlib.resolve(builtInTemplatesFolder))
-            .filter(file => fs.lstatSync(pathlib.resolve(builtInTemplatesFolder, file)).isFile()
-                && !_.includes(excludes, pathlib.basename(file, '.json')))
-            .map(templateFile => pathlib.basename(templateFile, '.json'));
-    }
-
-    function _getInitialTemplateConfig() {
-        let data = {};
-        _.forOwn(config.app.initialTemplate, function(value, role) {
-            if (_.isObject(value)) {
-                _.forOwn(value, function(template, tenant) {
-                    let item = data[template] || {roles: [], tenants: []};
-                    item.tenants.push(tenant);
-                    if (_.indexOf(item.roles, role) < 0) {
-                        item.roles.push(role);
-                    }
-                    data[template] = item;
-                });
-            } else {
-                let item = data[value] || {roles: [], tenants: []};
-                item.roles.push(role);
-                data[value] = item;
-            }
-        });
-
-        return data;
+        const mode = ServerSettings.settings.mode;
+        return _getTemplates(builtInTemplatesFolder, false, (fileName) => _.startsWith(pathlib.basename(fileName), mode));
     }
 
     function listTemplates() {
-        const initial = _getInitialTemplateConfig();
-        const builtInTemplates = _.map(_getBuiltInTemplates(), (template) => ({id: template, data: initial[template], custom: false}));
+        return Promise.resolve(_.concat(_getBuiltInTemplates(), _getUserTemplates()));
+    }
 
-        return _getUserTemplates()
-            .then(userTemplates => _.map(userTemplates, (template) => _.extend(template, {custom: true})))
-            .then(userTemplates => _.concat(builtInTemplates, userTemplates));
+    function _getPages(folder, isCustom) {
+
+        return _.chain(fs.readdirSync(pathlib.resolve(folder)))
+            .map((pageFile) => {
+                const pageFilePath = pathlib.resolve(folder, pageFile);
+
+                try {
+                    const pageFileContent = fs.readJsonSync(pageFilePath);
+                    const id = pathlib.basename(pageFile, '.json');
+
+                    const name = _.get(pageFileContent, 'name', id);
+                    const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Cloudify');
+                    const updatedAt = _.get(pageFileContent, 'updatedAt', '');
+
+                    return {id, name, custom: isCustom, updatedBy, updatedAt};
+                } catch (error) {
+                    logger.error(`Error when trying to parse ${pageFilePath} file to JSON.`, error);
+
+                    return null;
+                }
+            })
+            .reject(_.isNull)
+            .value();
     }
 
     function _getUserPages() {
-        return db.Resources
-            .findAll({where: {type: ResourceTypes.PAGE}, attributes: [['resourceId','id'], 'createdAt', 'creator'], raw: true});
+        return _getPages(userPagesFolder, true);
     }
 
     function _getBuiltInPages() {
-        return fs.readdirSync(pathlib.resolve(builtInPagesFolder))
-            .map((pageFile) => pathlib.basename(pageFile, '.json'));
+        return _getPages(builtInPagesFolder, false);
     }
 
     function _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant) {
@@ -91,7 +117,7 @@ module.exports = (function() {
         const roles = rbac.roles;
 
         logger.debug('Inputs for role calculation: ' + 'systemRole=' + systemRole +
-                     ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
+            ', tenant=' + tenant + ', tenantsRoles=' + JSON.stringify(tenantsRoles));
 
         const userRoles = _.compact(_.concat(_.get(tenantsRoles[tenant], 'roles', []), systemRole, _.keys(groupSystemRoles)));
 
@@ -109,11 +135,7 @@ module.exports = (function() {
     }
 
     function listPages() {
-        const builtInPages = _.map(_getBuiltInPages(), (page) => ({id: page, custom: false}));
-
-        return _getUserPages()
-            .then(userPages => _.map(userPages, (page) => _.extend(page, {custom: true})))
-            .then(userPages => _.concat(builtInPages, userPages));
+        return Promise.resolve(_.concat(_getBuiltInPages(), _getUserPages()));
     }
 
     function createTemplate(username, template) {
@@ -122,81 +144,66 @@ module.exports = (function() {
             return Promise.reject('Template name "' + template.id + '" already exists');
         }
 
+        const content = {
+            'updatedBy': username,
+            'updatedAt': moment().format(),
+            'roles': template.data.roles,
+            'tenants': template.data.tenants,
+            'pages': template.pages
+        };
+
         return checkTemplateExistence(template.data)
-            .then(() => fs.writeJson(path, template.pages, {spaces: '  '}))
-            .then(() => db.Resources.destroy({where: {resourceId: template.id, type:ResourceTypes.TEMPLATE}}))
-            .then(() => db.Resources.create({resourceId:template.id, type:ResourceTypes.TEMPLATE, creator: username, data: template.data}));
+            .then(() => fs.writeJson(path, content, {spaces: '  '}));
     }
 
     function updateTemplate(username, template) {
         const path = pathlib.resolve(userTemplatesFolder, template.id + '.json');
 
-        return checkTemplateExistence(template.data, template.oldId)
-        .then(() =>
-            new Promise((resolve, reject) => {
-                if (template.oldId && template.id !== template.oldId) {
-                    if (fs.existsSync(path)) {
-                        reject('Template name "' + template.id + '" already exists');
-                    } else {
-                        deleteTemplate(template.oldId)
-                            .then(() => resolve())
-                            .catch(error => reject(error));
-                    }
-                } else {
-                    resolve();
-                }
-            }))
-        .then(() => fs.writeJson(path, template.pages, {spaces: '  '}))
-        .then(() => db.Resources.findOne({ where: {resourceId:template.id, type:ResourceTypes.TEMPLATE} }))
-        .then(entity => {
-            if(entity) {
-                return entity.update({resourceId:template.id, data: template.data});
-            } else {
-                return db.Resources.create({resourceId:template.id, type:ResourceTypes.TEMPLATE, creator: username, data: template.data});
-            }
-        });
-    }
-
-    function checkTemplateExistence(data, excludeTemplateId) {
-        const incomingAllTenants =  _.indexOf(data.tenants, '*') >= 0;
-        const textRoles = _.replace(JSON.stringify(data.roles), /"/g, "'");
-        const textTenants = _.replace(JSON.stringify(_.concat(data.tenants, '*')), /"/g, "'");
-
-        const where = {
-            type: ResourceTypes.TEMPLATE,
-            data: incomingAllTenants ?
-                db.sequelize.literal(`data->'roles' ?| array${textRoles}`)
-                :
-                db.sequelize.literal(`data->'roles' ?| array${textRoles} and data->'tenants' ?| array${textTenants}`)
+        const content = {
+            'updatedBy': username,
+            'updatedAt': moment().format(),
+            'roles': template.data.roles,
+            'tenants': template.data.tenants,
+            'pages': template.pages
         };
 
-        if (excludeTemplateId) {
-            where.resourceId = {ne: excludeTemplateId};
-        }
-
-        return new Promise((resolve, reject) => {
-            db.Resources
-                .findOne({where, attributes: ['data'], raw: true})
-                .then(entity => {
-                    if (entity) {
-                        const commonRoles = _.join(_.intersection(data.roles, entity.data.roles), ', ');
-                        const allTenantsExists = _.indexOf(entity.data.tenants, '*') >= 0;
-
-                        if (incomingAllTenants) {
-                            const existingTenants = entity.data.tenants;
-                            reject(`Template cannot be created for all tenants because there is already template for roles [${commonRoles}] and tenants [${existingTenants}]`);
-                        } else if (allTenantsExists) {
-                            const incomingTenants = _.join(data.tenants, ', ');
-                            reject(`Template cannot be created for roles [${commonRoles}] and tenants [${incomingTenants}] because there is already template for these roles and all tenants`);
+        return checkTemplateExistence(template.data, template.oldId)
+            .then(() =>
+                new Promise((resolve, reject) => {
+                    if (template.oldId && template.id !== template.oldId) {
+                        if (fs.existsSync(path)) {
+                            reject('Template name "' + template.id + '" already exists');
                         } else {
-                            const commonTenants = _.join(_.intersection(data.tenants, entity.data.tenants), ', ');
-                            reject(`Template for roles [${commonRoles}] and tenants [${commonTenants}] already exists`);
+                            deleteTemplate(template.oldId)
+                                .then(() => resolve())
+                                .catch(error => reject(error));
                         }
                     } else {
                         resolve();
                     }
-                })
-        });
+                }))
+            .then(() => fs.writeJson(path, content, {spaces: '  '}));
+    }
+
+    function checkTemplateExistence(data, excludeTemplateId) {
+        const roles = data.roles;
+        const tenants = data.tenants;
+        const getTenantString = (tenant) => tenant === allTenants ? 'all tenants' : `tenant=${tenant}`;
+
+        const userTemplates = _.filter(_getUserTemplates(), (template) => template.id !== excludeTemplateId);
+
+        logger.debug(`Checking template existence for roles=${roles} and ${getTenantString(tenants)}.` +
+                     `${!!excludeTemplateId ? ` Excluding: '${excludeTemplateId}' template.` : ''}`);
+
+        const conflictingTemplate = _.filter(userTemplates, (userTemplate) =>
+            !_.isEmpty(_.intersection(roles, userTemplate.data.roles)) &&
+            !_.isEmpty(_.intersection(tenants, userTemplate.data.tenants)));
+
+        if (!_.isEmpty(conflictingTemplate)) {
+            return Promise.reject(`Template for specified role(s) and tenant(s) already exists: '${conflictingTemplate[0].id}'.`);
+        } else {
+            return Promise.resolve();
+        }
     }
 
     function deleteTemplate(templateId) {
@@ -210,7 +217,7 @@ module.exports = (function() {
                     resolve();
                 }
             })
-        }).then(() => db.Resources.destroy({ where: {resourceId: templateId, type:ResourceTypes.TEMPLATE}}));
+        });
     }
 
     function createPage(username, page) {
@@ -221,12 +228,12 @@ module.exports = (function() {
 
         const content = {
             'name': page.name,
+            'updatedBy': username,
+            'updatedAt': moment().format(),
             'widgets': page.widgets
         };
 
-        return fs.writeJson(path, content, {spaces: '  '})
-            .then(() => db.Resources.destroy({ where:{resourceId: page.id, type:ResourceTypes.PAGE}}))
-            .then(() => db.Resources.create({resourceId:page.id, type:ResourceTypes.PAGE, creator: username}));
+        return fs.writeJson(path, content, {spaces: '  '});
     }
 
     function updatePage(username, page) {
@@ -234,8 +241,10 @@ module.exports = (function() {
 
         const content = {
             'name': page.name,
+            'updatedBy': username,
+            'updatedAt': moment().format(),
             'widgets': page.widgets
-        }
+        };
 
         return new Promise((resolve, reject) => {
             if (page.oldId && page.id !== page.oldId) {
@@ -250,15 +259,7 @@ module.exports = (function() {
                 resolve();
             }
         })
-        .then(() => fs.writeJson(path, content, {spaces: '  '}))
-        .then(() => db.Resources.findOne({ where: {resourceId:page.id, type:ResourceTypes.PAGE} }))
-        .then(entity => {
-            if(entity) {
-                return Promise.resolve();
-            } else {
-                return db.Resources.create({resourceId:page.id, type:ResourceTypes.PAGE, creator: username});
-            }
-        });
+            .then(() => fs.writeJson(path, content, {spaces: '  '}));
     }
 
     function deletePage(pageId) {
@@ -272,53 +273,44 @@ module.exports = (function() {
                     resolve();
                 }
             })
-        }).then(() => db.Resources.destroy({ where: {resourceId: pageId, type:ResourceTypes.PAGE}}));
+        });
     }
 
     function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant) {
-        const DEFAULT_KEY = '*';
-
-        const initialTemplateObj = config.app.initialTemplate;
         const role = _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant);
         const mode = ServerSettings.settings.mode;
+        let templateId = null;
 
         logger.debug('Template inputs: mode=' + mode + ', role=' + role + ', tenant=' + tenant);
 
-        let promise;
+        // Search user template
         if (mode === ServerSettings.MODE_MAIN) {
-            const escTenant = db.sequelize.escape(tenant);
-            const escRole = db.sequelize.escape(role);
+            const userTemplates = _getUserTemplates();
+            const matchingTemplateForSpecificTenant = _.find(userTemplates,
+                template => _.includes(template.data.roles, role) && _.includes(template.data.tenants, tenant));
 
-            promise = db.Resources
-                .findOne({where: {type: ResourceTypes.TEMPLATE,
-                    data: db.sequelize.literal(`data->'roles' ? ${escRole} and (data->'tenants' ? ${escTenant} or data->'tenants' ? '${DEFAULT_KEY}')`)},
-                          attributes: ['resourceId'], raw: true})
-                .then(entity => entity ? entity.resourceId : null);
-        } else {
-            promise = Promise.resolve();
+            if (!matchingTemplateForSpecificTenant) {
+                const matchingTemplateForAllTenants = _.find(userTemplates,
+                    template => _.includes(template.data.roles, role) && _.includes(template.data.tenants, allTenants));
+                templateId = _.get(matchingTemplateForAllTenants, 'id', null);
+            } else {
+                templateId = matchingTemplateForSpecificTenant.id;
+            }
         }
 
-        return promise.then(templateId => {
-            logger.debug('Custom template: ' + templateId);
-
-            if (!templateId) {
-                const initialTemplateModeRole = (initialTemplateObj[mode === ServerSettings.MODE_MAIN ? role : mode]) || initialTemplateObj[DEFAULT_KEY];
-
-                if (_.isObject(initialTemplateModeRole)) {
-                    templateId = _.get(
-                        initialTemplateModeRole,
-                        tenant,
-                        initialTemplateModeRole[DEFAULT_KEY] || initialTemplateObj[DEFAULT_KEY]
-                    );
-                } else if (_.isString(initialTemplateModeRole)) {
-                    templateId = initialTemplateModeRole;
-                } else {
-                    throw `Error in configuration. Initial template for (mode=${mode}, role=${role}, tenant=${tenant}) invalid.`;
-                }
+        // Search built-in template
+        if (!templateId) {
+            if (mode === ServerSettings.MODE_MAIN) {
+                templateId = `${mode}-${systemRole}`;
+            } else {
+                templateId = mode;
             }
+            logger.debug('No user template found. Using: ' + templateId);
+        } else {
+            logger.debug('User template found: ' + templateId);
+        }
 
-            return templateId;
-        });
+        return Promise.resolve(templateId);
     }
 
     function init() {

@@ -1,0 +1,13 @@
+{
+  "roles": ["*"],
+  "tenants": ["*"],
+
+  "pages": [
+    "app",
+    "catalog-community",
+    "blueprints-community",
+    "deploy",
+    "systemResources-community",
+    "logs"
+  ]
+}
