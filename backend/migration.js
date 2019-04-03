@@ -3,14 +3,14 @@
  */
 
 const path = require('path');
-var db = require('./db/Connection');
-var Umzug = require('umzug');
-var _ = require('lodash');
+const db = require('./db/Connection');
+const Umzug = require('umzug');
+const _ = require('lodash');
 
-var log4js = require('log4js');
-var logger = log4js.getLogger('DBMigration');
+const sequelize = db.sequelize;
+const log4js = require('log4js');
+let logger = log4js.getLogger('DBMigration');
 logger.level = 'debug';
-var sequelize = db.sequelize;
 
 const umzug = new Umzug({
     storage: 'sequelize',
@@ -48,7 +48,7 @@ umzug.on('reverting', logUmzugEvent('reverting'));
 umzug.on('reverted',  logUmzugEvent('reverted'));
 
 function cmdStatus() {
-    var result = {};
+    let result = {};
 
     return umzug.executed()
         .then(executed => {
@@ -58,8 +58,8 @@ function cmdStatus() {
             result.pending = pending;
             return result;
         }).then(result => {
-            var executed = result.executed;
-            var pending = result.pending;
+            let executed = result.executed;
+            let pending = result.pending;
 
             executed = executed.map(m => {
                 m.name = path.basename(m.file, '.js');
@@ -102,19 +102,19 @@ function cmdDownTo(migrationName) {
 
     return cmdStatus()
         .then((result) => {
-            var executed = result.executed.map(m => m.file);
+            const executed = result.executed.map(m => m.file);
             if (executed.length === 0) {
                 return Promise.reject(new Error('Already at initial state'));
             }
 
-            var migrationIndex = executed.indexOf(migrationName);
+            const migrationIndex = executed.indexOf(migrationName);
             if (migrationIndex < 0 ) { // If its not found
                 return Promise.reject(new Error('Migration doesn\'t exist or was not executed'));
             } else if (migrationIndex + 1 >= executed.length){ // Or if its the last one so we cannot migrate to it - or actually one after it, then ignore)
                 return Promise.reject(new Error('Migration to downgrade to is the last migration, ignoring'));
             } else {
 
-                var migrationToMigrateTo = executed[migrationIndex+1];
+                const migrationToMigrateTo = executed[migrationIndex+1];
                 return umzug.down({to: migrationToMigrateTo});
             }
 
@@ -127,7 +127,7 @@ function cmdReset() {
 
 function cmdClear() {
     return sequelize.getQueryInterface().showAllTables().then(function(tableNames) {
-        var promises = [];
+        let promises = [];
         _.each(tableNames,function(tableName){
             if (tableName !== 'SequelizeMeta') {
                 logger.info('Clearing table '+tableName);
@@ -141,7 +141,7 @@ function cmdClear() {
 
 
 function handleCommand(cmd) {
-    var executedCmd;
+    let executedCmd;
 
     logger.info(`${ cmd.toUpperCase() } BEGIN`);
 
@@ -156,7 +156,7 @@ function handleCommand(cmd) {
             break;
 
         case 'downTo':
-            var downToMigration = process.argv[3].trim();
+            const downToMigration = process.argv[3].trim();
             executedCmd = cmdDownTo(downToMigration);
             break;
 

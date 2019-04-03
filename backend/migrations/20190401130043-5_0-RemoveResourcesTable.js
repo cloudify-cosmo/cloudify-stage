@@ -3,9 +3,9 @@ const ResourceTypes = require('../db/types/ResourceTypes');
 console.error(ResourceTypes.values);
 module.exports = {
 
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface, Sequelize, logger) => {
       return queryInterface.dropTable('Resources',
-        {cascade: true, logging: console.log, benchmark: true}
+        {cascade: true, logging: logger.info, benchmark: true}
     ).then(function() {
       return queryInterface.removeIndex('Resources',
           ['resourceId','type'],
