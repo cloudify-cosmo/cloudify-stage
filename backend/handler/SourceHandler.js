@@ -6,7 +6,7 @@ const _ = require('lodash');
 const os = require('os');
 const fs = require('fs-extra');
 const pathlib = require('path');
-const YAML = require('yamljs');
+const yaml = require('js-yaml');
 
 const config = require('../config').get();
 const ArchiveHelper = require('./ArchiveHelper');
@@ -81,9 +81,8 @@ module.exports = (function() {
         }
 
         if (!_.isEmpty(yamlFilePath)) {
-            const yaml = fs.readFileSync(yamlFilePath, 'utf8');
             try {
-                let json = YAML.parse(yaml);
+                let json = yaml.safeLoad(fs.readFileSync(yamlFilePath, 'utf8'));
                 return Promise.resolve(json);
             } catch (error) {
                 let errorMessage = `Cannot parse YAML file ${yamlFile}. Error: ${error}`;
@@ -93,6 +92,10 @@ module.exports = (function() {
         } else {
             return Promise.reject(`Cannot find YAML file ${yamlFile} in specified directory.`);
         }
+    }
+
+    function _getInputs(inputs) {
+        return _.mapValues(inputs, inputObject => inputObject || {});
     }
 
     function _getPlugins(imports) {
@@ -181,7 +184,7 @@ module.exports = (function() {
         return _getBlueprintArchiveContent(request)
             .then((data) => _convertYamlToJson(data.extractedDir, yamlFile))
             .then((json) => ({
-                inputs: json.inputs,
+                inputs: _getInputs(json.inputs),
                 plugins: _getPlugins(json.imports),
                 secrets: _getSecrets(json)
             }));
