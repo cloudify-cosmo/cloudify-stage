@@ -8,7 +8,7 @@ var passport = require('passport');
 var multer  = require('multer');
 var upload = multer({limits: {fileSize: 50000}});
 var logger = require('log4js').getLogger('File');
-var YAML = require('yamljs');
+var yaml = require('js-yaml');
 
 function checkIfFileUploaded(req, res, next) {
     if (!req.file) {
@@ -30,7 +30,7 @@ router.post('/yaml', passport.authenticate('token', {session: false}), upload.si
     logger.debug(`YAML file uploaded, name: ${req.file.originalname}, size: ${req.file.size}`);
     var yamlString = req.file.buffer.toString();
     try {
-        var json = YAML.parse(yamlString);
+        var json = yaml.safeLoad(yamlString);
     } catch (error) {
         var errorMessage = `Cannot parse YAML file. Error: ${error}`;
         logger.error(errorMessage);
