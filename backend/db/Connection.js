@@ -18,11 +18,8 @@ var options = _.merge({
             min: 0,
             idle: 10000
         },
-        logging: false
-
-        /*function(message) {
-            logger.debug(message);
-        }*/
+        operatorsAliases: false,
+        // logging: (message) => logger.debug(message)
     },config.app.db.options);
 
 var sequelize = new Sequelize(config.app.db.url,options);

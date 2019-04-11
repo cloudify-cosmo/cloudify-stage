@@ -4,9 +4,7 @@
 
 class InputsUtils {
 
-    static DEFAULT_VALUE_STRING = '';
-    static DEFAULT_VALUE_NUMBER = 0;
-    static DEFAULT_VALUE_BOOLEAN = false;
+    static DEFAULT_INITIAL_VALUE = '';
 
     static STRING_VALUE_SURROUND_CHAR = '"';
     static EMPTY_STRING = '""';
@@ -35,15 +33,7 @@ class InputsUtils {
 
     static getInputFieldInitialValue(defaultValue, type = undefined) {
         if (_.isNil(defaultValue)) {
-            switch (type) {
-                case 'boolean':
-                    return InputsUtils.DEFAULT_VALUE_BOOLEAN;
-                case 'integer':
-                    return InputsUtils.DEFAULT_VALUE_NUMBER;
-                case 'string':
-                default:
-                    return InputsUtils.DEFAULT_VALUE_STRING;
-            }
+            return InputsUtils.DEFAULT_INITIAL_VALUE;
         } else {
             switch (type) {
                 case 'boolean':
@@ -80,61 +70,140 @@ class InputsUtils {
             : <RevertToDefaultIcon value={typedValue} defaultValue={typedDefaultValue} onClick={revertToDefault} />;
     }
 
-    static getFormInputField(name, value, defaultValue, description, onChange, error, type) {
+    static getHelp(description, type, constraints) {
+        let {List} = Stage.Basic;
+
+        return (
+            <div>
+                {
+                    !_.isEmpty(description) &&
+                    <React.Fragment>
+                        <h4>Description</h4>
+                        <p>{description}</p>
+                    </React.Fragment>
+                }
+                {
+                    !_.isEmpty(type) &&
+                    <React.Fragment>
+                        <h4>Type</h4>
+                        <p>{type}</p>
+                    </React.Fragment>
+                }
+                {
+                    !_.isEmpty(constraints) &&
+                    <React.Fragment>
+                        <h4>Constraints</h4>
+                        <List bulleted>
+                            {
+                                _.map(constraints, (constraint) => {
+                                    const key = _.first(_.keys(constraint));
+                                    return <List.Item key={key}>{_.capitalize(_.lowerCase(key))}: {String(constraint[key])}</List.Item>
+                                })
+                            }
+                        </List>
+                    </React.Fragment>
+                }
+            </div>
+        );
+    }
+
+    static getFormInputField(name, value, defaultValue, description, onChange, error, type, constraints) {
         let {Form} = Stage.Basic;
+        const help = InputsUtils.getHelp(description, type, constraints);
 
         switch (type) {
             case 'boolean':
                 return (
-                    <Form.Field key={name} help={description} required={_.isNil(defaultValue)}>
-                        {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type)}
+                    <Form.Field key={name} help={help} required={_.isNil(defaultValue)}>
+                        {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
                     </Form.Field>
                 );
             case 'integer':
                 return (
-                    <Form.Field key={name} error={error} help={description} required={_.isNil(defaultValue)} label={name}>
-                        {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type)}
+                    <Form.Field key={name} error={error} help={help} required={_.isNil(defaultValue)} label={name}>
+                        {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
                     </Form.Field>
                 );
             case 'string':
             default:
                 return (
-                    <Form.Field key={name} error={error} help={description} required={_.isNil(defaultValue)} label={name}>
-                        {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type)}
+                    <Form.Field key={name} error={error} help={help} required={_.isNil(defaultValue)} label={name}>
+                        {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
                     </Form.Field>
                 );
         }
     }
 
-    static getInputField(name, value, defaultValue, onChange, error, type) {
+    static getInputField(name, value, defaultValue, onChange, error, type, constraints) {
         let {Form} = Stage.Basic;
+        let min, max;
+
+        const getConstraintValue = (constraints, constraintName) => {
+            const index = _.findIndex(constraints, constraintName);
+            return (index >= 0)
+                ? constraints[index][constraintName]
+                : null;
+        };
+
+        if (!_.isEmpty(constraints)) {
+
+            // Show only valid values in dropdown if 'valid_values' constraint is set
+            const validValues = getConstraintValue(constraints, 'valid_values');
+            if (!_.isNull(validValues)) {
+                const options = _.map(validValues, (value) => ({name: value, text: value, value}));
+                return (
+                    <Form.Group>
+                        <Form.Field width={16}>
+                            <Form.Dropdown name={name} value={value} fluid selection error={!!error} options={options}
+                                           onChange={onChange} />
+                        </Form.Field>
+                        <div style={{padding: '8px 0', margin: '0 auto'}}>
+                            {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                        </div>
+                    </Form.Group>
+                );
+            }
+
+            // Limit numerical values if at least one of range limitation constraints is set
+            const inRange = getConstraintValue(constraints, 'in_range');
+            const greaterThan = getConstraintValue(constraints, 'greater_than');
+            const greaterOrEqual = getConstraintValue(constraints, 'greater_or_equal');
+            const lessThan = getConstraintValue(constraints, 'less_than');
+            const lessOrEqual = getConstraintValue(constraints, 'less_or_equal');
+
+            min = _.max([inRange ? inRange[0] : null, greaterThan, greaterOrEqual]);
+            max = _.min([inRange ? inRange[1] : null, lessThan, lessOrEqual]);
+        }
 
         switch (type) {
             case 'boolean':
+                const isBooleanValue = value === false || value === true;
+                const checked = isBooleanValue ? value : undefined;
                 return (
                     <React.Fragment>
-                        <Form.Checkbox name={name} toggle label={name} checked={value} onChange={onChange} />
+                        <Form.Checkbox name={name} toggle label={name} checked={checked} indeterminate={!isBooleanValue}
+                                       onChange={onChange} />
                         &nbsp;&nbsp;&nbsp;
                         {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                     </React.Fragment>
                 );
 
             case 'integer':
-                return <Form.Input name={name} value={value} fluid error={!!error} type='number'
+                return <Form.Input name={name} value={value} fluid error={!!error} type='number' min={min} max={max}
                                    icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                                    onChange={onChange} />;
 
             case 'string':
             default:
-                return _.includes(value, '\n')
+                return _.includes(value, '\n') || type === 'list' || type === 'dict'
                     ?
                     <Form.Group>
-                        <Form.Field width={15}>
+                        <Form.Field width={16}>
                             <Form.TextArea name={name} value={value} onChange={onChange} />
                         </Form.Field>
-                        <Form.Field width={1} style={{textAlign: 'center'}}>
+                        <div style={{margin: '0 auto'}}>
                             {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
-                        </Form.Field>
+                        </div>
                     </Form.Group>
                     :
                     <Form.Input name={name} value={value} fluid error={!!error}
@@ -144,21 +213,24 @@ class InputsUtils {
     }
 
     static getInputFields(inputs, onChange, inputsState, errorsState) {
-        let enhancedInputs
+        const enhancedInputs
             = _.sortBy(
                 _.map(inputs, (input, name) => ({'name': name, ...input})),
                 [(input => !_.isNil(input.default)), 'name']);
 
-        return _.map(enhancedInputs, (input) =>
-            InputsUtils.getFormInputField(input.name,
-                                          inputsState[input.name] // Always return defined value to avoid rendering uncontrolled inputs
-                                          || InputsUtils.getInputFieldInitialValue(undefined, input.type),
-                                          input.default,
-                                          input.description,
-                                          onChange,
-                                          errorsState[input.name],
-                                          input.type)
-        );
+        return _.map(enhancedInputs, (input) => {
+            const value = _.isNil(inputsState[input.name])
+                ? InputsUtils.getInputFieldInitialValue(input.default, input.type)
+                : inputsState[input.name];
+            return InputsUtils.getFormInputField(input.name,
+                                                 value,
+                                                 input.default,
+                                                 input.description,
+                                                 onChange,
+                                                 errorsState[input.name],
+                                                 input.type,
+                                                 input.constraints);
+        });
     }
 
 
@@ -259,6 +331,22 @@ class InputsUtils {
         _.forEach(_.keys(inputsWithoutValues), (inputName) => errors[inputName] = `Please provide ${inputName}`);
     }
 
+    static getErrorObject(message) {
+        const typeValidationMatch = message.match(/Property type validation failed in '(.[^']+)'/);
+        const propertyMissingMatch = message.match(/Value of input (.[^ ]+) is missing/);
+        const constraintValidationMatch = message.match(/of input (.[^ ]+) violates constraint/);
+
+        let errorFieldKey = 'error';
+        if (typeValidationMatch) {
+            errorFieldKey = typeValidationMatch[1];
+        } else if (propertyMissingMatch) {
+            errorFieldKey = propertyMissingMatch[1];
+        } else if (constraintValidationMatch) {
+            errorFieldKey = constraintValidationMatch[1];
+        }
+
+        return {[errorFieldKey]: message};
+    }
 }
 
 Stage.defineCommon({
