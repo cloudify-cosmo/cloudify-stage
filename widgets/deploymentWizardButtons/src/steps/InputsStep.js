@@ -138,28 +138,38 @@ class InputsStepContent extends React.Component {
 
                                 <Table.Body>
                                     {
-                                        _.map(_.keys(this.props.stepData), (inputName) =>
-                                            !_.isNil(inputs[inputName]) &&
-                                            <Table.Row key={inputName} name={inputName}>
-                                                <Table.Cell collapsing>
-                                                    <Form.Field key={inputName} help={inputs[inputName].description}
-                                                                label={inputName} />
-                                                </Table.Cell>
-                                                <Table.Cell collapsing>
-                                                    {this.getInputStatus(inputs[inputName].default)}
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    {
-                                                        InputsUtils.getInputField(inputName,
-                                                            this.props.stepData[inputName],
-                                                            inputs[inputName].default,
-                                                            this.handleInputChange.bind(this),
-                                                            this.props.errors[inputName],
-                                                            inputs[inputName].type)
-                                                    }
-                                                </Table.Cell>
-                                            </Table.Row>
-                                        )
+                                        _.map(_.keys(this.props.stepData), (inputName) => {
+                                            if (!_.isNil(inputs[inputName])) {
+                                                const help = InputsUtils.getHelp(inputs[inputName].description,
+                                                                                 inputs[inputName].type,
+                                                                                 inputs[inputName].constraints);
+                                                return (
+                                                    <Table.Row key={inputName} name={inputName}>
+                                                        <Table.Cell collapsing>
+                                                            <Form.Field key={inputName}
+                                                                        help={help}
+                                                                        label={inputName} />
+                                                        </Table.Cell>
+                                                        <Table.Cell collapsing>
+                                                            {this.getInputStatus(inputs[inputName].default)}
+                                                        </Table.Cell>
+                                                        <Table.Cell>
+                                                            {
+                                                                InputsUtils.getInputField(inputName,
+                                                                    this.props.stepData[inputName],
+                                                                    inputs[inputName].default,
+                                                                    this.handleInputChange.bind(this),
+                                                                    this.props.errors[inputName],
+                                                                    inputs[inputName].type,
+                                                                    inputs[inputName].constraints)
+                                                            }
+                                                        </Table.Cell>
+                                                    </Table.Row>
+                                                );
+                                            } else {
+                                                return null;
+                                            }
+                                        })
                                     }
                                 </Table.Body>
                             </Table>
