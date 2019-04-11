@@ -70,10 +70,10 @@ class InputsUtils {
             : <RevertToDefaultIcon value={typedValue} defaultValue={typedDefaultValue} onClick={revertToDefault} />;
     }
 
-    static getFormInputField(name, value, defaultValue, description, onChange, error, type, constraints) {
-        let {Form, List} = Stage.Basic;
+    static getHelp(description, type, constraints) {
+        let {List} = Stage.Basic;
 
-        let formattedDescription =
+        return (
             <div>
                 {
                     !_.isEmpty(description) &&
@@ -103,25 +103,31 @@ class InputsUtils {
                         </List>
                     </React.Fragment>
                 }
-            </div>;
+            </div>
+        );
+    }
+
+    static getFormInputField(name, value, defaultValue, description, onChange, error, type, constraints) {
+        let {Form} = Stage.Basic;
+        const help = InputsUtils.getHelp(description, type, constraints);
 
         switch (type) {
             case 'boolean':
                 return (
-                    <Form.Field key={name} help={formattedDescription} required={_.isNil(defaultValue)}>
+                    <Form.Field key={name} help={help} required={_.isNil(defaultValue)}>
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
                     </Form.Field>
                 );
             case 'integer':
                 return (
-                    <Form.Field key={name} error={error} help={formattedDescription} required={_.isNil(defaultValue)} label={name}>
+                    <Form.Field key={name} error={error} help={help} required={_.isNil(defaultValue)} label={name}>
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
                     </Form.Field>
                 );
             case 'string':
             default:
                 return (
-                    <Form.Field key={name} error={error} help={formattedDescription} required={_.isNil(defaultValue)} label={name}>
+                    <Form.Field key={name} error={error} help={help} required={_.isNil(defaultValue)} label={name}>
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
                     </Form.Field>
                 );
