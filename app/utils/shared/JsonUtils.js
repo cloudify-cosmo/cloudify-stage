@@ -16,16 +16,6 @@ export default class JsonUtils {
         return _.trim(stringifiedValue, '"');
     }
 
-    // Attempts to parse string to json.
-    // Returns original value if failed
-    static stringToJson(value) {
-        try{
-            return JSON.parse(value);
-        } catch (err) {
-            return value;
-        }
-    }
-
     static toType(obj) {
         return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
     }
@@ -38,9 +28,11 @@ export default class JsonUtils {
             case 'string':
                 return type;
             case 'number':
-                return 'integer';
+                return _.isInteger(obj) ? 'integer' : 'float';
             case 'array':
+                return 'list';
             case 'object':
+                return 'dict';
             default:
                 return undefined;
         }

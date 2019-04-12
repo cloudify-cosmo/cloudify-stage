@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * Created by jakubniezgoda on 18/10/2018.
  */
@@ -33,11 +35,25 @@ class InputsUtils {
 
     static getInputFieldInitialValue(defaultValue, type = undefined) {
         if (_.isNil(defaultValue)) {
-            return InputsUtils.DEFAULT_INITIAL_VALUE;
+            switch (type) {
+                case 'list':
+                    return [];
+                case 'dict':
+                    return {};
+                case 'boolean':
+                case 'integer':
+                case 'float':
+                case 'string':
+                default:
+                    return InputsUtils.DEFAULT_INITIAL_VALUE;
+            }
         } else {
             switch (type) {
                 case 'boolean':
                 case 'integer':
+                case 'float':
+                case 'list':
+                case 'dict':
                     return defaultValue;
                 case 'string':
                 default:
@@ -138,29 +154,26 @@ class InputsUtils {
         let {Form} = Stage.Basic;
         let min, max;
 
-        const getConstraintValue = (constraints, constraintName) => {
-            const index = _.findIndex(constraints, constraintName);
-            return (index >= 0)
-                ? constraints[index][constraintName]
-                : null;
-        };
-
         if (!_.isEmpty(constraints)) {
+            const getConstraintValue = (constraints, constraintName) => {
+                const index = _.findIndex(constraints, constraintName);
+                return (index >= 0)
+                    ? constraints[index][constraintName]
+                    : null;
+            };
 
             // Show only valid values in dropdown if 'valid_values' constraint is set
             const validValues = getConstraintValue(constraints, 'valid_values');
             if (!_.isNull(validValues)) {
                 const options = _.map(validValues, (value) => ({name: value, text: value, value}));
                 return (
-                    <Form.Group>
-                        <Form.Field width={16}>
-                            <Form.Dropdown name={name} value={value} fluid selection error={!!error} options={options}
-                                           onChange={onChange} />
-                        </Form.Field>
-                        <div style={{padding: '8px 0', margin: '0 auto'}}>
+                    <div style={{position: 'relative'}}>
+                        <Form.Dropdown name={name} value={value} fluid selection error={!!error} options={options}
+                                       onChange={onChange} />
+                        <div style={{position: 'absolute', top: 10, right: 30}}>
                             {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                         </div>
-                    </Form.Group>
+                    </div>
                 );
             }
 
@@ -189,22 +202,34 @@ class InputsUtils {
                 );
 
             case 'integer':
-                return <Form.Input name={name} value={value} fluid error={!!error} type='number' min={min} max={max}
+            case 'float':
+                return <Form.Input name={name} value={value} fluid error={!!error} type='number'
+                                   step={type === 'integer' ? 1 : 'any'} min={min} max={max}
                                    icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                                    onChange={onChange} />;
 
-            case 'string':
-            default:
-                return _.includes(value, '\n') || type === 'list' || type === 'dict'
-                    ?
-                    <Form.Group>
-                        <Form.Field width={16}>
-                            <Form.TextArea name={name} value={value} onChange={onChange} />
-                        </Form.Field>
-                        <div style={{margin: '0 auto'}}>
+            case 'dict':
+            case 'list':
+                return (
+                    <div style={{position: 'relative'}}>
+                        <Form.Json name={name} value={value} onChange={onChange} />
+                        <div style={{position: 'absolute', top: 10, right: 10}}>
                             {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                         </div>
-                    </Form.Group>
+                    </div>
+                );
+
+            case 'string':
+            case 'regex':
+            default:
+                return _.includes(value, '\n')
+                    ?
+                    <div style={{position: 'relative'}}>
+                        <Form.TextArea name={name} value={value} onChange={onChange} />
+                        <div style={{position: 'absolute', top: 10, right: 10}}>
+                            {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                        </div>
+                    </div>
                     :
                     <Form.Input name={name} value={value} fluid error={!!error}
                                 icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}

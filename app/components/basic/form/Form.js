@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import {Form as FormSemanticUiReact, Radio as FormRadio,
         Button as FormButton} from 'semantic-ui-react';
+
 import ErrorMessage from '../ErrorMessage';
 import FormField from './FormField';
 import FormCheckbox from './FormCheckbox';
@@ -20,6 +21,8 @@ import FormInputTime from './InputTime';
 import FormDropdown from '../Dropdown';
 import FormTable from './EdiTable';
 import FormColorPicker from './ColorPicker';
+import FormJson from './InputJson';
+
 import '../../styles/Form.css';
 
 /**
@@ -157,6 +160,11 @@ export default class Form extends Component {
     static ColorPicker = FormColorPicker;
 
     /**
+     * Form JSON input,
+     */
+    static Json = FormJson;
+
+    /**
      * propTypes
      * @property {object} [errors] string wiht error message or object with fields error messages (syntax described above)
      * @property {function} [onSubmit=()=>{}] function called on form submission
@@ -182,10 +190,14 @@ export default class Form extends Component {
         const name = field.name;
         var value = field.value;
 
-        if (field.type === 'checkbox')
+        if (field.type === 'checkbox') {
             value = field.checked;
-        if (field.type === 'number')
-            value = parseInt(field.value);
+        }
+
+        if (field.type === 'number') {
+            const isFloat = (n) => Number(n) % 1 !== 0;
+            value = isFloat(field.value) ? parseFloat(field.value) : parseInt(field.value);
+        }
 
         if (_.isEmpty(name)) {
             console.error('Required name attribute is not provided!', field);

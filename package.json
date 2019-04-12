@@ -58,6 +58,7 @@
     "react-datepicker": "^1.4.1",
     "react-dom": "^16.6.3",
     "react-grid-layout": "^0.16.6",
+    "react-json-view": "^1.19.1",
     "react-redux": "^6.0.1",
     "react-resizable": "^1.7.5",
     "react-router-dom": "^5.0.0",
