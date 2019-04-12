@@ -125,7 +125,8 @@ class DeployBlueprintModal extends React.Component {
         let blueprint = Object.assign({}, DeployBlueprintModal.EMPTY_BLUEPRINT, this.props.blueprint);
 
         return (
-            <Modal open={this.props.open} onClose={()=>this.props.onHide()} className="deployBlueprintModal">
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()} closeOnEscape={false}
+                   className="deployBlueprintModal">
                 <Modal.Header>
                     <Icon name="rocket"/> Deploy blueprint {blueprint.id}
                     <VisibilityField visibility={this.state.visibility} className="rightFloated"

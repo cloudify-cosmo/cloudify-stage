@@ -141,7 +141,7 @@ export default class DeployModal extends React.Component {
         let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
 
         return (
-            <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()} closeOnEscape={false}>
                 <Modal.Header>
                     <Icon name="rocket"/> Create new deployment
                     <VisibilityField visibility={this.state.visibility} className="rightFloated"
