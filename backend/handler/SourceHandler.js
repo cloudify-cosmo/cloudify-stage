@@ -185,6 +185,7 @@ module.exports = (function() {
             .then((data) => _convertYamlToJson(data.extractedDir, yamlFile))
             .then((json) => ({
                 inputs: _getInputs(json.inputs),
+                dataTypes: json.data_types,
                 plugins: _getPlugins(json.imports),
                 secrets: _getSecrets(json)
             }));

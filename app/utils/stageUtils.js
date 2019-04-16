@@ -65,6 +65,7 @@ export default class StageUtils {
      */
     static resolveMessage(message) {
         var tagPattern = /<(\w+)[^<]*>/;
+        var noValueAttrPattern = /[',",`]([^',^",^`]+)[',",`]/;
         var attrPattern = /(\w+)=[',",`]([^',^",^`]+)[',",`]/g;
 
         var matchedTag, matchedAttr, sentence = '';
@@ -81,10 +82,15 @@ export default class StageUtils {
                 if (attributes.length > 1) {
                     sentence += ' with';
                     _.each(attributes,(item, index)=> {
-                        sentence += `  ${item.key}=${item.value} ${(index < attributes.length - 1) ? ' and' : ''}`;
+                        sentence += ` ${item.key}=${item.value} ${(index < attributes.length - 1) ? ' and' : ''}`;
                     })
                 } else {
-                    sentence += `  ${attributes[0].value}`;
+                    sentence += ` ${attributes[0].value}`;
+                }
+            } else {
+                matchedAttr = noValueAttrPattern.exec(tag);
+                if (matchedAttr) {
+                    sentence += ` ${matchedAttr[1]}`;
                 }
             }
 

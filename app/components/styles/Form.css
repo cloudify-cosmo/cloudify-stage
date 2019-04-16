@@ -88,3 +88,37 @@
 .top-padded-10 {
     margin-top: 10px;
 }
+
+/* InputJson - react-json-view */
+.react-json-view .key-modal-request {
+    top: -7px !important;
+}
+
+.react-json-view .key-modal-request > div {
+    padding: 5px !important;
+    margin-top: 0px !important;
+    background-color: #e0e1e2 !important;
+    width: 270px !important;
+}
+
+.react-json-view .key-modal-request > div > div:first-child {
+    color: inherit !important;
+    padding-right: 5px;
+}
+
+.react-json-view .key-modal-request > div > div {
+    display: inline-block !important;
+}
+
+.react-json-view .key-modal-request > div > span {
+    background-color: inherit !important;
+    line-height: 14px !important;
+}
+
+.react-json-view .key-modal-request > div > span > .key-modal-cancel > svg {
+    color: inherit !important;
+}
+
+.react-json-view .key-modal-request input {
+    font-size: 14px !important;
+}

@@ -15,14 +15,14 @@
     },
     {
         "name": "Main JS bundle",
-        "limit": "310 KB",
+        "limit": "315 KB",
         "gzip": false,
         "webpack": false,
         "path": "dist/js/main.bundle.js"
     },
     {
         "name": "Vendor JS bundle",
-        "limit": "3.8 MB",
+        "limit": "3.85 MB",
         "gzip": false,
         "webpack": false,
         "path": "dist/js/vendor.bundle.js"

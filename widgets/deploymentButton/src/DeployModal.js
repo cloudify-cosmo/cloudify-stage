@@ -56,7 +56,7 @@ export default class DeployModal extends React.Component {
 
             var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
             actions.doGetFullBlueprintData({id: data.value}).then((blueprint)=>{
-                let deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(blueprint.plan.inputs);
+                let deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(blueprint.plan);
                 this.setState({deploymentInputs, blueprint, errors: {}, loading: false});
             }).catch((err)=> {
                 this.setState({blueprint: Stage.Common.DeployBlueprintModal.EMPTY_BLUEPRINT, loading: false, errors: {error: err.message}});
@@ -135,13 +135,13 @@ export default class DeployModal extends React.Component {
 
     render() {
         let {ApproveButton, CancelButton, Form, Icon, Message, Modal, VisibilityField} = Stage.Basic;
-        let {InputsHeader, InputsUtils, YamlFileButton} = Stage.Common;
+        let {DataTypesButton, InputsHeader, InputsUtils, YamlFileButton} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.props.blueprints);
         let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
 
         return (
-            <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
+            <Modal open={this.props.open} onClose={()=>this.props.onHide()} closeOnEscape={false}>
                 <Modal.Header>
                     <Icon name="rocket"/> Create new deployment
                     <VisibilityField visibility={this.state.visibility} className="rightFloated"
@@ -172,6 +172,10 @@ export default class DeployModal extends React.Component {
                                                     dataType="deployment's inputs"
                                                     fileLoading={this.state.fileLoading}/>
                                 }
+                                {
+                                    !_.isEmpty(this.state.blueprint.plan.data_types) &&
+                                    <DataTypesButton types={this.state.blueprint.plan.data_types} />
+                                }
                                 <InputsHeader/>
                                 {
                                     _.isEmpty(this.state.blueprint.plan.inputs) &&
@@ -184,7 +188,8 @@ export default class DeployModal extends React.Component {
                             InputsUtils.getInputFields(this.state.blueprint.plan.inputs,
                                                        this._handleDeploymentInputChange.bind(this),
                                                        this.state.deploymentInputs,
-                                                       this.state.errors)
+                                                       this.state.errors,
+                                                       this.state.blueprint.plan.data_types)
                         }
                         <Form.Field className='skipPluginsValidationCheckbox'>
                             <Form.Checkbox toggle
