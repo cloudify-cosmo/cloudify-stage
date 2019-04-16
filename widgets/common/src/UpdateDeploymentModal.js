@@ -155,7 +155,7 @@ class UpdateDeploymentModal extends React.Component {
 
                 _.forEach(blueprint.plan.inputs, (inputObj, inputName) => {
                     deploymentInputs[inputName]
-                        = Stage.Common.InputsUtils.getInputFieldInitialValue(currentDeploymentInputs[inputName], inputObj.type);
+                        = Stage.Common.InputsUtils.getInputFieldInitialValue(currentDeploymentInputs[inputName], inputObj.type, blueprint.plan.data_types);
                 });
 
                 this.setState({deploymentInputs, blueprint, errors: {}, loading: false});
@@ -169,7 +169,7 @@ class UpdateDeploymentModal extends React.Component {
 
     render() {
         let {ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter} = Stage.Basic;
-        let {InputsHeader, InputsUtils, YamlFileButton, UpdateDetailsModal} = Stage.Common;
+        let {DataTypesButton, InputsHeader, InputsUtils, YamlFileButton, UpdateDetailsModal} = Stage.Common;
 
         let blueprints = Object.assign({},{items:[]}, this.state.blueprints);
         let blueprintsOptions = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
@@ -207,6 +207,10 @@ class UpdateDeploymentModal extends React.Component {
                                                     dataType="deployment's inputs"
                                                     fileLoading={this.state.fileLoading}/>
                                 }
+                                {
+                                    !_.isEmpty(this.state.blueprint.plan.data_types) &&
+                                    <DataTypesButton types={this.state.blueprint.plan.data_types} />
+                                }
                                 <InputsHeader/>
                                 {
                                     _.isEmpty(this.state.blueprint.plan.inputs) &&
@@ -219,7 +223,8 @@ class UpdateDeploymentModal extends React.Component {
                             InputsUtils.getInputFields(this.state.blueprint.plan.inputs,
                                                        this._handleDeploymentInputChange.bind(this),
                                                        this.state.deploymentInputs,
-                                                       this.state.errors)
+                                                       this.state.errors,
+                                                       this.state.blueprint.plan.data_types)
                         }
 
                         <Form.Divider>

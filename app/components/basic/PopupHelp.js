@@ -37,7 +37,7 @@ export default class PopupHelp extends React.Component {
     render() {
         let popupProps = _.omit(this.props, _.keys(PopupHelp.propTypes));
         return (
-            <Popup on={['hover', 'focus']} {...popupProps}>
+            <Popup on={['hover', 'focus']} hoverable wide={'very'} {...popupProps}>
                 {
                     !_.isEmpty(this.props.header) && (
                         <Popup.Header>

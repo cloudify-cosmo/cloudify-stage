@@ -6,6 +6,8 @@ import React from 'react';
 
 class InputsUtils {
 
+    static DEFAULT_INITIAL_VALUE_FOR_LIST = '[]';
+    static DEFAULT_INITIAL_VALUE_FOR_DICT = '{}';
     static DEFAULT_INITIAL_VALUE = '';
 
     static STRING_VALUE_SURROUND_CHAR = '"';
@@ -33,33 +35,88 @@ class InputsUtils {
         }
     }
 
-    static getInputFieldInitialValue(defaultValue, type = undefined) {
+    static getInputFieldInitialValue(defaultValue, type = undefined, dataType = undefined) {
+        let {Json} = Stage.Utils;
+
         if (_.isNil(defaultValue)) {
             switch (type) {
                 case 'list':
-                    return [];
+                    return InputsUtils.DEFAULT_INITIAL_VALUE_FOR_LIST;
                 case 'dict':
-                    return {};
+                    return InputsUtils.DEFAULT_INITIAL_VALUE_FOR_DICT;
                 case 'boolean':
                 case 'integer':
                 case 'float':
                 case 'string':
                 default:
-                    return InputsUtils.DEFAULT_INITIAL_VALUE;
+                    return !_.isUndefined(dataType)
+                        ? InputsUtils.getTemplateForDataType(dataType, true)
+                        : InputsUtils.DEFAULT_INITIAL_VALUE;
             }
         } else {
             switch (type) {
                 case 'boolean':
                 case 'integer':
                 case 'float':
+                    return defaultValue;
                 case 'list':
                 case 'dict':
-                    return defaultValue;
+                    return Json.getStringValue(defaultValue);
                 case 'string':
                 default:
                     return InputsUtils.getEnhancedStringValue(defaultValue);
             }
         }
+    }
+
+    static getTemplateForDataType(dataType, stringTemplate) {
+        const getStringInitialValue = (type) => {
+            switch (type) {
+                case 'boolean':
+                    return 'true';
+                case 'integer':
+                    return '0';
+                case 'float':
+                    return '0.0';
+                case 'string':
+                    return '"..."';
+                case 'dict':
+                    return '{}';
+                case 'list':
+                    return '[]';
+                case 'regex':
+                    return '"regexp"';
+                default:
+                    return '""';
+            }
+        };
+
+        const properties = dataType.properties;
+        let propertiesList = [];
+        _.map(properties, (propertyObject, propertyName) => {
+            let propertyString = `"${propertyName}":`;
+            if (!_.isUndefined(propertyObject.default)) {
+                if (_.isString(propertyObject.default)) {
+                    propertyString += `"${propertyObject.default}"`;
+                } else {
+                    const {Json} = Stage.Utils;
+                    propertyString += Json.getStringValue(propertyObject.default);
+                }
+            } else {
+                propertyString += getStringInitialValue(propertyObject.type);
+            }
+            propertiesList.push(propertyString);
+        });
+
+        let template = `{${_.join(propertiesList, ',')}}`;
+        if (!stringTemplate) {
+            try {
+                template = JSON.parse(template);
+            } catch (error) {
+                template = '{}';
+            }
+        }
+        return template;
     }
 
 
@@ -86,46 +143,50 @@ class InputsUtils {
             : <RevertToDefaultIcon value={typedValue} defaultValue={typedDefaultValue} onClick={revertToDefault} />;
     }
 
-    static getHelp(description, type, constraints) {
-        let {List} = Stage.Basic;
+    static getHelp(description, type, constraints, defaultValue, dataType) {
+        let {Header, List, ParameterValue} = Stage.Basic;
+
+        const HelpProperty = ({show, name, value}) =>
+            show &&
+            <React.Fragment>
+                <Header as='h4'>{name}</Header>
+                {value}
+            </React.Fragment>;
+
+        const example = !_.isUndefined(defaultValue)
+            ? defaultValue
+            : !_.isUndefined(dataType)
+                ? InputsUtils.getTemplateForDataType(dataType)
+                : null;
 
         return (
             <div>
-                {
-                    !_.isEmpty(description) &&
-                    <React.Fragment>
-                        <h4>Description</h4>
-                        <p>{description}</p>
-                    </React.Fragment>
-                }
-                {
-                    !_.isEmpty(type) &&
-                    <React.Fragment>
-                        <h4>Type</h4>
-                        <p>{type}</p>
-                    </React.Fragment>
-                }
-                {
-                    !_.isEmpty(constraints) &&
-                    <React.Fragment>
-                        <h4>Constraints</h4>
-                        <List bulleted>
-                            {
-                                _.map(constraints, (constraint) => {
-                                    const key = _.first(_.keys(constraint));
-                                    return <List.Item key={key}>{_.capitalize(_.lowerCase(key))}: {String(constraint[key])}</List.Item>
-                                })
-                            }
-                        </List>
-                    </React.Fragment>
-                }
+                <HelpProperty name='Description' show={!_.isEmpty(description)} value={description} />
+                <HelpProperty name='Type' show={!_.isEmpty(type)} value={type} />
+                <HelpProperty name='Constraints' show={!_.isEmpty(constraints)} value={
+                    <List bulleted>
+                        {
+                            _.map(constraints, (constraint) => {
+                                const key = _.first(_.keys(constraint));
+                                return (
+                                    <List.Item key={key}>
+                                        {_.capitalize(_.lowerCase(key))}: {String(constraint[key])}
+                                    </List.Item>
+                                );
+                            })
+                        }
+                    </List>
+                } />
+                <HelpProperty name={!_.isUndefined(defaultValue) ? 'Default Value' : 'Example'}
+                              show={!_.isUndefined(defaultValue) || !_.isUndefined(dataType)}
+                              value={<ParameterValue value={example} />} />
             </div>
         );
     }
 
-    static getFormInputField(name, value, defaultValue, description, onChange, error, type, constraints) {
+    static getFormInputField(name, value, defaultValue, description, onChange, error, type, constraints, dataType) {
         let {Form} = Stage.Basic;
-        const help = InputsUtils.getHelp(description, type, constraints);
+        const help = InputsUtils.getHelp(description, type, constraints, defaultValue, dataType);
 
         switch (type) {
             case 'boolean':
@@ -212,7 +273,7 @@ class InputsUtils {
             case 'list':
                 return (
                     <div style={{position: 'relative'}}>
-                        <Form.Json name={name} value={value} onChange={onChange} />
+                        <Form.Json name={name} value={value} onChange={onChange} error={!!error} />
                         <div style={{position: 'absolute', top: 10, right: 10}}>
                             {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                         </div>
@@ -221,7 +282,6 @@ class InputsUtils {
 
             case 'string':
             case 'regex':
-            default:
                 return _.includes(value, '\n')
                     ?
                     <div style={{position: 'relative'}}>
@@ -234,18 +294,29 @@ class InputsUtils {
                     <Form.Input name={name} value={value} fluid error={!!error}
                                 icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                                 onChange={onChange} />;
+
+            default:
+                return (
+                    <div style={{position: 'relative'}}>
+                        <Form.Json name={name} value={value} onChange={onChange} error={!!error} />
+                        <div style={{position: 'absolute', top: 10, right: 10}}>
+                            {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                        </div>
+                    </div>
+                );
         }
     }
 
-    static getInputFields(inputs, onChange, inputsState, errorsState) {
+    static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes) {
         const enhancedInputs
             = _.sortBy(
                 _.map(inputs, (input, name) => ({'name': name, ...input})),
                 [(input => !_.isNil(input.default)), 'name']);
 
         return _.map(enhancedInputs, (input) => {
+            const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes[input.type] : undefined;
             const value = _.isNil(inputsState[input.name])
-                ? InputsUtils.getInputFieldInitialValue(input.default, input.type)
+                ? InputsUtils.getInputFieldInitialValue(input.default, input.type, dataType)
                 : inputsState[input.name];
             return InputsUtils.getFormInputField(input.name,
                                                  value,
@@ -254,7 +325,8 @@ class InputsUtils {
                                                  onChange,
                                                  errorsState[input.name],
                                                  input.type,
-                                                 input.constraints);
+                                                 input.constraints,
+                                                 dataType);
         });
     }
 
@@ -264,8 +336,9 @@ class InputsUtils {
     static getInputsInitialValuesFrom(plan) {
         let inputs = {};
 
-        _.forEach(plan, (inputObj, inputName) => {
-            inputs[inputName] = InputsUtils.getInputFieldInitialValue(inputObj.default, inputObj.type);
+        _.forEach(plan.inputs, (inputObj, inputName) => {
+            const dataType = !_.isEmpty(plan.data_types) && !!inputObj.type ? plan.data_types[inputObj.type] : undefined;
+            inputs[inputName] = InputsUtils.getInputFieldInitialValue(inputObj.default, inputObj.type, dataType);
         });
 
         return inputs;
@@ -333,8 +406,8 @@ class InputsUtils {
         let deploymentInputs = {};
 
         _.forEach(inputs, (inputObj, inputName) => {
-            let stringInputValue = String(inputsValues[inputName]);
-            let typedInputValue = Json.getTypedValue(stringInputValue);
+            let stringInputValue = Json.getStringValue(inputsValues[inputName]);
+            let typedInputValue = Json.getTypedValue(inputsValues[inputName]);
 
             if (_.isEmpty(stringInputValue) && _.isNil(inputObj.default)) {
                 inputsWithoutValues[inputName] = true;

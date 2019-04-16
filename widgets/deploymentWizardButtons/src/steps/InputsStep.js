@@ -142,7 +142,8 @@ class InputsStepContent extends React.Component {
                                             if (!_.isNil(inputs[inputName])) {
                                                 const help = InputsUtils.getHelp(inputs[inputName].description,
                                                                                  inputs[inputName].type,
-                                                                                 inputs[inputName].constraints);
+                                                                                 inputs[inputName].constraints,
+                                                                                 inputs[inputName].default);
                                                 return (
                                                     <Table.Row key={inputName} name={inputName}>
                                                         <Table.Cell collapsing>
