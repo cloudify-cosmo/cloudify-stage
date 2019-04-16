@@ -61,6 +61,13 @@ export default class JsonUtils {
         let initialType = JsonUtils.toType(value);
 
         if (initialType === 'string') {
+            // Null or Undefined
+            if (value === 'null') {
+                return null;
+            } else if (value === 'undefined') {
+                return undefined;
+            }
+
             // Boolean
             if (value === 'true') {
                 return true;

@@ -11,7 +11,7 @@ import { TextArea } from 'semantic-ui-react';
 import { Icon, Label, List, Popup } from '../index';
 
 /**
- * InputJson is a component TODO...
+ * InputJson is a component providing text or rich editor for JSON-like data
  *
  * ## Access
  * `Stage.Basic.Form.Json`
@@ -20,7 +20,7 @@ import { Icon, Label, List, Popup } from '../index';
  * ![InputJson](manual/asset/form/InputJson_0.png)
  *
  * ```
- * <Form.Json TODO />
+ * <Form.Json name='port_conf' value={'{"webserver_port2":6,"webserver_port1":5}'} />
  * ```
  *
  */
@@ -30,8 +30,8 @@ export default class InputJson extends Component {
         super(props, context);
 
         this.state = {
-            isRawView: false,
-            isParsableToJson: true,
+            isRawView: true,
+            isParsableToJson: false,
             isMouseOver: false
         };
 
@@ -42,19 +42,23 @@ export default class InputJson extends Component {
 
     /**
      * propTypes
+     *
      * @property {string} name name of the field
-     * @property {object} [value=null] TODO
-     * @property {function} [onChange=(function () {});] TODO
+     * @property {any} [value="{}"] value of the field
+     * @property {boolean} [error=false] is field invalid
+     * @property {function} [onChange=(function () {});] function to be called on value change
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
         value: PropTypes.any,
-        onChange: PropTypes.func,
+        error: PropTypes.bool,
+        onChange: PropTypes.func
     };
 
     static defaultProps = {
-        value: {},
-        onChange: _.noop,
+        value: '{}',
+        error: false,
+        onChange: _.noop
     };
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -63,85 +67,64 @@ export default class InputJson extends Component {
     }
 
     componentDidMount() {
-        if (!_.isObject(this.props.value)) {
-            this.setIsParsableToJson(this.props.value);
+        const isParsableToJson = this.isParsableToJson(this.props.value);
+        this.setState({isParsableToJson, isRawView: !isParsableToJson});
+    }
+
+    componentDidUpdate() {
+        if (this.state.isRawView) {
+            this.setState({isParsableToJson: this.isParsableToJson(this.props.value)});
         }
+    }
+
+    // See: https://stackoverflow.com/questions/9804777/how-to-test-if-a-string-is-json-or-not
+    isParsableToJson(value) {
+        let isParsableToJson = true;
+
+        if (!_.isString(value)) {
+            isParsableToJson = false;
+        } else {
+            try {
+                const result = JSON.parse(value);
+                isParsableToJson
+                    = Object.prototype.toString.call(result) === '[object Object]' || Array.isArray(result);
+            } catch (err) {
+                isParsableToJson = false;
+            }
+        }
+
+        return isParsableToJson;
     }
 
     onChangeJson(changeObject) {
+        let {Json} = Stage.Utils;
+
         this.props.onChange(null, {
             name: this.props.name,
-            value: changeObject.updated_src
+            value: Json.getStringValue(changeObject.updated_src)
         });
     }
 
-    setIsParsableToJson(value) {
-        let isParsableToJson = true;
-
-        try {
-            JSON.parse(value);
-        } catch (error) {
-            isParsableToJson = false;
-        }
-
-        this.setState({ isParsableToJson });
-    }
-
     onChangeString(event, {name, value}) {
-        let valueToSave;
-
-        try {
-            valueToSave = JSON.parse(value);
-        } catch (error) {
-            valueToSave = value;
-        }
-
-        this.props.onChange(null, { name, value: valueToSave });
-        this.setIsParsableToJson(value);
+        this.props.onChange(event, { name, value });
     }
 
     switchView() {
         this.setState({isRawView: !this.state.isRawView});
     }
 
-    getStringValue() {
-        const value = this.props.value;
-        let result = '';
-
-        if (_.isObject(value)) {
-            try {
-                result = JSON.stringify(value, null, 4);
-            } catch (error) {
-                result = '';
-            }
-        } else {
-            result = String(value);
-        }
-
-        return result;
-    }
-
-    getJsonValue() {
-        const value = this.props.value;
-        let result = '';
-
-        if (_.isObject(value)) {
-            result = value;
-        } else {
-            try {
-                result = JSON.parse(value);
-            } catch (error) {
-                result = {};
-            }
-        }
-
-        return result;
-    }
-
     render() {
-        const stringValue = this.getStringValue();
-        const jsonValue = this.getJsonValue();
+        let {Json} = Stage.Utils;
 
+        const value = this.props.value;
+        const stringValue = Json.getStringValue(value);
+        const jsonValue = Json.getTypedValue(value);
+        const divStyle = {
+            backgroundColor: this.props.error ? '#fff6f6' : '',
+            border: `1px solid ${this.props.error ? 'rgb(224, 180, 180)' : 'rgba(34,36,38,.15)'}`,
+            borderRadius: 4,
+            padding: 10
+        };
 
         return (
             <div style={{position: 'relative'}} onMouseEnter={() => this.setState({isMouseOver: true})}
@@ -151,8 +134,8 @@ export default class InputJson extends Component {
                     ?
                         <TextArea name={this.props.name} value={stringValue} onChange={this.onChangeString} />
                     :
-                        <div style={{border: '1px solid rgba(34,36,38,.15)', borderRadius: 4, padding: 10}}>
-                            <ReactJsonView src={jsonValue} name={null} enableClipboard={false} defaultValue={''}
+                        <div style={divStyle}>
+                            <ReactJsonView src={jsonValue} name={null} enableClipboard={false} defaultValue=''
                                            onAdd={this.onChangeJson} onEdit={this.onChangeJson} onDelete={this.onChangeJson}
                             />
                         </div>
@@ -189,7 +172,6 @@ export default class InputJson extends Component {
                         </Popup.Content>
                     </Popup>
                 }
-
             </div>
         );
     }
