@@ -67,18 +67,20 @@ export default class InputJson extends Component {
     }
 
     componentDidMount() {
-        const isParsableToJson = this.isParsableToJson(this.props.value);
+        const isParsableToJson = this.isParsableToJson();
         this.setState({isParsableToJson, isRawView: !isParsableToJson});
     }
 
-    componentDidUpdate() {
-        if (this.state.isRawView) {
-            this.setState({isParsableToJson: this.isParsableToJson(this.props.value)});
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(this.props.value, prevProps.value)) {
+            const isParsableToJson = this.isParsableToJson();
+            this.setState({isParsableToJson, isRawView: !this.state.isRawView ? !isParsableToJson : this.state.isRawView});
         }
     }
 
     // See: https://stackoverflow.com/questions/9804777/how-to-test-if-a-string-is-json-or-not
-    isParsableToJson(value) {
+    isParsableToJson() {
+        const value = this.props.value;
         let isParsableToJson = true;
 
         if (!_.isString(value)) {

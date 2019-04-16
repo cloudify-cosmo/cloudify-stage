@@ -150,7 +150,7 @@ class InputsUtils {
             show &&
             <React.Fragment>
                 <Header as='h4'>{name}</Header>
-                {value}
+                <div>{value}</div>
             </React.Fragment>;
 
         const example = !_.isUndefined(defaultValue)

@@ -16,7 +16,7 @@ class InputsStepActions extends React.Component {
 
     static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
 
-    static dataPath = 'blueprint.inputs';
+    static inputsDataPath = 'blueprint.inputs';
 
     onNext(id) {
         const {InputsUtils} = Stage.Common;
@@ -25,7 +25,7 @@ class InputsStepActions extends React.Component {
             .then(this.props.fetchData)
             .then(({stepData}) => {
                 let inputsWithoutValues = {};
-                const blueprintInputsPlan = _.get(this.props.wizardData, InputsStepActions.dataPath, {});
+                const blueprintInputsPlan = _.get(this.props.wizardData, InputsStepActions.inputsDataPath, {});
                 const deploymentInputs = InputsUtils.getInputsToSend(blueprintInputsPlan, stepData, inputsWithoutValues);
 
                 if (!_.isEmpty(inputsWithoutValues)) {
@@ -58,16 +58,22 @@ class InputsStepContent extends React.Component {
 
     static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
 
-    static dataPath = 'blueprint.inputs';
+    static inputsDataPath = 'blueprint.inputs';
+    static dataTypesDataPath = 'blueprint.dataTypes';
 
     componentDidMount() {
-        let stepData = _.mapValues(
-            _.get(this.props.wizardData, InputsStepContent.dataPath, {}),
+        const inputs = _.get(this.props.wizardData, InputsStepContent.inputsDataPath, {}) ;
+        const dataTypes = _.get(this.props.wizardData, InputsStepContent.dataTypesDataPath, {});
+
+        let stepData = _.mapValues(inputs,
             (inputData, inputName) => {
                 if (!_.isUndefined(this.props.stepData[inputName])) {
                     return this.props.stepData[inputName];
                 } else {
-                    return Stage.Common.InputsUtils.getInputFieldInitialValue(inputData.default, inputData.type);
+                    const dataType = !_.isEmpty(dataTypes) && !!inputs[inputName].type
+                        ? dataTypes[inputs[inputName].type]
+                        : undefined;
+                    return Stage.Common.InputsUtils.getInputFieldInitialValue(inputData.default, inputData.type, dataType);
                 }
             }
         );
@@ -88,7 +94,7 @@ class InputsStepContent extends React.Component {
         this.setState({fileLoading: true});
 
         actions.doGetYamlFileContent(file).then((yamlInputs) => {
-            const plan = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
+            const plan = _.get(this.props.wizardData, InputsStepContent.inputsDataPath, {});
             let deploymentInputs = InputsUtils.getUpdatedInputs(plan, this.props.stepData, yamlInputs);
             this.props.onChange(this.props.id, {...deploymentInputs});
             this.setState({fileLoading: false});
@@ -109,9 +115,10 @@ class InputsStepContent extends React.Component {
 
     render() {
         let {Divider, Form, Table} = Stage.Basic;
-        let {InputsUtils, InputsHeader, YamlFileButton} = Stage.Common;
+        let {DataTypesButton, InputsUtils, InputsHeader, YamlFileButton} = Stage.Common;
 
-        const inputs = _.get(this.props.wizardData, InputsStepContent.dataPath, {});
+        const inputs = _.get(this.props.wizardData, InputsStepContent.inputsDataPath, {});
+        const dataTypes = _.get(this.props.wizardData, InputsStepContent.dataTypesDataPath, {});
         const noInputs = _.isEmpty(inputs);
 
         return (
@@ -125,6 +132,10 @@ class InputsStepContent extends React.Component {
                             <YamlFileButton onChange={this.handleYamlFileChange.bind(this)}
                                             dataType="deployment's inputs"
                                             fileLoading={this.state.fileLoading}/>
+                            {
+                                !_.isEmpty(dataTypes) &&
+                                <DataTypesButton types={dataTypes} />
+                            }
                             <Divider hidden style={{clear: 'both'}} />
                             <Table celled>
                                 <Table.Header>
@@ -140,10 +151,14 @@ class InputsStepContent extends React.Component {
                                     {
                                         _.map(_.keys(this.props.stepData), (inputName) => {
                                             if (!_.isNil(inputs[inputName])) {
+                                                const dataType = !_.isEmpty(dataTypes) && !!inputs[inputName].type
+                                                    ? dataTypes[inputs[inputName].type]
+                                                    : undefined;
                                                 const help = InputsUtils.getHelp(inputs[inputName].description,
                                                                                  inputs[inputName].type,
                                                                                  inputs[inputName].constraints,
-                                                                                 inputs[inputName].default);
+                                                                                 inputs[inputName].default,
+                                                                                 dataType);
                                                 return (
                                                     <Table.Row key={inputName} name={inputName}>
                                                         <Table.Cell collapsing>
