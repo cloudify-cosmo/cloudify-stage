@@ -1,7 +1,7 @@
 {
   "whiteLabel": {
     "enabled": false,
-    "logoUrl": "/console/images/Cloudify-icon.png",
+    "logoUrl": "/console/static/images/Cloudify-icon.png",
     "mainColor": "black",
     "pagesLocation": "",
     "headerTextColor": "white",

@@ -17,7 +17,7 @@ let styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
 
 const DEFAULT_MAIN_COLOR = '#000069';
 const DEFAULT_HEADER_TEXT_COLOR = '#d8e3e8';
-const DEFAULT_LOGO_URL = Consts.CONTEXT_PATH + '/images/Cloudify-logo.png';
+const DEFAULT_LOGO_URL = Consts.CONTEXT_PATH + '/static/images/Cloudify-logo.png';
 const DEFAULT_SIDEBAR_COLOR = '#d8e3e8';
 const DEFAULT_SIDEBAR_TEXT_COLOR = '#000000';
 
