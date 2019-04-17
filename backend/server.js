@@ -1,4 +1,3 @@
-'use strict';
 /**
  * Created by kinneretzin on 05/12/2016.
  */
@@ -103,8 +102,11 @@ app.use(contextPath + '/userData',
     expressStaticGzip(path.resolve(__dirname , '../dist/userData'), {enableBrotli: true, indexFromEmptyFile: false})
 );
 
-app.use(contextPath,
-    expressStaticGzip(path.resolve(__dirname , '../dist'), {enableBrotli: true, indexFromEmptyFile: false}));
+// Serving static content only in development mode. In production mode it is served by Nginx.
+if (process.env.NODE_ENV === 'development') {
+    app.use(contextPath + '/static',
+        expressStaticGzip(path.resolve(__dirname , '../dist/static'), {enableBrotli: true, indexFromEmptyFile: false}));
+}
 
 
 // API Routes
@@ -138,10 +140,11 @@ app.use([oldContextPath, `${oldContextPath}/*`], function (request, response){
     response.redirect(redirectUrl);
 });
 
-// BrowserHistory code
+
+// Serving index.html for routes defined in frontend - react-router (e.g. /console/login, /console/page/dashboard)
 app.get('*',function (request, response){
     logger.info('URL: "' + request.originalUrl + '". Sending index.html file.');
-    response.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
+    response.sendFile(path.resolve(__dirname, '../dist/static', 'index.html'));
 });
 
 ToursHandler.init().then(function(){

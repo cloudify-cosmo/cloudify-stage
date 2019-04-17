@@ -59,7 +59,7 @@ const rules = [
 
             options: {
                 limit: 100000,
-                name: 'fonts/[name].[ext]'
+                name: 'static/fonts/[name].[ext]'
             }
         }]
     }, {
@@ -69,7 +69,7 @@ const rules = [
 
             options: {
                 limit: 100000,
-                name: 'images/[name].[ext]'
+                name: 'static/images/[name].[ext]'
             }
         }]
     }
@@ -93,14 +93,14 @@ module.exports = [
         },
         output: {
             path: path.join(__dirname, 'dist'),
-            filename: 'js/[name].js',
+            filename: 'static/js/[name].js',
             publicPath: Consts.CONTEXT_PATH
         },
         plugins: [
             new CopyWebpackPlugin([
                 {
                     from: 'app/images',
-                    to: 'images'
+                    to: 'static/images'
                 }
             ]),
             new CopyWebpackPlugin([
@@ -131,7 +131,7 @@ module.exports = [
             new HtmlWebpackPlugin({
                 template: 'app/index.tmpl.html',
                 inject: 'body',
-                filename: 'index.html',
+                filename: 'static/index.html',
                 chunks: ['main.bundle']
             }),
             new webpack.optimize.OccurrenceOrderPlugin(),
