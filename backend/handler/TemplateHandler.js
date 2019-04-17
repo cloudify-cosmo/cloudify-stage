@@ -12,7 +12,7 @@ const ServerSettings = require('../serverSettings');
 const Utils = require('../utils');
 const AuthHandler = require('./AuthHandler');
 
-const logger = require('log4js').getLogger('TemplateHandler');
+const logger = require('./LoggerHandler').getLogger('TemplateHandler');
 
 const builtInTemplatesFolder = Utils.getResourcePath('templates', false);
 const userTemplatesFolder = Utils.getResourcePath('templates', true);

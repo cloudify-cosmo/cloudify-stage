@@ -9,7 +9,6 @@ const Utils = require('./utils');
 
 const app = require('../conf/app.json');
 const manager = require('../conf/manager.json');
-const log4jsConfig = require('../conf/log4jsConfig.json');
 let userConfig = require('../conf/userConfig.json');
 
 const userDataConfigPath = Utils.getResourcePath('userConfig.json', true);
@@ -40,8 +39,7 @@ module.exports = {
         let config = {
             app: _.merge(app, userConfig),
             manager: manager,
-            mode: mode,
-            log4jsConfig: log4jsConfig
+            mode: mode
         };
 
         _.merge(config, me);

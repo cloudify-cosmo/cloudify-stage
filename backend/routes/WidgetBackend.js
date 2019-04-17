@@ -7,7 +7,7 @@ var express = require('express');
 var passport = require('passport');
 
 var BackendHandler = require('../handler/BackendHandler');
-var logger = require('log4js').getLogger('WidgetBackend');
+var logger = require('../handler/LoggerHandler').getLogger('WidgetBackend');
 var router = express.Router();
 
 router.use(passport.authenticate('token', {session: false}));

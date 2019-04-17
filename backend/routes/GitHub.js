@@ -9,7 +9,7 @@ var _ = require('lodash');
 var ManagerHandler = require('../handler/ManagerHandler');
 
 var router = express.Router();
-var logger = require('log4js').getLogger('GitHub');
+var logger = require('../handler/LoggerHandler').getLogger('GitHub');
 
 var params = config.get().app.github;
 var authList = {};

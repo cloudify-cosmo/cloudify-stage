@@ -3,7 +3,7 @@
  */
 
 const _ = require('lodash');
-const logger = require('log4js').getLogger('argsReader');
+const logger = require('./handler/LoggerHandler').getLogger('argsReader');
 
 let ServerSettings = {
 

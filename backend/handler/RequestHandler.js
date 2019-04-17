@@ -4,7 +4,7 @@
  */
 
 var req = require('request');
-var logger = require('log4js').getLogger('RequestHandler');
+var logger = require('./LoggerHandler').getLogger('RequestHandler');
 
 module.exports = (function() {
     function request(method, requestUrl, options, onSuccess, onError) {

@@ -11,7 +11,7 @@ var passport = require('passport');
 var bodyParser = require('body-parser');
 
 var router = express.Router();
-var logger = require('log4js').getLogger('Monitoring');
+var logger = require('../handler/LoggerHandler').getLogger('Monitoring');
 
 router.use(passport.authenticate('token', {session: false}));
 router.use(bodyParser.json());

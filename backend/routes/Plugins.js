@@ -13,7 +13,7 @@ var archiver = require('archiver');
 var ManagerHandler = require('../handler/ManagerHandler');
 var RequestHandler = require('../handler/RequestHandler');
 
-var logger = require('log4js').getLogger('Plugins');
+var logger = require('../handler/LoggerHandler').getLogger('Plugins');
 
 
 function checkParams(req, res, next) {

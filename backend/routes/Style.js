@@ -11,7 +11,7 @@ let config = require('../config').get();
 let router = express.Router();
 const Consts = require('../consts');
 const Utils = require('../utils');
-var logger = require('log4js').getLogger('Style');
+var logger = require('../handler/LoggerHandler').getLogger('Style');
 
 let styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
 

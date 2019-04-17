@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var logger = require('log4js').getLogger('SAML');
+var logger = require('./handler/LoggerHandler').getLogger('SAML');
 
 
 exports.validate = (samlConfig) => {

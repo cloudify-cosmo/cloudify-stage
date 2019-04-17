@@ -8,9 +8,7 @@ const Umzug = require('umzug');
 const _ = require('lodash');
 
 const sequelize = db.sequelize;
-const log4js = require('log4js');
-let logger = log4js.getLogger('DBMigration');
-logger.level = 'debug';
+let logger = require('./handler/LoggerHandler').getLogger('DBMigration');
 
 const umzug = new Umzug({
     storage: 'sequelize',
