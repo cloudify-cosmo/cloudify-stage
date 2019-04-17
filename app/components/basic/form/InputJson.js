@@ -10,6 +10,35 @@ import { TextArea } from 'semantic-ui-react';
 
 import { Icon, Label, List, Popup } from '../index';
 
+class ReactJsonViewWrapper extends Component {
+
+    static propTypes = {
+        value: PropTypes.object,
+        divStyle: PropTypes.object,
+        onChange: PropTypes.func
+    };
+
+    static defaultProps = {
+        value: {},
+        divStyle: {},
+        onChange: _.noop
+    };
+
+    shouldComponentUpdate(nextProps) {
+        return !_.isEqual(nextProps, this.props);
+    }
+
+    render() {
+        return (
+            <div style={this.props.divStyle}>
+                <ReactJsonView src={this.props.value} name={null} enableClipboard={false} defaultValue=''
+                               onAdd={this.props.onChange} onEdit={this.props.onChange} onDelete={this.props.onChange}
+                />
+            </div>
+        )
+    }
+}
+
 /**
  * InputJson is a component providing text or rich editor for JSON-like data
  *
@@ -121,6 +150,7 @@ export default class InputJson extends Component {
         const value = this.props.value;
         const stringValue = Json.getStringValue(value);
         const jsonValue = Json.getTypedValue(value);
+
         const divStyle = {
             backgroundColor: this.props.error ? '#fff6f6' : '',
             border: `1px solid ${this.props.error ? 'rgb(224, 180, 180)' : 'rgba(34,36,38,.15)'}`,
@@ -136,11 +166,7 @@ export default class InputJson extends Component {
                     ?
                         <TextArea name={this.props.name} value={stringValue} onChange={this.onChangeString} />
                     :
-                        <div style={divStyle}>
-                            <ReactJsonView src={jsonValue} name={null} enableClipboard={false} defaultValue=''
-                                           onAdd={this.onChangeJson} onEdit={this.onChangeJson} onDelete={this.onChangeJson}
-                            />
-                        </div>
+                        <ReactJsonViewWrapper value={jsonValue} divStyle={divStyle} onChange={this.onChangeJson} />
                 }
                 {
                     this.state.isMouseOver &&
