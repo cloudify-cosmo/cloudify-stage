@@ -6,11 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "pm2 start --env production",
-    "stop": "pm2 stop stage-backend",
-    "restart": "pm2 restart stage-backend",
-    "delete": "pm2 delete stage-backend",
+    "stop": "pm2 kill",
+    "restart": "pm2 reload stage-backend",
     "devStart": "pm2 start --env development --watch --node-args=\"--trace-warnings\" && pm2 logs",
-    "devDebug": "pm2 start --env development --watch --node-args=\"--inspect\" && pm2 logs",
+    "devTrace": "cross-env NODE_ENV=development nodemon --trace-warnings server.js",
+    "devDebug": "cross-env NODE_ENV=development nodemon --inspect server.js",
     "db-migrate-create": "sequelize migration:create --config ../conf/app.json",
     "db-migrate": "node migration up",
     "db-migrate-status": "node migration status",
@@ -59,5 +59,11 @@
     "umzug": "^1.12.0",
     "vm2": "^3.5.2",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  },
+  "nodemonConfig": {
+    "delay": "2000"
   }
 }
