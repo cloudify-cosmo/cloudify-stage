@@ -8,13 +8,14 @@ import { expect } from 'chai';
 import Help from '../../app/components/Help.js';
 import * as BasicComponents from '../../app/components/basic';
 import sinon from 'sinon';
+import StageUtils from '../../app/utils/stageUtils';
 
 describe('(Component) Help', () => {
     let wrapper = null;
     let dropdownItemComponents = null;
-    let redirectToPage = sinon.spy();
+    let redirectToPage = sinon.spy(StageUtils.Url, 'redirectToPage');
     let onAbout = sinon.spy();
-    global.Stage = {Basic: BasicComponents, Utils: { redirectToPage }};
+    global.Stage = {Basic: BasicComponents};
     let {Dropdown} = Stage.Basic;
     wrapper = mount(<Help onAbout={onAbout} />);
     dropdownItemComponents = wrapper.find(Dropdown.Item);

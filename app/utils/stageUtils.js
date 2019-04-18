@@ -52,10 +52,10 @@ export default class StageUtils {
     }
 
     /**
-     * @deprecated use TimeUtils.formatTimestamp
+     * @deprecated use TimeUtils.formatLocalTimestamp
      */
     static formatLocalTimestamp(timestamp, outputPattern='DD-MM-YYYY HH:mm', inputPattern=undefined) {
-        return TimeUtils.formatTimestamp(timestamp, outputPattern, inputPattern);
+        return TimeUtils.formatLocalTimestamp(timestamp, outputPattern, inputPattern);
     }
 
     /**
