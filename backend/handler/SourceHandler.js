@@ -12,7 +12,7 @@ const config = require('../config').get();
 const ArchiveHelper = require('./ArchiveHelper');
 const Utils = require('../utils');
 
-let logger = require('log4js').getLogger('SourceHandler');
+let logger = require('./LoggerHandler').getLogger('SourceHandler');
 const browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourcesDir);
 const lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
 

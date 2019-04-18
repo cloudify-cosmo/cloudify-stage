@@ -12,7 +12,7 @@ var router = express.Router();
 var AuthHandler = require('../handler/AuthHandler');
 var ManagerHandler = require('../handler/ManagerHandler');
 
-var logger = require('log4js').getLogger('ServerProxy');
+var logger = require('../handler/LoggerHandler').getLogger('ServerProxy');
 
 function _errorHandler(url, res, err) {
     const isTimeout = err.code === 'ETIMEDOUT';

@@ -5,7 +5,7 @@ const express = require('express');
 const request = require('request');
 
 let router = express.Router();
-let logger = require('log4js').getLogger('External');
+let logger = require('../handler/LoggerHandler').getLogger('External');
 
 function _pipeRequest(req, res, next, url, queryString) {
     logger.debug(`Piping get request to url: ${url} with query string: ${queryString}`);

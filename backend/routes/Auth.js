@@ -10,7 +10,7 @@ let AuthHandler = require('../handler/AuthHandler');
 const Consts = require('../consts');
 
 let router = express.Router();
-let logger = require('log4js').getLogger('Auth');
+let logger = require('../handler/LoggerHandler').getLogger('Auth');
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));

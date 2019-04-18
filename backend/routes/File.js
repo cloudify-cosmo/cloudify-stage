@@ -7,7 +7,7 @@ var router = express.Router();
 var passport = require('passport');
 var multer  = require('multer');
 var upload = multer({limits: {fileSize: 50000}});
-var logger = require('log4js').getLogger('File');
+var logger = require('../handler/LoggerHandler').getLogger('File');
 var yaml = require('js-yaml');
 
 function checkIfFileUploaded(req, res, next) {

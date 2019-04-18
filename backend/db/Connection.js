@@ -7,7 +7,7 @@ var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 
-var logger = require('log4js').getLogger('DBConnection');
+var logger = require('../handler/LoggerHandler').getLogger('DBConnection');
 
 var excludes = ['.', 'Connection.js', 'types'];
 

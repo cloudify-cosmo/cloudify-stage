@@ -9,7 +9,7 @@ var express = require('express');
 var passport = require('passport');
 
 var router = express.Router();
-var logger = require('log4js').getLogger('Applications');
+var logger = require('../handler/LoggerHandler').getLogger('Applications');
 var db = require('../db/Connection');
 
 router.use(passport.authenticate('token', {session: false}));

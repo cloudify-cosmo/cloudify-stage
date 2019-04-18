@@ -10,7 +10,7 @@ var config = require('../config').get();
 var consts = require('../consts');
 const {NodeVM, VMScript} = require('vm2');
 
-var logger = require('log4js').getLogger('WidgetBackend');
+var logger = require('./LoggerHandler').getLogger('WidgetBackend');
 
 var userWidgetsFolder = '';
 var builtInWidgetsFolder = '';

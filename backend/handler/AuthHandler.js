@@ -3,7 +3,7 @@
  */
 
 let ManagerHandler = require('./ManagerHandler');
-let logger = require('log4js').getLogger('AuthHandler');
+let logger = require('./LoggerHandler').getLogger('AuthHandler');
 let _ = require('lodash');
 let ServerSettings = require('../serverSettings');
 

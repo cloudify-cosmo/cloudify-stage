@@ -7,7 +7,7 @@ const pathlib = require('path');
 
 const Utils = require('./../utils');
 const TemplateHandler = require('./TemplateHandler');
-const logger = require('log4js').getLogger('ToursHandler');
+const logger = require('./LoggerHandler').getLogger('ToursHandler');
 
 const builtInToursFolder = Utils.getResourcePath('tours', false);
 

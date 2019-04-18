@@ -6,7 +6,7 @@
 var config = require('../config').get();
 var SamlStrategy = require('passport-saml').Strategy;
 var fs = require('fs');
-var logger = require('log4js').getLogger('SAML');
+var logger = require('../handler/LoggerHandler').getLogger('SAML');
 
 
 module.exports = () => {

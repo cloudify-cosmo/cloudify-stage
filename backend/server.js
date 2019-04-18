@@ -7,15 +7,10 @@ const expressStaticGzip = require('express-static-gzip');
 const express = require('express');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
 
 const config = require('./config');
 const Consts = require('./consts');
-
-// Initialize log4js
-let log4js = require('log4js');
-let log4jsConfig = config.get().log4jsConfig;
-let LoggerHandler = require('./handler/LoggerHandler');
-LoggerHandler.init(log4jsConfig);
 
 // Initialize the DB connection
 let db = require('./db/Connection');
@@ -50,15 +45,16 @@ let Plugins = require('./routes/Plugins');
 let ToursHandler = require('./handler/ToursHandler');
 let WidgetHandler = require('./handler/WidgetHandler');
 let TemplateHandler = require('./handler/TemplateHandler');
+let LoggerHandler = require('./handler/LoggerHandler');
 
-let logger = log4js.getLogger('Server');
+let logger = LoggerHandler.getLogger('Server');
 
 const contextPath = Consts.CONTEXT_PATH;
 const oldContextPath = '/stage';
 
 let app = express();
 
-app.use(log4js.connectLogger(log4js.getLogger('http'), { level: 'INFO'}));
+app.use(morgan('short', {stream: LoggerHandler.getStream('Express')}));
 
 app.all('/', function (request, response){
     logger.info('Redirecting to "' + contextPath + '".');

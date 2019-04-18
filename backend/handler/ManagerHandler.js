@@ -6,7 +6,7 @@
 var _ = require('lodash');
 var fs = require('fs-extra');
 var config = require('../config').get();
-var logger = require('log4js').getLogger('ManagerHandler');
+var logger = require('./LoggerHandler').getLogger('ManagerHandler');
 var RequestHandler = require('./RequestHandler');
 
 module.exports = (function() {

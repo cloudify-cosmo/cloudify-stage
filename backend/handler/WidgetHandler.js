@@ -9,7 +9,7 @@ const pathlib = require('path');
 const mkdirp = require('mkdirp');
 const _ = require('lodash');
 
-const logger = require('log4js').getLogger('WidgetHandler');
+const logger = require('./LoggerHandler').getLogger('WidgetHandler');
 
 const config = require('../config').get();
 const Utils = require('../utils');
