@@ -17,8 +17,6 @@ module.exports = {
         managerData: {
             selector: '.managerMenu',
             elements: {
-                ip: 'span',
-                version: 'span.managerVersion',
                 statusIcon: 'i.signal',
                 statusIconGreen: 'i.signal.green'
             }

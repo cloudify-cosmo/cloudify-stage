@@ -14,6 +14,11 @@ module.exports = {
     WIDGET_ID_HEADER: 'widget-id',
     TOKEN_COOKIE_NAME: 'XSRF-TOKEN',
 
+    EDITION: {
+        PREMIUM: 'premium',
+        COMMUNITY: 'community'
+    },
+
     SERVER_HOST: 'localhost',
     SERVER_PORT: 8088
 };

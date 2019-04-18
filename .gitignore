@@ -2,7 +2,6 @@
 .vscode
 dist
 node_modules
-bower_components
 /logs
 /backend/logs
 
@@ -10,12 +9,13 @@ stage.tar.gz
 
 reports
 selenium-debug.log
+/test/nightwatch/screenshots
+/test/cypress/screenshots
+/test/cypress/videos
 
-/e2e/screenshots
 /doc/www
 /conf/me.json
 
-/resources
 /userData
 
 /widgets/*/backend.js

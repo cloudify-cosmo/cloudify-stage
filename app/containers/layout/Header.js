@@ -12,8 +12,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         manager: state.manager || {},
         mode: state.config.mode,
-        config: state.config,
-        widgetDefinitions: state.widgetDefinitions
+        pageTitle: _.get(state, 'config.app.whiteLabel.pageTitle')
     }
 };
 

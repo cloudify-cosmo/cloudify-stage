@@ -12,11 +12,25 @@ export default {
     LOGIN_PAGE_PATH: '/login',
     LOGOUT_PAGE_PATH: '/logout',
     MAINTENANCE_PAGE_PATH: '/maintenance',
+    LICENSE_PAGE_PATH: '/license',
 
     USER_DATA_PATH: '/userData',
     APP_DATA_PATH: '/appData',
 
     TOKEN_COOKIE_NAME: 'XSRF-TOKEN',
+
+    EDITION: {
+        PREMIUM: 'premium',
+        COMMUNITY: 'community',
+    },
+
+    LICENSE: {
+        EMPTY: 'no_license',
+        EXPIRED: 'expired_license',
+        ACTIVE: 'active_license',
+    },
+    NO_LICENSE_ERROR_CODE: 'missing_cloudify_license',
+    EXPIRED_LICENSE_ERROR_CODE: 'expired_cloudify_license',
 
     DEFAULT_TENANT: 'default_tenant',
     MODE_MAIN: 'main',
@@ -28,7 +42,9 @@ export default {
         STAGE_MAINTENANCE_MODE: 'stage_maintenance_mode',
         STAGE_CONFIGURE: 'stage_configure',
         STAGE_TEMPLATE_MANAGEMENT: 'stage_template_management',
-        CREATE_GLOBAL_RESOURCE: 'create_global_resource'
+        CREATE_GLOBAL_RESOURCE: 'create_global_resource',
+        LICENSE_LIST: 'license_list',
+        LICENSE_UPLOAD: 'license_upload'
     },
     visibility: {
         PRIVATE: {name: 'private', icon: 'lock', color: 'red', title: 'Private resource'},

@@ -7,13 +7,6 @@ a:hover {
   cursor: pointer;
 }
 
-.logo {
-  img {
-    height: 45px;
-    width: 165px;
-    margin: 4px;
-  }
-}
 .loadingSegment {
     height: 100%;
     z-index: 5 !important;
@@ -30,16 +23,21 @@ a:hover {
   display: inline-block;
 }
 
-div.headerBar {
-  height: 55px;
-}
-
 .sidebar-button{
   color: white;
   padding: 15px;
+}
+
+.show-on-small-screen {
   @media (min-width: 992px) {
     display: none !important;
-   }
+  }
+}
+
+.hide-on-small-screen {
+  @media (max-width: 800px) {
+    display: none !important;
+  }
 }
 
 .main {
@@ -284,20 +282,6 @@ div.headerBar {
   }
 }
 
-.coloredContainer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 55px;
-  bottom: 0;
-
-  .ui.segment.messageSegment {
-    max-width: 400px !important;
-    top: 120px;
-    margin: auto;
-  }
-}
-
 .uploadSnapshot {
   float: right;
 }
@@ -363,19 +347,19 @@ div.headerBar {
   }
 }
 
-.logoPage,.maintenancePage {
+.logoPage.ui.segment {
   margin: 0 !important;
   padding: 0 !important;
-}
-
-.configManager.ui.segment, .logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
+  overflow: auto;
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
+  border: none !important;
+  border-radius: 0 !important;
 
-  .configManagerContainer, .loginContainer {
+  .loginContainer {
     margin: auto;
     width: 400px;
     height: 170px;
@@ -384,28 +368,20 @@ div.headerBar {
     right: 0;
     top: 0;
     bottom: 0;
-  }
 
-  .maintenanceContainer {
-    margin: auto;
-    width: 600px;
-  }
-
-  .loginContainer {
     .loginHeader {
       text-align: center;
       margin-bottom: 30px;
+    }
+
+    button {
+      width: 100%;
     }
   }
 
   .loginContainerExtended {
     height: 400px;
   }
-
-  button {
-    width: 100%;
-  }
-
 }
 
 .keyIndicator {

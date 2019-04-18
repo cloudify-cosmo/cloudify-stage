@@ -2,7 +2,7 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-import {v4} from 'node-uuid';
+import v4 from 'uuid/v4';
 import * as types from '../actions/types';
 import StageUtils from '../utils/stageUtils';
 

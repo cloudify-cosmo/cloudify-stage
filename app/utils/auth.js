@@ -30,8 +30,25 @@ export default class Auth {
         return !!Cookies.get(Consts.TOKEN_COOKIE_NAME);
     }
 
-    static getRBACConfig(managerData){
-        var internal = new Internal(managerData);
-        return internal.doGet('/auth/RBAC', null, true);
+    static isProductOperational(license) {
+        const isLicenseRequired = _.get(license, 'isRequired', false);
+        const isTrialLicense = _.get(license, 'data.trial', false);
+        const licenseStatus = _.get(license, 'status', Consts.LICENSE.EMPTY);
+
+        return isLicenseRequired
+            ? isTrialLicense
+                ? _.isEqual(licenseStatus, Consts.LICENSE.ACTIVE)
+                : !_.isEqual(licenseStatus, Consts.LICENSE.EMPTY)
+            : true;
+    }
+
+    static getLicenseStatus(licenseData) {
+        if (_.isEmpty(licenseData)) {
+            return Consts.LICENSE.EMPTY;
+        } else if (licenseData.expired) {
+            return Consts.LICENSE.EXPIRED;
+        } else {
+            return Consts.LICENSE.ACTIVE;
+        }
     }
 }

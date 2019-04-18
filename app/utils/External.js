@@ -6,7 +6,7 @@ import 'isomorphic-fetch';
 import {saveAs} from 'file-saver';
 import StageUtils from './stageUtils';
 import Interceptor from './Interceptor';
-import {UNAUTHORIZED_ERR} from '../utils/ErrorCodes';
+import {LICENSE_ERR, UNAUTHORIZED_ERR} from '../utils/ErrorCodes';
 
 import log from 'loglevel';
 let logger = log.getLogger('External');
@@ -175,7 +175,12 @@ export default class External {
 
         if (data) {
             try {
-                options.body = JSON.stringify(data)
+                if (_.isString(data)) {
+                    options.body = data;
+                    _.merge(options.headers, this._contentType('text/plain'));
+                } else {
+                    options.body = JSON.stringify(data);
+                }
             } catch (e) {
                 logger.error('Error stringifying data. URL: '+actualUrl+' data ',data);
             }
@@ -209,6 +214,10 @@ export default class External {
         return false;
     }
 
+    _isLicenseError(response, body){
+        return false;
+    }
+
     _checkStatus(response) {
         if (response.ok) {
             return response;
@@ -225,11 +234,16 @@ export default class External {
         return response.text()
             .then(resText=>{
                 try {
-                    var resJson = JSON.parse(resText);
+                    let resJson = JSON.parse(resText);
+                    let message = StageUtils.resolveMessage(resJson.message);
 
-                    var message = StageUtils.resolveMessage(resJson.message);
-
-                    return Promise.reject({message: message || response.statusText, status: response.status});
+                    if (this._isLicenseError(response, resJson)) {
+                        let interceptor = Interceptor.getInterceptor();
+                        interceptor.handleLicenseError(resJson.error_code);
+                        return Promise.reject(LICENSE_ERR);
+                    } else {
+                        return Promise.reject({message: message || response.statusText, status: response.status});
+                    }
                 } catch (e) {
                     logger.error(e);
                     return Promise.reject({message: response.statusText, status: response.status});
@@ -242,8 +256,8 @@ export default class External {
         return `${url}${queryString}`;
     }
 
-    _contentType() {
-        return {'content-type': 'application/json'};
+    _contentType(type) {
+        return {'content-type': type || 'application/json'};
     }
 
     _buildHeaders() {

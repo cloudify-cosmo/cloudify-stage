@@ -6,20 +6,14 @@ let express = require('express');
 let path = require('path');
 let fs = require('fs');
 let ejs = require('ejs');
+let _ = require('lodash');
 
 let config = require('../config').get();
 let router = express.Router();
-const Consts = require('../consts');
 const Utils = require('../utils');
 var logger = require('../handler/LoggerHandler').getLogger('Style');
 
 let styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
-
-const DEFAULT_MAIN_COLOR = '#000069';
-const DEFAULT_HEADER_TEXT_COLOR = '#d8e3e8';
-const DEFAULT_LOGO_URL = Consts.CONTEXT_PATH + '/static/images/Cloudify-logo.png';
-const DEFAULT_SIDEBAR_COLOR = '#d8e3e8';
-const DEFAULT_SIDEBAR_TEXT_COLOR = '#000000';
 
 function shadeColor(color, percent) {
     var num=parseInt(color.slice(1),16); // Remove the '#'
@@ -31,19 +25,19 @@ function shadeColor(color, percent) {
 }
 
 router.get('/', function(req, res, next) {
-    let whiteLabel = config.app.whiteLabel;
+    const whiteLabel = config.app.whiteLabel;
     let stylesheetTemplate = fs.readFileSync(styleTemplateFile, 'utf8');
 
     let stylesheet = ejs.render(stylesheetTemplate, {
-        logoUrl: whiteLabel.enabled && whiteLabel.logoUrl || DEFAULT_LOGO_URL,
-        mainColor: whiteLabel.enabled && whiteLabel.mainColor || DEFAULT_MAIN_COLOR,
-        headerTextColor: whiteLabel.enabled && whiteLabel.headerTextColor || DEFAULT_HEADER_TEXT_COLOR,
-        sidebarColor: whiteLabel.enabled && whiteLabel.sidebarColor || DEFAULT_SIDEBAR_COLOR,
-        sideBarHoverActiveColor: shadeColor(whiteLabel.enabled && whiteLabel.sidebarColor || DEFAULT_SIDEBAR_COLOR,0.1),
-        sidebarTextColor: whiteLabel.enabled && whiteLabel.sidebarTextColor || DEFAULT_SIDEBAR_TEXT_COLOR
+        logoUrl: whiteLabel.logoUrl,
+        mainColor: whiteLabel.mainColor,
+        headerTextColor: whiteLabel.headerTextColor,
+        sidebarColor: whiteLabel.sidebarColor,
+        sideBarHoverActiveColor: shadeColor(whiteLabel.sidebarColor,0.1),
+        sidebarTextColor: whiteLabel.sidebarTextColor
     });
 
-    if (whiteLabel.enabled && !!whiteLabel.customCssPath) {
+    if (!_.isEmpty(whiteLabel.customCssPath)) {
         const customCssPath = Utils.getResourcePath(whiteLabel.customCssPath, true);
         try {
             const customCss = fs.readFileSync(customCssPath, 'utf8');

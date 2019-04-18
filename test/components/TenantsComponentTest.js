@@ -25,7 +25,7 @@ describe('(Component) Tenants', () => {
 
         wrapper = mount(<Tenants manager={manager}
                                  onTenantChange={()=>{}}
-                                 fetchTenants={()=>{}}/>);
+                                 onTenantsRefresh={()=>{}} />);
     });
 
     it('renders...', () => {

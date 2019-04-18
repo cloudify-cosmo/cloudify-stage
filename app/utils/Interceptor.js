@@ -2,7 +2,9 @@
  * Created by edenp on 08/11/2017.
  */
 
-import {unauthorized} from '../actions/auth';
+import {showAppError} from '../actions/auth';
+import Consts from './consts';
+
 var singleton = null;
 
 export default class Interceptor {
@@ -11,7 +13,15 @@ export default class Interceptor {
     }
 
     handle401(){
-        this._store.dispatch(unauthorized('Unauthorized - Invalid Credentials'));
+        this._store.dispatch(showAppError('Unauthorized - Invalid Credentials'));
+    }
+
+    handleLicenseError(errorCode){
+        if (errorCode === Consts.NO_LICENSE_ERROR_CODE) {
+            this._store.dispatch(showAppError('No active license'));
+        } else if (errorCode === Consts.EXPIRED_LICENSE_ERROR_CODE) {
+            this._store.dispatch(showAppError('License has expired'));
+        }
     }
 
     static create(store){

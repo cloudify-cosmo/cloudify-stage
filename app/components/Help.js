@@ -3,15 +3,20 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import {Dropdown, Icon} from './basic';
 import StageUtils from './../utils/stageUtils';
 
 export default class Help extends Component {
 
-    constructor(props,context) {
-        super(props,context);
+    constructor(props) {
+        super(props);
     }
+
+    static propTypes = {
+        onAbout: PropTypes.func.isRequired
+    };
 
     render() {
         let {redirectToPage} = StageUtils.Url;
@@ -27,6 +32,9 @@ export default class Help extends Component {
                                    onClick={redirectToPage.bind(this, 'https://cloudify.co/knowledge-base')} />
                     <Dropdown.Item icon='comments' text='Contact Us'
                                    onClick={redirectToPage.bind(this, 'https://cloudify.co/community')} />
+                    <Dropdown.Divider />
+                    <Dropdown.Item icon='info circle' text='About'
+                                   onClick={this.props.onAbout} />
                 </Dropdown.Menu>
             </Dropdown>
         );

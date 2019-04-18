@@ -7,9 +7,8 @@ import {loadWidgetDefinitions} from './widgets';
 import {getTenants} from './tenants';
 import {getClientConfig} from './clientConfig';
 import {loadOrCreateUserAppData} from './userApp';
-import {getUserData, getRBACConfig} from './managers';
+import {getUserData} from './managers';
 import {getStatus} from '../actions/status';
-import {getVersion} from '../actions/version';
 import {NO_TENANTS_ERR} from '../utils/ErrorCodes';
 
 export function setAppLoading(isLoading) {
@@ -38,7 +37,6 @@ export function intialPageLoad() {
                     return Promise.reject(NO_TENANTS_ERR);
                 }
             })
-            .then(() => dispatch(getRBACConfig()))
             .then(() => dispatch(getUserData()))
             .then(() => {
                 return Promise.all([
@@ -46,8 +44,7 @@ export function intialPageLoad() {
                     dispatch(loadTours()),
                     dispatch(loadWidgetDefinitions()),
                     dispatch(getClientConfig()),
-                    dispatch(getStatus()),
-                    dispatch(getVersion())
+                    dispatch(getStatus())
                 ]);
             })
             .then(() => {

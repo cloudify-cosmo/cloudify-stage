@@ -9,8 +9,10 @@ import { connect } from 'react-redux';
 import Consts from '../utils/consts';
 import Auth from '../utils/auth';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     return {
+        isProductOperational: Auth.isProductOperational(_.get(state, 'manager.license', {})),
+        isLicenseRequired: _.get(state, 'manager.license.isRequired', false),
         isLoggedIn: Auth.isLoggedIn(),
         isInMaintenanceMode: state.manager && state.manager.maintenance === Consts.MAINTENANCE_ACTIVATED,
         isSamlEnabled: _.get(state, 'config.app.saml.enabled', false),

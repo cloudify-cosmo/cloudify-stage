@@ -10,7 +10,8 @@ import Tenants from '../../containers/Tenants';
 import Manager from '../../containers/Manager';
 import Users from '../../containers/Users';
 import Help from '../../containers/Help';
-import Logo from '../../containers/Logo';
+import Banner from '../../containers/banner/Banner';
+import AboutModal from '../../containers/AboutModal';
 import ResetPagesModal from '../ResetPagesModal.js';
 import {Icon} from './../basic';
 import Consts from '../../utils/consts';
@@ -22,13 +23,15 @@ export default class Header extends Component {
 
         this.state = {
             showConfigureModal: false,
-            showResetPagesConfirm: false
+            showResetPagesConfirm: false,
+            showAboutModal: false
         }
     }
 
     static propTypes = {
         manager: PropTypes.any.isRequired,
         mode: PropTypes.string.isRequired,
+        pageTitle: PropTypes.string.isRequired,
         onResetPages: PropTypes.func.isRequired,
         onSidebarOpen : PropTypes.func.isRequired,
     };
@@ -39,10 +42,7 @@ export default class Header extends Component {
     }
 
     componentDidMount() {
-        let whiteLabel = this.props.config.app.whiteLabel;
-        if (whiteLabel.enabled && whiteLabel.pageTitle) {
-            document.title = whiteLabel.pageTitle;
-        }
+        document.title = this.props.pageTitle;
     }
 
     _isModeMain() {
@@ -53,27 +53,18 @@ export default class Header extends Component {
         return this.props.mode === Consts.MODE_CUSTOMER;
     }
 
-    _handleReset() {
-        this.setState({showResetPagesConfirm: true});
-    }
-
     render() {
 
         return (
             <div className="ui top fixed menu inverted secondary headerBar">
-                <Icon
-                    link
-                    name="content"
-                    className="sidebar-button"
-                    size="large"
-                    onClick={() => this.props.onSidebarOpen()}
-                />
-                <Logo />
+                <Icon link name="content" className="sidebar-button show-on-small-screen" size="large"
+                      onClick={this.props.onSidebarOpen} />
+                <Banner />
 
                 <div className="right menu">
                     {
                         !this._isModeCustomer() &&
-                        <div className='item'>
+                        <div className='item' style={{margin:0, padding: 0}}>
                             <Manager manager={this.props.manager}/>
                         </div>
                     }
@@ -81,17 +72,20 @@ export default class Header extends Component {
                         this._isModeMain() &&
                         <Tenants manager={this.props.manager}/>
                     }
-                    <Help />
+                    <Help onAbout={() => this.setState({showAboutModal: true})} />
 
                     <Users manager={this.props.manager}
                            showAllOptions={!this._isModeCustomer()}
-                           onReset={this._handleReset.bind(this)} />
+                           onReset={() => this.setState({showResetPagesConfirm: true})} />
                 </div>
 
                 <ResetPagesModal open={this.state.showResetPagesConfirm}
                                  tenants={this.props.manager.tenants}
                                  onConfirm={(tenantList)=>{this.setState({showResetPagesConfirm: false}); this.props.onResetPages(tenantList)}}
                                  onHide={()=> this.setState({showResetPagesConfirm: false})} />
+
+                <AboutModal open={this.state.showAboutModal}
+                            onHide={()=> this.setState({showAboutModal: false})} />
             </div>
         );
     }

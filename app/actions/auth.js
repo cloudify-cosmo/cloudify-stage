@@ -7,7 +7,7 @@ import {clearContext} from './context';
 import {setAppError} from './app';
 import Consts from './../utils/consts';
 
-export function unauthorized(err) {
+export function showAppError(err) {
     return function (dispatch) {
         dispatch(clearContext());
         dispatch(setAppError(err));
