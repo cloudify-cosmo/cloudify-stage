@@ -185,7 +185,7 @@ module.exports = {
                 inputRow: (inputName) => `tr[name='${inputName}']`,
                 inputStatus: (inputName, actionRequired) =>
                     `tr[name='${inputName}'] ${actionRequired ? 'i.yellow.warning.icon' : 'i.green.check.icon'}`,
-                inputInput: (inputName) => `tr[name='${inputName}'] input[name='${inputName}']`,
+                inputInput: (inputName, inputType = 'string') => `tr[name='${inputName}'] ${inputType === 'string' ? 'input' : 'textarea'}[name='${inputName}']`,
             },
             commands: [
                 {
@@ -199,8 +199,8 @@ module.exports = {
                         });
                         return this;
                     },
-                    setInputValue: function (inputName, inputValue) {
-                        return this.setElementValue(this.props.inputInput(inputName), inputValue);
+                    setInputValue: function (inputName, inputValue, type) {
+                        return this.setElementValue(this.props.inputInput(inputName, type), inputValue);
                     }
                 }
             ]

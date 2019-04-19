@@ -20,10 +20,10 @@ module.exports = {
             .waitForElementPresent('@tree')
             .waitForElementPresent('@blueprintHeader')
             .assert.containsText('@blueprintHeader', client.page.blueprints().props.testBlueprint)
-            .waitForElementPresent('@blueprintYaml')
-            .assert.containsText('@blueprintYaml', client.page.blueprintSources().props.blueprintYaml)
+            .waitForElementPresent('@vsphereYaml')
+            .assert.containsText('@vsphereYaml', client.page.blueprintSources().props.vsphereYaml)
             .waitForElementPresent('@emptyContent')
-            .clickElement('@blueprintYaml')
+            .clickElement('@vsphereYaml')
             .waitForElementPresent('@contentSnippet')
             .waitForElementPresent('@fullScreenButton')
             .clickElement('@fullScreenButton');
