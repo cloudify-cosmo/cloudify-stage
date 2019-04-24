@@ -2,12 +2,11 @@
  * Created by kinneretzin on 17/11/2016.
  */
 
-'use strict';
-
 import jsdom from 'jsdom';
 import _ from 'lodash';
 import $ from 'jquery';
 import d3 from 'd3';
+import moment from 'moment';
 import chai from 'chai';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
@@ -27,6 +26,7 @@ Object.keys(document.defaultView).forEach((property) => {
 global.$ = global.jQuery = global.window.$ = global.window.jQuery = $(window);
 global._ = _;
 global.d3 = d3;
+global.moment = moment;
 global.HTMLElement = window.HTMLElement;
 
 chai.use(require('chai-enzyme')());

@@ -15,7 +15,6 @@ module.exports = {
             .clickElement('@submitButton')
             .waitForSplashPageNotVisible()
             .waitForElementVisible('@managerData')
-            .assert.containsText('@managerData', Config.managerVersion)
             .assert.containsText('@tenantsDropdownText','default_tenant');
 
         client.end();

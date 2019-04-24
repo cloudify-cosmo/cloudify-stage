@@ -1,11 +1,11 @@
 {
-    "src_folders" : ["e2e/tests"],
+    "src_folders" : ["test/nightwatch/tests"],
     "output_folder" : "./reports",
     "live_output" : true,
     "parallel_process_delay" : 1500,
-    "page_objects_path" : "e2e/pages",
-    "custom_commands_path" : "e2e/commands",
-    "globals_path" : "e2e/globals.js",
+    "page_objects_path" : "test/nightwatch/pages",
+    "custom_commands_path" : "test/nightwatch/commands",
+    "globals_path" : "test/nightwatch/globals.js",
     "selenium" : {
         "start_process" : true,
         "server_path" : "./node_modules/selenium-server-standalone-jar/jar/selenium-server-standalone-3.141.5.jar",
@@ -23,7 +23,7 @@
             "selenium_host": "localhost",
             "screenshots" : {
                 "enabled" : true,
-                "path" : "e2e/screenshots",
+                "path" : "test/nightwatch/screenshots",
                 "on_failure": true,
                 "on_error": true
             },
@@ -50,7 +50,7 @@
             },
             "globals" : {
                 "usePathResolutionForResources": true,
-                "resourcesPath": "e2e/resources/"
+                "resourcesPath": "test/nightwatch/resources/"
             }
         }
     }

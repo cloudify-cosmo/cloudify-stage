@@ -1,6 +1,7 @@
 import * as types from '../actions/types';
 import tenants from './tenantsReducer';
 import status from './statusReducer';
+import license from './licenseReducer';
 
 const manager = (state = {}, action) => {
     switch (action.type) {
@@ -18,13 +19,11 @@ const manager = (state = {}, action) => {
                     tenantsRoles: {}
                 },
                 err: null,
-                serverVersion: action.serverVersion,
                 tenants: [],
                 lastUpdated: action.receivedAt,
                 status: {},
-                version: null,
-                distribution: null,
-                distroRelease: null
+                license: license(state.license, action),
+                version: action.version
             });
         case types.LOGOUT:
             return Object.assign({}, state, {
@@ -35,13 +34,11 @@ const manager = (state = {}, action) => {
                     tenantsRoles: {}
                 },
                 err: null,
-                serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
                 status: {},
-                version: null,
-                distribution: null,
-                distroRelease: null
+                license: {},
+                version: {}
             });
         case types.ERR_LOGIN:
             return Object.assign({}, state, {
@@ -53,13 +50,11 @@ const manager = (state = {}, action) => {
                     tenantsRoles: {}
                 },
                 err: (action.error  != null && typeof action.error === 'object' ? action.error.message : action.error),
-                serverVersion: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
                 status: {},
-                version: null,
-                distribution: null,
-                distroRelease: null
+                license: {},
+                version: {}
             });
         case types.SET_USER_DATA:
             return Object.assign({}, state, {
@@ -68,8 +63,7 @@ const manager = (state = {}, action) => {
                     role: action.role,
                     groupSystemRoles: action.groupSystemRoles,
                     tenantsRoles: action.tenantsRoles
-                },
-                serverVersion: action.serverVersion
+                }
             });
         case types.REQ_MANAGER_STATUS:
         case types.SET_MANAGER_STATUS:
@@ -79,9 +73,11 @@ const manager = (state = {}, action) => {
             });
         case types.SET_MANAGER_VERSION:
             return Object.assign({}, state, {
-                version: action.version,
-                distribution: action.distribution,
-                distroRelease: action.distroRelease,
+                version: action.version
+            });
+        case types.SET_MANAGER_LICENSE:
+            return Object.assign({}, state, {
+                license: license(state.license, action)
             });
         case types.SET_MAINTENANCE_STATUS:
             return Object.assign({}, state, {

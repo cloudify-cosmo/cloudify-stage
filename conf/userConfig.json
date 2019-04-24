@@ -1,17 +1,21 @@
 {
   "whiteLabel": {
-    "enabled": false,
-    "logoUrl": "/console/static/images/Cloudify-icon.png",
-    "mainColor": "black",
-    "pagesLocation": "",
-    "headerTextColor": "white",
+    "pageTitle": "Cloudify Console",
+    "logoUrl": "/console/static/images/Cloudify-logo.png",
+    "mainColor": "#000069",
+
+    "productName": "Cloudify",
+    "headerTextColor": "#d8e3e8",
+    "showVersionDetails": true,
+
     "loginPageHeader": "",
     "loginPageHeaderColor": "white",
     "loginPageText": "",
     "loginPageTextColor": "white",
-    "sidebarColor": "#ffffff",
+
+    "sidebarColor": "#d8e3e8",
     "sidebarTextColor" : "#000000",
-    "pageTitle": "Cloudify",
+
     "customCssPath": ""
   },
   "widgets": {

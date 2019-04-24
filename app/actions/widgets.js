@@ -6,7 +6,6 @@
 import * as types from './types';
 import {createDrilldownPage,selectPage} from './page';
 import {drillDownWarning} from './templateManagement';
-import {v4} from 'node-uuid';
 import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
 import Internal from '../utils/Internal';
 

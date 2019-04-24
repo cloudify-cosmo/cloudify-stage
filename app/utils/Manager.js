@@ -24,11 +24,11 @@ export default class Manager extends Internal {
     }
 
     getDistributionName() {
-        return _.get(this,'_data.distribution', null);
+        return _.get(this,'_data.version.distribution', null);
     }
 
     getDistributionRelease() {
-        return _.get(this,'_data.distroRelease', null);
+        return _.get(this,'_data.version.distro_release', null);
     }
 
     getManagerUrl(url,data) {

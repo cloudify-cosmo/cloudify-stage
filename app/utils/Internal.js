@@ -36,4 +36,10 @@ export default class Internal extends External {
     _isUnauthorized(response){
         return response.status === 401;
     }
+
+    _isLicenseError(response, body) {
+        return response.status === 400 &&
+            (body.error_code === Consts.NO_LICENSE_ERROR_CODE ||
+             body.error_code === Consts.EXPIRED_LICENSE_ERROR_CODE);
+    }
 }

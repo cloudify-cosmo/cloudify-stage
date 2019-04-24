@@ -58,12 +58,11 @@ export default class Login extends Component {
     render() {
         SplashLoadingScreen.turnOff();
 
-        let isWhiteLabelEnabled = _.get(this.props,'whiteLabel.enabled');
-        let loginPageHeader = _.get(this.props,'whiteLabel.loginPageHeader');
-        let loginPageHeaderColor = _.get(this.props,'whiteLabel.loginPageHeaderColor','white');
-        let loginPageText = _.get(this.props,'whiteLabel.loginPageText');
-        let loginPageTextColor = _.get(this.props,'whiteLabel.loginPageTextColor','white');
-        let isHeaderTextPresent = isWhiteLabelEnabled && (loginPageHeader || loginPageText);
+        const loginPageHeader = _.get(this.props,'whiteLabel.loginPageHeader');
+        const loginPageHeaderColor = _.get(this.props,'whiteLabel.loginPageHeaderColor');
+        const loginPageText = _.get(this.props,'whiteLabel.loginPageText');
+        const loginPageTextColor = _.get(this.props,'whiteLabel.loginPageTextColor');
+        const isHeaderTextPresent = (!_.isEmpty(loginPageHeader) || !_.isEmpty(loginPageText));
 
         return (
                 <div className={`loginContainer ${isHeaderTextPresent?'loginContainerExtended':''}`} >

@@ -4,7 +4,7 @@
 
 
 import * as types from '../actions/types';
-import {v4} from 'node-uuid';
+import v4 from 'uuid/v4';
 import StageUtils from '../utils/stageUtils';
 
 const widget = (state = {}, action) => {

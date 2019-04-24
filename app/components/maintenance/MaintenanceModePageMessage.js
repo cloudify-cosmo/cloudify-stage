@@ -7,10 +7,11 @@ import React, { Component } from 'react';
 
 import MessageContainer from '../MessageContainer';
 import Services from '../../containers/Services';
-import Logo from '../../containers/Logo';
+import Banner from '../../containers/banner/Banner';
 import Consts from '../../utils/consts';
 import StatusPoller from '../../utils/StatusPoller';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import FullScreenSegment from '../layout/FullScreenSegment';
 import {Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal} from '../basic';
 
 export default class MaintenanceModePageMessage extends Component {
@@ -47,10 +48,10 @@ export default class MaintenanceModePageMessage extends Component {
         SplashLoadingScreen.turnOff();
 
         return (
-            <div className='maintenancePage ui segment basic'>
-                <Logo />
+            <FullScreenSegment>
+                <Banner />
 
-                <MessageContainer className='maintenanceContainer'>
+                <MessageContainer wide>
                     <Header as='h2'>Maintenance mode</Header>
 
                     <p>Server is on maintenance mode and is not available at the moment.</p>
@@ -76,7 +77,7 @@ export default class MaintenanceModePageMessage extends Component {
 
                 }
 
-            </div>
+            </FullScreenSegment>
         );
     }
 }

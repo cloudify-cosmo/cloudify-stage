@@ -166,7 +166,8 @@ export default class Form extends Component {
 
     /**
      * propTypes
-     * @property {object} [errors] string wiht error message or object with fields error messages (syntax described above)
+     * @property {object} [errors] string with error message or object with fields error messages (syntax described above)
+     * @property {string} [errorMessageHeader] string with error message header
      * @property {function} [onSubmit=()=>{}] function called on form submission
      * @property {function} [onErrorsDismiss=()=>{}] function called when errors are dismissed (see {@link ErrorMessage})
      * @property {boolean} [scrollToError=false] if set, then on error change screen will be scrolled to (see {@link ErrorMessage})
@@ -174,6 +175,7 @@ export default class Form extends Component {
     static propTypes = {
         ...Form.propTypes,
         errors: PropTypes.any,
+        errorMessageHeader: PropTypes.string,
         onSubmit: PropTypes.func,
         onErrorsDismiss: PropTypes.func,
         scrollToError: PropTypes.bool
@@ -181,6 +183,7 @@ export default class Form extends Component {
 
     static defaultProps = {
         errors: null,
+        errorMessageHeader: 'Errors in the form',
         onSubmit: () => {},
         onErrorsDismiss: () => {},
         scrollToError: false
@@ -228,7 +231,7 @@ export default class Form extends Component {
     }
 
     render() {
-        let { errors, onErrorsDismiss, scrollToError, ...rest } = this.props;
+        let { errors, errorMessageHeader, onErrorsDismiss, scrollToError, ...rest } = this.props;
 
         if (_.isString(errors)) {
             errors = [errors];
@@ -238,7 +241,7 @@ export default class Form extends Component {
 
         return (
             <FormSemanticUiReact {...rest} onSubmit={this._handleSubmit.bind(this)} error={!_.isEmpty(errors)}>
-                <ErrorMessage header="Errors in the form" error={errors} onDismiss={onErrorsDismiss} />
+                <ErrorMessage header={errorMessageHeader} error={errors} onDismiss={onErrorsDismiss} />
 
                 {this.props.children}
 
