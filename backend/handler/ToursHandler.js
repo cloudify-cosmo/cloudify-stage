@@ -29,16 +29,18 @@ class ToursHandler {
     }
 
     static init() {
-        fs.readdirSync(builtInToursFolder).forEach(filename => {
-            try{
-                tours[filename] = JSON.parse(fs.readFileSync(pathlib.resolve(builtInToursFolder, filename), 'utf8'));
-            }
-            catch (err){
-                logger.error(`Failed to load tour - ${filename}: ${err.message}`);
-                process.exit(1);
-            }
+        return new Promise((resolve, reject) => {
+            fs.readdirSync(builtInToursFolder).forEach(filename => {
+                try{
+                    tours[filename] = JSON.parse(fs.readFileSync(pathlib.resolve(builtInToursFolder, filename), 'utf8'));
+                }
+                catch (err){
+                    logger.error(`Failed to load tour - ${filename}: ${err.message}`);
+                    return reject(`Failed to load tour - ${filename}: ${err.message}`);
+                }
+            });
+            return resolve();
         });
-        return Promise.resolve();
     }
 }
 

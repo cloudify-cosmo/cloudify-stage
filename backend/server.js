@@ -8,12 +8,17 @@ const express = require('express');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const _ = require('lodash');
+
+// Initialize logger
+let LoggerHandler = require('./handler/LoggerHandler');
+let logger = LoggerHandler.getLogger('Server');
 
 const config = require('./config');
 const Consts = require('./consts');
 
 // Initialize the DB connection
-let db = require('./db/Connection');
+require('./db/Connection');
 
 let getCookieStrategy = require('./auth/CookieStrategy');
 let getTokenStrategy = require('./auth/TokenStrategy');
@@ -45,9 +50,6 @@ let Plugins = require('./routes/Plugins');
 let ToursHandler = require('./handler/ToursHandler');
 let WidgetHandler = require('./handler/WidgetHandler');
 let TemplateHandler = require('./handler/TemplateHandler');
-let LoggerHandler = require('./handler/LoggerHandler');
-
-let logger = LoggerHandler.getLogger('Server');
 
 const contextPath = Consts.CONTEXT_PATH;
 const oldContextPath = '/stage';
@@ -143,18 +145,19 @@ app.get('*',function (request, response){
     response.sendFile(path.resolve(__dirname, '../dist/static', 'index.html'));
 });
 
-ToursHandler.init().then(function(){
-    // Only after we have all the data in place start the server
-    app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST, function () {
-        logger.info('Server started in mode ' + ServerSettings.settings.mode);
-        if (process.env.NODE_ENV === 'development') {
-            logger.info('Server started for development');
-        }
-        logger.info(`Stage runs on ${Consts.SERVER_HOST}:${Consts.SERVER_PORT}!`);
-    });
-});
+const instanceNumber = parseInt(process.env.NODE_APP_INSTANCE);
+if (_.isNaN(instanceNumber) || instanceNumber === 0) {
+    Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
+        .then(() =>
+            logger.info('Tours, Widgets and Templates initialized.')
+        )
+        .catch((error) => {
+            logger.error(`Error during Tours, Widgets and Templates initialization: ${error}`);
+            process.exit(1);
+        });
+}
 
-//Error handling
+// Error handling
 app.use(function(err, req, res, next) {
     logger.error('Error has occured ', err);
 
@@ -166,5 +169,11 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 404).send({message: message || err});
 });
 
-WidgetHandler.init();
-TemplateHandler.init();
+// Start server
+app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST, function () {
+    logger.info('Server (' + String(instanceNumber || 0) + ') started in mode ' + ServerSettings.settings.mode);
+    if (process.env.NODE_ENV === 'development') {
+        logger.info('Server started for development');
+    }
+    logger.info(`Stage runs on ${Consts.SERVER_HOST}:${Consts.SERVER_PORT}!`);
+});
