@@ -19,6 +19,7 @@ var options = _.merge({
             idle: 10000
         },
         operatorsAliases: false,
+        logging: false
         // logging: (message) => logger.debug(message)
     },config.app.db.options);
 

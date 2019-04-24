@@ -1,6 +1,5 @@
 const ResourceTypes = require('../db/types/ResourceTypes');
 
-console.error(ResourceTypes.values);
 module.exports = {
 
   up: (queryInterface, Sequelize, logger) => {

@@ -14,7 +14,8 @@ router.use(passport.authenticate('token', {session: false}));
 
 router.use('/:service', function(req, res, next) {
     logger.debug(`${req.method} request on service '${req.params.service}' called with parameters: ${JSON.stringify(req.query)}`);
-    return BackendHandler.callService(req.params.service, req.method, req, res, next);
+    return BackendHandler.callService(req.params.service, req.method, req, res, next)
+        .catch(next);
 });
 
 module.exports = router;

@@ -160,6 +160,7 @@ module.exports = (function() {
                         return Promise.resolve({id: widgetId, isCustom: true});
                     })
                     .catch(err => {
+                        logger.error(`Error during widget ${widgetId} installation: ${err}`);
                         deleteWidget(widgetId);
                         ArchiveHelper.cleanTempData(widgetTempPath);
                         throw err;
@@ -198,6 +199,7 @@ module.exports = (function() {
                         return Promise.resolve({id: widgetId, isCustom: true});
                     })
                     .catch(err => {
+                        logger.error(`Error during widget ${widgetId} update: ${err}`);
                         _restoreBackup(updateWidgetId, widgetTempPath)
                         .then(() => BackendHandler.removeWidgetBackend(widgetId))
                         .then(() => BackendHandler.importWidgetBackend(widgetId))
@@ -280,14 +282,18 @@ module.exports = (function() {
     }
 
     function init() {
-        try {
-            logger.info('Setting up user widgets directory:', userWidgetsFolder);
-            mkdirp.sync(userWidgetsFolder);
-            BackendHandler.initWidgetBackends(userWidgetsFolder, builtInWidgetsFolder);
-        } catch (e) {
-            logger.error('Could not set up directory, error was:', e);
-            process.exit(1);
-        }
+        return new Promise((resolve, reject) => {
+            try {
+                logger.info('Setting up user widgets directory:', userWidgetsFolder);
+                mkdirp.sync(userWidgetsFolder);
+                return BackendHandler.initWidgetBackends(userWidgetsFolder, builtInWidgetsFolder)
+                    .then(resolve)
+                    .catch(reject);
+            } catch (e) {
+                logger.error('Could not set up directory, error was:', e);
+                return reject(`Could not set up directory, error was: ${e}`);
+            }
+        });
     }
 
     return {

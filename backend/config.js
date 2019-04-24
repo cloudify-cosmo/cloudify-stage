@@ -10,9 +10,11 @@ const Utils = require('./utils');
 const app = require('../conf/app.json');
 const manager = require('../conf/manager.json');
 let userConfig = require('../conf/userConfig.json');
+let LoggerHandler = require('./handler/LoggerHandler');
+let logger = LoggerHandler.getLogger('Config');
 
 const userDataConfigPath = Utils.getResourcePath('userConfig.json', true);
-console.log(`Trying to fetch user config from: ${userDataConfigPath}`);
+logger.info(`Trying to fetch user config from: ${userDataConfigPath}`);
 
 try {
     let userDataConfig = require(userDataConfigPath);
