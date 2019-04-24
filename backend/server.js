@@ -145,18 +145,6 @@ app.get('*',function (request, response){
     response.sendFile(path.resolve(__dirname, '../dist/static', 'index.html'));
 });
 
-const instanceNumber = parseInt(process.env.NODE_APP_INSTANCE);
-if (_.isNaN(instanceNumber) || instanceNumber === 0) {
-    Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
-        .then(() =>
-            logger.info('Tours, Widgets and Templates initialized.')
-        )
-        .catch((error) => {
-            logger.error(`Error during Tours, Widgets and Templates initialization: ${error}`);
-            process.exit(1);
-        });
-}
-
 // Error handling
 app.use(function(err, req, res, next) {
     logger.error('Error has occured ', err);
@@ -169,11 +157,29 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 404).send({message: message || err});
 });
 
-// Start server
-app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST, function () {
-    logger.info('Server (' + String(instanceNumber || 0) + ') started in mode ' + ServerSettings.settings.mode);
-    if (process.env.NODE_ENV === 'development') {
-        logger.info('Server started for development');
-    }
-    logger.info(`Stage runs on ${Consts.SERVER_HOST}:${Consts.SERVER_PORT}!`);
-});
+const startServer = (instanceNumber) => {
+    app.listen(Consts.SERVER_PORT, Consts.SERVER_HOST, function () {
+        logger.info('Server (' + String(instanceNumber || 0) + ') started in mode ' + ServerSettings.settings.mode);
+        if (process.env.NODE_ENV === 'development') {
+            logger.info('Server started for development');
+        }
+        logger.info(`Stage runs on ${Consts.SERVER_HOST}:${Consts.SERVER_PORT}!`);
+    });
+}
+
+const instanceNumber = parseInt(process.env.NODE_APP_INSTANCE);
+if (_.isNaN(instanceNumber) || instanceNumber === 0) {
+    // Application data (tours, widgets, templates) initialization only in the first instance
+    Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
+        .then(() => {
+            logger.info('Application data initialized successfully.');
+            startServer(instanceNumber);
+        })
+        .catch((error) => {
+            logger.error(`Error during application data initialization: ${error}`);
+            process.exit(1);
+        });
+} else {
+    startServer(instanceNumber);
+}
+
