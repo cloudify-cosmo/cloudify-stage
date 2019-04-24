@@ -26,4 +26,4 @@ COMMON_OPTIONS="-o StrictHostKeyChecking=no"
 || exit "MANAGER_IP not defined."
 
 scp -i ${SSH_KEY_PATH} ${COMMON_OPTIONS} ${STAGE_PACKAGE} ${MANAGER_USER}@${MANAGER_IP}:~
-ssh -i ${SSH_KEY_PATH} ${COMMON_OPTIONS} ${MANAGER_USER}@${MANAGER_IP} "tar xzf stage.tar.gz; sudo service cloudify-stage stop; sudo rsync -ai cloudify-stage /opt; sudo chown -R stage_user:stage_group /opt/cloudify-stage; sudo service cloudify-stage restart;"
+ssh -i ${SSH_KEY_PATH} ${COMMON_OPTIONS} ${MANAGER_USER}@${MANAGER_IP} "tar xzf stage.tar.gz; sudo service cloudify-stage stop; sudo rsync -ai cloudify-stage /opt; sudo chown -R stage_user:stage_group /opt/cloudify-stage; cd /opt/cloudify-stage/backend; sudo /opt/nodejs/bin/npm run db-migrate; sudo service cloudify-stage restart;"
