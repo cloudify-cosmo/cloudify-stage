@@ -125,13 +125,17 @@ module.exports = {
             },
             commands: [
                 {
-                    fillIn: function(blueprintInputs) {
+                    fillIn: function(deploymentName, blueprintInputs) {
                         let _ = require('lodash');
                         this.waitForElementVisible('@deploymentName')
+                            .setElementValue('@deploymentName', deploymentName)
                             .api.perform(() =>
-                                _.each(blueprintInputs, (inputValue, inputName) => {
-                                    this.setElementValue(`input[name="${inputName}"]`, inputValue)
-                                }));
+                                _.each(blueprintInputs, (inputObject, inputName) =>
+                                    this.setElementValue(
+                                        `${inputObject.type === 'string' ? 'input' : 'textarea'}[name="${inputName}"]`,
+                                        inputObject.value
+                                    )
+                                ));
                         return this;
                     },
                     setSkipValidation: function(value) {

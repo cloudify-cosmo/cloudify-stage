@@ -198,7 +198,7 @@ const cmd = process.argv[2].trim();
 if (cmd === 'current') {
     getCurrMigration()
         .then(current => {
-            console.log(current);
+            logger.log(current);
             process.exit(0)
         });
 } else {

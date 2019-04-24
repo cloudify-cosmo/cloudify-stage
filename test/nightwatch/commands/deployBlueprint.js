@@ -27,9 +27,8 @@ exports.command = function(deploymentName, inputs, blueprintName) {
                     .clickElement('@createDeploymentButton');
 
                 var blueprints = this.page.blueprints();
-                inputs['deploymentName'] = deploymentName;
                 blueprints.section.deployBlueprintModal
-                    .fillIn(inputs)
+                    .fillIn(deploymentName, inputs)
                     .clickDeploy();
 
                 this.page.filter()

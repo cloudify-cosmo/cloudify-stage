@@ -46,7 +46,7 @@
         "dev" : {
             "launch_url" : "http://localhost:4000",
             "screenshots" : {
-                "enabled" : false
+                "enabled" : true
             },
             "globals" : {
                 "usePathResolutionForResources": true,

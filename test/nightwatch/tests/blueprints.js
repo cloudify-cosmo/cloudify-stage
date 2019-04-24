@@ -73,10 +73,18 @@ module.exports = {
     'Blueprint deploy': function (client) {
         const DEPLOYMENT_NAME = 'TestDeployment123';
         const BLUEPRINT_INPUTS = {
-            deploymentName: DEPLOYMENT_NAME,
-            agent_private_key_path: 'agentpath',
-            agent_user: 'agentuser',
-            host_ip: 'IP'
+            agent_private_key_path: {
+                value: 'agentpath',
+                type: null
+            },
+            agent_user: {
+                value: 'agentuser',
+                type: null
+            },
+            host_ip: {
+                value: 'IP',
+                type: null
+            }
         };
 
         let page = client.page.blueprints();
@@ -91,7 +99,7 @@ module.exports = {
                 .checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 0)
                 .clickDeploy(BLUEPRINT_NAME)
             .parent.section.deployBlueprintModal
-                .fillIn(BLUEPRINT_INPUTS)
+                .fillIn(DEPLOYMENT_NAME, BLUEPRINT_INPUTS)
                 .setSkipValidation(true)
                 .clickDeploy();
 

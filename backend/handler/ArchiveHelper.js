@@ -179,7 +179,7 @@ module.exports = (function() {
                     fs.remove(tempPath, err => {
                         if (err) {
                             const errorMessage = `Error removing temporary path ${tempPath}: ${err}`;
-                            console.error(errorMessage);
+                            logger.error(errorMessage);
                             reject(errorMessage);
                         } else {
                             resolve();

@@ -314,15 +314,18 @@ module.exports = (function() {
     }
 
     function init() {
-        try {
-            logger.info('Setting up user templates directory:', userTemplatesFolder);
-            mkdirp.sync(userTemplatesFolder);
-            logger.info('Setting up user pages directory:', userPagesFolder);
-            mkdirp.sync(userPagesFolder);
-        } catch (e) {
-            logger.error('Could not set up directories for templates and pages, error was:', e);
-            process.exit(1);
-        }
+        return new Promise((resolve, reject) => {
+            try {
+                logger.info('Setting up user templates directory:', userTemplatesFolder);
+                mkdirp.sync(userTemplatesFolder);
+                logger.info('Setting up user pages directory:', userPagesFolder);
+                mkdirp.sync(userPagesFolder);
+                return resolve();
+            } catch (e) {
+                logger.error('Could not set up directories for templates and pages, error was:', e);
+                return reject(`Could not set up directories for templates and pages, error was: ${e}`);
+            }
+        });
     }
 
     return {

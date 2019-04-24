@@ -72,7 +72,7 @@ module.exports = {
             .goToNextStep('inputsStep')
             .checkIfErrorPresent('Provide values for the following inputs: region');
         deploymentWizard.section.inputsStep
-            .setInputValue('region', 'Terra Incognita');
+            .setInputValue('region', 'Terra Incognita', 'string');
         deploymentWizard
             .goToNextStep('confirmStep');
 
@@ -143,7 +143,7 @@ module.exports = {
             .checkIfInputPresent('webserver_port', false)
             .checkIfInputPresent('agent_user', false)
             .checkIfInputPresent('image_id', true)
-            .setInputValue('image_id', 'circle')
+            .setInputValue('image_id', 'circle', null)
             .checkIfInputPresent('instance_type', false);
         deploymentWizard
             .goToNextStep('confirmStep');
