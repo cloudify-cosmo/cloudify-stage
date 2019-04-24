@@ -1,15 +1,15 @@
 license:
   capabilities:
-  - HA
-  - Awesomeness
-  cloudify_version: '4.6'
-  customer_id: customer123
-  expiration_date: 11/24/2019
+    - cap1
+    - cap2
+  cloudify_version: null
+  customer_id: MockCustomer
+  expiration_date: null
   license_edition: Spire
   trial: false
 signature: !!binary |
-  YfzmoyR9aGEE6mvfgvreTL73eh2CSt4r/3aV23f2xsdo+5r4F1VDgx9IVCdUrD2o49O9Zz5nsLu/
-  rZW+VuQBmxtY5u2yUQFe3eGCo00T/Z1tWuT0pemczDRYQUscq6YDQAWiH0FXD/wQUFH7fCvnHyMn
-  2gYLJfqgf/bVf63endcclJve7qCNZvxNFXzkXVtCMxNaKzxdZ7DKOPrTxLUVllii5HXTDLTCDUFZ
-  PLhQFHNiUMb6LWC2erswRT4sUC5OsVCGPJZrFR2m3Kqs+poQ6Ve4MEYn30sVnKIM3pK9JnDVF5av
-  c7fi1D/oc8SrAYH9R6l99i8LnRxk+UO9AGQiuQ==
+  m8tE0in3/OgP4nKpkLl4JkvYmhdxOEUYok01O53MrCICDGfVst5l6Z05ZeCBrWj5TEYVWZp/VAs/
+  O+FuSwT8Gz2pGYr1BKSpdiYrVIPnkSn+zHGaZw/QkOo6ElCaDOTFDa6TzyyzoQIbEvVv60AW4Fn6
+  9DmwEts5eNFCSGoHqSydHXBmy8uZWb4r2KFQbwhlpxeMMmsm8GRoOzwYj/kM8iVDccf74cOgwfEY
+  s4SAhbfRh4G3eJiOI070U2ZR1NDiXdoL8nuOI2Yn9pv+n/Rrrn1oOQRXnGTWfzvQoL3XsyWBhZmR
+  4wVBb4Txoj5WIG2BxZPhO3IkpqRk/hr6XrJzCA==

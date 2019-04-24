@@ -8,9 +8,10 @@ describe('License Management', () => {
     const invalidLicenses = [
         {
             name: 'tampered', file: 'tampered_paying_license.yaml',
-            error: 'This license could not be verified. ' +
-                'Please upload a valid license. If you don`t have a Cloudify ' +
-                'license please contact Cloudify Sales Department.'
+            error: 'The license could not be verified. Please upload a valid license. ' +
+                'Visit the Cloudify web site at https://cloudify.co/download/#trial to ' +
+                'learn more and acquire a free trial license. For other issues, ' +
+                'please contact Cloudify support at https://cloudify.co/support.'
         },
         {
             name: 'invalid', file: 'invalid_license.yaml',
@@ -66,10 +67,6 @@ describe('License Management', () => {
             .login();
     });
 
-    after(() => {
-        cy.activate();
-    });
-
     beforeEach(function () {
         cy.restoreState();
     });
@@ -105,15 +102,15 @@ describe('License Management', () => {
         cy.visit('/console/license');
 
         cy.get('tbody > :nth-child(1) > :nth-child(2)')
-            .should('have.text', '24-11-2019');
+            .should('have.text', 'Never');
         cy.get('tbody > :nth-child(2) > :nth-child(2)')
-            .should('have.text', '4.6');
+            .should('have.text', 'All');
         cy.get('tbody > :nth-child(3) > :nth-child(2)')
             .should('have.text', 'Spire');
         cy.get('tbody > :nth-child(4) > :nth-child(2)')
-            .should('have.text', 'HA, Awesomeness');
+            .should('have.text', 'cap1, cap2');
         cy.get('tbody > :nth-child(5) > :nth-child(2)')
-            .should('have.text', 'customer123');
+            .should('have.text', 'MockCustomer');
     });
 
     it('allows going to app', () => {
