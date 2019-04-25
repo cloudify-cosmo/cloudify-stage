@@ -15,6 +15,7 @@
     "e2e:old": "nightwatch -c ./test/nightwatch/nightwatch.conf.js",
     "e2e:old:dev": "nightwatch -c ./test/nightwatch/nightwatch.conf.js --env dev",
     "e2e:new": "cypress run --reporter spec",
+    "e2e:new:open": "cypress open",
     "e2e:new:dev": "cypress run --reporter spec --env dev",
     "beforebuild": "sh scripts/preinstall.sh",
     "build": "webpack --config webpack.config-prod.js --bail",
@@ -26,7 +27,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/cloudify-cosmo/cloudify-stage",
   "engines": {
-    "node": "8.x || 9.x"
+    "node": "10.x"
   },
   "dependencies": {
     "better-console": "^0.2.4",
