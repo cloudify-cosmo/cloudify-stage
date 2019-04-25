@@ -101,7 +101,7 @@ app.use(contextPath + '/userData',
 );
 
 // Serving static content only in development mode. In production mode it is served by Nginx.
-if (process.env.NODE_ENV === 'development') {
+if (process.env.LOCAL_ENV === 'true') {
     app.use(contextPath + '/static',
         expressStaticGzip(path.resolve(__dirname , '../dist/static'), {enableBrotli: true, indexFromEmptyFile: false}));
 }

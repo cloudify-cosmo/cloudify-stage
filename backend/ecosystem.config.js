@@ -11,10 +11,15 @@ module.exports = {
       NODE_ENV: 'production'
     },
     env_development: {
-      NODE_ENV: 'development'
+      NODE_ENV: 'development',
+      LOCAL_ENV: 'true'
     },
     env_production: {
       NODE_ENV: 'production'
+    },
+    env_local_production: {
+      NODE_ENV: 'production',
+      LOCAL_ENV: 'true'
     },
 
     output: '/var/log/cloudify/stage/server-output.log',
