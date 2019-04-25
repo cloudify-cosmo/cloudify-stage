@@ -8,6 +8,7 @@
     "start": "pm2 start --env production",
     "stop": "pm2 kill",
     "restart": "pm2 reload stage-backend",
+    "prodStart": "pm2 start --env local_production --watch --node-args=\"--trace-warnings\" && pm2 logs",
     "devStart": "pm2 start --env development --watch --node-args=\"--trace-warnings\" && pm2 logs",
     "devTrace": "cross-env NODE_ENV=development nodemon --trace-warnings server.js",
     "devDebug": "cross-env NODE_ENV=development nodemon --inspect server.js",
