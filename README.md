@@ -1,13 +1,17 @@
-# Cloudify Console [![CircleCI](https://circleci.com/gh/cloudify-cosmo/cloudify-stage.svg?style=svg)](https://circleci.com/gh/cloudify-cosmo/cloudify-stage)
+# Cloudify Console 
+[![CircleCI](https://circleci.com/gh/cloudify-cosmo/cloudify-stage.svg?style=svg)](https://circleci.com/gh/cloudify-cosmo/cloudify-stage)
+[![Cypress.io tests](https://img.shields.io/badge/cypress.io-tests-green.svg?style=flat-square)](https://cypress.io)
 
-The Cloudify Console provides a streamlined experience for managing and analyzing [Cloudify Manager](https://cloudify.co).
+The Cloudify Console provides User Interface for managing and analyzing [Cloudify Manager](https://cloudify.co).
 
-![CircleCI](./doc/screenshot.png)
+![Cloudify Console screenshot](./doc/screenshot.png)
 
+## Requirements
 
-## Prerequisites
-- NodeJS (version >= 10.x) and npm installed
-- PostgreSQL installed and running on your machine
+The following requirements should be met prior starting the application:
+
+- [Node.js](https://nodejs.org) (version >= 10.15.x) installed
+- [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured:
     - Make a database named `stage` 
     - Make a user named `cloudify` with `cloudify` as password
     - You can do this easily with docker:
@@ -15,79 +19,66 @@ The Cloudify Console provides a streamlined experience for managing and analyzin
         docker pull postgres
         docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
         ```
-- Cloudify Manager (version => 4.x) running
+- Cloudify Manager (version >= 4.x) accessible from your local machine
 
 ## Setup
 
-### Configuration
-Create `conf/me.json` file basing on `conf/me.json.template` and change `<MANAGER_IP>` into real IP of your Cloudify Manager.
+To setup development environment and start the application follow the steps below.
 
-### Installation
-Install application dependencies and initialize database:
-- `npm run beforebuild`
-- `cd backend && npm run db-migrate`
+1. **Configuration**
+   
+   * Create `conf/me.json` file basing on `conf/me.json.template`.
+   * Change `<MANAGER_IP>` into real IP of your Cloudify Manager in that file.
 
-## Deployment
-You can deploy the stage either by starting the server and connecting to stage locally, or by packaging it and deploying it on a remote server.
+1. **Dependencies installation**
 
-### Local deployment
-Start the stage server backend and the webserver:
-- run backend server: `cd backend && npm run devStart`
-- run development server: `npm run devServer`
+   Run `npm run beforebuild` to install install application dependencies.
 
-Open browser to see if application is running. It runs by default on `http://localhost:4000`. 
+1. **Database setup**
+   
+   Run `cd backend && npm run db-migrate` to initialize database.
+
+1. **Application start**
+
+   You can run the application by starting the stage backend server and starting [webpack dev server](https://webpack.js.org/configuration/dev-server/) serving client side:
+   * Run `cd backend && npm run devStart` to start backend server.
+   * Run `npm run devServer` to start webpack dev server.
+
+At this point you should have development environment configured and running. Open [http://localhost:4000](http://localhost:4000) page in your web-browser to see if application is running.
 
 Changes in the source code shall be hot loaded to the development version of the application:
-- for changes in `app` directory you don't need to reload page, 
-- for changes in `widgets` directory you need to reload page to see your updates,
-- for changes in `backend` directory you don't need to reload page as backend server will automatically be restarted.
+- for changes in [app](./app) directory you don't need to reload page, 
+- for changes in [widgets](./widgets) directory you need to reload page to see your updates,
+- for changes in [backend](./backend) directory you don't need to reload page as backend server will automatically be restarted.
 
-### Remote deployment
-- create application package:
+## Deployment
+You can create a package and deploy it on a remote Cloudify Manager server.
+
+To do that follow these steps:
+
+1. Create application package:
     - to create production build run: `npm run build`
     - to pack all necessary files into archive run: `npm run zip`
     Application package will be in repo main directory. 
-- upload the package to the remote Cloudify Manager:
+1. Upload the package to the remote Cloudify Manager:
     - define path to private SSH key to access Cloudify Manager: `export SSH_KEY_PATH=<PATH>`
     - define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`
     - upload package to the Cloudify Manager and restart UI services: `npm run upload`
 
-## Widgets development
+Open browser and go to page `http://<MANAGER_IP>` to see if application is running.
 
-Once you have configured successfully local deployment of Cloudify Console you are able to start development and testing of your own widgets. All out-of-the-box widgets resides in `widgets` directory. 
+## Tests
 
-To create your own widget:
-- follow the instructions from [here](https://docs.cloudify.co/latest/developer/custom_console/custom-widgets/) and place widget in `widgets` directory
-- restart development server
-- install new widget 
+Go to [test/README.md](./test/README.md).
 
-Since now, every single change in widget's code should be reflected in webserver after page reload.
+## Documentation 
 
-## Test
-### Unit tests
-Run `npm run prodtest`.
+1. Source Code documentation
+   * [Frontend](./app/README.md) - client-side of the application
+   * [Backend](./backend/README.md) - servers-side of the application
+   * [Widgets](./widgets/README.md) - widgets documentation
+   
+2. Documentation way-of-work
+   
+   See [this](./doc/README.md) to learn how this project is documented.
 
-### System tests
-
-#### Running in development environment
-Run `npm run deve2e`.
-
-#### Running in production environment
-Set the following environmental variables:
-```
-export STAGE_E2E_SELENIUM_HOST=<SELENIUM_HOST_IP_ADDRESS>
-export STAGE_E2E_MANAGER_URL=<MANAGER_IP>
-```
-and run: `npm run e2e`.
-
-## Documentation
-
-### Components
-To create components documentation run: `npm run doc`.
-Documentation is created in `doc/www` directory. Open `doc/www/index.html` in web browser to see it.
-
-### Widgets
-Widgets documentation bases on [Cloudify Documentation](https://docs.cloudify.co/latest/working_with/console/default-widgets-ref/) and is stored in README.md files in widgets' folders.
-
-To update widgets' documentation run `npm run docWidgets`. 
-Configuration for update script can be found in: `scripts/readmesConfig.json`. 
