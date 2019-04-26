@@ -19,7 +19,7 @@ Cypress.Commands.add('waitUntilLoaded', () => {
 });
 
 Cypress.Commands.add('activate', () =>
-    cy.fixture('license/valid_paying_license.yaml')
+    cy.fixture('license/valid_trial_license.yaml')
         .then((license) =>
             cy.request({
                 method: 'PUT',

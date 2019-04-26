@@ -4,12 +4,12 @@ license:
     - cap2
   cloudify_version: null
   customer_id: MockCustomer
-  expiration_date: null
+  expiration_date: 30 days
   license_edition: Spire
   trial: true
 signature: !!binary |
-  D266XF1dU4XzPlP8u1OVbgsiqinxbDEafrbZEV7qZX2qWzO0lzTaAQa+ULuuu//AclS3BHSDhuJy
-  IEIO3vgoTqYbpk7wcLQiPDCrI7w61Xis94zRuCkLCVmmwFKtBFuiYNiIMKZBGsF/sb+uQL11O7zN
-  Xn/FP8PFCnQIWN0NS6D0jeNEFvoDvNDORilo11v6l/RRZcyWnsQXaDTy9cWVB3iIu9M2kvKoPwyC
-  hdWwzQdmwD/VkxAExlWlk4wATnkf2Sbv3NHVJmwW5kHUyaF5ytNfh1xXLGwD72SZ23WtJU4LLcOt
-  U2ww7NCMtSF0qfaIRzLmQlnrohlWjmGwCoirvg==
+  Xqv4CYmknf40tdXqUWjJUDAdYYdWxtwcAjGCVxyOtYl9HA1EKERpr0siNwwO0sEEXibjZM7oBh4p
+  BvXSJsjvA6fNSsPPBsJiKrg1d4Xpds6YnfETWpSDjlq548GJQYerSkv9dYx93Iq/Y+j51jwhVBqC
+  PtucvJSIZc0s8xN1l/2ZaJNHumyE2k6QV2dBwaPhpzGAHsa+c71qSxPj38rDCzjhKaGw/gZE08if
+  lyNGzxLRARJcBRdBTF2GrSUu0I71kak26Jyr2EkrcElVYvCW0AbV9VROnOrgQ1gZF6oA3WOmAY2G
+  h2UuWlRgYNlil2pd3usE31wot7HaYkp3pWROaw==
