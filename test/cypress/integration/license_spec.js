@@ -1,7 +1,6 @@
 describe('License Management', () => {
 
     const validLicenses = [
-        {name: 'valid paying', file: 'valid_paying_license.yaml', header: 'License is valid'},
         {name: 'valid trial', file: 'valid_trial_license.yaml', header: 'License is valid'},
         {name: 'expired trial', file: 'expired_trial_license.yaml', header: 'The trial license has expired'}
     ];
@@ -101,8 +100,6 @@ describe('License Management', () => {
     it('shows active license', () => {
         cy.visit('/console/license');
 
-        cy.get('tbody > :nth-child(1) > :nth-child(2)')
-            .should('have.text', 'Never');
         cy.get('tbody > :nth-child(2) > :nth-child(2)')
             .should('have.text', 'All');
         cy.get('tbody > :nth-child(3) > :nth-child(2)')
@@ -110,6 +107,8 @@ describe('License Management', () => {
         cy.get('tbody > :nth-child(4) > :nth-child(2)')
             .should('have.text', 'cap1, cap2');
         cy.get('tbody > :nth-child(5) > :nth-child(2)')
+            .should('have.text', 'Yes');
+        cy.get('tbody > :nth-child(6) > :nth-child(2)')
             .should('have.text', 'MockCustomer');
     });
 

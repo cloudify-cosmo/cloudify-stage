@@ -216,7 +216,7 @@ function NodeInstancesSection(props) {
                         See details:&nbsp;
                         <PopupHelp content={
                             <div>
-                                Four different categories present added/removed/extended/reduced node instances.<br/>
+                                Four different categories present added, removed, modified, explicitly reinstalled node instances.<br/>
                                 Bulleted list contain modified node instance ID and node ID in round brackets.<br/>
                                 In upper right corner of the card you can see if install/uninstall/reinstall workflows are executed.
                             </div>
