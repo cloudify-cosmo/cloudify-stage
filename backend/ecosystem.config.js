@@ -3,8 +3,9 @@ module.exports = {
     name: 'stage-backend',
     script: 'server.js',
     args: process.env.STAGE_BACKEND_ARGS,
-    instances: 0,
     autorestart: true,
+    exec_mode: 'cluster',
+    instances: process.env.STAGE_BACKEND_INSTANCES,
     max_memory_restart: '1G',
 
     env: {
