@@ -32,7 +32,7 @@ To setup development environment and start the application follow the steps belo
 
 1. **Dependencies installation**
 
-   Run `npm run beforebuild` to install install application dependencies.
+   Run `npm run beforebuild` to install application dependencies.
 
 1. **Database setup**
    
