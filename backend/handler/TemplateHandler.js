@@ -112,8 +112,8 @@ module.exports = (function() {
         return _getPages(builtInPagesFolder, false);
     }
 
-    function _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant) {
-        const rbac = AuthHandler.getRBAC();
+    async function _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+        const rbac = await AuthHandler.getRBAC(token);
         const roles = rbac.roles;
 
         logger.debug('Inputs for role calculation: ' + 'systemRole=' + systemRole +
@@ -276,8 +276,8 @@ module.exports = (function() {
         });
     }
 
-    function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant) {
-        const role = _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant);
+    async function selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+        const role = await _getRole(systemRole, groupSystemRoles, tenantsRoles, tenant, token);
         const mode = ServerSettings.settings.mode;
         let templateId = null;
 
@@ -310,7 +310,7 @@ module.exports = (function() {
             logger.debug('User template found: ' + templateId);
         }
 
-        return Promise.resolve(templateId);
+        return templateId;
     }
 
     function init() {

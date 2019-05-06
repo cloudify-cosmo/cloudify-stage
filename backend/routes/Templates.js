@@ -61,7 +61,7 @@ router.delete('/pages/:pageId', function (req, res, next) {
 });
 
 router.get('/select', function (req, res, next) {
-    TemplateHandler.selectTemplate(req.user.role, req.user.group_system_roles, req.user.tenants, req.query.tenant)
+    TemplateHandler.selectTemplate(req.user.role, req.user.group_system_roles, req.user.tenants, req.query.tenant, req.headers['authentication-token'])
         .then(template => res.send(template))
         .catch(next);
 });

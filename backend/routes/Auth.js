@@ -22,7 +22,7 @@ router.post('/login', (req, res) =>
                                       AuthHandler.getManagerVersion(token.value),
                                       AuthHandler.getAndCacheConfig(token.value),
                                       Promise.resolve(token)]))
-        .then(([tenants, version, config, token]) => {
+        .then(([tenants, version, rbac, token]) => {
             if(!!tenants && !!tenants.items && tenants.items.length > 0) {
                 res.cookie(Consts.TOKEN_COOKIE_NAME, token.value);
 
@@ -33,7 +33,7 @@ router.post('/login', (req, res) =>
                             license: _.get(data, 'items[0]', {}),
                             version,
                             role: token.role,
-                            rbac: AuthHandler.getRBAC()
+                            rbac
                         }))
                 :
                     Promise.resolve(
@@ -41,7 +41,7 @@ router.post('/login', (req, res) =>
                             license: null,
                             version,
                             role: token.role,
-                            rbac: AuthHandler.getRBAC()
+                            rbac
                         }
                     );
 
@@ -94,16 +94,12 @@ router.post('/logout', passport.authenticate('token', {session: false}), (req, r
 });
 
 router.get('/RBAC', passport.authenticate('token', {session: false}), (req, res) => {
-    if (AuthHandler.isRbacInCache()) {
-        res.send(AuthHandler.getRBAC());
-    } else {
-        AuthHandler.getAndCacheConfig(req.headers['authentication-token'])
-            .then((config) => res.send(config.authorization))
-            .catch((err) => {
-                logger.error(err);
-                res.status(500).send({message: 'Failed to get RBAC configuration', error: err});
-            });
-    }
+    AuthHandler.getRBAC(req.headers['authentication-token'])
+        .then(res.send)
+        .catch((err) => {
+            logger.error(err);
+            res.status(500).send({message: 'Failed to get RBAC configuration', error: err});
+        });
 });
 
 module.exports = router;
