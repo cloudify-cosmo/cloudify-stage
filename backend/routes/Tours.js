@@ -11,7 +11,7 @@ var router = express.Router();
 router.use(passport.authenticate('token', {session: false}));
 
 router.get('/', function (req, res, next) {
-    ToursHandler.listTours(req.user.role, req.user.group_system_roles, req.user.tenants, req.query.tenant)
+    ToursHandler.listTours(req.user.role, req.user.group_system_roles, req.user.tenants, req.query.tenant, req.headers['authentication-token'])
         .then(tours => res.send(tours))
         .catch(next);
 });

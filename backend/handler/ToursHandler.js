@@ -22,10 +22,9 @@ function getTemplateTours(templateId) {
 }
 
 class ToursHandler {
-    static listTours(systemRole, groupSystemRoles, tenantsRoles, tenant) {
-        return TemplateHandler.selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant).then(templateId => {
-                return getTemplateTours(templateId);
-            });
+    static listTours(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
+        return TemplateHandler.selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant, token)
+            .then(getTemplateTours);
     }
 
     static init() {

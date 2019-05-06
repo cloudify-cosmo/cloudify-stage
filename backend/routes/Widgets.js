@@ -19,9 +19,10 @@ router.get('/list', function (req, res, next) {
         .catch(next);
 });
 
-function validateInstallWidgetsPermission(req, res, next) {
+async function validateInstallWidgetsPermission(req, res, next) {
     const permissionId = 'stage_install_widgets';
-    var permission = AuthHandler.getRBAC().permissions[permissionId];
+    const rbac = await AuthHandler.getRBAC(req.headers['authentication-token']);
+    const permission = rbac.permissions[permissionId];
     if(!AuthHandler.isAuthorized(req.user, permission)){
         res.sendStatus(403);
     }

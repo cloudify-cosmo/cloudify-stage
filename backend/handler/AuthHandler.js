@@ -52,7 +52,7 @@ class AuthHandler {
         .then(config => {
             authorizationCache = config.authorization;
             logger.debug('Authorization config cached successfully.');
-            return Promise.resolve(config);
+            return Promise.resolve(authorizationCache);
         })
     }
 
@@ -60,12 +60,14 @@ class AuthHandler {
         return !_.isEmpty(authorizationCache);
     }
 
-    static getRBAC() {
+    static async getRBAC(token) {
         if (!AuthHandler.isRbacInCache()) {
-            logger.error('No RBAC data in cache.');
+            logger.debug('No RBAC data in cache.');
+            return await AuthHandler.getAndCacheConfig(token);
+        } else {
+            logger.debug('RBAC data found in cache.');
+            return authorizationCache;
         }
-
-        return authorizationCache;
     }
 
     static getManagerVersion(token) {

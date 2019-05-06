@@ -169,17 +169,25 @@ const startServer = (instanceNumber) => {
 
 const instanceNumber = parseInt(process.env.NODE_APP_INSTANCE);
 if (_.isNaN(instanceNumber) || instanceNumber === 0) {
-    // Application data (tours, widgets, templates) initialization only in the first instance
+    // Application data (widgets, templates) initialization only in the first instance
     Promise.all([ToursHandler.init(), WidgetHandler.init(), TemplateHandler.init()])
         .then(() => {
-            logger.info('Application data initialized successfully.');
+            logger.info('Tours, widgets and templates data initialized successfully.');
             startServer(instanceNumber);
         })
         .catch((error) => {
-            logger.error(`Error during application data initialization: ${error}`);
+            logger.error(`Error during tours, widgets and templates data initialization: ${error}`);
             process.exit(1);
         });
 } else {
-    startServer(instanceNumber);
+    ToursHandler.init()
+        .then(() => {
+            logger.info('Tours data initialized successfully.');
+            startServer(instanceNumber);
+        })
+        .catch((error) => {
+            logger.error(`Error during tours data initialization: ${error}`);
+            process.exit(1);
+        });
 }
 
