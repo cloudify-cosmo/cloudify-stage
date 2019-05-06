@@ -16,7 +16,7 @@ module.exports = {
 
     // External before hook is ran at the beginning of the tests run, before creating the Selenium session
     before: function(done) {
-        const licenseFile = './test/cypress/fixtures/license/valid_paying_license.yaml';
+        const licenseFile = './test/cypress/fixtures/license/valid_trial_license.yaml';
         const licenseUrl = this.test_settings.launch_url + '/console/sp?su=/license';
         const license = fs.readFileSync(licenseFile);
 
