@@ -10,13 +10,9 @@ const Utils = require('./utils');
 const app = require('../conf/app.json');
 const manager = require('../conf/manager.json');
 let userConfig = require('../conf/userConfig.json');
-let LoggerHandler = require('./handler/LoggerHandler');
-let logger = LoggerHandler.getLogger('Config');
-
-const userDataConfigPath = Utils.getResourcePath('userConfig.json', true);
-logger.info(`Trying to fetch user config from: ${userDataConfigPath}`);
 
 try {
+    const userDataConfigPath = Utils.getResourcePath('userConfig.json', true);
     let userDataConfig = require(userDataConfigPath);
     userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig, {safe: true}))); // Security reason - get only allowed parameters
     userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration
@@ -53,8 +49,9 @@ module.exports = {
 
     getForClient: function(mode) {
         let config = this.get(mode);
+
         // For client only get from app config the relevant part (and not send passwords and shit)
-        let clientConfig = {
+        return {
             app: {
                 initialTemplate: config.app.initialTemplate,
                 maintenancePollingInterval: config.app.maintenancePollingInterval,
@@ -71,7 +68,5 @@ module.exports = {
             },
             mode: config.mode,
         };
-
-        return clientConfig;
     }
 };

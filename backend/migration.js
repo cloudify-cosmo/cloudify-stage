@@ -92,7 +92,6 @@ function getCurrMigration() {
         });
 }
 
-
 function cmdDownTo(migrationName) {
     if (!migrationName || migrationName === '') {
         return Promise.reject(new Error('Migration name to down to has to be supplied'));
@@ -198,10 +197,9 @@ const cmd = process.argv[2].trim();
 if (cmd === 'current') {
     getCurrMigration()
         .then(current => {
-            logger.info(current);
+            console.log(current);
             process.exit(0)
         });
 } else {
     handleCommand(cmd);
 }
-
