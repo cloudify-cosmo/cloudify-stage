@@ -96,6 +96,9 @@ module.exports = [
             filename: 'static/js/[name].js',
             publicPath: Consts.CONTEXT_PATH
         },
+        optimization: {
+            namedModules: true
+        },
         plugins: [
             new CopyWebpackPlugin([
                 {
@@ -135,7 +138,6 @@ module.exports = [
                 chunks: ['main.bundle']
             }),
             new webpack.optimize.OccurrenceOrderPlugin(),
-            new webpack.NamedModulesPlugin(),
             new webpack.HotModuleReplacementPlugin(),
             new webpack.ProvidePlugin({
                 $: 'jquery',
@@ -157,6 +159,9 @@ module.exports = [
             filename: 'widgets/[name]',
             publicPath: Consts.CONTEXT_PATH
         },
+        optimization: {
+            namedModules: true
+        },
         plugins: [
             new CopyWebpackPlugin([
                 {
@@ -164,7 +169,6 @@ module.exports = [
                     to: '[path]../backend.js'
                 }
             ]),
-            new webpack.NamedModulesPlugin(),
             new webpack.HotModuleReplacementPlugin()
         ],
         module: {
@@ -181,8 +185,10 @@ module.exports = [
             filename: 'common/common.js',
             publicPath: Consts.CONTEXT_PATH
         },
+        optimization: {
+            namedModules: true
+        },
         plugins: [
-            new webpack.NamedModulesPlugin(),
             new webpack.HotModuleReplacementPlugin()
         ],
         module: {
