@@ -19,7 +19,7 @@ module.exports = (function() {
     function saveMultipartData(req, targetDir, multipartId) {
         var storage = multer.diskStorage({
             destination: function (req, file, cb) {
-                logger.debug('Saving file on disk', file);
+                logger.debug('Saving file on disk');
 
                 var archiveFolder = _.isFunction(targetDir) ? targetDir(file.originalname) : targetDir;
 

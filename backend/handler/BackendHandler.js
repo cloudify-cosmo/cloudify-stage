@@ -3,19 +3,20 @@
  * Created by pposel on 13/09/2017.
  */
 
-var fs = require('fs-extra');
-var pathlib = require('path');
-var _ = require('lodash');
+const fs = require('fs-extra');
+const pathlib = require('path');
+const _ = require('lodash');
 const {NodeVM, VMScript} = require('vm2');
 
-var config = require('../config').get();
-var consts = require('../consts');
-var db = require('../db/Connection');
+const config = require('../config').get();
+const consts = require('../consts');
+const db = require('../db/Connection');
+const Utils = require('../utils');
 
-var logger = require('./LoggerHandler').getLogger('WidgetBackend');
+const logger = require('./LoggerHandler').getLogger('WidgetBackend');
 
-var userWidgetsFolder = '';
-var builtInWidgetsFolder = '';
+const builtInWidgetsFolder = Utils.getResourcePath('widgets', false);
+const userWidgetsFolder = Utils.getResourcePath('widgets', true);
 
 var BackendRegistrator = function (widgetId, resolve, reject) {
     return {
@@ -137,9 +138,7 @@ module.exports = (function() {
         }
     }
 
-    function initWidgetBackends(userFolder, builtInFolder) {
-        userWidgetsFolder = userFolder;
-        builtInWidgetsFolder = builtInFolder;
+    function initWidgetBackends() {
         logger.info('Scanning widget backend files...');
 
         var userWidgets = _getUserWidgets();
