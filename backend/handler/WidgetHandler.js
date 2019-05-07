@@ -286,7 +286,7 @@ module.exports = (function() {
             try {
                 logger.info('Setting up user widgets directory:', userWidgetsFolder);
                 mkdirp.sync(userWidgetsFolder);
-                return BackendHandler.initWidgetBackends(userWidgetsFolder, builtInWidgetsFolder)
+                return BackendHandler.initWidgetBackends()
                     .then(resolve)
                     .catch(reject);
             } catch (e) {
