@@ -5,6 +5,7 @@
 import React from 'react'
 import { mount } from 'enzyme';
 import { expect } from 'chai';
+import fetchMock from 'fetch-mock';
 
 import Consts from '../../app/utils/consts.js';
 import ConnectedLicensePage from '../../app/containers/LicensePage.js';
@@ -80,7 +81,8 @@ describe('(Component) LicensePage', () => {
         return ({ data, isRequired, status });
     };
 
-    const mockStoreAndRender = (role, license, version) => {
+    const mockStoreAndRender = async (role, license, version) => {
+        const licenseUrl = '/console/sp/?su=%2Flicense';
         const mockStore = configureMockStore();
         const store = mockStore({
             manager: {
@@ -115,20 +117,30 @@ describe('(Component) LicensePage', () => {
         });
         createToolbox(store);
 
+        const myMock = fetchMock.sandbox().mock(licenseUrl, { items: [license.data] });
+        global.fetch = myMock;
+
         let componentsTree = mount(
             <Provider store={store}>
                 <Router>
-                    <ConnectedLicensePage />
+                    <ConnectedLicensePage onLicenseChange={_.noop} />
                 </Router>
             </Provider>);
+
         licensePageComponent = componentsTree.find(LicensePage);
         messageContainerComponent = componentsTree.find('MessageContainer');
+
+        // Wait until Promise in componentDidMount resolves
+        await licensePageComponent.instance().componentDidMount();
+
+        // Check that license was fetch request was called
+        expect(myMock.called(licenseUrl)).to.be.true;
     };
 
     describe('for admin users', () => {
-        it('allows license management when paying license is active', () => {
+        it('allows license management when paying license is active', async () => {
             const license = getLicenseState(licenses.activePayingLicense, true, Consts.LICENSE.ACTIVE);
-            mockStoreAndRender('sys_admin', license, versions.premium);
+            await mockStoreAndRender('sys_admin', license, versions.premium);
 
             verifyProps(true, true, licenses.activePayingLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
@@ -139,9 +151,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(true);
         });
 
-        it('allows license management when trial license is active', () => {
+        it('allows license management when trial license is active', async () => {
             const license = getLicenseState(licenses.activeTrialLicense, true, Consts.LICENSE.ACTIVE);
-            mockStoreAndRender('sys_admin', license, versions.premium);
+            await mockStoreAndRender('sys_admin', license, versions.premium);
 
             verifyProps(true, true, licenses.activeTrialLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
@@ -152,9 +164,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(true);
         });
 
-        it('allows license management when paying license has expired', () => {
+        it('allows license management when paying license has expired', async () => {
             const license = getLicenseState(licenses.expiredPayingLicense, true, Consts.LICENSE.EXPIRED);
-            mockStoreAndRender('sys_admin', license, versions.premium);
+            await mockStoreAndRender('sys_admin', license, versions.premium);
 
             verifyProps(true, true, licenses.expiredPayingLicense, Consts.LICENSE.EXPIRED);
             verifyHeader();
@@ -165,9 +177,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(true);
         });
 
-        it('allows license management when trial license has expired', () => {
+        it('allows license management when trial license has expired', async () => {
             const license = getLicenseState(licenses.expiredTrialLicense, true, Consts.LICENSE.EXPIRED);
-            mockStoreAndRender('sys_admin', license, versions.premium);
+            await mockStoreAndRender('sys_admin', license, versions.premium);
 
             verifyProps(true, false, licenses.expiredTrialLicense, Consts.LICENSE.EXPIRED);
             verifyHeader();
@@ -178,24 +190,23 @@ describe('(Component) LicensePage', () => {
             verifyFooter(false);
         });
 
-        it('allows license management when no license is active', () => {
+        it('allows license management when no license is active', async () => {
             const license = getLicenseState({}, true, Consts.LICENSE.EMPTY);
-            mockStoreAndRender('sys_admin', license, versions.premium);
-
+            await mockStoreAndRender('sys_admin', license, versions.premium);
             verifyProps(true, false, {}, Consts.LICENSE.EMPTY);
             verifyHeader();
             verifyMessage('No active license', 'ban', false);
             verifySwitchToUpload(false);
-            verifyUploadLicense(true);
+            verifyUploadLicense(false);
             verifyFooter(false);
         });
     });
 
 
     describe('for non-admin users', () => {
-        it('allows to view license when paying license is active', () => {
+        it('allows to view license when paying license is active', async () => {
             const license = getLicenseState(licenses.activePayingLicense, true, Consts.LICENSE.ACTIVE);
-            mockStoreAndRender('default', license, versions.premium);
+            await mockStoreAndRender('default', license, versions.premium);
 
             verifyProps(false, true, licenses.activePayingLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
@@ -206,9 +217,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(true);
         });
 
-        it('allows to view license when trial license is active', () => {
+        it('allows to view license when trial license is active', async () => {
             const license = getLicenseState(licenses.activeTrialLicense, true, Consts.LICENSE.ACTIVE);
-            mockStoreAndRender('default', license, versions.premium);
+            await mockStoreAndRender('default', license, versions.premium);
 
             verifyProps(false, true, licenses.activeTrialLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
@@ -219,9 +230,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(true);
         });
 
-        it('allows to view license when paying license has expired', () => {
+        it('allows to view license when paying license has expired', async () => {
             const license = getLicenseState(licenses.expiredPayingLicense, true, Consts.LICENSE.EXPIRED);
-            mockStoreAndRender('default', license, versions.premium);
+            await mockStoreAndRender('default', license, versions.premium);
 
             verifyProps(false, true, licenses.expiredPayingLicense, Consts.LICENSE.EXPIRED);
             verifyHeader();
@@ -232,9 +243,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(true);
         });
 
-        it('allows to view license when trial license has expired', () => {
+        it('allows to view license when trial license has expired', async () => {
             const license = getLicenseState(licenses.expiredTrialLicense, true, Consts.LICENSE.EXPIRED);
-            mockStoreAndRender('default', license, versions.premium);
+            await mockStoreAndRender('default', license, versions.premium);
 
             verifyProps(false, false, licenses.expiredTrialLicense, Consts.LICENSE.EXPIRED);
             verifyHeader();
@@ -245,9 +256,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(false);
         });
 
-        it('allows to view license when no license is active', () => {
+        it('allows to view license when no license is active', async () => {
             const license = getLicenseState({}, true, Consts.LICENSE.EMPTY);
-            mockStoreAndRender('default', license, versions.premium);
+            await mockStoreAndRender('default', license, versions.premium);
 
             verifyProps(false, false, {}, Consts.LICENSE.EMPTY);
             verifyHeader();
@@ -257,9 +268,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(false);
         });
 
-        it('allows to view license when license without expiration date is active', () => {
+        it('allows to view license when license without expiration date is active', async () => {
             const license = getLicenseState(licenses.noExpirationDateLicense, true, Consts.LICENSE.ACTIVE);
-            mockStoreAndRender('default', license, versions.premium);
+            await mockStoreAndRender('default', license, versions.premium);
 
             verifyProps(false, true, licenses.noExpirationDateLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
@@ -270,9 +281,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(true);
         });
 
-        it('allows to view license when license without capabilities is active', () => {
+        it('allows to view license when license without capabilities is active', async () => {
             const license = getLicenseState(licenses.noCapabilitiesLicense, true, Consts.LICENSE.ACTIVE);
-            mockStoreAndRender('default', license, versions.premium);
+            await mockStoreAndRender('default', license, versions.premium);
 
             verifyProps(false, true, licenses.noCapabilitiesLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
@@ -283,9 +294,9 @@ describe('(Component) LicensePage', () => {
             verifyFooter(true);
         });
 
-        it('allows to view license when license without version is active', () => {
+        it('allows to view license when license without version is active', async () => {
             const license = getLicenseState(licenses.noCapabilitiesLicense, true, Consts.LICENSE.ACTIVE);
-            mockStoreAndRender('default', license, versions.premium);
+            await mockStoreAndRender('default', license, versions.premium);
 
             verifyProps(false, true, licenses.noCapabilitiesLicense, Consts.LICENSE.ACTIVE);
             verifyHeader();
