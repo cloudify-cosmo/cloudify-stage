@@ -47,10 +47,16 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: Start Stage Backend
+          name: Initialize database
           command: |
             cd backend
             npm run db-migrate
+      - run:
+          name: Start Stage Backend
+          environment:
+            STAGE_BACKEND_INSTANCES: 0
+          command: |
+            cd backend
             sudo npm run start
           # using sudo to create /var/log/cloudify/stage
       - run:

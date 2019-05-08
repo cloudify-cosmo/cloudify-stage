@@ -6,7 +6,7 @@ var config = require('./config.json');
 var _ = require('lodash');
 
 try {
-    var me = require('../conf/me.json');
+    var me = require('../../conf/me.json');
     _.merge(config, me.e2e);
 } catch(err) {
     if (err.code !== 'MODULE_NOT_FOUND') {

@@ -1,7 +1,7 @@
 module.exports = (function(settings) {
     var _ = require('lodash');
     try {
-        var me = require('../conf/me.json');
+        var me = require('../../conf/me.json');
         console.log('me.json found. Updating nightwatch settings.');
         _.merge(settings, me.e2e);
     } catch(err) {
