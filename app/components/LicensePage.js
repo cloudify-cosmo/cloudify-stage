@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import Consts from '../utils/consts';
 import StageUtils from '../utils/stageUtils';
-import {Button, Form, Grid, Header, Icon, Message, Segment} from './basic';
+import {Button, Form, Grid, Header, Icon, Message} from './basic';
 import MessageContainer from './MessageContainer';
 import Banner from '../containers/banner/Banner';
 import FullScreenSegment from './layout/FullScreenSegment';
@@ -145,7 +145,7 @@ export default class LicensePage extends Component {
     static propTypes = {
         isProductOperational: PropTypes.bool.isRequired,
         license: PropTypes.object.isRequired,
-        onLicenseUpload: PropTypes.func.isRequired,
+        onLicenseChange: PropTypes.func.isRequired,
         onGoToApp: PropTypes.func.isRequired,
         status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired,
     };
@@ -153,9 +153,14 @@ export default class LicensePage extends Component {
     static defaultProps = {};
 
     componentDidMount() {
-        if (_.isEmpty(this.props.license)) {
-            this.setState({isEditLicenseActive: true})
-        }
+        this.setState({isLoading: true});
+        return this.toolbox.getManager().doGet('/license')
+            .then((data) => {
+                const license = _.get(data, 'items[0]', {});
+                this.setState({isLoading: false, error: null, isEditLicenseActive: _.isEmpty(license)});
+                this.props.onLicenseChange(license);
+            })
+            .catch((error) => this.setState({isLoading: false, error: error.message}))
     }
 
     onErrorDismiss() {
@@ -172,7 +177,7 @@ export default class LicensePage extends Component {
         return this.toolbox.getManager().doPut('/license', null, this.state.license)
             .then((data) => {
                 this.setState({isLoading: false, error: null, isEditLicenseActive: false});
-                this.props.onLicenseUpload(data);
+                this.props.onLicenseChange(data);
             })
             .catch((error) => this.setState({isLoading: false, error: error.message}))
     }

@@ -1,9 +1,8 @@
 describe('License Management', () => {
 
-    const validLicenses = [
-        {name: 'valid trial', file: 'valid_trial_license.yaml', header: 'License is valid'},
-        {name: 'expired trial', file: 'expired_trial_license.yaml', header: 'The trial license has expired'}
-    ];
+    const validTrialLicense = {name: 'valid trial', file: 'valid_trial_license.yaml', header: 'License is valid'};
+    const expiredTrialLicense = {name: 'expired trial', file: 'expired_trial_license.yaml', header: 'The trial license has expired'};
+    const validLicenses = [ validTrialLicense, expiredTrialLicense ];
     const invalidLicenses = [
         {
             name: 'tampered', file: 'tampered_paying_license.yaml',
@@ -95,6 +94,21 @@ describe('License Management', () => {
 
         cy.location('pathname')
             .should('be.equal', '/console/license');
+    });
+
+    it('fetches license on page load', () => {
+        cy.visit('/console/license').waitUntilLoaded();
+
+        goToEditLicense();
+        uploadLicense(expiredTrialLicense.file)
+            .then(() => verifyMessageHeader(expiredTrialLicense.header));
+
+        // Update license using REST call
+        cy.activate()
+            .reload()
+            .waitUntilLoaded();
+
+        verifyMessageHeader(validTrialLicense.header);
     });
 
     it('shows active license', () => {

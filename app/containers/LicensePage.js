@@ -24,7 +24,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onLicenseUpload: (license) => {
+        onLicenseChange: (license) => {
             dispatch(setLicense(license));
         },
         onGoToApp: () => {

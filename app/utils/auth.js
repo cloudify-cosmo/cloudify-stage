@@ -12,17 +12,17 @@ import Internal from './Internal';
 export default class Auth {
 
     static login(username,password) {
-        var external = new External({basicAuth: btoa(`${username}:${password}`)});
+        let external = new External({basicAuth: btoa(`${username}:${password}`)});
         return external.doPost(StageUtils.Url.url('/auth/login'), null, null, true, null, true);
     }
 
     static getUserData(managerData){
-        var internal = new Internal(managerData);
+        let internal = new Internal(managerData);
         return internal.doGet('/auth/user', null, true);
     }
 
     static logout(managerData) {
-        var internal = new Internal(managerData);
+        let internal = new Internal(managerData);
         return internal.doPost('/auth/logout', null, null, true, null, true);
     }
 
