@@ -9,7 +9,10 @@
 // ***********************************************
 
 import './localStorage';
+import './users';
+import './templates';
 
+let token = '';
 
 Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
 
@@ -33,14 +36,57 @@ Cypress.Commands.add('activate', () =>
                 },
                 body: license
             }))
+        .then(() => {
+            cy.request({
+                method: 'GET',
+                url: '/console/sp',
+                qs: {
+                    su: '/tokens'
+                },
+                headers: {
+                    'Authorization': `Basic ${btoa('admin:admin')}`,
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => token = response.body.value);
+        })
 );
+
+Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null) =>
+    cy.request({
+        method,
+        url: '/console/sp',
+        qs: {
+            su: url
+        },
+        headers: {
+            'Authentication-Token': token,
+            'Content-Type': 'application/json',
+            ...headers
+        },
+        body
+    })
+);
+
+Cypress.Commands.add('stageRequest', (url, method = 'GET', headers = null, body = null) => {
+    cy.request({
+        method,
+        url,
+        headers: {
+            'Authentication-Token': token,
+            'Content-Type': 'application/json',
+            'tenant': 'default-tenant',
+            ...headers
+        },
+        body
+    })
+});
 
 Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
     cy.visit('/console/login')
-        .waitUntilLoaded()
+        .waitUntilLoaded();
 
-    cy.get('.form > :nth-child(1) > .ui > input').type(username);
-    cy.get('.form > :nth-child(2) > .ui > input').type(password);
+    cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
+    cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
     cy.get('.form > button').click();
 
     cy.get('.form > button.loading')
