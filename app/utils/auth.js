@@ -11,7 +11,7 @@ import Internal from './Internal';
 
 export default class Auth {
 
-    static login(username,password) {
+    static login(username, password) {
         let external = new External({basicAuth: btoa(`${username}:${password}`)});
         return external.doPost(StageUtils.Url.url('/auth/login'), null, null, true, null, true);
     }
