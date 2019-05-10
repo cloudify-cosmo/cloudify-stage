@@ -145,7 +145,7 @@ describe('Template Management', () => {
             .should('have.text', '404 Page Not Found');
     });
 
-    it('allows admin users to create and modify pages', () => {
+    /*it('allows admin users to create and modify pages', () => {
         cy.removeUserPages()
             .login();
 
@@ -215,7 +215,7 @@ describe('Template Management', () => {
         // Verify page was removed
         cy.getPages()
             .then((data) => expect(data.body.filter(page => page.id === 'page_1')).to.be.empty)
-    });
+    });*/
 
     it('allows admin users to create and modify templates', () => {
         cy.removeUserTemplates()
