@@ -79,6 +79,8 @@ module.exports = {
       }
 
       logger.info('Records to be inserted:', records);
-      return queryInterface.bulkInsert('Resources', records);
+      if (!_.isEmpty(records)){
+        return queryInterface.bulkInsert('Resources', records);
+      }
   }
 };
