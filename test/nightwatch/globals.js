@@ -33,7 +33,7 @@ module.exports = {
             if (response.ok) {
                 return response;
             } else {
-                throw new Error(`Server resonded with: status=${response.status}, message=${response.statusText}`);
+                throw new Error(`Server responded with: status=${response.status}, message=${response.statusText}`);
             }
         })
         .then(() => {
