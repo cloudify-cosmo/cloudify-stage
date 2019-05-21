@@ -1,0 +1,13 @@
+{
+  "name": "Site Management",
+  "widgets": [
+    {
+      "name": "Sites",
+      "definition": "sites",
+      "width": 12,
+      "height": 24,
+      "x": 0,
+      "y": 0
+    }
+  ]
+}

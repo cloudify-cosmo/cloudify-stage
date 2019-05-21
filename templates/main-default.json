@@ -7,6 +7,7 @@
     "catalog",
     "blueprints",
     "deploy",
+    "sites",
     "systemResources",
     "logs"
   ]
