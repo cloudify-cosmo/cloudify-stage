@@ -3,16 +3,16 @@
  */
 
 import thunkMiddleware from 'redux-thunk';
-import { routerMiddleware } from 'connected-react-router';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import StatePersister from './utils/StatePersister';
 import throttle from 'lodash/throttle';
 
-import createRootReducer from './reducers';
+import reducers from './reducers';
 
-export default (history, config) => {
+export default (history,config) => {
 
     let initialState = StatePersister.load(config.mode);
 
@@ -30,13 +30,13 @@ export default (history, config) => {
     initialState.manager.isLoggingIn = false;
 
     let store = createStore(
-        createRootReducer(history),
+        connectRouter(history)(reducers),
         initialState,
         composeWithDevTools(applyMiddleware(thunkMiddleware, routerMiddleware(history)))
     );
 
     // This saves the manager data in the local storage. This is good for when a user refreshes the page we can know if he is logged in or not, and save his login info - ip, username
-    store.subscribe(throttle(() => {StatePersister.save(store.getState(),config.mode);},1000));
+    store.subscribe(throttle(()=>{StatePersister.save(store.getState(),config.mode);},1000));
 
     if (module.hot) {
         module.hot.accept('./reducers', () => {
