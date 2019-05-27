@@ -56,16 +56,12 @@ var BackendRegistrator = function (widgetId, resolve, reject) {
                     defaults: {
                         script: ''
                     }})
-                .spread((widgetBackend, created) => {
-                    if (!created) {
-                        logger.debug('--- updating entry for service: ' + getServiceString(widgetId, method, serviceName));
-                        return widgetBackend.update(
-                            { script: new VMScript('module.exports = ' + service.toString()) },
-                            { fields: ['script'] }
-                        )
-                    } else {
-                        logger.debug('--- created entry for service: ' + getServiceString(widgetId, method, serviceName));
-                    }
+                .spread((widgetBackend) => {
+                    logger.debug('--- updating entry for service: ' + getServiceString(widgetId, method, serviceName));
+                    return widgetBackend.update(
+                        { script: new VMScript('module.exports = ' + service.toString()) },
+                        { fields: ['script'] }
+                    )
                 })
                 .then(() => {
                     logger.info('--- registered service: ' + getServiceString(widgetId, method, serviceName));
