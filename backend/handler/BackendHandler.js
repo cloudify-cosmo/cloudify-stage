@@ -43,7 +43,8 @@ var BackendRegistrator = function (widgetId, resolve, reject) {
                 return reject('Service body must be a function (function(request, response, next, helper) {...})');
             }
 
-            logger.info('--- registering service ' + serviceName + ' for ' + method + ' method');
+            const getServiceString = (widgetId, method, serviceName) => `widget=${widgetId} method=${method} name=${serviceName}`;
+            logger.info('--- registering service ' + getServiceString(widgetId, method, serviceName));
 
             return db.WidgetBackend
                 .findOrCreate({
@@ -56,20 +57,23 @@ var BackendRegistrator = function (widgetId, resolve, reject) {
                         script: ''
                     }})
                 .spread((widgetBackend, created) => {
-                    if (created) {
+                    if (!created) {
+                        logger.debug('--- updating entry for service: ' + getServiceString(widgetId, method, serviceName));
                         return widgetBackend.update(
                             { script: new VMScript('module.exports = ' + service.toString()) },
                             { fields: ['script'] }
                         )
+                    } else {
+                        logger.debug('--- created entry for service: ' + getServiceString(widgetId, method, serviceName));
                     }
                 })
                 .then(() => {
-                    logger.info('--- registered service ' + serviceName + ' for ' + method + ' method');
+                    logger.info('--- registered service: ' + getServiceString(widgetId, method, serviceName));
                     return resolve();
                 })
                 .catch((error) => {
                     logger.error(error);
-                    return reject('--- error registering service ' + serviceName + ' for ' + method + ' method');
+                    return reject('--- error registering service: ' + getServiceString(widgetId, method, serviceName));
                 });
         }
     }
