@@ -160,7 +160,8 @@ function NodeTypeIcon(props) {
         'cloudify.nodes.Tier':'topology-glyph tier', //A marker for a future scale group
         'cloudify.nodes.VirtualIP':'topology-glyph floating-ip', //A virtual IP implemented as NAT or in another manner
         'cloudify.nodes.Volume':'topology-glyph volume', //A persistent block storage volume
-        'cloudify.nodes.WebServer':'topology-glyph web-server' //A web server
+        'cloudify.nodes.WebServer':'topology-glyph web-server', //A web server
+        'cloudify.nodes.Component':'topology-glyph component' //A component
     };
     const DEFAULT_NODE_TYPE_CLASS = NODE_TYPE_CLASS['cloudify.nodes.Root'];
 

@@ -3,8 +3,9 @@
  */
 
 import 'cloudify-blueprint-topology';
-var BlueprintTopology = cloudifyTopology.Topology;
-var DataProcessingService = cloudifyTopology.DataProcessingService;
+
+let BlueprintTopology = cloudifyTopology.Topology;
+let DataProcessingService = cloudifyTopology.DataProcessingService;
 
 export default class Topology extends React.Component {
     constructor(props, context) {
@@ -60,7 +61,8 @@ export default class Topology extends React.Component {
             autoLayout:true,
             enableContextMenu: false,
             onNodeSelected: (node)=> this._setSelectedNode(node),
-            onDataProcessed: (data)=>this._processedTopologyData = data
+            onDataProcessed: (data)=>this._processedTopologyData = data,
+            onDeploymentNodeClick: (deploymentId)=>this._goToDeploymentPage(deploymentId)
         });
 
         this._topology.start();
@@ -173,6 +175,12 @@ export default class Topology extends React.Component {
         $(this.glassRef.current).removeClass('unlocked');
     }
 
+    _goToDeploymentPage(nodeDeploymentId) {
+        this.props.toolbox.getContext().setValue('deploymentId', nodeDeploymentId);
+        this.props.toolbox.goToPage('deployments');
+        this.props.toolbox.drillDown(this.props.toolbox.getWidget(), 'deployment', {deploymentId: nodeDeploymentId}, nodeDeploymentId);
+    }
+
     render () {
         return (
             <div ref={this.topologyParentContainerRef}
@@ -186,4 +194,3 @@ export default class Topology extends React.Component {
 
     }
 }
-
