@@ -161,7 +161,8 @@ function NodeTypeIcon(props) {
         'cloudify.nodes.VirtualIP':'topology-glyph floating-ip', //A virtual IP implemented as NAT or in another manner
         'cloudify.nodes.Volume':'topology-glyph volume', //A persistent block storage volume
         'cloudify.nodes.WebServer':'topology-glyph web-server', //A web server
-        'cloudify.nodes.Component':'topology-glyph component' //A component
+        'cloudify.nodes.Component':'topology-glyph component', //A component node that is connected to a remote deployment
+        'cloudify.nodes.SharedResource':'topology-glyph shared-resource' //A shared-resource node is a read link to a remote deployment
     };
     const DEFAULT_NODE_TYPE_CLASS = NODE_TYPE_CLASS['cloudify.nodes.Root'];
 
