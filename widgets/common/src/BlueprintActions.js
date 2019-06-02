@@ -20,12 +20,13 @@ class BlueprintActions {
             .then(() => this.doDeleteImage(blueprint.id));
     }
 
-    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation = false) {
+    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation = false, siteName = null) {
         return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null, {
             'blueprint_id': blueprint.id,
             inputs,
             visibility,
-            skip_plugins_validation:skipPluginsValidation
+            skip_plugins_validation:skipPluginsValidation,
+            site_name:siteName
         });
     }
 
@@ -79,7 +80,6 @@ class BlueprintActions {
     doDeleteImage(blueprintId) {
         return this.toolbox.getInternal().doDelete(`/ba/image/${blueprintId}`);
     }
-
 }
 
 Stage.defineCommon({

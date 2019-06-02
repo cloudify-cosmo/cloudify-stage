@@ -75,9 +75,14 @@ export default class DeploymentsSegment extends React.Component {
                                             </Header>
                                         </Grid.Column>
 
-                                        <Grid.Column width={3}>
+                                        <Grid.Column width={2}>
                                             <Header as='h5'>Blueprint</Header>
                                             <span>{item.blueprint_id}</span>
+                                        </Grid.Column>
+
+                                        <Grid.Column width={2}>
+                                            <Header as='h5'>Site Name</Header>
+                                            <span>{item.site_name}</span>
                                         </Grid.Column>
 
                                         <Grid.Column width={2}>
@@ -91,7 +96,7 @@ export default class DeploymentsSegment extends React.Component {
                                             <span>{item.created_by}</span>
                                         </Grid.Column>
 
-                                        <Grid.Column width={4}>
+                                        <Grid.Column width={3}>
                                             <Header as='h5'>Node Instances ({item.nodeInstancesCount})</Header>
                                             <Grid columns={4}>
                                                 <Grid.Row>

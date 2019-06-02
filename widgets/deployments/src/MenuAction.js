@@ -6,6 +6,7 @@ export default class MenuAction extends React.Component {
 
     static UPDATE_ACTION='update';
     static DELETE_ACTION='delete';
+    static SET_SITE_ACTION='setSite';
     static FORCE_DELETE_ACTION='forceDelete';
     static WORKFLOW_ACTION='workflow';
 
@@ -31,6 +32,8 @@ export default class MenuAction extends React.Component {
                         </Menu.Menu>
                     </Menu.Item>
                     <Menu.Item icon='edit' content='Update' name={MenuAction.UPDATE_ACTION}
+                               onClick={this.actionClick.bind(this)}/>
+                    <Menu.Item icon='building' content='Set Site' name={MenuAction.SET_SITE_ACTION}
                                onClick={this.actionClick.bind(this)}/>
                     <Menu.Item icon='trash alternate' content='Delete' name={MenuAction.DELETE_ACTION}
                                onClick={this.actionClick.bind(this)}/>

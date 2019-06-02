@@ -50,9 +50,10 @@ export default class extends React.Component {
                        className={tableName}
                        noDataMessage={this.props.noDataMessage}>
 
-                <DataTable.Column label="Name" name="id" width="25%"/>
-                <DataTable.Column label="Last Execution" />
-                <DataTable.Column label="Blueprint" name="blueprint_id" width="20%" show={!this.props.data.blueprintId}/>
+                <DataTable.Column label="Name" name="id" width="20%"/>
+                <DataTable.Column label="Last Execution" width="5%"/>
+                <DataTable.Column label="Blueprint" name="blueprint_id" width="15%" show={!this.props.data.blueprintId}/>
+                <DataTable.Column label="Site Name" name="site_name" width="15%"/>
                 <DataTable.Column label="Created" name="created_at" width="15%"/>
                 <DataTable.Column label="Updated" name="updated_at" width="15%"/>
                 <DataTable.Column label="Creator" name='created_by' width="10%"/>
@@ -79,6 +80,7 @@ export default class extends React.Component {
                                                              labelAttached={false} />
                                 </DataTable.Data>
                                 <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+                                <DataTable.Data>{item.site_name}</DataTable.Data>
                                 <DataTable.Data>
                                     {item.created_at}
                                     <DeploymentUpdatedIcon deployment={item} />

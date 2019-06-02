@@ -20,7 +20,8 @@ export default class DeployModal extends React.Component {
         fileLoading: false,
         deploymentInputs: [],
         visibility: Stage.Common.Consts.defaultVisibility,
-        skipPluginsValidation: false
+        skipPluginsValidation: false,
+        siteName: ''
     };
 
     static propTypes = {
@@ -103,7 +104,8 @@ export default class DeployModal extends React.Component {
         this.setState({loading: true});
 
         var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions.doDeploy(this.state.blueprint, this.state.deploymentName, deploymentInputs, this.state.visibility, this.state.skipPluginsValidation)
+        actions.doDeploy(this.state.blueprint, this.state.deploymentName, deploymentInputs, this.state.visibility,
+                         this.state.skipPluginsValidation, this.state.siteName)
             .then((/*deployment*/)=> {
                 this.setState({loading: false, errors: {}});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -139,6 +141,7 @@ export default class DeployModal extends React.Component {
 
         let blueprints = Object.assign({},{items:[]}, this.props.blueprints);
         let options = _.map(blueprints.items, blueprint => { return { text: blueprint.id, value: blueprint.id } });
+        let site_options = _.map(this.props.sites.items, site => { return { text: site.name, value: site.name } });
 
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()} closeOnEscape={false}>
@@ -191,6 +194,12 @@ export default class DeployModal extends React.Component {
                                                        this.state.errors,
                                                        this.state.blueprint.plan.data_types)
                         }
+
+                        <Form.Field error={this.state.errors.siteName} label='Site name'>
+                            <Form.Dropdown search selection value={this.state.siteName} name='siteName'
+                                           options={site_options} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+
                         <Form.Field className='skipPluginsValidationCheckbox'>
                             <Form.Checkbox toggle
                                            label="Skip plugins validation"
