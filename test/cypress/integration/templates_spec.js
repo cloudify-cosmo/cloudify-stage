@@ -42,12 +42,12 @@ describe('Template Management', () => {
         { id: 'ha', name: 'Admin Operations' },
         { id: 'logs', name: 'Logs' },
         { id: 'plugins', name: 'Plugins' },
+        { id: 'sites', name: 'Site Management' },
         { id: 'statistics', name: 'Statistics' },
         { id: 'systemResources-admin', name: 'System Resources' },
         { id: 'systemResources-community', name: 'System Resources' },
         { id: 'systemResources', name: 'System Resources' },
-        { id: 'tmm', name: 'Tenant Management' },
-        { id: 'sites', name: 'Sites' }
+        { id: 'tmm', name: 'Tenant Management' }
     ];
 
     const verifyTemplateRow = (index, id, pages, roles, tenants) => {
