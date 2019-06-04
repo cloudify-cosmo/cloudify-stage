@@ -273,6 +273,7 @@ module.exports = (r) => {
                                         // If a task is retrying - delete it and combine it with its father
                                         allSubgraphs[sourceNode].labels[0].retry = workflowTask.labels[0].retry;
                                         allSubgraphs[sourceNode].labels[0].state = workflowTask.labels[0].state;
+                                        allSubgraphs[sourceNode].labels[0].display_text = workflowTask.labels[0].display_text;
                                     }
                                 }
                                 else
@@ -303,7 +304,7 @@ module.exports = (r) => {
             // we need to increase the Node's height accordingly and split the text
             // This process must be here after all the nodes are in the list
             const textSplitCalculation = (nodeWidth, textToCalculate) => {
-                let maximumLength = _.floor((nodeWidth - (paddingLeftRight * 2)) / textSizingFactor);
+                let maximumLength = _.floor((nodeWidth - (paddingLeftRight * 2)) / textSizingFactor) - 2;
                 if (textToCalculate.length > maximumLength) {
                     let indexOfSplitLocation;
                     // Traversing the splitting location backwards to find the beginning of the word
