@@ -13,7 +13,7 @@ describe('Template Management', () => {
         {
             id: 'main-default',
             pages: [
-                'app', 'catalog', 'blueprints', 'deploy', 'systemResources', 'logs'
+                'app', 'catalog', 'blueprints', 'deploy', 'sites', 'systemResources', 'logs'
             ],
             roles: 'default',
             tenants: [ 'all' ]
@@ -21,7 +21,7 @@ describe('Template Management', () => {
         {
             id: 'main-sys_admin',
             pages: [
-                'adminDash', 'catalog', 'blueprints', 'deploy', 'tmm', 'ha',
+                'adminDash', 'catalog', 'blueprints', 'deploy', 'sites', 'tmm', 'ha',
                 'systemResources-admin', 'statistics', 'logs'
             ],
             roles: 'sys_admin',
@@ -42,6 +42,7 @@ describe('Template Management', () => {
         { id: 'ha', name: 'Admin Operations' },
         { id: 'logs', name: 'Logs' },
         { id: 'plugins', name: 'Plugins' },
+        { id: 'sites', name: 'Site Management' },
         { id: 'statistics', name: 'Statistics' },
         { id: 'systemResources-admin', name: 'System Resources' },
         { id: 'systemResources-community', name: 'System Resources' },
