@@ -245,7 +245,7 @@ module.exports = (r) => {
         const safeDeleteIrrelevantGraphVertices = (allSubgraphs) => {
             // Remove LocalWorkflow, NOPWorkflowTasks and retrying-tasks from the graph
             // while keeping it connected
-            let existingEdges = new Set(); // Used to remove deuplicate edges
+            let existingEdges = new Set(); // Used to remove duplicate edges
             _.map(allSubgraphs, (subGraph) => {
                 if (subGraph.children && subGraph.children.length > 0) { // Go through all the subgraphs
                     subGraph.children = _.map(subGraph.children, (workflowTask) => {
@@ -359,9 +359,30 @@ module.exports = (r) => {
             // Removing irrelevant vertices (when a task is rescheduled due to failure mostly)
             allSubgraphs = safeDeleteIrrelevantGraphVertices(allSubgraphs);
             // Removing subgraphs with 0 children
-            allSubgraphs = _.omitBy(allSubgraphs, (subGraph) =>
-                _.isEmpty(subGraph.children) && !_.isEmpty(subGraph.labels) && subGraph.labels[0].type == subgraphTask
-            );
+            allSubgraphs = _.omitBy(allSubgraphs, (subGraph) => {
+                if (_.isEmpty(subGraph.children) && !_.isEmpty(subGraph.labels) && subGraph.labels[0].type == subgraphTask) {
+                    // Verify the subGraph doesn't have connected edges
+                    if (subGraph.containing_subgraph != null) {
+                        let i = allSubgraphs[subGraph.containing_subgraph].edges.length;
+                        while(i--) {
+                            if (allSubgraphs[subGraph.containing_subgraph].edges[i].sources.indexOf(subGraph.id) > -1 ||
+                                allSubgraphs[subGraph.containing_subgraph].edges[i].targets.indexOf(subGraph.id) > -1) {
+                                    allSubgraphs[subGraph.containing_subgraph].edges.splice(i, 1);
+                            }
+                        }
+                    }
+                    else {
+                        let i = allSubgraphs.edges.length;
+                        while(i--) {
+                            if (allSubgraphs.edges[i].sources.indexOf(subGraph.id) > -1 ||
+                                allSubgraphs.edges[i].targets.indexOf(subGraph.id) > -1) {
+                                    allSubgraphs.edges.splice(i, 1);
+                            }
+                        }
+                    }
+                    return true;
+                }
+            });
             allSubgraphs = _.omitBy(allSubgraphs, (subGraph) => {
                 // Return all the nodes that are root-level subgraphs
                 let containing_subgraph = subGraph.containing_subgraph;
