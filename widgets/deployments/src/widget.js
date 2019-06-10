@@ -35,14 +35,16 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
     fetchParams: function(widget, toolbox) {
-        var blueprintId = toolbox.getContext().getValue('blueprintId');
-
+        let blueprintId = toolbox.getContext().getValue('blueprintId');
         blueprintId = _.isEmpty(widget.configuration.blueprintIdFilter) ? blueprintId : widget.configuration.blueprintIdFilter;
+        let obj = { blueprint_id: blueprintId };
 
-        let obj = {
-            blueprint_id: blueprintId
+        let siteName = toolbox.getContext().getValue('siteName');
+        if (siteName) {
+            obj.site_name = siteName;
         }
-        if(toolbox.getContext ().getValue ('onlyMyResources')){
+
+        if(toolbox.getContext ().getValue ('onlyMyResources')) {
             obj.created_by = toolbox.getManager().getCurrentUsername();
         }
         return obj;

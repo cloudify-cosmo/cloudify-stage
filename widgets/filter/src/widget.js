@@ -14,22 +14,24 @@ Stage.defineWidget({
     showHeader: false,
     showBorder: false,
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
-    
+
     fetchData:(widget,toolbox,params)=>{
         return Promise.all([
             widget.configuration.filterByBlueprints ? toolbox.getManager().doGetFull('/blueprints?_include=id') : Promise.resolve({}),
-            widget.configuration.filterByDeployments ? toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id') : Promise.resolve({}),
+            widget.configuration.filterByDeployments ? toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id,site_name') : Promise.resolve({}),
             widget.configuration.filterByNodes ? toolbox.getManager().doGetFull('/nodes?_include=id,blueprint_id,deployment_id') : Promise.resolve({}),
             widget.configuration.filterByNodeInstances ? toolbox.getManager().doGetFull('/node-instances?_include=id,deployment_id,node_id') : Promise.resolve({}),
             widget.configuration.filterByExecutions || widget.configuration.filterByExecutionsStatus ?
                 toolbox.getManager().doGetFull('/executions?_include=id,blueprint_id,deployment_id,workflow_id,status_display') : Promise.resolve({}),
+            widget.configuration.filterBySiteName ? toolbox.getManager().doGetFull('/sites?_include=name') : Promise.resolve({}),
         ]).then(results=>{
             return {
                 blueprints: results[0],
                 deployments: results[1],
                 nodes: results[2],
                 nodeInstances: results[3],
-                executions: results[4]
+                executions: results[4],
+                sites: results[5]
             }
         });
     },
@@ -45,12 +47,13 @@ Stage.defineWidget({
         {id: "filterByNodes",name: "Show node filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "filterByNodeInstances",name: "Show node instance filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "filterByExecutionsStatus",name: "Show execution status filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
+        {id: "filterBySiteName",name: "Show site name filter", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
         {id: "allowMultipleSelection", name: "Allow multiple selection",
          description: "Allows selecting more than one blueprint, deployment, node, node instance and execution in the filter",
          default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
     ],
 
-    _processData(blueprintId, deploymentId, nodeId, nodeInstanceId, executionId, executionStatus, data) {
+    _processData(blueprintId, deploymentId, nodeId, nodeInstanceId, executionId, executionStatus, siteName, data) {
         let processedData = {
             blueprintId,
             deploymentId,
@@ -58,6 +61,7 @@ Stage.defineWidget({
             nodeInstanceId,
             executionId,
             executionStatus,
+            siteName,
             blueprints: {
                 items: _.sortBy(data.blueprints.items, 'id')
             },
@@ -72,7 +76,10 @@ Stage.defineWidget({
             },
             executions: {
                 items: _.sortBy(data.executions.items, 'id')
-            }
+            },
+            sites: {
+                items: _.sortBy(data.sites.items, 'name')
+            },
         };
 
         processedData.allExecutions = Object.assign({}, processedData.executions);
@@ -123,10 +130,11 @@ Stage.defineWidget({
         const selectedNodeInstanceIds = context.getValue('nodeInstanceId');
         const selectedExecutionIds = context.getValue('executionId');
         const selectedExecutionStatus = context.getValue('executionStatus');
+        const selectedSiteName = context.getValue('siteName');
 
         let processedData
-            = this._processData(selectedBlueprintIds, selectedDeploymentIds, selectedNodeIds,
-                                selectedNodeInstanceIds, selectedExecutionIds, selectedExecutionStatus, data);
+            = this._processData(selectedBlueprintIds, selectedDeploymentIds, selectedNodeIds, selectedNodeInstanceIds,
+                                selectedExecutionIds, selectedExecutionStatus, selectedSiteName, data);
 
         return (
             <Filter configuration={widget.configuration} data={processedData} toolbox={toolbox}/>
