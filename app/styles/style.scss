@@ -424,13 +424,21 @@ a:hover {
       font-size: 1.1em;
     }
 
-    input {
+    input,
+    input:placeholder-shown {
       margin: 0 50px;
-      opacity: 0.4;
+      color: $white;
+      background: rgba(255, 255, 255, 0.3);
     }
 
-    input:focus {
-      opacity: 0.6;
+    input:focus,
+    input:placeholder-shown:focus {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    input::placeholder {
+      color: $white;
+      opacity: 1 !important; /* Firefox */
     }
 
     button {
