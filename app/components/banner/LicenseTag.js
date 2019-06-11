@@ -9,19 +9,18 @@ import {Label} from '../basic';
 import Consts from '../../utils/consts';
 
 export default function LicenseTag({isCommunity, isExpired, isTrial, className = ''}) {
-    let labelProps = { color: 'yellow' };
-    if (isTrial) {
-        labelProps.content = 'Trial';
-    }
-    if (isExpired) {
-        labelProps.content = 'Expired';
-    }
-    if (isCommunity) {
-        labelProps.content = 'Community';
-    }
+    const labelProps
+        = isCommunity
+        ? { content: 'Community' }
+        : isExpired
+            ? { content: 'Expired' }
+            : isTrial
+                ? { content: 'Trial' }
+                : {};
 
     const LicenseLabel = (labelProps) =>
-        <Label {...labelProps} size='large' style={{marginLeft: 15}} className={className} />;
+        <Label {...labelProps} size='large'
+               style={{ marginLeft: 15, backgroundColor: '#FFC304', color: '#000000' }} className={className} />;
 
     const LinkedLicenseLabel = (labelProps) =>
         !_.isEmpty(labelProps) &&

@@ -30,6 +30,7 @@ class Routes extends Component {
                 } />
                 <Route exact path={Consts.ERROR_PAGE_PATH} component={LogoPage} />
                 <Route exact path={Consts.ERROR_NO_TENANTS_PAGE_PATH} component={LogoPage} />
+                <Route exact path={Consts.ERROR_404_PAGE_PATH} component={LogoPage} />
                 {
                     this.props.isLoggedIn && this.props.isLicenseRequired &&
                     <Route exact path={Consts.LICENSE_PAGE_PATH} component={LicensePage} />
