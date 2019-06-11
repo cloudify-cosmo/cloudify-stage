@@ -2,14 +2,16 @@
  * Created by kinneretzin on 10/11/2016.
  */
 
-import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { parse } from 'query-string';
-import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import { Button, Input, Message, Form } from './basic';
 
-export default class Login extends Component {
+import { Button, Input, Message, Form } from './basic';
+import SplashLoadingScreen from '../utils/SplashLoadingScreen';
+import Logo from './banner/Logo';
+import FullScreenSegment from './layout/FullScreenSegment';
+
+export default class LoginPage extends Component {
 
     static propTypes = {
         username: PropTypes.string,
@@ -65,8 +67,10 @@ export default class Login extends Component {
         const isHeaderTextPresent = (!_.isEmpty(loginPageHeader) || !_.isEmpty(loginPageText));
 
         return (
+            <FullScreenSegment>
                 <div className={`loginContainer ${isHeaderTextPresent?'loginContainerExtended':''}`} >
 
+                    <Logo />
                     {
                         isHeaderTextPresent &&
                         <div className="loginHeader">
@@ -75,14 +79,14 @@ export default class Login extends Component {
                         </div>
                     }
 
-                    <Form size="huge" onSubmit={this.onSubmit.bind(this)}>
+                    <Form onSubmit={this.onSubmit.bind(this)}>
                         <Form.Field required error={this.state.errors.username}>
-                            <Input fluid name="username" type="text" placeholder="Enter user name" autoFocus
+                            <Input name="username" type="text" placeholder="Enter user name" autoFocus
                                    value={this.state.username} onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 
                         <Form.Field required error={this.state.errors.password}>
-                            <Input fluid name="password" type="password" placeholder="Enter user password"
+                            <Input name="password" type="password" placeholder="Enter user password"
                                    value={this.state.password} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
@@ -91,10 +95,14 @@ export default class Login extends Component {
                             <Message error style={{display: 'block'}}>{this.props.loginError}</Message>
                         }
 
-                        <Button size='huge' disabled={this.props.isLoggingIn} loading={this.props.isLoggingIn} type='submit'>Login</Button>
+                        <Button disabled={this.props.isLoggingIn} loading={this.props.isLoggingIn}
+                                color='yellow' size='large' type='submit'>
+                            Login
+                        </Button>
                     </Form>
 
                 </div>
+            </FullScreenSegment>
         );
     }
 }

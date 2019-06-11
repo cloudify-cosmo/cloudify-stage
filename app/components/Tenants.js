@@ -34,10 +34,10 @@ export default class Tenants extends Component {
 
         const tenantMenuTrigger = (
             <span>
-                <Icon name="male" circular size="small"/>
+                <Icon name="male" />
                 <span>{selectedTenant ? selectedTenant : 'No Tenants'}</span>
             </span>
-        )
+        );
 
         return (
             <Dropdown item pointing='top right' className='tenantsMenu' trigger={tenantMenuTrigger}>

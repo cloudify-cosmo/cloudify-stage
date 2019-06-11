@@ -11,5 +11,5 @@ export default function ProductVersion({version = '',  className = ''}) {
     const shortVersion = `${major}${minor ? `.${minor}` : ''}`;
 
     return !_.isEmpty(shortVersion) &&
-        <span style={{color: '#29abe2', verticalAlign: 'middle'}} className={className}> {shortVersion}</span>
+        <span style={{color: '#C1C1C6', verticalAlign: 'middle'}} className={className}> {shortVersion}</span>
 }

@@ -139,6 +139,12 @@ module.exports = [
             ]),
             new CopyWebpackPlugin([
                 {
+                    from: 'app/fonts',
+                    to: 'static/fonts'
+                }
+            ]),
+            new CopyWebpackPlugin([
+                {
                     from: 'widgets',
                     to: 'appData/widgets',
                     ignore: ['**/src/**']
