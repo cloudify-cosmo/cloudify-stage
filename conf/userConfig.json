@@ -2,19 +2,19 @@
   "whiteLabel": {
     "pageTitle": "Cloudify Console",
     "logoUrl": "/console/static/images/Cloudify-logo.png",
-    "mainColor": "#000069",
+    "mainColor": "#0077FC",
 
     "productName": "Cloudify",
     "headerTextColor": "#d8e3e8",
     "showVersionDetails": true,
 
-    "loginPageHeader": "",
+    "loginPageHeader": "CLOUDIFY",
     "loginPageHeaderColor": "white",
-    "loginPageText": "",
+    "loginPageText": "Welcome to the Cloudify Management Console, Please log in",
     "loginPageTextColor": "white",
 
-    "sidebarColor": "#d8e3e8",
-    "sidebarTextColor" : "#000000",
+    "sidebarColor": "#E2E2E2",
+    "sidebarTextColor" : "#7C7C84",
 
     "customCssPath": ""
   },

@@ -1,3 +1,33 @@
+$blue-light: #45A7FF;
+$blue-normal: #0077FC;
+$blue-dark: #0064BF;
+
+$cyan-light: #D9FDFF;
+$cyan-normal: #BAF8FF;
+$cyan-dark: #7EF2F2;
+
+$green-light: #8BFDDA;
+$green-normal: #3DFBC2;
+$green-dark: #16B77D;
+
+$grey-veryLight: #F2F2F2;
+$grey-light: #E2E2E2;
+$grey-normal: #C1C1C6;
+$grey-dark: #AAAAB2;
+$grey-veryDark: #7C7C84;
+$grey-darkest: #585860;
+
+$yellow-light: #FFDB80;
+$yellow-normal: #FFC304;
+$yellow-dark: #EFA500;
+
+$white: #FFFFFF;
+$black: #000000;
+
+@font-face {
+  font-family: Cloudify;
+  src: url(../fonts/JosefinSans-Bold.ttf);
+}
 
 body {
 }
@@ -24,7 +54,7 @@ a:hover {
 }
 
 .sidebar-button{
-  color: white;
+  color: $white;
   padding: 15px;
 }
 
@@ -56,10 +86,21 @@ a:hover {
       transition: all 500ms cubic-bezier(.55, 0, .1, 1);
       left: -200px;
       @media (min-width: 992px) {
-        left: 0px;
+        left: 0;
       }
       &.open{
-        left: 0px !important;
+        left: 0 !important;
+      }
+      .item {
+        color: $grey-veryDark;
+        background-color: $grey-light;
+      }
+      .item.active, .item:hover {
+        color: $grey-darkest;
+        background-color: $grey-normal;
+      }
+      .item:before {
+        background-color: $grey-veryLight;
       }
     }
   }
@@ -361,7 +402,7 @@ a:hover {
 
   .loginContainer {
     margin: auto;
-    width: 400px;
+    width: 350px;
     height: 170px;
     position: absolute;
     left: 0;
@@ -374,8 +415,38 @@ a:hover {
       margin-bottom: 30px;
     }
 
+    .loginHeader h2 {
+      font-size: 2em;
+      font-family: Cloudify, sans-serif;
+    }
+
+    .loginHeader p {
+      font-size: 1.1em;
+    }
+
+    input,
+    input:placeholder-shown {
+      margin: 0 50px;
+      color: $white;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    input:focus,
+    input:placeholder-shown:focus {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    input::placeholder {
+      color: $white;
+      opacity: 1 !important; /* Firefox */
+    }
+
     button {
-      width: 100%;
+      display: block;
+      margin: 30px auto;
+      width: 50%;
+      border-radius: 25px;
+      color: $white;
     }
   }
 
@@ -574,7 +645,7 @@ table.servicesData button.refreshButton {
 
     .ui.inverted.darkyellow {
       background-color: #ffa000 !important;
-      color: #fff !important;
+      color: $white !important;
     }
 
     .nodeState .icon {
@@ -682,7 +753,7 @@ table.servicesData button.refreshButton {
   }
 
   .ui.vertical.menu .menu .item {
-    color: black;
+    color: $black;
   }
 
   .ui.vertical.menu .menu .item:hover {
@@ -812,7 +883,7 @@ a.underline {
   }
 
   &:hover::before {
-    background-color: black;
+    background-color: $black;
     transform: scaleX(1);
   }
 }

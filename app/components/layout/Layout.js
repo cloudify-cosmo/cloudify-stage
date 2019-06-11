@@ -6,7 +6,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 
 import Header from '../../containers/layout/Header';
 
@@ -90,9 +90,8 @@ export default class Layout extends Component {
                     }
                     <Route exact path='/page/:pageId/:pageName' component={Home}/>
                     <Route exact path='/page/:pageId' component={Home}/>
-                    <Route exact path={Consts.ERROR_404_PAGE_PATH} component={NotFound}/>,
                     <Route exact path={Consts.HOME_PAGE_PATH} component={Home} />
-                    <Route component={NotFound} />
+                    <Route render={() => <Redirect to={Consts.ERROR_404_PAGE_PATH} />} />
                 </Switch>
             </ScrollToTop>
         );

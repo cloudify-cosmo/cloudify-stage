@@ -2,11 +2,12 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
-import Login from '../components/Login';
+import { withRouter } from 'react-router';
+
+import LoginPage from '../components/LoginPage';
 import {login} from '../actions/managers';
-import Consts from '../utils/consts';
+
 
 const mapStateToProps = (state) => {
 
@@ -27,7 +28,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 };
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(Login);
+)(LoginPage));
