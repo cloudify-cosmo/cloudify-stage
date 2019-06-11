@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -x
 
-npm install
+npm ci
 cd backend
-npm install
+npm ci

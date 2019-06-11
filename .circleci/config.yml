@@ -9,21 +9,9 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}-{{ checksum "backend/package.json" }}
-          - v1-dependencies-
-
       - run:
           name: Install dependencies
           command: npm run beforebuild
-
-      - save_cache:
-          paths:
-            - node_modules
-            - backend/node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}-{{ checksum "backend/package.json" }}
 
       - run:
           name: Build application
