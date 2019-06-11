@@ -3,8 +3,9 @@
  */
 
 import MenuAction from './MenuAction';
-import DeploymentsSegment from './DeploymentsSegment';
+import SetSiteModal from './SetSiteModal';
 import DeploymentsTable from './DeploymentsTable';
+import DeploymentsSegment from './DeploymentsSegment';
 
 export default class DeploymentsList extends React.Component {
 
@@ -208,6 +209,11 @@ export default class DeploymentsList extends React.Component {
                     deploymentUpdateId={this.state.deploymentUpdateId}
                     onClose={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox} />
+
+                <SetSiteModal open={this.state.modalType === MenuAction.SET_SITE_ACTION && this.state.showModal}
+                              deployment={this.state.deployment}
+                              onHide={this._hideModal.bind(this)}
+                              toolbox={this.props.toolbox} />
             </div>
 
         );

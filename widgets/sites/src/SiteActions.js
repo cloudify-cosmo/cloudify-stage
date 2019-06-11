@@ -16,8 +16,8 @@ export default class SiteActions {
         return this.toolbox.getManager().doPut(`/sites/${name}`, null, {location, visibility});
     }
 
-    doUpdate(name, visibility, location=null, new_name=null) {
-        let site_data = _.pickBy({location, visibility, new_name});
+    doUpdate(name, visibility, location=null, newName=null) {
+        let site_data = _.pickBy({location, visibility, 'new_name': newName});
         return this.toolbox.getManager().doPost(`/sites/${name}`, null, site_data);
     }
 }

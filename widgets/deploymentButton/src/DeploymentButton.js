@@ -14,16 +14,25 @@ export default class extends React.Component {
             open: false,
             loading: false,
             error: null,
-            blueprints: {items:[]}
+            blueprints: {items:[]},
+            sites: {items:[]}
         }
     }
 
     _createDeployment(){
         this.setState({loading: true});
 
-        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions.doGetBlueprints().then((blueprints)=>{
+        let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        actions.doGetBlueprints().then((blueprints) => {
             this.setState({loading: false, error: null, blueprints, open: true});
+        }).catch((err)=> {
+            this.setState({loading: false, error: err.message});
+        });
+
+        actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+        actions.doGetSites().then((sites) => {
+            let blueprints = this.state.blueprints;
+            this.setState({loading: false, error: null, sites, blueprints, open: true});
         }).catch((err)=> {
             this.setState({loading: false, error: err.message});
         });
@@ -43,7 +52,7 @@ export default class extends React.Component {
                 <Button color='green' icon='rocket' content='Create Deployment' labelPosition='left' className='widgetButton'
                         loading={this.state.loading} onClick={this._createDeployment.bind(this)} />
 
-                <DeployModal open={this.state.open} blueprints={this.state.blueprints}
+                <DeployModal open={this.state.open} blueprints={this.state.blueprints} sites={this.state.sites}
                              onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox}/>
             </div>
         );

@@ -73,6 +73,18 @@ class DeploymentActions {
         return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}/set-visibility`, null, {visibility: visibility});
     }
 
+    doSetSite(deploymentId, siteName = null, detachSite = false) {
+        let data = {'detach_site': detachSite};
+        if (siteName) {
+            data['site_name'] = siteName;
+        }
+
+        return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, null, data);
+    }
+
+    doGetSites() {
+        return this.toolbox.getManager().doGet('/sites?_include=name&_sort=name');
+    }
 }
 
 Stage.defineCommon({
