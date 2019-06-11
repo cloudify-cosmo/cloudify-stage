@@ -10,7 +10,7 @@
 
     "loginPageHeader": "CLOUDIFY",
     "loginPageHeaderColor": "white",
-    "loginPageText": "Welcome to the Cloudify Management Console, Please Login",
+    "loginPageText": "Welcome to the Cloudify Management Console, Please log in",
     "loginPageTextColor": "white",
 
     "sidebarColor": "#E2E2E2",

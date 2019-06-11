@@ -81,12 +81,12 @@ export default class LoginPage extends Component {
 
                     <Form onSubmit={this.onSubmit.bind(this)}>
                         <Form.Field required error={this.state.errors.username}>
-                            <Input name="username" type="text" placeholder="Enter user name" autoFocus
+                            <Input name="username" type="text" placeholder="Username" autoFocus
                                    value={this.state.username} onChange={this._handleInputChange.bind(this)} />
                         </Form.Field>
 
                         <Form.Field required error={this.state.errors.password}>
-                            <Input name="password" type="password" placeholder="Enter user password"
+                            <Input name="password" type="password" placeholder="Password"
                                    value={this.state.password} onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
@@ -96,9 +96,7 @@ export default class LoginPage extends Component {
                         }
 
                         <Button disabled={this.props.isLoggingIn} loading={this.props.isLoggingIn}
-                                color='yellow' size='large' type='submit'>
-                            Login
-                        </Button>
+                                color='yellow' size='large' type='submit' content='LOGIN' />
                     </Form>
 
                 </div>
