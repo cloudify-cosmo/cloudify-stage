@@ -181,6 +181,16 @@ export default class Topology extends React.Component {
         this.props.toolbox.drillDown(this.props.toolbox.getWidget(), 'deployment', {deploymentId: nodeDeploymentId}, nodeDeploymentId);
     }
 
+    _markDeploymentsToExpand(deploymentId, blueprintId){
+        let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
+        if (! currentExpanded){
+            currentExpanded = [];
+        }
+        currentExpanded.push(deploymentId);
+        this.props.toolbox.getContext().setValue('deploymentsToExpand', {'deployment_id': deploymentId,
+                                                                        'blueprint_id': blueprintId});  
+    }
+
     render () {
         return (
             <div ref={this.topologyParentContainerRef}

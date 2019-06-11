@@ -28,14 +28,20 @@ Stage.defineWidget({
     ],
 
     fetchData: function(widget,toolbox) {
-        var deploymentId = toolbox.getContext().getValue('deploymentId');
-        var blueprintId = toolbox.getContext().getValue('blueprintId');
+        let deploymentId = toolbox.getContext().getValue('deploymentId');
+        let blueprintId = toolbox.getContext().getValue('blueprintId');
+
+        let deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
+        let deploymentsTopology = {}
+        _.each(deploymentsToFetch,(depId)=>{
+            deploymentsTopology[depId] = DataFetcher.fetch(toolbox,blueprintId,depId);
+        });
 
         return DataFetcher.fetch(toolbox,blueprintId,deploymentId);
     },
 
     render: function(widget,data,error,toolbox) {
-        var topologyConfig = {
+        let topologyConfig = {
             enableNodeClick: widget.configuration.enableNodeClick,
             enableGroupClick: widget.configuration.enableGroupClick,
             enableZoom: widget.configuration.enableZoom,
@@ -43,10 +49,10 @@ Stage.defineWidget({
             showToolbar: widget.configuration.showToolbar
         };
 
-        var deploymentId = toolbox.getContext().getValue('deploymentId');
-        var blueprintId = toolbox.getContext().getValue('blueprintId');
+        let deploymentId = toolbox.getContext().getValue('deploymentId');
+        let blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        var formattedData = Object.assign({},data,{
+        let formattedData = Object.assign({},data,{
             deploymentId,
             blueprintId,
             topologyConfig
