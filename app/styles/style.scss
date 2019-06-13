@@ -91,16 +91,8 @@ a:hover {
       &.open{
         left: 0 !important;
       }
-      .item {
-        color: $grey-veryDark;
-        background-color: $grey-light;
-      }
-      .item.active, .item:hover {
-        color: $grey-darkest;
-        background-color: $grey-normal;
-      }
       .item:before {
-        background-color: $grey-veryLight;
+        background-color: $grey-normal;
       }
     }
   }
@@ -427,8 +419,8 @@ a:hover {
     input,
     input:placeholder-shown {
       margin: 0 50px;
-      color: $white;
-      background: rgba(255, 255, 255, 0.3);
+      color: $white !important;
+      background: rgba(255, 255, 255, 0.3) !important;
     }
 
     input:focus,
