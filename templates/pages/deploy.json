@@ -14,7 +14,8 @@
       "y": 3,
       "configuration": {
         "filterByDeployments": false,
-        "filterByExecutions": false
+        "filterByExecutions": false,
+        "filterBySiteName": true
       }
     },
     {
