@@ -51,6 +51,7 @@ export default class Filter extends React.Component {
             this.props.toolbox.getContext().setValue('executionId', null);
             this.props.toolbox.getContext().setValue('depNodeId', null);
             this.props.toolbox.getContext().setValue('executionStatus', null);
+            this.props.toolbox.getContext().setValue('siteName', null);
         }
     }
 
@@ -181,6 +182,11 @@ export default class Filter extends React.Component {
         this.props.toolbox.getContext().setValue('executionStatus', executionStatuses);
     }
 
+    _selectSiteName(proxy, field) {
+        let siteNames = !_.isEmpty(field.value) ? field.value : null;
+        this.props.toolbox.getContext().setValue('siteName', siteNames);
+    }
+
     _getDropdownValue(value) {
         const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
 
@@ -259,6 +265,15 @@ export default class Filter extends React.Component {
         }
         let executionStatus = this._getDropdownValue(data.executionStatus);
 
+        let siteNameOptions = [];
+        if (configuration.filterBySiteName) {
+            siteNameOptions = _.map(data.sites.items, site => ({text: site.name, value: site.name}));
+            if (!configuration.allowMultipleSelection) {
+                siteNameOptions.unshift(EMPTY_OPTION);
+            }
+        }
+        let siteName = this._getDropdownValue(data.siteName);
+
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
@@ -316,6 +331,15 @@ export default class Filter extends React.Component {
                                 <Form.Dropdown search selection placeholder="Execution Status" fluid
                                                value={executionStatus} id="executionStatusFilterField"
                                                options={executionStatusOptions} onChange={this._selectExecutionStatus.bind(this)}
+                                               multiple={configuration.allowMultipleSelection} />
+                            </Form.Field>
+                        }
+                        {
+                            configuration.filterBySiteName &&
+                            <Form.Field>
+                                <Form.Dropdown search selection placeholder="Site Name" fluid
+                                               value={siteName} id="siteNameFilterField"
+                                               options={siteNameOptions} onChange={this._selectSiteName.bind(this)}
                                                multiple={configuration.allowMultipleSelection} />
                             </Form.Field>
                         }
