@@ -21,13 +21,18 @@ class BlueprintActions {
     }
 
     doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation = false, siteName = null) {
-        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null, {
+        let data = {
             'blueprint_id': blueprint.id,
             inputs,
             visibility,
-            skip_plugins_validation:skipPluginsValidation,
-            site_name:siteName
-        });
+            skip_plugins_validation: skipPluginsValidation
+        };
+
+        if (siteName) {
+            data['site_name'] = siteName;
+        }
+
+        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null, data);
     }
 
     doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, visibility) {
