@@ -20,9 +20,18 @@ class DeployBlueprintModal extends React.Component {
         fileLoading: false,
         deploymentInputs: [],
         visibility: Stage.Common.Consts.defaultVisibility,
-        skipPluginsValidation: false
+        skipPluginsValidation: false,
+        siteName: '',
+        sites: {items:[]}
     };
 
+    /**
+     * propTypes
+     * @property {object} toolbox Toolbox object
+     * @property {boolean} open specifies whether the deploy modal is displayed
+     * @property {object} blueprints holds list of blueprints
+     * @property {function} onHide function to be called when the modal is closed
+     */
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
         open: PropTypes.bool.isRequired,
@@ -37,7 +46,12 @@ class DeployBlueprintModal extends React.Component {
     componentDidUpdate(prevProps) {
         if (!prevProps.open && this.props.open) {
             let deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(this.props.blueprint.plan);
-            this.setState({...DeployBlueprintModal.initialState, deploymentInputs});
+            let actions = new Stage.Common.DeploymentActions(this.props.toolbox);
+            actions.doGetSites().then((sites) => {
+                this.setState({...DeployBlueprintModal.initialState, deploymentInputs, sites});
+            }).catch((err)=> {
+                this.setState({loading: false, error: err.message});
+            });
         }
     }
 
@@ -77,8 +91,9 @@ class DeployBlueprintModal extends React.Component {
         // Disable the form
         this.setState({loading: true});
 
-        var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs, this.state.visibility, this.state.skipPluginsValidation)
+        let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+        actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs, this.state.visibility,
+                         this.state.skipPluginsValidation, this.state.siteName)
             .then((/*deployment*/)=> {
                 this.setState({loading: false, errors: {}});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -123,6 +138,7 @@ class DeployBlueprintModal extends React.Component {
         let {DataTypesButton, InputsHeader, InputsUtils, YamlFileButton} = Stage.Common;
 
         let blueprint = Object.assign({}, DeployBlueprintModal.EMPTY_BLUEPRINT, this.props.blueprint);
+        let site_options = _.map(this.state.sites.items, site => { return { text: site.name, value: site.name } });
 
         return (
             <Modal open={this.props.open} onClose={()=>this.props.onHide()} closeOnEscape={false}
@@ -137,12 +153,18 @@ class DeployBlueprintModal extends React.Component {
                     <Form loading={this.state.loading} errors={this.state.errors} scrollToError
                           onErrorsDismiss={() => this.setState({errors: {}})}>
 
-                        <Form.Field error={this.state.errors.deploymentName} label="Deployment name" required>
+                        <Form.Field error={this.state.errors.deploymentName} label='Deployment name' required
+                                    help='Specify a name for this deployment instance.'>
                             <Form.Input name='deploymentName'
                                         value={this.state.deploymentName}
                                         onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
+                        <Form.Field error={this.state.errors.siteName} label='Site name'
+                                    help='(Optional) Specify a site to which this deployment will be assigned.'>
+                            <Form.Dropdown search selection value={this.state.siteName} name='siteName'
+                                           options={site_options} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
 
                         {
                             blueprint.id &&
@@ -172,6 +194,7 @@ class DeployBlueprintModal extends React.Component {
                                                        this.state.errors,
                                                        blueprint.plan.data_types)
                         }
+
                         <Form.Field className='skipPluginsValidationCheckbox'>
                             <Form.Checkbox toggle
                                            label="Skip plugins validation"
