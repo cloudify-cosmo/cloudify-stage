@@ -30,8 +30,6 @@ export default class DataFetcher{
                     toolbox.getManager().doGet(`/executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&status=pending&status=started&status=cancelling&status=force_cancelling`)
                         .then(executions=>Promise.resolve(_.first(executions.items))),
                 ]).then( data=>{
-
-
                     var blueprint = data[0].items && data[0].items.length === 1 ? data[0].items[0]: {};
                     var blueprintPlan = blueprint.plan || {};
                     var nodes = data[1].items ? data[1].items : [];
@@ -51,11 +49,10 @@ export default class DataFetcher{
                         nodes: nodes
                     });
 
-
                     var topologyData = {
                         data: blueprint,
                         instances: nodeInstances,
-                        executions:execution
+                        executions: execution
                     };
 
                     return Promise.resolve(topologyData);
