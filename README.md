@@ -41,7 +41,7 @@ To setup development environment and start the application follow the steps belo
 1. **Application start**
 
    You can run the application by starting the stage backend server and starting [webpack dev server](https://webpack.js.org/configuration/dev-server/) serving client side:
-   * In 'backend' folder, run `npm run devStart` to start backend server (Notice: you wiil need write permissions to '/var/log/cloudify/stage'). But if you need to debug the backend, you should run `npm run devDebug`.
+   * In 'backend' folder, run `npm run devStart` to start backend server (Notice: you wiil need to have write permissions to `/var/log/cloudify/stage`). But if you need to debug the backend, you should run `npm run devDebug`.
    * And also run `npm run devServer` to start webpack dev server.
 
 At this point you should have development environment configured and running. Open [http://localhost:4000](http://localhost:4000) page in your web-browser to see if application is running.
