@@ -32,15 +32,19 @@ Stage.defineWidget({
         let blueprintId = toolbox.getContext().getValue('blueprintId');
 
         let deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
-        let deploymentsTopology = {}
+        let expandedDeployments = {}
         _.each(deploymentsToFetch,(depId)=>{
-            deploymentsTopology[depId] = DataFetcher.fetch(toolbox,blueprintId,depId);
+            expandedDeployments[depId] = DataFetcher.fetch(toolbox,null,depId);
         });
 
-        return DataFetcher.fetch(toolbox,blueprintId,deploymentId);
+        let deploymentData = DataFetcher.fetch(toolbox, blueprintId, deploymentId);
+        deploymentData.expandedDeployments = expandedDeployments;
+
+        return DataFetcher.fetch(toolbox, blueprintId, deploymentId);
     },
 
     render: function(widget,data,error,toolbox) {
+        console.info(data);
         let topologyConfig = {
             enableNodeClick: widget.configuration.enableNodeClick,
             enableGroupClick: widget.configuration.enableGroupClick,

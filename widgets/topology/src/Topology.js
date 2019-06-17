@@ -1,8 +1,8 @@
 /**
  * Created by kinneretzin on 06/11/2016.
  */
-
 import 'cloudify-blueprint-topology';
+import DataFetcher from './DataFetcher';
 
 let BlueprintTopology = cloudifyTopology.Topology;
 let DataProcessingService = cloudifyTopology.DataProcessingService;
@@ -62,7 +62,8 @@ export default class Topology extends React.Component {
             enableContextMenu: false,
             onNodeSelected: (node)=> this._setSelectedNode(node),
             onDataProcessed: (data)=>this._processedTopologyData = data,
-            onDeploymentNodeClick: (deploymentId)=>this._goToDeploymentPage(deploymentId)
+            onDeploymentNodeClick: (deploymentId)=>this._goToDeploymentPage(deploymentId),
+            onExpandClick: (deploymentId, blueprintId)=>this._markDeploymentsToExpand(deploymentId, blueprintId)
         });
 
         this._topology.start();
@@ -77,7 +78,6 @@ export default class Topology extends React.Component {
                 instances: this.props.data.instances,
                 executions: this.props.data.executions
             };
-
             result = DataProcessingService.encodeTopologyFromRest(topologyData);
         }
 
@@ -187,8 +187,8 @@ export default class Topology extends React.Component {
             currentExpanded = [];
         }
         currentExpanded.push(deploymentId);
-        this.props.toolbox.getContext().setValue('deploymentsToExpand', {'deployment_id': deploymentId,
-                                                                        'blueprint_id': blueprintId});  
+        this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded); 
+        return DataFetcher.fetch(this.props.toolbox, null, deploymentId);
     }
 
     render () {
