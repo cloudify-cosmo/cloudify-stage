@@ -25,20 +25,10 @@ Stage.defineWidget({
 
     fetchData(widget,toolbox,params) {
         var result = {};
-        return toolbox.getManager().doGet('/cluster')
+        return toolbox.getManager().doGet('/managers')
             .then((data)=>{
-                result.state = data;
-
-                if (data.initialized) {
-                    return toolbox.getManager().doGet('/cluster/nodes',params)
-                        .then((nodes)=>{
-                            result.nodes = nodes;
-
-                            return result;
-                        })
-                } else {
-                    return result;
-                }
+                result.nodes = data;
+                return result;
             })
     },
 

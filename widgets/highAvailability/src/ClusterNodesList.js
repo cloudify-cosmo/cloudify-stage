@@ -16,12 +16,10 @@ export default class ClusterNodesList extends React.Component {
     }
 
     render () {
-        const NO_DATA_MESSAGE = 'There are no Cluster Nodes available.';
-        let {DataTable,Checkmark,ErrorMessage} = Stage.Basic;
+        let {DataTable} = Stage.Basic;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
                 <h4> Nodes</h4>
                 <DataTable fetchData={this.fetchData.bind(this)}
                            totalSize={this.props.nodes.total}
@@ -29,32 +27,30 @@ export default class ClusterNodesList extends React.Component {
                            sortColumn={this.props.widget.configuration.sortColumn}
                            sortAscending={this.props.widget.configuration.sortAscending}
                            className="nodesTable"
-                           searchable={true}
-                           noDataMessage={NO_DATA_MESSAGE}>
+                           searchable={false}>
 
-                    <DataTable.Column label="Name" name="name" width="25%"/>
-                    <DataTable.Column label="Host IP" name="host_ip" width="20%"/>
-                    <DataTable.Column label="Initialized" name="initialized" width="10%"/>
-                    <DataTable.Column label="Is master" name="master" width="10%"/>
-                    <DataTable.Column label="Is online" name="online" width="10%"/>
+                    <DataTable.Column label="Name" name="hostname" width="30%"/>
+                    <DataTable.Column label="Private IP" name="private_ip" width="20%"/>
+                    <DataTable.Column label="Public IP" name="public_ip" width="20%"/>
+                    <DataTable.Column label="Distribution" name="distribution" width="15%"/>
+                    <DataTable.Column label="Version" name="version" width="15%"/>
 
                     {
                         this.props.nodes.items.map((item)=>{
 
                             return (
 
-                                <DataTable.Row key={item.host_ip}>
-                                    <DataTable.Data><a className='nodeName' href="javascript:void(0)">{item.name}</a></DataTable.Data>
-                                    <DataTable.Data>{item.host_ip}</DataTable.Data>
-                                    <DataTable.Data><Checkmark value={item.initialized}/></DataTable.Data>
-                                    <DataTable.Data><Checkmark value={item.master}/></DataTable.Data>
-                                    <DataTable.Data><Checkmark value={item.online}/></DataTable.Data>
+                                <DataTable.Row key={item.hostname}>
+                                    <DataTable.Data>{item.hostname}</DataTable.Data>
+                                    <DataTable.Data>{item.private_ip}</DataTable.Data>
+                                    <DataTable.Data>{item.public_ip}</DataTable.Data>
+                                    <DataTable.Data>{item.distribution}</DataTable.Data>
+                                    <DataTable.Data>{item.version}</DataTable.Data>
                                 </DataTable.Row>
                             );
                         })
                     }
                 </DataTable>
-
             </div>
         )
 
