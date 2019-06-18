@@ -1,8 +1,4 @@
-/**
- * Created by kinneretzin on 06/11/2016.
- */
 import 'cloudify-blueprint-topology';
-import DataFetcher from './DataFetcher';
 
 let BlueprintTopology = cloudifyTopology.Topology;
 let DataProcessingService = cloudifyTopology.DataProcessingService;
@@ -70,17 +66,34 @@ export default class Topology extends React.Component {
     }
 
     _buildTopologyData() {
-        let result = null;
+        let result = {
+            data: [],
+            instances: [],
+            executions: []
+        };
 
         if (this.props.data && this.props.data.data) {
-            const topologyData = {
-                data: this.props.data.data,
-                instances: this.props.data.instances,
-                executions: this.props.data.executions
-            };
-            result = DataProcessingService.encodeTopologyFromRest(topologyData);
-        }
+            let deploymentsData = [];
+            if (! this.props.data instanceof Array){
+                deploymentsData.push(this.props.data);
+            }
+            else {
+                deploymentsData = this.props.data;
+            }
 
+            _.forEach(deploymentsData, (deployment) => {
+                let topologyData = {
+                    data: deployment.data,
+                    instances: deployment.instances,
+                    executions: deployment.executions
+                };
+                let temp = DataProcessingService.encodeTopologyFromRest(topologyData);
+                
+                result.connectors.push.apply(result.connectors, temp.connectors);
+                result.groups.push.apply(result.groups, temp.groups);
+                result.nodes.push.apply(result.nodes, temp.nodes);
+            });
+        }
         return result;
     }
 
@@ -188,7 +201,6 @@ export default class Topology extends React.Component {
         }
         currentExpanded.push(deploymentId);
         this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded); 
-        return DataFetcher.fetch(this.props.toolbox, null, deploymentId);
     }
 
     render () {

@@ -30,17 +30,14 @@ Stage.defineWidget({
     fetchData: function(widget,toolbox) {
         let deploymentId = toolbox.getContext().getValue('deploymentId');
         let blueprintId = toolbox.getContext().getValue('blueprintId');
+        let expandedDeployments = [DataFetcher.fetch(toolbox, blueprintId, deploymentId)];
 
         let deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
-        let expandedDeployments = {}
         _.each(deploymentsToFetch,(depId)=>{
-            expandedDeployments[depId] = DataFetcher.fetch(toolbox,null,depId);
+            expandedDeployments.push(DataFetcher.fetch(toolbox, null, depId));
         });
 
-        let deploymentData = DataFetcher.fetch(toolbox, blueprintId, deploymentId);
-        deploymentData.expandedDeployments = expandedDeployments;
-
-        return DataFetcher.fetch(toolbox, blueprintId, deploymentId);
+        return Promise.all(expandedDeployments);
     },
 
     render: function(widget,data,error,toolbox) {
