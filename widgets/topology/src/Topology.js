@@ -202,8 +202,11 @@ export default class Topology extends React.Component {
         if (! currentExpanded){
             currentExpanded = [];
         }
-        currentExpanded.push(deploymentId);
-        this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded); 
+
+        if (!currentExpanded.includes(deploymentId)){
+            currentExpanded.push(deploymentId);
+            this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
+        }
     }
 
     render () {
