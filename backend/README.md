@@ -20,3 +20,6 @@ For a development puropses you can start backend in different modes using the fo
 
 You need to be aware that to stop stage backend server running in cluster mode you need to kill process manager.
 You can do that using `npm run stop` np script.
+
+## Troubleshooting
+* In case of `npm run devStart` fails to run, please verify first that there are write permissions to `/var/log/cloudify/stage`. Also it possible to redirect the logs by changing the paths in `backend/ecosystem.config.js` to the desired location and restarting the backend. 
