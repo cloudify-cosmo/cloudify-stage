@@ -101,7 +101,7 @@ GraphEdge.propTypes = {
     graphEdge: PropTypes.shape({
         sections: PropTypes.arrayOf(PropTypes.shape({
             startPoint: pointPropType.isRequired,
-            bendPoint: pointPropType,
+            bendPoints: pointPropType,
             endPoint: pointPropType.isRequired
         })).isRequired
     }).isRequired

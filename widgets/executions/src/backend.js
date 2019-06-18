@@ -85,7 +85,8 @@ module.exports = (r) => {
             layoutOptions: { 
                 'elk.algorithm': 'layered',
                 'elk.spacing.nodeNode': '30f', // Vertical spacing between nodes in each layer
-                'layered.spacing.nodeNodeBetweenLayers': '50f' // Horizontal spacing between layers
+                'layered.spacing.nodeNodeBetweenLayers': '50f', // Horizontal spacing between layers
+                'hierarchyHandling': 'INCLUDE_CHILDREN' // To ensure inner nodes can have proper edges to nodes with different parents
             },
             children: [],
             edges: []
