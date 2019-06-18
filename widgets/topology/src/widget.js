@@ -33,6 +33,7 @@ Stage.defineWidget({
         let expandedDeployments = [DataFetcher.fetch(toolbox, blueprintId, deploymentId)];
 
         let deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
+        console.error(deploymentsToFetch);
         _.each(deploymentsToFetch,(depId)=>{
             expandedDeployments.push(DataFetcher.fetch(toolbox, null, depId));
         });
@@ -41,7 +42,6 @@ Stage.defineWidget({
     },
 
     render: function(widget,data,error,toolbox) {
-        console.info(data);
         let topologyConfig = {
             enableNodeClick: widget.configuration.enableNodeClick,
             enableGroupClick: widget.configuration.enableGroupClick,
@@ -53,7 +53,8 @@ Stage.defineWidget({
         let deploymentId = toolbox.getContext().getValue('deploymentId');
         let blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        let formattedData = Object.assign({},data,{
+        let deploymentsData  = Object.assign({},data);
+        let formattedData = Object.assign({deploymentsData},{
             deploymentId,
             blueprintId,
             topologyConfig

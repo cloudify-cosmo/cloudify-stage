@@ -67,31 +67,34 @@ export default class Topology extends React.Component {
 
     _buildTopologyData() {
         let result = {
-            data: [],
-            instances: [],
-            executions: []
+            connectors: [],
+            groups: [],
+            nodes: []
         };
 
-        if (this.props.data && this.props.data.data) {
+        if (this.props.data && this.props.data.deploymentsData) {
             let deploymentsData = [];
-            if (! this.props.data instanceof Array){
-                deploymentsData.push(this.props.data);
+            if (! this.props.data.deploymentsData instanceof Array){
+                deploymentsData.push(this.props.data.deploymentsData);
             }
             else {
-                deploymentsData = this.props.data;
+                deploymentsData = this.props.data.deploymentsData;
             }
 
             _.forEach(deploymentsData, (deployment) => {
-                let topologyData = {
-                    data: deployment.data,
-                    instances: deployment.instances,
-                    executions: deployment.executions
-                };
-                let temp = DataProcessingService.encodeTopologyFromRest(topologyData);
-                
-                result.connectors.push.apply(result.connectors, temp.connectors);
-                result.groups.push.apply(result.groups, temp.groups);
-                result.nodes.push.apply(result.nodes, temp.nodes);
+                console.error(deployment);
+                if (deployment.data){
+                    let topologyData = {
+                        data: deployment.data,
+                        instances: deployment.instances,
+                        executions: deployment.executions
+                    };
+                    let temp = DataProcessingService.encodeTopologyFromRest(topologyData);
+                    
+                    result.connectors.push.apply(result.connectors, temp.connectors);
+                    result.groups.push.apply(result.groups, temp.groups);
+                    result.nodes.push.apply(result.nodes, temp.nodes);
+            }
             });
         }
         return result;
