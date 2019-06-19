@@ -24,11 +24,20 @@ export default class DeployModal extends React.Component {
         siteName: ''
     };
 
+    /**
+     * propTypes
+     * @property {object} toolbox Toolbox object
+     * @property {boolean} open specifies whether the deploy modal is displayed
+     * @property {object} blueprints holds list of blueprints
+     * @property {function} onHide function to be called when the modal is closed
+     * @property {object} sites holds list of sites
+     */
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
         open: PropTypes.bool.isRequired,
         blueprints: PropTypes.object.isRequired,
-        onHide: PropTypes.func
+        onHide: PropTypes.func,
+        sites: PropTypes.object.isRequired
     };
 
     static defaultProps = {
@@ -155,13 +164,21 @@ export default class DeployModal extends React.Component {
                     <Form loading={this.state.loading} errors={this.state.errors} scrollToError={true}
                           onErrorsDismiss={() => this.setState({errors: {}})}>
 
-                        <Form.Field error={this.state.errors.deploymentName} label='Deployment name' required>
+                        <Form.Field error={this.state.errors.deploymentName} label='Deployment name' required
+                                    help='Specify a name for this deployment instance.'>
                             <Form.Input name='deploymentName'
                                         value={this.state.deploymentName}
                                         onChange={this._handleInputChange.bind(this)}/>
                         </Form.Field>
 
-                        <Form.Field error={this.state.errors.blueprintName} label='Blueprint' required>
+                        <Form.Field error={this.state.errors.siteName} label='Site name'
+                                    help='(Optional) Specify a site to which this deployment will be assigned.'>
+                            <Form.Dropdown search selection value={this.state.siteName} name='siteName'
+                                           options={site_options} onChange={this._handleInputChange.bind(this)}/>
+                        </Form.Field>
+
+                        <Form.Field error={this.state.errors.blueprintName} label='Blueprint' required
+                                    help='Select the blueprint based on which this deployment will be created.'>
                             <Form.Dropdown search selection value={this.state.blueprint.id}
                                            name="blueprintName" options={options} onChange={this._selectBlueprint.bind(this)}/>
                         </Form.Field>
@@ -194,11 +211,6 @@ export default class DeployModal extends React.Component {
                                                        this.state.errors,
                                                        this.state.blueprint.plan.data_types)
                         }
-
-                        <Form.Field error={this.state.errors.siteName} label='Site name'>
-                            <Form.Dropdown search selection value={this.state.siteName} name='siteName'
-                                           options={site_options} onChange={this._handleInputChange.bind(this)}/>
-                        </Form.Field>
 
                         <Form.Field className='skipPluginsValidationCheckbox'>
                             <Form.Checkbox toggle
