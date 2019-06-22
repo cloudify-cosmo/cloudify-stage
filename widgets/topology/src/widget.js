@@ -34,8 +34,8 @@ Stage.defineWidget({
 
         let deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
         console.error(deploymentsToFetch);
-        _.each(deploymentsToFetch,(depId)=>{
-            expandedDeployments.push(DataFetcher.fetch(toolbox, null, depId));
+        _.each(deploymentsToFetch,(dep)=>{
+            expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep.deploymentId));
         });
 
         return Promise.all(expandedDeployments);
@@ -52,12 +52,14 @@ Stage.defineWidget({
 
         let deploymentId = toolbox.getContext().getValue('deploymentId');
         let blueprintId = toolbox.getContext().getValue('blueprintId');
+        let expandedDeployments = toolbox.getContext().getValue('deploymentsToExpand');
 
         let deploymentsData  = Object.assign({},data);
         let formattedData = Object.assign({deploymentsData},{
             deploymentId,
             blueprintId,
-            topologyConfig
+            topologyConfig,
+            expandedDeployments
         });
         return <Topology widget={widget} data={formattedData} toolbox={toolbox}/>;
 
