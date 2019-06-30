@@ -92,25 +92,28 @@ export default class Topology extends React.Component {
 
             const size = Object.keys(deploymentsData).length;
             for (let i = 1; i < size; i++){
+                debugger;
                 console.error(deploymentsData[i]);
-                console.error(this.props.data.expandedDeployments[i - 1].expendedNode);
+                console.error('node' + this.props.data.expandedDeployments[i - 1].expendedNode);
                 let father = _.find(result.nodes,
                     (node) => {
                         return node.name===this.props.data.expandedDeployments[i - 1].expendedNode;
                     });
                 if (deploymentsData[i].data){
+                    debugger;
                     let topologyData = {
                         data: deploymentsData[i].data,
                         instances: deploymentsData[i].instances,
                         executions: deploymentsData[i].executions
                     };
-                    let temp = DataProcessingService.encodeTopologyFromRest(topologyData);
 
-                    father.container = {'children':[]};
-                    _.forEach(temp.nodes, (node)=>{
-                        father.container.children.push(node);
-                        node.container = {'parent':father, 'type':'cloudify.relationships.contained_in'};
-                    });
+                    let temp = DataProcessingService.encodeTopologyFromRestContainedIn(topologyData, this.props.data.expandedDeployments[i - 1].expendedNode, father);
+
+                    // father.container = {'children':[]};
+                    // _.forEach(temp.nodes, (node)=>{
+                    //     father.container.children.push(node);
+                    //     node.container = {'parent':father, 'type':'cloudify.relationships.contained_in', 'containedIn':{'uiType': 'containedInConnector'}};
+                    // });
                     
                     result.connectors.push.apply(result.connectors, temp.connectors);
                     result.groups.push.apply(result.groups, temp.groups);
