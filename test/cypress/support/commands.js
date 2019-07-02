@@ -8,9 +8,10 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-import './localStorage';
 import './users';
+import './sites';
 import './templates';
+import './localStorage';
 
 let token = '';
 
