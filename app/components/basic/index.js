@@ -24,10 +24,12 @@ import Graphs from './graphs';
 import HighlightText from './HighlightText';
 import KeyIndicator from './KeyIndicator';
 import Loading from './Loading';
+import Leaflet from './leaflet';
 import MetricFilter from './MetricFilter';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
 import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
 import Menu from './Menu';
+import MessageContainer from './MessageContainer';
 import NodeFilter from './NodeFilter';
 import NodeInstancesFilter from './NodeInstancesFilter';
 import NodesTree from './NodesTree';
@@ -79,6 +81,7 @@ export {
     Item,
     KeyIndicator,
     Label,
+    Leaflet,
     List,
     Link,
     Loader,
@@ -87,6 +90,7 @@ export {
     MaintenanceModeModal,
     Menu,
     Message,
+    MessageContainer,
     MetricFilter,
     Modal,
     NodeFilter,

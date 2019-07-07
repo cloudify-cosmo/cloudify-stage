@@ -29,7 +29,8 @@
     "cloudifyTopology": true,
     "Cypress": true,
     "cy": true,
-    "expect": true
+    "expect": true,
+    "L": true
   },
   "parser": "babel-eslint",
   "rules": {

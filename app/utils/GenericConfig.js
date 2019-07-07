@@ -50,6 +50,7 @@ export default class GenericConfig {
             CHARTS_AND_STATISTICS: 'Charts and Statistics',
             EXECUTIONS_NODES: 'Executions/Nodes',
             SYSTEM_RESOURCES: 'System Resources',
+            SPIRE: 'Spire',
             OTHERS: 'Others',
             ALL: 'All'
         };

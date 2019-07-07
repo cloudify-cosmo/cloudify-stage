@@ -5,14 +5,13 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import MessageContainer from '../MessageContainer';
 import Services from '../../containers/Services';
 import Banner from '../../containers/banner/Banner';
 import Consts from '../../utils/consts';
 import StatusPoller from '../../utils/StatusPoller';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import FullScreenSegment from '../layout/FullScreenSegment';
-import {Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal} from '../basic';
+import {Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal, MessageContainer} from '../basic';
 
 export default class MaintenanceModePageMessage extends Component {
     constructor(props,context) {

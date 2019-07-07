@@ -39,7 +39,7 @@ export default class DeploymentsSegment extends React.Component {
 
     render() {
         let {DataSegment, Divider, Grid, Header, ResourceVisibility} = Stage.Basic;
-        let {NodeInstancesConsts, LastExecutionStatusIcon} = Stage.Common;
+        let {NodeInstancesConsts, LastExecutionStatusIcon, GroupState} = Stage.Common;
 
         return (
             <DataSegment totalSize={this.props.data.total}
@@ -102,15 +102,21 @@ export default class DeploymentsSegment extends React.Component {
                                                 <Grid.Row>
                                                 {
                                                     _.map(NodeInstancesConsts.groupStates, (groupState) =>
-                                                        <Grid.Column key={groupState.name} textAlign='center'>
-                                                            <NodeState icon={groupState.icon} title={groupState.name}
-                                                                       state={_.join(groupState.states, ', ')}
-                                                                       color={groupState.colorSUI}
-                                                                       value={_.sum(_.map(groupState.states, (state) =>
-                                                                           _.isNumber(item.nodeInstancesStates[state])
-                                                                               ? item.nodeInstancesStates[state]
-                                                                               : 0))} />
-                                                        </Grid.Column>
+                                                        {
+                                                            let value = _.sum(_.map(groupState.states, (state) =>
+                                                                _.isNumber(item.nodeInstancesStates[state])
+                                                                    ? item.nodeInstancesStates[state]
+                                                                    : 0));
+                                                            return (
+                                                                <Grid.Column key={groupState.name} textAlign='center'>
+                                                                    <GroupState state={groupState}
+                                                                                description={<StateDescription states={groupState.states} value={value}/>}
+                                                                                className='nodeState'
+                                                                                value={value}
+                                                                    />
+                                                                </Grid.Column>
+                                                            );
+                                                        }
                                                     )
                                                 }
                                                 </Grid.Row>
@@ -133,26 +139,13 @@ export default class DeploymentsSegment extends React.Component {
     }
 }
 
-function NodeState(props) {
-    let { Segment, Icon, Popup } = Stage.Basic;
-    let value = props.value ? props.value : 0;
-    let disabled = value === 0;
-    let color = disabled ? 'grey' : props.color;
-    const areManyStates = _.size(_.words(props.state)) > 1;
+function StateDescription({states, value}) {
+    let state = _.join(states, ', ');
+    const areManyStates = _.size(_.words(state)) > 1;
 
     return (
-        <Popup header={_.capitalize(props.title)}
-               content={<span><strong>{value}</strong> node instances in <strong>{props.state}</strong> state{areManyStates && 's'}</span>}
-               trigger={
-                   <Segment.Group className='nodeState' disabled={disabled}>
-                       <Segment color={color} disabled={disabled} inverted>
-                           <Icon name={props.icon} />
-                       </Segment>
-                       <Segment color={color} disabled={disabled} tertiary inverted>
-                           {value}
-                       </Segment>
-                   </Segment.Group>
-               }
-        />
+        <span>
+            <strong>{value}</strong> node instances in <strong>{state}</strong> state{areManyStates && 's'}
+        </span>
     )
 }

@@ -7,13 +7,12 @@ import PropTypes from 'prop-types';
 
 import Consts from '../utils/consts';
 import StageUtils from '../utils/stageUtils';
-import {Button, Form, Grid, Header, Icon, Message} from './basic';
-import MessageContainer from './MessageContainer';
 import Banner from '../containers/banner/Banner';
 import FullScreenSegment from './layout/FullScreenSegment';
 import EulaLink from './license/EulaLink';
 import CurrentLicense from './license/CurrentLicense';
 import UploadLicense from './license/UploadLicense';
+import {Button, Form, Grid, Header, Icon, Message, MessageContainer} from './basic';
 
 
 function LicenseSwitchButton({isEditLicenseActive, onClick, color}) {

@@ -34,6 +34,18 @@ The following components from Semantic-UI-React can be accessed using `Stage.Bas
 [Step](https://react.semantic-ui.com/elements/step), 
 [Table](https://react.semantic-ui.com/collections/table). 
 
+For example if you want to use Map component use `Stage.Basic.Map`. 
+
+### React Leaflet
+
+Some built-in widgets were created using components from [React-Leaflet](https://react-leaflet.js.org) library. 
+
+The following components from React-Leaflet can be accessed using `Stage.Basic.Leaflet` global object: 
+[Map](https://react-leaflet.js.org/docs/en/components#map), 
+[TileLayer](https://react-leaflet.js.org/docs/en/components#tilelayer), 
+[Marker](https://react-leaflet.js.org/docs/en/components#marker), 
+[Popup](https://react-leaflet.js.org/docs/en/components#popup). 
+
 For example if you want to use Message component use `Stage.Basic.Message`. 
 
 ### Useful links

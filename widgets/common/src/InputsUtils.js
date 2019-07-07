@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * Created by jakubniezgoda on 18/10/2018.
  */

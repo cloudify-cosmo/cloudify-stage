@@ -2,9 +2,6 @@
  * Created by jakubniezgoda on 15/04/2019.
  */
 
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-
 function DataType({name, description, version, derivedFrom, properties}) {
     let {Header, ParameterValue, Segment, Table} = Stage.Basic;
     let {InputsUtils} = Stage.Common;
@@ -73,7 +70,7 @@ function DataType({name, description, version, derivedFrom, properties}) {
     );
 }
 
-class DataTypesButton extends Component {
+class DataTypesButton extends React.Component {
     constructor(props) {
         super(props);
 
