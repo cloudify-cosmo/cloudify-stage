@@ -217,8 +217,9 @@ module.exports = (r) => {
             // *IMPORTANT NOTE* - Retrying tasks depend on their previous failed task
             allSubgraphs['edges'] = [];
             _.map(operationsList, (task) => {
-                if (task.parameters.current_retries > 0)
+                if (task.parameters.current_retries > 0) {
                     allSubgraphs[task.id].labels[0].retry = task.parameters.current_retries;
+                }
                 if (allSubgraphs[task.id].containing_subgraph) {
                     allSubgraphs[task.id].width = 270
                     allSubgraphs[task.id].height = 40
@@ -235,10 +236,12 @@ module.exports = (r) => {
                         edge.sources.push(task.id);
                         edge.targets.push(dependantTask.id);
                         let containing_subgraph = allSubgraphs[task.id].containing_subgraph;
-                        if (containing_subgraph === null)
+                        if (containing_subgraph === null) {
                             allSubgraphs.edges.push(edge);
-                        else
+                        }
+                        else {
                             allSubgraphs[containing_subgraph].edges.push(edge);
+                        }
                     }
                 });
             });
@@ -278,8 +281,9 @@ module.exports = (r) => {
                                         allSubgraphs[sourceNode].labels[0].display_text = workflowTask.labels[0].display_text;
                                     }
                                 }
-                                else
+                                else {
                                     return edge;
+                                }
                             }).filter((edge) => edge !== undefined);
                             _.map(sourceNodes, (sourceNodeId) => {
                                 _.map(targetNodes, (targetNodeId) => {
@@ -294,8 +298,9 @@ module.exports = (r) => {
                                     }
                                 })
                             });
-                        } else
+                        } else {
                             return workflowTask;
+                        }
                     }).filter((workflowTask) => workflowTask !== undefined);
                 }
             });
@@ -311,8 +316,9 @@ module.exports = (r) => {
                     let indexOfSplitLocation;
                     // Traversing the splitting location backwards to find the beginning of the word
                     for (indexOfSplitLocation = maximumLength; indexOfSplitLocation >= 0; indexOfSplitLocation--) {
-                        if (textToCalculate[indexOfSplitLocation] == ' ')
+                        if (textToCalculate[indexOfSplitLocation] === ' ') {
                             break;
+                        }
                     }
                     let textArr = textSplitCalculation(
                         nodeWidth,
@@ -324,11 +330,13 @@ module.exports = (r) => {
                 return [textToCalculate];
             }
             _.map(allSubgraphs, (subGraph) => {
-                if (subGraph.containing_subgraph !== null && subGraph.labels)
+                if (subGraph.containing_subgraph !== null && subGraph.labels) {
                     subGraph.labels[0].text = _.capitalize(_.lowerCase(subGraph.labels[0].text));
-                if (subGraph.children && subGraph.children.length !== 0)
+                }
+                if (subGraph.children && subGraph.children.length !== 0) {
                     subGraph.layoutOptions = subGraphLayoutOptions;
-                if (subGraph.children && subGraph.children.length == 0) { // if leaf and not the 'edges' object
+                }
+                if (subGraph.children && subGraph.children.length === 0) { // if leaf and not the 'edges' object
                     let numberOfSplits = 0;
                     let textToCalculate = '';
                     if (subGraph.labels[0].text) {
@@ -340,19 +348,23 @@ module.exports = (r) => {
                     }
                     // Description text
                     let tempArr = [];
-                    if (subGraph.labels[0].operation)
+                    if (subGraph.labels[0].operation) {
                         tempArr.push(subGraph.labels[0].operation);
-                    if (subGraph.labels[0].state)
+                    }
+                    if (subGraph.labels[0].state) {
                         tempArr.push(subGraph.labels[0].state);
-                    if (subGraph.labels[0].retry)
+                    }
+                    if (subGraph.labels[0].retry) {
                         tempArr.push(subGraph.labels[0].retry);
+                    }
                     textToCalculate = tempArr.join(' - ');
                     textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
                     // Each element in the resulting array will be rendered in a separate <text> element 
                     subGraph.labels[0].display_text = textToCalculate;
                     numberOfSplits += textToCalculate.length - 1;
-                    if (numberOfSplits > 0)
+                    if (numberOfSplits > 0) {
                         subGraph.height += textHeight * numberOfSplits;
+                    }
                 }
             })
             return allSubgraphs;
@@ -362,9 +374,9 @@ module.exports = (r) => {
             allSubgraphs = safeDeleteIrrelevantGraphVertices(allSubgraphs);
             // Removing subgraphs with 0 children
             allSubgraphs = _.omitBy(allSubgraphs, (subGraph) => {
-                if (_.isEmpty(subGraph.children) && !_.isEmpty(subGraph.labels) && subGraph.labels[0].type == subgraphTask) {
+                if (_.isEmpty(subGraph.children) && !_.isEmpty(subGraph.labels) && subGraph.labels[0].type === subgraphTask) {
                     // Verify the subGraph doesn't have connected edges
-                    if (subGraph.containing_subgraph != null) {
+                    if (subGraph.containing_subgraph !== null) {
                         let i = allSubgraphs[subGraph.containing_subgraph].edges.length;
                         while(i--) {
                             if (allSubgraphs[subGraph.containing_subgraph].edges[i].sources.indexOf(subGraph.id) > -1 ||
