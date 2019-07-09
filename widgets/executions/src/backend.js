@@ -229,7 +229,8 @@ module.exports = (r) => {
                         sources: [],
                         targets: []
                     }
-                    if (dependantTask.dependencies.indexOf(task.id) > -1) {
+                    if (dependantTask.dependencies.indexOf(task.id) > -1 ||
+                        dependantTask.parameters.retried_task === task.id) {
                         edge.id = task.id + '_' + dependantTask.id;
                         edge.sources.push(task.id);
                         edge.targets.push(dependantTask.id);
