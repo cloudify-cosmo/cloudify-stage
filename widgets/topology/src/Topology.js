@@ -66,78 +66,62 @@ export default class Topology extends React.Component {
     }
 
     _buildTopologyData() {
-        let result = {
-            connectors: [],
-            groups: [],
-            nodes: []
-        };
-
-        if (this.props.data && this.props.data.deploymentsData) {
-            let deploymentsData = [];
-            if (! this.props.data.deploymentsData instanceof Array){
-                deploymentsData.push(this.props.data.deploymentsData);
-            }
-            else {
-                deploymentsData = this.props.data.deploymentsData;
-            }
-
-            if (deploymentsData[0].data){
-                let topologyData = {
-                    data: deploymentsData[0].data,
-                    instances: deploymentsData[0].instances,
-                    executions: deploymentsData[0].executions
-                };
-                result = DataProcessingService.encodeTopologyFromRest(topologyData);
-            }
-
-            const size = Object.keys(deploymentsData).length;
-            for (let i = 1; i < size; i++){
-                debugger;
-                console.error(deploymentsData[i]);
-                console.error('node' + this.props.data.expandedDeployments[i - 1].expendedNode);
-                let father = _.find(result.nodes,
-                    (node) => {
-                        return node.name===this.props.data.expandedDeployments[i - 1].expendedNode;
-                    });
-                if (deploymentsData[i].data){
-                    debugger;
-                    let topologyData = {
-                        data: deploymentsData[i].data,
-                        instances: deploymentsData[i].instances,
-                        executions: deploymentsData[i].executions
-                    };
-
-                    let temp = DataProcessingService.encodeTopologyFromRestContainedIn(topologyData, this.props.data.expandedDeployments[i - 1].expendedNode, father);
-
-                    // father.container = {'children':[]};
-                    // _.forEach(temp.nodes, (node)=>{
-                    //     father.container.children.push(node);
-                    //     node.container = {'parent':father, 'type':'cloudify.relationships.contained_in', 'containedIn':{'uiType': 'containedInConnector'}};
-                    // });
-                    
-                    result.connectors.push.apply(result.connectors, temp.connectors);
-                    result.groups.push.apply(result.groups, temp.groups);
-                    result.nodes.push.apply(result.nodes, temp.nodes);
-                }
-            }
-
-            // _.forEach(deploymentsData, (deployment) => {
-            //     console.error(deployment);
-            //     if (deployment.data){
-            //         let topologyData = {
-            //             data: deployment.data,
-            //             instances: deployment.instances,
-            //             executions: deployment.executions
-            //         };
-            //         let temp = DataProcessingService.encodeTopologyFromRest(topologyData);
-                    
-            //         result.connectors.push.apply(result.connectors, temp.connectors);
-            //         result.groups.push.apply(result.groups, temp.groups);
-            //         result.nodes.push.apply(result.nodes, temp.nodes);
-            // }
-            // });
+        if (!(this.props.data && this.props.data.deploymentsData)) {
+            return null;
         }
-        return result;
+
+        let deploymentsData = [];
+        if (!this.props.data.deploymentsData instanceof Array){
+            deploymentsData.push(this.props.data.deploymentsData);
+        }
+        else {
+            deploymentsData = this.props.data.deploymentsData;
+        }
+
+        if (!deploymentsData[0].data){
+            return null;
+        }
+        let topology = this._create_base_topology(deploymentsData[0]);
+        this._add_expanded_topologies(deploymentsData, topology);
+
+        return topology;
+    }
+
+    _create_base_topology(deploymentData){
+        let topologyData = {
+            data: deploymentData.data,
+            instances: deploymentData.instances,
+            executions: deploymentData.executions
+        };
+        return DataProcessingService.encodeTopologyFromRest(topologyData);
+    }
+
+    _add_expanded_topologies(deploymentsData, currentTopology) {
+    /* Will build all the topologies of the expanded deployments
+     * of Component or SharedResource nodes.
+     */
+        const size = Object.keys(deploymentsData).length;
+        for (let i = 1; i < size; i++) {
+            let expandedNodeData = _.find(currentTopology.nodes, (node) => {
+                return node.name === this.props.data.expandedDeployments[i - 1].expandedNodeId;
+            });
+            if (deploymentsData[i].data) {
+                let expanded_topology = this._create_expanded_topology(deploymentsData[i], this.props.data.expandedDeployments[i - 1].expandedNodeId, expandedNodeData);
+
+                currentTopology.connectors.push.apply(currentTopology.connectors, expanded_topology.connectors);
+                currentTopology.groups.push.apply(currentTopology.groups, expanded_topology.groups);
+                currentTopology.nodes.push.apply(currentTopology.nodes, expanded_topology.nodes);
+            }
+        }
+    }
+
+    _create_expanded_topology(deploymentData, expandedNodeId, expandedNodeData){
+        let topologyData = {
+            data: deploymentData.data,
+            instances: deploymentData.instances,
+            executions: deploymentData.executions
+        };
+        return DataProcessingService.encodeTopologyFromRestContainedIn(topologyData, expandedNodeId, expandedNodeData);
     }
 
      _selectNode(nodeId) {
@@ -248,7 +232,7 @@ export default class Topology extends React.Component {
         });
 
         if (!result){
-            currentExpanded.push({expendedNode: nodeId, deploymentId});
+            currentExpanded.push({expandedNodeId: nodeId, deploymentId});
             this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
         }
     }

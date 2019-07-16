@@ -33,7 +33,6 @@ Stage.defineWidget({
         let expandedDeployments = [DataFetcher.fetch(toolbox, blueprintId, deploymentId)];
 
         let deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
-        console.error(deploymentsToFetch);
         _.each(deploymentsToFetch,(dep)=>{
             expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep.deploymentId));
         });
