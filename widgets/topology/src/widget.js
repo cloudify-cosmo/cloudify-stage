@@ -60,8 +60,8 @@ Stage.defineWidget({
             topologyConfig,
             expandedDeployments
         });
-        return <Topology widget={widget} data={formattedData} toolbox={toolbox}/>;
 
+        return <Topology widget={widget} data={formattedData} toolbox={toolbox}/>;
     }
 
 });

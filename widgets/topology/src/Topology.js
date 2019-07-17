@@ -106,7 +106,7 @@ export default class Topology extends React.Component {
                 return node.name === this.props.data.expandedDeployments[i - 1].expandedNodeId;
             });
             if (deploymentsData[i].data) {
-                let expanded_topology = this._create_expanded_topology(deploymentsData[i], this.props.data.expandedDeployments[i - 1].expandedNodeId, expandedNodeData);
+                let expanded_topology = this._create_expanded_topology(deploymentsData[i], expandedNodeData);
 
                 currentTopology.connectors.push.apply(currentTopology.connectors, expanded_topology.connectors);
                 currentTopology.groups.push.apply(currentTopology.groups, expanded_topology.groups);
@@ -115,13 +115,13 @@ export default class Topology extends React.Component {
         }
     }
 
-    _create_expanded_topology(deploymentData, expandedNodeId, expandedNodeData){
+    _create_expanded_topology(deploymentData, expandedNodeData){
         let topologyData = {
             data: deploymentData.data,
             instances: deploymentData.instances,
             executions: deploymentData.executions
         };
-        return DataProcessingService.encodeTopologyFromRestContainedIn(topologyData, expandedNodeId, expandedNodeData);
+        return DataProcessingService.encodeExtendedTopologyFromRest(topologyData, expandedNodeData);
     }
 
      _selectNode(nodeId) {
