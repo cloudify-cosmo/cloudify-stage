@@ -78,7 +78,7 @@ export default class Topology extends React.Component {
             deploymentsData = this.props.data.deploymentsData;
         }
 
-        if (!deploymentsData[0].data){
+        if (Object.entries(deploymentsData).length === 0 || !deploymentsData[0].data){
             return null;
         }
         let topology = this._create_base_topology(deploymentsData[0]);
