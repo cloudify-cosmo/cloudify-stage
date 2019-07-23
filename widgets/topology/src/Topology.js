@@ -59,7 +59,8 @@ export default class Topology extends React.Component {
             onNodeSelected: (node)=> this._setSelectedNode(node),
             onDataProcessed: (data)=>this._processedTopologyData = data,
             onDeploymentNodeClick: (deploymentId)=>this._goToDeploymentPage(deploymentId),
-            onExpandClick: (deploymentId, nodeId)=>this._markDeploymentsToExpand(deploymentId, nodeId)
+            onExpandClick: (deploymentId, nodeId)=>this._markDeploymentsToExpand(deploymentId, nodeId),
+            onCollapseClick: (deploymentId)=>this._collapseExpendedDeployments(deploymentId)
         });
 
         this._topology.start();
@@ -223,7 +224,7 @@ export default class Topology extends React.Component {
 
     _markDeploymentsToExpand(deploymentId, nodeId){
         let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
-        if (! currentExpanded){
+        if (!currentExpanded){
             currentExpanded = [];
         }
 
@@ -235,6 +236,20 @@ export default class Topology extends React.Component {
             currentExpanded.push({expandedNodeId: nodeId, deploymentId});
             this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
         }
+        this.props.toolbox.refresh();
+    }
+
+    _collapseExpendedDeployments(deploymentId){
+        let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
+        if (!currentExpanded){
+            return;
+        }
+
+        _.remove(currentExpanded, (expended)=>{
+            return expended.deploymentId === deploymentId;
+        });
+        this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
+        this.props.toolbox.refresh();
     }
 
     render () {
