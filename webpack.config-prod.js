@@ -63,7 +63,7 @@ const rules = [
 
             options: {
                 limit: 100000,
-                name: 'static/fonts/[name].[ext]'
+                name: '/static/fonts/[name].[ext]'
             }
         }]
     }, {
@@ -73,7 +73,7 @@ const rules = [
 
             options: {
                 limit: 100000,
-                name: 'static/images/[name].[ext]'
+                name: '/static/images/[name].[ext]'
             }
         }]
     }
@@ -133,30 +133,22 @@ module.exports = [
             ),
             new CopyWebpackPlugin([
                 {
-                    from: 'app/images',
+                    from: 'node_modules/cloudify-ui-common/images/favicon.png',
                     to: 'static/images'
-                }
-            ]),
-            new CopyWebpackPlugin([
+                },
                 {
-                    from: 'app/fonts',
-                    to: 'static/fonts'
-                }
-            ]),
-            new CopyWebpackPlugin([
+                    from: 'node_modules/cloudify-ui-common/images/logo.png',
+                    to: 'static/images'
+                },
                 {
                     from: 'widgets',
                     to: 'appData/widgets',
                     ignore: ['**/src/**']
-                }
-            ]),
-            new CopyWebpackPlugin([
+                },
                 {
                     from: 'templates',
                     to: 'appData/templates'
-                }
-            ]),
-            new CopyWebpackPlugin([
+                },
                 {
                     from: 'tours',
                     to: 'appData/tours'
