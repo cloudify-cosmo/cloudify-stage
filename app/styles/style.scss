@@ -24,11 +24,6 @@ $yellow-dark: #EFA500;
 $white: #FFFFFF;
 $black: #000000;
 
-@font-face {
-  font-family: Cloudify;
-  src: url(../fonts/JosefinSans-Bold.ttf);
-}
-
 body {
 }
 
@@ -401,20 +396,6 @@ a:hover {
     right: 0;
     top: 0;
     bottom: 0;
-
-    .loginHeader {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .loginHeader h2 {
-      font-size: 2em;
-      font-family: Cloudify, sans-serif;
-    }
-
-    .loginHeader p {
-      font-size: 1.1em;
-    }
 
     input,
     input:placeholder-shown {
@@ -803,10 +784,6 @@ table.servicesData button.refreshButton {
 
 .alignCenter {
   text-align: center !important;
-}
-
-.verticalAlignTop {
-  vertical-align: top;
 }
 
 .noWrap {
