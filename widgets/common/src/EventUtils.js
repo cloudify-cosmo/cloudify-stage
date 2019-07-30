@@ -2,6 +2,8 @@
  * Created by pposel on 07/02/2017.
  */
 
+import { icons } from 'cloudify-ui-common';
+
 class EventUtils {
     static eventType = 'cloudify_event';
     static logType = 'cloudify_log';
@@ -9,78 +11,74 @@ class EventUtils {
 
     static eventTypeOptions = {
         'workflow_received': {
-            text: 'Workflow received',
-            icon: 'icon-gs-workflow-stage',
+            text: 'Workflow received'
         },
         'workflow_started': {
             text: 'Workflow started',
-            icon: 'icon-gs-workflow-started',
+            iconClass: 'blue'
         },
         'workflow_initializing_policies': {
-            text: 'Workflow initializing policies',
-            icon: 'icon-gs-workflow-stage',
+            text: 'Workflow initializing policies'
         },
         'workflow_initializing_node': {
-            text: 'Workflow initializing node',
-            icon: 'icon-gs-workflow-stage',
+            text: 'Workflow initializing node'
         },
         'workflow_succeeded': {
             text: 'Workflow ended successfully',
-            icon: 'icon-gs-workflow-success',
+            iconClass: 'green',
         },
         'workflow_failed': {
             text: 'Workflow failed',
-            icon: 'icon-gs-workflow-failed',
-            class: 'row-error'
+            iconClass: 'red',
+            rowClass: 'row-error'
         },
         'workflow_cancelled': {
             text: 'Workflow cancelled',
-            icon: 'icon-gs-workflow-cancelled',
-            class: 'row-error'
+            iconClass: 'red',
+            rowClass: 'row-error'
         },
         'workflow_stage': {
-            text: 'Workflow staged',
-            icon: 'icon-gs-workflow-stage',
+            text: 'Workflow staged'
         },
         'task_started': {
             text: 'Task started',
-            icon: 'icon-gs-task-started',
+            iconClass: 'blue'
         },
         'sending_task': {
             text: 'Task sent',
-            icon: 'icon-gs-task-sent',
+            iconClass: 'blue'
         },
         'task_received': {
             text: 'Task received',
-            icon: 'icon-gs-task-recieved',
+            iconClass: 'blue'
         },
         'task_succeeded': {
             text: 'Task ended successfully',
-            icon: 'icon-gs-task-success',
+            iconClass: 'green'
         },
         'task_failed': {
             text: 'Task failed',
-            icon: 'icon-gs-task-failed',
-            class: 'row-error'
+            iconClass: 'red',
+            rowClass: 'row-error'
         },
         'task_rescheduled': {
             text: 'Task rescheduled',
-            icon: 'icon-gs-task-retry',
-            class: 'row-error'
+            iconClass: 'yellow',
+            rowClass: 'row-error'
         },
         'task_retried': {
             text: 'Task retried',
-            icon: 'icon-gs-task-retried',
-            class: 'row-error'
+            iconClass: 'yellow',
+            rowClass: 'row-error'
         },
         'policy_success': {
             text: 'Policy end successfully started',
-            icon: 'icon-gs-policy-success',
+            iconClass: 'green',
         },
         'policy_failed': {
             text: 'Policy failed',
-            icon: 'icon-gs-policy-failed',
-            class: 'row-error'
+            iconClass: 'red',
+            rowClass: 'row-error'
         },
         'workflow_node_event': {
             text: 'Workflow node event'
@@ -89,10 +87,12 @@ class EventUtils {
             text: 'Processing trigger'
         },
         'trigger_failed': {
-            text: 'Trigger failed'
+            text: 'Trigger failed',
+            iconClass: 'red',
         },
         'trigger_succeeded': {
-            text: 'Trigger succeeded'
+            text: 'Trigger succeeded',
+            iconClass: 'green',
         },
         'workflow_event': {
             text: 'Workflow event'
@@ -102,48 +102,41 @@ class EventUtils {
     static logLevelOptions = {
         'debug': {
             icon: 'bug',
-            circular: true,
             color: 'green',
-            class: 'row-debug',
+            rowClass: 'row-debug',
             text: 'Debug'
         },
         'info': {
             icon: 'info',
-            circular: true,
             color: 'blue',
             text: 'Info'
         },
         'warning': {
             icon: 'warning sign',
-            circular: true,
             color: 'yellow',
-            class: 'row-warning',
+            rowClass: 'row-warning',
             text: 'Warning'
         },
         'error': {
             icon: 'remove',
-            circular: true,
             color: 'red',
-            class: 'row-error',
+            rowClass: 'row-error',
             text: 'Error'
         },
         'critical': {
             icon: 'warning',
-            circular: true,
             color: 'red',
-            class: 'row-error',
+            rowClass: 'row-error',
             text: 'Critical'
         }
     };
 
-    static eventTypeAndLogLevelOptions = {...EventUtils.eventTypeOptions, ...EventUtils.logLevelOptions};
-
-    static getEventTypeOption(event) {
-        return {...{text: event, icon: 'calendar outline', class: 'info'}, ...EventUtils.eventTypeOptions[event]};
+    static getEventTypeOptions(event) {
+        return {...{iconChar: icons.getEventIcon(event)}, ...EventUtils.eventTypeOptions[event]};
     }
 
-    static getEventTypeOrLogLevelOption(eventOrLog) {
-        return {...{text: eventOrLog, icon: 'calendar outline', class: 'info'}, ...EventUtils.eventTypeAndLogLevelOptions[eventOrLog]};
+    static getLogLevelOptions(log) {
+        return {...{icon: 'question', color: 'orange'}, ...EventUtils.logLevelOptions[log]};
     }
 }
 
