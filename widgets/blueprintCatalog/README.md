@@ -12,3 +12,4 @@ You can and should enter Github credentials for fetching data, as the defaults u
 * `GitHub User` - GitHub user or organization account name which is the owner of the repository to fetch. Default: cloudify-examples
 * `GitHub Filter` - Optional filter for GitHub repositories. See GitHub’s web page ‘Searching repositories’ for more details. 
 * `Display style` - defines whether the widget’s view is Catalog or Table. Default: Catalog
+* `Sort by name` -  if set to true, then blueprints will be sorted by name. Default: No
