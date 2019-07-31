@@ -117,13 +117,11 @@ describe('License Management', () => {
         cy.get('tbody > :nth-child(2) > :nth-child(2)')
             .should('have.text', 'All');
         cy.get('tbody > :nth-child(3) > :nth-child(2)')
-            .should('have.text', 'Spire');
+            .should('have.text', 'Premium');
         cy.get('tbody > :nth-child(4) > :nth-child(2)')
-            .should('have.text', 'cap1, cap2');
-        cy.get('tbody > :nth-child(5) > :nth-child(2)')
             .should('have.text', 'Yes');
-        cy.get('tbody > :nth-child(6) > :nth-child(2)')
-            .should('have.text', 'MockCustomer');
+        cy.get('tbody > :nth-child(5) > :nth-child(2)')
+            .should('have.text', 'INT-AutoTests-111111111');
     });
 
     it('allows going to app', () => {
