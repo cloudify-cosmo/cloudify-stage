@@ -101,10 +101,15 @@ export default class Topology extends React.Component {
     /* Will build all the topologies of the expanded deployments
      * of Component or SharedResource nodes.
      */
-        const size = Object.keys(deploymentsData).length;
-        for (let i = 1; i < size; i++) {
+        for (let i = 1; i < _.size(deploymentsData); i++) {
             let expandedNodeData = _.find(currentTopology.nodes, (node) => {
-                return node.name === this.props.data.expandedDeployments[i - 1].expandedNodeId;
+                let found = false;
+                _.each(node.templateData.deploymentSettings, (deploymentSettings) =>{
+                    if (deploymentSettings.id === this.props.data.expandedDeployments[i - 1].expandedNodeId){
+                        found = true;
+                    }
+                  });
+                 return found;
             });
             if (deploymentsData[i].data) {
                 let expanded_topology = this._create_expanded_topology(deploymentsData[i], expandedNodeData);
