@@ -1,15 +1,13 @@
 license:
-  capabilities:
-    - cap1
-    - cap2
+  capabilities: null
   cloudify_version: null
-  customer_id: MockCustomer
-  expiration_date: 11/24/2018
-  license_edition: Spire
+  customer_id: INT-AutoTests-111111111
+  expiration_date: 12/31/2018
+  license_edition: Premium
   trial: true
 signature: !!binary |
-  ntcFdlfy6iV+I2lR0A+SGB+9N9kUF2cDd7VzVLcAXT72GFSJnuHbf4QmnyXhIEpfN+kEMY4N/CTC
-  jTb5Jx43Wep/owYphqXWGqQjFpwNRxhD98pBhLHZSUpE3fyuZGGTyMF6/vM68ph7lzRLv1wAxX+Q
-  f+IoGqxrSqtSVOOeBcqVmvvMuILS+5ir6ANTRtSnf282+52jj7I2Js6e6nrV3Wuxddis4r7I8qxD
-  uHtA15RXhKCaSNscf2WS09wpwaEPamG1zk9EzEREDhCY9mqbBJJxCFPEI4O1t3MuSV6bUee5TfJJ
-  sFafne8U334g9LRZskj9CPDM40hAlKXsnfxdAg==
+  F3NPYqBUi2VCVnU6vWtW9AG8jpf9QSwlOf8GzRpkdt8pHUNU3lzRe7RpDD1pEBM9myNQ28JgXM7J
+  LlggjWw0It/6fTfXo1ekRlrdrOzDqN4suqWB5RMI5rGCeH7NVMU0xb9w2L1kWzdlbyE4MS/cs1WD
+  lmdQiAqPkBgyCUEqhcyWdAXlUCvPlSjwMmF1GB2oo4pOuynHa8kXGiY/nppB/mzm6d60k8ZK5deH
+  d9/0etV7vouWsRocjKbaM01qgRbN40DdlZdR3QBDOz2GO8KrHNE1NQZAmVjKUZ/Xuw/qs1VhJfRs
+  QW/08i1QreUiUx7oCTEiAzQK0AJcdQhIA8/ZmA==
