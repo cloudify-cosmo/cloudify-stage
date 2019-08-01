@@ -113,7 +113,9 @@ export default class Topology extends React.Component {
             });
             if (deploymentsData[i].data) {
                 let expanded_topology = this._create_expanded_topology(deploymentsData[i], expandedNodeData);
-
+                _.each(expanded_topology.nodes, (node) =>{
+                    node.name = this.props.data.expandedDeployments[i - 1].expandedNodeId + '\\' + node.name;
+                });
                 currentTopology.connectors.push.apply(currentTopology.connectors, expanded_topology.connectors);
                 currentTopology.groups.push.apply(currentTopology.groups, expanded_topology.groups);
                 currentTopology.nodes.push.apply(currentTopology.nodes, expanded_topology.nodes);
