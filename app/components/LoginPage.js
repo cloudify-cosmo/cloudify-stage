@@ -11,6 +11,8 @@ import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import Logo from './banner/Logo';
 import FullScreenSegment from './layout/FullScreenSegment';
 
+import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
+
 export default class LoginPage extends Component {
 
     static propTypes = {
@@ -73,9 +75,24 @@ export default class LoginPage extends Component {
                     <Logo />
                     {
                         isHeaderTextPresent &&
-                        <div className="loginHeader">
-                            {loginPageHeader && <h2 style={{color: loginPageHeaderColor}}>{loginPageHeader}</h2>}
-                            {loginPageText && <p style={{color: loginPageTextColor}}>{loginPageText}</p>}
+                        <div style={{ textAlign: 'center', marginBottom: 30 }}>
+                            {
+                                loginPageHeader &&
+                                <h2 style={{
+                                    color: loginPageHeaderColor,
+                                    fontSize: '2em',
+                                    fontFamily: 'JosefinSans-Bold, sans-serif' }}>
+                                    {loginPageHeader}
+                                </h2>
+                            }
+                            {
+                                loginPageText &&
+                                <p style={{
+                                    color: loginPageTextColor,
+                                    fontSize: '1.1em'
+                                }}>
+                                    {loginPageText}
+                                </p>}
                         </div>
                     }
 

@@ -1,7 +1,7 @@
 {
   "whiteLabel": {
     "pageTitle": "Cloudify Console",
-    "logoUrl": "/console/static/images/Cloudify-logo.png",
+    "logoUrl": "/console/static/images/logo.png",
     "mainColor": "#0077FC",
 
     "productName": "Cloudify",

@@ -92,13 +92,9 @@ pipeline {
         }
         failure {
           mail(from: "jenkins-master-on-aws@gigaspaces.com",
-               to: "limor@cloudify.co,jakub.niezgoda@cloudify.co,edenp@cloudify.co",
+               to: "jakub.niezgoda@cloudify.co",
                subject: "Stage build failed!",
                body: "For more information see the build log: ${env.BUILD_URL}/console")
-            //emailext(body: 'For more information see the build log.',
-                     //attachLog: true,
-                     //subject: 'Stage build failed!',
-                     //to: 'limor@cloudify.co')
         }
       }
 

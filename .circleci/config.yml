@@ -1,10 +1,19 @@
 version: 2
+
+directory: &default-working-directory
+  working_directory: ~/repo
+
+image: &default-node-image
+  image: circleci/node:10.15-stretch
+
+env: &default-env
+  <<: *default-working-directory
+  docker:
+    - <<: *default-node-image
+
 jobs:
   build:
-    docker:
-      - image: circleci/node:10.15-stretch
-
-    working_directory: ~/repo
+    <<: *default-env
 
     steps:
       - checkout
@@ -23,14 +32,16 @@ jobs:
             - repo
 
   test:
+    <<: *default-working-directory
+
     docker:
-      - image: circleci/node:10.15-stretch
+      - <<: *default-node-image
       - image: circleci/postgres:9.6.9
         environment:
           POSTGRES_USER: cloudify
           POSTGRES_PASSWORD: cloudify
           POSTGRES_DB: stage
-    working_directory: ~/repo
+
     steps:
       - attach_workspace:
           at: ~/
@@ -46,7 +57,6 @@ jobs:
           command: |
             cd backend
             sudo npm run start
-          # using sudo to create /var/log/cloudify/stage
       - run:
           name: Run tests
           command: npm run prodtest
@@ -55,9 +65,8 @@ jobs:
           command: npm run lint
 
   checkBundleSize:
-    docker:
-      - image: circleci/node:10.15-stretch
-    working_directory: ~/repo
+    <<: *default-env
+
     steps:
       - attach_workspace:
           at: ~/
@@ -66,9 +75,8 @@ jobs:
           command: npm run size
 
   checkWidgetsDoc:
-    docker:
-      - image: circleci/node:10.15-stretch
-    working_directory: ~/repo
+    <<: *default-env
+
     steps:
       - attach_workspace:
           at: ~/

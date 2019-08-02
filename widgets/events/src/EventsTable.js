@@ -139,56 +139,45 @@ export default class EventsTable extends React.Component {
 
                     {
                         this.props.data.items.map((item, index) => {
-                            const eventOrLogOption = EventUtils.getEventTypeOrLogLevelOption(item.event_type || item.level);
-                            const rowClassName = 'verticalAlignTop' + (colorLogs ? ` ${eventOrLogOption.class}` : '');
+                            const isEventType = item.type === EventUtils.eventType;
+
+                            const eventOptions = isEventType
+                                ? EventUtils.getEventTypeOptions(item.event_type)
+                                : EventUtils.getLogLevelOptions(item.level);
+                            const eventName = eventOptions.text || _.capitalize(_.lowerCase(isEventType ? item.event_type : item.level));
+                            const EventIcon = () =>
+                                <span style={{color: '#2c4b68', lineHeight: 1}}>
+                                    {
+                                        isEventType
+                                        ?
+                                            <i style={{fontFamily: 'cloudify', fontSize: 26}}
+                                               className={`icon ${eventOptions.iconClass}`}>
+                                                {eventOptions.iconChar}
+                                            </i>
+                                        :
+                                            <Icon name={eventOptions.icon} color={eventOptions.color} circular inverted
+                                                  className={eventOptions.class} />
+                                    }
+                                </span>;
+
                             const truncateOptions = {'length': maxMessageLength};
 
                             return (
                                 <DataTable.Row key={item.id + index} selected={item.isSelected}
-                                               onClick={this._selectEvent.bind(this, item.id)} className={rowClassName}>
+                                               onClick={this._selectEvent.bind(this, item.id)}
+                                               className={colorLogs ? eventOptions.rowClass : ''}>
                                     <DataTable.Data className="alignCenter">
                                         {
-                                            item.type === EventUtils.eventType &&
-                                            (
-                                                _.isEmpty(eventOrLogOption.text)
-                                                ?
-                                                    <i className={`eventsType icon big ${eventOrLogOption.icon}`} />
-                                                :
-                                                    <Popup>
-                                                        <Popup.Trigger>
-                                                            <i className={`eventsType icon big ${eventOrLogOption.icon}`} />
-                                                        </Popup.Trigger>
-                                                        <Popup.Content>
-                                                            <span>{eventOrLogOption.text}</span>
-                                                        </Popup.Content>
-                                                    </Popup>
-                                            )
-                                        }
-                                        {
-                                            item.type === EventUtils.logType &&
-                                            (
-                                                _.isEmpty(eventOrLogOption.text)
-                                                    ?
-                                                    <Icon name={eventOrLogOption.icon} circular={eventOrLogOption.circular}
-                                                          color={eventOrLogOption.color} className={`eventsType ${eventOrLogOption.class}`}
-                                                          title={eventOrLogOption.text} inverted />
-                                                    :
-                                                    <Popup>
-                                                        <Popup.Trigger>
-                                                            <Icon name={eventOrLogOption.icon} circular={eventOrLogOption.circular}
-                                                                  color={eventOrLogOption.color} className={`eventsType ${eventOrLogOption.class}`}
-                                                                  title={eventOrLogOption.text} inverted />
-                                                        </Popup.Trigger>
-                                                        <Popup.Content>
-                                                            <span>{eventOrLogOption.text}</span>
-                                                        </Popup.Content>
-                                                    </Popup>
-                                            )
-
+                                            !eventName
+                                            ?
+                                                <EventIcon />
+                                            :
+                                                <Popup trigger={<span><EventIcon /></span>}
+                                                       content={<span>{eventName}</span>} />
                                         }
                                     </DataTable.Data>
                                     <DataTable.Data className="alignCenter noWrap">{item.timestamp}</DataTable.Data>
-                                    <DataTable.Data>{eventOrLogOption.text}</DataTable.Data>
+                                    <DataTable.Data>{eventName}</DataTable.Data>
                                     <DataTable.Data>{item.blueprint_id}</DataTable.Data>
                                     <DataTable.Data>{item.deployment_id}</DataTable.Data>
                                     <DataTable.Data>{item.node_name}</DataTable.Data>
