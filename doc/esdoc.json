@@ -8,7 +8,7 @@
         "undocumentIdentifier": {"enable": false},
         "brand": {
           "title": "Widgets Components API Reference",
-          "logo": "./app/images/favicon.png",
+          "logo": "./node_modules/cloudify-ui-common/images/favicon.png",
           "site": "https://github.com/cloudify-cosmo/cloudify-stage",
           "repository": "https://github.com/cloudify-cosmo/cloudify-stage.git"
         },
