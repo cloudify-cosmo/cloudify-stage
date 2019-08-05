@@ -71,15 +71,8 @@ export default class Topology extends React.Component {
             return null;
         }
 
-        let deploymentsData = [];
-        if (!this.props.data.deploymentsData instanceof Array){
-            deploymentsData.push(this.props.data.deploymentsData);
-        }
-        else {
-            deploymentsData = this.props.data.deploymentsData;
-        }
-
-        if (Object.entries(deploymentsData).length === 0 || !deploymentsData[0].data){
+        let deploymentsData = this.props.data.deploymentsData;
+        if (_.size(deploymentsData) === 0 || !deploymentsData[0].data){
             return null;
         }
         let topology = this._create_base_topology(deploymentsData[0]);
@@ -102,25 +95,34 @@ export default class Topology extends React.Component {
      * of Component or SharedResource nodes.
      */
         for (let i = 1; i < _.size(deploymentsData); i++) {
-            let expandedNodeData = _.find(currentTopology.nodes, (node) => {
-                let found = false;
-                _.each(node.templateData.deploymentSettings, (deploymentSettings) =>{
-                    if (deploymentSettings.id === this.props.data.expandedDeployments[i - 1].expandedNodeId){
-                        found = true;
-                    }
-                  });
-                 return found;
-            });
+            const currentExpandedNodeId = this.props.data.expandedDeployments[i - 1].expandedNodeId;
+            let expandedNodeData = this._find_expanded_node(currentTopology, currentExpandedNodeId);
             if (deploymentsData[i].data) {
                 let expanded_topology = this._create_expanded_topology(deploymentsData[i], expandedNodeData);
                 _.each(expanded_topology.nodes, (node) =>{
-                    node.name = this.props.data.expandedDeployments[i - 1].expandedNodeId + '\\' + node.name;
+                    // Formating the name to not collision on nodes from other topologies
+                    node.name = node.name + '(' + expandedNodeData.id + ')';
                 });
+
                 currentTopology.connectors.push.apply(currentTopology.connectors, expanded_topology.connectors);
                 currentTopology.groups.push.apply(currentTopology.groups, expanded_topology.groups);
                 currentTopology.nodes.push.apply(currentTopology.nodes, expanded_topology.nodes);
             }
         }
+    }
+
+    _find_expanded_node(currentTopology, nodeId) {
+        return _.find(currentTopology.nodes, (node) => {
+            let found = false;
+            _.each(node.templateData.deploymentSettings, (deploymentSettings) => {
+                // This will check if one of the node instances has that id,
+                // currently we only support one node instance for nodes that can extend.
+                if (deploymentSettings.id === nodeId) {
+                    found = true;
+                }
+            });
+            return found;
+        });
     }
 
     _create_expanded_topology(deploymentData, expandedNodeData){
@@ -235,20 +237,23 @@ export default class Topology extends React.Component {
             currentExpanded = [];
         }
 
-        let result = _.find(currentExpanded, (expended)=>{
+        let exists = _.find(currentExpanded, (expended)=>{
             return expended.deploymentId === deploymentId;
         });
-
-        if (!result){
-            currentExpanded.push({expandedNodeId: nodeId, deploymentId});
-            this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
+        if (exists){
+            // Nothing to do
+            return;
         }
+
+        currentExpanded.push({expandedNodeId: nodeId, deploymentId});
+        this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
         this.props.toolbox.refresh();
     }
 
     _collapseExpendedDeployments(deploymentId){
         let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
         if (!currentExpanded){
+            // Nothing to do
             return;
         }
 
