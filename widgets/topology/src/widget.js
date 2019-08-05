@@ -34,7 +34,7 @@ Stage.defineWidget({
 
         let deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
         _.each(deploymentsToFetch,(dep)=>{
-            expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep.deploymentId));
+            expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep));
         });
 
         return Promise.all(expandedDeployments);

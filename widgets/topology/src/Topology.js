@@ -95,8 +95,8 @@ export default class Topology extends React.Component {
      * of Component or SharedResource nodes.
      */
         for (let i = 1; i < _.size(deploymentsData); i++) {
-            const currentExpandedNodeId = this.props.data.expandedDeployments[i - 1].expandedNodeId;
-            let expandedNodeData = this._find_expanded_node(currentTopology, currentExpandedNodeId);
+            const expandedDeploymentId = this.props.data.expandedDeployments[i - 1];
+            let expandedNodeData = this._find_expanded_node(currentTopology, expandedDeploymentId);
             if (deploymentsData[i].data) {
                 let expanded_topology = this._create_expanded_topology(deploymentsData[i], expandedNodeData);
                 _.each(expanded_topology.nodes, (node) =>{
@@ -231,21 +231,18 @@ export default class Topology extends React.Component {
         this.props.toolbox.drillDown(this.props.toolbox.getWidget(), 'deployment', {deploymentId: nodeDeploymentId}, nodeDeploymentId);
     }
 
-    _markDeploymentsToExpand(deploymentId, nodeId){
+    _markDeploymentsToExpand(deploymentId){
         let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
         if (!currentExpanded){
             currentExpanded = [];
         }
 
-        let exists = _.find(currentExpanded, (expended)=>{
-            return expended.deploymentId === deploymentId;
-        });
-        if (exists){
+        if (_.includes(currentExpanded, deploymentId)){
             // Nothing to do
             return;
         }
 
-        currentExpanded.push({expandedNodeId: nodeId, deploymentId});
+        currentExpanded.push(deploymentId);
         this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
         this.props.toolbox.refresh();
     }
@@ -257,8 +254,9 @@ export default class Topology extends React.Component {
             return;
         }
 
+        debugger;
         _.remove(currentExpanded, (expended)=>{
-            return expended.deploymentId === deploymentId;
+            return expended === deploymentId;
         });
         this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
         this.props.toolbox.refresh();
