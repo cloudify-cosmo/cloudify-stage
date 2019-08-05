@@ -101,7 +101,7 @@ export default class Topology extends React.Component {
                 let expanded_topology = this._create_expanded_topology(deploymentsData[i], expandedNodeData);
                 _.each(expanded_topology.nodes, (node) =>{
                     // Formating the name to not collision on nodes from other topologies
-                    node.name = node.name + '(' + expandedNodeData.id + ')';
+                    node.name = node.name + '(' + expandedNodeData.name + ')';
                 });
 
                 currentTopology.connectors.push.apply(currentTopology.connectors, expanded_topology.connectors);
