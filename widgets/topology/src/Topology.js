@@ -97,6 +97,15 @@ export default class Topology extends React.Component {
         for (let i = 1; i < _.size(deploymentsData); i++) {
             const expandedDeploymentId = this.props.data.expandedDeployments[i - 1];
             let expandedNodeData = this._find_expanded_node(currentTopology, expandedDeploymentId);
+            if (!expandedNodeData){
+                // In the case of a parent node that contained it was collapsed already
+                let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
+                _.remove(currentExpanded, (expended)=>{
+                    return expended === expandedDeploymentId;
+                });
+                continue;
+            }
+
             if (deploymentsData[i].data) {
                 let expanded_topology = this._create_expanded_topology(deploymentsData[i], expandedNodeData);
                 _.each(expanded_topology.nodes, (node) =>{
@@ -253,8 +262,6 @@ export default class Topology extends React.Component {
             // Nothing to do
             return;
         }
-
-        debugger;
         _.remove(currentExpanded, (expended)=>{
             return expended === deploymentId;
         });
