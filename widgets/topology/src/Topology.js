@@ -1,3 +1,7 @@
+/**
+ * Created by kinneretzin on 06/11/2016.
+ */
+
 import 'cloudify-blueprint-topology';
 
 let BlueprintTopology = cloudifyTopology.Topology;
@@ -58,31 +62,31 @@ export default class Topology extends React.Component {
             enableContextMenu: false,
             onNodeSelected: (node)=> this._setSelectedNode(node),
             onDataProcessed: (data)=>this._processedTopologyData = data,
-            onDeploymentNodeClick: (deploymentId)=>this._goToDeploymentPage(deploymentId),
-            onExpandClick: (deploymentId, nodeId)=>this._markDeploymentsToExpand(deploymentId, nodeId),
-            onCollapseClick: (deploymentId)=>this._collapseExpendedDeployments(deploymentId)
+            onDeploymentNodeClick: (deploymentId)=>this.goToDeploymentPage(deploymentId),
+            onExpandClick: (deploymentId, nodeId)=>this.markDeploymentsToExpand(deploymentId, nodeId),
+            onCollapseClick: (deploymentId)=>this.collapseExpendedDeployments(deploymentId)
         });
 
         this._topology.start();
     }
 
-    _buildTopologyData() {
+    buildTopologyData() {
         if (!(this.props.data && this.props.data.deploymentsData)) {
             return null;
         }
 
-        let deploymentsData = this.props.data.deploymentsData;
+        const deploymentsData = this.props.data.deploymentsData;
         if (_.size(deploymentsData) === 0 || !deploymentsData[0].data){
             return null;
         }
-        let topology = this._create_base_topology(deploymentsData[0]);
-        this._add_expanded_topologies(deploymentsData, topology);
+        const topology = this.createBaseTopology(deploymentsData[0]);
+        this.addExpandedTopologies(deploymentsData, topology);
 
         return topology;
     }
 
-    _create_base_topology(deploymentData){
-        let topologyData = {
+    createBaseTopology(deploymentData){
+        const topologyData = {
             data: deploymentData.data,
             instances: deploymentData.instances,
             executions: deploymentData.executions
@@ -90,24 +94,24 @@ export default class Topology extends React.Component {
         return DataProcessingService.encodeTopologyFromRest(topologyData);
     }
 
-    _add_expanded_topologies(deploymentsData, currentTopology) {
+    addExpandedTopologies(deploymentsData, currentTopology) {
     /* Will build all the topologies of the expanded deployments
      * of Component or SharedResource nodes.
      */
         for (let i = 1; i < _.size(deploymentsData); i++) {
             const expandedDeploymentId = this.props.data.expandedDeployments[i - 1];
-            let expandedNodeData = this._find_expanded_node(currentTopology, expandedDeploymentId);
+            let expandedNodeData = this.findExpandedNode(currentTopology, expandedDeploymentId);
             if (!expandedNodeData){
                 // In the case of a parent node that contained it was collapsed already
                 let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
                 _.remove(currentExpanded, (expended)=>{
                     return expended === expandedDeploymentId;
                 });
-                continue;
+                return;
             }
 
             if (deploymentsData[i].data) {
-                let expanded_topology = this._create_expanded_topology(deploymentsData[i], expandedNodeData);
+                let expanded_topology = this.createExpandedTopology(deploymentsData[i], expandedNodeData);
                 _.each(expanded_topology.nodes, (node) =>{
                     // Formating the name to not collision on nodes from other topologies
                     node.name = node.name + '(' + expandedNodeData.name + ')';
@@ -120,7 +124,7 @@ export default class Topology extends React.Component {
         }
     }
 
-    _find_expanded_node(currentTopology, nodeId) {
+    findExpandedNode(currentTopology, nodeId) {
         return _.find(currentTopology.nodes, (node) => {
             let found = false;
             _.each(node.templateData.deploymentSettings, (deploymentSettings) => {
@@ -134,7 +138,7 @@ export default class Topology extends React.Component {
         });
     }
 
-    _create_expanded_topology(deploymentData, expandedNodeData){
+    createExpandedTopology(deploymentData, expandedNodeData){
         let topologyData = {
             data: deploymentData.data,
             instances: deploymentData.instances,
@@ -204,7 +208,7 @@ export default class Topology extends React.Component {
         } else {
             var isFirstTimeLoading = this._topologyData === null;
             var oldTopologyData = this._topologyData;
-            this._topologyData = this._buildTopologyData();
+            this._topologyData = this.buildTopologyData();
 
             if (isFirstTimeLoading || this._isNodesChanged(oldTopologyData.nodes, this._topologyData.nodes)) {
                 this._topology.setTopology(this._topologyData);
@@ -234,17 +238,14 @@ export default class Topology extends React.Component {
         $(this.glassRef.current).removeClass('unlocked');
     }
 
-    _goToDeploymentPage(nodeDeploymentId) {
+    goToDeploymentPage(nodeDeploymentId) {
         this.props.toolbox.getContext().setValue('deploymentId', nodeDeploymentId);
         this.props.toolbox.goToPage('deployments');
         this.props.toolbox.drillDown(this.props.toolbox.getWidget(), 'deployment', {deploymentId: nodeDeploymentId}, nodeDeploymentId);
     }
 
-    _markDeploymentsToExpand(deploymentId){
-        let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
-        if (!currentExpanded){
-            currentExpanded = [];
-        }
+    markDeploymentsToExpand(deploymentId){
+        let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand') || [];
 
         if (_.includes(currentExpanded, deploymentId)){
             // Nothing to do
@@ -256,14 +257,14 @@ export default class Topology extends React.Component {
         this.props.toolbox.refresh();
     }
 
-    _collapseExpendedDeployments(deploymentId){
+    collapseExpendedDeployments(deploymentId){
         let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
         if (!currentExpanded){
             // Nothing to do
             return;
         }
-        _.remove(currentExpanded, (expended)=>{
-            return expended === deploymentId;
+        _.remove(currentExpanded, (expanded)=>{
+            return expanded === deploymentId;
         });
         this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
         this.props.toolbox.refresh();

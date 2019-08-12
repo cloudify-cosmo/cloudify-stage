@@ -28,11 +28,11 @@ Stage.defineWidget({
     ],
 
     fetchData: function(widget,toolbox) {
-        let deploymentId = toolbox.getContext().getValue('deploymentId');
-        let blueprintId = toolbox.getContext().getValue('blueprintId');
+        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        const blueprintId = toolbox.getContext().getValue('blueprintId');
         let expandedDeployments = [DataFetcher.fetch(toolbox, blueprintId, deploymentId)];
 
-        let deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
+        const deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
         _.each(deploymentsToFetch,(dep)=>{
             expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep));
         });
@@ -41,7 +41,7 @@ Stage.defineWidget({
     },
 
     render: function(widget,data,error,toolbox) {
-        let topologyConfig = {
+        const topologyConfig = {
             enableNodeClick: widget.configuration.enableNodeClick,
             enableGroupClick: widget.configuration.enableGroupClick,
             enableZoom: widget.configuration.enableZoom,
@@ -49,12 +49,12 @@ Stage.defineWidget({
             showToolbar: widget.configuration.showToolbar
         };
 
-        let deploymentId = toolbox.getContext().getValue('deploymentId');
-        let blueprintId = toolbox.getContext().getValue('blueprintId');
-        let expandedDeployments = toolbox.getContext().getValue('deploymentsToExpand');
+        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        const blueprintId = toolbox.getContext().getValue('blueprintId');
+        const expandedDeployments = toolbox.getContext().getValue('deploymentsToExpand');
 
-        let deploymentsData  = Object.assign({},data);
-        let formattedData = Object.assign({deploymentsData},{
+        const deploymentsData  = Object.assign({},data);
+        const formattedData = Object.assign({deploymentsData},{
             deploymentId,
             blueprintId,
             topologyConfig,
