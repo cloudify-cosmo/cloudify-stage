@@ -23,7 +23,7 @@
     "upload": "sh scripts/uploadPackage.sh",
     "size": "size-limit"
   },
-  "author": "Kinneret Zin",
+  "author": "Cloudify",
   "license": "Apache-2.0",
   "repository": "https://github.com/cloudify-cosmo/cloudify-stage",
   "engines": {

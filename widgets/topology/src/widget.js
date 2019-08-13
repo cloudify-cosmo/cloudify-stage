@@ -28,14 +28,20 @@ Stage.defineWidget({
     ],
 
     fetchData: function(widget,toolbox) {
-        var deploymentId = toolbox.getContext().getValue('deploymentId');
-        var blueprintId = toolbox.getContext().getValue('blueprintId');
+        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        const blueprintId = toolbox.getContext().getValue('blueprintId');
+        let expandedDeployments = [DataFetcher.fetch(toolbox, blueprintId, deploymentId)];
 
-        return DataFetcher.fetch(toolbox,blueprintId,deploymentId);
+        const deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
+        _.each(deploymentsToFetch,(dep)=>{
+            expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep));
+        });
+
+        return Promise.all(expandedDeployments);
     },
 
     render: function(widget,data,error,toolbox) {
-        var topologyConfig = {
+        const topologyConfig = {
             enableNodeClick: widget.configuration.enableNodeClick,
             enableGroupClick: widget.configuration.enableGroupClick,
             enableZoom: widget.configuration.enableZoom,
@@ -43,16 +49,19 @@ Stage.defineWidget({
             showToolbar: widget.configuration.showToolbar
         };
 
-        var deploymentId = toolbox.getContext().getValue('deploymentId');
-        var blueprintId = toolbox.getContext().getValue('blueprintId');
+        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        const blueprintId = toolbox.getContext().getValue('blueprintId');
+        const expandedDeployments = toolbox.getContext().getValue('deploymentsToExpand');
 
-        var formattedData = Object.assign({},data,{
+        const deploymentsData  = Object.assign({},data);
+        const formattedData = Object.assign({deploymentsData},{
             deploymentId,
             blueprintId,
-            topologyConfig
+            topologyConfig,
+            expandedDeployments
         });
-        return <Topology widget={widget} data={formattedData} toolbox={toolbox}/>;
 
+        return <Topology widget={widget} data={formattedData} toolbox={toolbox}/>;
     }
 
 });
