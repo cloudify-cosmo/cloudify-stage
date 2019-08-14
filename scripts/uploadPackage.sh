@@ -19,10 +19,6 @@ if [ ! -f "${UPLOAD_PACKAGE_SCRIPT_PATH}" ]; then
 fi
 . "$UPLOAD_PACKAGE_SCRIPT_PATH"
 
-if [ ! -f "${STAGE_PACKAGE}" ]; then
-    echo "ERROR: Stage package - ${STAGE_PACKAGE} - not found."
-    exit 1
-fi
 # Stage package check and download
 if [ -n "${STAGE_PACKAGE_URL}" ]; then
     echo "Stage package URL set. Downloading package from '${STAGE_PACKAGE_URL}'..."
