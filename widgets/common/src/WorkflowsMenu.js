@@ -2,8 +2,6 @@
  * Created by jakubniezgoda on 31/01/2019.
  */
 
-import PropTypes from 'prop-types';
-
 class WorkflowsMenuItems extends React.Component {
 
     static propTypes = {

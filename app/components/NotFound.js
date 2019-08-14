@@ -5,9 +5,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Header, Label, Message } from './basic';
-import MessageContainer from './MessageContainer';
 import Consts from '../utils/consts';
+import { Header, Label, Message, MessageContainer } from './basic';
 
 export default class NotFound extends Component {
     render () {

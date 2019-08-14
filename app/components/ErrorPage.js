@@ -5,10 +5,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { Header, Message } from './basic';
-import MessageContainer from './MessageContainer';
-import LinkToLogin from '../containers/LinkToLogin';
 import Consts from '../utils/consts';
+import LinkToLogin from '../containers/LinkToLogin';
+import { Header, Message, MessageContainer } from './basic';
 
 export default class ErrorPage extends Component {
     render () {

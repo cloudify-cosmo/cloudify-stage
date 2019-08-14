@@ -163,4 +163,14 @@ export default class StageUtils {
         var userRoles = _.uniq(tenantRoles.concat(systemRole, groupSystemRoles));
         return _.intersection(authorizedRoles, userRoles).length > 0;
     }
+
+    static isWidgetPermitted(widgetSupportedEditions, managerData) {
+        // Don't check the supported editions and keep backwards compatibility
+        if (_.isEmpty(widgetSupportedEditions)) {
+            return true;
+        }
+
+        const license = _.get(managerData, 'license.data', {});
+        return _.includes(widgetSupportedEditions, license.license_edition);
+    }
 }

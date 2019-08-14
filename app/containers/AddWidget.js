@@ -14,7 +14,8 @@ import Consts from '../utils/consts';
 const mapStateToProps = (state, ownProps) => {
 
     var widgetDefinitions = state.widgetDefinitions.filter((definition) => {
-        return stageUtils.isUserAuthorized(definition.permission, state.manager);
+        return stageUtils.isUserAuthorized(definition.permission, state.manager) &&
+            stageUtils.isWidgetPermitted(definition.supportedEditions, state.manager);
     });
     var canInstallWidgets = stageUtils.isUserAuthorized(Consts.permissions.STAGE_INSTALL_WIDGETS, state.manager);
 

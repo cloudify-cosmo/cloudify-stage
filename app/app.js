@@ -27,9 +27,13 @@ import 'highlight.js/styles/xcode.css';
 // Import hopscotch
 import 'hopscotch/dist/css/hopscotch.css';
 
+// Import leaflet
+import 'leaflet/dist/leaflet.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import * as Leaflet from 'leaflet';
 
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
@@ -57,6 +61,7 @@ export default class app{
     static load (){
         window.React = React;
         window.PropTypes = PropTypes;
+        window.L = Leaflet;
 
         window.onerror = function (message, source, lineno, colno, error) {
             EventBus.trigger('window:error', message, source, lineno, colno, error);

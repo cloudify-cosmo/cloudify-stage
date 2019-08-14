@@ -24,6 +24,9 @@ export default class WidgetDefinition {
         this.showBorder = true;
         this.showHeader = true;
 
+        // By default don't check the supported editions and keep backwards compatibility
+        this.supportedEditions = [];
+
         // Override defaults with data
         Object.assign(this,data);
 
