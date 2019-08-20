@@ -1,7 +1,4 @@
-/**
- * Created by kinneretzin on 25/01/2017.
- */
-
+const fs = require('fs')
 const _ = require('lodash');
 const flatten = require('flat');
 
@@ -43,6 +40,14 @@ module.exports = {
         _.merge(config, me);
 
         config.managerUrl = manager.protocol + '://' + manager.ip + ':' + manager.port;
+
+        // Postgres client libraries require the cert to be loaded, not just given as a path
+        if(config.app.db.options.dialectOptions.ssl) {
+            config.app.db.options.dialectOptions.ssl.ca = fs.readFileSync(
+                config.app.db.options.dialectOptions.ssl.ca,
+                {encoding: 'utf8'}
+            )
+        }
 
         return config;
     },
