@@ -23,6 +23,13 @@ var options = _.merge({
         // logging: (message) => logger.debug(message)
     },config.app.db.options);
 
+if(options.dialectOptions.ssl) {
+    options.dialectOptions.ssl.ca = fs.readFileSync(
+        options.dialectOptions.ssl.ca,
+        {encoding: 'utf8'}
+    );
+}
+
 var sequelize = new Sequelize(config.app.db.url,options);
 
 var db        = {};
