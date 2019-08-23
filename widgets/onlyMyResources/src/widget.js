@@ -6,8 +6,8 @@ import MyResourcesCheckbox from './MyResourcesCheckbox';
 
 Stage.defineWidget ({
   id: 'onlyMyResources',
-  name: 'only my resources',
-  description: 'show only my resources checkbox, work with (plugins, snapshots, blueprints, deployments)',
+  name: 'Show Only My Resources',
+  description: 'Show only my resources checkbox, work with (plugins, snapshots, blueprints, deployments)',
   initialWidth: 12,
   initialHeight: 4,
   color: 'yellow',
