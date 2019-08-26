@@ -28,6 +28,17 @@ if(options.dialectOptions.ssl) {
         options.dialectOptions.ssl.ca,
         {encoding: 'utf8'}
     );
+    if(options.dialectOptions.ssl.cert) {
+        // If the cert is provided, the key will also be provided by the installer.
+        options.dialectOptions.ssl.cert = fs.readFileSync(
+            options.dialectOptions.ssl.cert,
+            {encoding: 'utf8'}
+        );
+        options.dialectOptions.ssl.key = fs.readFileSync(
+            options.dialectOptions.ssl.key,
+            {encoding: 'utf8'}
+        );
+    }
 }
 
 var sequelize = new Sequelize(config.app.db.url,options);
