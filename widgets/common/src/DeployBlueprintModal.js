@@ -23,7 +23,7 @@ class DeployBlueprintModal extends React.Component {
         skipPluginsValidation: false,
         siteName: '',
         sites: {items:[]},
-        functionsEager: true
+        runtimeOnlyEvaluation: false
     };
 
     /**
@@ -94,7 +94,7 @@ class DeployBlueprintModal extends React.Component {
 
         let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions.doDeploy(this.props.blueprint, this.state.deploymentName, deploymentInputs, this.state.visibility,
-                         this.state.skipPluginsValidation, this.state.siteName, this.state.functionsEager)
+                         this.state.skipPluginsValidation, this.state.siteName, this.state.runtimeOnlyEvaluation)
             .then((/*deployment*/)=> {
                 this.setState({loading: false, errors: {}});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -209,11 +209,11 @@ class DeployBlueprintModal extends React.Component {
                         }
 
                         <Form.Field help='If set, then get_property and get_input intrinsic functions will be evaluated
-                                          at deployment creation time. If not set evaluation will be done on demand at runtime.'>
+                                          on demand at runtime. If not set, then evaluation will be done at deployment creation time.'>
                             <Form.Checkbox toggle
-                                           label="Evaluate functions at runtime"
-                                           name='functionsEager'
-                                           checked={this.state.functionsEager}
+                                           label="Runtime only evaluation"
+                                           name='runtimeOnlyEvaluation'
+                                           checked={this.state.runtimeOnlyEvaluation}
                                            onChange={this._handleInputChange.bind(this)}
                             />
                         </Form.Field>
