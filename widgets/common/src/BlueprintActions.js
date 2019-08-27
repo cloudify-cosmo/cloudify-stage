@@ -20,12 +20,13 @@ class BlueprintActions {
             .then(() => this.doDeleteImage(blueprint.id));
     }
 
-    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation = false, siteName = null) {
+    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation = false, siteName = null, functionsEager = true) {
         let data = {
             'blueprint_id': blueprint.id,
             inputs,
             visibility,
-            skip_plugins_validation: skipPluginsValidation
+            skip_plugins_validation: skipPluginsValidation,
+            functions_eager: functionsEager
         };
 
         if (siteName) {

@@ -21,7 +21,8 @@ export default class DeployModal extends React.Component {
         deploymentInputs: [],
         visibility: Stage.Common.Consts.defaultVisibility,
         skipPluginsValidation: false,
-        siteName: ''
+        siteName: '',
+        functionsEager: true
     };
 
     /**
@@ -114,7 +115,7 @@ export default class DeployModal extends React.Component {
 
         var actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions.doDeploy(this.state.blueprint, this.state.deploymentName, deploymentInputs, this.state.visibility,
-                         this.state.skipPluginsValidation, this.state.siteName)
+                         this.state.skipPluginsValidation, this.state.siteName, this.state.functionsEager)
             .then((/*deployment*/)=> {
                 this.setState({loading: false, errors: {}});
                 this.props.toolbox.getEventBus().trigger('deployments:refresh');
@@ -223,6 +224,16 @@ export default class DeployModal extends React.Component {
                         {
                             this.state.skipPluginsValidation && <Message>The recommended path is uploading plugins as wagons to Cloudify. This option is designed for plugin development and advanced users only.</Message>
                         }
+
+                        <Form.Field help='If set, then get_property and get_input intrinsic functions will be evaluated
+                                          at deployment creation time. If not set evaluation will be done on demand at runtime.'>
+                            <Form.Checkbox toggle
+                                           label="Evaluate functions at runtime"
+                                           name='functionsEager'
+                                           checked={this.state.functionsEager}
+                                           onChange={this._handleInputChange.bind(this)}
+                            />
+                        </Form.Field>
                     </Form>
                 </Modal.Content>
 
