@@ -79,7 +79,7 @@ module.exports = [
     {
         mode: 'development',
         context: path.join(__dirname),
-        devtool: 'eval',
+        devtool: 'eval-source-map',
         resolve: {
             alias: {
                 'jquery-ui': 'jquery-ui/ui',
@@ -148,7 +148,7 @@ module.exports = [
     {
         mode: 'development',
         context: path.join(__dirname),
-        devtool: 'eval',
+        devtool: 'eval-source-map',
         entry: getWidgetEntries(),
         output: {
             path: path.join(__dirname, 'dist/appData'),
@@ -174,7 +174,7 @@ module.exports = [
     {
         mode: 'development',
         context: path.join(__dirname),
-        devtool: 'eval',
+        devtool: 'eval-source-map',
         entry: glob.sync('./widgets/common/src/*.js'),
         output: {
             path: path.join(__dirname, 'dist/appData/widgets'),
