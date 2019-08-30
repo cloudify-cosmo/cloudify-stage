@@ -16,9 +16,11 @@ module.exports = {
             elements: {
                 tree: '.nodes-tree',
                 blueprintHeader: '.nodes-tree .rc-tree-title .label',
-                vsphereYaml: '.nodes-tree > li > ul > li:first-child > ul > li:last-child > span.rc-tree-node-content-wrapper',
+                vsphereYaml:
+                    '.nodes-tree > li > ul > li:first-child > ul > li:last-child > span.rc-tree-node-content-wrapper',
                 emptyContent: '.splitter-layout .layout-splitter + .layout-pane i.file.icon',
-                contentSnippet: '.splitter-layout .layout-splitter + .layout-pane .alignHighlight code span.hljs-attr:nth-child(1)',
+                contentSnippet:
+                    '.splitter-layout .layout-splitter + .layout-pane .alignHighlight code span.hljs-attr:nth-child(1)',
                 fullScreenButton: '.splitter-layout .layout-splitter + .layout-pane .alignHighlight div.attached.label'
             }
         }

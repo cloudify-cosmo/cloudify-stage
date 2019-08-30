@@ -1,18 +1,17 @@
-'use strict';
 /**
  * Created by pposel on 24/02/2017.
  */
 
-var express = require('express');
-var SourceHandler = require('../handler/SourceHandler');
-var passport = require('passport');
+const express = require('express');
+const passport = require('passport');
+const SourceHandler = require('../handler/SourceHandler');
 
-var router = express.Router();
+const router = express.Router();
 
-router.use(passport.authenticate('token', {session: false}));
+router.use(passport.authenticate('token', { session: false }));
 
 router.get('/browse/file', function(req, res, next) {
-    var path = req.query.path;
+    const { path } = req.query;
 
     if (!path) {
         return next('no file path passed [path]');
@@ -29,13 +28,13 @@ router.get('/browse/:blueprintId/archive', function(req, res, next) {
         .catch(next);
 });
 
-router.put('/list/yaml', function (req, res, next) {
+router.put('/list/yaml', function(req, res, next) {
     SourceHandler.listYamlFiles(req)
         .then(data => res.send(data))
         .catch(next);
 });
 
-router.put('/list/resources', function (req, res, next) {
+router.put('/list/resources', function(req, res, next) {
     SourceHandler.getBlueprintResources(req)
         .then(data => res.send(data))
         .catch(next);

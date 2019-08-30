@@ -3,7 +3,6 @@
  */
 
 export default class Task {
-
     static Status = {
         pending: 0,
         inProgress: 1,

@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {EditableLabel} from './basic';
+import { EditableLabel } from './basic';
 
 export default class Breadcrumbs extends Component {
     static propTypes = {
@@ -15,29 +15,41 @@ export default class Breadcrumbs extends Component {
     };
 
     render() {
-        var elements = [];
-        var pagesList = _([...this.props.pagesList]).reverse().value();
-        _.each(pagesList,(p,index)=>{
-            if (index !== pagesList.length-1) {
-                elements.push(<div key={p.id} className='section' onClick={()=>{this.props.onPageSelected(p,pagesList,index);} }>{p.name}</div>);
-                elements.push(<span key={'d_'+p.id} className="divider">/</span>);
+        const elements = [];
+        const pagesList = _([...this.props.pagesList])
+            .reverse()
+            .value();
+        _.each(pagesList, (p, index) => {
+            if (index !== pagesList.length - 1) {
+                elements.push(
+                    <div
+                        key={p.id}
+                        className="section"
+                        onClick={() => {
+                            this.props.onPageSelected(p, pagesList, index);
+                        }}
+                    >
+                        {p.name}
+                    </div>
+                );
+                elements.push(
+                    <span key={`d_${p.id}`} className="divider">
+                        /
+                    </span>
+                );
             } else {
                 elements.push(
-                    <EditableLabel key={p.id}
+                    <EditableLabel
+                        key={p.id}
                         text={p.name}
-                        placeholder='You must fill a page name'
-                        className='section active pageTitle'
+                        placeholder="You must fill a page name"
+                        className="section active pageTitle"
                         isEditEnable={this.props.isEditMode}
-                        onEditDone={(newName)=>this.props.onPageNameChange(p,newName)}
+                        onEditDone={newName => this.props.onPageNameChange(p, newName)}
                     />
                 );
             }
-
         });
-        return (
-            <div className='ui breadcrumb breadcrumbLineHeight'>
-                {elements}
-            </div>
-        );
+        return <div className="ui breadcrumb breadcrumbLineHeight">{elements}</div>;
     }
 }

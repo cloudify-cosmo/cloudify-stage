@@ -3,9 +3,8 @@
  */
 
 class InputsHeader extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
     }
 
     static propTypes = {
@@ -24,39 +23,52 @@ class InputsHeader extends React.Component {
         return !_.isEqual(this.props, nextProps);
     }
 
-    render () {
-        let {Form, Header, List, PopupHelp} = Stage.Basic;
+    render() {
+        const { Form, Header, List, PopupHelp } = Stage.Basic;
 
-        let HeaderWithDescription = () =>
+        const HeaderWithDescription = () => (
             <Header size="tiny">
                 {this.props.header}
                 <Header.Subheader>
                     See values typing details:&nbsp;
-                    <PopupHelp flowing header='Value type' content={
-                        <div>
-                            Values are casted to types, e.g.:
-                            <List bulleted>
-                                <List.Item><strong>[1, 2]</strong> will be casted to an array</List.Item>
-                                <List.Item><strong>524</strong> will be casted to a number</List.Item>
-                            </List>
-                            Surround value with <strong>"</strong> to explicitly declare it as a string, e.g.:
-                            <List bulleted>
-                                <List.Item><strong>{'"{"a":"b"}"'}</strong> will be send as string not an object</List.Item>
-                                <List.Item><strong>{'"true"'}</strong> will be send as string not a boolean value</List.Item>
-                            </List>
-                            Use <strong>""</strong> for an empty string.
-                        </div>
-                    } />
+                    <PopupHelp
+                        flowing
+                        header="Value type"
+                        content={
+                            <div>
+                                Values are casted to types, e.g.:
+                                <List bulleted>
+                                    <List.Item>
+                                        <strong>[1, 2]</strong> will be casted to an array
+                                    </List.Item>
+                                    <List.Item>
+                                        <strong>524</strong> will be casted to a number
+                                    </List.Item>
+                                </List>
+                                Surround value with <strong>"</strong> to explicitly declare it as a string, e.g.:
+                                <List bulleted>
+                                    <List.Item>
+                                        <strong>{'"{"a":"b"}"'}</strong> will be send as string not an object
+                                    </List.Item>
+                                    <List.Item>
+                                        <strong>"true"</strong> will be send as string not a boolean value
+                                    </List.Item>
+                                </List>
+                                Use <strong>""</strong> for an empty string.
+                            </div>
+                        }
+                    />
                 </Header.Subheader>
-            </Header>;
+            </Header>
+        );
 
-        return this.props.dividing
-            ?
-                <Form.Divider style={this.props.compact ? {marginTop: 0} : {}}>
-                    <HeaderWithDescription />
-                </Form.Divider>
-            :
+        return this.props.dividing ? (
+            <Form.Divider style={this.props.compact ? { marginTop: 0 } : {}}>
                 <HeaderWithDescription />
+            </Form.Divider>
+        ) : (
+            <HeaderWithDescription />
+        );
     }
 }
 

@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import { CompactPicker } from 'react-color';
+
 const tinycolor = require('tinycolor2');
 
 /**
@@ -23,12 +24,12 @@ const tinycolor = require('tinycolor2');
  *
  */
 export default class ColorPicker extends Component {
-
     /**
      * propTypes
+     *
      * @property {string} [name=''] name of the color picker component
      * @property {string} [value='#000000'] hexadecimal color value
-     * @property {function} [onChange=(function () {});] function called on color change
+     * @property {Function} [onChange=(function () {});] function called on color change
      */
     static propTypes = {
         name: PropTypes.string,
@@ -40,19 +41,18 @@ export default class ColorPicker extends Component {
         name: '',
         value: '#000000',
         onChange: () => {}
-    }
+    };
 
     _handleInputChange(color, event) {
         this.props.onChange(event, {
             name: this.props.name,
             value: color.hex
-        })
+        });
     }
-    render() {
-        let color = tinycolor(this.props.value);
 
-        return (
-            <CompactPicker color={color.toHsl()} onChangeComplete={this._handleInputChange.bind(this)} />
-        );
+    render() {
+        const color = tinycolor(this.props.value);
+
+        return <CompactPicker color={color.toHsl()} onChangeComplete={this._handleInputChange.bind(this)} />;
     }
 }

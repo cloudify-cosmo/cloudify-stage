@@ -2,16 +2,22 @@
  * Created by edenp on 15/04/2018.
  */
 
-var express = require('express');
-var ToursHandler = require('../handler/ToursHandler');
-var passport = require('passport');
+const express = require('express');
+const passport = require('passport');
+const ToursHandler = require('../handler/ToursHandler');
 
-var router = express.Router();
+const router = express.Router();
 
-router.use(passport.authenticate('token', {session: false}));
+router.use(passport.authenticate('token', { session: false }));
 
-router.get('/', function (req, res, next) {
-    ToursHandler.listTours(req.user.role, req.user.group_system_roles, req.user.tenants, req.query.tenant, req.headers['authentication-token'])
+router.get('/', function(req, res, next) {
+    ToursHandler.listTours(
+        req.user.role,
+        req.user.group_system_roles,
+        req.user.tenants,
+        req.query.tenant,
+        req.headers['authentication-token']
+    )
         .then(tours => res.send(tours))
         .catch(next);
 });

@@ -2,32 +2,30 @@
  * Created by pawelposel on 24/11/2016.
  */
 
-import React from 'react'
-import { shallow , mount} from 'enzyme'
-import {expect} from 'chai';
+import React from 'react';
+import { shallow, mount } from 'enzyme';
+import { expect } from 'chai';
 import sinon from 'sinon';
 import DataSegment from '../../../app/components/basic/dataSegment/DataSegment';
 
 describe('(Component) DataSegment', () => {
-
-    var wrapper;
-    var fetchSpy = sinon.spy();
-    var selectSpy = sinon.spy();
-    before(()=>{
-        let div = $('<div />').appendTo('body');
+    let wrapper;
+    const fetchSpy = sinon.spy();
+    const selectSpy = sinon.spy();
+    before(() => {
+        const div = $('<div />').appendTo('body');
 
         wrapper = mount(
             <DataSegment fetchData={fetchSpy} pageSize={25} sortColumn="col1" sortAscending={false}>
-                {
-                    [{k:1}, {k:2}, {k:3, s:true}, {k:4}, {k:5}].map((item)=> {
-                        return (
-                            <DataSegment.Item key={item.k} selected={item.s} onClick={item.s?selectSpy:null}>
-                                <div>Data {item.k}</div>
-                            </DataSegment.Item>
-                        )
-                    })
-                }
-            </DataSegment>, { attachTo: div.get(0) }
+                {[{ k: 1 }, { k: 2 }, { k: 3, s: true }, { k: 4 }, { k: 5 }].map(item => {
+                    return (
+                        <DataSegment.Item key={item.k} selected={item.s} onClick={item.s ? selectSpy : null}>
+                            <div>Data {item.k}</div>
+                        </DataSegment.Item>
+                    );
+                })}
+            </DataSegment>,
+            { attachTo: div.get(0) }
         );
     });
 
@@ -36,7 +34,7 @@ describe('(Component) DataSegment', () => {
     });
 
     it('renders no data message if empty', () => {
-        wrapper.setProps({totalSize:0});
+        wrapper.setProps({ totalSize: 0 });
 
         expect(wrapper.find('.segmentList .icon.message')).to.have.length(1);
         expect(wrapper.find('.segmentList .icon.message')).to.have.text('No data available');
@@ -44,7 +42,7 @@ describe('(Component) DataSegment', () => {
     });
 
     it('renders data rows', () => {
-        wrapper.setProps({totalSize:5});
+        wrapper.setProps({ totalSize: 5 });
         expect(wrapper.find('.segmentList .segment')).to.have.length(5);
     });
 
@@ -62,6 +60,4 @@ describe('(Component) DataSegment', () => {
     after(() => {
         wrapper.detach();
     });
-
 });
-

@@ -2,21 +2,21 @@
  * Created by jakubniezgoda on 22/03/2019.
  */
 
-import React from 'react'
-import { mount } from 'enzyme'
+import React from 'react';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
+import sinon from 'sinon';
 import Help from '../../app/components/Help.js';
 import * as BasicComponents from '../../app/components/basic';
-import sinon from 'sinon';
 import StageUtils from '../../app/utils/stageUtils';
 
 describe('(Component) Help', () => {
     let wrapper = null;
     let dropdownItemComponents = null;
-    let redirectToPage = sinon.spy(StageUtils.Url, 'redirectToPage');
-    let onAbout = sinon.spy();
-    global.Stage = {Basic: BasicComponents};
-    let {Dropdown} = Stage.Basic;
+    const redirectToPage = sinon.spy(StageUtils.Url, 'redirectToPage');
+    const onAbout = sinon.spy();
+    global.Stage = { Basic: BasicComponents };
+    const { Dropdown } = Stage.Basic;
     wrapper = mount(<Help onAbout={onAbout} />);
     dropdownItemComponents = wrapper.find(Dropdown.Item);
 
@@ -42,19 +42,23 @@ describe('(Component) Help', () => {
         expect(dropdownItemComponents.get(4).props.icon).to.equal('info circle');
     });
 
-    it('calls onAbout function on click on About option',()=>{
+    it('calls onAbout function on click on About option', () => {
         dropdownItemComponents.filterWhere(element => element.instance().props.text === 'About').simulate('click');
         expect(onAbout.calledOnce).to.equal(true);
     });
 
-    it('calls redirectToPage function on click on Documentation, Tutorials, Knowledge Base and Contact Us options',()=>{
-        dropdownItemComponents.filterWhere(element => element.instance().props.text === 'Documentation').simulate('click');
+    it('calls redirectToPage function on click on Documentation, Tutorials, Knowledge Base and Contact Us options', () => {
+        dropdownItemComponents
+            .filterWhere(element => element.instance().props.text === 'Documentation')
+            .simulate('click');
         expect(redirectToPage.calledWith('https://docs.cloudify.co')).to.equal(true);
 
         dropdownItemComponents.filterWhere(element => element.instance().props.text === 'Tutorials').simulate('click');
         expect(redirectToPage.calledWith('https://cloudify.co/academy')).to.equal(true);
 
-        dropdownItemComponents.filterWhere(element => element.instance().props.text === 'Knowledge Base').simulate('click');
+        dropdownItemComponents
+            .filterWhere(element => element.instance().props.text === 'Knowledge Base')
+            .simulate('click');
         expect(redirectToPage.calledWith('https://cloudify.co/knowledge-base')).to.equal(true);
 
         dropdownItemComponents.filterWhere(element => element.instance().props.text === 'Contact Us').simulate('click');

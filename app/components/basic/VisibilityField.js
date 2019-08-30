@@ -23,16 +23,18 @@ import consts from '../../utils/consts';
  *  ```
  */
 export default class VisibilityField extends Component {
-
     /**
      * order of visibilities when changing visibility
      */
-    static visibilitiesOrder = [consts.visibility.TENANT.name, consts.visibility.PRIVATE.name, consts.visibility.GLOBAL.name];
-
+    static visibilitiesOrder = [
+        consts.visibility.TENANT.name,
+        consts.visibility.PRIVATE.name,
+        consts.visibility.GLOBAL.name
+    ];
 
     /**
      * @property {string} [visibility='unkown'] the current visibility, one from ['tenant', 'private', 'global'].
-     * @property {function} [onVisibilityChange=()=>{}] the callback to be called with the new visibility
+     * @property {Function} [onVisibilityChange=()=>{}] the callback to be called with the new visibility
      * @property {bool} [disallowGlobal=false] should the component not allow changing the global
      * @property {bool} [allowChange=true] should the component allow changing visibility
      * @property {string} [className=''] Name of the style class to be added
@@ -42,7 +44,8 @@ export default class VisibilityField extends Component {
             consts.visibility.PRIVATE.name,
             consts.visibility.TENANT.name,
             consts.visibility.GLOBAL.name,
-            consts.visibility.UNKNOWN.name]),
+            consts.visibility.UNKNOWN.name
+        ]),
         onVisibilityChange: PropTypes.func,
         disallowGlobal: PropTypes.bool,
         allowChange: PropTypes.bool,
@@ -57,17 +60,23 @@ export default class VisibilityField extends Component {
         className: ''
     };
 
-    static visibilityTitle = _.reduce(consts.visibility, (result, visibilityObject) => {
-        result[visibilityObject.name] = visibilityObject.title;
-        return result;
-    }, {});
+    static visibilityTitle = _.reduce(
+        consts.visibility,
+        (result, visibilityObject) => {
+            result[visibilityObject.name] = visibilityObject.title;
+            return result;
+        },
+        {}
+    );
 
-    onClick(){
-        let visibilities = this.props.disallowGlobal? _.dropRight(VisibilityField.visibilitiesOrder) : VisibilityField.visibilitiesOrder;
-        let index = visibilities.indexOf(this.props.visibility);
-        if(index >= 0 && index < visibilities.length - 1) {
+    onClick() {
+        const visibilities = this.props.disallowGlobal
+            ? _.dropRight(VisibilityField.visibilitiesOrder)
+            : VisibilityField.visibilitiesOrder;
+        const index = visibilities.indexOf(this.props.visibility);
+        if (index >= 0 && index < visibilities.length - 1) {
             this.props.onVisibilityChange(visibilities[index + 1]);
-        } else{
+        } else {
             this.props.onVisibilityChange(visibilities[0]);
         }
     }
@@ -76,17 +85,19 @@ export default class VisibilityField extends Component {
         return (
             <Popup>
                 <Popup.Trigger>
-                    <VisibilityIcon visibility={this.props.visibility} link={this.props.allowChange} disabled={!this.props.allowChange}
-                                    showTitle={false} title={null} className={this.props.className} onClick={this.onClick.bind(this)} />
+                    <VisibilityIcon
+                        visibility={this.props.visibility}
+                        link={this.props.allowChange}
+                        disabled={!this.props.allowChange}
+                        showTitle={false}
+                        title={null}
+                        className={this.props.className}
+                        onClick={this.onClick.bind(this)}
+                    />
                 </Popup.Trigger>
-                <Popup.Header>
-                    Visibility
-                </Popup.Header>
-                <Popup.Content>
-                    {VisibilityField.visibilityTitle[this.props.visibility]}
-                </Popup.Content>
+                <Popup.Header>Visibility</Popup.Header>
+                <Popup.Content>{VisibilityField.visibilityTitle[this.props.visibility]}</Popup.Content>
             </Popup>
         );
     }
 }
-

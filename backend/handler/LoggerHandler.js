@@ -9,15 +9,15 @@ module.exports = (function() {
     function getArgsSupportedLogger(logger) {
         // This is workaround for no support for multi-arguments logging, e.g.: logger.info('Part 1', 'Part 2')
         // See: https://github.com/winstonjs/winston/issues/1614
-        const wrapper = ( original ) => {
+        const wrapper = original => {
             return (...args) => {
                 for (let index = 0; index < args.length; index++) {
-                    if(args[index] instanceof Error){
-                        args[index] = args[index].stack
+                    if (args[index] instanceof Error) {
+                        args[index] = args[index].stack;
                     }
                 }
-                original(args.join(' '))
-            }
+                original(args.join(' '));
+            };
         };
 
         logger.error = wrapper(logger.error);
@@ -26,20 +26,23 @@ module.exports = (function() {
         logger.verbose = wrapper(logger.verbose);
         logger.debug = wrapper(logger.debug);
         logger.silly = wrapper(logger.silly);
-        
+
         return logger;
     }
+
     function getLogger(category, level = 'debug') {
         const logFormat = winston.format.printf(({ level, message, label, timestamp }) => {
             const instanceNumber = parseInt(process.env.NODE_APP_INSTANCE);
-            return `${instanceNumber >= 0 ? `[${instanceNumber}]` : ''}[${timestamp}][${label}] ${_.upperCase(level)}: ${message}`;
+            return `${instanceNumber >= 0 ? `[${instanceNumber}]` : ''}[${timestamp}][${label}] ${_.upperCase(
+                level
+            )}: ${message}`;
         });
 
-        let logger = winston.loggers.add(category,{
+        const logger = winston.loggers.add(category, {
             level,
             transports: [new winston.transports.Console()],
             format: winston.format.combine(
-                winston.format.label({label: category}),
+                winston.format.label({ label: category }),
                 winston.format.timestamp(),
                 logFormat
             )
@@ -51,12 +54,12 @@ module.exports = (function() {
     function getStream(category, level = 'debug') {
         const logger = getLogger(category, level);
         return {
-            write: (message) => logger.info(_.trim(message))
+            write: message => logger.info(_.trim(message))
         };
     }
 
     return {
         getLogger,
         getStream
-    }
+    };
 })();

@@ -2,12 +2,12 @@
  * Created by kinneretzin on 09/02/2017.
  */
 
-import {saveUserAppData} from '../actions/userApp'
+import { saveUserAppData } from '../actions/userApp';
 
-var singleton = null;
+let singleton = null;
 
 export default class UserAppDataAutoSaver {
-    constructor (store) {
+    constructor(store) {
         this._store = store;
         this._isActive = false;
 
@@ -15,31 +15,33 @@ export default class UserAppDataAutoSaver {
 
         // Subscribe to store change
         this.unsubscribe = store.subscribe(() => {
-            var state = this._store.getState();
+            const state = this._store.getState();
 
             if (this._isActive && this._hasDataChanged(state) && this._validData(state)) {
                 this._initFromStore();
 
-                this._store.dispatch(saveUserAppData(state.manager,{pages: this._pages}));
+                this._store.dispatch(saveUserAppData(state.manager, { pages: this._pages }));
             }
         });
     }
 
     _initFromStore() {
-        var state = this._store.getState();
+        const state = this._store.getState();
         this._pages = state.pages;
-        this._username = _.get(state,'manager.username');
-        this._role = _.get(state,'manager.auth.role');
+        this._username = _.get(state, 'manager.username');
+        this._role = _.get(state, 'manager.auth.role');
     }
 
-    _validData (state) {
-        return (_.get(state,'manager.username') && _.get(state,'manager.auth.role'));
+    _validData(state) {
+        return _.get(state, 'manager.username') && _.get(state, 'manager.auth.role');
     }
 
     _hasDataChanged(state) {
-        return (this._username !== state.manager.username ||
+        return (
+            this._username !== state.manager.username ||
             this._role !== state.manager.auth.role ||
-            !_.isEqual(this._pages,state.pages) )
+            !_.isEqual(this._pages, state.pages)
+        );
     }
 
     start() {
@@ -57,9 +59,10 @@ export default class UserAppDataAutoSaver {
         }
     }
 
-    static create(store){
+    static create(store) {
         singleton = new UserAppDataAutoSaver(store);
     }
+
     static getAutoSaver() {
         return singleton;
     }

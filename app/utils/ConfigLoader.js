@@ -10,8 +10,8 @@ export default class ConfigLoader {
     static load() {
         return fetch(StageUtils.Url.url('/config'))
             .then(response => response.json())
-            .catch((e)=>{
-                console.log('Error fetching configuration file',e);
+            .catch(e => {
+                console.log('Error fetching configuration file', e);
             });
     }
 }

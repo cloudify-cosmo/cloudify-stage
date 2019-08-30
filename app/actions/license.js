@@ -8,5 +8,5 @@ export function setLicense(license) {
     return {
         type: types.SET_MANAGER_LICENSE,
         license
-    }
+    };
 }

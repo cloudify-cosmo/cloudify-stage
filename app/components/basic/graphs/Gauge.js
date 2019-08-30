@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 function deg2rad(deg) {
-    return deg * Math.PI / 180;
+    return (deg * Math.PI) / 180;
 }
 
 /**
@@ -41,7 +41,6 @@ function deg2rad(deg) {
  *
  */
 export default class Gauge extends Component {
-
     constructor(props) {
         super(props);
 
@@ -50,6 +49,7 @@ export default class Gauge extends Component {
 
     /**
      * propTypes
+     *
      * @property {number} value actual value to be marked on the gauge
      * @property {number} min minimal value to be presented
      * @property {number} max maximum value to be presented
@@ -60,10 +60,10 @@ export default class Gauge extends Component {
      */
     static propTypes = {
         value: PropTypes.number.isRequired,
-        min : PropTypes.number.isRequired,
-        max : PropTypes.number.isRequired,
-        high : PropTypes.number,
-        low : PropTypes.number,
+        min: PropTypes.number.isRequired,
+        max: PropTypes.number.isRequired,
+        high: PropTypes.number,
+        low: PropTypes.number,
         minAngle: PropTypes.number,
         maxAngle: PropTypes.number
     };
@@ -73,35 +73,34 @@ export default class Gauge extends Component {
         maxAngle: 90
     };
 
-    _buildProps (svgComponent) {
-        var width = svgComponent.clientWidth;
-        var height = svgComponent.clientHeight;
+    _buildProps(svgComponent) {
+        const width = svgComponent.clientWidth;
+        const height = svgComponent.clientHeight;
 
         // Calc radius
-        var radius = width/2;
+        let radius = width / 2;
         if (height < radius) {
             radius = height;
         }
 
-        radius *=0.93; // Leave room for the last tick that goes under the graph
+        radius *= 0.93; // Leave room for the last tick that goes under the graph
 
-        var range = this.props.maxAngle - this.props.minAngle;
+        const range = this.props.maxAngle - this.props.minAngle;
 
         // Calculate ring size
-        var ringWidth = radius * 0.4;
+        const ringWidth = radius * 0.4;
 
-        var valueRange = this.props.max - this.props.min;
+        const valueRange = this.props.max - this.props.min;
 
-        var valRatio = (this.props.value - this.props.min) / valueRange;
-        valRatio = valRatio < 0 ? 0 : (valRatio > 1 ? 1 : valRatio);
+        let valRatio = (this.props.value - this.props.min) / valueRange;
+        valRatio = valRatio < 0 ? 0 : valRatio > 1 ? 1 : valRatio;
 
+        const isHigh = this.props.high && this.props.value > this.props.high;
+        const isLow = this.props.low && this.props.value < this.props.low;
 
-        var isHigh = this.props.high  && this.props.value > this.props.high;
-        var isLow = this.props.low && this.props.value < this.props.low;
-
-        var textSize = (radius - ringWidth) * 0.8;
-        var tickTextSize = ringWidth * 0.15 ;
-        var arcPadding = tickTextSize;
+        const textSize = (radius - ringWidth) * 0.8;
+        const tickTextSize = ringWidth * 0.15;
+        const arcPadding = tickTextSize;
 
         return {
             radius,
@@ -112,20 +111,20 @@ export default class Gauge extends Component {
             isHigh,
             isLow,
             arcPadding,
-            value:this.props.value,
-            minAngle:this.props.minAngle,
+            value: this.props.value,
+            minAngle: this.props.minAngle,
             maxAngle: this.props.maxAngle,
-            ticksNumber:7,
-            minValue : this.props.min,
+            ticksNumber: 7,
+            minValue: this.props.min,
             maxValue: this.props.max,
             textSize,
             tickTextSize
-        }
+        };
     }
 
     componentDidMount() {
         this._initGauge(this.svgRef.current);
-        $(window).resize(()=>this._initGauge(this.svgRef.current));
+        $(window).resize(() => this._initGauge(this.svgRef.current));
     }
 
     componentWillUnmount() {
@@ -133,92 +132,97 @@ export default class Gauge extends Component {
     }
 
     componentDidUpdate() {
-        setTimeout(()=>{
+        setTimeout(() => {
             this._initGauge(this.svgRef.current);
-        },100);
+        }, 100);
     }
 
-    _initGauge (svgComponent) {
-
+    _initGauge(svgComponent) {
         if (svgComponent === null) {
             return;
         }
 
-        var opts = this._buildProps(svgComponent);
+        const opts = this._buildProps(svgComponent);
 
-        var svg = d3.select(svgComponent);
+        const svg = d3.select(svgComponent);
 
         // First clear everything
         svg.selectAll('*').remove();
 
-
         // Make sure the svg width contains the gauge and it only (so there wont be some widths mess up)
-        svg.attr('width',opts.radius*2);
+        svg.attr('width', opts.radius * 2);
 
         // Define the 2 arcs (one for the filled area and one for the non-filled area
-        var arcBackground = d3.svg.arc()
+        const arcBackground = d3.svg
+            .arc()
             .innerRadius(opts.radius - opts.ringWidth - opts.arcPadding)
             .outerRadius(opts.radius - opts.arcPadding)
-            .startAngle(deg2rad(opts.minAngle + opts.valRatio*opts.range))
+            .startAngle(deg2rad(opts.minAngle + opts.valRatio * opts.range))
             .endAngle(deg2rad(opts.maxAngle));
 
-        var arcValue = d3.svg.arc()
+        const arcValue = d3.svg
+            .arc()
             .innerRadius(opts.radius - opts.ringWidth - opts.arcPadding)
             .outerRadius(opts.radius - opts.arcPadding)
             .startAngle(deg2rad(opts.minAngle))
-            .endAngle(deg2rad(opts.minAngle + opts.valRatio*opts.range));
+            .endAngle(deg2rad(opts.minAngle + opts.valRatio * opts.range));
 
         // Create the arcs container
-        var arcs = svg.append('g')
+        const arcs = svg
+            .append('g')
             .attr('class', 'arc')
-            .attr('transform', 'translate('+opts.radius +','+ opts.radius +')');
+            .attr('transform', `translate(${opts.radius},${opts.radius})`);
 
         // Draw the arcs
         arcs.append('path')
-            .attr('class','arcBackground backgroundColor')
-            .attr('d',arcBackground);
+            .attr('class', 'arcBackground backgroundColor')
+            .attr('d', arcBackground);
 
         arcs.append('path')
-            .attr('class','arcValue')
-            .classed('highColor',opts.isHigh)
-            .classed('lowColor',opts.isLow)
+            .attr('class', 'arcValue')
+            .classed('highColor', opts.isHigh)
+            .classed('lowColor', opts.isLow)
             .classed('okColor', !opts.isLow && !opts.isHigh)
-            .attr('d',arcValue);
+            .attr('d', arcValue);
 
         // Draw the ticks
-         var scale = d3.scale.linear()
-         .range([0,1])
-         .domain([opts.minValue, opts.maxValue]);
+        const scale = d3.scale
+            .linear()
+            .range([0, 1])
+            .domain([opts.minValue, opts.maxValue]);
 
-         var ticks = scale.ticks(opts.ticksNumber);
-        var ticksContainer= svg.append('g')
+        const ticks = scale.ticks(opts.ticksNumber);
+        const ticksContainer = svg
+            .append('g')
             .attr('class', 'ticks')
-            .attr('transform', 'translate('+opts.radius +','+ opts.radius +')');
+            .attr('transform', `translate(${opts.radius},${opts.radius})`);
 
-        ticksContainer.selectAll('text')
+        ticksContainer
+            .selectAll('text')
             .data(ticks)
-            .enter().append('text')
+            .enter()
+            .append('text')
             .attr('transform', function(d) {
-                var ratio = scale(d);
-                var newAngle = opts.minAngle + (ratio * opts.range);
-                return 'rotate(' +newAngle +') translate(0,' +(-opts.radius + opts.arcPadding - 3) +')';
+                const ratio = scale(d);
+                const newAngle = opts.minAngle + ratio * opts.range;
+                return `rotate(${newAngle}) translate(0,${-opts.radius + opts.arcPadding - 3})`;
             })
-            .attr('font-size',opts.tickTextSize)
-            .text(d=>d);
+            .attr('font-size', opts.tickTextSize)
+            .text(d => d);
 
         // Draw the text
         svg.append('text')
-            .attr('class','valueText')
-            .attr('transform', 'translate('+opts.radius +','+ opts.radius +')')
-            .attr('text-anchor','middle')
-            .attr('font-size',opts.textSize)
+            .attr('class', 'valueText')
+            .attr('transform', `translate(${opts.radius},${opts.radius})`)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', opts.textSize)
             .text(opts.value);
     }
 
-    render () {
+    render() {
         return (
-            <div className='gaugeContainer'>
-                <svg className='gauge' ref={this.svgRef} />
+            <div className="gaugeContainer">
+                <svg className="gauge" ref={this.svgRef} />
             </div>
         );
     }

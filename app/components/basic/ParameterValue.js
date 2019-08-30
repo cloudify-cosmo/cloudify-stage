@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import {CopyToClipboardButton, HighlightText} from './index';
+import { CopyToClipboardButton, HighlightText } from './index';
 import StageUtils from '../../utils/stageUtils';
 
 /**
@@ -28,20 +28,20 @@ import StageUtils from '../../utils/stageUtils';
  *
  */
 export default class ParameterValue extends Component {
-
     /**
      * propTypes
+     *
      * @property {any} [value=''] parameter value (original type)
      * @property {bool} [showCopyButton=true] if set to true, then CopyToClipboardButton will be shown
      */
     static propTypes = {
         value: PropTypes.any,
-        showCopyButton: PropTypes.bool,
+        showCopyButton: PropTypes.bool
     };
 
     static defaultProps = {
         value: '',
-        showCopyButton: true,
+        showCopyButton: true
     };
 
     shouldComponentUpdate(nextProps) {
@@ -49,44 +49,66 @@ export default class ParameterValue extends Component {
     }
 
     getValueElement(stringValue) {
-        let {Url, Json} = StageUtils;
+        const { Url, Json } = StageUtils;
 
-        const commonStyle = {padding: '0.5em', whiteSpace: 'pre-wrap', wordBreak: 'break-word'};
+        const commonStyle = { padding: '0.5em', whiteSpace: 'pre-wrap', wordBreak: 'break-word' };
         const typedValue = this.props.value;
 
         switch (Json.toType(typedValue)) {
             case 'array':
             case 'object':
-                return <HighlightText className='json'>{stringValue}</HighlightText>;
+                return <HighlightText className="json">{stringValue}</HighlightText>;
             case 'boolean':
-                return <code style={commonStyle} className='hljs-keyword'>{stringValue}</code>;
+                return (
+                    <code style={commonStyle} className="hljs-keyword">
+                        {stringValue}
+                    </code>
+                );
             case 'number':
-                return <code style={commonStyle} className='hljs-number'>{stringValue}</code>;
+                return (
+                    <code style={commonStyle} className="hljs-number">
+                        {stringValue}
+                    </code>
+                );
             case 'null':
-                return <code style={commonStyle} className='hljs-keyword'>{stringValue}</code>;
+                return (
+                    <code style={commonStyle} className="hljs-keyword">
+                        {stringValue}
+                    </code>
+                );
             case 'string':
-                return Url.isUrl(stringValue)
-                    ? <a target="_blank" href={stringValue}>{stringValue}</a>
-                    : <code style={commonStyle} className='hljs-string'>{stringValue}</code>;
+                return Url.isUrl(stringValue) ? (
+                    <a target="_blank" href={stringValue}>
+                        {stringValue}
+                    </a>
+                ) : (
+                    <code style={commonStyle} className="hljs-string">
+                        {stringValue}
+                    </code>
+                );
             default:
-                return <code style={commonStyle} className='hljs-literal'>{stringValue}</code>;
+                return (
+                    <code style={commonStyle} className="hljs-literal">
+                        {stringValue}
+                    </code>
+                );
         }
     }
 
     render() {
-        let {Json} = StageUtils;
+        const { Json } = StageUtils;
 
         const stringValue = _.isObject(this.props.value)
             ? Json.stringify(this.props.value, true)
             : Json.getStringValue(this.props.value);
 
-        return this.props.showCopyButton
-            ?
-                <div>
-                    <CopyToClipboardButton text={stringValue} className='rightFloated' />
-                    {this.getValueElement(stringValue)}
-                </div>
-            :
-                this.getValueElement(stringValue);
+        return this.props.showCopyButton ? (
+            <div>
+                <CopyToClipboardButton text={stringValue} className="rightFloated" />
+                {this.getValueElement(stringValue)}
+            </div>
+        ) : (
+            this.getValueElement(stringValue)
+        );
     }
 }

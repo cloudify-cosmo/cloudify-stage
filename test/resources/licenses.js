@@ -3,10 +3,7 @@ export default {
         expiration_date: '2019-11-24T00:00:00.000Z',
         cloudify_version: '4.6',
         license_edition: 'Spire',
-        capabilities: [
-            'HA',
-            'Awesomeness'
-        ],
+        capabilities: ['HA', 'Awesomeness'],
         trial: false,
         customer_id: 'customer123',
         expired: false
@@ -15,10 +12,7 @@ export default {
         expiration_date: '2018-11-24T00:00:00.000Z',
         cloudify_version: '4.6',
         license_edition: 'Spire',
-        capabilities: [
-            'HA',
-            'Awesomeness'
-        ],
+        capabilities: ['HA', 'Awesomeness'],
         trial: false,
         customer_id: 'customer123',
         expired: true
@@ -27,10 +21,7 @@ export default {
         expiration_date: '2019-11-24T00:00:00.000Z',
         cloudify_version: '4.6',
         license_edition: 'Spire',
-        capabilities: [
-            'HA',
-            'Awesomeness'
-        ],
+        capabilities: ['HA', 'Awesomeness'],
         trial: true,
         customer_id: 'customer123',
         expired: true
@@ -39,10 +30,7 @@ export default {
         expiration_date: '2018-11-24T00:00:00.000Z',
         cloudify_version: '4.6',
         license_edition: 'Spire',
-        capabilities: [
-            'HA',
-            'Awesomeness'
-        ],
+        capabilities: ['HA', 'Awesomeness'],
         trial: true,
         customer_id: 'customer123',
         expired: true
@@ -52,10 +40,7 @@ export default {
         expiration_date: null,
         cloudify_version: '4.6',
         license_edition: 'Spire',
-        capabilities: [
-            'Mock1',
-            'Mock2'
-        ],
+        capabilities: ['Mock1', 'Mock2'],
         trial: true,
         customer_id: 'CloudifyMock',
         expired: false
@@ -73,12 +58,9 @@ export default {
         expiration_date: '2019-11-24T00:00:00.000Z',
         cloudify_version: null,
         license_edition: 'Spire',
-        capabilities: [
-            'HA',
-            'Awesomeness'
-        ],
+        capabilities: ['HA', 'Awesomeness'],
         trial: true,
         customer_id: 'customer123',
         expired: false
     }
-}
+};

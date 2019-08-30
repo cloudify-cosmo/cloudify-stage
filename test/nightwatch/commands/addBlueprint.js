@@ -3,7 +3,7 @@
  */
 
 exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile = '') {
-    let api = this;
+    const api = this;
 
     if (!blueprintName) {
         blueprintName = this.page.blueprints().props.testBlueprint;
@@ -12,13 +12,13 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
         blueprintUrl = this.page.blueprints().props.testBlueprintUrl;
     }
 
-    if(!blueprintYamlFile) {
+    if (!blueprintYamlFile) {
         blueprintYamlFile = this.page.blueprints().props.testBlueprintYamlFile;
     }
 
     return this.isBlueprintExist(blueprintName, result => {
         if (!result.value) {
-            var blueprints = this.page.blueprints();
+            const blueprints = this.page.blueprints();
 
             this.isWidgetPresent(blueprints.props.widgetId, result => {
                 this.log('adding', blueprintName, 'blueprint - upload blueprint');
@@ -31,8 +31,9 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
 
                 blueprints.clickElement('@uploadButton');
 
-                let blueprintYamlFileOptionElement = `div[name="blueprintFileName"] div[option-value="${blueprintYamlFile}"]`;
-                let blueprintYamlFileDropdownSelector = blueprints.section.uploadModal.elements.blueprintYamlFile.selector;
+                const blueprintYamlFileOptionElement = `div[name="blueprintFileName"] div[option-value="${blueprintYamlFile}"]`;
+                const blueprintYamlFileDropdownSelector =
+                    blueprints.section.uploadModal.elements.blueprintYamlFile.selector;
                 blueprints.section.uploadModal
                     .waitForElementVisible('@okButton')
                     .setElementValue('@blueprintUrl', [blueprintUrl, api.Keys.TAB])
@@ -40,15 +41,16 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
                     .resetValue('@blueprintName')
                     .setElementValue('@blueprintName', blueprintName)
                     .waitForElementPresent(blueprintYamlFileOptionElement)
-                    .selectOptionInDropdown(blueprintYamlFileDropdownSelector,
-                                            blueprintYamlFileDropdownSelector,
-                                            blueprintYamlFile)
+                    .selectOptionInDropdown(
+                        blueprintYamlFileDropdownSelector,
+                        blueprintYamlFileDropdownSelector,
+                        blueprintYamlFile
+                    )
                     .clickElement('@okButton');
 
                 blueprints.waitForElementNotPresent('@uploadModal');
 
-                this.page.filter()
-                    .waitForBlueprintPresent(blueprintName);
+                this.page.filter().waitForBlueprintPresent(blueprintName);
             });
         } else {
             this.log('not adding', blueprintName, 'blueprint, it already exists');

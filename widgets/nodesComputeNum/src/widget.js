@@ -8,25 +8,23 @@ Stage.defineWidget({
     description: 'Number of compute nodes',
     initialWidth: 2,
     initialHeight: 8,
-    color : 'red',
+    color: 'red',
     showHeader: false,
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('nodesComputeNum'),
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
-    initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(30)
-    ],
+    initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
     fetchUrl: '[manager]/summary/node_instances?_target_field=host_id&state=started',
 
-    render: function(widget, data, error, toolbox) {
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading />;
         }
 
-        let KeyIndicator = Stage.Basic.KeyIndicator;
+        const { KeyIndicator } = Stage.Basic;
         const numberOfComputeNodes = _.chain(data.items)
-            .filter((item) => !_.isNil(item.host_id))
+            .filter(item => !_.isNil(item.host_id))
             .size()
             .value();
 

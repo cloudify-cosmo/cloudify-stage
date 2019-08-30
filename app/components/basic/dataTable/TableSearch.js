@@ -5,10 +5,9 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Form} from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
 export default class TableSearch extends Component {
-
     static propTypes = {
         search: PropTypes.string.isRequired,
         onSearch: PropTypes.func.isRequired,
@@ -22,10 +21,15 @@ export default class TableSearch extends Component {
     render() {
         return (
             <Form.Field>
-                <Form.Input icon="search" placeholder="Search..."
-                            value={this.props.search}
-                            onChange={(e) => {this.props.onSearch(e.target.value)}}
-                            loading={this.props.searching} />
+                <Form.Input
+                    icon="search"
+                    placeholder="Search..."
+                    value={this.props.search}
+                    onChange={e => {
+                        this.props.onSearch(e.target.value);
+                    }}
+                    loading={this.props.searching}
+                />
             </Form.Field>
         );
     }

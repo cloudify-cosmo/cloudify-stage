@@ -3,10 +3,12 @@
  */
 
 export default class ResourceStatus extends React.Component {
-
     static unknown = 0;
+
     static noActionRequired = 1;
+
     static actionRequired = 2;
+
     static errorOccurred = 3;
 
     static propTypes = {
@@ -14,38 +16,38 @@ export default class ResourceStatus extends React.Component {
             ResourceStatus.unknown,
             ResourceStatus.noActionRequired,
             ResourceStatus.actionRequired,
-            ResourceStatus.errorOccurred]).isRequired,
+            ResourceStatus.errorOccurred
+        ]).isRequired,
         text: PropTypes.string.isRequired
     };
 
     shouldComponentUpdate(nextProps) {
-        return this.props.status !== nextProps.status
-            || this.props.text !== nextProps.text;
+        return this.props.status !== nextProps.status || this.props.text !== nextProps.text;
     }
 
     render() {
-        let {Icon, Popup} = Stage.Basic;
+        const { Icon, Popup } = Stage.Basic;
 
-        let status = this.props.status;
+        const { status } = this.props;
         let statusIcon = null;
-        let statusText = this.props.text;
+        const statusText = this.props.text;
 
         switch (status) {
             case ResourceStatus.unknown:
-                statusIcon = <Icon name='question' color='grey' size='big' />;
+                statusIcon = <Icon name="question" color="grey" size="big" />;
                 break;
             case ResourceStatus.noActionRequired:
-                statusIcon = <Icon name='check' color='green' size='big' />;
+                statusIcon = <Icon name="check" color="green" size="big" />;
                 break;
             case ResourceStatus.actionRequired:
-                statusIcon = <Icon name='warning' color='yellow' size='big' />;
+                statusIcon = <Icon name="warning" color="yellow" size="big" />;
                 break;
             case ResourceStatus.errorOccurred:
             default:
-                statusIcon = <Icon name='cancel' color='red' size='big' />;
+                statusIcon = <Icon name="cancel" color="red" size="big" />;
                 break;
         }
 
-        return <Popup hoverable trigger={statusIcon} header='Status' content={statusText} />;
+        return <Popup hoverable trigger={statusIcon} header="Status" content={statusText} />;
     }
 }

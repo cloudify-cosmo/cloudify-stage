@@ -1,34 +1,33 @@
-'use strict';
+const express = require('express');
 
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-var multer  = require('multer');
-var upload = multer();
+const router = express.Router();
+const passport = require('passport');
+const multer = require('multer');
 
-var _ = require('lodash');
+const upload = multer();
 
-var request = require('request').defaults({ encoding: null });
-var archiver = require('archiver');
-var ManagerHandler = require('../handler/ManagerHandler');
-var RequestHandler = require('../handler/RequestHandler');
+const _ = require('lodash');
 
-var logger = require('../handler/LoggerHandler').getLogger('Plugins');
+const request = require('request').defaults({ encoding: null });
+const archiver = require('archiver');
+const ManagerHandler = require('../handler/ManagerHandler');
+const RequestHandler = require('../handler/RequestHandler');
 
+const logger = require('../handler/LoggerHandler').getLogger('Plugins');
 
 function checkParams(req, res, next) {
-    var noWagon = req.files && _.isEmpty(req.files.wagon_file) && !req.query.wagonUrl;
-    var noYaml = req.files && _.isEmpty(req.files.yaml_file) && !req.query.yamlUrl;
+    const noWagon = req.files && _.isEmpty(req.files.wagon_file) && !req.query.wagonUrl;
+    const noYaml = req.files && _.isEmpty(req.files.yaml_file) && !req.query.yamlUrl;
 
-    if(noWagon){
+    if (noWagon) {
         var errorMessage = 'Must provide a wagon file or url.';
         logger.error(errorMessage);
-        res.status(500).send({message: errorMessage})
+        res.status(500).send({ message: errorMessage });
     } else if (noYaml) {
         var errorMessage = 'Must provide a yaml file or url.';
         logger.error(errorMessage);
-        res.status(500).send({message: errorMessage})
-    } else{
+        res.status(500).send({ message: errorMessage });
+    } else {
         next();
     }
 }
@@ -36,11 +35,11 @@ function checkParams(req, res, next) {
 function downloadFile(url) {
     return new Promise((resolve, reject) => {
         request.get(url, (err, res, body) => {
-            if(err){
-                logger.error('Failed downloading '+url+'. '+err);
+            if (err) {
+                logger.error(`Failed downloading ${url}. ${err}`);
                 reject(err);
             }
-            logger.info('Finished downloading '+url);
+            logger.info(`Finished downloading ${url}`);
             resolve(body);
         });
     });
@@ -48,12 +47,12 @@ function downloadFile(url) {
 
 function zipFiles(wagonFile, wagonFilename, yamlFile, output) {
     return new Promise((resolve, reject) => {
-        let archive = archiver('zip');
-        archive.append(wagonFile, {name: wagonFilename});
-        archive.append(yamlFile, {name: 'plugin.yaml'});
+        const archive = archiver('zip');
+        archive.append(wagonFile, { name: wagonFilename });
+        archive.append(yamlFile, { name: 'plugin.yaml' });
 
-        archive.on('error', (err) => {
-            logger.error('Failed archiving plugin. '+err);
+        archive.on('error', err => {
+            logger.error(`Failed archiving plugin. ${err}`);
             reject(err);
         });
 
@@ -67,48 +66,61 @@ function zipFiles(wagonFile, wagonFilename, yamlFile, output) {
     });
 }
 
-router.post('/upload', passport.authenticate('token', {session: false}),
-    upload.fields([{ name: 'wagon_file', maxCount: 1 }, { name: 'yaml_file', maxCount: 1 }]), checkParams, function (req, res, next) {
+router.post(
+    '/upload',
+    passport.authenticate('token', { session: false }),
+    upload.fields([{ name: 'wagon_file', maxCount: 1 }, { name: 'yaml_file', maxCount: 1 }]),
+    checkParams,
+    function(req, res, next) {
+        const promises = [];
+        let wagonFilename;
 
-    var promises = [];
-    var wagonFilename;
+        if (req.query.wagonUrl) {
+            promises.push(downloadFile(req.query.wagonUrl));
+            wagonFilename = _.last(req.query.wagonUrl.split('/'));
+        } else {
+            promises.push(Promise.resolve(req.files.wagon_file[0].buffer));
+            wagonFilename = req.files.wagon_file[0].originalname;
+        }
 
-    if(req.query.wagonUrl){
-        promises.push(downloadFile(req.query.wagonUrl));
-        wagonFilename = _.last(req.query.wagonUrl.split('/'));
-    } else{
-        promises.push(Promise.resolve(req.files.wagon_file[0].buffer));
-        wagonFilename = req.files.wagon_file[0].originalname;
-    }
+        if (req.query.yamlUrl) {
+            promises.push(downloadFile(req.query.yamlUrl));
+        } else {
+            promises.push(Promise.resolve(req.files.yaml_file[0].buffer));
+        }
 
-    if(req.query.yamlUrl){
-        promises.push(downloadFile(req.query.yamlUrl));
-    } else{
-        promises.push(Promise.resolve(req.files.yaml_file[0].buffer));
-    }
+        Promise.all(promises)
+            .then(([wagonFile, yamlFile]) => {
+                const uploadRequest = ManagerHandler.request(
+                    'post',
+                    `/plugins?visibility=${req.query.visibility}`,
+                    {
+                        'authentication-token': req.headers['authentication-token'],
+                        tenant: req.headers.tenant
+                    },
+                    null,
+                    response => {
+                        RequestHandler.getResponseJson(response)
+                            .then(data => {
+                                res.status(response.statusCode).send(data);
+                            })
+                            .catch(() => {
+                                res.sendStatus(response.statusCode);
+                            });
+                    },
+                    err => {
+                        res.status(500).send({ message: err });
+                    }
+                );
 
-    Promise.all(promises).then(([wagonFile, yamlFile]) => {
-
-        var uploadRequest = ManagerHandler.request('post', '/plugins?visibility='+req.query.visibility, {
-            'authentication-token': req.headers['authentication-token'],
-            tenant: req.headers.tenant
-        }, null, (response) => {
-            RequestHandler.getResponseJson(response).then((data) => {
-                res.status(response.statusCode).send(data);
-            }).catch(() => {
-                res.sendStatus(response.statusCode);
+                zipFiles(wagonFile, wagonFilename, yamlFile, uploadRequest).catch(err => {
+                    res.status(500).send({ message: `Failed zipping the plugin. ${err}` });
+                });
+            })
+            .catch(err => {
+                res.status(500).send({ message: `Failed downloading files. ${err}` });
             });
-        }, (err) => {
-            res.status(500).send({message: err});
-        });
-
-        zipFiles(wagonFile, wagonFilename, yamlFile, uploadRequest).catch((err) => {
-            res.status(500).send({message: 'Failed zipping the plugin. '+err});
-        });
-
-    }).catch((err) => {
-        res.status(500).send({message: 'Failed downloading files. '+err});
-    })
-});
+    }
+);
 
 module.exports = router;

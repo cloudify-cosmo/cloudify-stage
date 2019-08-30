@@ -5,12 +5,11 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 
-import {Modal, Button, Icon, Form, ApproveButton, CancelButton} from '../basic/index';
+import { Modal, Button, Icon, Form, ApproveButton, CancelButton } from '../basic/index';
 
 export default class CreatePageModal extends Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = CreatePageModal.initialState(false, props);
     }
@@ -21,7 +20,7 @@ export default class CreatePageModal extends Component {
             loading: false,
             pageName: props.pageName,
             errors: {}
-        }
+        };
     };
 
     static propTypes = {
@@ -33,26 +32,26 @@ export default class CreatePageModal extends Component {
     };
 
     _openModal() {
-        this.setState(CreatePageModal.initialState(true, this.props))
+        this.setState(CreatePageModal.initialState(true, this.props));
     }
 
     _submitCreate() {
-        let errors = {};
+        const errors = {};
 
         if (_.isEmpty(_.trim(this.state.pageName))) {
-            errors['pageName']='Please provide correct page name';
+            errors.pageName = 'Please provide correct page name';
         }
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors});
+            this.setState({ errors });
             return false;
         }
 
         // Disable the form
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
-        this.props.onCreatePage(_.trim(this.state.pageName)).catch((err)=>{
-            this.setState({errors: {error: err.message}, loading: false});
+        this.props.onCreatePage(_.trim(this.state.pageName)).catch(err => {
+            this.setState({ errors: { error: err.message }, loading: false });
         });
     }
 
@@ -61,27 +60,49 @@ export default class CreatePageModal extends Component {
     }
 
     render() {
-        const trigger = <Button content='Create page' icon='block layout' labelPosition='left' className='createPageButton'/>;
+        const trigger = (
+            <Button content="Create page" icon="block layout" labelPosition="left" className="createPageButton" />
+        );
 
         return (
-            <Modal trigger={trigger} open={this.state.open} onOpen={this._openModal.bind(this)}
-                   onClose={()=>this.setState({open:false})} className="createPageModal">
+            <Modal
+                trigger={trigger}
+                open={this.state.open}
+                onOpen={this._openModal.bind(this)}
+                onClose={() => this.setState({ open: false })}
+                className="createPageModal"
+            >
                 <Modal.Header>
-                    <Icon name="block layout"/>Create page
+                    <Icon name="block layout" />
+                    Create page
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors} onErrorsDismiss={() => this.setState({errors: {}})}>
+                    <Form
+                        loading={this.state.loading}
+                        errors={this.state.errors}
+                        onErrorsDismiss={() => this.setState({ errors: {} })}
+                    >
                         <Form.Field error={this.state.errors.pageName}>
-                            <Form.Input name='pageName' placeholder="Page name"
-                                        value={this.state.pageName} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.Input
+                                name="pageName"
+                                placeholder="Page name"
+                                value={this.state.pageName}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={()=>this.setState({open:false})} disabled={this.state.loading} />
-                    <ApproveButton onClick={this._submitCreate.bind(this)} disabled={this.state.loading} content='Create' icon="checkmark" color="green"/>
+                    <CancelButton onClick={() => this.setState({ open: false })} disabled={this.state.loading} />
+                    <ApproveButton
+                        onClick={this._submitCreate.bind(this)}
+                        disabled={this.state.loading}
+                        content="Create"
+                        icon="checkmark"
+                        color="green"
+                    />
                 </Modal.Actions>
             </Modal>
         );

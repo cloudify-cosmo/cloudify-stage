@@ -13,18 +13,18 @@ export default class LoaderUtils {
     }
 
     static fetchResource(path, isUserResource, parseResponse = true) {
-        return fetch(StageUtils.Url.url(LoaderUtils.getResourceUrl(path, isUserResource)), { credentials: 'same-origin' })
-            .then((response) => {
-                if (response.status >= 400) {
-                    console.error(response.statusText);
-                    return;
-                }
-                if (parseResponse) {
-                    let contentType = _.toLower(response.headers.get('content-type'));
-                    return contentType.indexOf('application/json') >= 0 ? response.json() : response.text();
-                } else {
-                    return response;
-                }
-            });
+        return fetch(StageUtils.Url.url(LoaderUtils.getResourceUrl(path, isUserResource)), {
+            credentials: 'same-origin'
+        }).then(response => {
+            if (response.status >= 400) {
+                console.error(response.statusText);
+                return;
+            }
+            if (parseResponse) {
+                const contentType = _.toLower(response.headers.get('content-type'));
+                return contentType.indexOf('application/json') >= 0 ? response.json() : response.text();
+            }
+            return response;
+        });
     }
 }

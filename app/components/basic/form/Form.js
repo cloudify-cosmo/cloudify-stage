@@ -6,8 +6,7 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {Form as FormSemanticUiReact, Radio as FormRadio,
-        Button as FormButton} from 'semantic-ui-react';
+import { Form as FormSemanticUiReact, Radio as FormRadio, Button as FormButton } from 'semantic-ui-react';
 
 import ErrorMessage from '../ErrorMessage';
 import FormField from './FormField';
@@ -76,7 +75,6 @@ import '../../styles/Form.css';
  *
  */
 export default class Form extends Component {
-
     constructor(props) {
         super(props);
 
@@ -166,10 +164,11 @@ export default class Form extends Component {
 
     /**
      * propTypes
+     *
      * @property {object} [errors] string with error message or object with fields error messages (syntax described above)
      * @property {string} [errorMessageHeader] string with error message header
-     * @property {function} [onSubmit=()=>{}] function called on form submission
-     * @property {function} [onErrorsDismiss=()=>{}] function called when errors are dismissed (see {@link ErrorMessage})
+     * @property {Function} [onSubmit=()=>{}] function called on form submission
+     * @property {Function} [onErrorsDismiss=()=>{}] function called when errors are dismissed (see {@link ErrorMessage})
      * @property {boolean} [scrollToError=false] if set, then on error change screen will be scrolled to (see {@link ErrorMessage})
      */
     static propTypes = {
@@ -190,15 +189,15 @@ export default class Form extends Component {
     };
 
     static fieldNameValue(field) {
-        const name = field.name;
-        var value = field.value;
+        const { name } = field;
+        let { value } = field;
 
         if (field.type === 'checkbox') {
             value = field.checked;
         }
 
         if (field.type === 'number') {
-            const isFloat = (n) => Number(n) % 1 !== 0;
+            const isFloat = n => Number(n) % 1 !== 0;
             value = isFloat(field.value) ? parseFloat(field.value) : parseInt(field.value);
         }
 
@@ -207,15 +206,18 @@ export default class Form extends Component {
             throw 'Required name attribute is not provided!';
         }
 
-        return {[name]: value};
+        return { [name]: value };
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.scrollToError && !_.isEmpty(this.props.errors) &&
-            !_.isEqual(prevProps.errors, this.props.errors)) {
+        if (
+            this.props.scrollToError &&
+            !_.isEmpty(this.props.errors) &&
+            !_.isEqual(prevProps.errors, this.props.errors)
+        ) {
             const formElement = ReactDOM.findDOMNode(this);
             if (formElement) {
-                formElement.scrollIntoView({behavior: 'smooth', block: 'start'});
+                formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
     }
@@ -245,7 +247,7 @@ export default class Form extends Component {
 
                 {this.props.children}
 
-                <input type='submit' name="submitFormBtn" style={{'display': 'none'}} ref={this.submitFormBtnRef} />
+                <input type="submit" name="submitFormBtn" style={{ display: 'none' }} ref={this.submitFormBtnRef} />
             </FormSemanticUiReact>
         );
     }

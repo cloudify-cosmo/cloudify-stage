@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Table, Dropdown} from 'semantic-ui-react';
+import { Table, Dropdown } from 'semantic-ui-react';
 import _ from 'lodash';
 
 /**
@@ -23,7 +23,6 @@ import _ from 'lodash';
  *
  */
 export default class InputTime extends Component {
-
     constructor(props, context) {
         super(props, context);
 
@@ -32,9 +31,10 @@ export default class InputTime extends Component {
 
     /**
      * propTypes
+     *
      * @property {string} name name of the field
      * @property {string} [value='00:00'] variable for input value control (acceptable format: 'HH:mm')
-     * @property {function} [onChange=(function () {});] function called on hours/minutes input change
+     * @property {Function} [onChange=(function () {});] function called on hours/minutes input change
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
@@ -44,7 +44,7 @@ export default class InputTime extends Component {
 
     static defaultProps = {
         value: '00:00',
-        onChange: ()=>{}
+        onChange: () => {}
     };
 
     static initialState = {
@@ -54,16 +54,17 @@ export default class InputTime extends Component {
 
     static generateOptions = (start, end, step, padding) => {
         return _.range(start, end, step).map(num => {
-            let value = _.padStart(num, padding, '0');
-            return { key: value, text: value, value: value };
+            const value = _.padStart(num, padding, '0');
+            return { key: value, text: value, value };
         });
-    }
+    };
+
     static HOURS_OPTIONS = InputTime.generateOptions(0, 24, 1, 2);
+
     static MINUTES_OPTIONS = InputTime.generateOptions(0, 60, 1, 2);
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(nextProps, this.props)
-            || !_.isEqual(nextState, this.state);
+        return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
     }
 
     componentDidMount() {
@@ -71,13 +72,13 @@ export default class InputTime extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(!_.isEqual(this.props.value, prevProps.value)) {
+        if (!_.isEqual(this.props.value, prevProps.value)) {
             this._parseAndSetState(this.props.value);
         }
     }
 
     _handleDropdownChange(event, field) {
-        this.setState({[field.name]: field.value}, () =>
+        this.setState({ [field.name]: field.value }, () =>
             this.props.onChange(event, {
                 name: this.props.name,
                 value: `${this.state.hours}:${this.state.minutes}`
@@ -86,25 +87,35 @@ export default class InputTime extends Component {
     }
 
     _parseAndSetState(value) {
-        let [hours, minutes] = _.split(value, ':');
-        this.setState({hours, minutes});
+        const [hours, minutes] = _.split(value, ':');
+        this.setState({ hours, minutes });
     }
 
     render() {
         return (
-            <Table compact basic='very'>
+            <Table compact basic="very">
                 <Table.Body>
                     <Table.Row>
-                        <Table.Cell textAlign='left'>
-                            <Dropdown selection options={InputTime.HOURS_OPTIONS} name='hours' fluid
-                                      value={this.state.hours} onChange={this._handleDropdownChange.bind(this)} />
+                        <Table.Cell textAlign="left">
+                            <Dropdown
+                                selection
+                                options={InputTime.HOURS_OPTIONS}
+                                name="hours"
+                                fluid
+                                value={this.state.hours}
+                                onChange={this._handleDropdownChange.bind(this)}
+                            />
                         </Table.Cell>
-                        <Table.Cell textAlign='center'>
-                            :
-                        </Table.Cell>
-                        <Table.Cell textAlign='right'>
-                            <Dropdown selection options={InputTime.MINUTES_OPTIONS} name='minutes' fluid
-                                      value={this.state.minutes} onChange={this._handleDropdownChange.bind(this)} />
+                        <Table.Cell textAlign="center">:</Table.Cell>
+                        <Table.Cell textAlign="right">
+                            <Dropdown
+                                selection
+                                options={InputTime.MINUTES_OPTIONS}
+                                name="minutes"
+                                fluid
+                                value={this.state.minutes}
+                                onChange={this._handleDropdownChange.bind(this)}
+                            />
                         </Table.Cell>
                     </Table.Row>
                 </Table.Body>

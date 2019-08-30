@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import { Icon } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react';
 
 /**
  * Checkmark component shows a simple checkbox (read only)
@@ -24,7 +24,6 @@ import { Icon } from 'semantic-ui-react'
  *```
  */
 export default class Checkmark extends Component {
-
     /**
      * @property {boolean} value If true the component will be marked as checked
      */
@@ -32,12 +31,14 @@ export default class Checkmark extends Component {
         value: PropTypes.bool
     };
 
-    static defaultProps = {
-    };
+    static defaultProps = {};
 
     render() {
         return (
-            <Icon title={this.props.value ? 'Yes' : 'No'} name={this.props.value ? 'checkmark box' : 'square outline'}/>
+            <Icon
+                title={this.props.value ? 'Yes' : 'No'}
+                name={this.props.value ? 'checkmark box' : 'square outline'}
+            />
         );
     }
 }

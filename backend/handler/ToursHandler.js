@@ -11,11 +11,11 @@ const logger = require('./LoggerHandler').getLogger('ToursHandler');
 
 const builtInToursFolder = Utils.getResourcePath('tours', false);
 
-let tours = {};
+const tours = {};
 
 function getTemplateTours(templateId) {
-    const templateTour = tours[templateId+'.json'];
-    if(templateTour){
+    const templateTour = tours[`${templateId}.json`];
+    if (templateTour) {
         return Promise.resolve(templateTour);
     }
     return Promise.resolve();
@@ -23,17 +23,19 @@ function getTemplateTours(templateId) {
 
 class ToursHandler {
     static listTours(systemRole, groupSystemRoles, tenantsRoles, tenant, token) {
-        return TemplateHandler.selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant, token)
-            .then(getTemplateTours);
+        return TemplateHandler.selectTemplate(systemRole, groupSystemRoles, tenantsRoles, tenant, token).then(
+            getTemplateTours
+        );
     }
 
     static init() {
         return new Promise((resolve, reject) => {
             fs.readdirSync(builtInToursFolder).forEach(filename => {
-                try{
-                    tours[filename] = JSON.parse(fs.readFileSync(pathlib.resolve(builtInToursFolder, filename), 'utf8'));
-                }
-                catch (err){
+                try {
+                    tours[filename] = JSON.parse(
+                        fs.readFileSync(pathlib.resolve(builtInToursFolder, filename), 'utf8')
+                    );
+                } catch (err) {
                     logger.error(`Failed to load tour - ${filename}: ${err.message}`);
                     return reject(`Failed to load tour - ${filename}: ${err.message}`);
                 }

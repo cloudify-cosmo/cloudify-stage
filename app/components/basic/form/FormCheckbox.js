@@ -4,7 +4,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import {Checkbox as SemanticUiReactCheckbox} from 'semantic-ui-react';
+import { Checkbox as SemanticUiReactCheckbox } from 'semantic-ui-react';
 
 import { Form } from '../index';
 
@@ -25,9 +25,9 @@ import { Form } from '../index';
  * ```
  */
 export default class FormCheckbox extends Component {
-
     /**
      * propTypes
+     *
      * @property {string} [label=''] checkbox label
      * @property {string} [help=''] help description
      */
@@ -42,8 +42,8 @@ export default class FormCheckbox extends Component {
     };
 
     render() {
-        let label = Form.Field.getLabel(this.props.label, this.props.help);
+        const label = Form.Field.getLabel(this.props.label, this.props.help);
 
-        return <SemanticUiReactCheckbox {...this.props} label={label} />
+        return <SemanticUiReactCheckbox {...this.props} label={label} />;
     }
 }

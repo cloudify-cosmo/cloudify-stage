@@ -3,13 +3,13 @@
  */
 
 import React from 'react';
+import { connect } from 'react-redux';
 import Routes from '../components/Routes';
 
-import { connect } from 'react-redux';
 import Consts from '../utils/consts';
 import Auth from '../utils/auth';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
         isProductOperational: Auth.isProductOperational(_.get(state, 'manager.license', {})),
         isLicenseRequired: _.get(state, 'manager.license.isRequired', false),
@@ -18,12 +18,11 @@ const mapStateToProps = (state) => {
         isSamlEnabled: _.get(state, 'config.app.saml.enabled', false),
         samlPortalUrl: _.get(state, 'config.app.saml.portalUrl', ''),
         samlSsoUrl: _.get(state, 'config.app.saml.ssoUrl', '')
-    }
+    };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-    }
+    return {};
 };
 
 export default connect(

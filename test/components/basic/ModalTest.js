@@ -2,33 +2,35 @@
  * Created by pawelposel on 24/11/2016.
  */
 
-import React from 'react'
-import {shallow, mount} from 'enzyme'
-import {expect} from 'chai';
+import React from 'react';
+import { shallow, mount } from 'enzyme';
+import { expect } from 'chai';
 import sinon from 'sinon';
-import {Modal} from 'semantic-ui-react';
-import {CancelButton, ApproveButton} from '../../../app/components/basic/modal/ModalButtons';
+import { Modal } from 'semantic-ui-react';
+import { CancelButton, ApproveButton } from '../../../app/components/basic/modal/ModalButtons';
 
 describe('(Component) Modal', () => {
-
-    var wrapper;
+    let wrapper;
     global.requestAnimationFrame = () => {};
     global.cancelAnimationFrame = () => {};
-    var approveCallback = sinon.spy();
-    var cancelCallback = sinon.spy();
+    const approveCallback = sinon.spy();
+    const cancelCallback = sinon.spy();
 
     before(() => {
-        let div = $('<div />').appendTo('body');
+        const div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Modal className='testModal' open>
+            <Modal className="testModal" open>
                 <Modal.Header>test header</Modal.Header>
-                <Modal.Content><form>test body</form></Modal.Content>
+                <Modal.Content>
+                    <form>test body</form>
+                </Modal.Content>
                 <Modal.Actions>
                     <CancelButton onClick={cancelCallback} />
-                    <ApproveButton onClick={approveCallback} color='green'/>
+                    <ApproveButton onClick={approveCallback} color="green" />
                 </Modal.Actions>
-            </Modal>, { attachTo: div.get(0) }
+            </Modal>,
+            { attachTo: div.get(0) }
         );
     });
 
@@ -37,11 +39,19 @@ describe('(Component) Modal', () => {
     });
 
     it('shows up modal', function() {
-        wrapper.setProps({open:true});
+        wrapper.setProps({ open: true });
         this.timeout(500);
         this.retries(5);
-        if ($('.confirmTest').parent().hasClass('active')) {
-            expect($('.confirmTest').parent().hasClass('active')).to.be.true;
+        if (
+            $('.confirmTest')
+                .parent()
+                .hasClass('active')
+        ) {
+            expect(
+                $('.confirmTest')
+                    .parent()
+                    .hasClass('active')
+            ).to.be.true;
         }
     });
 
@@ -58,12 +68,12 @@ describe('(Component) Modal', () => {
     });
 
     it('clicks approve button', () => {
-        $('.testModal .actions .button.ok').trigger( 'click' );
+        $('.testModal .actions .button.ok').trigger('click');
         expect(approveCallback).to.have.been.calledOnce;
     });
 
     it('clicks cancel button', () => {
-        $('.testModal .actions .button.cancel').trigger( 'click' );
+        $('.testModal .actions .button.cancel').trigger('click');
         expect(cancelCallback).to.have.been.calledOnce;
     });
 
@@ -73,15 +83,13 @@ describe('(Component) Modal', () => {
     });
 
     /* Hide modal doesn't work in Enzyme, spent long time to check why but without success.
-       Will come back to it in spare time.*/
+       Will come back to it in spare time. */
     it('hide modal', () => {
-        wrapper.setProps({open:false});
+        wrapper.setProps({ open: false });
         expect($('.ui.dimmer.active .ui.modal').length > 0).to.be.false;
     });
 
     after(() => {
         wrapper.detach();
     });
-
 });
-

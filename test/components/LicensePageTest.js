@@ -2,29 +2,28 @@
  * Created by jakubniezgoda on 20/03/2019.
  */
 
-import React from 'react'
+import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 import fetchMock from 'fetch-mock';
 
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+import { MemoryRouter as Router } from 'react-router-dom';
+import moment from 'moment';
 import Consts from '../../app/utils/consts.js';
 import ConnectedLicensePage from '../../app/containers/LicensePage.js';
 import LicensePage from '../../app/components/LicensePage.js';
 import * as BasicComponents from '../../app/components/basic';
 
-import { Provider } from 'react-redux';
-import {createToolbox} from '../../app/utils/Toolbox';
-import configureMockStore from 'redux-mock-store';
-import { MemoryRouter as Router } from 'react-router-dom';
-import moment from 'moment';
+import { createToolbox } from '../../app/utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
-
 
 describe('(Component) LicensePage', () => {
     let licensePageComponent = null;
     let messageContainerComponent = null;
-    global.Stage = {Basic: BasicComponents};
+    global.Stage = { Basic: BasicComponents };
     global.moment = (timestamp, inputPattern) => moment(timestamp, inputPattern).utcOffset(0);
 
     const verifyProps = (canUploadLicense, isProductOperational, license, status) => {
@@ -43,11 +42,23 @@ describe('(Component) LicensePage', () => {
     const verifyMessage = (messageHeader, icon, isLicenseSwitchButtonVisible) => {
         const descriptionMessage = messageContainerComponent.find('DescriptionMessage');
         expect(descriptionMessage.find('MessageHeader').text()).to.be.eql(messageHeader);
-        expect(descriptionMessage.find('Icon').first().props().name).to.be.eql(icon);
+        expect(
+            descriptionMessage
+                .find('Icon')
+                .first()
+                .props().name
+        ).to.be.eql(icon);
         expect(descriptionMessage.find('LicenseSwitchButton')).to.have.length(isLicenseSwitchButtonVisible ? 1 : 0);
     };
 
-    const verifyCurrentLicense = (firstRow = '', secondRow = '', thirdRow = '', fourthRow = '', fifthRow = '', sixthRow = '') => {
+    const verifyCurrentLicense = (
+        firstRow = '',
+        secondRow = '',
+        thirdRow = '',
+        fourthRow = '',
+        fifthRow = '',
+        sixthRow = ''
+    ) => {
         const currentLicense = messageContainerComponent.find('CurrentLicense');
         const tableCells = currentLicense.find('TableCell');
         firstRow !== '' && expect(tableCells.at(1).text()).to.be.eql(firstRow);
@@ -58,12 +69,12 @@ describe('(Component) LicensePage', () => {
         sixthRow !== '' && expect(tableCells.at(11).text()).to.be.eql(sixthRow);
     };
 
-    const verifyUploadLicense = (isPresent) => {
+    const verifyUploadLicense = isPresent => {
         const uploadLicense = messageContainerComponent.find('UploadLicense');
         expect(uploadLicense).to.have.length(isPresent ? 1 : 0);
     };
 
-    const verifyFooter = (isGoToAppButtonEnabled) => {
+    const verifyFooter = isGoToAppButtonEnabled => {
         const footer = messageContainerComponent.find('Grid');
         expect(footer.find('EulaLink')).to.have.length(1);
         const goToAppButton = footer.find('Button').findWhere(el => el.props().content === 'Go to app');
@@ -71,14 +82,14 @@ describe('(Component) LicensePage', () => {
         expect(goToAppButton.props().disabled).to.be.eql(!isGoToAppButtonEnabled);
     };
 
-    const verifySwitchToUpload = (isButtonPresent) => {
+    const verifySwitchToUpload = isButtonPresent => {
         const descriptionMessage = messageContainerComponent.find('DescriptionMessage');
         const licenseSwitchButton = descriptionMessage.find('LicenseSwitchButton');
         expect(licenseSwitchButton).to.have.length(isButtonPresent ? 1 : 0);
     };
 
     const getLicenseState = (data, isRequired, status) => {
-        return ({ data, isRequired, status });
+        return { data, isRequired, status };
     };
 
     const mockStoreAndRender = async (role, license, version) => {
@@ -92,9 +103,7 @@ describe('(Component) LicensePage', () => {
                     tenantsRoles: {
                         default_tenant: {
                             'tenant-role': 'user',
-                            roles: [
-                                'user'
-                            ]
+                            roles: ['user']
                         }
                     }
                 },
@@ -112,7 +121,7 @@ describe('(Component) LicensePage', () => {
                     selected: 'default_tenant',
                     lastUpdated: 1553065713112
                 },
-                version: version
+                version
             }
         });
         createToolbox(store);
@@ -120,12 +129,13 @@ describe('(Component) LicensePage', () => {
         const myMock = fetchMock.sandbox().mock(licenseUrl, { items: [license.data] });
         global.fetch = myMock;
 
-        let componentsTree = mount(
+        const componentsTree = mount(
             <Provider store={store}>
                 <Router>
                     <ConnectedLicensePage onLicenseChange={_.noop} />
                 </Router>
-            </Provider>);
+            </Provider>
+        );
 
         licensePageComponent = componentsTree.find(LicensePage);
         messageContainerComponent = componentsTree.find('MessageContainer');
@@ -159,7 +169,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'HA, Awesomeness', 'Yes', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -185,7 +195,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('The trial license has expired', 'clock outline', true);
             verifySwitchToUpload(true);
-            verifyCurrentLicense('24-11-2018', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2018', '4.6', 'Spire', 'HA, Awesomeness', 'Yes', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(false);
         });
@@ -201,7 +211,6 @@ describe('(Component) LicensePage', () => {
             verifyFooter(false);
         });
     });
-
 
     describe('for non-admin users', () => {
         it('allows to view license when paying license is active', async () => {
@@ -225,7 +234,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'HA, Awesomeness', 'Yes', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -251,7 +260,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('The trial license has expired', 'clock outline', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2018', '4.6', 'Spire', 'HA, Awesomeness', 'Yes','customer123');
+            verifyCurrentLicense('24-11-2018', '4.6', 'Spire', 'HA, Awesomeness', 'Yes', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(false);
         });
@@ -276,7 +285,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('Never', '4.6', 'Spire', 'Mock1, Mock2', 'Yes','CloudifyMock');
+            verifyCurrentLicense('Never', '4.6', 'Spire', 'Mock1, Mock2', 'Yes', 'CloudifyMock');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -289,7 +298,7 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2019', '4.6', 'Spire',  'Yes','customer123');
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'Yes', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
@@ -302,9 +311,9 @@ describe('(Component) LicensePage', () => {
             verifyHeader();
             verifyMessage('License is valid', 'checkmark', false);
             verifySwitchToUpload(false);
-            verifyCurrentLicense('24-11-2019', '4.6', 'Spire',  'Yes','customer123');
+            verifyCurrentLicense('24-11-2019', '4.6', 'Spire', 'Yes', 'customer123');
             verifyUploadLicense(false);
             verifyFooter(true);
         });
-    })
+    });
 });

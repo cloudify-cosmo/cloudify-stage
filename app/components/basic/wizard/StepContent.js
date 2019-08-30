@@ -18,14 +18,14 @@ export default class StepContent extends Component {
 
     /**
      * @property {string} id step ID
-     * @property {function} onChange function calling wizard to update data
-     * @property {function} onError function setting wizard in error state
-     * @property {function} onLoading function setting wizard in loading state
-     * @property {function} onReady function setting wizard in ready state
-     * @property {Object} stepData step data object
-     * @property {Object} wizardData wizard data object
-     * @property {Object} errors errors object
-     * @property {Object} toolbox Toolbox object
+     * @property {Function} onChange function calling wizard to update data
+     * @property {Function} onError function setting wizard in error state
+     * @property {Function} onLoading function setting wizard in loading state
+     * @property {Function} onReady function setting wizard in ready state
+     * @property {object} stepData step data object
+     * @property {object} wizardData wizard data object
+     * @property {object} errors errors object
+     * @property {object} toolbox Toolbox object
      */
     static propTypes = {
         id: PropTypes.string.isRequired,

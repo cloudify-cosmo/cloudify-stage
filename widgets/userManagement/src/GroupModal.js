@@ -5,9 +5,8 @@
 import Actions from './actions';
 
 export default class GroupModal extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = GroupModal.initialState;
     }
@@ -18,39 +17,42 @@ export default class GroupModal extends React.Component {
         errors: {}
     };
 
-    onApprove () {
+    onApprove() {
         this._submitGroup();
         return false;
     }
 
-    onCancel () {
+    onCancel() {
         this.props.onHide();
         return true;
     }
 
     componentDidUpdate(prevProps) {
         if (!prevProps.open && this.props.open) {
-            this.setState({...GroupModal.initialState, groups: this.props.user.groups});
+            this.setState({ ...GroupModal.initialState, groups: this.props.user.groups });
         }
     }
 
     _submitGroup() {
         // Disable the form
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
-        let groupsToAdd = _.difference(this.state.groups, this.props.user.groups);
-        let groupsToRemove = _.difference(this.props.user.groups, this.state.groups);
+        const groupsToAdd = _.difference(this.state.groups, this.props.user.groups);
+        const groupsToRemove = _.difference(this.props.user.groups, this.state.groups);
 
-        var actions = new Actions(this.props.toolbox);
-        actions.doHandleGroups(this.props.user.username, groupsToAdd, groupsToRemove).then(()=>{
-            this.setState({errors: {}, loading: false});
-            this.props.toolbox.refresh();
-            this.props.toolbox.getEventBus().trigger('userGroups:refresh');
-            this.props.toolbox.getEventBus().trigger('tenants:refresh');
-            this.props.onHide();
-        }).catch((err)=>{
-            this.setState({errors: {error: err.message}, loading: false});
-        });
+        const actions = new Actions(this.props.toolbox);
+        actions
+            .doHandleGroups(this.props.user.username, groupsToAdd, groupsToRemove)
+            .then(() => {
+                this.setState({ errors: {}, loading: false });
+                this.props.toolbox.refresh();
+                this.props.toolbox.getEventBus().trigger('userGroups:refresh');
+                this.props.toolbox.getEventBus().trigger('tenants:refresh');
+                this.props.onHide();
+            })
+            .catch(err => {
+                this.setState({ errors: { error: err.message }, loading: false });
+            });
     }
 
     _handleInputChange(proxy, field) {
@@ -58,34 +60,51 @@ export default class GroupModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-        var user = Object.assign({},{username:''}, this.props.user);
-        var groups = Object.assign({},{items:[]}, this.props.groups);
+        const user = { username: '', ...this.props.user };
+        const groups = { items: [], ...this.props.groups };
 
-        var options = _.map(groups.items, item => { return {text: item.name, value: item.name, key: item.name} });
+        const options = _.map(groups.items, item => {
+            return { text: item.name, value: item.name, key: item.name };
+        });
 
         return (
-            <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
+            <Modal open={this.props.open} onClose={() => this.props.onHide()}>
                 <Modal.Header>
-                    <Icon name="user"/> Edit user groups for {user.username}
+                    <Icon name="user" /> Edit user groups for {user.username}
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}
-                          onErrorsDismiss={() => this.setState({errors: {}})}>
+                    <Form
+                        loading={this.state.loading}
+                        errors={this.state.errors}
+                        onErrorsDismiss={() => this.setState({ errors: {} })}
+                    >
                         <Form.Field>
-                            <Form.Dropdown placeholder='Groups' multiple selection options={options} name="groups"
-                                           value={this.state.groups} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.Dropdown
+                                placeholder="Groups"
+                                multiple
+                                selection
+                                options={options}
+                                name="groups"
+                                value={this.state.groups}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} icon="user" color="green" />
+                    <ApproveButton
+                        onClick={this.onApprove.bind(this)}
+                        disabled={this.state.loading}
+                        icon="user"
+                        color="green"
+                    />
                 </Modal.Actions>
             </Modal>
         );
     }
-};
+}

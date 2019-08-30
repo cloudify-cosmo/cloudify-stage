@@ -2,14 +2,13 @@
  * Created by kinneretzin on 09/02/2017.
  */
 
-import {getMaintenanceStatus} from '../actions/managers';
+import { getMaintenanceStatus } from '../actions/managers';
 import StageUtils from './stageUtils';
 
-
-var singleton = null;
+let singleton = null;
 
 export default class StatusPoller {
-    constructor (store) {
+    constructor(store) {
         this._store = store;
         this._pollerTimer = null;
         this._fetchStatusPromise = null;
@@ -29,7 +28,7 @@ export default class StatusPoller {
 
             // Do the first fetch
             this._fetchStatus().then(this._start.bind(this));
-            //this._start();
+            // this._start();
         }
     }
 
@@ -49,24 +48,27 @@ export default class StatusPoller {
             this._fetchStatusPromise.cancel();
         }
     }
+
     _start() {
         this._stop();
 
         console.log(`Polling status for manager ${this.getManagerIp()} - time interval: ${this.interval} sec`);
-        this._pollerTimer = setTimeout(()=>{this._fetchStatus().then(this._start.bind(this))}, this.interval);
+        this._pollerTimer = setTimeout(() => {
+            this._fetchStatus().then(this._start.bind(this));
+        }, this.interval);
     }
 
-
-    _fetchStatus () {
-        var fetchStatus = this._store.dispatch(getMaintenanceStatus(this._store.getState().manager));
+    _fetchStatus() {
+        const fetchStatus = this._store.dispatch(getMaintenanceStatus(this._store.getState().manager));
         this._fetchStatusPromise = StageUtils.makeCancelable(fetchStatus);
 
         return this._fetchStatusPromise.promise;
     }
 
-    static create(store){
+    static create(store) {
         singleton = new StatusPoller(store);
     }
+
     static getPoller() {
         return singleton;
     }

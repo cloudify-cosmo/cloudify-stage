@@ -1,9 +1,12 @@
-
 class DeploymentStates {
     static GOOD_STATE = 'good';
+
     static IN_PROGRESS_STATE = 'inProgress';
+
     static PENDING_STATE = 'pending';
+
     static FAILED_STATE = 'failed';
+
     static groupStates = {
         [DeploymentStates.GOOD_STATE]: {
             name: 'good',
@@ -31,7 +34,7 @@ class DeploymentStates {
             icon: 'close',
             colorSUI: 'red',
             severity: 4,
-            description: 'deployments with failed workflow execution',
+            description: 'deployments with failed workflow execution'
         }
     };
 
@@ -41,13 +44,14 @@ class DeploymentStates {
 
         if (Stage.Utils.Execution.isActiveExecution(lastExecution)) {
             return DeploymentStates.IN_PROGRESS_STATE;
-        } else if (Stage.Utils.Execution.isFailedExecution(lastExecution)){
-            return DeploymentStates.FAILED_STATE;
-        } else if (nodeStates['started'] === nodeInstanceCount) {
-            return DeploymentStates.GOOD_STATE;
-        } else {
-            return DeploymentStates.PENDING_STATE;
         }
+        if (Stage.Utils.Execution.isFailedExecution(lastExecution)) {
+            return DeploymentStates.FAILED_STATE;
+        }
+        if (nodeStates.started === nodeInstanceCount) {
+            return DeploymentStates.GOOD_STATE;
+        }
+        return DeploymentStates.PENDING_STATE;
     }
 }
 

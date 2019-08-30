@@ -5,8 +5,8 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Form} from 'semantic-ui-react';
-import {areComponentsEqual} from 'react-hot-loader';
+import { Form } from 'semantic-ui-react';
+import { areComponentsEqual } from 'react-hot-loader';
 
 import TableRow from './TableRow';
 import TableRowExpandable from './TableRowExpandable';
@@ -194,31 +194,36 @@ import Pagination from '../pagination/Pagination';
  * ```
  */
 export default class DataTable extends Component {
-
     /**
      * Data row, see {@link TableRow}
      */
     static Row = TableRow;
+
     /**
      * Header column, see {@link TableColumn}
      */
     static Column = TableColumn;
+
     /**
      * Data column, see {@link TableDataCell}
      */
     static Data = TableDataCell;
+
     /**
      * Table action, see {@link TableAction}
      */
     static Action = TableAction;
+
     /**
      * Table filter, see {@link TableFilter}
      */
     static Filter = TableFilter;
+
     /**
      * Expandable row, see {@link TableRowExpandable}
      */
     static RowExpandable = TableRowExpandable;
+
     /**
      * Expandable data, see {@link TableDataExpandable}
      */
@@ -236,19 +241,22 @@ export default class DataTable extends Component {
             searching: false
         };
 
-        this.debouncedSearch = _.debounce(() => {
-            this.paginationRef.current.reset(() => {
-                return Promise.resolve(this._fetchData())
-                              .then(() => this.setState({searching: false}));
-            });
-        }, 300, {'maxWait': 2000});
+        this.debouncedSearch = _.debounce(
+            () => {
+                this.paginationRef.current.reset(() => {
+                    return Promise.resolve(this._fetchData()).then(() => this.setState({ searching: false }));
+                });
+            },
+            300,
+            { maxWait: 2000 }
+        );
     }
 
     /**
      * @property {object[]} children - table content
-     * @property {function} [fetchData] - used to fetch table data
+     * @property {Function} [fetchData] - used to fetch table data
      * @property {number} [totalSize=-1] - total number of rows in table, if not specified pagination will not be set. It is used to calculate pagination pages.
-     * @property {function} [fetchSize=-1] - if total number is unknown size of fetched data can be provided.
+     * @property {Function} [fetchSize=-1] - if total number is unknown size of fetched data can be provided.
      * Pagination pages will be added dynamically until fetchSize is not equal to page size
      * @property {number} [pageSize=0] - number of displayed rows on page
      * @property {string} [sortColumn=] - column name used for data sorting
@@ -301,7 +309,7 @@ export default class DataTable extends Component {
         return {
             getSortColumn: () => this.state.sortColumn,
             isSortAscending: () => this.state.sortAscending,
-            sortColumn: (name) => this._sortColumn(name)
+            sortColumn: name => this._sortColumn(name)
         };
     }
 
@@ -314,14 +322,14 @@ export default class DataTable extends Component {
             ascending = true;
         }
 
-        var fetchData = {sortColumn: name, sortAscending: ascending, currentPage: 1};
+        const fetchData = { sortColumn: name, sortAscending: ascending, currentPage: 1 };
         this.setState(fetchData, () => {
             this.paginationRef.current.reset(this._fetchData.bind(this));
         });
     }
 
     componentDidUpdate(prevProps) {
-        let changedProps = {};
+        const changedProps = {};
         if (prevProps.sortColumn !== this.props.sortColumn) {
             changedProps.sortColumn = this.props.sortColumn;
         }
@@ -335,37 +343,41 @@ export default class DataTable extends Component {
     }
 
     _fetchData() {
-        return this.props.fetchData({gridParams: {
-            _search: this.state.searchText,
-            currentPage: this.paginationRef.current.state.currentPage,
-            pageSize: this.paginationRef.current.state.pageSize,
-            sortColumn: this.state.sortColumn,
-            sortAscending: this.state.sortAscending
-        }});
+        return this.props.fetchData({
+            gridParams: {
+                _search: this.state.searchText,
+                currentPage: this.paginationRef.current.state.currentPage,
+                pageSize: this.paginationRef.current.state.pageSize,
+                sortColumn: this.state.sortColumn,
+                sortAscending: this.state.sortAscending
+            }
+        });
     }
 
     render() {
-        var headerColumns = [];
-        var bodyRows = [];
-        var gridAction = null;
-        var gridFilters = [];
+        const headerColumns = [];
+        const bodyRows = [];
+        let gridAction = null;
+        const gridFilters = [];
 
-        var showCols = [];
-        React.Children.forEach(this.props.children, function (child) {
+        const showCols = [];
+        React.Children.forEach(this.props.children, function(child) {
             if (child && child.type) {
                 if (areComponentsEqual(child.type, TableColumn)) {
                     showCols.push(child.props.show);
                     headerColumns.push(child);
                 } else if (areComponentsEqual(child.type, TableRow)) {
-                    bodyRows.push(React.cloneElement(child, {showCols}));
+                    bodyRows.push(React.cloneElement(child, { showCols }));
                 } else if (areComponentsEqual(child.type, TableRowExpandable)) {
-                    let expandableContent = [];
-                    React.Children.forEach(child.props.children, function (expChild) {
+                    const expandableContent = [];
+                    React.Children.forEach(child.props.children, function(expChild) {
                         if (expChild && expChild.type) {
                             if (areComponentsEqual(expChild.type, TableRow)) {
-                                bodyRows.push(React.cloneElement(expChild, {showCols}));
+                                bodyRows.push(React.cloneElement(expChild, { showCols }));
                             } else if (areComponentsEqual(expChild.type, TableDataExpandable) && child.props.expanded) {
-                                expandableContent.push(React.cloneElement(expChild, {numberOfColumns: showCols.length}));
+                                expandableContent.push(
+                                    React.cloneElement(expChild, { numberOfColumns: showCols.length })
+                                );
                             }
                         }
                     });
@@ -380,52 +392,64 @@ export default class DataTable extends Component {
 
         return (
             <div className={`gridTable ${this.props.className}`}>
-                { (this.props.searchable || !_.isEmpty(gridFilters) || gridAction) &&
-                <Form size="small" as="div">
-                    <Form.Group inline>
-                        {
-                            this.props.searchable &&
-                            <TableSearch search={this.state.searchText}
-                                         searching={this.state.searching}
-                                         onSearch={(searchText) => this.setState({searchText, searching: true},
-                                                                                 this.debouncedSearch)}
-                            />
-                        }
-                        {gridFilters}
-                        {gridAction}
-                    </Form.Group>
-                </Form>
-                }
+                {(this.props.searchable || !_.isEmpty(gridFilters) || gridAction) && (
+                    <Form size="small" as="div">
+                        <Form.Group inline>
+                            {this.props.searchable && (
+                                <TableSearch
+                                    search={this.state.searchText}
+                                    searching={this.state.searching}
+                                    onSearch={searchText =>
+                                        this.setState({ searchText, searching: true }, this.debouncedSearch)
+                                    }
+                                />
+                            )}
+                            {gridFilters}
+                            {gridAction}
+                        </Form.Group>
+                    </Form>
+                )}
 
-                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} sizeMultiplier={this.props.sizeMultiplier}
-                            fetchSize={this.props.fetchSize} fetchData={this._fetchData.bind(this)} ref={this.paginationRef}>
+                <Pagination
+                    totalSize={this.props.totalSize}
+                    pageSize={this.props.pageSize}
+                    sizeMultiplier={this.props.sizeMultiplier}
+                    fetchSize={this.props.fetchSize}
+                    fetchData={this._fetchData.bind(this)}
+                    ref={this.paginationRef}
+                >
                     <table
-                        className={`ui very compact table sortable ${this.props.selectable ? 'selectable' : ''} ${this.props.className}`}
-                        cellSpacing="0" cellPadding="0">
+                        className={`ui very compact table sortable ${this.props.selectable ? 'selectable' : ''} ${
+                            this.props.className
+                        }`}
+                        cellSpacing="0"
+                        cellPadding="0"
+                    >
                         <thead>
-                            <tr>
-                                {headerColumns}
-                            </tr>
+                            <tr>{headerColumns}</tr>
                         </thead>
-                        {this.props.noDataAvailable || (this.props.totalSize <= 0 && this.props.fetchSize <= 0 &&
-                         (this.props.totalSize === 0 || this.props.fetchSize === 0)) ?
+                        {this.props.noDataAvailable ||
+                        (this.props.totalSize <= 0 &&
+                            this.props.fetchSize <= 0 &&
+                            (this.props.totalSize === 0 || this.props.fetchSize === 0)) ? (
                             <tbody>
                                 <tr className="noDataRow">
                                     <td colSpan={headerColumns.length} className="center aligned">
-                                    {this.props.fetchSize === 0 && this.paginationRef.current && this.paginationRef.current.state.currentPage > 1 ?
-                                        <span>No more data available</span>
-                                        :
-                                        <span>{this.props.noDataMessage}</span>
-                                    }
+                                        {this.props.fetchSize === 0 &&
+                                        this.paginationRef.current &&
+                                        this.paginationRef.current.state.currentPage > 1 ? (
+                                            <span>No more data available</span>
+                                        ) : (
+                                            <span>{this.props.noDataMessage}</span>
+                                        )}
                                     </td>
                                 </tr>
                             </tbody>
-                            :
+                        ) : (
                             <tbody>{bodyRows}</tbody>
-                        }
+                        )}
                     </table>
                 </Pagination>
-
             </div>
         );
     }

@@ -1,19 +1,16 @@
 /**
  * Created by edenp on 7/30/17.
  */
-'use strict';
 
-var config = require('../config').get();
-var SamlStrategy = require('passport-saml').Strategy;
-var fs = require('fs');
-var logger = require('../handler/LoggerHandler').getLogger('SAML');
-
+const SamlStrategy = require('passport-saml').Strategy;
+const fs = require('fs');
+const config = require('../config').get();
+const logger = require('../handler/LoggerHandler').getLogger('SAML');
 
 module.exports = () => {
-    try{
+    try {
         var cert = fs.readFileSync(config.app.saml.certPath, 'utf-8');
-    }
-    catch(e){
+    } catch (e) {
         logger.error('Could not read SAML certificate [saml.certPath]', e);
         process.exit(1);
     }
@@ -22,9 +19,9 @@ module.exports = () => {
         {
             path: '/auth/saml/callback',
             entryPoint: config.app.saml.ssoUrl,
-            cert: cert
+            cert
         },
-        function (user, done) {
+        function(user, done) {
             return done(null, user);
         }
     );
