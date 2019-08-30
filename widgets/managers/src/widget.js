@@ -6,15 +6,16 @@ import ManagersTable from './ManagersTable';
 
 Stage.defineWidget({
     id: 'managers',
-    name: 'Cloudify Managers Management',
-    description: 'This widget allows to manage Cloudify Managers created using Cloudify Manager of Managers plugin',
+    name: 'Spire Manager',
+    description: 'This widget allows to manage Cloudify Managers created using Cloudify Spire plugin',
     initialWidth: 12,
     initialHeight: 24,
     color : 'black',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('managers'),
-    categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
+    categories: [Stage.GenericConfig.CATEGORY.SPIRE],
+    supportedEditions: [Stage.Common.Consts.licenseEdition.spire],
     
     initialConfiguration:
         [
@@ -33,11 +34,10 @@ Stage.defineWidget({
 
         let momDeployments = [];
 
-        // FIXME: Temporaraly fetching all fields from deployments as _include=workflows is not working properly
-        return toolbox.getManager().doGet('/deployments')
+        return toolbox.getManager().doGetFull('/deployments', { _include: 'id,workflows,outputs' })
             .then((deployments) => {
                 momDeployments = _.filter(_.get(deployments, 'items', []), (deployment) =>
-                    !!deployment.outputs.cluster_ips && !!deployment.outputs.cluster_status);
+                    !!deployment.outputs.cluster_ips);
 
                 let outputsPromises = _.map(momDeployments, (deployment) =>
                     toolbox.getManager().doGet(`/deployments/${deployment.id}/outputs`));

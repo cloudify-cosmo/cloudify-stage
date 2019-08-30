@@ -7,7 +7,6 @@ import ExecuteWorkflowButton from './ExecuteWorkflowButton';
 import ExecuteWorkflowIcon from './ExecuteWorkflowIcon';
 import RefreshButton from './RefreshButton';
 import RefreshIcon from './RefreshIcon';
-import SlavesDetails from './SlavesDetails';
 import StatusIcon from './StatusIcon';
 
 export default class ManagersTable extends React.Component {
@@ -135,50 +134,42 @@ export default class ManagersTable extends React.Component {
                             const inSelectedManagers = _.includes(selectedManagers, manager.id);
 
                             return (
-                                <DataTable.RowExpandable key={manager.id} expanded={manager.id === this.state.selectedManagerId}>
-
-                                    <DataTable.Row key={manager.id} selected={manager.id === this.state.selectedManagerId}
-                                                   onClick={this.selectManager.bind(this, manager)}>
-                                        <DataTable.Data>
-                                            <Checkbox checked={inSelectedManagers}
-                                                      onChange={() =>
-                                                          inSelectedManagers
-                                                              ? this.setState({selectedManagers: _.filter(selectedManagers, (id) => id !== manager.id)})
-                                                              : this.setState({selectedManagers: [...selectedManagers, manager.id]})
-                                                      }
-                                                      onClick={(e) => e.stopPropagation()}
-                                            />
-                                        </DataTable.Data>
-                                        <DataTable.Data>
-                                            {manager.id}
-                                        </DataTable.Data>
-                                        <DataTable.Data>
-                                            {manager.ip}
-                                        </DataTable.Data>
-                                        <DataTable.Data>
-                                            <LastExecutionStatusIcon execution={manager.lastExecution}
-                                                                     onShowLogs={() => this.showLogs(manager.id, manager.lastExecution.id)}
-                                                                     onShowUpdateDetails={this.openDeploymentUpdateDetailsModal.bind(this)}
-                                                                     onActOnExecution={this.actOnExecution.bind(this)}
-                                                                     showLabel labelAttached={false} />
-                                        </DataTable.Data>
-                                        <DataTable.Data className="center aligned">
-                                            <StatusIcon status={manager.status} error={manager.error} />
-                                        </DataTable.Data>
-                                        <DataTable.Data className="center aligned">
-                                            <ConsoleIcon manager={manager} />
-                                            <RefreshIcon manager={manager} toolbox={this.props.toolbox}
-                                                         onSuccess={this.refreshData.bind(this)} onFail={this.showError.bind(this)} />
-                                            <ExecuteWorkflowIcon workflows={manager.workflows}
-                                                                 onClick={this.openExecuteWorkflowModal.bind(this, manager.id, false)} />
-                                        </DataTable.Data>
-                                    </DataTable.Row>
-
-                                    <DataTable.DataExpandable key={manager.id}>
-                                        <SlavesDetails slaves={manager.slaves} />
-                                    </DataTable.DataExpandable>
-
-                                </DataTable.RowExpandable>
+                                <DataTable.Row key={manager.id} selected={manager.id === this.state.selectedManagerId}
+                                               onClick={this.selectManager.bind(this, manager)}>
+                                    <DataTable.Data>
+                                        <Checkbox checked={inSelectedManagers}
+                                                  onChange={() =>
+                                                      inSelectedManagers
+                                                          ? this.setState({selectedManagers: _.filter(selectedManagers, (id) => id !== manager.id)})
+                                                          : this.setState({selectedManagers: [...selectedManagers, manager.id]})
+                                                  }
+                                                  onClick={(e) => e.stopPropagation()}
+                                        />
+                                    </DataTable.Data>
+                                    <DataTable.Data>
+                                        {manager.id}
+                                    </DataTable.Data>
+                                    <DataTable.Data>
+                                        {manager.ip}
+                                    </DataTable.Data>
+                                    <DataTable.Data>
+                                        <LastExecutionStatusIcon execution={manager.lastExecution}
+                                                                 onShowLogs={() => this.showLogs(manager.id, manager.lastExecution.id)}
+                                                                 onShowUpdateDetails={this.openDeploymentUpdateDetailsModal.bind(this)}
+                                                                 onActOnExecution={this.actOnExecution.bind(this)}
+                                                                 showLabel labelAttached={false} />
+                                    </DataTable.Data>
+                                    <DataTable.Data className="center aligned">
+                                        <StatusIcon status={manager.status} error={manager.error} />
+                                    </DataTable.Data>
+                                    <DataTable.Data className="center aligned">
+                                        <ConsoleIcon manager={manager} />
+                                        <RefreshIcon manager={manager} toolbox={this.props.toolbox}
+                                                     onSuccess={this.refreshData.bind(this)} onFail={this.showError.bind(this)} />
+                                        <ExecuteWorkflowIcon workflows={manager.workflows}
+                                                             onClick={this.openExecuteWorkflowModal.bind(this, manager.id, false)} />
+                                    </DataTable.Data>
+                                </DataTable.Row>
                             )
                         })
                     }
