@@ -152,7 +152,7 @@ module.exports = [
                 filename: 'static/index.html',
                 chunks: ['main.bundle']
             }),
-            new webpack.optimize.OccurrenceOrderPlugin(),
+            new webpack.optimize.OccurrenceOrderPlugin(false),
             new webpack.HotModuleReplacementPlugin(),
             new webpack.ProvidePlugin({
                 $: 'jquery',

@@ -99,7 +99,6 @@ const rules = [
 const compressionPlugins = [
     new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
     new CompressionPlugin({
-        path: '[path].gz[query]',
         algorithm: 'gzip',
         test: /\.js$|\.css$|\.html$/,
         threshold: 10240,
@@ -170,7 +169,7 @@ module.exports = [
                 inject: 'body',
                 filename: 'static/index.html'
             }),
-            new webpack.optimize.OccurrenceOrderPlugin(),
+            new webpack.optimize.OccurrenceOrderPlugin(false),
             new webpack.ProvidePlugin({
                 $: 'jquery',
                 jQuery: 'jquery',
