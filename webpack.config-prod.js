@@ -7,7 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const BrotliPlugin = require('brotli-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const Consts = require('./backend/consts');
 
