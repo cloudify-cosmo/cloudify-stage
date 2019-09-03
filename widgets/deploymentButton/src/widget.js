@@ -16,10 +16,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentButton'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render: function(widget,data,error,toolbox) {
-        return (
-            <DeploymentButton toolbox={toolbox} />
-        );
+    render(widget, data, error, toolbox) {
+        return <DeploymentButton toolbox={toolbox} />;
     }
-
 });

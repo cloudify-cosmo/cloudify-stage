@@ -4,35 +4,34 @@
 
 module.exports = {
     before(client) {
-        client.login()
+        client
+            .login()
             .resetPages()
             .moveToEditMode()
             .addPage();
 
-        var page = client.page.page();
+        const page = client.page.page();
 
-        page.section.editModeSidebar
-            .clickElement('@addWidgetButton');
+        page.section.editModeSidebar.clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
             .isWidgetInstalled('testWidget', result => {
                 if (result.value) {
-                    client.page.page().section.addWidgetModal
-                          .clickElement('@removeWidgetButton');
+                    client.page.page().section.addWidgetModal.clickElement('@removeWidgetButton');
 
-                    client.page.page().section.removeWidgetConfirm
-                          .clickElement('@okButton')
-                          .waitForElementNotPresent('@okButton');
+                    client.page
+                        .page()
+                        .section.removeWidgetConfirm.clickElement('@okButton')
+                        .waitForElementNotPresent('@okButton');
                 }
             });
     },
 
-    'Install widget - error handling': function (client) {
-        var page = client.page.page();
+    'Install widget - error handling': function(client) {
+        const page = client.page.page();
 
-        page.section.addWidgetModal
-            .clickElement('@installWidgetBtn');
+        page.section.addWidgetModal.clickElement('@installWidgetBtn');
 
         page.section.installWidgetModal
             .clickElement('@okButton')
@@ -45,10 +44,15 @@ module.exports = {
             .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', page.section.installWidgetModal.props.invalidURIError);
 
-        const errors = ['IncorrectFiles', 'InvalidPermission', 'InstallIncorrectDirectoryName', 'MandatoryFieldMissingName'];
+        const errors = [
+            'IncorrectFiles',
+            'InvalidPermission',
+            'InstallIncorrectDirectoryName',
+            'MandatoryFieldMissingName'
+        ];
 
-        for (let error of errors) {
-            let errorMessage = page.section.installWidgetModal.props[`widget${error}Error`];
+        for (const error of errors) {
+            const errorMessage = page.section.installWidgetModal.props[`widget${error}Error`];
 
             page.section.installWidgetModal
                 .resetValue('@urlField')
@@ -59,16 +63,13 @@ module.exports = {
                 .assert.containsText('@errorMessage', errorMessage);
         }
 
-        page.section.installWidgetModal
-            .clickElement('@cancelButton')
-            .waitForElementNotPresent('@okButton');
+        page.section.installWidgetModal.clickElement('@cancelButton').waitForElementNotPresent('@okButton');
     },
 
-    'Install and update widget': function (client) {
-        var page = client.page.page();
+    'Install and update widget': function(client) {
+        const page = client.page.page();
 
-        page.section.addWidgetModal
-            .clickElement('@installWidgetBtn');
+        page.section.addWidgetModal.clickElement('@installWidgetBtn');
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
@@ -77,15 +78,16 @@ module.exports = {
             .clickElement('@okButton')
             .waitForElementNotPresent('@okButton');
 
-        page.section.addWidgetModal
-            .waitForElementPresent('@testWidget')
-            .clickElement('@updateWidgetButton');
+        page.section.addWidgetModal.waitForElementPresent('@testWidget').clickElement('@updateWidgetButton');
 
         // Check update error handling
-        let errorMessage = page.section.updateWidgetModal.props.widgetUpdateIncorrectDirectoryNameError;
+        const errorMessage = page.section.updateWidgetModal.props.widgetUpdateIncorrectDirectoryNameError;
         page.section.updateWidgetModal
             .resetValue('@urlField')
-            .setElementValue('@fileField', client.page.resources().props.testWidget(client.globals, 'InvalidPermission'))
+            .setElementValue(
+                '@fileField',
+                client.page.resources().props.testWidget(client.globals, 'InvalidPermission')
+            )
             .clickElement('@okButton')
             .waitForElementVisible('@errorMessage')
             .assert.containsText('@errorMessage', errorMessage);
@@ -97,12 +99,10 @@ module.exports = {
             .waitForElementNotPresent('@okButton');
     },
 
-    'Check widget removing': function (client) {
-        var page = client.page.page();
+    'Check widget removing': function(client) {
+        const page = client.page.page();
 
-        page.section.addWidgetModal
-            .waitForElementPresent('@testWidget')
-            .clickElement('@removeWidgetButton');
+        page.section.addWidgetModal.waitForElementPresent('@testWidget').clickElement('@removeWidgetButton');
 
         page.section.removeWidgetConfirm
             .waitForElementPresent('@okButton')
@@ -111,8 +111,8 @@ module.exports = {
             .waitForElementNotPresent('@okButton');
     },
 
-    'Add installed widget': function (client) {
-        var page = client.page.page();
+    'Add installed widget': function(client) {
+        const page = client.page.page();
 
         page.section.page
             .addWidget('testWidget')
@@ -120,14 +120,12 @@ module.exports = {
             .assert.containsText('@testWidgetContent', page.section.page.props.testWidgetLabel);
     },
 
-    'Widget already installed': function (client) {
-        var page = client.page.page();
+    'Widget already installed': function(client) {
+        const page = client.page.page();
 
-        page.section.editModeSidebar
-            .clickElement('@addWidgetButton');
+        page.section.editModeSidebar.clickElement('@addWidgetButton');
 
-        page.section.addWidgetModal
-            .clickElement('@installWidgetBtn');
+        page.section.addWidgetModal.clickElement('@installWidgetBtn');
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
@@ -141,11 +139,10 @@ module.exports = {
             .waitForElementNotPresent('@okButton');
     },
 
-    'Remove widget': function (client) {
-        var page = client.page.page();
+    'Remove widget': function(client) {
+        const page = client.page.page();
 
-        page.section.addWidgetModal
-            .clickElement('@removeWidgetButton');
+        page.section.addWidgetModal.clickElement('@removeWidgetButton');
 
         page.section.removeWidgetConfirm
             .waitForElementPresent('@okButton')
@@ -159,8 +156,6 @@ module.exports = {
     },
 
     after(client) {
-        client
-            .resetPages()
-            .end();
+        client.resetPages().end();
     }
 };

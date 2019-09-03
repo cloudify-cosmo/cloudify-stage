@@ -9,7 +9,7 @@ exports.command = function(deploymentName, inputs, blueprintName) {
 
     this.isDeploymentExist(deploymentName, result => {
         if (!result.value) {
-            var blueprintActionButtons = this.page.blueprintActionButtons();
+            const blueprintActionButtons = this.page.blueprintActionButtons();
             this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
                 this.log('deploying', blueprintName, 'blueprint');
 
@@ -26,13 +26,10 @@ exports.command = function(deploymentName, inputs, blueprintName) {
                     .waitForElementNotVisible('@widgetLoader')
                     .clickElement('@createDeploymentButton');
 
-                var blueprints = this.page.blueprints();
-                blueprints.section.deployBlueprintModal
-                    .fillIn(deploymentName, inputs)
-                    .clickDeploy();
+                const blueprints = this.page.blueprints();
+                blueprints.section.deployBlueprintModal.fillIn(deploymentName, inputs).clickDeploy();
 
-                this.page.filter()
-                    .waitForDeploymentPresent(deploymentName);
+                this.page.filter().waitForDeploymentPresent(deploymentName);
             });
         } else {
             this.log('not deploying', blueprintName, 'blueprint,', deploymentName, 'deployment already exists');

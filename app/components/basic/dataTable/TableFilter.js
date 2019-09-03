@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Form} from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
 /**
  * Defines filter bar including filter fields which are displayed above the table
@@ -34,7 +34,6 @@ import {Form} from 'semantic-ui-react';
  * ```
  */
 export default class TableFilter extends Component {
-
     /**
      * @property {object[]} children - filter fields
      * @property {string} [className=] - name of the style class to be added
@@ -45,10 +44,6 @@ export default class TableFilter extends Component {
     };
 
     render() {
-        return (
-            <Form.Field className={this.props.className}>
-                {this.props.children}
-            </Form.Field>
-        );
+        return <Form.Field className={this.props.className}>{this.props.children}</Form.Field>;
     }
 }

@@ -3,51 +3,61 @@
  */
 
 import React from 'react';
-import { mount} from 'enzyme';
-import {expect} from 'chai';
+import { mount } from 'enzyme';
+import { expect } from 'chai';
 import sinon from 'sinon';
 import Pagination from '../../../app/components/basic/pagination/Pagination';
 
 describe('(Component) Pagination', () => {
-
-    var wrapper;
-    var fetchSpy = sinon.spy();
-    before(()=>{
-        let div = $('<div />').appendTo('body');
+    let wrapper;
+    const fetchSpy = sinon.spy();
+    before(() => {
+        const div = $('<div />').appendTo('body');
 
         wrapper = mount(
-            <Pagination fetchData={fetchSpy} pageSize={25}><div /></Pagination>, { attachTo: div.get(0) }
+            <Pagination fetchData={fetchSpy} pageSize={25}>
+                <div />
+            </Pagination>,
+            { attachTo: div.get(0) }
         );
     });
 
     it('renders default page size', () => {
-        wrapper.setProps({totalSize:10});
-        wrapper.setProps({pageSize:5});
+        wrapper.setProps({ totalSize: 10 });
+        wrapper.setProps({ pageSize: 5 });
 
         expect(wrapper.find('.gridPagination .dropdown .text').first()).to.have.text('5');
-        expect(wrapper.find('.gridPagination').childAt(0).text()).to.be.equal('Page size: 5510152550  1 to 5 of 10 entries');
+        expect(
+            wrapper
+                .find('.gridPagination')
+                .childAt(0)
+                .text()
+        ).to.be.equal('Page size: 5510152550  1 to 5 of 10 entries');
     });
 
-    it('changes page size', (done) => {
-        var fetchSpy = sinon.spy(()=>done());
-        wrapper.setProps({fetchData:fetchSpy});
+    it('changes page size', done => {
+        const fetchSpy = sinon.spy(() => done());
+        wrapper.setProps({ fetchData: fetchSpy });
 
-        wrapper.find('div[role="option"]').at(0).simulate('click');
+        wrapper
+            .find('div[role="option"]')
+            .at(0)
+            .simulate('click');
         expect(fetchSpy).to.have.been.calledOnce;
-        sinon.assert.calledWith(fetchSpy, {currentPage: 1, pageSize: 5});
+        sinon.assert.calledWith(fetchSpy, { currentPage: 1, pageSize: 5 });
         expect(wrapper.find('.gridPagination .dropdown .text')).to.have.text('10');
         fetchSpy.reset();
     });
 
     it('tests paginator for single page', () => {
-        wrapper.setProps({totalSize:5});
+        wrapper.setProps({ totalSize: 5 });
         expect(wrapper.find('.gridPagination')).to.have.length(0);
-        wrapper.setProps({totalSize:7});
+        wrapper.setProps({ totalSize: 7 });
         expect(wrapper.find('.gridPagination')).to.have.length(1);
     });
 
     it('tests paginator for pages count equals to default number of pages', () => {
-        wrapper.setProps({totalSize:25});
+        wrapper.setProps({ totalSize: 25 });
         const pagination = wrapper.find('.pagination');
 
         const page0 = pagination.childAt(0);
@@ -66,7 +76,7 @@ describe('(Component) Pagination', () => {
     });
 
     it('tests paginator for more then default number of pages', () => {
-        wrapper.setProps({totalSize:36});
+        wrapper.setProps({ totalSize: 36 });
 
         const pagination = wrapper.find('.pagination');
 
@@ -89,14 +99,14 @@ describe('(Component) Pagination', () => {
         expect(page7).to.not.have.className('disabled');
     });
 
-    it('selects next page', (done) => {
-        var fetchSpy = sinon.spy(()=>done());
-        wrapper.setProps({fetchData:fetchSpy});
+    it('selects next page', done => {
+        const fetchSpy = sinon.spy(() => done());
+        wrapper.setProps({ fetchData: fetchSpy });
 
         const pagination = wrapper.find('.pagination');
         pagination.childAt(2).simulate('click');
         expect(fetchSpy.calledOnce).to.be.eql(true);
-        sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 2, pageSize: 5}});
+        sinon.assert.calledWith(fetchSpy, { gridParams: { currentPage: 2, pageSize: 5 } });
         fetchSpy.reset();
 
         const page0 = pagination.childAt(0);
@@ -122,15 +132,15 @@ describe('(Component) Pagination', () => {
         expect(page7).to.not.have.className('disabled');
     });
 
-    it('changes pages by arrows', (done) => {
-        var fetchSpy = sinon.spy(()=>done());
-        wrapper.setProps({fetchData:fetchSpy});
+    it('changes pages by arrows', done => {
+        const fetchSpy = sinon.spy(() => done());
+        wrapper.setProps({ fetchData: fetchSpy });
 
         const pagination = wrapper.find('.pagination');
 
         pagination.childAt(7).simulate('click');
         expect(fetchSpy.calledOnce).to.be.eql(true);
-        sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 3, pageSize: 5}});
+        sinon.assert.calledWith(fetchSpy, { gridParams: { currentPage: 3, pageSize: 5 } });
         fetchSpy.reset();
 
         const page0 = pagination.childAt(0);
@@ -147,7 +157,7 @@ describe('(Component) Pagination', () => {
 
         pagination.childAt(0).simulate('click');
         expect(fetchSpy.calledOnce).to.be.eql(true);
-        sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 2, pageSize: 5}});
+        sinon.assert.calledWith(fetchSpy, { gridParams: { currentPage: 2, pageSize: 5 } });
         fetchSpy.reset();
 
         expect(page3).to.have.text('3');
@@ -157,16 +167,16 @@ describe('(Component) Pagination', () => {
         expect(page2).to.have.className('active');
     });
 
-    it('changes pages to middle position', (done) => {
-        var fetchSpy = sinon.spy(()=>done());
-        wrapper.setProps({fetchData:fetchSpy, totalSize:36});
+    it('changes pages to middle position', done => {
+        const fetchSpy = sinon.spy(() => done());
+        wrapper.setProps({ fetchData: fetchSpy, totalSize: 36 });
 
         const pagination = wrapper.find('.pagination');
 
         const page4 = pagination.childAt(4);
         page4.simulate('click');
         expect(fetchSpy.calledOnce).to.be.eql(true);
-        sinon.assert.calledWith(fetchSpy, {gridParams: {currentPage: 4, pageSize: 5}});
+        sinon.assert.calledWith(fetchSpy, { gridParams: { currentPage: 4, pageSize: 5 } });
         fetchSpy.reset();
 
         const page0 = pagination.childAt(0);
@@ -190,6 +200,4 @@ describe('(Component) Pagination', () => {
     after(() => {
         wrapper.detach();
     });
-
 });
-

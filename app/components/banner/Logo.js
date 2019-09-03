@@ -5,5 +5,5 @@
 import React from 'react';
 
 export default function Logo() {
-    return <div className='logo' />;
+    return <div className="logo" />;
 }

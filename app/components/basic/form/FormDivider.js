@@ -50,9 +50,9 @@ import React, { Component } from 'react';
  *
  */
 export default class FormDivider extends Component {
-
     /**
      * propTypes
+     *
      * @property {object} children primary content
      * @property {string} [className] stylesheet classes to add to h4 element
      */
@@ -67,7 +67,10 @@ export default class FormDivider extends Component {
 
     render() {
         return (
-            <h4 className={`ui dividing header ${this.props.className}`} {..._.omit(this.props, _.keys(FormDivider.propTypes))}>
+            <h4
+                className={`ui dividing header ${this.props.className}`}
+                {..._.omit(this.props, _.keys(FormDivider.propTypes))}
+            >
                 {this.props.children}
             </h4>
         );

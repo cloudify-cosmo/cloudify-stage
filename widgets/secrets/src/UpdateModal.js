@@ -3,9 +3,8 @@
  */
 
 export default class UpdateModal extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = UpdateModal.initialState;
     }
@@ -15,7 +14,7 @@ export default class UpdateModal extends React.Component {
         secretValue: '',
         canUpdateSecret: true,
         errors: {}
-    }
+    };
 
     static propTypes = {
         secret: PropTypes.object.isRequired,
@@ -25,59 +24,65 @@ export default class UpdateModal extends React.Component {
     };
 
     static defaultProps = {
-        onHide: ()=>{}
+        onHide: () => {}
     };
 
-    onApprove () {
+    onApprove() {
         this._updateSecret();
         return false;
     }
 
-    onCancel () {
+    onCancel() {
         this.props.onHide();
         return true;
     }
 
     componentDidUpdate(prevProps) {
         if (!prevProps.open && this.props.open) {
-            this.setState({...UpdateModal.initialState, loading: true});
+            this.setState({ ...UpdateModal.initialState, loading: true });
 
-            let actions = new Stage.Common.SecretActions(this.props.toolbox);
-            actions.doGet(this.props.secret.key).then((secret)=>{
-                let canUpdateSecret = true;
-                if (this.props.secret.is_hidden_value && _.isEmpty(secret.value)) {
-                    canUpdateSecret = false;
-                }
-                this.setState({secretValue: secret.value, loading: false, errors: {}, canUpdateSecret});
-            }).catch((err)=> {
-                this.setState({loading: false, errors: {secretValue: err.message}});
-            });
+            const actions = new Stage.Common.SecretActions(this.props.toolbox);
+            actions
+                .doGet(this.props.secret.key)
+                .then(secret => {
+                    let canUpdateSecret = true;
+                    if (this.props.secret.is_hidden_value && _.isEmpty(secret.value)) {
+                        canUpdateSecret = false;
+                    }
+                    this.setState({ secretValue: secret.value, loading: false, errors: {}, canUpdateSecret });
+                })
+                .catch(err => {
+                    this.setState({ loading: false, errors: { secretValue: err.message } });
+                });
         }
     }
 
     _updateSecret() {
-        let errors = {};
+        const errors = {};
 
         if (_.isEmpty(this.state.secretValue)) {
-            errors['secretValue'] = 'Please provide secret value';
+            errors.secretValue = 'Please provide secret value';
         }
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors});
+            this.setState({ errors });
             return false;
         }
 
         // Disable the form
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
-        let actions = new Stage.Common.SecretActions(this.props.toolbox);
-        actions.doUpdate(this.props.secret.key, this.state.secretValue).then(()=>{
-            this.setState({errors: {}, loading: false});
-            this.props.onHide();
-            this.props.toolbox.refresh();
-        }).catch((err)=> {
-            this.setState({errors: {error: err.message}, loading: false});
-        });
+        const actions = new Stage.Common.SecretActions(this.props.toolbox);
+        actions
+            .doUpdate(this.props.secret.key, this.state.secretValue)
+            .then(() => {
+                this.setState({ errors: {}, loading: false });
+                this.props.onHide();
+                this.props.toolbox.refresh();
+            })
+            .catch(err => {
+                this.setState({ errors: { error: err.message }, loading: false });
+            });
     }
 
     _handleInputChange(proxy, field) {
@@ -85,45 +90,57 @@ export default class UpdateModal extends React.Component {
     }
 
     render() {
-        let {Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage} = Stage.Basic;
-        let canUpdateSecret = this.state.canUpdateSecret;
-        let currentUsername = this.props.toolbox.getManager().getCurrentUsername();
-        let selectedTenant = this.props.toolbox.getManager().getSelectedTenant();
+        const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
+        const { canUpdateSecret } = this.state;
+        const currentUsername = this.props.toolbox.getManager().getCurrentUsername();
+        const selectedTenant = this.props.toolbox.getManager().getSelectedTenant();
 
         return (
             <div>
-                <Modal open={this.props.open} onClose={()=>this.props.onHide()}>
+                <Modal open={this.props.open} onClose={() => this.props.onHide()}>
                     <Modal.Header>
-                        <Icon name='edit' /> Update secret {this.props.secret.key}
+                        <Icon name="edit" /> Update secret {this.props.secret.key}
                     </Modal.Header>
 
                     <Modal.Content>
-                        {
-                            !canUpdateSecret &&
-                            <ErrorMessage error={`User \`${currentUsername}\` is not permitted to update value of the secret '${this.props.secret.key}' in the tenant \`${selectedTenant}\` .`} />
-                        }
-                        <Form loading={this.state.loading} errors={this.state.errors}
-                              onErrorsDismiss={() => this.setState({errors: {}})}>
-                            {
-                                canUpdateSecret &&
+                        {!canUpdateSecret && (
+                            <ErrorMessage
+                                error={`User \`${currentUsername}\` is not permitted to update value of the secret '${this.props.secret.key}' in the tenant \`${selectedTenant}\` .`}
+                            />
+                        )}
+                        <Form
+                            loading={this.state.loading}
+                            errors={this.state.errors}
+                            onErrorsDismiss={() => this.setState({ errors: {} })}
+                        >
+                            {canUpdateSecret && (
                                 <Form.Field error={this.state.errors.secretValue}>
-                                    <Form.TextArea name='secretValue' placeholder='Secret value' autoHeight
-                                                   value={this.state.secretValue} onChange={this._handleInputChange.bind(this)}/>
+                                    <Form.TextArea
+                                        name="secretValue"
+                                        placeholder="Secret value"
+                                        autoHeight
+                                        value={this.state.secretValue}
+                                        onChange={this._handleInputChange.bind(this)}
+                                    />
                                 </Form.Field>
-                            }
+                            )}
                         </Form>
                     </Modal.Content>
 
                     <Modal.Actions>
                         <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                        {
-                            canUpdateSecret &&
-                            <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading}
-                                           content="Update" icon='edit' color="green"/>
-                        }
+                        {canUpdateSecret && (
+                            <ApproveButton
+                                onClick={this.onApprove.bind(this)}
+                                disabled={this.state.loading}
+                                content="Update"
+                                icon="edit"
+                                color="green"
+                            />
+                        )}
                     </Modal.Actions>
                 </Modal>
             </div>
         );
     }
-};
+}

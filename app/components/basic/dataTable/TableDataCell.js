@@ -7,17 +7,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 export default class TableDataCell extends Component {
-
     static propTypes = {
         children: PropTypes.any,
         className: PropTypes.string
     };
 
     render() {
-        return (
-            <td className={this.props.className}>
-                {this.props.children}
-            </td>
-        );
+        return <td className={this.props.className}>{this.props.children}</td>;
     }
 }

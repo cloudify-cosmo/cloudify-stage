@@ -6,14 +6,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { selectHomePage } from '../../actions/page';
 import TemplateManagement from '../../components/templates/TemplateManagement';
-import { getTemplates, createTemplate, updateTemplate, deleteTemplate, createPage, deletePage,
-         showPage, selectTemplate, selectPage, clearTemplateContext} from '../../actions/templateManagement';
+import {
+    getTemplates,
+    createTemplate,
+    updateTemplate,
+    deleteTemplate,
+    createPage,
+    deletePage,
+    showPage,
+    selectTemplate,
+    selectPage,
+    clearTemplateContext
+} from '../../actions/templateManagement';
 
 const mapStateToProps = (state, ownProps) => {
-    var templateManagement = state.templateManagement || {};
+    const templateManagement = state.templateManagement || {};
 
-    var roles = _.map (state.manager.roles, (role) => {
-        return {text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name};
+    const roles = _.map(state.manager.roles, role => {
+        return { text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name };
     });
 
     return {
@@ -40,7 +50,7 @@ const mapDispatchToProps = (dispatch, getState, ownProps) => {
         onPageSelect: pageId => dispatch(selectPage(pageId)),
         onClear: () => dispatch(clearTemplateContext()),
         onClose: () => dispatch(selectHomePage())
-    }
+    };
 };
 
 export default connect(

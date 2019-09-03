@@ -17,10 +17,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintUploadButton'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render: function(widget,data,error,toolbox) {
-        return (
-            <UploadButton toolbox={toolbox} />
-        );
+    render(widget, data, error, toolbox) {
+        return <UploadButton toolbox={toolbox} />;
     }
-
 });

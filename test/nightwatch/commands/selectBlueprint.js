@@ -7,17 +7,17 @@ exports.command = function(blueprintName) {
         blueprintName = this.page.blueprints().props.testBlueprint;
     }
 
-    var filter = this.page.filter();
+    const filter = this.page.filter();
 
     return this.isWidgetPresent(filter.props.widgetId, result => {
-            this.log('selecting', blueprintName, 'blueprint');
+        this.log('selecting', blueprintName, 'blueprint');
 
-            if (!result.value) {
-                this.moveToEditMode()
-                    .addWidget(filter.props.widgetId)
-                    .moveOutOfEditMode();
-            }
+        if (!result.value) {
+            this.moveToEditMode()
+                .addWidget(filter.props.widgetId)
+                .moveOutOfEditMode();
+        }
 
-            filter.selectOptionInDropdown('@blueprintSearch', filter.elements.blueprintSearch.selector, blueprintName);
-        });
+        filter.selectOptionInDropdown('@blueprintSearch', filter.elements.blueprintSearch.selector, blueprintName);
+    });
 };

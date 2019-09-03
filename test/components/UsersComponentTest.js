@@ -2,45 +2,49 @@
  * Created by jakubniezgoda on 07/02/2017.
  */
 
-import React from 'react'
-import { mount } from 'enzyme'
+import React from 'react';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
+import sinon from 'sinon';
 import Users from '../../app/components/Users.js';
 import * as BasicComponents from '../../app/components/basic';
-import sinon from 'sinon';
 
 describe('(Component) Users', () => {
     let manager;
     let wrapper;
-    global.Stage = {Basic: BasicComponents};
-    let {Dropdown} = Stage.Basic;
+    global.Stage = { Basic: BasicComponents };
+    const { Dropdown } = Stage.Basic;
 
     beforeEach(() => {
-         manager = {
-             username: 'admin',
-             auth: {
-                 role: 'admin'
-             }
-         };
+        manager = {
+            username: 'admin',
+            auth: {
+                role: 'admin'
+            }
+        };
 
-         wrapper = mount(<Users manager={manager}
-                                showAllOptions={true}
-                                isEditMode={false}
-                                canEditMode={true}
-                                canTemplateManagement={true}
-                                canLicenseManagement={true}
-                                onEditModeChange={()=>{}}
-                                onReset={()=>{}}
-                                onTemplates={()=>{}}
-                                onLogout={()=>{}}
-                                onLicense={()=>{}} />);
+        wrapper = mount(
+            <Users
+                manager={manager}
+                showAllOptions
+                isEditMode={false}
+                canEditMode
+                canTemplateManagement
+                canLicenseManagement
+                onEditModeChange={() => {}}
+                onReset={() => {}}
+                onTemplates={() => {}}
+                onLogout={() => {}}
+                onLicense={() => {}}
+            />
+        );
     });
 
     it('renders...', () => {
         expect(wrapper).to.have.length(1);
     });
 
-    it('renders user menu with full options list ',()=>{
+    it('renders user menu with full options list ', () => {
         expect(wrapper.find(Dropdown)).to.have.length(1); // Showing the users menu
         expect(wrapper.find(Dropdown.Item).length).to.equal(5); // 5 menu options
         expect(wrapper.find(Dropdown.Item).get(0).props.text).to.equal('Edit Mode'); // Having Edit Mode option
@@ -55,8 +59,8 @@ describe('(Component) Users', () => {
         expect(wrapper.find(Dropdown.Item).get(4).props.icon).to.equal('log out'); // Having log out icon for Logout option
     });
 
-    it('renders user menu with full options list and edit mode selected ',()=>{
-        wrapper.setProps({isEditMode: true});
+    it('renders user menu with full options list and edit mode selected ', () => {
+        wrapper.setProps({ isEditMode: true });
 
         expect(wrapper.find(Dropdown)).to.have.length(1); // Showing the users menu
         expect(wrapper.find(Dropdown.Item).length).to.equal(5); // 5 menu options
@@ -64,8 +68,8 @@ describe('(Component) Users', () => {
         expect(wrapper.find(Dropdown.Item).get(0).props.selected).to.equal(true); // Having Edit Mode option selected
     });
 
-    it('renders user menu with limited options list ',()=>{
-        wrapper.setProps({showAllOptions: false});
+    it('renders user menu with limited options list ', () => {
+        wrapper.setProps({ showAllOptions: false });
 
         expect(wrapper.find(Dropdown)).to.have.length(1); // Showing the users menu
         expect(wrapper.find(Dropdown.Item).length).to.equal(2); // 2 menu options
@@ -75,49 +79,63 @@ describe('(Component) Users', () => {
         expect(wrapper.find(Dropdown.Item).get(1).props.icon).to.equal('log out'); // Having log out icon for Logout option
     });
 
-    it('onEditModeChange is called',()=>{
-        let onEditModeChange = sinon.spy();
-        wrapper.setProps({onEditModeChange});
+    it('onEditModeChange is called', () => {
+        const onEditModeChange = sinon.spy();
+        wrapper.setProps({ onEditModeChange });
 
-        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Edit Mode').simulate('click');
+        wrapper
+            .find(Dropdown.Item)
+            .filterWhere(element => element.instance().props.text === 'Edit Mode')
+            .simulate('click');
 
         expect(onEditModeChange.calledOnce).to.equal(true);
     });
 
-    it('onTemplates is called',()=>{
-        let onTemplates = sinon.spy();
-        wrapper.setProps({onTemplates});
+    it('onTemplates is called', () => {
+        const onTemplates = sinon.spy();
+        wrapper.setProps({ onTemplates });
 
-        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Template Management').simulate('click');
+        wrapper
+            .find(Dropdown.Item)
+            .filterWhere(element => element.instance().props.text === 'Template Management')
+            .simulate('click');
 
         expect(onTemplates.calledOnce).to.equal(true);
     });
 
-    it('onReset is called',()=>{
-        let onReset = sinon.spy();
-        wrapper.setProps({onReset});
+    it('onReset is called', () => {
+        const onReset = sinon.spy();
+        wrapper.setProps({ onReset });
 
-        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Reset Templates').simulate('click');
+        wrapper
+            .find(Dropdown.Item)
+            .filterWhere(element => element.instance().props.text === 'Reset Templates')
+            .simulate('click');
 
         expect(onReset.calledOnce).to.equal(true);
     });
 
-    it('onLicense is called',()=>{
-        let onLicense = sinon.spy();
-        wrapper.setProps({onLicense});
+    it('onLicense is called', () => {
+        const onLicense = sinon.spy();
+        wrapper.setProps({ onLicense });
 
-        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'License Management').simulate('click');
+        wrapper
+            .find(Dropdown.Item)
+            .filterWhere(element => element.instance().props.text === 'License Management')
+            .simulate('click');
 
         expect(onLicense.calledOnce).to.equal(true);
     });
 
-    it('onLogout is called',()=>{
-        let onLogout = sinon.spy();
-        wrapper.setProps({onLogout});
+    it('onLogout is called', () => {
+        const onLogout = sinon.spy();
+        wrapper.setProps({ onLogout });
 
-        wrapper.find(Dropdown.Item).filterWhere(element => element.instance().props.text === 'Logout').simulate('click');
+        wrapper
+            .find(Dropdown.Item)
+            .filterWhere(element => element.instance().props.text === 'Logout')
+            .simulate('click');
 
         expect(onLogout.calledOnce).to.equal(true);
     });
-
 });

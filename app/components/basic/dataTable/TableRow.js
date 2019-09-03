@@ -25,11 +25,10 @@ import TableDataCell from './TableDataCell';
  * ```
  */
 export default class TableRow extends Component {
-
     /**
      * @property {object[]} children - row content
      * @property {boolean} [selected=false] - if true, then row will be marked as selected
-     * @property {function} onClick - action to be executed on click event
+     * @property {Function} onClick - action to be executed on click event
      * @property {string[]} showCols - array of column's names to be shown
      * @property {string} [className] - name of the style class to be added
      */
@@ -43,7 +42,7 @@ export default class TableRow extends Component {
 
     static defaultProps = {
         selected: false,
-        showCols:[],
+        showCols: [],
         className: ''
     };
 
@@ -52,20 +51,26 @@ export default class TableRow extends Component {
     }
 
     render() {
-        let className = this.props.className + (_.isFunction(this.props.onClick) ? ' clickable' : '') + (this.props.selected ? ' active' : '');
-        let children = [];
+        const className =
+            this.props.className +
+            (_.isFunction(this.props.onClick) ? ' clickable' : '') +
+            (this.props.selected ? ' active' : '');
+        const children = [];
         let index = 0;
-        React.Children.forEach(this.props.children, (child) => {
+        React.Children.forEach(this.props.children, child => {
             if (child.type && areComponentsEqual(child.type, TableDataCell) && this._showData(index++)) {
                 children.push(child);
             }
         });
 
         return (
-            <tr id={this.props.id} className={className}
+            <tr
+                id={this.props.id}
+                className={className}
                 onClick={this.props.onClick}
                 onMouseOver={this.props.onMouseOver}
-                onMouseOut={this.props.onMouseOut}>
+                onMouseOut={this.props.onMouseOut}
+            >
                 {children}
             </tr>
         );

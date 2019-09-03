@@ -11,36 +11,39 @@ Stage.defineWidget({
     description: 'This widget shows list of installed agents',
     initialWidth: 12,
     initialHeight: 24,
-    color : 'olive',
+    color: 'olive',
     fetchUrl: '[manager]/agents?[params:deployment_id,node_ids,node_instance_ids,install_methods]',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('agents'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
-    
-    initialConfiguration:
-        [
-            Stage.GenericConfig.POLLING_TIME_CONFIG(15),
-            {
-                id: 'fieldsToShow', name: 'List of fields to show in the table',
-                description: 'Some of the fields may be hidden depending on the context, ' +
-                             'eg. when Deployment ID is set in context then Deployment field will be hidden.',
-                placeHolder: 'Select fields from the list',
-                items: ['Id','Node','Deployment','IP','Install Method','System','Version','Actions'],
-                default: 'Id,Node,Deployment,IP,Install Method,System,Version,Actions', 
-                type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
-            },
-            {
-                id: 'installMethods', name: 'Filter Agents by Install Method',
-                description: 'Choose Install Methods to filter Agents. Unset all options to disable this type of filtering.',
-                placeHolder: 'Select Install Methods from the list',
-                items: Consts.installMethodsOptions,
-                default: '',
-                type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
-            }
-        ],
 
-    fetchParams: function(widget, toolbox) {
+    initialConfiguration: [
+        Stage.GenericConfig.POLLING_TIME_CONFIG(15),
+        {
+            id: 'fieldsToShow',
+            name: 'List of fields to show in the table',
+            description:
+                'Some of the fields may be hidden depending on the context, ' +
+                'eg. when Deployment ID is set in context then Deployment field will be hidden.',
+            placeHolder: 'Select fields from the list',
+            items: ['Id', 'Node', 'Deployment', 'IP', 'Install Method', 'System', 'Version', 'Actions'],
+            default: 'Id,Node,Deployment,IP,Install Method,System,Version,Actions',
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+        },
+        {
+            id: 'installMethods',
+            name: 'Filter Agents by Install Method',
+            description:
+                'Choose Install Methods to filter Agents. Unset all options to disable this type of filtering.',
+            placeHolder: 'Select Install Methods from the list',
+            items: Consts.installMethodsOptions,
+            default: '',
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+        }
+    ],
+
+    fetchParams(widget, toolbox) {
         return {
             deployment_id: toolbox.getContext().getValue('deploymentId'),
             node_ids: toolbox.getContext().getValue('nodeId'),
@@ -51,14 +54,13 @@ Stage.defineWidget({
         };
     },
 
-    render: function(widget, data, error, toolbox) {
-
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
 
-        let params = this.fetchParams(widget, toolbox);
-        let formattedData = {
+        const params = this.fetchParams(widget, toolbox);
+        const formattedData = {
             items: data.items,
             total: _.get(data, 'metadata.pagination.total', 0),
             deploymentId: params.deployment_id,
@@ -66,8 +68,6 @@ Stage.defineWidget({
             nodeInstanceId: params.node_instance_ids
         };
 
-        return (
-            <AgentsTable widget={widget} data={formattedData} toolbox={toolbox} />
-        );
+        return <AgentsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
 });

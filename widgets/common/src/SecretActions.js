@@ -16,22 +16,21 @@ class SecretActions {
     }
 
     doCreate(key, value, visibility, is_hidden_value) {
-        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, {value, visibility, is_hidden_value});
+        return this.toolbox.getManager().doPut(`/secrets/${key}`, null, { value, visibility, is_hidden_value });
     }
 
     doUpdate(key, value) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, {value});
+        return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, { value });
     }
 
     doSetIsHiddenValue(key, is_hidden_value) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, {is_hidden_value});
+        return this.toolbox.getManager().doPatch(`/secrets/${key}`, null, { is_hidden_value });
     }
 
     doSetVisibility(key, visibility) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-visibility`, null, {visibility});
+        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-visibility`, null, { visibility });
     }
 }
-
 
 Stage.defineCommon({
     name: 'SecretActions',

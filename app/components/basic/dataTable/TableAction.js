@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Form} from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
 /**
  * Defines action bar including buttons which are displayed above the table
@@ -29,20 +29,14 @@ import {Form} from 'semantic-ui-react';
  * ```
  */
 export default class TableAction extends Component {
-
     /**
      * @property {object[]} children - action buttons
      */
     static propTypes = {
-        children: PropTypes.any.isRequired,
+        children: PropTypes.any.isRequired
     };
 
     render() {
-        return (
-            <Form.Field className="actionField">
-                {this.props.children}
-            </Form.Field>
-        );
+        return <Form.Field className="actionField">{this.props.children}</Form.Field>;
     }
 }
- 

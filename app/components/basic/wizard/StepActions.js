@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import {Button} from './../index';
+import { Button } from '../index';
 
 /**
  * StepActions component is interface for components implementing step actions for {@link WizardModal}
@@ -14,22 +14,22 @@ import {Button} from './../index';
  * `Stage.Basic.Wizard.Step.Actions`
  */
 export default class StepActions extends Component {
-
     constructor(props) {
         super(props);
     }
+
     /**
      * @property {string} id step ID
-     * @property {function} onClose function calling wizard to close
-     * @property {function} onStartOver function calling wizard to start over wizard process
-     * @property {function} onPrev function calling wizard to move to the previous step
-     * @property {function} onNext function calling wizard to move to the next step
-     * @property {function} onError function setting wizard in error state
-     * @property {function} onLoading function setting wizard in loading state
-     * @property {function} onReady function setting wizard in ready state
-     * @property {function} fetchData function providing step data from step content
-     * @property {Object} wizardData wizard data object
-     * @property {Object} toolbox Toolbox object
+     * @property {Function} onClose function calling wizard to close
+     * @property {Function} onStartOver function calling wizard to start over wizard process
+     * @property {Function} onPrev function calling wizard to move to the previous step
+     * @property {Function} onNext function calling wizard to move to the next step
+     * @property {Function} onError function setting wizard in error state
+     * @property {Function} onLoading function setting wizard in loading state
+     * @property {Function} onReady function setting wizard in ready state
+     * @property {Function} fetchData function providing step data from step content
+     * @property {object} wizardData wizard data object
+     * @property {object} toolbox Toolbox object
      * @property {boolean} [disabled=false] if set then action buttons will be disabled
      * @property {string} [startOverLabel='Start Over'] label for Start Over button
      * @property {string} [startOverIcon='undo'] icon to be added to Start Over button
@@ -64,7 +64,7 @@ export default class StepActions extends Component {
         showPrev: PropTypes.bool,
         nextLabel: PropTypes.string,
         nextIcon: PropTypes.string,
-        showNext: PropTypes.bool,
+        showNext: PropTypes.bool
     };
 
     static defaultProps = {
@@ -107,34 +107,49 @@ export default class StepActions extends Component {
 
     render() {
         return (
-            <React.Fragment>
+            <>
                 {this.props.children}
 
-                {
-                    this.props.showClose &&
-                    <Button floated={this.props.closeFloated} icon={this.props.closeIcon} content={this.props.closeLabel}
-                            labelPosition='left' onClick={this.onClose.bind(this)} />
-                }
-                {
-                    this.props.showStartOver &&
-                    <Button icon={this.props.startOverIcon} content={this.props.startOverLabel} disabled={this.props.disabled}
-                            labelPosition='left' onClick={this.onStartOver.bind(this)} />
-                }
+                {this.props.showClose && (
+                    <Button
+                        floated={this.props.closeFloated}
+                        icon={this.props.closeIcon}
+                        content={this.props.closeLabel}
+                        labelPosition="left"
+                        onClick={this.onClose.bind(this)}
+                    />
+                )}
+                {this.props.showStartOver && (
+                    <Button
+                        icon={this.props.startOverIcon}
+                        content={this.props.startOverLabel}
+                        disabled={this.props.disabled}
+                        labelPosition="left"
+                        onClick={this.onStartOver.bind(this)}
+                    />
+                )}
 
                 <Button.Group>
-                    {
-                        this.props.showPrev &&
-                        <Button icon={this.props.prevIcon} content={this.props.prevLabel} disabled={this.props.disabled}
-                                labelPosition='left' onClick={this.onPrev.bind(this)} />
-                    }
-                    {
-                        this.props.showNext &&
-                        <Button icon={this.props.nextIcon} content={this.props.nextLabel} disabled={this.props.disabled}
-                                labelPosition='right' onClick={this.onNext.bind(this)} />
-                    }
+                    {this.props.showPrev && (
+                        <Button
+                            icon={this.props.prevIcon}
+                            content={this.props.prevLabel}
+                            disabled={this.props.disabled}
+                            labelPosition="left"
+                            onClick={this.onPrev.bind(this)}
+                        />
+                    )}
+                    {this.props.showNext && (
+                        <Button
+                            icon={this.props.nextIcon}
+                            content={this.props.nextLabel}
+                            disabled={this.props.disabled}
+                            labelPosition="right"
+                            onClick={this.onNext.bind(this)}
+                        />
+                    )}
                 </Button.Group>
-
-            </React.Fragment>
+            </>
         );
     }
 }

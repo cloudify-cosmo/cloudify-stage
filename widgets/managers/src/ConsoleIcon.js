@@ -3,8 +3,7 @@
  */
 
 export default class ConsoleIcon extends React.Component {
-
-    constructor(props, context){
+    constructor(props, context) {
         super(props, context);
     }
 
@@ -13,25 +12,29 @@ export default class ConsoleIcon extends React.Component {
     };
 
     static defaultProps = {
-        manager: {ip: ''}
+        manager: { ip: '' }
     };
 
     handleClick(event) {
-        let {redirectToPage, url} = Stage.Utils.Url;
+        const { redirectToPage, url } = Stage.Utils.Url;
         const managerDefaultProtocol = 'https';
-        const ip = this.props.manager.ip;
+        const { ip } = this.props.manager;
 
         event.stopPropagation();
         redirectToPage(`${managerDefaultProtocol}://${ip}${url('')}`);
     }
 
     render() {
-        let {Icon, Popup} = Stage.Basic;
-        const ip = this.props.manager.ip;
+        const { Icon, Popup } = Stage.Basic;
+        const { ip } = this.props.manager;
 
-        return ip &&
-            <Popup trigger={<Icon name='computer' link bordered onClick={this.handleClick.bind(this)} />}
-                   content='Open Console' />;
+        return (
+            ip && (
+                <Popup
+                    trigger={<Icon name="computer" link bordered onClick={this.handleClick.bind(this)} />}
+                    content="Open Console"
+                />
+            )
+        );
     }
 }
-

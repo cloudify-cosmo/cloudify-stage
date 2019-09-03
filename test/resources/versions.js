@@ -1,7 +1,7 @@
 export default {
     premium: {
         edition: 'premium',
-            version: '4.6',
+        version: '4.6',
         build: null,
         date: null,
         commit: null,
@@ -17,4 +17,4 @@ export default {
         distribution: 'centos',
         distro_release: 'Core'
     }
-}
+};

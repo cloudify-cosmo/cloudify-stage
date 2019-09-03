@@ -2,64 +2,67 @@
  * Created by kinneretzin on 25/12/2016.
  */
 
-
 module.exports = {
     sections: {
         blueprintsTable: {
             selector: 'div.blueprintsWidget table.blueprintsTable',
-            elements: {
-
-            },
+            elements: {},
             props: {
-                blueprintRow : (name) => `tr#blueprintsTable_${name}`,
-                createDeploymentButton : (name) => `tr#blueprintsTable_${name} td.rowActions i.rocket`,
-                deploymentsCount : (name) => `tr#blueprintsTable_${name} td div.ui.green.horizontal.label`
+                blueprintRow: name => `tr#blueprintsTable_${name}`,
+                createDeploymentButton: name => `tr#blueprintsTable_${name} td.rowActions i.rocket`,
+                deploymentsCount: name => `tr#blueprintsTable_${name} td div.ui.green.horizontal.label`
             },
             commands: [
                 {
-                    clickRow: function (blueprintName) {
+                    clickRow(blueprintName) {
                         return this.clickElement(this.props.blueprintRow(blueprintName));
                     },
 
-                    clickDeploy: function (blueprintName) {
+                    clickDeploy(blueprintName) {
                         return this.clickElement(this.props.createDeploymentButton(blueprintName));
                     },
 
-                    clickRemove: function (blueprintName) {
-                        let removeBlueprintButton = `${this.props.blueprintRow(blueprintName)} td.rowActions i.trash`;
+                    clickRemove(blueprintName) {
+                        const removeBlueprintButton = `${this.props.blueprintRow(blueprintName)} td.rowActions i.trash`;
                         return this.clickElement(removeBlueprintButton);
                     },
 
-                    checkIfBlueprintPresent: function (blueprintName) {
-                        return this.waitForElementPresent(this.props.blueprintRow(blueprintName), (result) => {
-                            this.assert.equal(result.status, 0, 'Blueprint ' + blueprintName + ' present.');
+                    checkIfBlueprintPresent(blueprintName) {
+                        return this.waitForElementPresent(this.props.blueprintRow(blueprintName), result => {
+                            this.assert.equal(result.status, 0, `Blueprint ${blueprintName} present.`);
                         });
                     },
 
-                    checkIfBlueprintRemoved: function (blueprintName) {
-                        return this.waitForElementNotPresent(this.props.blueprintRow(blueprintName), (result) => {
-                            this.assert.equal(result.status, 0, 'Blueprint ' + blueprintName + ' removed.');
+                    checkIfBlueprintRemoved(blueprintName) {
+                        return this.waitForElementNotPresent(this.props.blueprintRow(blueprintName), result => {
+                            this.assert.equal(result.status, 0, `Blueprint ${blueprintName} removed.`);
                         });
                     },
 
-                    checkIfDeploymentsCountEqual: function (blueprintName, deploymentsCount) {
-                        return this.waitForElementVisible(this.props.deploymentsCount(blueprintName))
-                            .getText(this.props.deploymentsCount(blueprintName), (result) => {
-                                this.assert.equal(result.value, deploymentsCount, 'Deployments count equals to ' + deploymentsCount + '.');
-                            });
-                    },
+                    checkIfDeploymentsCountEqual(blueprintName, deploymentsCount) {
+                        return this.waitForElementVisible(this.props.deploymentsCount(blueprintName)).getText(
+                            this.props.deploymentsCount(blueprintName),
+                            result => {
+                                this.assert.equal(
+                                    result.value,
+                                    deploymentsCount,
+                                    `Deployments count equals to ${deploymentsCount}.`
+                                );
+                            }
+                        );
+                    }
                 }
-            ],
+            ]
         },
 
         blueprintsCatalog: {
             selector: 'div.blueprintsWidget .segmentList',
             props: {
-                blueprintElementSelector : (name) => `div.${name}`
+                blueprintElementSelector: name => `div.${name}`
             },
             commands: [
                 {
-                    clickSegment: function (blueprintName) {
+                    clickSegment(blueprintName) {
                         return this.clickElement(this.props.blueprintElementSelector(blueprintName));
                     }
                 }
@@ -83,33 +86,29 @@ module.exports = {
             },
             commands: [
                 {
-                    fillIn: function(blueprintUrl, blueprintName, blueprintYamlFile = 'blueprint.yaml') {
-                        let blueprintFileOptionElement = `div[name="blueprintFileName"] div[option-value="${blueprintYamlFile}"]`;
-                        return this
-                            .waitForElementVisible(this.selector)
+                    fillIn(blueprintUrl, blueprintName, blueprintYamlFile = 'blueprint.yaml') {
+                        const blueprintFileOptionElement = `div[name="blueprintFileName"] div[option-value="${blueprintYamlFile}"]`;
+                        return this.waitForElementVisible(this.selector)
                             .setElementValue('@blueprintUrl', [blueprintUrl, this.api.Keys.TAB])
                             .waitForElementNotPresent('@loading')
                             .resetValue('@blueprintName')
                             .setElementValue('@blueprintName', blueprintName)
                             .waitForElementPresent(blueprintFileOptionElement)
-                            .selectOptionInDropdown('@blueprintYamlFile',
-                                                    `${this.selector} ${this.elements.blueprintYamlFile.selector}`,
-                                                    blueprintYamlFile);
-
+                            .selectOptionInDropdown(
+                                '@blueprintYamlFile',
+                                `${this.selector} ${this.elements.blueprintYamlFile.selector}`,
+                                blueprintYamlFile
+                            );
                     },
-                    fillInForSingleYaml: function(blueprintSingleYamlFile, blueprintName) {
-                        return this
-                            .waitForElementVisible(this.selector)
+                    fillInForSingleYaml(blueprintSingleYamlFile, blueprintName) {
+                        return this.waitForElementVisible(this.selector)
                             .setElementValue('@blueprintFile', blueprintSingleYamlFile)
                             .waitForElementNotPresent('@loading')
                             .resetValue('@blueprintName')
                             .setElementValue('@blueprintName', blueprintName);
-
                     },
-                    clickUpload: function() {
-                        return this
-                            .clickElement('@okButton')
-                            .waitForElementNotPresent(this.selector);
+                    clickUpload() {
+                        return this.clickElement('@okButton').waitForElementNotPresent(this.selector);
                     }
                 }
             ]
@@ -125,8 +124,8 @@ module.exports = {
             },
             commands: [
                 {
-                    fillIn: function(deploymentName, blueprintInputs) {
-                        let _ = require('lodash');
+                    fillIn(deploymentName, blueprintInputs) {
+                        const _ = require('lodash');
                         this.waitForElementVisible('@deploymentName')
                             .setElementValue('@deploymentName', deploymentName)
                             .api.perform(() =>
@@ -135,16 +134,15 @@ module.exports = {
                                         `${inputObject.type === 'string' ? 'input' : 'textarea'}[name="${inputName}"]`,
                                         inputObject.value
                                     )
-                                ));
+                                )
+                            );
                         return this;
                     },
-                    setSkipValidation: function(value) {
+                    setSkipValidation(value) {
                         return this.setCheckbox('.content .field.skipPluginsValidationCheckbox', value);
                     },
-                    clickDeploy: function() {
-                        return this
-                            .clickElement('@deployButton')
-                            .waitForElementNotPresent(this.selector);
+                    clickDeploy() {
+                        return this.clickElement('@deployButton').waitForElementNotPresent(this.selector);
                     }
                 }
             ]
@@ -158,7 +156,7 @@ module.exports = {
             },
             commands: [
                 {
-                    clickYes: function () {
+                    clickYes() {
                         return this.waitForElementVisible(this.selector)
                             .clickElement('@yesButton')
                             .waitForElementNotPresent(this.selector);
@@ -176,43 +174,42 @@ module.exports = {
             },
             props: {
                 tableView: 'table',
-                catalogView: 'catalog',
+                catalogView: 'catalog'
             },
             commands: [
                 {
-                    setDrilldown: function(value) {
+                    setDrilldown(value) {
                         return this.setCheckbox('.content div.field.clickToDrillDown', value);
                     },
-                    setPollingTime: function(value) {
+                    setPollingTime(value) {
                         return this.setInputText('.content div.field.pollingTime', value);
                     },
-                    setTableView: function () {
-                        return this.selectOptionInDropdown('@displayStyle',
-                                                           `${this.selector} ${this.elements.displayStyle.selector}`,
-                                                           this.props.tableView);
+                    setTableView() {
+                        return this.selectOptionInDropdown(
+                            '@displayStyle',
+                            `${this.selector} ${this.elements.displayStyle.selector}`,
+                            this.props.tableView
+                        );
                     },
-                    setCatalogView: function () {
-                        return this.selectOptionInDropdown('@displayStyle',
-                                                           `${this.selector} ${this.elements.displayStyle.selector}`,
-                                                           this.props.catalogView);
-
+                    setCatalogView() {
+                        return this.selectOptionInDropdown(
+                            '@displayStyle',
+                            `${this.selector} ${this.elements.displayStyle.selector}`,
+                            this.props.catalogView
+                        );
                     },
-                    clickSave: function () {
-                        return this
-                            .clickElement('@saveButton')
-                            .waitForElementNotPresent(this.selector);
+                    clickSave() {
+                        return this.clickElement('@saveButton').waitForElementNotPresent(this.selector);
                     },
-                    clickCancel: function () {
-                        return this
-                            .clickElement('@cancelButton')
-                            .waitForElementNotPresent(this.selector);
+                    clickCancel() {
+                        return this.clickElement('@cancelButton').waitForElementNotPresent(this.selector);
                     },
-                    pause: function (value) {
+                    pause(value) {
                         this.api.pause(value);
                         return this;
                     }
                 }
-            ],
+            ]
         }
     },
     elements: {
@@ -233,15 +230,15 @@ module.exports = {
 
     commands: [
         {
-            configureWidget: function () {
+            configureWidget() {
                 this.moveToEditMode()
                     .waitForElementPresent('@header')
                     .waitForElementNotVisible('@loader')
                     .waitForElementPresent('@header')
                     .moveToElement('@header', undefined, undefined) // For details, see: https://github.com/nightwatchjs/nightwatch/issues/1250#issuecomment-257644295
-                    .clickElement('@editWidgetButton')
+                    .clickElement('@editWidgetButton');
                 return this;
-            },
+            }
         }
     ]
 };

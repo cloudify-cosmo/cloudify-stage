@@ -5,12 +5,12 @@
 import SnapshotsTable from './SnapshotsTable';
 
 Stage.defineWidget({
-    id: "snapshots",
-    name: "Snapshots list",
+    id: 'snapshots',
+    name: 'Snapshots list',
     description: 'Snapshots list',
     initialWidth: 4,
     initialHeight: 16,
-    color : "blue",
+    color: 'blue',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('snapshots'),
@@ -23,28 +23,29 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
     fetchUrl: '[manager]/snapshots?_include=id,created_at,status,created_by,visibility[params]',
-    fetchParams: (widget, toolbox) => 
-        toolbox.getContext ().getValue ('onlyMyResources') ? {created_by: toolbox.getManager().getCurrentUsername()} : {},
+    fetchParams: (widget, toolbox) =>
+        toolbox.getContext().getValue('onlyMyResources')
+            ? { created_by: toolbox.getManager().getCurrentUsername() }
+            : {},
 
-    render: function(widget,data,error,toolbox) {
-
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
 
-        var selectedSnapshot = toolbox.getContext().getValue('snapshotId');
-        var formattedData = Object.assign({},data,{
-            items: _.map (data.items,(item)=>{
-                return Object.assign({},item,{
-                    created_at: Stage.Utils.Time.formatTimestamp(item.created_at), //2016-07-20 09:10:53.103579
+        const selectedSnapshot = toolbox.getContext().getValue('snapshotId');
+        const formattedData = {
+            ...data,
+            items: _.map(data.items, item => {
+                return {
+                    ...item,
+                    created_at: Stage.Utils.Time.formatTimestamp(item.created_at), // 2016-07-20 09:10:53.103579
                     isSelected: selectedSnapshot === item.id
-                })
+                };
             })
-        });
-        formattedData.total =  _.get(data, "metadata.pagination.total", 0);
+        };
+        formattedData.total = _.get(data, 'metadata.pagination.total', 0);
 
-        return (
-            <SnapshotsTable widget={widget} data={formattedData} toolbox={toolbox}/>
-        );
+        return <SnapshotsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
 });

@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Form} from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
 /**
  * SegmentAction is a component showing action bar including buttons displayed above the segments
@@ -29,21 +29,16 @@ import {Form} from 'semantic-ui-react';
  * ```
  */
 export default class SegmentAction extends Component {
-
     /**
      * propTypes
+     *
      * @property {object[]} children - primary content
      */
     static propTypes = {
-        children: PropTypes.any.isRequired,
+        children: PropTypes.any.isRequired
     };
 
     render() {
-        return (
-            <Form.Field className="actionField">
-                {this.props.children}
-            </Form.Field>
-        );
+        return <Form.Field className="actionField">{this.props.children}</Form.Field>;
     }
 }
- 

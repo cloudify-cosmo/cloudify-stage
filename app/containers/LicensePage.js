@@ -3,9 +3,9 @@
  */
 
 import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import LicensePage from '../components/LicensePage';
-import {setLicense} from '../actions/license';
-import {push} from 'connected-react-router';
+import { setLicense } from '../actions/license';
 import Consts from '../utils/consts';
 import Auth from '../utils/auth';
 import stageUtils from '../utils/stageUtils';
@@ -16,15 +16,15 @@ const mapStateToProps = (state, ownProps) => {
 
     return {
         canUploadLicense: stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, manager),
-        isProductOperational:  Auth.isProductOperational(license),
+        isProductOperational: Auth.isProductOperational(license),
         license: _.get(license, 'data', {}),
         status: _.get(license, 'status', Consts.LICENSE.EMPTY)
-    }
+    };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onLicenseChange: (license) => {
+        onLicenseChange: license => {
             dispatch(setLicense(license));
         },
         onGoToApp: () => {

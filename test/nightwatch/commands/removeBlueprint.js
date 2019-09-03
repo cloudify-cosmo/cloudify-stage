@@ -9,7 +9,7 @@ exports.command = function(blueprintName) {
 
     return this.isBlueprintExist(blueprintName, result => {
         if (result.value) {
-            var blueprintActionButtons = this.page.blueprintActionButtons();
+            const blueprintActionButtons = this.page.blueprintActionButtons();
 
             this.isWidgetPresent(blueprintActionButtons.props.widgetId, result => {
                 this.log('removing', blueprintName, 'blueprint');
@@ -30,8 +30,7 @@ exports.command = function(blueprintName) {
                     .clickElement('@okButton')
                     .waitForElementNotPresent('@okButton');
 
-                this.page.filter()
-                    .waitForBlueprintNotPresent(blueprintName);
+                this.page.filter().waitForBlueprintNotPresent(blueprintName);
             });
         } else {
             this.log('not removing', blueprintName, "blueprint, it doesn't exist");

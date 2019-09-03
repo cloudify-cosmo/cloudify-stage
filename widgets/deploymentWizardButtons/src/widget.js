@@ -32,23 +32,35 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     initialConfiguration: [
-        {id: 'showHelloWorldWizardButton', name: 'Show Hello World Wizard button',
+        {
+            id: 'showHelloWorldWizardButton',
+            name: 'Show Hello World Wizard button',
             default: configurationDefaults.showHelloWorldWizardButton,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-        {id: 'helloWorldWizardButtonLabel', name: 'Hello World Wizard button label',
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'helloWorldWizardButtonLabel',
+            name: 'Hello World Wizard button label',
             default: configurationDefaults.helloWorldWizardButtonLabel,
-            type: Stage.Basic.GenericField.STRING_TYPE},
-        {id: 'showDeploymentWizardButton', name: 'Show Deployment Wizard button',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
+            id: 'showDeploymentWizardButton',
+            name: 'Show Deployment Wizard button',
             default: configurationDefaults.showDeploymentWizardButton,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-        {id: 'deploymentWizardButtonLabel', name: 'Deployment Wizard button label',
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'deploymentWizardButtonLabel',
+            name: 'Deployment Wizard button label',
             default: configurationDefaults.deploymentWizardButtonLabel,
-            type: Stage.Basic.GenericField.STRING_TYPE}
+            type: Stage.Basic.GenericField.STRING_TYPE
+        }
     ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
 
-    render: function(widget, data, error, toolbox) {
-        let {Divider} = Stage.Basic;
+    render(widget, data, error, toolbox) {
+        const { Divider } = Stage.Basic;
 
         const helloWorldWizardSteps = [
             InfrastructureStep,
@@ -74,26 +86,29 @@ Stage.defineWidget({
         } = widget.configuration;
 
         return (
-            <React.Fragment>
-            {
-                showHelloWorldWizardButton &&
-                <WizardButton color='red' icon='globe' name={helloWorldWizardButtonLabel}
-                              wizardTitle='Hello World Wizard'
-                              steps={helloWorldWizardSteps} toolbox={toolbox} />
-            }
-            {
-                showHelloWorldWizardButton && showDeploymentWizardButton &&
-                <Divider hidden />
-            }
-            {
-                showDeploymentWizardButton &&
-                <WizardButton color='teal' icon='wizard' name={deploymentWizardButtonLabel}
-                              wizardTitle='Deployment Wizard'
-                              steps={deploymentWizardSteps}
-                              toolbox={toolbox} />
-            }
-            </React.Fragment>
+            <>
+                {showHelloWorldWizardButton && (
+                    <WizardButton
+                        color="red"
+                        icon="globe"
+                        name={helloWorldWizardButtonLabel}
+                        wizardTitle="Hello World Wizard"
+                        steps={helloWorldWizardSteps}
+                        toolbox={toolbox}
+                    />
+                )}
+                {showHelloWorldWizardButton && showDeploymentWizardButton && <Divider hidden />}
+                {showDeploymentWizardButton && (
+                    <WizardButton
+                        color="teal"
+                        icon="wizard"
+                        name={deploymentWizardButtonLabel}
+                        wizardTitle="Deployment Wizard"
+                        steps={deploymentWizardSteps}
+                        toolbox={toolbox}
+                    />
+                )}
+            </>
         );
     }
-
 });

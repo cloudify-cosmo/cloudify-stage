@@ -2,17 +2,15 @@
  * Created by jakubniezgoda on 26/02/2018.
  */
 
-import { connect } from 'react-redux'
-import Help from '../components/Help'
+import { connect } from 'react-redux';
+import Help from '../components/Help';
 
 const mapStateToProps = (state, ownProps) => {
-    return {
-    };
+    return {};
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-    }
+    return {};
 };
 
 export default connect(

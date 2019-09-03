@@ -3,18 +3,13 @@
  */
 
 export default class ResourceAction extends React.Component {
-
     static propTypes = {
         children: PropTypes.any
     };
 
     render() {
-        let action = this.props.children;
+        const action = this.props.children;
 
-        return (
-            <div>
-                {action}
-            </div>
-        );
+        return <div>{action}</div>;
     }
 }

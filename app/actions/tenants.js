@@ -4,16 +4,16 @@
 
 import * as types from './types';
 import Manager from '../utils/Manager';
-import {setAppLoading} from './app';
-import {setEditMode} from './config';
-import {clearContext} from './context';
-import {reloadUserAppData} from './userApp';
-import {loadTours} from './tours';
+import { setAppLoading } from './app';
+import { setEditMode } from './config';
+import { clearContext } from './context';
+import { reloadUserAppData } from './userApp';
+import { loadTours } from './tours';
 
 function requestTenants() {
     return {
         type: types.REQ_TENANTS
-    }
+    };
 }
 
 function recieveTenants(tenants) {
@@ -21,7 +21,7 @@ function recieveTenants(tenants) {
         type: types.RES_TENANTS,
         tenants,
         receivedAt: Date.now()
-    }
+    };
 }
 
 function errorTenants(err) {
@@ -29,33 +29,34 @@ function errorTenants(err) {
         type: types.ERR_TENANTS,
         error: err,
         receivedAt: Date.now()
-    }
+    };
 }
 
-export function getTenants (manager) {
-    var managerAccessor = new Manager(manager);
+export function getTenants(manager) {
+    const managerAccessor = new Manager(manager);
     return function(dispatch) {
-
         dispatch(requestTenants());
-        return managerAccessor.doGet('/tenants',{_include:'name', _get_all_results: true})
-            .then((tenants)=>{
+        return managerAccessor
+            .doGet('/tenants', { _include: 'name', _get_all_results: true })
+            .then(tenants => {
                 dispatch(recieveTenants(tenants));
-            }).catch((err)=>{
+            })
+            .catch(err => {
                 console.error(err);
                 dispatch(errorTenants(err.message));
                 return Promise.reject(err);
             });
-    }
+    };
 }
 
-export function selectTenant (tenantName) {
+export function selectTenant(tenantName) {
     return {
         type: types.SELECT_TENANT,
         tenant: tenantName
-    }
+    };
 }
 
-export function changeTenant (tenantName) {
+export function changeTenant(tenantName) {
     return function(dispatch) {
         dispatch(setAppLoading(true));
         dispatch(setEditMode(false));
@@ -63,5 +64,5 @@ export function changeTenant (tenantName) {
         dispatch(selectTenant(tenantName));
         dispatch(reloadUserAppData());
         dispatch(loadTours());
-    }
+    };
 }

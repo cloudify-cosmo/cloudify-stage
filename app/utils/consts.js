@@ -21,13 +21,13 @@ export default {
 
     EDITION: {
         PREMIUM: 'premium',
-        COMMUNITY: 'community',
+        COMMUNITY: 'community'
     },
 
     LICENSE: {
         EMPTY: 'no_license',
         EXPIRED: 'expired_license',
-        ACTIVE: 'active_license',
+        ACTIVE: 'active_license'
     },
     NO_LICENSE_ERROR_CODE: 'missing_cloudify_license',
     EXPIRED_LICENSE_ERROR_CODE: 'expired_cloudify_license',
@@ -47,10 +47,10 @@ export default {
         LICENSE_UPLOAD: 'license_upload'
     },
     visibility: {
-        PRIVATE: {name: 'private', icon: 'lock', color: 'red', title: 'Private resource'},
-        TENANT: {name: 'tenant', icon: 'user', color: 'green', title: 'Tenant resource'},
-        GLOBAL: {name: 'global', icon: 'globe', color: 'blue', title: 'Global resource'},
-        UNKNOWN: {name: 'unknown', icon: 'question', color: 'grey', title: 'Unknown resource visibility'},
+        PRIVATE: { name: 'private', icon: 'lock', color: 'red', title: 'Private resource' },
+        TENANT: { name: 'tenant', icon: 'user', color: 'green', title: 'Tenant resource' },
+        GLOBAL: { name: 'global', icon: 'globe', color: 'blue', title: 'Global resource' },
+        UNKNOWN: { name: 'unknown', icon: 'question', color: 'grey', title: 'Unknown resource visibility' }
     },
     MANAGER_RUNNING: 'running',
     MAINTENANCE_ACTIVATING: 'activating',

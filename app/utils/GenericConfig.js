@@ -2,7 +2,6 @@
  * Created by jakub.niezgoda on 05/02/2018.
  */
 
-
 import GenericField from '../components/basic/form/GenericField';
 import Pagination from '../components/basic/pagination/Pagination';
 
@@ -15,7 +14,7 @@ export default class GenericConfig {
             placeHolder: 'Enter time interval in seconds',
             description: 'Data of the widget will be refreshed per provided interval time in seconds',
             type: GenericField.NUMBER_TYPE
-        }
+        };
     };
 
     static PAGE_SIZE_CONFIG = (pageSize = Pagination.PAGE_SIZE_LIST(5)[0]) => {
@@ -23,23 +22,23 @@ export default class GenericConfig {
             id: 'pageSize',
             default: pageSize,
             hidden: true
-        }
+        };
     };
 
-    static SORT_COLUMN_CONFIG = (sortColumn) => {
+    static SORT_COLUMN_CONFIG = sortColumn => {
         return {
             id: 'sortColumn',
             default: sortColumn,
             hidden: true
-        }
+        };
     };
 
-    static SORT_ASCENDING_CONFIG = (sortAscending) => {
+    static SORT_ASCENDING_CONFIG = sortAscending => {
         return {
             id: 'sortAscending',
             default: sortAscending,
             hidden: true
-        }
+        };
     };
 
     static get CATEGORY() {
@@ -64,7 +63,7 @@ export default class GenericConfig {
         };
     }
 
-    static WIDGET_PERMISSION = (widgetId) => {
-        return 'widget_' + widgetId
-    }
+    static WIDGET_PERMISSION = widgetId => {
+        return `widget_${widgetId}`;
+    };
 }

@@ -4,6 +4,10 @@
 
 import React from 'react';
 
-export default function ProductName({name, className = ''}) {
-    return <span style={{color: 'white', verticalAlign: 'middle'}} className={className}>{name}</span>
+export default function ProductName({ name, className = '' }) {
+    return (
+        <span style={{ color: 'white', verticalAlign: 'middle' }} className={className}>
+            {name}
+        </span>
+    );
 }

@@ -13,12 +13,11 @@ export default class LinkToLogin extends Component {
         searchQuery: PropTypes.string.isRequired
     };
 
-    render () {
-        return (
-            this.props.portalUrl ?
-                <a href={this.props.portalUrl}>Back to apps</a>
-            :
-                <Link to={{pathname: Consts.LOGIN_PAGE_PATH, search: this.props.searchQuery}}>Back to login</Link>
-        )
+    render() {
+        return this.props.portalUrl ? (
+            <a href={this.props.portalUrl}>Back to apps</a>
+        ) : (
+            <Link to={{ pathname: Consts.LOGIN_PAGE_PATH, search: this.props.searchQuery }}>Back to login</Link>
+        );
     }
 }

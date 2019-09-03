@@ -16,7 +16,7 @@ Stage.defineWidget({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('tenants'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
-    
+
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(30),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
@@ -24,28 +24,22 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
-    render: function(widget, data, error, toolbox) {
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
 
-        var selectedTenant = toolbox.getContext().getValue('tenantName');
+        const selectedTenant = toolbox.getContext().getValue('tenantName');
 
         let formattedData = data;
-        formattedData = Object.assign({}, formattedData, {
-            items: _.map (formattedData.items, (item) => {
-                return Object.assign({}, item, {
-                    groups: item.groups,
-                    users: item.users,
-                    isSelected: item.name === selectedTenant
-                })
+        formattedData = {
+            ...formattedData,
+            items: _.map(formattedData.items, item => {
+                return { ...item, groups: item.groups, users: item.users, isSelected: item.name === selectedTenant };
             }),
-            total : _.get(data, 'metadata.pagination.total', 0)
-        });
+            total: _.get(data, 'metadata.pagination.total', 0)
+        };
 
-        return (
-            <TenantsTable widget={widget} data={formattedData} toolbox={toolbox}/>
-        );
-
+        return <TenantsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
 });

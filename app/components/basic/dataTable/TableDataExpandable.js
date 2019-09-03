@@ -14,7 +14,6 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
  * `Stage.Basic.DataTable.DataExpandable`
  */
 export default class TableDataExpandable extends Component {
-
     /**
      * @property {object[]} children - expandable row content
      * @property {string} [className] - name of the style class to be added
@@ -37,10 +36,11 @@ export default class TableDataExpandable extends Component {
                     <TransitionGroup>
                         <CSSTransition
                             classNames="dataExpandable"
-                            appear={true}
-                            enter={true}
-                            timeout={{ enter: 500, exit: 500}}
-                            exit={false}>
+                            appear
+                            enter
+                            timeout={{ enter: 500, exit: 500 }}
+                            exit={false}
+                        >
                             {this.props.children}
                         </CSSTransition>
                     </TransitionGroup>
@@ -49,4 +49,3 @@ export default class TableDataExpandable extends Component {
         );
     }
 }
- 

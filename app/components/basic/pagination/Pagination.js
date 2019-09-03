@@ -8,14 +8,13 @@ import React, { Component } from 'react';
 import PaginationInfo from './PaginationInfo';
 import TotalSizePaginator from './TotalSizePaginator';
 import FetchSizePaginator from './FetchSizePaginator';
-import {Icon, Message, Popup} from '../index';
+import { Icon, Message, Popup } from '../index';
 
 export default class Pagination extends Component {
-
     static PAGE_SIZE_LIST = PaginationInfo.pageSizes;
 
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             pageSize: props.pageSize,
@@ -42,8 +41,10 @@ export default class Pagination extends Component {
         pageSize: Pagination.PAGE_SIZE_LIST(5)[0]
     };
 
-    _changePageSize(size){
-        const minPageSize = 1, maxPageSize = 500, popupShowTimeout = 3000;
+    _changePageSize(size) {
+        const minPageSize = 1;
+        const maxPageSize = 500;
+        const popupShowTimeout = 3000;
         let pageSize = parseInt(size);
         let showWarningPopup = false;
 
@@ -52,33 +53,33 @@ export default class Pagination extends Component {
             showWarningPopup = true;
         }
 
-        this.setState({pageSize, currentPage: 1, showWarningPopup}, () => {
+        this.setState({ pageSize, currentPage: 1, showWarningPopup }, () => {
             if (showWarningPopup) {
-                setTimeout(() => this.setState({showWarningPopup: false}), popupShowTimeout);
+                setTimeout(() => this.setState({ showWarningPopup: false }), popupShowTimeout);
             }
             return this.props.fetchData();
         });
     }
 
-    _changePage(page, pageSize){
-        this.setState({currentPage: page, pageSize: pageSize || this.state.pageSize}, () => {
+    _changePage(page, pageSize) {
+        this.setState({ currentPage: page, pageSize: pageSize || this.state.pageSize }, () => {
             this.props.fetchData();
         });
     }
 
-    reset(callback){
-        this.setState({currentPage: 1}, callback);
+    reset(callback) {
+        this.setState({ currentPage: 1 }, callback);
     }
 
     componentDidUpdate(prevProps) {
-        let changedProps = {};
+        const changedProps = {};
 
         if (prevProps.pageSize !== this.props.pageSize) {
             changedProps.pageSize = this.props.pageSize;
         }
 
         if (this.props.totalSize >= 0 && this.state.currentPage !== 1) {
-            let pageCount = Math.ceil(this.props.totalSize / this.props.pageSize);
+            const pageCount = Math.ceil(this.props.totalSize / this.props.pageSize);
             if (this.state.currentPage > pageCount) {
                 changedProps.currentPage = 1;
             }
@@ -94,36 +95,49 @@ export default class Pagination extends Component {
             <div>
                 {this.props.children}
 
-                { (this.props.totalSize > Pagination.PAGE_SIZE_LIST(this.props.sizeMultiplier)[0] || this.props.fetchSize > 0 || this.state.currentPage > 1) &&
+                {(this.props.totalSize > Pagination.PAGE_SIZE_LIST(this.props.sizeMultiplier)[0] ||
+                    this.props.fetchSize > 0 ||
+                    this.state.currentPage > 1) && (
                     <div className="ui two column grid gridPagination">
                         <div className="column">
-                            <Popup open={this.state.showWarningPopup} wide='very'>
+                            <Popup open={this.state.showWarningPopup} wide="very">
                                 <Popup.Trigger>
-                                    <PaginationInfo currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                                    totalSize={this.props.totalSize} fetchSize={this.props.fetchSize}
-                                                    onPageSizeChange={this._changePageSize.bind(this)} sizeMultiplier={this.props.sizeMultiplier}/>
+                                    <PaginationInfo
+                                        currentPage={this.state.currentPage}
+                                        pageSize={this.state.pageSize}
+                                        totalSize={this.props.totalSize}
+                                        fetchSize={this.props.fetchSize}
+                                        onPageSizeChange={this._changePageSize.bind(this)}
+                                        sizeMultiplier={this.props.sizeMultiplier}
+                                    />
                                 </Popup.Trigger>
                                 <Popup.Content>
                                     <Message warning>
-                                        <Icon name='warning sign' />
+                                        <Icon name="warning sign" />
                                         Only integer values between 1 and 500 are allowed.
                                     </Message>
                                 </Popup.Content>
                             </Popup>
-
                         </div>
                         <div className="right aligned column">
-                            {
-                                this.props.totalSize > 0 ?
-                                <TotalSizePaginator currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                                    totalSize={this.props.totalSize} onPageChange={this._changePage.bind(this)}/>
-                                :
-                                <FetchSizePaginator currentPage={this.state.currentPage} pageSize={this.state.pageSize}
-                                                    fetchSize={this.props.fetchSize} onPageChange={this._changePage.bind(this)}/>
-                            }
+                            {this.props.totalSize > 0 ? (
+                                <TotalSizePaginator
+                                    currentPage={this.state.currentPage}
+                                    pageSize={this.state.pageSize}
+                                    totalSize={this.props.totalSize}
+                                    onPageChange={this._changePage.bind(this)}
+                                />
+                            ) : (
+                                <FetchSizePaginator
+                                    currentPage={this.state.currentPage}
+                                    pageSize={this.state.pageSize}
+                                    fetchSize={this.props.fetchSize}
+                                    onPageChange={this._changePage.bind(this)}
+                                />
+                            )}
                         </div>
                     </div>
-                }
+                )}
             </div>
         );
     }

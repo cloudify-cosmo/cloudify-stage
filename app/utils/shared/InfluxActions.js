@@ -8,7 +8,7 @@ export default class InfluxActions {
     }
 
     doGetMetric(deploymentId, nodeId, nodeInstanceId, metrics, from, to, timeGroup) {
-        let params = {};
+        const params = {};
         if (!_.isEmpty(from)) {
             params.from = from;
         }
@@ -19,15 +19,21 @@ export default class InfluxActions {
             params.timeGroup = timeGroup;
         }
 
-        return this.toolbox.getInternal().doGet(`/monitor/byMetric/${deploymentId || '*'}/${nodeId || '*'}/${nodeInstanceId || '*'}/${metrics || '*'}`, params);
+        return this.toolbox
+            .getInternal()
+            .doGet(
+                `/monitor/byMetric/${deploymentId || '*'}/${nodeId || '*'}/${nodeInstanceId || '*'}/${metrics || '*'}`,
+                params
+            );
     }
 
-
     doGetMetrics(deploymentId, nodeId, nodeInstanceId) {
-        return this.toolbox.getInternal().doGet(`/monitor/metrics/${deploymentId || '*'}/${nodeId || '*'}/${nodeInstanceId || '*'}`);
+        return this.toolbox
+            .getInternal()
+            .doGet(`/monitor/metrics/${deploymentId || '*'}/${nodeId || '*'}/${nodeInstanceId || '*'}`);
     }
 
     doRunQuery(qSelect, qFrom, qWhere) {
-        return this.toolbox.getInternal().doGet('/monitor/query', {qSelect, qFrom, qWhere});
+        return this.toolbox.getInternal().doGet('/monitor/query', { qSelect, qFrom, qWhere });
     }
 }

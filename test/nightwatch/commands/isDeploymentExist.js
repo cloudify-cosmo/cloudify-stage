@@ -10,13 +10,12 @@ exports.command = function(deploymentName, callback) {
                 .moveOutOfEditMode();
         }
 
-        this.page.filter()
-            .isDeploymentPresent(deploymentName, result => {
-                this.log('does deployment', deploymentName, 'exist:', result.value)
+        this.page.filter().isDeploymentPresent(deploymentName, result => {
+            this.log('does deployment', deploymentName, 'exist:', result.value);
 
-                if (callback) {
-                    callback(result);
-                }
-            })
+            if (callback) {
+                callback(result);
+            }
+        });
     });
 };

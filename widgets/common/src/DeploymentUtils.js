@@ -5,7 +5,7 @@
 class DeploymentUtils {
     static filterWorkflows(workflows) {
         const UPDATE_WORKFLOW = 'update';
-        return _.filter(workflows, (workflow) => !_.isEqual(workflow.name, UPDATE_WORKFLOW));
+        return _.filter(workflows, workflow => !_.isEqual(workflow.name, UPDATE_WORKFLOW));
     }
 }
 

@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import {Popup,  Button, Header} from 'semantic-ui-react'
+import { Popup, Button, Header } from 'semantic-ui-react';
 
 export default class PopupConfirm extends Component {
-
     constructor(props, context) {
         super(props, context);
 
@@ -28,11 +27,11 @@ export default class PopupConfirm extends Component {
     };
 
     openPopup() {
-        this.setState({canConfirm: this.props.onCanConfirm(), showPopup: true});
+        this.setState({ canConfirm: this.props.onCanConfirm(), showPopup: true });
     }
 
     closePopup() {
-        this.setState({showPopup: false})
+        this.setState({ showPopup: false });
     }
 
     handleCancel() {
@@ -47,20 +46,27 @@ export default class PopupConfirm extends Component {
 
     render() {
         return (
-            <Popup trigger={this.props.trigger} on="click" wide="very" hideOnScroll open={this.state.showPopup}
-                   onOpen={this.openPopup.bind(this)} onClose={this.closePopup.bind(this)}>
+            <Popup
+                trigger={this.props.trigger}
+                on="click"
+                wide="very"
+                hideOnScroll
+                open={this.state.showPopup}
+                onOpen={this.openPopup.bind(this)}
+                onClose={this.closePopup.bind(this)}
+            >
                 <Header>{this.state.canConfirm ? this.state.canConfirm : this.props.content}</Header>
 
-                {this.state.canConfirm ?
+                {this.state.canConfirm ? (
                     <div className="rightFloated">
-                        <Button icon="checkmark" content="Ok" color="green" onClick={this.handleCancel.bind(this)}/>
+                        <Button icon="checkmark" content="Ok" color="green" onClick={this.handleCancel.bind(this)} />
                     </div>
-                    :
+                ) : (
                     <div className="rightFloated">
-                        <Button icon="remove" content="Cancel" basic onClick={this.handleCancel.bind(this)}/>
-                        <Button icon="checkmark" content="Ok" color="green" onClick={this.handleConfirm.bind(this)}/>
+                        <Button icon="remove" content="Cancel" basic onClick={this.handleCancel.bind(this)} />
+                        <Button icon="checkmark" content="Ok" color="green" onClick={this.handleConfirm.bind(this)} />
                     </div>
-                }
+                )}
             </Popup>
         );
     }

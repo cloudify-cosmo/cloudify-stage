@@ -4,12 +4,11 @@
 
 module.exports = {
     before(client) {
-        client.login()
-            .prepareTestWidget(client.page.plugins().props.widgetId);
+        client.login().prepareTestWidget(client.page.plugins().props.widgetId);
     },
 
-    'upload from url': function (client) {
-        var page = client.page.plugins();
+    'upload from url': function(client) {
+        const page = client.page.plugins();
         page.openUploadModal()
             .fillWagonUrl(page.props.testWagonUrl)
             .fillYamlUrl(page.props.testYamlUrl)
@@ -20,8 +19,6 @@ module.exports = {
     },
 
     after(client) {
-        client
-            .removeLastPage()
-            .end();
+        client.removeLastPage().end();
     }
 };

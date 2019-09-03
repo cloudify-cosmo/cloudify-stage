@@ -16,7 +16,7 @@ Stage.defineWidget({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('secrets'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
-    
+
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(30),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
@@ -24,25 +24,24 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
-    render: function(widget, data, error, toolbox) {
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
 
         let formattedData = data;
-        formattedData = Object.assign({}, formattedData, {
-            items: _.map (formattedData.items, (item) => {
-                return Object.assign({}, item, {
+        formattedData = {
+            ...formattedData,
+            items: _.map(formattedData.items, item => {
+                return {
+                    ...item,
                     created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
                     updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at)
-                })
+                };
             }),
-            total : _.get(data, 'metadata.pagination.total', 0)
-        });
+            total: _.get(data, 'metadata.pagination.total', 0)
+        };
 
-        return (
-            <SecretsTable widget={widget} data={formattedData} toolbox={toolbox}/>
-        );
-
+        return <SecretsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
 });

@@ -3,25 +3,24 @@
  */
 
 export default class extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             open: false
-        }
+        };
     }
 
     _showModal() {
-        this.setState({open: true});
+        this.setState({ open: true });
     }
 
     _hideModal() {
-        this.setState({open: false});
+        this.setState({ open: false });
     }
 
     render() {
-        let {MaintenanceModeActivationButton, MaintenanceModeModal} = Stage.Basic;
+        const { MaintenanceModeActivationButton, MaintenanceModeModal } = Stage.Basic;
 
         return (
             <div>

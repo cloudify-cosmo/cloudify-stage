@@ -31,20 +31,20 @@ import Popup from '../Popup';
  *
  */
 export default class EdiTable extends Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = EdiTable.initialState(props);
     }
 
     /**
      * propTypes
+     *
      * @property {string} name name of the table
      * @property {number} rows number of rows in table
      * @property {object[]} columns rows configuration (see usage example for format details)
      * @property {object} [value] serialized value of the whole table
-     * @property {function} [onChange=()=>{}] function called on input value change
+     * @property {Function} [onChange=()=>{}] function called on input value change
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
@@ -56,48 +56,53 @@ export default class EdiTable extends Component {
 
     static defaultProps = {
         value: {},
-        onChange: ()=>{}
+        onChange: () => {}
     };
 
-    static initialState = (props) => {
-        var fields = [];
+    static initialState = props => {
+        const fields = [];
 
         for (let rowIndex = 0; rowIndex < props.rows; rowIndex++) {
             fields[rowIndex] = {};
             for (let columnIndex = 0; columnIndex < props.columns.length; columnIndex++) {
-                let columnName = props.columns[columnIndex].name;
-                fields[rowIndex][columnName] = props.value && props.value[rowIndex]
-                                               ? props.value[rowIndex][columnName]
-                                               : '';
+                const columnName = props.columns[columnIndex].name;
+                fields[rowIndex][columnName] =
+                    props.value && props.value[rowIndex] ? props.value[rowIndex][columnName] : '';
             }
         }
 
-        return {fields};
+        return { fields };
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return JSON.stringify(this.props) !== JSON.stringify(nextProps)
-            || JSON.stringify(this.state) !== JSON.stringify(nextState);
+        return (
+            JSON.stringify(this.props) !== JSON.stringify(nextProps) ||
+            JSON.stringify(this.state) !== JSON.stringify(nextState)
+        );
     }
 
     componentDidUpdate(prevProps) {
-        if (JSON.stringify(prevProps.value) !== JSON.stringify(this.props.value) ||
-            prevProps.rows !== this.props.rows)
-        {
+        if (
+            JSON.stringify(prevProps.value) !== JSON.stringify(this.props.value) ||
+            prevProps.rows !== this.props.rows
+        ) {
             this.setState(EdiTable.initialState(this.props));
         }
     }
 
     _handleInputChange(proxy, field) {
-        let [row,column] = _.split(field.name, '|');
-        let value = GenericField.formatValue(field.genericType, field.genericType === GenericField.BOOLEAN_TYPE ? field.checked : field.value);
+        const [row, column] = _.split(field.name, '|');
+        const value = GenericField.formatValue(
+            field.genericType,
+            field.genericType === GenericField.BOOLEAN_TYPE ? field.checked : field.value
+        );
 
         // Component state update
-        let fields = Object.assign({}, this.state.fields, {[row]: {...this.state.fields[row], [column]: value}});
-        this.setState({fields});
+        const fields = { ...this.state.fields, [row]: { ...this.state.fields[row], [column]: value } };
+        this.setState({ fields });
 
         // Serialize table data
-        let ediTableField = {
+        const ediTableField = {
             name: this.props.name,
             genericType: GenericField.EDITABLE_TABLE_TYPE,
             value: fields
@@ -112,45 +117,52 @@ export default class EdiTable extends Component {
             <Table celled>
                 <Table.Header>
                     <Table.Row>
-                        {(this.props.rows > 1) &&
-                        <Table.HeaderCell key='-1' textAlign="center">No.</Table.HeaderCell>}
-                        {
-                            _.map(this.props.columns, (column, index) =>
-                                <Table.HeaderCell key={index} textAlign="center">
-                                    <label>{column.label}&nbsp;
-                                        {
-                                            column.description &&
-                                            <Popup>
-                                                <Popup.Trigger><Icon name="help circle"/></Popup.Trigger>
-                                                {column.description}
-                                            </Popup>
-                                        }
-                                    </label>
-                                </Table.HeaderCell>
-                            )
-                        }
+                        {this.props.rows > 1 && (
+                            <Table.HeaderCell key="-1" textAlign="center">
+                                No.
+                            </Table.HeaderCell>
+                        )}
+                        {_.map(this.props.columns, (column, index) => (
+                            <Table.HeaderCell key={index} textAlign="center">
+                                <label>
+                                    {column.label}&nbsp;
+                                    {column.description && (
+                                        <Popup>
+                                            <Popup.Trigger>
+                                                <Icon name="help circle" />
+                                            </Popup.Trigger>
+                                            {column.description}
+                                        </Popup>
+                                    )}
+                                </label>
+                            </Table.HeaderCell>
+                        ))}
                     </Table.Row>
                 </Table.Header>
 
                 <Table.Body>
-                    {
-                        _.times(this.props.rows, (index) =>
-                            <Table.Row key={index}>
-                                {(this.props.rows > 1) &&
-                                <Table.Cell key={`${index}|no`} textAlign="center">{index + 1}</Table.Cell>}
-                                {
-                                    _.map(this.props.columns, (column) =>
-                                        <Table.Cell key={`${index}|${column.name}`}>
-                                            <GenericField {...column} type={column.type} description='' label=''
-                                                          name={`${index}|${column.name}`}
-                                                          value={this.state.fields[index][column.name]}
-                                                          onChange={this._handleInputChange.bind(this)} />
-                                        </Table.Cell>
-                                    )
-                                }
-                            </Table.Row>
-                        )
-                    }
+                    {_.times(this.props.rows, index => (
+                        <Table.Row key={index}>
+                            {this.props.rows > 1 && (
+                                <Table.Cell key={`${index}|no`} textAlign="center">
+                                    {index + 1}
+                                </Table.Cell>
+                            )}
+                            {_.map(this.props.columns, column => (
+                                <Table.Cell key={`${index}|${column.name}`}>
+                                    <GenericField
+                                        {...column}
+                                        type={column.type}
+                                        description=""
+                                        label=""
+                                        name={`${index}|${column.name}`}
+                                        value={this.state.fields[index][column.name]}
+                                        onChange={this._handleInputChange.bind(this)}
+                                    />
+                                </Table.Cell>
+                            ))}
+                        </Table.Row>
+                    ))}
                 </Table.Body>
             </Table>
         );

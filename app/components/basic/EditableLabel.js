@@ -30,11 +30,10 @@ import React, { Component } from 'react';
  * <EditableLabel placeholder="Enter your text here..." />
  *
  * ```
-*/
+ */
 export default class EditableLabel extends Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = EditableLabel.initialState(props);
     }
@@ -44,7 +43,7 @@ export default class EditableLabel extends Component {
      * @property {string} [placeholder=''] Label's value if text {@link EditableLabel.text} value is not set
      * @property {string} [className=''] - Name of the style class to be added
      * @property {boolean} [isEditEnable=true] If 'true' make the label editable
-     * @property {function} [onEditDone=()=>{}] Function to call when value has changed (returns label's text as attribute)
+     * @property {Function} [onEditDone=()=>{}] Function to call when value has changed (returns label's text as attribute)
      */
     static propTypes = {
         text: PropTypes.string,
@@ -59,64 +58,71 @@ export default class EditableLabel extends Component {
         placeholder: '',
         className: '',
         isEditEnable: true,
-        onEditDone : () => {}
+        onEditDone: () => {}
     };
 
-    static initialState = (props) => {
+    static initialState = props => {
         return {
             editing: false,
             text: props.text
-        }
+        };
     };
 
     labelClicked() {
         if (this.props.isEditEnable) {
             this.setState({ editing: true });
         }
-    };
+    }
 
     textChanged(event) {
-        this.setState({text: event.target.value});
-    };
+        this.setState({ text: event.target.value });
+    }
 
     inputLostFocus() {
         if (this.props.isEditEnable) {
             this.props.onEditDone(this.state.text);
-            this.setState({editing: false});
+            this.setState({ editing: false });
         }
-    };
+    }
 
     keyPressed(event) {
         if (event.key === 'Enter') {
             this.inputLostFocus();
         }
-    };
+    }
 
     render() {
-        let className = `${this.props.className} ${_.isEmpty(this.props.text) ? 'editPlaceholder' : ''}`;
+        const className = `${this.props.className} ${_.isEmpty(this.props.text) ? 'editPlaceholder' : ''}`;
 
         if (this.state.editing) {
             return (
                 <input
-                    type='text' value={this.state.text} autoFocus
-                    onClick={(event) => {event.stopPropagation(); this.labelClicked();}} onChange={this.textChanged.bind(this)}
-                    onBlur={this.inputLostFocus.bind(this)} onKeyPress={this.keyPressed.bind(this)}
+                    type="text"
+                    value={this.state.text}
+                    autoFocus
+                    onClick={event => {
+                        event.stopPropagation();
+                        this.labelClicked();
+                    }}
+                    onChange={this.textChanged.bind(this)}
+                    onBlur={this.inputLostFocus.bind(this)}
+                    onKeyPress={this.keyPressed.bind(this)}
                     className={className}
                 />
             );
-        } else {
-            const text
-                = this.props.isEditEnable
-                ? this.props.text || this.props.placeholder
-                : this.props.text;
-
-            return (
-                <label
-                    onClick={(event) => {event.stopPropagation(); this.labelClicked();}}
-                    className={className}>
-                    {text}
-                </label>
-            );
         }
+        const text = this.props.isEditEnable ? this.props.text || this.props.placeholder : this.props.text;
+
+        return (
+            <label
+                onClick={event => {
+                    event.stopPropagation();
+                    this.labelClicked();
+                }}
+                className={className}
+            >
+                {text}
+            </label>
+        );
     }
 }

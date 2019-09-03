@@ -5,5 +5,9 @@
 import React from 'react';
 
 export default function EulaLink() {
-    return <a href='https://cloudify.co/license' target='_blank'>End User License Agreement</a>;
+    return (
+        <a href="https://cloudify.co/license" target="_blank">
+            End User License Agreement
+        </a>
+    );
 }

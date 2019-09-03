@@ -2,7 +2,6 @@
  * Created by kinneretzin on 9/5/2017.
  */
 
-
 import * as types from '../actions/types';
 
 const drillDownContext = (state = [], action) => {
@@ -17,6 +16,5 @@ const drillDownContext = (state = [], action) => {
             return state;
     }
 };
-
 
 export default drillDownContext;

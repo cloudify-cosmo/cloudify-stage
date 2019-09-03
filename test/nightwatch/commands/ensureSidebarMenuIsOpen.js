@@ -8,8 +8,7 @@ exports.command = function() {
             return this.log('Opening sidebar menu.')
                 .clickElement('i.sidebar-button')
                 .waitForElementVisible('.sidebarContainer div.sidebar.menu.open');
-        } else {
-            return this.log('Sidebar menu is already open.');
         }
+        return this.log('Sidebar menu is already open.');
     });
 };

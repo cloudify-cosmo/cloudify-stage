@@ -3,7 +3,6 @@
  */
 
 module.exports = {
-
     sections: {
         buttons: {
             selector: '.deploymentActionButtonsWidget',

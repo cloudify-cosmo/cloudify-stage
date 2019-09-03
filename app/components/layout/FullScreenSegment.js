@@ -3,8 +3,8 @@
  */
 
 import React from 'react';
-import {Segment} from '../basic';
+import { Segment } from '../basic';
 
-export default function FullScreenSegment({children}) {
-    return <Segment className='logoPage'>{children}</Segment>;
+export default function FullScreenSegment({ children }) {
+    return <Segment className="logoPage">{children}</Segment>;
 }

@@ -4,7 +4,13 @@
 
 import React from 'react';
 
-export default function LicenseEdition({edition, className = ''}) {
-    return !_.isEmpty(edition) &&
-        <span style={{color: 'white', verticalAlign: 'middle'}} className={className}> {edition}</span>
+export default function LicenseEdition({ edition, className = '' }) {
+    return (
+        !_.isEmpty(edition) && (
+            <span style={{ color: 'white', verticalAlign: 'middle' }} className={className}>
+                {' '}
+                {edition}
+            </span>
+        )
+    );
 }

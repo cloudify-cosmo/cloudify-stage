@@ -4,8 +4,8 @@
 
 import 'cloudify-blueprint-topology';
 
-let BlueprintTopology = cloudifyTopology.Topology;
-let DataProcessingService = cloudifyTopology.DataProcessingService;
+const BlueprintTopology = cloudifyTopology.Topology;
+const { DataProcessingService } = cloudifyTopology;
 
 export default class Topology extends React.Component {
     constructor(props, context) {
@@ -21,9 +21,11 @@ export default class Topology extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget, nextProps.widget)
-            || !_.isEqual(this.state, nextState)
-            || !_.isEqual(this.props.data, nextProps.data);
+        return (
+            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(this.state, nextState) ||
+            !_.isEqual(this.props.data, nextProps.data)
+        );
     }
 
     componentDidMount() {
@@ -50,21 +52,21 @@ export default class Topology extends React.Component {
             isLoading: true,
             selector: '#topologyContainer',
             autoScale: true,
-            showToolbar:_.get(this.props.data,'topologyConfig.showToolbar',true),
-            enableGroupClick:_.get(this.props.data,'topologyConfig.enableGroupClick',true),
-            enableNodeClick: _.get(this.props.data,'topologyConfig.enableNodeClick',true),
-            enableZoom: _.get(this.props.data,'topologyConfig.enableZoom',true),
-            enableDrag: _.get(this.props.data,'topologyConfig.enableDrag',true),
+            showToolbar: _.get(this.props.data, 'topologyConfig.showToolbar', true),
+            enableGroupClick: _.get(this.props.data, 'topologyConfig.enableGroupClick', true),
+            enableNodeClick: _.get(this.props.data, 'topologyConfig.enableNodeClick', true),
+            enableZoom: _.get(this.props.data, 'topologyConfig.enableZoom', true),
+            enableDrag: _.get(this.props.data, 'topologyConfig.enableDrag', true),
             enableDrop: true,
             enableDragEdit: false,
             enableDragToSelect: true,
-            autoLayout:true,
+            autoLayout: true,
             enableContextMenu: false,
-            onNodeSelected: (node)=> this._setSelectedNode(node),
-            onDataProcessed: (data)=>this._processedTopologyData = data,
-            onDeploymentNodeClick: (deploymentId)=>this.goToDeploymentPage(deploymentId),
-            onExpandClick: (deploymentId, nodeId)=>this.markDeploymentsToExpand(deploymentId, nodeId),
-            onCollapseClick: (deploymentId)=>this.collapseExpendedDeployments(deploymentId)
+            onNodeSelected: node => this._setSelectedNode(node),
+            onDataProcessed: data => (this._processedTopologyData = data),
+            onDeploymentNodeClick: deploymentId => this.goToDeploymentPage(deploymentId),
+            onExpandClick: (deploymentId, nodeId) => this.markDeploymentsToExpand(deploymentId, nodeId),
+            onCollapseClick: deploymentId => this.collapseExpendedDeployments(deploymentId)
         });
 
         this._topology.start();
@@ -75,8 +77,8 @@ export default class Topology extends React.Component {
             return null;
         }
 
-        const deploymentsData = this.props.data.deploymentsData;
-        if (_.size(deploymentsData) === 0 || !deploymentsData[0].data){
+        const { deploymentsData } = this.props.data;
+        if (_.size(deploymentsData) === 0 || !deploymentsData[0].data) {
             return null;
         }
         const topology = this.createBaseTopology(deploymentsData[0]);
@@ -85,7 +87,7 @@ export default class Topology extends React.Component {
         return topology;
     }
 
-    createBaseTopology(deploymentData){
+    createBaseTopology(deploymentData) {
         const topologyData = {
             data: deploymentData.data,
             instances: deploymentData.instances,
@@ -95,26 +97,26 @@ export default class Topology extends React.Component {
     }
 
     addExpandedTopologies(deploymentsData, currentTopology) {
-    /* Will build all the topologies of the expanded deployments
-     * of Component or SharedResource nodes.
-     */
+        /* Will build all the topologies of the expanded deployments
+         * of Component or SharedResource nodes.
+         */
         for (let i = 1; i < _.size(deploymentsData); i++) {
             const expandedDeploymentId = this.props.data.expandedDeployments[i - 1];
-            let expandedNodeData = this.findExpandedNode(currentTopology, expandedDeploymentId);
-            if (!expandedNodeData){
+            const expandedNodeData = this.findExpandedNode(currentTopology, expandedDeploymentId);
+            if (!expandedNodeData) {
                 // In the case of a parent node that contained it was collapsed already
-                let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
-                _.remove(currentExpanded, (expended)=>{
+                const currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
+                _.remove(currentExpanded, expended => {
                     return expended === expandedDeploymentId;
                 });
                 return;
             }
 
             if (deploymentsData[i].data) {
-                let expanded_topology = this.createExpandedTopology(deploymentsData[i], expandedNodeData);
-                _.each(expanded_topology.nodes, (node) =>{
+                const expanded_topology = this.createExpandedTopology(deploymentsData[i], expandedNodeData);
+                _.each(expanded_topology.nodes, node => {
                     // Formating the name to not collision on nodes from other topologies
-                    node.name = node.name + '(' + expandedNodeData.name + ')';
+                    node.name = `${node.name}(${expandedNodeData.name})`;
                 });
 
                 currentTopology.connectors.push.apply(currentTopology.connectors, expanded_topology.connectors);
@@ -125,9 +127,9 @@ export default class Topology extends React.Component {
     }
 
     findExpandedNode(currentTopology, nodeId) {
-        return _.find(currentTopology.nodes, (node) => {
+        return _.find(currentTopology.nodes, node => {
             let found = false;
-            _.each(node.templateData.deploymentSettings, (deploymentSettings) => {
+            _.each(node.templateData.deploymentSettings, deploymentSettings => {
                 // This will check if one of the node instances has that id,
                 // currently we only support one node instance for nodes that can extend.
                 if (deploymentSettings.id === nodeId) {
@@ -138,8 +140,8 @@ export default class Topology extends React.Component {
         });
     }
 
-    createExpandedTopology(deploymentData, expandedNodeData){
-        let topologyData = {
+    createExpandedTopology(deploymentData, expandedNodeData) {
+        const topologyData = {
             data: deploymentData.data,
             instances: deploymentData.instances,
             executions: deploymentData.executions
@@ -147,18 +149,21 @@ export default class Topology extends React.Component {
         return DataProcessingService.encodeExtendedTopologyFromRest(topologyData, expandedNodeData);
     }
 
-     _selectNode(nodeId) {
+    _selectNode(nodeId) {
         if (this._topology && this._processedTopologyData && this._processedTopologyData.nodes) {
             if (_.isEmpty(nodeId)) {
                 this._topology.clearSelectedNodes();
             } else {
-                let selectedNode = _.find(this._processedTopologyData.nodes, (topologyNode) => topologyNode.name === nodeId);
+                const selectedNode = _.find(
+                    this._processedTopologyData.nodes,
+                    topologyNode => topologyNode.name === nodeId
+                );
                 this._topology.setSelectNode(selectedNode);
             }
         }
     }
 
-     _setSelectedNode(selectedNode) {
+    _setSelectedNode(selectedNode) {
         if (this.props.data.deploymentId) {
             this.props.toolbox.getContext().setValue('depNodeId', selectedNode.name + this.props.data.deploymentId);
             this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
@@ -167,16 +172,14 @@ export default class Topology extends React.Component {
         }
     }
 
-
     _isNodesChanged(topologyNodes, newNodes) {
-
         // compare # of nodes
         if (topologyNodes.length !== newNodes.length) {
             return true;
         }
 
         // compare node names, and if in the same order
-        for (var i = 0; i < topologyNodes.length; i++) {
+        for (let i = 0; i < topologyNodes.length; i++) {
             if (topologyNodes[i].name !== newNodes[i].name) {
                 return true;
             }
@@ -186,28 +189,30 @@ export default class Topology extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.data.topologyConfig &&
+        if (
+            this.props.data.topologyConfig &&
             (this.props.data.topologyConfig.enableNodeClick !== prevProps.data.topologyConfig.enableNodeClick ||
-            this.props.data.topologyConfig.enableGroupClick !== prevProps.data.topologyConfig.enableGroupClick ||
-            this.props.data.topologyConfig.enableZoom !== prevProps.data.topologyConfig.enableZoom ||
-            this.props.data.topologyConfig.enableDrag !== prevProps.data.topologyConfig.enableDrag ||
-            this.props.data.topologyConfig.showToolbar !== prevProps.data.topologyConfig.showToolbar)) {
-
+                this.props.data.topologyConfig.enableGroupClick !== prevProps.data.topologyConfig.enableGroupClick ||
+                this.props.data.topologyConfig.enableZoom !== prevProps.data.topologyConfig.enableZoom ||
+                this.props.data.topologyConfig.enableDrag !== prevProps.data.topologyConfig.enableDrag ||
+                this.props.data.topologyConfig.showToolbar !== prevProps.data.topologyConfig.showToolbar)
+        ) {
             if (this._topology) {
                 this._destroyTopology();
                 this._startTopology();
             }
         }
 
-        if (this.props.data.blueprintId !== prevProps.data.blueprintId ||
-            this.props.data.deploymentId !== prevProps.data.deploymentId) {
-
+        if (
+            this.props.data.blueprintId !== prevProps.data.blueprintId ||
+            this.props.data.deploymentId !== prevProps.data.deploymentId
+        ) {
             this._topology.setLoading(true);
             this._topologyData = null;
             this.props.toolbox.refresh();
         } else {
-            var isFirstTimeLoading = this._topologyData === null;
-            var oldTopologyData = this._topologyData;
+            const isFirstTimeLoading = this._topologyData === null;
+            const oldTopologyData = this._topologyData;
             this._topologyData = this.buildTopologyData();
 
             if (isFirstTimeLoading || this._isNodesChanged(oldTopologyData.nodes, this._topologyData.nodes)) {
@@ -219,21 +224,21 @@ export default class Topology extends React.Component {
         }
     }
 
-    _releaseScroller () {
+    _releaseScroller() {
         this.isMouseOver = true;
         $(this.glassRef.current).addClass('unlocked');
     }
 
     _timerReleaseScroller() {
         this.isMouseOver = true;
-        setTimeout(()=>{
+        setTimeout(() => {
             if (this.isMouseOver) {
                 this._releaseScroller();
             }
-        },3000);
+        }, 3000);
     }
 
-    _reactivateScroller () {
+    _reactivateScroller() {
         this.isMouseOver = false;
         $(this.glassRef.current).removeClass('unlocked');
     }
@@ -241,13 +246,18 @@ export default class Topology extends React.Component {
     goToDeploymentPage(nodeDeploymentId) {
         this.props.toolbox.getContext().setValue('deploymentId', nodeDeploymentId);
         this.props.toolbox.goToPage('deployments');
-        this.props.toolbox.drillDown(this.props.toolbox.getWidget(), 'deployment', {deploymentId: nodeDeploymentId}, nodeDeploymentId);
+        this.props.toolbox.drillDown(
+            this.props.toolbox.getWidget(),
+            'deployment',
+            { deploymentId: nodeDeploymentId },
+            nodeDeploymentId
+        );
     }
 
-    markDeploymentsToExpand(deploymentId){
-        let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand') || [];
+    markDeploymentsToExpand(deploymentId) {
+        const currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand') || [];
 
-        if (_.includes(currentExpanded, deploymentId)){
+        if (_.includes(currentExpanded, deploymentId)) {
             // Nothing to do
             return;
         }
@@ -257,29 +267,32 @@ export default class Topology extends React.Component {
         this.props.toolbox.refresh();
     }
 
-    collapseExpendedDeployments(deploymentId){
-        let currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
-        if (!currentExpanded){
+    collapseExpendedDeployments(deploymentId) {
+        const currentExpanded = this.props.toolbox.getContext().getValue('deploymentsToExpand');
+        if (!currentExpanded) {
             // Nothing to do
             return;
         }
-        _.remove(currentExpanded, (expanded)=>{
+        _.remove(currentExpanded, expanded => {
             return expanded === deploymentId;
         });
         this.props.toolbox.getContext().setValue('deploymentsToExpand', currentExpanded);
         this.props.toolbox.refresh();
     }
 
-    render () {
+    render() {
         return (
-            <div ref={this.topologyParentContainerRef}
-                 onClick={this._releaseScroller.bind(this)}
-                 onMouseEnter={this._timerReleaseScroller.bind(this)}
-                 onMouseLeave={this._reactivateScroller.bind(this)}>
-                <div className='scrollGlass' ref={this.glassRef}><span className='message'>Click to release scroller</span></div>
-                <div id='topologyContainer' />
+            <div
+                ref={this.topologyParentContainerRef}
+                onClick={this._releaseScroller.bind(this)}
+                onMouseEnter={this._timerReleaseScroller.bind(this)}
+                onMouseLeave={this._reactivateScroller.bind(this)}
+            >
+                <div className="scrollGlass" ref={this.glassRef}>
+                    <span className="message">Click to release scroller</span>
+                </div>
+                <div id="topologyContainer" />
             </div>
         );
-
     }
 }

@@ -3,11 +3,10 @@
  */
 
 class UploadPluginModal extends React.Component {
-
     constructor(props) {
         super(props);
 
-        this.state = {...UploadPluginModal.initialState};
+        this.state = { ...UploadPluginModal.initialState };
     }
 
     static propTypes = {
@@ -26,7 +25,6 @@ class UploadPluginModal extends React.Component {
         visibility: Stage.Common.Consts.defaultVisibility
     };
 
-
     componentDidUpdate(prevProps) {
         if (!prevProps.open && this.props.open) {
             this.setState(UploadPluginModal.initialState);
@@ -36,76 +34,89 @@ class UploadPluginModal extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.props.open, nextProps.open) || !_.isEqual(this.state, nextState);
     }
-    
 
     uploadPlugin() {
-        let wagonUrl = this.state.wagonFile ? '' : this.state.wagonUrl;
-        let yamlUrl = this.state.yamlFile ? '' : this.state.yamlUrl;
+        const wagonUrl = this.state.wagonFile ? '' : this.state.wagonUrl;
+        const yamlUrl = this.state.yamlFile ? '' : this.state.yamlUrl;
 
-        let errors = {};
+        const errors = {};
 
         if (!this.state.wagonFile) {
             if (_.isEmpty(wagonUrl)) {
-                errors['wagonUrl'] = 'Please select wagon file or provide URL to wagon file';
+                errors.wagonUrl = 'Please select wagon file or provide URL to wagon file';
             } else if (!Stage.Utils.Url.isUrl(wagonUrl)) {
-                errors['wagonUrl'] = 'Please provide valid URL for wagon file';
+                errors.wagonUrl = 'Please provide valid URL for wagon file';
             }
         }
 
         if (!this.state.yamlFile) {
             if (_.isEmpty(yamlUrl)) {
-                errors['yamlUrl'] = 'Please select YAML file or provide URL to YAML file';
+                errors.yamlUrl = 'Please select YAML file or provide URL to YAML file';
             } else if (!Stage.Utils.Url.isUrl(yamlUrl)) {
-                errors['yamlUrl'] = 'Please provide valid URL for YAML file';
+                errors.yamlUrl = 'Please provide valid URL for YAML file';
             }
         }
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors});
+            this.setState({ errors });
             return false;
         }
 
         // Disable the form
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
-        let actions = new Stage.Common.PluginActions(this.props.toolbox);
-        actions.doUpload(this.state.visibility, wagonUrl, yamlUrl, this.state.wagonFile, this.state.yamlFile).then(()=>{
-            this.setState({errors: {}, loading: false}, this.props.onHide);
-            this.props.toolbox.refresh();
-        }).catch(err=>{
-            this.setState({errors: {error: err.message}, loading: false});
-        });
+        const actions = new Stage.Common.PluginActions(this.props.toolbox);
+        actions
+            .doUpload(this.state.visibility, wagonUrl, yamlUrl, this.state.wagonFile, this.state.yamlFile)
+            .then(() => {
+                this.setState({ errors: {}, loading: false }, this.props.onHide);
+                this.props.toolbox.refresh();
+            })
+            .catch(err => {
+                this.setState({ errors: { error: err.message }, loading: false });
+            });
     }
 
     onFormFieldChange(fields) {
         this.setState(fields);
     }
-    
+
     render() {
-        let {ApproveButton, CancelButton, Icon, Modal, VisibilityField} = Stage.Basic;
-        let {UploadPluginForm} = Stage.Common;
+        const { ApproveButton, CancelButton, Icon, Modal, VisibilityField } = Stage.Basic;
+        const { UploadPluginForm } = Stage.Common;
 
         return (
             <Modal open={this.props.open} onClose={this.props.onHide}>
                 <Modal.Header>
-                    <Icon name="upload"/> Upload plugin
-                    <VisibilityField visibility={this.state.visibility} className="rightFloated"
-                                  onVisibilityChange={(visibility)=>this.setState({visibility: visibility})}/>
+                    <Icon name="upload" /> Upload plugin
+                    <VisibilityField
+                        visibility={this.state.visibility}
+                        className="rightFloated"
+                        onVisibilityChange={visibility => this.setState({ visibility })}
+                    />
                 </Modal.Header>
 
                 <Modal.Content>
-                    <UploadPluginForm wagonUrl={this.state.wagonUrl}
-                                      wagonFile={this.state.wagonFile}
-                                      yamlUrl={this.state.yamlUrl}
-                                      yamlFile={this.state.yamlFile}
-                                      errors={this.state.errors}
-                                      loading={this.state.loading}
-                                      onChange={this.onFormFieldChange.bind(this)} />
+                    <UploadPluginForm
+                        wagonUrl={this.state.wagonUrl}
+                        wagonFile={this.state.wagonFile}
+                        yamlUrl={this.state.yamlUrl}
+                        yamlFile={this.state.yamlFile}
+                        errors={this.state.errors}
+                        loading={this.state.loading}
+                        onChange={this.onFormFieldChange.bind(this)}
+                    />
                 </Modal.Content>
 
                 <Modal.Actions>
                     <CancelButton onClick={this.props.onHide} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.uploadPlugin.bind(this)} disabled={this.state.loading} content="Upload" icon="upload" color="green"/>
+                    <ApproveButton
+                        onClick={this.uploadPlugin.bind(this)}
+                        disabled={this.state.loading}
+                        content="Upload"
+                        icon="upload"
+                        color="green"
+                    />
                 </Modal.Actions>
             </Modal>
         );

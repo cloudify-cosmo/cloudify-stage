@@ -6,8 +6,8 @@
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 
 export default {
-  Map,
-  TileLayer,
-  Marker,
-  Popup
-}
+    Map,
+    TileLayer,
+    Marker,
+    Popup
+};

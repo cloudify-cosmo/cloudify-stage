@@ -23,50 +23,47 @@ module.exports = {
 
     commands: [
         {
-            openHelloWorldWizard: function() {
+            openHelloWorldWizard() {
                 this.clickElement('@helloWorldWizardButton');
                 return this;
             },
 
-            openDeploymentWizard: function() {
+            openDeploymentWizard() {
                 this.clickElement('@deploymentWizardButton');
                 return this;
             },
 
-            closeWizard: function() {
+            closeWizard() {
                 this.clickElement('@closeButton')
                     .clickElement('div.confirmModal button.primary.button')
                     .waitForElementNotPresent('@wizardModal');
                 return this;
             },
 
-            goToNextStep: function(expectedNextStep) {
+            goToNextStep(expectedNextStep) {
                 this.clickElement('@nextButton')
                     .waitForElementVisible(this.section[expectedNextStep].selector)
                     .waitForElementNotPresent('@loadingBlock');
                 return this;
             },
 
-            goToPreviousStep: function (expectedPreviousStep) {
+            goToPreviousStep(expectedPreviousStep) {
                 this.clickElement('@backButton')
                     .waitForElementVisible(this.section[expectedPreviousStep].selector)
                     .waitForElementNotPresent('@loadingBlock');
                 return this;
             },
 
-            clickInstall: function () {
-                this.clickElement('@installButton')
-                    .waitForElementVisible(this.section['installStep'].selector);
+            clickInstall() {
+                this.clickElement('@installButton').waitForElementVisible(this.section.installStep.selector);
                 return this;
             },
 
-            checkIfErrorPresent: function (errorMessage) {
-                return this
-                    .waitForElementVisible('@errorMessage')
-                    .assert.containsText('@errorMessage', errorMessage);
+            checkIfErrorPresent(errorMessage) {
+                return this.waitForElementVisible('@errorMessage').assert.containsText('@errorMessage', errorMessage);
             },
 
-            waitForReadiness: function () {
+            waitForReadiness() {
                 return this.waitForElementNotPresent('@loadingBlock');
             }
         }
@@ -83,15 +80,16 @@ module.exports = {
             },
             commands: [
                 {
-                    setBlueprintPackage: function (fileName) {
-                        this.setElementValue('@blueprintFile', fileName)
-                            .waitForElementNotPresent('@loadingBlock');
+                    setBlueprintPackage(fileName) {
+                        this.setElementValue('@blueprintFile', fileName).waitForElementNotPresent('@loadingBlock');
                         return this;
                     },
-                    setBlueprintYamlFile: function (yamlFile) {
-                        this.selectOptionInDropdown('@blueprintYamlDropdownTriggerElement',
-                                                    this.elements.blueprintYamlDropdownElement.selector,
-                                                    yamlFile);
+                    setBlueprintYamlFile(yamlFile) {
+                        this.selectOptionInDropdown(
+                            '@blueprintYamlDropdownTriggerElement',
+                            this.elements.blueprintYamlDropdownElement.selector,
+                            yamlFile
+                        );
                         return this;
                     }
                 }
@@ -101,11 +99,11 @@ module.exports = {
         infrastructureStep: {
             selector: 'div.wizardModal.infrastructureStep',
             props: {
-                yamlButton : (yaml) => `button[name='${yaml}']`
+                yamlButton: yaml => `button[name='${yaml}']`
             },
             commands: [
                 {
-                    selectYaml: function (yaml) {
+                    selectYaml(yaml) {
                         this.clickElement(this.props.yamlButton(yaml));
                         return this;
                     }
@@ -116,36 +114,41 @@ module.exports = {
         pluginsStep: {
             selector: 'div.wizardModal.pluginsStep',
             elements: {
-                addUserPluginButton: 'i.add.icon',
+                addUserPluginButton: 'i.add.icon'
             },
             props: {
-                pluginRow: (pluginName) => `tr[name='${pluginName}']`,
+                pluginRow: pluginName => `tr[name='${pluginName}']`,
                 pluginStatus: (secretKey, actionRequired) =>
                     `tr[name='${secretKey}'] ${actionRequired ? 'i.yellow.warning.icon' : 'i.green.check.icon'}`,
-                removeUserPluginButton: (pluginName) => `tr[name='${pluginName}'] i.minus.icon`
+                removeUserPluginButton: pluginName => `tr[name='${pluginName}'] i.minus.icon`
             },
             commands: [
                 {
-                    checkIfPluginPresent: function (pluginName, actionRequired) {
-                        this.waitForElementPresent(this.props.pluginRow(pluginName), (result) => {
-                            this.assert.equal(result.status, 0, 'Plugin ' + pluginName + ' present.');
+                    checkIfPluginPresent(pluginName, actionRequired) {
+                        this.waitForElementPresent(this.props.pluginRow(pluginName), result => {
+                            this.assert.equal(result.status, 0, `Plugin ${pluginName} present.`);
                         });
-                        this.waitForElementPresent(this.props.pluginStatus(pluginName, actionRequired), (result) => {
-                            this.assert.equal(result.status, 0,
-                                'Plugin ' + pluginName + (actionRequired ? ' requires' : ' does not require') + ' an action');
+                        this.waitForElementPresent(this.props.pluginStatus(pluginName, actionRequired), result => {
+                            this.assert.equal(
+                                result.status,
+                                0,
+                                `Plugin ${pluginName}${actionRequired ? ' requires' : ' does not require'} an action`
+                            );
                         });
                         return this;
                     },
 
-                    addUserPlugin: function (wagonUrl, yamlUrl, expectedPluginName = 'user-plugin-0') {
-                        this.clickElement('@addUserPluginButton')
-                            .waitForElementPresent(this.props.pluginRow(expectedPluginName));
+                    addUserPlugin(wagonUrl, yamlUrl, expectedPluginName = 'user-plugin-0') {
+                        this.clickElement('@addUserPluginButton').waitForElementPresent(
+                            this.props.pluginRow(expectedPluginName)
+                        );
                         return this;
                     },
 
-                    removeUserPlugin: function (pluginName) {
-                        this.clickElement(this.props.removeUserPluginButton(pluginName))
-                            .waitForElementNotPresent(this.props.pluginRow(pluginName));
+                    removeUserPlugin(pluginName) {
+                        this.clickElement(this.props.removeUserPluginButton(pluginName)).waitForElementNotPresent(
+                            this.props.pluginRow(pluginName)
+                        );
                         return this;
                     }
                 }
@@ -155,24 +158,27 @@ module.exports = {
         secretsStep: {
             selector: 'div.wizardModal.secretsStep',
             props: {
-                secretRow: (secretKey) => `tr[name='${secretKey}']`,
+                secretRow: secretKey => `tr[name='${secretKey}']`,
                 secretStatus: (secretKey, actionRequired) =>
                     `tr[name='${secretKey}'] ${actionRequired ? 'i.yellow.warning.icon' : 'i.green.check.icon'}`,
-                secretInput: (secretKey) => `tr[name='${secretKey}'] input[name='${secretKey}']`,
+                secretInput: secretKey => `tr[name='${secretKey}'] input[name='${secretKey}']`
             },
             commands: [
                 {
-                    checkIfSecretPresent: function (secretKey, actionRequired) {
-                        this.waitForElementPresent(this.props.secretRow(secretKey), (result) => {
-                            this.assert.equal(result.status, 0, 'Secret ' + secretKey + ' present.');
+                    checkIfSecretPresent(secretKey, actionRequired) {
+                        this.waitForElementPresent(this.props.secretRow(secretKey), result => {
+                            this.assert.equal(result.status, 0, `Secret ${secretKey} present.`);
                         });
-                        this.waitForElementPresent(this.props.secretStatus(secretKey, actionRequired), (result) => {
-                            this.assert.equal(result.status, 0,
-                                'Secret ' + secretKey + (actionRequired ? ' requires' : ' does not require') + ' an action');
+                        this.waitForElementPresent(this.props.secretStatus(secretKey, actionRequired), result => {
+                            this.assert.equal(
+                                result.status,
+                                0,
+                                `Secret ${secretKey}${actionRequired ? ' requires' : ' does not require'} an action`
+                            );
                         });
                         return this;
                     },
-                    setSecretValue: function (secretKey, secretValue) {
+                    setSecretValue(secretKey, secretValue) {
                         return this.setElementValue(this.props.secretInput(secretKey), secretValue);
                     }
                 }
@@ -182,24 +188,28 @@ module.exports = {
         inputsStep: {
             selector: 'div.wizardModal.inputsStep',
             props: {
-                inputRow: (inputName) => `tr[name='${inputName}']`,
+                inputRow: inputName => `tr[name='${inputName}']`,
                 inputStatus: (inputName, actionRequired) =>
                     `tr[name='${inputName}'] ${actionRequired ? 'i.yellow.warning.icon' : 'i.green.check.icon'}`,
-                inputInput: (inputName, inputType = 'string') => `tr[name='${inputName}'] ${inputType === 'string' ? 'input' : 'textarea'}[name='${inputName}']`,
+                inputInput: (inputName, inputType = 'string') =>
+                    `tr[name='${inputName}'] ${inputType === 'string' ? 'input' : 'textarea'}[name='${inputName}']`
             },
             commands: [
                 {
-                    checkIfInputPresent: function (inputName, actionRequired) {
-                        this.waitForElementPresent(this.props.inputRow(inputName), (result) => {
-                            this.assert.equal(result.status, 0, 'Input ' + inputName + ' present.');
+                    checkIfInputPresent(inputName, actionRequired) {
+                        this.waitForElementPresent(this.props.inputRow(inputName), result => {
+                            this.assert.equal(result.status, 0, `Input ${inputName} present.`);
                         });
-                        this.waitForElementPresent(this.props.inputStatus(inputName, actionRequired), (result) => {
-                            this.assert.equal(result.status, 0,
-                                'Input ' + inputName + (actionRequired ? ' requires' : ' does not require') + ' an action');
+                        this.waitForElementPresent(this.props.inputStatus(inputName, actionRequired), result => {
+                            this.assert.equal(
+                                result.status,
+                                0,
+                                `Input ${inputName}${actionRequired ? ' requires' : ' does not require'} an action`
+                            );
                         });
                         return this;
                     },
-                    setInputValue: function (inputName, inputValue, type) {
+                    setInputValue(inputName, inputValue, type) {
                         return this.setElementValue(this.props.inputInput(inputName, type), inputValue);
                     }
                 }
@@ -208,17 +218,17 @@ module.exports = {
 
         confirmStep: {
             selector: 'div.wizardModal.confirmStep',
-            elements: {
-            },
+            elements: {},
             props: {
-                taskElement: (index) => `div.list div.item:nth-child(${index})`
+                taskElement: index => `div.list div.item:nth-child(${index})`
             },
             commands: [
                 {
-                    checkIfTaskPresent: function (index, taskDescription) {
-                        return this
-                            .waitForElementVisible(this.props.taskElement(index))
-                            .assert.containsText(this.props.taskElement(index), taskDescription);
+                    checkIfTaskPresent(index, taskDescription) {
+                        return this.waitForElementVisible(this.props.taskElement(index)).assert.containsText(
+                            this.props.taskElement(index),
+                            taskDescription
+                        );
                     }
                 }
             ]
@@ -230,30 +240,33 @@ module.exports = {
                 successProgressBar: 'div.progress.success',
                 failedProgressBar: 'div.progress.error',
                 progressBarLabel: 'div.progress div.label',
-                stayOnThisPageButton: 'i.icon.hand.paper',
+                stayOnThisPageButton: 'i.icon.hand.paper'
             },
             props: {
-                installationTimeout: 2*60*1000 // 2 minutes
+                installationTimeout: 2 * 60 * 1000 // 2 minutes
             },
             commands: [
                 {
-                    checkIfInstallInProgress: function () {
-                        return this
-                            .waitForElementVisible('@progressBarLabel')
-                            .assert.containsText('@progressBarLabel', 'Installation in progress...');
+                    checkIfInstallInProgress() {
+                        return this.waitForElementVisible('@progressBarLabel').assert.containsText(
+                            '@progressBarLabel',
+                            'Installation in progress...'
+                        );
                     },
-                    checkIfInstallStarted: function () {
-                        return this
-                            .waitForElementVisible('@successProgressBar', this.props.installationTimeout)
-                            .assert.containsText('@progressBarLabel', 'Installation started!');
+                    checkIfInstallStarted() {
+                        return this.waitForElementVisible(
+                            '@successProgressBar',
+                            this.props.installationTimeout
+                        ).assert.containsText('@progressBarLabel', 'Installation started!');
                     },
-                    cancelRedirection: function () {
+                    cancelRedirection() {
                         return this.clickElement('@stayOnThisPageButton');
                     },
-                    checkIfInstallFailed: function () {
-                        return this
-                            .waitForElementVisible('@failedProgressBar', this.props.installationTimeout)
-                            .assert.containsText('@progressBarLabel', 'Installation failed. Check error details above.');
+                    checkIfInstallFailed() {
+                        return this.waitForElementVisible(
+                            '@failedProgressBar',
+                            this.props.installationTimeout
+                        ).assert.containsText('@progressBarLabel', 'Installation failed. Check error details above.');
                     }
                 }
             ]

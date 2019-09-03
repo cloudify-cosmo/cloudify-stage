@@ -1,0 +1,10 @@
+.circleci/**
+backend/node_modules/**
+conf/**
+dist/**
+doc/**
+templates/**
+tours/**
+userData/**
+
+# To be removed, when code is fixed in these folders

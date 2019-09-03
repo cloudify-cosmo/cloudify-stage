@@ -30,7 +30,6 @@ import { Message } from 'semantic-ui-react';
  *
  */
 export default class ErrorMessage extends Component {
-
     constructor(props, context) {
         super(props, context);
 
@@ -43,11 +42,12 @@ export default class ErrorMessage extends Component {
 
     /**
      * propTypes
+     *
      * @property {boolean} [autoHide=false] if set, then message will be hidden after visibility timeout
      * @property {string} [className=''] additional CSS classes to [Message](https://react.semantic-ui.com/elements/message) component
      * @property {object} [error=null] string, array or object containing error text message/messages
      * @property {string} [header='Error Occured'] header of error text message
-     * @property {function} [onDismiss=()=>{}] function called when either error message visibility timeout (see {@link ErrorMessage.MESSAGE_VISIBLE_TIMEOUT}) expires or user dismiss manually error message
+     * @property {Function} [onDismiss=()=>{}] function called when either error message visibility timeout (see {@link ErrorMessage.MESSAGE_VISIBLE_TIMEOUT}) expires or user dismiss manually error message
      */
     static propTypes = {
         autoHide: PropTypes.bool,
@@ -72,7 +72,7 @@ export default class ErrorMessage extends Component {
 
     componentDidUpdate(prevProps) {
         if (!!this.props.error && !_.isEqual(this.props.error, prevProps.error)) {
-            this.setState({hidden: false});
+            this.setState({ hidden: false });
             if (this.props.error) {
                 this._setVisibilityTimeout(ErrorMessage.MESSAGE_VISIBLE_TIMEOUT);
             }
@@ -92,12 +92,12 @@ export default class ErrorMessage extends Component {
             clearTimeout(this.visibilityTimeout);
             this.visibilityTimeout = setTimeout(() => {
                 this._handleDismiss();
-            }, timeout)
+            }, timeout);
         }
     }
 
     _handleDismiss() {
-        this.setState({hidden: true});
+        this.setState({ hidden: true });
         this.props.onDismiss();
     }
 
@@ -106,8 +106,8 @@ export default class ErrorMessage extends Component {
             return null;
         }
 
-        var error = this.props.error;
-        var header = this.props.header;
+        let { error } = this.props;
+        let { header } = this.props;
 
         if (!_.isString(error) && !_.isArray(error)) {
             error = this.props.error.message;
@@ -118,16 +118,19 @@ export default class ErrorMessage extends Component {
         }
 
         return (
-            <Message error className={this.props.className}
-                     hidden={this.state.hidden} onDismiss={this._handleDismiss.bind(this)}>
+            <Message
+                error
+                className={this.props.className}
+                hidden={this.state.hidden}
+                onDismiss={this._handleDismiss.bind(this)}
+            >
                 <Message.Header>{header}</Message.Header>
-                {
-                    _.isArray(error) && !_.isEmpty(error)
-                    ? <Message.List items={error} />
-                    : <Message.Content>{error}</Message.Content>
-                }
+                {_.isArray(error) && !_.isEmpty(error) ? (
+                    <Message.List items={error} />
+                ) : (
+                    <Message.Content>{error}</Message.Content>
+                )}
             </Message>
-        )
+        );
     }
 }
- 

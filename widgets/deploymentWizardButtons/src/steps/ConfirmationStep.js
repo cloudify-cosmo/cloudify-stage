@@ -6,10 +6,9 @@ import TaskList from './helpers/TaskList';
 import Task from './helpers/Task';
 
 const confirmationStepId = 'confirm';
-const {createWizardStep} = Stage.Basic.Wizard.Utils;
+const { createWizardStep } = Stage.Basic.Wizard.Utils;
 
 class ConfirmationStepActions extends React.Component {
-
     constructor(props) {
         super(props);
     }
@@ -18,21 +17,28 @@ class ConfirmationStepActions extends React.Component {
 
     async isUsed(deploymentId) {
         const deploymentActions = new Stage.Common.DeploymentActions(this.props.toolbox);
-        let deploymentPromise = () => deploymentActions.doGetDeployments({_search: deploymentId});
+        const deploymentPromise = () => deploymentActions.doGetDeployments({ _search: deploymentId });
 
-        return !_.isEqual(deploymentId, await ConfirmationStepContent.chooseId(deploymentId, deploymentPromise, 'deployment'));
+        return !_.isEqual(
+            deploymentId,
+            await ConfirmationStepContent.chooseId(deploymentId, deploymentPromise, 'deployment')
+        );
     }
 
     onNext(id) {
-        return this.props.onLoading()
+        return this.props
+            .onLoading()
             .then(this.props.fetchData)
-            .then(({stepData}) =>
-                this.isUsed(stepData.deploymentId)
-                    .then((isDeploymentNameUsed => ({stepData, isDeploymentNameUsed}))))
-            .then(({stepData, isDeploymentNameUsed}) => {
+            .then(({ stepData }) =>
+                this.isUsed(stepData.deploymentId).then(isDeploymentNameUsed => ({ stepData, isDeploymentNameUsed }))
+            )
+            .then(({ stepData, isDeploymentNameUsed }) => {
                 if (isDeploymentNameUsed) {
-                    this.props.onError(id, `Deployment name '${stepData.deploymentId}' is already used. Please choose a different one.`,
-                                       {deploymentId: true});
+                    this.props.onError(
+                        id,
+                        `Deployment name '${stepData.deploymentId}' is already used. Please choose a different one.`,
+                        { deploymentId: true }
+                    );
                 } else {
                     this.props.onNext(id, {
                         tasks: stepData.tasks,
@@ -43,18 +49,23 @@ class ConfirmationStepActions extends React.Component {
                     });
                 }
             })
-            .catch((error) => this.props.onError(id, error));
+            .catch(error => this.props.onError(id, error));
     }
 
     render() {
-        let {Wizard} = Stage.Basic;
-        return <Wizard.Step.Actions {...this.props} onNext={this.onNext.bind(this)}
-                                    nextLabel='Install' nextIcon='download' />
+        const { Wizard } = Stage.Basic;
+        return (
+            <Wizard.Step.Actions
+                {...this.props}
+                onNext={this.onNext.bind(this)}
+                nextLabel="Install"
+                nextIcon="download"
+            />
+        );
     }
 }
 
 class ConfirmationStepContent extends React.Component {
-
     constructor(props) {
         super(props);
     }
@@ -63,37 +74,33 @@ class ConfirmationStepContent extends React.Component {
 
     static chooseId(baseId, promise, idName) {
         const maxSuffixNumber = 1000;
-        const isIdInList = (items, id) => !_.isUndefined(_.find(items, {id}));
+        const isIdInList = (items, id) => !_.isUndefined(_.find(items, { id }));
 
         let id = baseId;
         let idChosen = false;
-        return promise()
-            .then(({items}) => {
+        return promise().then(({ items }) => {
+            idChosen = !isIdInList(items, id);
+
+            for (let i = 0; i < maxSuffixNumber && !idChosen; i++) {
+                id = `${baseId}_${i}`;
                 idChosen = !isIdInList(items, id);
+            }
 
-                for (let i = 0; i < maxSuffixNumber && !idChosen; i++) {
-                    id = `${baseId}_${i}`;
-                    idChosen = !isIdInList(items, id);
-                }
-
-                return idChosen
-                    ? Promise.resolve(id)
-                    : Promise.reject(`Not found unused ${idName} ID.`);
-            });
+            return idChosen ? Promise.resolve(id) : Promise.reject(`Not found unused ${idName} ID.`);
+        });
     }
 
     addPluginsTasks(plugins, tasks) {
         const pluginActions = new Stage.Common.PluginActions(this.props.toolbox);
 
-        for (let pluginName of _.keys(plugins)) {
+        for (const pluginName of _.keys(plugins)) {
             const plugin = plugins[pluginName];
             const wagonUrl = plugin.wagonFile ? '' : plugin.wagonUrl;
             const yamlUrl = plugin.yamlFile ? '' : plugin.yamlUrl;
 
             tasks.push(
-                new Task(
-                    `Upload plugin ${pluginName}`,
-                    () => pluginActions.doUpload(plugin.visibility, wagonUrl, yamlUrl, plugin.wagonFile, plugin.yamlFile)
+                new Task(`Upload plugin ${pluginName}`, () =>
+                    pluginActions.doUpload(plugin.visibility, wagonUrl, yamlUrl, plugin.wagonFile, plugin.yamlFile)
                 )
             );
         }
@@ -104,16 +111,15 @@ class ConfirmationStepContent extends React.Component {
     addSecretsTasks(secrets, tasks) {
         const secretActions = new Stage.Common.SecretActions(this.props.toolbox);
 
-        for (let secret of _.keys(secrets)) {
+        for (const secret of _.keys(secrets)) {
             const secretValue = secrets[secret].value;
             const secretVisibility = secrets[secret].visibility;
 
             tasks.push(
-                new Task(
-                    `Create secret ${secret}`,
-                    () => secretActions.doCreate(secret, secretValue, secretVisibility, false)
+                new Task(`Create secret ${secret}`, () =>
+                    secretActions.doCreate(secret, secretValue, secretVisibility, false)
                 )
-            )
+            );
         }
 
         return Promise.resolve();
@@ -121,7 +127,11 @@ class ConfirmationStepContent extends React.Component {
 
     chooseBlueprintId(initialBlueprintId) {
         const blueprintActions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        return ConfirmationStepContent.chooseId(initialBlueprintId, () => blueprintActions.doGetBlueprints({_search: initialBlueprintId}), 'blueprint');
+        return ConfirmationStepContent.chooseId(
+            initialBlueprintId,
+            () => blueprintActions.doGetBlueprints({ _search: initialBlueprintId }),
+            'blueprint'
+        );
     }
 
     addBlueprintUploadTask(blueprint, tasks) {
@@ -130,12 +140,16 @@ class ConfirmationStepContent extends React.Component {
         const imageUrl = blueprint.imageFile ? '' : blueprint.imageUrl;
 
         tasks.push(
-            new Task(
-                `Upload blueprint ${blueprint.blueprintName}`,
-                () => blueprintActions.doUpload(blueprint.blueprintName, blueprint.blueprintFileName,
-                                                blueprintUrl, blueprint.blueprintFile,
-                                                imageUrl, blueprint.imageFile,
-                                                blueprint.visibility)
+            new Task(`Upload blueprint ${blueprint.blueprintName}`, () =>
+                blueprintActions.doUpload(
+                    blueprint.blueprintName,
+                    blueprint.blueprintFileName,
+                    blueprintUrl,
+                    blueprint.blueprintFile,
+                    imageUrl,
+                    blueprint.imageFile,
+                    blueprint.visibility
+                )
             )
         );
 
@@ -144,7 +158,11 @@ class ConfirmationStepContent extends React.Component {
 
     chooseDeploymentId(initialDeploymentId) {
         const deploymentActions = new Stage.Common.DeploymentActions(this.props.toolbox);
-        return ConfirmationStepContent.chooseId(initialDeploymentId, () => deploymentActions.doGetDeployments({_search: initialDeploymentId}), 'deployment');
+        return ConfirmationStepContent.chooseId(
+            initialDeploymentId,
+            () => deploymentActions.doGetDeployments({ _search: initialDeploymentId }),
+            'deployment'
+        );
     }
 
     addDeployBlueprintTask(deploymentId, blueprintId, inputs, visibility, tasks) {
@@ -153,32 +171,31 @@ class ConfirmationStepContent extends React.Component {
 
         const waitForDeploymentIsCreated = async () => {
             const maxNumberOfRetries = 60;
-            const waitingInterval = 1000; //ms
+            const waitingInterval = 1000; // ms
 
             let deploymentCreated = false;
             for (let i = 0; i < maxNumberOfRetries && !deploymentCreated; i++) {
                 await new Promise(resolve => {
-                        console.debug('Waiting for deployment is created...', i);
-                        setTimeout(resolve, waitingInterval);
-                    })
+                    console.debug('Waiting for deployment is created...', i);
+                    setTimeout(resolve, waitingInterval);
+                })
                     .then(() => executionActions.doGetExecutions(deploymentId))
-                    .then(({items}) => {
-                        deploymentCreated = !_.isEmpty(items) && _.isUndefined(_.find(items, {ended_at: null}));
+                    .then(({ items }) => {
+                        deploymentCreated = !_.isEmpty(items) && _.isUndefined(_.find(items, { ended_at: null }));
                     });
             }
 
             if (deploymentCreated) {
                 return Promise.resolve();
-            } else {
-                const timeout = Math.floor(maxNumberOfRetries * waitingInterval / 1000);
-                return Promise.reject(`Timeout exceeded. Deployment was not created after ${timeout} seconds.`);
             }
+            const timeout = Math.floor((maxNumberOfRetries * waitingInterval) / 1000);
+            return Promise.reject(`Timeout exceeded. Deployment was not created after ${timeout} seconds.`);
         };
 
         tasks.push(
-            new Task(
-                `Create ${deploymentId} deployment from ${blueprintId} blueprint`,
-                () => blueprintActions.doDeploy({id: blueprintId}, deploymentId, inputs, visibility)
+            new Task(`Create ${deploymentId} deployment from ${blueprintId} blueprint`, () =>
+                blueprintActions
+                    .doDeploy({ id: blueprintId }, deploymentId, inputs, visibility)
                     .then(() => waitForDeploymentIsCreated())
             )
         );
@@ -190,9 +207,8 @@ class ConfirmationStepContent extends React.Component {
         const deploymentActions = new Stage.Common.DeploymentActions(this.props.toolbox);
 
         tasks.push(
-            new Task(
-                `Execute install workflow on ${deploymentId} deployment`,
-                () => deploymentActions.doExecute({id: deploymentId}, {name: 'install'}, {}, false)
+            new Task(`Execute install workflow on ${deploymentId} deployment`, () =>
+                deploymentActions.doExecute({ id: deploymentId }, { name: 'install' }, {}, false)
             )
         );
 
@@ -200,55 +216,79 @@ class ConfirmationStepContent extends React.Component {
     }
 
     componentDidMount() {
-        const wizardData = this.props.wizardData;
+        const { wizardData } = this.props;
 
-        let tasks = [];
+        const tasks = [];
         let blueprintId = '';
         let deploymentId = '';
 
-        this.props.onLoading()
+        this.props
+            .onLoading()
             .then(() => this.addPluginsTasks(wizardData.plugins, tasks))
             .then(() => this.addSecretsTasks(wizardData.secrets, tasks))
             .then(() => this.chooseBlueprintId(wizardData.blueprint.blueprintName))
-            .then((id) => {blueprintId = id; return this.addBlueprintUploadTask({...wizardData.blueprint, blueprintName: id}, tasks)})
+            .then(id => {
+                blueprintId = id;
+                return this.addBlueprintUploadTask({ ...wizardData.blueprint, blueprintName: id }, tasks);
+            })
             .then(() => this.chooseDeploymentId(blueprintId))
-            .then((id) => {deploymentId = id; this.addDeployBlueprintTask(id, blueprintId, wizardData.inputs, wizardData.blueprint.visibility, tasks)})
+            .then(id => {
+                deploymentId = id;
+                this.addDeployBlueprintTask(id, blueprintId, wizardData.inputs, wizardData.blueprint.visibility, tasks);
+            })
             .then(() => this.addRunInstallWorkflowTask(deploymentId, tasks))
-            .then(() => ({stepData: {tasks, blueprintId, deploymentId}}))
-            .then(({stepData}) => this.props.onChange(this.props.id, stepData))
-            .then(() => this.setState({deploymentId}))
-            .catch((error) => this.props.onError(this.props.id, error))
+            .then(() => ({ stepData: { tasks, blueprintId, deploymentId } }))
+            .then(({ stepData }) => this.props.onChange(this.props.id, stepData))
+            .then(() => this.setState({ deploymentId }))
+            .catch(error => this.props.onError(this.props.id, error))
             .finally(() => this.props.onReady());
     }
 
     handleInputChange(proxy, field) {
         // Remove last two tasks: create deployment and execute install workflow
-        let tasks = _.dropRight(this.props.stepData.tasks, 2);
+        const tasks = _.dropRight(this.props.stepData.tasks, 2);
 
-        this.addDeployBlueprintTask(field.value, this.props.stepData.blueprintId,
-                                    this.props.wizardData.inputs, this.props.wizardData.blueprint.visibility, tasks);
+        this.addDeployBlueprintTask(
+            field.value,
+            this.props.stepData.blueprintId,
+            this.props.wizardData.inputs,
+            this.props.wizardData.blueprint.visibility,
+            tasks
+        );
         this.addRunInstallWorkflowTask(field.value, tasks);
-        this.props.onChange(this.props.id, {...this.props.stepData, tasks, ...Stage.Basic.Form.fieldNameValue(field)});
+        this.props.onChange(this.props.id, {
+            ...this.props.stepData,
+            tasks,
+            ...Stage.Basic.Form.fieldNameValue(field)
+        });
     }
 
     render() {
-        let {Form} = Stage.Basic;
+        const { Form } = Stage.Basic;
         const tasks = _.get(this.props.stepData, 'tasks', []);
         const deploymentId = _.get(this.props.stepData, 'deploymentId', []);
 
         return (
             <Form loading={this.props.loading}>
-                <Form.Input label='Deployment name' name='deploymentId' value={deploymentId} fluid
-                            error={this.props.errors.deploymentId} required
-                            onChange={this.handleInputChange.bind(this)} />
+                <Form.Input
+                    label="Deployment name"
+                    name="deploymentId"
+                    value={deploymentId}
+                    fluid
+                    error={this.props.errors.deploymentId}
+                    required
+                    onChange={this.handleInputChange.bind(this)}
+                />
                 <TaskList tasks={tasks} />
             </Form>
         );
     }
 }
 
-export default createWizardStep(confirmationStepId,
-                                'Confirm',
-                                'Confirm installation',
-                                ConfirmationStepContent,
-                                ConfirmationStepActions);
+export default createWizardStep(
+    confirmationStepId,
+    'Confirm',
+    'Confirm installation',
+    ConfirmationStepContent,
+    ConfirmationStepActions
+);

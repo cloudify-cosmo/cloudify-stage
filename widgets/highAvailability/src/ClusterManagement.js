@@ -10,13 +10,15 @@ export default class ClusterManagement extends React.Component {
 
         this.state = {
             error: null
-        }
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget, nextProps.widget)
-            || !_.isEqual(this.state, nextState)
-            || !_.isEqual(this.props.data, nextProps.data);
+        return (
+            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(this.state, nextState) ||
+            !_.isEqual(this.props.data, nextProps.data)
+        );
     }
 
     _refreshData() {
@@ -32,11 +34,14 @@ export default class ClusterManagement extends React.Component {
     }
 
     render() {
-
         return (
             <div>
                 {
-                    <ClusterNodesList toolbox={this.props.toolbox} widget={this.props.widget} nodes={this.props.data.nodes}/>
+                    <ClusterNodesList
+                        toolbox={this.props.toolbox}
+                        widget={this.props.widget}
+                        nodes={this.props.data.nodes}
+                    />
                 }
             </div>
         );

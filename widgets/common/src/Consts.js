@@ -10,7 +10,7 @@ const consts = {
     licenseEdition: {
         premium: 'Premium',
         spire: 'Spire'
-    },
+    }
 };
 
 Stage.defineCommon({
