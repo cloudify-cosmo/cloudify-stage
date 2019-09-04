@@ -44,7 +44,7 @@ Breadcrumbs.propTypes = {
     pagesList: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
-            name: PropTypes.number.isRequired
+            name: PropTypes.string.isRequired
         })
     ).isRequired
 };

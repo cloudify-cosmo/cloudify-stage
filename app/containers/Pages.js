@@ -2,30 +2,30 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
+
 import PagesList from '../components/PagesList';
-import { selectPage, removePage, reorderPage } from '../actions/page';
+import { selectPage, removePage, reorderPage, createPagesMap } from '../actions/page';
 import { toogleSidebar } from '../actions/app';
 
-const findSelectedRootPage = (pagesMap, selectedPageId) => {
-    var _r = page => {
+const findSelectedRootPageId = (pagesMap, selectedPageId) => {
+    const getParentPageId = page => {
         if (!page.parent) {
             return page.id;
         }
-        return _r(pagesMap[page.parent]);
+        return getParentPageId(pagesMap[page.parent]);
     };
 
-    return _r(pagesMap[selectedPageId]);
+    return getParentPageId(pagesMap[selectedPageId]);
 };
 
 const mapStateToProps = (state, ownProps) => {
     const { pages } = state;
-    const pagesMap = _.keyBy(pages, 'id');
+    const pagesMap = createPagesMap(pages);
     const page = pagesMap[ownProps.pageId];
     const homePageId = pages[0].id;
     const pageId = page ? page.id : homePageId;
-    const selected = pages && pages.length > 0 ? findSelectedRootPage(pagesMap, pageId) : null;
+    const selected = pages && pages.length > 0 ? findSelectedRootPageId(pagesMap, pageId) : null;
 
     return {
         pages,
@@ -50,16 +50,20 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(selectPage(page.id, page.isDrillDown));
         },
         onPageRemoved: (page, pages) => {
-            dispatch(removePage(page.id));
+            const pagesMap = createPagesMap(pages);
+            const selectedRootPageId = findSelectedRootPageId(pagesMap, ownProps.pageId);
 
-            // If user removes current page, then navigate to home page
-            if (ownProps.pageId === page.id) {
-                if (ownProps.pageId === ownProps.homePageId) {
+            // Check if user removes current page
+            if (selectedRootPageId === page.id) {
+                // Check if current page is home page
+                if (selectedRootPageId === ownProps.homePageId) {
                     dispatch(selectPage(pages[1].id, false));
                 } else {
                     dispatch(selectPage(ownProps.homePageId, false));
                 }
             }
+
+            dispatch(removePage(page));
         },
         onPageReorder: (pageIndex, newPageIndex) => {
             dispatch(reorderPage(pageIndex, newPageIndex));

@@ -29,6 +29,10 @@ export function createDrilldownPage(newPageId, name) {
     };
 }
 
+export function createPagesMap(pages) {
+    return _.keyBy(pages, 'id');
+}
+
 function createPageId(name, pages) {
     // Add suffix to make URL unique if same page name already exists
     let newPageId = _.snakeCase(name);
@@ -109,10 +113,26 @@ export function addPage(name) {
     };
 }
 
-export function removePage(pageId) {
+function removeSinglePage(pageId) {
     return {
         type: types.REMOVE_PAGE,
         pageId
+    };
+}
+
+export function removePage(page) {
+    return (dispatch, getState) => {
+        const pagesMap = createPagesMap(getState().pages);
+        const removePageWithChildren = p => {
+            if (!_.isEmpty(p.children)) {
+                p.children.forEach(childPageId => {
+                    removePageWithChildren(pagesMap[childPageId]);
+                });
+            }
+            dispatch(removeSinglePage(p.id));
+        };
+
+        removePageWithChildren(page);
     };
 }
 

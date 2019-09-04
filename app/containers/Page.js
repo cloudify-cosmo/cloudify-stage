@@ -5,13 +5,13 @@
 import { connect } from 'react-redux';
 
 import Page from '../components/Page';
-import { changePageDescription, changePageName, removePage, selectPage } from '../actions/page';
+import { changePageDescription, changePageName, createPagesMap, selectPage } from '../actions/page';
 import { changeWidgetGridData } from '../actions/widgets';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import { setEditMode } from '../actions/config';
 
 const buildPagesList = (pages, drilldownContextArray, selectedPageId) => {
-    const pagesMap = _.keyBy(pages, 'id');
+    const pagesMap = createPagesMap(pages);
     const pagesList = [];
     let index = drilldownContextArray.length - 1;
 
@@ -39,7 +39,7 @@ const buildPagesList = (pages, drilldownContextArray, selectedPageId) => {
 const mapStateToProps = (state, ownProps) => {
     const { pages } = state;
 
-    const pagesMap = _.keyBy(pages, 'id');
+    const pagesMap = createPagesMap(pages);
     const page = pagesMap[ownProps.pageId];
     const homePageId = pages[0].id;
     const pageId = page ? page.id : homePageId;
@@ -77,9 +77,6 @@ const mapDispatchToProps = dispatch => {
             }
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
-        },
-        onPageRemoved: page => {
-            dispatch(removePage(page.id));
         },
         onWidgetsGridDataChange: (pageId, widgetId, gridData) => {
             dispatch(changeWidgetGridData(pageId, widgetId, gridData));
