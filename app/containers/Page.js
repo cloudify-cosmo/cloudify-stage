@@ -2,12 +2,11 @@
  * Created by kinneretzin on 11/09/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
-import Page from '../components/Page';
-import { changePageName, selectPage, removePage, updatePageDescription } from '../actions/page';
 
-import { changeWidgetGridData, minimizeWidgets } from '../actions/widgets';
+import Page from '../components/Page';
+import { changePageDescription, changePageName, removePage, selectPage } from '../actions/page';
+import { changeWidgetGridData } from '../actions/widgets';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import { setEditMode } from '../actions/config';
 
@@ -16,23 +15,23 @@ const buildPagesList = (pages, drilldownContextArray, selectedPageId) => {
     const pagesList = [];
     let index = drilldownContextArray.length - 1;
 
-    var _r = page => {
-        if (!page) {
-            page = pages[0];
-        }
-        const pageDrilldownContext = index >= 0 ? drilldownContextArray[index--] : {};
+    const updatePagesListWith = page => {
+        const basePage = !page ? pages[0] : page;
+        const pageDrilldownContext = index >= 0 ? drilldownContextArray[index] : {};
+        index -= 1;
+
         pagesList.push({
-            ...page,
-            name: pageDrilldownContext.pageName || page.name,
+            ...basePage,
+            name: pageDrilldownContext.pageName || basePage.name,
             context: pageDrilldownContext.context
         });
-        if (!page.parent) {
-            return;
+
+        if (basePage.parent) {
+            updatePagesListWith(pagesMap[basePage.parent]);
         }
-        return _r(pagesMap[page.parent]);
     };
 
-    _r(pagesMap[selectedPageId]);
+    updatePagesListWith(pagesMap[selectedPageId]);
 
     return pagesList;
 };
@@ -46,12 +45,11 @@ const mapStateToProps = (state, ownProps) => {
     const pageId = page ? page.id : homePageId;
 
     const pageData = _.clone(_.find(pages, { id: pageId }));
-    const widgets = _.map(pageData.widgets, wd => {
+    pageData.widgets = _.map(pageData.widgets, wd => {
         const w = _.clone(wd);
         w.definition = _.find(state.widgetDefinitions, { id: w.definition });
         return w;
     });
-    pageData.widgets = widgets;
     pageData.name = ownProps.pageName || pageData.name;
 
     const pagesList = buildPagesList(pages, state.drilldownContext, pageId);
@@ -62,19 +60,19 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onPageNameChange: (page, newName) => {
             dispatch(changePageName(page, newName));
         },
         onPageDescriptionChange: (pageId, newDescription) => {
-            dispatch(updatePageDescription(pageId, newDescription));
+            dispatch(changePageDescription(pageId, newDescription));
         },
         onPageSelected: (page, pagesList, index) => {
             const drilldownContext = [];
             // Starting from 1 cause the first page doesnt have any context and shouldnt be in the context array (only drilldown pages)
             // and also skip the last page, because we are sending the context of this one to the select page
-            for (let i = 1; i <= index - 1; ++i) {
+            for (let i = 1; i <= index - 1; i += 1) {
                 drilldownContext.push({ pageName: pagesList[i].name, context: pagesList[i].context });
             }
             dispatch(setDrilldownContext(drilldownContext));

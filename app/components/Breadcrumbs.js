@@ -3,53 +3,48 @@
  */
 
 import PropTypes from 'prop-types';
+import React from 'react';
 
-import React, { Component } from 'react';
-import { EditableLabel } from './basic';
+import { Breadcrumb, EditableLabel } from './basic';
 
-export default class Breadcrumbs extends Component {
-    static propTypes = {
-        pagesList: PropTypes.array.isRequired,
-        onPageNameChange: PropTypes.func.isRequired,
-        onPageSelected: PropTypes.func.isRequired
-    };
-
-    render() {
-        const elements = [];
-        const pagesList = _([...this.props.pagesList])
-            .reverse()
-            .value();
-        _.each(pagesList, (p, index) => {
-            if (index !== pagesList.length - 1) {
-                elements.push(
-                    <div
-                        key={p.id}
-                        className="section"
-                        onClick={() => {
-                            this.props.onPageSelected(p, pagesList, index);
-                        }}
-                    >
-                        {p.name}
-                    </div>
-                );
-                elements.push(
-                    <span key={`d_${p.id}`} className="divider">
-                        /
-                    </span>
-                );
-            } else {
-                elements.push(
-                    <EditableLabel
-                        key={p.id}
-                        text={p.name}
-                        placeholder="You must fill a page name"
-                        className="section active pageTitle"
-                        isEditEnable={this.props.isEditMode}
-                        onEditDone={newName => this.props.onPageNameChange(p, newName)}
-                    />
-                );
-            }
-        });
-        return <div className="ui breadcrumb breadcrumbLineHeight">{elements}</div>;
-    }
+export default function Breadcrumbs(props) {
+    const breadcrumbElements = [];
+    const { isEditMode, onPageNameChange, onPageSelected, pagesList } = props;
+    const reversedPagesList = _([...pagesList])
+        .reverse()
+        .value();
+    _.each(reversedPagesList, (p, index) => {
+        if (index !== reversedPagesList.length - 1) {
+            breadcrumbElements.push(
+                <Breadcrumb.Section link key={p.id} onClick={() => onPageSelected(p, reversedPagesList, index)}>
+                    {p.name}
+                </Breadcrumb.Section>
+            );
+            breadcrumbElements.push(<Breadcrumb.Divider key={`d_${p.id}`} icon="right angle" />);
+        } else {
+            breadcrumbElements.push(
+                <EditableLabel
+                    key={p.id}
+                    text={p.name}
+                    placeholder="You must fill a page name"
+                    className="section active pageTitle"
+                    isEditEnable={isEditMode}
+                    onEditDone={newName => onPageNameChange(p, newName)}
+                />
+            );
+        }
+    });
+    return <Breadcrumb className="breadcrumbLineHeight">{breadcrumbElements}</Breadcrumb>;
 }
+
+Breadcrumbs.propTypes = {
+    isEditMode: PropTypes.bool.isRequired,
+    onPageNameChange: PropTypes.func.isRequired,
+    onPageSelected: PropTypes.func.isRequired,
+    pagesList: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.number.isRequired
+        })
+    ).isRequired
+};
