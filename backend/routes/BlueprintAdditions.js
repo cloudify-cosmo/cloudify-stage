@@ -26,12 +26,15 @@ router.get('/image/:blueprint', function(req, res, next) {
                 if (additions.image) {
                     res.contentType('image/*').send(additions.image);
                     return;
-                } else if (additions.imageUrl) {
+                }
+                if (additions.imageUrl) {
                     res.redirect(additions.imageUrl);
                     return;
                 }
             }
-            res.contentType('image/png').sendFile(path.resolve(__dirname, '../node_modules/cloudify-ui-common/images/logo_color.png'));
+            res.contentType('image/png').sendFile(
+                path.resolve(__dirname, '../node_modules/cloudify-ui-common/images/logo_color.png')
+            );
         })
         .catch(next);
 });
