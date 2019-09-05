@@ -10,6 +10,7 @@ export default class SitesMap extends React.Component {
      * @property {boolean} showAllLabels - specifies whether all the site labels displayed
      * @property {object} toolbox - Toolbox object
      * @property {object} data - object with sites data
+     * @property {object} dimensions - object with widget dimensions
      */
     static propTypes = {
         sitesAreDefined: PropTypes.bool.isRequired,
@@ -30,16 +31,35 @@ export default class SitesMap extends React.Component {
                     failed: PropTypes.array.isRequired
                 }).isRequired
             })
-        ).isRequired
+        ).isRequired,
+        dimensions: PropTypes.shape({
+            height: PropTypes.number.isRequired,
+            width: PropTypes.number.isRequired,
+            maximized: PropTypes.bool.isRequired
+        }).isRequired
     };
+
+    constructor(props) {
+        super(props);
+
+        this.mapRef = React.createRef();
+    }
 
     shouldComponentUpdate(nextProps) {
         return (
             !_.isEqual(this.props.showAllLabels, nextProps.showAllLabels) ||
             !_.isEqual(this.props.data, nextProps.data) ||
             !_.isEqual(this.props.sitesAreDefined, nextProps.sitesAreDefined) ||
-            !_.isEqual(this.props.isMapAvailable, nextProps.isMapAvailable)
+            !_.isEqual(this.props.isMapAvailable, nextProps.isMapAvailable) ||
+            !_.isEqual(this.props.dimensions, nextProps.dimensions)
         );
+    }
+
+    componentDidUpdate(prevProps) {
+        const { dimensions } = this.props;
+        if (prevProps.dimensions !== dimensions) {
+            this.mapRef.current.leafletElement.invalidateSize();
+        }
     }
 
     _openPopup(marker) {
@@ -90,15 +110,16 @@ export default class SitesMap extends React.Component {
 
     render() {
         const { Map, TileLayer } = Stage.Basic.Leaflet;
-        if (!this.props.isMapAvailable) {
+        const { isMapAvailable, mapUrl, sitesAreDefined } = this.props;
+        if (!isMapAvailable) {
             const NO_INTERNET_MESSAGE = `The widget content cannot be displayed because there is no connection 
-                                         to the maps repository (${this.props.mapUrl}).`;
+                                         to the maps repository (${mapUrl}).`;
             return <MapMessage text={NO_INTERNET_MESSAGE} />;
         }
 
         const markers = this._createMarkers();
         if (_.isEmpty(markers)) {
-            return <NoDataMessage sitesAreDefined={this.props.sitesAreDefined} />;
+            return <NoDataMessage sitesAreDefined={sitesAreDefined} />;
         }
 
         const mapOptions = {
@@ -109,11 +130,12 @@ export default class SitesMap extends React.Component {
             bounds: [[-90, -180], [90, 180]],
             viscosity: 0.75
         };
-        const tilesUrl = `${this.props.mapUrl}/osm-intl/{z}/{x}/{y}{r}.png?lang=en`;
+        const tilesUrl = `${mapUrl}/osm-intl/{z}/{x}/{y}{r}.png?lang=en`;
         const attribution = '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>';
 
         return (
             <Map
+                ref={this.mapRef}
                 className="sites-map"
                 center={mapOptions.position}
                 zoom={mapOptions.zoom}
