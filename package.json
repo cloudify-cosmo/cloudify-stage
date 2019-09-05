@@ -38,6 +38,7 @@
     "d3": "^3.5.17",
     "d3-format": "^1.3.2",
     "diff": "^3.5.0",
+    "eslint-plugin-chai-friendly": "^0.4.1",
     "file-saver": "^1.3.3",
     "history": "^4.7.2",
     "hopscotch": "^0.3.1",

@@ -21,15 +21,6 @@ export function createPage(name, newPageId) {
     };
 }
 
-export function addPage(name) {
-    return function(dispatch, getState) {
-        const newPageId = createPageId(name, getState().pages);
-
-        dispatch(createPage(name, newPageId));
-        dispatch(selectPage(newPageId, false));
-    };
-}
-
 export function createDrilldownPage(newPageId, name) {
     return {
         type: types.CREATE_DRILLDOWN_PAGE,
@@ -38,13 +29,8 @@ export function createDrilldownPage(newPageId, name) {
     };
 }
 
-export function renamePage(pageId, newName, newPageId) {
-    return {
-        type: types.RENAME_PAGE,
-        pageId,
-        name: newName,
-        newPageId
-    };
+export function createPagesMap(pages) {
+    return _.keyBy(pages, 'id');
 }
 
 function createPageId(name, pages) {
@@ -53,7 +39,7 @@ function createPageId(name, pages) {
     let suffix = 1;
     _.each(pages, p => {
         if (p.id.startsWith(newPageId)) {
-            const index = parseInt(p.id.substring(newPageId.length)) || suffix;
+            const index = parseInt(p.id.substring(newPageId.length), 10) || suffix;
             suffix = Math.max(index + 1, suffix + 1);
         }
     });
@@ -66,43 +52,39 @@ function createPageId(name, pages) {
 }
 
 export function changePageName(page, newName) {
-    return function(dispatch, getState) {
-        const newPageId = createPageId(newName, getState().pages);
-
-        dispatch(renamePage(page.id, newName, newPageId));
-        dispatch(selectPage(newPageId, page.isDrillDown, page.context, newName));
+    return {
+        type: types.RENAME_PAGE,
+        pageId: page.id,
+        name: newName
     };
 }
 
-export function updatePageDescription(pageId, newDescription) {
+export function changePageDescription(pageId, newDescription) {
     return {
-        type: types.UPDATE_PAGE_DESCRIPTION,
+        type: types.CHANGE_PAGE_DESCRIPTION,
         pageId,
         description: newDescription
     };
 }
 
 export function selectPage(pageId, isDrilldown, drilldownContext, drilldownPageName) {
-    return function(dispatch, getState) {
-        const state = getState();
-        let dContext = state.drilldownContext || [];
+    return (dispatch, getState) => {
+        const location = { pathname: `/page/${pageId}` };
+        let newDrilldownContext = getState().drilldownContext || [];
 
         // Clear the widgets data since there is no point in saving data for widgets that are not in view
         dispatch(clearWidgetsData());
 
+        // Update context and location depending on page is drilldown
         if (!isDrilldown) {
             dispatch(clearContext());
-        }
-
-        const location = { pathname: `/page/${pageId}` };
-        if (!_.isEmpty(drilldownPageName)) {
-            location.pathname += `/${drilldownPageName}`;
-        }
-
-        if (isDrilldown) {
+        } else {
+            if (!_.isEmpty(drilldownPageName)) {
+                location.pathname += `/${drilldownPageName}`;
+            }
             if (drilldownPageName || drilldownContext) {
-                dContext = [
-                    ...dContext,
+                newDrilldownContext = [
+                    ...newDrilldownContext,
                     {
                         context: drilldownContext || {},
                         pageName: drilldownPageName
@@ -110,7 +92,7 @@ export function selectPage(pageId, isDrilldown, drilldownContext, drilldownPageN
                 ];
             }
 
-            location.search = stringify({ c: JSON.stringify(dContext) });
+            location.search = stringify({ c: JSON.stringify(newDrilldownContext) });
         }
 
         dispatch(push(location));
@@ -122,15 +104,40 @@ export function selectPageByName(pageName) {
     return selectPage(pageId, false);
 }
 
-export function removePage(pageId) {
+export function addPage(name) {
+    return (dispatch, getState) => {
+        const newPageId = createPageId(name, getState().pages);
+
+        dispatch(createPage(name, newPageId));
+        dispatch(selectPage(newPageId, false));
+    };
+}
+
+function removeSinglePage(pageId) {
     return {
         type: types.REMOVE_PAGE,
         pageId
     };
 }
 
+export function removePage(page) {
+    return (dispatch, getState) => {
+        const pagesMap = createPagesMap(getState().pages);
+        const removePageWithChildren = p => {
+            if (!_.isEmpty(p.children)) {
+                p.children.forEach(childPageId => {
+                    removePageWithChildren(pagesMap[childPageId]);
+                });
+            }
+            dispatch(removeSinglePage(p.id));
+        };
+
+        removePageWithChildren(page);
+    };
+}
+
 export function createPagesFromTemplate() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const { manager } = getState();
         const tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
@@ -183,7 +190,7 @@ export function reorderPage(pageIndex, newPageIndex) {
 }
 
 export function selectHomePage() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const homePageId = getState().pages[0].id;
 
         dispatch(selectPage(homePageId));
@@ -191,7 +198,7 @@ export function selectHomePage() {
 }
 
 export function selectParentPage() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const state = getState();
 
         const pageId = state.app.currentPageId || state.pages[0].id;
@@ -201,33 +208,6 @@ export function selectParentPage() {
             const parentPage = _.find(state.pages, { id: page.parent });
             dispatch(popDrilldownContext());
             dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
-        }
-    };
-}
-
-export function selectRootPage() {
-    return function(dispatch, getState) {
-        const state = getState();
-
-        const pageId = state.app.currentPageId;
-        if (!pageId || !_.find(state.pages, { id: pageId })) {
-            return dispatch(selectHomePage());
-        }
-
-        var _findRecurse = (pid, count) => {
-            const page = _.find(state.pages, { id: pid });
-
-            if (page && page.parent) {
-                return _findRecurse(page.parent, count + 1);
-            }
-
-            return { page, count };
-        };
-
-        const found = _findRecurse(pageId, 0);
-        if (found.count > 0) {
-            dispatch(popDrilldownContext(found.count));
-            dispatch(selectPage(found.page.id, found.page.isDrillDown));
         }
     };
 }

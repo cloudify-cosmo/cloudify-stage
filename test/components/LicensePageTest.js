@@ -11,9 +11,9 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
 import moment from 'moment';
-import Consts from '../../app/utils/consts.js';
-import ConnectedLicensePage from '../../app/containers/LicensePage.js';
-import LicensePage from '../../app/components/LicensePage.js';
+import Consts from '../../app/utils/consts';
+import ConnectedLicensePage from '../../app/containers/LicensePage';
+import LicensePage from '../../app/components/LicensePage';
 import * as BasicComponents from '../../app/components/basic';
 
 import { createToolbox } from '../../app/utils/Toolbox';
@@ -61,12 +61,24 @@ describe('(Component) LicensePage', () => {
     ) => {
         const currentLicense = messageContainerComponent.find('CurrentLicense');
         const tableCells = currentLicense.find('TableCell');
-        firstRow !== '' && expect(tableCells.at(1).text()).to.be.eql(firstRow);
-        secondRow !== '' && expect(tableCells.at(3).text()).to.be.eql(secondRow);
-        thirdRow !== '' && expect(tableCells.at(5).text()).to.be.eql(thirdRow);
-        fourthRow !== '' && expect(tableCells.at(7).text()).to.be.eql(fourthRow);
-        fifthRow !== '' && expect(tableCells.at(9).text()).to.be.eql(fifthRow);
-        sixthRow !== '' && expect(tableCells.at(11).text()).to.be.eql(sixthRow);
+        if (firstRow !== '') {
+            expect(tableCells.at(1).text()).to.be.eql(firstRow);
+        }
+        if (secondRow !== '') {
+            expect(tableCells.at(3).text()).to.be.eql(secondRow);
+        }
+        if (thirdRow !== '') {
+            expect(tableCells.at(5).text()).to.be.eql(thirdRow);
+        }
+        if (fourthRow !== '') {
+            expect(tableCells.at(7).text()).to.be.eql(fourthRow);
+        }
+        if (fifthRow !== '') {
+            expect(tableCells.at(9).text()).to.be.eql(fifthRow);
+        }
+        if (sixthRow !== '') {
+            expect(tableCells.at(11).text()).to.be.eql(sixthRow);
+        }
     };
 
     const verifyUploadLicense = isPresent => {

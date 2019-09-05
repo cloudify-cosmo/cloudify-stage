@@ -19,7 +19,6 @@ export default class Page extends Component {
         onPageDescriptionChange: PropTypes.func.isRequired,
         onWidgetsGridDataChange: PropTypes.func.isRequired,
         onPageSelected: PropTypes.func.isRequired,
-        onPageRemoved: PropTypes.func.isRequired,
         onEditModeExit: PropTypes.func.isRequired,
         isEditMode: PropTypes.bool.isRequired
     };
@@ -42,7 +41,6 @@ export default class Page extends Component {
                     onPageNameChange={this.props.onPageNameChange}
                     isEditMode={this.props.isEditMode}
                     onPageSelected={this.props.onPageSelected}
-                    onPageRemoved={this.props.onPageRemoved}
                 />
 
                 <div>
