@@ -7,9 +7,8 @@ import React from 'react';
 
 import { Breadcrumb, EditableLabel } from './basic';
 
-export default function Breadcrumbs(props) {
+export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelected, pagesList }) {
     const breadcrumbElements = [];
-    const { isEditMode, onPageNameChange, onPageSelected, pagesList } = props;
     const reversedPagesList = _([...pagesList])
         .reverse()
         .value();
