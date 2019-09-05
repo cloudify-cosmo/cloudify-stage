@@ -25,14 +25,13 @@ router.get('/image/:blueprint', function(req, res, next) {
             if (additions) {
                 if (additions.image) {
                     res.contentType('image/*').send(additions.image);
+                    return;
                 } else if (additions.imageUrl) {
                     res.redirect(additions.imageUrl);
-                } else {
-                    res.contentType('image/png').sendFile(path.resolve(__dirname, '../images/logo.png'));
+                    return;
                 }
-            } else {
-                res.contentType('image/png').sendFile(path.resolve(__dirname, '../images/logo.png'));
             }
+            res.contentType('image/png').sendFile(path.resolve(__dirname, '../node_modules/cloudify-ui-common/images/logo_color.png'));
         })
         .catch(next);
 });
