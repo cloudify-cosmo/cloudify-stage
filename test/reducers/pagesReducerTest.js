@@ -1,27 +1,24 @@
 /**
- * Created by kinneretzin on 03/01/2017.
- */
-
-/**
  * Created by kinneretzin on 11/12/2016.
  */
 import { expect } from 'chai';
-import sinon from 'sinon';
 import { parse } from 'query-string';
 
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
 
-import PagesReducer from '../../app/reducers/pageReducer';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+
+import pageReducer from '../../app/reducers/pageReducer';
 
 import { drillDownToPage } from '../../app/actions/widgets';
+import { changePageName, changePageDescription, removePage } from '../../app/actions/page';
 
-import * as types from '../../app/actions/types.js';
+import * as types from '../../app/actions/types';
 
 const mockStore = configureMockStore([thunk]);
 
-describe('(Reducer) Pages - drilldown process', () => {
+describe('(Reducer) Pages', () => {
     describe('Drilldown to page actions', () => {
         it('create a drilldown page if it doesnt exist', () => {
             const initialState = {
@@ -80,12 +77,13 @@ describe('(Reducer) Pages - drilldown process', () => {
 
             _.each(storeActions, (action, index) => {
                 const expectedAction = expectedActions[index];
+                const actualAction = action;
                 delete expectedAction.newPageId;
                 delete expectedAction.pageId;
                 delete expectedAction.drillDownPageId;
-                delete action.newPageId;
-                delete action.pageId;
-                delete action.drillDownPageId;
+                delete actualAction.newPageId;
+                delete actualAction.pageId;
+                delete actualAction.drillDownPageId;
 
                 expect(action).to.eql(expectedAction);
             });
@@ -218,7 +216,7 @@ describe('(Reducer) Pages - drilldown process', () => {
             ]
         };
 
-        const store = createStore(PagesReducer, initialState.pages, applyMiddleware(thunk));
+        const store = createStore(pageReducer, initialState.pages, applyMiddleware(thunk));
 
         const widget = initialState.pages[0].widgets[0];
         const defaultTemplate = initialState.templates.templatesDef.tmp1;
@@ -302,7 +300,7 @@ describe('(Reducer) Pages - drilldown process', () => {
             ]
         };
 
-        const store = createStore(PagesReducer, initialState.pages, applyMiddleware(thunk));
+        const store = createStore(pageReducer, initialState.pages, applyMiddleware(thunk));
 
         const widget = initialState.pages[0].widgets[0];
         const defaultTemplate1 = initialState.templates.templatesDef.tmp1;
@@ -325,6 +323,130 @@ describe('(Reducer) Pages - drilldown process', () => {
         it('Drilldown pages should have the right IDs', () => {
             expect(parentPage.widgets[0].drillDownPages.tmp1).to.equal(drillDownPage1.id);
             expect(parentPage.widgets[0].drillDownPages.tmp2).to.equal(drillDownPage2.id);
+        });
+    });
+
+    describe('Page removal', () => {
+        const initialState = {
+            pages: [
+                {
+                    id: 'dashboard',
+                    name: 'Dashboard',
+                    description: '',
+                    widgets: []
+                },
+                {
+                    id: 'local_blueprints',
+                    name: 'Local Blueprints',
+                    description: '',
+                    widgets: [],
+                    children: ['local_blueprints_blueprint']
+                },
+                {
+                    id: 'deployments',
+                    name: 'Deployments',
+                    description: '',
+                    widgets: [],
+                    children: ['deployments_deployment']
+                },
+                {
+                    isDrillDown: true,
+                    id: 'deployments_deployment',
+                    name: 'Deployment',
+                    description: '',
+                    widgets: [],
+                    parent: 'deployments'
+                },
+                {
+                    isDrillDown: true,
+                    id: 'local_blueprints_blueprint',
+                    name: 'Blueprint',
+                    description: '',
+                    widgets: [],
+                    parent: 'local_blueprints',
+                    children: ['local_blueprints_blueprint_hello_world_deployment']
+                },
+                {
+                    isDrillDown: true,
+                    id: 'local_blueprints_blueprint_hello_world_deployment',
+                    name: 'Deployment',
+                    description: '',
+                    widgets: [],
+                    parent: 'local_blueprints_blueprint'
+                }
+            ]
+        };
+        const dashboardPage = initialState.pages[0];
+        const localBlueprintsPage = initialState.pages[1];
+        const deploymentsPage = initialState.pages[2];
+        const deploymentDrillDownPage = initialState.pages[3];
+        const blueprintDrillDownPage = initialState.pages[4];
+        const deploymentDrillDownPageFromBlueprintDrillDownPage = initialState.pages[5];
+
+        it('Single page should not exist when page without children is being removed', () => {
+            const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
+
+            store.dispatch(removePage(dashboardPage));
+
+            const { pages } = store.getState();
+            expect(pages).to.deep.equal([
+                localBlueprintsPage,
+                deploymentsPage,
+                deploymentDrillDownPage,
+                blueprintDrillDownPage,
+                deploymentDrillDownPageFromBlueprintDrillDownPage
+            ]);
+        });
+
+        it('All pages in page hierarchy should not exist when page with children is being removed', () => {
+            const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
+
+            store.dispatch(removePage(localBlueprintsPage));
+
+            const { pages } = store.getState();
+            expect(pages).to.deep.equal([dashboardPage, deploymentsPage, deploymentDrillDownPage]);
+        });
+    });
+
+    describe('Page update', () => {
+        const initialState = {
+            pages: [
+                {
+                    id: 'dashboard',
+                    name: 'Dashboard',
+                    description: 'DevOps control panel',
+                    widgets: []
+                }
+            ]
+        };
+        const dashboardPage = initialState.pages[0];
+
+        it('Changing page name should affect only name property and not id', () => {
+            const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
+
+            store.dispatch(changePageName(dashboardPage, 'Control Panel'));
+
+            const { pages } = store.getState();
+            expect(pages[0]).to.deep.equal({
+                id: 'dashboard',
+                name: 'Control Panel',
+                description: 'DevOps control panel',
+                widgets: []
+            });
+        });
+
+        it('Changing page description should affect only description property', () => {
+            const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
+
+            store.dispatch(changePageDescription(dashboardPage.id, 'Widgets for controlling the world'));
+
+            const { pages } = store.getState();
+            expect(pages[0]).to.deep.equal({
+                id: 'dashboard',
+                name: 'Dashboard',
+                description: 'Widgets for controlling the world',
+                widgets: []
+            });
         });
     });
 });
