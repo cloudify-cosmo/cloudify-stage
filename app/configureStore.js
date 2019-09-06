@@ -41,12 +41,5 @@ export default (history, config) => {
         }, 1000)
     );
 
-    if (module.hot) {
-        module.hot.accept('./reducers', () => {
-            const newReducers = require('./reducers');
-            store.replaceReducer(newReducers);
-        });
-    }
-
     return store;
 };
