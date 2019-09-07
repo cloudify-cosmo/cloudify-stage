@@ -22,6 +22,7 @@ class UpdateDeploymentModal extends React.Component {
         installWorkflowFirst: false,
         ignoreFailure: false,
         automaticReinstall: true,
+        updateExecutions: false,
         reinstallList: [],
         showPreview: false,
         previewData: {},
@@ -106,7 +107,8 @@ class UpdateDeploymentModal extends React.Component {
                 this.state.automaticReinstall,
                 this.state.reinstallList,
                 this.state.force,
-                preview
+                preview,
+                this.state.updateExecutions
             )
             .then(data => {
                 if (preview) {
@@ -330,6 +332,19 @@ class UpdateDeploymentModal extends React.Component {
                                                  that were explicitly given to "Reinstall
                                                  node instances list" will still be reinstalled'
                                 checked={this.state.automaticReinstall}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
+                        </Form.Field>
+
+                        <Form.Field>
+                            <Form.Checkbox
+                                label="Update stored operations"
+                                name="updateExecutions"
+                                toggle
+                                help='Reevaluate inputs to stored operations, so that resuming
+                                                a workflow which was started before the update,
+                                                will use the updated values'
+                                checked={this.state.updateExecutions}
                                 onChange={this._handleInputChange.bind(this)}
                             />
                         </Form.Field>

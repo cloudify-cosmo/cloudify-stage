@@ -53,7 +53,8 @@ class DeploymentActions {
         shouldRunReinstall = true,
         reinstallList = [],
         forceUpdate = false,
-        preview = false
+        preview = false,
+        updateExecutions = false,
     ) {
         const data = {};
 
@@ -69,6 +70,7 @@ class DeploymentActions {
         data.reinstall_list = reinstallList;
         data.force = forceUpdate;
         data.preview = preview;
+        data.update_executions = updateExecutions;
 
         if (!_.isEmpty(deploymentInputs)) {
             data.inputs = deploymentInputs;
