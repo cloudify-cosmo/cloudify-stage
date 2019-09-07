@@ -341,9 +341,9 @@ class UpdateDeploymentModal extends React.Component {
                                 label="Update stored operations"
                                 name="updateExecutions"
                                 toggle
-                                help='Reevaluate inputs to stored operations, so that resuming
+                                help="Reevaluate inputs to stored operations, so that resuming
                                                 a workflow which was started before the update,
-                                                will use the updated values'
+                                                will use the updated values"
                                 checked={this.state.updateExecutions}
                                 onChange={this._handleInputChange.bind(this)}
                             />

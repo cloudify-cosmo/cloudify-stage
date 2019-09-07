@@ -54,7 +54,7 @@ class DeploymentActions {
         reinstallList = [],
         forceUpdate = false,
         preview = false,
-        updateExecutions = false,
+        updateExecutions = false
     ) {
         const data = {};
 
