@@ -336,19 +336,6 @@ class UpdateDeploymentModal extends React.Component {
                             />
                         </Form.Field>
 
-                        <Form.Field>
-                            <Form.Checkbox
-                                label="Update stored operations"
-                                name="updateExecutions"
-                                toggle
-                                help="Reevaluate inputs to stored operations, so that resuming
-                                                a workflow which was started before the update,
-                                                will use the updated values"
-                                checked={this.state.updateExecutions}
-                                onChange={this._handleInputChange.bind(this)}
-                            />
-                        </Form.Field>
-
                         <NodeInstancesFilter
                             name="reinstallList"
                             deploymentId={this.props.deployment.id}
@@ -372,6 +359,19 @@ class UpdateDeploymentModal extends React.Component {
                                                  update on this deployment has failed to
                                                  finished successfully"
                                 checked={this.state.force}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
+                        </Form.Field>
+
+                        <Form.Field>
+                            <Form.Checkbox
+                                label="Update stored operations"
+                                name="updateExecutions"
+                                toggle
+                                help="Reevaluate inputs to stored operations, so that resuming
+                                                a workflow which was started before the update,
+                                                will use the updated values"
+                                checked={this.state.updateExecutions}
                                 onChange={this._handleInputChange.bind(this)}
                             />
                         </Form.Field>
