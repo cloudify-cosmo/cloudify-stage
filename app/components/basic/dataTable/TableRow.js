@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import TableDataCell from './TableDataCell';
 
-
 /**
  * Defines table rows, renders <tr> elements.
  *

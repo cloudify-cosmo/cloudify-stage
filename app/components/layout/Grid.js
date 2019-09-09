@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import GridItem from './GridItem';
 
-
 const ReactGridLayout = WidthProvider(Responsive);
 
 export default class Grid extends Component {

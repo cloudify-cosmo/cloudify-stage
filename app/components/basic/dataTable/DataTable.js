@@ -15,8 +15,6 @@ import TableRow from './TableRow';
 import TableRowExpandable from './TableRowExpandable';
 import TableSearch from './TableSearch';
 
-
-
 /**
  * DataTable component enables fetching data using predefined function and showing tabular data in a simple manner.
  *
