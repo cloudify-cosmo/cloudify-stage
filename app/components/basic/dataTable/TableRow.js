@@ -3,10 +3,9 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
-import { areComponentsEqual } from 'react-hot-loader';
 import TableDataCell from './TableDataCell';
+
 
 /**
  * Defines table rows, renders <tr> elements.
@@ -58,7 +57,7 @@ export default class TableRow extends Component {
         const children = [];
         let index = 0;
         React.Children.forEach(this.props.children, child => {
-            if (child.type && areComponentsEqual(child.type, TableDataCell) && this._showData(index++)) {
+            if (child.type === TableDataCell && this._showData(index++)) {
                 children.push(child);
             }
         });

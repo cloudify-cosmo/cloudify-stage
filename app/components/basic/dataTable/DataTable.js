@@ -3,20 +3,19 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
 import { Form } from 'semantic-ui-react';
-import { areComponentsEqual } from 'react-hot-loader';
-
-import TableRow from './TableRow';
-import TableRowExpandable from './TableRowExpandable';
+import Pagination from '../pagination/Pagination';
+import TableAction from './TableAction';
 import TableColumn from './TableColumn';
 import TableDataCell from './TableDataCell';
 import TableDataExpandable from './TableDataExpandable';
-import TableAction from './TableAction';
 import TableFilter from './TableFilter';
+import TableRow from './TableRow';
+import TableRowExpandable from './TableRowExpandable';
 import TableSearch from './TableSearch';
-import Pagination from '../pagination/Pagination';
+
+
 
 /**
  * DataTable component enables fetching data using predefined function and showing tabular data in a simple manner.
@@ -362,19 +361,19 @@ export default class DataTable extends Component {
 
         const showCols = [];
         React.Children.forEach(this.props.children, function(child) {
-            if (child && child.type) {
-                if (areComponentsEqual(child.type, TableColumn)) {
+            if (child) {
+                if (child.type === TableColumn) {
                     showCols.push(child.props.show);
                     headerColumns.push(child);
-                } else if (areComponentsEqual(child.type, TableRow)) {
+                } else if (child.type === TableRow) {
                     bodyRows.push(React.cloneElement(child, { showCols }));
-                } else if (areComponentsEqual(child.type, TableRowExpandable)) {
+                } else if (child.type === TableRowExpandable) {
                     const expandableContent = [];
                     React.Children.forEach(child.props.children, function(expChild) {
-                        if (expChild && expChild.type) {
-                            if (areComponentsEqual(expChild.type, TableRow)) {
+                        if (expChild) {
+                            if (expChild.type === TableRow) {
                                 bodyRows.push(React.cloneElement(expChild, { showCols }));
-                            } else if (areComponentsEqual(expChild.type, TableDataExpandable) && child.props.expanded) {
+                            } else if (expChild.type === TableDataExpandable && child.props.expanded) {
                                 expandableContent.push(
                                     React.cloneElement(expChild, { numberOfColumns: showCols.length })
                                 );
@@ -382,9 +381,9 @@ export default class DataTable extends Component {
                         }
                     });
                     bodyRows.push(expandableContent);
-                } else if (areComponentsEqual(child.type, TableAction)) {
+                } else if (child.type === TableAction) {
                     gridAction = child;
-                } else if (areComponentsEqual(child.type, TableFilter)) {
+                } else if (child.type === TableFilter) {
                     gridFilters.push(child);
                 }
             }

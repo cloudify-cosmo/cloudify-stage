@@ -3,14 +3,12 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
-import { areComponentsEqual } from 'react-hot-loader';
-import { Message, Form, Icon } from 'semantic-ui-react';
-import SegmentItem from './SegmentItem';
-import SegmentAction from './SegmentAction';
-import Pagination from '../pagination/Pagination';
+import { Form, Icon, Message } from 'semantic-ui-react';
 import TableSearch from '../dataTable/TableSearch';
+import Pagination from '../pagination/Pagination';
+import SegmentAction from './SegmentAction';
+import SegmentItem from './SegmentItem';
 
 /**
  * DataSegment component enables fetching data using predefined function and showing segmented data in a simple manner.
@@ -211,7 +209,7 @@ export default class DataSegment extends Component {
 
         React.Children.forEach(this.props.children, function(child) {
             if (child && child.type) {
-                if (areComponentsEqual(child.type, SegmentAction)) {
+                if (child.type === SegmentAction) {
                     segmentAction = child;
                 } else {
                     children.push(child);

@@ -3,11 +3,10 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
-import { areComponentsEqual } from 'react-hot-loader';
-import RGL, { WidthProvider, Responsive } from 'react-grid-layout';
+import { Responsive, WidthProvider } from 'react-grid-layout';
 import GridItem from './GridItem';
+
 
 const ReactGridLayout = WidthProvider(Responsive);
 
@@ -30,7 +29,7 @@ export default class Grid extends Component {
     }
 
     processGridItem(el) {
-        if (el.type && !areComponentsEqual(el.type, GridItem)) {
+        if (el.type && el.type !== GridItem) {
             return [];
         }
         return React.createElement(

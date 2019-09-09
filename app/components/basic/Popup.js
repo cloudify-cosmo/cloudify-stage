@@ -3,10 +3,9 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
 import { Popup as PopupSemanticUiReact } from 'semantic-ui-react';
-import { areComponentsEqual } from 'react-hot-loader';
+
 
 class Wrapper extends Component {
     static propTypes = {
@@ -55,7 +54,7 @@ export default class Popup extends Component {
         let { children } = this.props;
 
         React.Children.forEach(this.props.children, function(child) {
-            if (!!child && !!child.type && areComponentsEqual(child.type, Wrapper)) {
+            if (!!child && child.type === Wrapper) {
                 trigger = child.props.children;
                 children = _.without(props.children, child);
             }
