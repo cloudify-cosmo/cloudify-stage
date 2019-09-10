@@ -5,6 +5,10 @@
     z-index: 5;
 }
 
+.sites-map a:hover {
+    text-decoration: none !important;
+}
+
 .deploymentState .segment {
     padding: 1px 0px !important;
     min-width: 4rem;
