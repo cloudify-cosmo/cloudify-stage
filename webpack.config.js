@@ -25,7 +25,6 @@ const rules = [
                 options: {
                     presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'],
                     plugins: [
-                        'react-hot-loader/babel',
                         '@babel/plugin-transform-runtime',
                         '@babel/plugin-proposal-class-properties'
                     ],
@@ -153,7 +152,6 @@ module.exports = [
                 chunks: ['main.bundle']
             }),
             new webpack.optimize.OccurrenceOrderPlugin(false),
-            new webpack.HotModuleReplacementPlugin(),
             new webpack.ProvidePlugin({
                 $: 'jquery',
                 jQuery: 'jquery',
@@ -183,8 +181,7 @@ module.exports = [
                     from: 'widgets/**/src/backend.js',
                     to: '[path]../backend.js'
                 }
-            ]),
-            new webpack.HotModuleReplacementPlugin()
+            ])
         ],
         module: {
             rules
@@ -203,7 +200,6 @@ module.exports = [
         optimization: {
             namedModules: true
         },
-        plugins: [new webpack.HotModuleReplacementPlugin()],
         module: {
             rules
         }

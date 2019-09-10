@@ -4,7 +4,6 @@
 
 import React, { Component } from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
-import { hot } from 'react-hot-loader/root';
 
 import Consts from '../utils/consts';
 import Layout from '../containers/layout/Layout';
@@ -65,4 +64,4 @@ class Routes extends Component {
     }
 }
 
-export default hot(Routes);
+export default Routes;
