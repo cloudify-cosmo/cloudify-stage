@@ -2,7 +2,6 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-const path = require('path');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 
@@ -50,7 +49,7 @@ const options = {
         [`${contextPath}/plugins`]: proxyOptions
     },
     watchOptions: {
-        ignored: [path.resolve(__dirname, 'userData')]
+        ignored: ['**/userData/**']
     }
 };
 

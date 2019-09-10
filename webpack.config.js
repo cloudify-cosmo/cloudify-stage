@@ -24,10 +24,7 @@ const rules = [
                 loader: 'babel-loader',
                 options: {
                     presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'],
-                    plugins: [
-                        '@babel/plugin-transform-runtime',
-                        '@babel/plugin-proposal-class-properties'
-                    ],
+                    plugins: ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties'],
                     babelrc: false
                 }
             }

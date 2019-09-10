@@ -19,7 +19,6 @@ const options = _.merge(
             min: 0,
             idle: 10000
         },
-        operatorsAliases: false,
         logging: false
         // logging: (message) => logger.debug(message)
     },
