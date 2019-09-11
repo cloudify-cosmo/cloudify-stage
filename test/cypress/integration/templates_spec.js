@@ -158,77 +158,58 @@ describe('Template Management', () => {
         cy.get('div > h2').should('have.text', '404 Page Not Found');
     });
 
-    /* it('allows admin users to create and modify pages', () => {
-        cy.removeUserPages()
-            .login();
+    it('allows admin users to create and modify pages', () => {
+        cy.removeUserPages().login();
 
         cy.get('.usersMenu').click();
-        cy.get('.usersMenu').contains('Template Management').click();
-
-        cy.get('.createPageButton')
+        cy.get('.usersMenu')
+            .contains('Template Management')
             .click();
+
+        cy.get('.createPageButton').click();
 
         // Specify page name
-        cy.get('.field > .ui > input')
-            .type('Page 1');
+        cy.get('.field > .ui > input').type('Page 1');
 
         // Create page
-        cy.get('.actions > .ok')
-            .click();
+        cy.get('.actions > .ok').click();
 
         // Add widgets
-        cy.get('.editModeSidebar .content > :nth-child(1)')
-            .click();
-        cy.get('[data-id="agents"]')
-            .click();
-        cy.get('[data-id="blueprintSources"]')
-            .click();
-        cy.get('button#addWidgetsBtn')
-            .click();
+        cy.get('.editModeSidebar .content > :nth-child(1)').click();
+        cy.get('[data-id="agents"]').click();
+        cy.get('[data-id="blueprintSources"]').click();
+        cy.get('button#addWidgetsBtn').click();
 
         // Save page
-        cy.get('.editModeSidebar .content > :nth-child(2)')
-            .click();
+        cy.get('.editModeSidebar .content > :nth-child(2)').click();
 
         // Verify page
         verifyPageRow(builtInPages.length + 1, 'page_1', 'Page 1');
 
         // Edit page
-        getPageRow('page_1')
-            .within(() => cy.get('.edit').click());
+        getPageRow('page_1').within(() => cy.get('.edit').click());
 
         // Verify widgets
-        cy.get('.agentsWidget')
-            .should('be.visible', true);
-        cy.get('.blueprintSourcesWidget')
-            .should('be.visible', true);
+        cy.get('.agentsWidget').should('be.visible', true);
+        cy.get('.blueprintSourcesWidget').should('be.visible', true);
 
         // Add more widgets
-        cy.get('.editModeSidebar .content > :nth-child(1)')
-            .click();
-        cy.get('[data-id="plugins"]')
-            .click();
-        cy.get('[data-id="snapshots"]')
-            .click();
-        cy.get('button#addWidgetsBtn')
-            .click();
+        cy.get('.editModeSidebar .content > :nth-child(1)').click();
+        cy.get('[data-id="plugins"]').click();
+        cy.get('[data-id="snapshots"]').click();
+        cy.get('button#addWidgetsBtn').click();
 
         // Save page
-        cy.get('.editModeSidebar .content > :nth-child(2)')
-            .click();
+        cy.get('.editModeSidebar .content > :nth-child(2)').click();
 
         // Remove page
-        getPageRow('page_1')
-            .within(() => cy.get('.remove').click());
-        cy.get('.rightFloated > .green')
-            .click();
-        cy.get('.main .loading')
-            .should('be.not.visible', true);
+        getPageRow('page_1').within(() => cy.get('.remove').click());
+        cy.get('.rightFloated > .green').click();
+        cy.get('.main .loading').should('be.not.visible', true);
 
         // Verify page was removed
-        cy.getPages()
-            .then((data) => expect(data.body.filter(page => page.id === 'page_1')).to.be.empty)
-    }); */
+        cy.getPages().then(data => expect(data.body.filter(page => page.id === 'page_1')).to.be.empty);
+    });
 
     it('allows admin users to create and modify templates', () => {
         cy.removeUserTemplates().login();

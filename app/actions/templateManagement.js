@@ -323,7 +323,6 @@ export function persistPage(page) {
                 }
             })
             .then(() => dispatch(addPage(page.id, page.name, pageData.widgets)))
-            .then(() => dispatch(fetchTemplates()))
             .catch(err => dispatch(errorTemplateManagement(err.message)));
     };
 }
