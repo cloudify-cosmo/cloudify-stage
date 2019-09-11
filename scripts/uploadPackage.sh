@@ -8,7 +8,8 @@ COMMAND="
   sudo chown -R stage_user:stage_group /opt/cloudify-stage;
   cd /opt/cloudify-stage/backend;
   sudo /opt/nodejs/bin/npm run db-migrate;
-  sudo service cloudify-stage restart;"
+  sudo service cloudify-stage restart;
+  sudo /opt/nodejs/bin/npm run wait-on-server;"
 
 NODE_MODULES_PATH="$( npm root )"
 UPLOAD_PACKAGE_SCRIPT_PATH="${NODE_MODULES_PATH}/cloudify-ui-common/scripts/upload-package.sh"
