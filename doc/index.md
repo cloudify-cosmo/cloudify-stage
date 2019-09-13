@@ -52,4 +52,4 @@ For example if you want to use Message component use `Stage.Basic.Message`.
 - [Cloudify Console @ GitHub](https://github.com/cloudify-cosmo/cloudify-stage) - official Git repository with Cloudify Console source code
 - [Cloudify Console Widgets Boilerplate @ GitHub](https://github.com/cloudify-cosmo/Cloudify-UI-Widget-boilerplate) - Git repository containing widget development environment  
 - [Cloudify Documentation](http://docs.cloudify.co) - latest official version of Cloudify documentation
-- [Creating Custom Widgets @ Cloudify Documentation](http://docs.cloudify.co/latest/developer/custom_console/custom-widgets/) - latest version of creating custom widgets how-to
+- [Writing Widgets @ Cloudify Documentation](http://docs.cloudify.co/latest/developer/writing_widgets/) - latest version of creating custom widgets how-to
