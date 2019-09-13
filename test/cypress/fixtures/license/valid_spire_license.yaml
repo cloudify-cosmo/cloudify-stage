@@ -1,0 +1,15 @@
+license:
+  capabilities:
+    - cap1
+    - cap2
+  cloudify_version: null
+  customer_id: INT-Internal-111111111
+  expiration_date: null
+  license_edition: Spire
+  trial: false
+signature: !!binary |
+  QQcth41WVGX5SgyIs7ENIjmvpXQNzbvMHzGJ+3bWE2VaF36kta8sJULoTkp4KcRM1bLG+5waNbtC
+  Ij5fDk0OwbI0YvsPnJM2CsForyde1RbMLz21VdnM3t6TR7+86f+2+QzASJnMdF0pjy0OS3iEWTsn
+  /YZ4aVZibY3j4oBIkldEFxedaJbw53hksacCIIh68GkPQmJy3zyaJ0g4D7bXXAZ1TpEBVAFKOel8
+  0QCvHtp2b/41EYMUqmln6IeXwCSidK21QiZmV3g1cCSDHLqb0jIA7Qecxrg036me9/dz/So8NpBj
+  xS7ttBJqBbHVwUh/EI3JozYyeEPfshymh7UD4w==

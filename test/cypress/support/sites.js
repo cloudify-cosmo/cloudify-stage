@@ -20,8 +20,10 @@ Cypress.Commands.add('deleteSite', siteName => {
     cy.cfyRequest(`/sites/${siteName}`, 'DELETE', { tenant: 'default_tenant' });
 });
 
-Cypress.Commands.add('deleteSites', sites => {
-    for (const site of sites) {
-        cy.deleteSite(site.name);
-    }
+Cypress.Commands.add('deleteSites', () => {
+    cy.cfyRequest('/sites', 'GET', { tenant: 'default_tenant' }).then(response => {
+        for (const site of response.body.items) {
+            cy.deleteSite(site.name);
+        }
+    });
 });
