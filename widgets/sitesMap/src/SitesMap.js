@@ -6,17 +6,16 @@ export default class SitesMap extends React.Component {
      *
      * @property {boolean} sitesAreDefined - specifies whether sites are defined
      * @property {boolean} isMapAvailable - specifies whether there is internet connection
-     * @property {boolean} mapUrl - the base url of the tiles server
-     * @property {boolean} showAllLabels - specifies whether all the site labels displayed
      * @property {object} toolbox - Toolbox object
      * @property {object} data - object with sites data
      * @property {object} dimensions - object with widget dimensions
+     * @property {string} tilesUrlTemplate - map tiles provider template URL
+     * @property {string} attribution - map attribution to be added to map view
+     * @property {boolean} showAllLabels - specifies whether all the site labels displayed
      */
     static propTypes = {
         sitesAreDefined: PropTypes.bool.isRequired,
         isMapAvailable: PropTypes.bool.isRequired,
-        mapUrl: PropTypes.string.isRequired,
-        showAllLabels: PropTypes.bool.isRequired,
         toolbox: PropTypes.object.isRequired,
         data: PropTypes.objectOf(
             PropTypes.shape({
@@ -32,11 +31,16 @@ export default class SitesMap extends React.Component {
                 }).isRequired
             })
         ).isRequired,
+
         dimensions: PropTypes.shape({
             height: PropTypes.number.isRequired,
             width: PropTypes.number.isRequired,
-            maximized: PropTypes.bool.isRequired
-        }).isRequired
+            maximized: PropTypes.bool
+        }).isRequired,
+
+        tilesUrlTemplate: PropTypes.string.isRequired,
+        attribution: PropTypes.string.isRequired,
+        showAllLabels: PropTypes.bool.isRequired
     };
 
     constructor(props) {
@@ -46,19 +50,34 @@ export default class SitesMap extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
+        const {
+            attribution,
+            data,
+            dimensions,
+            isMapAvailable,
+            showAllLabels,
+            sitesAreDefined,
+            tilesUrlTemplate
+        } = this.props;
+
         return (
-            !_.isEqual(this.props.showAllLabels, nextProps.showAllLabels) ||
-            !_.isEqual(this.props.data, nextProps.data) ||
-            !_.isEqual(this.props.sitesAreDefined, nextProps.sitesAreDefined) ||
-            !_.isEqual(this.props.isMapAvailable, nextProps.isMapAvailable) ||
-            !_.isEqual(this.props.dimensions, nextProps.dimensions)
+            !_.isEqual(attribution, nextProps.attribution) ||
+            !_.isEqual(data, nextProps.data) ||
+            !_.isEqual(dimensions, nextProps.dimensions) ||
+            !_.isEqual(isMapAvailable, nextProps.isMapAvailable) ||
+            !_.isEqual(showAllLabels, nextProps.showAllLabels) ||
+            !_.isEqual(sitesAreDefined, nextProps.sitesAreDefined) ||
+            !_.isEqual(tilesUrlTemplate, nextProps.tilesUrlTemplate)
         );
     }
 
     componentDidUpdate(prevProps) {
         const { dimensions } = this.props;
         if (prevProps.dimensions !== dimensions) {
-            this.mapRef.current.leafletElement.invalidateSize();
+            // Widget properties change doesn't affect immediately DOM changes,
+            // so it's necessary to wait a bit till DOM is updated.
+            const refreshAfterDimensionChangeTimeout = 500;
+            setTimeout(() => this.mapRef.current.leafletElement.invalidateSize(), refreshAfterDimensionChangeTimeout);
         }
     }
 
@@ -110,10 +129,10 @@ export default class SitesMap extends React.Component {
 
     render() {
         const { Map, TileLayer } = Stage.Basic.Leaflet;
-        const { isMapAvailable, mapUrl, sitesAreDefined } = this.props;
+        const { attribution, isMapAvailable, sitesAreDefined, tilesUrlTemplate } = this.props;
         if (!isMapAvailable) {
             const NO_INTERNET_MESSAGE = `The widget content cannot be displayed because there is no connection 
-                                         to the maps repository (${mapUrl}).`;
+                                         to the maps repository. Please check network connection and widget's configuration.`;
             return <MapMessage text={NO_INTERNET_MESSAGE} />;
         }
 
@@ -130,8 +149,6 @@ export default class SitesMap extends React.Component {
             bounds: [[-90, -180], [90, 180]],
             viscosity: 0.75
         };
-        const tilesUrl = `${mapUrl}/osm-intl/{z}/{x}/{y}{r}.png?lang=en`;
-        const attribution = '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>';
 
         return (
             <Map
@@ -144,7 +161,7 @@ export default class SitesMap extends React.Component {
                 minZoom={mapOptions.minZoom}
                 maxZoom={mapOptions.maxZoom}
             >
-                <TileLayer attribution={attribution} url={tilesUrl} />
+                <TileLayer attribution={attribution} url={tilesUrlTemplate} />
                 {markers}
             </Map>
         );

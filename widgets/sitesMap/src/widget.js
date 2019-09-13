@@ -1,7 +1,5 @@
 import SitesMap from './SitesMap';
 
-const MAP_URL = 'https://maps.wikimedia.org';
-
 Stage.defineWidget({
     id: 'sitesMap',
     name: 'Sites Map',
@@ -22,6 +20,41 @@ Stage.defineWidget({
             name: 'Show all the site labels',
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'mapUrl',
+            name: 'Map URL',
+            description: 'URL for the map service. It is used to check service availability.',
+            default: 'https://maps.wikimedia.org',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
+            id: 'tilesUrlTemplate',
+            name: 'Map Tiles URL Template',
+            description: (
+                <span>
+                    Template map tiles provider URL. Check URL template section at{' '}
+                    <a href="https://leafletjs.com/reference-1.5.0.html#tilelayer">TileLayer page</a> for details. Check{' '}
+                    <a href="https://leaflet-extras.github.io/leaflet-providers/preview/">providers preview</a> for
+                    examples.
+                </span>
+            ),
+            default: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
+            id: 'attribution',
+            name: 'Map Attribution',
+            description: (
+                <span>
+                    Attribution data to be displayed as small text box on a map. HTML allowed. It is required by map
+                    providers. Check{' '}
+                    <a href="https://leaflet-extras.github.io/leaflet-providers/preview/">providers preview</a>
+                    for examples and requirements from different providers.
+                </span>
+            ),
+            default: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
+            type: Stage.Basic.GenericField.STRING_TYPE
         }
     ],
 
@@ -122,7 +155,8 @@ Stage.defineWidget({
             })
         );
 
-        const isMapAvailable = toolbox.getExternal().isReachable(MAP_URL);
+        const mapUrl = widget.configuration.mapUrl || '';
+        const isMapAvailable = toolbox.getExternal().isReachable(mapUrl);
         return Promise.all([
             sitesData,
             deploymentsData,
@@ -140,16 +174,18 @@ Stage.defineWidget({
             return <Stage.Basic.Loading />;
         }
 
+        const { attribution, tilesUrlTemplate } = widget.configuration;
         const { siteStatuses, isMapAvailable, sitesAreDefined } = this._processData(data);
         return (
             <SitesMap
+                attribution={attribution}
                 data={siteStatuses}
-                toolbox={toolbox}
-                showAllLabels={widget.configuration.showAllLabels}
-                isMapAvailable={isMapAvailable}
-                sitesAreDefined={sitesAreDefined}
-                mapUrl={MAP_URL}
                 dimensions={{ height: widget.height, width: widget.width, maximized: widget.maximized }}
+                isMapAvailable={isMapAvailable}
+                showAllLabels={widget.configuration.showAllLabels}
+                sitesAreDefined={sitesAreDefined}
+                tilesUrlTemplate={tilesUrlTemplate}
+                toolbox={toolbox}
             />
         );
     }
