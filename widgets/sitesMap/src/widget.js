@@ -49,8 +49,8 @@ Stage.defineWidget({
                 <span>
                     Attribution data to be displayed as small text box on a map. HTML allowed. It is required by map
                     providers. Check{' '}
-                    <a href="https://leaflet-extras.github.io/leaflet-providers/preview/">providers preview</a>
-                    for examples and requirements from different providers.
+                    <a href="https://leaflet-extras.github.io/leaflet-providers/preview/">providers preview</a> for{' '}
+                    examples and requirements from different providers.
                 </span>
             ),
             default: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
