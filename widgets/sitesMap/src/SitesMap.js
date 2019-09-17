@@ -92,7 +92,7 @@ export default class SitesMap extends React.Component {
             const { Marker, Popup } = Stage.Basic.Leaflet;
             markers.push(
                 <Marker
-                    position={[site.latitude, site.longitude]}
+                    position={this._mapToLatLng(site)}
                     ref={showLabels}
                     key={`siteMarker${site.name}`}
                     riseOnHover
@@ -106,6 +106,10 @@ export default class SitesMap extends React.Component {
         });
 
         return markers;
+    }
+
+    _mapToLatLng(site) {
+        return [site.latitude, site.longitude];
     }
 
     render() {
@@ -123,27 +127,24 @@ export default class SitesMap extends React.Component {
         }
 
         const mapOptions = {
-            zoom: 2.5,
             minZoom: 2,
             maxZoom: 18,
-            position: [50, 0],
-            bounds: [[-90, -180], [90, 180]],
-            viscosity: 0.75
+            maxBounds: [[-90, -180], [90, 180]],
+            maxBoundsViscosity: 0.75
         };
         const tilesUrl = `${mapUrl}/osm-intl/{z}/{x}/{y}{r}.png?lang=en`;
         const attribution = '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>';
 
+        const sites = _.values(this.props.data);
+        if (sites.length > 1) {
+            mapOptions.bounds = L.latLngBounds(sites.map(this._mapToLatLng)).pad(0.05);
+        } else {
+            mapOptions.center = this._mapToLatLng(sites[0]);
+            mapOptions.zoom = 2.5;
+        }
+
         return (
-            <Map
-                ref={this.mapRef}
-                className="sites-map"
-                center={mapOptions.position}
-                zoom={mapOptions.zoom}
-                maxBounds={mapOptions.bounds}
-                maxBoundsViscosity={mapOptions.viscosity}
-                minZoom={mapOptions.minZoom}
-                maxZoom={mapOptions.maxZoom}
-            >
+            <Map ref={this.mapRef} className="sites-map" {...mapOptions}>
                 <TileLayer attribution={attribution} url={tilesUrl} />
                 {markers}
             </Map>

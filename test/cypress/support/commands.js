@@ -21,9 +21,9 @@ Cypress.Commands.add('waitUntilLoaded', () => {
     cy.get('#loader', { timeout: 20000 }).should('be.not.visible', true);
 });
 
-Cypress.Commands.add('activate', () =>
+Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
     cy
-        .fixture('license/valid_trial_license.yaml')
+        .fixture(`license/${license}.yaml`)
         .then(license =>
             cy.request({
                 method: 'PUT',
