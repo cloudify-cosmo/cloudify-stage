@@ -136,18 +136,10 @@ export default class SitesMap extends React.Component {
         const attribution = '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>';
 
         const sites = _.values(this.props.data);
-        const firstSiteLatLng = this._mapToLatLng(sites[0]);
         if (sites.length > 1) {
-            mapOptions.bounds = L.latLngBounds([firstSiteLatLng, firstSiteLatLng])
-                .extend(
-                    _(sites)
-                        .drop(1)
-                        .map(this._mapToLatLng)
-                        .value()
-                )
-                .pad(0.05);
+            mapOptions.bounds = L.latLngBounds(sites.map(this._mapToLatLng)).pad(0.05);
         } else {
-            mapOptions.center = firstSiteLatLng;
+            mapOptions.center = this._mapToLatLng(sites[0]);
             mapOptions.zoom = 2.5;
         }
 
