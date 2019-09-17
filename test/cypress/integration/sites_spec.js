@@ -52,7 +52,6 @@ describe('Sites Management', () => {
     const createValidSite = site => {
         createSite(site);
         cy.get('.modal').should('not.be.visible', true);
-        cy.deleteSite(site.name);
     };
 
     const createInvalidSite = site => {
@@ -65,10 +64,6 @@ describe('Sites Management', () => {
         // Verify error
         cy.get('.form > .error').should('be.visible', true);
         cy.get('.list > .content').contains(site.error);
-
-        if (site.error === 'already exists') {
-            cy.deleteSite(siteWithLocation.name);
-        }
     };
 
     const verifySiteRow = (index, site) => {
@@ -101,11 +96,17 @@ describe('Sites Management', () => {
     };
 
     before(() => {
-        cy.activate().login();
+        cy.activate('valid_spire_license').login();
+        cy.get('.usersMenu')
+            .click()
+            .contains('Reset Templates')
+            .click();
+        cy.contains('Yes').click();
     });
 
     beforeEach(function() {
         cy.restoreState();
+        cy.deleteSites();
         cy.visit('/console/page/site_management').waitUntilLoaded();
     });
 
@@ -130,8 +131,6 @@ describe('Sites Management', () => {
         for (let i = 0; i < sites.length; i++) {
             verifySiteRow(i + 1, sites[i]);
         }
-
-        cy.deleteSites(sites);
     });
 
     it('update a site', () => {
@@ -154,7 +153,6 @@ describe('Sites Management', () => {
         cy.get('.actions > .green').click();
 
         verifySiteRow(1, { name: new_name, location: '' });
-        cy.deleteSite(new_name);
     });
 
     it('update the visibility of a site', () => {
@@ -167,7 +165,6 @@ describe('Sites Management', () => {
         cy.get('.primary').click();
 
         verifySiteRow(1, { ...siteWithPrivateVisibility, visibility: 'tenant' });
-        cy.deleteSite(siteWithPrivateVisibility.name);
     });
 
     it('cancel site delete', () => {
@@ -177,8 +174,6 @@ describe('Sites Management', () => {
 
         // Click the No button
         cy.get('.actions > :nth-child(1)').click();
-
-        cy.deleteSite(siteWithLocation.name);
     });
 
     it('delete all sites', () => {
@@ -190,5 +185,25 @@ describe('Sites Management', () => {
 
         // No sites message
         cy.get('.center > span').should('have.text', 'There are no Sites available. Click "Create" to create Sites.');
+    });
+
+    it('display sites in map', () => {
+        cy.createSite(siteWithLocation);
+
+        cy.get('.usersMenu')
+            .click()
+            .contains('Edit Mode')
+            .click();
+
+        cy.get('.editModeSidebar .content > :nth-child(1)').click();
+        cy.get('[data-id="sitesMap"]').click();
+        cy.get('button#addWidgetsBtn').click();
+
+        cy.get('.leaflet-marker-icon');
+
+        cy.createSite(siteWithPrivateVisibility);
+        cy.reload();
+
+        cy.get('.leaflet-marker-icon').should('have.length', 2);
     });
 });
