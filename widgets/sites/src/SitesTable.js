@@ -1,6 +1,7 @@
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
 import SiteActions from './SiteActions';
+import SiteLocationMap from './SiteLocationMap';
 
 export default class SitesTable extends React.Component {
     constructor(props, context) {
@@ -100,7 +101,7 @@ export default class SitesTable extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Sites available. Click "Create" to create Sites.';
-        const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label } = Stage.Basic;
+        const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup, Leaflet } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
         const { data } = this.props;
         let latitude;
@@ -147,7 +148,31 @@ export default class SitesTable extends React.Component {
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {site.location && `Latitude: ${latitude}, Longitude: ${longitude}`}
+                                    {site.location && (
+                                        <>
+                                            Latitude: {latitude}, Longitude: {longitude}
+                                            <Popup hoverable>
+                                                <Popup.Trigger>
+                                                    <Icon
+                                                        name="crosshairs"
+                                                        link
+                                                        bordered
+                                                        className="rightFloated"
+                                                        onClick={event => event.stopPropagation()}
+                                                    />
+                                                </Popup.Trigger>
+                                                <Popup.Content>
+                                                    <SiteLocationMap
+                                                        location={site.location}
+                                                        mapOptions={{
+                                                            zoomControl: false,
+                                                            style: { width: 200, height: 200 }
+                                                        }}
+                                                    />
+                                                </Popup.Content>
+                                            </Popup>
+                                        </>
+                                    )}
                                 </DataTable.Data>
                                 <DataTable.Data>{site.created_at}</DataTable.Data>
                                 <DataTable.Data>{site.created_by}</DataTable.Data>

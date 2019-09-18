@@ -13,6 +13,7 @@ Stage.defineWidget({
     },
     isReact: true,
     hasReadme: true,
+    hasStyle: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('sites'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     initialConfiguration: [

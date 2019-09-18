@@ -1,4 +1,5 @@
 import SiteControl from './SiteControl';
+import createMarkerIcon from '../../common/src/MarkerIcon';
 
 export default class SitesMap extends React.Component {
     /**
@@ -72,22 +73,10 @@ export default class SitesMap extends React.Component {
 
     _createMarkers() {
         const markers = [];
-        const widgetDir = 'sitesMap';
-        const { widgetResourceUrl } = Stage.Utils.Url;
-        const markerIconPath = color => `/images/marker-icon-${color}.png`;
-        const shadowUrl = widgetResourceUrl(widgetDir, '/images/marker-shadow.png', false);
         const showLabels = this.props.showAllLabels ? this._openPopup : undefined;
 
         _.forEach(this.props.data, site => {
-            const iconUrl = widgetResourceUrl(widgetDir, markerIconPath(site.color), false);
-            const icon = new L.Icon({
-                iconUrl,
-                shadowUrl,
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            });
+            const icon = createMarkerIcon(site.color);
 
             const { Marker, Popup } = Stage.Basic.Leaflet;
             markers.push(
