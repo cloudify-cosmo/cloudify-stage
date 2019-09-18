@@ -126,12 +126,7 @@ export default class SitesMap extends React.Component {
             return <NoDataMessage sitesAreDefined={sitesAreDefined} />;
         }
 
-        const mapOptions = {
-            minZoom: 2,
-            maxZoom: 18,
-            maxBounds: [[-90, -180], [90, 180]],
-            maxBoundsViscosity: 0.75
-        };
+        const mapOptions = { ...Stage.Common.Consts.leaflet.mapOptions };
         const tilesUrl = `${mapUrl}/osm-intl/{z}/{x}/{y}{r}.png?lang=en`;
         const attribution = '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>';
 
@@ -140,7 +135,7 @@ export default class SitesMap extends React.Component {
             mapOptions.bounds = L.latLngBounds(sites.map(this._mapToLatLng)).pad(0.05);
         } else {
             mapOptions.center = this._mapToLatLng(sites[0]);
-            mapOptions.zoom = 2.5;
+            mapOptions.zoom = Stage.Common.Consts.leaflet.initialZoom;
         }
 
         return (
