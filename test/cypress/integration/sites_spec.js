@@ -98,6 +98,7 @@ describe('Sites Management', () => {
             .click();
         cy.contains('Yes').click();
         cy.waitUntilLoaded();
+        cy.get('.loader').should('be.not.visible');
     });
 
     beforeEach(function() {
