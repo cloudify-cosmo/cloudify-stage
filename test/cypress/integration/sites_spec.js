@@ -74,8 +74,13 @@ describe('Sites Management', () => {
         if (site.location) {
             const [latitude, longitude] = site.location.split(',');
             cy.get(`${siteRow} > :nth-child(2)`).should('have.text', `Latitude: ${latitude}, Longitude: ${longitude}`);
+            cy.get(`${siteRow} > :nth-child(2) i`).trigger('mouseover');
+            cy.get('.popup .leaflet-marker-icon').should('have.length', 1);
+            cy.get(`${siteRow} > :nth-child(2) i`).trigger('mouseout');
+            cy.get('.popup').should('not.exist');
         } else {
             cy.get(`${siteRow} > :nth-child(2)`).should('have.text', '');
+            cy.get(`${siteRow} > :nth-child(2) i`).should('not.exist');
         }
 
         cy.get(`${siteRow} > :nth-child(5)`).should('have.text', 'default_tenant');
