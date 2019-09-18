@@ -39,10 +39,8 @@ export default class SiteLocationInput extends React.Component {
                 {this.state.mapOpen && (
                     <Leaflet.Map
                         style={{ height: 'calc(100vh - 344px)', maxHeight: 460, marginTop: -14, cursor: 'pointer' }}
-                        minZoom={2}
-                        maxZoom={18}
-                        maxBounds={[[-90, -180], [90, 180]]}
-                        zoom={2.5}
+                        {...Stage.Common.Consts.leaflet.mapOptions}
+                        zoom={Stage.Common.Consts.leaflet.initialZoom}
                         center={this.toLatLng(this.props.value)}
                         onClick={e => this.onLocationChange(`${e.latlng.lat}, ${e.latlng.lng}`)}
                     >
