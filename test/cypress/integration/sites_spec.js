@@ -102,8 +102,8 @@ describe('Sites Management', () => {
             .contains('Reset Templates')
             .click();
         cy.contains('Yes').click();
+        cy.get('#loader');
         cy.waitUntilLoaded();
-        cy.get('.loader').should('be.not.visible');
     });
 
     beforeEach(function() {
