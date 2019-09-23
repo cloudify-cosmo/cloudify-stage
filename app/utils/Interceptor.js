@@ -2,8 +2,10 @@
  * Created by edenp on 08/11/2017.
  */
 
+import { push } from 'connected-react-router';
 import { showAppError } from '../actions/auth';
 import Consts from './consts';
+import { clearContext } from '../actions/context';
 
 let singleton = null;
 
@@ -13,7 +15,8 @@ export default class Interceptor {
     }
 
     handle401() {
-        this._store.dispatch(showAppError('Unauthorized - Invalid Credentials'));
+        this._store.dispatch(clearContext());
+        this._store.dispatch(push(Consts.LOGIN_PAGE_PATH));
     }
 
     handleLicenseError(errorCode) {

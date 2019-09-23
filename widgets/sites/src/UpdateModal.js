@@ -1,4 +1,5 @@
 import SiteActions from './SiteActions';
+import SiteLocationInput from './SiteLocationInput';
 
 export default class UpdateModal extends React.Component {
     constructor(props, context) {
@@ -9,7 +10,8 @@ export default class UpdateModal extends React.Component {
 
     static initialState = {
         loading: false,
-        errors: {}
+        errors: {},
+        siteNewName: ''
     };
 
     /**
@@ -93,11 +95,8 @@ export default class UpdateModal extends React.Component {
                                 />
                             </Form.Field>
                             <Form.Field error={this.state.errors.siteLocation}>
-                                <Form.Input
-                                    label="Location"
-                                    name="siteLocation"
+                                <SiteLocationInput
                                     value={this.state.siteLocation}
-                                    placeholder="latitude, longitude (32.166369, 34.810893)"
                                     onChange={this._handleInputChange.bind(this)}
                                 />
                             </Form.Field>

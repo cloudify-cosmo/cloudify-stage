@@ -1,4 +1,5 @@
 import SiteControl from './SiteControl';
+import createMarkerIcon from '../../common/src/MarkerIcon';
 
 export default class SitesMap extends React.Component {
     /**
@@ -72,27 +73,15 @@ export default class SitesMap extends React.Component {
 
     _createMarkers() {
         const markers = [];
-        const widgetDir = 'sitesMap';
-        const { widgetResourceUrl } = Stage.Utils.Url;
-        const markerIconPath = color => `/images/marker-icon-${color}.png`;
-        const shadowUrl = widgetResourceUrl(widgetDir, '/images/marker-shadow.png', false);
         const showLabels = this.props.showAllLabels ? this._openPopup : undefined;
 
         _.forEach(this.props.data, site => {
-            const iconUrl = widgetResourceUrl(widgetDir, markerIconPath(site.color), false);
-            const icon = new L.Icon({
-                iconUrl,
-                shadowUrl,
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            });
+            const icon = createMarkerIcon(site.color);
 
             const { Marker, Popup } = Stage.Basic.Leaflet;
             markers.push(
                 <Marker
-                    position={[site.latitude, site.longitude]}
+                    position={this._mapToLatLng(site)}
                     ref={showLabels}
                     key={`siteMarker${site.name}`}
                     riseOnHover
@@ -106,6 +95,10 @@ export default class SitesMap extends React.Component {
         });
 
         return markers;
+    }
+
+    _mapToLatLng(site) {
+        return [site.latitude, site.longitude];
     }
 
     render() {
@@ -122,28 +115,20 @@ export default class SitesMap extends React.Component {
             return <NoDataMessage sitesAreDefined={sitesAreDefined} />;
         }
 
-        const mapOptions = {
-            zoom: 2.5,
-            minZoom: 2,
-            maxZoom: 18,
-            position: [50, 0],
-            bounds: [[-90, -180], [90, 180]],
-            viscosity: 0.75
-        };
+        const mapOptions = { ...Stage.Common.Consts.leaflet.mapOptions };
         const tilesUrl = `${mapUrl}/osm-intl/{z}/{x}/{y}{r}.png?lang=en`;
         const attribution = '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>';
 
+        const sites = _.values(this.props.data);
+        if (sites.length > 1) {
+            mapOptions.bounds = L.latLngBounds(sites.map(this._mapToLatLng)).pad(0.05);
+        } else {
+            mapOptions.center = this._mapToLatLng(sites[0]);
+            mapOptions.zoom = Stage.Common.Consts.leaflet.initialZoom;
+        }
+
         return (
-            <Map
-                ref={this.mapRef}
-                className="sites-map"
-                center={mapOptions.position}
-                zoom={mapOptions.zoom}
-                maxBounds={mapOptions.bounds}
-                maxBoundsViscosity={mapOptions.viscosity}
-                minZoom={mapOptions.minZoom}
-                maxZoom={mapOptions.maxZoom}
-            >
+            <Map ref={this.mapRef} className="sites-map" {...mapOptions}>
                 <TileLayer attribution={attribution} url={tilesUrl} />
                 {markers}
             </Map>

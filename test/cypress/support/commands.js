@@ -21,9 +21,9 @@ Cypress.Commands.add('waitUntilLoaded', () => {
     cy.get('#loader', { timeout: 20000 }).should('be.not.visible', true);
 });
 
-Cypress.Commands.add('activate', () =>
+Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
     cy
-        .fixture('license/valid_trial_license.yaml')
+        .fixture(`license/${license}.yaml`)
         .then(license =>
             cy.request({
                 method: 'PUT',
@@ -84,7 +84,7 @@ Cypress.Commands.add('stageRequest', (url, method = 'GET', headers = null, body 
 });
 
 Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
-    cy.visit('/console/login').waitUntilLoaded();
+    cy.visit('/console/login');
 
     cy.get('.form > :nth-child(1) > .ui > input')
         .clear()

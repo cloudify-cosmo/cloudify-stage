@@ -51,7 +51,7 @@
     "passport-cookie": "^1.0.6",
     "passport-saml": "^0.35.0",
     "passport-unique-token": "^0.1.4",
-    "pg": "^7.12.1",
+    "pg": "^6.4.2",
     "pg-hstore": "^2.3.3",
     "pm2": "^3.5.0",
     "request": "^2.83.0",
