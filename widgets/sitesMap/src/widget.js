@@ -149,7 +149,7 @@ Stage.defineWidget({
                 isMapAvailable={isMapAvailable}
                 sitesAreDefined={sitesAreDefined}
                 mapUrl={MAP_URL}
-                dimensions={{ height: widget.height, width: widget.width, maximized: widget.maximized }}
+                dimensions={{ height: widget.height, width: widget.width, maximized: widget.maximized || false }}
             />
         );
     }
