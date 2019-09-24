@@ -36,7 +36,7 @@ class BlueprintActions {
             inputs,
             visibility,
             skip_plugins_validation: skipPluginsValidation,
-            functions_eager: runtimeOnlyEvaluation
+            runtime_only_evaluation: runtimeOnlyEvaluation
         };
 
         if (siteName) {
