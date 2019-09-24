@@ -19,7 +19,8 @@ export default class DeployModal extends React.Component {
         deploymentInputs: [],
         visibility: Stage.Common.Consts.defaultVisibility,
         skipPluginsValidation: false,
-        siteName: ''
+        siteName: '',
+        runtimeOnlyEvaluation: false
     };
 
     /**
@@ -128,7 +129,8 @@ export default class DeployModal extends React.Component {
                 deploymentInputs,
                 this.state.visibility,
                 this.state.skipPluginsValidation,
-                this.state.siteName
+                this.state.siteName,
+                this.state.runtimeOnlyEvaluation
             )
             .then((/* deployment */) => {
                 this.setState({ loading: false, errors: {} });
@@ -282,6 +284,19 @@ export default class DeployModal extends React.Component {
                                 for plugin development and advanced users only.
                             </Message>
                         )}
+
+                        <Form.Field
+                            help="If set, then get_property and get_input intrinsic functions will be evaluated
+                                  on demand at runtime. If not set, then evaluation will be done at deployment creation time."
+                        >
+                            <Form.Checkbox
+                                toggle
+                                label="Runtime only evaluation"
+                                name="runtimeOnlyEvaluation"
+                                checked={this.state.runtimeOnlyEvaluation}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
+                        </Form.Field>
                     </Form>
                 </Modal.Content>
 
