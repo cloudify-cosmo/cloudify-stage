@@ -180,7 +180,7 @@ Stage.defineWidget({
             <SitesMap
                 attribution={attribution}
                 data={siteStatuses}
-                dimensions={{ height: widget.height, width: widget.width, maximized: widget.maximized }}
+                dimensions={{ height: widget.height, width: widget.width, maximized: widget.maximized || false }}
                 isMapAvailable={isMapAvailable}
                 showAllLabels={widget.configuration.showAllLabels}
                 sitesAreDefined={sitesAreDefined}
