@@ -27,7 +27,6 @@ import React, { Component } from 'react';
  * ```
  */
 export default class TableRowExpandable extends Component {
-
     static propTypes = {
         children: PropTypes.any.isRequired,
         expanded: PropTypes.bool
@@ -41,6 +40,6 @@ export default class TableRowExpandable extends Component {
     };
 
     render() {
-        return ({});
+        return {};
     }
 }

@@ -1,5 +1,7 @@
 .idea
 .vscode
+.history
+.tmp
 dist
 node_modules
 /logs

@@ -8,10 +8,9 @@ import React, { Component } from 'react';
 import Templates from './Templates';
 import Pages from './Pages';
 import Const from '../../utils/consts';
-import {Breadcrumb, Segment, Divider, ErrorMessage, Button} from './../basic';
+import { Breadcrumb, Segment, Divider, ErrorMessage, Button } from '../basic';
 
 export default class TemplateManagement extends Component {
-
     static propTypes = {
         onTemplatesLoad: PropTypes.func.isRequired,
         onTemplateCreate: PropTypes.func.isRequired,
@@ -35,7 +34,7 @@ export default class TemplateManagement extends Component {
         pages: [],
         isLoading: false,
         error: null
-    }
+    };
 
     componentDidMount() {
         this.props.onTemplatesLoad();
@@ -53,8 +52,8 @@ export default class TemplateManagement extends Component {
         this.props.onPageSelect(page.id);
     }
 
-    _createTemplate(templateName, roles,  tenants, pages) {
-        var template = {
+    _createTemplate(templateName, roles, tenants, pages) {
+        const template = {
             id: templateName.trim(),
             data: {
                 roles,
@@ -70,8 +69,8 @@ export default class TemplateManagement extends Component {
         this.props.onTemplateDelete(template.id);
     }
 
-    _modifyTemplate(item, templateName, roles,  tenants, pages) {
-        var template = {
+    _modifyTemplate(item, templateName, roles, tenants, pages) {
+        const template = {
             oldId: item.id,
             id: templateName.trim(),
             data: {
@@ -103,7 +102,7 @@ export default class TemplateManagement extends Component {
     }
 
     _updateTemplate(template) {
-        return this.props.onTemplateUpdate({...template, oldId: template.id});
+        return this.props.onTemplateUpdate({ ...template, oldId: template.id });
     }
 
     _deletePage(page) {
@@ -122,40 +121,50 @@ export default class TemplateManagement extends Component {
         this.props.onPagePreview(page.id, page.name);
     }
 
-    render () {
-
+    render() {
         return (
-            <div className='main'>
+            <div className="main">
                 <Segment basic loading={this.props.isLoading}>
                     <div>
                         <Breadcrumb className="breadcrumbLineHeight">
                             <Breadcrumb.Section active>Template management</Breadcrumb.Section>
                         </Breadcrumb>
-                        <Button content="Close" basic compact floated="right" icon='sign out' onClick={this.props.onClose}/>
+                        <Button
+                            content="Close"
+                            basic
+                            compact
+                            floated="right"
+                            icon="sign out"
+                            onClick={this.props.onClose}
+                        />
                     </div>
-                    <Divider/>
+                    <Divider />
 
-                    <ErrorMessage error={this.props.error}/>
+                    <ErrorMessage error={this.props.error} />
 
-                    <Templates templates={this.props.templates} pages={this.props.pages} roles={this.props.roles}
-                               tenants={this.props.manager.tenants}
-                               onSelectTemplate={this._selectTemplate.bind(this)}
-                               onRemoveTemplatePage={this._removeTemplatePage.bind(this)}
-                               onRemoveTemplateRole={this._removeTemplateRole.bind(this)}
-                               onRemoveTemplateTenant={this._removeTemplateTenant.bind(this)}
-                               onCreateTemplate={this._createTemplate.bind(this)}
-                               onModifyTemplate={this._modifyTemplate.bind(this)}
-                               onDeleteTemplate={this._deleteTemplate.bind(this)}
+                    <Templates
+                        templates={this.props.templates}
+                        pages={this.props.pages}
+                        roles={this.props.roles}
+                        tenants={this.props.manager.tenants}
+                        onSelectTemplate={this._selectTemplate.bind(this)}
+                        onRemoveTemplatePage={this._removeTemplatePage.bind(this)}
+                        onRemoveTemplateRole={this._removeTemplateRole.bind(this)}
+                        onRemoveTemplateTenant={this._removeTemplateTenant.bind(this)}
+                        onCreateTemplate={this._createTemplate.bind(this)}
+                        onModifyTemplate={this._modifyTemplate.bind(this)}
+                        onDeleteTemplate={this._deleteTemplate.bind(this)}
                     />
 
-                    <Pages pages={this.props.pages}
-                           onSelectPage={this._selectPage.bind(this)}
-                           onCreatePage={this.props.onPageCreate}
-                           onDeletePage={this._deletePage.bind(this)}
-                           onEditPage={this._editPage.bind(this)}
-                           onPreviewPage={this._previewPage.bind(this)}
-                           onCanDeletePage={this._canDeletePage.bind(this)}/>
-
+                    <Pages
+                        pages={this.props.pages}
+                        onSelectPage={this._selectPage.bind(this)}
+                        onCreatePage={this.props.onPageCreate}
+                        onDeletePage={this._deletePage.bind(this)}
+                        onEditPage={this._editPage.bind(this)}
+                        onPreviewPage={this._previewPage.bind(this)}
+                        onCanDeletePage={this._canDeletePage.bind(this)}
+                    />
                 </Segment>
             </div>
         );

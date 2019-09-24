@@ -1,10 +1,10 @@
 /**
  * Created by jakubniezgoda on 07/11/2017.
  */
-let _ = require('lodash');
+const _ = require('lodash');
 
 module.exports = {
-    ALLOWED_METHODS_OBJECT: {get: 'GET', post: 'POST', put: 'PUT', delete: 'DELETE', patch: 'PATCH'},
+    ALLOWED_METHODS_OBJECT: { get: 'GET', post: 'POST', put: 'PUT', delete: 'DELETE', patch: 'PATCH' },
 
     CONTEXT_PATH: '/console',
 

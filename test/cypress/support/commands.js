@@ -18,13 +18,13 @@ let token = '';
 Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
 
 Cypress.Commands.add('waitUntilLoaded', () => {
-    cy.get('#loader', {timeout: 20000})
-        .should('be.not.visible', true);
+    cy.get('#loader', { timeout: 20000 }).should('be.not.visible', true);
 });
 
-Cypress.Commands.add('activate', () =>
-    cy.fixture('license/valid_trial_license.yaml')
-        .then((license) =>
+Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
+    cy
+        .fixture(`license/${license}.yaml`)
+        .then(license =>
             cy.request({
                 method: 'PUT',
                 url: '/console/sp',
@@ -32,11 +32,12 @@ Cypress.Commands.add('activate', () =>
                     su: '/license'
                 },
                 headers: {
-                    'Authorization': `Basic ${btoa('admin:admin')}`,
+                    Authorization: `Basic ${btoa('admin:admin')}`,
                     'Content-Type': 'text/plain'
                 },
                 body: license
-            }))
+            })
+        )
         .then(() => {
             cy.request({
                 method: 'GET',
@@ -45,10 +46,10 @@ Cypress.Commands.add('activate', () =>
                     su: '/tokens'
                 },
                 headers: {
-                    'Authorization': `Basic ${btoa('admin:admin')}`,
+                    Authorization: `Basic ${btoa('admin:admin')}`,
                     'Content-Type': 'application/json'
                 }
-            }).then((response) => token = response.body.value);
+            }).then(response => (token = response.body.value));
         })
 );
 
@@ -75,30 +76,31 @@ Cypress.Commands.add('stageRequest', (url, method = 'GET', headers = null, body 
         headers: {
             'Authentication-Token': token,
             'Content-Type': 'application/json',
-            'tenant': 'default-tenant',
+            tenant: 'default-tenant',
             ...headers
         },
         body
-    })
+    });
 });
 
 Cypress.Commands.add('login', (username = 'admin', password = 'admin') => {
-    cy.visit('/console/login')
-        .waitUntilLoaded();
+    cy.visit('/console/login');
 
-    cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
-    cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
+    cy.get('.form > :nth-child(1) > .ui > input')
+        .clear()
+        .type(username);
+    cy.get('.form > :nth-child(2) > .ui > input')
+        .clear()
+        .type(password);
     cy.get('.form > button').click();
 
-    cy.get('.form > button.loading')
-        .should('be.not.visible', true);
+    cy.get('.form > button.loading').should('be.not.visible', true);
 
     cy.getCookies()
         .should('have.length', 1)
-        .then((cookies) => {
+        .then(cookies => {
             expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
         });
 
-    cy.waitUntilLoaded()
-        .then(() => cy.saveLocalStorage());
+    cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
 });

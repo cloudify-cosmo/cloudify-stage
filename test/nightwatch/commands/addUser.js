@@ -3,7 +3,7 @@
  */
 
 exports.command = function(userName, password, isAdmin = false, tenant = 'default_tenant') {
-    var users = this.page.userManagement();
+    const users = this.page.userManagement();
 
     this.log('adding', userName, 'user')
         .moveToEditMode()
@@ -11,9 +11,8 @@ exports.command = function(userName, password, isAdmin = false, tenant = 'defaul
 
     return this.isWidgetPresent(users.props.widgetId, result => {
         if (!result.value) {
-            this.addWidget(users.props.widgetId)
+            this.addWidget(users.props.widgetId);
         }
-        users.add(userName, password, isAdmin, tenant)
-             .moveOutOfEditMode();
+        users.add(userName, password, isAdmin, tenant).moveOutOfEditMode();
     });
 };

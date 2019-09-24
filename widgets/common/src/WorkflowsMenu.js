@@ -3,7 +3,6 @@
  */
 
 class WorkflowsMenuItems extends React.Component {
-
     static propTypes = {
         workflows: PropTypes.array.isRequired,
         onClick: PropTypes.func
@@ -14,24 +13,27 @@ class WorkflowsMenuItems extends React.Component {
     };
 
     render() {
-        let { Menu } = Stage.Basic;
+        const { Menu } = Stage.Basic;
         const { onClick, workflows } = this.props;
 
-        return _.map(workflows, (workflow) =>
-            <Menu.Item name={workflow.name} content={_.capitalize(_.lowerCase(workflow.name))} key={workflow.name}
-                       onClick={() => onClick(workflow)} />
-        )
+        return _.map(workflows, workflow => (
+            <Menu.Item
+                name={workflow.name}
+                content={_.capitalize(_.lowerCase(workflow.name))}
+                key={workflow.name}
+                onClick={() => onClick(workflow)}
+            />
+        ));
     }
 }
 
 class AccordionWorkflowsMenu extends React.Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
             activeGroup: ''
-        }
+        };
     }
 
     static propTypes = {
@@ -39,7 +41,8 @@ class AccordionWorkflowsMenu extends React.Component {
             PropTypes.shape({
                 name: PropTypes.string,
                 workflows: PropTypes.array
-            })).isRequired,
+            })
+        ).isRequired,
         onClick: PropTypes.func
     };
 
@@ -53,39 +56,38 @@ class AccordionWorkflowsMenu extends React.Component {
         const { index } = pluginItemProps;
         const { activeGroup } = this.state;
 
-        this.setState({ activeGroup: activeGroup === index ? '' : index })
+        this.setState({ activeGroup: activeGroup === index ? '' : index });
     }
 
     render() {
-        let { Accordion, Menu } = Stage.Basic;
+        const { Accordion, Menu } = Stage.Basic;
 
         const { workflowsGroups, onClick } = this.props;
         const { activeGroup } = this.state;
 
         return (
-            <Accordion as={Menu} vertical style={{boxShadow: 'none'}}>
-                {
-                    _.map(workflowsGroups, (group) =>
-                        <Menu.Item key={group.name}>
-                            <Accordion.Title active={activeGroup === group.name} index={group.name}
-                                             content={_.capitalize(_.lowerCase(group.name))}
-                                             onClick={this.onGroupClick.bind(this)} />
-                            <Accordion.Content active={activeGroup === group.name}>
-                                <Menu.Menu>
-                                    <WorkflowsMenuItems workflows={group.workflows}
-                                                        onClick={onClick} />
-                                </Menu.Menu>
-                            </Accordion.Content>
-                        </Menu.Item>
-                    )
-                }
+            <Accordion as={Menu} vertical style={{ boxShadow: 'none' }}>
+                {_.map(workflowsGroups, group => (
+                    <Menu.Item key={group.name}>
+                        <Accordion.Title
+                            active={activeGroup === group.name}
+                            index={group.name}
+                            content={_.capitalize(_.lowerCase(group.name))}
+                            onClick={this.onGroupClick.bind(this)}
+                        />
+                        <Accordion.Content active={activeGroup === group.name}>
+                            <Menu.Menu>
+                                <WorkflowsMenuItems workflows={group.workflows} onClick={onClick} />
+                            </Menu.Menu>
+                        </Accordion.Content>
+                    </Menu.Item>
+                ))}
             </Accordion>
-        )
+        );
     }
 }
 
 class WorkflowsMenu extends React.Component {
-
     static propTypes = {
         workflows: PropTypes.array.isRequired,
         onClick: PropTypes.func,
@@ -101,45 +103,33 @@ class WorkflowsMenu extends React.Component {
         trigger: null
     };
 
-    render () {
-        let {Menu, Popup, PopupMenu} = Stage.Basic;
+    render() {
+        const { Menu, Popup, PopupMenu } = Stage.Basic;
 
-        const workflows = this.props.workflows;
+        const { workflows } = this.props;
         const workflowsGroups = _.chain(workflows)
             .groupBy('plugin')
-            .map((value, key) => ({name: key, workflows: value}))
+            .map((value, key) => ({ name: key, workflows: value }))
             .sortBy('name')
             .value();
         const showOnlyDefaultWorkflows = _.size(workflowsGroups) === 1;
 
-        return (
-            this.props.showInPopup
-            ?
-                <PopupMenu className="workflowAction" position="bottom center"
-                           offset={0} {...this.props.popupMenuProps}>
-                    {
-                        !!this.props.trigger &&
-                        <Popup.Trigger>
-                            {this.props.trigger}
-                        </Popup.Trigger>
-                    }
+        return this.props.showInPopup ? (
+            <PopupMenu className="workflowAction" position="bottom center" offset={0} {...this.props.popupMenuProps}>
+                {!!this.props.trigger && <Popup.Trigger>{this.props.trigger}</Popup.Trigger>}
 
-                    {
-                        showOnlyDefaultWorkflows
-                        ?
-                            <Menu vertical>
-                                <WorkflowsMenuItems workflows={workflows} onClick={this.props.onClick} />
-                            </Menu>
-                        :
-                            <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={this.props.onClick} />
-                    }
-                </PopupMenu>
-            :
-                showOnlyDefaultWorkflows
-                ?
-                    <WorkflowsMenuItems workflows={workflows} onClick={this.props.onClick} />
-                :
+                {showOnlyDefaultWorkflows ? (
+                    <Menu vertical>
+                        <WorkflowsMenuItems workflows={workflows} onClick={this.props.onClick} />
+                    </Menu>
+                ) : (
                     <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={this.props.onClick} />
+                )}
+            </PopupMenu>
+        ) : showOnlyDefaultWorkflows ? (
+            <WorkflowsMenuItems workflows={workflows} onClick={this.props.onClick} />
+        ) : (
+            <AccordionWorkflowsMenu workflowsGroups={workflowsGroups} onClick={this.props.onClick} />
         );
     }
 }

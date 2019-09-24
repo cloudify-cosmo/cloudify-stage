@@ -52,6 +52,7 @@ export default class PieGraph extends Component {
 
     /**
      * propTypes
+     *
      * @property {object} widget Widget object
      * @property {object[]} data graph input data
      * @property {object} toolbox Toolbox object
@@ -63,21 +64,23 @@ export default class PieGraph extends Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.widget, nextProps.widget)
-            || !_.isEqual(this.state, nextState)
-            || !_.isEqual(this.props.data, nextProps.data);
+        return (
+            !_.isEqual(this.props.widget, nextProps.widget) ||
+            !_.isEqual(this.state, nextState) ||
+            !_.isEqual(this.props.data, nextProps.data)
+        );
     }
 
     render() {
-        let data = this.props.data;
+        const { data } = this.props;
 
         return (
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                    <Pie dataKey="value" data={data} labelLine={true} label={true} isAnimationActive={false} cx="40%">
-                        {
-                            data.map((entry, index) => <Cell key={index} fill={entry.color}/>)
-                        }
+                    <Pie dataKey="value" data={data} labelLine label isAnimationActive={false} cx="40%">
+                        {data.map((entry, index) => (
+                            <Cell key={index} fill={entry.color} />
+                        ))}
                     </Pie>
                     <Legend layout="vertical" verticalAlign="middle" align="right" />
                 </PieChart>

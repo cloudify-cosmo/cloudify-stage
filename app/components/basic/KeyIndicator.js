@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import { Icon, Statistic } from 'semantic-ui-react'
+import { Icon, Statistic } from 'semantic-ui-react';
 
 /**
  * KeyIndicator - a simple component showing a counter along with an icon
@@ -25,7 +25,6 @@ import { Icon, Statistic } from 'semantic-ui-react'
  *```
  */
 export default class KeyIndicator extends Component {
-
     /**
      * @property {string} title Label appearing at the bottom of the component
      * @property {string} icon Name of the [icon](https://react.semantic-ui.com/elements/icon) to be displayed
@@ -37,8 +36,7 @@ export default class KeyIndicator extends Component {
         number: PropTypes.number.isRequired
     };
 
-    static defaultProps = {
-    };
+    static defaultProps = {};
 
     render() {
         return (
@@ -53,4 +51,3 @@ export default class KeyIndicator extends Component {
         );
     }
 }
- 

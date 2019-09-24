@@ -3,13 +3,12 @@
  */
 
 export default class RefreshIcon extends React.Component {
-
-    constructor(props, context){
+    constructor(props, context) {
         super(props, context);
 
         this.state = {
             loading: false
-        }
+        };
     }
 
     static propTypes = {
@@ -27,33 +26,39 @@ export default class RefreshIcon extends React.Component {
     handleClick(event) {
         event.stopPropagation();
 
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
-        const executionStatusCheckInterval = 2000; //ms
-        let {DeploymentActions, ExecutionActions} = Stage.Common;
-        let managerId = this.props.manager.id;
-        let deploymentActions = new DeploymentActions(this.props.toolbox);
-        let executionActions = new ExecutionActions(this.props.toolbox);
+        const executionStatusCheckInterval = 2000; // ms
+        const { DeploymentActions, ExecutionActions } = Stage.Common;
+        const managerId = this.props.manager.id;
+        const deploymentActions = new DeploymentActions(this.props.toolbox);
+        const executionActions = new ExecutionActions(this.props.toolbox);
 
-        return deploymentActions.doExecute({id: managerId}, {name: 'get_status'}, {})
-            .then((result) => {
+        return deploymentActions
+            .doExecute({ id: managerId }, { name: 'get_status' }, {})
+            .then(result => {
                 this.props.toolbox.refresh();
                 return executionActions.waitUntilFinished(result.id, executionStatusCheckInterval);
             })
-            .then((result) => this.props.onSuccess(result))
-            .catch((error) => this.props.onFail(error.message))
-            .finally(() => this.setState({loading: false}));
+            .then(result => this.props.onSuccess(result))
+            .catch(error => this.props.onFail(error.message))
+            .finally(() => this.setState({ loading: false }));
     }
 
     render() {
-        let {Icon, Popup} = Stage.Basic;
+        const { Icon, Popup } = Stage.Basic;
 
         return (
-            <Popup trigger={this.state.loading
-                            ? <Icon name='spinner' loading disabled />
-                            : <Icon name='refresh' link bordered onClick={this.handleClick.bind(this)} />}
-                   content={this.state.loading ? 'Status refresh in progress...' : 'Refresh Status'} />
+            <Popup
+                trigger={
+                    this.state.loading ? (
+                        <Icon name="spinner" loading disabled />
+                    ) : (
+                        <Icon name="refresh" link bordered onClick={this.handleClick.bind(this)} />
+                    )
+                }
+                content={this.state.loading ? 'Status refresh in progress...' : 'Refresh Status'}
+            />
         );
     }
 }
-

@@ -4,20 +4,26 @@
 
 module.exports = {
     before(client) {
-        client.login()
+        client
+            .login()
             .prepareTestWidget(client.page.blueprintSources().props.widgetId)
             .addBlueprint();
     },
 
-    'No blueprint selected': function (client) {
-        client.page.blueprintSources().section.noBlueprintSelected
-            .assert.containsText('@message', 'Please select blueprint to display source files');
+    'No blueprint selected': function(client) {
+        client.page
+            .blueprintSources()
+            .section.noBlueprintSelected.assert.containsText(
+                '@message',
+                'Please select blueprint to display source files'
+            );
     },
 
-    'Browse blueprint source': function (client) {
-        client.selectBlueprint()
-            .page.blueprintSources().section.source
-            .waitForElementPresent('@tree')
+    'Browse blueprint source': function(client) {
+        client
+            .selectBlueprint()
+            .page.blueprintSources()
+            .section.source.waitForElementPresent('@tree')
             .waitForElementPresent('@blueprintHeader')
             .assert.containsText('@blueprintHeader', client.page.blueprints().props.testBlueprint)
             .waitForElementPresent('@vsphereYaml')
@@ -28,15 +34,14 @@ module.exports = {
             .waitForElementPresent('@fullScreenButton')
             .clickElement('@fullScreenButton');
 
-        client.page.blueprintSources()
+        client.page
+            .blueprintSources()
             .waitForElementPresent('@fullScreen')
             .clickElement('@overlay')
-            .api.keys(client.Keys.ESCAPE)
+            .api.keys(client.Keys.ESCAPE);
     },
 
     after(client) {
-        client
-            .removeLastPage()
-            .end();
+        client.removeLastPage().end();
     }
 };

@@ -3,20 +3,19 @@
  */
 
 export default class UserRoles extends React.Component {
-
     static propTypes = {
         tenant: PropTypes.object.isRequired,
         user: PropTypes.string.isRequired
     };
 
-    _groupGroupsByRole(groups){
-        let roles = {};
+    _groupGroupsByRole(groups) {
+        const roles = {};
 
         _.forEach(groups, (group, name) => {
-            if(_.includes(group.users, this.props.user)){
-                if(_.has(roles, group.role)){
-                    roles[group.role].push(name)
-                } else{
+            if (_.includes(group.users, this.props.user)) {
+                if (_.has(roles, group.role)) {
+                    roles[group.role].push(name);
+                } else {
                     roles[group.role] = [name];
                 }
             }
@@ -25,13 +24,11 @@ export default class UserRoles extends React.Component {
     }
 
     render() {
-        let RolesPresenter = Stage.Common.RolesPresenter;
+        const { RolesPresenter } = Stage.Common;
 
-        let directRole = this.props.tenant.user_roles.direct[this.props.user];
-        let groupRoles = this._groupGroupsByRole(this.props.tenant.user_roles.groups);
+        const directRole = this.props.tenant.user_roles.direct[this.props.user];
+        const groupRoles = this._groupGroupsByRole(this.props.tenant.user_roles.groups);
 
-        return (
-            <RolesPresenter directRole={directRole} groupRoles={groupRoles}/>
-        )
+        return <RolesPresenter directRole={directRole} groupRoles={groupRoles} />;
     }
 }

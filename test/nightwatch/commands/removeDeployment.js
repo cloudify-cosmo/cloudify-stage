@@ -5,7 +5,7 @@
 exports.command = function(deploymentName) {
     return this.isDeploymentExist(deploymentName, result => {
         if (result.value) {
-            var deploymentActionButtons = this.page.deploymentActionButtons();
+            const deploymentActionButtons = this.page.deploymentActionButtons();
 
             this.isWidgetPresent(deploymentActionButtons.props.widgetId, result => {
                 this.log('removing', deploymentName, 'deployment');
@@ -27,8 +27,9 @@ exports.command = function(deploymentName) {
                     .clickElement('@okButton')
                     .waitForElementNotPresent('@okButton');
 
-                var filter = this.page.filter();
-                filter.waitForDeploymentNotPresent(deploymentName)
+                const filter = this.page.filter();
+                filter
+                    .waitForDeploymentNotPresent(deploymentName)
                     .selectOptionInDropdown('@deploymentSearch', filter.elements.deploymentSearch.selector, '');
             });
         } else {

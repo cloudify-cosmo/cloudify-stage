@@ -16,13 +16,23 @@ class BlueprintActions {
     }
 
     doDelete(blueprint, force = false) {
-        return this.toolbox.getManager().doDelete(`/blueprints/${blueprint.id}`, {force})
+        return this.toolbox
+            .getManager()
+            .doDelete(`/blueprints/${blueprint.id}`, { force })
             .then(() => this.doDeleteImage(blueprint.id));
     }
 
-    doDeploy(blueprint, deploymentId, inputs, visibility, skipPluginsValidation = false, siteName = null, runtimeOnlyEvaluation = true) {
-        let data = {
-            'blueprint_id': blueprint.id,
+    doDeploy(
+        blueprint,
+        deploymentId,
+        inputs,
+        visibility,
+        skipPluginsValidation = false,
+        siteName = null,
+        runtimeOnlyEvaluation = false
+    ) {
+        const data = {
+            blueprint_id: blueprint.id,
             inputs,
             visibility,
             skip_plugins_validation: skipPluginsValidation,
@@ -30,44 +40,44 @@ class BlueprintActions {
         };
 
         if (siteName) {
-            data['site_name'] = siteName;
+            data.site_name = siteName;
         }
 
         return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null, data);
     }
 
     doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, visibility) {
-        let params = {visibility: visibility};
+        const params = { visibility };
 
         if (!_.isEmpty(blueprintFileName)) {
-            params['application_file_name'] = blueprintFileName;
+            params.application_file_name = blueprintFileName;
         }
         if (!_.isEmpty(blueprintUrl)) {
-            params['blueprint_archive_url'] = blueprintUrl;
+            params.blueprint_archive_url = blueprintUrl;
         }
 
         let promise;
         if (file) {
             const compressFile = _.endsWith(file.name, '.yaml') || _.endsWith(file.name, '.yml');
-            promise = this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, params, file,
-                                                         undefined, undefined, compressFile);
+            promise = this.toolbox
+                .getManager()
+                .doUpload(`/blueprints/${blueprintName}`, params, file, undefined, undefined, compressFile);
         } else {
             promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, params);
         }
 
-        return promise.then(()=> this.doUploadImage(blueprintName, imageUrl, image));
+        return promise.then(() => this.doUploadImage(blueprintName, imageUrl, image));
     }
 
     doSetVisibility(blueprintId, visibility) {
-        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, null, {visibility: visibility});
+        return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, null, { visibility });
     }
 
-    doListYamlFiles(blueprintUrl, file=null, includeFilename=false) {
+    doListYamlFiles(blueprintUrl, file = null, includeFilename = false) {
         if (file) {
-            return this.toolbox.getInternal().doUpload('/source/list/yaml', {includeFilename}, {archive: file});
-        } else {
-            return this.toolbox.getInternal().doPut('/source/list/yaml', {url: blueprintUrl, includeFilename});
+            return this.toolbox.getInternal().doUpload('/source/list/yaml', { includeFilename }, { archive: file });
         }
+        return this.toolbox.getInternal().doPut('/source/list/yaml', { url: blueprintUrl, includeFilename });
     }
 
     doUploadImage(blueprintId, imageUrl, image) {
@@ -75,12 +85,11 @@ class BlueprintActions {
             return Promise.resolve();
         }
 
-        var params = {imageUrl};
+        const params = { imageUrl };
         if (image) {
             return this.toolbox.getInternal().doUpload(`/ba/image/${blueprintId}`, params, image, 'post');
-        } else {
-            return this.toolbox.getInternal().doPost(`/ba/image/${blueprintId}`, params);
         }
+        return this.toolbox.getInternal().doPost(`/ba/image/${blueprintId}`, params);
     }
 
     doDeleteImage(blueprintId) {

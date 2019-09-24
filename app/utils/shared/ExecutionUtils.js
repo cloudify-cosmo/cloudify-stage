@@ -7,19 +7,27 @@ import _ from 'lodash';
 export default class ExecutionUtils {
     /* Execution resume types */
     static FORCE_RESUME_ACTION = 'force-resume';
+
     static RESUME_ACTION = 'resume';
 
     /* Execution cancellation types */
     static CANCEL_ACTION = 'cancel';
+
     static FORCE_CANCEL_ACTION = 'force-cancel';
+
     static KILL_CANCEL_ACTION = 'kill';
 
     /* Execution status groups */
     static EXECUTION_SUCCESSFUL = 'success';
+
     static EXECUTION_FAILED = 'failed';
+
     static EXECUTION_CANCELLED = 'cancelled';
+
     static EXECUTION_WAITING = 'waiting';
+
     static EXECUTION_IN_PROGRESS = 'inprogress';
+
     static STATUS_ICON_PARAMS = {
         [ExecutionUtils.EXECUTION_SUCCESSFUL]: {
             name: 'checkmark',
@@ -49,15 +57,27 @@ export default class ExecutionUtils {
     };
 
     /* Execution statuses */
-    static EXECUTION_STATUSES
-        = ['terminated', 'failed', 'cancelled', 'scheduled', 'queued', 'pending', 'started', 'cancelling', 'force_cancelling', 'kill_cancelling'];
-    static WAITING_EXECUTION_STATUSES
-        = ['scheduled', 'queued'];
-    static END_EXECUTION_STATUSES
-        = ['terminated', 'failed', 'cancelled'];
-    static ACTIVE_EXECUTION_STATUSES
-        = _.difference(ExecutionUtils.EXECUTION_STATUSES,
-                       [...ExecutionUtils.END_EXECUTION_STATUSES, ...ExecutionUtils.WAITING_EXECUTION_STATUSES]);
+    static EXECUTION_STATUSES = [
+        'terminated',
+        'failed',
+        'cancelled',
+        'scheduled',
+        'queued',
+        'pending',
+        'started',
+        'cancelling',
+        'force_cancelling',
+        'kill_cancelling'
+    ];
+
+    static WAITING_EXECUTION_STATUSES = ['scheduled', 'queued'];
+
+    static END_EXECUTION_STATUSES = ['terminated', 'failed', 'cancelled'];
+
+    static ACTIVE_EXECUTION_STATUSES = _.difference(ExecutionUtils.EXECUTION_STATUSES, [
+        ...ExecutionUtils.END_EXECUTION_STATUSES,
+        ...ExecutionUtils.WAITING_EXECUTION_STATUSES
+    ]);
 
     /* Helper methods */
     static isCancelledExecution(execution) {
@@ -87,15 +107,17 @@ export default class ExecutionUtils {
     static getExecutionStatusGroup(execution) {
         if (ExecutionUtils.isFailedExecution(execution)) {
             return ExecutionUtils.EXECUTION_FAILED;
-        } else if (ExecutionUtils.isSuccessfulExecution(execution)) {
-            return ExecutionUtils.EXECUTION_SUCCESSFUL;
-        } else if (ExecutionUtils.isCancelledExecution(execution)) {
-            return ExecutionUtils.EXECUTION_CANCELLED;
-        } else if (ExecutionUtils.isWaitingExecution(execution)) {
-            return ExecutionUtils.EXECUTION_WAITING;
-        } else {
-            return ExecutionUtils.EXECUTION_IN_PROGRESS;
         }
+        if (ExecutionUtils.isSuccessfulExecution(execution)) {
+            return ExecutionUtils.EXECUTION_SUCCESSFUL;
+        }
+        if (ExecutionUtils.isCancelledExecution(execution)) {
+            return ExecutionUtils.EXECUTION_CANCELLED;
+        }
+        if (ExecutionUtils.isWaitingExecution(execution)) {
+            return ExecutionUtils.EXECUTION_WAITING;
+        }
+        return ExecutionUtils.EXECUTION_IN_PROGRESS;
     }
 
     static getExecutionStatusIconParams(execution) {

@@ -5,12 +5,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import {Modal, ApproveButton, CancelButton, GenericField, Form, Message} from './basic';
+import { Modal, ApproveButton, CancelButton, GenericField, Form, Message } from './basic';
 
 export default class EditWidgetModal extends Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = EditWidgetModal.initialState(props);
     }
@@ -24,15 +23,17 @@ export default class EditWidgetModal extends Component {
         onHideConfig: PropTypes.func.isRequired
     };
 
-    static initialState = (props) => {
-        var fields = {};
+    static initialState = props => {
+        const fields = {};
 
-        props.configDef.filter((config) => !config.hidden).map((config)=>{
-            var currValue = _.get(props.configuration,'['+config.id+']',config.value || config.default);
-            fields[config.id] = currValue;
-        });
+        props.configDef
+            .filter(config => !config.hidden)
+            .map(config => {
+                const currValue = _.get(props.configuration, `[${config.id}]`, config.value || config.default);
+                fields[config.id] = currValue;
+            });
 
-        return {fields};
+        return { fields };
     };
 
     componentDidUpdate(prevProps) {
@@ -43,7 +44,7 @@ export default class EditWidgetModal extends Component {
 
     onApprove() {
         // Get the changed configurations
-        var config = _.clone(this.props.configuration);
+        const config = _.clone(this.props.configuration);
 
         _.forEach(this.state.fields, function(value, key) {
             config[key] = value;
@@ -63,40 +64,45 @@ export default class EditWidgetModal extends Component {
     }
 
     _handleInputChange(proxy, field) {
-        var name = field.name;
-        var value = GenericField.formatValue(field.genericType, field.genericType === GenericField.BOOLEAN_TYPE ? field.checked : field.value);
+        const { name } = field;
+        const value = GenericField.formatValue(
+            field.genericType,
+            field.genericType === GenericField.BOOLEAN_TYPE ? field.checked : field.value
+        );
 
-        this.setState({fields: Object.assign({}, this.state.fields, {[name]: value})});
+        this.setState({ fields: { ...this.state.fields, [name]: value } });
     }
 
     render() {
-
         return (
-            <Modal open={this.props.show} onClose={()=>this.props.onHideConfig()} className='editWidgetModal'>
-
+            <Modal open={this.props.show} onClose={() => this.props.onHideConfig()} className="editWidgetModal">
                 <Modal.Header>Configure Widget</Modal.Header>
 
                 <Modal.Content>
                     <Form>
-                        {
-                            this.props.configDef.filter((config) => !config.hidden).map((config)=>{
-                                return <GenericField {...config}
-                                                     key={config.id}
-                                                     name={config.id}
-                                                     label={config.name}
-                                                     value={this.state.fields[config.id]}
-                                                     onChange={this._handleInputChange.bind(this)} />
-                            })
-                        }
+                        {this.props.configDef
+                            .filter(config => !config.hidden)
+                            .map(config => {
+                                return (
+                                    <GenericField
+                                        {...config}
+                                        key={config.id}
+                                        name={config.id}
+                                        label={config.name}
+                                        value={this.state.fields[config.id]}
+                                        onChange={this._handleInputChange.bind(this)}
+                                    />
+                                );
+                            })}
 
-                        {_.isEmpty(this.props.configDef) &&
+                        {_.isEmpty(this.props.configDef) && (
                             <Message>No configuration available for this widget</Message>
-                        }
+                        )}
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <ApproveButton onClick={this.onApprove.bind(this)}/>
+                    <ApproveButton onClick={this.onApprove.bind(this)} />
                     <CancelButton onClick={this.onDeny.bind(this)} />
                 </Modal.Actions>
             </Modal>

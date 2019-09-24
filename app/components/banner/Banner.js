@@ -16,9 +16,7 @@ import ProductName from './ProductName';
 import ProductVersion from './ProductVersion';
 import LicenseEdition from './LicenseEdition';
 
-
 export default class Banner extends Component {
-
     static propTypes = {
         isCommunity: PropTypes.bool,
         isExpired: PropTypes.bool,
@@ -26,7 +24,7 @@ export default class Banner extends Component {
         productName: PropTypes.string,
         productVersion: PropTypes.string,
         licenseEdition: PropTypes.string,
-        hideOnSmallScreen: PropTypes.bool,
+        hideOnSmallScreen: PropTypes.bool
     };
 
     static defaultProps = {
@@ -39,30 +37,32 @@ export default class Banner extends Component {
         hideOnSmallScreen: true
     };
 
-    render () {
+    render() {
         const className = this.props.hideOnSmallScreen ? 'hide-on-small-screen' : '';
 
         return (
-            <div style={{lineHeight: '55px'}}>
+            <div style={{ lineHeight: '55px' }}>
                 <Link to={Consts.HOME_PAGE_PATH}>
-                    <Header as='h1' style={{textDecoration: 'none', display: 'inline-block'}}>
+                    <Header as="h1" style={{ textDecoration: 'none', display: 'inline-block' }}>
                         <Logo />
                         <ProductName name={this.props.productName} className={className} />
-                        {
-                            this.props.showVersionDetails && !this.props.isCommunity &&
-                            <React.Fragment>
+                        {this.props.showVersionDetails && !this.props.isCommunity && (
+                            <>
                                 <LicenseEdition edition={this.props.licenseEdition} className={className} />
                                 <ProductVersion version={this.props.productVersion} className={className} />
-                            </React.Fragment>
-                        }
+                            </>
+                        )}
                     </Header>
                 </Link>
-                {
-                    this.props.showVersionDetails &&
-                    <LicenseTag isCommunity={this.props.isCommunity} isExpired={this.props.isExpired}
-                                isTrial={this.props.isTrial} className={className} />
-                }
+                {this.props.showVersionDetails && (
+                    <LicenseTag
+                        isCommunity={this.props.isCommunity}
+                        isExpired={this.props.isExpired}
+                        isTrial={this.props.isTrial}
+                        className={className}
+                    />
+                )}
             </div>
-        )
+        );
     }
 }

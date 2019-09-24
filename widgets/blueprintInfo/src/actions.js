@@ -3,7 +3,6 @@
  */
 
 export default class Actions {
-
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -13,11 +12,16 @@ export default class Actions {
     }
 
     doGetBlueprintDetails(blueprintId) {
-        return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name`);
+        return this.toolbox
+            .getManager()
+            .doGet(
+                `/blueprints/${blueprintId}?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name`
+            );
     }
 
     doGetBlueprintDeployments(blueprintId) {
-        return this.toolbox.getManager().doGetFull('/deployments?_include=id,blueprint_id',{blueprint_id: blueprintId});
+        return this.toolbox
+            .getManager()
+            .doGetFull('/deployments?_include=id,blueprint_id', { blueprint_id: blueprintId });
     }
-
 }

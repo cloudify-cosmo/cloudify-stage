@@ -3,8 +3,8 @@
  */
 
 module.exports = {
-    url: function () {
-        return this.api.launch_url + '/page/0';
+    url() {
+        return `${this.api.launch_url}/page/0`;
     },
 
     sections: {
@@ -30,12 +30,12 @@ module.exports = {
             }
         },
         userMenu: {
-            selector : '.usersMenu',
+            selector: '.usersMenu',
             elements: {
                 userName: 'span:first-child',
-                userDropdownMenu : '.menu',
-                editModeMenuItem : '#editModeMenuItem',
-                resetMenuItem : '#resetMenuItem',
+                userDropdownMenu: '.menu',
+                editModeMenuItem: '#editModeMenuItem',
+                resetMenuItem: '#resetMenuItem',
                 logoutMenuItem: '#logoutMenuItem'
             },
             props: {
@@ -44,28 +44,29 @@ module.exports = {
             }
         },
         sidebar: {
-            selector : '.sidebarContainer',
+            selector: '.sidebarContainer',
             elements: {
                 lastPage: '.pages .item:last-child',
-                lastPageRemoveButton : '.pages .item:last-child .pageRemoveButton'
+                lastPageRemoveButton: '.pages .item:last-child .pageRemoveButton'
             },
             props: {
                 lastPageLabel: 'Page_0'
             }
         },
         editModeSidebar: {
-            selector : '.editModeSidebar:not(.animating)',
+            selector: '.editModeSidebar:not(.animating)',
             elements: {
                 addWidgetButton: '.addWidgetBtn',
                 addPageButton: 'button:nth-child(2)'
-            },
+            }
         },
         page: {
             selector: '.page',
             elements: {
                 firstWidget: '.react-grid-item.widget:first-child',
                 firstWidgetName: '.react-grid-item.widget:first-child div.widgetItem > h5.header label',
-                firstWidgetRemoveIcon: '.react-grid-item.widget:first-child .widgetEditButtons i.remove.link.icon.small',
+                firstWidgetRemoveIcon:
+                    '.react-grid-item.widget:first-child .widgetEditButtons i.remove.link.icon.small',
                 firstWidgetConfigureIcon: '.react-grid-item.widget:first-child .widgetEditButtons .editWidgetIcon',
                 firstWidgetResizeHandle: '.react-grid-item.widget:first-child .react-resizable-handle',
                 testWidgetContent: '.widget.testWidgetWidget .widgetContent .statistic .label'
@@ -77,38 +78,44 @@ module.exports = {
         addWidgetModal: {
             selector: '.addWidgetModal',
             elements: {
-                searchInput : 'input',
+                searchInput: 'input',
                 installWidgetBtn: '#installWidgetBtn',
                 testWidget: '.widgetsList .item[data-id="testWidget"]',
                 removeWidgetButton: '.widgetsList .item[data-id="testWidget"] .removeWidgetButton',
                 updateWidgetButton: '.widgetsList .item[data-id="testWidget"] .updateWidgetButton',
                 closeIcon: '.close.icon'
             },
-            commands: [{
-                selectAndAddWidget: function(widgetId) {
-                    this.clickElement('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .addWidgetCheckbox')
-                        .waitForElementPresent('.item[data-id="'+widgetId+'"] .addWidgetCheckbox.checked.checkbox');
+            commands: [
+                {
+                    selectAndAddWidget(widgetId) {
+                        this.clickElement(
+                            `.addWidgetModal .widgetsList .item[data-id="${widgetId}"] .addWidgetCheckbox`
+                        ).waitForElementPresent(`.item[data-id="${widgetId}"] .addWidgetCheckbox.checked.checkbox`);
 
-                    return this.clickElement('#addWidgetsBtn')
-                        .waitForElementNotPresent('.addWidgetModal')
-                        .waitForElementPresent('.react-grid-item.widget.' + widgetId + 'Widget');
-                },
+                        return this.clickElement('#addWidgetsBtn')
+                            .waitForElementNotPresent('.addWidgetModal')
+                            .waitForElementPresent(`.react-grid-item.widget.${widgetId}Widget`);
+                    },
 
-                uninstallWidget: function(widgetId) {
-                    this.clickElement(`.widgetsList .item[data-id="${widgetId}"] .removeWidgetButton`);
+                    uninstallWidget(widgetId) {
+                        this.clickElement(`.widgetsList .item[data-id="${widgetId}"] .removeWidgetButton`);
 
-                    return this.parent.section.removeWidgetConfirm
-                        .waitForElementPresent('@okButton')
-                        .clickElement('@okButton')
-                        .waitForElementNotPresent('@okButton');
-                },
+                        return this.parent.section.removeWidgetConfirm
+                            .waitForElementPresent('@okButton')
+                            .clickElement('@okButton')
+                            .waitForElementNotPresent('@okButton');
+                    },
 
-                isWidgetInstalled: function(widgetId, callback) {
-                    return this.isPresent('.addWidgetModal .widgetsList .item[data-id="'+widgetId+'"] .removeWidgetButton', callback);
+                    isWidgetInstalled(widgetId, callback) {
+                        return this.isPresent(
+                            `.addWidgetModal .widgetsList .item[data-id="${widgetId}"] .removeWidgetButton`,
+                            callback
+                        );
+                    }
                 }
-            }]
+            ]
         },
-        installWidgetModal : {
+        installWidgetModal: {
             selector: '.installWidgetModal',
             elements: {
                 urlField: 'input[name="widgetUrl"]',
@@ -120,23 +127,27 @@ module.exports = {
                 loader: '.ui.loading'
             },
             props: {
-                emptyFieldsError: 'Please provide the widget\'s archive URL or select a file',
-                invalidURIError: 'Please provide valid URL for widget\'s archive',
-                widgetIncorrectFilesError: 'The following files are required for widget registration: widget.js, widget.png',
+                emptyFieldsError: "Please provide the widget's archive URL or select a file",
+                invalidURIError: "Please provide valid URL for widget's archive",
+                widgetIncorrectFilesError:
+                    'The following files are required for widget registration: widget.js, widget.png',
                 widgetAlreadyInstalledError: 'Widget testWidget is already installed',
-                widgetInvalidPermissionError: 'Specified widget permission (\'invalid_permission_name\') ' +
+                widgetInvalidPermissionError:
+                    "Specified widget permission ('invalid_permission_name') " +
                     'not found in available permissions list.',
-                widgetUpdateIncorrectDirectoryNameError: 'Updated widget directory name invalid. ' +
-                    'Expected: \'testWidget\'. Received: \'testWidgetInvalidPermiss\n' +
-                    'ion\'',
-                widgetInstallIncorrectDirectoryNameError: 'Incorrect widget folder name not consistent with widget id. ' +
-                    'Widget ID: \'testWidgetInstallIncorrectDirectoryName\'. Directory name: \'testWidget\'',
-                widgetMandatoryFieldMissingNameError: 'Mandatory field - \'name\' - not specified in widget definition.',
+                widgetUpdateIncorrectDirectoryNameError:
+                    'Updated widget directory name invalid. ' +
+                    "Expected: 'testWidget'. Received: 'testWidgetInvalidPermiss\n" +
+                    "ion'",
+                widgetInstallIncorrectDirectoryNameError:
+                    'Incorrect widget folder name not consistent with widget id. ' +
+                    "Widget ID: 'testWidgetInstallIncorrectDirectoryName'. Directory name: 'testWidget'",
+                widgetMandatoryFieldMissingNameError: "Mandatory field - 'name' - not specified in widget definition.",
                 fileLabelString: 'File',
                 urlLabelString: 'URL'
             }
         },
-        updateWidgetModal : {
+        updateWidgetModal: {
             selector: '.updateWidgetModal',
             elements: {
                 urlField: 'input[name="widgetUrl"]',
@@ -147,8 +158,9 @@ module.exports = {
                 loader: '.ui.loading'
             },
             props: {
-                widgetUpdateIncorrectDirectoryNameError: 'Updated widget directory name invalid. ' +
-                    'Expected: \'testWidget\'. Received: \'testWidgetInvalidPermission\'',
+                widgetUpdateIncorrectDirectoryNameError:
+                    'Updated widget directory name invalid. ' +
+                    "Expected: 'testWidget'. Received: 'testWidgetInvalidPermission'"
             }
         },
         removeWidgetConfirm: {
@@ -168,18 +180,17 @@ module.exports = {
                 yesButton: '.ui.button.primary',
                 noButton: '.ui.button'
             }
-        },
-
+        }
     },
 
-    commands: [{
-        openSidebarMenu: function() {
-
+    commands: [
+        {
+            openSidebarMenu() {}
         }
-    }],
+    ],
 
     elements: {
-        tenantsDropdownText : 'div.tenantsMenu',
+        tenantsDropdownText: 'div.tenantsMenu',
         statusesTitle: 'table.servicesData tr th',
         breadcrumb: '.breadcrumbLineHeight',
         pageTitle: '.pageTitle'

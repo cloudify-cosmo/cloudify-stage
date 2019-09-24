@@ -3,8 +3,7 @@
  */
 
 export default class ErrorCausesModal extends React.Component {
-
-    constructor(props, context){
+    constructor(props, context) {
         super(props, context);
     }
 
@@ -19,23 +18,24 @@ export default class ErrorCausesModal extends React.Component {
     };
 
     render() {
-        let {Icon, Popup} = Stage.Basic;
+        const { Icon, Popup } = Stage.Basic;
 
-        return this.props.show
-            ?
-                <Popup on='hover'>
-                    <Popup.Trigger>
-                        <Icon.Group size='big' onClick={(e) => {e.stopPropagation(); this.props.onClick();}}>
-                            <Icon name='file text' color='red'/>
-                            <Icon corner name='zoom' color='black'/>
-                        </Icon.Group>
-                    </Popup.Trigger>
-                    <Popup.Content>
-                        Show Error Causes
-                    </Popup.Content>
-                </Popup>
-            :
-                null;
+        return this.props.show ? (
+            <Popup on="hover">
+                <Popup.Trigger>
+                    <Icon.Group
+                        size="big"
+                        onClick={e => {
+                            e.stopPropagation();
+                            this.props.onClick();
+                        }}
+                    >
+                        <Icon name="file text" color="red" />
+                        <Icon corner name="zoom" color="black" />
+                    </Icon.Group>
+                </Popup.Trigger>
+                <Popup.Content>Show Error Causes</Popup.Content>
+            </Popup>
+        ) : null;
     }
 }
-

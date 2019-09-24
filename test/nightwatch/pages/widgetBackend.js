@@ -4,15 +4,14 @@
 
 module.exports = {
     sections: {
-        installWidget : {
+        installWidget: {
             selector: '.installWidgetModal',
-            elements: {
-            },
+            elements: {},
             props: {
-                notAllowedModuleError: "The module 'fs-extra' is not whitelisted in VM.",
+                notAllowedModuleError: "The module 'fs-extra' is not whitelisted in VM."
             }
         },
-        brokenWidget : {
+        brokenWidget: {
             selector: '.widget.BrokenBackendWidget2Widget',
             elements: {
                 endpoint: 'input[name="endpoint"]',
@@ -20,10 +19,10 @@ module.exports = {
                 errorMsg: '.ui.error.message .content'
             },
             props: {
-                notAllowedModuleError: "The module 'fs-extra' is not whitelisted in VM.",
+                notAllowedModuleError: "The module 'fs-extra' is not whitelisted in VM."
             }
         },
-        backendWidget : {
+        backendWidget: {
             selector: '.widget.BackendWidgetWidget',
             elements: {
                 endpoint: 'input[name="endpoint"]',
@@ -42,17 +41,17 @@ module.exports = {
             },
             commands: [
                 {
-                    configureWidget: function () {
+                    configureWidget() {
                         this.moveToEditMode()
                             .waitForElementPresent('@header')
                             .waitForElementNotVisible('@loader')
                             .waitForElementPresent('@header')
                             .moveToElement('@header', undefined, undefined) // For details, see: https://github.com/nightwatchjs/nightwatch/issues/1250#issuecomment-257644295
-                            .clickElement('@editWidgetButton')
+                            .clickElement('@editWidgetButton');
                         return this;
-                    },
+                    }
                 }
-            ],
+            ]
         },
         widgetConfig: {
             selector: '.ui.modal.editWidgetModal',
@@ -73,6 +72,5 @@ module.exports = {
         broken1WidgetFilename: 'BrokenBackendWidget1.zip',
         broken2WidgetFilename: 'BrokenBackendWidget2.zip',
         widgetFilename: 'BackendWidget.zip'
-    },
-
+    }
 };

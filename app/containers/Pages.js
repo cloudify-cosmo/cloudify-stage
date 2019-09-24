@@ -2,30 +2,30 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
-import PagesList from '../components/PagesList';
-import {selectPage, removePage, reorderPage} from '../actions/page';
-import {toogleSidebar} from '../actions/app';
 
-const findSelectedRootPage = (pagesMap,selectedPageId) => {
-    var _r = (page) => {
+import PagesList from '../components/PagesList';
+import { selectPage, removePage, reorderPage, createPagesMap } from '../actions/page';
+import { toogleSidebar } from '../actions/app';
+
+const findSelectedRootPageId = (pagesMap, selectedPageId) => {
+    const getParentPageId = page => {
         if (!page.parent) {
             return page.id;
         }
-        return _r(pagesMap[page.parent]);
+        return getParentPageId(pagesMap[page.parent]);
     };
 
-    return _r(pagesMap[selectedPageId]);
+    return getParentPageId(pagesMap[selectedPageId]);
 };
 
 const mapStateToProps = (state, ownProps) => {
-    var pages = state.pages;
-    var pagesMap = _.keyBy(pages,'id');
-    var page = pagesMap[ownProps.pageId];
-    var homePageId = pages[0].id;
-    var pageId = page ? page.id : homePageId;
-    var selected = pages && pages.length > 0 ? findSelectedRootPage(pagesMap,pageId) : null;
+    const { pages } = state;
+    const pagesMap = createPagesMap(pages);
+    const page = pagesMap[ownProps.pageId];
+    const homePageId = pages[0].id;
+    const pageId = page ? page.id : homePageId;
+    const selected = pages && pages.length > 0 ? findSelectedRootPageId(pagesMap, pageId) : null;
 
     return {
         pages,
@@ -34,28 +34,36 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
-    return Object.assign({}, ownProps, dispatchProps, stateProps,
-        {
-            onPageRemoved: (page) => {dispatchProps.onPageRemoved(page, stateProps.pages)}
-    })
+    return {
+        ...ownProps,
+        ...dispatchProps,
+        ...stateProps,
+        onPageRemoved: page => {
+            dispatchProps.onPageRemoved(page, stateProps.pages);
+        }
+    };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onPageSelected: (page) => {
-            dispatch(selectPage(page.id,page.isDrillDown));
+        onPageSelected: page => {
+            dispatch(selectPage(page.id, page.isDrillDown));
         },
         onPageRemoved: (page, pages) => {
-            dispatch(removePage(page.id));
+            const pagesMap = createPagesMap(pages);
+            const selectedRootPageId = findSelectedRootPageId(pagesMap, ownProps.pageId);
 
-            // If user removes current page, then navigate to home page
-            if (ownProps.pageId === page.id) {
-                if(ownProps.pageId === ownProps.homePageId){
-                    dispatch(selectPage(pages[1].id,false));
-                } else{
-                    dispatch(selectPage(ownProps.homePageId,false));
+            // Check if user removes current page
+            if (selectedRootPageId === page.id) {
+                // Check if current page is home page
+                if (selectedRootPageId === ownProps.homePageId) {
+                    dispatch(selectPage(pages[1].id, false));
+                } else {
+                    dispatch(selectPage(ownProps.homePageId, false));
                 }
             }
+
+            dispatch(removePage(page));
         },
         onPageReorder: (pageIndex, newPageIndex) => {
             dispatch(reorderPage(pageIndex, newPageIndex));
@@ -63,7 +71,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onSidebarClose: () => {
             dispatch(toogleSidebar());
         }
-    }
+    };
 };
 
 const Pages = connect(
@@ -72,5 +80,4 @@ const Pages = connect(
     mergeProps
 )(PagesList);
 
-
-export default Pages
+export default Pages;

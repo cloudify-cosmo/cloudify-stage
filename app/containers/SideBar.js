@@ -7,20 +7,18 @@ import { connect } from 'react-redux';
 import SideBar from '../components/SideBar';
 
 const mapStateToProps = (state, ownProps) => {
-    var homePageId = state.pages[0].id;
+    const homePageId = state.pages[0].id;
     return {
         homePageId,
-        pageId:     ownProps.pageId || homePageId,
+        pageId: ownProps.pageId || homePageId,
         isEditMode: state.config.isEditMode || false,
         isOpen: state.app.sidebarIsOpen || false
-    }
+    };
 };
-
 
 const SideBarW = connect(
     mapStateToProps,
-    {} //mapDispatchToProps
+    {} // mapDispatchToProps
 )(SideBar);
 
-
-export default SideBarW
+export default SideBarW;

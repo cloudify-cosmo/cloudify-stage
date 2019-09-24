@@ -2,18 +2,17 @@
  * Created by jakubniezgoda on 06/11/2017.
  */
 
-var _ = require('lodash');
-var param = require('jquery-param');
-var RequestHandler = require('../RequestHandler');
-var consts = require('../../consts');
+const _ = require('lodash');
+const param = require('jquery-param');
+const RequestHandler = require('../RequestHandler');
+const consts = require('../../consts');
 
 module.exports = (function() {
-
-    function call(method, url, params, data, parseResponse=true, headers={}) {
+    function call(method, url, params, data, parseResponse = true, headers = {}) {
         return new Promise((resolve, reject) => {
-            var options = {headers: {}};
+            const options = { headers: {} };
             if (!_.isEmpty(params)) {
-                var queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
+                const queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
                 url = `${url}${queryString}`;
             }
             if (headers) {
@@ -25,36 +24,42 @@ module.exports = (function() {
                     data = JSON.stringify(data);
                     options.headers['content-length'] = Buffer.byteLength(data);
                 } catch (error) {
-                    throw new Error('Invalid (non-json) payload data. Error: ' + error)
+                    throw new Error(`Invalid (non-json) payload data. Error: ${error}`);
                 }
             }
 
-            RequestHandler.request(method, url, options, (res) => {
-                var isSuccess = res.statusCode >= 200 && res.statusCode < 300;
-                var body = '';
-                res.on('data', function(chunk) {
-                    body += chunk;
-                });
-                res.on('end', function() {
-                    if (isSuccess) {
-                        if (parseResponse) {
-                            var contentType = _.toLower(res.headers['content-type']);
-                            if (contentType.indexOf('application/json') >= 0) {
-                                try {
-                                    body = JSON.parse(body);
-                                } catch (error) {
-                                    reject(`Invalid JSON response. Cannot parse. Data received: ${body}`);
+            RequestHandler.request(
+                method,
+                url,
+                options,
+                res => {
+                    const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
+                    let body = '';
+                    res.on('data', function(chunk) {
+                        body += chunk;
+                    });
+                    res.on('end', function() {
+                        if (isSuccess) {
+                            if (parseResponse) {
+                                const contentType = _.toLower(res.headers['content-type']);
+                                if (contentType.indexOf('application/json') >= 0) {
+                                    try {
+                                        body = JSON.parse(body);
+                                    } catch (error) {
+                                        reject(`Invalid JSON response. Cannot parse. Data received: ${body}`);
+                                    }
                                 }
                             }
+                            resolve(body);
+                        } else {
+                            reject(`Status: ${res.statusCode} ${res.statusMessage}. Data received: ${body}`);
                         }
-                        resolve(body);
-                    } else {
-                        reject(`Status: ${res.statusCode} ${res.statusMessage}. Data received: ${body}`);
-                    }
-                });
-            }, (err) => {
-                reject(err);
-            });
+                    });
+                },
+                err => {
+                    reject(err);
+                }
+            );
         });
     }
 

@@ -22,9 +22,8 @@ import { Button, Icon } from './index';
  *```
  */
 export default class CopyToClipboardButton extends Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
     }
 
     /**
@@ -47,19 +46,28 @@ export default class CopyToClipboardButton extends Component {
     render() {
         return (
             <CopyToClipboard text={this.props.text}>
-                {
-                    this.props.content
-                    ?
-                        <Button animated='vertical' basic className={this.props.className} onClick={(event) => event.stopPropagation()}>
-                            <Button.Content visible>{this.props.content}</Button.Content>
-                            <Button.Content hidden><Icon name='copy' /></Button.Content>
-                        </Button>
-                    :
-                        <Button basic compact icon='copy' className={this.props.className} onClick={(event) => event.stopPropagation()} />
-                }
-
-
+                {this.props.content ? (
+                    <Button
+                        animated="vertical"
+                        basic
+                        className={this.props.className}
+                        onClick={event => event.stopPropagation()}
+                    >
+                        <Button.Content visible>{this.props.content}</Button.Content>
+                        <Button.Content hidden>
+                            <Icon name="copy" />
+                        </Button.Content>
+                    </Button>
+                ) : (
+                    <Button
+                        basic
+                        compact
+                        icon="copy"
+                        className={this.props.className}
+                        onClick={event => event.stopPropagation()}
+                    />
+                )}
             </CopyToClipboard>
-        )
-    };
-};
+        );
+    }
+}

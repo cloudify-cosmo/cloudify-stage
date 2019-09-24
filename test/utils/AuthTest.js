@@ -1,16 +1,17 @@
 /**
  * Created by edenp on 7/20/17.
  */
-'use strict';
 
 import chai from 'chai';
-chai.use(require('chai-as-promised'));
-chai.should();
-var expect = chai.expect;
 import sinon from 'sinon';
 
-import Auth from '../../app/utils/auth';
 import Cookies from 'js-cookie';
+import Auth from '../../app/utils/auth';
+
+chai.use(require('chai-as-promised'));
+
+chai.should();
+const { expect } = chai;
 
 describe('(Utils) Auth', () => {
     after(() => {
@@ -18,14 +19,14 @@ describe('(Utils) Auth', () => {
     });
 
     it('should check is logged in', () => {
-        var managerData = {};
+        let managerData = {};
         expect(Auth.isLoggedIn(managerData)).to.equal(false);
 
-        managerData = {auth:{}};
+        managerData = { auth: {} };
         expect(Auth.isLoggedIn(managerData)).to.equal(false);
 
         sinon.stub(Cookies, 'get', () => {
-            return 'WyIwIiwiYWY4ODQ2YjFiNjZlZTlkNWIyZGNhNGU3MDY3Yjk3NTgiXQ.DFJJOw.zXZeFuhPJ-n-lds_UJsLTAub2Q0'
+            return 'WyIwIiwiYWY4ODQ2YjFiNjZlZTlkNWIyZGNhNGU3MDY3Yjk3NTgiXQ.DFJJOw.zXZeFuhPJ-n-lds_UJsLTAub2Q0';
         });
         expect(Auth.isLoggedIn(managerData)).to.equal(true);
     });

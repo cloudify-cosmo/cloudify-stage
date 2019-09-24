@@ -10,26 +10,24 @@ const BLUEPRINT_INPUTS_FILENAME = 'nodecellarInputs2.yaml';
 const WORKFLOW_VERIFICATION_TIMEOUT = 20000;
 
 module.exports = {
-
-    before : function(client) {
-
+    before(client) {
         const BLUEPRINT_INPUTS = {};
 
-        client.login()
+        client
+            .login()
             .prepareTestWidget(client.page.deployments().props.widgetId)
             .addBlueprint(BLUEPRINT_NAME, BLUEPRINT_URL, BLUEPRINT_YAML_FILENAME)
             .deployBlueprint(DEPLOYMENT_NAME, BLUEPRINT_INPUTS, BLUEPRINT_NAME);
     },
 
-    'Deployments widget configuration': function (client) {
-        let page = client.page.deployments();
+    'Deployments widget configuration': function(client) {
+        const page = client.page.deployments();
 
         // 1. List view & drilldown turned on
         page.configureWidget()
-            .section.configureWidgetModal
-                .setDrilldown(true)
-                .setListView()
-                .clickSave();
+            .section.configureWidgetModal.setDrilldown(true)
+            .setListView()
+            .clickSave();
 
         // List view verification
         page.assert.elementPresent(page.section.deploymentsList.selector);
@@ -39,82 +37,80 @@ module.exports = {
         page.section.deploymentsList
             .clickSegment(DEPLOYMENT_NAME)
             .waitForElementNotPresent(page.section.deploymentsList.selector);
-        client.page.page().assert.containsText('@pageTitle', DEPLOYMENT_NAME)
-
+        client.page.page().assert.containsText('@pageTitle', DEPLOYMENT_NAME);
 
         // 2. Table view & drilldown turned off
-        client.back()
-            .waitForElementPresent(page.section.deploymentsList.selector);
+        client.back().waitForElementPresent(page.section.deploymentsList.selector);
         page.configureWidget()
-            .section.configureWidgetModal
-                .setDrilldown(false)
-                .setBlueprintIdFilter(BLUEPRINT_NAME)
-                .setTableView()
-                .clickSave();
+            .section.configureWidgetModal.setDrilldown(false)
+            .setBlueprintIdFilter(BLUEPRINT_NAME)
+            .setTableView()
+            .clickSave();
 
         // Table view verification
         client.assert.elementPresent(page.section.deploymentsTable.selector);
         client.assert.elementNotPresent(page.section.deploymentsList.selector);
 
-
         // Drilldown off - verification
-        page.section.deploymentsTable
-            .clickRow(DEPLOYMENT_NAME);
+        page.section.deploymentsTable.clickRow(DEPLOYMENT_NAME);
         client.page.page().assert.containsText('@pageTitle', 'Page_0');
     },
 
-    'Execute workflow': function (client) {
+    'Execute workflow': function(client) {
         const WORKFLOW_NAME = 'install';
-        let page = client.page.deployments();
+        const page = client.page.deployments();
 
         // Set refresh interval to 1 seconds to see changing execution status
         page.configureWidget()
-            .section.configureWidgetModal
-            .setPollingTime(1)
+            .section.configureWidgetModal.setPollingTime(1)
             .clickSave();
 
         page.section.deploymentsTable
             .checkIfDeploymentPresent(DEPLOYMENT_NAME)
             .clickExecuteWorkflow(DEPLOYMENT_NAME, WORKFLOW_NAME);
-        page.section.executeWorkflowModal
-            .clickExecute();
+        page.section.executeWorkflowModal.clickExecute();
 
         page.section.deploymentsTable
             .checkIfWorkflowStartedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT)
             .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
     },
 
-    'Deployment update': function (client) {
-        let page = client.page.deployments();
+    'Deployment update': function(client) {
+        const page = client.page.deployments();
 
-        page.section.deploymentsTable
-            .checkIfDeploymentPresent(DEPLOYMENT_NAME)
-            .clickUpdate(DEPLOYMENT_NAME);
+        page.section.deploymentsTable.checkIfDeploymentPresent(DEPLOYMENT_NAME).clickUpdate(DEPLOYMENT_NAME);
         page.section.updateDeploymentModal
             .waitUntilFormLoaded()
-            .selectOptionInDropdown('@blueprint', page.section.updateDeploymentModal.elements.blueprint.selector, BLUEPRINT_NAME)
-            .setElementValue('@inputsFile', client.page.resources().props.fileByName(BLUEPRINT_INPUTS_FILENAME, client.globals))
+            .selectOptionInDropdown(
+                '@blueprint',
+                page.section.updateDeploymentModal.elements.blueprint.selector,
+                BLUEPRINT_NAME
+            )
+            .setElementValue(
+                '@inputsFile',
+                client.page.resources().props.fileByName(BLUEPRINT_INPUTS_FILENAME, client.globals)
+            )
             .clickUpdate();
         client.pause(2000);
-        page.section.deploymentsTable
-            .checkIfWorkflowFinishedOnDeployment(DEPLOYMENT_NAME, WORKFLOW_VERIFICATION_TIMEOUT);
+        page.section.deploymentsTable.checkIfWorkflowFinishedOnDeployment(
+            DEPLOYMENT_NAME,
+            WORKFLOW_VERIFICATION_TIMEOUT
+        );
     },
 
-    'Deployment remove': function (client) {
-        let page = client.page.deployments();
+    'Deployment remove': function(client) {
+        const page = client.page.deployments();
 
-        page.section.deploymentsTable
-            .checkIfDeploymentPresent(DEPLOYMENT_NAME)
-            .clickForceDelete(DEPLOYMENT_NAME);
+        page.section.deploymentsTable.checkIfDeploymentPresent(DEPLOYMENT_NAME).clickForceDelete(DEPLOYMENT_NAME);
 
-        page.section.removeDeploymentModal
-            .clickYes();
+        page.section.removeDeploymentModal.clickYes();
 
-        page.section.deploymentsTable
-            .checkIfDeploymentRemoved(DEPLOYMENT_NAME);
+        page.section.deploymentsTable.checkIfDeploymentRemoved(DEPLOYMENT_NAME);
 
-        //Fix strange issue in the filter when deployment is removed
-        client.page.filter().selectOptionInDropdown('@deploymentSearch', client.page.filter().elements.deploymentSearch.selector, '');
+        // Fix strange issue in the filter when deployment is removed
+        client.page
+            .filter()
+            .selectOptionInDropdown('@deploymentSearch', client.page.filter().elements.deploymentSearch.selector, '');
     },
 
     after(client) {
@@ -127,4 +123,3 @@ module.exports = {
             .end();
     }
 };
-

@@ -18,7 +18,7 @@ Stage.defineWidget({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('userManagement'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
-    
+
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(30),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
@@ -26,35 +26,35 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
-    render: function(widget, data, error, toolbox) {
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
 
-        var selectedUser = toolbox.getContext().getValue('userName');
+        const selectedUser = toolbox.getContext().getValue('userName');
 
         let formattedData = data.users;
-        formattedData = Object.assign({}, data.users, {
-            items: _.map (formattedData.items, (item) => {
-                return Object.assign({}, item, {
-                    last_login_at: item.last_login_at?Stage.Utils.Time.formatTimestamp(item.last_login_at):"",
+        formattedData = {
+            ...data.users,
+            items: _.map(formattedData.items, item => {
+                return {
+                    ...item,
+                    last_login_at: item.last_login_at ? Stage.Utils.Time.formatTimestamp(item.last_login_at) : '',
                     groupCount: item.groups.length,
                     tenantCount: _.size(item.tenants),
                     isSelected: item.username === selectedUser,
-                    isAdmin: item.role === Stage.Common.Consts.sysAdminRole ||
-                             _.has(item.group_system_roles, Stage.Common.Consts.sysAdminRole)
-                })
+                    isAdmin:
+                        item.role === Stage.Common.Consts.sysAdminRole ||
+                        _.has(item.group_system_roles, Stage.Common.Consts.sysAdminRole)
+                };
             }),
-            total : _.get(data.users, 'metadata.pagination.total', 0)
+            total: _.get(data.users, 'metadata.pagination.total', 0)
+        };
+
+        const roles = _.map(toolbox.getManager().getSystemRoles(), role => {
+            return { text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name };
         });
 
-        var roles = _.map (toolbox.getManager().getSystemRoles(), (role) => {
-            return {text: role.description ? `${role.name} - ${role.description}` : role.name, value: role.name};
-        });
-
-        return (
-            <UsersTable widget={widget} data={formattedData} roles={roles} toolbox={toolbox}/>
-        );
-
+        return <UsersTable widget={widget} data={formattedData} roles={roles} toolbox={toolbox} />;
     }
 });

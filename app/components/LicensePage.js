@@ -12,109 +12,118 @@ import FullScreenSegment from './layout/FullScreenSegment';
 import EulaLink from './license/EulaLink';
 import CurrentLicense from './license/CurrentLicense';
 import UploadLicense from './license/UploadLicense';
-import {Button, Form, Grid, Header, Icon, Message, MessageContainer} from './basic';
+import { Button, Form, Grid, Header, Icon, Message, MessageContainer } from './basic';
 
-
-function LicenseSwitchButton({isEditLicenseActive, onClick, color}) {
+function LicenseSwitchButton({ isEditLicenseActive, onClick, color }) {
     return (
-        <Button content={isEditLicenseActive ? 'Show License' : 'Edit License'} floated='right'
-                icon={isEditLicenseActive ? 'text file' : 'edit'}
-                color={color} labelPosition='left' onClick={onClick} />
-    )
+        <Button
+            content={isEditLicenseActive ? 'Show License' : 'Edit License'}
+            floated="right"
+            icon={isEditLicenseActive ? 'text file' : 'edit'}
+            color={color}
+            labelPosition="left"
+            onClick={onClick}
+        />
+    );
 }
 
-function DescriptionMessage({canUploadLicense, isTrial, isEditLicenseActive, onLicenseButtonClick, status}) {
-    const commonMessageProps = {icon: true};
-    const SpanMessage = ({children}) => <span>{children}</span>;
+function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, onLicenseButtonClick, status }) {
+    const commonMessageProps = { icon: true };
+    const SpanMessage = ({ children }) => <span>{children}</span>;
 
     switch (status) {
         case Consts.LICENSE.EMPTY:
             return (
                 <Message negative {...commonMessageProps}>
-                    <Icon name='ban' />
+                    <Icon name="ban" />
                     <Message.Content>
                         <Message.Header>No active license</Message.Header>
-                        {
-                            canUploadLicense
-                            ?
-                                <SpanMessage>
-                                    To activate this product, please enter the license key provided by Cloudify below
-                                    and press update. Visit the Cloudify <a target='_blank' href='https://cloudify.co'>
-                                    web site</a> &nbsp;to learn more and acquire a free&nbsp;
-                                    <a target='_blank' href='https://cloudify.co/download/#trial'>trial license</a>.
-                                </SpanMessage>
-                            :
-                                <SpanMessage>
-                                    To activate this product, please contact your Cloudify administrator.
-                                </SpanMessage>
-                        }
-
+                        {canUploadLicense ? (
+                            <SpanMessage>
+                                To activate this product, please enter the license key provided by Cloudify below and
+                                press update. Visit the Cloudify{' '}
+                                <a target="_blank" href="https://cloudify.co">
+                                    web site
+                                </a>{' '}
+                                &nbsp;to learn more and acquire a free&nbsp;
+                                <a target="_blank" href="https://cloudify.co/download/#trial">
+                                    trial license
+                                </a>
+                                .
+                            </SpanMessage>
+                        ) : (
+                            <SpanMessage>
+                                To activate this product, please contact your Cloudify administrator.
+                            </SpanMessage>
+                        )}
                     </Message.Content>
                 </Message>
             );
         case Consts.LICENSE.EXPIRED:
-            return isTrial
-                ?
+            return isTrial ? (
                 <Message negative {...commonMessageProps}>
-                    <Icon name='clock outline' />
+                    <Icon name="clock outline" />
                     <Message.Content>
-                        {
-                            canUploadLicense &&
-                            <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
-                                                 onClick={onLicenseButtonClick} color='red' />
-                        }
+                        {canUploadLicense && (
+                            <LicenseSwitchButton
+                                isEditLicenseActive={isEditLicenseActive}
+                                onClick={onLicenseButtonClick}
+                                color="red"
+                            />
+                        )}
                         <Message.Header>The trial license has expired</Message.Header>
-                        {
-                            canUploadLicense
-                            ?
-                                <SpanMessage>
-                                    Please contact <a target='_blank' href='https://cloudify.co/contact'>Cloudify</a>
-                                    &nbsp;to obtain a license key.
-                                </SpanMessage>
-                            :
-                                <SpanMessage>
-                                    Please contact your Cloudify administrator.
-                                </SpanMessage>
-                        }
-
+                        {canUploadLicense ? (
+                            <SpanMessage>
+                                Please contact{' '}
+                                <a target="_blank" href="https://cloudify.co/contact">
+                                    Cloudify
+                                </a>
+                                &nbsp;to obtain a license key.
+                            </SpanMessage>
+                        ) : (
+                            <SpanMessage>Please contact your Cloudify administrator.</SpanMessage>
+                        )}
                     </Message.Content>
                 </Message>
-                :
+            ) : (
                 <Message warning {...commonMessageProps}>
-                    <Icon name='clock outline' />
+                    <Icon name="clock outline" />
                     <Message.Content>
-                        {
-                            canUploadLicense &&
-                            <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
-                                                 onClick={onLicenseButtonClick} color='brown' />
-                        }
+                        {canUploadLicense && (
+                            <LicenseSwitchButton
+                                isEditLicenseActive={isEditLicenseActive}
+                                onClick={onLicenseButtonClick}
+                                color="brown"
+                            />
+                        )}
 
                         <Message.Header>Product license has expired</Message.Header>
-                        {
-                            canUploadLicense
-                            ?
-                                <SpanMessage>
-                                    Please contact <a target='_blank' href='https://cloudify.co/support'>Cloudify support</a>
-                                    &nbsp;to obtain a new license key.
-                                </SpanMessage>
-                            :
-                                <SpanMessage>
-                                    Please contact your Cloudify administrator.
-                                </SpanMessage>
-                        }
-
+                        {canUploadLicense ? (
+                            <SpanMessage>
+                                Please contact{' '}
+                                <a target="_blank" href="https://cloudify.co/support">
+                                    Cloudify support
+                                </a>
+                                &nbsp;to obtain a new license key.
+                            </SpanMessage>
+                        ) : (
+                            <SpanMessage>Please contact your Cloudify administrator.</SpanMessage>
+                        )}
                     </Message.Content>
-                </Message>;
+                </Message>
+            );
         case Consts.LICENSE.ACTIVE:
             return (
                 <Message positive {...commonMessageProps}>
-                    <Icon name='checkmark' />
+                    <Icon name="checkmark" />
                     <Message.Content>
-                        {
-                            canUploadLicense &&
-                            <LicenseSwitchButton isEditLicenseActive={isEditLicenseActive}
-                                                 onClick={onLicenseButtonClick} color='green'/>
-                        }
+                        {canUploadLicense && (
+                            <LicenseSwitchButton
+                                isEditLicenseActive={isEditLicenseActive}
+                                onClick={onLicenseButtonClick}
+                                color="green"
+                            />
+                        )}
                         <Message.Header>License is valid</Message.Header>
                         <SpanMessage>No action required.</SpanMessage>
                     </Message.Content>
@@ -138,7 +147,7 @@ export default class LicensePage extends Component {
         this.onLicenseButtonClick = this.onLicenseButtonClick.bind(this);
         this.onLicenseEdit = this.onLicenseEdit.bind(this);
         this.onLicenseUpload = this.onLicenseUpload.bind(this);
-        this.toolbox = StageUtils.getToolbox(()=>{}, ()=>{}, null);
+        this.toolbox = StageUtils.getToolbox(() => {}, () => {}, null);
     }
 
     static propTypes = {
@@ -146,24 +155,26 @@ export default class LicensePage extends Component {
         license: PropTypes.object.isRequired,
         onLicenseChange: PropTypes.func.isRequired,
         onGoToApp: PropTypes.func.isRequired,
-        status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired,
+        status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired
     };
 
     static defaultProps = {};
 
     componentDidMount() {
-        this.setState({isLoading: true});
-        return this.toolbox.getManager().doGet('/license')
-            .then((data) => {
+        this.setState({ isLoading: true });
+        return this.toolbox
+            .getManager()
+            .doGet('/license')
+            .then(data => {
                 const license = _.get(data, 'items[0]', {});
-                this.setState({isLoading: false, error: null, isEditLicenseActive: _.isEmpty(license)});
+                this.setState({ isLoading: false, error: null, isEditLicenseActive: _.isEmpty(license) });
                 this.props.onLicenseChange(license);
             })
-            .catch((error) => this.setState({isLoading: false, error: error.message}))
+            .catch(error => this.setState({ isLoading: false, error: error.message }));
     }
 
     onErrorDismiss() {
-        this.setState({error: null});
+        this.setState({ error: null });
     }
 
     onLicenseEdit(proxy, field) {
@@ -171,23 +182,25 @@ export default class LicensePage extends Component {
     }
 
     onLicenseUpload() {
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
 
-        return this.toolbox.getManager().doPut('/license', null, this.state.license)
-            .then((data) => {
-                this.setState({isLoading: false, error: null, isEditLicenseActive: false});
+        return this.toolbox
+            .getManager()
+            .doPut('/license', null, this.state.license)
+            .then(data => {
+                this.setState({ isLoading: false, error: null, isEditLicenseActive: false });
                 this.props.onLicenseChange(data);
             })
-            .catch((error) => this.setState({isLoading: false, error: error.message}))
+            .catch(error => this.setState({ isLoading: false, error: error.message }));
     }
 
     onLicenseButtonClick() {
-        this.setState({isEditLicenseActive: !this.state.isEditLicenseActive});
+        this.setState({ isEditLicenseActive: !this.state.isEditLicenseActive });
     }
 
-    render () {
-        const {license: licenseObject, canUploadLicense, isProductOperational, onGoToApp, status} = this.props;
-        const {license: licenseString, error, isLoading, isEditLicenseActive} = this.state;
+    render() {
+        const { license: licenseObject, canUploadLicense, isProductOperational, onGoToApp, status } = this.props;
+        const { license: licenseString, error, isLoading, isEditLicenseActive } = this.state;
 
         const isTrial = !_.isEmpty(licenseObject) ? licenseObject.trial : false;
 
@@ -195,34 +208,49 @@ export default class LicensePage extends Component {
             <FullScreenSegment>
                 <Banner />
 
-                <MessageContainer wide size='large' textAlign='left' loading={isLoading}>
-                    <Header as='h2'><Icon name='key' /> License Management</Header>
+                <MessageContainer wide size="large" textAlign="left" loading={isLoading}>
+                    <Header as="h2">
+                        <Icon name="key" /> License Management
+                    </Header>
 
-                    <DescriptionMessage isTrial={isTrial} status={status} canUploadLicense={canUploadLicense}
-                                        isEditLicenseActive={isEditLicenseActive}
-                                        onLicenseButtonClick={this.onLicenseButtonClick} />
+                    <DescriptionMessage
+                        isTrial={isTrial}
+                        status={status}
+                        canUploadLicense={canUploadLicense}
+                        isEditLicenseActive={isEditLicenseActive}
+                        onLicenseButtonClick={this.onLicenseButtonClick}
+                    />
 
-                    {
-                        canUploadLicense && isEditLicenseActive
-                        ?
-                            <UploadLicense error={error} isLoading={isLoading} license={licenseString}
-                                           onChange={this.onLicenseEdit} onErrorDismiss={this.onErrorDismiss}
-                                           onUpload={this.onLicenseUpload} />
-                        :
-                            <CurrentLicense license={licenseObject}/>
-                    }
+                    {canUploadLicense && isEditLicenseActive ? (
+                        <UploadLicense
+                            error={error}
+                            isLoading={isLoading}
+                            license={licenseString}
+                            onChange={this.onLicenseEdit}
+                            onErrorDismiss={this.onErrorDismiss}
+                            onUpload={this.onLicenseUpload}
+                        />
+                    ) : (
+                        <CurrentLicense license={licenseObject} />
+                    )}
 
-                    <Grid columns={'equal'}>
-                        <Grid.Column textAlign='left' verticalAlign='middle'>
+                    <Grid columns="equal">
+                        <Grid.Column textAlign="left" verticalAlign="middle">
                             <EulaLink />
                         </Grid.Column>
 
-                        <Grid.Column textAlign='right' verticalAlign='middle'>
-                            <Button content='Go to app' icon='arrow right' color='green' labelPosition='right' fluid={false}
-                                    disabled={!isProductOperational} onClick={onGoToApp} />
+                        <Grid.Column textAlign="right" verticalAlign="middle">
+                            <Button
+                                content="Go to app"
+                                icon="arrow right"
+                                color="green"
+                                labelPosition="right"
+                                fluid={false}
+                                disabled={!isProductOperational}
+                                onClick={onGoToApp}
+                            />
                         </Grid.Column>
                     </Grid>
-
                 </MessageContainer>
             </FullScreenSegment>
         );

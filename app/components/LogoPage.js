@@ -9,11 +9,11 @@ import Consts from '../utils/consts';
 import FullScreenSegment from './layout/FullScreenSegment';
 import ErrorPage from '../containers/ErrorPage';
 import NoTenants from '../containers/NoTenants';
-import Logo from '../components/banner/Logo';
+import Logo from './banner/Logo';
 import NotFound from './NotFound';
 
 export default class LogoPage extends Component {
-    render () {
+    render() {
         return (
             <FullScreenSegment>
                 <Logo />

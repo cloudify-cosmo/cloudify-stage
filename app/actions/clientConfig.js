@@ -10,23 +10,21 @@ function setClientConfig(config) {
         type: types.SET_CLIENT_CONFIG,
         config,
         receivedAt: Date.now()
-    }
+    };
 }
 
 export function getClientConfig() {
-    return function(dispatch,getState) {
-        var internal = new Internal(getState().manager);
-        return internal.doGet('/clientConfig')
-            .then(response => dispatch(setClientConfig(response.config)));
-    }
+    return function(dispatch, getState) {
+        const internal = new Internal(getState().manager);
+        return internal.doGet('/clientConfig').then(response => dispatch(setClientConfig(response.config)));
+    };
 }
 
 export function saveClientConfig(config) {
-    return function(dispatch,getState) {
-        var internal = new Internal(getState().manager);
-        return internal.doPost('/clientConfig',null,config).then(response=>{
-            dispatch(setClientConfig(response.config))
+    return function(dispatch, getState) {
+        const internal = new Internal(getState().manager);
+        return internal.doPost('/clientConfig', null, config).then(response => {
+            dispatch(setClientConfig(response.config));
         });
-    }
+    };
 }
-

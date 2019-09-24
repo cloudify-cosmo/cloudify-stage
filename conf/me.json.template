@@ -10,9 +10,6 @@
   "customer": {
 
   },
-  "log4jsConfig": {
-
-  },
   "manager": {
     "ip":"<MANAGER_IP>",
     "protocol" : "http",

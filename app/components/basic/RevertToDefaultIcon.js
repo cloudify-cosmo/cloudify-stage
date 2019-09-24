@@ -21,17 +21,17 @@ import { Icon, Popup } from './index';
  * ```
  */
 export default class RevertToDefaultIcon extends Component {
-
     /**
      * propTypes
+     *
      * @property {any} value typed field value
      * @property {any} defaultValue typed field default value
-     * @property {function} onClick function to be called on revert icon click
+     * @property {Function} onClick function to be called on revert icon click
      */
     static propTypes = {
         value: PropTypes.any,
         defaultValue: PropTypes.any,
-        onClick: PropTypes.func,
+        onClick: PropTypes.func
     };
 
     static defaultProps = {
@@ -41,12 +41,8 @@ export default class RevertToDefaultIcon extends Component {
     };
 
     render() {
-
-        return !_.isNil(this.props.defaultValue) && !_.isEqual(this.props.value, this.props.defaultValue)
-            ?
-            <Popup trigger={<Icon name='undo' link onClick={this.props.onClick} />}>
-                Revert to default value
-            </Popup>
-            : null;
+        return !_.isNil(this.props.defaultValue) && !_.isEqual(this.props.value, this.props.defaultValue) ? (
+            <Popup trigger={<Icon name="undo" link onClick={this.props.onClick} />}>Revert to default value</Popup>
+        ) : null;
     }
 }

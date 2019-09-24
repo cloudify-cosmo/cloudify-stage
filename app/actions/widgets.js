@@ -2,10 +2,9 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-
 import * as types from './types';
-import {createDrilldownPage,selectPage} from './page';
-import {drillDownWarning} from './templateManagement';
+import { createDrilldownPage, selectPage } from './page';
+import { drillDownWarning } from './templateManagement';
 import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
 import Internal from '../utils/Internal';
 
@@ -13,17 +12,16 @@ export function storeWidgetDefinitions(widgetDefinitions) {
     return {
         type: types.STORE_WIDGETS,
         widgetDefinitions
-    }
+    };
 }
 
 export function loadWidgetDefinitions() {
-    return function (dispatch, getState) {
-        return widgetDefinitionLoader.load(getState().manager)
-            .then(result => dispatch(storeWidgetDefinitions(result)));
-    }
+    return function(dispatch, getState) {
+        return widgetDefinitionLoader.load(getState().manager).then(result => dispatch(storeWidgetDefinitions(result)));
+    };
 }
 
-export function addWidget(pageId,name,widgetDefinition,width,height,x,y,configuration) {
+export function addWidget(pageId, name, widgetDefinition, width, height, x, y, configuration) {
     return {
         type: types.ADD_WIDGET,
         pageId,
@@ -37,22 +35,21 @@ export function addWidget(pageId,name,widgetDefinition,width,height,x,y,configur
     };
 }
 
-export function renameWidget(pageId,widgetId,newName) {
+export function renameWidget(pageId, widgetId, newName) {
     return {
         type: types.RENAME_WIDGET,
         pageId,
         widgetId,
         name: newName
-    }
-
+    };
 }
 
-export function removeWidget(pageId,widgetId) {
+export function removeWidget(pageId, widgetId) {
     return {
         type: types.REMOVE_WIDGET,
         pageId,
         widgetId
-    }
+    };
 }
 
 export function editWidget(pageId, widgetId, configuration) {
@@ -61,74 +58,80 @@ export function editWidget(pageId, widgetId, configuration) {
         pageId,
         widgetId,
         configuration
-    }
+    };
 }
 
-export function maximizeWidget(pageId,widgetId,maximized) {
+export function maximizeWidget(pageId, widgetId, maximized) {
     return {
         type: types.MAXIMIZE_WIDGET,
         pageId,
         widgetId,
         maximized
-    }
+    };
 }
 
 export function minimizeWidgets() {
     return {
         type: types.MINIMIZE_WIDGETS
-    }
+    };
 }
 
-export function changeWidgetGridData(pageId,widgetId,gridData) {
+export function changeWidgetGridData(pageId, widgetId, gridData) {
     return {
         type: types.CHANGE_WIDGET_GRID_DATA,
         pageId,
         widgetId,
         gridData
-
-    }
-
+    };
 }
 
-export function addWidgetDrilldownPage(widgetId,drillDownName,drillDownPageId) {
+export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId) {
     return {
-        type : types.ADD_DRILLDOWN_PAGE,
+        type: types.ADD_DRILLDOWN_PAGE,
         widgetId,
         drillDownPageId,
         drillDownName
-    }
-
+    };
 }
 
-export function drillDownToPage(widget,defaultTemplate,widgetDefinitions,drilldownContext,drilldownPageName) {
-
-    return function (dispatch, getState) {
-        let isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
+export function drillDownToPage(widget, defaultTemplate, widgetDefinitions, drilldownContext, drilldownPageName) {
+    return function(dispatch, getState) {
+        const isPageEditMode = _.get(getState().templateManagement, 'isPageEditMode');
         if (!_.isUndefined(isPageEditMode)) {
             return dispatch(drillDownWarning(true));
         }
 
         let pageId = widget.drillDownPages[defaultTemplate.name];
         if (!pageId) {
-            let currentPage = _.replace(window.location.pathname, /.*\/page\//, '');
-            let newPageId = _.snakeCase(currentPage + ' ' + defaultTemplate.name);
-            let isDrilldownPagePresent = !!_.find(getState().pages, {'id': newPageId});
+            const currentPage = _.replace(window.location.pathname, /.*\/page\//, '');
+            const newPageId = _.snakeCase(`${currentPage} ${defaultTemplate.name}`);
+            const isDrilldownPagePresent = !!_.find(getState().pages, { id: newPageId });
 
             if (!isDrilldownPagePresent) {
                 dispatch(createDrilldownPage(newPageId, defaultTemplate.name));
-                _.each(defaultTemplate.widgets, (widget) => {
-                    var widgetDefinition = _.find(widgetDefinitions, {id: widget.definition});
-                    dispatch(addWidget(newPageId, widget.name, widgetDefinition,
-                                       widget.width, widget.height, widget.x, widget.y, widget.configuration));
+                _.each(defaultTemplate.widgets, widget => {
+                    const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
+                    dispatch(
+                        addWidget(
+                            newPageId,
+                            widget.name,
+                            widgetDefinition,
+                            widget.width,
+                            widget.height,
+                            widget.x,
+                            widget.y,
+                            widget.configuration
+                        )
+                    );
                 });
             }
 
-            dispatch(addWidgetDrilldownPage(widget.id,defaultTemplate.name,newPageId));
+            dispatch(addWidgetDrilldownPage(widget.id, defaultTemplate.name, newPageId));
             pageId = newPageId;
         }
 
-        dispatch(selectPage(pageId,true,drilldownContext,drilldownPageName));
-    }
+        dispatch(selectPage(pageId, true, drilldownContext, drilldownPageName));
+    };
 }
 
 export function setInstallWidget(widgetDefinitions) {
@@ -139,10 +142,11 @@ export function setInstallWidget(widgetDefinitions) {
 }
 
 export function installWidget(widgetFile, widgetUrl) {
-    return function(dispatch,getState) {
-        return widgetDefinitionLoader.install(widgetFile, widgetUrl, getState().manager)
+    return function(dispatch, getState) {
+        return widgetDefinitionLoader
+            .install(widgetFile, widgetUrl, getState().manager)
             .then(widgetDefinitions => dispatch(setInstallWidget(widgetDefinitions)));
-    }
+    };
 }
 
 export function setUninstallWidget(widgetId) {
@@ -153,10 +157,11 @@ export function setUninstallWidget(widgetId) {
 }
 
 export function uninstallWidget(widgetId) {
-    return function(dispatch,getState) {
-        return widgetDefinitionLoader.uninstall(widgetId, getState().manager)
+    return function(dispatch, getState) {
+        return widgetDefinitionLoader
+            .uninstall(widgetId, getState().manager)
             .then(() => dispatch(setUninstallWidget(widgetId)));
-    }
+    };
 }
 
 export function setUpdateWidget(widgetDefinitions, widgetId) {
@@ -168,15 +173,16 @@ export function setUpdateWidget(widgetDefinitions, widgetId) {
 }
 
 export function updateWidget(widgetId, widgetFile, widgetUrl) {
-    return function(dispatch,getState) {
-        return widgetDefinitionLoader.update(widgetId, widgetFile, widgetUrl, getState().manager)
+    return function(dispatch, getState) {
+        return widgetDefinitionLoader
+            .update(widgetId, widgetFile, widgetUrl, getState().manager)
             .then(widgetDefinitions => dispatch(setUpdateWidget(widgetDefinitions, widgetId)));
-    }
+    };
 }
 
 export function checkIfWidgetIsUsed(widgetId) {
-    return function(dispatch,getState) {
-        var internal = new Internal(getState().manager);
+    return function(dispatch, getState) {
+        const internal = new Internal(getState().manager);
         return internal.doGet(`/widgets/${widgetId}/used`);
-    }
+    };
 }

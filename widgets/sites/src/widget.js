@@ -1,4 +1,3 @@
-
 import SitesTable from './SitesTable';
 
 Stage.defineWidget({
@@ -14,6 +13,7 @@ Stage.defineWidget({
     },
     isReact: true,
     hasReadme: true,
+    hasStyle: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('sites'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     initialConfiguration: [
@@ -23,28 +23,26 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
-    render: function(widget, data, error, toolbox) {
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
-        let {sites, siteDeploymentCount} = data;
-        let deploymentsPerSite = {};
-        _.forEach(siteDeploymentCount.items, (item) => {
+        const { sites, siteDeploymentCount } = data;
+        const deploymentsPerSite = {};
+        _.forEach(siteDeploymentCount.items, item => {
             deploymentsPerSite[item.site_name] = item.deployments;
         });
-        let formattedData = {
-            items: _.map(sites.items, (site) => {
+        const formattedData = {
+            items: _.map(sites.items, site => {
                 return {
                     ...site,
                     created_at: Stage.Utils.Time.formatTimestamp(site.created_at),
                     deploymentCount: deploymentsPerSite[site.name] || 0
-                }
+                };
             }),
-            total : _.get(sites, 'metadata.pagination.total', 0)
+            total: _.get(sites, 'metadata.pagination.total', 0)
         };
 
-        return (
-            <SitesTable widget={widget} data={formattedData} toolbox={toolbox}/>
-        );
+        return <SitesTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
 });

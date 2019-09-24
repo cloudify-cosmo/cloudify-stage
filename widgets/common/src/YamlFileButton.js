@@ -3,15 +3,14 @@
  */
 
 class YamlFileButton extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
     }
 
     static propTypes = {
         dataType: PropTypes.string,
         fileLoading: PropTypes.bool,
-        onChange: PropTypes.func,
+        onChange: PropTypes.func
     };
 
     static defaultProps = {
@@ -20,15 +19,20 @@ class YamlFileButton extends React.Component {
         onChange: _.noop
     };
 
-    render () {
-        let {Form} = Stage.Basic;
+    render() {
+        const { Form } = Stage.Basic;
 
         return (
-            <Form.File name='yamlFile' showInput={false} showReset={false}
-                       openButtonParams={{className: 'rightFloated', content: 'Load Values', labelPosition: 'left'}}
-                       onChange={this.props.onChange}
-                       help={`You can provide YAML file with ${this.props.dataType} to automatically fill in the form.`}
-                       loading={this.props.fileLoading} disabled={this.props.fileLoading} />
+            <Form.File
+                name="yamlFile"
+                showInput={false}
+                showReset={false}
+                openButtonParams={{ className: 'rightFloated', content: 'Load Values', labelPosition: 'left' }}
+                onChange={this.props.onChange}
+                help={`You can provide YAML file with ${this.props.dataType} to automatically fill in the form.`}
+                loading={this.props.fileLoading}
+                disabled={this.props.fileLoading}
+            />
         );
     }
 }

@@ -3,14 +3,12 @@
  */
 
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
-import {areComponentsEqual} from 'react-hot-loader';
-import SegmentItem from './SegmentItem';
-import SegmentAction from './SegmentAction';
-import Pagination from '../pagination/Pagination';
-import {Message, Form, Icon} from 'semantic-ui-react';
+import { Form, Icon, Message } from 'semantic-ui-react';
 import TableSearch from '../dataTable/TableSearch';
+import Pagination from '../pagination/Pagination';
+import SegmentAction from './SegmentAction';
+import SegmentItem from './SegmentItem';
 
 /**
  * DataSegment component enables fetching data using predefined function and showing segmented data in a simple manner.
@@ -127,7 +125,6 @@ import TableSearch from '../dataTable/TableSearch';
  * ```
  */
 export default class DataSegment extends Component {
-
     /**
      * Segment item, see {@link SegmentItem}
      */
@@ -138,8 +135,8 @@ export default class DataSegment extends Component {
      */
     static Action = SegmentAction;
 
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.paginationRef = React.createRef();
 
@@ -148,20 +145,24 @@ export default class DataSegment extends Component {
             searching: false
         };
 
-        this.debouncedSearch = _.debounce(() => {
-            this.paginationRef.current.reset(() => {
-                return Promise.resolve(this._fetchData())
-                              .then(() => this.setState({searching: false}));
-            });
-        }, 300, {'maxWait': 2000});
+        this.debouncedSearch = _.debounce(
+            () => {
+                this.paginationRef.current.reset(() => {
+                    return Promise.resolve(this._fetchData()).then(() => this.setState({ searching: false }));
+                });
+            },
+            300,
+            { maxWait: 2000 }
+        );
     }
 
     /**
      * propTypes
+     *
      * @property {object[]} children - primary content
-     * @property {function} [fetchData] - used to fetch data
+     * @property {Function} [fetchData] - used to fetch data
      * @property {number} [totalSize=-1] - total number of data segments, if not specified pagination will not be set. It is used to calculate pagination pages.
-     * @property {function} [fetchSize=-1] - if total number is unknown size of fetched data can be provided.
+     * @property {Function} [fetchSize=-1] - if total number is unknown size of fetched data can be provided.
      * Pagination pages will be added dynamically until fetchSize is not equal to page size
      * @property {number} [pageSize=0] - number of displayed rows on page
      * @property {number} [sizeMultiplier=3] - param related to pagination.
@@ -193,20 +194,22 @@ export default class DataSegment extends Component {
     };
 
     _fetchData() {
-        return this.props.fetchData({gridParams: {
-            _search: this.state.searchText,
-            currentPage: this.paginationRef.current.state.currentPage,
-            pageSize: this.paginationRef.current.state.pageSize
-        }});
+        return this.props.fetchData({
+            gridParams: {
+                _search: this.state.searchText,
+                currentPage: this.paginationRef.current.state.currentPage,
+                pageSize: this.paginationRef.current.state.pageSize
+            }
+        });
     }
 
     render() {
-        var segmentAction = null;
-        var children = [];
+        let segmentAction = null;
+        const children = [];
 
         React.Children.forEach(this.props.children, function(child) {
             if (child && child.type) {
-                if (areComponentsEqual(child.type, SegmentAction)) {
+                if (child.type === SegmentAction) {
                     segmentAction = child;
                 } else {
                     children.push(child);
@@ -216,38 +219,47 @@ export default class DataSegment extends Component {
 
         return (
             <div className={`segmentList ${this.props.className}`}>
-                {
-                    (segmentAction || this.props.searchable) &&
+                {(segmentAction || this.props.searchable) && (
                     <Form size="small" as="div">
                         <Form.Group inline>
-                            {
-                                this.props.searchable &&
-                                <TableSearch search={this.state.searchText}
-                                             searching={this.state.searching}
-                                             onSearch={(searchText) => this.setState({searchText, searching: true},
-                                                                                     this.debouncedSearch)}
+                            {this.props.searchable && (
+                                <TableSearch
+                                    search={this.state.searchText}
+                                    searching={this.state.searching}
+                                    onSearch={searchText =>
+                                        this.setState({ searchText, searching: true }, this.debouncedSearch)
+                                    }
                                 />
-                            }
+                            )}
                             {segmentAction}
                         </Form.Group>
                     </Form>
-                }
+                )}
 
-                <Pagination totalSize={this.props.totalSize} pageSize={this.props.pageSize} sizeMultiplier={this.props.sizeMultiplier}
-                            fetchData={this._fetchData.bind(this)} fetchSize={this.props.fetchSize} ref={this.paginationRef}>
-                    {this.props.totalSize <= 0 && this.props.fetchSize <= 0 &&
-                     (this.props.totalSize === 0 || this.props.fetchSize === 0) ?
+                <Pagination
+                    totalSize={this.props.totalSize}
+                    pageSize={this.props.pageSize}
+                    sizeMultiplier={this.props.sizeMultiplier}
+                    fetchData={this._fetchData.bind(this)}
+                    fetchSize={this.props.fetchSize}
+                    ref={this.paginationRef}
+                >
+                    {this.props.totalSize <= 0 &&
+                    this.props.fetchSize <= 0 &&
+                    (this.props.totalSize === 0 || this.props.fetchSize === 0) ? (
                         <Message icon>
                             <Icon name="ban" />
-                            {this.props.fetchSize === 0 && this.paginationRef.current && this.paginationRef.current.state.currentPage > 1 ?
+                            {this.props.fetchSize === 0 &&
+                            this.paginationRef.current &&
+                            this.paginationRef.current.state.currentPage > 1 ? (
                                 <span>No more data available</span>
-                                :
+                            ) : (
                                 <span>{this.props.noDataMessage}</span>
-                            }
+                            )}
                         </Message>
-                        :
+                    ) : (
                         children
-                    }
+                    )}
                 </Pagination>
             </div>
         );

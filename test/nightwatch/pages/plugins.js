@@ -32,38 +32,40 @@ module.exports = {
     },
     commands: [
         {
-            openUploadModal: function() {
+            openUploadModal() {
                 return this.waitForElementVisible('@uploadButton')
                     .clickElement('@uploadButton')
                     .waitForElementVisible(this.section.uploadModal.selector);
             },
-            fillWagonUrl: function(url) {
+            fillWagonUrl(url) {
                 return this.section.uploadModal.setElementValue('@wagonUrl', url).parent;
             },
-            fillYamlUrl: function(url) {
+            fillYamlUrl(url) {
                 return this.section.uploadModal.setElementValue('@yamlUrl', url).parent;
             },
-            searchFor: function(text) {
-                this.section.pluginsTable.setElementValue('@searchInput', text)
-                    .api.pause(2000);
+            searchFor(text) {
+                this.section.pluginsTable.setElementValue('@searchInput', text).api.pause(2000);
                 return this;
             },
-            uploadPlugin: function() {
-                return this.section.uploadModal.clickElement('@uploadButton')
-                    .waitForElementNotPresent(this.section.uploadModal.selector, function(){
+            uploadPlugin() {
+                return this.section.uploadModal
+                    .clickElement('@uploadButton')
+                    .waitForElementNotPresent(this.section.uploadModal.selector, function() {
                         this.pause(1000);
                     }).parent;
             },
-            deletePlugin: function() {
-                return this.section.pluginsTable.clickElement('@deleteButton')
+            deletePlugin() {
+                return this.section.pluginsTable
+                    .clickElement('@deleteButton')
                     .parent.section.deleteConfirmModal.clickElement('@yesButton')
                     .parent.section.pluginsTable.waitForElementNotPresent('@packageName').parent;
             }
         }
     ],
-        props: {
+    props: {
         widgetId: 'plugins',
-        testWagonUrl: 'http://repository.cloudifysource.org/cloudify/wagons/cloudify-diamond-plugin/1.3.6/cloudify_diamond_plugin-1.3.6-py26-none-linux_x86_64-centos-Final.wgn',
+        testWagonUrl:
+            'http://repository.cloudifysource.org/cloudify/wagons/cloudify-diamond-plugin/1.3.6/cloudify_diamond_plugin-1.3.6-py26-none-linux_x86_64-centos-Final.wgn',
         testYamlUrl: 'http://www.getcloudify.org/spec/diamond-plugin/1.3.6/plugin.yaml',
         pluginPackageName: 'cloudify-diamond-plugin'
     }

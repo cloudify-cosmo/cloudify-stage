@@ -3,9 +3,8 @@
  */
 
 export default class MyResourcesCheckbox extends React.Component {
-
-    handleChange(proxy, elm){
-        this.props.toolbox.getContext ().setValue ('onlyMyResources', elm.checked);
+    handleChange(proxy, elm) {
+        this.props.toolbox.getContext().setValue('onlyMyResources', elm.checked);
         this.props.toolbox.getEventBus().trigger('plugins:refresh');
         this.props.toolbox.getEventBus().trigger('snapshots:refresh');
         this.props.toolbox.getEventBus().trigger('blueprints:refresh');
@@ -13,9 +12,7 @@ export default class MyResourcesCheckbox extends React.Component {
     }
 
     render() {
-        var {Checkbox} = Stage.Basic;
-        return ( 
-            <Checkbox toggle label="Show Only my Resources" onChange={this.handleChange.bind(this)} />
-        );
+        const { Checkbox } = Stage.Basic;
+        return <Checkbox toggle label="Show Only my Resources" onChange={this.handleChange.bind(this)} />;
     }
 }

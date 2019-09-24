@@ -3,10 +3,9 @@
  */
 
 const infrastructureStepId = 'infrastructure';
-const {createWizardStep} = Stage.Basic.Wizard.Utils;
+const { createWizardStep } = Stage.Basic.Wizard.Utils;
 
 class InfrastructureStepActions extends React.Component {
-
     constructor(props) {
         super(props);
     }
@@ -16,27 +15,27 @@ class InfrastructureStepActions extends React.Component {
     onNext(id) {
         let fetchedStepData = {};
 
-        this.props.onLoading()
+        this.props
+            .onLoading()
             .then(this.props.fetchData)
-            .then(({stepData}) => fetchedStepData = stepData)
-            .then((stepData) =>
-                this.props.toolbox.getInternal()
-                    .doPut('source/list/resources', {
-                        yamlFile: stepData.blueprintFileName,
-                        url: stepData.blueprintUrl
-                    }))
-            .then((resources) => this.props.onNext(id, {blueprint: {...resources, ...fetchedStepData}}))
-            .catch(() => this.props.onError(id, 'Error during fetching data for the next step'))
+            .then(({ stepData }) => (fetchedStepData = stepData))
+            .then(stepData =>
+                this.props.toolbox.getInternal().doPut('source/list/resources', {
+                    yamlFile: stepData.blueprintFileName,
+                    url: stepData.blueprintUrl
+                })
+            )
+            .then(resources => this.props.onNext(id, { blueprint: { ...resources, ...fetchedStepData } }))
+            .catch(() => this.props.onError(id, 'Error during fetching data for the next step'));
     }
 
     render() {
-        let {Wizard} = Stage.Basic;
-        return <Wizard.Step.Actions {...this.props} onNext={this.onNext.bind(this)} />
+        const { Wizard } = Stage.Basic;
+        return <Wizard.Step.Actions {...this.props} onNext={this.onNext.bind(this)} />;
     }
 }
 
 class InfrastructureStepContent extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -44,7 +43,9 @@ class InfrastructureStepContent extends React.Component {
     }
 
     static defaultBlueprintName = 'hello-world';
+
     static helloWorldBlueprintUrl = 'https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip';
+
     static defaultBlueprintYaml = 'aws.yaml';
 
     static initialState = {
@@ -63,31 +64,38 @@ class InfrastructureStepContent extends React.Component {
 
     componentDidMount() {
         if (!_.isEmpty(this.props.stepData)) {
-            this.setState({stepData: {...this.props.stepData}});
+            this.setState({ stepData: { ...this.props.stepData } });
         } else {
             this.props.onChange(this.props.id, this.state.stepData);
         }
     }
 
     onChange(blueprintFileName) {
-        this.setState({stepData: {...this.state.stepData, blueprintFileName}},
-            () => this.props.onChange(this.props.id, this.state.stepData));
+        this.setState({ stepData: { ...this.state.stepData, blueprintFileName } }, () =>
+            this.props.onChange(this.props.id, this.state.stepData)
+        );
     }
 
     render() {
-        let {Button, Form, Image} = Stage.Basic;
-        const {widgetResourceUrl} = Stage.Utils.Url;
+        const { Button, Form, Image } = Stage.Basic;
+        const { widgetResourceUrl } = Stage.Utils.Url;
 
-        const blueprintFileName = this.state.stepData.blueprintFileName;
+        const { blueprintFileName } = this.state.stepData;
         const platformsYaml = ['aws.yaml', 'gcp.yaml', 'openstack.yaml', 'azure.yaml'];
 
-        const PlatformButton = (props) => {
-            const platformLogoSrc = (yaml) =>
+        const PlatformButton = props => {
+            const platformLogoSrc = yaml =>
                 widgetResourceUrl('deploymentWizardButtons', `/images/${_.replace(yaml, '.yaml', '')}_logo.svg`, false);
 
             return (
-                <Button fluid basic size='huge' active={props.active} name={props.value}
-                        onClick={this.onChange.bind(this, props.value)}>
+                <Button
+                    fluid
+                    basic
+                    size="huge"
+                    active={props.active}
+                    name={props.value}
+                    onClick={this.onChange.bind(this, props.value)}
+                >
                     <Image src={platformLogoSrc(props.value)} inline style={{ cursor: 'pointer', height: 35 }} />
                 </Button>
             );
@@ -95,26 +103,24 @@ class InfrastructureStepContent extends React.Component {
 
         return (
             <Form loading={this.props.loading}>
-                {
-                    _.map(_.chunk(platformsYaml, 2), (group, index) =>
-                         <Form.Group key={`platformGroup${index}`} widths='equal'>
-                             {
-                                 _.map(group, (yaml) =>
-                                     <Form.Field key={yaml}>
-                                         <PlatformButton value={yaml} active={blueprintFileName === yaml} />
-                                     </Form.Field>
-                                 )
-                             }
-                         </Form.Group>
-                     )
-                }
+                {_.map(_.chunk(platformsYaml, 2), (group, index) => (
+                    <Form.Group key={`platformGroup${index}`} widths="equal">
+                        {_.map(group, yaml => (
+                            <Form.Field key={yaml}>
+                                <PlatformButton value={yaml} active={blueprintFileName === yaml} />
+                            </Form.Field>
+                        ))}
+                    </Form.Group>
+                ))}
             </Form>
         );
     }
 }
 
-export default createWizardStep(infrastructureStepId,
-                                'Infrastructure',
-                                'Select IaaS Provider',
-                                InfrastructureStepContent,
-                                InfrastructureStepActions);
+export default createWizardStep(
+    infrastructureStepId,
+    'Infrastructure',
+    'Select IaaS Provider',
+    InfrastructureStepContent,
+    InfrastructureStepActions
+);

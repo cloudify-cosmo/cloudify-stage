@@ -5,11 +5,10 @@
 import Actions from './actions';
 
 export default class CreateModal extends React.Component {
+    constructor(props, context) {
+        super(props, context);
 
-    constructor(props,context) {
-        super(props,context);
-
-        this.state = {...CreateModal.initialState, open: false}
+        this.state = { ...CreateModal.initialState, open: false };
     }
 
     static initialState = {
@@ -20,13 +19,13 @@ export default class CreateModal extends React.Component {
         isAdmin: false
     };
 
-    onApprove () {
+    onApprove() {
         this._submitCreate();
         return false;
     }
 
-    onCancel () {
-        this.setState({open: false});
+    onCancel() {
+        this.setState({ open: false });
         return true;
     }
 
@@ -37,30 +36,34 @@ export default class CreateModal extends React.Component {
     }
 
     _submitCreate() {
-        let errors = {};
+        const errors = {};
 
         if (_.isEmpty(this.state.groupName)) {
-            errors['groupName'] = 'Please provide group name';
+            errors.groupName = 'Please provide group name';
         }
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors});
+            this.setState({ errors });
             return false;
         }
 
         // Disable the form
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
-        var actions = new Actions(this.props.toolbox);
-        actions.doCreate(this.state.groupName,
-                         this.state.ldapGroup,
-                         Stage.Common.RolesUtil.getSystemRole(this.state.isAdmin)
-        ).then(()=>{
-            this.setState({errors: {}, loading: false, open: false});
-            this.props.toolbox.refresh();
-        }).catch((err)=>{
-            this.setState({errors: {error: err.message}, loading: false});
-        });
+        const actions = new Actions(this.props.toolbox);
+        actions
+            .doCreate(
+                this.state.groupName,
+                this.state.ldapGroup,
+                Stage.Common.RolesUtil.getSystemRole(this.state.isAdmin)
+            )
+            .then(() => {
+                this.setState({ errors: {}, loading: false, open: false });
+                this.props.toolbox.refresh();
+            })
+            .catch(err => {
+                this.setState({ errors: { error: err.message }, loading: false });
+            });
     }
 
     _handleInputChange(proxy, field) {
@@ -68,41 +71,66 @@ export default class CreateModal extends React.Component {
     }
 
     render() {
-        var {Modal, Button, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
-        const addButton = <Button content='Add' icon='add user' labelPosition='left' />;
+        const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
+        const addButton = <Button content="Add" icon="add user" labelPosition="left" />;
 
         return (
-            <Modal trigger={addButton} open={this.state.open} onOpen={()=>this.setState({open:true})} onClose={()=>this.setState({open:false})}>
+            <Modal
+                trigger={addButton}
+                open={this.state.open}
+                onOpen={() => this.setState({ open: true })}
+                onClose={() => this.setState({ open: false })}
+            >
                 <Modal.Header>
-                    <Icon name="add user"/> Add user group
+                    <Icon name="add user" /> Add user group
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}
-                          onErrorsDismiss={() => this.setState({errors: {}})}>
+                    <Form
+                        loading={this.state.loading}
+                        errors={this.state.errors}
+                        onErrorsDismiss={() => this.setState({ errors: {} })}
+                    >
                         <Form.Field error={this.state.errors.groupName}>
-                            <Form.Input name='groupName' placeholder="Group name"
-                                        value={this.state.groupName} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.Input
+                                name="groupName"
+                                placeholder="Group name"
+                                value={this.state.groupName}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.ldapGroup}>
-                            <Form.Input name='ldapGroup' placeholder="LDAP group name"
-                                        value={this.state.ldapGroup} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.Input
+                                name="ldapGroup"
+                                placeholder="LDAP group name"
+                                value={this.state.ldapGroup}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.isAdmin}>
-                            <Form.Checkbox label="Admin" name="isAdmin" checked={this.state.isAdmin}
-                                           onChange={this._handleInputChange.bind(this)} />
+                            <Form.Checkbox
+                                label="Admin"
+                                name="isAdmin"
+                                checked={this.state.isAdmin}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
-
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Add" icon="add user" color="green"/>
+                    <ApproveButton
+                        onClick={this.onApprove.bind(this)}
+                        disabled={this.state.loading}
+                        content="Add"
+                        icon="add user"
+                        color="green"
+                    />
                 </Modal.Actions>
             </Modal>
         );
     }
-};
+}

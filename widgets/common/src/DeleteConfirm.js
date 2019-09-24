@@ -3,9 +3,8 @@
  */
 
 class DeleteConfirm extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
     }
 
     static propTypes = {
@@ -24,23 +23,31 @@ class DeleteConfirm extends React.Component {
         onForceChange: _.noop
     };
 
-    render () {
-        let {Confirm, Form, Segment} = Stage.Basic;
+    render() {
+        const { Confirm, Form, Segment } = Stage.Basic;
 
-        return <Confirm className={this.props.className}
-                        header={`Are you sure you want to remove ${this.props.resourceName}?`}
-                        content={
-                            <Segment basic>
-                                <Form.Field>
-                                    <Form.Checkbox name='force' toggle label='Force'
-                                                   checked={this.props.force}
-                                                   onChange={this.props.onForceChange} />
-                                </Form.Field>
-                            </Segment>
-                        }
-                        open={this.props.open}
-                        onConfirm={this.props.onConfirm}
-                        onCancel={this.props.onCancel} />
+        return (
+            <Confirm
+                className={this.props.className}
+                header={`Are you sure you want to remove ${this.props.resourceName}?`}
+                content={
+                    <Segment basic>
+                        <Form.Field>
+                            <Form.Checkbox
+                                name="force"
+                                toggle
+                                label="Force"
+                                checked={this.props.force}
+                                onChange={this.props.onForceChange}
+                            />
+                        </Form.Field>
+                    </Segment>
+                }
+                open={this.props.open}
+                onConfirm={this.props.onConfirm}
+                onCancel={this.props.onCancel}
+            />
+        );
     }
 }
 

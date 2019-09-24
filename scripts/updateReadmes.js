@@ -1,7 +1,7 @@
-let request = require('request').defaults({ encoding: 'utf8' });
-let fs = require('fs');
-let path = require('path');
-let _ = require('lodash');
+const request = require('request').defaults({ encoding: 'utf8' });
+const fs = require('fs');
+const path = require('path');
+const _ = require('lodash');
 
 const config = require('./readmesConfig.json');
 
@@ -20,7 +20,7 @@ function logChange(prefix, type, changes) {
 function downloadFile(widget, url) {
     return new Promise((resolve, reject) => {
         request.get(url, (err, res, body) => {
-            let isSuccess = res.statusCode >= 200 && res.statusCode <300;
+            const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
             if (err || !isSuccess) {
                 reject(`Failed downloading ${url}. Status code: ${res.statusCode}. Error: ${err}.`);
             } else {
@@ -41,7 +41,7 @@ function updateTitle(widget, content) {
         content = content.replace(titleRegex, '### $1');
 
         resolve(content);
-    })
+    });
 }
 
 function updateLinks(widget, content) {
@@ -58,7 +58,6 @@ function updateLinks(widget, content) {
 }
 
 function convertHugoShortcodes(widget, content) {
-
     return new Promise((resolve, reject) => {
         // note
         const noteRegex = /{{%\s*note.*%}}([^]*){{%\s*\/note\s*%}}/gm;
@@ -112,23 +111,22 @@ function saveToReadmeFile(widget, content, readmePath) {
 }
 
 function updateFiles() {
-     for(let file of config.files) {
-         const widgetsPath = 'widgets';
-         const readmeFileName = 'README.md';
-         const readmePath = path.resolve(`${widgetsPath}/${file.widget}/${readmeFileName}`);
-         const url = `${config.rawContentBasePath}${file.link}`;
-         const widget = file.widget;
+    for (const file of config.files) {
+        const widgetsPath = 'widgets';
+        const readmeFileName = 'README.md';
+        const readmePath = path.resolve(`${widgetsPath}/${file.widget}/${readmeFileName}`);
+        const url = `${config.rawContentBasePath}${file.link}`;
+        const { widget } = file;
 
-         log(widget, `Adding to queue: '${url}' for '${widget}' widget...`);
-         downloadFile(widget, url)
-             .then((content) => updateTitle(widget, content))
-             .then((content) => convertHugoShortcodes(widget, content))
-             .then((content) => updateLinks(widget, content))
-             .then((content) => removeHTMLTags(widget, content))
-             .then((content) => saveToReadmeFile(widget, content, readmePath))
-             .catch((error) => console.error(error));
-     }
+        log(widget, `Adding to queue: '${url}' for '${widget}' widget...`);
+        downloadFile(widget, url)
+            .then(content => updateTitle(widget, content))
+            .then(content => convertHugoShortcodes(widget, content))
+            .then(content => updateLinks(widget, content))
+            .then(content => removeHTMLTags(widget, content))
+            .then(content => saveToReadmeFile(widget, content, readmePath))
+            .catch(error => console.error(error));
+    }
 }
-
 
 updateFiles();

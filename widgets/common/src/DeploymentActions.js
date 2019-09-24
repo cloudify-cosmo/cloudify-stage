@@ -20,20 +20,20 @@ class DeploymentActions {
     }
 
     doForceDelete(deployment) {
-        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`, {ignore_live_nodes: 'true'});
+        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`, { ignore_live_nodes: 'true' });
     }
 
-    doCancel(execution,action) {
+    doCancel(execution, action) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
-            'deployment_id': execution.deployment_id,
-            'action': action
+            deployment_id: execution.deployment_id,
+            action
         });
     }
 
     doExecute(deployment, workflow, params, force = false, dry_run = false, queue = false, scheduled_time = undefined) {
-        return this.toolbox.getManager().doPost('/executions',null,{
-            'deployment_id': deployment.id,
-            'workflow_id' : workflow.name,
+        return this.toolbox.getManager().doPost('/executions', null, {
+            deployment_id: deployment.id,
+            workflow_id: workflow.name,
             dry_run,
             force,
             queue,
@@ -42,41 +42,49 @@ class DeploymentActions {
         });
     }
 
-    doUpdate(deploymentName, blueprintName, deploymentInputs={},
-             shouldRunInstallWorkflow=true, shouldRunUninstallWorkflow=true,
-             installWorkflowFirst=false, ignoreFailure=false,
-             shouldRunReinstall=true, reinstallList=[],
-             forceUpdate=false, preview=false) {
-        let data = {};
+    doUpdate(
+        deploymentName,
+        blueprintName,
+        deploymentInputs = {},
+        shouldRunInstallWorkflow = true,
+        shouldRunUninstallWorkflow = true,
+        installWorkflowFirst = false,
+        ignoreFailure = false,
+        shouldRunReinstall = true,
+        reinstallList = [],
+        forceUpdate = false,
+        preview = false
+    ) {
+        const data = {};
 
         if (!_.isEmpty(blueprintName)) {
-            data['blueprint_id'] = blueprintName;
+            data.blueprint_id = blueprintName;
         }
 
-        data['skip_install'] = !shouldRunInstallWorkflow;
-        data['skip_uninstall'] = !shouldRunUninstallWorkflow;
-        data['install_first'] = installWorkflowFirst;
-        data['ignore_failure'] = ignoreFailure;
-        data['skip_reinstall'] = !shouldRunReinstall;
-        data['reinstall_list'] = reinstallList;
-        data['force'] = forceUpdate;
-        data['preview'] = preview;
+        data.skip_install = !shouldRunInstallWorkflow;
+        data.skip_uninstall = !shouldRunUninstallWorkflow;
+        data.install_first = installWorkflowFirst;
+        data.ignore_failure = ignoreFailure;
+        data.skip_reinstall = !shouldRunReinstall;
+        data.reinstall_list = reinstallList;
+        data.force = forceUpdate;
+        data.preview = preview;
 
         if (!_.isEmpty(deploymentInputs)) {
-            data['inputs'] = deploymentInputs;
+            data.inputs = deploymentInputs;
         }
 
         return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, null, data);
     }
 
-    doSetVisibility(deploymentId, visibility){
-        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}/set-visibility`, null, {visibility: visibility});
+    doSetVisibility(deploymentId, visibility) {
+        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}/set-visibility`, null, { visibility });
     }
 
     doSetSite(deploymentId, siteName = null, detachSite = false) {
-        let data = {'detach_site': detachSite};
+        const data = { detach_site: detachSite };
         if (siteName) {
-            data['site_name'] = siteName;
+            data.site_name = siteName;
         }
 
         return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, null, data);

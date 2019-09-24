@@ -3,17 +3,17 @@
  */
 
 module.exports = {
-    before : function(client) {
-        client.login()
+    before(client) {
+        client
+            .login()
             .resetPages()
             .moveToEditMode()
             .addPage();
 
-        var page = client.page.page();
-        var backend = client.page.widgetBackend();
+        const page = client.page.page();
+        const backend = client.page.widgetBackend();
 
-        page.section.editModeSidebar
-            .clickElement('@addWidgetButton');
+        page.section.editModeSidebar.clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
@@ -21,16 +21,17 @@ module.exports = {
                 if (result.value) {
                     client.page.page().section.addWidgetModal.uninstallWidget(backend.props.widgetId);
                 }
-            }).isWidgetInstalled(backend.props.broken2WidgetId, result => {
+            })
+            .isWidgetInstalled(backend.props.broken2WidgetId, result => {
                 if (result.value) {
                     client.page.page().section.addWidgetModal.uninstallWidget(backend.props.broken2WidgetId);
                 }
             });
     },
 
-    'Install broken widget': function (client) {
-        var page = client.page.page();
-        var backend = client.page.widgetBackend();
+    'Install broken widget': function(client) {
+        const page = client.page.page();
+        const backend = client.page.widgetBackend();
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
@@ -39,7 +40,10 @@ module.exports = {
 
         page.section.installWidgetModal
             .waitForElementPresent('@okButton')
-            .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.broken1WidgetFilename, client.globals))
+            .setElementValue(
+                '@fileField',
+                client.page.resources().props.fileByName(backend.props.broken1WidgetFilename, client.globals)
+            )
             .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
             .clickElement('@okButton')
             .waitForElementNotPresent('@loader')
@@ -47,12 +51,15 @@ module.exports = {
             .assert.containsText('@errorMessage', backend.section.installWidget.props.notAllowedModuleError);
     },
 
-    'Install broken service': function (client) {
-        var page = client.page.page();
-        var backend = client.page.widgetBackend();
+    'Install broken service': function(client) {
+        const page = client.page.page();
+        const backend = client.page.widgetBackend();
 
         page.section.installWidgetModal
-            .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.broken2WidgetFilename, client.globals))
+            .setElementValue(
+                '@fileField',
+                client.page.resources().props.fileByName(backend.props.broken2WidgetFilename, client.globals)
+            )
             .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
             .clickElement('@okButton')
             .waitForElementNotPresent('@loader')
@@ -70,9 +77,7 @@ module.exports = {
             .waitForElementPresent('@errorMsg')
             .assert.containsText('@errorMsg', backend.section.installWidget.props.notAllowedModuleError);
 
-        page.section.editModeSidebar
-            .moveToEditMode()
-            .clickElement('@addWidgetButton');
+        page.section.editModeSidebar.moveToEditMode().clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
@@ -83,17 +88,20 @@ module.exports = {
             });
     },
 
-    'Install working service and check manager call': function (client) {
-        var page = client.page.page();
-        var backend = client.page.widgetBackend();
+    'Install working service and check manager call': function(client) {
+        const page = client.page.page();
+        const backend = client.page.widgetBackend();
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
             .clickElement('@installWidgetBtn')
-            .waitForElementVisible(page.section.installWidgetModal.selector)
+            .waitForElementVisible(page.section.installWidgetModal.selector);
 
         page.section.installWidgetModal
-            .setElementValue('@fileField', client.page.resources().props.fileByName(backend.props.widgetFilename, client.globals))
+            .setElementValue(
+                '@fileField',
+                client.page.resources().props.fileByName(backend.props.widgetFilename, client.globals)
+            )
             .assert.containsText('@fieldLabel', page.section.installWidgetModal.props.fileLabelString)
             .clickElement('@okButton')
             .waitForElementNotPresent('@loader')
@@ -112,16 +120,19 @@ module.exports = {
             .assert.elementPresent('@jsonResult');
     },
 
-    'Check request call': function (client) {
-        var page = client.page.page();
-        var backend = client.page.widgetBackend();
+    'Check request call': function(client) {
+        const page = client.page.page();
+        const backend = client.page.widgetBackend();
 
-        backend.section.backendWidget
-            .configureWidget()
+        backend.section.backendWidget.configureWidget();
 
         backend.section.widgetConfig
-            .selectOptionInDropdown('@dropdown', `${backend.section.widgetConfig.selector} ${backend.section.widgetConfig.elements.dropdown.selector}`, backend.section.widgetConfig.props.requestItem)
-            .clickElement('@saveBtn')
+            .selectOptionInDropdown(
+                '@dropdown',
+                `${backend.section.widgetConfig.selector} ${backend.section.widgetConfig.elements.dropdown.selector}`,
+                backend.section.widgetConfig.props.requestItem
+            )
+            .clickElement('@saveBtn');
 
         backend.section.backendWidget
             .waitForElementPresent('@urlIcon')
@@ -131,8 +142,7 @@ module.exports = {
             .waitForElementPresent('@xmlResult')
             .assert.elementPresent('@xmlResult');
 
-        page.section.editModeSidebar
-            .clickElement('@addWidgetButton');
+        page.section.editModeSidebar.clickElement('@addWidgetButton');
 
         page.section.addWidgetModal
             .waitForElementPresent('@installWidgetBtn')
@@ -146,8 +156,6 @@ module.exports = {
     },
 
     after(client) {
-        client
-            .resetPages()
-            .end();
+        client.resetPages().end();
     }
 };

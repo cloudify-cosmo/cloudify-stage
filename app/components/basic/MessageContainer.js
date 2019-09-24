@@ -31,9 +31,9 @@ import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
  *
  */
 export default class MessageContainer extends Component {
-
     /**
      * propTypes
+     *
      * @property {object[]} children - primary content
      * @property {string} [textAlign='center'] - sets the horizontal alignment of the text
      * @property {boolean} [loading=false] - if set to true show its content is being loaded
@@ -58,19 +58,18 @@ export default class MessageContainer extends Component {
         margin: '80px auto'
     };
 
-    render () {
+    render() {
         SplashLoadingScreen.turnOff();
 
-        const style = {margin: this.props.margin, textAlign: this.props.textAlign};
+        const style = { margin: this.props.margin, textAlign: this.props.textAlign };
         const widths = this.props.wide
-            ? {mobile: 14, tablet: 14, computer: 12}
-            : {mobile: 12, tablet: 8, computer: 6};
+            ? { mobile: 14, tablet: 14, computer: 12 }
+            : { mobile: 12, tablet: 8, computer: 6 };
 
         return (
             <Grid centered container columns={1}>
                 <Grid.Column {...widths}>
-                    <Segment size={this.props.size} padded raised style={style}
-                             loading={this.props.loading}>
+                    <Segment size={this.props.size} padded raised style={style} loading={this.props.loading}>
                         {this.props.children}
                     </Segment>
                 </Grid.Column>

@@ -3,7 +3,6 @@
  */
 
 module.exports = {
-
     sections: {
         buttons: {
             selector: '.blueprintActionButtonsWidget',
@@ -12,7 +11,7 @@ module.exports = {
                 createDeploymentButton: '#createDeploymentButton',
                 createButtonDisabled: '#createDeploymentButton.disabled',
                 deleteBlueprintButton: '#deleteBlueprintButton',
-                deleteButtonDisabled: '#deleteBlueprintButton.disabled',
+                deleteButtonDisabled: '#deleteBlueprintButton.disabled'
             }
         },
 

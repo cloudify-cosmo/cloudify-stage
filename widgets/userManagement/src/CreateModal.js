@@ -5,12 +5,11 @@
 import Actions from './actions';
 
 export default class CreateModal extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.availableTenantsPromise = null;
-        this.state = {...CreateModal.initialState, open: false}
+        this.state = { ...CreateModal.initialState, open: false };
     }
 
     static initialState = {
@@ -23,30 +22,32 @@ export default class CreateModal extends React.Component {
         errors: {}
     };
 
-    onApprove () {
+    onApprove() {
         this._submitCreate();
         return false;
     }
 
-    onCancel () {
-        this.setState({open: false});
+    onCancel() {
+        this.setState({ open: false });
         return true;
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (!prevState.open && this.state.open) {
-            this.setState({...CreateModal.initialState, loading: true});
+            this.setState({ ...CreateModal.initialState, loading: true });
 
-            let actions = new Actions(this.props.toolbox);
+            const actions = new Actions(this.props.toolbox);
             this.availableTenantsPromise = Stage.Utils.makeCancelable(actions.doGetTenants());
 
-            this.availableTenantsPromise.promise.then((availableTenants) => {
-                this.setState({error: null, availableTenants, loading: false});
-            }).catch((err)=> {
-                if (!err.isCanceled) {
-                    this.setState({error: err.message, availableTenants: {items:[]}, loading: false});
-                }
-            });
+            this.availableTenantsPromise.promise
+                .then(availableTenants => {
+                    this.setState({ error: null, availableTenants, loading: false });
+                })
+                .catch(err => {
+                    if (!err.isCanceled) {
+                        this.setState({ error: err.message, availableTenants: { items: [] }, loading: false });
+                    }
+                });
         }
     }
 
@@ -57,47 +58,52 @@ export default class CreateModal extends React.Component {
     }
 
     _submitCreate() {
-        let errors = {};
+        const errors = {};
 
         if (_.isEmpty(this.state.username)) {
-            errors['username']='Please provide username';
+            errors.username = 'Please provide username';
         }
 
         if (_.isEmpty(this.state.password)) {
-            errors['password']='Please provide user password';
+            errors.password = 'Please provide user password';
         }
 
         if (_.isEmpty(this.state.confirmPassword)) {
-            errors['confirmPassword']='Please provide password confirmation';
+            errors.confirmPassword = 'Please provide password confirmation';
         }
 
-        if (!_.isEmpty(this.state.password) && !_.isEmpty(this.state.confirmPassword) &&
-            this.state.password !== this.state.confirmPassword) {
-            errors['confirmPassword']='Passwords do not match';
+        if (
+            !_.isEmpty(this.state.password) &&
+            !_.isEmpty(this.state.confirmPassword) &&
+            this.state.password !== this.state.confirmPassword
+        ) {
+            errors.confirmPassword = 'Passwords do not match';
         }
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors});
+            this.setState({ errors });
             return false;
         }
 
         // Disable the form
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
-        var actions = new Actions(this.props.toolbox);
-        actions.doCreate(this.state.username,
-                         this.state.password,
-                         Stage.Common.RolesUtil.getSystemRole(this.state.isAdmin)
-        ).then(() =>
-            actions.doHandleTenants(this.state.username, this.state.tenants, [], [])
-        ).then(() => {
-            this.setState({errors: {}, loading: false, open: false});
-            this.props.toolbox.refresh();
-            this.props.toolbox.getEventBus().trigger('tenants:refresh');
-        }).catch((err) => {
-            this.setState({errors: {error: err.message}, loading: false});
-        });
-
+        const actions = new Actions(this.props.toolbox);
+        actions
+            .doCreate(
+                this.state.username,
+                this.state.password,
+                Stage.Common.RolesUtil.getSystemRole(this.state.isAdmin)
+            )
+            .then(() => actions.doHandleTenants(this.state.username, this.state.tenants, [], []))
+            .then(() => {
+                this.setState({ errors: {}, loading: false, open: false });
+                this.props.toolbox.refresh();
+                this.props.toolbox.getEventBus().trigger('tenants:refresh');
+            })
+            .catch(err => {
+                this.setState({ errors: { error: err.message }, loading: false });
+            });
     }
 
     _handleInputChange(proxy, field) {
@@ -105,84 +111,119 @@ export default class CreateModal extends React.Component {
     }
 
     _handleTenantChange(proxy, field) {
-        let newTenants = {};
-        _.forEach(field.value, (tenant) => {
-            newTenants[tenant] = this.state.tenants[tenant]
-                || Stage.Common.RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
+        const newTenants = {};
+        _.forEach(field.value, tenant => {
+            newTenants[tenant] =
+                this.state.tenants[tenant] ||
+                Stage.Common.RolesUtil.getDefaultRoleName(this.props.toolbox.getManager()._data.roles);
         });
-        this.setState({tenants: newTenants});
+        this.setState({ tenants: newTenants });
     }
 
-    _handleRoleChange(tenant, role){
-        let newTenants = {...this.state.tenants};
+    _handleRoleChange(tenant, role) {
+        const newTenants = { ...this.state.tenants };
         newTenants[tenant] = role;
-        this.setState({tenants: newTenants});
+        this.setState({ tenants: newTenants });
     }
 
     render() {
-        let {ApproveButton, Button, CancelButton, Icon, Form, Message, Modal} = Stage.Basic;
-        let {RolesPicker} = Stage.Common;
+        const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
+        const { RolesPicker } = Stage.Common;
 
-        const addButton = <Button content='Add' icon='add user' labelPosition='left' className='addUserButton' />;
+        const addButton = <Button content="Add" icon="add user" labelPosition="left" className="addUserButton" />;
 
-        let tenants = {items:[], ...this.state.availableTenants};
-        let options = _.map(tenants.items, item => { return {text: item.name, value: item.name, key: item.name} });
+        const tenants = { items: [], ...this.state.availableTenants };
+        const options = _.map(tenants.items, item => {
+            return { text: item.name, value: item.name, key: item.name };
+        });
 
         return (
-            <Modal trigger={addButton} open={this.state.open} onOpen={()=>this.setState({open:true})}
-                   onClose={()=>this.setState({open:false})} className="addUserModal">
+            <Modal
+                trigger={addButton}
+                open={this.state.open}
+                onOpen={() => this.setState({ open: true })}
+                onClose={() => this.setState({ open: false })}
+                className="addUserModal"
+            >
                 <Modal.Header>
-                    <Icon name="add user"/> Add user
+                    <Icon name="add user" /> Add user
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}
-                          onErrorsDismiss={() => this.setState({errors: {}})}>
-                        <Form.Field label='Username' error={this.state.errors.username} required>
-                            <Form.Input name='username'
-                                        value={this.state.username} onChange={this._handleInputChange.bind(this)}/>
+                    <Form
+                        loading={this.state.loading}
+                        errors={this.state.errors}
+                        onErrorsDismiss={() => this.setState({ errors: {} })}
+                    >
+                        <Form.Field label="Username" error={this.state.errors.username} required>
+                            <Form.Input
+                                name="username"
+                                value={this.state.username}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
 
-                        <Form.Field label='Password' error={this.state.errors.password} required>
-                            <Form.Input name='password' type="password"
-                                        value={this.state.password} onChange={this._handleInputChange.bind(this)}/>
+                        <Form.Field label="Password" error={this.state.errors.password} required>
+                            <Form.Input
+                                name="password"
+                                type="password"
+                                value={this.state.password}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
 
-                        <Form.Field label='Confirm password' error={this.state.errors.confirmPassword} required>
-                            <Form.Input name='confirmPassword' type="password"
-                                        value={this.state.confirmPassword} onChange={this._handleInputChange.bind(this)}/>
+                        <Form.Field label="Confirm password" error={this.state.errors.confirmPassword} required>
+                            <Form.Input
+                                name="confirmPassword"
+                                type="password"
+                                value={this.state.confirmPassword}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
 
                         <Form.Field error={this.state.errors.isAdmin}>
-                            <Form.Checkbox label="Admin" name="isAdmin" checked={this.state.isAdmin}
-                                           onChange={this._handleInputChange.bind(this)} />
+                            <Form.Checkbox
+                                label="Admin"
+                                name="isAdmin"
+                                checked={this.state.isAdmin}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
 
-                        {
-                            this.state.isAdmin &&
-                            <Message>
-                                Admin users have full permissions to all tenants on the manager.
-                            </Message>
-                        }
+                        {this.state.isAdmin && (
+                            <Message>Admin users have full permissions to all tenants on the manager.</Message>
+                        )}
 
-                        <Form.Field label='Tenants'>
-                            <Form.Dropdown name="tenants" multiple selection options={options}
-                                           value={Object.keys(this.state.tenants)}
-                                           onChange={this._handleTenantChange.bind(this)}/>
+                        <Form.Field label="Tenants">
+                            <Form.Dropdown
+                                name="tenants"
+                                multiple
+                                selection
+                                options={options}
+                                value={Object.keys(this.state.tenants)}
+                                onChange={this._handleTenantChange.bind(this)}
+                            />
                         </Form.Field>
-                        <RolesPicker onUpdate={this._handleRoleChange.bind(this)}
-                                     resources={this.state.tenants}
-                                     resourceName="tenant" toolbox={this.props.toolbox} />
-
+                        <RolesPicker
+                            onUpdate={this._handleRoleChange.bind(this)}
+                            resources={this.state.tenants}
+                            resourceName="tenant"
+                            toolbox={this.props.toolbox}
+                        />
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} content="Add" icon="add user" color="green"/>
-
+                    <ApproveButton
+                        onClick={this.onApprove.bind(this)}
+                        disabled={this.state.loading}
+                        content="Add"
+                        icon="add user"
+                        color="green"
+                    />
                 </Modal.Actions>
             </Modal>
         );
     }
-};
+}

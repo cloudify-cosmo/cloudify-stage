@@ -17,76 +17,96 @@ module.exports = {
 
     commands: [
         {
-            configureWidget: function () {
+            configureWidget() {
                 this.moveToEditMode()
                     .waitForElementPresent('@header')
                     .waitForElementNotVisible('@loader')
                     .waitForElementPresent('@header')
                     .moveToElement('@header', undefined, undefined) // For details, see: https://github.com/nightwatchjs/nightwatch/issues/1250#issuecomment-257644295
-                    .clickElement('@editWidgetButton')
+                    .clickElement('@editWidgetButton');
                 return this;
-            },
+            }
         }
     ],
 
     sections: {
         deploymentsTable: {
             selector: 'div.deploymentsWidget table.deploymentsTable',
-            elements: {
-
-            },
+            elements: {},
             props: {
-                deploymentRow : (name) => `tr#deploymentsTable_${name}`,
-                deploymentMenu : (name) => `tr#deploymentsTable_${name} td.rowActions i.menuAction`,
-                executionInProgressIcon : (name) => `tr#deploymentsTable_${name} i.spinner.loading.icon`,
+                deploymentRow: name => `tr#deploymentsTable_${name}`,
+                deploymentMenu: name => `tr#deploymentsTable_${name} td.rowActions i.menuAction`,
+                executionInProgressIcon: name => `tr#deploymentsTable_${name} i.spinner.loading.icon`,
                 updateOption: 'update',
                 deleteOption: 'delete',
                 forceDeleteOption: 'forceDelete'
             },
             commands: [
                 {
-                    clickRow: function (deploymentId) {
+                    clickRow(deploymentId) {
                         return this.clickElement(this.props.deploymentRow(deploymentId));
                     },
 
-                    clickExecuteWorkflow: function (deploymentId, workflowId) {
+                    clickExecuteWorkflow(deploymentId, workflowId) {
                         return this.selectOptionInPopupMenu(this.props.deploymentMenu(deploymentId), workflowId);
                     },
 
-                    clickUpdate: function (deploymentId) {
-                        return this.selectOptionInPopupMenu(this.props.deploymentMenu(deploymentId), this.props.updateOption, '> div.menu >');
+                    clickUpdate(deploymentId) {
+                        return this.selectOptionInPopupMenu(
+                            this.props.deploymentMenu(deploymentId),
+                            this.props.updateOption,
+                            '> div.menu >'
+                        );
                     },
 
-                    clickDelete: function (deploymentId) {
-                        return this.selectOptionInPopupMenu(this.props.deploymentMenu(deploymentId), this.props.deleteOption);
+                    clickDelete(deploymentId) {
+                        return this.selectOptionInPopupMenu(
+                            this.props.deploymentMenu(deploymentId),
+                            this.props.deleteOption
+                        );
                     },
 
-                    clickForceDelete: function (deploymentId) {
-                        return this.selectOptionInPopupMenu(this.props.deploymentMenu(deploymentId), this.props.forceDeleteOption);
+                    clickForceDelete(deploymentId) {
+                        return this.selectOptionInPopupMenu(
+                            this.props.deploymentMenu(deploymentId),
+                            this.props.forceDeleteOption
+                        );
                     },
 
-                    checkIfDeploymentPresent: function (deploymentId) {
-                        return this.waitForElementPresent(this.props.deploymentRow(deploymentId), (result) => {
-                            this.assert.equal(result.status, 0, 'Deployment ' + deploymentId + ' present.');
+                    checkIfDeploymentPresent(deploymentId) {
+                        return this.waitForElementPresent(this.props.deploymentRow(deploymentId), result => {
+                            this.assert.equal(result.status, 0, `Deployment ${deploymentId} present.`);
                         });
                     },
 
-                    checkIfDeploymentRemoved: function (deploymentId) {
-                        return this.waitForElementNotPresent(this.props.deploymentRow(deploymentId), (result) => {
-                            this.assert.equal(result.status, 0, 'Deployment ' + deploymentId + ' removed.');
+                    checkIfDeploymentRemoved(deploymentId) {
+                        return this.waitForElementNotPresent(this.props.deploymentRow(deploymentId), result => {
+                            this.assert.equal(result.status, 0, `Deployment ${deploymentId} removed.`);
                         });
                     },
 
-                    checkIfWorkflowStartedOnDeployment: function(deploymentId, timeout) {
-                        return this.waitForElementPresent(this.props.executionInProgressIcon(deploymentId), timeout, (result) => {
-                            this.assert.equal(result.status, 0, 'Workflow execution on ' + deploymentId + ' in progress.');
-                        });
+                    checkIfWorkflowStartedOnDeployment(deploymentId, timeout) {
+                        return this.waitForElementPresent(
+                            this.props.executionInProgressIcon(deploymentId),
+                            timeout,
+                            result => {
+                                this.assert.equal(
+                                    result.status,
+                                    0,
+                                    `Workflow execution on ${deploymentId} in progress.`
+                                );
+                            }
+                        );
                     },
 
-                    checkIfWorkflowFinishedOnDeployment: function(deploymentId, timeout) {
-                        return this.waitForElementNotPresent(this.props.executionInProgressIcon(deploymentId), timeout, (result) => {
-                            this.assert.equal(result.status, 0, 'Workflow execution on ' + deploymentId + ' finished.');
-                        });
+                    checkIfWorkflowFinishedOnDeployment(deploymentId, timeout) {
+                        return this.waitForElementNotPresent(
+                            this.props.executionInProgressIcon(deploymentId),
+                            timeout,
+                            result => {
+                                this.assert.equal(result.status, 0, `Workflow execution on ${deploymentId} finished.`);
+                            }
+                        );
                     }
                 }
             ]
@@ -95,11 +115,11 @@ module.exports = {
         deploymentsList: {
             selector: 'div.deploymentsWidget .segmentList',
             props: {
-                deploymentElementSelector : (name) => `div.segmentList div.${name} h3`
+                deploymentElementSelector: name => `div.segmentList div.${name} h3`
             },
             commands: [
                 {
-                    clickSegment: function (deploymentId) {
+                    clickSegment(deploymentId) {
                         return this.clickElement(this.props.deploymentElementSelector(deploymentId));
                     }
                 }
@@ -115,38 +135,41 @@ module.exports = {
             },
             props: {
                 tableView: 'table',
-                listView: 'list',
+                listView: 'list'
             },
             commands: [
                 {
-                    setDrilldown: function(value) {
+                    setDrilldown(value) {
                         return this.setCheckbox('.content div.field.clickToDrillDown', value);
                     },
-                    setPollingTime: function(value) {
+                    setPollingTime(value) {
                         return this.setInputText('.content div.field.pollingTime', value);
                     },
-                    setBlueprintIdFilter: function(blueprintId) {
+                    setBlueprintIdFilter(blueprintId) {
                         return this.setInputText('.content div.field.blueprintIdFilter', blueprintId);
                     },
-                    setTableView: function () {
-                        return this.selectOptionInDropdown('@displayStyle', `${this.selector} ${this.elements.displayStyle.selector}`, this.props.tableView);
+                    setTableView() {
+                        return this.selectOptionInDropdown(
+                            '@displayStyle',
+                            `${this.selector} ${this.elements.displayStyle.selector}`,
+                            this.props.tableView
+                        );
                     },
-                    setListView: function () {
-                        return this.selectOptionInDropdown('@displayStyle', `${this.selector} ${this.elements.displayStyle.selector}`, this.props.listView);
-
+                    setListView() {
+                        return this.selectOptionInDropdown(
+                            '@displayStyle',
+                            `${this.selector} ${this.elements.displayStyle.selector}`,
+                            this.props.listView
+                        );
                     },
-                    clickSave: function () {
-                        return this
-                            .clickElement('@saveButton')
-                            .waitForElementNotPresent(this.selector);
+                    clickSave() {
+                        return this.clickElement('@saveButton').waitForElementNotPresent(this.selector);
                     },
-                    clickCancel: function () {
-                        return this
-                            .clickElement('@cancelButton')
-                            .waitForElementNotPresent(this.selector);
+                    clickCancel() {
+                        return this.clickElement('@cancelButton').waitForElementNotPresent(this.selector);
                     }
                 }
-            ],
+            ]
         },
 
         updateDeploymentModal: {
@@ -161,14 +184,13 @@ module.exports = {
             },
             commands: [
                 {
-                    clickUpdate: function () {
+                    clickUpdate() {
                         return this.waitForElementVisible(this.selector)
                             .clickElement('@updateButton')
                             .waitForElementNotPresent(this.selector);
                     },
-                    waitUntilFormLoaded: function () {
-                        return this.waitForElementPresent('@formLoading')
-                                   .waitForElementNotPresent('@formNotLoading')
+                    waitUntilFormLoaded() {
+                        return this.waitForElementPresent('@formLoading').waitForElementNotPresent('@formNotLoading');
                     }
                 }
             ]
@@ -182,7 +204,7 @@ module.exports = {
             },
             commands: [
                 {
-                    clickExecute: function () {
+                    clickExecute() {
                         return this.waitForElementVisible(this.selector)
                             .clickElement('@executeButton')
                             .waitForElementNotPresent(this.selector);
@@ -199,13 +221,13 @@ module.exports = {
             },
             commands: [
                 {
-                    clickYes: function () {
+                    clickYes() {
                         return this.waitForElementVisible(this.selector)
                             .clickElement('@yesButton')
                             .waitForElementNotPresent(this.selector);
                     }
                 }
             ]
-        },
+        }
     }
 };

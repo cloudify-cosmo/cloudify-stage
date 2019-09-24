@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Popup, Icon} from './index';
+import { Popup, Icon } from './index';
 
 /**
  * PopupMenu is a component which uses [Popup](https://react.semantic-ui.com/modules/popup) component to create
@@ -27,17 +27,17 @@ import {Popup, Icon} from './index';
  * ```
  */
 export default class PopupMenu extends Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             opened: false
-        }
+        };
     }
 
     /**
      * propTypes
+     *
      * @property {object[]} children primary content
      * @property {string} [className=''] additional CSS classes to be applied to popup trigger
      * @property {string} [position='bottom right'] position for the popover.
@@ -68,27 +68,54 @@ export default class PopupMenu extends Component {
         help: ''
     };
 
-    render () {
-        let trigger = _.isEmpty(this.props.help)
-            ?
-                <Icon link={!this.props.disabled} disabled={this.props.disabled} name={this.props.icon}
-                      bordered={this.props.bordered} className={this.props.className} onClick={(e) => {e.stopPropagation();}} />
-            :
-                <span onClick={(e) => {e.stopPropagation();}}>
-                    <Popup trigger={<Icon name={this.props.icon} bordered={this.props.bordered}
-                                          link={!this.props.disabled} className={this.props.className} />}
-                           content={this.props.help} />
-                </span>;
+    render() {
+        const trigger = _.isEmpty(this.props.help) ? (
+            <Icon
+                link={!this.props.disabled}
+                disabled={this.props.disabled}
+                name={this.props.icon}
+                bordered={this.props.bordered}
+                className={this.props.className}
+                onClick={e => {
+                    e.stopPropagation();
+                }}
+            />
+        ) : (
+            <span
+                onClick={e => {
+                    e.stopPropagation();
+                }}
+            >
+                <Popup
+                    trigger={
+                        <Icon
+                            name={this.props.icon}
+                            bordered={this.props.bordered}
+                            link={!this.props.disabled}
+                            className={this.props.className}
+                        />
+                    }
+                    content={this.props.help}
+                />
+            </span>
+        );
 
         return (
-            <Popup trigger={trigger} on='click' position={this.props.position} className='popupMenu' offset={this.props.offset}
-                   open={this.props.disabled ? false : this.state.opened}
-                   onClose={()=>this.setState({opened: false})}
-                   onOpen={()=>this.setState({opened: true})}
-                   onClick={(e)=>{e.stopPropagation(); this.setState({opened: false})}}>
-
+            <Popup
+                trigger={trigger}
+                on="click"
+                position={this.props.position}
+                className="popupMenu"
+                offset={this.props.offset}
+                open={this.props.disabled ? false : this.state.opened}
+                onClose={() => this.setState({ opened: false })}
+                onOpen={() => this.setState({ opened: true })}
+                onClick={e => {
+                    e.stopPropagation();
+                    this.setState({ opened: false });
+                }}
+            >
                 {this.props.children}
-
             </Popup>
         );
     }

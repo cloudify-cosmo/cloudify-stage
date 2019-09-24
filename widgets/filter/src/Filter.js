@@ -8,13 +8,15 @@ export default class Filter extends React.Component {
 
         this.state = {
             error: null
-        }
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.configuration, nextProps.configuration)
-            || !_.isEqual(this.state, nextState)
-            || !_.isEqual(this.props.data, nextProps.data);
+        return (
+            !_.isEqual(this.props.configuration, nextProps.configuration) ||
+            !_.isEqual(this.state, nextState) ||
+            !_.isEqual(this.props.data, nextProps.data)
+        );
     }
 
     _refreshData() {
@@ -56,26 +58,31 @@ export default class Filter extends React.Component {
     }
 
     _updateResourceValue(valueName, resourcesName, changedIdNameInResource, changedIds, fieldName = 'id') {
-        const data = this.props.data;
+        const { data } = this.props;
         const context = this.props.toolbox.getContext();
-        const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
+        const { allowMultipleSelection } = this.props.configuration;
         let value = context.getValue(valueName);
 
         if (!_.isEmpty(data[valueName]) && !_.isEmpty(changedIds)) {
-            const selectedResources = _.filter(data[resourcesName].items,
-                (resource) => _.includes(data[valueName], resource[fieldName]));
-            let selectedResourceId = [];
+            const selectedResources = _.filter(data[resourcesName].items, resource =>
+                _.includes(data[valueName], resource[fieldName])
+            );
+            const selectedResourceId = [];
 
-            _.forEach(selectedResources, (resource) => {
-                if (_.includes(changedIds, resource[changedIdNameInResource]) &&
-                    !_.includes(selectedResourceId, resource[fieldName])) {
-                    selectedResourceId.push(resource[fieldName])
+            _.forEach(selectedResources, resource => {
+                if (
+                    _.includes(changedIds, resource[changedIdNameInResource]) &&
+                    !_.includes(selectedResourceId, resource[fieldName])
+                ) {
+                    selectedResourceId.push(resource[fieldName]);
                 }
             });
 
             value = _.isEmpty(selectedResourceId)
                 ? null
-                : (allowMultipleSelection ? selectedResourceId : selectedResourceId[0]);
+                : allowMultipleSelection
+                ? selectedResourceId
+                : selectedResourceId[0];
             context.setValue(valueName, value);
         }
 
@@ -83,13 +90,13 @@ export default class Filter extends React.Component {
     }
 
     _updateDeplomentNodeIdValue(selectedDeploymentId, selectedNodeId) {
-        const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
+        const { allowMultipleSelection } = this.props.configuration;
         const context = this.props.toolbox.getContext();
 
         if (!allowMultipleSelection) {
             if (!_.isEmpty(selectedDeploymentId) && !_.isEmpty(selectedNodeId)) {
-                let oldDepNodeId = context.getValue('depNodeId');
-                let newDepNodeId = selectedNodeId + selectedDeploymentId;
+                const oldDepNodeId = context.getValue('depNodeId');
+                const newDepNodeId = selectedNodeId + selectedDeploymentId;
                 if (oldDepNodeId !== newDepNodeId) {
                     context.setValue('depNodeId', newDepNodeId);
                 }
@@ -98,45 +105,60 @@ export default class Filter extends React.Component {
             }
         }
     }
-    
+
     _updateTopologyWidget(selectedNodeId) {
-        const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
-        
+        const { allowMultipleSelection } = this.props.configuration;
+
         if (!allowMultipleSelection) {
             this.props.toolbox.getEventBus().trigger('topology:selectNode', selectedNodeId);
         }
     }
 
-    _selectBlueprint(proxy, field){
-        let blueprintIds = !_.isEmpty(field.value) ? field.value : null;
+    _selectBlueprint(proxy, field) {
+        const blueprintIds = !_.isEmpty(field.value) ? field.value : null;
 
         if (!_.isEmpty(blueprintIds)) {
-            let selectedBlueprintIds =  _.castArray(blueprintIds);
-            let deploymentIds = this._updateResourceValue('deploymentId', 'deployments', 'blueprint_id', selectedBlueprintIds);
-            let nodeIds = this._updateResourceValue('nodeId', 'nodes', 'blueprint_id', selectedBlueprintIds);
+            const selectedBlueprintIds = _.castArray(blueprintIds);
+            const deploymentIds = this._updateResourceValue(
+                'deploymentId',
+                'deployments',
+                'blueprint_id',
+                selectedBlueprintIds
+            );
+            const nodeIds = this._updateResourceValue('nodeId', 'nodes', 'blueprint_id', selectedBlueprintIds);
             this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'deployment_id', deploymentIds);
             this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'node_id', nodeIds);
             this._updateResourceValue('executionId', 'executions', 'blueprint_id', selectedBlueprintIds);
-            this._updateResourceValue('executionStatus', 'allExecutions', 'blueprint_id', selectedBlueprintIds,
-                'status_display');
+            this._updateResourceValue(
+                'executionStatus',
+                'allExecutions',
+                'blueprint_id',
+                selectedBlueprintIds,
+                'status_display'
+            );
 
             this._updateDeplomentNodeIdValue(deploymentIds, nodeIds);
         }
 
-        this.props.toolbox.getContext().setValue('blueprintId',blueprintIds);
+        this.props.toolbox.getContext().setValue('blueprintId', blueprintIds);
     }
 
     _selectDeployment(proxy, field) {
-        let deploymentIds = !_.isEmpty(field.value) ? field.value : null;
+        const deploymentIds = !_.isEmpty(field.value) ? field.value : null;
 
         if (!_.isEmpty(deploymentIds)) {
-            let selectedDeploymentIds =  _.castArray(deploymentIds);
+            const selectedDeploymentIds = _.castArray(deploymentIds);
 
-            let nodeIds = this._updateResourceValue('nodeId', 'nodes', 'deployment_id', selectedDeploymentIds);
+            const nodeIds = this._updateResourceValue('nodeId', 'nodes', 'deployment_id', selectedDeploymentIds);
             this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'deployment_id', selectedDeploymentIds);
             this._updateResourceValue('executionId', 'executions', 'deployment_id', selectedDeploymentIds);
-            this._updateResourceValue('executionStatus', 'allExecutions', 'deployment_id', selectedDeploymentIds,
-                'status_display');
+            this._updateResourceValue(
+                'executionStatus',
+                'allExecutions',
+                'deployment_id',
+                selectedDeploymentIds,
+                'status_display'
+            );
 
             this._updateDeplomentNodeIdValue(deploymentIds, nodeIds);
         }
@@ -145,10 +167,10 @@ export default class Filter extends React.Component {
     }
 
     _selectNode(proxy, field) {
-        let nodeIds = !_.isEmpty(field.value) ? field.value : null;
+        const nodeIds = !_.isEmpty(field.value) ? field.value : null;
 
         if (!_.isEmpty(nodeIds)) {
-            let selectedNodeIds = _.castArray(nodeIds);
+            const selectedNodeIds = _.castArray(nodeIds);
 
             this._updateResourceValue('nodeInstanceId', 'nodeInstances', 'node_id', selectedNodeIds);
 
@@ -160,189 +182,236 @@ export default class Filter extends React.Component {
     }
 
     _selectNodeInstance(proxy, field) {
-        let nodeInstanceIds = !_.isEmpty(field.value) ? field.value : null;
+        const nodeInstanceIds = !_.isEmpty(field.value) ? field.value : null;
 
         this.props.toolbox.getContext().setValue('nodeInstanceId', nodeInstanceIds);
     }
 
     _selectExecution(proxy, field) {
-        let executionIds = !_.isEmpty(field.value) ? field.value : null;
+        const executionIds = !_.isEmpty(field.value) ? field.value : null;
 
         if (!_.isEmpty(executionIds)) {
-            let selectedExecutionIds =  _.castArray(executionIds);
-            this._updateResourceValue('executionStatus', 'allExecutions', 'id', selectedExecutionIds,
-                'status_display');
+            const selectedExecutionIds = _.castArray(executionIds);
+            this._updateResourceValue('executionStatus', 'allExecutions', 'id', selectedExecutionIds, 'status_display');
         }
 
         this.props.toolbox.getContext().setValue('executionId', executionIds);
     }
 
     _selectExecutionStatus(proxy, field) {
-        let executionStatuses = !_.isEmpty(field.value) ? field.value : null;
+        const executionStatuses = !_.isEmpty(field.value) ? field.value : null;
         this.props.toolbox.getContext().setValue('executionStatus', executionStatuses);
     }
 
     _selectSiteName(proxy, field) {
-        let siteNames = !_.isEmpty(field.value) ? field.value : null;
+        const siteNames = !_.isEmpty(field.value) ? field.value : null;
         this.props.toolbox.getContext().setValue('siteName', siteNames);
     }
 
     _getDropdownValue(value) {
-        const allowMultipleSelection = this.props.configuration.allowMultipleSelection;
+        const { allowMultipleSelection } = this.props.configuration;
 
         if (_.isString(value)) {
-            return allowMultipleSelection ? [value]: value;
-        } else if (_.isArray(value)) {
-            return allowMultipleSelection ? value: value[0];
-        } else {
-            return allowMultipleSelection ? [] : '';
+            return allowMultipleSelection ? [value] : value;
         }
+        if (_.isArray(value)) {
+            return allowMultipleSelection ? value : value[0];
+        }
+        return allowMultipleSelection ? [] : '';
     }
 
     render() {
-        let {ErrorMessage, Form} = Stage.Basic;
-        const EMPTY_OPTION = {text:'', value:''};
-        const configuration = this.props.configuration;
-        const data = this.props.data;
+        const { ErrorMessage, Form } = Stage.Basic;
+        const EMPTY_OPTION = { text: '', value: '' };
+        const { configuration } = this.props;
+        const { data } = this.props;
 
         let blueprintOptions = [];
         if (configuration.filterByBlueprints) {
-            blueprintOptions = _.map(data.blueprints.items,
-                blueprint => ({text: blueprint.id, value: blueprint.id}));
+            blueprintOptions = _.map(data.blueprints.items, blueprint => ({ text: blueprint.id, value: blueprint.id }));
             if (!configuration.allowMultipleSelection) {
                 blueprintOptions.unshift(EMPTY_OPTION);
             }
         }
-        let blueprintId = this._getDropdownValue(data.blueprintId);
+        const blueprintId = this._getDropdownValue(data.blueprintId);
 
         let deploymentOptions = [];
         if (configuration.filterByDeployments) {
-            deploymentOptions = _.map(data.deployments.items,
-                deployment => ({text: deployment.id, value: deployment.id}));
+            deploymentOptions = _.map(data.deployments.items, deployment => ({
+                text: deployment.id,
+                value: deployment.id
+            }));
             if (!configuration.allowMultipleSelection) {
                 deploymentOptions.unshift(EMPTY_OPTION);
             }
         }
-        let deploymentId = this._getDropdownValue(data.deploymentId);
+        const deploymentId = this._getDropdownValue(data.deploymentId);
 
         let nodeOptions = [];
         if (configuration.filterByNodes) {
-            nodeOptions = _.map(_.sortedUniqBy(data.nodes.items, 'id'),
-                node => ({text: node.id, value: node.id}));
+            nodeOptions = _.map(_.sortedUniqBy(data.nodes.items, 'id'), node => ({ text: node.id, value: node.id }));
             if (!configuration.allowMultipleSelection) {
                 nodeOptions.unshift(EMPTY_OPTION);
             }
         }
-        let nodeId = this._getDropdownValue(data.nodeId);
+        const nodeId = this._getDropdownValue(data.nodeId);
 
         let nodeInstanceOptions = [];
         if (configuration.filterByNodeInstances) {
-            nodeInstanceOptions = _.map(data.nodeInstances.items,
-                nodeInstance => ({text: nodeInstance.id, value: nodeInstance.id}));
+            nodeInstanceOptions = _.map(data.nodeInstances.items, nodeInstance => ({
+                text: nodeInstance.id,
+                value: nodeInstance.id
+            }));
             if (!configuration.allowMultipleSelection) {
                 nodeInstanceOptions.unshift(EMPTY_OPTION);
             }
         }
-        let nodeInstanceId = this._getDropdownValue(data.nodeInstanceId);
+        const nodeInstanceId = this._getDropdownValue(data.nodeInstanceId);
 
         let executionOptions = [];
         if (configuration.filterByExecutions) {
-            executionOptions = _.map(data.executions.items,
-                execution => ({text: `${execution.id} (${execution.workflow_id})`, value: execution.id}));
+            executionOptions = _.map(data.executions.items, execution => ({
+                text: `${execution.id} (${execution.workflow_id})`,
+                value: execution.id
+            }));
             if (!configuration.allowMultipleSelection) {
                 executionOptions.unshift(EMPTY_OPTION);
             }
         }
-        let executionId = this._getDropdownValue(data.executionId);
+        const executionId = this._getDropdownValue(data.executionId);
 
         let executionStatusOptions = [];
         if (configuration.filterByExecutionsStatus) {
-            executionStatusOptions = _.map(_.uniqBy(data.executionStatuses.items, 'status_display'),
-                execution => ({text: execution.status_display, value: execution.status_display}));
+            executionStatusOptions = _.map(_.uniqBy(data.executionStatuses.items, 'status_display'), execution => ({
+                text: execution.status_display,
+                value: execution.status_display
+            }));
             if (!configuration.allowMultipleSelection) {
                 executionStatusOptions.unshift(EMPTY_OPTION);
             }
         }
-        let executionStatus = this._getDropdownValue(data.executionStatus);
+        const executionStatus = this._getDropdownValue(data.executionStatus);
 
         let siteNameOptions = [];
         if (configuration.filterBySiteName) {
-            siteNameOptions = _.map(data.sites.items, site => ({text: site.name, value: site.name}));
+            siteNameOptions = _.map(data.sites.items, site => ({ text: site.name, value: site.name }));
             if (!configuration.allowMultipleSelection) {
                 siteNameOptions.unshift(EMPTY_OPTION);
             }
         }
-        let siteName = this._getDropdownValue(data.siteName);
+        const siteName = this._getDropdownValue(data.siteName);
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({error: null})} autoHide={true}/>
+                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <Form size="small">
-                    <Form.Group inline widths='equal'>
-                        {
-                            configuration.filterByBlueprints &&
+                    <Form.Group inline widths="equal">
+                        {configuration.filterByBlueprints && (
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Blueprint" fluid
-                                               value={blueprintId} id="blueprintFilterField"
-                                               options={blueprintOptions} onChange={this._selectBlueprint.bind(this)}
-                                               multiple={configuration.allowMultipleSelection}/>
+                                <Form.Dropdown
+                                    search
+                                    selection
+                                    placeholder="Blueprint"
+                                    fluid
+                                    value={blueprintId}
+                                    id="blueprintFilterField"
+                                    options={blueprintOptions}
+                                    onChange={this._selectBlueprint.bind(this)}
+                                    multiple={configuration.allowMultipleSelection}
+                                />
                             </Form.Field>
-                        }
-                        {
-                            configuration.filterByDeployments &&
+                        )}
+                        {configuration.filterByDeployments && (
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Deployment" fluid
-                                               value={deploymentId} id="deploymentFilterField"
-                                               options={deploymentOptions} onChange={this._selectDeployment.bind(this)}
-                                               multiple={configuration.allowMultipleSelection}/>
+                                <Form.Dropdown
+                                    search
+                                    selection
+                                    placeholder="Deployment"
+                                    fluid
+                                    value={deploymentId}
+                                    id="deploymentFilterField"
+                                    options={deploymentOptions}
+                                    onChange={this._selectDeployment.bind(this)}
+                                    multiple={configuration.allowMultipleSelection}
+                                />
                             </Form.Field>
-                        }
-                        {
-                            configuration.filterByNodes &&
+                        )}
+                        {configuration.filterByNodes && (
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Node" fluid
-                                               value={nodeId} id="nodeFilterField"
-                                               options={nodeOptions} onChange={this._selectNode.bind(this)}
-                                               multiple={configuration.allowMultipleSelection} />
+                                <Form.Dropdown
+                                    search
+                                    selection
+                                    placeholder="Node"
+                                    fluid
+                                    value={nodeId}
+                                    id="nodeFilterField"
+                                    options={nodeOptions}
+                                    onChange={this._selectNode.bind(this)}
+                                    multiple={configuration.allowMultipleSelection}
+                                />
                             </Form.Field>
-                        }
-                        {
-                            configuration.filterByNodeInstances &&
+                        )}
+                        {configuration.filterByNodeInstances && (
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Node Instance" fluid
-                                               value={nodeInstanceId} id="nodeInstanceFilterField"
-                                               options={nodeInstanceOptions} onChange={this._selectNodeInstance.bind(this)}
-                                               multiple={configuration.allowMultipleSelection} />
+                                <Form.Dropdown
+                                    search
+                                    selection
+                                    placeholder="Node Instance"
+                                    fluid
+                                    value={nodeInstanceId}
+                                    id="nodeInstanceFilterField"
+                                    options={nodeInstanceOptions}
+                                    onChange={this._selectNodeInstance.bind(this)}
+                                    multiple={configuration.allowMultipleSelection}
+                                />
                             </Form.Field>
-                        }
-                        {
-                            configuration.filterByExecutions &&
+                        )}
+                        {configuration.filterByExecutions && (
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Execution" fluid
-                                               value={executionId} id="executionFilterField"
-                                               options={executionOptions} onChange={this._selectExecution.bind(this)}
-                                               multiple={configuration.allowMultipleSelection} />
+                                <Form.Dropdown
+                                    search
+                                    selection
+                                    placeholder="Execution"
+                                    fluid
+                                    value={executionId}
+                                    id="executionFilterField"
+                                    options={executionOptions}
+                                    onChange={this._selectExecution.bind(this)}
+                                    multiple={configuration.allowMultipleSelection}
+                                />
                             </Form.Field>
-                        }
-                        {
-                            configuration.filterByExecutionsStatus &&
+                        )}
+                        {configuration.filterByExecutionsStatus && (
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Execution Status" fluid
-                                               value={executionStatus} id="executionStatusFilterField"
-                                               options={executionStatusOptions} onChange={this._selectExecutionStatus.bind(this)}
-                                               multiple={configuration.allowMultipleSelection} />
+                                <Form.Dropdown
+                                    search
+                                    selection
+                                    placeholder="Execution Status"
+                                    fluid
+                                    value={executionStatus}
+                                    id="executionStatusFilterField"
+                                    options={executionStatusOptions}
+                                    onChange={this._selectExecutionStatus.bind(this)}
+                                    multiple={configuration.allowMultipleSelection}
+                                />
                             </Form.Field>
-                        }
-                        {
-                            configuration.filterBySiteName &&
+                        )}
+                        {configuration.filterBySiteName && (
                             <Form.Field>
-                                <Form.Dropdown search selection placeholder="Site Name" fluid
-                                               value={siteName} id="siteNameFilterField"
-                                               options={siteNameOptions} onChange={this._selectSiteName.bind(this)}
-                                               multiple={configuration.allowMultipleSelection} />
+                                <Form.Dropdown
+                                    search
+                                    selection
+                                    placeholder="Site Name"
+                                    fluid
+                                    value={siteName}
+                                    id="siteNameFilterField"
+                                    options={siteNameOptions}
+                                    onChange={this._selectSiteName.bind(this)}
+                                    multiple={configuration.allowMultipleSelection}
+                                />
                             </Form.Field>
-                        }
+                        )}
                     </Form.Group>
                 </Form>
             </div>

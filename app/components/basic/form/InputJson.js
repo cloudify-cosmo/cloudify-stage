@@ -11,7 +11,6 @@ import { TextArea } from 'semantic-ui-react';
 import { Icon, Label, List, Popup } from '../index';
 
 class ReactJsonViewWrapper extends Component {
-
     static propTypes = {
         value: PropTypes.object,
         divStyle: PropTypes.object,
@@ -31,11 +30,17 @@ class ReactJsonViewWrapper extends Component {
     render() {
         return (
             <div style={this.props.divStyle}>
-                <ReactJsonView src={this.props.value} name={null} enableClipboard={false} defaultValue=''
-                               onAdd={this.props.onChange} onEdit={this.props.onChange} onDelete={this.props.onChange}
+                <ReactJsonView
+                    src={this.props.value}
+                    name={null}
+                    enableClipboard={false}
+                    defaultValue=""
+                    onAdd={this.props.onChange}
+                    onEdit={this.props.onChange}
+                    onDelete={this.props.onChange}
                 />
             </div>
-        )
+        );
     }
 }
 
@@ -54,7 +59,6 @@ class ReactJsonViewWrapper extends Component {
  *
  */
 export default class InputJson extends Component {
-
     constructor(props, context) {
         super(props, context);
 
@@ -75,7 +79,7 @@ export default class InputJson extends Component {
      * @property {string} name name of the field
      * @property {any} [value="{}"] value of the field
      * @property {boolean} [error=false] is field invalid
-     * @property {function} [onChange=(function () {});] function to be called on value change
+     * @property {Function} [onChange=(function () {});] function to be called on value change
      */
     static propTypes = {
         name: PropTypes.string.isRequired,
@@ -91,25 +95,27 @@ export default class InputJson extends Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(nextProps, this.props)
-            || !_.isEqual(nextState, this.state);
+        return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
     }
 
     componentDidMount() {
         const isParsableToJson = this.isParsableToJson();
-        this.setState({isParsableToJson, isRawView: !isParsableToJson});
+        this.setState({ isParsableToJson, isRawView: !isParsableToJson });
     }
 
     componentDidUpdate(prevProps) {
         if (!_.isEqual(this.props.value, prevProps.value)) {
             const isParsableToJson = this.isParsableToJson();
-            this.setState({isParsableToJson, isRawView: !this.state.isRawView ? !isParsableToJson : this.state.isRawView});
+            this.setState({
+                isParsableToJson,
+                isRawView: !this.state.isRawView ? !isParsableToJson : this.state.isRawView
+            });
         }
     }
 
     // See: https://stackoverflow.com/questions/9804777/how-to-test-if-a-string-is-json-or-not
     isParsableToJson() {
-        const value = this.props.value;
+        const { value } = this.props;
         let isParsableToJson = true;
 
         if (!_.isString(value)) {
@@ -117,8 +123,8 @@ export default class InputJson extends Component {
         } else {
             try {
                 const result = JSON.parse(value);
-                isParsableToJson
-                    = Object.prototype.toString.call(result) === '[object Object]' || Array.isArray(result);
+                isParsableToJson =
+                    Object.prototype.toString.call(result) === '[object Object]' || Array.isArray(result);
             } catch (err) {
                 isParsableToJson = false;
             }
@@ -128,7 +134,7 @@ export default class InputJson extends Component {
     }
 
     onChangeJson(changeObject) {
-        let {Json} = Stage.Utils;
+        const { Json } = Stage.Utils;
 
         this.props.onChange(null, {
             name: this.props.name,
@@ -136,18 +142,18 @@ export default class InputJson extends Component {
         });
     }
 
-    onChangeString(event, {name, value}) {
+    onChangeString(event, { name, value }) {
         this.props.onChange(event, { name, value });
     }
 
     switchView() {
-        this.setState({isRawView: !this.state.isRawView});
+        this.setState({ isRawView: !this.state.isRawView });
     }
 
     render() {
-        let {Json} = Stage.Utils;
+        const { Json } = Stage.Utils;
 
-        const value = this.props.value;
+        const { value } = this.props;
         const stringValue = Json.getStringValue(value);
         const jsonValue = Json.getTypedValue(value);
 
@@ -159,47 +165,54 @@ export default class InputJson extends Component {
         };
 
         return (
-            <div style={{position: 'relative'}} onMouseEnter={() => this.setState({isMouseOver: true})}
-                 onMouseLeave={() => this.setState({isMouseOver: false})}>
-                {
-                    this.state.isRawView
-                    ?
-                        <TextArea name={this.props.name} value={stringValue} onChange={this.onChangeString} />
-                    :
-                        <ReactJsonViewWrapper value={jsonValue} divStyle={divStyle} onChange={this.onChangeJson} />
-                }
-                {
-                    this.state.isMouseOver &&
-                        <Popup>
-                            <Popup.Trigger>
-                                <Icon name='edit' link={this.state.isParsableToJson} disabled={!this.state.isParsableToJson}
-                                      style={{position: 'absolute', top: 10, right: 30}}
-                                      onClick={this.state.isParsableToJson ? this.switchView : _.noop} />
-                            </Popup.Trigger>
-                            <Popup.Content>
-                                {
-                                    this.state.isParsableToJson
-                                    ? `Switch to ${this.state.isRawView ? 'Rich View' : 'Text View'}`
-                                    : 'Cannot switch to Rich View. Text cannot be parsed to JSON.'
-                                }
-                            </Popup.Content>
-                        </Popup>
-                }
-                {
-                    this.state.isMouseOver && !this.state.isRawView &&
-                    <Popup wide='very'>
+            <div
+                style={{ position: 'relative' }}
+                onMouseEnter={() => this.setState({ isMouseOver: true })}
+                onMouseLeave={() => this.setState({ isMouseOver: false })}
+            >
+                {this.state.isRawView ? (
+                    <TextArea name={this.props.name} value={stringValue} onChange={this.onChangeString} />
+                ) : (
+                    <ReactJsonViewWrapper value={jsonValue} divStyle={divStyle} onChange={this.onChangeJson} />
+                )}
+                {this.state.isMouseOver && (
+                    <Popup>
                         <Popup.Trigger>
-                            <Icon name='info' style={{position: 'absolute', top: 10, right: 50, cursor: 'pointer'}} />
+                            <Icon
+                                name="edit"
+                                link={this.state.isParsableToJson}
+                                disabled={!this.state.isParsableToJson}
+                                style={{ position: 'absolute', top: 10, right: 30 }}
+                                onClick={this.state.isParsableToJson ? this.switchView : _.noop}
+                            />
+                        </Popup.Trigger>
+                        <Popup.Content>
+                            {this.state.isParsableToJson
+                                ? `Switch to ${this.state.isRawView ? 'Rich View' : 'Text View'}`
+                                : 'Cannot switch to Rich View. Text cannot be parsed to JSON.'}
+                        </Popup.Content>
+                    </Popup>
+                )}
+                {this.state.isMouseOver && !this.state.isRawView && (
+                    <Popup wide="very">
+                        <Popup.Trigger>
+                            <Icon name="info" style={{ position: 'absolute', top: 10, right: 50, cursor: 'pointer' }} />
                         </Popup.Trigger>
                         <Popup.Content>
                             <List>
-                                <List.Item><Label>Ctrl + Click</Label> to enter edit mode</List.Item>
-                                <List.Item>In edit mode <Label>Ctrl + Enter</Label> to submit changes</List.Item>
-                                <List.Item>In edit mode <Label>Escape</Label> to cancel changes</List.Item>
+                                <List.Item>
+                                    <Label>Ctrl + Click</Label> to enter edit mode
+                                </List.Item>
+                                <List.Item>
+                                    In edit mode <Label>Ctrl + Enter</Label> to submit changes
+                                </List.Item>
+                                <List.Item>
+                                    In edit mode <Label>Escape</Label> to cancel changes
+                                </List.Item>
                             </List>
                         </Popup.Content>
                     </Popup>
-                }
+                )}
             </div>
         );
     }

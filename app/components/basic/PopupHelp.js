@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Icon, Popup } from './index'
+import { Icon, Popup } from './index';
 
 /**
  * PopupHelp is a component which uses [Popup](https://react.semantic-ui.com/modules/popup) component to display
@@ -16,9 +16,9 @@ import { Icon, Popup } from './index'
  * ```
  */
 export default class PopupHelp extends React.Component {
-
     /**
      * propTypes
+     *
      * @property {any} content help popup content
      * @property {any} [header=''] help popup header
      * @property {any} [trigger=<Icon name="help circle" />] help popup triggering element (on hover and focus)
@@ -31,26 +31,16 @@ export default class PopupHelp extends React.Component {
 
     static defaultProps = {
         header: '',
-        trigger: (<Icon name="help circle"/>)
+        trigger: <Icon name="help circle" />
     };
 
     render() {
-        let popupProps = _.omit(this.props, _.keys(PopupHelp.propTypes));
+        const popupProps = _.omit(this.props, _.keys(PopupHelp.propTypes));
         return (
-            <Popup on={['hover', 'focus']} hoverable wide={'very'} {...popupProps}>
-                {
-                    !_.isEmpty(this.props.header) && (
-                        <Popup.Header>
-                            {this.props.header}
-                        </Popup.Header>
-                    )
-                }
-                <Popup.Trigger>
-                    {this.props.trigger}
-                </Popup.Trigger>
-                <Popup.Content>
-                    {this.props.content}
-                </Popup.Content>
+            <Popup on={['hover', 'focus']} hoverable wide="very" {...popupProps}>
+                {!_.isEmpty(this.props.header) && <Popup.Header>{this.props.header}</Popup.Header>}
+                <Popup.Trigger>{this.props.trigger}</Popup.Trigger>
+                <Popup.Content>{this.props.content}</Popup.Content>
             </Popup>
         );
     }

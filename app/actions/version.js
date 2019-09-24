@@ -8,5 +8,5 @@ export function setVersion(version) {
     return {
         type: types.SET_MANAGER_VERSION,
         version
-    }
+    };
 }

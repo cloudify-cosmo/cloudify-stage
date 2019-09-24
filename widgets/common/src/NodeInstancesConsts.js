@@ -40,11 +40,10 @@ const groupStates = [
         colorSUI: 'black',
         colorHTML: '#1b1c1d',
         states: ['deleted']
-    },
+    }
 ];
-
 
 Stage.defineCommon({
     name: 'NodeInstancesConsts',
-    common: {groupStates}
+    common: { groupStates }
 });

@@ -25,19 +25,20 @@ import { Confirm as ConfirmSemanticUiReact } from 'semantic-ui-react';
  * ```
  */
 export default class Confirm extends Component {
-
     static defaultProps = {
         className: ''
     };
 
     render() {
-        const {confirmButton, cancelButton, className, ...rest} = this.props;
+        const { confirmButton, cancelButton, className, ...rest } = this.props;
 
         return (
-            <ConfirmSemanticUiReact {...rest} confirmButton={confirmButton?confirmButton:'Yes'}
-                                    cancelButton={cancelButton?cancelButton:'No'}
-                                    className={`confirmModal ${className}`}/>
+            <ConfirmSemanticUiReact
+                {...rest}
+                confirmButton={confirmButton || 'Yes'}
+                cancelButton={cancelButton || 'No'}
+                className={`confirmModal ${className}`}
+            />
         );
     }
 }
-
