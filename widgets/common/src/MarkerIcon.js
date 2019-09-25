@@ -1,6 +1,6 @@
-const widgetId = 'common';
+function createMarkerIcon(color) {
+    const widgetId = 'common';
 
-export default function createMarkerIcon(color) {
     return new L.Icon({
         iconUrl: Stage.Utils.Url.widgetResourceUrl(widgetId, `/images/marker-icon-${color}.png`, false),
         shadowUrl: Stage.Utils.Url.widgetResourceUrl(widgetId, '/images/marker-shadow.png', false),
@@ -8,3 +8,8 @@ export default function createMarkerIcon(color) {
         popupAnchor: [1, -34]
     });
 }
+
+Stage.defineCommon({
+    name: 'createMarkerIcon',
+    common: createMarkerIcon
+});

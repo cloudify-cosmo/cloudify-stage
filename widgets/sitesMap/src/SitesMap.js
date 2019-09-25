@@ -1,22 +1,20 @@
 import SiteControl from './SiteControl';
-import createMarkerIcon from '../../common/src/MarkerIcon';
 
-export default class SitesMap extends React.Component {
+class SitesMap extends React.Component {
     /**
      * propTypes
      *
      * @property {boolean} sitesAreDefined - specifies whether sites are defined
-     * @property {boolean} isMapAvailable - specifies whether there is internet connection
      * @property {object} toolbox - Toolbox object
      * @property {object} data - object with sites data
      * @property {object} dimensions - object with widget dimensions
+     * @property {string} mapUrl - map provider URL
      * @property {string} tilesUrlTemplate - map tiles provider template URL
      * @property {string} attribution - map attribution to be added to map view
      * @property {boolean} showAllLabels - specifies whether all the site labels displayed
      */
     static propTypes = {
         sitesAreDefined: PropTypes.bool.isRequired,
-        isMapAvailable: PropTypes.bool.isRequired,
         toolbox: PropTypes.object.isRequired,
         data: PropTypes.objectOf(
             PropTypes.shape({
@@ -39,8 +37,10 @@ export default class SitesMap extends React.Component {
             maximized: PropTypes.bool
         }).isRequired,
 
+        mapUrl: PropTypes.string.isRequired,
         tilesUrlTemplate: PropTypes.string.isRequired,
         attribution: PropTypes.string.isRequired,
+
         showAllLabels: PropTypes.bool.isRequired
     };
 
@@ -48,28 +48,33 @@ export default class SitesMap extends React.Component {
         super(props);
 
         this.mapRef = React.createRef();
+        this.state = {
+            isMapAvailable: true
+        };
     }
 
-    shouldComponentUpdate(nextProps) {
-        const {
-            attribution,
-            data,
-            dimensions,
-            isMapAvailable,
-            showAllLabels,
-            sitesAreDefined,
-            tilesUrlTemplate
-        } = this.props;
+    shouldComponentUpdate(nextProps, nextState) {
+        const { attribution, data, dimensions, mapUrl, showAllLabels, sitesAreDefined, tilesUrlTemplate } = this.props;
+        const { isMapAvailable } = this.state;
 
         return (
             !_.isEqual(attribution, nextProps.attribution) ||
             !_.isEqual(data, nextProps.data) ||
             !_.isEqual(dimensions, nextProps.dimensions) ||
-            !_.isEqual(isMapAvailable, nextProps.isMapAvailable) ||
+            !_.isEqual(mapUrl, nextProps.mapUrl) ||
             !_.isEqual(showAllLabels, nextProps.showAllLabels) ||
             !_.isEqual(sitesAreDefined, nextProps.sitesAreDefined) ||
-            !_.isEqual(tilesUrlTemplate, nextProps.tilesUrlTemplate)
+            !_.isEqual(tilesUrlTemplate, nextProps.tilesUrlTemplate) ||
+            !_.isEqual(isMapAvailable, nextState.isMapAvailable)
         );
+    }
+
+    componentDidMount() {
+        const { mapUrl, toolbox } = this.props;
+        toolbox
+            .getExternal()
+            .isReachable(mapUrl)
+            .then(isMapAvailable => this.setState({ isMapAvailable }));
     }
 
     componentDidUpdate(prevProps) {
@@ -92,9 +97,11 @@ export default class SitesMap extends React.Component {
 
     _createMarkers() {
         const markers = [];
-        const showLabels = this.props.showAllLabels ? this._openPopup : undefined;
+        const { data, showAllLabels, toolbox } = this.props;
+        const showLabels = showAllLabels ? this._openPopup : undefined;
 
-        _.forEach(this.props.data, site => {
+        _.forEach(data, site => {
+            const { createMarkerIcon } = Stage.Common;
             const icon = createMarkerIcon(site.color);
 
             const { Marker, Popup } = Stage.Basic.Leaflet;
@@ -107,7 +114,7 @@ export default class SitesMap extends React.Component {
                     icon={icon}
                 >
                     <Popup interactive autoClose={false} closeOnClick={false}>
-                        <SiteControl site={site} toolbox={this.props.toolbox} />
+                        <SiteControl site={site} toolbox={toolbox} />
                     </Popup>
                 </Marker>
             );
@@ -122,7 +129,10 @@ export default class SitesMap extends React.Component {
 
     render() {
         const { Map, TileLayer } = Stage.Basic.Leaflet;
-        const { attribution, isMapAvailable, sitesAreDefined, tilesUrlTemplate } = this.props;
+
+        const { attribution, sitesAreDefined, tilesUrlTemplate } = this.props;
+        const { isMapAvailable } = this.state;
+
         if (!isMapAvailable) {
             const NO_INTERNET_MESSAGE = `The widget content cannot be displayed because there is no connection 
                                          to the maps repository. Please check network connection and widget's configuration.`;
@@ -152,6 +162,8 @@ export default class SitesMap extends React.Component {
         );
     }
 }
+
+export default connectToStore(state => _.get(state, 'config.app.maps', () => ({})), {})(SitesMap);
 
 function NoDataMessage({ sitesAreDefined }) {
     const REASON = sitesAreDefined ? 'the defined sites have no location' : 'no sites are defined';

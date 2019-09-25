@@ -56,7 +56,8 @@ module.exports = {
                     enabled: config.app.saml.enabled,
                     ssoUrl: config.app.saml.ssoUrl,
                     portalUrl: config.app.saml.portalUrl
-                }
+                },
+                maps: userConfig.maps
             },
             manager: {
                 ip: config.manager.ip
