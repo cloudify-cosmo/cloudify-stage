@@ -23,12 +23,12 @@ Stage.defineWidget({
         }
     ],
 
-    _processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData) {
+    processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData) {
         const { groupStates, getDeploymentState, GOOD_STATE } = Stage.Common.DeploymentStates;
         let siteState = GOOD_STATE;
         const deploymentStates = _.reduce(
             groupStates,
-            function(result, value, key) {
+            (result, value, key) => {
                 result[key] = [];
                 return result;
             },
@@ -49,7 +49,7 @@ Stage.defineWidget({
         siteStatuses[site.name].color = deploymentsData[site.name] ? groupStates[siteState].colorSUI : 'grey';
     },
 
-    _processData(data) {
+    processData(data) {
         const nodeInstanceData = _.reduce(
             data[2].items,
             (result, item) => {
@@ -75,14 +75,21 @@ Stage.defineWidget({
         const siteStatuses = {};
 
         _.forEach(sitesData, site => {
-            this._processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData);
+            this.processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData);
         });
 
         const sitesAreDefined = data[4].items.length > 0;
         return { siteStatuses, sitesAreDefined };
     },
 
-    fetchData(widget, toolbox) {
+    fetchParams(widget, toolbox) {
+        return {
+            blueprint_id: toolbox.getContext().getValue('blueprintId'),
+            id: toolbox.getContext().getValue('deploymentId')
+        };
+    },
+
+    fetchData(widget, toolbox, params) {
         const allSites = toolbox.getManager().doGet('/sites', {
             _include: 'name,latitude,longitude',
             _get_all_results: true
@@ -96,7 +103,8 @@ Stage.defineWidget({
             toolbox.getManager().doGet('/deployments', {
                 _include: 'id,site_name',
                 _get_all_results: true,
-                site_name: names
+                site_name: names,
+                ...params
             })
         );
         const deploymentIds = deploymentsData.then(data => _.map(data.items, deployment => deployment.id));
@@ -127,7 +135,7 @@ Stage.defineWidget({
             return <Stage.Basic.Loading />;
         }
 
-        const { siteStatuses, sitesAreDefined } = this._processData(data);
+        const { siteStatuses, sitesAreDefined } = this.processData(data);
         return (
             <SitesMap
                 data={siteStatuses}
