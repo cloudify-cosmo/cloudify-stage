@@ -179,7 +179,7 @@ export default class GenericField extends Component {
      * @property {string} [error=false] specifies if a field should be marked as field with error
      * @property {string} [type=GenericField.STRING_TYPE] specifies type of the field
      * @property {string} [icon=null] additional icon in right side of the input field
-     * @property {string} [description=''] fields description showed in popup when user hovers field
+     * @property {string|element} [description=''] fields description showed in popup when user hovers field
      * @property {object} [value=''] specifies the value of an <input> element
      * @property {boolean} [required={true}] define if a field is required adding a red star icon to label
      * @property {object[]} [items=[]] list of items (for list types)
@@ -194,7 +194,7 @@ export default class GenericField extends Component {
         error: PropTypes.bool,
         type: PropTypes.string,
         icon: PropTypes.string,
-        description: PropTypes.string,
+        description: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         value: PropTypes.any,
         required: PropTypes.bool,
         onChange: PropTypes.func,

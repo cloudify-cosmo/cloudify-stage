@@ -1,7 +1,5 @@
 import SitesMap from './SitesMap';
 
-const MAP_URL = 'https://maps.wikimedia.org';
-
 Stage.defineWidget({
     id: 'sitesMap',
     name: 'Sites Map',
@@ -80,9 +78,8 @@ Stage.defineWidget({
             this._processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData);
         });
 
-        const isMapAvailable = data[4];
-        const sitesAreDefined = data[5].items.length > 0;
-        return { siteStatuses, isMapAvailable, sitesAreDefined };
+        const sitesAreDefined = data[4].items.length > 0;
+        return { siteStatuses, sitesAreDefined };
     },
 
     fetchData(widget, toolbox) {
@@ -122,17 +119,7 @@ Stage.defineWidget({
             })
         );
 
-        const isMapAvailable = toolbox.getExternal().isReachable(MAP_URL);
-        return Promise.all([
-            sitesData,
-            deploymentsData,
-            nodeInstanceData,
-            executionsData,
-            isMapAvailable,
-            allSites
-        ]).then(data => {
-            return data;
-        });
+        return Promise.all([sitesData, deploymentsData, nodeInstanceData, executionsData, allSites]);
     },
 
     render(widget, data, error, toolbox) {
@@ -140,16 +127,14 @@ Stage.defineWidget({
             return <Stage.Basic.Loading />;
         }
 
-        const { siteStatuses, isMapAvailable, sitesAreDefined } = this._processData(data);
+        const { siteStatuses, sitesAreDefined } = this._processData(data);
         return (
             <SitesMap
                 data={siteStatuses}
-                toolbox={toolbox}
-                showAllLabels={widget.configuration.showAllLabels}
-                isMapAvailable={isMapAvailable}
-                sitesAreDefined={sitesAreDefined}
-                mapUrl={MAP_URL}
                 dimensions={{ height: widget.height, width: widget.width, maximized: widget.maximized || false }}
+                showAllLabels={widget.configuration.showAllLabels}
+                sitesAreDefined={sitesAreDefined}
+                toolbox={toolbox}
             />
         );
     }

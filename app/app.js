@@ -33,7 +33,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Leaflet from 'leaflet';
 
-import { Provider } from 'react-redux';
+import { connect, Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
@@ -62,6 +62,7 @@ export default class app {
         window.React = React;
         window.PropTypes = PropTypes;
         window.L = Leaflet;
+        window.connectToStore = connect;
 
         window.onerror = function(message, source, lineno, colno, error) {
             EventBus.trigger('window:error', message, source, lineno, colno, error);
