@@ -8,6 +8,7 @@ import { createPagesFromTemplate } from './page';
 import { setAppLoading, setAppError } from './app';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
+import UserAppDataAutoSaver from '../utils/UserAppDataAutoSaver';
 
 const CURRENT_APP_DATA_VERSION = 4;
 
@@ -31,29 +32,37 @@ export function resetPagesForTenant(tenant) {
     };
 }
 
-export function saveUserAppData(manager, appData) {
-    return function() {
-        const data = { appData, version: CURRENT_APP_DATA_VERSION };
+export function saveUserAppData() {
+    return function(dispatch, getState) {
+        const data = { appData: _.pick(getState(), 'pages'), version: CURRENT_APP_DATA_VERSION };
 
-        const internal = new Internal(manager);
+        const internal = new Internal(getState().manager);
         return internal.doPost('/ua', null, data);
     };
 }
 
 export function resetPages() {
     return function(dispatch) {
+        const autoSaver = UserAppDataAutoSaver.getAutoSaver();
+        autoSaver.stop();
         // First clear the pages
         dispatch(setAppLoading(true));
         dispatch(setPages([]));
         return dispatch(createPagesFromTemplate())
             .then(() => {
-                dispatch(setAppLoading(false));
-                dispatch(push(Consts.HOME_PAGE_PATH));
+                dispatch(saveUserAppData()).then(() => {
+                    dispatch(setAppLoading(false));
+                    dispatch(push(Consts.HOME_PAGE_PATH));
+                });
             })
             .catch(err => {
                 dispatch(setAppError(err.message));
                 dispatch(push(Consts.ERROR_PAGE_PATH));
                 throw err;
+            })
+            .finally(() => {
+                autoSaver.initFromStore();
+                autoSaver.start();
             });
     };
 }

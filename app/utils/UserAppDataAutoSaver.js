@@ -11,21 +11,21 @@ export default class UserAppDataAutoSaver {
         this._store = store;
         this._isActive = false;
 
-        this._initFromStore();
+        this.initFromStore();
 
         // Subscribe to store change
         this.unsubscribe = store.subscribe(() => {
             const state = this._store.getState();
 
             if (this._isActive && this._hasDataChanged(state) && this._validData(state)) {
-                this._initFromStore();
+                this.initFromStore();
 
-                this._store.dispatch(saveUserAppData(state.manager, { pages: this._pages }));
+                this._store.dispatch(saveUserAppData());
             }
         });
     }
 
-    _initFromStore() {
+    initFromStore() {
         const state = this._store.getState();
         this._pages = state.pages;
         this._username = _.get(state, 'manager.username');
