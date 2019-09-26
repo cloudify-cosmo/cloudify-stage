@@ -97,6 +97,14 @@
       }
     },
     {
+      "name": "Sites Map",
+      "width": 12,
+      "height": 24,
+      "definition": "sitesMap",
+      "x": 0,
+      "y": 14
+    },
+    {
       "name": "Executions",
       "width": 8,
       "height": 24,
@@ -105,7 +113,7 @@
         "pageSize": 10
       },
       "x": 0,
-      "y": 14
+      "y": 38
     },
     {
       "name": "Executions Statuses Graph",
@@ -113,7 +121,7 @@
       "height": 24,
       "definition": "executionsStatus",
       "x": 8,
-      "y": 14
+      "y": 38
     }
   ]
 }

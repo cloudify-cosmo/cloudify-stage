@@ -3,9 +3,8 @@
  */
 
 class IdPopup extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
     }
 
     static propTypes = {
@@ -20,16 +19,16 @@ class IdPopup extends React.Component {
         selected: true
     };
 
-    render () {
-        let {CopyToClipboardButton, Label, Popup} = Stage.Basic;
+    render() {
+        const { CopyToClipboardButton, Label, Popup } = Stage.Basic;
 
         return (
-            <Popup wide hoverable position='right center'>
+            <Popup wide hoverable position="right center">
                 <Popup.Trigger>
-                    <Label style={{opacity: this.props.selected ? '1' : '0.2'}}>{this.props.label}</Label>
+                    <Label style={{ opacity: this.props.selected ? '1' : '0.2' }}>{this.props.label}</Label>
                 </Popup.Trigger>
                 <Popup.Content>
-                    <div className='noWrap'>
+                    <div className="noWrap">
                         <CopyToClipboardButton content={`Copy ${this.props.label}`} text={this.props.id} />
                         &nbsp;&nbsp;<strong>{this.props.id}</strong>
                     </div>

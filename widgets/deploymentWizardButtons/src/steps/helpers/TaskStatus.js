@@ -5,20 +5,16 @@
 import Task from './Task';
 
 export default class TaskStatus extends React.Component {
-
     static propTypes = {
         name: PropTypes.string.isRequired,
-        status: PropTypes.oneOf([
-            Task.Status.pending,
-            Task.Status.inProgress,
-            Task.Status.finished,
-            Task.Status.failed]).isRequired,
+        status: PropTypes.oneOf([Task.Status.pending, Task.Status.inProgress, Task.Status.finished, Task.Status.failed])
+            .isRequired,
         error: PropTypes.string
     };
 
     getStatusIcon() {
-        let {Icon} = Stage.Basic;
-        let iconProps = {
+        const { Icon } = Stage.Basic;
+        const iconProps = {
             color: '',
             loading: false,
             name: ''
@@ -44,15 +40,13 @@ export default class TaskStatus extends React.Component {
                 break;
         }
 
-        return <Icon {...iconProps} />
+        return <Icon {...iconProps} />;
     }
 
     getStatusText() {
-        const {error, status} = this.props;
+        const { error, status } = this.props;
         let statusText = '';
-        let errorText = !!error
-            ? <em>{error}</em>
-            : null;
+        const errorText = error ? <em>{error}</em> : null;
 
         switch (status) {
             case Task.Status.pending:
@@ -70,17 +64,22 @@ export default class TaskStatus extends React.Component {
         }
 
         return (
-            <React.Fragment>
-                <strong>{statusText}</strong>{errorText}
-            </React.Fragment>
+            <>
+                <strong>{statusText}</strong>
+                {errorText}
+            </>
         );
     }
 
     render() {
-        const name = this.props.name;
+        const { name } = this.props;
         const statusIcon = this.getStatusIcon();
         const statusText = this.getStatusText();
 
-        return <span>{name}... {statusIcon} {statusText}</span>
+        return (
+            <span>
+                {name}... {statusIcon} {statusText}
+            </span>
+        );
     }
 }

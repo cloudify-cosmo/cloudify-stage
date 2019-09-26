@@ -3,8 +3,7 @@
  */
 
 export default class ExecuteWorkflowIcon extends React.Component {
-
-    constructor(props, context){
+    constructor(props, context) {
         super(props, context);
     }
 
@@ -18,17 +17,16 @@ export default class ExecuteWorkflowIcon extends React.Component {
         workflows: []
     };
 
-    render () {
-        let {WorkflowsMenu} = Stage.Common;
+    render() {
+        const { WorkflowsMenu } = Stage.Common;
 
-        return !_.isEmpty(this.props.workflows)
-            ?
-                <WorkflowsMenu workflows={this.props.workflows} dropdownDirection='left'
-                               popupMenuProps={{icon: 'cogs', help: 'Execute Workflow', bordered: true}}
-                               onClick={(workflow) => this.props.onClick(workflow)}
-                />
-            :
-                null;
+        return !_.isEmpty(this.props.workflows) ? (
+            <WorkflowsMenu
+                workflows={this.props.workflows}
+                dropdownDirection="left"
+                popupMenuProps={{ icon: 'cogs', help: 'Execute Workflow', bordered: true }}
+                onClick={workflow => this.props.onClick(workflow)}
+            />
+        ) : null;
     }
 }
-

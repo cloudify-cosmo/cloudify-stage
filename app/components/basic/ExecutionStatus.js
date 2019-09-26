@@ -5,8 +5,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import {Icon, Label, Popup} from './index';
-import ExecutionUtils from './../../utils/shared/ExecutionUtils';
+import { Icon, Label, Popup } from './index';
+import ExecutionUtils from '../../utils/shared/ExecutionUtils';
 
 /**
  * ExecutionStatus is a component which shows execution status as icon with optional status and workflow ID strings.
@@ -35,7 +35,6 @@ import ExecutionUtils from './../../utils/shared/ExecutionUtils';
  *
  */
 export default class ExecutionStatus extends Component {
-
     /**
      * @property {object} execution Execution resource object
      * @property {object} [labelProps={}] Props to be passed to Label component
@@ -62,30 +61,36 @@ export default class ExecutionStatus extends Component {
         showWorkflowId: false
     };
 
-    render () {
-        const execution = this.props.execution;
+    render() {
+        const { execution } = this.props;
         const executionStatusDisplay = execution.status_display || execution.status;
-        const showPopup = this.props.allowShowingPopup && ExecutionUtils.isWaitingExecution(execution) && !_.isEmpty(execution.scheduled_for);
+        const showPopup =
+            this.props.allowShowingPopup &&
+            ExecutionUtils.isWaitingExecution(execution) &&
+            !_.isEmpty(execution.scheduled_for);
 
-        return this.props.showLabel
-            ?
+        return this.props.showLabel ? (
             <Popup on={showPopup ? 'hover' : []}>
                 <Popup.Trigger>
-                    <Label {...this.props.labelProps} onClick={(e) => e.stopPropagation()}>
+                    <Label {...this.props.labelProps} onClick={e => e.stopPropagation()}>
                         <Icon {...ExecutionUtils.getExecutionStatusIconParams(execution)} {...this.props.iconProps} />
                         {this.props.showWorkflowId && execution.workflow_id}
                         {this.props.showWorkflowId && ' '}
                         {executionStatusDisplay}
                     </Label>
                 </Popup.Trigger>
-                {
-                    showPopup
-                        ? <span>Scheduled for: <strong>{execution.scheduled_for}</strong></span>
-                        : null
-                }
+                {showPopup ? (
+                    <span>
+                        Scheduled for: <strong>{execution.scheduled_for}</strong>
+                    </span>
+                ) : null}
             </Popup>
-            :
-            <Icon {...ExecutionUtils.getExecutionStatusIconParams(execution)} {...this.props.iconProps}
-                  onClick={(e) => e.stopPropagation()} />
+        ) : (
+            <Icon
+                {...ExecutionUtils.getExecutionStatusIconParams(execution)}
+                {...this.props.iconProps}
+                onClick={e => e.stopPropagation()}
+            />
+        );
     }
 }

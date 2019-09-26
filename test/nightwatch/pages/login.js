@@ -3,14 +3,14 @@
  */
 
 module.exports = {
-    url: function () {
-        return this.api.launch_url + '/login';
+    url() {
+        return `${this.api.launch_url}/login`;
     },
     elements: {
         usernameField: 'input[name="username"]',
         passwordField: 'input[name="password"]',
         submitButton: 'button[type="submit"]',
-        tenantsDropdownText : 'div.tenantsMenu',
+        tenantsDropdownText: 'div.tenantsMenu',
         managerData: '.managerMenu',
         errorMessage: '.error.message'
     }

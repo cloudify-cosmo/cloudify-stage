@@ -1,7 +1,4 @@
-
 import SitesMap from './SitesMap';
-
-const MAP_URL = 'https://maps.wikimedia.org';
 
 Stage.defineWidget({
     id: 'sitesMap',
@@ -18,18 +15,27 @@ Stage.defineWidget({
     supportedEditions: [Stage.Common.Consts.licenseEdition.spire],
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
-        {id: "showAllLabels", name: "Show all the site labels", default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
+        {
+            id: 'showAllLabels',
+            name: 'Show all the site labels',
+            default: false,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        }
     ],
 
-    _processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData) {
+    processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData) {
         const { groupStates, getDeploymentState, GOOD_STATE } = Stage.Common.DeploymentStates;
         let siteState = GOOD_STATE;
-        let deploymentStates = _.reduce(groupStates, function(result, value, key) {
-            result[key] = [];
-            return result;
-        }, {});
+        const deploymentStates = _.reduce(
+            groupStates,
+            (result, value, key) => {
+                result[key] = [];
+                return result;
+            },
+            {}
+        );
 
-        _.forEach(deploymentsData[site.name], (deployment) => {
+        _.forEach(deploymentsData[site.name], deployment => {
             const lastExecution = _.first(executionsData[deployment.id]);
             const currentState = getDeploymentState(deployment.id, nodeInstanceData, lastExecution);
             deploymentStates[currentState].push(deployment.id);
@@ -38,57 +44,72 @@ Stage.defineWidget({
             }
         });
 
-        siteStatuses[site.name] = {...site};
-        siteStatuses[site.name]['deploymentStates'] = deploymentStates;
-        siteStatuses[site.name]['color'] = deploymentsData[site.name] ? groupStates[siteState].colorSUI : 'grey';
+        siteStatuses[site.name] = { ...site };
+        siteStatuses[site.name].deploymentStates = deploymentStates;
+        siteStatuses[site.name].color = deploymentsData[site.name] ? groupStates[siteState].colorSUI : 'grey';
     },
 
-    _processData(data) {
-        const nodeInstanceData = _.reduce(data[2].items, (result, item) => {
-            result[item.deployment_id] = {
-                states: _.reduce(item['by state'], (result, state) => {
-                    result[state.state] = state.node_instances;
-                    return result;
-                }, {}),
-                count: item.node_instances
-            };
-            return result;
-        }, {});
+    processData(data) {
+        const nodeInstanceData = _.reduce(
+            data[2].items,
+            (result, item) => {
+                result[item.deployment_id] = {
+                    states: _.reduce(
+                        item['by state'],
+                        (result, state) => {
+                            result[state.state] = state.node_instances;
+                            return result;
+                        },
+                        {}
+                    ),
+                    count: item.node_instances
+                };
+                return result;
+            },
+            {}
+        );
 
         const sitesData = data[0];
         const deploymentsData = _.groupBy(data[1].items, 'site_name');
         const executionsData = _.groupBy(data[3].items, 'deployment_id');
-        let siteStatuses = {};
+        const siteStatuses = {};
 
-        _.forEach(sitesData, (site) => {
-            this._processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData);
+        _.forEach(sitesData, site => {
+            this.processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData);
         });
 
-        const isMapAvailable = data[4];
-        const sitesAreDefined = data[5].items.length > 0;
-        return {siteStatuses, isMapAvailable, sitesAreDefined};
+        const sitesAreDefined = data[4].items.length > 0;
+        return { siteStatuses, sitesAreDefined };
     },
 
-    fetchData: function(widget, toolbox) {
-        let allSites = toolbox.getManager().doGet('/sites', {
+    fetchParams(widget, toolbox) {
+        return {
+            blueprint_id: toolbox.getContext().getValue('blueprintId'),
+            id: toolbox.getContext().getValue('deploymentId')
+        };
+    },
+
+    fetchData(widget, toolbox, params) {
+        const allSites = toolbox.getManager().doGet('/sites', {
             _include: 'name,latitude,longitude',
             _get_all_results: true
         });
 
         // Leave only the sites with location
-        let sitesData = allSites.then(data => _.filter(data.items, site => !_.isNil(site.latitude)));
-        let siteNames = sitesData.then(data =>_.map(data.items, site => site.name));
+        const sitesData = allSites.then(data => _.filter(data.items, site => !_.isNil(site.latitude)));
+        const siteNames = sitesData.then(data => _.map(data.items, site => site.name));
 
-        let deploymentsData = siteNames.then(names =>
+        const deploymentsData = siteNames.then(names =>
             toolbox.getManager().doGet('/deployments', {
                 _include: 'id,site_name',
                 _get_all_results: true,
-                site_name: names
+                site_name: names,
+                ...params
             })
         );
-        let deploymentIds = deploymentsData.then(data => _.map(data.items, deployment => deployment.id));
+        const deploymentIds = deploymentsData.then(data => _.map(data.items, deployment => deployment.id));
 
-        let nodeInstanceData = deploymentIds.then(ids =>
+        const nodeInstanceData = deploymentIds.then(ids =>
             toolbox.getManager().doGet('/summary/node_instances', {
                 _target_field: 'deployment_id',
                 _sub_field: 'state',
@@ -97,7 +118,7 @@ Stage.defineWidget({
             })
         );
 
-        let executionsData = deploymentIds.then(ids =>
+        const executionsData = deploymentIds.then(ids =>
             toolbox.getManager().doGet('/executions', {
                 _include: 'id,deployment_id,workflow_id,status,status_display,created_at,ended_at',
                 _sort: '-ended_at',
@@ -106,24 +127,22 @@ Stage.defineWidget({
             })
         );
 
-        const isMapAvailable = toolbox.getExternal().isReachable(MAP_URL);
-        return Promise.all([sitesData, deploymentsData, nodeInstanceData, executionsData, isMapAvailable, allSites])
-            .then((data) => {return data});
+        return Promise.all([sitesData, deploymentsData, nodeInstanceData, executionsData, allSites]);
     },
 
-    render: function(widget, data, error, toolbox) {
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
 
-        const {siteStatuses, isMapAvailable, sitesAreDefined} = this._processData(data);
+        const { siteStatuses, sitesAreDefined } = this.processData(data);
         return (
-            <SitesMap data={siteStatuses}
-                      toolbox={toolbox}
-                      showAllLabels={widget.configuration.showAllLabels}
-                      isMapAvailable={isMapAvailable}
-                      sitesAreDefined={sitesAreDefined}
-                      mapUrl={MAP_URL}
+            <SitesMap
+                data={siteStatuses}
+                dimensions={{ height: widget.height, width: widget.width, maximized: widget.maximized || false }}
+                showAllLabels={widget.configuration.showAllLabels}
+                sitesAreDefined={sitesAreDefined}
+                toolbox={toolbox}
             />
         );
     }

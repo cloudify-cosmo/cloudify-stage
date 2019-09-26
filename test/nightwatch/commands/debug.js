@@ -2,10 +2,10 @@
  * Created by pawelposel on 2017-06-09.
  */
 
-exports.command = function (callback) {
+exports.command = function(callback) {
     return this.perform(function(client, done) {
         console.log('press to continue');
-        var pressed = false;
+        let pressed = false;
         process.stdin.setRawMode(true);
         process.stdin.resume();
         process.stdin.on('data', listener);
@@ -14,12 +14,12 @@ exports.command = function (callback) {
         function listener() {
             process.stdin.removeListener('keypress', listener);
             process.stdin.pause();
-            pressed = true
+            pressed = true;
         }
 
         function pause() {
             client.pause(10, function() {
-                if(!pressed) return pause();
+                if (!pressed) return pause();
                 done();
             });
         }

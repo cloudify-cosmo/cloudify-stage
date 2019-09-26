@@ -12,8 +12,8 @@ const widgetBackendFilename = appConfig.widgets.backendFilename;
 const widgetBackendFilesGlob = `./widgets/*/src/${widgetBackendFilename}`;
 
 const logger = {
-    log: (logString) => console.log(`[widgetBackendWatcher] ${logString}`),
-    error: (errorString) => console.error(`[widgetBackendWatcher] ${errorString}`)
+    log: logString => console.log(`[widgetBackendWatcher] ${logString}`),
+    error: errorString => console.error(`[widgetBackendWatcher] ${errorString}`)
 };
 
 // Update Widget Backend file
@@ -48,16 +48,17 @@ const triggerBackendRestart = () => {
 };
 
 module.exports = function start() {
-    chokidar.watch(widgetBackendFilesGlob)
-        .on('add', (file) => {
+    chokidar
+        .watch(widgetBackendFilesGlob)
+        .on('add', file => {
             updateWidgetBackendFile(file, 'add');
             triggerBackendRestart();
         })
-        .on('change', (file) => {
+        .on('change', file => {
             updateWidgetBackendFile(file, 'change');
             triggerBackendRestart();
         })
-        .on('unlink', (file) => {
+        .on('unlink', file => {
             updateWidgetBackendFile(file, 'unlink');
             triggerBackendRestart();
         })

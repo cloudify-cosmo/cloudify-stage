@@ -19,7 +19,6 @@ import React, { Component } from 'react';
  * ```
  */
 export default class TableColumn extends Component {
-
     /**
      * @property {any} label - column label
      * @property {string} [name] - data property, enables column sorting
@@ -74,10 +73,13 @@ export default class TableColumn extends Component {
         }
 
         return (
-            <th className={this._className()} style={this.props.width?{width:this.props.width}:{}} onClick={this._onClick.bind(this)}>
+            <th
+                className={this._className()}
+                style={this.props.width ? { width: this.props.width } : {}}
+                onClick={this._onClick.bind(this)}
+            >
                 {this.props.label}
             </th>
         );
     }
 }
- 

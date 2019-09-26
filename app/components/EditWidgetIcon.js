@@ -14,7 +14,13 @@ export default class EditWidgetIcon extends Component {
 
     render() {
         return (
-            <i className="setting link icon small editWidgetIcon" onClick={(event)=> {event.stopPropagation(); this.props.onShowConfig();}}/>
+            <i
+                className="setting link icon small editWidgetIcon"
+                onClick={event => {
+                    event.stopPropagation();
+                    this.props.onShowConfig();
+                }}
+            />
         );
     }
 }

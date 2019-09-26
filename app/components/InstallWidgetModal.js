@@ -5,13 +5,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import {Icon, Button, Form, Label, Modal, Message} from './basic/index'
+import { Icon, Button, Form, Label, Modal, Message } from './basic/index';
 import EventBus from '../utils/EventBus';
 import StageUtils from '../utils/stageUtils';
 
 export default class InstallWidgetModal extends Component {
-
-    constructor(props,context){
+    constructor(props, context) {
         super(props, context);
 
         this.widgetFileRef = React.createRef();
@@ -38,7 +37,7 @@ export default class InstallWidgetModal extends Component {
 
     static defaultProps = {
         className: 'installWidgetModal',
-        onWidgetInstalled: ()=>Promise.resolve()
+        onWidgetInstalled: () => Promise.resolve()
     };
 
     componentDidUpdate(prevProps) {
@@ -49,47 +48,48 @@ export default class InstallWidgetModal extends Component {
     }
 
     _installWidget() {
-        let widgetUrl = this.state.widgetFile ? '' : this.state.widgetUrl;
+        const widgetUrl = this.state.widgetFile ? '' : this.state.widgetUrl;
 
-        let errors = {};
+        const errors = {};
 
         if (!this.state.widgetFile) {
             if (_.isEmpty(widgetUrl)) {
-                errors['widgetUrl'] = "Please provide the widget's archive URL or select a file";
+                errors.widgetUrl = "Please provide the widget's archive URL or select a file";
             } else if (!StageUtils.Url.isUrl(widgetUrl)) {
-                errors['widgetUrl'] = "Please provide valid URL for widget's archive";
+                errors.widgetUrl = "Please provide valid URL for widget's archive";
             }
         }
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors, scriptError: ''});
+            this.setState({ errors, scriptError: '' });
             return false;
         }
 
-        this.setState({loading: true, errors: {}, scriptError: ''});
+        this.setState({ loading: true, errors: {}, scriptError: '' });
 
         EventBus.on('window:error', this._showScriptError, this);
-        this.props.onWidgetInstalled(this.state.widgetFile, widgetUrl)
-            .then(()=>{
+        this.props
+            .onWidgetInstalled(this.state.widgetFile, widgetUrl)
+            .then(() => {
                 EventBus.off('window:error', this._showScriptError);
-                this.setState({loading: false, open: false});
+                this.setState({ loading: false, open: false });
             })
-            .catch((err)=>{
+            .catch(err => {
                 EventBus.off('window:error', this._showScriptError);
-                this.setState({errors: {error: err.message}, loading: false});
+                this.setState({ errors: { error: err.message }, loading: false });
             });
     }
 
     _openModal() {
-        this.setState({...InstallWidgetModal.initialState, open: true});
+        this.setState({ ...InstallWidgetModal.initialState, open: true });
     }
 
     _closeModal() {
-        this.setState({open: false});
+        this.setState({ open: false });
     }
 
     _showScriptError(message, source, lineno, colno) {
-        this.setState({scriptError: `${message} (${source}:${lineno}:${colno})`});
+        this.setState({ scriptError: `${message} (${source}:${lineno}:${colno})` });
     }
 
     _handleInputChange(proxy, field) {
@@ -105,32 +105,41 @@ export default class InstallWidgetModal extends Component {
 
     _onWidgetFileChange(file) {
         if (file) {
-            this.setState({errors: {}, widgetUrl: file.name, widgetFile: file});
+            this.setState({ errors: {}, widgetUrl: file.name, widgetFile: file });
         }
     }
 
     _onWidgetFileReset() {
-        this.setState({errors: {}, widgetUrl: '', widgetFile: null});
+        this.setState({ errors: {}, widgetUrl: '', widgetFile: null });
     }
 
     render() {
         return (
-            <Modal trigger={this.props.trigger} dimmer="blurring" open={this.state.open} className={this.props.className}
-                   onOpen={this._openModal.bind(this)} onClose={this._closeModal.bind(this)}>
-                <Modal.Header><Icon name="puzzle"/> {this.props.header}</Modal.Header>
+            <Modal
+                trigger={this.props.trigger}
+                dimmer="blurring"
+                open={this.state.open}
+                className={this.props.className}
+                onOpen={this._openModal.bind(this)}
+                onClose={this._closeModal.bind(this)}
+            >
+                <Modal.Header>
+                    <Icon name="puzzle" /> {this.props.header}
+                </Modal.Header>
                 <Modal.Content>
                     <Form errors={this.state.errors} ref="installForm" loading={this.state.loading}>
-                        <Form.Field label='Widget package' required
-                                    error={this.state.errors.widgetUrl}>
-                            <Form.UrlOrFile name="widget" value={this.state.widgetUrl}
-                                            placeholder="Provide the widget's archive URL or click browse to select a file"
-                                            onChangeUrl={this._handleInputChange.bind(this)}
-                                            onFocusUrl={this._onWidgetUrlFocus.bind(this)}
-                                            onBlurUrl={() => {}}
-                                            onChangeFile={this._onWidgetFileChange.bind(this)}
-                                            onResetFile={this._onWidgetFileReset.bind(this)}
-                                            label={<Label>{!this.state.widgetFile ? 'URL' : 'File'}</Label>}
-                                            fileInputRef={this.widgetFileRef}
+                        <Form.Field label="Widget package" required error={this.state.errors.widgetUrl}>
+                            <Form.UrlOrFile
+                                name="widget"
+                                value={this.state.widgetUrl}
+                                placeholder="Provide the widget's archive URL or click browse to select a file"
+                                onChangeUrl={this._handleInputChange.bind(this)}
+                                onFocusUrl={this._onWidgetUrlFocus.bind(this)}
+                                onBlurUrl={() => {}}
+                                onChangeFile={this._onWidgetFileChange.bind(this)}
+                                onResetFile={this._onWidgetFileReset.bind(this)}
+                                label={<Label>{!this.state.widgetFile ? 'URL' : 'File'}</Label>}
+                                fileInputRef={this.widgetFileRef}
                             />
                         </Form.Field>
                     </Form>
@@ -138,10 +147,24 @@ export default class InstallWidgetModal extends Component {
                     {this.state.scriptError && <Message error>{this.state.scriptError}</Message>}
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button icon='remove' basic content='Cancel'
-                            onClick={(event) => { event.stopPropagation(); this._closeModal() } } />
-                    <Button icon='puzzle' content={this.props.buttonLabel} color="green"
-                            onClick={(event) => { event.stopPropagation(); this._installWidget() } } />
+                    <Button
+                        icon="remove"
+                        basic
+                        content="Cancel"
+                        onClick={event => {
+                            event.stopPropagation();
+                            this._closeModal();
+                        }}
+                    />
+                    <Button
+                        icon="puzzle"
+                        content={this.props.buttonLabel}
+                        color="green"
+                        onClick={event => {
+                            event.stopPropagation();
+                            this._installWidget();
+                        }}
+                    />
                 </Modal.Actions>
             </Modal>
         );

@@ -1,5 +1,3 @@
-'use strict';
-
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
@@ -21,9 +19,9 @@ import { Button } from 'semantic-ui-react';
  * ```
  */
 export class ApproveButton extends Component {
-
     /**
      * propTypes
+     *
      * @property {string} [content='Save'] button content
      * @property {string} [icon='checkmark'] button icon
      * @property {string} [className='ok'] button classname
@@ -40,10 +38,8 @@ export class ApproveButton extends Component {
         className: 'ok'
     };
 
-    render () {
-        return (
-            <Button {...this.props} />
-        );
+    render() {
+        return <Button {...this.props} />;
     }
 }
 
@@ -63,9 +59,9 @@ export class ApproveButton extends Component {
  * ```
  */
 export class CancelButton extends Component {
-
     /**
      * propTypes
+     *
      * @property {string} [content='Cancel'] button content
      * @property {string} [icon='remove'] button icon
      * @property {string} [className='basic cancel'] button classname
@@ -82,9 +78,7 @@ export class CancelButton extends Component {
         className: 'basic cancel'
     };
 
-    render () {
-        return (
-            <Button {...this.props} />
-        );
+    render() {
+        return <Button {...this.props} />;
     }
 }

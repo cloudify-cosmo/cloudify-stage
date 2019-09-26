@@ -25,26 +25,26 @@ import InputFile from './InputFile';
  *                 onChangeFile={this._onBlueprintFileChange.bind(this)}
  *                 onResetFile={this._onBlueprintFileReset.bind(this)}
  *                 label={<Label>{this.state.isBlueprintUrlUsed ? 'URL' : 'File'}</Label>}
-*  />
+ *  />
  * ```
  */
 export default class InputUrlOrFile extends Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
     }
 
     /**
      * propTypes
+     *
      * @property {string} name basename of the field => URL field will be named `<name>Url` and file field will be named `<name>File`
      * @property {string} value text input field value
      * @property {string} placeholder input field placeholder
      * @property {any} [label=null] label to be added to URL input field on the left side
-     * @property {function} onChangeUrl function to be called on URL change
-     * @property {function} onFocusUrl function to be called on URL input focus
-     * @property {function} onBlurUrl function to be called on URL input blur
-     * @property {function} onChangeFile function to be called on file change
-     * @property {function} onResetFile function to be called on file reset
+     * @property {Function} onChangeUrl function to be called on URL change
+     * @property {Function} onFocusUrl function to be called on URL input focus
+     * @property {Function} onBlurUrl function to be called on URL input blur
+     * @property {Function} onChangeFile function to be called on file change
+     * @property {Function} onResetFile function to be called on file reset
      * @property {object} fileInputRef ref attached to file input
      */
     static propTypes = {
@@ -67,20 +67,26 @@ export default class InputUrlOrFile extends Component {
 
     render() {
         return (
-            <Input value={this.props.value} name={`${this.props.name}Url`}
-                   placeholder={this.props.placeholder}
-                   onChange={this.props.onChangeUrl}
-                   onFocus={this.props.onFocusUrl}
-                   onBlur={this.props.onBlurUrl}
-                   action labelPosition='left'>
+            <Input
+                value={this.props.value}
+                name={`${this.props.name}Url`}
+                placeholder={this.props.placeholder}
+                onChange={this.props.onChangeUrl}
+                onFocus={this.props.onFocusUrl}
+                onBlur={this.props.onBlurUrl}
+                action
+                labelPosition="left"
+            >
                 {this.props.label}
                 <input />
-                <InputFile name={`${this.props.name}File`} ref={this.props.fileInputRef}
-                           onChange={this.props.onChangeFile}
-                           onReset={this.props.onResetFile}
-                           showInput={false} />
+                <InputFile
+                    name={`${this.props.name}File`}
+                    ref={this.props.fileInputRef}
+                    onChange={this.props.onChangeFile}
+                    onReset={this.props.onResetFile}
+                    showInput={false}
+                />
             </Input>
-        )
+        );
     }
 }
-

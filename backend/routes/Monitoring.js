@@ -2,24 +2,24 @@
  * Created by kinneretzin on 28/02/2017.
  */
 
-var express = require('express');
-var influx = require('influx-old');
-var influxNew = require('influx');
-var config = require('../config').get();
-var _ = require('lodash');
-var passport = require('passport');
-var bodyParser = require('body-parser');
+const express = require('express');
+const influx = require('influx-old');
+const influxNew = require('influx');
+const _ = require('lodash');
+const passport = require('passport');
+const bodyParser = require('body-parser');
+const config = require('../config').get();
 
-var router = express.Router();
-var logger = require('../handler/LoggerHandler').getLogger('Monitoring');
+const router = express.Router();
+const logger = require('../handler/LoggerHandler').getLogger('Monitoring');
 
-router.use(passport.authenticate('token', {session: false}));
+router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 const defaultTimeRange = 'time > now() - 15m AND time < now() group by time(1m)';
 
 function getClient() {
-    var options = {
+    const options = {
         host: config.app.influx.ip,
         port: config.app.influx.port,
         username: config.app.influx.user,
@@ -33,7 +33,7 @@ function getClient() {
 }
 
 function getClientNew() {
-    var options = {
+    const options = {
         host: config.app.influx.ip,
         port: config.app.influx.port,
         username: config.app.influx.user,
@@ -61,13 +61,13 @@ function _createQuery(query) {
     const qFrom = _sanitizeQuery(query.qFrom);
     const qWhere = _sanitizeQuery(query.qWhere);
 
-    return ''.concat('SELECT ', qSelect, ' FROM ', qFrom, ' WHERE ', qWhere?qWhere:defaultTimeRange);
+    return ''.concat('SELECT ', qSelect, ' FROM ', qFrom, ' WHERE ', qWhere || defaultTimeRange);
 }
 
 function _createShowTagValuesQuery(query) {
     const qFrom = _sanitizeQuery(query.qFrom);
     const qWithKey = _sanitizeQuery(query.qWithKey);
-    var q = ''.concat('SHOW TAG values FROM ', qFrom, ' WITH KEY',qWithKey);
+    let q = ''.concat('SHOW TAG values FROM ', qFrom, ' WITH KEY', qWithKey);
     if (query.qWhere) {
         const qWhere = _sanitizeQuery(query.qWhere);
         q = q.concat(' WHERE ', qWhere);
@@ -104,21 +104,22 @@ function _createShowTagValuesQuery(query) {
  * ]
  *
  */
-router.get('/metrics/:deploymentId/:nodeId/:nodeInstanceId',function (req, res,next) {
-    const deploymentId = req.params.deploymentId;
-    const nodeId = req.params.nodeId;
-    const nodeInstanceId = req.params.nodeInstanceId;
-    getClient()
-        .query(`list series /^${deploymentId}\.${nodeId}\.${nodeInstanceId}\..*/i`, function(err,response){
-            if (err) {
-                logger.error('Error connecting to influxDB', err);
-                res.status(500).send({message: err.message})
-            } else {
-                res.send(_.map(response[0].points,function(point){
-                    return point[1].substring(point[1].lastIndexOf('.')+1);
-                }));
-            }
-        } );
+router.get('/metrics/:deploymentId/:nodeId/:nodeInstanceId', function(req, res, next) {
+    const { deploymentId } = req.params;
+    const { nodeId } = req.params;
+    const { nodeInstanceId } = req.params;
+    getClient().query(`list series /^${deploymentId}\.${nodeId}\.${nodeInstanceId}\..*/i`, function(err, response) {
+        if (err) {
+            logger.error('Error connecting to influxDB', err);
+            res.status(500).send({ message: err.message });
+        } else {
+            res.send(
+                _.map(response[0].points, function(point) {
+                    return point[1].substring(point[1].lastIndexOf('.') + 1);
+                })
+            );
+        }
+    });
 });
 
 /**
@@ -139,64 +140,61 @@ router.get('/metrics/:deploymentId/:nodeId/:nodeInstanceId',function (req, res,n
  *    to - the to time
  *    timeGroup - group the results by time
  */
-router.get('/byMetric/:deploymentId/:nodeId/:nodeInstanceId/:metrics',function(req,res,next){
-    const deploymentId = req.params.deploymentId;
-    const nodeId = req.params.nodeId;
-    const nodeInstanceId = req.params.nodeInstanceId;
+router.get('/byMetric/:deploymentId/:nodeId/:nodeInstanceId/:metrics', function(req, res, next) {
+    const { deploymentId } = req.params;
+    const { nodeId } = req.params;
+    const { nodeInstanceId } = req.params;
     const metrics = _.chain(req.params.metrics)
-                     .split(',')
-                     .map(function(metric) { return `(${metric})`})
-                     .join('|');
-    const fromTime = req.query.from ||  'now() - 15m';
+        .split(',')
+        .map(function(metric) {
+            return `(${metric})`;
+        })
+        .join('|');
+    const fromTime = req.query.from || 'now() - 15m';
     const toTime = req.query.to || 'now()';
     const timeGrouping = req.query.timeGroup || 10;
 
-    const query = `select mean(value) from /^${deploymentId}.${nodeId}.${nodeInstanceId}.(${metrics})$/ ` +
-                  `where time > ${fromTime} and time < ${toTime} group by time(${timeGrouping}) order asc`;
+    const query =
+        `select mean(value) from /^${deploymentId}.${nodeId}.${nodeInstanceId}.(${metrics})$/ ` +
+        `where time > ${fromTime} and time < ${toTime} group by time(${timeGrouping}) order asc`;
 
-    logger.debug('Query: ',query);
+    logger.debug('Query: ', query);
 
-    getClient()
-        .query(query, function(err,response){
-            if (err) {
-                logger.error('Error connecting to influxDB', err);
-                res.status(500).send({message: err.message})
-            } else {
-                res.send(response);
-            }
-        } );
+    getClient().query(query, function(err, response) {
+        if (err) {
+            logger.error('Error connecting to influxDB', err);
+            res.status(500).send({ message: err.message });
+        } else {
+            res.send(response);
+        }
+    });
 });
 
-router.get('/query',function (req, res, next) {
-
+router.get('/query', function(req, res, next) {
     const query = _createQuery(req.query);
     logger.debug('Running query:', query);
 
-    if (!_isValidQuery(query)){
+    if (!_isValidQuery(query)) {
         logger.error('Error: not a valid SELECT query');
         res.status(403).send('Error: not a valid SELECT query');
         return;
     }
 
-    getClient()
-        .query(query, function(err,results){
-            if (err) {
-                logger.error('Error connecting to influxDB', err);
-                res.status(500).send(err.message);
-            } else {
-                res.send(results);
-            }
-        } );
-
+    getClient().query(query, function(err, results) {
+        if (err) {
+            logger.error('Error connecting to influxDB', err);
+            res.status(500).send(err.message);
+        } else {
+            res.send(results);
+        }
+    });
 });
 
-
-router.get('/new/showTagValues',function (req, res, next) {
-
+router.get('/new/showTagValues', function(req, res, next) {
     const query = _createShowTagValuesQuery(req.query);
     logger.debug('Running query:', query);
 
-    if (!_isValidQuery(query)){
+    if (!_isValidQuery(query)) {
         logger.error('Error: not a valid SHOW TAG VALUES query');
         res.status(403).send('Error: not a valid SHOW TAG VALUES query');
         return;
@@ -204,27 +202,25 @@ router.get('/new/showTagValues',function (req, res, next) {
 
     getClientNew()
         .query(query)
-        .then(function (results) {
-            logger.debug('Influx got result ' + results);
+        .then(function(results) {
+            logger.debug(`Influx got result ${results}`);
             res.send(results);
-
         })
-        .catch(function (err) {
+        .catch(function(err) {
             logger.error('Error connecting to influxDB', err);
-            res.status(500).send(err.message)
+            res.status(500).send(err.message);
         });
 });
 
-router.post('/new/query',function (req, res, next) {
+router.post('/new/query', function(req, res, next) {
+    const queries = [];
+    let isValid = true;
+    logger.debug('body is: ', req.body);
+    _.each(req.body, function(queryObj, i) {
+        const query = _createQuery(queryObj);
+        logger.debug(`Got query[${i}]:`, query);
 
-    var queries = [];
-    var isValid = true;
-    logger.debug('body is: ',req.body);
-    _.each(req.body,function(queryObj,i){
-        var query = _createQuery(queryObj);
-        logger.debug('Got query['+i+']:', query);
-
-        if (!_isValidQuery(query)){
+        if (!_isValidQuery(query)) {
             logger.error('Error: not a valid SELECT query');
             res.status(403).send('Error: not a valid SELECT query');
             isValid = false;
@@ -236,24 +232,23 @@ router.post('/new/query',function (req, res, next) {
 
     if (!isValid) return;
 
-    if (_.isEmpty(queries)){
+    if (_.isEmpty(queries)) {
         logger.warn('Got Empty queries list ');
         res.send([]);
         return;
     }
 
-    var queryToRun = _.join(queries,';');
+    const queryToRun = _.join(queries, ';');
 
     getClientNew()
         .query(queryToRun)
-        .then(function (results) {
-            logger.debug('Influx got result ' + results);
+        .then(function(results) {
+            logger.debug(`Influx got result ${results}`);
             res.send(results);
-
         })
-        .catch(function (err) {
+        .catch(function(err) {
             logger.error('Error connecting to influxDB', err);
-            res.status(500).send(err.message)
+            res.status(500).send(err.message);
         });
 });
 

@@ -1,51 +1,165 @@
 {
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true,
-      "modules": true
+    "extends": [
+        "airbnb",
+        "prettier",
+        "prettier/react",
+        "plugin:jsdoc/recommended",
+        "plugin:cypress/recommended"
+    ],
+    "parser": "babel-eslint",
+    "plugins": [
+        "jsdoc",
+        "prettier"
+    ],
+    "rules": {
+        "prettier/prettier": ["error"],
+
+        // FIXME: All below listed rules are off only during transition period. We need to remove them as we update the code.
+        "array-callback-return": ["warn"],
+        "block-scoped-var": ["warn"],
+        "camelcase": ["warn"],
+        "class-methods-use-this": ["warn"],
+        "consistent-return": ["warn"],
+        "default-case": ["warn"],
+        "eqeqeq": ["warn"],
+        "global-require": ["warn"],
+        "import/extensions": ["warn"],
+        "import/named": ["warn"],
+        "import/no-cycle": ["warn"],
+        "import/no-dynamic-require": ["warn"],
+        "import/no-extraneous-dependencies": ["warn"],
+        "import/no-unresolved": ["warn"],
+        "import/order": ["warn"],
+        "import/prefer-default-export": ["warn"],
+        "jsdoc/require-jsdoc": ["off"],
+        "jsdoc/require-param": ["warn"],
+        "jsdoc/valid-types": ["warn"],
+        "jsx-a11y/no-autofocus": ["warn"],
+        "jsx-a11y/anchor-is-valid": ["warn"],
+        "jsx-a11y/click-events-have-key-events": ["warn"],
+        "jsx-a11y/label-has-associated-control": ["warn"],
+        "jsx-a11y/mouse-events-have-key-events": ["warn"],
+        "jsx-a11y/no-static-element-interactions": ["warn"],
+        "max-classes-per-file": ["warn"],
+        "no-await-in-loop": ["warn"],
+        "no-bitwise": ["warn"],
+        "no-buffer-constructor": ["warn"],
+        "no-case-declarations": ["warn"],
+        "no-cond-assign": ["warn"],
+        "no-continue": ["warn"],
+        "no-loop-func": ["warn"],
+        "no-multi-assign": ["warn"],
+        "no-nested-ternary": ["warn"],
+        "no-param-reassign": ["warn"],
+        "no-plusplus": ["warn"],
+        "no-prototype-builtins": ["warn"],
+        "no-redeclare": ["warn"],
+        "no-restricted-globals": ["warn"],
+        "no-restricted-syntax": ["warn"],
+        "no-return-assign": ["warn"],
+        "no-return-await": ["warn"],
+        "no-script-url": ["warn"],
+        "no-shadow": ["warn"],
+        "no-template-curly-in-string": ["warn"],
+        "no-throw-literal": ["warn"],
+        "no-underscore-dangle": ["warn"],
+        "no-unused-expressions": ["warn"],
+        "no-unused-vars": ["warn"],
+        "no-use-before-define": ["warn"],
+        "no-useless-constructor": ["warn"],
+        "no-useless-escape": ["warn"],
+        "no-var": ["warn"],
+        "prefer-const": ["warn"],
+        "prefer-destructuring": ["warn"],
+        "prefer-promise-reject-errors": ["warn"],
+        "prefer-rest-params": ["warn"],
+        "prefer-spread": ["warn"],
+        "radix": ["warn"],
+        "react/button-has-type": ["warn"],
+        "react/default-props-match-prop-types": ["warn"],
+        "react/destructuring-assignment": ["warn"],
+        "react/no-find-dom-node": ["warn"],
+        "react/forbid-prop-types": ["warn"],
+        "react/jsx-filename-extension": ["warn"],
+        "react/jsx-no-bind": ["warn"],
+        "react/jsx-no-target-blank": ["warn"],
+        "react/jsx-no-undef": ["warn"],
+        "react/jsx-props-no-spreading": ["warn"],
+        "react/no-access-state-in-setstate": ["warn"],
+        "react/no-array-index-key": ["warn"],
+        "react/no-did-update-set-state": ["warn"],
+        "react/no-string-refs": ["warn"],
+        "react/no-unescaped-entities": ["warn"],
+        "react/no-unused-prop-types": ["warn"],
+        "react/no-unused-state": ["warn"],
+        "react/prefer-stateless-function": ["warn"],
+        "react/prop-types": ["warn"],
+        "react/require-default-props": ["warn"],
+        "react/sort-comp": ["warn"],
+        "react/static-property-placement": ["warn"],
+        "vars-on-top": ["warn"]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true,
+            "modules": true
+        }
+    },
+    "overrides": [
+        {
+            "files": ["app/**/*.js", "widgets/**/*.js"],
+            "env": {
+                "browser": true
+            }
+        },
+        {
+            "files": "test/**/*.js",
+            "env": {
+                "mocha": true,
+                "cypress/globals": true
+            },
+            "plugins": [
+                "chai-friendly"
+            ],
+            "rules": {
+                "no-unused-expressions": 0,
+                "chai-friendly/no-unused-expressions": 2
+            }
+        },
+        {
+            "files": ["backend/**/*.js", "scripts/*.js"],
+            "env": {
+                "node": true
+            }
+        },
+        {
+            "files": ["./*.js", "scripts/*.js", "test/**/*.js"],
+            "rules": {
+                "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+                "no-console": "off"
+            },
+            "env": {
+                "node": true
+            }
+        }
+    ],
+    "globals": {
+        "_": true,
+        "$": true,
+        "connectToStore": true,
+        "d3": true,
+        "L": true,
+        "markdown": true,
+        "moment": true,
+        "PropTypes": true,
+        "React": true,
+
+        "Stage": true,
+        "cloudifyTopology": true
     }
-  },
-  "env": {
-    "browser": true,
-    "node": true,
-    "es6": true
-  },
-  "globals": {
-    "_": true,
-    "Stage": true,
-    "$": true,
-    "moment": true,
-    "markdown": true,
-    "d3": true,
-    "React": true,
-    "PropTypes": true,
-    "describe": true,
-    "it": true,
-    "before": true,
-    "beforeEach": true,
-    "after": true,
-    "afterEach": true,
-    "angular": true,
-    "cloudifyTopology": true,
-    "Cypress": true,
-    "cy": true,
-    "expect": true,
-    "L": true
-  },
-  "parser": "babel-eslint",
-  "rules": {
-    "quotes": [2, "single", {"avoidEscape": true}],
-    "strict": [1, "never"],
-    "react/jsx-uses-react": 2,
-    "react/jsx-uses-vars": 2,
-    "react/react-in-jsx-scope": 2,
-    "eqeqeq": 1,
-    "curly": 1,
-    "no-empty-function": 1,
-    "no-undef": 2,
-    "no-unused-vars": 1
-  },
-  "plugins": [
-    "react"
-  ]
 }

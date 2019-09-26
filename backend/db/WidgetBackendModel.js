@@ -3,14 +3,15 @@
  */
 
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('WidgetBackend',
-	
+    return sequelize.define(
+        'WidgetBackend',
+
         {
-            widgetId : {type: DataTypes.STRING, allowNull: false},
-            serviceName : {type: DataTypes.STRING, allowNull: false},
-            method : {type: DataTypes.STRING, allowNull: false},
-            script : {type: DataTypes.JSONB, allowNull: true}
+            widgetId: { type: DataTypes.STRING, allowNull: false },
+            serviceName: { type: DataTypes.STRING, allowNull: false },
+            method: { type: DataTypes.STRING, allowNull: false },
+            script: { type: DataTypes.JSONB, allowNull: true }
         },
-        { indexes: [{unique: true, fields: ['widgetId', 'serviceName', 'method']}]}
+        { indexes: [{ unique: true, fields: ['widgetId', 'serviceName', 'method'] }] }
     );
 };

@@ -14,4 +14,4 @@ export default {
     },
     Modal: WizardModal,
     Utils: wizardUtils
-}
+};

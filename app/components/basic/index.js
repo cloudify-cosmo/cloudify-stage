@@ -3,7 +3,33 @@
  */
 
 // NOTE: When you update this list, please also update list in: doc/index.md
-import { Accordion, Breadcrumb, Button, Card, Checkbox, Container, Divider, Grid, Header, Icon, Image, Input, Item, Label, List, Loader, Message, Modal, Portal, Progress, Radio, Segment, Sidebar, Step, Table } from 'semantic-ui-react';
+import {
+    Accordion,
+    Breadcrumb,
+    Button,
+    Card,
+    Checkbox,
+    Container,
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Image,
+    Input,
+    Item,
+    Label,
+    List,
+    Loader,
+    Message,
+    Modal,
+    Portal,
+    Progress,
+    Radio,
+    Segment,
+    Sidebar,
+    Step,
+    Table
+} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import SplitterLayout from 'react-splitter-layout';
 

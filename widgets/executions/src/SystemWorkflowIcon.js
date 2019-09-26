@@ -3,8 +3,7 @@
  */
 
 export default class SystemWorkflowIcon extends React.Component {
-
-    constructor(props, context){
+    constructor(props, context) {
         super(props, context);
     }
 
@@ -13,23 +12,20 @@ export default class SystemWorkflowIcon extends React.Component {
     };
 
     static defaultProps = {
-        execution: {is_system_workflow: false}
+        execution: { is_system_workflow: false }
     };
 
     render() {
-        let {Icon, Popup} = Stage.Basic;
-        const execution = this.props.execution;
+        const { Icon, Popup } = Stage.Basic;
+        const { execution } = this.props;
 
-        return execution.is_system_workflow
-            ? <Popup wide on='hover'>
-                  <Popup.Trigger>
-                      <Icon name='cogs' color='blue' />
-                  </Popup.Trigger>
-                  <Popup.Content>
-                      System Workflow
-                  </Popup.Content>
-              </Popup>
-            : null;
+        return execution.is_system_workflow ? (
+            <Popup wide on="hover">
+                <Popup.Trigger>
+                    <Icon name="cogs" color="blue" />
+                </Popup.Trigger>
+                <Popup.Content>System Workflow</Popup.Content>
+            </Popup>
+        ) : null;
     }
 }
-

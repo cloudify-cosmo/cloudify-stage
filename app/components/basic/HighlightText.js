@@ -44,7 +44,6 @@ registerLanguage('yaml', yaml);
  *```
  */
 export default class HighlightText extends Component {
-
     /**
      * @property {object[]} [children] Text to be displayed
      * @property {string} [className='json'] Language name (used for code highlighting)
@@ -55,16 +54,18 @@ export default class HighlightText extends Component {
     };
 
     static defaultProps = {
-        className: 'json',
+        className: 'json'
     };
 
     render() {
         return (
-            <Highlight language={this.props.className} style={idea}
-                       codeTagProps={{style: {whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}}>
+            <Highlight
+                language={this.props.className}
+                style={idea}
+                codeTagProps={{ style: { whiteSpace: 'pre-wrap', wordBreak: 'break-word' } }}
+            >
                 {this.props.children}
             </Highlight>
         );
     }
 }
- 

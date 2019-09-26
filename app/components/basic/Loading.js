@@ -22,9 +22,9 @@ import { Segment, Dimmer, Loader } from 'semantic-ui-react';
  *
  */
 export default class Loading extends Component {
-
     /**
      * propTypes
+     *
      * @property {string} [message='Loading'] text message to display under loading icon
      */
     static propTypes = {
@@ -37,7 +37,7 @@ export default class Loading extends Component {
 
     render() {
         return (
-            <Segment basic className='loadingSegment'>
+            <Segment basic className="loadingSegment">
                 <Dimmer active inverted>
                     <Loader>{this.props.message}</Loader>
                 </Dimmer>

@@ -3,7 +3,6 @@
  */
 
 class UploadPluginForm extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -28,17 +27,17 @@ class UploadPluginForm extends React.Component {
     static defaultProps = {
         wagonUrl: '',
         wagonFile: null,
-        wagonPlaceholder: 'Provide the plugin\'s wagon file URL or click browse to select a file',
+        wagonPlaceholder: "Provide the plugin's wagon file URL or click browse to select a file",
         yamlUrl: '',
         yamlFile: null,
-        yamlPlaceholder: 'Provide the plugin\'s YAML file URL or click browse to select a file',
+        yamlPlaceholder: "Provide the plugin's YAML file URL or click browse to select a file",
         errors: {},
         loading: false,
         wrapInForm: true,
         addRequiredMarks: true
     };
 
-    static NO_ERRORS = {errors: {}};
+    static NO_ERRORS = { errors: {} };
 
     componentDidMount() {
         this.wagonFileRef.current && this.wagonFileRef.current.reset();
@@ -51,7 +50,7 @@ class UploadPluginForm extends React.Component {
     }
 
     _handleInputChange(proxy, field) {
-        this.props.onChange({...UploadPluginForm.NO_ERRORS, ...Stage.Basic.Form.fieldNameValue(field)});
+        this.props.onChange({ ...UploadPluginForm.NO_ERRORS, ...Stage.Basic.Form.fieldNameValue(field) });
     }
 
     _onWagonUrlFocus() {
@@ -62,11 +61,15 @@ class UploadPluginForm extends React.Component {
     }
 
     _onWagonFileChange(file) {
-        this.props.onChange({...UploadPluginForm.NO_ERRORS, wagonFile: file ? file : null, wagonUrl: file ? file.name : ''});
+        this.props.onChange({
+            ...UploadPluginForm.NO_ERRORS,
+            wagonFile: file || null,
+            wagonUrl: file ? file.name : ''
+        });
     }
 
     _onWagonFileReset() {
-        this.props.onChange({...UploadPluginForm.NO_ERRORS, wagonFile: null, wagonUrl: ''});
+        this.props.onChange({ ...UploadPluginForm.NO_ERRORS, wagonFile: null, wagonUrl: '' });
     }
 
     _onYamlUrlFocus() {
@@ -77,34 +80,49 @@ class UploadPluginForm extends React.Component {
     }
 
     _onYamlFileChange(file) {
-        this.props.onChange({...UploadPluginForm.NO_ERRORS, yamlFile: file ? file : null, yamlUrl: file ? file.name : ''});
+        this.props.onChange({
+            ...UploadPluginForm.NO_ERRORS,
+            yamlFile: file || null,
+            yamlUrl: file ? file.name : ''
+        });
     }
 
     _onYamlFileReset() {
-        this.props.onChange({...UploadPluginForm.NO_ERRORS, yamlFile: null, yamlUrl: ''});
+        this.props.onChange({ ...UploadPluginForm.NO_ERRORS, yamlFile: null, yamlUrl: '' });
     }
 
     render() {
-        let {Container, Form, Label} = Stage.Basic;
+        const { Container, Form, Label } = Stage.Basic;
 
         const formFields = [
-            <Form.Field label="Wagon file" required={this.props.addRequiredMarks} key='wagon'
-                        error={this.props.errors.wagonUrl}>
-                <Form.UrlOrFile name="wagon" value={this.props.wagonUrl}
-                                placeholder={this.props.wagonPlaceholder}
-                                onChangeUrl={this._handleInputChange.bind(this)}
-                                onFocusUrl={this._onWagonUrlFocus.bind(this)}
-                                onBlurUrl={_.noop}
-                                onChangeFile={this._onWagonFileChange.bind(this)}
-                                onResetFile={this._onWagonFileReset.bind(this)}
-                                label={<Label>{!this.props.wagonFile ? 'URL' : 'File'}</Label>}
-                                fileInputRef={this.wagonFileRef}
+            <Form.Field
+                label="Wagon file"
+                required={this.props.addRequiredMarks}
+                key="wagon"
+                error={this.props.errors.wagonUrl}
+            >
+                <Form.UrlOrFile
+                    name="wagon"
+                    value={this.props.wagonUrl}
+                    placeholder={this.props.wagonPlaceholder}
+                    onChangeUrl={this._handleInputChange.bind(this)}
+                    onFocusUrl={this._onWagonUrlFocus.bind(this)}
+                    onBlurUrl={_.noop}
+                    onChangeFile={this._onWagonFileChange.bind(this)}
+                    onResetFile={this._onWagonFileReset.bind(this)}
+                    label={<Label>{!this.props.wagonFile ? 'URL' : 'File'}</Label>}
+                    fileInputRef={this.wagonFileRef}
                 />
-            </Form.Field>
-            ,
-            <Form.Field label="YAML file" required={this.props.addRequiredMarks} key='yaml'
-                        error={this.props.errors.yamlUrl}>
-                <Form.UrlOrFile name="yaml" value={this.props.yamlUrl}
+            </Form.Field>,
+            <Form.Field
+                label="YAML file"
+                required={this.props.addRequiredMarks}
+                key="yaml"
+                error={this.props.errors.yamlUrl}
+            >
+                <Form.UrlOrFile
+                    name="yaml"
+                    value={this.props.yamlUrl}
                     placeholder={this.props.yamlPlaceholder}
                     onChangeUrl={this._handleInputChange.bind(this)}
                     onFocusUrl={this._onYamlUrlFocus.bind(this)}
@@ -113,25 +131,22 @@ class UploadPluginForm extends React.Component {
                     onResetFile={this._onYamlFileReset.bind(this)}
                     label={<Label>{!this.props.yamlFile ? 'URL' : 'File'}</Label>}
                     fileInputRef={this.yamlFileRef}
-                    />
+                />
             </Form.Field>
         ];
 
         if (this.props.wrapInForm) {
             return (
-                <Form errors={this.props.errors} onErrorsDismiss={this.resetErrors.bind(this)}
-                      loading={this.props.loading}>
+                <Form
+                    errors={this.props.errors}
+                    onErrorsDismiss={this.resetErrors.bind(this)}
+                    loading={this.props.loading}
+                >
                     {formFields}
                 </Form>
             );
-        } else {
-            return (
-                <Container fluid>
-                    {formFields}
-                </Container>
-            );
         }
-
+        return <Container fluid>{formFields}</Container>;
     }
 }
 

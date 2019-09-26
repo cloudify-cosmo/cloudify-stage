@@ -8,30 +8,27 @@ Stage.defineWidget({
     description: 'Number of running executions',
     initialWidth: 2,
     initialHeight: 8,
-    color : 'teal',
+    color: 'teal',
     showHeader: false,
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executionNum'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
-    
-    initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(10)
-    ],
-    fetchUrl: '[manager]/executions?_include=id&_size=1&' +
-              '&status=pending&status=started&status=cancelling&status=force_cancelling&status=kill_cancelling',
 
-    render: function(widget,data,error,toolbox) {
+    initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(10)],
+    fetchUrl:
+        '[manager]/executions?_include=id&_size=1&' +
+        '&status=pending&status=started&status=cancelling&status=force_cancelling&status=kill_cancelling',
+
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
 
-        const {KeyIndicator} = Stage.Basic;
+        const { KeyIndicator } = Stage.Basic;
 
         const num = _.get(data, 'metadata.pagination.total', 0);
 
-        return (
-            <KeyIndicator title="Running Executions" icon="cogs" number={num} />
-        );
+        return <KeyIndicator title="Running Executions" icon="cogs" number={num} />;
     }
 });

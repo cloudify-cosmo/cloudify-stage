@@ -2,7 +2,6 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
@@ -16,14 +15,18 @@ export default class SideBar extends Component {
         isEditMode: PropTypes.bool.isRequired,
         isOpen: PropTypes.bool
     };
-    
+
     render() {
-        let isOpen = this.props.isOpen ? 'open' : '';
+        const isOpen = this.props.isOpen ? 'open' : '';
 
         return (
-            <div className='sidebarContainer'>
+            <div className="sidebarContainer">
                 <div className={`ui visible left vertical sidebar menu small basic  ${isOpen}`}>
-                    <Pages pageId={this.props.pageId} isEditMode={this.props.isEditMode} homePageId={this.props.homePageId}/>
+                    <Pages
+                        pageId={this.props.pageId}
+                        isEditMode={this.props.isEditMode}
+                        homePageId={this.props.homePageId}
+                    />
                 </div>
             </div>
         );

@@ -7,11 +7,11 @@ import Actions from './actions';
 
 Stage.defineWidget({
     id: 'blueprintInfo',
-    name: "Blueprint info",
+    name: 'Blueprint info',
     description: 'Shows blueprint info and status',
     initialWidth: 3,
     initialHeight: 14,
-    color: "orange",
+    color: 'orange',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintInfo'),
@@ -19,34 +19,39 @@ Stage.defineWidget({
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
-        {id: "blueprintId", name: "Blueprint ID", placeHolder: "Enter the blueprint id you wish to show info", type: Stage.Basic.GenericField.STRING_TYPE}
+        {
+            id: 'blueprintId',
+            name: 'Blueprint ID',
+            placeHolder: 'Enter the blueprint id you wish to show info',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        }
     ],
 
-    fetchParams: function(widget, toolbox) {
-        var blueprintId = toolbox.getContext().getValue('blueprintId');
+    fetchParams(widget, toolbox) {
+        let blueprintId = toolbox.getContext().getValue('blueprintId');
 
         blueprintId = _.isEmpty(widget.configuration.blueprintId) ? blueprintId : widget.configuration.blueprintId;
 
-        var deploymentId = toolbox.getContext().getValue('deploymentId');
+        const deploymentId = toolbox.getContext().getValue('deploymentId');
 
         return {
             blueprint_id: blueprintId,
             deployment_id: deploymentId
-        }
+        };
     },
 
     fetchData(widget, toolbox, params) {
-        var actions = new Actions(toolbox);
+        const actions = new Actions(toolbox);
 
-        var blueprintId = params.blueprint_id;
-        var deploymentId = params.deployment_id;
+        let blueprintId = params.blueprint_id;
+        const deploymentId = params.deployment_id;
 
-        var promise = Promise.resolve({blueprint_id: blueprintId});
+        let promise = Promise.resolve({ blueprint_id: blueprintId });
         if (!blueprintId && deploymentId) {
             promise = actions.doGetBlueprintId(deploymentId);
         }
 
-        return promise.then(({blueprint_id}) => {
+        return promise.then(({ blueprint_id }) => {
             blueprintId = blueprint_id;
 
             if (blueprintId) {
@@ -57,22 +62,19 @@ Stage.defineWidget({
                             created_at: Stage.Utils.Time.formatTimestamp(data.created_at),
                             updated_at: Stage.Utils.Time.formatTimestamp(data.updated_at),
                             deployments: deps.items.length
-                        }
+                        };
                     });
                 });
-            } else {
-                return Promise.resolve({id:""});
             }
+            return Promise.resolve({ id: '' });
         });
     },
 
-    render: function(widget, data, error, toolbox) {
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
 
-        return (
-            <BlueprintInfo widget={widget} data={data} toolbox={toolbox}/>
-        );
+        return <BlueprintInfo widget={widget} data={data} toolbox={toolbox} />;
     }
 });

@@ -11,24 +11,20 @@ export default class StyleLoader {
     }
 
     load() {
-        var styleLoader = this;
-        return new Promise((resolve,reject)=>{
-
-            var styleObj=document.createElement('link');
-            styleObj.setAttribute('rel','stylesheet');
-            styleObj.setAttribute('type','text/css');
+        const styleLoader = this;
+        return new Promise((resolve, reject) => {
+            const styleObj = document.createElement('link');
+            styleObj.setAttribute('rel', 'stylesheet');
+            styleObj.setAttribute('type', 'text/css');
             styleObj.setAttribute('href', styleLoader.path);
             styleObj.onload = () => {
                 styleLoader.loaded = true;
                 resolve();
             };
 
-
             document.getElementsByTagName('head')[0].appendChild(styleObj);
 
             // TODO Set timer to check if loaded or we got error
-
         });
     }
-
 }

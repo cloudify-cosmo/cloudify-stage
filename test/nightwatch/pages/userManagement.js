@@ -7,66 +7,69 @@ module.exports = {
         header: 'div.userManagementWidget > div.widgetItem > h5.header',
         loader: 'div.userManagementWidget div.widgetLoader',
         addButton: 'div.userManagementWidget .addUserButton',
-        addModal: '.addUserModal',
+        addModal: '.addUserModal'
     },
     sections: {
         usersTable: {
             selector: 'div.userManagementWidget table.usersTable',
-            elements: {
-
-            },
+            elements: {},
             props: {
-                userRow : (name) => `tr#usersTable_${name}`,
-                userMenu : (name) => `tr#usersTable_${name} td i.content.link.icon`,
-                adminCheckbox : (name) => `tr#usersTable_${name} td:nth-child(3)`,
-                setPasswordOption : 'password',
-                editTenantsOption : 'tenants'
+                userRow: name => `tr#usersTable_${name}`,
+                userMenu: name => `tr#usersTable_${name} td i.content.link.icon`,
+                adminCheckbox: name => `tr#usersTable_${name} td:nth-child(3)`,
+                setPasswordOption: 'password',
+                editTenantsOption: 'tenants'
             },
             commands: [
                 {
-                    clickRow: function (userName) {
+                    clickRow(userName) {
                         return this.clickElement(this.props.userRow(userName));
                     },
 
-                    setPassword: function (userName) {
-                        return this
-                            .selectOptionInPopupMenu(this.props.userMenu(userName), this.props.setPasswordOption)
-                            .waitForElementVisible(this.parent.section.setPasswordModal.selector);
+                    setPassword(userName) {
+                        return this.selectOptionInPopupMenu(
+                            this.props.userMenu(userName),
+                            this.props.setPasswordOption
+                        ).waitForElementVisible(this.parent.section.setPasswordModal.selector);
                     },
 
-                    setAdmin: function (userName, isAdmin) {
-                        return this
-                            .setCheckbox(this.props.adminCheckbox(userName), isAdmin);
+                    setAdmin(userName, isAdmin) {
+                        return this.setCheckbox(this.props.adminCheckbox(userName), isAdmin);
                     },
 
-                    editTenants: function (userName) {
-                        return this
-                            .selectOptionInPopupMenu(this.props.userMenu(userName), this.props.editTenantsOption)
-                            .waitForElementVisible(this.parent.section.editTenantsModal.selector);
+                    editTenants(userName) {
+                        return this.selectOptionInPopupMenu(
+                            this.props.userMenu(userName),
+                            this.props.editTenantsOption
+                        ).waitForElementVisible(this.parent.section.editTenantsModal.selector);
                     }
                 }
-            ],
+            ]
         },
-        editTenantsModal : {
+        editTenantsModal: {
             selector: 'div.editTenantsModal',
             elements: {
-                tenantDropdown : 'div[role="listbox"][name="tenants"]',
+                tenantDropdown: 'div[role="listbox"][name="tenants"]',
                 okButton: '.actions button.ok',
                 cancelButton: '.actions button.cancel'
             },
             props: {
-                tenantTag : (tagName) => `div[role='listbox'] a[value='${tagName}']`,
-                editTenantsOption : 'tenants'
+                tenantTag: tagName => `div[role='listbox'] a[value='${tagName}']`,
+                editTenantsOption: 'tenants'
             },
             commands: [
                 {
-                    addTenant: function (tenant) {
-                        return this
-                            .log(this.props.tenantTag(tenant))
-                            .isPresent(this.props.tenantTag(tenant), (result) => {
+                    addTenant(tenant) {
+                        return this.log(this.props.tenantTag(tenant)).isPresent(
+                            this.props.tenantTag(tenant),
+                            result => {
                                 if (!result.value) {
                                     this.log('Tenant', tenant, 'not present. Adding...')
-                                        .selectOptionInDropdown('@tenantDropdown', `${this.selector} ${this.elements.tenantDropdown.selector}`, tenant)
+                                        .selectOptionInDropdown(
+                                            '@tenantDropdown',
+                                            `${this.selector} ${this.elements.tenantDropdown.selector}`,
+                                            tenant
+                                        )
                                         .clickElement('@okButton')
                                         .waitForElementNotPresent(this.selector);
                                 } else {
@@ -74,12 +77,13 @@ module.exports = {
                                         .clickElement('@cancelButton')
                                         .waitForElementNotPresent(this.selector);
                                 }
-                            });
+                            }
+                        );
                     }
                 }
-            ],
+            ]
         },
-        setPasswordModal : {
+        setPasswordModal: {
             selector: 'div.userPasswordModal',
             elements: {
                 password: '.content input[name="password"]',
@@ -89,21 +93,18 @@ module.exports = {
             },
             commands: [
                 {
-                    clickSave: function() {
-                        return this
-                            .clickElement('@saveButton')
-                            .waitForElementNotPresent(this.selector);
+                    clickSave() {
+                        return this.clickElement('@saveButton').waitForElementNotPresent(this.selector);
                     },
-                    setPassword: function (password) {
-                        return this
-                            .resetValue('@password')
+                    setPassword(password) {
+                        return this.resetValue('@password')
                             .setElementValue('@password', password)
                             .resetValue('@confirmPassword')
                             .setElementValue('@confirmPassword', password)
                             .clickSave();
                     }
                 }
-            ],
+            ]
         },
         addModal: {
             selector: '.addUserModal',
@@ -118,22 +119,19 @@ module.exports = {
             },
             props: {
                 errorMessage: '.ui.error.message',
-                userAlreadyExistError: (userName) => `user ${userName} already exists`
+                userAlreadyExistError: userName => `user ${userName} already exists`
             },
             commands: [
                 {
-                    fillIn: function(userName, password, isAdmin) {
-                        return this
-                            .waitForElementVisible(this.selector)
+                    fillIn(userName, password, isAdmin) {
+                        return this.waitForElementVisible(this.selector)
                             .setElementValue('@userName', userName)
                             .setElementValue('@password', password)
                             .setElementValue('@confirmPassword', password)
-                            .setCheckbox(`${this.selector}`, isAdmin)
-
+                            .setCheckbox(`${this.selector}`, isAdmin);
                     },
-                    clickAdd: function() {
-                        return this
-                            .clickElement('@okButton')
+                    clickAdd() {
+                        return this.clickElement('@okButton')
                             .waitForElementNotPresent('@loading')
                             .isPresent(this.props.errorMessage, result => {
                                 if (!result.value) {
@@ -141,68 +139,59 @@ module.exports = {
                                 }
                             });
                     },
-                    clickCancel: function() {
-                        return this
-                            .clickElement('@cancelButton')
-                            .waitForElementNotPresent(this.selector);
+                    clickCancel() {
+                        return this.clickElement('@cancelButton').waitForElementNotPresent(this.selector);
                     },
-                    performAddition: function (userName, onUserExist, onUserNotExist, onError) {
-                        let _ = require('lodash');
-                        return this
-                            .clickAdd()
-                            .isPresent(this.props.errorMessage, result => {
-                                if (result.value) {
-                                    this.getText(this.props.errorMessage, result => {
-                                        if (_.includes(result.value, this.props.userAlreadyExistError(userName))) {
-                                            this.log('User', userName, 'already exists.')
-                                                .api.perform(() => onUserExist(this));
-                                        } else {
-                                            this.log('Error during user addition. Error:', result.value)
-                                                .api.perform(() => onError(this))
-                                            return false;
-                                        }
-                                    });
-                                } else {
-                                    this.log('User', userName, 'added.')
-                                        .api.perform(() => onUserNotExist(this));
-                                }
-                            });
+                    performAddition(userName, onUserExist, onUserNotExist, onError) {
+                        const _ = require('lodash');
+                        return this.clickAdd().isPresent(this.props.errorMessage, result => {
+                            if (result.value) {
+                                this.getText(this.props.errorMessage, result => {
+                                    if (_.includes(result.value, this.props.userAlreadyExistError(userName))) {
+                                        this.log('User', userName, 'already exists.').api.perform(() =>
+                                            onUserExist(this)
+                                        );
+                                    } else {
+                                        this.log('Error during user addition. Error:', result.value).api.perform(() =>
+                                            onError(this)
+                                        );
+                                        return false;
+                                    }
+                                });
+                            } else {
+                                this.log('User', userName, 'added.').api.perform(() => onUserNotExist(this));
+                            }
+                        });
                     }
                 }
             ]
-        },
+        }
     },
     props: {
         widgetId: 'userManagement'
     },
     commands: [
         {
-            add: function (userName, password, isAdmin, tenant) {
-                return this
-                    .clickElement('@addButton')
-                    .section.addModal
-                        .fillIn(userName, password, isAdmin)
-                        .performAddition(userName,
-                            (context) => context
+            add(userName, password, isAdmin, tenant) {
+                return this.clickElement('@addButton')
+                    .section.addModal.fillIn(userName, password, isAdmin)
+                    .performAddition(
+                        userName,
+                        context =>
+                            context
                                 .clickCancel()
-                                .parent.section.usersTable
-                                    .setPassword(userName, password)
-                                    .parent.section.setPasswordModal
-                                        .setPassword(password)
-                                .parent.section.usersTable
-                                    .setAdmin(userName, isAdmin)
-                                .parent.section.usersTable
-                                    .editTenants(userName)
-                                    .parent.section.editTenantsModal
-                                        .addTenant(tenant),
-                            (context) => context
-                                .parent.section.usersTable
-                                    .editTenants(userName)
-                                    .parent.section.editTenantsModal
-                                        .addTenant(tenant),
-                            (context) => {});
+                                .parent.section.usersTable.setPassword(userName, password)
+                                .parent.section.setPasswordModal.setPassword(password)
+                                .parent.section.usersTable.setAdmin(userName, isAdmin)
+                                .parent.section.usersTable.editTenants(userName)
+                                .parent.section.editTenantsModal.addTenant(tenant),
+                        context =>
+                            context.parent.section.usersTable
+                                .editTenants(userName)
+                                .parent.section.editTenantsModal.addTenant(tenant),
+                        context => {}
+                    );
             }
-
         }
-    ],
+    ]
 };

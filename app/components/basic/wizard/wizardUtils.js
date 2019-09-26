@@ -12,9 +12,7 @@ function getDisplayName(WrappedComponent) {
 }
 
 function createStepContent(ContentComponent, id) {
-
     class StepContentComponent extends Component {
-
         constructor(props) {
             super(props);
         }
@@ -32,9 +30,7 @@ function createStepContent(ContentComponent, id) {
 }
 
 function createStepActions(ActionsComponent, id) {
-
     class StepActionsComponent extends Component {
-
         constructor(props) {
             super(props);
         }
@@ -51,7 +47,6 @@ function createStepActions(ActionsComponent, id) {
     return StepActionsComponent;
 }
 
-
 /**
  * Function creating step object. Can be accessed using: `Stage.Basic.Wizard.Utils.createWizardStep`.
  *
@@ -61,24 +56,19 @@ function createStepActions(ActionsComponent, id) {
  * @param {React.Component} ContentComponent step component to be shown in content part (middle) of the wizard. Check {@link StepContent} for details about necessary props to provide
  * @param {React.Component} ActionsComponent step component to be shown in action part (bottom) of the wizard. Check {@link StepActions} for details about necessary props to provide
  *
- * @return {{id: string, title: string, description: string, Content: React.Component, Actions: React.Component}}
+ * @returns {{id: string, title: string, description: string, Content: React.Component, Actions: React.Component}}
  * object describing step compatible with {@link WizardModal} steps prop
  */
-export function createWizardStep(id,
-                                 title,
-                                 description,
-                                 ContentComponent,
-                                 ActionsComponent)
-{
+export function createWizardStep(id, title, description, ContentComponent, ActionsComponent) {
     return {
         id,
         title,
         description,
         Content: createStepContent(ContentComponent, id),
         Actions: createStepActions(ActionsComponent, id)
-    }
+    };
 }
 
 export default {
     createWizardStep
-}
+};

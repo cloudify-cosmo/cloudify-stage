@@ -14,17 +14,15 @@ import FullScreenSegment from './layout/FullScreenSegment';
 import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
 
 export default class LoginPage extends Component {
-
     static propTypes = {
         username: PropTypes.string,
         loginError: PropTypes.string,
         onLogin: PropTypes.func.isRequired,
         isLoggingIn: PropTypes.bool.isRequired,
         whiteLabel: PropTypes.object
-
     };
 
-    constructor(props,context){
+    constructor(props, context) {
         super(props, context);
 
         this.state = {
@@ -35,87 +33,106 @@ export default class LoginPage extends Component {
     }
 
     onSubmit() {
-        let errors = {};
+        const errors = {};
 
         if (_.isEmpty(this.state.username)) {
-            errors['username'] = 'Please provide username';
+            errors.username = 'Please provide username';
         }
         if (_.isEmpty(this.state.password)) {
-            errors['password'] = 'Please provide password';
+            errors.password = 'Please provide password';
         }
         if (!_.isEmpty(errors)) {
-            this.setState({errors});
+            this.setState({ errors });
             return false;
         }
 
         const query = parse(this.props.location.search);
-        let redirect = query.redirect || null;
+        const redirect = query.redirect || null;
 
         this.props.onLogin(this.state.username, this.state.password, redirect);
     }
 
     _handleInputChange(proxy, field) {
-        let fieldNameValue = Form.fieldNameValue(field);
-        this.setState({...fieldNameValue, errors: {}});
+        const fieldNameValue = Form.fieldNameValue(field);
+        this.setState({ ...fieldNameValue, errors: {} });
     }
 
     render() {
         SplashLoadingScreen.turnOff();
 
-        const loginPageHeader = _.get(this.props,'whiteLabel.loginPageHeader');
-        const loginPageHeaderColor = _.get(this.props,'whiteLabel.loginPageHeaderColor');
-        const loginPageText = _.get(this.props,'whiteLabel.loginPageText');
-        const loginPageTextColor = _.get(this.props,'whiteLabel.loginPageTextColor');
-        const isHeaderTextPresent = (!_.isEmpty(loginPageHeader) || !_.isEmpty(loginPageText));
+        const loginPageHeader = _.get(this.props, 'whiteLabel.loginPageHeader');
+        const loginPageHeaderColor = _.get(this.props, 'whiteLabel.loginPageHeaderColor');
+        const loginPageText = _.get(this.props, 'whiteLabel.loginPageText');
+        const loginPageTextColor = _.get(this.props, 'whiteLabel.loginPageTextColor');
+        const isHeaderTextPresent = !_.isEmpty(loginPageHeader) || !_.isEmpty(loginPageText);
 
         return (
             <FullScreenSegment>
-                <div className={`loginContainer ${isHeaderTextPresent?'loginContainerExtended':''}`} >
-
+                <div className={`loginContainer ${isHeaderTextPresent ? 'loginContainerExtended' : ''}`}>
                     <Logo />
-                    {
-                        isHeaderTextPresent &&
+                    {isHeaderTextPresent && (
                         <div style={{ textAlign: 'center', marginBottom: 30 }}>
-                            {
-                                loginPageHeader &&
-                                <h2 style={{
-                                    color: loginPageHeaderColor,
-                                    fontSize: '2em',
-                                    fontFamily: 'JosefinSans-Bold, sans-serif' }}>
+                            {loginPageHeader && (
+                                <h2
+                                    style={{
+                                        color: loginPageHeaderColor,
+                                        fontSize: '2em',
+                                        fontFamily: 'JosefinSans-Bold, sans-serif'
+                                    }}
+                                >
                                     {loginPageHeader}
                                 </h2>
-                            }
-                            {
-                                loginPageText &&
-                                <p style={{
-                                    color: loginPageTextColor,
-                                    fontSize: '1.1em'
-                                }}>
+                            )}
+                            {loginPageText && (
+                                <p
+                                    style={{
+                                        color: loginPageTextColor,
+                                        fontSize: '1.1em'
+                                    }}
+                                >
                                     {loginPageText}
-                                </p>}
+                                </p>
+                            )}
                         </div>
-                    }
+                    )}
 
                     <Form onSubmit={this.onSubmit.bind(this)}>
                         <Form.Field required error={this.state.errors.username}>
-                            <Input name="username" type="text" placeholder="Username" autoFocus
-                                   value={this.state.username} onChange={this._handleInputChange.bind(this)} />
+                            <Input
+                                name="username"
+                                type="text"
+                                placeholder="Username"
+                                autoFocus
+                                value={this.state.username}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
 
                         <Form.Field required error={this.state.errors.password}>
-                            <Input name="password" type="password" placeholder="Password"
-                                   value={this.state.password} onChange={this._handleInputChange.bind(this)}/>
+                            <Input
+                                name="password"
+                                type="password"
+                                placeholder="Password"
+                                value={this.state.password}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
 
-                        {
-                            this.props.loginError &&
-                            <Message error style={{display: 'block'}}>{this.props.loginError}</Message>
-                        }
+                        {this.props.loginError && (
+                            <Message error style={{ display: 'block' }}>
+                                {this.props.loginError}
+                            </Message>
+                        )}
 
-                        <Button disabled={this.props.isLoggingIn} loading={this.props.isLoggingIn}
-                                color='yellow' size='large' type='submit' content='LOGIN' />
+                        <Button
+                            disabled={this.props.isLoggingIn}
+                            loading={this.props.isLoggingIn}
+                            color="yellow"
+                            size="large"
+                            type="submit"
+                            content="LOGIN"
+                        />
                     </Form>
-
                 </div>
             </FullScreenSegment>
         );

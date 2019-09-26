@@ -3,9 +3,10 @@
  */
 
 exports.command = function() {
-    var section = this.page.page().section.userMenu;
+    const section = this.page.page().section.userMenu;
 
-    return section.clickElement('@userName')
+    return section
+        .clickElement('@userName')
         .waitForElementVisible('@userDropdownMenu')
         .getText('@editModeMenuItem', result => {
             if (result.value === section.props.editModeLabel) {

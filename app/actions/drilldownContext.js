@@ -4,11 +4,11 @@
 
 import * as types from './types';
 
-export function setDrilldownContext(drilldownContext){
+export function setDrilldownContext(drilldownContext) {
     return {
         type: types.SET_DRILLDOWN_CONTEXT,
         drilldownContext
-    }
+    };
 }
 
 export function popDrilldownContext(count = 1) {

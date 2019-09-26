@@ -11,7 +11,7 @@ export default class GridItem extends Component {
         id: PropTypes.string.isRequired,
         x: PropTypes.number,
         y: PropTypes.number,
-        width : PropTypes.number,
+        width: PropTypes.number,
         height: PropTypes.number,
         className: PropTypes.string,
         onItemAdded: PropTypes.func,
@@ -48,4 +48,3 @@ export default class GridItem extends Component {
         );
     }
 }
-

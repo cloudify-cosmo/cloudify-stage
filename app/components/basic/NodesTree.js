@@ -66,7 +66,6 @@ import { Loading } from './index';
  * ```
  */
 export default class NodesTree extends Component {
-
     static Node = TreeNode;
 
     static propTypes = Tree.propTypes;
@@ -96,26 +95,27 @@ export default class NodesTree extends Component {
                 <Tree {...this.props} className={`nodes-tree ${this.props.className}`}>
                     {_.compact(_.castArray(this.props.children))}
                 </Tree>
-            )
-        } else {
-            const loop = data => {
-                return _.compact(data).map(item => {
-                    if (item.children) {
-                        return (
-                            <TreeNode key={item.key} title={item.title}>
-                                {loop(item.children)}
-                            </TreeNode>
-                        );
-                    }
-                    return <TreeNode key={item.key} title={item.title}/>;
-                });
-            };
-
-            return this.props.treeData.length ?
-                <Tree {...this.props} className={`nodes-tree ${this.props.className}`}>
-                    {loop(this.props.treeData)}
-                </Tree> :
-                <Loading />;
+            );
         }
+        const loop = data => {
+            return _.compact(data).map(item => {
+                if (item.children) {
+                    return (
+                        <TreeNode key={item.key} title={item.title}>
+                            {loop(item.children)}
+                        </TreeNode>
+                    );
+                }
+                return <TreeNode key={item.key} title={item.title} />;
+            });
+        };
+
+        return this.props.treeData.length ? (
+            <Tree {...this.props} className={`nodes-tree ${this.props.className}`}>
+                {loop(this.props.treeData)}
+            </Tree>
+        ) : (
+            <Loading />
+        );
     }
 }

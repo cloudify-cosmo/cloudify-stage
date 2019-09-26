@@ -2,9 +2,8 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-const path = require('path');
 const webpack = require('webpack');
-const webpackDevServer = require('webpack-dev-server');
+const WebpackDevServer = require('webpack-dev-server');
 
 const webpackConfig = require('./webpack.config');
 const Consts = require('./backend/consts');
@@ -25,8 +24,7 @@ const proxyOptions = {
 const indexHtml = `${contextPath}/static/index.html`;
 const options = {
     publicPath: webpackConfig[0].output.publicPath,
-    hot: true,
-    host: host,
+    host,
     inline: true,
     historyApiFallback: {
         index: indexHtml
@@ -51,22 +49,20 @@ const options = {
         [`${contextPath}/plugins`]: proxyOptions
     },
     watchOptions: {
-        ignored: [
-            path.resolve(__dirname, 'userData')
-        ]
+        ignored: ['**/userData/**']
     }
 };
 
-webpackDevServer.addDevServerEntrypoints(webpackConfig[0], options);
+WebpackDevServer.addDevServerEntrypoints(webpackConfig[0], options);
 const compiler = webpack(webpackConfig);
-const server = new webpackDevServer(compiler, options);
+const server = new WebpackDevServer(compiler, options);
 
-server.listen(devServerPort, host, (err) => {
+server.listen(devServerPort, host, err => {
     if (err) {
-        return console.log(err);
+        console.log(err);
+    } else {
+        console.log(`Listening at http://${host}:${devServerPort}/`);
     }
-
-    console.log(`Listening at http://${host}:${devServerPort}/`);
 });
 
 startWidgetBackendWatcher();

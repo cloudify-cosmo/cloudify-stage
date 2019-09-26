@@ -8,23 +8,25 @@ class ExecutionActions {
     }
 
     doGetExecutions(deploymentId) {
-        return this.toolbox.getManager().doGet('/executions?_include=id,status,ended_at', {deployment_id: deploymentId});
+        return this.toolbox
+            .getManager()
+            .doGet('/executions?_include=id,status,ended_at', { deployment_id: deploymentId });
     }
 
     doGetStatus(executionId) {
-        return this.toolbox.getManager().doGet('/executions?_include=id,status', {id: executionId});
+        return this.toolbox.getManager().doGet('/executions?_include=id,status', { id: executionId });
     }
 
     doAct(execution, action) {
         return this.toolbox.getManager().doPost(`/executions/${execution.id}`, null, {
-            'deployment_id': execution.deployment_id,
-            'action': action
+            deployment_id: execution.deployment_id,
+            action
         });
     }
 
     async waitUntilFinished(executionIds, interval) {
-        let executions = await this.doGetStatus(executionIds);
-        let activeExecutions = _.filter(executions.items, Stage.Utils.Execution.isActiveExecution);
+        const executions = await this.doGetStatus(executionIds);
+        const activeExecutions = _.filter(executions.items, Stage.Utils.Execution.isActiveExecution);
 
         if (!_.isEmpty(activeExecutions)) {
             await new Promise(resolve => setTimeout(resolve, interval));

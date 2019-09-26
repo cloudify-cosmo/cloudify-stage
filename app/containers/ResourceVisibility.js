@@ -8,12 +8,15 @@ import stageUtils from '../utils/stageUtils';
 import consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
-    var allowedSettingTo = ownProps.allowedSettingTo;
-    if(_.includes(ownProps.allowedSettingTo, consts.visibility.GLOBAL.name) && !stageUtils.isUserAuthorized(consts.permissions.CREATE_GLOBAL_RESOURCE, state.manager)){
+    let { allowedSettingTo } = ownProps;
+    if (
+        _.includes(ownProps.allowedSettingTo, consts.visibility.GLOBAL.name) &&
+        !stageUtils.isUserAuthorized(consts.permissions.CREATE_GLOBAL_RESOURCE, state.manager)
+    ) {
         allowedSettingTo = _.without(allowedSettingTo, consts.visibility.GLOBAL.name);
     }
     return {
-        allowedSettingTo: allowedSettingTo
+        allowedSettingTo
     };
 };
 

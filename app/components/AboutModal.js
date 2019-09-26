@@ -12,7 +12,6 @@ import CurrentVersion from './license/CurrentVersion';
 import EulaLink from './license/EulaLink';
 
 export default class AboutModal extends Component {
-
     constructor(props) {
         super(props);
     }
@@ -30,25 +29,20 @@ export default class AboutModal extends Component {
     };
 
     render() {
-        var {Button, CancelButton, Divider, Header, Modal} = Stage.Basic;
+        const { Button, CancelButton, Divider, Header, Modal } = Stage.Basic;
 
         return (
             <Modal open={this.props.open} onClose={this.props.onHide}>
-
-                <Modal.Header className='mainBackgroundColor' style={{padding: 0, paddingLeft: 10}}>
+                <Modal.Header className="mainBackgroundColor" style={{ padding: 0, paddingLeft: 10 }}>
                     <Banner hideOnSmallScreen={false} />
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Header>
-                        Version Details
-                    </Header>
+                    <Header>Version Details</Header>
                     <Divider />
                     <CurrentVersion version={this.props.version} />
 
-                    <Header>
-                        License Details
-                    </Header>
+                    <Header>License Details</Header>
                     <Divider />
                     <CurrentLicense license={this.props.license} />
 
@@ -56,11 +50,15 @@ export default class AboutModal extends Component {
                 </Modal.Content>
 
                 <Modal.Actions>
-                    {
-                        this.props.canLicenseManagement &&
-                        <Button content='License Management' icon='key' color='yellow' onClick={this.props.onLicenseManagment} />
-                    }
-                    <CancelButton content='Close' onClick={this.props.onHide} />
+                    {this.props.canLicenseManagement && (
+                        <Button
+                            content="License Management"
+                            icon="key"
+                            color="yellow"
+                            onClick={this.props.onLicenseManagment}
+                        />
+                    )}
+                    <CancelButton content="Close" onClick={this.props.onHide} />
                 </Modal.Actions>
             </Modal>
         );

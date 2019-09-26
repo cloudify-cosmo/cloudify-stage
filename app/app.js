@@ -3,8 +3,6 @@
  */
 
 import 'babel-polyfill';
-
-window.$ = $;
 import 'jquery-ui/ui/core.js';
 import 'jquery-ui/ui/widget.js';
 import 'jquery-ui/ui/widgets/mouse.js';
@@ -35,13 +33,13 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import * as Leaflet from 'leaflet';
 
-import { Provider } from 'react-redux';
+import { connect, Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
 
-import configureStore  from './configureStore';
-import {createToolbox} from './utils/Toolbox';
+import configureStore from './configureStore';
+import { createToolbox } from './utils/Toolbox';
 import ConfigLoader from './utils/ConfigLoader';
 import EventBus from './utils/EventBus';
 import Consts from './utils/consts';
@@ -53,23 +51,26 @@ import Interceptor from './utils/Interceptor';
 
 import Routes from './containers/Routes';
 
+window.$ = $;
+
 const browserHistory = createBrowserHistory({
     basename: Consts.CONTEXT_PATH
 });
 
-export default class app{
-    static load (){
+export default class app {
+    static load() {
         window.React = React;
         window.PropTypes = PropTypes;
         window.L = Leaflet;
+        window.connectToStore = connect;
 
-        window.onerror = function (message, source, lineno, colno, error) {
+        window.onerror = function(message, source, lineno, colno, error) {
             EventBus.trigger('window:error', message, source, lineno, colno, error);
         };
 
         widgetDefinitionLoader.init();
-        return ConfigLoader.load().then((result)=>{
-            const store = configureStore(browserHistory,result);
+        return ConfigLoader.load().then(result => {
+            const store = configureStore(browserHistory, result);
 
             createToolbox(store);
 
@@ -81,7 +82,7 @@ export default class app{
         });
     }
 
-    static start (store) {
+    static start(store) {
         ReactDOM.render(
             <Provider store={store}>
                 <ConnectedRouter history={browserHistory}>
@@ -94,4 +95,3 @@ export default class app{
         );
     }
 }
-

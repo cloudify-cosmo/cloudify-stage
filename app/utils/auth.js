@@ -10,23 +10,22 @@ import External from './External';
 import Internal from './Internal';
 
 export default class Auth {
-
     static login(username, password) {
-        let external = new External({basicAuth: btoa(`${username}:${password}`)});
+        const external = new External({ basicAuth: btoa(`${username}:${password}`) });
         return external.doPost(StageUtils.Url.url('/auth/login'), null, null, true, null, true);
     }
 
-    static getUserData(managerData){
-        let internal = new Internal(managerData);
+    static getUserData(managerData) {
+        const internal = new Internal(managerData);
         return internal.doGet('/auth/user', null, true);
     }
 
     static logout(managerData) {
-        let internal = new Internal(managerData);
+        const internal = new Internal(managerData);
         return internal.doPost('/auth/logout', null, null, true, null, true);
     }
 
-    static isLoggedIn(){
+    static isLoggedIn() {
         return !!Cookies.get(Consts.TOKEN_COOKIE_NAME);
     }
 
@@ -45,10 +44,10 @@ export default class Auth {
     static getLicenseStatus(licenseData) {
         if (_.isEmpty(licenseData)) {
             return Consts.LICENSE.EMPTY;
-        } else if (licenseData.expired) {
-            return Consts.LICENSE.EXPIRED;
-        } else {
-            return Consts.LICENSE.ACTIVE;
         }
+        if (licenseData.expired) {
+            return Consts.LICENSE.EXPIRED;
+        }
+        return Consts.LICENSE.ACTIVE;
     }
 }

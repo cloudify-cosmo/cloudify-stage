@@ -8,15 +8,15 @@ export default class Actions {
     }
 
     doCreate(username, password, role) {
-        return this.toolbox.getManager().doPut('/users', null, {username, password, role});
+        return this.toolbox.getManager().doPut('/users', null, { username, password, role });
     }
 
     doSetPassword(username, password) {
-        return this.toolbox.getManager().doPost(`/users/${username}`, null, {password});
+        return this.toolbox.getManager().doPost(`/users/${username}`, null, { password });
     }
 
     doSetRole(username, role) {
-        return this.toolbox.getManager().doPost(`/users/${username}`, null, {role});
+        return this.toolbox.getManager().doPost(`/users/${username}`, null, { role });
     }
 
     doGetTenants() {
@@ -24,13 +24,19 @@ export default class Actions {
     }
 
     doRemoveFromTenant(username, tenant_name) {
-        return this.toolbox.getManager().doDelete('/tenants/users', null, {username, tenant_name});
+        return this.toolbox.getManager().doDelete('/tenants/users', null, { username, tenant_name });
     }
 
     doHandleTenants(username, tenantsToAdd, tenantsToDelete, tenantsToUpdate) {
-        let addActions = _.map(tenantsToAdd,(role, tenant_name)=> this.toolbox.getManager().doPut('/tenants/users', null, {username, tenant_name, role}));
-        let deleteActions = _.map(tenantsToDelete,(tenant_name)=> this.toolbox.getManager().doDelete('/tenants/users', null, {username, tenant_name}));
-        let updateActions = _.map(tenantsToUpdate,(role, tenant_name)=> this.toolbox.getManager().doPatch('/tenants/users', null, {username, tenant_name, role}));
+        const addActions = _.map(tenantsToAdd, (role, tenant_name) =>
+            this.toolbox.getManager().doPut('/tenants/users', null, { username, tenant_name, role })
+        );
+        const deleteActions = _.map(tenantsToDelete, tenant_name =>
+            this.toolbox.getManager().doDelete('/tenants/users', null, { username, tenant_name })
+        );
+        const updateActions = _.map(tenantsToUpdate, (role, tenant_name) =>
+            this.toolbox.getManager().doPatch('/tenants/users', null, { username, tenant_name, role })
+        );
 
         return Promise.all(_.concat(addActions, deleteActions, updateActions));
     }
@@ -40,12 +46,16 @@ export default class Actions {
     }
 
     doRemoveFromGroup(username, group_name) {
-        return this.toolbox.getManager().doDelete('/user-groups/users', null, {username, group_name});
+        return this.toolbox.getManager().doDelete('/user-groups/users', null, { username, group_name });
     }
 
     doHandleGroups(username, groupsToAdd, groupsToDelete) {
-        let addActions = _.map(groupsToAdd,(group_name)=> this.toolbox.getManager().doPut('/user-groups/users', null, {username, group_name}));
-        let deleteActions = _.map(groupsToDelete,(group_name)=> this.toolbox.getManager().doDelete('/user-groups/users', null, {username, group_name}));
+        const addActions = _.map(groupsToAdd, group_name =>
+            this.toolbox.getManager().doPut('/user-groups/users', null, { username, group_name })
+        );
+        const deleteActions = _.map(groupsToDelete, group_name =>
+            this.toolbox.getManager().doDelete('/user-groups/users', null, { username, group_name })
+        );
 
         return Promise.all(_.concat(addActions, deleteActions));
     }
@@ -55,11 +65,10 @@ export default class Actions {
     }
 
     doActivate(username) {
-        return this.toolbox.getManager().doPost(`/users/active/${username}`,null, {action: 'activate'} );
+        return this.toolbox.getManager().doPost(`/users/active/${username}`, null, { action: 'activate' });
     }
 
     doDeactivate(username) {
-        return this.toolbox.getManager().doPost(`/users/active/${username}`,null, {action: 'deactivate'} );
+        return this.toolbox.getManager().doPost(`/users/active/${username}`, null, { action: 'deactivate' });
     }
-
 }
