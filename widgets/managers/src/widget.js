@@ -34,15 +34,15 @@ Stage.defineWidget({
 
         return toolbox
             .getManager()
-            .doGetFull('/deployments', { _include: 'id,workflows,outputs' })
+            .doGetFull('/deployments', { _include: 'id,workflows,capabilities' })
             .then(deployments => {
                 momDeployments = _.filter(
                     _.get(deployments, 'items', []),
-                    deployment => !!deployment.outputs.cluster_ips
+                    deployment => !!deployment.capabilities.endpoint
                 );
 
-                const outputsPromises = _.map(momDeployments, deployment =>
-                    toolbox.getManager().doGet(`/deployments/${deployment.id}/outputs`)
+                const capabilitiesPromises = _.map(momDeployments, deployment =>
+                    toolbox.getManager().doGet(`/deployments/${deployment.id}/capabilities`)
                 );
 
                 const executionsPromise = toolbox.getManager().doGet('/executions', {
@@ -50,19 +50,19 @@ Stage.defineWidget({
                     deployment_id: _.map(momDeployments, deployment => deployment.id)
                 });
 
-                return Promise.all([executionsPromise, ...outputsPromises]);
+                return Promise.all([executionsPromise, ...capabilitiesPromises]);
             })
-            .then(([executions, ...momDeploymentsOutputs]) => {
+            .then(([executions, ...momDeploymentsCapabilities]) => {
                 const executionsData = _.groupBy(executions.items, 'deployment_id');
 
                 return Promise.resolve({
                     items: _.sortBy(
-                        _.map(momDeploymentsOutputs, deploymentOutputs => {
-                            const managerId = deploymentOutputs.deployment_id;
-                            const managerIp = _.get(deploymentOutputs.outputs.cluster_ips, 'Master', '');
+                        _.map(momDeploymentsCapabilities, deploymentCapabilities => {
+                            const managerId = deploymentCapabilities.deployment_id;
+                            const managerIp = _.get(deploymentCapabilities.capabilities, 'endpoint', '');
                             const deployment = _.find(
                                 momDeployments,
-                                deployment => deployment.id === deploymentOutputs.deployment_id
+                                deployment => deployment.id === deploymentCapabilities.deployment_id
                             );
                             const workflows = _.get(deployment, 'workflows', []);
 
@@ -70,26 +70,19 @@ Stage.defineWidget({
                                 id: managerId,
                                 ip: managerIp,
                                 status: _.find(
-                                    _.get(deploymentOutputs.outputs.cluster_status, 'cluster_status', []),
+                                    _.get(deploymentCapabilities.outputs.cluster_status, 'cluster_status', []),
                                     clusterStatusItem => clusterStatusItem.name === managerIp
                                 ),
-                                servicesStatus: _.get(deploymentOutputs.outputs.cluster_status, 'leader_status', []),
-                                error: _.get(deploymentOutputs.outputs.cluster_status, 'error', ''),
+                                servicesStatus: 'TODO', // _.get(deploymentCapabilities.capabilities.cluster_status, 'leader_status', []),
+                                error: 'TODO', // _.get(deploymentCapabilities.capabilities.cluster_status, 'error', ''),
 
-                                slaves: _.map(_.get(deploymentOutputs.outputs.cluster_ips, 'Slaves', []), slaveIp => ({
-                                    ip: slaveIp,
-                                    status: _.find(
-                                        _.get(deploymentOutputs.outputs.cluster_status, 'cluster_status', []),
-                                        clusterStatusItem => clusterStatusItem.name === slaveIp
-                                    )
-                                })),
                                 workflows,
                                 lastExecution: _.first(executionsData[managerId])
                             };
                         }),
                         'id'
                     ),
-                    total: _.size(momDeploymentsOutputs)
+                    total: _.size(momDeploymentsCapabilities)
                 });
             });
     },
