@@ -1,6 +1,6 @@
 # Configuration
 
-The following section describes different types of configuration used in cloudify-stage.
+The following section describes different configuration files used in cloudify-stage.
 
 ## Application (`app.json`)
 
@@ -24,7 +24,7 @@ The following section describes different types of configuration used in cloudif
   * `user` - string, DB username
   * `password` - string, DB password
   * `database` - string, DB name
-  * `timeout` - string, DB connection timeout
+  * `timeout` - integer, DB connection timeout (milliseconds)
 
 * `github` - object, configuration for accessing GitHub resources
   * `username` - string, GitHub username secret name, eg. "secret(github-username)"
