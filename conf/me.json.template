@@ -7,16 +7,10 @@
         "ca": null
       }
   },
-  "customer": {
-
-  },
   "manager": {
     "ip":"<MANAGER_IP>",
     "protocol" : "http",
     "port": "80"
-  },
-  "widgets": {
-
   },
   "e2e": {
 
