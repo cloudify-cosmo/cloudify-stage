@@ -1,7 +1,5 @@
 import SitesMap from './SitesMap';
 
-const MAP_URL = 'https://maps.wikimedia.org';
-
 Stage.defineWidget({
     id: 'sitesMap',
     name: 'Sites Map',
@@ -25,12 +23,12 @@ Stage.defineWidget({
         }
     ],
 
-    _processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData) {
+    processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData) {
         const { groupStates, getDeploymentState, GOOD_STATE } = Stage.Common.DeploymentStates;
         let siteState = GOOD_STATE;
         const deploymentStates = _.reduce(
             groupStates,
-            function(result, value, key) {
+            (result, value, key) => {
                 result[key] = [];
                 return result;
             },
@@ -51,7 +49,7 @@ Stage.defineWidget({
         siteStatuses[site.name].color = deploymentsData[site.name] ? groupStates[siteState].colorSUI : 'grey';
     },
 
-    _processData(data) {
+    processData(data) {
         const nodeInstanceData = _.reduce(
             data[2].items,
             (result, item) => {
@@ -77,15 +75,21 @@ Stage.defineWidget({
         const siteStatuses = {};
 
         _.forEach(sitesData, site => {
-            this._processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData);
+            this.processSite(site, siteStatuses, deploymentsData, executionsData, nodeInstanceData);
         });
 
-        const isMapAvailable = data[4];
-        const sitesAreDefined = data[5].items.length > 0;
-        return { siteStatuses, isMapAvailable, sitesAreDefined };
+        const sitesAreDefined = data[4].items.length > 0;
+        return { siteStatuses, sitesAreDefined };
     },
 
-    fetchData(widget, toolbox) {
+    fetchParams(widget, toolbox) {
+        return {
+            blueprint_id: toolbox.getContext().getValue('blueprintId'),
+            id: toolbox.getContext().getValue('deploymentId')
+        };
+    },
+
+    fetchData(widget, toolbox, params) {
         const allSites = toolbox.getManager().doGet('/sites', {
             _include: 'name,latitude,longitude',
             _get_all_results: true
@@ -99,7 +103,8 @@ Stage.defineWidget({
             toolbox.getManager().doGet('/deployments', {
                 _include: 'id,site_name',
                 _get_all_results: true,
-                site_name: names
+                site_name: names,
+                ...params
             })
         );
         const deploymentIds = deploymentsData.then(data => _.map(data.items, deployment => deployment.id));
@@ -122,17 +127,7 @@ Stage.defineWidget({
             })
         );
 
-        const isMapAvailable = toolbox.getExternal().isReachable(MAP_URL);
-        return Promise.all([
-            sitesData,
-            deploymentsData,
-            nodeInstanceData,
-            executionsData,
-            isMapAvailable,
-            allSites
-        ]).then(data => {
-            return data;
-        });
+        return Promise.all([sitesData, deploymentsData, nodeInstanceData, executionsData, allSites]);
     },
 
     render(widget, data, error, toolbox) {
@@ -140,16 +135,14 @@ Stage.defineWidget({
             return <Stage.Basic.Loading />;
         }
 
-        const { siteStatuses, isMapAvailable, sitesAreDefined } = this._processData(data);
+        const { siteStatuses, sitesAreDefined } = this.processData(data);
         return (
             <SitesMap
                 data={siteStatuses}
-                toolbox={toolbox}
-                showAllLabels={widget.configuration.showAllLabels}
-                isMapAvailable={isMapAvailable}
-                sitesAreDefined={sitesAreDefined}
-                mapUrl={MAP_URL}
                 dimensions={{ height: widget.height, width: widget.width, maximized: widget.maximized || false }}
+                showAllLabels={widget.configuration.showAllLabels}
+                sitesAreDefined={sitesAreDefined}
+                toolbox={toolbox}
             />
         );
     }
