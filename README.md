@@ -51,21 +51,54 @@ Changes in the source code shall be hot loaded to the development version of the
 - for changes in [widgets](./widgets) directory you need to reload page to see your updates,
 - for changes in [backend](./backend) directory you don't need to reload page as backend server will automatically be restarted.
 
-## Deployment
-You can create a package and deploy it on a remote Cloudify Manager server.
+## Package
 
-To do that follow these steps:
+You can create application package and deploy it on a remote Cloudify Manager server.
 
-1. Create application package:
-    - to create production build run: `npm run build`
-    - to pack all necessary files into archive run: `npm run zip`
-    Application package will be in repo main directory. 
-1. Upload the package to the remote Cloudify Manager:
-    - define path to private SSH key to access Cloudify Manager: `export SSH_KEY_PATH=<PATH>`
-    - define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`
-    - upload package to the Cloudify Manager and restart UI services: `npm run upload`
+### Package creation
 
-Open browser and go to page `http://<MANAGER_IP>` to see if application is running.
+To create application package:  
+1. Create production build by running: `npm run build`
+1. Pack all necessary files into archive by running: `npm run zip`. 
+1. Application package will be in `stage.tar.gz` file in repository main directory. 
+
+### Package upload
+
+To upload the package to the remote Cloudify Manager:
+1. Define path to private SSH key to access Cloudify Manager: `export SSH_KEY_PATH=<PATH>`
+1. Define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`
+1. Upload package to the Cloudify Manager and restart UI services: `npm run upload`
+1. Open browser and go to page `http://<MANAGER_IP>` to see if application is running.
+
+### Package content
+
+Package archive contains the following resources:
+
+* `backend` - Stage Backend - whole [backend](./backend) folder
+* `conf` - configuration files (see [Configuration](./conf/README.md) for details)
+* `dist` - Stage Frontend - directory created by Webpack according to the [production configuration](./webpack.config-prod.js)
+  * `appData` - built-in application data
+    * `tours` - built-in tours - whole [tours](./tours) folder
+    * `widgets` - built-in widgets
+      * `<widget-name>` - every widget has its own folder 
+        * `widget.js` - minified widget bundle file (+ brotli-compressed widget and gzip-compressed widget bundles)
+        * `README.md` - documentation file
+        * `widget.png` - widget thumbnail
+      * ...
+    * `templates` - built-in templates - whole [templates](./templates) folder
+      * `pages` - built-in pages - whole [templates/pages](./templates/pages) folder 
+  * `static` - static files
+    * `images` - image files
+    * `fonts` - font files
+    * `js` - JavaScript bundles
+      * `main.bundle.js` - bundle created from client-side application source code (+ brotli-compressed and gzip-compressed bundle)
+      * `vendor.bundle.js` - bundle created from client-side application external depenencies (+ brotli-compressed and gzip-compressed bundle)
+    * `index.html` - main HTML file (created from [app/index.tmpl.html](./app/index.tmpl.html))
+  * `userData` - user application data (empty in clean package)
+    * `widgets` - custom widgets (empty in clean package)
+    * `templates` - custom templates (empty in clean package)
+      * `pages` - custom pages (empty in clean package)
+
 
 ## Tests
 
