@@ -58,16 +58,16 @@ You can create application package and deploy it on a remote Cloudify Manager se
 ### Package creation
 
 To create application package:  
-1. Create production build by running: `npm run build`
+1. Create production build by running: `npm run build`.
 1. Pack all necessary files into archive by running: `npm run zip`. 
 1. Application package will be in `stage.tar.gz` file in repository main directory. 
 
 ### Package upload
 
 To upload the package to the remote Cloudify Manager:
-1. Define path to private SSH key to access Cloudify Manager: `export SSH_KEY_PATH=<PATH>`
-1. Define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`
-1. Upload package to the Cloudify Manager and restart UI services: `npm run upload`
+1. Define path to private SSH key to access Cloudify Manager: `export SSH_KEY_PATH=<PATH>`.
+1. Define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`.
+1. Upload package to the Cloudify Manager and restart UI services: `npm run upload`.
 1. Open browser and go to page `http://<MANAGER_IP>` to see if application is running.
 
 ### Package content
@@ -82,6 +82,8 @@ Package archive contains the following resources:
     * `widgets` - built-in widgets
       * `<widget-name>` - every widget has its own folder 
         * `widget.js` - minified widget bundle file (+ brotli-compressed widget and gzip-compressed widget bundles)
+        * `widget.js.br` - (optional) brotli-compressed `widget.js`
+        * `widget.js.gz` - (optional) gzip-compressed `widget.js`
         * `README.md` - documentation file
         * `widget.png` - widget thumbnail
       * ...
@@ -92,7 +94,11 @@ Package archive contains the following resources:
     * `fonts` - font files
     * `js` - JavaScript bundles
       * `main.bundle.js` - bundle created from client-side application source code (+ brotli-compressed and gzip-compressed bundle)
-      * `vendor.bundle.js` - bundle created from client-side application external depenencies (+ brotli-compressed and gzip-compressed bundle)
+      * `main.bundle.js` - brotli-compressed `main.bundle.js`
+      * `main.bundle.js` - gzip-compressed `main.bundle.js`
+      * `vendor.bundle.js` - bundle created from client-side application external dependencies
+      * `vendor.bundle.js.br` - brotli-compressed `vendor.bundle.js`
+      * `vendor.bundle.js.gz` - gzip-compressed `vendor.bundle.js`
     * `index.html` - main HTML file (created from [app/index.tmpl.html](./app/index.tmpl.html))
   * `userData` - user application data (empty in clean package)
     * `widgets` - custom widgets (empty in clean package)
