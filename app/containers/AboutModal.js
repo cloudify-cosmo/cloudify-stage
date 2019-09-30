@@ -14,7 +14,9 @@ const mapStateToProps = (state, ownProps) => {
     const manager = _.get(state, 'manager', {});
 
     return {
-        canLicenseManagement: stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, manager),
+        canLicenseManagement:
+            _.get(manager, 'license.isRequired', false) &&
+            stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, manager),
         version: _.get(manager, 'version', {}),
         license: _.get(manager, 'license.data', {})
     };
