@@ -175,7 +175,7 @@ export default class StageUtils {
             return true;
         }
 
-        const license = _.get(managerData, 'license.data', {});
-        return _.includes(widgetSupportedEditions, license.license_edition);
+        const licenseEdition = _.get(managerData, 'license.data.license_edition', '');
+        return _.includes(widgetSupportedEditions, licenseEdition);
     }
 }
