@@ -1,0 +1,17 @@
+[note:Cloudify Stage Architecture {bg:indianred}]
+
+[note: Web Browser {bg:forestgreen}]<->[Frontend|React & Redux application|folder: app]
+
+[Frontend]-.->Stage REST API[Backend|NodeJS & Express application|folder: backend]
+[Backend]->File System[note: Internal Resources {bg:slategray}]
+[note: Internal Resources {bg}]->[Configuration|folder: conf]
+[note: Internal Resources {bg}]->[Templates|folder: templates]
+[note: Internal Resources {bg}]->[Tours|folder: tours]
+[note: Internal Resources {bg}]->[Widgets|folder: widgets]
+
+[Backend]->[note:External Resources {bg:slategray}]
+[note:External Resources {bg}]->Sequelize API[Postgres {bg:forestgreen}]
+[note:External Resources {bg}]->GitHub API[GitHub {bg:forestgreen}]
+[note:External Resources {bg}]->Cloudify REST API[note:Cloudify Manager {bg:forestgreen}]
+[Frontend]-.->load files[Widgets]
+[Frontend]-.->load files[Templates]
