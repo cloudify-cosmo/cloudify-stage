@@ -32,9 +32,19 @@ export function getStatus() {
         return managerAccessor
             .doGet('/status')
             .then(data => {
-                let services = _.filter(data.services, item => !_.isEmpty(item.instances));
-                services = _.sortBy(services, service => service.display_name);
-                dispatch(setStatus(data.status, services));
+                const { services, status } = data;
+                const filteredServices = _(services)
+                    .keys()
+                    .sort()
+                    .map(serviceName => ({
+                        name: serviceName,
+                        isExternal: services[serviceName].is_external,
+                        status: services[serviceName].status,
+                        description: _.get(services[serviceName], 'extra_info.systemd.instances[0].Description', '')
+                    }))
+                    .value();
+
+                dispatch(setStatus(status, filteredServices));
             })
             .catch(err => {
                 console.error(err);
