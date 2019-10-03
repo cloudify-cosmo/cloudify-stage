@@ -24,14 +24,6 @@
       "blueprintUpload": 70000
     }
   },
-  "influx": {
-    "ip" : "127.0.0.1",
-    "port": 8086,
-    "user" : "root",
-    "password" : "root",
-    "database": "cloudify",
-    "timeout": 10000
-  },
   "github": {
     "username": "secret(github-username)",
     "password": "secret(github-password)"

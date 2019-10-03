@@ -1,8 +1,5 @@
 {
   "app": {
-      "influx": {
-        "ip" : "<MANAGER_IP>"
-      },
       "ssl": {
         "ca": null
       }

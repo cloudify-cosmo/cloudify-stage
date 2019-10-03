@@ -17,14 +17,6 @@ The following section describes different configuration files used in cloudify-s
     * `put` - integer, PUT request timeout (milliseconds)
     * `delete` - integer, DELETE request timeout (milliseconds)
     * `blueprintUpload` - integer, blueprint upload request timeout (milliseconds)
-  
-* `influx` - object, configuration of Influx DB connection
-  * `ip` - string, DB IP address
-  * `port` - integer, DB port number 
-  * `user` - string, DB username
-  * `password` - string, DB password
-  * `database` - string, DB name
-  * `timeout` - integer, DB connection timeout (milliseconds)
 
 * `github` - object, configuration for accessing GitHub resources
   * `username` - string, GitHub username secret name, eg. "secret(github-username)"
