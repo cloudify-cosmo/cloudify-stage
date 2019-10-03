@@ -51,7 +51,6 @@ import HighlightText from './HighlightText';
 import KeyIndicator from './KeyIndicator';
 import Loading from './Loading';
 import Leaflet from './leaflet';
-import MetricFilter from './MetricFilter';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
 import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
 import Menu from './Menu';
@@ -117,7 +116,6 @@ export {
     Menu,
     Message,
     MessageContainer,
-    MetricFilter,
     Modal,
     NodeFilter,
     NodeInstancesFilter,

@@ -13,8 +13,6 @@ import JsonUtils from './shared/JsonUtils';
 import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
 
-import InfluxActions from './shared/InfluxActions';
-
 export default class StageUtils {
     static Execution = ExecutionUtils;
 
@@ -23,8 +21,6 @@ export default class StageUtils {
     static Time = TimeUtils;
 
     static Url = UrlUtils;
-
-    static InfluxActions = InfluxActions;
 
     static makeCancelable(promise) {
         let hasCanceled_ = false;

@@ -116,7 +116,7 @@ export default class CreateModal extends React.Component {
                         <Form.Field>
                             <Form.Checkbox
                                 toggle
-                                label="Include metrics stored in InfluxDB"
+                                label="Include metrics data"
                                 name="includeMetrics"
                                 checked={this.state.includeMetrics}
                                 onChange={this._handleInputChange.bind(this)}
