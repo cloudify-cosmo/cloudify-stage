@@ -1,0 +1,16 @@
+[note:Cloudify Stage Backend Architecture {bg:indianred}]
+
+[note: Frontend {bg:forestgreen}]<--HTTP-->[ExpressJS Web Server|server.js {bg:red}]
+
+[ExpressJS Web Server|server.js]->[Routes|folder: &#47;routes|Applications;URL: &#47;applications|Auth;URL: &#47;auth|BlueprintAdditions;URL: &#47;ba|ClientConfig;URL: &#47;config|External;URL: &#47;external|File;URL: &#47;file|GitHub;URL: &#47;github|Plugins;URL: &#47;plugins|ServerProxy;URL: &#47;sp|SourceBrowser;URL: &#47;source|Style;URL: &#47;style|Templates;URL: &#47;templates|Tours;URL: &#47;tours|UserApp;URL: &#47;ua|WidgetBackend;URL: &#47;wb|Widgets;URL: &#47;widgets]
+
+[ExpressJS Web Server]->[Database Connection|db&#47;Connection.js]
+[Database Connection|]->[note: Postgres DB {bg:forestgreen}]
+
+[Routes|]->[note: External REST APIs {bg:forestgreen}]
+[Routes|]->[note: File System {bg:forestgreen}]
+[Routes|]->[Database Connection|]
+
+[note: NPM Scripts {bg:forestgreen}]-->[Umzug Migration Tool|migration.js {bg:red}]
+[Umzug Migration Tool|]->[Database Connection|]
+[Database Connection|]->[Models|folder: &#47;db|ApplicationModel;Table:&nbsp;Application|BlueprintAdditionsModel;Table: BlueprintAdditions|ClientConfigModel;Table: ClientConfig|ResourcesModel;Table: Resources|UserAppModel;Table: UserApp]

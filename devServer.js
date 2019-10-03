@@ -37,7 +37,6 @@ const options = {
         [`${contextPath}/source`]: proxyOptions,
         [`${contextPath}/ba`]: proxyOptions,
         [`${contextPath}/clientConfig`]: proxyOptions,
-        [`${contextPath}/monitor`]: proxyOptions,
         [`${contextPath}/github`]: proxyOptions,
         [`${contextPath}/external`]: proxyOptions,
         [`${contextPath}/style`]: proxyOptions,
