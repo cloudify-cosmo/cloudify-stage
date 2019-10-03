@@ -23,7 +23,6 @@
     {"widget": "executions", "link": "/content/working_with/console/widgets/executions.md"},
     {"widget": "executionsStatus", "link": "/content/working_with/console/widgets/executionsStatus.md"},
     {"widget": "filter", "link": "/content/working_with/console/widgets/filter.md"},
-    {"widget": "graph", "link": "/content/working_with/console/widgets/graph.md"},
     {"widget": "highAvailability", "link": "/content/working_with/console/widgets/highAvailability.md"},
     {"widget": "inputs", "link": "/content/working_with/console/widgets/inputs.md"},
     {"widget": "maintenanceModeButton", "link": "/content/working_with/console/widgets/maintenanceModeButton.md"},
