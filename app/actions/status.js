@@ -33,15 +33,15 @@ export function getStatus() {
             .doGet('/status')
             .then(data => {
                 const { services, status } = data;
-                const filteredServices = _.chain(services)
+                const filteredServices = _(services)
                     .keys()
+                    .sort()
                     .map(serviceName => ({
                         name: serviceName,
                         isExternal: services[serviceName].is_external,
                         status: services[serviceName].status,
                         description: _.get(services[serviceName], 'extra_info.systemd.instances[0].Description', '')
                     }))
-                    .sortBy(service => service.name)
                     .value();
 
                 dispatch(setStatus(status, filteredServices));
