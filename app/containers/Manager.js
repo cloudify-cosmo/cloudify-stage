@@ -8,15 +8,13 @@ import stageUtils from '../utils/stageUtils';
 import Consts from '../utils/consts';
 import { getStatus } from '../actions/status';
 
-const mapStateToProps = (state, ownProps) => {
-    const showServicesStatus = stageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager);
+const mapStateToProps = state => {
     return {
-        manager: ownProps.manager,
-        showServicesStatus
+        showServicesStatus: stageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager)
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onServicesStatusOpen: () => {
             dispatch(getStatus());
