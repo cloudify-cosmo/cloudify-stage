@@ -99,7 +99,7 @@ import { getToolbox } from '../../../utils/Toolbox';
  * ![GenericField](manual/asset/form/GenericField_11.png)
  * ```
  * <GenericField name="timeFilterTest" type={GenericField.CUSTOM_TYPE} component={Stage.Basic.TimeFilter}
- *               label="TIME_FILTER_TYPE" value={Stage.Basic.TimeFilter.INFLUX_DEFAULT_VALUE} />
+ *               label="TIME_FILTER_TYPE" value={Stage.Basic.TimeFilter.DEFAULT_VALUE} />
  * ```
  */
 
