@@ -10,17 +10,16 @@
     color: #000;
     border: 0 none #aeaeae;
     border-radius: 0.3rem;
-    display: flex;
     min-width: 300px;
 }
 
 .react-datepicker__month-container {
     float: left;
-    width: 250px;
+    width: 240px;
 }
 
 .react-datepicker__time-container {
-    width: 100px;
+    width: 90px;
 }
 
 .react-datepicker__day--outside-month {
@@ -29,8 +28,7 @@
 
 .react-datepicker__day, .react-datepicker__day-name {
     width: 2rem;
-    line-height: 2rem;
-    padding: 1px 0;
+    padding: 1px 0 0 0;
 }
 
 .react-datepicker__day:hover {
@@ -48,8 +46,9 @@
 }
 
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
-    padding-right: 0;
-    padding-left: 0;
+    padding-right: unset;
+    padding-left: unset;
+    width: 100%;
 }
 
 .react-datepicker__day--range-end, .react-datepicker__day--range-start {
