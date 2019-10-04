@@ -5,24 +5,29 @@
 import Actions from './actions';
 
 export default class CreateModal extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-
-        this.state = { ...CreateModal.initialState, open: false };
-    }
-
     static initialState = {
         loading: false,
         snapshotId: '',
-        includeMetrics: false,
         includeCredentials: false,
         excludeLogs: false,
         excludeEvents: false,
-        errors: {}
+        queue: false,
+        errors: {},
+        open: false
     };
 
+    constructor(props, context) {
+        super(props, context);
+
+        this.state = CreateModal.initialState;
+
+        this.onApprove = this.onApprove.bind(this);
+        this.onCancel = this.onCancel.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+    }
+
     onApprove() {
-        this._submitCreate();
+        this.submitCreate();
         return false;
     }
 
@@ -31,20 +36,16 @@ export default class CreateModal extends React.Component {
         return true;
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (!prevState.open && this.state.open) {
-            this.setState(CreateModal.initialState);
-        }
-    }
-
-    _submitCreate() {
+    submitCreate() {
+        const { toolbox, widget } = this.props;
+        const { snapshotId, includeCredentials, excludeLogs, excludeEvents, queue } = this.state;
         const errors = {};
 
-        if (_.isEmpty(this.state.snapshotId)) {
-            errors.snapshotId = 'Please provide snapshot id';
+        if (_.isEmpty(snapshotId)) {
+            errors.snapshotId = 'Please provide snapshot ID';
         } else {
             const URL_SAFE_CHARACTERS_RE = /^[0-9a-zA-Z\$\-\_\.\+\!\*\'\(\)\,]+$/;
-            if (!URL_SAFE_CHARACTERS_RE.test(this.state.snapshotId)) {
+            if (!URL_SAFE_CHARACTERS_RE.test(snapshotId)) {
                 errors.snapshotId =
                     'Please use safe characters. Letters, digits and the following ' +
                     "special characters $-_.+!*'(), are allowed";
@@ -53,25 +54,20 @@ export default class CreateModal extends React.Component {
 
         if (!_.isEmpty(errors)) {
             this.setState({ errors });
-            return false;
+            return;
         }
 
         // Disable the form
         this.setState({ loading: true });
 
         // Call create method
-        const actions = new Actions(this.props.toolbox);
+        const actions = new Actions(toolbox);
+
         actions
-            .doCreate(
-                this.state.snapshotId,
-                this.state.includeMetrics,
-                this.state.includeCredentials,
-                this.state.excludeLogs,
-                this.state.excludeEvents
-            )
+            .doCreate(snapshotId, includeCredentials, excludeLogs, excludeEvents, queue)
             .then(() => {
-                this.props.toolbox.getContext().setValue(`${this.props.widget.id}createSnapshot`, null);
-                this.props.toolbox.getEventBus().trigger('snapshots:refresh');
+                toolbox.getContext().setValue(`${widget.id}createSnapshot`, null);
+                toolbox.getEventBus().trigger('snapshots:refresh');
                 this.setState({ errors: {}, loading: false, open: false });
             })
             .catch(err => {
@@ -79,87 +75,78 @@ export default class CreateModal extends React.Component {
             });
     }
 
-    _handleInputChange(proxy, field) {
+    handleInputChange(proxy, field) {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
     render() {
+        const { errors, excludeLogs, excludeEvents, includeCredentials, open, loading, snapshotId, queue } = this.state;
         const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-        const createButton = <Button content="Create" icon="add" labelPosition="left" />;
 
         return (
             <Modal
-                trigger={createButton}
-                open={this.state.open}
-                onOpen={() => this.setState({ open: true })}
-                onClose={() => this.setState({ open: false })}
+                trigger={<Button content="Create" icon="add" labelPosition="left" />}
+                open={open}
+                onOpen={() => this.setState({ ...CreateModal.initialState, open: true })}
+                onClose={this.onCancel}
             >
                 <Modal.Header>
                     <Icon name="add" /> Create snapshot
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form
-                        loading={this.state.loading}
-                        errors={this.state.errors}
-                        onErrorsDismiss={() => this.setState({ errors: {} })}
-                    >
-                        <Form.Field error={this.state.errors.snapshotId}>
-                            <Form.Input
-                                name="snapshotId"
-                                placeholder="Snapshot ID"
-                                value={this.state.snapshotId}
-                                onChange={this._handleInputChange.bind(this)}
-                            />
+                    <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
+                        <Form.Field label="Snapshot ID" required error={errors.snapshotId}>
+                            <Form.Input name="snapshotId" value={snapshotId} onChange={this.handleInputChange} />
                         </Form.Field>
 
-                        <Form.Field>
-                            <Form.Checkbox
-                                toggle
-                                label="Include metrics data"
-                                name="includeMetrics"
-                                checked={this.state.includeMetrics}
-                                onChange={this._handleInputChange.bind(this)}
-                            />
-                        </Form.Field>
-
-                        <Form.Field help="Includes SSH keys specified in uploaded blueprints">
+                        <Form.Field help="Includes agent SSH keys (including those specified in uploaded blueprints) in the snapshot">
                             <Form.Checkbox
                                 toggle
                                 label="Include credentials"
                                 name="includeCredentials"
-                                checked={this.state.includeCredentials}
-                                onChange={this._handleInputChange.bind(this)}
+                                checked={includeCredentials}
+                                onChange={this.handleInputChange}
                             />
                         </Form.Field>
 
-                        <Form.Field>
+                        <Form.Field help="Exclude logs from the snapshot">
                             <Form.Checkbox
                                 toggle
                                 label="Exclude logs"
                                 name="excludeLogs"
-                                checked={this.state.excludeLogs}
-                                onChange={this._handleInputChange.bind(this)}
+                                checked={excludeLogs}
+                                onChange={this.handleInputChange}
                             />
                         </Form.Field>
 
-                        <Form.Field>
+                        <Form.Field help="Exclude events from the snapshot">
                             <Form.Checkbox
                                 toggle
                                 label="Exclude events"
                                 name="excludeEvents"
-                                checked={this.state.excludeEvents}
-                                onChange={this._handleInputChange.bind(this)}
+                                checked={excludeEvents}
+                                onChange={this.handleInputChange}
+                            />
+                        </Form.Field>
+
+                        <Form.Field help="Queue snapshot creation workflow and run automatically when possible">
+                            <Form.Checkbox
+                                toggle
+                                label="Queue"
+                                name="queue"
+                                checked={queue}
+                                onChange={this.handleInputChange}
                             />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
+                    <CancelButton onClick={this.onCancel} disabled={loading} />
                     <ApproveButton
-                        onClick={this.onApprove.bind(this)}
-                        disabled={this.state.loading}
+                        onClick={this.onApprove}
+                        disabled={loading}
                         content="Create"
                         icon="add"
                         color="green"
@@ -169,3 +156,13 @@ export default class CreateModal extends React.Component {
         );
     }
 }
+
+CreateModal.propTypes = {
+    toolbox: PropTypes.shape({
+        getContext: PropTypes.func.isRequired,
+        getEventBus: PropTypes.func.isRequired
+    }).isRequired,
+    widget: PropTypes.shape({
+        id: PropTypes.string.isRequired
+    }).isRequired
+};
