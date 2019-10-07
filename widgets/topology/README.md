@@ -59,6 +59,7 @@ When you hover over the badge and the topology is displayed for specific deploym
 
 The following settings allow changing the presentation of the widget in different aspects, and are by default marked as “on”: 
 
+* `Enable node click` 
 * `Enable group click` 
 * `Enable zoom` 
 * `Enable drag` 

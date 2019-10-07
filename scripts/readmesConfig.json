@@ -39,6 +39,7 @@
     {"widget": "secrets", "link": "/content/working_with/console/widgets/secrets.md"},
     {"widget": "serversNum", "link": "/content/working_with/console/widgets/serversNum.md"},
     {"widget": "sites", "link": "/content/working_with/console/widgets/sites.md"},
+    {"widget": "sitesMap", "link": "/content/working_with/console/widgets/sitesMap.md"},
     {"widget": "snapshots", "link": "/content/working_with/console/widgets/snapshots.md"},
     {"widget": "tenants", "link": "/content/working_with/console/widgets/tenants.md"},
     {"widget": "text", "link": "/content/working_with/console/widgets/text.md"},

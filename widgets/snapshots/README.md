@@ -1,6 +1,6 @@
 ### Snapshots List
 
-Displays a list of snapshots of the Manager - both snapshots that were created on this manager, and snapshots uploaded to it. This widget is only available to users with the role ‘admin’
+Displays a list of snapshots of the Manager - both snapshots that were created on this manager, and snapshots uploaded to it. This widget is only available to users with the role ‘admin’.
 
 
 Snapshots are always created with “private” visibility, which cannot be set to a different visibility level.
@@ -8,13 +8,13 @@ Snapshots are always created with “private” visibility, which cannot be set 
 
 The widget exposes the following information on each snapshot:
 
-* **Id** (the name given to the snapshot upon creation)
-* **Visibility Icon** (always “private” for snapshots)
+* **Id** - the name given to the snapshot upon creation
+* **Visibility** - always “private” for snapshots
 * **Creation time**
-* **Status** (One of: created/creating/failed/uploading/uploaded)
+* **Status** - one of: created/creating/failed/uploading/uploaded
 * **Creator**
 
-In the right column of every snapshot, the widget exposes the following functionalities:
+In the right column of every snapshot, the widget exposes the following action buttons:
 
 * **Restore snapshot**
 * **Download snapshot** 
