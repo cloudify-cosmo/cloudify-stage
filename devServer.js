@@ -25,7 +25,7 @@ const indexHtml = `${contextPath}/static/index.html`;
 const options = {
     publicPath: webpackConfig[0].output.publicPath,
     host,
-    inline: true,
+    inline: false,
     historyApiFallback: {
         index: indexHtml
     },

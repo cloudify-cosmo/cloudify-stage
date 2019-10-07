@@ -27,7 +27,6 @@ describe('Template Management', () => {
                 'tmm',
                 'ha',
                 'systemResources-admin',
-                'statistics',
                 'logs'
             ],
             roles: 'sys_admin',
@@ -49,7 +48,6 @@ describe('Template Management', () => {
         { id: 'logs', name: 'Logs' },
         { id: 'plugins', name: 'Plugins' },
         { id: 'sites', name: 'Site Management' },
-        { id: 'statistics', name: 'Statistics' },
         { id: 'systemResources-admin', name: 'System Resources' },
         { id: 'systemResources-community', name: 'System Resources' },
         { id: 'systemResources', name: 'System Resources' },
@@ -232,7 +230,7 @@ describe('Template Management', () => {
         // Add pages
         cy.get('.horizontal > :nth-child(1)').within(() => {
             cy.contains('deployment').within(() => cy.get('.add').click());
-            cy.contains('statistics').within(() => cy.get('.add').click());
+            cy.contains('plugins').within(() => cy.get('.add').click());
             cy.contains('logs').within(() => cy.get('.add').click());
         });
 
@@ -244,7 +242,7 @@ describe('Template Management', () => {
         verifyTemplateRow(
             builtInTemplates.length + 1,
             'Template 1',
-            ['deployment', 'statistics', 'logs'],
+            ['deployment', 'plugins', 'logs'],
             'user, viewer',
             ['all']
         );
@@ -291,7 +289,7 @@ describe('Template Management', () => {
         verifyTemplateRow(
             builtInTemplates.length + 1,
             'Another Template',
-            ['deployment', 'statistics', 'tmm'],
+            ['deployment', 'plugins', 'tmm'],
             'manager, operations',
             ['T1', 'T2']
         );
