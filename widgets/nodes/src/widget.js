@@ -41,7 +41,7 @@ Stage.defineWidget({
     ],
     fetchUrl: {
         nodes:
-            '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,type_hierarchy,number_of_instances,host_id,relationships,created_by[params:blueprint_id,deployment_id,gridParams]',
+            '[manager]/nodes?_include=id,deployment_id,blueprint_id,type,type_hierarchy,actual_number_of_instances,host_id,relationships,created_by[params:blueprint_id,deployment_id,gridParams]',
         nodeInstances:
             '[manager]/node-instances?_include=id,node_id,deployment_id,state,relationships,runtime_properties[params:deployment_id]',
         deployments: '[manager]/deployments?_include=id,groups[params:blueprint_id,id]'
@@ -96,7 +96,7 @@ Stage.defineWidget({
                         .filter(r => r.type === CONNECTED_TO_RELATIONSHIP)
                         .map(r => r.target_id)
                         .join(),
-                    numberOfInstances: node.number_of_instances,
+                    numberOfInstances: node.actual_number_of_instances,
                     instances: instances
                         .filter(
                             instance => instance.node_id === node.id && instance.deployment_id === node.deployment_id
