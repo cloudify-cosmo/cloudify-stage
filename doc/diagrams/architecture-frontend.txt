@@ -1,0 +1,41 @@
+[note:Cloudify Stage Frontend Architecture {bg:black}]
+
+[Application Starter|main.js]->[React&Redux application|app.js {bg:red}]
+[React&Redux application|]->[note:react library {bg:forestgreen}]
+[React&Redux application|]->[note:react-redux library {bg:forestgreen}]
+[React&Redux application|]->[note:react-router library {bg:forestgreen}]
+[React&Redux application|]->[Core React components;&#9883;|containers&#47;Routes.js {bg:deepskyblue}]
+
+[React&Redux application|]->[Redux Store Configuration|configureStore.js]
+[Redux Store Configuration|]->[note:redux library {bg:forestgreen}]
+
+
+[React&Redux application|]->[Configuration Loader|utils&#47;ConfigLoader.js]
+[React&Redux application|]->[Widgets Loader|utils&#47;widgetDefinitionLoader.js]
+[React&Redux application|]->[Toolbox|utils&#47;Toolbox.js]
+[React&Redux application|]->[UserApp Data Handler|utils&#47;UserAppDataAutoSaver.js]
+[React&Redux application|]->[Manager Status Poller|utils&#47;StatusPoller.js]
+
+[Toolbox|]->[Event Bus|utils&#47;EventBus.js]
+[Toolbox|]->[Context Handler|utils&#47;Context.js]
+[Toolbox|]->[Manager HTTP Request Handler|utils&#47;Manager.js]
+[Toolbox|]->[External HTTP Request Handler|utils&#47;External.js]
+[Toolbox|]->[Internal HTTP Request Handler|utils&#47;Internal.js]
+[Toolbox|]->[Widget Backend HTTP Request Handler|utils&#47;WidgetBackend.js]
+
+[Configuration Loader|]->[note:isomorphic-fetch library {bg:forestgreen}]
+
+[Widgets Loader|]->[Script Loader|utils&#47;ScriptLoader.js]
+[Widgets Loader|]->[Style Loader|utils&#47;StyleLoader.js]
+[Widgets Loader|]->[Basic React components;&#9883;|components&#47;basic&#47;index.js {bg:deepskyblue}]
+[Widgets Loader|]->[Internal HTTP Request Handler|]
+[Widgets Loader|]->[note:moment library {bg:forestgreen}]
+[Widgets Loader|]->[note:markdown library {bg:forestgreen}]
+
+[Script Loader|]->[note:Browser-based file fetch {bg:forestgreen}]
+[Style Loader|]->[note:Browser-based file fetch {bg:forestgreen}]
+
+[External HTTP Request Handler|]^-[Internal HTTP Request Handler|]
+[Internal HTTP Request Handler|]^-[Manager HTTP Request Handler|]
+[Internal HTTP Request Handler|]^-[Widget Backend HTTP Request Handler|]
+[External HTTP Request Handler|]->[note:isomorphic-fetch library {bg:forestgreen}]

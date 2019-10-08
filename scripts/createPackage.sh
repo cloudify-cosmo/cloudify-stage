@@ -13,6 +13,7 @@ mkdir .tmp/cloudify-stage/conf
 cp -r dist/** .tmp/cloudify-stage/dist
 cp -r backend/** .tmp/cloudify-stage/backend
 cp conf/** .tmp/cloudify-stage/conf
+rm .tmp/cloudify-stage/conf/me.json*
 cp scripts/package-template.json .tmp/cloudify-stage
 cd .tmp
 mv cloudify-stage/package-template.json cloudify-stage/package.json
