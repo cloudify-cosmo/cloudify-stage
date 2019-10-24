@@ -179,7 +179,7 @@ describe('Template Management', () => {
         cy.get('button#addWidgetsBtn').click();
 
         // Save page
-        cy.get('.editModeSidebar .content > :nth-child(2)').click();
+        cy.contains('Save').click();
 
         // Verify page
         verifyPageRow(builtInPages.length + 1, 'page_1', 'Page 1');
@@ -198,7 +198,7 @@ describe('Template Management', () => {
         cy.get('button#addWidgetsBtn').click();
 
         // Save page
-        cy.get('.editModeSidebar .content > :nth-child(2)').click();
+        cy.contains('Save').click();
 
         // Remove page
         getPageRow('page_1').within(() => cy.get('.remove').click());
