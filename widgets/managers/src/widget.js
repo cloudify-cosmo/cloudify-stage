@@ -34,14 +34,13 @@ Stage.defineWidget({
 
         return toolbox
             .getManager()
-            .doGetFull('/deployments', { _include: 'id,workflows,capabilities' })
+            .doGetFull('/deployments', {
+                _include: 'id,workflows,capabilities,description',
+                description: 'Cloudify Spire Management Cluster'
+            })
             .then(deployments => {
-                momDeployments = _.filter(
-                    _.get(deployments, 'items', []),
-                    deployment => !!deployment.capabilities.endpoint
-                );
-
-                const capabilitiesPromises = _.map(momDeployments, deployment =>
+                // FIXME: Do we need that??
+                const capabilitiesPromises = _.map(deployments, deployment =>
                     toolbox.getManager().doGet(`/deployments/${deployment.id}/capabilities`)
                 );
 
@@ -52,12 +51,12 @@ Stage.defineWidget({
 
                 return Promise.all([executionsPromise, ...capabilitiesPromises]);
             })
-            .then(([executions, ...momDeploymentsCapabilities]) => {
+            .then(([executions, ...spireDeploymentsCapabilities]) => {
                 const executionsData = _.groupBy(executions.items, 'deployment_id');
 
                 return Promise.resolve({
                     items: _.sortBy(
-                        _.map(momDeploymentsCapabilities, deploymentCapabilities => {
+                        _.map(spireDeploymentsCapabilities, deploymentCapabilities => {
                             const managerId = deploymentCapabilities.deployment_id;
                             const managerIp = _.get(deploymentCapabilities.capabilities, 'endpoint', '');
                             const deployment = _.find(
@@ -82,7 +81,7 @@ Stage.defineWidget({
                         }),
                         'id'
                     ),
-                    total: _.size(momDeploymentsCapabilities)
+                    total: _.size(spireDeploymentsCapabilities)
                 });
             });
     },
