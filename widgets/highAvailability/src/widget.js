@@ -1,44 +1,26 @@
-/**
- * Created by kinneretzin on 28/03/2017.
- */
-
-import ClusterManagement from './ClusterManagement';
+import ClusterServicesList from './ClusterServicesList';
 
 Stage.defineWidget({
     id: 'highAvailability',
-    name: 'High Availability',
-    description: 'List nodes in High Availability cluster',
+    name: 'Cluster Status',
+    description: 'Shows the status of the Cloudify Manager cluster',
     initialWidth: 12,
     initialHeight: 25,
     color: 'green',
+    fetchUrl: '[manager]/cluster-status',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('highAvailability'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
-
-    initialConfiguration: [
-        Stage.GenericConfig.POLLING_TIME_CONFIG(30),
-        Stage.GenericConfig.PAGE_SIZE_CONFIG(),
-        Stage.GenericConfig.SORT_COLUMN_CONFIG('name'),
-        Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
-    ],
-
-    fetchData(widget, toolbox, params) {
-        const result = {};
-        return toolbox
-            .getManager()
-            .doGet('/managers')
-            .then(data => {
-                result.nodes = data;
-                return result;
-            });
-    },
+    initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
 
     render(widget, data, error, toolbox) {
-        if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading />;
-        }
+        const { Loading } = Stage.Basic;
 
-        return <ClusterManagement widget={widget} data={data} toolbox={toolbox} />;
+        return _.isEmpty(data) ? (
+            <Loading />
+        ) : (
+            <ClusterServicesList configuration={widget.configuration} services={data.services} toolbox={toolbox} />
+        );
     }
 });
