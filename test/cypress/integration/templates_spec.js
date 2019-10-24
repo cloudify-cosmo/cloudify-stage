@@ -202,7 +202,7 @@ describe('Template Management', () => {
 
         // Remove page
         getPageRow('page_1').within(() => cy.get('.remove').click());
-        cy.get('.rightFloated > .green').click();
+        cy.get('.rightFloated > .green').click({ force: true });
         cy.get('.main .loading').should('be.not.visible', true);
 
         // Verify page was removed
