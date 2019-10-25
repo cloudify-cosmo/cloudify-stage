@@ -200,9 +200,12 @@ describe('Template Management', () => {
         // Save page
         cy.contains('Save').click();
 
+        // Verify page
+        verifyPageRow(builtInPages.length + 1, 'page_1', 'Page 1');
+
         // Remove page
-        cy.get('.remove').click();
-        cy.contains('button', 'Ok').click({ force: true });
+        getPageRow('page_1').within(() => cy.get('.remove').click());
+        cy.get('.rightFloated > .green').click({ force: true });
         cy.get('.main .loading').should('be.not.visible', true);
 
         // Verify page was removed
@@ -296,8 +299,8 @@ describe('Template Management', () => {
 
         // Remove template
         cy.get('.blue.segment');
-        cy.get('.remove').click();
-        cy.contains('button', 'Ok').click({ force: true });
+        getTemplateRow('Another Template').within(() => cy.get('.remove').click());
+        cy.get('.rightFloated > .green').click({ force: true });
         cy.get('.main .loading').should('be.not.visible', true);
 
         // Verify template was removed
