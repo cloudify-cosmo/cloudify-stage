@@ -202,7 +202,7 @@ describe('Template Management', () => {
 
         // Remove page
         cy.get('.remove').click();
-        cy.contains('Ok').click({ force: true });
+        cy.contains('button', 'Ok').click({ force: true });
         cy.get('.main .loading').should('be.not.visible', true);
 
         // Verify page was removed
@@ -297,7 +297,7 @@ describe('Template Management', () => {
         // Remove template
         cy.get('.blue.segment');
         cy.get('.remove').click();
-        cy.contains('Ok').click({ force: true });
+        cy.contains('button', 'Ok').click({ force: true });
         cy.get('.main .loading').should('be.not.visible', true);
 
         // Verify template was removed
