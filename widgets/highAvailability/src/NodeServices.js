@@ -69,6 +69,26 @@ ServiceStatus.propTypes = {
     status: PropTypes.oneOf(nodeServiceStatuses).isRequired
 };
 
+const ServiceExtraInfo = ({ extraInfo }) => {
+    const { HighlightText, Icon, Popup } = Stage.Basic;
+    const { stringify } = Stage.Utils.Json;
+
+    return (
+        <Popup wide="very">
+            <Popup.Trigger>
+                <Icon name="info" />
+            </Popup.Trigger>
+            <Popup.Content>
+                <HighlightText className="json">{stringify(extraInfo, true)}</HighlightText>
+            </Popup.Content>
+        </Popup>
+    );
+};
+ServiceStatus.propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    extraInfo: PropTypes.object.isRequired
+};
+
 export default function NodeServices({ name, type, services }) {
     const { Table } = Stage.Basic;
 
@@ -79,7 +99,8 @@ export default function NodeServices({ name, type, services }) {
             name: serviceName,
             isExternal: services[serviceName].is_external,
             status: services[serviceName].status,
-            description: _.get(services[serviceName], 'extra_info.systemd.instances[0].Description', '')
+            description: _.get(services[serviceName], 'extra_info.systemd.instances[0].Description', ''),
+            extraInfo: services[serviceName].extra_info
         }))
         .value();
 
@@ -87,7 +108,7 @@ export default function NodeServices({ name, type, services }) {
         <Table celled basic="very" collapsing className="servicesData">
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell colSpan="2">
+                    <Table.HeaderCell colSpan="3">
                         <StatusHeader nodeName={name} nodeType={type} />
                     </Table.HeaderCell>
                 </Table.Row>
@@ -95,7 +116,7 @@ export default function NodeServices({ name, type, services }) {
 
             <Table.Body>
                 {_.map(formattedServices, service => {
-                    const { description, isExternal, name: serviceName, status: serviceStatus } = service;
+                    const { description, isExternal, name: serviceName, status: serviceStatus, extraInfo } = service;
                     return (
                         <Table.Row key={serviceName}>
                             <Table.Cell collapsing>
@@ -103,6 +124,9 @@ export default function NodeServices({ name, type, services }) {
                             </Table.Cell>
                             <Table.Cell textAlign="center">
                                 <ServiceStatus status={serviceStatus} />
+                            </Table.Cell>
+                            <Table.Cell textAlign="center">
+                                <ServiceExtraInfo extraInfo={extraInfo} />
                             </Table.Cell>
                         </Table.Row>
                     );
