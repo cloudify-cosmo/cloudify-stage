@@ -1,13 +1,13 @@
 import NodeServices from './NodeServices';
-import { clusterNodeStatus, clusterNodeStatuses, clusterServices, nodeServiceStatuses } from './consts';
+import { clusterNodeStatusEnum, clusterNodeStatuses } from './consts';
 
 export default function NodeStatus({ name, type, status, services }) {
     const { Icon, Popup } = Stage.Basic;
 
     const StatusIcon = () =>
         ({
-            [clusterNodeStatus.OK]: <Icon name="checkmark" color="green" link />,
-            [clusterNodeStatus.FAIL]: <Icon name="remove" color="red" link />
+            [clusterNodeStatusEnum.OK]: <Icon name="checkmark" color="green" link />,
+            [clusterNodeStatusEnum.FAIL]: <Icon name="remove" color="red" link />
         }[status]);
 
     return (
@@ -25,25 +25,9 @@ export default function NodeStatus({ name, type, status, services }) {
 }
 
 NodeStatus.propTypes = {
-    name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(clusterServices).isRequired,
-    status: PropTypes.oneOf(clusterNodeStatuses).isRequired,
-    services: PropTypes.objectOf(
-        PropTypes.shape({
-            is_external: PropTypes.bool,
-            status: PropTypes.oneOf(nodeServiceStatuses),
-            extra_info: PropTypes.shape({
-                systemd: PropTypes.shape({
-                    instances: PropTypes.arrayOf(
-                        PropTypes.shape({
-                            Description: PropTypes.string
-                        })
-                    )
-                })
-            })
-        })
-    )
+    ...NodeServices.propTypes,
+    status: PropTypes.oneOf(clusterNodeStatuses).isRequired
 };
 NodeStatus.defaultProps = {
-    services: {}
+    ...NodeServices.defaultProps
 };

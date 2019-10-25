@@ -1,33 +1,31 @@
-import _ from 'lodash';
-
-export const clusterService = {
-    manager: 'manager',
-    db: 'db',
-    broker: 'broker'
-};
-export const clusterServices = _.keys(clusterService);
-
-export const clusterServiceName = {
+export const clusterServiceName = Object.freeze({
     manager: 'Manager',
     db: 'Database',
     broker: 'Broker'
-};
+});
 
-export const clusterServiceStatus = {
+export const clusterServiceEnum = Object.freeze({
+    manager: 'manager',
+    db: 'db',
+    broker: 'broker'
+});
+export const clusterServices = _.keys(clusterServiceEnum);
+
+export const clusterServiceStatusEnum = Object.freeze({
     OK: 'OK',
     FAIL: 'FAIL',
     DEGRADED: 'DEGRADED'
-};
-export const clusterServiceStatuses = _.keys(clusterServiceStatus);
+});
+export const clusterServiceStatuses = _.keys(clusterServiceStatusEnum);
 
-export const clusterNodeStatus = {
+export const clusterNodeStatusEnum = Object.freeze({
     OK: 'OK',
     FAIL: 'FAIL'
-};
-export const clusterNodeStatuses = _.keys(clusterNodeStatus);
+});
+export const clusterNodeStatuses = _.keys(clusterNodeStatusEnum);
 
-export const nodeServiceStatus = {
+export const nodeServiceStatusEnum = Object.freeze({
     Active: 'Active',
     Inactive: 'Inactive'
-};
-export const nodeServiceStatuses = _.keys(nodeServiceStatus);
+});
+export const nodeServiceStatuses = _.keys(nodeServiceStatusEnum);

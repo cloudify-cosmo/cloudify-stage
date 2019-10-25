@@ -1,12 +1,11 @@
-import _ from 'lodash';
-import { clusterService, clusterServices, nodeServiceStatus, nodeServiceStatuses } from './consts';
+import { clusterServiceEnum, clusterServices, nodeServiceStatusEnum, nodeServiceStatuses } from './consts';
 
 const StatusHeader = ({ nodeName, nodeType }) => {
     const { Header, Icon } = Stage.Basic;
     const nodeIcon = {
-        [clusterService.manager]: 'settings',
-        [clusterService.db]: 'database',
-        [clusterService.broker]: 'comments'
+        [clusterServiceEnum.manager]: 'settings',
+        [clusterServiceEnum.db]: 'database',
+        [clusterServiceEnum.broker]: 'comments'
     }[nodeType];
 
     return (
@@ -53,20 +52,16 @@ ServiceHeader.defaultProps = {
 const ServiceStatus = ({ status }) => {
     const { Icon } = Stage.Basic;
 
-    const StatusIcon = () => {
-        switch (status) {
-            case nodeServiceStatus.Active:
-                return <Icon name="checkmark" color="green" />;
-            case nodeServiceStatus.Inactive:
-                return <Icon name="remove" color="red" />;
-            default:
-                return <Icon name="question" color="grey" />;
-        }
-    };
+    let icon = <Icon name="question" color="grey" />;
+    if (status === nodeServiceStatusEnum.Active) {
+        icon = <Icon name="checkmark" color="green" />;
+    } else if (status === nodeServiceStatusEnum.Inactive) {
+        icon = <Icon name="remove" color="red" />;
+    }
+
     return (
         <>
-            <StatusIcon />
-            {status}
+            {icon} {status}
         </>
     );
 };
@@ -117,24 +112,18 @@ export default function NodeServices({ name, type, services }) {
     );
 }
 
+export const nodeServicesPropType = PropTypes.objectOf(
+    PropTypes.shape({
+        is_external: PropTypes.bool.isRequired,
+        status: PropTypes.oneOf(nodeServiceStatuses).isRequired,
+        extra_info: PropTypes.object
+    })
+);
+
 NodeServices.propTypes = {
     name: PropTypes.string.isRequired,
     type: PropTypes.oneOf(clusterServices).isRequired,
-    services: PropTypes.objectOf(
-        PropTypes.shape({
-            is_external: PropTypes.bool,
-            status: PropTypes.oneOf(nodeServiceStatuses),
-            extra_info: PropTypes.shape({
-                systemd: PropTypes.shape({
-                    instances: PropTypes.arrayOf(
-                        PropTypes.shape({
-                            Description: PropTypes.string
-                        })
-                    )
-                })
-            })
-        })
-    )
+    services: nodeServicesPropType
 };
 NodeServices.defaultProps = {
     services: {}

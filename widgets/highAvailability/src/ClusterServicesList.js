@@ -1,14 +1,13 @@
 import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';
-import { clusterNodeStatuses, clusterService, clusterServiceStatus, clusterServiceStatuses } from './consts';
+import { nodeServicesPropType } from './NodeServices';
+import { clusterNodeStatuses, clusterServiceEnum, clusterServiceStatuses, clusterServiceStatusEnum } from './consts';
 
-export default function ClusterServicesList(props) {
-    const { services, toolbox } = props;
+export default function ClusterServicesList({ services, toolbox }) {
     const { DataTable } = Stage.Basic;
-    const fetchData = fetchParams => toolbox.refresh(fetchParams);
 
     return (
-        <DataTable fetchData={fetchData}>
+        <DataTable fetchData={toolbox.refresh}>
             <DataTable.Column label="Service Type" width="15%" />
             <DataTable.Column label="Node Name" width="20%" />
             <DataTable.Column label="Status" width="5%" />
@@ -17,15 +16,15 @@ export default function ClusterServicesList(props) {
             <DataTable.Column label="Version" width="15%" />
 
             {_.map(services, (service, serviceName) => {
-                const numberOfNodes = service.nodes.length;
+                const numberOfNodes = _.size(service.nodes);
                 const backgroundColor = {
-                    [clusterServiceStatus.OK]: '#21ba45',
-                    [clusterServiceStatus.DEGRADED]: '#fbbd08',
-                    [clusterServiceStatus.FAIL]: '#db2828'
+                    [clusterServiceStatusEnum.OK]: '#21ba45',
+                    [clusterServiceStatusEnum.DEGRADED]: '#fbbd08',
+                    [clusterServiceStatusEnum.FAIL]: '#db2828'
                 }[service.status];
 
                 return _(service.nodes)
-                    .sortBy(node => node.name)
+                    .sortBy('name')
                     .map((node, index) => (
                         <DataTable.Row key={node.id}>
                             {index === 0 && (
@@ -44,7 +43,7 @@ export default function ClusterServicesList(props) {
                             </DataTable.Data>
                             <DataTable.Data>{node.private_ip}</DataTable.Data>
                             <DataTable.Data>
-                                {serviceName === clusterService.manager ? (
+                                {serviceName === clusterServiceEnum.manager ? (
                                     <a href={`https://${node.public_ip}`} target="_blank" rel="noopener noreferrer">
                                         {node.public_ip}
                                     </a>
@@ -61,7 +60,7 @@ export default function ClusterServicesList(props) {
     );
 }
 
-ClusterServicesList.clusterServiceProps = PropTypes.shape({
+const clusterServiceProps = PropTypes.shape({
     status: PropTypes.oneOf(clusterServiceStatuses).isRequired,
     nodes: PropTypes.arrayOf(
         PropTypes.shape({
@@ -69,17 +68,14 @@ ClusterServicesList.clusterServiceProps = PropTypes.shape({
             public_ip: PropTypes.string.isRequired,
             version: PropTypes.string.isRequired,
             id: PropTypes.string.isRequired,
-            private_ip: PropTypes.string.isRequired
+            private_ip: PropTypes.string.isRequired,
+            services: nodeServicesPropType
         })
     ).isRequired,
     is_external: PropTypes.bool.isRequired
 }).isRequired;
 
 ClusterServicesList.propTypes = {
-    services: PropTypes.shape({
-        [clusterService.manager]: ClusterServicesList.clusterServiceProps,
-        [clusterService.db]: ClusterServicesList.clusterServiceProps,
-        [clusterService.broker]: ClusterServicesList.clusterServiceProps
-    }).isRequired,
+    services: PropTypes.shape(_.mapValues(clusterServiceEnum, () => clusterServiceProps)).isRequired,
     toolbox: PropTypes.shape({ refresh: PropTypes.func.isRequired }).isRequired
 };
