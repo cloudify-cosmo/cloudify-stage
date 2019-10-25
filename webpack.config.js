@@ -101,7 +101,8 @@ module.exports = [
             alias: {
                 'jquery-ui': 'jquery-ui/ui',
                 jquery: `${__dirname}/node_modules/jquery` // Always make sure we take jquery from the same place
-            }
+            },
+            modules: [path.resolve(__dirname, 'node_modules')]
         },
         entry: {
             'main.bundle': ['./app/main.js']
@@ -163,6 +164,9 @@ module.exports = [
         mode: 'development',
         context: path.join(__dirname),
         devtool: 'eval-source-map',
+        resolve: {
+            modules: [path.resolve(__dirname, 'node_modules')]
+        },
         entry: getWidgetEntries(),
         output: {
             path: path.join(__dirname, 'dist/appData'),
@@ -188,6 +192,9 @@ module.exports = [
         mode: 'development',
         context: path.join(__dirname),
         devtool: 'eval-source-map',
+        resolve: {
+            modules: [path.resolve(__dirname, 'node_modules')]
+        },
         entry: glob.sync('./widgets/common/src/*.js'),
         output: {
             path: path.join(__dirname, 'dist/appData/widgets'),

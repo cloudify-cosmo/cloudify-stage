@@ -104,7 +104,7 @@ export default class NodesTable extends React.Component {
                     />
                     <DataTable.Column
                         label="# Instances"
-                        name="number_of_instances"
+                        name="actual_number_of_instances"
                         width="9%"
                         show={fieldsToShow.indexOf('# Instances') >= 0}
                     />

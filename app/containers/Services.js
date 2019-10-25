@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Services from '../components/Services';
 import { getStatus } from '../actions/status';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     return {
         services: state.manager.status.services,
         isFetching: state.manager.status.isFetching,
@@ -14,7 +14,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         onStatusRefresh: () => {
             dispatch(getStatus());

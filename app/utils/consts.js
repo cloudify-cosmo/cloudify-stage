@@ -52,7 +52,8 @@ export default {
         GLOBAL: { name: 'global', icon: 'globe', color: 'blue', title: 'Global resource' },
         UNKNOWN: { name: 'unknown', icon: 'question', color: 'grey', title: 'Unknown resource visibility' }
     },
-    MANAGER_RUNNING: 'running',
+    MANAGER_STATUS_OK: 'OK',
+    MANAGER_STATUS_FAIL: 'FAIL',
     MAINTENANCE_ACTIVATING: 'activating',
     MAINTENANCE_ACTIVATED: 'activated',
     MAINTENANCE_DEACTIVATED: 'deactivated',

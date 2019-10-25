@@ -105,7 +105,7 @@ export default class InputDate extends Component {
                 timeIntervals={this.props.timeIntervals}
                 inline
                 calendarClassName="input-time-filter"
-                dropdownMode="scroll"
+                fixedHeight
             />
         );
     }

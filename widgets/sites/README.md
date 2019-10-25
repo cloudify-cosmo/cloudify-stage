@@ -4,7 +4,7 @@ The widget provides the following information:
 
 * **Name**
 * **Visibility level** - Represented by the icon next to the name. Permitted users (the sites’s creator, sys admins or tenant managers of the current tenant) can set the site’s visibility by clicking on this icon.
-* **Location** - The location of the site, represented by latitude and longitude.
+* **Location** - The location of the site, represented by latitude and longitude. On hovering aim icon you can see popup with map and marked location.
 * **Creation time**
 * **Creator**
 * **Tenant** - The name of the tenant the site belongs to (if the site is global, it might belong to a tenant different than the current one).

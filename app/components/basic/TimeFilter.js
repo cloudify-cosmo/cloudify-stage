@@ -4,23 +4,20 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import { Button, Dropdown, Grid, Label, List, Segment, Table } from 'semantic-ui-react';
+import { Button, Grid, Label, List, Segment } from 'semantic-ui-react';
 import { ApproveButton, CancelButton } from './modal/ModalButtons';
 import Form from './form/Form';
 import Popup from './Popup';
-import StageUtils from '../../utils/stageUtils';
 
 /**
- * TimeFilter is a component showing time range and optionally time resolution selectors
+ * TimeFilter is a component showing time range
  *
  * Both props: `value` and `defaultValue` are timeFilter objects:
  * ```
  * {
  *   range:'',      // time range label
  *   start:'',      // datetime string representing time range start, eg. '2017-08-06 16:00' or 'now()-15m'
- *   end:'',        // datetime string representing time range end, eg. '2017-08-06 18:00' or 'now()'
- *   resolution:'', // time resolution value, an integer (only used when addTimeResolution is set to true)
- *   unit:''        // time resolution InfluxDB time syntax units, eg. 'm' for minutes, 'h' for hours (only used when addTimeResolution is set to true)
+ *   end:''         // datetime string representing time range end, eg. '2017-08-06 18:00' or 'now()'
  * }
  * ```
  *
@@ -49,53 +46,16 @@ export default class TimeFilter extends React.Component {
     static EMPTY_VALUE = {
         range: '',
         start: '',
-        end: '',
-        resolution: 1,
-        unit: 'm'
+        end: ''
     };
-
-    /*
-     *
-     */
-    static INFLUX_DEFAULT_VALUE = {
-        range: 'Last 15 Minutes',
-        start: 'now()-15m',
-        end: 'now()',
-        resolution: 1,
-        unit: 'm'
-    };
-
-    /*
-     *
-     */
-    static INFLUX_RANGES = {
-        'Last 15 Minutes': { start: 'now()-15m', end: 'now()' },
-        'Last 30 Minutes': { start: 'now()-30m', end: 'now()' },
-        'Last Hour': { start: 'now()-1h', end: 'now()' },
-        'Last 2 Hours': { start: 'now()-2h', end: 'now()' },
-        'Last Day': { start: 'now()-1d', end: 'now()' },
-        'Last Week': { start: 'now()-1w', end: 'now()' }
-    };
-
-    /*
-     *
-     */
-    static INFLUX_DATE_SYNTAX = 'influx';
-
-    /*
-     *
-     */
-    static ISO_8601_DATE_SYNTAX = 'iso8601';
 
     /**
      * propTypes
      *
      * @property {string} name name of the field
-     * @property {object} [defaultValue=TimeFilter.INFLUX_DEFAULT_VALUE] timeFilter object ({range:'', start:'', end:'', resolution:'', unit:''}) to be set when Reset button is clicked
-     * @property {object} [value=TimeFilter.INFLUX_DEFAULT_VALUE] timeFilter object to set input values
-     * @property {object} [ranges=TimeFilter.INFLUX_RANGES] ranges object ({[range1] : {start: '', end:''}, [range2]: {start:'', end:''}, ...})
-     * @property {boolean} [addTimeResolution=true] adds time resolution segment
-     * @property {string} [dateSyntax=TimeFilter.INFLUX_DATE_SYNTAX] defines validation method for input start/end date (allowed values: TimeFilter.INFLUX_DATE_SYNTAX, TimeFilter.ISO_8601_DATE_SYNTAX)
+     * @property {object} [defaultValue=TimeFilter.EMPTY_VALUE] timeFilter object ({range:'', start:'', end:''}) to be set when Reset button is clicked
+     * @property {object} [value=TimeFilter.EMPTY_VALUE] timeFilter object to set input values
+     * @property {object} [ranges={}] ranges object ({[range1] : {start: '', end:''}, [range2]: {start:'', end:''}, ...})
      * @property {Function} [onChange=(function (event, data) {});] function called on Apply button click, timeFilter object value is sent as data.value
      * @property {Function} [onCancel=(function (event, data) {});] function called on Cancel button click, timeFilter object value is sent as data.value
      */
@@ -104,32 +64,24 @@ export default class TimeFilter extends React.Component {
         defaultValue: PropTypes.shape({
             range: PropTypes.string.isRequired,
             start: PropTypes.string.isRequired,
-            end: PropTypes.string.isRequired,
-            resolution: PropTypes.number,
-            unit: PropTypes.string
+            end: PropTypes.string.isRequired
         }),
         value: PropTypes.shape({
             range: PropTypes.string.isRequired,
             start: PropTypes.string.isRequired,
-            end: PropTypes.string.isRequired,
-            resolution: PropTypes.number,
-            unit: PropTypes.string
+            end: PropTypes.string.isRequired
         }),
         ranges: PropTypes.object,
-        addTimeResolution: PropTypes.bool,
-        dateSyntax: PropTypes.oneOf([TimeFilter.INFLUX_DATE_SYNTAX, TimeFilter.ISO_8601_DATE_SYNTAX]),
         onChange: PropTypes.func,
         onCancel: PropTypes.func
     };
 
     static defaultProps = {
-        defaultValue: TimeFilter.INFLUX_DEFAULT_VALUE,
-        value: TimeFilter.INFLUX_DEFAULT_VALUE,
-        ranges: TimeFilter.INFLUX_RANGES,
-        addTimeResolution: true,
-        dateSyntax: TimeFilter.INFLUX_DATE_SYNTAX,
-        onChange: (event, data) => {},
-        onCancel: (event, data) => {}
+        defaultValue: TimeFilter.EMPTY_VALUE,
+        value: TimeFilter.EMPTY_VALUE,
+        ranges: {},
+        onChange: () => {},
+        onCancel: () => {}
     };
 
     static initialState = props => ({
@@ -151,25 +103,18 @@ export default class TimeFilter extends React.Component {
 
     static CUSTOM_RANGE = 'Custom Range';
 
-    static INFLUX_DATE_REGEX = /^$|^(now\(\)|([0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}))([\s-+]+[0-9]+[usmhdw])*$/;
-
-    static INFLUX_DURATION_REGEX = /([-+])\s?([0-9]+)([smhdw]){1}/g;
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
-    }
-
     componentDidMount() {
         const state = TimeFilter.initialState(this.props);
         _.extend(state, this._getStartDateState(state.start), this._getEndDateState(state.end));
         this.setState(state);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
+    }
+
     componentDidUpdate(prevProps, prevState) {
-        const dirty = !_.isEqual(
-            _.pick(this.state, Object.keys(TimeFilter.INFLUX_DEFAULT_VALUE)),
-            this.props.defaultValue
-        );
+        const dirty = !_.isEqual(_.pick(this.state, Object.keys(TimeFilter.EMPTY_VALUE)), this.props.defaultValue);
         const { value } = this.props;
         const newState = {};
         if (prevState.dirty != dirty) {
@@ -190,12 +135,8 @@ export default class TimeFilter extends React.Component {
     _getStartDateState(start) {
         const startDate = { startError: false };
         if (this._isValidDate(start)) {
-            if (this._isInfluxDateSyntax()) {
-                _.extend(startDate, this._calculateDateWithOffsets(start, 'startDate'));
-            } else {
-                const startMoment = moment(start || {});
-                _.extend(startDate, { startDate: startMoment });
-            }
+            const startMoment = moment(start || {});
+            _.extend(startDate, { startDate: startMoment });
         }
         return startDate;
     }
@@ -203,64 +144,10 @@ export default class TimeFilter extends React.Component {
     _getEndDateState(end) {
         const endDate = { endError: false };
         if (this._isValidDate(end)) {
-            if (this._isInfluxDateSyntax()) {
-                _.extend(endDate, this._calculateDateWithOffsets(end, 'endDate'));
-            } else {
-                const endMoment = moment(end || {});
-                _.extend(endDate, { endDate: endMoment });
-            }
+            const endMoment = moment(end || {});
+            _.extend(endDate, { endDate: endMoment });
         }
         return endDate;
-    }
-
-    _calculateDateWithOffsets(dateTime, stateDateField) {
-        const groups = TimeFilter.INFLUX_DATE_REGEX.exec(dateTime);
-        const baseDate = moment(groups[1], TimeFilter.DATETIME_FORMAT).isValid() ? moment(groups[1]) : moment();
-
-        _.forEach(groups[0].match(TimeFilter.INFLUX_DURATION_REGEX), match => {
-            const matchedGroups = new RegExp(TimeFilter.INFLUX_DURATION_REGEX).exec(match);
-            const opSubtraction = _.isEqual(matchedGroups[1], '-');
-            const opValue = matchedGroups[2];
-            const opScale = matchedGroups[3];
-            opSubtraction ? baseDate.subtract(opValue, opScale) : baseDate.add(opValue, opScale);
-        });
-
-        return {
-            [stateDateField]: baseDate
-        };
-    }
-
-    _calculateTimeResolution(startDate, endDate) {
-        const EXPECTED_NUMBER_OF_POINTS = 50;
-        const NUMBER_OF_MILLISECONDS_IN_SECOND = 1000;
-        const NUMBER_OF_MILLISECONDS_IN_MINUTE = 1000 * 60;
-        const NUMBER_OF_MILLISECONDS_IN_HOUR = 1000 * 60 * 60;
-        const NUMBER_OF_MILLISECONDS_IN_DAY = 1000 * 60 * 60 * 24;
-        const NUMBER_OF_MILLISECONDS_IN_WEEK = 1000 * 60 * 60 * 24 * 7;
-
-        let newResolution = {};
-        const startDateMoment = moment(startDate);
-        const endDateMoment = moment(endDate);
-
-        if (startDateMoment.isValid() && endDateMoment.isValid()) {
-            const tickSize = endDateMoment.diff(startDateMoment) / EXPECTED_NUMBER_OF_POINTS;
-
-            if (tickSize <= NUMBER_OF_MILLISECONDS_IN_SECOND) {
-                newResolution = { resolution: Math.floor(tickSize), unit: 'ms' };
-            } else if (tickSize <= NUMBER_OF_MILLISECONDS_IN_MINUTE) {
-                newResolution = { resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_SECOND), unit: 's' };
-            } else if (tickSize <= NUMBER_OF_MILLISECONDS_IN_HOUR) {
-                newResolution = { resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_MINUTE), unit: 'm' };
-            } else if (tickSize <= NUMBER_OF_MILLISECONDS_IN_DAY) {
-                newResolution = { resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_HOUR), unit: 'h' };
-            } else if (tickSize <= NUMBER_OF_MILLISECONDS_IN_WEEK) {
-                newResolution = { resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_DAY), unit: 'd' };
-            } else {
-                newResolution = { resolution: Math.floor(tickSize / NUMBER_OF_MILLISECONDS_IN_WEEK), unit: 'w' };
-            }
-        }
-
-        return newResolution;
     }
 
     _getStartState(startDate) {
@@ -287,23 +174,15 @@ export default class TimeFilter extends React.Component {
         });
     }
 
-    _isInfluxDateSyntax() {
-        return _.isEqual(this.props.dateSyntax, TimeFilter.INFLUX_DATE_SYNTAX);
-    }
-
     _isValidDate(dateTimeString) {
-        return this._isInfluxDateSyntax()
-            ? TimeFilter.INFLUX_DATE_REGEX.test(dateTimeString)
-            : moment(dateTimeString || {}).isValid();
+        return moment(dateTimeString || {}).isValid();
     }
 
     _getTimeFilterObject() {
         const timeFilter = {
             range: this.state.range
         };
-        if (this.props.addTimeResolution) {
-            _.extend(timeFilter, { resolution: this.state.resolution, unit: this.state.unit });
-        }
+
         if (_.isEqual(this.state.range, TimeFilter.CUSTOM_RANGE)) {
             timeFilter.start = this.state.start;
             timeFilter.end = this.state.end;
@@ -335,16 +214,13 @@ export default class TimeFilter extends React.Component {
         const { end } = this.props.ranges[field.name];
         const startDate = this._getStartDateState(start);
         const endDate = this._getEndDateState(end);
-        const timeResolution = this.props.addTimeResolution
-            ? this._calculateTimeResolution(startDate.startDate, endDate.endDate)
-            : {};
+
         this.setState({
             range: field.name,
             start,
             end,
             ...startDate,
-            ...endDate,
-            ...timeResolution
+            ...endDate
         });
     }
 
@@ -353,11 +229,6 @@ export default class TimeFilter extends React.Component {
         _.extend(newState, this._getStartState(this.state.startDate));
         _.extend(newState, this._getEndState(this.state.endDate));
         this.setState(newState);
-    }
-
-    _handleOptimizeButtonClick() {
-        const timeResolution = this._calculateTimeResolution(this.state.startDate, this.state.endDate);
-        this.setState(timeResolution);
     }
 
     _handleResetButtonClick() {
@@ -394,15 +265,7 @@ export default class TimeFilter extends React.Component {
         const from = this.state.start ? `from [${this.state.start}] ` : '';
         const until = this.state.end ? ` until [${this.state.end}]` : '';
         const inputValue = this._isRangeSelected(TimeFilter.CUSTOM_RANGE) ? `${from}${until}` : this.state.range;
-        const inputFieldHint = this._isInfluxDateSyntax() ? (
-            <div>
-                Influx-compatible date/time expected
-                <br />
-                Examples:
-                <br /> now() - 15m <br />
-                2017-09-21 10:10
-            </div>
-        ) : (
+        const inputFieldHint = (
             <div>
                 ISO-8601-compatible date/time expected
                 <br />
@@ -425,8 +288,8 @@ export default class TimeFilter extends React.Component {
                     />
                 </Popup.Trigger>
                 <Grid className="fixed-width">
-                    <Grid.Row columns={this.props.ranges ? 3 : 2}>
-                        {this.props.ranges && (
+                    <Grid.Row columns={_.isEmpty(this.props.ranges) ? 2 : 3}>
+                        {!_.isEmpty(this.props.ranges) && (
                             <Grid.Column width={4}>
                                 <Segment padded>
                                     <Label attached="top">Range:</Label>
@@ -458,7 +321,7 @@ export default class TimeFilter extends React.Component {
                                 </Segment>
                             </Grid.Column>
                         )}
-                        <Grid.Column width={this.props.ranges ? 6 : 8}>
+                        <Grid.Column width={_.isEmpty(this.props.ranges) ? 8 : 6}>
                             <Segment padded>
                                 <Label attached="top">From:</Label>
 
@@ -492,7 +355,7 @@ export default class TimeFilter extends React.Component {
                                 </List>
                             </Segment>
                         </Grid.Column>
-                        <Grid.Column width={this.props.ranges ? 6 : 8}>
+                        <Grid.Column width={_.isEmpty(this.props.ranges) ? 8 : 6}>
                             <Segment padded>
                                 <Label attached="top">To:</Label>
 
@@ -527,50 +390,6 @@ export default class TimeFilter extends React.Component {
                             </Segment>
                         </Grid.Column>
                     </Grid.Row>
-                    {this.props.addTimeResolution && (
-                        <Grid.Row>
-                            <Grid.Column width={12} floated="right">
-                                <Segment padded>
-                                    <Label attached="top">Resolution:</Label>
-                                    <Table compact basic="very">
-                                        <Table.Body>
-                                            <Table.Row>
-                                                <Table.Cell>
-                                                    <Form.Input
-                                                        type="number"
-                                                        name="resolution"
-                                                        fluid
-                                                        max={StageUtils.Time.MAX_TIME_RESOLUTION_VALUE}
-                                                        min={StageUtils.Time.MIN_TIME_RESOLUTION_VALUE}
-                                                        value={this.state.resolution}
-                                                        onChange={this._handleInputChange.bind(this)}
-                                                    />
-                                                </Table.Cell>
-                                                <Table.Cell>
-                                                    <Dropdown
-                                                        search
-                                                        options={StageUtils.Time.TIME_RESOLUTION_UNITS}
-                                                        name="unit"
-                                                        selection
-                                                        fluid
-                                                        value={this.state.unit}
-                                                        onChange={this._handleInputChange.bind(this)}
-                                                    />
-                                                </Table.Cell>
-                                                <Table.Cell collapsing>
-                                                    <Button
-                                                        onClick={this._handleOptimizeButtonClick.bind(this)}
-                                                        content="Optimize"
-                                                        icon="refresh"
-                                                    />
-                                                </Table.Cell>
-                                            </Table.Row>
-                                        </Table.Body>
-                                    </Table>
-                                </Segment>
-                            </Grid.Column>
-                        </Grid.Row>
-                    )}
                 </Grid>
                 <div className="rightFloated top-padded-10">
                     <Button

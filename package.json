@@ -59,7 +59,7 @@
     "react": "^16.6.3",
     "react-color": "^2.14.0",
     "react-copy-to-clipboard": "^5.0.1",
-    "react-datepicker": "^1.4.1",
+    "react-datepicker": "^1.8.0",
     "react-dom": "^16.6.3",
     "react-grid-layout": "^0.16.6",
     "react-json-view": "^1.19.1",
@@ -144,10 +144,10 @@
     "style-loader": "^1.0.0",
     "timekeeper": "^1.0.0",
     "url-loader": "^2.1.0",
-    "webpack": "^4.39.3",
-    "webpack-bundle-analyzer": "^3.4.1",
-    "webpack-cli": "^3.3.7",
-    "webpack-dev-middleware": "^3.7.0",
-    "webpack-dev-server": "^3.8.0"
+    "webpack": "^4.41.0",
+    "webpack-bundle-analyzer": "^3.5.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.8.2"
   }
 }

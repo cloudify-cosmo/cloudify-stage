@@ -11,11 +11,19 @@ import Users from '../../containers/Users';
 import Help from '../../containers/Help';
 import Banner from '../../containers/banner/Banner';
 import AboutModal from '../../containers/AboutModal';
-import ResetPagesModal from '../ResetPagesModal.js';
+import ResetPagesModal from '../ResetPagesModal';
 import { Icon } from '../basic';
 import Consts from '../../utils/consts';
 
 export default class Header extends Component {
+    static propTypes = {
+        manager: PropTypes.any.isRequired,
+        mode: PropTypes.string.isRequired,
+        pageTitle: PropTypes.string.isRequired,
+        onResetPages: PropTypes.func.isRequired,
+        onSidebarOpen: PropTypes.func.isRequired
+    };
+
     constructor(props, context) {
         super(props, context);
 
@@ -26,31 +34,30 @@ export default class Header extends Component {
         };
     }
 
-    static propTypes = {
-        manager: PropTypes.any.isRequired,
-        mode: PropTypes.string.isRequired,
-        pageTitle: PropTypes.string.isRequired,
-        onResetPages: PropTypes.func.isRequired,
-        onSidebarOpen: PropTypes.func.isRequired
-    };
+    componentDidMount() {
+        const { pageTitle } = this.props;
+        document.title = pageTitle;
+    }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props.manager, nextProps.manager) || !_.isEqual(this.state, nextState);
+        const { manager } = this.props;
+        return !_.isEqual(manager, nextProps.manager) || !_.isEqual(this.state, nextState);
     }
 
-    componentDidMount() {
-        document.title = this.props.pageTitle;
+    isModeMain() {
+        const { mode } = this.props;
+        return mode === Consts.MODE_MAIN;
     }
 
-    _isModeMain() {
-        return this.props.mode === Consts.MODE_MAIN;
-    }
-
-    _isModeCustomer() {
-        return this.props.mode === Consts.MODE_CUSTOMER;
+    isModeCustomer() {
+        const { mode } = this.props;
+        return mode === Consts.MODE_CUSTOMER;
     }
 
     render() {
+        const { manager, onResetPages, onSidebarOpen } = this.props;
+        const { showAboutModal, showResetPagesConfirm } = this.state;
+
         return (
             <div className="ui top fixed menu inverted secondary headerBar">
                 <Icon
@@ -58,37 +65,40 @@ export default class Header extends Component {
                     name="content"
                     className="sidebar-button show-on-small-screen"
                     size="large"
-                    onClick={this.props.onSidebarOpen}
+                    onClick={onSidebarOpen}
                 />
                 <Banner />
 
                 <div className="right menu">
-                    {!this._isModeCustomer() && (
+                    {!this.isModeCustomer() && (
                         <div className="item" style={{ margin: 0, padding: 0 }}>
-                            <Manager manager={this.props.manager} />
+                            <Manager
+                                managerStatus={_.get(manager, 'status.status', '')}
+                                maintenanceStatus={_.get(manager, 'maintenance', '')}
+                            />
                         </div>
                     )}
-                    {this._isModeMain() && <Tenants manager={this.props.manager} />}
+                    {this.isModeMain() && <Tenants manager={manager} />}
                     <Help onAbout={() => this.setState({ showAboutModal: true })} />
 
                     <Users
-                        manager={this.props.manager}
-                        showAllOptions={!this._isModeCustomer()}
+                        manager={manager}
+                        showAllOptions={!this.isModeCustomer()}
                         onReset={() => this.setState({ showResetPagesConfirm: true })}
                     />
                 </div>
 
                 <ResetPagesModal
-                    open={this.state.showResetPagesConfirm}
-                    tenants={this.props.manager.tenants}
+                    open={showResetPagesConfirm}
+                    tenants={manager.tenants}
                     onConfirm={tenantList => {
                         this.setState({ showResetPagesConfirm: false });
-                        this.props.onResetPages(tenantList);
+                        onResetPages(tenantList);
                     }}
                     onHide={() => this.setState({ showResetPagesConfirm: false })}
                 />
 
-                <AboutModal open={this.state.showAboutModal} onHide={() => this.setState({ showAboutModal: false })} />
+                <AboutModal open={showAboutModal} onHide={() => this.setState({ showAboutModal: false })} />
             </div>
         );
     }

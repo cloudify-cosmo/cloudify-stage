@@ -25,7 +25,7 @@ const indexHtml = `${contextPath}/static/index.html`;
 const options = {
     publicPath: webpackConfig[0].output.publicPath,
     host,
-    inline: true,
+    inline: false,
     historyApiFallback: {
         index: indexHtml
     },
@@ -37,7 +37,6 @@ const options = {
         [`${contextPath}/source`]: proxyOptions,
         [`${contextPath}/ba`]: proxyOptions,
         [`${contextPath}/clientConfig`]: proxyOptions,
-        [`${contextPath}/monitor`]: proxyOptions,
         [`${contextPath}/github`]: proxyOptions,
         [`${contextPath}/external`]: proxyOptions,
         [`${contextPath}/style`]: proxyOptions,

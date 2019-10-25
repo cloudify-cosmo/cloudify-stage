@@ -237,9 +237,7 @@ export default class EventFilter extends React.Component {
                             fluid
                             placeholder="Time Range"
                             name="timeRange"
-                            addTimeResolution={false}
                             ranges={timeRanges}
-                            dateSyntax={TimeFilter.ISO_8601_DATE_SYNTAX}
                             defaultValue={TimeFilter.EMPTY_VALUE}
                             value={this.state.fields.timeRange}
                             onChange={this._handleInputChange.bind(this)}
