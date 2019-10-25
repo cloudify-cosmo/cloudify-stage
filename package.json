@@ -14,7 +14,7 @@
     "e2e": "echo \"npm run e2e:old\" && npm run e2e:new",
     "e2e:old": "nightwatch -c ./test/nightwatch/nightwatch.conf.js",
     "e2e:old:dev": "nightwatch -c ./test/nightwatch/nightwatch.conf.js --env dev",
-    "e2e:new": "cypress run --reporter mocha-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
+    "e2e:new": "cypress run -s test/cypress/integration/templates_spec.js --reporter mocha-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
     "e2e:new:open": "cypress open",
     "e2e:new:dev": "cypress run --reporter spec --env dev",
     "beforebuild": "sh scripts/preinstall.sh",
