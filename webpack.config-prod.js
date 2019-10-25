@@ -213,6 +213,10 @@ module.exports = [
             filename: 'common/common.js',
             publicPath: Consts.CONTEXT_PATH
         },
+        externals: {
+            react: 'React',
+            'react-dom': 'ReactDOM'
+        },
         plugins: compressionPlugins,
         module: {
             rules

@@ -30,23 +30,26 @@ Stage.defineWidget({
     ],
 
     fetchData(widget, toolbox) {
-        let momDeployments = [];
+        let spireDeployments = [];
 
         return toolbox
             .getManager()
             .doGetFull('/deployments', {
                 _include: 'id,workflows,capabilities,description',
-                description: 'Cloudify Spire Management Cluster'
+                description:
+                    'This blueprint creates several VMs, installs a Cloudify Manager on each of them, ' +
+                    'creates a Cloudify Spire Management Cluster between all the managers and uploads ' +
+                    'several auxiliary resources to the cluster.\n'
             })
-            .then(deployments => {
-                // FIXME: Do we need that??
-                const capabilitiesPromises = _.map(deployments, deployment =>
+            .then(data => {
+                spireDeployments = data.items;
+                const capabilitiesPromises = _.map(spireDeployments, deployment =>
                     toolbox.getManager().doGet(`/deployments/${deployment.id}/capabilities`)
                 );
 
                 const executionsPromise = toolbox.getManager().doGet('/executions', {
                     _sort: '-ended_at',
-                    deployment_id: _.map(momDeployments, deployment => deployment.id)
+                    deployment_id: _.map(spireDeployments, deployment => deployment.id)
                 });
 
                 return Promise.all([executionsPromise, ...capabilitiesPromises]);
@@ -60,7 +63,7 @@ Stage.defineWidget({
                             const managerId = deploymentCapabilities.deployment_id;
                             const managerIp = _.get(deploymentCapabilities.capabilities, 'endpoint', '');
                             const deployment = _.find(
-                                momDeployments,
+                                spireDeployments,
                                 deployment => deployment.id === deploymentCapabilities.deployment_id
                             );
                             const workflows = _.get(deployment, 'workflows', []);
@@ -68,10 +71,7 @@ Stage.defineWidget({
                             return {
                                 id: managerId,
                                 ip: managerIp,
-                                status: _.find(
-                                    _.get(deploymentCapabilities.outputs.cluster_status, 'cluster_status', []),
-                                    clusterStatusItem => clusterStatusItem.name === managerIp
-                                ),
+                                status: 'TODO', // get it from cluster-status API
                                 servicesStatus: 'TODO', // _.get(deploymentCapabilities.capabilities.cluster_status, 'leader_status', []),
                                 error: 'TODO', // _.get(deploymentCapabilities.capabilities.cluster_status, 'error', ''),
 
