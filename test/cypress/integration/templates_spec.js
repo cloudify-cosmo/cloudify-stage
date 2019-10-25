@@ -201,7 +201,7 @@ describe('Template Management', () => {
         cy.contains('Save').click();
 
         // Remove page
-        getPageRow('page_1').within(() => cy.get('.remove').click());
+        cy.get('.remove').click();
         cy.get('.rightFloated > .green').click({ force: true });
         cy.get('.main .loading').should('be.not.visible', true);
 
@@ -296,7 +296,7 @@ describe('Template Management', () => {
 
         // Remove template
         cy.get('.blue.segment');
-        getTemplateRow('Another Template').within(() => cy.get('.remove').click());
+        cy.get('.remove').click();
         cy.get('.rightFloated > .green').click({ force: true });
         cy.get('.main .loading').should('be.not.visible', true);
 
