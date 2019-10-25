@@ -297,7 +297,7 @@ describe('Template Management', () => {
         // Remove template
         cy.get('.blue.segment');
         getTemplateRow('Another Template').within(() => cy.get('.remove').click());
-        cy.get('.rightFloated > .green').click();
+        cy.get('.rightFloated > .green').click({ force: true });
         cy.get('.main .loading').should('be.not.visible', true);
 
         // Verify template was removed
