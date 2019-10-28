@@ -3,17 +3,33 @@ import NodeStatus from './NodeStatus';
 import { nodeServicesPropType } from './NodeServices';
 import { clusterNodeStatuses, clusterServiceEnum, clusterServiceStatuses, clusterServiceStatusEnum } from './consts';
 
+const PublicIP = ({ ip, serviceName }) =>
+    serviceName === clusterServiceEnum.manager ? (
+        <a href={`http://${ip}`} target="_blank" rel="noopener noreferrer">
+            {ip}
+        </a>
+    ) : (
+        ip
+    );
+PublicIP.propTypes = {
+    ip: PropTypes.string.isRequired,
+    serviceName: PropTypes.string.isRequired
+};
+
 export default function ClusterServicesList({ services, toolbox }) {
     const { DataTable } = Stage.Basic;
+    const { IdPopup } = Stage.Common;
+    const [hoveredNode, setHoveredNode] = React.useState(null);
 
     return (
-        <DataTable fetchData={toolbox.refresh}>
-            <DataTable.Column label="Service Type" width="15%" />
-            <DataTable.Column label="Node Name" width="20%" />
+        <DataTable fetchData={toolbox.refresh} selectable>
+            <DataTable.Column label="Service Type" width="20%" />
+            <DataTable.Column label="Node Name" width="25%" />
             <DataTable.Column label="Status" width="5%" />
             <DataTable.Column label="Private IP" width="15%" />
             <DataTable.Column label="Public IP / LB IP" width="15%" />
             <DataTable.Column label="Version" width="15%" />
+            <DataTable.Column label="" width="1%" />
 
             {_.map(services, (service, serviceName) => {
                 const numberOfNodes = _.size(service.nodes);
@@ -26,7 +42,12 @@ export default function ClusterServicesList({ services, toolbox }) {
                 return _(service.nodes)
                     .sortBy('name')
                     .map((node, index) => (
-                        <DataTable.Row key={node.id}>
+                        <DataTable.Row
+                            key={node.id}
+                            onMouseOver={() => hoveredNode !== node.id && setHoveredNode(node.id)}
+                            onMouseOut={() => hoveredNode === node.id && setHoveredNode(null)}
+                        >
+                            >
                             {index === 0 && (
                                 <DataTable.Data rowsSpan={numberOfNodes} style={{ backgroundColor }}>
                                     <ClusterService isExternal={service.is_external} name={serviceName} />
@@ -43,15 +64,12 @@ export default function ClusterServicesList({ services, toolbox }) {
                             </DataTable.Data>
                             <DataTable.Data>{node.private_ip}</DataTable.Data>
                             <DataTable.Data>
-                                {serviceName === clusterServiceEnum.manager ? (
-                                    <a href={`https://${node.public_ip}`} target="_blank" rel="noopener noreferrer">
-                                        {node.public_ip}
-                                    </a>
-                                ) : (
-                                    node.public_ip
-                                )}
+                                <PublicIP ip={node.public_ip} serviceName={serviceName} />
                             </DataTable.Data>
                             <DataTable.Data>{node.version}</DataTable.Data>
+                            <DataTable.Data>
+                                <IdPopup selected={node.id === hoveredNode} id={node.id} buttonPosition="right" />
+                            </DataTable.Data>
                         </DataTable.Row>
                     ))
                     .value();

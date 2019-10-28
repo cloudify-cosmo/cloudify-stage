@@ -1,7 +1,7 @@
 export const clusterServiceName = Object.freeze({
     manager: 'Manager',
     db: 'Database',
-    broker: 'Broker'
+    broker: 'Message Broker'
 });
 
 export const clusterServiceEnum = Object.freeze({

@@ -3,20 +3,23 @@
  */
 
 class IdPopup extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-    }
+    static buttonPositions = Object.freeze({
+        right: 'right',
+        left: 'left'
+    });
 
     static propTypes = {
         label: PropTypes.string,
         id: PropTypes.string,
-        selected: PropTypes.bool
+        selected: PropTypes.bool,
+        buttonPosition: PropTypes.oneOf(_.keys(IdPopup.buttonPositions))
     };
 
     static defaultProps = {
         label: 'ID',
         id: '',
-        selected: true
+        selected: true,
+        buttonPosition: 'left'
     };
 
     render() {
@@ -29,8 +32,19 @@ class IdPopup extends React.Component {
                 </Popup.Trigger>
                 <Popup.Content>
                     <div className="noWrap">
-                        <CopyToClipboardButton content={`Copy ${this.props.label}`} text={this.props.id} />
-                        &nbsp;&nbsp;<strong>{this.props.id}</strong>
+                        {this.props.buttonPosition === IdPopup.buttonPositions.left ? (
+                            <>
+                                <CopyToClipboardButton content={`Copy ${this.props.label}`} text={this.props.id} />
+                                &nbsp;&nbsp;
+                                <strong>{this.props.id}</strong>
+                            </>
+                        ) : (
+                            <>
+                                <strong>{this.props.id}</strong>
+                                &nbsp;&nbsp;
+                                <CopyToClipboardButton content={`Copy ${this.props.label}`} text={this.props.id} />
+                            </>
+                        )}
                     </div>
                 </Popup.Content>
             </Popup>

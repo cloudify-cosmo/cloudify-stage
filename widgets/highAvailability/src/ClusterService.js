@@ -1,7 +1,7 @@
 import { clusterServiceEnum, clusterServices, clusterServiceName } from './consts';
 
 export default function ClusterService({ name, isExternal }) {
-    const { Icon, Header, Popup } = Stage.Basic;
+    const { Header, Icon, Label } = Stage.Basic;
 
     const icon = {
         [clusterServiceEnum.manager]: 'settings',
@@ -12,7 +12,9 @@ export default function ClusterService({ name, isExternal }) {
     return (
         <div style={{ verticalAlign: 'middle' }}>
             {isExternal && (
-                <Popup trigger={<Icon name="external" style={{ float: 'right' }} />} content="External Service" />
+                <Label color="black" style={{ float: 'right' }}>
+                    External
+                </Label>
             )}
             <Header style={{ marginTop: 0 }}>
                 <Icon name={icon} /> {clusterServiceName[name]}
