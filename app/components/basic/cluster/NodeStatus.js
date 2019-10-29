@@ -1,9 +1,12 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { Icon } from 'semantic-ui-react';
+import Popup from '../Popup';
 import NodeServices from './NodeServices';
 import { clusterNodeStatusEnum, clusterNodeStatuses } from './consts';
 
 export default function NodeStatus({ name, type, status, services }) {
-    const { Icon, Popup } = Stage.Basic;
-
     const icon = {
         [clusterNodeStatusEnum.OK]: <Icon name="checkmark" color="green" link />,
         [clusterNodeStatusEnum.FAIL]: <Icon name="remove" color="red" link />

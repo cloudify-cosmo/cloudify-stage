@@ -1,3 +1,8 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import DataTable from '../dataTable/DataTable';
+import IdPopup from '../IdPopup';
 import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';
 import { nodeServicesPropType } from './NodeServices';
@@ -17,10 +22,6 @@ PublicIP.propTypes = {
 };
 
 export default function ClusterServicesList({ services, toolbox }) {
-    const { DataTable } = Stage.Basic;
-    const { IdPopup } = Stage.Common;
-    const [hoveredNode, setHoveredNode] = React.useState(null);
-
     return (
         <DataTable fetchData={toolbox.refresh} selectable>
             <DataTable.Column label="Service Type" width="20%" />
@@ -42,12 +43,7 @@ export default function ClusterServicesList({ services, toolbox }) {
                 return _(service.nodes)
                     .sortBy('name')
                     .map((node, index) => (
-                        <DataTable.Row
-                            key={node.id}
-                            onMouseOver={() => hoveredNode !== node.id && setHoveredNode(node.id)}
-                            onMouseOut={() => hoveredNode === node.id && setHoveredNode(null)}
-                        >
-                            >
+                        <DataTable.Row key={node.id}>
                             {index === 0 && (
                                 <DataTable.Data rowsSpan={numberOfNodes} style={{ backgroundColor }}>
                                     <ClusterService isExternal={service.is_external} name={serviceName} />
@@ -68,7 +64,7 @@ export default function ClusterServicesList({ services, toolbox }) {
                             </DataTable.Data>
                             <DataTable.Data>{node.version}</DataTable.Data>
                             <DataTable.Data>
-                                <IdPopup selected={node.id === hoveredNode} id={node.id} buttonPosition="right" />
+                                <IdPopup selected id={node.id} buttonPosition="right" />
                             </DataTable.Data>
                         </DataTable.Row>
                     ))

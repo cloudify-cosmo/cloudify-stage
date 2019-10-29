@@ -1,7 +1,14 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { Header, Icon, Table } from 'semantic-ui-react';
+import CopyToClipboardButton from '../CopyToClipboardButton';
+import Popup from '../Popup';
+import JsonUtils from '../../../utils/shared/JsonUtils';
+
 import { clusterServiceEnum, clusterServices, nodeServiceStatusEnum, nodeServiceStatuses } from './consts';
 
 const StatusHeader = ({ nodeName, nodeType }) => {
-    const { Header, Icon } = Stage.Basic;
     const nodeIcon = {
         [clusterServiceEnum.manager]: 'settings',
         [clusterServiceEnum.db]: 'database',
@@ -21,8 +28,6 @@ StatusHeader.propTypes = {
 };
 
 const ServiceHeader = ({ name, description, isExternal }) => {
-    const { Header, Icon, Popup } = Stage.Basic;
-
     return (
         <Header size="tiny">
             <Header.Content>
@@ -50,8 +55,6 @@ ServiceHeader.defaultProps = {
 };
 
 const ServiceStatus = ({ status }) => {
-    const { Icon } = Stage.Basic;
-
     let icon = <Icon name="question" color="grey" />;
     if (status === nodeServiceStatusEnum.Active) {
         icon = <Icon name="checkmark" color="green" />;
@@ -70,9 +73,6 @@ ServiceStatus.propTypes = {
 };
 
 export default function NodeServices({ name, type, services }) {
-    const { CopyToClipboardButton, Table } = Stage.Basic;
-    const { Json } = Stage.Utils;
-
     const numberOfColumns = 2;
     const formattedServices = _(services)
         .keys()
@@ -85,7 +85,7 @@ export default function NodeServices({ name, type, services }) {
             extraInfo: services[serviceName].extra_info
         }))
         .value();
-    const stringifiedServices = Json.stringify(formattedServices, true);
+    const stringifiedServices = JsonUtils.stringify(formattedServices, true);
 
     return (
         <Table celled basic="very" collapsing className="servicesData">

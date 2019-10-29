@@ -1,8 +1,10 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Header, Icon, Label } from 'semantic-ui-react';
+
 import { clusterServiceEnum, clusterServices, clusterServiceName } from './consts';
 
 export default function ClusterService({ name, isExternal }) {
-    const { Header, Icon, Label } = Stage.Basic;
-
     const icon = {
         [clusterServiceEnum.manager]: 'settings',
         [clusterServiceEnum.db]: 'database',

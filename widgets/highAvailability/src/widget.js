@@ -1,5 +1,3 @@
-import ClusterServicesList from './ClusterServicesList';
-
 Stage.defineWidget({
     id: 'highAvailability',
     name: 'Cluster Status',
@@ -15,12 +13,12 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
 
     render(widget, data, error, toolbox) {
-        const { Loading } = Stage.Basic;
+        const { Cluster, Loading } = Stage.Basic;
 
         return _.isEmpty(data) ? (
             <Loading />
         ) : (
-            <ClusterServicesList configuration={widget.configuration} services={data.services} toolbox={toolbox} />
+            <Cluster.ClusterServicesList services={data.services} toolbox={toolbox} />
         );
     }
 });

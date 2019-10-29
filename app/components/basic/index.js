@@ -38,6 +38,7 @@ import Alert from './modal/Alert';
 import Checkmark from './Checkmark';
 import CopyToClipboardButton from './CopyToClipboardButton';
 import Confirm from './modal/Confirm';
+import Cluster from './cluster';
 import DataTable from './dataTable/DataTable';
 import DataSegment from './dataSegment/DataSegment';
 import Dropdown from './Dropdown';
@@ -48,6 +49,7 @@ import Form from './form/Form';
 import GenericField from './form/GenericField';
 import Graphs from './graphs';
 import HighlightText from './HighlightText';
+import IdPopup from './IdPopup';
 import KeyIndicator from './KeyIndicator';
 import Loading from './Loading';
 import Leaflet from './leaflet';
@@ -84,6 +86,7 @@ export {
     Card,
     Checkbox,
     Checkmark,
+    Cluster,
     Confirm,
     Container,
     CopyToClipboardButton,
@@ -101,6 +104,7 @@ export {
     Header,
     HighlightText,
     Icon,
+    IdPopup,
     Image,
     Input,
     Item,

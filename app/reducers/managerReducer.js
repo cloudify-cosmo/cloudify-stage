@@ -1,5 +1,6 @@
 import * as types from '../actions/types';
 import tenants from './tenantsReducer';
+import clusterStatus from './clusterStatusReducer';
 import status from './statusReducer';
 import license from './licenseReducer';
 
@@ -67,6 +68,10 @@ const manager = (state = {}, action) => {
                     tenantsRoles: action.tenantsRoles
                 }
             };
+        case types.REQ_CLUSTER_STATUS:
+        case types.SET_CLUSTER_STATUS:
+        case types.ERR_CLUSTER_STATUS:
+            return { ...state, clusterStatus: clusterStatus(state.status, action) };
         case types.REQ_MANAGER_STATUS:
         case types.SET_MANAGER_STATUS:
         case types.ERR_MANAGER_STATUS:

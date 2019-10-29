@@ -1,8 +1,13 @@
 /**
  * Created by jakubniezgoda on 05/07/2018.
  */
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Label } from 'semantic-ui-react';
+import CopyToClipboardButton from './CopyToClipboardButton';
+import Popup from './Popup';
 
-class IdPopup extends React.Component {
+export default class IdPopup extends React.Component {
     static buttonPositions = Object.freeze({
         right: 'right',
         left: 'left'
@@ -23,8 +28,6 @@ class IdPopup extends React.Component {
     };
 
     render() {
-        const { CopyToClipboardButton, Label, Popup } = Stage.Basic;
-
         return (
             <Popup wide hoverable position="right center">
                 <Popup.Trigger>
@@ -51,8 +54,3 @@ class IdPopup extends React.Component {
         );
     }
 }
-
-Stage.defineCommon({
-    name: 'IdPopup',
-    common: IdPopup
-});

@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import { Dropdown } from '../index';
+import Dropdown from '../Dropdown';
 
 export default class PaginationInfo extends Component {
     static propTypes = {
