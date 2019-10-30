@@ -68,7 +68,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     render() {
-        const { ErrorMessage, Loading } = Stage.Basic;
+        const { Header, Loading, Message } = Stage.Basic;
         if (this.state.graphResult !== null) {
             return (
                 <div id="graphContainer">
@@ -82,7 +82,10 @@ export default class ExecutionWorkflowGraph extends React.Component {
         if (this.state.error) {
             return (
                 <div id="graphContainer">
-                    <ErrorMessage error={this.state.error} />
+                    <Message>
+                        <Message.Header>Note</Message.Header>
+                        <p>This execution has no tasks graph to display.</p>
+                    </Message>
                 </div>
             );
         }
