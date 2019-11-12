@@ -7,10 +7,6 @@ export default class {
         this.toolbox = toolbox;
     }
 
-    doGetBlueprintYamlFile(blueprintId) {
-        return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}?_include=main_file_name`);
-    }
-
     doGetBlueprintId(deploymentId) {
         return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,blueprint_id`);
     }
@@ -19,11 +15,14 @@ export default class {
         return this.toolbox.getInternal().doGet(`/source/browse/${blueprintId}/archive`);
     }
 
-    doGetImportedBlueprints(blueprintId) {
+    doGetBlueprintDetails(blueprintId) {
         return this.toolbox
             .getManager()
-            .doGet(`/blueprints?id=${blueprintId}&_include=plan`)
-            .then(data => _.get(data, 'items[0].plan.imported_blueprints', []));
+            .doGet(`/blueprints?id=${blueprintId}&_include=plan,main_file_name`)
+            .then(data => ({
+                yamlFileName: _.get(data, 'items[0].main_file_name', ''),
+                imports: _.get(data, 'items[0].plan.imported_blueprints', [])
+            }));
     }
 
     doGetFileContent(path) {

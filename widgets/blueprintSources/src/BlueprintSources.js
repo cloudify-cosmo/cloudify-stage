@@ -69,7 +69,7 @@ export default class BlueprintSources extends React.Component {
     render() {
         const { NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon, SplitterLayout } = Stage.Basic;
 
-        const data = this.props.data;
+        const { data } = this.props;
         const loop = items => {
             return items.map(item => {
                 if (item.children) {
@@ -101,7 +101,6 @@ export default class BlueprintSources extends React.Component {
                 );
             });
         };
-        const { data } = this.props;
 
         return (
             <div>
