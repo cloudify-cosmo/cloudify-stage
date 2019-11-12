@@ -17,8 +17,8 @@ module.exports = {
         managerData: {
             selector: '.managerMenu',
             elements: {
-                statusIcon: 'i.signal',
-                statusIconGreen: 'i.signal.green'
+                statusIcon: 'i.heartbeat',
+                statusIconGreen: 'i.heartbeat.green'
             }
         },
         tenants: {

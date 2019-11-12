@@ -32,7 +32,7 @@ export default class Manager extends Component {
 
             return (
                 <div className="managerMenu">
-                    <Icon name="signal" circular inverted size="small" color={color} className="statusIcon" />
+                    <Icon name="heartbeat" size="large" color={color} className="statusIcon" />
                 </div>
             );
         };
