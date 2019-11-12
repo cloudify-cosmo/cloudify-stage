@@ -5,29 +5,28 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import MessageContainer from '../MessageContainer';
 import Services from '../../containers/Services';
-import Logo from '../../containers/Logo';
+import Banner from '../../containers/banner/Banner';
 import Consts from '../../utils/consts';
 import StatusPoller from '../../utils/StatusPoller';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
-import {Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal} from '../basic';
+import FullScreenSegment from '../layout/FullScreenSegment';
+import { Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal, MessageContainer } from '../basic';
 
 export default class MaintenanceModePageMessage extends Component {
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             showMaintenanceModal: false
-        }
+        };
     }
 
     static propTypes = {
         manager: PropTypes.object.isRequired,
         canMaintenanceMode: PropTypes.bool.isRequired,
-        showServicesStatus: PropTypes.bool.isRequired,
+        showServicesStatus: PropTypes.bool.isRequired
     };
-
 
     componentDidUpdate() {
         if (this.props.manager.maintenance !== Consts.MAINTENANCE_ACTIVATED) {
@@ -43,40 +42,40 @@ export default class MaintenanceModePageMessage extends Component {
         StatusPoller.getPoller().stop();
     }
 
-    render () {
+    render() {
         SplashLoadingScreen.turnOff();
 
         return (
-            <div className='maintenancePage ui segment basic'>
-                <Logo />
+            <FullScreenSegment>
+                <Banner />
 
-                <MessageContainer className='maintenanceContainer'>
-                    <Header as='h2'>Maintenance mode</Header>
+                <MessageContainer wide>
+                    <Header as="h2">Maintenance mode</Header>
 
                     <p>Server is on maintenance mode and is not available at the moment.</p>
 
-                    {
-                        this.props.canMaintenanceMode &&
-                        <MaintenanceModeActivationButton activate={false} onClick={()=> this.setState({showMaintenanceModal: true})} />
-                    }
+                    {this.props.canMaintenanceMode && (
+                        <MaintenanceModeActivationButton
+                            activate={false}
+                            onClick={() => this.setState({ showMaintenanceModal: true })}
+                        />
+                    )}
 
-                    {
-                        this.props.showServicesStatus &&
+                    {this.props.showServicesStatus && (
                         <div>
                             <Divider />
                             <Services />
                         </div>
-                    }
+                    )}
                 </MessageContainer>
 
-                {
-                    this.props.canMaintenanceMode &&
-                    <MaintenanceModeModal show={this.state.showMaintenanceModal}
-                                          onHide={()=> this.setState({showMaintenanceModal: false})} />
-
-                }
-
-            </div>
+                {this.props.canMaintenanceMode && (
+                    <MaintenanceModeModal
+                        show={this.state.showMaintenanceModal}
+                        onHide={() => this.setState({ showMaintenanceModal: false })}
+                    />
+                )}
+            </FullScreenSegment>
         );
     }
 }

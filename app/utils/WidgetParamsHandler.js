@@ -3,7 +3,7 @@
  */
 
 export default class WidgetParamsHandler {
-    constructor(widget,toolbox) {
+    constructor(widget, toolbox) {
         this._widget = widget;
         this._toolbox = toolbox;
 
@@ -18,7 +18,6 @@ export default class WidgetParamsHandler {
             filterParams: {}
         };
 
-
         // process fetch params
         this._runFetchParamsIfNeeded();
     }
@@ -28,18 +27,18 @@ export default class WidgetParamsHandler {
     }
 
     buildParamsToSend(userRequestedParams) {
-
         // Map grid params to params
-        let gridParams = this._mapGridParamsToParams();
-        let fetchParams = this._buildFilterParams();
+        const gridParams = this._mapGridParamsToParams();
+        const fetchParams = this._buildFilterParams();
 
-        let params = Object.assign({},gridParams,fetchParams);
+        let params = { ...gridParams, ...fetchParams };
 
         // If user stated params, replace the grid params and pick the ones we need from the real params
         if (!_.isEmpty(userRequestedParams)) {
-
             // If user stated he wanted gridParams, then add the grid params fields
-            userRequestedParams = _.replace(userRequestedParams, 'gridParams', '_sort,_size,_offset,_search').split(',');
+            userRequestedParams = _.replace(userRequestedParams, 'gridParams', '_sort,_size,_offset,_search').split(
+                ','
+            );
 
             // Pick only the values that the user asked for
             params = _.pick(params, userRequestedParams);
@@ -48,15 +47,14 @@ export default class WidgetParamsHandler {
         return params;
     }
 
-
     updateFetchParams() {
         // save the old filter params
-        var oldFilterParams = this.fetchParams.filterParams;
+        const oldFilterParams = this.fetchParams.filterParams;
 
-        this. _runFetchParamsIfNeeded();
+        this._runFetchParamsIfNeeded();
 
         // Check if the filter params have changed
-        return !_.isEqual(this.fetchParams.filterParams, oldFilterParams) ;
+        return !_.isEqual(this.fetchParams.filterParams, oldFilterParams);
     }
 
     updateGridParams(newGridParams) {
@@ -69,22 +67,22 @@ export default class WidgetParamsHandler {
                 this.fetchParams.filterParams = this._widget.definition.fetchParams(this._widget, this._toolbox);
             } catch (e) {
                 console.error('Error processing fetch params', e);
-                throw new Error('Error processing fetch params',e);
+                throw new Error('Error processing fetch params', e);
             }
         }
     }
 
     _buildFilterParams() {
-        let params = {};
+        const params = {};
         _.forIn(this.fetchParams.filterParams, function(value, key) {
             if (_.isBoolean(value) || !_.isEmpty(value)) {
                 params[key] = value;
             }
         });
 
-        return params
-
+        return params;
     }
+
     _mapGridParamsToParams() {
         if (_.isEmpty(this.fetchParams.gridParams)) {
             return {};
@@ -98,12 +96,14 @@ export default class WidgetParamsHandler {
                 params = this._widget.definition.mapGridParams(this.fetchParams.gridParams);
             } catch (e) {
                 console.error('Error processing match grid params', e);
-                throw new Error('Error processing match grid params',e);
+                throw new Error('Error processing match grid params', e);
             }
         } else {
             // If not this is the default mapping
             if (this.fetchParams.gridParams.sortColumn) {
-                params._sort = `${this.fetchParams.gridParams.sortAscending?'':'-'}${this.fetchParams.gridParams.sortColumn}`;
+                params._sort = `${this.fetchParams.gridParams.sortAscending ? '' : '-'}${
+                    this.fetchParams.gridParams.sortColumn
+                }`;
             }
 
             if (this.fetchParams.gridParams._search) {
@@ -111,11 +111,11 @@ export default class WidgetParamsHandler {
             }
 
             if (this.fetchParams.gridParams.pageSize) {
-                params._size=this.fetchParams.gridParams.pageSize;
+                params._size = this.fetchParams.gridParams.pageSize;
             }
 
             if (this.fetchParams.gridParams.currentPage && this.fetchParams.gridParams.pageSize) {
-                params._offset=(this.fetchParams.gridParams.currentPage-1)*this.fetchParams.gridParams.pageSize;
+                params._offset = (this.fetchParams.gridParams.currentPage - 1) * this.fetchParams.gridParams.pageSize;
             }
         }
 

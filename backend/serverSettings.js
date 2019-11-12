@@ -3,24 +3,23 @@
  */
 
 const _ = require('lodash');
-const logger = require('log4js').getLogger('argsReader');
+const logger = require('./handler/LoggerHandler').getLogger('argsReader');
 
-let ServerSettings = {
-
+const ServerSettings = {
     MODE_MAIN: 'main',
-    MODE_CUSTOMER : 'customer',
-    MODE_COMMUNITY : 'community',
+    MODE_CUSTOMER: 'customer',
+    MODE_COMMUNITY: 'community',
 
     settings: {},
 
-    init: function(){
+    init() {
         this.settings = {
             mode: this.MODE_MAIN
         };
         const modes = [this.MODE_MAIN, this.MODE_CUSTOMER, this.MODE_COMMUNITY];
 
         const displayUsage = () => {
-            logger.info('Usage: server.js -mode [' + _.join(modes,'|') + ']');
+            logger.info(`Usage: server.js -mode [${_.join(modes, '|')}]`);
             process.exit(0);
         };
 
@@ -30,8 +29,8 @@ let ServerSettings = {
             }
 
             if (val.toLowerCase() === '-mode') {
-                if (process.argv.length > index+1){
-                    var mode = process.argv[index+1].toLowerCase();
+                if (process.argv.length > index + 1) {
+                    const mode = process.argv[index + 1].toLowerCase();
                     if (_.includes(modes, mode)) {
                         this.settings.mode = mode;
                     } else {
@@ -42,7 +41,6 @@ let ServerSettings = {
                 }
             }
         });
-
     }
 };
 

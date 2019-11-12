@@ -5,12 +5,11 @@
 import React, { Component } from 'react';
 
 export class ExternalRedirect extends Component {
-    componentDidMount(){
+    componentDidMount() {
         window.location = this.props.url;
     }
-    render(){
-        return (
-            <section>Redirecting to {this.props.url}...</section>
-        );
+
+    render() {
+        return <section>Redirecting to {this.props.url}...</section>;
     }
 }

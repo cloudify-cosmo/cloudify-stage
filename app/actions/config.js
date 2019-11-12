@@ -6,7 +6,7 @@ import * as types from './types';
 
 export function setEditMode(isEditMode) {
     return {
-        type : types.SET_CONFIG_EDIT_MODE,
+        type: types.SET_CONFIG_EDIT_MODE,
         isEditMode
-    }
+    };
 }

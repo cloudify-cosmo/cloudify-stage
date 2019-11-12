@@ -9,8 +9,7 @@ import Page from '../containers/Page';
 import ToursButton from '../containers/ToursButton';
 
 export default class Home extends Component {
-
-    constructor(props,context){
+    constructor(props, context) {
         super(props, context);
     }
 
@@ -34,7 +33,9 @@ export default class Home extends Component {
         }
 
         if (this.props.emptyPages) {
-            this.props.navigateToError('No pages available to display. Please try to reset application to the default settings.');
+            this.props.navigateToError(
+                'No pages available to display. Please try to reset application to the default settings.'
+            );
         }
 
         if (!this.props.selectedPage) {
@@ -45,11 +46,11 @@ export default class Home extends Component {
     _handleContext(contextParams) {
         // Always clear the context. Whatever is relevant to the drilldown should be passed as drilldown context
         this.props.onClearContext();
-        
+
         // Go over all the drilldown context and set it all (from top down)
-        _.each(contextParams,cp=>{
-            _.each(cp.context,(value,key)=>{
-                this.props.onSetContextValue(key,value);
+        _.each(contextParams, cp => {
+            _.each(cp.context, (value, key) => {
+                this.props.onSetContextValue(key, value);
             });
         });
 
@@ -61,23 +62,21 @@ export default class Home extends Component {
             return null;
         }
 
-        var pageId = this.props.pageId;
-        var pageName = this.props.pageName;
+        const { pageId } = this.props;
+        const { pageName } = this.props;
 
         return (
-            <div className='main'>
-
+            <div className="main">
                 <ToursButton />
 
-                <SideBar pageId={pageId}/>
+                <SideBar pageId={pageId} />
 
                 <div className="page">
                     <div className="ui basic segment">
-                        <Page pageId={pageId} pageName={pageName}/>
+                        <Page pageId={pageId} pageName={pageName} />
                     </div>
                 </div>
             </div>
         );
     }
 }
-

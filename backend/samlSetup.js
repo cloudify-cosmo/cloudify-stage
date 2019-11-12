@@ -1,12 +1,10 @@
 /**
  * Created by edenp on 07/09/2017.
  */
-'use strict';
 
-var logger = require('log4js').getLogger('SAML');
+const logger = require('./handler/LoggerHandler').getLogger('SAML');
 
-
-exports.validate = (samlConfig) => {
+exports.validate = samlConfig => {
     if (!samlConfig.certPath) {
         logger.error('SAML is enabled, yet certificate path was not configured. [saml.certPath]');
         process.exit(1);

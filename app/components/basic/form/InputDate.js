@@ -28,16 +28,16 @@ import '../../styles/Form.css';
  *
  */
 export default class InputDate extends Component {
-
     constructor(props, context) {
         super(props, context);
     }
 
     /**
      * propTypes
+     *
      * @property {string} name name of the field
      * @property {object} [value=null] MomentJS object with date to be selected on the picker
-     * @property {function} [onChange=(function () {});] function (selectedDateMoment, {name, value}) called on calendar date change
+     * @property {Function} [onChange=(function () {});] function (selectedDateMoment, {name, value}) called on calendar date change
      * @property {object} [minDate=undefined] MomentJS object with min allowed date on the picker
      * @property {object} [maxDate=undefined] MomentJS object with max allowed date on the picker
      * @property {object} [startDate=undefined] MomentJS object for start range date (used when two InputDate components are used to display date range)
@@ -57,7 +57,7 @@ export default class InputDate extends Component {
 
     static defaultProps = {
         value: null,
-        onChange: ()=>{},
+        onChange: () => {},
         minDate: undefined,
         maxDate: undefined,
         startDate: undefined,
@@ -66,21 +66,19 @@ export default class InputDate extends Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(nextProps, this.props)
-            || !_.isEqual(nextState, this.state);
+        return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
     }
 
     _handleSelectedDateChange(date) {
-        return this.props.onChange(date, {name: this.props.name, value: date});
+        return this.props.onChange(date, { name: this.props.name, value: date });
     }
 
     getMinMaxTime(minMaxDate, defaultValue) {
         const value = this.props.value || moment();
         if (!!minMaxDate && minMaxDate.isSame(value, 'day')) {
             return minMaxDate;
-        } else {
-            return defaultValue;
         }
+        return defaultValue;
     }
 
     getMinTime() {
@@ -102,12 +100,13 @@ export default class InputDate extends Component {
                 maxDate={this.props.maxDate}
                 minTime={this.getMinTime()}
                 maxTime={this.getMaxTime()}
-                timeFormat='HH:mm'
+                timeFormat="HH:mm"
                 showTimeSelect
                 timeIntervals={this.props.timeIntervals}
                 inline
                 calendarClassName="input-time-filter"
-                dropdownMode='scroll' />
+                fixedHeight
+            />
         );
     }
 }

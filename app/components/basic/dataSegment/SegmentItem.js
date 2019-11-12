@@ -5,8 +5,7 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import {Segment} from 'semantic-ui-react';
-
+import { Segment } from 'semantic-ui-react';
 
 /**
  * SegmentItem is a component showing content item for {@link DataSegment} component
@@ -41,12 +40,12 @@ import {Segment} from 'semantic-ui-react';
  * ```
  */
 export default class SegmentItem extends Component {
-
     /**
      * propTypes
+     *
      * @property {object[]} children - primary content
      * @property {boolean} [selected=false] - specifies if data segment item shall be selected
-     * @property {function} [onClick=()=>{}] - specifies function to be called on action click
+     * @property {Function} [onClick=()=>{}] - specifies function to be called on action click
      * @property {string} [className=''] - CSS classname
      */
     static propTypes = {
@@ -62,7 +61,7 @@ export default class SegmentItem extends Component {
     };
 
     render() {
-        let className = this.props.className + (_.isFunction(this.props.onClick) ? ' clickable' : '');
+        const className = this.props.className + (_.isFunction(this.props.onClick) ? ' clickable' : '');
         return (
             <Segment secondary={this.props.selected} className={className} onClick={this.props.onClick}>
                 {this.props.children}

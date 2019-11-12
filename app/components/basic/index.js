@@ -3,7 +3,33 @@
  */
 
 // NOTE: When you update this list, please also update list in: doc/index.md
-import { Accordion, Breadcrumb, Button, Card, Checkbox, Container, Divider, Grid, Header, Icon, Image, Input, Item, Label, List, Loader, Message, Modal, Portal, Progress, Radio, Segment, Sidebar, Step, Table } from 'semantic-ui-react';
+import {
+    Accordion,
+    Breadcrumb,
+    Button,
+    Card,
+    Checkbox,
+    Container,
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Image,
+    Input,
+    Item,
+    Label,
+    List,
+    Loader,
+    Message,
+    Modal,
+    Portal,
+    Progress,
+    Radio,
+    Segment,
+    Sidebar,
+    Step,
+    Table
+} from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import SplitterLayout from 'react-splitter-layout';
 
@@ -24,10 +50,11 @@ import Graphs from './graphs';
 import HighlightText from './HighlightText';
 import KeyIndicator from './KeyIndicator';
 import Loading from './Loading';
-import MetricFilter from './MetricFilter';
+import Leaflet from './leaflet';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
 import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
 import Menu from './Menu';
+import MessageContainer from './MessageContainer';
 import NodeFilter from './NodeFilter';
 import NodeInstancesFilter from './NodeInstancesFilter';
 import NodesTree from './NodesTree';
@@ -79,6 +106,7 @@ export {
     Item,
     KeyIndicator,
     Label,
+    Leaflet,
     List,
     Link,
     Loader,
@@ -87,7 +115,7 @@ export {
     MaintenanceModeModal,
     Menu,
     Message,
-    MetricFilter,
+    MessageContainer,
     Modal,
     NodeFilter,
     NodeInstancesFilter,

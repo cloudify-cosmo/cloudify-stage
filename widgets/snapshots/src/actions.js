@@ -2,7 +2,6 @@
  * Created by kinneretzin on 30/11/2016.
  */
 
-
 export default class {
     constructor(toolbox) {
         this.toolbox = toolbox;
@@ -10,11 +9,10 @@ export default class {
 
     doDelete(snapshot) {
         return this.toolbox.getManager().doDelete(`/snapshots/${snapshot.id}`);
-
     }
 
     doRestore(snapshot, shouldForceRestore, ignorePluginFailure = false) {
-        return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`,null, {
+        return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`, null, {
             force: shouldForceRestore,
             recreate_deployments_envs: false,
             tenant_name: '',
@@ -23,33 +21,32 @@ export default class {
     }
 
     doUpload(snapshotUrl, snapshotId, file) {
-        var params = {};
+        const params = {};
         if (!_.isEmpty(snapshotUrl)) {
-            params['snapshot_archive_url'] = snapshotUrl;
+            params.snapshot_archive_url = snapshotUrl;
         }
 
         if (file) {
             return this.toolbox.getManager().doUpload(`/snapshots/${snapshotId}/archive`, params, file, 'put');
-        } else {
-            return this.toolbox.getManager().doPut(`/snapshots/${snapshotId}/archive`, params);
         }
+        return this.toolbox.getManager().doPut(`/snapshots/${snapshotId}/archive`, params);
     }
 
     doDownload(snapshot) {
-        let snapshotDownloadUrl = `/snapshots/${snapshot.id}/archive`;
-        let snapshotCreationDateShort = moment(snapshot.created_at,'DD-MM-YYYY HH:mm').format('YYYYMMDD_HHmm');
-        let snapshotFileName = `${snapshot.id}_${snapshotCreationDateShort}.zip`;
+        const snapshotDownloadUrl = `/snapshots/${snapshot.id}/archive`;
+        const snapshotCreationDateShort = moment(snapshot.created_at, 'DD-MM-YYYY HH:mm').format('YYYYMMDD_HHmm');
+        const snapshotFileName = `${snapshot.id}_${snapshotCreationDateShort}.zip`;
 
         return this.toolbox.getManager().doDownload(snapshotDownloadUrl, snapshotFileName);
     }
 
-    doCreate(snapshotId, includeMetrics=false, includeCredentials=false, excludeLogs=false, excludeEvents=false){
+    doCreate(snapshotId, includeCredentials = false, excludeLogs = false, excludeEvents = false, queue = false) {
         snapshotId = encodeURIComponent(snapshotId);
         return this.toolbox.getManager().doPut(`/snapshots/${snapshotId}`, null, {
-            include_metrics: includeMetrics,
             include_credentials: includeCredentials,
             include_logs: !excludeLogs,
-            include_events: !excludeEvents
+            include_events: !excludeEvents,
+            queue
         });
     }
 }

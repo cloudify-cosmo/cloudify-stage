@@ -1,10 +1,10 @@
 /**
  * Created by jakubniezgoda on 07/11/2017.
  */
-let _ = require('lodash');
+const _ = require('lodash');
 
 module.exports = {
-    ALLOWED_METHODS_OBJECT: {get: 'GET', post: 'POST', put: 'PUT', delete: 'DELETE', patch: 'PATCH'},
+    ALLOWED_METHODS_OBJECT: { get: 'GET', post: 'POST', put: 'PUT', delete: 'DELETE', patch: 'PATCH' },
 
     CONTEXT_PATH: '/console',
 
@@ -13,6 +13,11 @@ module.exports = {
 
     WIDGET_ID_HEADER: 'widget-id',
     TOKEN_COOKIE_NAME: 'XSRF-TOKEN',
+
+    EDITION: {
+        PREMIUM: 'premium',
+        COMMUNITY: 'community'
+    },
 
     SERVER_HOST: 'localhost',
     SERVER_PORT: 8088

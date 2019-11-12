@@ -3,9 +3,8 @@
  */
 
 export default class RoleModal extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = RoleModal.initialState;
     }
@@ -14,46 +13,49 @@ export default class RoleModal extends React.Component {
         loading: false,
         role: '',
         errors: {}
-    }
+    };
 
-    onApprove () {
+    onApprove() {
         this._submitRole();
         return false;
     }
 
-    onCancel () {
+    onCancel() {
         this.props.onHide();
         return true;
     }
 
     componentDidUpdate(prevProps) {
         if (!prevProps.open && this.props.open) {
-            this.setState({...RoleModal.initialState, role: this.props.resource.role});
+            this.setState({ ...RoleModal.initialState, role: this.props.resource.role });
         }
     }
 
     _submitRole() {
-        let errors = {};
+        const errors = {};
 
         if (_.isEmpty(this.state.role)) {
-            errors['role']='Please provide a role';
+            errors.role = 'Please provide a role';
         }
 
         if (!_.isEmpty(errors)) {
-            this.setState({errors});
+            this.setState({ errors });
             return false;
         }
 
         // Disable the form
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
-        this.props.onSetRole(this.props.resource.name, this.state.role).then(()=>{
-            this.setState({errors: {}, loading: false});
-            this.props.toolbox.refresh();
-            this.props.onHide();
-        }).catch((err)=>{
-            this.setState({errors: {error: err.message}, loading: false});
-        });
+        this.props
+            .onSetRole(this.props.resource.name, this.state.role)
+            .then(() => {
+                this.setState({ errors: {}, loading: false });
+                this.props.toolbox.refresh();
+                this.props.onHide();
+            })
+            .catch(err => {
+                this.setState({ errors: { error: err.message }, loading: false });
+            });
     }
 
     _handleInputChange(proxy, field) {
@@ -61,34 +63,48 @@ export default class RoleModal extends React.Component {
     }
 
     render() {
-        var {Modal, Icon, Form, ApproveButton, CancelButton} = Stage.Basic;
+        const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-        var resource = Object.assign({},{name:''}, this.props.resource);
+        const resource = { name: '', ...this.props.resource };
 
         return (
-            <Modal open={this.props.open} onClose={()=>this.props.onHide()} className='roleModal'>
+            <Modal open={this.props.open} onClose={() => this.props.onHide()} className="roleModal">
                 <Modal.Header>
-                    <Icon name="male"/> Set role for {resource.name}
+                    <Icon name="male" /> Set role for {resource.name}
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form loading={this.state.loading} errors={this.state.errors}
-                          onErrorsDismiss={() => this.setState({errors: {}})}>
+                    <Form
+                        loading={this.state.loading}
+                        errors={this.state.errors}
+                        onErrorsDismiss={() => this.setState({ errors: {} })}
+                    >
                         <Form.Field error={this.state.errors.role}>
-                            <Form.Dropdown selection name='role' placeholder="Role" options={this.props.roles}
-                                           value={this.state.role} onChange={this._handleInputChange.bind(this)}/>
+                            <Form.Dropdown
+                                selection
+                                name="role"
+                                placeholder="Role"
+                                options={this.props.roles}
+                                value={this.state.role}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel.bind(this)} disabled={this.state.loading} />
-                    <ApproveButton onClick={this.onApprove.bind(this)} disabled={this.state.loading} icon="male" color="green" />
+                    <ApproveButton
+                        onClick={this.onApprove.bind(this)}
+                        disabled={this.state.loading}
+                        icon="male"
+                        color="green"
+                    />
                 </Modal.Actions>
             </Modal>
         );
     }
-};
+}
 
 Stage.defineCommon({
     name: 'RoleModal',

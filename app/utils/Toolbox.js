@@ -4,9 +4,8 @@
 
 import 'proxy-polyfill';
 
-import {drillDownToPage} from '../actions/widgets';
-import {selectPageByName, selectHomePage, selectParentPage} from '../actions/page';
-
+import { drillDownToPage } from '../actions/widgets';
+import { selectPageByName, selectHomePage, selectParentPage } from '../actions/page';
 
 import EventBus from './EventBus';
 import Context from './Context';
@@ -16,7 +15,7 @@ import Internal from './Internal';
 import WidgetBackend from './WidgetBackend';
 
 class Toolbox {
-    constructor (store) {
+    constructor(store) {
         // Save the link to the store on the context (so we can dispatch to it later)
         this.store = store;
         this._initFromStore();
@@ -27,17 +26,25 @@ class Toolbox {
         });
     }
 
-    _initFromStore () {
-        var state = this.store.getState();
-        this.templates = state.templates || {templatesDef: {}};
+    _initFromStore() {
+        const state = this.store.getState();
+        this.templates = state.templates || { templatesDef: {} };
         this._Manager = new Manager(state.manager || {});
         this._Internal = new Internal(state.manager || {});
         this._Context = new Context(this.store);
         this.widgetDefinitions = state.widgetDefinitions || [];
     }
 
-    drillDown(widget,defaultTemplate,drilldownContext,drilldownPageName) {
-        this.store.dispatch(drillDownToPage(widget,this.templates.pagesDef[defaultTemplate],this.widgetDefinitions,drilldownContext,drilldownPageName));
+    drillDown(widget, defaultTemplate, drilldownContext, drilldownPageName) {
+        this.store.dispatch(
+            drillDownToPage(
+                widget,
+                this.templates.pagesDef[defaultTemplate],
+                this.widgetDefinitions,
+                drilldownContext,
+                drilldownPageName
+            )
+        );
     }
 
     goToHomePage() {
@@ -52,7 +59,7 @@ class Toolbox {
         this.store.dispatch(selectPageByName(pageName));
     }
 
-    getEventBus (){
+    getEventBus() {
         return EventBus;
     }
 
@@ -65,8 +72,8 @@ class Toolbox {
     }
 
     getWidgetBackend() {
-        let state = this.store.getState();
-        let widget = this.getWidget();
+        const state = this.store.getState();
+        const widget = this.getWidget();
         return new WidgetBackend(_.get(widget, 'definition.id', ''), state.manager || {});
     }
 
@@ -90,26 +97,27 @@ class Toolbox {
     getWidget() {}
 }
 
-var toolbox = null;
+let toolbox = null;
 
-let createToolbox = (store) =>{
+const createToolbox = store => {
     toolbox = new Toolbox(store);
 };
 
-let getToolbox = (onRefresh, onLoading, widget)=>{
-    return new Proxy(toolbox,{
-        get: (target, name)=> {
+const getToolbox = (onRefresh, onLoading, widget) => {
+    return new Proxy(toolbox, {
+        get: (target, name) => {
             if (name === 'refresh') {
                 return onRefresh;
-            } else if (name === 'loading') {
-                return onLoading;
-            } else if (name === 'getWidget') {
-                return () => widget;
-            } else {
-                return target[name];
             }
+            if (name === 'loading') {
+                return onLoading;
+            }
+            if (name === 'getWidget') {
+                return () => widget;
+            }
+            return target[name];
         }
     });
 };
 
-export {createToolbox,getToolbox};
+export { createToolbox, getToolbox };

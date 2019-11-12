@@ -9,7 +9,9 @@ import consts from '../utils/consts';
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        disallowGlobal: ownProps.disallowGlobal || !stageUtils.isUserAuthorized(consts.permissions.CREATE_GLOBAL_RESOURCE, state.manager)
+        disallowGlobal:
+            ownProps.disallowGlobal ||
+            !stageUtils.isUserAuthorized(consts.permissions.CREATE_GLOBAL_RESOURCE, state.manager)
     };
 };
 

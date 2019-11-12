@@ -1,28 +1,29 @@
-'use strict';
 /**
  * Created by pposel on 13/09/2017.
  */
 
-var fs = require('fs-extra');
-var pathlib = require('path');
-var _ = require('lodash');
-var config = require('../config').get();
-var consts = require('../consts');
-const {NodeVM, VMScript} = require('vm2');
+const fs = require('fs-extra');
+const pathlib = require('path');
+const _ = require('lodash');
+const { NodeVM, VMScript } = require('vm2');
 
-var logger = require('log4js').getLogger('WidgetBackend');
+const config = require('../config').get();
+const consts = require('../consts');
+const db = require('../db/Connection');
+const Utils = require('../utils');
 
-var userWidgetsFolder = '';
-var builtInWidgetsFolder = '';
-var services = {};
-var BackendRegistrator = function (widgetId) {
+const logger = require('./LoggerHandler').getLogger('WidgetBackend');
+
+const builtInWidgetsFolder = Utils.getResourcePath('widgets', false);
+const userWidgetsFolder = Utils.getResourcePath('widgets', true);
+
+const BackendRegistrator = function(widgetId, resolve, reject) {
     return {
         register: (serviceName, method, service) => {
             if (!serviceName) {
-                throw new Error('Service name must be provided');
-            } else {
-                serviceName = _.toUpper(serviceName);
+                return reject('Service name must be provided');
             }
+            serviceName = _.toUpper(serviceName);
 
             if (!_.isString(method)) {
                 service = method;
@@ -30,58 +31,85 @@ var BackendRegistrator = function (widgetId) {
             } else if (!_.isNil(method)) {
                 method = _.toUpper(method);
                 if (!_.includes(consts.ALLOWED_METHODS_ARRAY, method)) {
-                    throw new Error(`Method '${method}' not allowed. Valid methods: ${consts.ALLOWED_METHODS_ARRAY.toString()}`);
+                    return reject(
+                        `Method '${method}' not allowed. Valid methods: ${consts.ALLOWED_METHODS_ARRAY.toString()}`
+                    );
                 }
             }
 
             if (!service) {
-                throw new Error('Service body must be provided');
-            } else if (!_.isFunction(service)) {
-                throw new Error('Service body must be a function (function(request, response, next, helper) {...})');
+                return reject('Service body must be provided');
+            }
+            if (!_.isFunction(service)) {
+                return reject('Service body must be a function (function(request, response, next, helper) {...})');
             }
 
-            if (!_.isUndefined(_.get(services, [widgetId, serviceName, method]))) {
-                throw new Error('Service ' + serviceName + ' for method ' + method + ' for widget ' + widgetId + ' already exists');
-            } else {
-                if (_.isEmpty(services[widgetId]))
-                    services[widgetId] = {};
+            const getServiceString = (widgetId, method, serviceName) =>
+                `widget=${widgetId} method=${method} name=${serviceName}`;
+            logger.info(`--- registering service ${getServiceString(widgetId, method, serviceName)}`);
 
-                if (_.isEmpty(services[widgetId][serviceName]))
-                    services[widgetId][serviceName] = {};
-
-                logger.info('--- registering service ' + serviceName + ' for ' + method + ' method');
-                services[widgetId][serviceName][method] = new VMScript('module.exports = ' + service.toString());
-            }
+            return db.WidgetBackend.findOrCreate({
+                where: {
+                    widgetId,
+                    serviceName,
+                    method
+                },
+                defaults: {
+                    script: ''
+                }
+            })
+                .spread(widgetBackend => {
+                    logger.debug(`--- updating entry for service: ${getServiceString(widgetId, method, serviceName)}`);
+                    return widgetBackend.update(
+                        { script: new VMScript(`module.exports = ${service.toString()}`) },
+                        { fields: ['script'] }
+                    );
+                })
+                .then(() => {
+                    logger.info(`--- registered service: ${getServiceString(widgetId, method, serviceName)}`);
+                    return resolve();
+                })
+                .catch(error => {
+                    logger.error(error);
+                    return reject(`--- error registering service: ${getServiceString(widgetId, method, serviceName)}`);
+                });
         }
-    }
-}
+    };
+};
 
 module.exports = (function() {
-
     function _getUserWidgets() {
-        return fs.readdirSync(userWidgetsFolder)
-            .filter(dir => fs.lstatSync(pathlib.resolve(userWidgetsFolder, dir)).isDirectory()
-            && _.indexOf(config.app.widgets.ignoreFolders, dir) < 0);
+        return fs
+            .readdirSync(userWidgetsFolder)
+            .filter(
+                dir =>
+                    fs.lstatSync(pathlib.resolve(userWidgetsFolder, dir)).isDirectory() &&
+                    _.indexOf(config.app.widgets.ignoreFolders, dir) < 0
+            );
     }
 
     function _getBuiltInWidgets() {
-        return fs.readdirSync(builtInWidgetsFolder)
-            .filter(dir => fs.lstatSync(pathlib.resolve(builtInWidgetsFolder, dir)).isDirectory()
-                && _.indexOf(config.app.widgets.ignoreFolders, dir) < 0);
+        return fs
+            .readdirSync(builtInWidgetsFolder)
+            .filter(
+                dir =>
+                    fs.lstatSync(pathlib.resolve(builtInWidgetsFolder, dir)).isDirectory() &&
+                    _.indexOf(config.app.widgets.ignoreFolders, dir) < 0
+            );
     }
 
-    function importWidgetBackend(widgetId, isCustom=true) {
-        var widgetsFolder = userWidgetsFolder;
+    function importWidgetBackend(widgetId, isCustom = true) {
+        let widgetsFolder = userWidgetsFolder;
         if (!isCustom) {
             widgetsFolder = builtInWidgetsFolder;
         }
-        var backendFile = pathlib.resolve(widgetsFolder, widgetId, config.app.widgets.backendFilename);
+        const backendFile = pathlib.resolve(widgetsFolder, widgetId, config.app.widgets.backendFilename);
 
         if (fs.existsSync(backendFile)) {
-            logger.info('-- initializing file ' + backendFile);
+            logger.info(`-- initializing file ${backendFile}`);
 
             try {
-                var vm = new NodeVM({
+                const vm = new NodeVM({
                     sandbox: {
                         _,
                         backendFile,
@@ -94,68 +122,102 @@ module.exports = (function() {
                     }
                 });
 
-                var script = `var backend = require(backendFile);
-                    if (_.isFunction(backend)) {
-                        backend(BackendRegistrator(widgetId));
-                    } else {
-                        throw new Error('Backend definition must be a function (module.exports = function(BackendRegistrator) {...})');
-                    }`;
+                const script = `module.exports = new Promise((resolve, reject) => {
+                         try {
+                             let backend = require(backendFile);
+                             if (_.isFunction(backend)) {
+                                 backend(BackendRegistrator(widgetId, resolve, reject));
+                             } else {
+                                 reject('Backend definition must be a function (module.exports = function(BackendRegistrator) {...})');
+                             }
+                         } catch (error) {
+                             reject(error);
+                         }
+                     });`;
 
-                return vm.run(script, pathlib.resolve(process.cwd() + '/' + widgetId));
-
-            } catch(err) {
-                throw new Error('Error during importing widget backend from file ' + backendFile + ' - ' + err.message);
+                return vm.run(script, pathlib.resolve(`${process.cwd()}/${widgetId}`));
+            } catch (err) {
+                logger.info('reject', backendFile);
+                return Promise.reject(
+                    `Error during importing widget backend from file ${backendFile} - ${err.message}`
+                );
             }
+        } else {
+            return Promise.resolve();
         }
     }
 
-    function initWidgetBackends(userFolder, builtInFolder) {
-        userWidgetsFolder = userFolder;
-        builtInWidgetsFolder = builtInFolder;
+    function initWidgetBackends() {
         logger.info('Scanning widget backend files...');
 
-        var userWidgets = _getUserWidgets();
-        var builtInWidgets = _getBuiltInWidgets();
+        const userWidgets = _getUserWidgets();
+        const builtInWidgets = _getBuiltInWidgets();
 
-        _.each(userWidgets, widgetId => importWidgetBackend(widgetId));
-        _.each(builtInWidgets, widgetId => importWidgetBackend(widgetId, false));
+        const promises = [];
+        _.each(userWidgets, widgetId =>
+            promises.push(
+                new Promise((resolve, reject) =>
+                    importWidgetBackend(widgetId)
+                        .then(resolve)
+                        .catch(reject)
+                )
+            )
+        );
+        _.each(builtInWidgets, widgetId =>
+            promises.push(
+                new Promise((resolve, reject) =>
+                    importWidgetBackend(widgetId, false)
+                        .then(resolve)
+                        .catch(reject)
+                )
+            )
+        );
 
-        logger.info('Widget backend files for registration completed');
+        return Promise.all(promises)
+            .then(() => {
+                logger.info('Widget backend files for registration completed');
+                return Promise.resolve();
+            })
+            .catch(error => {
+                logger.error('Widget backend files registration cannot be completed');
+                return Promise.reject(error);
+            });
     }
 
     function callService(serviceName, method, req, res, next) {
-        var widgetId = req.header(consts.WIDGET_ID_HEADER);
+        const widgetId = req.header(consts.WIDGET_ID_HEADER);
         method = _.toUpper(method);
         serviceName = _.toUpper(serviceName);
 
-        var widgetServices = services[widgetId];
-        if (widgetServices) {
-            var serviceScripts = widgetServices[serviceName];
-            if (serviceScripts) {
-                var serviceScript = serviceScripts[method];
-                if (serviceScript) {
-                    var helper = require('./services');
+        return db.WidgetBackend.findOne({ where: { widgetId, serviceName, method } })
+            .catch(() => {
+                return Promise.reject(
+                    `There is no service ${serviceName} for method ${method} for widget ${widgetId} registered`
+                );
+            })
+            .then(widgetBackend => {
+                const script = _.get(widgetBackend, 'script.code', null);
 
-                    var vm = new NodeVM({
+                if (script) {
+                    const helper = require('./services');
+
+                    const vm = new NodeVM({
                         require: {
                             external: config.app.widgets.allowedModules
                         }
                     });
-                    return vm.run(serviceScript, pathlib.resolve(process.cwd() + '/' + widgetId))(req, res, next, helper);
-                } else {
-                    throw new Error('Widget ' + widgetId + ' has no service ' + serviceName + ' for method ' + method + ' registered');
+                    return vm.run(script, pathlib.resolve(`${process.cwd()}/${widgetId}`))(req, res, next, helper);
                 }
-            } else {
-                throw new Error('Widget ' + widgetId + ' has no service ' + serviceName + ' registered');
-            }
-        } else {
-            throw new Error('Widget ' + widgetId + ' does not have any services registered');
-        }
-
+                return Promise.reject(
+                    `No script for service ${serviceName} for method ${method} for widget ${widgetId}`
+                );
+            });
     }
 
     function removeWidgetBackend(widgetId) {
-        services = _.omit(services, widgetId);
+        return db.WidgetBackend.destroy({ where: { widgetId } }).then(() =>
+            logger.debug(`Deleted widget backend for ${widgetId}.`)
+        );
     }
 
     return {
@@ -163,5 +225,5 @@ module.exports = (function() {
         initWidgetBackends,
         removeWidgetBackend,
         callService
-    }
+    };
 })();

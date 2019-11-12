@@ -8,7 +8,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         portalUrl: state.config.app.saml.enabled ? state.config.app.saml.portalUrl : null,
         searchQuery: state.router.location.search
-    }
+    };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -19,4 +19,3 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(LinkToLogin);
-

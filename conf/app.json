@@ -1,15 +1,4 @@
 {
-  "initialTemplate": {
-    "*": "initial-template",
-    "sys_admin": {
-      "*": "initial-template-admin"
-    },
-    "user": {
-      "*": "initial-template"
-    },
-    "customer": "initial-template-customer",
-    "community": "initial-template-community"
-  },
   "maintenancePollingInterval": 10000,
   "singleManager": true,
 
@@ -20,6 +9,9 @@
         "max": 5,
         "min": 0,
         "idle": 10000
+      },
+      "dialectOptions": {
+        "ssl": false
       }
     }
   },
@@ -31,14 +23,6 @@
       "delete": 10000,
       "blueprintUpload": 70000
     }
-  },
-  "influx": {
-    "ip" : "127.0.0.1",
-    "port": 8086,
-    "user" : "root",
-    "password" : "root",
-    "database": "cloudify",
-    "timeout": 10000
   },
   "github": {
     "username": "secret(github-username)",

@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react';
-import { Form } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react';
 
 /**
  * FormGroup is a component to group {@link FormField} components and is used in {@link Form} component
@@ -36,10 +36,7 @@ import { Form } from 'semantic-ui-react'
  * ```
  */
 export default class FormGroup extends Component {
-
     render() {
-        return (
-            <Form.Group {...this.props}/>
-        );
+        return <Form.Group {...this.props} />;
     }
 }

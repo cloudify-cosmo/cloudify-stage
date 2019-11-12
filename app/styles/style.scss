@@ -1,3 +1,28 @@
+$blue-light: #45A7FF;
+$blue-normal: #0077FC;
+$blue-dark: #0064BF;
+
+$cyan-light: #D9FDFF;
+$cyan-normal: #BAF8FF;
+$cyan-dark: #7EF2F2;
+
+$green-light: #8BFDDA;
+$green-normal: #3DFBC2;
+$green-dark: #16B77D;
+
+$grey-veryLight: #F2F2F2;
+$grey-light: #E2E2E2;
+$grey-normal: #C1C1C6;
+$grey-dark: #AAAAB2;
+$grey-veryDark: #7C7C84;
+$grey-darkest: #585860;
+
+$yellow-light: #FFDB80;
+$yellow-normal: #FFC304;
+$yellow-dark: #EFA500;
+
+$white: #FFFFFF;
+$black: #000000;
 
 body {
 }
@@ -7,13 +32,6 @@ a:hover {
   cursor: pointer;
 }
 
-.logo {
-  img {
-    height: 45px;
-    width: 165px;
-    margin: 4px;
-  }
-}
 .loadingSegment {
     height: 100%;
     z-index: 5 !important;
@@ -30,16 +48,21 @@ a:hover {
   display: inline-block;
 }
 
-div.headerBar {
-  height: 55px;
+.sidebar-button{
+  color: $white;
+  padding: 15px;
 }
 
-.sidebar-button{
-  color: white;
-  padding: 15px;
+.show-on-small-screen {
   @media (min-width: 992px) {
     display: none !important;
-   }
+  }
+}
+
+.hide-on-small-screen {
+  @media (max-width: 800px) {
+    display: none !important;
+  }
 }
 
 .main {
@@ -47,8 +70,8 @@ div.headerBar {
   left: 0;
   right: 0;
   bottom: 0;
-  //bottom: 30px;
   top: 55px;
+  overflow: auto;
 
   .sidebar {
     &.ui.left.menu{
@@ -58,10 +81,13 @@ div.headerBar {
       transition: all 500ms cubic-bezier(.55, 0, .1, 1);
       left: -200px;
       @media (min-width: 992px) {
-        left: 0px;
+        left: 0;
       }
       &.open{
-        left: 0px !important;
+        left: 0 !important;
+      }
+      .item:before {
+        background-color: $grey-normal;
       }
     }
   }
@@ -284,20 +310,6 @@ div.headerBar {
   }
 }
 
-.coloredContainer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 55px;
-  bottom: 0;
-
-  .ui.segment.messageSegment {
-    max-width: 400px !important;
-    top: 120px;
-    margin: auto;
-  }
-}
-
 .uploadSnapshot {
   float: right;
 }
@@ -363,49 +375,57 @@ div.headerBar {
   }
 }
 
-.logoPage,.maintenancePage {
+.logoPage.ui.segment {
   margin: 0 !important;
   padding: 0 !important;
-}
-
-.configManager.ui.segment, .logoPage.ui.segment, .loadingPage.ui.segment, .maintenancePage.ui.segment {
+  overflow: auto;
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
+  border: none !important;
+  border-radius: 0 !important;
 
-  .configManagerContainer, .loginContainer {
+  .loginContainer {
     margin: auto;
-    width: 400px;
+    width: 350px;
     height: 170px;
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-  }
 
-  .maintenanceContainer {
-    margin: auto;
-    width: 600px;
-  }
+    input,
+    input:placeholder-shown {
+      margin: 0 50px;
+      color: $white !important;
+      background: rgba(255, 255, 255, 0.3) !important;
+    }
 
-  .loginContainer {
-    .loginHeader {
-      text-align: center;
-      margin-bottom: 30px;
+    input:focus,
+    input:placeholder-shown:focus {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    input::placeholder {
+      color: $white;
+      opacity: 1 !important; /* Firefox */
+    }
+
+    button {
+      display: block;
+      margin: 30px auto;
+      width: 50%;
+      border-radius: 25px;
+      color: $white;
     }
   }
 
   .loginContainerExtended {
     height: 400px;
   }
-
-  button {
-    width: 100%;
-  }
-
 }
 
 .keyIndicator {
@@ -598,7 +618,7 @@ table.servicesData button.refreshButton {
 
     .ui.inverted.darkyellow {
       background-color: #ffa000 !important;
-      color: #fff !important;
+      color: $white !important;
     }
 
     .nodeState .icon {
@@ -706,7 +726,7 @@ table.servicesData button.refreshButton {
   }
 
   .ui.vertical.menu .menu .item {
-    color: black;
+    color: $black;
   }
 
   .ui.vertical.menu .menu .item:hover {
@@ -764,10 +784,6 @@ table.servicesData button.refreshButton {
 
 .alignCenter {
   text-align: center !important;
-}
-
-.verticalAlignTop {
-  vertical-align: top;
 }
 
 .noWrap {
@@ -836,7 +852,7 @@ a.underline {
   }
 
   &:hover::before {
-    background-color: black;
+    background-color: $black;
     transform: scaleX(1);
   }
 }

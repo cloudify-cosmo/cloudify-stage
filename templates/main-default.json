@@ -1,0 +1,14 @@
+{
+  "roles": ["default"],
+  "tenants": ["*"],
+
+  "pages": [
+    "app",
+    "catalog",
+    "blueprints",
+    "deploy",
+    "sites",
+    "systemResources",
+    "logs"
+  ]
+}

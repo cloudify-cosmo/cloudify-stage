@@ -3,8 +3,7 @@
  */
 
 export default class DryRunIcon extends React.Component {
-
-    constructor(props, context){
+    constructor(props, context) {
         super(props, context);
     }
 
@@ -13,23 +12,20 @@ export default class DryRunIcon extends React.Component {
     };
 
     static defaultProps = {
-        execution: {is_dry_run: false}
+        execution: { is_dry_run: false }
     };
 
     render() {
-        let {Icon, Popup} = Stage.Basic;
-        const execution = this.props.execution;
+        const { Icon, Popup } = Stage.Basic;
+        const { execution } = this.props;
 
-        return execution.is_dry_run
-            ? <Popup wide on='hover'>
-                  <Popup.Trigger>
-                      <Icon name='clipboard check' color='green' />
-                  </Popup.Trigger>
-                  <Popup.Content>
-                      Dry Run
-                  </Popup.Content>
-              </Popup>
-            : null;
+        return execution.is_dry_run ? (
+            <Popup wide on="hover">
+                <Popup.Trigger>
+                    <Icon name="clipboard check" color="green" />
+                </Popup.Trigger>
+                <Popup.Content>Dry Run</Popup.Content>
+            </Popup>
+        ) : null;
     }
 }
-

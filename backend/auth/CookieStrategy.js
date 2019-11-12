@@ -7,10 +7,9 @@ const AuthHandler = require('../handler/AuthHandler');
 const Consts = require('../consts');
 
 module.exports = () => {
-    return new CookieStrategy({ cookieName: Consts.TOKEN_COOKIE_NAME },
-        (token, done) =>
-            AuthHandler.getUser(token)
-                .then((user) => done(null, user))
-                .catch((err) => done(null, false, err + token))
+    return new CookieStrategy({ cookieName: Consts.TOKEN_COOKIE_NAME }, (token, done) =>
+        AuthHandler.getUser(token)
+            .then(user => done(null, user))
+            .catch(err => done(null, false, err + token))
     );
 };

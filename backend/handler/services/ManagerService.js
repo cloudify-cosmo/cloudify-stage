@@ -2,15 +2,15 @@
  * Created by jakubniezgoda on 06/11/2017.
  */
 
-var _ = require('lodash');
-var param = require('jquery-param');
-var ManagerHandler = require('../ManagerHandler');
-var consts = require('../../consts');
+const _ = require('lodash');
+const param = require('jquery-param');
+const ManagerHandler = require('../ManagerHandler');
+const consts = require('../../consts');
 
 module.exports = (function() {
-    function call(method, url, params, data, headers={}) {
+    function call(method, url, params, data, headers = {}) {
         if (!_.isEmpty(params)) {
-            var queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
+            const queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
             url = `${url}${queryString}`;
         }
         return ManagerHandler.jsonRequest(method, url, headers, data);

@@ -7,35 +7,51 @@ import DataFetcher from './DataFetcher';
 
 Stage.defineWidget({
     id: 'topology',
-    name: "Topology",
+    name: 'Topology',
     description: 'Shows topology (blueprint or deployment)',
     initialWidth: 8,
     initialHeight: 16,
-    color: "yellow",
+    color: 'yellow',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('topology'),
     hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
-    
+
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
-        {id: 'enableNodeClick', name: 'Enable node click', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-        {id: 'enableGroupClick', name: 'Enable group click', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-        {id: 'enableZoom', name: 'Enable zoom', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-        {id: 'enableDrag', name: 'Enable drag', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE},
-        {id: 'showToolbar', name: 'Show toolbar', default:true, type: Stage.Basic.GenericField.BOOLEAN_TYPE}
+        {
+            id: 'enableNodeClick',
+            name: 'Enable node click',
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'enableGroupClick',
+            name: 'Enable group click',
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        { id: 'enableZoom', name: 'Enable zoom', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
+        { id: 'enableDrag', name: 'Enable drag', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
+        { id: 'showToolbar', name: 'Show toolbar', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE }
     ],
 
-    fetchData: function(widget,toolbox) {
-        var deploymentId = toolbox.getContext().getValue('deploymentId');
-        var blueprintId = toolbox.getContext().getValue('blueprintId');
+    fetchData(widget, toolbox) {
+        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        const blueprintId = toolbox.getContext().getValue('blueprintId');
+        const expandedDeployments = [DataFetcher.fetch(toolbox, blueprintId, deploymentId)];
 
-        return DataFetcher.fetch(toolbox,blueprintId,deploymentId);
+        const deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
+        _.each(deploymentsToFetch, dep => {
+            expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep));
+        });
+
+        return Promise.all(expandedDeployments);
     },
 
-    render: function(widget,data,error,toolbox) {
-        var topologyConfig = {
+    render(widget, data, error, toolbox) {
+        const topologyConfig = {
             enableNodeClick: widget.configuration.enableNodeClick,
             enableGroupClick: widget.configuration.enableGroupClick,
             enableZoom: widget.configuration.enableZoom,
@@ -43,16 +59,13 @@ Stage.defineWidget({
             showToolbar: widget.configuration.showToolbar
         };
 
-        var deploymentId = toolbox.getContext().getValue('deploymentId');
-        var blueprintId = toolbox.getContext().getValue('blueprintId');
+        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        const blueprintId = toolbox.getContext().getValue('blueprintId');
+        const expandedDeployments = toolbox.getContext().getValue('deploymentsToExpand');
 
-        var formattedData = Object.assign({},data,{
-            deploymentId,
-            blueprintId,
-            topologyConfig
-        });
-        return <Topology widget={widget} data={formattedData} toolbox={toolbox}/>;
+        const deploymentsData = { ...data };
+        const formattedData = { deploymentsData, deploymentId, blueprintId, topologyConfig, expandedDeployments };
 
+        return <Topology widget={widget} data={formattedData} toolbox={toolbox} />;
     }
-
 });

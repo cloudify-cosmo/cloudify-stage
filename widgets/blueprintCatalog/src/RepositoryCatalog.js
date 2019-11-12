@@ -2,8 +2,7 @@
  * Created by pposel on 06/02/2017.
  */
 
-export default class extends React.Component{
-
+export default class extends React.Component {
     static propTypes = {
         data: PropTypes.object.isRequired,
         widget: PropTypes.object.isRequired,
@@ -16,85 +15,96 @@ export default class extends React.Component{
     };
 
     static defaultProps = {
-        fetchData: ()=>{},
-        onSelect: ()=>{},
-        onUpload: ()=>{}
+        fetchData: () => {},
+        onSelect: () => {},
+        onUpload: () => {}
     };
 
-    render(){
-        let {DataSegment, Grid, Image, Button, Header} = Stage.Basic;
+    render() {
+        const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
 
-        let index = 0;
-        let catalogItems =
-            this.props.data.items.map((item) => {
-                return (
-                    <Grid.Column key={item.id}>
-
-                        <DataSegment.Item selected={item.isSelected} onClick={(event)=>{event.stopPropagation(); this.props.onSelect(item)}} className="fullHeight">
-                            <Grid className="contentBlock">
-                                <Grid.Row className="bottomDivider">
-                                    <Grid.Column width="16">
-                                        <Image src={Stage.Utils.Url.url(item.image_url)}/>
-                                        <Header><a href={item.html_url} target="_blank">{item.name}</a></Header>
-                                    </Grid.Column>
-                                </Grid.Row>
-
+        const index = 0;
+        const catalogItems = this.props.data.items.map(item => {
+            return (
+                <Grid.Column key={item.id}>
+                    <DataSegment.Item
+                        selected={item.isSelected}
+                        onClick={event => {
+                            event.stopPropagation();
+                            this.props.onSelect(item);
+                        }}
+                        className="fullHeight"
+                    >
+                        <Grid className="contentBlock">
+                            <Grid.Row className="bottomDivider">
                                 <Grid.Column width="16">
-                                    {item.description}
+                                    <Image src={Stage.Utils.Url.url(item.image_url)} />
+                                    <Header>
+                                        <a href={item.html_url} target="_blank">
+                                            {item.name}
+                                        </a>
+                                    </Header>
                                 </Grid.Column>
+                            </Grid.Row>
 
-                                <Grid.Row className="noPadded">
-                                    <Grid.Column width="4"><h5 className="ui icon header">Created</h5></Grid.Column>
-                                    <Grid.Column width="12">{item.created_at}</Grid.Column>
-                                </Grid.Row>
+                            <Grid.Column width="16">{item.description}</Grid.Column>
 
-                                <Grid.Row className="noPadded">
-                                    <Grid.Column width="4"><h5 className="ui icon header">Updated</h5></Grid.Column>
-                                    <Grid.Column width="12">{item.updated_at}</Grid.Column>
-                                </Grid.Row>
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="4">
+                                    <h5 className="ui icon header">Created</h5>
+                                </Grid.Column>
+                                <Grid.Column width="12">{item.created_at}</Grid.Column>
+                            </Grid.Row>
 
-                            </Grid>
-                            <div>
-                                <Button
-                                    circular
-                                    icon="info"
-                                    loading={this.props.readmeLoading === item.name}
-                                    className="readmeButton icon"
-                                    onClick={event => {
-                                        event.stopPropagation();
-                                        this.props.onReadme(item.name, item.readme_url);
-                                    }}/>
-                                <Button
-                                    icon="upload"
-                                    content="Upload"
-                                    className="uploadButton labeled icon"
-                                    onClick={event => {
-                                        event.stopPropagation();
-                                        this.props.onUpload(item.name, item.zip_url, item.image_url);
-                                    }}/>
-                            </div>
-                        </DataSegment.Item>
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="4">
+                                    <h5 className="ui icon header">Updated</h5>
+                                </Grid.Column>
+                                <Grid.Column width="12">{item.updated_at}</Grid.Column>
+                            </Grid.Row>
+                        </Grid>
+                        <div>
+                            <Button
+                                circular
+                                icon="info"
+                                loading={this.props.readmeLoading === item.name}
+                                className="readmeButton icon"
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    this.props.onReadme(item.name, item.readme_url);
+                                }}
+                            />
+                            <Button
+                                icon="upload"
+                                content="Upload"
+                                className="uploadButton labeled icon"
+                                onClick={event => {
+                                    event.stopPropagation();
+                                    this.props.onUpload(item.name, item.zip_url, item.image_url);
+                                }}
+                            />
+                        </div>
+                    </DataSegment.Item>
+                </Grid.Column>
+            );
+        });
 
-                    </Grid.Column>
-                );
-            });
-
-        var catalogRows = [];
-        var row = [];
-        _.each(catalogItems,(catalogItem,index)=>{
+        const catalogRows = [];
+        let row = [];
+        _.each(catalogItems, (catalogItem, index) => {
             row.push(catalogItem);
-            if ((index+1) % 3 === 0) {
+            if ((index + 1) % 3 === 0) {
                 catalogRows.push(
-                    <Grid.Row key={catalogRows.length+1} columns='3'>
+                    <Grid.Row key={catalogRows.length + 1} columns="3">
                         {row}
                     </Grid.Row>
                 );
-                row =[];
+                row = [];
             }
         });
         if (row.length > 0) {
             catalogRows.push(
-                <Grid.Row key={catalogRows.length+1} columns='3'>
+                <Grid.Row key={catalogRows.length + 1} columns="3">
                     {row}
                 </Grid.Row>
             );
@@ -102,17 +112,15 @@ export default class extends React.Component{
 
         return (
             <div>
-                <DataSegment fetchSize={this.props.data.items.length}
-                             totalSize={this.props.data.total}
-                             pageSize={this.props.widget.configuration.pageSize}
-                             fetchData={this.props.fetchData}
-                             className="repositoryCatalog"
-                             noDataMessage={this.props.noDataMessage}>
-
-                    <Grid>
-                        {catalogRows}
-                    </Grid>
-
+                <DataSegment
+                    fetchSize={this.props.data.items.length}
+                    totalSize={this.props.data.total}
+                    pageSize={this.props.widget.configuration.pageSize}
+                    fetchData={this.props.fetchData}
+                    className="repositoryCatalog"
+                    noDataMessage={this.props.noDataMessage}
+                >
+                    <Grid>{catalogRows}</Grid>
                 </DataSegment>
             </div>
         );

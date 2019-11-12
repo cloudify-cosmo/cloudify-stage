@@ -2,17 +2,19 @@
  * Created by edenp on 7/30/17.
  */
 
-let ManagerHandler = require('./ManagerHandler');
-let logger = require('log4js').getLogger('AuthHandler');
-let _ = require('lodash');
-let ServerSettings = require('../serverSettings');
+const _ = require('lodash');
+const Consts = require('../consts');
+const ManagerHandler = require('./ManagerHandler');
+
+const ServerSettings = require('../serverSettings');
+const logger = require('./LoggerHandler').getLogger('AuthHandler');
 
 let authorizationCache = {};
 
 class AuthHandler {
     static getToken(basicAuth) {
         return ManagerHandler.jsonRequest('GET', '/tokens', {
-            'Authorization': basicAuth
+            Authorization: basicAuth
         });
     }
 
@@ -28,6 +30,16 @@ class AuthHandler {
         });
     }
 
+    static isProductLicensed(version) {
+        return !_.isEqual(version.edition, Consts.EDITION.COMMUNITY);
+    }
+
+    static getLicense(token) {
+        return ManagerHandler.jsonRequest('GET', '/license', {
+            'Authentication-Token': token
+        });
+    }
+
     static getTokenViaSamlResponse(samlResponse) {
         return ManagerHandler.jsonRequest('POST', '/tokens', null, {
             'saml-response': samlResponse
@@ -37,44 +49,45 @@ class AuthHandler {
     static getAndCacheConfig(token) {
         return ManagerHandler.jsonRequest('GET', '/config', {
             'Authentication-Token': token
-        })
-        .then(config => {
+        }).then(config => {
             authorizationCache = config.authorization;
             logger.debug('Authorization config cached successfully.');
-            return Promise.resolve(config);
-        })
+            return Promise.resolve(authorizationCache);
+        });
     }
 
     static isRbacInCache() {
         return !_.isEmpty(authorizationCache);
     }
 
-    static getRBAC() {
+    static async getRBAC(token) {
         if (!AuthHandler.isRbacInCache()) {
-            logger.error('No RBAC data in cache.');
+            logger.debug('No RBAC data in cache.');
+            return await AuthHandler.getAndCacheConfig(token);
         }
-
+        logger.debug('RBAC data found in cache.');
         return authorizationCache;
     }
 
     static getManagerVersion(token) {
-        return ManagerHandler.jsonRequest('GET', '/version', {'Authentication-Token': token})
-            .then((version) => {
-                //set community mode from manager API only if mode is not set from the command line
-                if (ServerSettings.settings.mode === ServerSettings.MODE_MAIN
-                    && version.edition === ServerSettings.MODE_COMMUNITY) {
-                    ServerSettings.settings.mode = ServerSettings.MODE_COMMUNITY;
-                }
+        return ManagerHandler.jsonRequest('GET', '/version', { 'Authentication-Token': token }).then(version => {
+            // set community mode from manager API only if mode is not set from the command line
+            if (
+                ServerSettings.settings.mode === ServerSettings.MODE_MAIN &&
+                version.edition === ServerSettings.MODE_COMMUNITY
+            ) {
+                ServerSettings.settings.mode = ServerSettings.MODE_COMMUNITY;
+            }
 
-                return Promise.resolve(version.version);
-            });
+            return Promise.resolve(version);
+        });
     }
 
     static isAuthorized(user, authorizedRoles) {
-        var systemRole = user.role;
-        var groupSystemRoles = _.keys(user.group_system_roles);
+        const systemRole = user.role;
+        const groupSystemRoles = _.keys(user.group_system_roles);
 
-        var userSystemRoles = _.uniq(_.concat(systemRole, groupSystemRoles));
+        const userSystemRoles = _.uniq(_.concat(systemRole, groupSystemRoles));
         return _.intersection(userSystemRoles, authorizedRoles).length > 0;
     }
 }

@@ -13,9 +13,7 @@ pipeline {
         }
         stage('Clean') {
             steps {
-                sh '''#npm cache clean --force
-                  #bower cache clean
-                  sudo chown jenkins:jenkins -R ../*'''
+                sh 'sudo chown jenkins:jenkins -R ../*'
                 step([$class: 'WsCleanup'])
             }
         }
@@ -88,17 +86,10 @@ pipeline {
     post {
         always {
           sh 'sudo chown jenkins:jenkins -R ../*'
-          //deleteDir()
-        }
-        failure {
-          mail(from: "jenkins-master-on-aws@gigaspaces.com",
-               to: "limor@cloudify.co,jakub.niezgoda@cloudify.co,edenp@cloudify.co",
-               subject: "Stage build failed!",
-               body: "For more information see the build log: ${env.BUILD_URL}/console")
-            //emailext(body: 'For more information see the build log.',
-                     //attachLog: true,
-                     //subject: 'Stage build failed!',
-                     //to: 'limor@cloudify.co')
+          step([$class: 'Mailer',
+            notifyEveryUnstableBuild: true,
+            recipients: emailextrecipients([[$class: 'CulpritsRecipientProvider'], [$class: 'RequesterRecipientProvider']]),
+            sendToIndividuals: true])
         }
       }
 

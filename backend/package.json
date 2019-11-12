@@ -1,12 +1,16 @@
 {
   "name": "stage-backend",
-  "version": "5.0.0-.dev1",
+  "version": "5.0.5-.dev1",
   "description": "Cloudify Console Backend",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "devStart": "cross-env NODE_ENV=development nodemon --trace-warnings server.js",
+    "start": "pm2 start --env production",
+    "stop": "pm2 kill",
+    "restart": "pm2 reload stage-backend",
+    "prodStart": "cross-env STAGE_BACKEND_INSTANCES=0 pm2 start --env local_production --watch --node-args=\"--trace-warnings\" && pm2 logs",
+    "devStart": "cross-env STAGE_BACKEND_INSTANCES=0 pm2 start --env development --watch --node-args=\"--trace-warnings\" && pm2 logs",
+    "devTrace": "cross-env NODE_ENV=development nodemon --trace-warnings server.js",
     "devDebug": "cross-env NODE_ENV=development nodemon --inspect server.js",
     "db-migrate-create": "sequelize migration:create --config ../conf/app.json",
     "db-migrate": "node migration up",
@@ -14,7 +18,8 @@
     "db-migrate-current": "node migration current",
     "db-migrate-reset": "node migration reset",
     "db-migrate-down-to": "node migration downTo",
-    "db-migrate-clear": "node migration clear"
+    "db-migrate-clear": "node migration clear",
+    "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -23,6 +28,7 @@
     "archiver": "^2.1.1",
     "body": "^5.1.0",
     "body-parser": "^1.16.1",
+    "cloudify-ui-common": "^1.1.0",
     "cookie-parser": "^1.4.3",
     "cross-env": "^5.2.0",
     "decompress": "^4.0.0",
@@ -32,33 +38,34 @@
     "express-static-gzip": "^0.3.2",
     "flat": "^4.0.0",
     "fs-extra": "^3.0.1",
-    "influx": "^5.0.0",
-    "influx-old": "https://github.com/cloudify-cosmo/influx-v0.8",
     "jquery-param": "^0.2.0",
     "js-beautify": "1.6.14",
-    "lodash": "^4.17.4",
-    "log4js": "^3.0.6",
+    "js-yaml": "^3.13.1",
+    "lodash": "^4.17.15",
     "mkdirp": "^0.5.1",
+    "morgan": "^1.9.1",
     "multer": "^1.3.0",
     "passport": "^0.3.2",
     "passport-cookie": "^1.0.6",
     "passport-saml": "^0.35.0",
     "passport-unique-token": "^0.1.4",
-    "pg": "^6.1.2",
-    "pg-hstore": "^2.3.2",
+    "pg": "^6.4.2",
+    "pg-hstore": "^2.3.3",
+    "pm2": "^3.5.0",
     "request": "^2.83.0",
     "request-debug": "^0.2.0",
     "sanitize-filename": "^1.6.1",
-    "sequelize": "^4.41.1",
-    "sequelize-cli": "^5.3.0",
+    "sequelize": "^5.18.4",
     "umzug": "^1.12.0",
     "vm2": "^3.5.2",
-    "yamljs": "^0.3.0"
+    "wait-on": "^3.3.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "sequelize-cli": "^5.5.1"
   },
   "nodemonConfig": {
-    "delay": "2000"
+    "delay": 2000
   }
 }

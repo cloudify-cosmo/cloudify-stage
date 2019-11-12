@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {Form as FormSemanticUiReact, Radio as FormRadio,
-        Button as FormButton} from 'semantic-ui-react';
+import { Form as FormSemanticUiReact, Radio as FormRadio, Button as FormButton } from 'semantic-ui-react';
+
 import ErrorMessage from '../ErrorMessage';
 import FormField from './FormField';
 import FormCheckbox from './FormCheckbox';
@@ -20,6 +20,8 @@ import FormInputTime from './InputTime';
 import FormDropdown from '../Dropdown';
 import FormTable from './EdiTable';
 import FormColorPicker from './ColorPicker';
+import FormJson from './InputJson';
+
 import '../../styles/Form.css';
 
 /**
@@ -73,7 +75,6 @@ import '../../styles/Form.css';
  *
  */
 export default class Form extends Component {
-
     constructor(props) {
         super(props);
 
@@ -157,15 +158,23 @@ export default class Form extends Component {
     static ColorPicker = FormColorPicker;
 
     /**
+     * Form JSON input,
+     */
+    static Json = FormJson;
+
+    /**
      * propTypes
-     * @property {object} [errors] string wiht error message or object with fields error messages (syntax described above)
-     * @property {function} [onSubmit=()=>{}] function called on form submission
-     * @property {function} [onErrorsDismiss=()=>{}] function called when errors are dismissed (see {@link ErrorMessage})
+     *
+     * @property {object} [errors] string with error message or object with fields error messages (syntax described above)
+     * @property {string} [errorMessageHeader] string with error message header
+     * @property {Function} [onSubmit=()=>{}] function called on form submission
+     * @property {Function} [onErrorsDismiss=()=>{}] function called when errors are dismissed (see {@link ErrorMessage})
      * @property {boolean} [scrollToError=false] if set, then on error change screen will be scrolled to (see {@link ErrorMessage})
      */
     static propTypes = {
         ...Form.propTypes,
         errors: PropTypes.any,
+        errorMessageHeader: PropTypes.string,
         onSubmit: PropTypes.func,
         onErrorsDismiss: PropTypes.func,
         scrollToError: PropTypes.bool
@@ -173,34 +182,42 @@ export default class Form extends Component {
 
     static defaultProps = {
         errors: null,
+        errorMessageHeader: 'Errors in the form',
         onSubmit: () => {},
         onErrorsDismiss: () => {},
         scrollToError: false
     };
 
     static fieldNameValue(field) {
-        const name = field.name;
-        var value = field.value;
+        const { name } = field;
+        let { value } = field;
 
-        if (field.type === 'checkbox')
+        if (field.type === 'checkbox') {
             value = field.checked;
-        if (field.type === 'number')
-            value = parseInt(field.value);
+        }
+
+        if (field.type === 'number') {
+            const isFloat = n => Number(n) % 1 !== 0;
+            value = isFloat(field.value) ? parseFloat(field.value) : parseInt(field.value);
+        }
 
         if (_.isEmpty(name)) {
             console.error('Required name attribute is not provided!', field);
             throw 'Required name attribute is not provided!';
         }
 
-        return {[name]: value};
+        return { [name]: value };
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.scrollToError && !_.isEmpty(this.props.errors) &&
-            !_.isEqual(prevProps.errors, this.props.errors)) {
+        if (
+            this.props.scrollToError &&
+            !_.isEmpty(this.props.errors) &&
+            !_.isEqual(prevProps.errors, this.props.errors)
+        ) {
             const formElement = ReactDOM.findDOMNode(this);
             if (formElement) {
-                formElement.scrollIntoView({behavior: 'smooth', block: 'start'});
+                formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
     }
@@ -216,7 +233,7 @@ export default class Form extends Component {
     }
 
     render() {
-        let { errors, onErrorsDismiss, scrollToError, ...rest } = this.props;
+        let { errors, errorMessageHeader, onErrorsDismiss, scrollToError, ...rest } = this.props;
 
         if (_.isString(errors)) {
             errors = [errors];
@@ -226,11 +243,11 @@ export default class Form extends Component {
 
         return (
             <FormSemanticUiReact {...rest} onSubmit={this._handleSubmit.bind(this)} error={!_.isEmpty(errors)}>
-                <ErrorMessage header="Errors in the form" error={errors} onDismiss={onErrorsDismiss} />
+                <ErrorMessage header={errorMessageHeader} error={errors} onDismiss={onErrorsDismiss} />
 
                 {this.props.children}
 
-                <input type='submit' name="submitFormBtn" style={{'display': 'none'}} ref={this.submitFormBtnRef} />
+                <input type="submit" name="submitFormBtn" style={{ display: 'none' }} ref={this.submitFormBtnRef} />
             </FormSemanticUiReact>
         );
     }

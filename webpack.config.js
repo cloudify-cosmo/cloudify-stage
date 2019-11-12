@@ -9,7 +9,7 @@ const Consts = require('./backend/consts');
 
 const getWidgetEntries = () => {
     return glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
-        let name = item.replace('./widgets/', '').replace('/src', '');
+        const name = item.replace('./widgets/', '').replace('/src', '');
         acc[name] = item;
         return acc;
     }, {});
@@ -19,64 +19,76 @@ const rules = [
     {
         test: /\.js?$/,
         exclude: /node_modules/,
-        use: [{
-            loader: 'babel-loader',
-            options: {
-                presets: [['env', {modules: false}], 'react', 'stage-0'],
-                plugins: ['react-hot-loader/babel', 'transform-runtime'],
-                babelrc: false
+        use: [
+            {
+                loader: 'babel-loader',
+                options: {
+                    presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'],
+                    plugins: ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties'],
+                    babelrc: false
+                }
             }
-        }]
-    }, {
+        ]
+    },
+    {
         test: /\.scss$/,
-        use: [{
-            loader: 'style-loader'
-        }, {
-            loader: 'css-loader',
+        use: [
+            {
+                loader: 'style-loader'
+            },
+            {
+                loader: 'css-loader'
+            },
+            {
+                loader: 'sass-loader',
 
-            options: {
-                minimize: true
+                options: {
+                    modules: true,
+                    localIdentName: '[name]---[local]---[hash:base64:5]'
+                }
             }
-        }, {
-            loader: 'sass-loader',
-
-            options: {
-                modules: true,
-                localIdentName: '[name]---[local]---[hash:base64:5]'
-            }
-        }]
-    }, {
+        ]
+    },
+    {
         test: /\.css$/,
-        use: [{
-            loader: 'style-loader'
-        }, {
-            loader: 'css-loader',
+        use: [
+            {
+                loader: 'style-loader'
+            },
+            {
+                loader: 'css-loader',
 
-            options: {
-                importLoaders: 1,
-                minimize: true
+                options: {
+                    importLoaders: 1
+                }
             }
-        }]
-    }, {
+        ]
+    },
+    {
         test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/,
-        use: [{
-            loader: 'url-loader',
+        use: [
+            {
+                loader: 'url-loader',
 
-            options: {
-                limit: 100000,
-                name: 'fonts/[name].[ext]'
+                options: {
+                    limit: 100000,
+                    name: '/static/fonts/[name].[ext]'
+                }
             }
-        }]
-    }, {
+        ]
+    },
+    {
         test: /\.(svg|png|jpe?g|gif)(\?\S*)?$/,
-        use: [{
-            loader: 'url-loader',
+        use: [
+            {
+                loader: 'url-loader',
 
-            options: {
-                limit: 100000,
-                name: 'images/[name].[ext]'
+                options: {
+                    limit: 100000,
+                    name: '/static/images/[name].[ext]'
+                }
             }
-        }]
+        ]
     }
 ];
 
@@ -84,50 +96,48 @@ module.exports = [
     {
         mode: 'development',
         context: path.join(__dirname),
-        devtool: 'eval',
+        devtool: 'eval-source-map',
         resolve: {
             alias: {
                 'jquery-ui': 'jquery-ui/ui',
-                'jquery': __dirname + '/node_modules/jquery' // Always make sure we take jquery from the same place
-            }
+                jquery: `${__dirname}/node_modules/jquery` // Always make sure we take jquery from the same place
+            },
+            modules: [path.resolve(__dirname, 'node_modules')]
         },
         entry: {
-            'main.bundle': [
-                './app/main.js'
-            ]
+            'main.bundle': ['./app/main.js']
         },
         output: {
             path: path.join(__dirname, 'dist'),
-            filename: 'js/[name].js',
+            filename: 'static/js/[name].js',
             publicPath: Consts.CONTEXT_PATH
+        },
+        optimization: {
+            namedModules: true
         },
         plugins: [
             new CopyWebpackPlugin([
                 {
-                    from: 'app/images',
-                    to: 'images'
-                }
-            ]),
-            new CopyWebpackPlugin([
+                    from: 'node_modules/cloudify-ui-common/images/favicon.png',
+                    to: 'static/images'
+                },
+                {
+                    from: 'node_modules/cloudify-ui-common/images/logo.png',
+                    to: 'static/images'
+                },
                 {
                     from: 'widgets',
                     to: 'appData/widgets',
                     ignore: ['**/src/**', '*/widget.js', '*/backend.js', '*/common.js']
-                }
-            ]),
-            new CopyWebpackPlugin([
+                },
                 {
                     from: 'templates',
                     to: 'appData/templates'
-                }
-            ]),
-            new CopyWebpackPlugin([
+                },
                 {
                     from: 'tours',
                     to: 'appData/tours'
-                }
-            ]),
-            new CopyWebpackPlugin([
+                },
                 {
                     from: 'userData',
                     to: 'userData'
@@ -136,12 +146,10 @@ module.exports = [
             new HtmlWebpackPlugin({
                 template: 'app/index.tmpl.html',
                 inject: 'body',
-                filename: 'index.html',
+                filename: 'static/index.html',
                 chunks: ['main.bundle']
             }),
-            new webpack.optimize.OccurrenceOrderPlugin(),
-            new webpack.NamedModulesPlugin(),
-            new webpack.HotModuleReplacementPlugin(),
+            new webpack.optimize.OccurrenceOrderPlugin(false),
             new webpack.ProvidePlugin({
                 $: 'jquery',
                 jQuery: 'jquery',
@@ -155,12 +163,18 @@ module.exports = [
     {
         mode: 'development',
         context: path.join(__dirname),
-        devtool: 'eval',
+        devtool: 'eval-source-map',
+        resolve: {
+            modules: [path.resolve(__dirname, 'node_modules')]
+        },
         entry: getWidgetEntries(),
         output: {
             path: path.join(__dirname, 'dist/appData'),
             filename: 'widgets/[name]',
             publicPath: Consts.CONTEXT_PATH
+        },
+        optimization: {
+            namedModules: true
         },
         plugins: [
             new CopyWebpackPlugin([
@@ -168,9 +182,7 @@ module.exports = [
                     from: 'widgets/**/src/backend.js',
                     to: '[path]../backend.js'
                 }
-            ]),
-            new webpack.NamedModulesPlugin(),
-            new webpack.HotModuleReplacementPlugin()
+            ])
         ],
         module: {
             rules
@@ -179,17 +191,19 @@ module.exports = [
     {
         mode: 'development',
         context: path.join(__dirname),
-        devtool: 'eval',
+        devtool: 'eval-source-map',
+        resolve: {
+            modules: [path.resolve(__dirname, 'node_modules')]
+        },
         entry: glob.sync('./widgets/common/src/*.js'),
         output: {
             path: path.join(__dirname, 'dist/appData/widgets'),
             filename: 'common/common.js',
             publicPath: Consts.CONTEXT_PATH
         },
-        plugins: [
-            new webpack.NamedModulesPlugin(),
-            new webpack.HotModuleReplacementPlugin()
-        ],
+        optimization: {
+            namedModules: true
+        },
         module: {
             rules
         }

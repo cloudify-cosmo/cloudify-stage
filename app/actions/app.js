@@ -1,35 +1,33 @@
-
 import * as types from './types';
 
-import {loadTemplates} from './templates';
-import {loadTours} from './tours';
-import {loadWidgetDefinitions} from './widgets';
-import {getTenants} from './tenants';
-import {getClientConfig} from './clientConfig';
-import {loadOrCreateUserAppData} from './userApp';
-import {getUserData, getRBACConfig} from './managers';
-import {getStatus} from '../actions/status';
-import {getVersion} from '../actions/version';
-import {NO_TENANTS_ERR} from '../utils/ErrorCodes';
+import { loadTemplates } from './templates';
+import { loadTours } from './tours';
+import { loadWidgetDefinitions } from './widgets';
+import { getTenants } from './tenants';
+import { getClientConfig } from './clientConfig';
+import { loadOrCreateUserAppData } from './userApp';
+import { getUserData } from './managers';
+import { getStatus } from './status';
+import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 
 export function setAppLoading(isLoading) {
     return {
-        type : types.SET_APP_LOADING,
+        type: types.SET_APP_LOADING,
         isLoading
-    }
+    };
 }
 
 export function setAppError(error) {
     return {
-        type : types.SET_APP_ERROR,
+        type: types.SET_APP_ERROR,
         error
-    }
+    };
 }
 
 export function intialPageLoad() {
-    return function(dispatch,getState) {
+    return function(dispatch, getState) {
         dispatch(setAppLoading(true));
-        var state = getState();
+        const state = getState();
         return dispatch(getTenants(state.manager))
             .then(() => {
                 if (getState().manager.tenants.items.length === 0) {
@@ -38,7 +36,6 @@ export function intialPageLoad() {
                     return Promise.reject(NO_TENANTS_ERR);
                 }
             })
-            .then(() => dispatch(getRBACConfig()))
             .then(() => dispatch(getUserData()))
             .then(() => {
                 return Promise.all([
@@ -46,14 +43,13 @@ export function intialPageLoad() {
                     dispatch(loadTours()),
                     dispatch(loadWidgetDefinitions()),
                     dispatch(getClientConfig()),
-                    dispatch(getStatus()),
-                    dispatch(getVersion())
+                    dispatch(getStatus())
                 ]);
             })
             .then(() => {
                 return dispatch(loadOrCreateUserAppData());
             })
-            .then(()=>{
+            .then(() => {
                 dispatch(setAppLoading(false));
                 dispatch(setAppError(null));
             })
@@ -62,19 +58,18 @@ export function intialPageLoad() {
                 dispatch(setAppLoading(false));
                 return Promise.reject(e);
             });
-    }
+    };
 }
 
 export function storeCurrentPageId(pageId) {
     return {
         type: types.STORE_CURRENT_PAGE,
         pageId
-    }
+    };
 }
-
 
 export function toogleSidebar() {
     return {
-        type : types.APP_SIDEBAR_TOOGLE
-    }
+        type: types.APP_SIDEBAR_TOOGLE
+    };
 }

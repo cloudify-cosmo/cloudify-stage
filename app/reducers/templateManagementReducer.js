@@ -2,39 +2,52 @@
  * Created by kinneretzin on 30/08/2016.
  */
 
-import {v4} from 'node-uuid';
+import v4 from 'uuid/v4';
 import * as types from '../actions/types';
 import StageUtils from '../utils/stageUtils';
 
 function updateWidget(widgets, widgetId, params) {
-    return widgets.map( (w) => {
+    return widgets.map(w => {
         if (w.id === widgetId) {
-            return {...w, ...params};
+            return { ...w, ...params };
         }
-        return w
+        return w;
     });
 }
 
 const templates = (state = {}, action) => {
     switch (action.type) {
         case types.TEMPLATE_MANAGEMENT_LOADING:
-            return {...state, isLoading: true, error: null};
+            return { ...state, isLoading: true, error: null };
         case types.TEMPLATE_MANAGEMENT_ERROR:
-            return {...state, isLoading: false, error: action.error};
+            return { ...state, isLoading: false, error: action.error };
         case types.TEMPLATE_MANAGEMENT_FETCH:
-            return {templates: action.templates, pages: action.pages, isLoading: false, error: null};
+            return { templates: action.templates, pages: action.pages, isLoading: false, error: null };
         case types.TEMPLATE_MANAGEMENT_SELECT:
-            return {...state, templates: _.map(state.templates, item => {
-                return {...item, selected: !item.selected && item.id === action.templateId}
-            })};
+            return {
+                ...state,
+                templates: _.map(state.templates, item => {
+                    return { ...item, selected: !item.selected && item.id === action.templateId };
+                })
+            };
         case types.PAGE_MANAGEMENT_SELECT:
-            return {...state, pages: _.map(state.pages, item => {
-                return {...item, selected: !item.selected && item.id === action.pageId}
-            })};
+            return {
+                ...state,
+                pages: _.map(state.pages, item => {
+                    return { ...item, selected: !item.selected && item.id === action.pageId };
+                })
+            };
         case types.PAGE_MANAGEMENT_SHOW:
-            return {...state, isPageEditMode: action.isPageEditMode, page: {id: action.pageId, name: action.pageName, widgets: []}};
+            return {
+                ...state,
+                isPageEditMode: action.isPageEditMode,
+                page: { id: action.pageId, name: action.pageName, widgets: [] }
+            };
         case types.PAGE_MANAGEMENT_CHANGE_NAME:
-            return {...state, page: {...state.page, oldId: state.page.id, id: action.pageId, name: action.pageName}};
+            return {
+                ...state,
+                page: { ...state.page, oldId: state.page.id, id: action.pageId, name: action.pageName }
+            };
         case types.PAGE_MANAGEMENT_ADD_WIDGET:
             var widget = {
                 id: v4(),
@@ -44,26 +57,26 @@ const templates = (state = {}, action) => {
                 x: action.x,
                 y: action.y,
                 definition: action.widgetDefinition.id,
-                configuration: Object.assign({},StageUtils.buildConfig(action.widgetDefinition),action.configuration),
+                configuration: { ...StageUtils.buildConfig(action.widgetDefinition), ...action.configuration },
                 drillDownPages: {}
             };
 
-            return {...state, page: {...state.page, widgets: [...state.page.widgets, widget]}};
+            return { ...state, page: { ...state.page, widgets: [...state.page.widgets, widget] } };
         case types.PAGE_MANAGEMENT_RENAME_WIDGET:
-            var widgets = updateWidget(state.page.widgets, action.widgetId, {name: action.name});
-            return {...state, page: {...state.page, widgets}};
+            var widgets = updateWidget(state.page.widgets, action.widgetId, { name: action.name });
+            return { ...state, page: { ...state.page, widgets } };
         case types.PAGE_MANAGEMENT_REMOVE_WIDGET:
-            var widgets = _.filter(state.page.widgets, (w) => {
+            var widgets = _.filter(state.page.widgets, w => {
                 return w.id !== action.widgetId;
             });
 
-            return {...state, page: {...state.page, widgets}};
+            return { ...state, page: { ...state.page, widgets } };
         case types.PAGE_MANAGEMENT_EDIT_WIDGET:
-            var widgets = updateWidget(state.page.widgets, action.widgetId, {configuration: action.configuration});
-            return {...state, page: {...state.page, widgets}};
+            var widgets = updateWidget(state.page.widgets, action.widgetId, { configuration: action.configuration });
+            return { ...state, page: { ...state.page, widgets } };
         case types.PAGE_MANAGEMENT_MAXIMIZE_WIDGET:
-            var widgets = updateWidget(state.page.widgets, action.widgetId, {maximized: action.maximized});
-            return {...state, page: {...state.page, widgets}};
+            var widgets = updateWidget(state.page.widgets, action.widgetId, { maximized: action.maximized });
+            return { ...state, page: { ...state.page, widgets } };
         case types.PAGE_MANAGEMENT_CHANGE_WIDGET:
             var params = {
                 x: action.gridData.x,
@@ -72,19 +85,18 @@ const templates = (state = {}, action) => {
                 height: action.gridData.height
             };
             var widgets = updateWidget(state.page.widgets, action.widgetId, params);
-            return {...state, page: {...state.page, widgets}};
+            return { ...state, page: { ...state.page, widgets } };
         case types.TEMPLATE_MANAGEMENT_CLEAR:
-            let {pages, templates, ...templateRest} = state;
+            const { pages, templates, ...templateRest } = state;
             return templateRest;
         case types.PAGE_MANAGEMENT_CLEAR:
-            let {page, ...pageRest} = state;
+            const { page, ...pageRest } = state;
             return pageRest;
         case types.PAGE_MANAGEMENT_DRILLDOWN_WARN:
-            return {...state, showDrillDownWarn: action.show};
+            return { ...state, showDrillDownWarn: action.show };
         default:
             return state;
     }
 };
-
 
 export default templates;

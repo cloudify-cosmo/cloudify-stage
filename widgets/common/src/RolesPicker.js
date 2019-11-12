@@ -3,7 +3,6 @@
  */
 
 export default class RolesPicker extends React.Component {
-
     constructor(props, context) {
         super(props, context);
     }
@@ -20,28 +19,33 @@ export default class RolesPicker extends React.Component {
     }
 
     render() {
-        const {Form} = Stage.Basic;
-        let roleOptions = _.reverse(_.map(_.filter(this.props.toolbox.getManager()._data.roles, {type: 'tenant_role'}), (role) => {
-            return {text: role.name, value: role.name};
-        }));
+        const { Form } = Stage.Basic;
+        const roleOptions = _.reverse(
+            _.map(_.filter(this.props.toolbox.getManager()._data.roles, { type: 'tenant_role' }), role => {
+                return { text: role.name, value: role.name };
+            })
+        );
 
         return (
             <span>
-                {
-                    _.map(this.props.resources, (role, resource) => {
-                        return (
-                            <Form.Field key={resource} label={`Choose a role for ${this.props.resourceName} ${resource}:`}>
-                                <Form.Dropdown placeholder='Choose a role' selection options={roleOptions} name={resource}
-                                               value={role} onChange={this._handleInputChange.bind(this)}/>
-                            </Form.Field>
-                        )
-                    })
-                }
+                {_.map(this.props.resources, (role, resource) => {
+                    return (
+                        <Form.Field key={resource} label={`Choose a role for ${this.props.resourceName} ${resource}:`}>
+                            <Form.Dropdown
+                                placeholder="Choose a role"
+                                selection
+                                options={roleOptions}
+                                name={resource}
+                                value={role}
+                                onChange={this._handleInputChange.bind(this)}
+                            />
+                        </Form.Field>
+                    );
+                })}
             </span>
-        )
+        );
     }
 }
-
 
 Stage.defineCommon({
     name: 'RolesPicker',

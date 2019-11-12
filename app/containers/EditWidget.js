@@ -5,10 +5,10 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import EditWidgetIcon from '../components/EditWidgetIcon';
-import {editWidget} from '../actions/widgets';
-import {editPageWidget} from '../actions/templateManagement';
+import { editWidget } from '../actions/widgets';
+import { editPageWidget } from '../actions/templateManagement';
 import EditWidgetModal from '../components/EditWidgetModal';
 
 const mapStateToProps = (state, ownProps) => {
@@ -19,52 +19,69 @@ const mapStateToProps = (state, ownProps) => {
         configuration: ownProps.widget.configuration || {},
         configDef: ownProps.widget.definition.initialConfiguration || [],
         showConfig: ownProps.widget.showConfig || false
-    }
+    };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onWidgetEdited: (configuration) => {
+        onWidgetEdited: configuration => {
             if (ownProps.pageManagementMode) {
-                dispatch(editPageWidget(ownProps.pageId, ownProps.widget.id, configuration || ownProps.widget.configuration || {}));
+                dispatch(
+                    editPageWidget(
+                        ownProps.pageId,
+                        ownProps.widget.id,
+                        configuration || ownProps.widget.configuration || {}
+                    )
+                );
             } else {
-                dispatch(editWidget(ownProps.pageId, ownProps.widget.id, configuration || ownProps.widget.configuration || {}));
+                dispatch(
+                    editWidget(
+                        ownProps.pageId,
+                        ownProps.widget.id,
+                        configuration || ownProps.widget.configuration || {}
+                    )
+                );
             }
         }
-    }
+    };
 };
 
 class EditWidgetComponent extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = {
             showConfig: false
-        }
+        };
     }
 
     static propTypes = {
-        widget : PropTypes.object,
-        onWidgetEdited : PropTypes.func,
-        configDef : PropTypes.array,
-        configuration : PropTypes.object
+        widget: PropTypes.object,
+        onWidgetEdited: PropTypes.func,
+        configDef: PropTypes.array,
+        configuration: PropTypes.object
     };
 
     _showConfig() {
-        this.setState({showConfig:true});
+        this.setState({ showConfig: true });
     }
 
     _hideConfig() {
-        this.setState({showConfig:false});
+        this.setState({ showConfig: false });
     }
 
     render() {
         return (
             <span>
-                <EditWidgetIcon widgetId={this.props.widget.id} onShowConfig={this._showConfig.bind(this)}/>
-                <EditWidgetModal widget={this.props.widget} configDef={this.props.configDef} configuration={this.props.configuration}
-                                 onWidgetEdited={this.props.onWidgetEdited} show={this.state.showConfig} onHideConfig={this._hideConfig.bind(this)}/>
+                <EditWidgetIcon widgetId={this.props.widget.id} onShowConfig={this._showConfig.bind(this)} />
+                <EditWidgetModal
+                    widget={this.props.widget}
+                    configDef={this.props.configDef}
+                    configuration={this.props.configuration}
+                    onWidgetEdited={this.props.onWidgetEdited}
+                    show={this.state.showConfig}
+                    onHideConfig={this._hideConfig.bind(this)}
+                />
             </span>
         );
     }
@@ -75,5 +92,4 @@ const EditWidget = connect(
     mapDispatchToProps
 )(EditWidgetComponent);
 
-
-export default EditWidget
+export default EditWidget;

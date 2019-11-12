@@ -1,0 +1,47 @@
+/**
+ * Created by pposel on 05/07/2017.
+ */
+
+module.exports = {
+    before(client) {
+        client
+            .login()
+            .prepareTestWidget(client.page.blueprintSources().props.widgetId)
+            .addBlueprint();
+    },
+
+    'No blueprint selected': function(client) {
+        client.page
+            .blueprintSources()
+            .section.noBlueprintSelected.assert.containsText(
+                '@message',
+                'Please select blueprint to display source files'
+            );
+    },
+
+    'Browse blueprint source': function(client) {
+        client
+            .selectBlueprint()
+            .page.blueprintSources()
+            .section.source.waitForElementPresent('@tree')
+            .waitForElementPresent('@blueprintHeader')
+            .assert.containsText('@blueprintHeader', client.page.blueprints().props.testBlueprint)
+            .waitForElementPresent('@vsphereYaml')
+            .assert.containsText('@vsphereYaml', client.page.blueprintSources().props.vsphereYaml)
+            .waitForElementPresent('@emptyContent')
+            .clickElement('@vsphereYaml')
+            .waitForElementPresent('@contentSnippet')
+            .waitForElementPresent('@fullScreenButton')
+            .clickElement('@fullScreenButton');
+
+        client.page
+            .blueprintSources()
+            .waitForElementPresent('@fullScreen')
+            .clickElement('@overlay')
+            .api.keys(client.Keys.ESCAPE);
+    },
+
+    after(client) {
+        client.removeLastPage().end();
+    }
+};

@@ -3,7 +3,6 @@
  */
 
 export default class {
-
     constructor(toolbox) {
         this.toolbox = toolbox;
     }
@@ -21,12 +20,13 @@ export default class {
     }
 
     doGetImportedBlueprints(blueprintId) {
-        return this.toolbox.getManager().doGet(`/blueprints?id=${blueprintId}&_include=plan`)
-            .then((data) => _.get(data, 'items[0].plan.imported_blueprints', []));
+        return this.toolbox
+            .getManager()
+            .doGet(`/blueprints?id=${blueprintId}&_include=plan`)
+            .then(data => _.get(data, 'items[0].plan.imported_blueprints', []));
     }
 
     doGetFileContent(path) {
-        return this.toolbox.getInternal().doGet('/source/browse/file',{path});
+        return this.toolbox.getInternal().doGet('/source/browse/file', { path });
     }
-
 }

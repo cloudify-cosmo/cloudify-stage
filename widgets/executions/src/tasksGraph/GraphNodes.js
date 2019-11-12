@@ -10,29 +10,29 @@ import GraphEdges from './GraphEdges';
 
 const textVisualAdjustment = 5;
 
-const GraphNodes = (props) => (
-    props.graphNodes.map((graphNode) => 
+const GraphNodes = props =>
+    props.graphNodes.map(graphNode => (
         <g key={graphNode.id} transform={`translate(${graphNode.x}, ${graphNode.y + textVisualAdjustment})`}>
             <GraphNode graphNode={graphNode} />
-            {
-                !_.isEmpty(graphNode.children) && 
-                <React.Fragment>
+            {!_.isEmpty(graphNode.children) && (
+                <>
                     <GraphNodes graphNodes={graphNode.children} />
                     <GraphEdges graphEdges={graphNode.edges} />
-                </React.Fragment>
-            }
+                </>
+            )}
         </g>
-    )
-)
+    ));
 
 GraphNodes.propTypes = {
-    graphNodes: PropTypes.arrayOf(PropTypes.shape({
-        x: PropTypes.number.isRequired,
-        y: PropTypes.number.isRequired,
-        id: PropTypes.string,
-        children: PropTypes.array.isRequired, // While required, may be empty
-        edges: PropTypes.array.isRequired, // Same as above
-    })).isRequired
+    graphNodes: PropTypes.arrayOf(
+        PropTypes.shape({
+            x: PropTypes.number.isRequired,
+            y: PropTypes.number.isRequired,
+            id: PropTypes.string,
+            children: PropTypes.array.isRequired, // While required, may be empty
+            edges: PropTypes.array.isRequired // Same as above
+        })
+    ).isRequired
 };
 
 export default GraphNodes;

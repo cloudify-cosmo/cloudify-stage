@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {Button, Form, Popup} from './index';
+import { Button, Form, Popup } from './index';
 
 /**
  * TimePicker is a component showing datetime picker
@@ -25,19 +25,21 @@ import {Button, Form, Popup} from './index';
  *
  */
 export default class TimePicker extends React.Component {
-
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
 
         this.state = TimePicker.initialState;
     }
 
     static TIME_FORMAT = 'HH:mm';
+
     static DATE_FORMAT = 'YYYY-MM-DD';
+
     static DATETIME_FORMAT = `${TimePicker.DATE_FORMAT} ${TimePicker.TIME_FORMAT}`;
 
     /**
      * propTypes
+     *
      * @property {string} name name of the field
      * @property {object} defaultValue string data value to be set when Reset button is clicked
      * @property {object} value string data value
@@ -45,7 +47,7 @@ export default class TimePicker extends React.Component {
      * @property {number} [timeIntervals=5] time interval between available time options (in minutes)
      * @property {object} [minDate=undefined] moment object for minimal date available in picker
      * @property {object} [maxDate=undefined] moment object for maximal date available in picker
-     * @property {function} [onChange=(function (event, data) {});] function called on data picker change
+     * @property {Function} [onChange=(function (event, data) {});] function called on data picker change
      */
     static propTypes = {
         defaultValue: PropTypes.string.isRequired,
@@ -81,56 +83,76 @@ export default class TimePicker extends React.Component {
     static getDerivedStateFromProps(nextProps, prevState) {
         if (nextProps.value !== TimePicker.getDateString(prevState.dateValue)) {
             return TimePicker.getDateState(prevState.dateValue, nextProps.value);
-        } else {
-            return null;
         }
+        return null;
     }
 
     static getDateState(currentMomentDate, newStringDate) {
         return _.isEmpty(newStringDate)
-            ? {dateError: false, dateValue: undefined}
+            ? { dateError: false, dateValue: undefined }
             : moment(newStringDate).isValid()
-                ? {dateError: false, dateValue: currentMomentDate}
-                : {dateError: true, dateValue: undefined};
+            ? { dateError: false, dateValue: currentMomentDate }
+            : { dateError: true, dateValue: undefined };
     }
 
     handleDataPickerChange(proxy, field) {
         const value = TimePicker.getDateString(field.value);
-        this.setState({dirty: !_.isEqual(value, this.props.defaultValue), dateValue: field.value, dateError: false});
-        this.props.onChange(proxy, {name: this.props.name, value});
+        this.setState({ dirty: !_.isEqual(value, this.props.defaultValue), dateValue: field.value, dateError: false });
+        this.props.onChange(proxy, { name: this.props.name, value });
     }
 
     handleInputChange(proxy, field) {
-        this.props.onChange(proxy, {name: this.props.name, value: field.value});
+        this.props.onChange(proxy, { name: this.props.name, value: field.value });
         this.setState(TimePicker.getDateState(this.state.dateValue, field.value));
     }
 
     handleResetButtonClick(proxy) {
-        this.props.onChange(proxy, {name: this.props.name, value: this.props.defaultValue});
-        this.setState({dirty: false, ...TimePicker.getDateState(this.state.dateValue, this.props.defaultValue)});
+        this.props.onChange(proxy, { name: this.props.name, value: this.props.defaultValue });
+        this.setState({ dirty: false, ...TimePicker.getDateState(this.state.dateValue, this.props.defaultValue) });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props, nextProps)
-            || !_.isEqual(this.state, nextState);
+        return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
     }
 
-    render () {
+    render() {
         return (
-            <Popup hoverable flowing onClose={() => this.setState({isOpen: false})} open={this.state.isOpen} position='top right'>
+            <Popup
+                hoverable
+                flowing
+                onClose={() => this.setState({ isOpen: false })}
+                open={this.state.isOpen}
+                position="top right"
+            >
                 <Popup.Trigger>
-                    <Form.Input name='value' value={this.props.value} placeholder={this.props.placeholder} fluid action error={this.state.dateError}
-                                onChange={this.handleInputChange.bind(this)} onClick={() => this.setState({isOpen: false})}>
+                    <Form.Input
+                        name="value"
+                        value={this.props.value}
+                        placeholder={this.props.placeholder}
+                        fluid
+                        action
+                        error={this.state.dateError}
+                        onChange={this.handleInputChange.bind(this)}
+                        onClick={() => this.setState({ isOpen: false })}
+                    >
                         <input />
-                        <Button onClick={() => this.setState({isOpen: true})} icon='calendar' />
-                        <Button onClick={this.handleResetButtonClick.bind(this)} icon="cancel" disabled={!this.state.dirty}/>
+                        <Button onClick={() => this.setState({ isOpen: true })} icon="calendar" />
+                        <Button
+                            onClick={this.handleResetButtonClick.bind(this)}
+                            icon="cancel"
+                            disabled={!this.state.dirty}
+                        />
                     </Form.Input>
                 </Popup.Trigger>
 
-                <Form.InputDate name='dateValue' value={this.state.dateValue}
-                                onChange={this.handleDataPickerChange.bind(this)}
-                                minDate={this.props.minDate} maxDate={this.props.maxDate}
-                                timeIntervals={this.props.timeIntervals} />
+                <Form.InputDate
+                    name="dateValue"
+                    value={this.state.dateValue}
+                    onChange={this.handleDataPickerChange.bind(this)}
+                    minDate={this.props.minDate}
+                    maxDate={this.props.maxDate}
+                    timeIntervals={this.props.timeIntervals}
+                />
             </Popup>
         );
     }

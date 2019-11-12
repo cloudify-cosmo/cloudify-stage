@@ -16,31 +16,26 @@ export default class JsonUtils {
         return _.trim(stringifiedValue, '"');
     }
 
-    // Attempts to parse string to json.
-    // Returns original value if failed
-    static stringToJson(value) {
-        try{
-            return JSON.parse(value);
-        } catch (err) {
-            return value;
-        }
-    }
-
     static toType(obj) {
-        return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+        return {}.toString
+            .call(obj)
+            .match(/\s([a-zA-Z]+)/)[1]
+            .toLowerCase();
     }
 
     static toCloudifyType(obj) {
-        let type = JsonUtils.toType(obj);
+        const type = JsonUtils.toType(obj);
 
         switch (type) {
             case 'boolean':
             case 'string':
                 return type;
             case 'number':
-                return 'integer';
+                return _.isInteger(obj) ? 'integer' : 'float';
             case 'array':
+                return 'list';
             case 'object':
+                return 'dict';
             default:
                 return undefined;
         }
@@ -66,18 +61,27 @@ export default class JsonUtils {
     }
 
     static getTypedValue(value) {
-        let initialType = JsonUtils.toType(value);
+        const initialType = JsonUtils.toType(value);
 
         if (initialType === 'string') {
+            // Null or Undefined
+            if (value === 'null') {
+                return null;
+            }
+            if (value === 'undefined') {
+                return undefined;
+            }
+
             // Boolean
             if (value === 'true') {
                 return true;
-            } else if (value === 'false') {
+            }
+            if (value === 'false') {
                 return false;
             }
 
             // Number
-            let numericValue = Number(value);
+            const numericValue = Number(value);
             if (!isNaN(numericValue)) {
                 return numericValue;
             }
@@ -91,9 +95,7 @@ export default class JsonUtils {
             }
 
             return jsonValue;
-
-        } else {
-            return value;
         }
+        return value;
     }
 }

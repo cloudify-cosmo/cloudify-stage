@@ -6,8 +6,8 @@ import Manager from '../utils/Manager';
 
 export function requestStatus() {
     return {
-        type: types.REQ_MANAGER_STATUS,
-    }
+        type: types.REQ_MANAGER_STATUS
+    };
 }
 
 export function setStatus(status, services) {
@@ -15,28 +15,40 @@ export function setStatus(status, services) {
         type: types.SET_MANAGER_STATUS,
         status,
         services
-    }
+    };
 }
 
 export function errorStatus(error) {
     return {
         type: types.ERR_MANAGER_STATUS,
         error
-    }
+    };
 }
 
-export function getStatus () {
+export function getStatus() {
     return function(dispatch, getState) {
-        var managerAccessor = new Manager(getState().manager);
+        const managerAccessor = new Manager(getState().manager);
         dispatch(requestStatus());
-        return managerAccessor.doGet('/status')
-            .then((data)=>{
-                var services = _.filter(data.services, item => !_.isEmpty(item.instances));
-                services = _.sortBy(services, (service) => service.display_name);
-                dispatch(setStatus(data.status, services));
-            }).catch((err)=>{
+        return managerAccessor
+            .doGet('/status')
+            .then(data => {
+                const { services, status } = data;
+                const filteredServices = _(services)
+                    .keys()
+                    .sort()
+                    .map(serviceName => ({
+                        name: serviceName,
+                        isExternal: services[serviceName].is_external,
+                        status: services[serviceName].status,
+                        description: _.get(services[serviceName], 'extra_info.systemd.instances[0].Description', '')
+                    }))
+                    .value();
+
+                dispatch(setStatus(status, filteredServices));
+            })
+            .catch(err => {
                 console.error(err);
                 dispatch(errorStatus(err));
             });
-    }
+    };
 }

@@ -1,17 +1,26 @@
 {
+  "maps": {
+    "mapUrl": "https://maps.wikimedia.org",
+    "tilesUrlTemplate": "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png",
+    "attribution": "<a href='https://wikimediafoundation.org/wiki/Maps_Terms_of_Use'>Wikimedia</a>"
+  },
   "whiteLabel": {
-    "enabled": false,
-    "logoUrl": "/console/images/Cloudify-icon.png",
-    "mainColor": "black",
-    "pagesLocation": "",
-    "headerTextColor": "white",
-    "loginPageHeader": "",
+    "pageTitle": "Cloudify Console",
+    "logoUrl": "/console/static/images/logo.png",
+    "mainColor": "#0077FC",
+
+    "productName": "Cloudify",
+    "headerTextColor": "#d8e3e8",
+    "showVersionDetails": true,
+
+    "loginPageHeader": "CLOUDIFY",
     "loginPageHeaderColor": "white",
-    "loginPageText": "",
+    "loginPageText": "Welcome to the Cloudify Management Console, Please log in",
     "loginPageTextColor": "white",
-    "sidebarColor": "#ffffff",
-    "sidebarTextColor" : "#000000",
-    "pageTitle": "Cloudify",
+
+    "sidebarColor": "#E2E2E2",
+    "sidebarTextColor" : "#585860",
+
     "customCssPath": ""
   },
   "widgets": {

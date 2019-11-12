@@ -1,29 +1,26 @@
 version: 2
+
+directory: &default-working-directory
+  working_directory: ~/repo
+
+image: &default-node-image
+  image: circleci/node:10.15-stretch
+
+env: &default-env
+  <<: *default-working-directory
+  docker:
+    - <<: *default-node-image
+
 jobs:
   build:
-    docker:
-      - image: circleci/node:8.15-stretch
-
-    working_directory: ~/repo
+    <<: *default-env
 
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}-{{ checksum "backend/package.json" }}
-          - v1-dependencies-
-
       - run:
           name: Install dependencies
           command: npm run beforebuild
-
-      - save_cache:
-          paths:
-            - node_modules
-            - backend/node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}-{{ checksum "backend/package.json" }}
 
       - run:
           name: Build application
@@ -35,12 +32,31 @@ jobs:
             - repo
 
   test:
+    <<: *default-working-directory
+
     docker:
-      - image: circleci/node:8.15-stretch
-    working_directory: ~/repo
+      - <<: *default-node-image
+      - image: circleci/postgres:9.6.9
+        environment:
+          POSTGRES_USER: cloudify
+          POSTGRES_PASSWORD: cloudify
+          POSTGRES_DB: stage
+
     steps:
       - attach_workspace:
           at: ~/
+      - run:
+          name: Initialize database
+          command: |
+            cd backend
+            npm run db-migrate
+      - run:
+          name: Start Stage Backend
+          environment:
+            STAGE_BACKEND_INSTANCES: 0
+          command: |
+            cd backend
+            sudo npm run start
       - run:
           name: Run tests
           command: npm run prodtest
@@ -49,9 +65,8 @@ jobs:
           command: npm run lint
 
   checkBundleSize:
-    docker:
-      - image: circleci/node:8.15-stretch
-    working_directory: ~/repo
+    <<: *default-env
+
     steps:
       - attach_workspace:
           at: ~/
@@ -59,13 +74,15 @@ jobs:
           name: Check bundle size
           command: npm run size
 
-  checkWidgetsDoc:
-    docker:
-      - image: circleci/node:8.15-stretch
-    working_directory: ~/repo
+  checkDocs:
+    <<: *default-env
+
     steps:
       - attach_workspace:
           at: ~/
+      - run:
+          name: Generate components documentation
+          command: npm run doc
       - run:
           name: Generate widgets documentation
           command: npm run docWidgets
@@ -84,6 +101,6 @@ workflows:
       - checkBundleSize:
           requires:
             - build
-      - checkWidgetsDoc:
+      - checkDocs:
           requires:
             - build

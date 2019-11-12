@@ -2,8 +2,6 @@
  * Created by Alex on 21/03/2017.
  */
 
-'use strict';
-
 module.exports = function(sequelize, DataTypes) {
     return sequelize.define('Application', {
         id: {

@@ -2,18 +2,17 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import Header from '../../containers/layout/Header';
 
 import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
-import {NO_TENANTS_ERR, UNAUTHORIZED_ERR} from '../../utils/ErrorCodes';
+import { NO_TENANTS_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
 import Consts from '../../utils/consts';
 import TemplateManagement from '../../containers/templates/TemplateManagement';
 import PageManagement from '../../containers/templates/PageManagement';
@@ -22,8 +21,8 @@ import NotFound from '../NotFound';
 import ScrollToTop from './ScrollToTop';
 
 export default class Layout extends Component {
-    constructor(props,context) {
-        super(props,context);
+    constructor(props, context) {
+        super(props, context);
         this.state = Layout.initialState;
     }
 
@@ -41,14 +40,15 @@ export default class Layout extends Component {
     componentDidMount() {
         console.log('First time logging in , fetching stuff');
 
-        this.props.intialPageLoad()
-            .then(()=>{
+        this.props
+            .intialPageLoad()
+            .then(() => {
                 StatusPoller.getPoller().start();
                 UserAppDataAutoSaver.getAutoSaver().start();
-                this.setState({initialized: true});
+                this.setState({ initialized: true });
             })
-            .catch((e)=>{
-                switch(e) {
+            .catch(e => {
+                switch (e) {
                     case NO_TENANTS_ERR:
                         this.props.doLogout(null, 'noTenants');
                         break;
@@ -80,19 +80,16 @@ export default class Layout extends Component {
             <ScrollToTop>
                 <Header />
                 <Switch>
-                    {
-                        this.props.isUserAuthorizedForTemplateManagement &&
-                        <Route exact path='/template_management' component={TemplateManagement} />
-                    }
-                    {
-                        this.props.isUserAuthorizedForTemplateManagement && this.props.isPageSetForPageManagement &&
-                        <Route exact path='/page_management' component={PageManagement} />
-                    }
-                    <Route exact path='/page/:pageId/:pageName' component={Home}/>
-                    <Route exact path='/page/:pageId' component={Home}/>
-                    <Route exact path={Consts.ERROR_404_PAGE_PATH} component={NotFound}/>,
+                    {this.props.isUserAuthorizedForTemplateManagement && (
+                        <Route exact path="/template_management" component={TemplateManagement} />
+                    )}
+                    {this.props.isUserAuthorizedForTemplateManagement && this.props.isPageSetForPageManagement && (
+                        <Route exact path="/page_management" component={PageManagement} />
+                    )}
+                    <Route exact path="/page/:pageId/:pageName" component={Home} />
+                    <Route exact path="/page/:pageId" component={Home} />
                     <Route exact path={Consts.HOME_PAGE_PATH} component={Home} />
-                    <Route component={NotFound} />
+                    <Route render={() => <Redirect to={Consts.ERROR_404_PAGE_PATH} />} />
                 </Switch>
             </ScrollToTop>
         );

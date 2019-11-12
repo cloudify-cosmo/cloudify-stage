@@ -18,12 +18,14 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintActionButtons'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    fetchData: function(widget,toolbox) {
-        let blueprintId = toolbox.getContext().getValue('blueprintId');
+    fetchData(widget, toolbox) {
+        const blueprintId = toolbox.getContext().getValue('blueprintId');
 
         if (!_.isEmpty(blueprintId)) {
             toolbox.loading(true);
-            return toolbox.getManager().doGet(`/blueprints/${blueprintId}`)
+            return toolbox
+                .getManager()
+                .doGet(`/blueprints/${blueprintId}`)
                 .then(blueprint => {
                     toolbox.loading(false);
                     return Promise.resolve(blueprint);
@@ -33,20 +35,17 @@ Stage.defineWidget({
         return Promise.resolve(BlueprintActionButtons.EMPTY_BLUEPRINT);
     },
 
-    fetchParams: function(widget, toolbox) {
-        let blueprintId = toolbox.getContext().getValue('blueprintId');
+    fetchParams(widget, toolbox) {
+        const blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        return {blueprint_id: blueprintId};
+        return { blueprint_id: blueprintId };
     },
 
-    render: function(widget,data,error,toolbox) {
+    render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
-            return <Stage.Basic.Loading/>;
+            return <Stage.Basic.Loading />;
         }
 
-
-        return (
-            <BlueprintActionButtons blueprint={data} widget={widget} toolbox={toolbox} />
-        );
+        return <BlueprintActionButtons blueprint={data} widget={widget} toolbox={toolbox} />;
     }
 });

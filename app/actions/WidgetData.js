@@ -13,7 +13,7 @@ function widgetFetchReq(widgetId) {
     };
 }
 
-function widgetFetchError(widgetId,error) {
+function widgetFetchError(widgetId, error) {
     return {
         type: types.WIDGET_FETCH_ERROR,
         widgetId,
@@ -21,7 +21,7 @@ function widgetFetchError(widgetId,error) {
     };
 }
 
-function widgetFetchRes(widgetId,data) {
+function widgetFetchRes(widgetId, data) {
     return {
         type: types.WIDGET_FETCH_RES,
         widgetId,
@@ -34,35 +34,33 @@ function widgetFetchCanceled(widgetId) {
     return {
         type: types.WIDGET_FETCH_CANCELED,
         widgetId
-    }
+    };
 }
 
-export function fetchWidgetData(widget,toolbox,paramsHandler) {
+export function fetchWidgetData(widget, toolbox, paramsHandler) {
     return function(dispatch) {
         dispatch(widgetFetchReq(widget.id));
 
         if (widget.definition.fetchUrl || _.isFunction(widget.definition.fetchData)) {
+            const widgetDataFetcher = new WidgetDataFetcher(widget, toolbox, paramsHandler);
 
-            var widgetDataFetcher = new WidgetDataFetcher(widget,toolbox,paramsHandler);
+            const fetchPromise = widget.definition.fetchUrl
+                ? widgetDataFetcher.fetchByUrls()
+                : widgetDataFetcher.fetchByFunc();
 
-            var fetchPromise = widget.definition.fetchUrl ?
-                widgetDataFetcher.fetchByUrls()
-                :
-                widgetDataFetcher.fetchByFunc();
+            const cancelablePromise = StageUtils.makeCancelable(fetchPromise);
 
-            var cancelablePromise = StageUtils.makeCancelable(fetchPromise);
-
-            var waitForPromise = cancelablePromise.promise
-                .then((response)=> {
-                    dispatch(widgetFetchRes(widget.id,response));
+            const waitForPromise = cancelablePromise.promise
+                .then(response => {
+                    dispatch(widgetFetchRes(widget.id, response));
                     return response;
                 })
-                .catch((e)=>{
+                .catch(e => {
                     if (e.isCanceled) {
                         console.log(`Widget '${widget.name}' data fetch canceled`);
                         dispatch(widgetFetchCanceled(widget.id));
                     } else {
-                        dispatch(widgetFetchError(widget.id,e));
+                        dispatch(widgetFetchError(widget.id, e));
                     }
 
                     throw e;
@@ -73,11 +71,11 @@ export function fetchWidgetData(widget,toolbox,paramsHandler) {
                 waitForPromise
             };
         }
-    }
+    };
 }
 
-export function clearWidgetsData () {
+export function clearWidgetsData() {
     return {
         type: types.WIDGET_DATA_CLEAR
-    }
+    };
 }

@@ -1,0 +1,57 @@
+{
+    "src_folders" : ["test/nightwatch/tests"],
+    "output_folder" : "./reports",
+    "live_output" : true,
+    "parallel_process_delay" : 1500,
+    "page_objects_path" : "test/nightwatch/pages",
+    "custom_commands_path" : "test/nightwatch/commands",
+    "globals_path" : "test/nightwatch/globals.js",
+    "selenium" : {
+        "start_process" : true,
+        "server_path" : "./node_modules/selenium-server-standalone-jar/jar/selenium-server-standalone-3.141.5.jar",
+        "port" : 4444,
+        "cli_args" : {
+            "webdriver.chrome.driver" : "./node_modules/chrome-driver-standalone/binaries/chromedriver_mac64"
+        }
+    },
+
+    "test_settings" : {
+        "default" : {
+            "launch_url" : "http://localhost:8088",
+            "silent" : true,
+            "selenium_port": 4444,
+            "selenium_host": "localhost",
+            "screenshots" : {
+                "enabled" : true,
+                "path" : "test/nightwatch/screenshots",
+                "on_failure": true,
+                "on_error": true
+            },
+            "end_session_on_fail" : true,
+            "desiredCapabilities": {
+                "browserName": "chrome",
+                "marionette": true,
+                "chromeOptions": {
+                    "args": [
+                        "window-size=1600,1600"
+                    ]
+                }
+            },
+            "globals" : {
+                "usePathResolutionForResources": false,
+                "resourcesPath": "/home/ubuntu/stage/e2e/resources/"
+            }
+        },
+
+        "dev" : {
+            "launch_url" : "http://localhost:4000",
+            "screenshots" : {
+                "enabled" : true
+            },
+            "globals" : {
+                "usePathResolutionForResources": true,
+                "resourcesPath": "test/nightwatch/resources/"
+            }
+        }
+    }
+}

@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 
-import {Modal} from 'semantic-ui-react';
-import {ApproveButton} from './ModalButtons';
+import { Modal } from 'semantic-ui-react';
+import { ApproveButton } from './ModalButtons';
 
 /**
  * Alert is component to present simple message in modal window with OK button.
@@ -23,12 +23,11 @@ import {ApproveButton} from './ModalButtons';
  * ```
  */
 export default class Alert extends Component {
-
     static propTypes = {
         open: PropTypes.bool,
         content: PropTypes.string,
         onDismiss: PropTypes.func
-    }
+    };
 
     static defaultProps = {
         onDismiss: () => {}
@@ -39,10 +38,9 @@ export default class Alert extends Component {
             <Modal open={this.props.open} size="small">
                 <Modal.Header>{this.props.content}</Modal.Header>
                 <Modal.Actions>
-                    <ApproveButton onClick={this.props.onDismiss} content="Ok" color="green"/>
+                    <ApproveButton onClick={this.props.onDismiss} content="Ok" color="green" />
                 </Modal.Actions>
             </Modal>
         );
     }
 }
-

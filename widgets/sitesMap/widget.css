@@ -1,0 +1,20 @@
+
+.sites-map {
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+}
+
+.sites-map a:hover {
+    text-decoration: none !important;
+}
+
+.deploymentState .segment {
+    padding: 1px 0px !important;
+    min-width: 4rem;
+}
+
+.row > .column.deploymentState {
+    padding-right: 2px !important;
+    padding-left: 2px !important;
+}

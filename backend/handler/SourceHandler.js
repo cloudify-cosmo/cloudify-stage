@@ -6,37 +6,38 @@ const _ = require('lodash');
 const os = require('os');
 const fs = require('fs-extra');
 const pathlib = require('path');
-const YAML = require('yamljs');
+const yaml = require('js-yaml');
 
 const config = require('../config').get();
 const ArchiveHelper = require('./ArchiveHelper');
 const Utils = require('../utils');
 
-let logger = require('log4js').getLogger('SourceHandler');
+const logger = require('./LoggerHandler').getLogger('SourceHandler');
+
 const browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourcesDir);
 const lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
 
 module.exports = (function() {
-
     function browseArchiveTree(req) {
-        var archiveUrl = '/blueprints/' + req.params.blueprintId + '/archive';
+        const archiveUrl = `/blueprints/${req.params.blueprintId}/archive`;
         logger.debug('download archive from url', archiveUrl);
 
-        var archiveFolder = pathlib.join(browseSourcesDir, 'source' + Date.now());
+        const archiveFolder = pathlib.join(browseSourcesDir, `source${Date.now()}`);
         return ArchiveHelper.removeOldExtracts(browseSourcesDir)
             .then(() => ArchiveHelper.saveDataFromUrl(archiveUrl, archiveFolder, req))
             .then(data => {
-                var archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
-                var extractedDir = pathlib.join(data.archiveFolder, 'extracted');
+                const archivePath = pathlib.join(data.archiveFolder, data.archiveFile);
+                const extractedDir = pathlib.join(data.archiveFolder, 'extracted');
 
-                return ArchiveHelper.decompressArchive(archivePath, extractedDir)
-                    .then(() => _scanArchive(extractedDir));
+                return ArchiveHelper.decompressArchive(archivePath, extractedDir).then(() =>
+                    _scanArchive(extractedDir)
+                );
             });
     }
 
     function browseArchiveFile(path) {
         return new Promise((resolve, reject) => {
-            var absolutePath = pathlib.resolve(browseSourcesDir, path);
+            const absolutePath = pathlib.resolve(browseSourcesDir, path);
             if (!_checkPrefix(absolutePath, browseSourcesDir)) {
                 return reject('Wrong path');
             }
@@ -52,17 +53,16 @@ module.exports = (function() {
     }
 
     function _checkPrefix(absCandidate, absPrefix) {
-        return absCandidate.substring(0, absPrefix.length) === absPrefix
+        return absCandidate.substring(0, absPrefix.length) === absPrefix;
     }
 
-
     function _saveMultipartData(req) {
-        var targetPath = pathlib.join(lookupYamlsDir, 'archive' + Date.now());
+        const targetPath = pathlib.join(lookupYamlsDir, `archive${Date.now()}`);
         return ArchiveHelper.saveMultipartData(req, targetPath, 'archive');
     }
 
     function _saveDataFromUrl(archiveUrl) {
-        var targetPath = pathlib.join(lookupYamlsDir, 'archive' + Date.now());
+        const targetPath = pathlib.join(lookupYamlsDir, `archive${Date.now()}`);
         return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
     }
 
@@ -81,12 +81,11 @@ module.exports = (function() {
         }
 
         if (!_.isEmpty(yamlFilePath)) {
-            const yaml = fs.readFileSync(yamlFilePath, 'utf8');
             try {
-                let json = YAML.parse(yaml);
+                const json = yaml.safeLoad(fs.readFileSync(yamlFilePath, 'utf8'));
                 return Promise.resolve(json);
             } catch (error) {
-                let errorMessage = `Cannot parse YAML file ${yamlFile}. Error: ${error}`;
+                const errorMessage = `Cannot parse YAML file ${yamlFile}. Error: ${error}`;
                 logger.error(errorMessage);
                 return Promise.reject(errorMessage);
             }
@@ -95,21 +94,23 @@ module.exports = (function() {
         }
     }
 
+    function _getInputs(inputs) {
+        return _.mapValues(inputs, inputObject => inputObject || {});
+    }
+
     function _getPlugins(imports) {
         const PLUGIN_KEYWORD = 'plugin:';
 
-        return _
-            .chain(imports)
-            .filter((imp) => String(imp).match(PLUGIN_KEYWORD))
-            .map((plugin) => {
-                const [package_name, pluginQueryString] = _
-                    .chain(plugin)
+        return _.chain(imports)
+            .filter(imp => String(imp).match(PLUGIN_KEYWORD))
+            .map(plugin => {
+                const [package_name, pluginQueryString] = _.chain(plugin)
                     .replace(PLUGIN_KEYWORD, '')
                     .split('?')
                     .value();
 
                 const params = Utils.getParams(pluginQueryString);
-                const pluginObject = {package_name, params};
+                const pluginObject = { package_name, params };
 
                 return pluginObject;
             })
@@ -123,8 +124,7 @@ module.exports = (function() {
     function _getSecrets(json) {
         const SECRET_KEYWORD = 'get_secret';
 
-        return _
-            .chain(Utils.getValuesWithPaths(json, SECRET_KEYWORD))
+        return _.chain(Utils.getValuesWithPaths(json, SECRET_KEYWORD))
             .reduce((result, value) => {
                 const secretName = _.keys(value)[0];
                 const secretPath = value[secretName];
@@ -141,12 +141,12 @@ module.exports = (function() {
     }
 
     function _getBlueprintArchiveContent(request) {
-        const query = request.query;
-        let promise = query.url ? _saveDataFromUrl(query.url) : _saveMultipartData(request);
+        const { query } = request;
+        const promise = query.url ? _saveDataFromUrl(query.url) : _saveMultipartData(request);
 
         return promise.then(data => {
-            const archiveFolder = data.archiveFolder;
-            const archiveFile = data.archiveFile; // filename with extension
+            const { archiveFolder } = data;
+            const { archiveFile } = data; // filename with extension
             const archiveFileName = pathlib.parse(archiveFile).name; // filename without extension
             const extractedDir = pathlib.join(archiveFolder, 'extracted');
 
@@ -160,50 +160,49 @@ module.exports = (function() {
 
                         if (archiveExtension === '.yml' || archiveExtension === '.yaml') {
                             return ArchiveHelper.storeSingleYamlFile(archivePath, archiveFile, extractedDir);
-                        } else {
-                            return ArchiveHelper.decompressArchive(archivePath, extractedDir)
                         }
+                        return ArchiveHelper.decompressArchive(archivePath, extractedDir);
                     }
                 })
-                .then((decompressData) => ({archiveFileName, extractedDir, decompressData}))
+                .then(decompressData => ({ archiveFileName, extractedDir, decompressData }))
                 .catch(err => {
                     ArchiveHelper.cleanTempData(archiveFolder);
                     throw err;
                 });
-
         });
     }
 
     function getBlueprintResources(request) {
-        const query = request.query;
-        const yamlFile = query.yamlFile;
+        const { query } = request;
+        const { yamlFile } = query;
 
         return _getBlueprintArchiveContent(request)
-            .then((data) => _convertYamlToJson(data.extractedDir, yamlFile))
-            .then((json) => ({
-                inputs: json.inputs,
+            .then(data => _convertYamlToJson(data.extractedDir, yamlFile))
+            .then(json => ({
+                inputs: _getInputs(json.inputs),
+                dataTypes: json.data_types,
                 plugins: _getPlugins(json.imports),
                 secrets: _getSecrets(json)
             }));
     }
 
     function listYamlFiles(request) {
-        const query = request.query;
-        const includeFilename = (query.includeFilename === 'true');
+        const { query } = request;
+        const includeFilename = query.includeFilename === 'true';
         let archiveFileName = '';
 
         return _getBlueprintArchiveContent(request)
-            .then((data) => {
+            .then(data => {
                 archiveFileName = data.archiveFileName;
                 return _scanYamlFiles(data.extractedDir);
             })
-            .then((data) => includeFilename ? [archiveFileName, ...data] : data);
+            .then(data => (includeFilename ? [archiveFileName, ...data] : data));
     }
 
     function _scanYamlFiles(extractedDir) {
         logger.debug('scaning yaml files from', extractedDir);
 
-        var items = fs.readdirSync(extractedDir);
+        let items = fs.readdirSync(extractedDir);
 
         if (items.length === 1 && fs.statSync(pathlib.join(extractedDir, items[0])).isDirectory()) {
             items = fs.readdirSync(pathlib.join(extractedDir, items[0]));
@@ -220,14 +219,14 @@ module.exports = (function() {
     }
 
     function _isUnixHiddenPath(path) {
-        return (/(^|.\/)\.+[^\/\.]/g).test(path);
+        return /(^|.\/)\.+[^\/\.]/g.test(path);
     }
 
     function _scanRecursive(root, archivePath) {
-        var stats = fs.statSync(archivePath);
-        var name = pathlib.basename(archivePath);
+        const stats = fs.statSync(archivePath);
+        const name = pathlib.basename(archivePath);
 
-        if (stats.isSymbolicLink() || _isUnixHiddenPath(name) ) {
+        if (stats.isSymbolicLink() || _isUnixHiddenPath(name)) {
             return null;
         }
 
@@ -238,16 +237,18 @@ module.exports = (function() {
 
         if (stats.isFile()) {
             return item;
-        } else if (stats.isDirectory()) {
+        }
+        if (stats.isDirectory()) {
             try {
-                item.children = fs.readdirSync(archivePath)
+                item.children = fs
+                    .readdirSync(archivePath)
                     .map(child => _scanRecursive(root, pathlib.join(archivePath, child)))
                     .filter(e => !!e);
 
                 return item;
-            } catch(ex) {
+            } catch (ex) {
                 if (ex.code === 'EACCES') {
-                    //User does not have permissions, ignore directory
+                    // User does not have permissions, ignore directory
                     return null;
                 }
             }
@@ -261,5 +262,5 @@ module.exports = (function() {
         browseArchiveFile,
         getBlueprintResources,
         listYamlFiles
-    }
+    };
 })();

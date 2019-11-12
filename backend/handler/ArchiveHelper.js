@@ -1,105 +1,111 @@
-'use strict';
 /**
  * Created by pposel on 24/02/2017.
  */
 
-var _ = require('lodash');
-var fs = require('fs-extra');
-var pathlib = require('path');
-var sanitize = require('sanitize-filename');
-var decompress = require('decompress');
-var multer  = require('multer');
-var ManagerHandler = require('./ManagerHandler');
-var RequestHandler = require('./RequestHandler');
+const _ = require('lodash');
+const fs = require('fs-extra');
+const pathlib = require('path');
+const sanitize = require('sanitize-filename');
+const decompress = require('decompress');
+const multer = require('multer');
+const ManagerHandler = require('./ManagerHandler');
+const RequestHandler = require('./RequestHandler');
 
-var logger = require('log4js').getLogger('ArchiveHelper');
+const logger = require('./LoggerHandler').getLogger('ArchiveHelper');
 
 module.exports = (function() {
-
     function saveMultipartData(req, targetDir, multipartId) {
-        var storage = multer.diskStorage({
-            destination: function (req, file, cb) {
-                logger.debug('Saving file on disk', file);
+        const storage = multer.diskStorage({
+            destination(req, file, cb) {
+                logger.debug('Saving file on disk');
 
-                var archiveFolder = _.isFunction(targetDir) ? targetDir(file.originalname) : targetDir;
+                const archiveFolder = _.isFunction(targetDir) ? targetDir(file.originalname) : targetDir;
 
                 fs.mkdirsSync(archiveFolder);
 
                 req.archiveFolder = archiveFolder;
                 cb(null, archiveFolder);
             },
-            filename: function (req, file, cb) {
+            filename(req, file, cb) {
                 req.archiveFile = file.originalname;
                 cb(null, file.originalname);
             }
         });
 
-        var upload = multer({ storage: storage }).single(multipartId);
+        const upload = multer({ storage }).single(multipartId);
 
         return new Promise((resolve, reject) => {
-            upload(req, null, function (err) {
+            upload(req, null, function(err) {
                 if (err) {
                     reject(err);
                 } else {
-                    logger.debug('Archive saved from multipart data, archiveFolder:', req.archiveFolder, 'archiveFile:', req.archiveFile);
-                    resolve({archiveFolder: req.archiveFolder, archiveFile: req.archiveFile});
+                    logger.debug(
+                        'Archive saved from multipart data, archiveFolder:',
+                        req.archiveFolder,
+                        'archiveFile:',
+                        req.archiveFile
+                    );
+                    resolve({ archiveFolder: req.archiveFolder, archiveFile: req.archiveFile });
                 }
-            })
+            });
         });
     }
 
     function saveDataFromUrl(archiveUrl, targetDir, req) {
         return new Promise((resolve, reject) => {
-            const HEADERS = {'User-Agent': 'Cloudify'};
+            const HEADERS = { 'User-Agent': 'Cloudify' };
             archiveUrl = decodeURIComponent(archiveUrl.trim());
 
             logger.debug('Fetching file from url', archiveUrl);
 
-            var getRequest = null;
-            var onErrorFetch = function (error) {
+            let getRequest = null;
+            const onErrorFetch = function(error) {
                 reject(error);
             };
-            var onSuccessFetch = function (response) {
-                var archiveFile = _extractFilename(response.headers['content-disposition']);
+            const onSuccessFetch = function(response) {
+                let archiveFile = _extractFilename(response.headers['content-disposition']);
 
                 logger.debug('Filename extracted from content-disposition', archiveFile);
                 logger.debug('Content length', response.headers['content-length']);
 
                 if (!archiveFile) {
-                    var details = pathlib.parse(archiveUrl);
+                    const details = pathlib.parse(archiveUrl);
 
-                    var archiveExt = ['tar', 'bz2', 'gz', 'zip'].find(function (ext) {
+                    const archiveExt = ['tar', 'bz2', 'gz', 'zip'].find(function(ext) {
                         return _.includes(details.ext, ext);
-                    })
+                    });
 
                     if (archiveExt) {
                         archiveFile = details.base;
                     } else {
-                        return reject('Unable to determine filename from url ' + archiveUrl);
+                        return reject(`Unable to determine filename from url ${archiveUrl}`);
                     }
 
                     logger.debug('Filename build from url', archiveFile);
                 }
 
-                //remove not allowed characters
+                // remove not allowed characters
                 archiveFile = sanitize(archiveFile);
 
-                var archiveFolder = _.isFunction(targetDir) ? targetDir(archiveFile) : targetDir;
+                const archiveFolder = _.isFunction(targetDir) ? targetDir(archiveFile) : targetDir;
                 fs.mkdirsSync(archiveFolder);
-                var archivePath = pathlib.join(archiveFolder, archiveFile);
+                const archivePath = pathlib.join(archiveFolder, archiveFile);
 
                 logger.debug('Streaming to file', archivePath);
 
-                response.pipe(fs.createWriteStream(archivePath)
-                    .on('error', reject)
-                    .on('close', function () {
-                        logger.debug('archive saved, archivePath:', archivePath);
-                        resolve({archiveFolder, archiveFile, archivePath});
-                    }));
+                response.pipe(
+                    fs
+                        .createWriteStream(archivePath)
+                        .on('error', reject)
+                        .on('close', function() {
+                            logger.debug('archive saved, archivePath:', archivePath);
+                            resolve({ archiveFolder, archiveFile, archivePath });
+                        })
+                );
             };
 
             if (_isExternalUrl(archiveUrl)) {
-                var options = {options: {headers: HEADERS}};
+                const options = { options: { headers: HEADERS } };
                 getRequest = RequestHandler.request('GET', archiveUrl, options, onSuccessFetch, onErrorFetch);
             } else {
                 getRequest = ManagerHandler.request('GET', archiveUrl, HEADERS, null, onSuccessFetch, onErrorFetch);
@@ -109,7 +115,6 @@ module.exports = (function() {
                 req.pipe(getRequest);
             }
         });
-
     }
 
     function _isExternalUrl(url) {
@@ -119,8 +124,8 @@ module.exports = (function() {
     }
 
     function _extractFilename(contentDisposition) {
-        let regexp = /filename=([^;]*)/g
-        let match = regexp.exec(contentDisposition);
+        const regexp = /filename=([^;]*)/g;
+        const match = regexp.exec(contentDisposition);
         if (!match) {
             return '';
         }
@@ -146,25 +151,27 @@ module.exports = (function() {
     }
 
     function removeOldExtracts(tempDir) {
-        const PAST_TIME = 60*60*1000; //remove archives older then 1 hour async
+        const PAST_TIME = 60 * 60 * 1000; // remove archives older then 1 hour async
 
-        fs.readdir(tempDir, function (err, files) {
+        fs.readdir(tempDir, function(err, files) {
             if (err) {
                 logger.warn('Cannot remove old extracts. Error:', err);
                 return;
             }
 
-            files.map(function (file) {
-                return pathlib.join(tempDir, file);
-            }).filter(function (file) {
+            files
+                .map(function(file) {
+                    return pathlib.join(tempDir, file);
+                })
+                .filter(function(file) {
+                    const now = new Date().getTime();
+                    const modTime = new Date(fs.statSync(file).mtime).getTime() + PAST_TIME;
 
-                var now = new Date().getTime();
-                var modTime = new Date(fs.statSync(file).mtime).getTime() + PAST_TIME;
-
-                return now > modTime;
-            }).forEach(function (file) {
-                fs.removeSync(file);
-            });
+                    return now > modTime;
+                })
+                .forEach(function(file) {
+                    fs.removeSync(file);
+                });
         });
 
         return Promise.resolve();
@@ -179,12 +186,12 @@ module.exports = (function() {
                     fs.remove(tempPath, err => {
                         if (err) {
                             const errorMessage = `Error removing temporary path ${tempPath}: ${err}`;
-                            console.error(errorMessage);
+                            logger.error(errorMessage);
                             reject(errorMessage);
                         } else {
                             resolve();
                         }
-                    })
+                    });
                 } else {
                     resolve();
                 }
@@ -199,5 +206,5 @@ module.exports = (function() {
         storeSingleYamlFile,
         removeOldExtracts,
         cleanTempData
-    }
+    };
 })();

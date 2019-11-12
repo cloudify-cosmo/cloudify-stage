@@ -3,7 +3,7 @@
  */
 
 const webpack = require('webpack');
-const webpackDevServer = require('webpack-dev-server');
+const WebpackDevServer = require('webpack-dev-server');
 
 const webpackConfig = require('./webpack.config');
 const Consts = require('./backend/consts');
@@ -21,12 +21,11 @@ const proxyOptions = {
     secure: false
 };
 
-const indexHtml = `${contextPath}/index.html`;
+const indexHtml = `${contextPath}/static/index.html`;
 const options = {
     publicPath: webpackConfig[0].output.publicPath,
-    hot: true,
-    host: host,
-    inline: true,
+    host,
+    inline: false,
     historyApiFallback: {
         index: indexHtml
     },
@@ -38,7 +37,6 @@ const options = {
         [`${contextPath}/source`]: proxyOptions,
         [`${contextPath}/ba`]: proxyOptions,
         [`${contextPath}/clientConfig`]: proxyOptions,
-        [`${contextPath}/monitor`]: proxyOptions,
         [`${contextPath}/github`]: proxyOptions,
         [`${contextPath}/external`]: proxyOptions,
         [`${contextPath}/style`]: proxyOptions,
@@ -48,19 +46,22 @@ const options = {
         [`${contextPath}/wb`]: proxyOptions,
         [`${contextPath}/file`]: proxyOptions,
         [`${contextPath}/plugins`]: proxyOptions
+    },
+    watchOptions: {
+        ignored: ['**/userData/**']
     }
 };
 
-webpackDevServer.addDevServerEntrypoints(webpackConfig[0], options);
+WebpackDevServer.addDevServerEntrypoints(webpackConfig[0], options);
 const compiler = webpack(webpackConfig);
-const server = new webpackDevServer(compiler, options);
+const server = new WebpackDevServer(compiler, options);
 
-server.listen(devServerPort, host, (err) => {
+server.listen(devServerPort, host, err => {
     if (err) {
-        return console.log(err);
+        console.log(err);
+    } else {
+        console.log(`Listening at http://${host}:${devServerPort}/`);
     }
-
-    console.log(`Listening at http://${host}:${devServerPort}/`);
 });
 
 startWidgetBackendWatcher();

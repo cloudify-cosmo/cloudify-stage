@@ -7,65 +7,47 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import Consts from '../utils/consts';
 import Services from '../containers/Services';
-import {Icon, Popup} from './basic/index';
+import { Icon, Popup } from './basic/index';
 
 export default class Manager extends Component {
     static propTypes = {
-        manager: PropTypes.object.isRequired,
+        maintenanceStatus: PropTypes.string.isRequired,
+        managerStatus: PropTypes.string.isRequired,
+        onServicesStatusOpen: PropTypes.func.isRequired,
         showServicesStatus: PropTypes.bool.isRequired
     };
 
-    _areAllServicesRunning(services) {
-        const runningState = 'running';
-        const remoteState = 'remote';
-        let allServicesRunning = true;
-
-        _.forEach(services, (service) => {
-            _.forEach(service.instances, (instance) => {
-                if (instance.state !== runningState && instance.state !== remoteState) {
-                    allServicesRunning = false;
-                    return false;
-                }
-            });
-            if (!allServicesRunning) {
-                return false;
-            }
-        });
-
-        return allServicesRunning;
-    }
-
-    _renderStatusIcon(status, maintenance) {
-        const allServicesRunning = this._areAllServicesRunning(status.services);
-
-        const color = status.status
-            ? (status.status === Consts.MANAGER_RUNNING
-                ? (maintenance !== Consts.MAINTENANCE_DEACTIVATED || !allServicesRunning
-                    ? 'yellow'
-                    : 'green')
-                : 'red')
-            : 'grey';
-
-        return <Icon name='signal' circular inverted size="small" color={color} className='statusIcon'/>;
-    }
-
     render() {
-        let managerInfo = () =>
-            <div className="managerMenu">
-                {this._renderStatusIcon(this.props.manager.status, this.props.manager.maintenance)}
-                <span className="managerVersion">v{this.props.manager.serverVersion}</span>
-            </div>;
+        const { onServicesStatusOpen, maintenanceStatus, managerStatus, showServicesStatus } = this.props;
 
-        return (
-            this.props.showServicesStatus
-            ?
-                <Popup wide hoverable position='bottom right' onOpen={this.props.onServicesStatusOpen}>
-                    <Popup.Trigger>{managerInfo()}</Popup.Trigger>
-                    <Services />
-                </Popup>
-            :
-                managerInfo()
+        const ManagerStatusIcon = () => {
+            let color = 'grey';
+            if (managerStatus === Consts.MANAGER_STATUS_FAIL) {
+                color = 'red';
+            } else if (maintenanceStatus !== Consts.MAINTENANCE_DEACTIVATED) {
+                color = 'yellow';
+            } else if (managerStatus === Consts.MANAGER_STATUS_OK) {
+                color = 'green';
+            }
+
+            return (
+                <div className="managerMenu">
+                    <Icon name="signal" circular inverted size="small" color={color} className="statusIcon" />
+                </div>
+            );
+        };
+
+        return showServicesStatus ? (
+            <Popup wide hoverable position="bottom right" onOpen={onServicesStatusOpen}>
+                <Popup.Trigger>
+                    <div>
+                        <ManagerStatusIcon />
+                    </div>
+                </Popup.Trigger>
+                <Services />
+            </Popup>
+        ) : (
+            <ManagerStatusIcon />
         );
     }
 }
-
