@@ -22,8 +22,6 @@ import FormTable from './EdiTable';
 import FormColorPicker from './ColorPicker';
 import FormJson from './InputJson';
 
-import '../../styles/Form.css';
-
 /**
  * Form is a component to present HTML forms
  *

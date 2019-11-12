@@ -536,138 +536,9 @@ table.servicesData button.refreshButton {
   }
 }
 
-/* Grid table */
-.gridTable {
-
-  .noDataRow {
-    height: 50px;
-  }
-
-}
-
-.actionField {
-  margin-left: auto !important;
-  padding-right: 0px !important;
-
-  & > button {
-    margin-right: 1em;
-  }
-
-  & > button:last-child, & > div:last-child button {
-    margin-right: 0 !important;
-  }
-
-  & > div {
-    display: inline-block;
-  }
-}
-
 .actionIcons {
   & > i.icon {
     margin-right: 2px !important;
-  }
-}
-
-.dataExpandable-appear {
-  opacity: 0.01;
-}
-
-.dataExpandable-appear.dataExpandable-appear-active {
-  opacity: 1;
-  transition: opacity .5s ease-in;
-}
-
-.dataExpandable-enter {
-  opacity: 0.01;
-}
-
-.dataExpandable-enter.dataExpandable-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
-/* Pagination */
-
-.gridPagination {
-
-  .pagination.menu .item {
-    padding-top: 0.78571429em !important;
-    padding-bottom: 0.78571429em !important;
-  }
-
-  .compact.dropdown {
-    min-width: 50px !important;
-  }
-
-}
-
-/* Segment list */
-
-.segmentList {
-
-  .segments {
-    border: none !important;
-  }
-
-  .segment {
-    box-shadow: none !important;
-
-    .nodeState .segment {
-      padding: 2px 0px !important;
-    }
-
-    .ui.inverted.darkyellow {
-      background-color: #ffa000 !important;
-      color: $white !important;
-    }
-
-    .nodeState .icon {
-      margin-right: 0px;
-    }
-  }
-
-  .segment:hover {
-    background-color: #f3f4f5;
-  }
-
-  .menuAction {
-    position: absolute;
-    right: 10px;
-  }
-
-  .ui.icon.header {
-    color: inherit;
-
-    .content {
-      margin-bottom:5px;
-    }
-
-    .icon {
-      font-size: 2em;
-      margin-bottom:0px;
-    }
-  }
-
-  .ui.header  a {
-    color: inherit;
-  }
-
-  .row.bottomDivider {
-
-    img {
-      width: auto;
-      max-width: 150px !important;
-      height: 70px;
-      display: inline-block;
-    }
-
-    .ui.header {
-      margin-left: 2rem;
-      margin-top: auto !important;
-      vertical-align: middle !important;
-      display: inline-block;
-      max-width: calc(100% - 150px);
-    }
   }
 }
 
@@ -710,52 +581,7 @@ table.servicesData button.refreshButton {
   word-wrap: break-word;
 }
 
-/* Popup Menu */
-
-.popupMenu {
-  padding: 0 !important;
-
-  .ui.menu {
-    border: none !important;
-    width: inherit !important;
-    min-width: 12rem;
-  }
-
-  .ui.menu a:hover {
-    text-decoration: none !important;
-  }
-
-  .ui.vertical.menu .menu .item {
-    color: $black;
-  }
-
-  .ui.vertical.menu .menu .item:hover {
-    background: rgba(0,0,0,.03);
-  }
-}
-
-
 /* Modal */
-
-.ui.modal.readmeModal {
-  img {
-    max-width: 100% !important;
-  }
-}
-
-.ui.modal.unlimited > .content {
-  max-height: none;
-  overflow: inherit;
-}
-
-
-.confirmModal.ui.modal, .setVisibilityModal.ui.modal{
-  > .content{
-    font-size: 1.3em;
-    line-height: 1.28571429em;
-    font-weight: 700;
-  }
-}
 
 .ui.modal.tiny {
   width: 500px !important;
@@ -823,11 +649,6 @@ table.servicesData button.refreshButton {
   border-top: none;
 }
 
-// FIXME: Remove this when Semantic-UI-CSS 2.4.2 it's ready
-.ui.fullscreen.scrolling.modal.readmeModal,
-.ui.fullscreen.modal.readmeModal {
-  left: auto !important;
-}
 /* A href underscore */
 a.underline {
   text-decoration: none !important;

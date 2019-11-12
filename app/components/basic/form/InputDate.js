@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import '../../styles/Form.css';
 
 /**
  * InputDate is a component showing calendar picker using [react-datepicker library](https://github.com/Hacker0x01/react-datepicker)
