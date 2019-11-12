@@ -40,36 +40,45 @@ Stage.defineWidget({
     fetchData(widget, toolbox, params) {
         const actions = new Actions(toolbox);
 
-        let blueprintId = params.blueprint_id;
-        const deploymentId = params.deployment_id;
+        const paramBlueprintId = params.blueprint_id;
+        const paramDeploymentId = params.deployment_id;
 
-        let promise = Promise.resolve({ blueprint_id: blueprintId });
-        if (!blueprintId && deploymentId) {
-            promise = actions.doGetBlueprintId(deploymentId);
+        let promise = Promise.resolve({ blueprint_id: paramBlueprintId });
+        if (!paramBlueprintId && paramDeploymentId) {
+            promise = actions.doGetBlueprintId(paramDeploymentId);
         }
 
-        return promise.then(({ blueprint_id }) => {
-            blueprintId = blueprint_id;
-
+        return promise.then(({ blueprint_id: blueprintId }) => {
             if (blueprintId) {
                 return actions
-                    .doGetImportedBlueprints(blueprintId)
-                    .then(imports =>
+                    .doGetBlueprintDetails(blueprintId)
+                    .then(({ imports, yamlFileName }) =>
                         Promise.all(_.map([blueprintId, ...imports], bp => actions.doGetFilesTree(bp))).then(data => ({
                             imports,
-                            data
+                            data,
+                            yamlFileName
                         }))
                     )
-                    .then(({ imports, data }) => {
-                        const [blueprintTree, ...importedBlueprintTrees] = data;
-                        return { blueprintTree, importedBlueprintTrees, blueprintId, importedBlueprintIds: imports };
-                    });
+                    .then(
+                        ({
+                            imports: importedBlueprintIds,
+                            data: [blueprintTree, ...importedBlueprintTrees],
+                            yamlFileName
+                        }) => ({
+                            blueprintTree,
+                            importedBlueprintTrees,
+                            blueprintId,
+                            importedBlueprintIds,
+                            yamlFileName
+                        })
+                    );
             }
             return {
                 blueprintTree: {},
                 importedBlueprintsTrees: [],
                 blueprintId: '',
-                importedBlueprintIds: []
+                importedBlueprintIds: [],
+                yamlFileName: ''
             };
         });
     },
