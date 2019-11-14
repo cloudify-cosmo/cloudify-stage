@@ -65,7 +65,7 @@ export default class BlueprintsTable extends React.Component {
                                     height="auto"
                                     inline
                                 />{' '}
-                                <a className="blueprintName" href="javascript:void(0)">
+                                <a className="blueprintName" href="#!">
                                     {item.id}
                                 </a>
                                 <ResourceVisibility

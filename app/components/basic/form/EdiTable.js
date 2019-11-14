@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 import { Table, Icon } from 'semantic-ui-react';
+import { Popup } from 'cloudify-ui-components';
 import GenericField from './GenericField';
-import Popup from '../Popup';
 
 /**
  * EdiTable is a component used in forms to get tabular data input

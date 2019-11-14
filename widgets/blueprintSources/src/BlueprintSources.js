@@ -45,15 +45,13 @@ export default class BlueprintSources extends React.Component {
         actions
             .doGetFileContent(path)
             .then(data => {
-                let type = '';
+                let type = 'json';
                 if (_.endsWith(path, '.yaml') || _.endsWith(path, '.yml')) {
                     type = 'yaml';
                 } else if (_.endsWith(path, '.py')) {
                     type = 'python';
                 } else if (_.endsWith(path, '.sh')) {
                     type = 'bash';
-                } else if (_.endsWith(path, '.json')) {
-                    type = 'json';
                 }
 
                 this.props.toolbox.loading(false);
@@ -165,7 +163,7 @@ export default class BlueprintSources extends React.Component {
                         </div>
                         {this.state.content ? (
                             <div className="alignHighlight">
-                                <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
+                                <HighlightText language={this.state.type}>{this.state.content}</HighlightText>
                                 <Label
                                     attached="top right"
                                     size="small"
@@ -175,7 +173,7 @@ export default class BlueprintSources extends React.Component {
                                     {this.state.filename}
                                 </Label>
                                 <Modal open={this.state.maximized} onClose={() => this.setState({ maximized: false })}>
-                                    <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
+                                    <HighlightText language={this.state.type}>{this.state.content}</HighlightText>
                                 </Modal>
                             </div>
                         ) : (

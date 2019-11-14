@@ -57,7 +57,7 @@ export default class ParameterValue extends Component {
         switch (Json.toType(typedValue)) {
             case 'array':
             case 'object':
-                return <HighlightText className="json">{stringValue}</HighlightText>;
+                return <HighlightText language="json">{stringValue}</HighlightText>;
             case 'boolean':
                 return (
                     <code style={commonStyle} className="hljs-keyword">

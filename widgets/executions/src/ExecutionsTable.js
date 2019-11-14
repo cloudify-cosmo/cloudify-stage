@@ -370,7 +370,7 @@ export default class ExecutionsTable extends React.Component {
                 >
                     <Modal.Header>Error details</Modal.Header>
                     <Modal.Content scrolling>
-                        <HighlightText className="python">{execution.error}</HighlightText>
+                        <HighlightText language="python">{execution.error}</HighlightText>
                     </Modal.Content>
                     <Modal.Actions>
                         <CopyToClipboardButton content="Copy Error" text={execution.error} />

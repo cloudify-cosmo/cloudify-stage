@@ -73,7 +73,7 @@ export default class extends React.Component {
                             onClick={() => this.props.onSelectDeployment(item)}
                         >
                             <DataTable.Data>
-                                <a className="deploymentName" href="javascript:void(0)">
+                                <a className="deploymentName" href="#!">
                                     {item.id}
                                 </a>
                                 <ResourceVisibility

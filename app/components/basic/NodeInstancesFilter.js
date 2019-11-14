@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Form from './form/Form';
+import { Form } from 'cloudify-ui-components';
 import StageUtils from '../../utils/stageUtils';
 
 /**
