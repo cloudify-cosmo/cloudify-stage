@@ -428,23 +428,6 @@ a:hover {
   }
 }
 
-.keyIndicator {
-  position: absolute;
-  left: 0;
-  right:0;
-  top:0;
-  bottom:0;
-  overflow: hidden;
-}
-
-.keyIndicator > div {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  white-space: nowrap;
-}
-
 .manager {
   .icon.statusIcon {
     line-height: 18px;
@@ -779,11 +762,6 @@ a.underline {
   position: absolute;
   top: 1rem;
   right: 1rem;
-}
-
-.setVisibility{
-  margin-top: 10px;
-  text-align: center;
 }
 
 .hopscotch-close {

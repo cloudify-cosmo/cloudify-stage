@@ -46,12 +46,9 @@ export default {
         LICENSE_LIST: 'license_list',
         LICENSE_UPLOAD: 'license_upload'
     },
-    visibility: {
-        PRIVATE: { name: 'private', icon: 'lock', color: 'red', title: 'Private resource' },
-        TENANT: { name: 'tenant', icon: 'user', color: 'green', title: 'Tenant resource' },
-        GLOBAL: { name: 'global', icon: 'globe', color: 'blue', title: 'Global resource' },
-        UNKNOWN: { name: 'unknown', icon: 'question', color: 'grey', title: 'Unknown resource visibility' }
-    },
+
+    GLOBAL_VISIBILITY: 'global',
+
     MANAGER_STATUS_OK: 'OK',
     MANAGER_STATUS_FAIL: 'FAIL',
     MAINTENANCE_ACTIVATING: 'activating',
