@@ -19,7 +19,7 @@ export default function ClusterService({ name, isExternal }) {
                 </Label>
             )}
             <Header style={{ marginTop: 0 }}>
-                <Icon name={icon} /> {clusterServiceName[name]}
+                <Icon name={icon} size="large" /> {clusterServiceName[name]}
             </Header>
         </div>
     );

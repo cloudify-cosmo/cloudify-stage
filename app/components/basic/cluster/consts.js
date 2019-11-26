@@ -13,14 +13,14 @@ export const clusterServices = _.keys(clusterServiceEnum);
 
 export const clusterServiceStatusEnum = Object.freeze({
     OK: 'OK',
-    FAIL: 'FAIL',
-    DEGRADED: 'DEGRADED'
+    FAIL: 'Fail',
+    DEGRADED: 'Degraded'
 });
 export const clusterServiceStatuses = _.keys(clusterServiceStatusEnum);
 
 export const clusterNodeStatusEnum = Object.freeze({
     OK: 'OK',
-    FAIL: 'FAIL'
+    FAIL: 'Fail'
 });
 export const clusterNodeStatuses = _.keys(clusterNodeStatusEnum);
 

@@ -41,9 +41,10 @@ export default function ClusterServicesList({ services, toolbox }) {
                 }[service.status];
 
                 return _(service.nodes)
+                    .map((node, nodeName) => ({ name: nodeName, ...node }))
                     .sortBy('name')
                     .map((node, index) => (
-                        <DataTable.Row key={node.id}>
+                        <DataTable.Row key={node.node_id}>
                             {index === 0 && (
                                 <DataTable.Data rowsSpan={numberOfNodes} style={{ backgroundColor }}>
                                     <ClusterService isExternal={service.is_external} name={serviceName} />
@@ -64,7 +65,7 @@ export default function ClusterServicesList({ services, toolbox }) {
                             </DataTable.Data>
                             <DataTable.Data>{node.version}</DataTable.Data>
                             <DataTable.Data>
-                                <IdPopup selected id={node.id} buttonPosition="right" />
+                                <IdPopup selected id={node.node_id} buttonPosition="right" />
                             </DataTable.Data>
                         </DataTable.Row>
                     ))
