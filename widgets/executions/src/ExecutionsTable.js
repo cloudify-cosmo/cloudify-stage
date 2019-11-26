@@ -113,6 +113,7 @@ export default class ExecutionsTable extends React.Component {
             ErrorMessage,
             ExecutionStatus,
             HighlightText,
+            IdPopup,
             Icon,
             Menu,
             Modal,
@@ -121,7 +122,7 @@ export default class ExecutionsTable extends React.Component {
             PopupMenu,
             Table
         } = Stage.Basic;
-        const { IdPopup, UpdateDetailsModal } = Stage.Common;
+        const { UpdateDetailsModal } = Stage.Common;
         const { Utils } = Stage;
 
         const { MenuAction } = ExecutionsTable;
