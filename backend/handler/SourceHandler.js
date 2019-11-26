@@ -232,7 +232,8 @@ module.exports = (function() {
 
         const item = {
             key: archivePath.replace(pathlib.join(root, pathlib.sep), ''),
-            title: name
+            title: name,
+            isDir: false
         };
 
         if (stats.isFile()) {
@@ -240,10 +241,13 @@ module.exports = (function() {
         }
         if (stats.isDirectory()) {
             try {
-                item.children = fs
+                const children = fs
                     .readdirSync(archivePath)
                     .map(child => _scanRecursive(root, pathlib.join(archivePath, child)))
                     .filter(e => !!e);
+
+                item.isDir = true;
+                item.children = _.sortBy(children, i => !i.isDir);
 
                 return item;
             } catch (ex) {
