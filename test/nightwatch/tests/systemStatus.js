@@ -8,12 +8,15 @@ module.exports = {
 
         const page = client.page.page();
 
-        page.section.statusIcon
-            .waitForElementPresent('@statusIconGreen')
-            .clickElement('@statusIconGreen')
-            .assert.cssClassPresent('@statusIcon', 'green');
+        page.waitForElementPresent('@statusIcon').assert.cssClassPresent('@statusIcon', 'green');
 
-        page.waitForElementVisible('@statusesTitle').assert.containsText('@statusesTitle', 'System Status');
+        page.moveToElement('@statusIcon', 5, 5)
+            .waitForElementVisible('@statusTitle')
+            .assert.containsText('@statusTitle', 'System Status')
+            .waitForElementVisible('@statusManager')
+            .assert.containsText('@statusManager', 'Manager')
+            .assert.containsText('@statusDatabase', 'Database')
+            .assert.containsText('@statusBroker', 'Message Broker');
 
         client.end();
     }

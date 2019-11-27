@@ -14,13 +14,6 @@ module.exports = {
                 sidebarButton: 'i.sidebar-button'
             }
         },
-        statusIcon: {
-            selector: '.statusIcon',
-            elements: {
-                statusIcon: 'i.heartbeat',
-                statusIconGreen: 'i.heartbeat.green'
-            }
-        },
         tenants: {
             selector: '.tenantsMenu',
             elements: {
@@ -191,7 +184,13 @@ module.exports = {
 
     elements: {
         tenantsDropdownText: 'div.tenantsMenu',
-        statusesTitle: 'table.servicesData tr th',
+
+        statusIcon: '.headerBar .statusIcon',
+        statusTitle: '.popup table.servicesData tr th div.header',
+        statusManager: '.popup table.servicesData tbody tr:nth-child(1)',
+        statusDatabase: '.popup table.servicesData tbody tr:nth-child(2)',
+        statusBroker: '.popup table.servicesData tbody tr:nth-child(3)',
+
         breadcrumb: '.breadcrumbLineHeight',
         pageTitle: '.pageTitle'
     }
