@@ -5,9 +5,16 @@ const clusterStatus = (state = {}, action) => {
         case types.REQ_CLUSTER_STATUS:
             return { ...state, isFetching: true };
         case types.SET_CLUSTER_STATUS:
-            return { ...state, isFetching: false, error: undefined, status: action.status, services: action.services };
+            return {
+                isFetching: false,
+                error: undefined,
+                status: action.status,
+                services: action.services
+            };
         case types.ERR_CLUSTER_STATUS:
             return { ...state, isFetching: false, error: action.error };
+        default:
+            return state;
     }
 };
 

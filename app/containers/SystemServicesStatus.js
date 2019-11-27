@@ -3,20 +3,20 @@
  */
 
 import { connect } from 'react-redux';
-import Manager from '../components/Manager';
-import stageUtils from '../utils/stageUtils';
-import Consts from '../utils/consts';
+import SystemServicesStatus from '../components/SystemServicesStatus';
 import { getClusterStatus } from '../actions/clusterStatus';
 
 const mapStateToProps = state => {
     return {
-        showServicesStatus: stageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager)
+        services: state.manager.clusterStatus.services,
+        isFetching: state.manager.clusterStatus.isFetching,
+        fetchingError: state.manager.clusterStatus.error
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onServicesStatusOpen: () => {
+        onStatusRefresh: () => {
             dispatch(getClusterStatus());
         }
     };
@@ -25,4 +25,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Manager);
+)(SystemServicesStatus);

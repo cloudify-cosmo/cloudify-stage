@@ -71,7 +71,7 @@ const manager = (state = {}, action) => {
         case types.REQ_CLUSTER_STATUS:
         case types.SET_CLUSTER_STATUS:
         case types.ERR_CLUSTER_STATUS:
-            return { ...state, clusterStatus: clusterStatus(state.status, action) };
+            return { ...state, clusterStatus: clusterStatus(state.clusterStatus, action) };
         case types.REQ_MANAGER_STATUS:
         case types.SET_MANAGER_STATUS:
         case types.ERR_MANAGER_STATUS:

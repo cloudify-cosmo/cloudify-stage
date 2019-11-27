@@ -6,10 +6,10 @@ import IdPopup from '../IdPopup';
 import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';
 import { nodeServicesPropType } from './NodeServices';
-import { clusterNodeStatuses, clusterServiceEnum, clusterServiceStatuses, clusterServiceStatusEnum } from './consts';
+import { clusterNodeStatuses, clusterServiceEnum, clusterServiceStatuses, clusterServiceBgColor } from './consts';
 
 const PublicIP = ({ ip, serviceName }) =>
-    serviceName === clusterServiceEnum.manager ? (
+    ip && serviceName === clusterServiceEnum.manager ? (
         <a href={`http://${ip}`} target="_blank" rel="noopener noreferrer">
             {ip}
         </a>
@@ -17,7 +17,7 @@ const PublicIP = ({ ip, serviceName }) =>
         ip
     );
 PublicIP.propTypes = {
-    ip: PropTypes.string.isRequired,
+    ip: PropTypes.string,
     serviceName: PropTypes.string.isRequired
 };
 
@@ -34,19 +34,17 @@ export default function ClusterServicesList({ services, toolbox }) {
 
             {_.map(services, (service, serviceName) => {
                 const numberOfNodes = _.size(service.nodes);
-                const backgroundColor = {
-                    [clusterServiceStatusEnum.OK]: '#21ba45',
-                    [clusterServiceStatusEnum.DEGRADED]: '#fbbd08',
-                    [clusterServiceStatusEnum.FAIL]: '#db2828'
-                }[service.status];
 
                 return _(service.nodes)
                     .map((node, nodeName) => ({ name: nodeName, ...node }))
                     .sortBy('name')
                     .map((node, index) => (
-                        <DataTable.Row key={node.node_id}>
+                        <DataTable.Row key={`${serviceName}_${node.name}_${node.node_id}`}>
                             {index === 0 && (
-                                <DataTable.Data rowsSpan={numberOfNodes} style={{ backgroundColor }}>
+                                <DataTable.Data
+                                    rowsSpan={numberOfNodes}
+                                    style={{ backgroundColor: clusterServiceBgColor[service.status] }}
+                                >
                                     <ClusterService isExternal={service.is_external} name={serviceName} />
                                 </DataTable.Data>
                             )}
@@ -77,12 +75,12 @@ export default function ClusterServicesList({ services, toolbox }) {
 
 const clusterServiceProps = PropTypes.shape({
     status: PropTypes.oneOf(clusterServiceStatuses).isRequired,
-    nodes: PropTypes.arrayOf(
+    nodes: PropTypes.objectOf(
         PropTypes.shape({
             status: PropTypes.oneOf(clusterNodeStatuses).isRequired,
-            public_ip: PropTypes.string.isRequired,
+            public_ip: PropTypes.string,
             version: PropTypes.string.isRequired,
-            id: PropTypes.string.isRequired,
+            node_id: PropTypes.string.isRequired,
             private_ip: PropTypes.string.isRequired,
             services: nodeServicesPropType
         })

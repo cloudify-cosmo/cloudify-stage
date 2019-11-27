@@ -2,52 +2,29 @@
  * Created by kinneretzin on 26/09/2016.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import React, { Component } from 'react';
-import Consts from '../utils/consts';
-import Services from '../containers/Services';
-import { Icon, Popup } from './basic/index';
+import SystemStatusIcon from '../containers/SystemStatusIcon';
+import SystemServicesStatus from '../containers/SystemServicesStatus';
+import { Popup } from './basic/index';
 
-export default class Manager extends Component {
-    static propTypes = {
-        maintenanceStatus: PropTypes.string.isRequired,
-        managerStatus: PropTypes.string.isRequired,
-        onServicesStatusOpen: PropTypes.func.isRequired,
-        showServicesStatus: PropTypes.bool.isRequired
-    };
-
-    render() {
-        const { onServicesStatusOpen, maintenanceStatus, managerStatus, showServicesStatus } = this.props;
-
-        const ManagerStatusIcon = () => {
-            let color = 'grey';
-            if (managerStatus === Consts.MANAGER_STATUS_FAIL) {
-                color = 'red';
-            } else if (maintenanceStatus !== Consts.MAINTENANCE_DEACTIVATED) {
-                color = 'yellow';
-            } else if (managerStatus === Consts.MANAGER_STATUS_OK) {
-                color = 'green';
-            }
-
-            return (
-                <div className="managerMenu">
-                    <Icon name="heartbeat" size="large" color={color} className="statusIcon" />
+export default function Manager({ onServicesStatusOpen, showServicesStatus }) {
+    return showServicesStatus ? (
+        <Popup wide hoverable position="bottom right" onOpen={onServicesStatusOpen}>
+            <Popup.Trigger>
+                <div>
+                    <SystemStatusIcon />
                 </div>
-            );
-        };
-
-        return showServicesStatus ? (
-            <Popup wide hoverable position="bottom right" onOpen={onServicesStatusOpen}>
-                <Popup.Trigger>
-                    <div>
-                        <ManagerStatusIcon />
-                    </div>
-                </Popup.Trigger>
-                <Services />
-            </Popup>
-        ) : (
-            <ManagerStatusIcon />
-        );
-    }
+            </Popup.Trigger>
+            <SystemServicesStatus />
+        </Popup>
+    ) : (
+        <SystemStatusIcon />
+    );
 }
+
+Manager.propTypes = {
+    onServicesStatusOpen: PropTypes.func.isRequired,
+    showServicesStatus: PropTypes.bool.isRequired
+};

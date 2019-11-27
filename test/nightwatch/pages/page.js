@@ -14,8 +14,8 @@ module.exports = {
                 sidebarButton: 'i.sidebar-button'
             }
         },
-        managerData: {
-            selector: '.managerMenu',
+        statusIcon: {
+            selector: '.statusIcon',
             elements: {
                 statusIcon: 'i.heartbeat',
                 statusIconGreen: 'i.heartbeat.green'

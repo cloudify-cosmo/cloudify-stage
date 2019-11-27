@@ -3,17 +3,17 @@
  */
 
 module.exports = {
-    'Manager status': function(client) {
+    'System status': function(client) {
         client.login();
 
         const page = client.page.page();
 
-        page.section.managerData
+        page.section.statusIcon
             .waitForElementPresent('@statusIconGreen')
             .clickElement('@statusIconGreen')
             .assert.cssClassPresent('@statusIcon', 'green');
 
-        page.waitForElementVisible('@statusesTitle').assert.containsText('@statusesTitle', 'Manager Services Status');
+        page.waitForElementVisible('@statusesTitle').assert.containsText('@statusesTitle', 'System Status');
 
         client.end();
     }
