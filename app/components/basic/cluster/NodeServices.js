@@ -27,17 +27,17 @@ StatusHeader.propTypes = {
     nodeType: PropTypes.oneOf(clusterServices).isRequired
 };
 
-const ServiceHeader = ({ name, description, isExternal }) => {
+const ServiceHeader = ({ name, description, isRemote }) => {
     return (
         <Header size="tiny">
             <Header.Content>
                 {name}&nbsp;
-                {isExternal && (
+                {isRemote && (
                     <Popup>
                         <Popup.Trigger>
                             <Icon name="external square" />
                         </Popup.Trigger>
-                        <Popup.Content>External</Popup.Content>
+                        <Popup.Content>Remote</Popup.Content>
                     </Popup>
                 )}
                 {description && <Header.Subheader>{description}</Header.Subheader>}
@@ -48,7 +48,7 @@ const ServiceHeader = ({ name, description, isExternal }) => {
 ServiceHeader.propTypes = {
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
-    isExternal: PropTypes.bool.isRequired
+    isRemote: PropTypes.bool.isRequired
 };
 ServiceHeader.defaultProps = {
     description: ''
@@ -79,13 +79,13 @@ export default function NodeServices({ name, type, services }) {
         .sort()
         .map(serviceName => ({
             name: serviceName,
-            isExternal: services[serviceName].is_external,
+            isRemote: services[serviceName].is_remote,
             status: services[serviceName].status,
             description: _.get(services[serviceName], 'extra_info.systemd.instances[0].Description', ''),
             extraInfo: services[serviceName].extra_info
         }))
         .value();
-    const stringifiedServices = JsonUtils.stringify(formattedServices, true);
+    const stringifiedServices = JsonUtils.stringify(services, true);
 
     return (
         <Table celled basic="very" collapsing className="servicesData">
@@ -99,11 +99,11 @@ export default function NodeServices({ name, type, services }) {
 
             <Table.Body>
                 {_.map(formattedServices, service => {
-                    const { description, isExternal, name: serviceName, status: serviceStatus } = service;
+                    const { description, isRemote, name: serviceName, status: serviceStatus } = service;
                     return (
                         <Table.Row key={serviceName}>
                             <Table.Cell collapsing>
-                                <ServiceHeader name={serviceName} description={description} isExternal={isExternal} />
+                                <ServiceHeader name={serviceName} description={description} isRemote={isRemote} />
                             </Table.Cell>
                             <Table.Cell textAlign="center">
                                 <ServiceStatus status={serviceStatus} />
@@ -130,7 +130,7 @@ export default function NodeServices({ name, type, services }) {
 
 export const nodeServicesPropType = PropTypes.objectOf(
     PropTypes.shape({
-        is_external: PropTypes.bool.isRequired,
+        is_remote: PropTypes.bool.isRequired,
         status: PropTypes.oneOf(nodeServiceStatuses).isRequired,
         extra_info: PropTypes.object
     })

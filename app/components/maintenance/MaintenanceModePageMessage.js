@@ -2,28 +2,20 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Button } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
+import { Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal, MessageContainer } from '../basic';
 import Banner from '../../containers/banner/Banner';
 import Consts from '../../utils/consts';
-import StatusPoller from '../../utils/StatusPoller';
-import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
-import FullScreenSegment from '../layout/FullScreenSegment';
-import { Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal, MessageContainer } from '../basic';
 import ClusterServicesList from '../basic/cluster/ClusterServicesList';
+import FullScreenSegment from '../layout/FullScreenSegment';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StageUtils from '../../utils/stageUtils';
+import StatusPoller from '../../utils/StatusPoller';
+import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 
 export default class MaintenanceModePageMessage extends Component {
-    static propTypes = {
-        /* FIXME: During CY-1514 add proper propTypes */
-        manager: PropTypes.object.isRequired,
-        canMaintenanceMode: PropTypes.bool.isRequired,
-        showServicesStatus: PropTypes.bool.isRequired,
-        onGetClusterStatus: PropTypes.func.isRequired
-    };
-
     constructor(props, context) {
         super(props, context);
 
@@ -39,7 +31,7 @@ export default class MaintenanceModePageMessage extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.manager.maintenance !== Consts.MAINTENANCE_ACTIVATED) {
+        if (this.props.maintenanceStatus !== Consts.MAINTENANCE_ACTIVATED) {
             this.props.navigateToHome();
         }
     }
@@ -51,7 +43,7 @@ export default class MaintenanceModePageMessage extends Component {
     render() {
         SplashLoadingScreen.turnOff();
 
-        const { canMaintenanceMode, showServicesStatus, manager, onGetClusterStatus } = this.props;
+        const { canMaintenanceMode, clusterServices, isFetchingClusterStatus, showServicesStatus } = this.props;
         const { showMaintenanceModal } = this.state;
 
         return (
@@ -73,31 +65,10 @@ export default class MaintenanceModePageMessage extends Component {
                     {showServicesStatus && (
                         <div style={{ fontSize: '1rem' }}>
                             <Divider />
-                            {/* TODO: Create separate component during CY-1514 */}
-                            <div style={{ marginBottom: 10 }}>
-                                <Header
-                                    as="h3"
-                                    style={{
-                                        display: 'inline-block',
-                                        marginBottom: 0,
-                                        marginRight: 5,
-                                        verticalAlign: 'middle'
-                                    }}
-                                >
-                                    System Status
-                                </Header>
-                                <Button
-                                    onClick={onGetClusterStatus}
-                                    loading={manager.clusterStatus.isFetching}
-                                    disabled={manager.clusterStatus.isFetching}
-                                    circular
-                                    icon="refresh"
-                                    size="tiny"
-                                />
-                            </div>
+                            <SystemStatusHeader />
 
-                            {!manager.clusterStatus.isFetching && (
-                                <ClusterServicesList services={manager.clusterStatus.services} toolbox={this.toolbox} />
+                            {!isFetchingClusterStatus && (
+                                <ClusterServicesList services={clusterServices} toolbox={this.toolbox} />
                             )}
                         </div>
                     )}
@@ -113,3 +84,13 @@ export default class MaintenanceModePageMessage extends Component {
         );
     }
 }
+
+MaintenanceModePageMessage.propTypes = {
+    canMaintenanceMode: PropTypes.bool.isRequired,
+    clusterServices: ClusterServicesList.propTypes,
+    isFetchingClusterStatus: PropTypes.bool.isRequired,
+    maintenanceStatus: PropTypes.string.isRequired,
+    navigateToHome: PropTypes.func.isRequired,
+    onGetClusterStatus: PropTypes.func.isRequired,
+    showServicesStatus: PropTypes.bool.isRequired
+};

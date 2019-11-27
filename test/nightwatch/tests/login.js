@@ -15,7 +15,7 @@ module.exports = {
             .setElementValue('@passwordField', Config.adminPass)
             .clickElement('@submitButton')
             .waitForSplashPageNotVisible()
-            .waitForElementVisible('@managerData')
+            .waitForElementVisible('@statusIcon')
             .assert.containsText('@tenantsDropdownText', 'default_tenant');
 
         client.end();

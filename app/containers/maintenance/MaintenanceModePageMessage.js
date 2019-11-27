@@ -8,16 +8,18 @@ import stageUtils from '../../utils/stageUtils';
 import Consts from '../../utils/consts';
 import { getClusterStatus } from '../../actions/clusterStatus';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     const canMaintenanceMode = stageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager);
     const showServicesStatus = stageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager);
     return {
-        manager: state.manager,
         canMaintenanceMode,
+        clusterServices: _.get(state.manager, 'clusterStatus.services'),
+        isFetchingClusterStatus: _.get(state.manager, 'clusterStatus.isFetching'),
+        maintenanceStatus: _.get(state.manager, 'maintenance'),
         showServicesStatus
     };
 };
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = dispatch => {
     return {
         navigateToHome: () => {
             return dispatch(push(Consts.HOME_PAGE_PATH));

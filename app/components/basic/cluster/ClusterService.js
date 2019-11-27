@@ -12,7 +12,7 @@ export default function ClusterService({ name, isExternal }) {
     }[name];
 
     return (
-        <div style={{ verticalAlign: 'middle' }}>
+        <div style={{ verticalAlign: 'middle', padding: 10 }}>
             {isExternal && (
                 <Label color="black" style={{ float: 'right' }}>
                     External
