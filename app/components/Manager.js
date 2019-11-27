@@ -5,8 +5,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SystemStatusIcon from '../containers/SystemStatusIcon';
-import SystemServicesStatus from '../containers/SystemServicesStatus';
+import SystemStatusIcon from '../containers/status/SystemStatusIcon';
+import SystemServicesStatus from '../containers/status/SystemServicesStatus';
 import { Popup } from './basic/index';
 
 export default function Manager({ onServicesStatusOpen, showServicesStatus }) {

@@ -3,8 +3,8 @@
  */
 
 import { connect } from 'react-redux';
-import SystemServicesStatus from '../components/SystemServicesStatus';
-import { getClusterStatus } from '../actions/clusterStatus';
+import SystemServicesStatus from '../../components/status/SystemServicesStatus';
+import { getClusterStatus } from '../../actions/clusterStatus';
 
 const mapStateToProps = state => {
     return {

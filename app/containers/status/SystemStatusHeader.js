@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import SystemStatusHeader from '../components/SystemStatusHeader';
-import { getClusterStatus } from '../actions/clusterStatus';
+import SystemStatusHeader from '../../components/status/SystemStatusHeader';
+import { getClusterStatus } from '../../actions/clusterStatus';
 
 const mapStateToProps = state => {
     return {

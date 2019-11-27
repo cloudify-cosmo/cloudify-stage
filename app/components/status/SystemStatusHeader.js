@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Header } from './basic/index';
-import SystemStatusIcon from '../containers/SystemStatusIcon';
+import { Button, Header } from '../basic';
+import SystemStatusIcon from '../../containers/status/SystemStatusIcon';
 
 export default function SystemStatusHeader({ onStatusRefresh, isFetching }) {
     return (

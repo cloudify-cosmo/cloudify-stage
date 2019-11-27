@@ -13,7 +13,7 @@ import FullScreenSegment from '../layout/FullScreenSegment';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StageUtils from '../../utils/stageUtils';
 import StatusPoller from '../../utils/StatusPoller';
-import SystemStatusHeader from '../../containers/SystemStatusHeader';
+import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 
 export default class MaintenanceModePageMessage extends Component {
     constructor(props, context) {

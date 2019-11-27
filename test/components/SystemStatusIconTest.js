@@ -5,7 +5,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import SystemStatusIcon from '../../app/components/SystemStatusIcon';
+import SystemStatusIcon from '../../app/components/status/SystemStatusIcon';
 import * as BasicComponents from '../../app/components/basic';
 
 describe('(Component) SystemStatusIcon', () => {

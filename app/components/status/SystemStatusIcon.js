@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Icon } from './basic/index';
-import Consts from '../utils/consts';
+import { Icon } from '../basic';
+import Consts from '../../utils/consts';
 
 export default function SystemStatusIcon({ systemStatus, maintenanceStatus }) {
     let color = 'grey';

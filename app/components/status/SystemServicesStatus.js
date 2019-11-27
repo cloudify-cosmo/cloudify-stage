@@ -5,15 +5,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SystemStatusHeader from '../containers/SystemStatusHeader';
-import { Button, ErrorMessage, Header, Link, Table } from './basic/index';
-import ClusterService from './basic/cluster/ClusterService';
+import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
+import { ErrorMessage, Link, Table } from '../basic';
+import ClusterService from '../basic/cluster/ClusterService';
 import {
     clusterServiceBgColor,
     clusterServiceEnum,
     clusterServiceStatusEnum,
     clusterServiceStatuses
-} from './basic/cluster/consts';
+} from '../basic/cluster/consts';
+import './SystemStatus.css';
 
 export default function SystemServicesStatus({ services, isFetching, fetchingError }) {
     const adminOperationsPageUrl = '/page/admin_operations';

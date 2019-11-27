@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import SystemStatusIcon from '../components/SystemStatusIcon';
+import SystemStatusIcon from '../../components/status/SystemStatusIcon';
 
 const mapStateToProps = state => {
     return {
@@ -8,7 +8,7 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = () => {
     return {};
 };
 
