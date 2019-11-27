@@ -17,6 +17,10 @@ export default function SystemStatusIcon({ systemStatus, maintenanceStatus }) {
     return <Icon name="heartbeat" size="large" color={color} className="statusIcon" />;
 }
 SystemStatusIcon.propTypes = {
-    systemStatus: PropTypes.string.isRequired,
-    maintenanceStatus: PropTypes.string.isRequired
+    systemStatus: PropTypes.string,
+    maintenanceStatus: PropTypes.string
+};
+SystemStatusIcon.defaultProps = {
+    systemStatus: '',
+    maintenanceStatus: ''
 };
