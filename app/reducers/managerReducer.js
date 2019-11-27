@@ -1,7 +1,6 @@
 import * as types from '../actions/types';
 import tenants from './tenantsReducer';
 import clusterStatus from './clusterStatusReducer';
-import status from './statusReducer';
 import license from './licenseReducer';
 
 const manager = (state = {}, action) => {
@@ -21,7 +20,7 @@ const manager = (state = {}, action) => {
                 err: null,
                 tenants: [],
                 lastUpdated: action.receivedAt,
-                status: {},
+                clusterStatus: {},
                 license: license(state.license, action),
                 version: action.version
             };
@@ -37,7 +36,7 @@ const manager = (state = {}, action) => {
                 err: null,
                 tenants: {},
                 lastUpdated: action.receivedAt,
-                status: {},
+                clusterStatus: {},
                 license: {},
                 version: {}
             };
@@ -54,7 +53,7 @@ const manager = (state = {}, action) => {
                 err: action.error != null && typeof action.error === 'object' ? action.error.message : action.error,
                 tenants: {},
                 lastUpdated: action.receivedAt,
-                status: {},
+                clusterStatus: {},
                 license: {},
                 version: {}
             };
@@ -72,10 +71,6 @@ const manager = (state = {}, action) => {
         case types.SET_CLUSTER_STATUS:
         case types.ERR_CLUSTER_STATUS:
             return { ...state, clusterStatus: clusterStatus(state.clusterStatus, action) };
-        case types.REQ_MANAGER_STATUS:
-        case types.SET_MANAGER_STATUS:
-        case types.ERR_MANAGER_STATUS:
-            return { ...state, status: status(state.status, action) };
         case types.SET_MANAGER_VERSION:
             return { ...state, version: action.version };
         case types.SET_MANAGER_LICENSE:

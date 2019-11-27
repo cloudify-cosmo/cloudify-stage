@@ -5,7 +5,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SystemStatusIcon from '../containers/SystemStatusIcon';
+import SystemStatusHeader from '../containers/SystemStatusHeader';
 import { Button, ErrorMessage, Header, Link, Table } from './basic/index';
 import ClusterService from './basic/cluster/ClusterService';
 import {
@@ -15,7 +15,7 @@ import {
     clusterServiceStatuses
 } from './basic/cluster/consts';
 
-export default function SystemServicesStatus({ services, isFetching, fetchingError, onStatusRefresh }) {
+export default function SystemServicesStatus({ services, isFetching, fetchingError }) {
     const adminOperationsPageUrl = '/page/admin_operations';
 
     return (
@@ -23,19 +23,7 @@ export default function SystemServicesStatus({ services, isFetching, fetchingErr
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell colSpan="2">
-                        <Header floated="left" style={{ width: 'auto', marginTop: '4px' }} size="medium">
-                            <SystemStatusIcon />
-                            System Status
-                        </Header>
-                        <Button
-                            floated="right"
-                            className="refreshButton"
-                            onClick={onStatusRefresh}
-                            loading={isFetching}
-                            disabled={isFetching}
-                            circular
-                            icon="refresh"
-                        />
+                        <SystemStatusHeader />
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
