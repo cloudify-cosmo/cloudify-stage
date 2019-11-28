@@ -16,5 +16,5 @@ exports.command = function(asUser) {
         .setElementValue('@passwordField', asUser ? Config.pass : Config.adminPass)
         .clickElement('@submitButton')
         .waitForSplashPageNotVisible()
-        .waitForElementVisible('@managerData');
+        .waitForElementVisible('@statusIcon');
 };

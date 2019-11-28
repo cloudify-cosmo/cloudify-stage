@@ -7,7 +7,7 @@ import { getTenants } from './tenants';
 import { getClientConfig } from './clientConfig';
 import { loadOrCreateUserAppData } from './userApp';
 import { getUserData } from './managers';
-import { getStatus } from './status';
+import { getClusterStatus } from './clusterStatus';
 import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 
 export function setAppLoading(isLoading) {
@@ -43,7 +43,7 @@ export function intialPageLoad() {
                     dispatch(loadTours()),
                     dispatch(loadWidgetDefinitions()),
                     dispatch(getClientConfig()),
-                    dispatch(getStatus())
+                    dispatch(getClusterStatus())
                 ]);
             })
             .then(() => {

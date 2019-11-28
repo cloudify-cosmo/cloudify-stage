@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Manager from '../components/Manager';
 import stageUtils from '../utils/stageUtils';
 import Consts from '../utils/consts';
-import { getStatus } from '../actions/status';
+import { getClusterStatus } from '../actions/clusterStatus';
 
 const mapStateToProps = state => {
     return {
@@ -17,7 +17,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onServicesStatusOpen: () => {
-            dispatch(getStatus());
+            dispatch(getClusterStatus());
         }
     };
 };
