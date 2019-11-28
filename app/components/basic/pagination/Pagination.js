@@ -5,10 +5,11 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
+import { Icon, Message } from 'semantic-ui-react';
 import PaginationInfo from './PaginationInfo';
 import TotalSizePaginator from './TotalSizePaginator';
 import FetchSizePaginator from './FetchSizePaginator';
-import { Icon, Message, Popup } from '../index';
+import Popup from '../Popup';
 
 export default class Pagination extends Component {
     static PAGE_SIZE_LIST = PaginationInfo.pageSizes;

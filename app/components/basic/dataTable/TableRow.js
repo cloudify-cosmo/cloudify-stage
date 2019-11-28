@@ -56,7 +56,7 @@ export default class TableRow extends Component {
         const children = [];
         let index = 0;
         React.Children.forEach(this.props.children, child => {
-            if (child.type === TableDataCell && this._showData(index++)) {
+            if (child && child.type === TableDataCell && this._showData(index++)) {
                 children.push(child);
             }
         });

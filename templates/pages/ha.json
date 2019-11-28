@@ -8,7 +8,7 @@
       "y": 0
     },
     {
-      "name": "Cluster management",
+      "name": "Cluster Status",
       "definition": "highAvailability",
       "width": 12,
       "height": 24,

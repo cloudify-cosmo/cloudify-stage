@@ -329,8 +329,7 @@ export function persistPage(page) {
 
 export function savePage(page) {
     return function(dispatch) {
-        dispatch(persistPage(page));
-        dispatch(push('/template_management'));
+        dispatch(persistPage(page)).then(() => dispatch(push('/template_management')));
     };
 }
 

@@ -5,8 +5,7 @@
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
-import { Button, Icon } from './index';
+import { Button, Icon } from 'semantic-ui-react';
 
 /**
  * CopyToClipboardButton component shows a simple copy icon and on click action it copies prop - text to clipboard
