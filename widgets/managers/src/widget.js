@@ -52,31 +52,40 @@ Stage.defineWidget({
                     deployment_id: _.map(spireDeployments, deployment => deployment.id)
                 });
 
-                return Promise.all([executionsPromise, ...capabilitiesPromises]);
+                const cfyManagerWorkersPromise = toolbox.getManager().doGet('/node-instances', {
+                    _include: 'id,node_id,deployment_id,runtime_properties',
+                    node_id: 'cloudify_manager_worker',
+                    deployment_id: _.map(spireDeployments, deployment => deployment.id)
+                });
+
+                return Promise.all([executionsPromise, cfyManagerWorkersPromise, ...capabilitiesPromises]);
             })
-            .then(([executions, ...spireDeploymentsCapabilities]) => {
+            .then(([executions, cfyManagerWorkers, ...spireDeploymentsCapabilities]) => {
                 const executionsData = _.groupBy(executions.items, 'deployment_id');
+                const cfyManagerWorkersData = _.groupBy(cfyManagerWorkers.items, 'deployment_id');
 
                 return Promise.resolve({
                     items: _.sortBy(
                         _.map(spireDeploymentsCapabilities, deploymentCapabilities => {
-                            const managerId = deploymentCapabilities.deployment_id;
-                            const managerIp = _.get(deploymentCapabilities.capabilities, 'endpoint', '');
+                            const spireDeploymentId = deploymentCapabilities.deployment_id;
+                            const spireEndpointIp = _.get(deploymentCapabilities.capabilities, 'endpoint', '');
                             const deployment = _.find(
                                 spireDeployments,
                                 deployment => deployment.id === deploymentCapabilities.deployment_id
                             );
                             const workflows = _.get(deployment, 'workflows', []);
 
-                            return {
-                                id: managerId,
-                                ip: managerIp,
-                                status: 'TODO', // get it from cluster-status API
-                                servicesStatus: 'TODO', // _.get(deploymentCapabilities.capabilities.cluster_status, 'leader_status', []),
-                                error: 'TODO', // _.get(deploymentCapabilities.capabilities.cluster_status, 'error', ''),
+                            const seedWorkerData = _.find(cfyManagerWorkersData[spireDeploymentId], data =>
+                                _.get(data, 'runtime_properties.status', false)
+                            );
+                            const spireDeploymentStatus = _.get(seedWorkerData, 'runtime_properties.status.status', {});
 
+                            return {
+                                id: spireDeploymentId,
+                                ip: spireEndpointIp,
+                                status: spireDeploymentStatus,
                                 workflows,
-                                lastExecution: _.first(executionsData[managerId])
+                                lastExecution: _.first(executionsData[spireDeploymentId])
                             };
                         }),
                         'id'

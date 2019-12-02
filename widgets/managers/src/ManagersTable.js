@@ -190,10 +190,9 @@ export default class ManagersTable extends React.Component {
                                     />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    <StatusIcon status={manager.status} error={manager.error} />
+                                    <StatusIcon status={manager.status} />
                                 </DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    {/* TODO: Get public IP from cluster-status API */}
                                     <ConsoleIcon manager={manager} />
                                     <RefreshIcon
                                         manager={manager}
