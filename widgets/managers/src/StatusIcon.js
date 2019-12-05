@@ -8,19 +8,25 @@ export default class StatusIcon extends React.Component {
     }
 
     static propTypes = {
-        status: PropTypes.object
+        status: PropTypes.object,
+        isFetching: PropTypes.bool
     };
 
     static defaultProps = {
-        status: {}
+        status: {},
+        isFetching: false
     };
 
     render() {
-        const { Popup, Cluster } = Stage.Basic;
+        const { Cluster, Icon, Popup } = Stage.Basic;
         const { ClusterStatusIcon, ClusterServicesOverview } = Cluster;
+
+        const { isFetching } = this.props;
         const { status, services } = this.props.status;
 
-        return (
+        return isFetching ? (
+            <Icon name="spinner" loading disabled />
+        ) : (
             <Popup
                 on="hover"
                 wide

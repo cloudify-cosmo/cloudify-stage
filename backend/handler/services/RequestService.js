@@ -8,7 +8,7 @@ const RequestHandler = require('../RequestHandler');
 const consts = require('../../consts');
 
 module.exports = (function() {
-    function call(method, url, params, data, parseResponse = true, headers = {}) {
+    function call(method, url, params, data, parseResponse = true, headers = {}, certificate = null) {
         return new Promise((resolve, reject) => {
             const options = { headers: {} };
             if (!_.isEmpty(params)) {
@@ -16,7 +16,12 @@ module.exports = (function() {
                 url = `${url}${queryString}`;
             }
             if (headers) {
-                options.headers = headers;
+                options.headers = _.omit(headers, 'cert');
+            }
+            if (certificate) {
+                options.agentOptions = {
+                    ca: certificate
+                };
             }
             if (data) {
                 options.json = data;
@@ -63,24 +68,24 @@ module.exports = (function() {
         });
     }
 
-    function doGet(url, params, parseResponse, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.get, url, params, null, parseResponse, headers);
+    function doGet(url, params, parseResponse, headers, certificate) {
+        return call(consts.ALLOWED_METHODS_OBJECT.get, url, params, null, parseResponse, headers, certificate);
     }
 
-    function doPost(url, params, data, parseResponse, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.post, url, params, data, parseResponse, headers);
+    function doPost(url, params, data, parseResponse, headers, certificate) {
+        return call(consts.ALLOWED_METHODS_OBJECT.post, url, params, data, parseResponse, headers, certificate);
     }
 
-    function doDelete(url, params, data, parseResponse, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.delete, url, params, data, parseResponse, headers);
+    function doDelete(url, params, data, parseResponse, headers, certificate) {
+        return call(consts.ALLOWED_METHODS_OBJECT.delete, url, params, data, parseResponse, headers, certificate);
     }
 
-    function doPut(url, params, data, parseResponse, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.put, url, params, data, parseResponse, headers);
+    function doPut(url, params, data, parseResponse, headers, certificate) {
+        return call(consts.ALLOWED_METHODS_OBJECT.put, url, params, data, parseResponse, headers, certificate);
     }
 
-    function doPatch(url, params, data, parseResponse, headers) {
-        return call(consts.ALLOWED_METHODS_OBJECT.patch, url, params, data, parseResponse, headers);
+    function doPatch(url, params, data, parseResponse, headers, certificate) {
+        return call(consts.ALLOWED_METHODS_OBJECT.patch, url, params, data, parseResponse, headers, certificate);
     }
 
     return {
