@@ -43,7 +43,7 @@ export default function ClusterServicesList({ services, toolbox }) {
                             {index === 0 && (
                                 <DataTable.Data
                                     rowsSpan={numberOfNodes}
-                                    style={{ backgroundColor: clusterServiceBgColor[service.status] }}
+                                    style={{ backgroundColor: clusterServiceBgColor(service.status) }}
                                 >
                                     <ClusterService isExternal={service.is_external} name={serviceName} />
                                 </DataTable.Data>

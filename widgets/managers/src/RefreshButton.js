@@ -2,6 +2,8 @@
  * Created by jakub.niezgoda on 31/10/2018.
  */
 
+import Actions from './actions';
+
 export default class RefreshButton extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -14,11 +16,13 @@ export default class RefreshButton extends React.Component {
     static propTypes = {
         managers: PropTypes.array.isRequired,
         toolbox: PropTypes.object.isRequired,
+        onStart: PropTypes.func,
         onSuccess: PropTypes.func,
         onFail: PropTypes.func
     };
 
     static defaultProps = {
+        onStart: _.noop,
         onSuccess: _.noop,
         onFail: _.noop
     };
@@ -28,25 +32,13 @@ export default class RefreshButton extends React.Component {
 
         this.setState({ loading: true });
 
-        const executionStatusCheckInterval = 2000; // ms
-        const { DeploymentActions, ExecutionActions } = Stage.Common;
-        const deploymentActions = new DeploymentActions(this.props.toolbox);
-        const executionActions = new ExecutionActions(this.props.toolbox);
-        const executePromises = _.map(this.props.managers, manager =>
-            deploymentActions.doExecute({ id: manager }, { name: 'get_status' }, {})
-        );
+        const actions = new Actions(this.props.toolbox);
 
-        return Promise.all(executePromises)
-            .then(results => {
-                this.props.toolbox.refresh();
-                return executionActions.waitUntilFinished(
-                    _.map(results, result => result.id),
-                    executionStatusCheckInterval
-                );
-            })
-            .then(result => this.props.onSuccess(result))
-            .catch(error => this.props.onFail(error.message))
-            .finally(() => this.setState({ loading: false }));
+        const clusterStatusPromise = managerId =>
+            actions.getClusterStatus(managerId, this.props.onStart, this.props.onSuccess, this.props.onFail);
+        const clusterStatusPromises = _.map(this.props.managers, managerId => clusterStatusPromise(managerId));
+
+        return Promise.all(clusterStatusPromises).then(() => this.setState({ loading: false }));
     }
 
     render() {

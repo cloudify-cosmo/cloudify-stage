@@ -1,3 +1,10 @@
+export const clusterStatusEnum = Object.freeze({
+    OK: 'OK',
+    Fail: 'Fail',
+    Degraded: 'Degraded',
+    Unknown: 'Unknown'
+});
+
 export const clusterServiceName = Object.freeze({
     manager: 'Manager',
     db: 'Database',
@@ -13,15 +20,23 @@ export const clusterServices = _.keys(clusterServiceEnum);
 
 export const clusterServiceStatusEnum = Object.freeze({
     OK: 'OK',
-    FAIL: 'Fail',
-    DEGRADED: 'Degraded'
+    Fail: 'Fail',
+    Degraded: 'Degraded',
+    Unknown: 'Unknown'
 });
 export const clusterServiceStatuses = _.keys(clusterServiceStatusEnum);
 
-export const clusterServiceBgColor = {
-    [clusterServiceStatusEnum.OK]: '#21ba45',
-    [clusterServiceStatusEnum.DEGRADED]: '#fbbd08',
-    [clusterServiceStatusEnum.FAIL]: '#db2828'
+export const clusterServiceBgColor = serviceStatus => {
+    switch (serviceStatus) {
+        case clusterServiceStatusEnum.OK:
+            return '#21ba45';
+        case clusterServiceStatusEnum.Degraded:
+            return '#fbbd08';
+        case clusterServiceStatusEnum.Fail:
+            return '#db2828';
+        default:
+            return '#aaaaaa';
+    }
 };
 
 export const clusterNodeStatusEnum = Object.freeze({

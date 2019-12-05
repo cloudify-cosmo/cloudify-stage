@@ -53,9 +53,6 @@ export default {
         UNKNOWN: { name: 'unknown', icon: 'question', color: 'grey', title: 'Unknown resource visibility' }
     },
 
-    SYSTEM_STATUS_OK: 'OK',
-    SYSTEM_STATUS_FAIL: 'Fail',
-
     MAINTENANCE_ACTIVATING: 'activating',
     MAINTENANCE_ACTIVATED: 'activated',
     MAINTENANCE_DEACTIVATED: 'deactivated',
