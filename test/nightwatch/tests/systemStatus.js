@@ -8,15 +8,20 @@ module.exports = {
 
         const page = client.page.page();
 
-        page.waitForElementPresent('@statusIcon').assert.cssClassPresent('@statusIcon', 'green');
+        page.waitForElementPresent('@statusIcon').assert.cssClassPresent('@statusIcon', 'yellow');
 
         page.moveToElement('@statusIcon', 5, 5)
             .waitForElementVisible('@statusTitle')
-            .assert.containsText('@statusTitle', 'System Status')
-            .waitForElementVisible('@statusManager')
-            .assert.containsText('@statusManager', 'Manager')
-            .assert.containsText('@statusDatabase', 'Database')
-            .assert.containsText('@statusBroker', 'Message Broker');
+            .waitForElementVisible('@statusMessage')
+            .assert.containsText('@statusMessage', 'No services available');
+
+        // page.moveToElement('@statusIcon', 5, 5)
+        //     .waitForElementVisible('@statusTitle')
+        //     .assert.containsText('@statusTitle', 'System Status')
+        //     .waitForElementVisible('@statusManager')
+        //     .assert.containsText('@statusManager', 'Manager')
+        //     .assert.containsText('@statusDatabase', 'Database')
+        //     .assert.containsText('@statusBroker', 'Message Broker');
 
         client.end();
     }

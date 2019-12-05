@@ -187,6 +187,7 @@ module.exports = {
 
         statusIcon: '.headerBar .statusIcon',
         statusTitle: '.popup table.servicesData tr th div.header',
+        statusMessage: '.popup table.servicesData div.message div.header',
         statusManager: '.popup table.servicesData tbody tr:nth-child(1)',
         statusDatabase: '.popup table.servicesData tbody tr:nth-child(2)',
         statusBroker: '.popup table.servicesData tbody tr:nth-child(3)',
