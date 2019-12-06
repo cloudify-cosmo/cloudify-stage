@@ -119,13 +119,21 @@ export default class ManagersTable extends React.Component {
         this.setState({ status: { ...this.state.status, [managerId]: { isFetching: true, status: {} } } });
     }
 
+    handleStatusBulkFetching(managerIds) {
+        const newStatus = {};
+        _.forEach(managerIds, managerId => {
+            newStatus[managerId] = { isFetching: true, status: {} };
+        });
+        this.setState({ status: { ...this.state.status, ...newStatus } });
+    }
+
     handleStatusUpdate(managerId, status) {
         this.setState({ status: { ...this.state.status, [managerId]: { isFetching: false, status } } });
     }
 
     handleStatusError(managerId, errorMessage) {
         this.setState({ status: { ...this.state.status, [managerId]: { isFetching: false, status: {} } } });
-        this.setState({ error: `Refresh status for ${managerId} has failed with error: ${errorMessage}` });
+        this.setState({ error: `Status update for ${managerId} has failed.` });
     }
 
     render() {
@@ -243,7 +251,7 @@ export default class ManagersTable extends React.Component {
                         <RefreshButton
                             managers={selectedManagers}
                             toolbox={this.props.toolbox}
-                            onStart={this.handleStatusFetching}
+                            onStart={this.handleStatusBulkFetching}
                             onSuccess={this.handleStatusUpdate}
                             onFail={this.handleStatusError}
                         />
