@@ -23,7 +23,7 @@ Cypress.Commands.add('addUserToTenant', (username, tenant, role) =>
 );
 
 Cypress.Commands.add('removeUserFromTenant', (username, tenant) => {
-    if (username !== 'admin' && tenant !== 'default_tenant') {
+    if (username !== 'admin' && username !== 'manager_status_reporter' && tenant !== 'default_tenant') {
         return cy.cfyRequest('/tenants/users', 'DELETE', null, {
             username,
             tenant_name: tenant
@@ -32,7 +32,7 @@ Cypress.Commands.add('removeUserFromTenant', (username, tenant) => {
 });
 
 Cypress.Commands.add('deleteUser', username => {
-    if (username !== 'admin') {
+    if (username !== 'admin' && username !== 'manager_status_reporter') {
         return cy.cfyRequest(`/users/${username}`, 'DELETE');
     }
 });
