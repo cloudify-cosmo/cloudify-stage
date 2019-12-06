@@ -31,6 +31,7 @@ export default class ManagersTable extends React.Component {
 
         this.actions = new Actions(this.props.toolbox);
         this.handleStatusFetching = this.handleStatusFetching.bind(this);
+        this.handleStatusBulkFetching = this.handleStatusBulkFetching.bind(this);
         this.handleStatusUpdate = this.handleStatusUpdate.bind(this);
         this.handleStatusError = this.handleStatusError.bind(this);
     }
@@ -50,13 +51,10 @@ export default class ManagersTable extends React.Component {
     componentDidMount() {
         this.props.toolbox.getEventBus().on('managers:refresh', this.refreshData, this);
 
-        _.forEach(this.props.data.items, manager =>
-            this.actions.getClusterStatus(
-                manager.id,
-                this.handleStatusFetching,
-                this.handleStatusUpdate,
-                this.handleStatusError
-            )
+        const managerIds = _.map(this.props.data.items, manager => manager.id);
+        this.handleStatusBulkFetching(managerIds);
+        _.forEach(managerIds, managerId =>
+            this.actions.getClusterStatus(managerId, () => {}, this.handleStatusUpdate, this.handleStatusError)
         );
     }
 
