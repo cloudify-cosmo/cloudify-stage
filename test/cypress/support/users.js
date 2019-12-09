@@ -1,3 +1,7 @@
+import _ from 'lodash';
+
+const builtInUsernames = ['admin', 'db_status_reporter', 'broker_status_reporter', 'manager_status_reporter'];
+
 Cypress.Commands.add('addTenant', tenant => cy.cfyRequest(`/tenants/${tenant}`, 'POST'));
 
 Cypress.Commands.add('deleteTenant', tenant => {
@@ -22,15 +26,17 @@ Cypress.Commands.add('addUserToTenant', (username, tenant, role) =>
     })
 );
 
-Cypress.Commands.add('removeUserFromTenant', (username, tenant) =>
-    cy.cfyRequest('/tenants/users', 'DELETE', null, {
-        username,
-        tenant_name: tenant
-    })
-);
+Cypress.Commands.add('removeUserFromTenant', (username, tenant) => {
+    if (tenant !== 'default_tenant' || !_.includes(builtInUsernames, username)) {
+        return cy.cfyRequest('/tenants/users', 'DELETE', null, {
+            username,
+            tenant_name: tenant
+        });
+    }
+});
 
 Cypress.Commands.add('deleteUser', username => {
-    if (username !== 'admin') {
+    if (!_.includes(builtInUsernames, username)) {
         return cy.cfyRequest(`/users/${username}`, 'DELETE');
     }
 });

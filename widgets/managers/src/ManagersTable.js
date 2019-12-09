@@ -31,6 +31,7 @@ export default class ManagersTable extends React.Component {
 
         this.actions = new Actions(this.props.toolbox);
         this.handleStatusFetching = this.handleStatusFetching.bind(this);
+        this.handleStatusBulkFetching = this.handleStatusBulkFetching.bind(this);
         this.handleStatusUpdate = this.handleStatusUpdate.bind(this);
         this.handleStatusError = this.handleStatusError.bind(this);
     }
@@ -50,13 +51,10 @@ export default class ManagersTable extends React.Component {
     componentDidMount() {
         this.props.toolbox.getEventBus().on('managers:refresh', this.refreshData, this);
 
-        _.forEach(this.props.data.items, manager =>
-            this.actions.getClusterStatus(
-                manager.id,
-                this.handleStatusFetching,
-                this.handleStatusUpdate,
-                this.handleStatusError
-            )
+        const managerIds = _.map(this.props.data.items, 'id');
+        this.handleStatusBulkFetching(managerIds);
+        _.forEach(managerIds, managerId =>
+            this.actions.getClusterStatus(managerId, _.noop, this.handleStatusUpdate, this.handleStatusError)
         );
     }
 
@@ -119,13 +117,21 @@ export default class ManagersTable extends React.Component {
         this.setState({ status: { ...this.state.status, [managerId]: { isFetching: true, status: {} } } });
     }
 
+    handleStatusBulkFetching(managerIds) {
+        const newStatus = {};
+        _.forEach(managerIds, managerId => {
+            newStatus[managerId] = { isFetching: true, status: {} };
+        });
+        this.setState({ status: { ...this.state.status, ...newStatus } });
+    }
+
     handleStatusUpdate(managerId, status) {
         this.setState({ status: { ...this.state.status, [managerId]: { isFetching: false, status } } });
     }
 
     handleStatusError(managerId, errorMessage) {
         this.setState({ status: { ...this.state.status, [managerId]: { isFetching: false, status: {} } } });
-        this.setState({ error: `Refresh status for ${managerId} has failed with error: ${errorMessage}` });
+        this.setState({ error: `Status update for ${managerId} has failed.` });
     }
 
     render() {
@@ -243,7 +249,7 @@ export default class ManagersTable extends React.Component {
                         <RefreshButton
                             managers={selectedManagers}
                             toolbox={this.props.toolbox}
-                            onStart={this.handleStatusFetching}
+                            onStart={this.handleStatusBulkFetching}
                             onSuccess={this.handleStatusUpdate}
                             onFail={this.handleStatusError}
                         />
