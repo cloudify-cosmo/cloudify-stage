@@ -13,8 +13,6 @@ export default class InstallWidgetModal extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.widgetFileRef = React.createRef();
-
         this.state = InstallWidgetModal.initialState;
     }
 
@@ -42,7 +40,6 @@ export default class InstallWidgetModal extends Component {
 
     componentDidUpdate(prevProps) {
         if (!prevProps.open && this.props.open) {
-            this.widgetFileRef.current && this.widgetFileRef.current.reset();
             this.setState(InstallWidgetModal.initialState);
         }
     }
@@ -92,25 +89,12 @@ export default class InstallWidgetModal extends Component {
         this.setState({ scriptError: `${message} (${source}:${lineno}:${colno})` });
     }
 
-    _handleInputChange(proxy, field) {
-        this.setState(Form.fieldNameValue(field));
+    _onWidgetUrlChange(widgetUrl) {
+        this.setState({ errors: {}, widgetUrl, widgetFile: null });
     }
 
-    _onWidgetUrlFocus() {
-        if (this.state.widgetFile) {
-            this.widgetFileRef.current && this.widgetFileRef.current.reset();
-            this._onWidgetFileReset();
-        }
-    }
-
-    _onWidgetFileChange(file) {
-        if (file) {
-            this.setState({ errors: {}, widgetUrl: file.name, widgetFile: file });
-        }
-    }
-
-    _onWidgetFileReset() {
-        this.setState({ errors: {}, widgetUrl: '', widgetFile: null });
+    _onWidgetFileChange(widgetFile) {
+        this.setState({ errors: {}, widgetUrl: null, widgetFile });
     }
 
     render() {
@@ -127,19 +111,13 @@ export default class InstallWidgetModal extends Component {
                     <Icon name="puzzle" /> {this.props.header}
                 </Modal.Header>
                 <Modal.Content>
-                    <Form errors={this.state.errors} ref="installForm" loading={this.state.loading}>
+                    <Form errors={this.state.errors} loading={this.state.loading}>
                         <Form.Field label="Widget package" required error={this.state.errors.widgetUrl}>
                             <Form.UrlOrFile
                                 name="widget"
-                                value={this.state.widgetUrl}
                                 placeholder="Provide the widget's archive URL or click browse to select a file"
-                                onChangeUrl={this._handleInputChange.bind(this)}
-                                onFocusUrl={this._onWidgetUrlFocus.bind(this)}
-                                onBlurUrl={() => {}}
+                                onChangeUrl={this._onWidgetUrlChange.bind(this)}
                                 onChangeFile={this._onWidgetFileChange.bind(this)}
-                                onResetFile={this._onWidgetFileReset.bind(this)}
-                                label={<Label>{!this.state.widgetFile ? 'URL' : 'File'}</Label>}
-                                fileInputRef={this.widgetFileRef}
                             />
                         </Form.Field>
                     </Form>
