@@ -51,10 +51,10 @@ export default class ManagersTable extends React.Component {
     componentDidMount() {
         this.props.toolbox.getEventBus().on('managers:refresh', this.refreshData, this);
 
-        const managerIds = _.map(this.props.data.items, manager => manager.id);
+        const managerIds = _.map(this.props.data.items, 'id');
         this.handleStatusBulkFetching(managerIds);
         _.forEach(managerIds, managerId =>
-            this.actions.getClusterStatus(managerId, () => {}, this.handleStatusUpdate, this.handleStatusError)
+            this.actions.getClusterStatus(managerId, _.noop, this.handleStatusUpdate, this.handleStatusError)
         );
     }
 

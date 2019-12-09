@@ -35,7 +35,7 @@ export default class RefreshButton extends React.Component {
         const actions = new Actions(this.props.toolbox);
 
         const clusterStatusPromise = managerId =>
-            actions.getClusterStatus(managerId, () => {}, this.props.onSuccess, this.props.onFail);
+            actions.getClusterStatus(managerId, _.noop, this.props.onSuccess, this.props.onFail);
         const clusterStatusPromises = _.map(this.props.managers, managerId => clusterStatusPromise(managerId));
         this.props.onStart(this.props.managers);
 
