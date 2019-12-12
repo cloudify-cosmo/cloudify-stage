@@ -1,0 +1,83 @@
+{
+    "items": [
+        {
+            "id": "rome",
+            "ip": "10.239.0.50",
+            "workflows": [{}],
+            "lastExecution": {
+                "status": "terminated",
+                "status_display": "completed",
+                "ended_at": null,
+                "is_system_workflow": false,
+                "is_dry_run": false,
+                "blueprint_id": "cfy_manager_floating_ip_bp",
+                "tenant_name": "default_tenant",
+                "created_at": "2019-12-12T09:08:34.038Z",
+                "created_by": "admin",
+                "scheduled_for": null,
+                "visibility": "tenant",
+                "private_resource": false,
+                "workflow_id": "install",
+                "resource_availability": "tenant",
+                "parameters": {},
+                "error": "",
+                "deployment_id": "rome",
+                "started_at": "2019-12-12T09:08:34.038Z",
+                "id": "9c84943e-c65e-42e4-9a48-730192ccfca5"
+            }
+        },
+        {
+            "id": "london",
+            "ip": "10.239.10.56",
+            "workflows": [{}],
+            "lastExecution": {
+                "status": "terminated",
+                "status_display": "completed",
+                "ended_at": null,
+                "is_system_workflow": false,
+                "is_dry_run": false,
+                "blueprint_id": "cfy_manager_floating_ip_bp",
+                "tenant_name": "default_tenant",
+                "created_at": "2019-12-12T09:08:34.038Z",
+                "created_by": "admin",
+                "scheduled_for": null,
+                "visibility": "tenant",
+                "private_resource": false,
+                "workflow_id": "get_status",
+                "resource_availability": "tenant",
+                "parameters": {},
+                "error": "",
+                "deployment_id": "london",
+                "started_at": "2019-12-12T09:08:34.038Z",
+                "id": "9c84943e-c65e-42e4-9a48-730192ccfca5"
+            }
+        },
+        {
+            "id": "new-york",
+            "ip": "10.239.5.160",
+            "workflows": [{}],
+            "lastExecution": {
+                "status": "started",
+                "status_display": "started",
+                "ended_at": null,
+                "is_system_workflow": false,
+                "is_dry_run": false,
+                "blueprint_id": "cfy_manager_floating_ip_bp",
+                "tenant_name": "default_tenant",
+                "created_at": "2019-12-12T09:08:34.038Z",
+                "created_by": "admin",
+                "scheduled_for": null,
+                "visibility": "tenant",
+                "private_resource": false,
+                "workflow_id": "heal",
+                "resource_availability": "tenant",
+                "parameters": {},
+                "error": "",
+                "deployment_id": "new-york",
+                "started_at": "2019-12-12T09:08:34.038Z",
+                "id": "9c84943e-c65e-42e4-9a48-730192ccfca5"
+            }
+        }
+    ],
+    "total": 3
+}

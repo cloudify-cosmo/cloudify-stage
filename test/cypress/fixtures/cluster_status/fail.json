@@ -1,0 +1,95 @@
+{
+    "status": "Fail",
+    "services": {
+        "manager": {
+            "status": "OK",
+            "nodes": {
+                "manager_1": {
+                    "status": "OK",
+                    "version": "5.0.5.dev1",
+                    "public_ip": "10.239.3.98",
+                    "node_id": "ad54c867-6585-419f-a4ed-fa0f0e7a0447",
+                    "private_ip": "172.16.4.26",
+                    "services": {}
+                },
+                "manager_3": {
+                    "status": "OK",
+                    "version": "5.0.5.dev1",
+                    "public_ip": "10.239.3.100",
+                    "node_id": "1b68676a-b74b-4843-9542-cf33f401e73b",
+                    "private_ip": "172.16.4.28",
+                    "services": {}
+                },
+                "manager_2": {
+                    "status": "OK",
+                    "version": "5.0.5.dev1",
+                    "public_ip": "10.239.3.99",
+                    "node_id": "e2405374-701b-4e7a-a142-aec805543589",
+                    "private_ip": "172.16.4.27",
+                    "services": {}
+                }
+            },
+            "is_external": false
+        },
+        "db": {
+            "status": "OK",
+            "nodes": {
+                "postgresql_3": {
+                    "status": "OK",
+                    "version": "5.0.5.dev1",
+                    "public_ip": null,
+                    "node_id": "dfa35159-62e5-4bd7-9e0a-ee4bc8ac06e6",
+                    "private_ip": "172.16.4.31",
+                    "services": {}
+                },
+                "postgresql_2": {
+                    "status": "OK",
+                    "version": "5.0.5.dev1",
+                    "public_ip": null,
+                    "node_id": "d31fa2df-da8e-4a18-8d5c-18355813c3ad",
+                    "private_ip": "172.16.4.30",
+                    "services": {}
+                },
+                "postgresql_1": {
+                    "status": "OK",
+                    "version": "5.0.5.dev1",
+                    "public_ip": null,
+                    "node_id": "1dddbd1c-0c4d-40be-9678-dd33735c8f9a",
+                    "private_ip": "172.16.4.29",
+                    "services": {}
+                }
+            },
+            "is_external": false
+        },
+        "broker": {
+            "status": "Fail",
+            "nodes": {
+                "rabbitmq_1": {
+                    "status": "OK",
+                    "version": "5.0.5.dev1",
+                    "public_ip": null,
+                    "node_id": "c771ca92-a2b9-41e3-af03-85e48c951e5f",
+                    "private_ip": "172.16.4.32",
+                    "services": {}
+                },
+                "rabbitmq_3": {
+                    "status": "OK",
+                    "version": "5.0.5.dev1",
+                    "public_ip": null,
+                    "node_id": "6e0cb1a8-692a-47dd-899f-ca2e0970fb7b",
+                    "private_ip": "172.16.4.34",
+                    "services": {}
+                },
+                "rabbitmq_2": {
+                    "status": "OK",
+                    "version": "5.0.5.dev1",
+                    "public_ip": null,
+                    "node_id": "958508e5-e9e6-48a5-a509-e36bcff44a70",
+                    "private_ip": "172.16.4.33",
+                    "services": {}
+                }
+            },
+            "is_external": false
+        }
+    }
+}

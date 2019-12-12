@@ -16,13 +16,11 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
-
 // use `Cypress` instead of `cy` so this persists across all tests
 Cypress.on('window:before:load', window => {
     // Uncomment for testing HTTP Requests from client-side
-    // window.fetch = null;
+    // eslint-disable-next-line no-param-reassign
+    delete window.fetch;
 });
 
 Cypress.Cookies.defaults({
