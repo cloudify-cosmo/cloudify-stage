@@ -57,7 +57,7 @@ ClusterServicesOverview.propTypes = {
 };
 
 ClusterServicesOverview.defaultProps = {
-    services: _.mapValues(clusterServiceEnum, () => ({ status: clusterServiceStatusEnum.Fail, is_external: false })),
+    services: _.mapValues(clusterServiceEnum, () => ({ status: clusterServiceStatusEnum.Unknown, is_external: false })),
     clickable: false,
     isFetching: false,
     fetchingError: '',

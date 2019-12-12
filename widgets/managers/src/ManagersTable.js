@@ -58,6 +58,23 @@ export default class ManagersTable extends React.Component {
         );
     }
 
+    componentDidUpdate(prevProps) {
+        const newManagers = _.get(this.props, 'data.items', []);
+        const oldManagers = _.get(prevProps, 'data.items', []);
+
+        if (!_.isEqual(oldManagers, newManagers)) {
+            const managerIds = _.map(newManagers, 'id');
+
+            const { status } = this.state;
+            const currentStatus = _.pick(status, managerIds);
+            const emptyStatusForAllManagers = _(newManagers)
+                .mapKeys('id')
+                .mapValues(() => ({ isFetching: false, status: {} }))
+                .value();
+            this.setState({ status: { ...emptyStatusForAllManagers, ...currentStatus } });
+        }
+    }
+
     componentWillUnmount() {
         this.props.toolbox.getEventBus().off('managers:refresh', this.refreshData);
     }
@@ -186,7 +203,10 @@ export default class ManagersTable extends React.Component {
 
                     {_.map(this.props.data.items, manager => {
                         const inSelectedManagers = _.includes(selectedManagers, manager.id);
-                        const { isFetching, status } = this.state.status[manager.id];
+                        const { isFetching, status } = _.get(this.state.status, manager.id, {
+                            isFetching: false,
+                            status: {}
+                        });
 
                         return (
                             <DataTable.Row
