@@ -30,56 +30,7 @@ Stage.defineWidget({
     ],
 
     fetchData(widget, toolbox) {
-        let spireDeployments = [];
-
-        return toolbox
-            .getManager()
-            .doGetFull('/deployments', {
-                _include: 'id,workflows,capabilities,description',
-                description:
-                    'This blueprint creates several VMs, installs a Cloudify Manager on each of them, ' +
-                    'creates a Cloudify Spire Management Cluster between all the managers and uploads ' +
-                    'several auxiliary resources to the cluster.\n'
-            })
-            .then(data => {
-                spireDeployments = data.items;
-                const capabilitiesPromises = _.map(spireDeployments, deployment =>
-                    toolbox.getManager().doGet(`/deployments/${deployment.id}/capabilities`)
-                );
-
-                const executionsPromise = toolbox.getManager().doGet('/executions', {
-                    _sort: '-ended_at',
-                    deployment_id: _.map(spireDeployments, deployment => deployment.id)
-                });
-
-                return Promise.all([executionsPromise, ...capabilitiesPromises]);
-            })
-            .then(([executions, ...spireDeploymentsCapabilities]) => {
-                const executionsData = _.groupBy(executions.items, 'deployment_id');
-
-                return Promise.resolve({
-                    items: _.sortBy(
-                        _.map(spireDeploymentsCapabilities, deploymentCapabilities => {
-                            const spireDeploymentId = deploymentCapabilities.deployment_id;
-                            const spireEndpointIp = _.get(deploymentCapabilities.capabilities, 'endpoint', '');
-                            const deployment = _.find(
-                                spireDeployments,
-                                d => d.id === deploymentCapabilities.deployment_id
-                            );
-                            const workflows = _.get(deployment, 'workflows', []);
-
-                            return {
-                                id: spireDeploymentId,
-                                ip: spireEndpointIp,
-                                workflows,
-                                lastExecution: _.first(executionsData[spireDeploymentId])
-                            };
-                        }),
-                        'id'
-                    ),
-                    total: _.size(spireDeploymentsCapabilities)
-                });
-            });
+        return toolbox.getWidgetBackend().doGet('get_spire_deployments');
     },
 
     render(widget, data, error, toolbox) {

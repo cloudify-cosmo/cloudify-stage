@@ -9,6 +9,7 @@ import { clusterServiceEnum, clusterServiceStatusEnum, clusterServiceStatuses } 
 export default function SystemServicesStatus({ services, isFetching, fetchingError }) {
     return (
         <ClusterStatusOverview
+            clickable
             services={services}
             isFetching={isFetching}
             fetchingError={fetchingError}

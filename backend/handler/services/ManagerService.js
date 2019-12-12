@@ -20,6 +20,27 @@ module.exports = (function() {
         return call(consts.ALLOWED_METHODS_OBJECT.get, url, params, null, headers);
     }
 
+    function doGetFull(url, params, headers, fullData = { items: [] }, size = 0) {
+        const p = params;
+        p._size = 1000;
+        p._offset = size;
+        let s = size;
+
+        const pr = this.doGet(url, p, headers);
+
+        return pr.then(data => {
+            s += data.items.length;
+            const fd = fullData;
+            fd.items = _.concat(fullData.items, data.items);
+            const total = _.get(data, 'metadata.pagination.total');
+
+            if (total > size) {
+                return this.doGetFull(url, p, headers, fullData, s);
+            }
+            return fd;
+        });
+    }
+
     function doPost(url, params, data, headers) {
         return call(consts.ALLOWED_METHODS_OBJECT.post, url, params, data, headers);
     }
@@ -39,6 +60,7 @@ module.exports = (function() {
     return {
         call,
         doGet,
+        doGetFull,
         doPost,
         doDelete,
         doPut,
