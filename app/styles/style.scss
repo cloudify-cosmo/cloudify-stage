@@ -105,10 +105,52 @@ a:hover {
       top: 2rem;
       right: 15px;
     }
+    $input-padding: 4.85px 9px !important;
+    $input-left: -10px;
+    .pageDescription {
+      $font-size: 12px;
+      opacity: 0.6;
+      font-size: $font-size;
+      padding-left: 0;
+
+      &.editPlaceholder {
+        font-style: italic;
+      }
+
+      input {
+        padding: $input-padding;
+        font-size: $font-size !important;
+        font-weight: 700;
+        width: 260px;
+        margin-left: $input-left;
+      }
+    }
+    .pageTitle {
+      clear: both;
+      line-height: 1.5;
+      height: 18px;
+      font-size: inherit;
+
+      &.input {
+        width: 100%;
+      }
+
+      input {
+        font-weight: 700;
+        font-size: 14px;
+        position: absolute;
+        left: $input-left;
+        top: -4px;
+        padding: $input-padding;
+      }
+    }
   }
 
-  .ui.breadcrumb .section:not(.active) {
-    cursor: pointer;
+  .ui.breadcrumb {
+    width: 100%;
+    .section:not(.active):not(.input) {
+      cursor: pointer;
+    }
   }
 }
 
@@ -144,7 +186,7 @@ a:hover {
 .maximizeWidget .widget {
   display: none;
 
-  &.maximize {  
+  &.maximize {
     display: block;
     width: auto !important;
     height: auto !important;
@@ -178,20 +220,6 @@ a:hover {
   visibility: visible;
 }
 
-.pageDescription {
-  opacity: 0.6;
-  font-size: 12px;
-
-  &.editPlaceholder {
-    font-style: italic;
-  }
-}
-
-.pageTitle {
-  clear: both;
-  line-height: 1.5;
-}
-
 .pages {
 
   .ui-sortable-helper {
@@ -211,7 +239,7 @@ a:hover {
 }
 
 .layout{
-  &.isEditMode{  
+  &.isEditMode{
     background-color: #fafafa;
     border: 1px solid #eee;
     border-radius: 5px;
@@ -223,7 +251,7 @@ a:hover {
   }
   &>.react-draggable-dragging{
     opacity: 0.3;
-    filter: blur(1px); 
+    filter: blur(1px);
   }
 
   .widgetItem{
@@ -288,6 +316,22 @@ a:hover {
     left: 0;
     right: 0;
     bottom: 0;
+
+    .widgetName {
+      padding-left: 0;
+      padding-bottom: 0;
+      margin-left: 0;
+      font-size: inherit;
+      color: inherit;
+
+      input {
+        font-weight: bold;
+        padding: 0.5px 9px;
+        position: relative;
+        left: -10px;
+        top: 2px;
+      }
+    }
   }
 
   .widgetContent {
@@ -354,7 +398,7 @@ a:hover {
           transition: all 500ms ease-in-out;
           &:hover{
             transform: scale(1.3);
-            box-shadow: 0px 8px 20px -6px rgba(0, 0, 0, 0.75);          
+            box-shadow: 0px 8px 20px -6px rgba(0, 0, 0, 0.75);
           }
         }
       }

@@ -45,11 +45,12 @@ export default class Page extends Component {
 
                 <div>
                     <EditableLabel
-                        text={this.props.page.description}
+                        value={this.props.page.description}
                         placeholder="Page description"
                         className="pageDescription"
-                        isEditEnable={this.props.isEditMode}
-                        onEditDone={newDesc => this.props.onPageDescriptionChange(this.props.page.id, newDesc)}
+                        enabled={this.props.isEditMode}
+                        onChange={newDesc => this.props.onPageDescriptionChange(this.props.page.id, newDesc)}
+                        inputSize="mini"
                     />
                 </div>
 
