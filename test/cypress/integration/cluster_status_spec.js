@@ -1,3 +1,5 @@
+import { styles } from '../support/cluster_status_commons';
+
 describe('Cluster Status', () => {
     before(() => {
         cy.activate('valid_spire_license');
@@ -20,11 +22,11 @@ describe('Cluster Status', () => {
         cy.get('table.servicesData').within(() => {
             cy.get('button.refreshButton').should('not.have.class', 'loading');
             cy.get('tbody tr:nth-child(1)').should('have.text', ' Manager');
-            cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', 'background-color: rgb(251, 189, 8);');
+            cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', styles.degraded);
             cy.get('tbody tr:nth-child(2)').should('have.text', ' Database');
-            cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', 'background-color: rgb(33, 186, 69);');
+            cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', styles.ok);
             cy.get('tbody tr:nth-child(3)').should('have.text', ' Message Broker');
-            cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', 'background-color: rgb(33, 186, 69);');
+            cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles.ok);
 
             cy.get('tbody tr:nth-child(1)').click();
         });
@@ -37,23 +39,11 @@ describe('Cluster Status', () => {
 
         cy.get('div.widget.highAvailabilityWidget').within(() => {
             cy.get('tbody tr:nth-child(1) td:nth-child(1)').should('have.text', ' Manager');
-            cy.get('tbody tr:nth-child(1) td:nth-child(1)').should(
-                'have.attr',
-                'style',
-                'background-color: rgb(251, 189, 8);'
-            );
+            cy.get('tbody tr:nth-child(1) td:nth-child(1)').should('have.attr', 'style', styles.degraded);
             cy.get('tbody tr:nth-child(4) td:nth-child(1)').should('have.text', ' Database');
-            cy.get('tbody tr:nth-child(4) td:nth-child(1)').should(
-                'have.attr',
-                'style',
-                'background-color: rgb(33, 186, 69);'
-            );
+            cy.get('tbody tr:nth-child(4) td:nth-child(1)').should('have.attr', 'style', styles.ok);
             cy.get('tbody tr:nth-child(7) td:nth-child(1)').should('have.text', ' Message Broker');
-            cy.get('tbody tr:nth-child(7) td:nth-child(1)').should(
-                'have.attr',
-                'style',
-                'background-color: rgb(33, 186, 69);'
-            );
+            cy.get('tbody tr:nth-child(7) td:nth-child(1)').should('have.attr', 'style', styles.ok);
         });
     });
 });

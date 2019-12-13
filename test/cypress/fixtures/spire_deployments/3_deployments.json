@@ -3,7 +3,348 @@
         {
             "id": "rome",
             "ip": "10.239.0.50",
-            "workflows": [{}],
+            "workflows": [
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "scalable_entity_name":{
+                            "description":"Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+                        },
+                        "ignore_failure":{
+                            "default":false,
+                            "type":"boolean"
+                        },
+                        "scale_compute":{
+                            "default":false,
+                            "description":"If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+                        },
+                        "delta":{
+                            "default":1,
+                            "type":"integer",
+                            "description":"How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n"
+                        }
+                    },
+                    "name":"scale",
+                    "operation":"cloudify.plugins.workflows.scale_entity",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "install_methods":{
+                            "default":null
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"validate_agents",
+                    "operation":"cloudify.plugins.workflows.validate_agents",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "diagnose_value":{
+                            "default":"Not provided",
+                            "description":"Diagnosed reason of failure"
+                        },
+                        "node_instance_id":{
+                            "description":"Which node instance has failed"
+                        },
+                        "ignore_failure":{
+                            "default":true,
+                            "type":"boolean"
+                        }
+                    },
+                    "name":"heal",
+                    "operation":"cloudify.plugins.workflows.auto_heal_reinstall_node_subgraph",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "run_by_dependency_order":{
+                            "default":true
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "operation_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"stop",
+                    "operation":"cloudify.plugins.workflows.stop",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "skip_uninstall":{
+                            "default":false
+                        },
+                        "remove_target_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "extended_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "reduce_target_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "ignore_failure":{
+                            "default":false,
+                            "type":"boolean"
+                        },
+                        "reduced_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "modified_entity_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "added_target_instances_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "install_first":{
+                            "default":false,
+                            "type":"boolean"
+                        },
+                        "update_id":{
+                            "default":""
+                        },
+                        "skip_install":{
+                            "default":false
+                        },
+                        "node_instances_to_reinstall":{
+                            "default":[
+
+                            ]
+                        },
+                        "removed_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "extend_target_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "added_instance_ids":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"update",
+                    "operation":"cloudify.plugins.workflows.update",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "run_by_dependency_order":{
+                            "default":true
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "operation_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"start",
+                    "operation":"cloudify.plugins.workflows.start",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "operation_kwargs":{
+                            "default":{
+
+                            }
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "run_by_dependency_order":{
+                            "default":false
+                        },
+                        "operation":{
+
+                        },
+                        "allow_kwargs_override":{
+                            "default":null
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"execute_operation",
+                    "operation":"cloudify.plugins.workflows.execute_operation",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+
+                    },
+                    "name":"install",
+                    "operation":"cloudify.plugins.workflows.install",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "manager_ip":{
+                            "default":"",
+                            "description":"The private ip of the new manager"
+                        },
+                        "install":{
+                            "default":true
+                        },
+                        "install_methods":{
+                            "default":null
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "install_agent_timeout":{
+                            "default":300
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "stop_old_agent":{
+                            "default":false,
+                            "description":"Stop the old agent after the new agent is installed"
+                        },
+                        "validate":{
+                            "default":true
+                        },
+                        "install_script":{
+                            "default":""
+                        },
+                        "manager_certificate":{
+                            "default":"",
+                            "description":"The cloudify_internal_ca_cert.pem of the new manager"
+                        }
+                    },
+                    "name":"install_new_agents",
+                    "operation":"cloudify.plugins.workflows.install_new_agents",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "start_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "stop_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "run_by_dependency_order":{
+                            "default":true
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"restart",
+                    "operation":"cloudify.plugins.workflows.restart",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "ignore_failure":{
+                            "default":false,
+                            "type":"boolean"
+                        }
+                    },
+                    "name":"uninstall",
+                    "operation":"cloudify.plugins.workflows.uninstall",
+                    "plugin":"default_workflows"
+                }
+            ],
             "lastExecution": {
                 "status": "terminated",
                 "status_display": "completed",
@@ -29,7 +370,348 @@
         {
             "id": "london",
             "ip": "10.239.10.56",
-            "workflows": [{}],
+            "workflows": [
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "scalable_entity_name":{
+                            "description":"Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+                        },
+                        "ignore_failure":{
+                            "default":false,
+                            "type":"boolean"
+                        },
+                        "scale_compute":{
+                            "default":false,
+                            "description":"If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+                        },
+                        "delta":{
+                            "default":1,
+                            "type":"integer",
+                            "description":"How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n"
+                        }
+                    },
+                    "name":"scale",
+                    "operation":"cloudify.plugins.workflows.scale_entity",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "install_methods":{
+                            "default":null
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"validate_agents",
+                    "operation":"cloudify.plugins.workflows.validate_agents",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "diagnose_value":{
+                            "default":"Not provided",
+                            "description":"Diagnosed reason of failure"
+                        },
+                        "node_instance_id":{
+                            "description":"Which node instance has failed"
+                        },
+                        "ignore_failure":{
+                            "default":true,
+                            "type":"boolean"
+                        }
+                    },
+                    "name":"heal",
+                    "operation":"cloudify.plugins.workflows.auto_heal_reinstall_node_subgraph",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "run_by_dependency_order":{
+                            "default":true
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "operation_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"stop",
+                    "operation":"cloudify.plugins.workflows.stop",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "skip_uninstall":{
+                            "default":false
+                        },
+                        "remove_target_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "extended_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "reduce_target_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "ignore_failure":{
+                            "default":false,
+                            "type":"boolean"
+                        },
+                        "reduced_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "modified_entity_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "added_target_instances_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "install_first":{
+                            "default":false,
+                            "type":"boolean"
+                        },
+                        "update_id":{
+                            "default":""
+                        },
+                        "skip_install":{
+                            "default":false
+                        },
+                        "node_instances_to_reinstall":{
+                            "default":[
+
+                            ]
+                        },
+                        "removed_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "extend_target_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "added_instance_ids":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"update",
+                    "operation":"cloudify.plugins.workflows.update",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "run_by_dependency_order":{
+                            "default":true
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "operation_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"start",
+                    "operation":"cloudify.plugins.workflows.start",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "operation_kwargs":{
+                            "default":{
+
+                            }
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "run_by_dependency_order":{
+                            "default":false
+                        },
+                        "operation":{
+
+                        },
+                        "allow_kwargs_override":{
+                            "default":null
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"execute_operation",
+                    "operation":"cloudify.plugins.workflows.execute_operation",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+
+                    },
+                    "name":"install",
+                    "operation":"cloudify.plugins.workflows.install",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "manager_ip":{
+                            "default":"",
+                            "description":"The private ip of the new manager"
+                        },
+                        "install":{
+                            "default":true
+                        },
+                        "install_methods":{
+                            "default":null
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "install_agent_timeout":{
+                            "default":300
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "stop_old_agent":{
+                            "default":false,
+                            "description":"Stop the old agent after the new agent is installed"
+                        },
+                        "validate":{
+                            "default":true
+                        },
+                        "install_script":{
+                            "default":""
+                        },
+                        "manager_certificate":{
+                            "default":"",
+                            "description":"The cloudify_internal_ca_cert.pem of the new manager"
+                        }
+                    },
+                    "name":"install_new_agents",
+                    "operation":"cloudify.plugins.workflows.install_new_agents",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "start_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "stop_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "run_by_dependency_order":{
+                            "default":true
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"restart",
+                    "operation":"cloudify.plugins.workflows.restart",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "ignore_failure":{
+                            "default":false,
+                            "type":"boolean"
+                        }
+                    },
+                    "name":"uninstall",
+                    "operation":"cloudify.plugins.workflows.uninstall",
+                    "plugin":"default_workflows"
+                }
+            ],
             "lastExecution": {
                 "status": "terminated",
                 "status_display": "completed",
@@ -55,7 +737,348 @@
         {
             "id": "new-york",
             "ip": "10.239.5.160",
-            "workflows": [{}],
+            "workflows": [
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "scalable_entity_name":{
+                            "description":"Which node/group to scale. Note that the parameter specified should denote the node/group name and NOT the node/group instance id.\n"
+                        },
+                        "ignore_failure":{
+                            "default":false,
+                            "type":"boolean"
+                        },
+                        "scale_compute":{
+                            "default":false,
+                            "description":"If a node name is passed as the `scalable_entity_name` parameter and that node is contained (transitively) within a compute node and this property is 'true', operate on the compute node instead of the specified node.\n"
+                        },
+                        "delta":{
+                            "default":1,
+                            "type":"integer",
+                            "description":"How many node/group instances should be added/removed. A positive number denotes increase of instances. A negative number denotes decrease of instances.\n"
+                        }
+                    },
+                    "name":"scale",
+                    "operation":"cloudify.plugins.workflows.scale_entity",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "install_methods":{
+                            "default":null
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"validate_agents",
+                    "operation":"cloudify.plugins.workflows.validate_agents",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "diagnose_value":{
+                            "default":"Not provided",
+                            "description":"Diagnosed reason of failure"
+                        },
+                        "node_instance_id":{
+                            "description":"Which node instance has failed"
+                        },
+                        "ignore_failure":{
+                            "default":true,
+                            "type":"boolean"
+                        }
+                    },
+                    "name":"heal",
+                    "operation":"cloudify.plugins.workflows.auto_heal_reinstall_node_subgraph",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "run_by_dependency_order":{
+                            "default":true
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "operation_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"stop",
+                    "operation":"cloudify.plugins.workflows.stop",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "skip_uninstall":{
+                            "default":false
+                        },
+                        "remove_target_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "extended_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "reduce_target_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "ignore_failure":{
+                            "default":false,
+                            "type":"boolean"
+                        },
+                        "reduced_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "modified_entity_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "added_target_instances_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "install_first":{
+                            "default":false,
+                            "type":"boolean"
+                        },
+                        "update_id":{
+                            "default":""
+                        },
+                        "skip_install":{
+                            "default":false
+                        },
+                        "node_instances_to_reinstall":{
+                            "default":[
+
+                            ]
+                        },
+                        "removed_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "extend_target_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "added_instance_ids":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"update",
+                    "operation":"cloudify.plugins.workflows.update",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "run_by_dependency_order":{
+                            "default":true
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "operation_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"start",
+                    "operation":"cloudify.plugins.workflows.start",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "operation_kwargs":{
+                            "default":{
+
+                            }
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "run_by_dependency_order":{
+                            "default":false
+                        },
+                        "operation":{
+
+                        },
+                        "allow_kwargs_override":{
+                            "default":null
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"execute_operation",
+                    "operation":"cloudify.plugins.workflows.execute_operation",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+
+                    },
+                    "name":"install",
+                    "operation":"cloudify.plugins.workflows.install",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "manager_ip":{
+                            "default":"",
+                            "description":"The private ip of the new manager"
+                        },
+                        "install":{
+                            "default":true
+                        },
+                        "install_methods":{
+                            "default":null
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "install_agent_timeout":{
+                            "default":300
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "stop_old_agent":{
+                            "default":false,
+                            "description":"Stop the old agent after the new agent is installed"
+                        },
+                        "validate":{
+                            "default":true
+                        },
+                        "install_script":{
+                            "default":""
+                        },
+                        "manager_certificate":{
+                            "default":"",
+                            "description":"The cloudify_internal_ca_cert.pem of the new manager"
+                        }
+                    },
+                    "name":"install_new_agents",
+                    "operation":"cloudify.plugins.workflows.install_new_agents",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "start_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "node_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "node_instance_ids":{
+                            "default":[
+
+                            ]
+                        },
+                        "stop_parms":{
+                            "default":{
+
+                            }
+                        },
+                        "run_by_dependency_order":{
+                            "default":true
+                        },
+                        "type_names":{
+                            "default":[
+
+                            ]
+                        }
+                    },
+                    "name":"restart",
+                    "operation":"cloudify.plugins.workflows.restart",
+                    "plugin":"default_workflows"
+                },
+                {
+                    "created_at":null,
+                    "parameters":{
+                        "ignore_failure":{
+                            "default":false,
+                            "type":"boolean"
+                        }
+                    },
+                    "name":"uninstall",
+                    "operation":"cloudify.plugins.workflows.uninstall",
+                    "plugin":"default_workflows"
+                }
+            ],
             "lastExecution": {
                 "status": "started",
                 "status_display": "started",
