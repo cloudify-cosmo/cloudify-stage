@@ -21,23 +21,20 @@ module.exports = (function() {
     }
 
     function doGetFull(url, params, headers, fullData = { items: [] }, size = 0) {
-        const p = params;
-        p._size = 1000;
-        p._offset = size;
-        let s = size;
+        params._size = 1000;
+        params._offset = size;
 
-        const pr = this.doGet(url, p, headers);
+        const promise = this.doGet(url, params, headers);
 
-        return pr.then(data => {
-            s += data.items.length;
-            const fd = fullData;
-            fd.items = _.concat(fullData.items, data.items);
+        return promise.then(data => {
+            size += data.items.length;
+            fullData.items = _.concat(fullData.items, data.items);
             const total = _.get(data, 'metadata.pagination.total');
 
             if (total > size) {
-                return this.doGetFull(url, p, headers, fullData, s);
+                return this.doGetFull(url, params, headers, fullData, size);
             }
-            return fd;
+            return fullData;
         });
     }
 

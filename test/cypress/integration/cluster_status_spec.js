@@ -22,11 +22,11 @@ describe('Cluster Status', () => {
         cy.get('table.servicesData').within(() => {
             cy.get('button.refreshButton').should('not.have.class', 'loading');
             cy.get('tbody tr:nth-child(1)').should('have.text', ' Manager');
-            cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', styles.degraded);
+            cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', styles.Degraded);
             cy.get('tbody tr:nth-child(2)').should('have.text', ' Database');
-            cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', styles.ok);
+            cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', styles.OK);
             cy.get('tbody tr:nth-child(3)').should('have.text', ' Message Broker');
-            cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles.ok);
+            cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles.OK);
 
             cy.get('tbody tr:nth-child(1)').click();
         });
@@ -39,11 +39,11 @@ describe('Cluster Status', () => {
 
         cy.get('div.widget.highAvailabilityWidget').within(() => {
             cy.get('tbody tr:nth-child(1) td:nth-child(1)').should('have.text', ' Manager');
-            cy.get('tbody tr:nth-child(1) td:nth-child(1)').should('have.attr', 'style', styles.degraded);
+            cy.get('tbody tr:nth-child(1) td:nth-child(1)').should('have.attr', 'style', styles.Degraded);
             cy.get('tbody tr:nth-child(4) td:nth-child(1)').should('have.text', ' Database');
-            cy.get('tbody tr:nth-child(4) td:nth-child(1)').should('have.attr', 'style', styles.ok);
+            cy.get('tbody tr:nth-child(4) td:nth-child(1)').should('have.attr', 'style', styles.OK);
             cy.get('tbody tr:nth-child(7) td:nth-child(1)').should('have.text', ' Message Broker');
-            cy.get('tbody tr:nth-child(7) td:nth-child(1)').should('have.attr', 'style', styles.ok);
+            cy.get('tbody tr:nth-child(7) td:nth-child(1)').should('have.attr', 'style', styles.OK);
         });
     });
 });

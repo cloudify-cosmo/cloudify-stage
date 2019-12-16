@@ -18,8 +18,6 @@ import './commands';
 
 // use `Cypress` instead of `cy` so this persists across all tests
 Cypress.on('window:before:load', window => {
-    // Uncomment for testing HTTP Requests from client-side
-    // eslint-disable-next-line no-param-reassign
     delete window.fetch;
 });
 

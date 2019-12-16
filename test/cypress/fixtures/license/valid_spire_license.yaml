@@ -1,13 +1,15 @@
 license:
-  capabilities: null
+  capabilities:
+    - cap1
+    - cap2
   cloudify_version: null
-  customer_id: INT-Internal-111111113
-  expiration_date: 1 days
+  customer_id: INT-Internal-111111111
+  expiration_date: null
   license_edition: Spire
-  trial: true
+  trial: false
 signature: !!binary |
-  IuUstvRgQsq9yAEIKj6SflA3TDDtYZSvMGvsV9g5TbYRpm5gMSKQJgyeDhIIqaCOhDyiux+RXlJS
-  lW5uNvSHbvv+lR5RpjmaVd2WqTXYx3RcwslYlKWQ3Tmt9XRoAW+0PdIBc4KZi1tTL9eX6v22jkAE
-  pX+H6V6kD/B0JYde2NxfKsS7dvt4mFrLVOhodt+RSwLlBY7fHhRU0vMOToTCzPD235hFlmPoX1x2
-  c0n7eLd5/TtDyZkLToc8B23ZYbHShPdBA2zKDoq0HblDv5/vrXuXp//foP6uYpCH7TK7wOHBMQnr
-  1AFj2WfL9yUPI9+Bed5VSope3cLoA4pxfayfrw==
+  QQcth41WVGX5SgyIs7ENIjmvpXQNzbvMHzGJ+3bWE2VaF36kta8sJULoTkp4KcRM1bLG+5waNbtC
+  Ij5fDk0OwbI0YvsPnJM2CsForyde1RbMLz21VdnM3t6TR7+86f+2+QzASJnMdF0pjy0OS3iEWTsn
+  /YZ4aVZibY3j4oBIkldEFxedaJbw53hksacCIIh68GkPQmJy3zyaJ0g4D7bXXAZ1TpEBVAFKOel8
+  0QCvHtp2b/41EYMUqmln6IeXwCSidK21QiZmV3g1cCSDHLqb0jIA7Qecxrg036me9/dz/So8NpBj
+  xS7ttBJqBbHVwUh/EI3JozYyeEPfshymh7UD4w==

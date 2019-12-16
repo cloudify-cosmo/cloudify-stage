@@ -57,81 +57,53 @@ describe('Spire Manager widget', () => {
     });
 
     it('presents data properly', () => {
-        cy.get('tbody > :nth-child(1) > :nth-child(2)').should('have.text', 'rome');
-        cy.get('tbody > :nth-child(1) > :nth-child(3)').should('have.text', '10.239.0.50');
-        cy.get('tbody > :nth-child(1) > :nth-child(4)').should('have.text', 'install completed');
-        cy.get('tbody > :nth-child(1) > :nth-child(5) i.statusIcon.heartbeat').should('have.class', 'green');
-        cy.get('tbody > :nth-child(1) > :nth-child(6) i.computer.icon').should('have.class', 'link');
-        cy.get('tbody > :nth-child(1) > :nth-child(6) i.refresh.icon').should('have.class', 'link');
-        cy.get('tbody > :nth-child(1) > :nth-child(6) i.cogs.icon').should('have.class', 'link');
+        const checkData = (rowNumber, id, ip, executionStatus, statusColor) => {
+            cy.get(`tbody > tr:nth-child(${rowNumber})`).within(() => {
+                cy.get('td:nth-child(2)').should('have.text', id);
+                cy.get('td:nth-child(3)').should('have.text', ip);
+                cy.get('td:nth-child(4)').should('have.text', executionStatus);
+                cy.get('td:nth-child(5) i.statusIcon.heartbeat').should('have.class', statusColor);
+                cy.get('td:nth-child(6) i.computer.icon').should('have.class', 'link');
+                cy.get('td:nth-child(6) i.refresh.icon').should('have.class', 'link');
+                cy.get('td:nth-child(6) i.cogs.icon').should('have.class', 'link');
+            });
+        };
 
-        cy.get('tbody > :nth-child(2) > :nth-child(2)').should('have.text', 'london');
-        cy.get('tbody > :nth-child(2) > :nth-child(3)').should('have.text', '10.239.10.56');
-        cy.get('tbody > :nth-child(2) > :nth-child(4)').should('have.text', 'get_status completed');
-        cy.get('tbody > :nth-child(2) > :nth-child(5) i.statusIcon.heartbeat').should('have.class', 'yellow');
-        cy.get('tbody > :nth-child(2) > :nth-child(6) i.computer.icon').should('have.class', 'link');
-        cy.get('tbody > :nth-child(2) > :nth-child(6) i.refresh.icon').should('have.class', 'link');
-        cy.get('tbody > :nth-child(2) > :nth-child(6) i.cogs.icon').should('have.class', 'link');
-
-        cy.get('tbody > :nth-child(3) > :nth-child(2)').should('have.text', 'new-york');
-        cy.get('tbody > :nth-child(3) > :nth-child(3)').should('have.text', '10.239.5.160');
-        cy.get('tbody > :nth-child(3) > :nth-child(4)').should('have.text', 'heal started');
-        cy.get('tbody > :nth-child(3) > :nth-child(5) i.statusIcon.heartbeat').should('have.class', 'red');
-        cy.get('tbody > :nth-child(3) > :nth-child(6) i.computer.icon').should('have.class', 'link');
-        cy.get('tbody > :nth-child(3) > :nth-child(6) i.refresh.icon').should('have.class', 'link');
-        cy.get('tbody > :nth-child(3) > :nth-child(6) i.cogs.icon').should('have.class', 'link');
+        checkData(1, 'rome', '10.239.0.50', 'install completed', 'green');
+        checkData(2, 'london', '10.239.10.56', 'get_status completed', 'yellow');
+        checkData(3, 'new-york', '10.239.5.160', 'heal started', 'red');
     });
 
     it('allows checking last execution status details', () => {
-        cy.get('tbody > :nth-child(1) > :nth-child(4) div.label').trigger('mouseover');
-        cy.get('.popup .header').should('have.text', 'Last Execution');
-        cy.get('tbody > :nth-child(1) > :nth-child(4) div.label').trigger('mouseout');
+        const checkLastExecution = rowNumber => {
+            cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(4) div.label`).trigger('mouseover');
+            cy.get('.popup .header').should('have.text', 'Last Execution');
+            cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(4) div.label`).trigger('mouseout');
+        };
 
-        cy.get('tbody > :nth-child(2) > :nth-child(4) div.label').trigger('mouseover');
-        cy.get('.popup .header').should('have.text', 'Last Execution');
-        cy.get('tbody > :nth-child(2) > :nth-child(4) div.label').trigger('mouseout');
-
-        cy.get('tbody > :nth-child(3) > :nth-child(4) div.label').trigger('mouseover');
-        cy.get('.popup .header').should('have.text', 'Last Execution');
-        cy.get('tbody > :nth-child(3) > :nth-child(4) div.label').trigger('mouseout');
+        checkLastExecution(1);
+        checkLastExecution(2);
+        checkLastExecution(3);
     });
 
     it('allows checking deployment cluster status details', () => {
-        cy.get('tbody > :nth-child(1) > :nth-child(5) i.statusIcon').trigger('mouseover');
-        cy.get('table.servicesData').should('be.visible');
-        cy.get('table.servicesData').within(() => {
-            cy.get('tbody tr:nth-child(1)').should('have.text', ' Manager');
-            cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', styles.ok);
-            cy.get('tbody tr:nth-child(2)').should('have.text', ' Database');
-            cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', styles.ok);
-            cy.get('tbody tr:nth-child(3)').should('have.text', ' Message Broker');
-            cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles.ok);
-        });
-        cy.get('tbody > :nth-child(1) > :nth-child(5) i.statusIcon').trigger('mouseout');
+        const checkServiceRow = (rowNumber, managerStatus, databaseStatus, brokerStatus) => {
+            cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseover');
+            cy.get('table.servicesData').should('be.visible');
+            cy.get('table.servicesData').within(() => {
+                cy.get('tbody tr:nth-child(1)').should('have.text', ' Manager');
+                cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', styles[managerStatus]);
+                cy.get('tbody tr:nth-child(2)').should('have.text', ' Database');
+                cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', styles[databaseStatus]);
+                cy.get('tbody tr:nth-child(3)').should('have.text', ' Message Broker');
+                cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles[brokerStatus]);
+            });
+            cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseout');
+        };
 
-        cy.get('tbody > :nth-child(2) > :nth-child(5) i.statusIcon').trigger('mouseover');
-        cy.get('table.servicesData').should('be.visible');
-        cy.get('table.servicesData').within(() => {
-            cy.get('tbody tr:nth-child(1)').should('have.text', ' Manager');
-            cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', styles.degraded);
-            cy.get('tbody tr:nth-child(2)').should('have.text', ' Database');
-            cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', styles.ok);
-            cy.get('tbody tr:nth-child(3)').should('have.text', ' Message Broker');
-            cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles.ok);
-        });
-        cy.get('tbody > :nth-child(2) > :nth-child(5) i.statusIcon').trigger('mouseout');
-
-        cy.get('tbody > :nth-child(3) > :nth-child(5) i.statusIcon').trigger('mouseover');
-        cy.get('table.servicesData').should('be.visible');
-        cy.get('table.servicesData').within(() => {
-            cy.get('tbody tr:nth-child(1)').should('have.text', ' Manager');
-            cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', styles.ok);
-            cy.get('tbody tr:nth-child(2)').should('have.text', ' Database');
-            cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', styles.ok);
-            cy.get('tbody tr:nth-child(3)').should('have.text', ' Message Broker');
-            cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles.fail);
-        });
-        cy.get('tbody > :nth-child(3) > :nth-child(5) i.statusIcon').trigger('mouseout');
+        checkServiceRow(1, 'OK', 'OK', 'OK');
+        checkServiceRow(2, 'Degraded', 'OK', 'OK');
+        checkServiceRow(3, 'OK', 'OK', 'Fail');
     });
 
     it('allows to do status refresh of selected spire deployment', () => {
@@ -141,14 +113,23 @@ describe('Spire Manager widget', () => {
     });
 
     it('allows to do bulk status refresh of spire deployments', () => {
+        const checkLoading = rowNumber =>
+            cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i`).should('have.class', 'loading');
+        const checkStatus = (rowNumber, expectedColor) =>
+            cy
+                .get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon.heartbeat`)
+                .should('have.class', expectedColor);
+
         cy.get('th > div.checkbox').click();
         cy.get('div.actionField > div:nth-child(1) > button').click();
-        cy.get('tbody > :nth-child(1) > :nth-child(5) i').should('have.class', 'loading');
-        cy.get('tbody > :nth-child(2) > :nth-child(5) i').should('have.class', 'loading');
-        cy.get('tbody > :nth-child(3) > :nth-child(5) i').should('have.class', 'loading');
-        cy.get('tbody > :nth-child(1) > :nth-child(5) i.statusIcon.heartbeat').should('have.class', 'green');
-        cy.get('tbody > :nth-child(2) > :nth-child(5) i.statusIcon.heartbeat').should('have.class', 'yellow');
-        cy.get('tbody > :nth-child(3) > :nth-child(5) i.statusIcon.heartbeat').should('have.class', 'red');
+
+        checkLoading(1);
+        checkLoading(2);
+        checkLoading(3);
+
+        checkStatus(1, 'green');
+        checkStatus(2, 'yellow');
+        checkStatus(3, 'red');
     });
 
     it('allows to execute workflow on spire deployment', () => {
@@ -167,30 +148,26 @@ describe('Spire Manager widget', () => {
     });
 
     it('allows to do bulk workflow execution on spire deployments', () => {
+        const waitForExecutionsRequest = id =>
+            cy
+                .wait('@postExecutions')
+                .its('request.body')
+                .should('contain', {
+                    deployment_id: id,
+                    workflow_id: 'install'
+                });
+
         cy.get('th > div.checkbox').click();
         cy.get('div.actionField > div:nth-child(2) > button').click();
         cy.get('.popupMenu').should('be.visible');
         cy.get('[option-value="install"]').click();
         cy.get('.modal').should('be.visible');
         cy.get('.actions > .green').click();
-        cy.wait('@postExecutions')
-            .its('request.body')
-            .should('contain', {
-                deployment_id: 'rome',
-                workflow_id: 'install'
-            });
-        cy.wait('@postExecutions')
-            .its('request.body')
-            .should('contain', {
-                deployment_id: 'london',
-                workflow_id: 'install'
-            });
-        cy.wait('@postExecutions')
-            .its('request.body')
-            .should('contain', {
-                deployment_id: 'new-york',
-                workflow_id: 'install'
-            });
+
+        waitForExecutionsRequest('rome');
+        waitForExecutionsRequest('london');
+        waitForExecutionsRequest('new-york');
+
         cy.get('.modal').should('not.be.visible');
     });
 });
