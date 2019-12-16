@@ -56,7 +56,6 @@ describe('Spire Manager widget', () => {
         cy.get('.pageMenuItem.active').click(); // to refresh widget data
 
         // Wait to load Spire Manager widget
-        cy.get('.managersWidget .loadingSegment').should('be.visible');
         cy.wait('@getSpireDeployments');
         cy.get('.managersWidget .loadingSegment').should('not.be.visible');
 
