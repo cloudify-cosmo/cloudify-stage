@@ -24,28 +24,28 @@ describe('Spire Manager widget', () => {
                 method: 'GET',
                 url: '/console/wb/get_spire_deployments',
                 response: data
-            });
+            }).as('getSpireDeployments');
         });
         cy.fixture('cluster_status/ok.json').then(data => {
             cy.route({
                 method: 'GET',
                 url: '/console/wb/get_cluster_status?deploymentId=rome',
                 response: data
-            });
+            }).as('getClusterStatusForRome');
         });
         cy.fixture('cluster_status/degraded.json').then(data => {
             cy.route({
                 method: 'GET',
                 url: '/console/wb/get_cluster_status?deploymentId=london',
                 response: data
-            });
+            }).as('getClusterStatusForLondon');
         });
         cy.fixture('cluster_status/fail.json').then(data => {
             cy.route({
                 method: 'GET',
                 url: '/console/wb/get_cluster_status?deploymentId=new-york',
                 response: data
-            });
+            }).as('getClusterStatusForNewYork');
         });
         cy.route({
             method: 'POST',
@@ -54,6 +54,22 @@ describe('Spire Manager widget', () => {
         }).as('postExecutions');
 
         cy.get('.pageMenuItem.active').click(); // to refresh widget data
+
+        // Wait to load Spire Manager widget
+        cy.get('.managersWidget .loadingSegment').should('be.visible');
+        cy.wait('@getSpireDeployments');
+        cy.get('.managersWidget .loadingSegment').should('not.be.visible');
+
+        // Wait to load Spire Deployments status
+        const waitToLoadStatus = rowNumber => {
+            cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i`).should('not.have.class', 'loading');
+        };
+        cy.wait('@getClusterStatusForRome');
+        cy.wait('@getClusterStatusForLondon');
+        cy.wait('@getClusterStatusForNewYork');
+        waitToLoadStatus(1);
+        waitToLoadStatus(2);
+        waitToLoadStatus(3);
     });
 
     it('presents data properly', () => {
@@ -88,6 +104,7 @@ describe('Spire Manager widget', () => {
 
     it('allows checking deployment cluster status details', () => {
         const checkServiceRow = (rowNumber, managerStatus, databaseStatus, brokerStatus) => {
+            cy.get('table.servicesData').should('not.be.visible');
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseover');
             cy.get('table.servicesData').should('be.visible');
             cy.get('table.servicesData').within(() => {
@@ -99,6 +116,7 @@ describe('Spire Manager widget', () => {
                 cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles[brokerStatus]);
             });
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseout');
+            cy.get('table.servicesData').should('not.be.visible');
         };
 
         checkServiceRow(1, 'OK', 'OK', 'OK');
