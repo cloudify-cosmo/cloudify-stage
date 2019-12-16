@@ -22,6 +22,11 @@ describe('Sites Management', () => {
     const siteAlreadyExists = { name: 'Tel-Aviv', error: 'already exists', check: 'it already exists' };
     const invalidSites = [siteWithInvalidName, siteWithInvalidLocation, siteAlreadyExists];
 
+    const reloadSiteManagementPage = () => {
+        cy.get('.pageMenuItem.active').click();
+        cy.get('.widget .loadingSegment').should('not.be.visible');
+    };
+
     const createSite = site => {
         cy.get('.actionField > .ui').as('createSiteButton');
         cy.get('@createSiteButton').click();
@@ -52,13 +57,16 @@ describe('Sites Management', () => {
     const createInvalidSite = site => {
         if (site.error === 'already exists') {
             cy.createSite(siteWithLocation);
-            cy.reload().waitUntilLoaded();
         }
         createSite(site);
 
         // Verify error
         cy.get('.form > .error').should('be.visible', true);
         cy.get('.list > .content').contains(site.error);
+
+        // Close modal
+        cy.get('.actions > .basic').as('cancelButton');
+        cy.get('@cancelButton').click();
     };
 
     const verifySiteRow = (index, site) => {
@@ -96,20 +104,21 @@ describe('Sites Management', () => {
     };
 
     before(() => {
-        cy.activate('valid_spire_license').login();
+        cy.activate('valid_spire_license')
+            .deleteAllUsersAndTenants()
+            .login();
         cy.get('.usersMenu')
             .click()
             .contains('Reset Templates')
             .click();
         cy.contains('Yes').click();
         cy.get('#loader');
-        cy.waitUntilLoaded();
+        cy.visit('/console/page/site_management').waitUntilLoaded();
     });
 
     beforeEach(function() {
-        cy.restoreState();
         cy.deleteSites();
-        cy.visit('/console/page/site_management').waitUntilLoaded();
+        reloadSiteManagementPage();
     });
 
     it('create new site with location', () => {
@@ -148,7 +157,7 @@ describe('Sites Management', () => {
 
     it('list all sites', () => {
         cy.createSites(sites);
-        cy.reload().waitUntilLoaded();
+        reloadSiteManagementPage();
 
         cy.get('.sitesWidget').should('be.visible', true);
 
@@ -159,7 +168,7 @@ describe('Sites Management', () => {
 
     it('update a site with location changed with text input', () => {
         cy.createSite(siteWithLocation);
-        cy.reload().waitUntilLoaded();
+        reloadSiteManagementPage();
 
         cy.get('.edit').click();
         cy.get(':nth-child(2) > .field > .ui > input').as('name');
@@ -181,7 +190,7 @@ describe('Sites Management', () => {
 
     it('update a site with location changed with map', () => {
         cy.createSite(siteWithLocation);
-        cy.reload().waitUntilLoaded();
+        reloadSiteManagementPage();
 
         cy.get('.edit').click();
 
@@ -198,10 +207,10 @@ describe('Sites Management', () => {
 
     it('update the visibility of a site', () => {
         cy.createSite(siteWithPrivateVisibility);
-        cy.reload().waitUntilLoaded();
+        reloadSiteManagementPage();
 
         // Change the visibility to tenant
-        cy.get('.red').click();
+        cy.get('.red.lock').click();
         cy.get('.green > .visible').click();
         cy.get('.primary').click();
 
@@ -210,7 +219,8 @@ describe('Sites Management', () => {
 
     it('cancel site delete', () => {
         cy.createSite(siteWithLocation);
-        cy.reload().waitUntilLoaded();
+        reloadSiteManagementPage();
+
         cy.get('.trash').click();
 
         // Click the No button
@@ -219,7 +229,8 @@ describe('Sites Management', () => {
 
     it('delete all sites', () => {
         cy.createSites(sites);
-        cy.reload().waitUntilLoaded();
+        reloadSiteManagementPage();
+
         for (let i = sites.length; i > 0; i--) {
             deleteSite(i);
         }
@@ -243,7 +254,8 @@ describe('Sites Management', () => {
         cy.get('.leaflet-marker-icon');
 
         cy.createSite(siteWithPrivateVisibility);
-        cy.reload();
+
+        reloadSiteManagementPage();
 
         cy.get('.leaflet-marker-icon').should('have.length', 2);
     });

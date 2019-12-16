@@ -20,6 +20,24 @@ module.exports = (function() {
         return call(consts.ALLOWED_METHODS_OBJECT.get, url, params, null, headers);
     }
 
+    function doGetFull(url, params, headers, fullData = { items: [] }, size = 0) {
+        params._size = 1000;
+        params._offset = size;
+
+        const promise = this.doGet(url, params, headers);
+
+        return promise.then(data => {
+            size += data.items.length;
+            fullData.items = _.concat(fullData.items, data.items);
+            const total = _.get(data, 'metadata.pagination.total');
+
+            if (total > size) {
+                return this.doGetFull(url, params, headers, fullData, size);
+            }
+            return fullData;
+        });
+    }
+
     function doPost(url, params, data, headers) {
         return call(consts.ALLOWED_METHODS_OBJECT.post, url, params, data, headers);
     }
@@ -39,6 +57,7 @@ module.exports = (function() {
     return {
         call,
         doGet,
+        doGetFull,
         doPost,
         doDelete,
         doPut,

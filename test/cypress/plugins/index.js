@@ -12,12 +12,8 @@
 // the project's config changing)
 
 module.exports = (on, config) => {
-    if (config.env.dev) {
-        config.baseUrl = 'http://localhost:4000';
-    } else if (process.env.STAGE_E2E_MANAGER_URL) {
+    if (process.env.STAGE_E2E_MANAGER_URL) {
         config.baseUrl = `http://${process.env.STAGE_E2E_MANAGER_URL}`;
-    } else {
-        throw new Error('Environmental variable STAGE_E2E_MANAGER_URL not set.');
     }
 
     console.info(`Testing on: ${config.baseUrl}`);

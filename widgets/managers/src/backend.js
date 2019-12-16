@@ -73,4 +73,73 @@ module.exports = r => {
             .then(clusterStatus => res.send(clusterStatus))
             .catch(error => next(error));
     });
+
+    r.register('get_spire_deployments', 'GET', (req, res, next, helper) => {
+        const _ = require('lodash');
+        // const logger = helper.Logger('get_spire_deployments');
+
+        const { headers } = req;
+        const extractedHeaders = {
+            tenant: headers.tenant,
+            'Authentication-Token': headers['authentication-token']
+        };
+        let spireDeployments = [];
+
+        return helper.Manager.doGetFull(
+            '/deployments',
+            {
+                _include: 'id,workflows,capabilities,description',
+                description:
+                    'This blueprint creates several VMs, installs a Cloudify Manager on each of them, ' +
+                    'creates a Cloudify Spire Management Cluster between all the managers and uploads ' +
+                    'several auxiliary resources to the cluster.\n'
+            },
+            extractedHeaders
+        )
+            .then(data => {
+                spireDeployments = data.items;
+                const capabilitiesPromises = _.map(spireDeployments, deployment =>
+                    helper.Manager.doGet(`/deployments/${deployment.id}/capabilities`, null, extractedHeaders)
+                );
+
+                const executionsPromise = helper.Manager.doGet(
+                    '/executions',
+                    {
+                        _sort: '-ended_at',
+                        deployment_id: _.map(spireDeployments, deployment => deployment.id)
+                    },
+                    extractedHeaders
+                );
+
+                return Promise.all([executionsPromise, ...capabilitiesPromises]);
+            })
+            .then(([executions, ...spireDeploymentsCapabilities]) => {
+                const executionsData = _.groupBy(executions.items, 'deployment_id');
+
+                return Promise.resolve({
+                    items: _.sortBy(
+                        _.map(spireDeploymentsCapabilities, deploymentCapabilities => {
+                            const spireDeploymentId = deploymentCapabilities.deployment_id;
+                            const spireEndpointIp = _.get(deploymentCapabilities.capabilities, 'endpoint', '');
+                            const deployment = _.find(
+                                spireDeployments,
+                                d => d.id === deploymentCapabilities.deployment_id
+                            );
+                            const workflows = _.get(deployment, 'workflows', []);
+
+                            return {
+                                id: spireDeploymentId,
+                                ip: spireEndpointIp,
+                                workflows,
+                                lastExecution: _.first(executionsData[spireDeploymentId])
+                            };
+                        }),
+                        'id'
+                    ),
+                    total: _.size(spireDeploymentsCapabilities)
+                });
+            })
+            .then(data => res.send(data))
+            .catch(error => next(error));
+    });
 };
