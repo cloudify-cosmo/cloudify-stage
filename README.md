@@ -19,7 +19,7 @@ The following requirements should be met prior starting the application:
         docker pull postgres
         docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
         ```
-- Cloudify Manager (version >= 4.x) accessible from your local machine
+- [Cloudify Manager](https://cloudify.co/download) (version >= 5.x) accessible from your local machine
 
 ## Setup
 
@@ -41,14 +41,16 @@ To setup development environment and start the application follow the steps belo
 1. **Application start**
 
    You can run the application by starting the stage backend server and starting [webpack dev server](https://webpack.js.org/configuration/dev-server/) serving client side:
-   * In 'backend' folder, run `npm run devStart` to start backend server (Notice: you will need to have write permissions to `/var/log/cloudify/stage`). For more information and troubleshooting visit [backend](./backend).
+   * In `backend` folder, run `npm run devStart` to start backend server   
+     **NOTE**: you will need to have write permissions to `/var/log/cloudify/stage`). 
+     For more information and troubleshooting visit [backend](./backend).
+   
    * And also run `npm run devServer` to start webpack dev server.
 
 At this point you should have development environment configured and running. Open [http://localhost:4000](http://localhost:4000) page in your web-browser to see if application is running.
 
-Changes in the source code shall be hot loaded to the development version of the application:
-- for changes in [app](./app) directory you don't need to reload page, 
-- for changes in [widgets](./widgets) directory you need to reload page to see your updates,
+Changes in the source code shall be loaded to the development version of the application: 
+- for changes in [app](./app) and [widgets](./widgets) directory you need to reload page to see your updates,
 - for changes in [backend](./backend) directory you don't need to reload page as backend server will automatically be restarted.
 
 ## Package
@@ -121,3 +123,6 @@ Go to [test/README.md](./test/README.md).
    
    See [this](./doc/README.md) to learn how this project is documented.
 
+## Support
+
+To get community support join [Cloudify Community Slack](https://cloudify.co/slack/). 

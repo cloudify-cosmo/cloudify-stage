@@ -2,6 +2,8 @@
  * Created by jakub.niezgoda on 25/10/2018.
  */
 
+import Actions from './actions';
+
 export default class RefreshIcon extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -14,11 +16,13 @@ export default class RefreshIcon extends React.Component {
     static propTypes = {
         manager: PropTypes.object.isRequired,
         toolbox: PropTypes.object.isRequired,
+        onStart: PropTypes.func,
         onSuccess: PropTypes.func,
         onFail: PropTypes.func
     };
 
     static defaultProps = {
+        onStart: _.noop,
         onSuccess: _.noop,
         onFail: _.noop
     };
@@ -28,21 +32,12 @@ export default class RefreshIcon extends React.Component {
 
         this.setState({ loading: true });
 
-        const executionStatusCheckInterval = 2000; // ms
-        const { DeploymentActions, ExecutionActions } = Stage.Common;
         const managerId = this.props.manager.id;
-        const deploymentActions = new DeploymentActions(this.props.toolbox);
-        const executionActions = new ExecutionActions(this.props.toolbox);
+        const actions = new Actions(this.props.toolbox);
 
-        return deploymentActions
-            .doExecute({ id: managerId }, { name: 'get_status' }, {})
-            .then(result => {
-                this.props.toolbox.refresh();
-                return executionActions.waitUntilFinished(result.id, executionStatusCheckInterval);
-            })
-            .then(result => this.props.onSuccess(result))
-            .catch(error => this.props.onFail(error.message))
-            .finally(() => this.setState({ loading: false }));
+        return actions.getClusterStatus(managerId, this.props.onStart, this.props.onSuccess, this.props.onFail, () =>
+            this.setState({ loading: false })
+        );
     }
 
     render() {

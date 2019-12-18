@@ -501,7 +501,7 @@ a:hover {
   }
 }
 
-.tenantsMenu, .managerMenu, .helpMenu {
+.tenantsMenu, .helpMenu {
   .dropdown.icon {
     margin: 0 0 0 0.4em !important;
     vertical-align: middle;
@@ -535,10 +535,6 @@ table.servicesData button.refreshButton {
 
 .managerVersion {
   font-size: 0.8em;
-}
-
-.managerMenu:hover {
-  cursor: pointer;
 }
 
 .ui.menu:not(.vertical) .item.configPanel {

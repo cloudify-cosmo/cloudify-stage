@@ -62,10 +62,12 @@ import {
     VisibilityField,
     VisibilityIcon
 } from 'cloudify-ui-components';
-import ExecutionStatus from './ExecutionStatus';
 
+import Cluster from './cluster';
+import ExecutionStatus from './ExecutionStatus';
 import GenericField from './form/GenericField';
 import Graphs from './graphs';
+import IdPopup from './IdPopup';
 import Leaflet from './leaflet';
 import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
 import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
@@ -88,6 +90,7 @@ export {
     Card,
     Checkbox,
     Checkmark,
+    Cluster,
     Confirm,
     Container,
     CopyToClipboardButton,
@@ -107,6 +110,7 @@ export {
     Header,
     HighlightText,
     Icon,
+    IdPopup,
     Image,
     Input,
     Item,

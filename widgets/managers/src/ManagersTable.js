@@ -7,8 +7,8 @@ import ExecuteWorkflowButton from './ExecuteWorkflowButton';
 import ExecuteWorkflowIcon from './ExecuteWorkflowIcon';
 import RefreshButton from './RefreshButton';
 import RefreshIcon from './RefreshIcon';
-import SlavesDetails from './SlavesDetails';
 import StatusIcon from './StatusIcon';
+import Actions from './actions';
 
 export default class ManagersTable extends React.Component {
     constructor(props, context) {
@@ -22,8 +22,18 @@ export default class ManagersTable extends React.Component {
             selectedManagers: [],
             showDeploymentUpdateDetailsModal: false,
             showExecuteWorkflowModal: false,
-            workflow: { name: '', parameters: [] }
+            workflow: { name: '', parameters: [] },
+            status: _(props.data.items)
+                .mapKeys(manager => manager.id)
+                .mapValues(() => ({ isFetching: false, status: {} }))
+                .value()
         };
+
+        this.actions = new Actions(this.props.toolbox);
+        this.handleStatusFetching = this.handleStatusFetching.bind(this);
+        this.handleStatusBulkFetching = this.handleStatusBulkFetching.bind(this);
+        this.handleStatusUpdate = this.handleStatusUpdate.bind(this);
+        this.handleStatusError = this.handleStatusError.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -40,6 +50,29 @@ export default class ManagersTable extends React.Component {
 
     componentDidMount() {
         this.props.toolbox.getEventBus().on('managers:refresh', this.refreshData, this);
+
+        const managerIds = _.map(this.props.data.items, 'id');
+        this.handleStatusBulkFetching(managerIds);
+        _.forEach(managerIds, managerId =>
+            this.actions.getClusterStatus(managerId, _.noop, this.handleStatusUpdate, this.handleStatusError)
+        );
+    }
+
+    componentDidUpdate(prevProps) {
+        const newManagers = _.get(this.props, 'data.items', []);
+        const oldManagers = _.get(prevProps, 'data.items', []);
+
+        if (!_.isEqual(oldManagers, newManagers)) {
+            const managerIds = _.map(newManagers, 'id');
+
+            const { status } = this.state;
+            const currentStatus = _.pick(status, managerIds);
+            const emptyStatusForAllManagers = _(newManagers)
+                .mapKeys('id')
+                .mapValues(() => ({ isFetching: false, status: {} }))
+                .value();
+            this.setState({ status: { ...emptyStatusForAllManagers, ...currentStatus } });
+        }
     }
 
     componentWillUnmount() {
@@ -97,8 +130,25 @@ export default class ManagersTable extends React.Component {
         );
     }
 
-    showError(errorMessage) {
-        this.setState({ error: `Last action has failed with error: ${errorMessage}` });
+    handleStatusFetching(managerId) {
+        this.setState({ status: { ...this.state.status, [managerId]: { isFetching: true, status: {} } } });
+    }
+
+    handleStatusBulkFetching(managerIds) {
+        const newStatus = {};
+        _.forEach(managerIds, managerId => {
+            newStatus[managerId] = { isFetching: true, status: {} };
+        });
+        this.setState({ status: { ...this.state.status, ...newStatus } });
+    }
+
+    handleStatusUpdate(managerId, status) {
+        this.setState({ status: { ...this.state.status, [managerId]: { isFetching: false, status } } });
+    }
+
+    handleStatusError(managerId, errorMessage) {
+        this.setState({ status: { ...this.state.status, [managerId]: { isFetching: false, status: {} } } });
+        this.setState({ error: `Status update for ${managerId} has failed.` });
     }
 
     render() {
@@ -153,69 +203,65 @@ export default class ManagersTable extends React.Component {
 
                     {_.map(this.props.data.items, manager => {
                         const inSelectedManagers = _.includes(selectedManagers, manager.id);
+                        const { isFetching, status } = _.get(this.state.status, manager.id, {
+                            isFetching: false,
+                            status: {}
+                        });
 
                         return (
-                            <DataTable.RowExpandable
+                            <DataTable.Row
                                 key={manager.id}
-                                expanded={manager.id === this.state.selectedManagerId}
+                                selected={manager.id === this.state.selectedManagerId}
+                                onClick={this.selectManager.bind(this, manager)}
                             >
-                                <DataTable.Row
-                                    key={manager.id}
-                                    selected={manager.id === this.state.selectedManagerId}
-                                    onClick={this.selectManager.bind(this, manager)}
-                                >
-                                    <DataTable.Data>
-                                        <Checkbox
-                                            checked={inSelectedManagers}
-                                            onChange={() =>
-                                                inSelectedManagers
-                                                    ? this.setState({
-                                                          selectedManagers: _.filter(
-                                                              selectedManagers,
-                                                              id => id !== manager.id
-                                                          )
-                                                      })
-                                                    : this.setState({
-                                                          selectedManagers: [...selectedManagers, manager.id]
-                                                      })
-                                            }
-                                            onClick={e => e.stopPropagation()}
-                                        />
-                                    </DataTable.Data>
-                                    <DataTable.Data>{manager.id}</DataTable.Data>
-                                    <DataTable.Data>{manager.ip}</DataTable.Data>
-                                    <DataTable.Data>
-                                        <LastExecutionStatusIcon
-                                            execution={manager.lastExecution}
-                                            onShowLogs={() => this.showLogs(manager.id, manager.lastExecution.id)}
-                                            onShowUpdateDetails={this.openDeploymentUpdateDetailsModal.bind(this)}
-                                            onActOnExecution={this.actOnExecution.bind(this)}
-                                            showLabel
-                                            labelAttached={false}
-                                        />
-                                    </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-                                        <StatusIcon status={manager.status} error={manager.error} />
-                                    </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
-                                        <ConsoleIcon manager={manager} />
-                                        <RefreshIcon
-                                            manager={manager}
-                                            toolbox={this.props.toolbox}
-                                            onSuccess={this.refreshData.bind(this)}
-                                            onFail={this.showError.bind(this)}
-                                        />
-                                        <ExecuteWorkflowIcon
-                                            workflows={manager.workflows}
-                                            onClick={this.openExecuteWorkflowModal.bind(this, manager.id, false)}
-                                        />
-                                    </DataTable.Data>
-                                </DataTable.Row>
-
-                                <DataTable.DataExpandable key={manager.id}>
-                                    <SlavesDetails slaves={manager.slaves} />
-                                </DataTable.DataExpandable>
-                            </DataTable.RowExpandable>
+                                <DataTable.Data>
+                                    <Checkbox
+                                        checked={inSelectedManagers}
+                                        onChange={() =>
+                                            inSelectedManagers
+                                                ? this.setState({
+                                                      selectedManagers: _.filter(
+                                                          selectedManagers,
+                                                          id => id !== manager.id
+                                                      )
+                                                  })
+                                                : this.setState({
+                                                      selectedManagers: [...selectedManagers, manager.id]
+                                                  })
+                                        }
+                                        onClick={e => e.stopPropagation()}
+                                    />
+                                </DataTable.Data>
+                                <DataTable.Data>{manager.id}</DataTable.Data>
+                                <DataTable.Data>{manager.ip}</DataTable.Data>
+                                <DataTable.Data>
+                                    <LastExecutionStatusIcon
+                                        execution={manager.lastExecution}
+                                        onShowLogs={() => this.showLogs(manager.id, manager.lastExecution.id)}
+                                        onShowUpdateDetails={this.openDeploymentUpdateDetailsModal.bind(this)}
+                                        onActOnExecution={this.actOnExecution.bind(this)}
+                                        showLabel
+                                        labelAttached={false}
+                                    />
+                                </DataTable.Data>
+                                <DataTable.Data className="center aligned">
+                                    <StatusIcon status={status} isFetching={isFetching} />
+                                </DataTable.Data>
+                                <DataTable.Data className="center aligned">
+                                    <ConsoleIcon manager={manager} />
+                                    <RefreshIcon
+                                        manager={manager}
+                                        toolbox={this.props.toolbox}
+                                        onStart={this.handleStatusFetching}
+                                        onSuccess={this.handleStatusUpdate}
+                                        onFail={this.handleStatusError}
+                                    />
+                                    <ExecuteWorkflowIcon
+                                        workflows={manager.workflows}
+                                        onClick={this.openExecuteWorkflowModal.bind(this, manager.id, false)}
+                                    />
+                                </DataTable.Data>
+                            </DataTable.Row>
                         );
                     })}
 
@@ -223,8 +269,9 @@ export default class ManagersTable extends React.Component {
                         <RefreshButton
                             managers={selectedManagers}
                             toolbox={this.props.toolbox}
-                            onSuccess={this.refreshData.bind(this)}
-                            onFail={this.showError.bind(this)}
+                            onStart={this.handleStatusBulkFetching}
+                            onSuccess={this.handleStatusUpdate}
+                            onFail={this.handleStatusError}
                         />
                         <ExecuteWorkflowButton
                             managers={selectedManagers}

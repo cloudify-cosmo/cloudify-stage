@@ -72,10 +72,7 @@ export default class Header extends Component {
                 <div className="right menu">
                     {!this.isModeCustomer() && (
                         <div className="item" style={{ margin: 0, padding: 0 }}>
-                            <Manager
-                                managerStatus={_.get(manager, 'status.status', '')}
-                                maintenanceStatus={_.get(manager, 'maintenance', '')}
-                            />
+                            <Manager />
                         </div>
                     )}
                     {this.isModeMain() && <Tenants manager={manager} />}

@@ -2,16 +2,18 @@
  * Created by kinneretzin on 29/08/2016.
  */
 
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import Services from '../../containers/Services';
+import { Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal, MessageContainer } from '../basic';
 import Banner from '../../containers/banner/Banner';
 import Consts from '../../utils/consts';
-import StatusPoller from '../../utils/StatusPoller';
-import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import ClusterServicesList from '../basic/cluster/ClusterServicesList';
 import FullScreenSegment from '../layout/FullScreenSegment';
-import { Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal, MessageContainer } from '../basic';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import StageUtils from '../../utils/stageUtils';
+import StatusPoller from '../../utils/StatusPoller';
+import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 
 export default class MaintenanceModePageMessage extends Component {
     constructor(props, context) {
@@ -20,22 +22,18 @@ export default class MaintenanceModePageMessage extends Component {
         this.state = {
             showMaintenanceModal: false
         };
-    }
-
-    static propTypes = {
-        manager: PropTypes.object.isRequired,
-        canMaintenanceMode: PropTypes.bool.isRequired,
-        showServicesStatus: PropTypes.bool.isRequired
-    };
-
-    componentDidUpdate() {
-        if (this.props.manager.maintenance !== Consts.MAINTENANCE_ACTIVATED) {
-            this.props.navigateToHome();
-        }
+        this.toolbox = StageUtils.getToolbox(() => {}, () => {}, null);
     }
 
     componentDidMount() {
         StatusPoller.getPoller().start();
+        this.props.onGetClusterStatus();
+    }
+
+    componentDidUpdate() {
+        if (this.props.maintenanceStatus !== Consts.MAINTENANCE_ACTIVATED) {
+            this.props.navigateToHome();
+        }
     }
 
     componentWillUnmount() {
@@ -44,6 +42,9 @@ export default class MaintenanceModePageMessage extends Component {
 
     render() {
         SplashLoadingScreen.turnOff();
+
+        const { canMaintenanceMode, clusterServices, isFetchingClusterStatus, showServicesStatus } = this.props;
+        const { showMaintenanceModal } = this.state;
 
         return (
             <FullScreenSegment>
@@ -54,24 +55,28 @@ export default class MaintenanceModePageMessage extends Component {
 
                     <p>Server is on maintenance mode and is not available at the moment.</p>
 
-                    {this.props.canMaintenanceMode && (
+                    {canMaintenanceMode && (
                         <MaintenanceModeActivationButton
                             activate={false}
                             onClick={() => this.setState({ showMaintenanceModal: true })}
                         />
                     )}
 
-                    {this.props.showServicesStatus && (
-                        <div>
+                    {showServicesStatus && (
+                        <div style={{ fontSize: '1rem' }}>
                             <Divider />
-                            <Services />
+                            <SystemStatusHeader />
+
+                            {!isFetchingClusterStatus && (
+                                <ClusterServicesList services={clusterServices} toolbox={this.toolbox} />
+                            )}
                         </div>
                     )}
                 </MessageContainer>
 
-                {this.props.canMaintenanceMode && (
+                {canMaintenanceMode && (
                     <MaintenanceModeModal
-                        show={this.state.showMaintenanceModal}
+                        show={showMaintenanceModal}
                         onHide={() => this.setState({ showMaintenanceModal: false })}
                     />
                 )}
@@ -79,3 +84,13 @@ export default class MaintenanceModePageMessage extends Component {
         );
     }
 }
+
+MaintenanceModePageMessage.propTypes = {
+    canMaintenanceMode: PropTypes.bool.isRequired,
+    clusterServices: ClusterServicesList.propTypes,
+    isFetchingClusterStatus: PropTypes.bool.isRequired,
+    maintenanceStatus: PropTypes.string.isRequired,
+    navigateToHome: PropTypes.func.isRequired,
+    onGetClusterStatus: PropTypes.func.isRequired,
+    showServicesStatus: PropTypes.bool.isRequired
+};

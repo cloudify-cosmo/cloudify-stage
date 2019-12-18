@@ -50,7 +50,7 @@
         "no-loop-func": ["warn"],
         "no-multi-assign": ["warn"],
         "no-nested-ternary": ["warn"],
-        "no-param-reassign": ["warn"],
+        "no-param-reassign": ["warn", { "props": false }],
         "no-plusplus": ["warn"],
         "no-prototype-builtins": ["warn"],
         "no-redeclare": ["warn"],

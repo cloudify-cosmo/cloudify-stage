@@ -119,8 +119,8 @@ export default class extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
-        const { Button, DataTable, ErrorMessage, ResourceVisibility } = Stage.Basic;
-        const { DeleteConfirm, IdPopup, UploadPluginModal } = Stage.Common;
+        const { Button, DataTable, ErrorMessage, IdPopup, ResourceVisibility } = Stage.Basic;
+        const { DeleteConfirm, UploadPluginModal } = Stage.Common;
 
         return (
             <div>
