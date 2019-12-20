@@ -70,7 +70,6 @@ export default function ClusterServicesList({ services, toolbox }) {
                             </DataTable.Data>
                             <DataTable.Data>{node.version}</DataTable.Data>
                             <DataTable.Data>
-                                {/*TODO: Check WTF?*/}
                                 <IdPopup selected id={node.node_id} buttonPosition="right" />
                             </DataTable.Data>
                         </DataTable.Row>

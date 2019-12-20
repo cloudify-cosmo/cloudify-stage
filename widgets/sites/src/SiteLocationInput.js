@@ -4,7 +4,7 @@ export default class SiteLocationInput extends React.Component {
     /**
      * propTypes
      *
-     * @property {function} onChange - function to be called on value change
+     * @property {Function} onChange - function to be called on value change
      * @property {string} value - location, format: "<latitude>, <longitude>"
      */
     static propTypes = {

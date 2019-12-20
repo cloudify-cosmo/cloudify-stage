@@ -77,7 +77,6 @@ import NodeInstancesFilter from './NodeInstancesFilter';
 import PageFilter from './PageFilter';
 import ParameterValue from './ParameterValue';
 import ParameterValueDescription from './ParameterValueDescription';
-import RevertToDefaultIcon from './RevertToDefaultIcon';
 import Wizard from './wizard';
 
 export {
@@ -142,7 +141,6 @@ export {
     Radio,
     ResourceVisibility,
     ReadmeModal,
-    RevertToDefaultIcon,
     Segment,
     Sidebar,
     SplitterLayout,
