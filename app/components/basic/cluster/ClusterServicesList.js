@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { DataTable } from 'cloudify-ui-components';
 
-import DataTable from '../dataTable/DataTable';
 import IdPopup from '../IdPopup';
 import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';
@@ -49,7 +49,7 @@ export default function ClusterServicesList({ services, toolbox }) {
                         <DataTable.Row key={`${serviceName}_${node.name}_${node.node_id}`}>
                             {index === 0 && (
                                 <DataTable.Data
-                                    rowsSpan={numberOfNodes}
+                                    rowSpan={numberOfNodes}
                                     style={{ backgroundColor: clusterServiceBgColor(service.status) }}
                                 >
                                     <ClusterService isExternal={service.is_external} name={serviceName} />
@@ -70,6 +70,7 @@ export default function ClusterServicesList({ services, toolbox }) {
                             </DataTable.Data>
                             <DataTable.Data>{node.version}</DataTable.Data>
                             <DataTable.Data>
+                                {/*TODO: Check WTF?*/}
                                 <IdPopup selected id={node.node_id} buttonPosition="right" />
                             </DataTable.Data>
                         </DataTable.Row>

@@ -4,8 +4,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Label } from 'semantic-ui-react';
+import { Popup } from 'cloudify-ui-components';
 import CopyToClipboardButton from './CopyToClipboardButton';
-import Popup from './Popup';
 
 export default class IdPopup extends React.Component {
     static buttonPositions = Object.freeze({
