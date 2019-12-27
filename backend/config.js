@@ -9,6 +9,7 @@ let userConfig = require('../conf/userConfig.json');
 
 try {
     const userDataConfigPath = Utils.getResourcePath('userConfig.json', true);
+    // eslint-disable-next-line import/no-dynamic-require
     let userDataConfig = require(userDataConfigPath);
     userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig, { safe: true }))); // Security reason - get only allowed parameters
     userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration

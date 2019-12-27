@@ -9,10 +9,20 @@
     "parser": "babel-eslint",
     "plugins": [
         "jsdoc",
-        "prettier"
+        "prettier",
+        "security"
     ],
     "rules": {
         "prettier/prettier": ["error"],
+        "security/detect-buffer-noassert": "error",
+        "security/detect-child-process": "error",
+        "security/detect-disable-mustache-escape": "error",
+        "security/detect-eval-with-expression": "error",
+        "security/detect-new-buffer": "error",
+        "security/detect-no-csrf-before-method-override": "error",
+        "security/detect-possible-timing-attacks": "error",
+        "security/detect-pseudoRandomBytes": "error",
+        "security/detect-unsafe-regex": "error",
 
         // FIXME: All below listed rules are off only during transition period. We need to remove them as we update the code.
         "array-callback-return": ["warn"],
@@ -26,7 +36,6 @@
         "import/extensions": ["warn"],
         "import/named": ["warn"],
         "import/no-cycle": ["warn"],
-        "import/no-dynamic-require": ["warn"],
         "import/no-extraneous-dependencies": ["warn"],
         "import/no-unresolved": ["warn"],
         "import/order": ["warn"],
@@ -97,6 +106,9 @@
         "react/require-default-props": ["warn"],
         "react/sort-comp": ["warn"],
         "react/static-property-placement": ["warn"],
+        "security/detect-non-literal-fs-filename": "warn",
+        "security/detect-non-literal-regexp": "warn",
+        "security/detect-object-injection": "warn",
         "vars-on-top": ["warn"]
     },
     "settings": {

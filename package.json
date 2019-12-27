@@ -119,6 +119,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.0.1",
+    "eslint-plugin-security": "^1.4.0",
     "fetch-mock": "^7.3.3",
     "file-loader": "^1.1.11",
     "glob": "^7.1.2",
