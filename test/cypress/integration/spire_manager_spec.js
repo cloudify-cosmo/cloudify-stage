@@ -30,21 +30,24 @@ describe('Spire Manager widget', () => {
             cy.route({
                 method: 'GET',
                 url: '/console/wb/get_cluster_status?deploymentId=rome',
-                response: data
+                response: data,
+                delay: 100
             }).as('getClusterStatusForRome');
         });
         cy.fixture('cluster_status/degraded.json').then(data => {
             cy.route({
                 method: 'GET',
                 url: '/console/wb/get_cluster_status?deploymentId=london',
-                response: data
+                response: data,
+                delay: 100
             }).as('getClusterStatusForLondon');
         });
         cy.fixture('cluster_status/fail.json').then(data => {
             cy.route({
                 method: 'GET',
                 url: '/console/wb/get_cluster_status?deploymentId=new-york',
-                response: data
+                response: data,
+                delay: 100
             }).as('getClusterStatusForNewYork');
         });
         cy.route({
