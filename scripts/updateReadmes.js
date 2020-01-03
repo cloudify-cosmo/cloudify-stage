@@ -125,7 +125,10 @@ function updateFiles() {
             .then(content => updateLinks(widget, content))
             .then(content => removeHTMLTags(widget, content))
             .then(content => saveToReadmeFile(widget, content, readmePath))
-            .catch(error => console.error(error));
+            .catch(error => {
+                console.error(error);
+                process.exit(-1);
+            });
     }
 }
 
