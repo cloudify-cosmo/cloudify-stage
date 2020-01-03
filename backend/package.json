@@ -19,7 +19,8 @@
     "db-migrate-reset": "node migration reset",
     "db-migrate-down-to": "node migration downTo",
     "db-migrate-clear": "node migration clear",
-    "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'"
+    "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'",
+    "prepush": "lint-staged",
   },
   "author": "",
   "license": "Apache-2.0",
@@ -62,6 +63,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "lint-staged": "^9.5.0",
     "nodemon": "^1.18.10",
     "sequelize-cli": "^5.5.1"
   },
