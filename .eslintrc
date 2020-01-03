@@ -1,57 +1,14 @@
 {
     "extends": [
-        "airbnb",
-        "prettier",
-        "prettier/react",
         "plugin:jsdoc/recommended",
-        "plugin:cypress/recommended"
+        "plugin:cypress/recommended",
+        "./node_modules/cloudify-ui-common/eslint/eslint-common-react.json"
     ],
     "parser": "babel-eslint",
     "plugins": [
-        "jsdoc",
-        "prettier",
-        "scanjs-rules",
-        "security"
+        "jsdoc"
     ],
     "rules": {
-        "prettier/prettier": ["error"],
-        "scanjs-rules/assign_to_hostname" : "error",
-        "scanjs-rules/assign_to_href" : "error",
-        "scanjs-rules/assign_to_onmessage" : "error",
-        "scanjs-rules/assign_to_pathname" : "warn",
-        "scanjs-rules/assign_to_protocol" : "error",
-        "scanjs-rules/assign_to_search" : "warn",
-        "scanjs-rules/assign_to_src" : "error",
-        "scanjs-rules/call_Function" : "error",
-        "scanjs-rules/call_addEventListener_deviceproximity" : "error",
-        "scanjs-rules/call_addEventListener_message" : "error",
-        "scanjs-rules/call_eval" : "error",
-        "scanjs-rules/call_execScript" : "error",
-        "scanjs-rules/call_open_remote=true" : "error",
-        "scanjs-rules/call_parseFromString" : "error",
-        "scanjs-rules/call_setImmediate" : "error",
-        "scanjs-rules/identifier_indexedDB" : "error",
-        "scanjs-rules/new_Function" : "error",
-        "scanjs-rules/property_addIdleObserver" : "error",
-        "scanjs-rules/property_createContextualFragment" : "error",
-        "scanjs-rules/property_crypto": "error",
-        "scanjs-rules/property_geolocation" : "error",
-        "scanjs-rules/property_getUserMedia" : "error",
-        "scanjs-rules/property_indexedDB" : "error",
-        "scanjs-rules/property_localStorage" : "error",
-        "scanjs-rules/property_mgmt" : "error",
-        "scanjs-rules/property_sessionStorage" : "error",
-        "security/detect-buffer-noassert": "error",
-        "security/detect-child-process": "error",
-        "security/detect-disable-mustache-escape": "error",
-        "security/detect-eval-with-expression": "error",
-        "security/detect-new-buffer": "error",
-        "security/detect-no-csrf-before-method-override": "error",
-        "security/detect-object-injection": "warn",
-        "security/detect-possible-timing-attacks": "error",
-        "security/detect-pseudoRandomBytes": "error",
-        "security/detect-unsafe-regex": "error",
-
         // FIXME: All below listed rules are off only during transition period. We need to remove them as we update the code.
         "array-callback-return": ["warn"],
         "block-scoped-var": ["warn"],
@@ -87,7 +44,7 @@
         "no-loop-func": ["warn"],
         "no-multi-assign": ["warn"],
         "no-nested-ternary": ["warn"],
-        "no-param-reassign": ["warn", { "props": false }],
+        "no-param-reassign": ["warn"],
         "no-plusplus": ["warn"],
         "no-prototype-builtins": ["warn"],
         "no-redeclare": ["warn"],
@@ -134,11 +91,6 @@
         "react/require-default-props": ["warn"],
         "react/sort-comp": ["warn"],
         "react/static-property-placement": ["warn"],
-        "scanjs-rules/assign_to_location" : "warn",
-        "scanjs-rules/call_connect" : "warn",
-        "scanjs-rules/identifier_localStorage" : "warn",
-        "security/detect-non-literal-fs-filename": "warn",
-        "security/detect-non-literal-regexp": "warn",
         "vars-on-top": ["warn"]
     },
     "settings": {
@@ -148,7 +100,6 @@
     },
     "parserOptions": {
         "ecmaFeatures": {
-            "jsx": true,
             "modules": true
         }
     },
