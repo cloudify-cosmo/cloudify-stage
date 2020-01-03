@@ -20,7 +20,7 @@
     "db-migrate-down-to": "node migration downTo",
     "db-migrate-clear": "node migration clear",
     "wait-on-server": "wait-on tcp:localhost:8088 --timeout 5000 && echo 'Stage backend is up!'",
-    "pre-push": "lint-staged",
+    "pre-push": "lint-staged"
   },
   "author": "",
   "license": "Apache-2.0",
