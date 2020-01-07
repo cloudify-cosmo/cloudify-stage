@@ -6,7 +6,7 @@ Displays status of the Cloudify cluster divided into 3 cluster services:
 * Database,
 * Message Broker. 
 
-![cluster-status-widget](https://docs.cloudify.co/staging/dev/images/ui/widgets/cluster-status.png)      
+![cluster-status-widget](https://docs.cloudify.co/5.0.5/images/ui/widgets/cluster-status.png)      
 
 Cluster services can have the following statuses:
 
@@ -22,7 +22,7 @@ Each cluster node is presented with:
 * **Version**,
 * **ID** - displayed in popup on hovering ID button.
 
-![cluster-status-widget](https://docs.cloudify.co/staging/dev/images/ui/widgets/cluster-status-node-status.png)
+![cluster-status-widget](https://docs.cloudify.co/5.0.5/images/ui/widgets/cluster-status-node-status.png)
 
 #### Widget Settings
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds
