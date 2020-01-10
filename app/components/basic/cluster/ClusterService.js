@@ -12,15 +12,15 @@ export default function ClusterService({ name, isExternal }) {
     }[name];
 
     return (
-        <div style={{ verticalAlign: 'middle', padding: 10 }}>
-            {isExternal && (
-                <Label color="black" style={{ float: 'right' }}>
+        <div style={{ verticalAlign: 'middle', padding: 10, overflow: 'auto' }}>
+            <Header floated="left" style={{ margin: 0 }}>
+                <Icon name={icon} size="large" /> {clusterServiceName[name]}
+            </Header>
+            {!isExternal && (
+                <Label color="black" style={{ marginLeft: 10, float: 'right' }}>
                     External
                 </Label>
             )}
-            <Header style={{ marginTop: 0 }}>
-                <Icon name={icon} size="large" /> {clusterServiceName[name]}
-            </Header>
         </div>
     );
 }
