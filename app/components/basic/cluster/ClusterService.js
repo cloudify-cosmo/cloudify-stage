@@ -16,7 +16,7 @@ export default function ClusterService({ name, isExternal }) {
             <Header floated="left" style={{ margin: 0 }}>
                 <Icon name={icon} size="large" /> {clusterServiceName[name]}
             </Header>
-            {!isExternal && (
+            {isExternal && (
                 <Label color="black" style={{ marginLeft: 10, float: 'right' }}>
                     External
                 </Label>
