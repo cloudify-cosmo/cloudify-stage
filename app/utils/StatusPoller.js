@@ -3,6 +3,7 @@
  */
 
 import { getMaintenanceStatus } from '../actions/managers';
+import { getClusterStatus } from '../actions/clusterStatus';
 import StageUtils from './stageUtils';
 
 let singleton = null;
@@ -12,6 +13,7 @@ export default class StatusPoller {
         this._store = store;
         this._pollerTimer = null;
         this._fetchStatusPromise = null;
+        this._fetchClusterStatusPromise = null;
         this._isActive = false;
         this.interval = store.getState().config.app.maintenancePollingInterval;
     }
@@ -47,6 +49,9 @@ export default class StatusPoller {
         if (this._fetchStatusPromise) {
             this._fetchStatusPromise.cancel();
         }
+        if (this._fetchClusterStatusPromise) {
+            this._fetchClusterStatusPromise.cancel();
+        }
     }
 
     _start() {
@@ -61,8 +66,10 @@ export default class StatusPoller {
     _fetchStatus() {
         const fetchStatus = this._store.dispatch(getMaintenanceStatus(this._store.getState().manager));
         this._fetchStatusPromise = StageUtils.makeCancelable(fetchStatus);
+        const fetchClusterStatus = this._store.dispatch(getClusterStatus(true));
+        this._fetchClusterStatusPromise = StageUtils.makeCancelable(fetchClusterStatus);
 
-        return this._fetchStatusPromise.promise;
+        return Promise.all([this._fetchStatusPromise.promise, this._fetchClusterStatusPromise.promise]);
     }
 
     static create(store) {
