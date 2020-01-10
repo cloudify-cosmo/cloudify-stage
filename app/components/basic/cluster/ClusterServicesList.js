@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getClusterStatus } from '../../../actions/clusterStatus';
 import DataTable from '../dataTable/DataTable';
 import IdPopup from '../IdPopup';
 import ClusterService from './ClusterService';
@@ -26,12 +25,8 @@ PublicIP.defaultProps = {
     ip: ''
 };
 
-function ClusterServicesList({ services, toolbox, onGetClusterStatus }) {
+function ClusterServicesList({ services, toolbox }) {
     const noServicesMessage = 'There are no Cluster Services available.';
-
-    useEffect(() => {
-        onGetClusterStatus();
-    }, []);
 
     return (
         <DataTable
@@ -106,23 +101,10 @@ const clusterServiceProps = PropTypes.shape({
 
 ClusterServicesList.propTypes = {
     services: PropTypes.shape(_.mapValues(clusterServiceEnum, () => clusterServiceProps)).isRequired,
-    toolbox: PropTypes.shape({ refresh: PropTypes.func.isRequired }).isRequired,
-    onGetClusterStatus: PropTypes.func
-};
-
-ClusterServicesList.defaultProps = {
-    onGetClusterStatus: _.noop
+    toolbox: PropTypes.shape({ refresh: PropTypes.func.isRequired }).isRequired
 };
 
 const mapStateToProps = state => ({
     services: _.get(state, 'manager.clusterStatus.services', {})
 });
-const mapDispatchToProps = dispatch => ({
-    onGetClusterStatus: () => {
-        dispatch(getClusterStatus());
-    }
-});
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ClusterServicesList);
+export default connect(mapStateToProps)(ClusterServicesList);
