@@ -3,66 +3,73 @@
  */
 
 import { getMaintenanceStatus } from '../actions/managers';
+import { getClusterStatus } from '../actions/clusterStatus';
 import StageUtils from './stageUtils';
 
 let singleton = null;
 
 export default class StatusPoller {
     constructor(store) {
-        this._store = store;
-        this._pollerTimer = null;
-        this._fetchStatusPromise = null;
-        this._isActive = false;
+        this.store = store;
+        this.pollerTimer = null;
+        this.fetchMaintenanceStatusPromise = null;
+        this.fetchClusterStatusPromise = null;
+        this.isActive = false;
         this.interval = store.getState().config.app.maintenancePollingInterval;
     }
 
     getManagerIp() {
-        return _.get(this._store.getState(), 'config.manager.ip');
+        return _.get(this.store.getState(), 'config.manager.ip');
     }
 
     start() {
-        if (!this._isActive) {
+        if (!this.isActive) {
             console.log(`Starting status polling for manager ${this.getManagerIp()}`);
 
-            this._isActive = true;
+            this.isActive = true;
 
             // Do the first fetch
-            this._fetchStatus().then(this._start.bind(this));
-            // this._start();
+            this.fetchStatus().then(this.startPolling.bind(this));
+            // this.startPolling();
         }
     }
 
     stop() {
-        if (this._isActive) {
+        if (this.isActive) {
             console.log(`Stopping status polling for manager ${this.getManagerIp()}`);
 
-            this._isActive = false;
-            this._stop();
+            this.isActive = false;
+            this.stopPolling();
         }
     }
 
-    _stop() {
-        clearTimeout(this._pollerTimer);
+    stopPolling() {
+        clearTimeout(this.pollerTimer);
 
-        if (this._fetchStatusPromise) {
-            this._fetchStatusPromise.cancel();
+        if (this.fetchMaintenanceStatusPromise) {
+            this.fetchMaintenanceStatusPromise.cancel();
+        }
+        if (this.fetchClusterStatusPromise) {
+            this.fetchClusterStatusPromise.cancel();
         }
     }
 
-    _start() {
-        this._stop();
+    startPolling() {
+        this.stopPolling();
 
         console.log(`Polling status for manager ${this.getManagerIp()} - time interval: ${this.interval} sec`);
-        this._pollerTimer = setTimeout(() => {
-            this._fetchStatus().then(this._start.bind(this));
+        this.pollerTimer = setTimeout(() => {
+            this.fetchStatus().then(this.startPolling.bind(this));
         }, this.interval);
     }
 
-    _fetchStatus() {
-        const fetchStatus = this._store.dispatch(getMaintenanceStatus(this._store.getState().manager));
-        this._fetchStatusPromise = StageUtils.makeCancelable(fetchStatus);
+    fetchStatus() {
+        const fetchMaintenanceStatus = this.store.dispatch(getMaintenanceStatus(this.store.getState().manager));
+        this.fetchMaintenanceStatusPromise = StageUtils.makeCancelable(fetchMaintenanceStatus);
+        const fetchClusterStatus = this.store.dispatch(getClusterStatus(true));
+        this.fetchClusterStatusPromise = StageUtils.makeCancelable(fetchClusterStatus);
 
-        return this._fetchStatusPromise.promise;
+        return Promise.all([this.fetchMaintenanceStatusPromise.promise, this.fetchClusterStatusPromise.promise]);
     }
 
     static create(store) {

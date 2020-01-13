@@ -6,7 +6,7 @@ import SystemStatusIcon from '../../containers/status/SystemStatusIcon';
 
 export default function SystemStatusHeader({ onStatusRefresh, isFetching }) {
     return (
-        <div style={{ height: 36 }}>
+        <div style={{ verticalAlign: 'middle', overflow: 'hidden' }}>
             <Header floated="left" style={{ width: 'auto', marginTop: '4px' }} size="medium">
                 <SystemStatusIcon />
                 System Status

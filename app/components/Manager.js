@@ -11,7 +11,7 @@ import { Popup } from './basic/index';
 
 export default function Manager({ onServicesStatusOpen, showServicesStatus }) {
     return showServicesStatus ? (
-        <Popup wide hoverable position="bottom right" onOpen={onServicesStatusOpen}>
+        <Popup wide="very" hoverable onOpen={onServicesStatusOpen}>
             <Popup.Trigger>
                 <div>
                     <SystemStatusIcon />

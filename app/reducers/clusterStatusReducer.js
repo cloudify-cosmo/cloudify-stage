@@ -9,7 +9,7 @@ const clusterStatus = (state = {}, action) => {
                 isFetching: false,
                 error: undefined,
                 status: action.status,
-                services: action.services
+                services: action.services || state.services
             };
         case types.ERR_CLUSTER_STATUS:
             return { ...state, isFetching: false, error: action.error };

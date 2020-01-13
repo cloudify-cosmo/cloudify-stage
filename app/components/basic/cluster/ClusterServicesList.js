@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { DataTable } from 'cloudify-ui-components';
 
 import IdPopup from '../IdPopup';
@@ -20,8 +21,11 @@ PublicIP.propTypes = {
     ip: PropTypes.string,
     serviceName: PropTypes.string.isRequired
 };
+PublicIP.defaultProps = {
+    ip: ''
+};
 
-export default function ClusterServicesList({ services, toolbox }) {
+function ClusterServicesList({ services, toolbox }) {
     const noServicesMessage = 'There are no Cluster Services available.';
 
     return (
@@ -99,3 +103,8 @@ ClusterServicesList.propTypes = {
     services: PropTypes.shape(_.mapValues(clusterServiceEnum, () => clusterServiceProps)).isRequired,
     toolbox: PropTypes.shape({ refresh: PropTypes.func.isRequired }).isRequired
 };
+
+const mapStateToProps = state => ({
+    services: _.get(state, 'manager.clusterStatus.services', {})
+});
+export default connect(mapStateToProps)(ClusterServicesList);
