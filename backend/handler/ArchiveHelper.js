@@ -118,6 +118,7 @@ module.exports = (function() {
     }
 
     function _isExternalUrl(url) {
+        // eslint-disable-next-line security/detect-unsafe-regex
         const ABSOLUTE_URL_REGEX = new RegExp('^(?:[a-z]+:)?//', 'i');
 
         return ABSOLUTE_URL_REGEX.test(url);

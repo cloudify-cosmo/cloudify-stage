@@ -1,19 +1,14 @@
 {
     "extends": [
-        "airbnb",
-        "prettier",
-        "prettier/react",
         "plugin:jsdoc/recommended",
-        "plugin:cypress/recommended"
+        "plugin:cypress/recommended",
+        "./node_modules/cloudify-ui-common/eslint/eslint-common-react.json"
     ],
     "parser": "babel-eslint",
     "plugins": [
-        "jsdoc",
-        "prettier"
+        "jsdoc"
     ],
     "rules": {
-        "prettier/prettier": ["error"],
-
         // FIXME: All below listed rules are off only during transition period. We need to remove them as we update the code.
         "array-callback-return": ["warn"],
         "block-scoped-var": ["warn"],
@@ -26,7 +21,6 @@
         "import/extensions": ["warn"],
         "import/named": ["warn"],
         "import/no-cycle": ["warn"],
-        "import/no-dynamic-require": ["warn"],
         "import/no-extraneous-dependencies": ["warn"],
         "import/no-unresolved": ["warn"],
         "import/order": ["warn"],
@@ -50,7 +44,7 @@
         "no-loop-func": ["warn"],
         "no-multi-assign": ["warn"],
         "no-nested-ternary": ["warn"],
-        "no-param-reassign": ["warn", { "props": false }],
+        "no-param-reassign": ["warn"],
         "no-plusplus": ["warn"],
         "no-prototype-builtins": ["warn"],
         "no-redeclare": ["warn"],
@@ -106,7 +100,6 @@
     },
     "parserOptions": {
         "ecmaFeatures": {
-            "jsx": true,
             "modules": true
         }
     },
