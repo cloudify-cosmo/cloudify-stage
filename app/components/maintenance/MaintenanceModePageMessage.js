@@ -43,7 +43,7 @@ export default class MaintenanceModePageMessage extends Component {
     render() {
         SplashLoadingScreen.turnOff();
 
-        const { canMaintenanceMode, clusterServices, isFetchingClusterStatus, showServicesStatus } = this.props;
+        const { canMaintenanceMode, isFetchingClusterStatus, showServicesStatus } = this.props;
         const { showMaintenanceModal } = this.state;
 
         return (
@@ -67,9 +67,7 @@ export default class MaintenanceModePageMessage extends Component {
                             <Divider />
                             <SystemStatusHeader />
 
-                            {!isFetchingClusterStatus && (
-                                <ClusterServicesList services={clusterServices} toolbox={this.toolbox} />
-                            )}
+                            {!isFetchingClusterStatus && <ClusterServicesList toolbox={this.toolbox} />}
                         </div>
                     )}
                 </MessageContainer>
@@ -87,7 +85,6 @@ export default class MaintenanceModePageMessage extends Component {
 
 MaintenanceModePageMessage.propTypes = {
     canMaintenanceMode: PropTypes.bool.isRequired,
-    clusterServices: ClusterServicesList.propTypes,
     isFetchingClusterStatus: PropTypes.bool.isRequired,
     maintenanceStatus: PropTypes.string.isRequired,
     navigateToHome: PropTypes.func.isRequired,
