@@ -23,14 +23,13 @@ export function errorClusterStatus(error) {
 }
 
 function isClusterStatusWidgetOnPage(pageId, pages) {
-    const currentPage = _.find(pages, page => page.id === pageId);
+    const currentPage = _.find(pages, { id: pageId }) || {};
     const clusterStatusWidgetDefinitionName = 'highAvailability';
-    const clusterStatusWidgets = _.find(
-        _.get(currentPage, 'widgets'),
-        widget => widget.definition === clusterStatusWidgetDefinitionName
-    );
+    const clusterStatusWidget = _.find(_.get(currentPage, 'widgets'), {
+        definition: clusterStatusWidgetDefinitionName
+    });
 
-    return !_.isUndefined(clusterStatusWidgets);
+    return _.isObject(clusterStatusWidget);
 }
 
 export function getClusterStatus(summaryOnly = false) {
@@ -40,7 +39,7 @@ export function getClusterStatus(summaryOnly = false) {
         const fetchOnlySummary = summaryOnly && !isClusterStatusWidgetOnPage(app.currentPageId, pages);
         dispatch(requestClusterStatus());
         return managerAccessor
-            .doGet(`/cluster-status${fetchOnlySummary ? '?summary=true' : ''}`)
+            .doGet(`/cluster-status?summary=${fetchOnlySummary}`)
             .then(data => {
                 const { services, status } = data;
                 dispatch(setClusterStatus(status, fetchOnlySummary ? undefined : services));

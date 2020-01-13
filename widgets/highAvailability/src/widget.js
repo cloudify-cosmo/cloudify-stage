@@ -5,7 +5,6 @@ Stage.defineWidget({
     initialWidth: 12,
     initialHeight: 25,
     color: 'green',
-    fetchUrl: '[manager]/cluster-status',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('highAvailability'),
