@@ -68,7 +68,7 @@ function _setAuthorizationHeader(req, res, next, fetchCredentials) {
             .then(data => {
                 const username = data[0];
                 const password = data[1];
-                const authorization = `Basic ${new Buffer(`${username.value}:${password.value}`).toString('base64')}`;
+                const authorization = `Basic ${Buffer.from(`${username.value}:${password.value}`).toString('base64')}`;
                 req.headers.authorization = authorization;
                 _.set(authList, `${user}.${tenant}`, authorization);
                 logger.debug('Setting authorization header from fetched credentials. GitHub user:', username.value);
