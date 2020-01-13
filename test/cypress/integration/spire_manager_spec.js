@@ -123,7 +123,7 @@ describe('Spire Manager widget', () => {
 
         checkServiceRow(1, 'OK', 'OK', 'OK');
         checkServiceRow(2, 'Degraded', 'OK', 'OK');
-        checkServiceRow(3, 'OK', 'OK', 'Fail');
+        checkServiceRow(3, 'Fail', 'OK', 'Fail');
     });
 
     it('allows to do status refresh of selected spire deployment', () => {
