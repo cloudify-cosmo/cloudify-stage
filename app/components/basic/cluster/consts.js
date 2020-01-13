@@ -41,7 +41,7 @@ export const clusterServiceBgColor = serviceStatus => {
 
 export const clusterNodeStatusEnum = Object.freeze({
     OK: 'OK',
-    FAIL: 'Fail'
+    Fail: 'Fail'
 });
 export const clusterNodeStatuses = _.keys(clusterNodeStatusEnum);
 

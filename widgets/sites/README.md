@@ -14,7 +14,7 @@ You can use the **Search** input to filter the sites list.
 The right column of the table allows permitted users to edit the site or delete it.
 Also, using the “Create” button on the right top corner of the widget, you will be able to create new sites.
 
-![manage-users](https://docs.cloudify.co/staging/dev/images/ui/widgets/sites.png)
+![manage-users](https://docs.cloudify.co/5.0.5/images/ui/widgets/sites.png)
 
 #### Widget Settings 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds.
