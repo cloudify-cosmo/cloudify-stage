@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Header, Icon, Table } from 'semantic-ui-react';
-import { Popup } from 'cloudify-ui-components';
-import CopyToClipboardButton from '../CopyToClipboardButton';
+import { CopyToClipboardButton, Popup } from 'cloudify-ui-components';
 import JsonUtils from '../../../utils/shared/JsonUtils';
 
 import { clusterServiceEnum, clusterServices, nodeServiceStatusEnum, nodeServiceStatuses } from './consts';

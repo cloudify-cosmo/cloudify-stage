@@ -4,8 +4,8 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { CopyToClipboardButton, HighlightText } from 'cloudify-ui-components';
 
-import { CopyToClipboardButton, HighlightText } from './index';
 import StageUtils from '../../utils/stageUtils';
 
 /**
@@ -32,7 +32,7 @@ export default class ParameterValue extends Component {
      * propTypes
      *
      * @property {any} [value=''] parameter value (original type)
-     * @property {bool} [showCopyButton=true] if set to true, then CopyToClipboardButton will be shown
+     * @property {boolean} [showCopyButton=true] if set to true, then CopyToClipboardButton will be shown
      */
     static propTypes = {
         value: PropTypes.any,

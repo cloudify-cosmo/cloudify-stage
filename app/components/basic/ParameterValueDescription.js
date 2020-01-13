@@ -3,8 +3,10 @@
  */
 
 import React, { Component } from 'react';
+import { List } from 'semantic-ui-react';
+import { PopupHelp } from 'cloudify-ui-components';
 
-import { List, ParameterValue, PopupHelp } from './index';
+import ParameterValue from './ParameterValue';
 
 export default class ParameterValueDescription extends Component {
     constructor(props, context) {

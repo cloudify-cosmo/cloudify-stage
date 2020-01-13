@@ -3,28 +3,24 @@
  */
 
 import PropTypes from 'prop-types';
+import { Button } from 'semantic-ui-react';
 
-import { Component } from 'react';
-import { Button } from '../index';
+export default function MaintenanceModeActivationButton({ activate, onClick }) {
+    const content = activate ? 'Activate Maintenance Mode' : 'Dectivate Maintenance Mode';
 
-export default class extends Component {
-    static props = {
-        activate: PropTypes.bool.isRequired,
-        onClick: PropTypes.func.isRequired
-    };
-
-    render() {
-        const content = this.props.activate ? 'Activate Maintenance Mode' : 'Dectivate Maintenance Mode';
-
-        return (
-            <Button
-                color="orange"
-                icon="doctor"
-                content={content}
-                className="widgetButton"
-                labelPosition="left"
-                onClick={this.props.onClick}
-            />
-        );
-    }
+    return (
+        <Button
+            color="orange"
+            icon="doctor"
+            content={content}
+            className="widgetButton"
+            labelPosition="left"
+            onClick={onClick}
+        />
+    );
 }
+
+MaintenanceModeActivationButton.propTypes = {
+    activate: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired
+};
