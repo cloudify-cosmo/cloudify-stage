@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Icon, Button, Form, Label, Modal, Message } from './basic/index';
+import { Icon, Button, Form, Modal, Message } from './basic/index';
 import EventBus from '../utils/EventBus';
 import StageUtils from '../utils/stageUtils';
 
