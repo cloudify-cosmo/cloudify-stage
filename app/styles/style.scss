@@ -132,7 +132,7 @@ a:hover {
       font-size: inherit;
 
       &.input {
-        width: 100%;
+        width: 230px;
       }
 
       input {
@@ -150,6 +150,9 @@ a:hover {
     width: 100%;
     .section:not(.active):not(.input) {
       cursor: pointer;
+    }
+    > * {
+      vertical-align: bottom !important;
     }
   }
 }
