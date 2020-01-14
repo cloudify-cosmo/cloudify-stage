@@ -44,6 +44,10 @@ export default class InstallWidgetModal extends Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(nextState, this.state);
+    }
+
     _installWidget() {
         const widgetUrl = this.state.widgetFile ? '' : this.state.widgetUrl;
 
