@@ -168,7 +168,7 @@ module.exports = {
             }
         },
         resetPagesConfirmModal: {
-            selector: '.confirmModal',
+            selector: '.resetPagesModal',
             elements: {
                 yesButton: '.ui.button.primary',
                 noButton: '.ui.button'

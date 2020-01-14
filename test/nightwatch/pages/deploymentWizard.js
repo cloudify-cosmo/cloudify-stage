@@ -35,7 +35,7 @@ module.exports = {
 
             closeWizard() {
                 this.clickElement('@closeButton')
-                    .clickElement('div.confirmModal button.primary.button')
+                    .clickElement('div.small.modal button.primary.button')
                     .waitForElementNotPresent('@wizardModal');
                 return this;
             },

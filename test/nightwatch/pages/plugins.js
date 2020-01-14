@@ -21,7 +21,7 @@ module.exports = {
             }
         },
         deleteConfirmModal: {
-            selector: '.confirmModal',
+            selector: '.modal',
             elements: {
                 yesButton: '.actions .ui.primary'
             }
