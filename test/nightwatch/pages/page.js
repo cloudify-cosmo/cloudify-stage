@@ -57,7 +57,7 @@ module.exports = {
             selector: '.page',
             elements: {
                 firstWidget: '.react-grid-item.widget:first-child',
-                firstWidgetName: '.react-grid-item.widget:first-child div.widgetItem > h5.header label',
+                firstWidgetName: '.react-grid-item.widget:first-child div.widgetItem > h5.header div.label',
                 firstWidgetRemoveIcon:
                     '.react-grid-item.widget:first-child .widgetEditButtons i.remove.link.icon.small',
                 firstWidgetConfigureIcon: '.react-grid-item.widget:first-child .widgetEditButtons .editWidgetIcon',
@@ -184,14 +184,6 @@ module.exports = {
 
     elements: {
         tenantsDropdownText: 'div.tenantsMenu',
-
-        statusIcon: '.headerBar .statusIcon',
-        statusTitle: '.popup table.servicesData tr th div.header',
-        statusMessage: '.popup table.servicesData div.message div.header',
-        statusManager: '.popup table.servicesData tbody tr:nth-child(1)',
-        statusDatabase: '.popup table.servicesData tbody tr:nth-child(2)',
-        statusBroker: '.popup table.servicesData tbody tr:nth-child(3)',
-
         breadcrumb: '.breadcrumbLineHeight',
         pageTitle: '.pageTitle'
     }
