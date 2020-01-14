@@ -119,7 +119,13 @@ export default class BlueprintSources extends React.Component {
                         secondaryInitialSize={this.props.widget.configuration.contentPaneWidth}
                     >
                         <div>
-                            <NodesTree showLine selectable defaultExpandAll onSelect={this._selectFile.bind(this)}>
+                            <NodesTree
+                                className="nodes-tree"
+                                showLine
+                                selectable
+                                defaultExpandAll
+                                onSelect={this._selectFile.bind(this)}
+                            >
                                 <NodesTree.Node
                                     key="blueprint"
                                     disabled

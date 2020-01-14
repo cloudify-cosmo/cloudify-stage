@@ -4,6 +4,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { types } from 'cloudify-ui-common';
 import { CopyToClipboardButton, HighlightText } from 'cloudify-ui-components';
 
 import StageUtils from '../../utils/stageUtils';
@@ -49,12 +50,12 @@ export default class ParameterValue extends Component {
     }
 
     getValueElement(stringValue) {
-        const { Url, Json } = StageUtils;
+        const { Url } = StageUtils;
 
         const commonStyle = { padding: '0.5em', whiteSpace: 'pre-wrap', wordBreak: 'break-word' };
         const typedValue = this.props.value;
 
-        switch (Json.toType(typedValue)) {
+        switch (types.toType(typedValue)) {
             case 'array':
             case 'object':
                 return <HighlightText language="json">{stringValue}</HighlightText>;
