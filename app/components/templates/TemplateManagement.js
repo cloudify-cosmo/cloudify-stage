@@ -125,7 +125,7 @@ export default class TemplateManagement extends Component {
         return (
             <div className="main">
                 <Segment basic loading={this.props.isLoading}>
-                    <div>
+                    <div style={{ position: 'relative' }}>
                         <Breadcrumb className="breadcrumbLineHeight">
                             <Breadcrumb.Section active>Template management</Breadcrumb.Section>
                         </Breadcrumb>
@@ -136,6 +136,7 @@ export default class TemplateManagement extends Component {
                             floated="right"
                             icon="sign out"
                             onClick={this.props.onClose}
+                            style={{ position: 'absolute', right: 0 }}
                         />
                     </div>
                     <Divider />
