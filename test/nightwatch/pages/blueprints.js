@@ -149,7 +149,7 @@ module.exports = {
         },
 
         removeBlueprintModal: {
-            selector: '.blueprintRemoveConfirm',
+            selector: '.ui.small.modal',
             elements: {
                 yesButton: '.actions button.primary.button',
                 noButton: '.actions button.button'

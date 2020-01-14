@@ -214,7 +214,7 @@ module.exports = {
         },
 
         removeDeploymentModal: {
-            selector: '.deploymentRemoveConfirm',
+            selector: '.ui.small.modal',
             elements: {
                 yesButton: '.actions button.primary.button',
                 noButton: '.actions button.button'
