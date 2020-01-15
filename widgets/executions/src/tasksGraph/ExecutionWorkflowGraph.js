@@ -6,6 +6,7 @@ import GraphNodes from './GraphNodes';
 import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000;
+const MAX_GRAPH_HEIGHT = 380;
 
 export default class ExecutionWorkflowGraph extends React.Component {
     /**
@@ -84,7 +85,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                 <div ref={this.wrapper}>
                     <UncontrolledReactSVGPanZoom
                         width={this.state.width}
-                        height={Math.min(380, this.state.graphResult.height)}
+                        height={Math.min(MAX_GRAPH_HEIGHT, this.state.graphResult.height)}
                         background="#fff"
                         tool="pan"
                         miniatureProps={{ position: 'none' }}
