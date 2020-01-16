@@ -1,10 +1,12 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
+import { UncontrolledReactSVGPanZoom } from 'react-svg-pan-zoom';
 import GraphNodes from './GraphNodes';
 import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000;
+const MAX_GRAPH_HEIGHT = 380;
 
 export default class ExecutionWorkflowGraph extends React.Component {
     /**
@@ -18,15 +20,24 @@ export default class ExecutionWorkflowGraph extends React.Component {
         super(props, context);
         this.state = {
             graphResult: null,
-            error: ''
+            error: '',
+            width: 0
         };
         this.timer = null;
         this.cancelablePromise = null;
         this.startPolling = this.startPolling.bind(this); // Required for the setTimeout function which changes the scope for 'this'
+        this.wrapper = React.createRef();
     }
 
     componentDidMount() {
         this.startPolling();
+    }
+
+    componentDidUpdate() {
+        const width = _.get(this.wrapper.current, 'offsetWidth');
+        if (width && width !== this.state.width) {
+            this.setState({ width });
+        }
     }
 
     componentWillUnmount() {
@@ -71,11 +82,20 @@ export default class ExecutionWorkflowGraph extends React.Component {
         const { Header, Loading, Message } = Stage.Basic;
         if (this.state.graphResult !== null) {
             return (
-                <div id="graphContainer">
-                    <svg height={this.state.graphResult.height} width={this.state.graphResult.width}>
-                        <GraphNodes graphNodes={this.state.graphResult.children} />
-                        <GraphEdges graphEdges={this.state.graphResult.edges} />
-                    </svg>
+                <div ref={this.wrapper}>
+                    <UncontrolledReactSVGPanZoom
+                        width={this.state.width}
+                        height={Math.min(MAX_GRAPH_HEIGHT, this.state.graphResult.height)}
+                        background="#fff"
+                        tool="pan"
+                        miniatureProps={{ position: 'none' }}
+                        toolbarProps={{ position: 'none' }}
+                    >
+                        <svg height={this.state.graphResult.height} width={this.state.graphResult.width}>
+                            <GraphNodes graphNodes={this.state.graphResult.children} />
+                            <GraphEdges graphEdges={this.state.graphResult.edges} />
+                        </svg>
+                    </UncontrolledReactSVGPanZoom>
                 </div>
             );
         }
