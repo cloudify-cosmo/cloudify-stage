@@ -168,10 +168,10 @@ module.exports = {
             }
         },
         resetPagesConfirmModal: {
-            selector: '.ui.modal',
+            selector: '.ui.small.modal',
             elements: {
-                yesButton: '.ui.button.ok',
-                noButton: '.ui.button.cancel'
+                yesButton: '.ui.button.primary',
+                noButton: '.ui.button'
             }
         }
     },
