@@ -118,7 +118,11 @@ export default class ExecutionWorkflowGraph extends React.Component {
                         style={{ position: 'absolute', top: 0, right: 0 }}
                         onClick={() => this.setState({ maximized: true })}
                     />
-                    <Modal open={this.state.maximized} onClose={() => this.setState({ maximized: false })} size="fullscreen">
+                    <Modal
+                        open={this.state.maximized}
+                        onClose={() => this.setState({ maximized: false })}
+                        size="fullscreen"
+                    >
                         <div ref={this.modal}>
                             {this.renderGraph(this.state.modalWidth, this.state.graphResult.height)}
                         </div>
