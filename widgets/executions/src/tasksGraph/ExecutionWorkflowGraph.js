@@ -7,6 +7,7 @@ import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000;
 const MAX_GRAPH_HEIGHT = 380;
+const GRAPH_VERTICAL_MARGIN = 15;
 
 export default class ExecutionWorkflowGraph extends React.Component {
     /**
@@ -95,9 +96,11 @@ export default class ExecutionWorkflowGraph extends React.Component {
                 miniatureProps={{ position: 'none' }}
                 toolbarProps={{ position: 'none' }}
             >
-                <svg height={this.state.graphResult.height} width={this.state.graphResult.width}>
-                    <GraphNodes graphNodes={this.state.graphResult.children} />
-                    <GraphEdges graphEdges={this.state.graphResult.edges} />
+                <svg>
+                    <g transform={`translate(0, ${GRAPH_VERTICAL_MARGIN})`}>
+                        <GraphNodes graphNodes={this.state.graphResult.children} />
+                        <GraphEdges graphEdges={this.state.graphResult.edges} />
+                    </g>
                 </svg>
             </UncontrolledReactSVGPanZoom>
         );
@@ -106,16 +109,22 @@ export default class ExecutionWorkflowGraph extends React.Component {
     render() {
         const { Header, Loading, Message, Icon, Modal } = Stage.Basic;
         if (this.state.graphResult !== null) {
+            const height = this.state.graphResult.height + 2 * GRAPH_VERTICAL_MARGIN;
             return (
                 <div ref={this.wrapper} style={{ position: 'relative' }}>
-                    {this.renderGraph(
-                        this.state.containerWidth,
-                        Math.min(MAX_GRAPH_HEIGHT, this.state.graphResult.height)
-                    )}
+                    {this.renderGraph(this.state.containerWidth, Math.min(MAX_GRAPH_HEIGHT, height))}
                     <Icon
                         name="expand"
                         link
-                        style={{ position: 'absolute', top: 0, right: 0 }}
+                        style={{
+                            position: 'absolute',
+                            top: 1,
+                            right: -2,
+                            background: 'white',
+                            opacity: 1,
+                            display: 'inline-table',
+                            padding: '0 2px'
+                        }}
                         onClick={() => this.setState({ maximized: true })}
                     />
                     <Modal
@@ -123,9 +132,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                         onClose={() => this.setState({ maximized: false })}
                         size="fullscreen"
                     >
-                        <div ref={this.modal}>
-                            {this.renderGraph(this.state.modalWidth, this.state.graphResult.height)}
-                        </div>
+                        <div ref={this.modal}>{this.renderGraph(this.state.modalWidth, height)}</div>
                     </Modal>
                 </div>
             );
