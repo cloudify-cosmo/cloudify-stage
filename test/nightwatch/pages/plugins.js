@@ -16,12 +16,12 @@ module.exports = {
             selector: '.pluginsTable',
             elements: {
                 searchInput: 'input',
-                packageName: 'tr.clickable td:nth-child(2)',
+                packageName: 'tr td:nth-child(2)',
                 deleteButton: '.rowActions i.trash'
             }
         },
         deleteConfirmModal: {
-            selector: '.confirmModal',
+            selector: '.ui.small.modal',
             elements: {
                 yesButton: '.actions .ui.primary'
             }
@@ -50,9 +50,7 @@ module.exports = {
             uploadPlugin() {
                 return this.section.uploadModal
                     .clickElement('@uploadButton')
-                    .waitForElementNotPresent(this.section.uploadModal.selector, function() {
-                        this.pause(1000);
-                    }).parent;
+                    .waitForElementNotPresent(this.section.uploadModal.selector).parent;
             },
             deletePlugin() {
                 return this.section.pluginsTable

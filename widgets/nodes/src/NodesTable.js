@@ -187,13 +187,13 @@ export default class NodesTable extends React.Component {
     }
 }
 
-function NodeTypeIcon(props) {
-    const icon = icons.getNodeIcon(_.reverse(props.typeHierarchy));
+function NodeTypeIcon({ typeHierarchy }) {
+    const icon = icons.getNodeIcon(_.reverse(_.clone(typeHierarchy)));
 
     return <span style={{ fontSize: 20, fontFamily: 'cloudify' }}>{icon}</span>;
 }
 
-function TypeHierarchyTree(props) {
+function TypeHierarchyTree({ typeHierarchy }) {
     const { Icon, NodesTree } = Stage.Basic;
 
     const getNodes = types => {
@@ -227,7 +227,7 @@ function TypeHierarchyTree(props) {
 
     return (
         <NodesTree showLine selectable={false} defaultExpandAll className="typesHierarchy">
-            {getNodes(props.typeHierarchy)}
+            {getNodes(typeHierarchy)}
         </NodesTree>
     );
 }

@@ -46,12 +46,13 @@ class DeployBlueprintModal extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (!prevProps.open && this.props.open) {
+            this.setState(DeployBlueprintModal.initialState);
             const deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(this.props.blueprint.plan);
             const actions = new Stage.Common.DeploymentActions(this.props.toolbox);
             actions
                 .doGetSites()
                 .then(sites => {
-                    this.setState({ ...DeployBlueprintModal.initialState, deploymentInputs, sites });
+                    this.setState({ deploymentInputs, sites });
                 })
                 .catch(err => {
                     this.setState({ loading: false, error: err.message });

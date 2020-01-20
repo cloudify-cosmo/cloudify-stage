@@ -19,9 +19,6 @@ import 'semantic-ui-css/semantic.min.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
-// Import highlight
-import 'highlight.js/styles/xcode.css';
-
 // Import hopscotch
 import 'hopscotch/dist/css/hopscotch.css';
 

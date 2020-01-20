@@ -31,7 +31,7 @@ describe('Spire Manager widget', () => {
                 method: 'GET',
                 url: '/console/wb/get_cluster_status?deploymentId=rome',
                 response: data,
-                delay: 100
+                delay: 500
             }).as('getClusterStatusForRome');
         });
         cy.fixture('cluster_status/degraded.json').then(data => {
@@ -39,7 +39,7 @@ describe('Spire Manager widget', () => {
                 method: 'GET',
                 url: '/console/wb/get_cluster_status?deploymentId=london',
                 response: data,
-                delay: 100
+                delay: 500
             }).as('getClusterStatusForLondon');
         });
         cy.fixture('cluster_status/fail.json').then(data => {
@@ -47,7 +47,7 @@ describe('Spire Manager widget', () => {
                 method: 'GET',
                 url: '/console/wb/get_cluster_status?deploymentId=new-york',
                 response: data,
-                delay: 100
+                delay: 500
             }).as('getClusterStatusForNewYork');
         });
         cy.route({
@@ -123,7 +123,7 @@ describe('Spire Manager widget', () => {
 
         checkServiceRow(1, 'OK', 'OK', 'OK');
         checkServiceRow(2, 'Degraded', 'OK', 'OK');
-        checkServiceRow(3, 'OK', 'OK', 'Fail');
+        checkServiceRow(3, 'Fail', 'OK', 'Fail');
     });
 
     it('allows to do status refresh of selected spire deployment', () => {

@@ -4,8 +4,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import { Button } from '../index';
+import { Button } from 'semantic-ui-react';
 
 /**
  * StepActions component is interface for components implementing step actions for {@link WizardModal}

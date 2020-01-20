@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Form from './form/Form';
+import { Form } from 'cloudify-ui-components';
 
 /**
  * PageFilter  - a component showing dropdown with list of currently available pages.
