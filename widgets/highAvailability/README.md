@@ -23,6 +23,3 @@ Each cluster node is presented with:
 * **ID** - displayed in popup on hovering ID button.
 
 ![cluster-status-widget](https://docs.cloudify.co/5.0.5/images/ui/widgets/cluster-status-node-status.png)
-
-#### Widget Settings
-* `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 30 seconds

@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 
@@ -7,31 +6,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const Consts = require('./backend/consts');
-
-// absolute paths to all symlinked modules inside `nodeModulesPath`
-// adapted from https://github.com/webpack/webpack/issues/811#issuecomment-405199263
-const findLinkedModules = nodeModulesPath => {
-    const modules = [];
-
-    fs.readdirSync(nodeModulesPath).forEach(dirname => {
-        const modulePath = path.resolve(nodeModulesPath, dirname);
-        const stat = fs.lstatSync(modulePath);
-
-        if (dirname.startsWith('.')) {
-            // not a module or scope, ignore
-        } else if (dirname.startsWith('@')) {
-            // scoped modules
-            modules.push(...findLinkedModules(modulePath));
-        } else if (stat.isSymbolicLink()) {
-            const realPath = fs.realpathSync(modulePath);
-            const realModulePath = path.resolve(realPath, 'node_modules');
-
-            modules.push(realModulePath);
-        }
-    });
-
-    return modules;
-};
 
 const getWidgetEntries = () => {
     return glob.sync('./widgets/*/src/widget.js').reduce((acc, item) => {
@@ -127,9 +101,7 @@ module.exports = [
             alias: {
                 'jquery-ui': 'jquery-ui/ui',
                 jquery: `${__dirname}/node_modules/jquery` // Always make sure we take jquery from the same place
-            },
-            symlinks: false,
-            modules: [path.resolve('node_modules'), ...findLinkedModules(path.resolve('node_modules'))]
+            }
         },
         entry: {
             'main.bundle': ['./app/main.js']
@@ -191,10 +163,6 @@ module.exports = [
         mode: 'development',
         context: path.join(__dirname),
         devtool: 'eval-source-map',
-        resolve: {
-            symlinks: false,
-            modules: [path.resolve('node_modules'), ...findLinkedModules(path.resolve('node_modules'))]
-        },
         entry: getWidgetEntries(),
         output: {
             path: path.join(__dirname, 'dist/appData'),
@@ -224,10 +192,6 @@ module.exports = [
         mode: 'development',
         context: path.join(__dirname),
         devtool: 'eval-source-map',
-        resolve: {
-            symlinks: false,
-            modules: [path.resolve('node_modules'), ...findLinkedModules(path.resolve('node_modules'))]
-        },
         entry: glob.sync('./widgets/common/src/*.js'),
         output: {
             path: path.join(__dirname, 'dist/appData/widgets'),
