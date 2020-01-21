@@ -7,6 +7,7 @@ import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000;
 const MAX_GRAPH_HEIGHT = 380;
+const GRAPH_VERTICAL_MARGIN = 15;
 
 export default class ExecutionWorkflowGraph extends React.Component {
     /**
@@ -21,12 +22,15 @@ export default class ExecutionWorkflowGraph extends React.Component {
         this.state = {
             graphResult: null,
             error: '',
-            width: 0
+            maximized: false,
+            containerWidth: 0,
+            modalWidth: 0
         };
         this.timer = null;
         this.cancelablePromise = null;
         this.startPolling = this.startPolling.bind(this); // Required for the setTimeout function which changes the scope for 'this'
         this.wrapper = React.createRef();
+        this.modal = React.createRef();
     }
 
     componentDidMount() {
@@ -34,9 +38,13 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     componentDidUpdate() {
-        const width = _.get(this.wrapper.current, 'offsetWidth');
-        if (width && width !== this.state.width) {
-            this.setState({ width });
+        const containerWidth = _.get(this.wrapper.current, 'offsetWidth');
+        if (containerWidth && containerWidth !== this.state.containerWidth) {
+            this.setState({ containerWidth });
+        }
+        const modalWidth = _.get(this.modal.current, 'offsetWidth');
+        if (modalWidth && modalWidth !== this.state.modalWidth) {
+            this.setState({ modalWidth });
         }
     }
 
@@ -78,24 +86,54 @@ export default class ExecutionWorkflowGraph extends React.Component {
         return this.props.widgetBackend.doGet('get_tasks_graph', { ...tasksGraphParams });
     }
 
+    renderGraph(width, height) {
+        return (
+            <UncontrolledReactSVGPanZoom
+                width={width}
+                height={height}
+                background="#fff"
+                tool="pan"
+                miniatureProps={{ position: 'none' }}
+                toolbarProps={{ position: 'none' }}
+            >
+                <svg>
+                    <g transform={`translate(0, ${GRAPH_VERTICAL_MARGIN})`}>
+                        <GraphNodes graphNodes={this.state.graphResult.children} />
+                        <GraphEdges graphEdges={this.state.graphResult.edges} />
+                    </g>
+                </svg>
+            </UncontrolledReactSVGPanZoom>
+        );
+    }
+
     render() {
-        const { Header, Loading, Message } = Stage.Basic;
+        const { Header, Loading, Message, Icon, Modal } = Stage.Basic;
         if (this.state.graphResult !== null) {
+            const height = this.state.graphResult.height + 2 * GRAPH_VERTICAL_MARGIN;
             return (
-                <div ref={this.wrapper}>
-                    <UncontrolledReactSVGPanZoom
-                        width={this.state.width}
-                        height={Math.min(MAX_GRAPH_HEIGHT, this.state.graphResult.height)}
-                        background="#fff"
-                        tool="pan"
-                        miniatureProps={{ position: 'none' }}
-                        toolbarProps={{ position: 'none' }}
+                <div ref={this.wrapper} style={{ position: 'relative' }}>
+                    {this.renderGraph(this.state.containerWidth - 1, Math.min(MAX_GRAPH_HEIGHT, height))}
+                    <Icon
+                        name="expand"
+                        link
+                        style={{
+                            position: 'absolute',
+                            top: 1,
+                            right: -2,
+                            background: 'white',
+                            opacity: 1,
+                            display: 'inline-table',
+                            padding: '0 2px'
+                        }}
+                        onClick={() => this.setState({ maximized: true })}
+                    />
+                    <Modal
+                        open={this.state.maximized}
+                        onClose={() => this.setState({ maximized: false })}
+                        size="fullscreen"
                     >
-                        <svg height={this.state.graphResult.height} width={this.state.graphResult.width}>
-                            <GraphNodes graphNodes={this.state.graphResult.children} />
-                            <GraphEdges graphEdges={this.state.graphResult.edges} />
-                        </svg>
-                    </UncontrolledReactSVGPanZoom>
+                        <div ref={this.modal}>{this.renderGraph(this.state.modalWidth, height)}</div>
+                    </Modal>
                 </div>
             );
         }
