@@ -112,7 +112,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
             const height = this.state.graphResult.height + 2 * GRAPH_VERTICAL_MARGIN;
             return (
                 <div ref={this.wrapper} style={{ position: 'relative' }}>
-                    {this.renderGraph(this.state.containerWidth, Math.min(MAX_GRAPH_HEIGHT, height))}
+                    {this.renderGraph(this.state.containerWidth - 1, Math.min(MAX_GRAPH_HEIGHT, height))}
                     <Icon
                         name="expand"
                         link
