@@ -113,7 +113,6 @@ export default class extends React.Component {
         return (
             <div>
                 <DataSegment
-                    fetchSize={this.props.data.items.length}
                     totalSize={this.props.data.total}
                     pageSize={this.props.widget.configuration.pageSize}
                     fetchData={this.props.fetchData}

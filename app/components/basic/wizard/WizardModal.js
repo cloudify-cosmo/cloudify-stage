@@ -2,10 +2,11 @@
  * Created by jakub.niezgoda on 20/07/2018.
  */
 
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Modal, Step } from 'semantic-ui-react';
+import { ErrorMessage, Confirm } from 'cloudify-ui-components';
 
-import { ErrorMessage, Confirm, Modal, Step } from '../index';
 import '../../styles/Wizard.css';
 
 /**

@@ -117,6 +117,7 @@ module.exports = {
         client
             .moveToEditMode()
             .addPage() // To remove deployment and blueprint with fresh data in filter widgets
+            .moveOutOfEditMode()
             .removeDeployment(DEPLOYMENT_NAME)
             .removeBlueprint(BLUEPRINT_NAME)
             .resetPages()

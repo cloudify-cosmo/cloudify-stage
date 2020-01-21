@@ -2,7 +2,7 @@
     "status": "Fail",
     "services": {
         "manager": {
-            "status": "OK",
+            "status": "Fail",
             "nodes": {
                 "manager_1": {
                     "status": "OK",
@@ -13,7 +13,7 @@
                     "services": {}
                 },
                 "manager_3": {
-                    "status": "OK",
+                    "status": "Fail",
                     "version": "5.0.5.dev1",
                     "public_ip": "10.239.3.100",
                     "node_id": "1b68676a-b74b-4843-9542-cf33f401e73b",
@@ -73,7 +73,7 @@
                     "services": {}
                 },
                 "rabbitmq_3": {
-                    "status": "OK",
+                    "status": "Fail",
                     "version": "5.0.5.dev1",
                     "public_ip": null,
                     "node_id": "6e0cb1a8-692a-47dd-899f-ca2e0970fb7b",

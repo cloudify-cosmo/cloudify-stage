@@ -5,7 +5,8 @@
 import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
-import { Input, Checkbox, Dropdown, Form } from '../index';
+import { Input, Checkbox } from 'semantic-ui-react';
+import { Dropdown, Form } from 'cloudify-ui-components';
 import { getToolbox } from '../../../utils/Toolbox';
 
 /**

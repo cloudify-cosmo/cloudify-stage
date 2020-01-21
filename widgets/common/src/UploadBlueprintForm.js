@@ -8,9 +8,6 @@ class UploadBlueprintForm extends React.Component {
 
         this.state = UploadBlueprintForm.initialState;
 
-        this.blueprintFileRef = React.createRef();
-        this.imageFileRef = React.createRef();
-
         this.actions = new Stage.Common.BlueprintActions(props.toolbox);
     }
 
@@ -50,8 +47,6 @@ class UploadBlueprintForm extends React.Component {
     static NO_ERRORS = { errors: {} };
 
     componentDidMount() {
-        this.blueprintFileRef.current && this.blueprintFileRef.current.reset();
-        this.imageFileRef.current && this.imageFileRef.current.reset();
         this.setState(UploadBlueprintForm.initialState);
 
         if (
@@ -82,7 +77,6 @@ class UploadBlueprintForm extends React.Component {
         }
 
         this.setState({ loading: true }, () => this.props.onChange({ blueprintFile: null }));
-        this.blueprintFileRef.current && this.blueprintFileRef.current.reset();
 
         this.actions
             .doListYamlFiles(this.props.blueprintUrl, null, true)
@@ -102,16 +96,17 @@ class UploadBlueprintForm extends React.Component {
             });
     }
 
-    _onBlueprintUrlFocus() {
-        if (this.props.blueprintFile) {
-            this.blueprintFileRef.current && this.blueprintFileRef.current.reset();
-            this._onBlueprintFileReset();
-        }
-    }
-
     _onBlueprintFileChange(file) {
         if (!file) {
             this.setState({ yamlFiles: [] }, this.resetErrors);
+            if (this.props.blueprintFile) {
+                this.props.onChange({
+                    blueprintFile: null,
+                    blueprintUrl: '',
+                    blueprintName: '',
+                    blueprintFileName: ''
+                });
+            }
             return;
         }
 
@@ -140,33 +135,18 @@ class UploadBlueprintForm extends React.Component {
             });
     }
 
-    _onBlueprintFileReset() {
-        this.setState({ yamlFiles: [] }, () =>
-            this.props.onChange({
-                ...UploadBlueprintForm.NO_ERRORS,
-                blueprintFile: null,
-                blueprintUrl: '',
-                blueprintName: '',
-                blueprintFileName: ''
-            })
-        );
-    }
-
-    _onBlueprintImageUrlFocus() {
-        if (this.props.imageFile) {
-            this.imageFileRef.current && this.imageFileRef.current.reset();
-            this._onBlueprintImageReset();
-        }
-    }
-
     _onBlueprintImageChange(file) {
         if (file) {
             this.props.onChange({ ...UploadBlueprintForm.NO_ERRORS, imageUrl: file.name, imageFile: file });
         }
     }
 
-    _onBlueprintImageReset() {
-        this.props.onChange({ ...UploadBlueprintForm.NO_ERRORS, imageUrl: '', imageFile: null });
+    onBlueprintUrlChange(blueprintUrl) {
+        this.props.onChange({ ...UploadBlueprintForm.NO_ERRORS, blueprintUrl, blueprintFile: null });
+    }
+
+    onBlueprintImageUrlChange(imageUrl) {
+        this.props.onChange({ ...UploadBlueprintForm.NO_ERRORS, imageUrl, imageFile: null });
     }
 
     resetErrors() {
@@ -196,15 +176,10 @@ class UploadBlueprintForm extends React.Component {
                 >
                     <Form.UrlOrFile
                         name="blueprint"
-                        value={this.props.blueprintUrl}
                         placeholder="Provide the blueprint's URL or click browse to select a file"
-                        onChangeUrl={this._handleInputChange.bind(this)}
-                        onFocusUrl={this._onBlueprintUrlFocus.bind(this)}
+                        onChangeUrl={this.onBlueprintUrlChange.bind(this)}
                         onBlurUrl={this._onBlueprintUrlBlur.bind(this)}
                         onChangeFile={this._onBlueprintFileChange.bind(this)}
-                        onResetFile={this._onBlueprintFileReset.bind(this)}
-                        label={<Label>{!this.props.blueprintFile ? 'URL' : 'File'}</Label>}
-                        fileInputRef={this.blueprintFileRef}
                     />
                 </Form.Field>
 
@@ -246,15 +221,9 @@ class UploadBlueprintForm extends React.Component {
                 >
                     <Form.UrlOrFile
                         name="image"
-                        value={this.props.imageUrl}
                         placeholder="Provide the image file URL or click browse to select a file"
-                        onChangeUrl={this._handleInputChange.bind(this)}
-                        onFocusUrl={this._onBlueprintImageUrlFocus.bind(this)}
-                        onBlurUrl={_.noop}
+                        onChangeUrl={this.onBlueprintImageUrlChange.bind(this)}
                         onChangeFile={this._onBlueprintImageChange.bind(this)}
-                        onResetFile={this._onBlueprintImageReset.bind(this)}
-                        label={<Label>{!this.props.imageFile ? 'URL' : 'File'}</Label>}
-                        fileInputRef={this.imageFileRef}
                     />
                 </Form.Field>
             </Form>

@@ -13,7 +13,6 @@ const mapStateToProps = state => {
     const showServicesStatus = stageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager);
     return {
         canMaintenanceMode,
-        clusterServices: _.get(state.manager, 'clusterStatus.services'),
         isFetchingClusterStatus: _.get(state.manager, 'clusterStatus.isFetching'),
         maintenanceStatus: _.get(state.manager, 'maintenance'),
         showServicesStatus

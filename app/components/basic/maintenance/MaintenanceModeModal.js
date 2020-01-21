@@ -1,23 +1,23 @@
 /**
  * Created by pposel on 16/02/2017.
  */
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Consts from '../../../utils/consts';
+import { Icon, Modal } from 'semantic-ui-react';
 import {
     ApproveButton,
     CancelButton,
     Checkmark,
     DataTable,
     ErrorMessage,
-    ExecutionStatus,
-    Icon,
     Menu,
-    Modal,
     PopupMenu
-} from '../index';
+} from 'cloudify-ui-components';
+
+import ExecutionStatus from '../ExecutionStatus';
+import Consts from '../../../utils/consts';
 import StageUtils from '../../../utils/stageUtils';
 import {
     switchMaintenance,

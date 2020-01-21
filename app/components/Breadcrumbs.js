@@ -24,11 +24,12 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
             breadcrumbElements.push(
                 <EditableLabel
                     key={p.id}
-                    text={p.name}
+                    value={p.name}
                     placeholder="You must fill a page name"
                     className="section active pageTitle"
-                    isEditEnable={isEditMode}
-                    onEditDone={newName => onPageNameChange(p, newName)}
+                    enabled={isEditMode}
+                    onChange={newName => onPageNameChange(p, newName)}
+                    inputSize="mini"
                 />
             );
         }

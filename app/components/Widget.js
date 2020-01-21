@@ -152,10 +152,11 @@ export default class Widget extends Component {
                 {this.props.widget.definition && this.props.widget.definition.showHeader && (
                     <h5 className="ui header dividing">
                         <EditableLabel
-                            text={this.props.widget.name}
+                            value={this.props.widget.name}
                             placeholder="Widget header"
-                            isEditEnable={this.props.isEditMode}
-                            onEditDone={text =>
+                            enabled={this.props.isEditMode}
+                            className="widgetName"
+                            onChange={text =>
                                 this.props.onWidgetNameChange(this.props.pageId, this.props.widget.id, text)
                             }
                         />

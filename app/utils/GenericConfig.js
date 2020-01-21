@@ -3,7 +3,6 @@
  */
 
 import GenericField from '../components/basic/form/GenericField';
-import Pagination from '../components/basic/pagination/Pagination';
 
 export default class GenericConfig {
     static POLLING_TIME_CONFIG = (pollingTime = 0) => {
@@ -17,7 +16,7 @@ export default class GenericConfig {
         };
     };
 
-    static PAGE_SIZE_CONFIG = (pageSize = Pagination.PAGE_SIZE_LIST(5)[0]) => {
+    static PAGE_SIZE_CONFIG = (pageSize = 5) => {
         return {
             id: 'pageSize',
             default: pageSize,

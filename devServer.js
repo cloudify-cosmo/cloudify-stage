@@ -45,7 +45,8 @@ const options = {
         [`${contextPath}/tours`]: proxyOptions,
         [`${contextPath}/wb`]: proxyOptions,
         [`${contextPath}/file`]: proxyOptions,
-        [`${contextPath}/plugins`]: proxyOptions
+        [`${contextPath}/plugins`]: proxyOptions,
+        [`${contextPath}/userData`]: proxyOptions
     },
     watchOptions: {
         ignored: ['**/userData/**']

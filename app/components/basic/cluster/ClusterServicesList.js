@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { DataTable } from 'cloudify-ui-components';
 
-import DataTable from '../dataTable/DataTable';
 import IdPopup from '../IdPopup';
 import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';
@@ -53,7 +53,7 @@ function ClusterServicesList({ services, toolbox }) {
                         <DataTable.Row key={`${serviceName}_${node.name}_${node.node_id}`}>
                             {index === 0 && (
                                 <DataTable.Data
-                                    rowsSpan={numberOfNodes}
+                                    rowSpan={numberOfNodes}
                                     style={{ backgroundColor: clusterServiceBgColor(service.status) }}
                                 >
                                     <ClusterService isExternal={service.is_external} name={serviceName} />

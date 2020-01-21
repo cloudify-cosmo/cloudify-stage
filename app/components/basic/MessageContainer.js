@@ -4,8 +4,8 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { Grid, Segment } from 'semantic-ui-react';
 
-import { Grid, Segment } from './index';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 
 /**
