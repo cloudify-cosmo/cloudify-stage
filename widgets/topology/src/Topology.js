@@ -2,10 +2,8 @@
  * Created by kinneretzin on 06/11/2016.
  */
 
-import 'cloudify-blueprint-topology';
-
-const BlueprintTopology = cloudifyTopology.Topology;
-const { DataProcessingService } = cloudifyTopology;
+import { Topology as BlueprintTopology, DataProcessingService } from 'cloudify-blueprint-topology';
+import createBaseTopology from './createBaseTopology';
 
 export default class Topology extends React.Component {
     constructor(props, context) {
@@ -29,8 +27,6 @@ export default class Topology extends React.Component {
     }
 
     componentDidMount() {
-        this._startTopology();
-
         this.props.toolbox.getEventBus().on('topology:selectNode', this._selectNode, this);
     }
 
@@ -60,7 +56,10 @@ export default class Topology extends React.Component {
             enableDrop: true,
             enableDragEdit: false,
             enableDragToSelect: true,
-            autoLayout: true,
+            autoLayout: !_.chain(this.props.data.deploymentsData)
+                .head()
+                .get('layout')
+                .value(),
             enableContextMenu: false,
             onNodeSelected: node => this._setSelectedNode(node),
             onDataProcessed: data => (this._processedTopologyData = data),
@@ -81,19 +80,10 @@ export default class Topology extends React.Component {
         if (_.size(deploymentsData) === 0 || !deploymentsData[0].data) {
             return null;
         }
-        const topology = this.createBaseTopology(deploymentsData[0]);
+        const topology = createBaseTopology(deploymentsData[0]);
         this.addExpandedTopologies(deploymentsData, topology);
 
         return topology;
-    }
-
-    createBaseTopology(deploymentData) {
-        const topologyData = {
-            data: deploymentData.data,
-            instances: deploymentData.instances,
-            executions: deploymentData.executions
-        };
-        return DataProcessingService.encodeTopologyFromRest(topologyData);
     }
 
     addExpandedTopologies(deploymentsData, currentTopology) {
@@ -210,7 +200,10 @@ export default class Topology extends React.Component {
             this._topology.setLoading(true);
             this._topologyData = null;
             this.props.toolbox.refresh();
-        } else {
+        } else if (!_.isEmpty(this.props.data.deploymentsData)) {
+            if (!this._topology) {
+                this._startTopology();
+            }
             const isFirstTimeLoading = this._topologyData === null;
             const oldTopologyData = this._topologyData;
             this._topologyData = this.buildTopologyData();
