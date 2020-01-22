@@ -29,7 +29,7 @@
     },
     {
         "name": "Application package",
-        "limit": "10.21 MB",
+        "limit": "10.22 MB",
         "gzip": false,
         "webpack": false,
         "path": "dist/**"
