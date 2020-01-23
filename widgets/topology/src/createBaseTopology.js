@@ -2,6 +2,14 @@ import { Consts, DataProcessingService, NodeDataUtils } from 'cloudify-blueprint
 import ExecutionsService from './ExecutionsService';
 import NodeStatusService from './NodeStatusService';
 
+/**
+ * @description
+ * removes 'plan' from topologyData and splits it to node_templates and hierarchy.
+ * if 'plan' does not exists, does nothing.
+ *
+ * @param {object} data
+ * @param {object} data.data.plan raw data from manager. contains both nodes and type_hierarchy
+ */
 export default function createBaseTopology(data) {
     // is execution in progress?
     const inProgress = data.executions ? ExecutionsService.isRunning(data.executions) : false;

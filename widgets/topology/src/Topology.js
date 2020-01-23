@@ -4,6 +4,7 @@
 
 import { Topology as BlueprintTopology, DataProcessingService } from 'cloudify-blueprint-topology';
 import createBaseTopology from './createBaseTopology';
+import createExpandedTopology from './createExpandedTopology';
 
 export default class Topology extends React.Component {
     constructor(props, context) {
@@ -103,7 +104,7 @@ export default class Topology extends React.Component {
             }
 
             if (deploymentsData[i].data) {
-                const expanded_topology = this.createExpandedTopology(deploymentsData[i], expandedNodeData);
+                const expanded_topology = createExpandedTopology(deploymentsData[i], expandedNodeData);
                 _.each(expanded_topology.nodes, node => {
                     // Formating the name to not collision on nodes from other topologies
                     node.name = `${node.name}(${expandedNodeData.name})`;
@@ -128,15 +129,6 @@ export default class Topology extends React.Component {
             });
             return found;
         });
-    }
-
-    createExpandedTopology(deploymentData, expandedNodeData) {
-        const topologyData = {
-            data: deploymentData.data,
-            instances: deploymentData.instances,
-            executions: deploymentData.executions
-        };
-        return DataProcessingService.encodeExtendedTopologyFromRest(topologyData, expandedNodeData);
     }
 
     _selectNode(nodeId) {
