@@ -64,9 +64,8 @@ import {
 } from 'cloudify-ui-components';
 
 import Cluster from './cluster';
-import EdiTable from './form/EdiTable';
 import ExecutionStatus from './ExecutionStatus';
-import GenericField from './form/GenericField';
+import GenericField from './GenericField';
 import Graphs from './graphs';
 import IdPopup from './IdPopup';
 import Leaflet from './leaflet';
@@ -100,7 +99,6 @@ export {
     DataTable,
     Divider,
     Dropdown,
-    EdiTable,
     EditableLabel,
     ErrorMessage,
     ExecutionStatus,

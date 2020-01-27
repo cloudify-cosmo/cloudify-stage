@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Input, Checkbox } from 'semantic-ui-react';
 import { Dropdown, Form } from 'cloudify-ui-components';
-import { getToolbox } from '../../../utils/Toolbox';
+import { getToolbox } from '../../utils/Toolbox';
 
 /**
  * GenericField is a generic component which can be used as different input fields in {@link Form} component
@@ -15,7 +15,7 @@ import { getToolbox } from '../../../utils/Toolbox';
  * It is used widely in widget configuration modal. Constant values used for defining field type are described below.
  *
  * ## Access
- * `Stage.Basic.Form.GenericField`
+ * `Stage.Basic.GenericField`
  *
  * ## Usage
  *
@@ -80,20 +80,6 @@ import { getToolbox } from '../../../utils/Toolbox';
  * ```
  * <GenericField name="numberEditableListTest" type={GenericField.NUMBER_EDITABLE_LIST_TYPE}
  *               label="NUMBER_EDITABLE_LIST_TYPE" items={[1,2,3]} value={2}/>
- * ```
- *
- * ### Custom field - Editable table
- * ![GenericField](manual/asset/form/GenericField_10.png)
- * ```
- * <GenericField name="editableTable" type={GenericField.CUSTOM_TYPE} component={Stage.Basic.Form.Table}
- *               label="EDITABLE_TABLE_TYPE"
- *               columns={[
- *                 {name: "metric", label: 'Metric', default: "", type: Stage.Basic.GenericField.EDITABLE_LIST_TYPE, description: "Name of the metric to be presented on the graph",
- *                  items: ["", "cpu_total_system", "cpu_total_user", "memory_MemFree", "memory_SwapFree", "loadavg_processes_running"]},
- *                 {name: 'label', label: 'Label', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart label"},
- *                 {name: 'unit', label: 'Unit', default: "", type: Stage.Basic.GenericField.STRING_TYPE, description: "Chart data unit"}
- *               ]}
- *               rows={3} />
  * ```
  *
  * ### Custom filed - Time filter

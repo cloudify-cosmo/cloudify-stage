@@ -2,7 +2,7 @@
  * Created by jakub.niezgoda on 05/02/2018.
  */
 
-import GenericField from '../components/basic/form/GenericField';
+import GenericField from 'app/components/basic/GenericField';
 
 export default class GenericConfig {
     static POLLING_TIME_CONFIG = (pollingTime = 0) => {

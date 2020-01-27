@@ -6,7 +6,7 @@ import md5 from 'blueimp-md5';
 import _ from 'lodash';
 import { getToolbox } from './Toolbox';
 
-import GenericField from '../components/basic/form/GenericField';
+import GenericField from 'app/components/basic/GenericField';
 
 import ExecutionUtils from './shared/ExecutionUtils';
 import JsonUtils from './shared/JsonUtils';

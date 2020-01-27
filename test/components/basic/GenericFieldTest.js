@@ -3,11 +3,11 @@
  */
 
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 import configureMockStore from 'redux-mock-store';
-import GenericField from '../../../app/components/basic/form/GenericField';
-import { createToolbox } from '../../../app/utils/Toolbox';
+import GenericField from 'app/components/basic/GenericField';
+import { createToolbox } from 'app/utils/Toolbox';
 
 const mockStore = configureMockStore();
 const store = mockStore({ config: { widgets: {} } });

@@ -8,15 +8,22 @@ import { PopupHelp } from 'cloudify-ui-components';
 
 import ParameterValue from './ParameterValue';
 
+/**
+ * ParameterValueDescription is a popup description for ParameterValue component.
+ *
+ * ## Access
+ * `Stage.Basic.ParameterValueDescription`
+ *
+ * ## Usage
+ * ```
+ * <ParameterValueDescription />
+ * ```
+ *
+ * ### ParameterValueDescription
+ * ![ParameterValue JSON](manual/asset/ParameterValueDescription_0.png)
+ *
+ */
 export default class ParameterValueDescription extends Component {
-    constructor(props, context) {
-        super(props, context);
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return !_.isEqual(this.props, nextProps);
-    }
-
     render() {
         return (
             <PopupHelp

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { Modal, Step } from 'semantic-ui-react';
 import { ErrorMessage, Confirm } from 'cloudify-ui-components';
 
-import '../../styles/Wizard.css';
+import './Wizard.css';
 
 /**
  * WizardModal component allows you to present step-by-step process in modal window providing convenient way
