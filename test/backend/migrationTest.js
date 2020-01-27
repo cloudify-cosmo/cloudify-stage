@@ -8,6 +8,6 @@ import { execSync } from 'child_process';
 describe('(Backend) Migration script', () => {
     it('prints latest revision for "current" argument', () => {
         const result = execSync('cd backend && node migration.js current').toString();
-        expect(result).to.equal('20190423064931-5_0-CreateWidgetBackendTable.js\n');
+        expect(result).to.equal('20200123095213-5_1-CreateBlueprintUserData.js\n');
     });
 });
