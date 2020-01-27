@@ -36,6 +36,10 @@ export default class Topology extends React.Component {
         this.props.toolbox.getEventBus().off('topology:selectNode');
     }
 
+    getLayout() {
+        return this.layout || this.props.data.deploymentsData[0].layout;
+    }
+
     _destroyTopology() {
         if (!_.isNil(this._topology)) {
             this._topology.destroy();
@@ -57,16 +61,24 @@ export default class Topology extends React.Component {
             enableDrop: true,
             enableDragEdit: false,
             enableDragToSelect: true,
-            autoLayout: !_.chain(this.props.data.deploymentsData)
-                .head()
-                .get('layout')
-                .value(),
+            autoLayout: !this.getLayout(),
             enableContextMenu: false,
             onNodeSelected: node => this._setSelectedNode(node),
             onDataProcessed: data => (this._processedTopologyData = data),
             onDeploymentNodeClick: deploymentId => this.goToDeploymentPage(deploymentId),
             onExpandClick: (deploymentId, nodeId) => this.markDeploymentsToExpand(deploymentId, nodeId),
-            onCollapseClick: deploymentId => this.collapseExpendedDeployments(deploymentId)
+            onCollapseClick: deploymentId => this.collapseExpendedDeployments(deploymentId),
+            onNodeDragged: nodeData => {
+                const layout = this.getLayout();
+                _.assign(_.find(layout.nodes, _.pick(nodeData, 'name')), _.pick(nodeData, ['x', 'y']));
+                _.each(nodeData.connectedTo, connectorData =>
+                    _.assign(
+                        _.find(layout.connectors, _.pick(connectorData, 'name')),
+                        _.pick(connectorData, ['x1', 'x2', 'y1', 'y2', 'points'])
+                    )
+                );
+                this.props.toolbox.getInternal().doPut(`/bud/layout/${this.props.data.blueprintId}`, null, layout);
+            }
         });
 
         this._topology.start();
@@ -81,7 +93,7 @@ export default class Topology extends React.Component {
         if (_.size(deploymentsData) === 0 || !deploymentsData[0].data) {
             return null;
         }
-        const topology = createBaseTopology(deploymentsData[0]);
+        const topology = createBaseTopology(deploymentsData[0], this.getLayout());
         this.addExpandedTopologies(deploymentsData, topology);
 
         return topology;
@@ -170,6 +182,20 @@ export default class Topology extends React.Component {
         return false;
     }
 
+    extractLayout(entityType, initialTopologyData) {
+        return {
+            [entityType]: _.map(this._topologyData[entityType], (topologyItem, index) =>
+                _.omit(
+                    topologyItem,
+                    _(initialTopologyData[entityType][index])
+                        .keys()
+                        .pull('name')
+                        .value()
+                )
+            )
+        };
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (
             this.props.data.topologyConfig &&
@@ -201,7 +227,28 @@ export default class Topology extends React.Component {
             this._topologyData = this.buildTopologyData();
 
             if (isFirstTimeLoading || this._isNodesChanged(oldTopologyData.nodes, this._topologyData.nodes)) {
-                this._topology.setTopology(this._topologyData);
+                if (this.getLayout()) {
+                    this._topology.setTopology(this._topologyData);
+                } else {
+                    const initialTopologyData = _.cloneDeep(this._topologyData);
+                    this._topology.setTopology(this._topologyData);
+                    this.layout = {
+                        ...this.extractLayout('nodes', initialTopologyData),
+                        ...this.extractLayout('groups', initialTopologyData),
+                        connectors: _.map(this._topologyData.connectors, (connector, index) => ({
+                            ..._.omit(
+                                connector,
+                                _(initialTopologyData.connectors[index])
+                                    .keys()
+                                    .pull('name')
+                                    .value()
+                            ),
+                            source: connector.side1.name,
+                            target: connector.side2.name,
+                            ..._.pick(connector.templateData, 'type')
+                        }))
+                    };
+                }
                 this._topology.setLoading(false);
             } else {
                 this._topology.refreshTopologyDeploymentStatus(this._topologyData);

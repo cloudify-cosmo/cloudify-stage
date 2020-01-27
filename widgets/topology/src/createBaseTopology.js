@@ -10,7 +10,7 @@ import NodeStatusService from './NodeStatusService';
  * @param {object} data
  * @param {object} data.data.plan raw data from manager. contains both nodes and type_hierarchy
  */
-export default function createBaseTopology(data) {
+export default function createBaseTopology(data, layout) {
     // is execution in progress?
     const inProgress = data.executions ? ExecutionsService.isRunning(data.executions) : false;
 
@@ -79,7 +79,7 @@ export default function createBaseTopology(data) {
         }
     }
 
-    return data.layout
-        ? DataProcessingService.encodeTopology(data)
+    return layout
+        ? DataProcessingService.encodeTopology({ ...data, layout })
         : DataProcessingService.encodeTopologyNoLayout(data);
 }

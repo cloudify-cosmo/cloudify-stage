@@ -9,21 +9,26 @@ export default class DataFetcher {
         function getLayoutPromise(layoutBlueprintId) {
             return toolbox
                 .getInternal()
-                .doGet(`/source/browse/${layoutBlueprintId}/archive`)
-                .then(data =>
-                    _.chain(data)
-                        .get('children[0].children')
-                        .find({ title: 'info.yaml' })
-                        .get('key')
-                        .value()
-                )
-                .then(path =>
-                    path
-                        ? toolbox
-                              .getInternal()
-                              .doGet('/source/browse/file', { path })
-                              .then(yaml.safeLoad)
-                        : null
+                .doGet(`/bud/layout/${layoutBlueprintId}`)
+                .catch(() =>
+                    toolbox
+                        .getInternal()
+                        .doGet(`/source/browse/${layoutBlueprintId}/archive`)
+                        .then(data =>
+                            _.chain(data)
+                                .get('children[0].children')
+                                .find({ title: 'info.yaml' })
+                                .get('key')
+                                .value()
+                        )
+                        .then(path =>
+                            path
+                                ? toolbox
+                                      .getInternal()
+                                      .doGet('/source/browse/file', { path })
+                                      .then(yaml.safeLoad)
+                                : null
+                        )
                 );
         }
 
