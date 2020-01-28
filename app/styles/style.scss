@@ -1,28 +1,4 @@
-$blue-light: #45A7FF;
-$blue-normal: #0077FC;
-$blue-dark: #0064BF;
-
-$cyan-light: #D9FDFF;
-$cyan-normal: #BAF8FF;
-$cyan-dark: #7EF2F2;
-
-$green-light: #8BFDDA;
-$green-normal: #3DFBC2;
-$green-dark: #16B77D;
-
-$grey-veryLight: #F2F2F2;
-$grey-light: #E2E2E2;
-$grey-normal: #C1C1C6;
-$grey-dark: #AAAAB2;
-$grey-veryDark: #7C7C84;
-$grey-darkest: #585860;
-
-$yellow-light: #FFDB80;
-$yellow-normal: #FFC304;
-$yellow-dark: #EFA500;
-
-$white: #FFFFFF;
-$black: #000000;
+@import '~cloudify-ui-common/styles/colors';
 
 body {
 }
@@ -236,15 +212,15 @@ a:hover {
 }
 
 .react-grid-placeholder{
-  background-color: #ccc !important;
-  border: 2px dotted #777;
+  background-color: $grey-normal !important;
+  border: 2px dotted $grey-veryDark;
   border-radius: 2px;
 }
 
 .layout{
   &.isEditMode{
-    background-color: #fafafa;
-    border: 1px solid #eee;
+    background-color: $grey-veryLight;
+    border: 1px solid $grey-light;
     border-radius: 5px;
   }
 
@@ -388,7 +364,7 @@ a:hover {
       cursor: pointer;
       align-items: center;
       &:hover{
-        background-color: #eee;
+        background-color: $grey-light;
         border-radius: 5px;
       }
       .image{
@@ -396,8 +372,8 @@ a:hover {
           object-fit: contain;
           height: 80px !important;
           border-radius: 5px;
-          background: #fff;
-          border: 1px dotted #eee;
+          background: $white;
+          border: 1px dotted $grey-light;
           transition: all 500ms ease-in-out;
           &:hover{
             transform: scale(1.3);
@@ -668,7 +644,7 @@ table.servicesData button.refreshButton {
 }
 
 .ui.divided.light.list>.item {
-  border-top: 1px solid #F0F0F0;
+  border-top: 1px solid $grey-veryLight;
 }
 
 .ui.divided.light.list>.item:first-child {
@@ -761,7 +737,7 @@ a.underline {
     height: inherit;
 
     &>.layout-splitter {
-      background-color: #eee;
+      background-color: $grey-light;
     }
   }
 }
