@@ -20,27 +20,27 @@ Stage.defineWidget({
             id: 'clickToDrillDown',
             name: 'Enable click to drill down',
             default: true,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+            type: Stage.Shared.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showExecutionStatusLabel',
             name: 'Show execution status label',
             description: 'Show last execution workflow ID and status',
             default: false,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+            type: Stage.Shared.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'blueprintIdFilter',
             name: 'Blueprint ID to filter by',
             placeHolder: 'Enter the blueprint id you wish to filter by',
-            type: Stage.Basic.GenericField.STRING_TYPE
+            type: Stage.Shared.GenericField.STRING_TYPE
         },
         {
             id: 'displayStyle',
             name: 'Display style',
             items: [{ name: 'Table', value: 'table' }, { name: 'List', value: 'list' }],
             default: 'table',
-            type: Stage.Basic.GenericField.LIST_TYPE
+            type: Stage.Shared.GenericField.LIST_TYPE
         },
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)

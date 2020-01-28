@@ -1,35 +1,12 @@
 /**
- * Created by jakubniezgoda on 05/12/2017.
- */
-
-import PropTypes from 'prop-types';
-import React from 'react';
-
-import { Form } from 'cloudify-ui-components';
-import StageUtils from '../../utils/stageUtils';
-
-/**
  * NodeFilter  - a component showing dropdowns for filtering blueprints, deployments, nodes and nodes instances.
  * Data (list of blueprints, deployments, nodes and node instances) is dynamically fetched from manager.
- *
- * ## Access
- * `Stage.Basic.NodeFilter`
- *
- * ## Usage
- * ![NodeFilter](manual/asset/NodeFilter_0.png)
- *
- * ```
- * let value = {blueprintId: '', deploymentId: '', nodeId: '', nodeInstance: ''}
- * <NodeFilter name='nodeFilter' value={value} />
- * ```
- *
  */
 export default class NodeFilter extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = NodeFilter.initialState(props);
-        this.toolbox = StageUtils.getToolbox(() => {}, () => {}, null);
     }
 
     /*
@@ -47,6 +24,7 @@ export default class NodeFilter extends React.Component {
      *
      * @property {string} name name of the field
      * @property {string} value value of the field (object containing the following string valued keys: blueprintId, deploymentId, nodeId, nodeInstanceId)
+     * @property {object} toolbox Toolbox object
      * @property {func} [onChange=_.noop] function to be called on value change
      * @property {bool} [allowMultiple=false] if set to true, then it will be allowed to select more than one blueprint, deployment, node and node instance
      * @property {bool} [allowMultipleBlueprints=false] if set to true, then it will be allowed to select more than one blueprint
@@ -70,6 +48,7 @@ export default class NodeFilter extends React.Component {
             nodeId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
             nodeInstanceId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired
         }).isRequired,
+        toolbox: PropTypes.object.isRequired,
         onChange: PropTypes.func,
         allowMultiple: PropTypes.bool,
         allowMultipleBlueprints: PropTypes.bool,
@@ -149,7 +128,7 @@ export default class NodeFilter extends React.Component {
         const errors = { ...this.state.errors };
         errors[optionsField] = null;
         this.setState({ [loading]: true, [optionsField]: [], errors });
-        this.toolbox
+        this.props.toolbox
             .getManager()
             .doGet(fetchUrl, params)
             .then(data => {
@@ -293,7 +272,7 @@ export default class NodeFilter extends React.Component {
 
     render() {
         const { errors } = this.state;
-        const errorMessage = 'Data fetching error';
+        const { Form } = Stage.Basic;
 
         return (
             <Form.Group widths="equal">
@@ -365,3 +344,8 @@ export default class NodeFilter extends React.Component {
         );
     }
 }
+
+Stage.defineCommon({
+    name: 'NodeFilter',
+    common: NodeFilter
+});

@@ -21,9 +21,9 @@ Stage.defineWidget({
             id: 'page',
             name: 'Page to open on click',
             description: 'Page to open when user clicks on widget content',
-            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            type: Stage.Shared.GenericField.CUSTOM_TYPE,
             default: 'local_blueprints',
-            component: Stage.Basic.PageFilter
+            component: Stage.Shared.PageFilter
         }
     ],
     fetchUrl: '[manager]/blueprints?_include=id&_size=1',
@@ -33,7 +33,8 @@ Stage.defineWidget({
             return <Stage.Basic.Loading />;
         }
 
-        const { KeyIndicator, Link } = Stage.Basic;
+        const { KeyIndicator } = Stage.Basic;
+        const { Link } = Stage.Shared;
 
         const num = _.get(data, 'metadata.pagination.total', 0);
         const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';

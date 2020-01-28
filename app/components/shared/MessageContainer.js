@@ -13,18 +13,13 @@ import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
  * [Segment](https://react.semantic-ui.com/elements/segment) components from Semantic-UI-React to display message box.
  * Can be displayed in full screen or inside another container.
  *
- * ## Access
- * `Stage.Basic.MessageContainer`
- *
  * ## Usage
  * ### Full screen message - eg. Error Page
- * ![MessageContainer](manual/asset/MessageContainer_0.png)
  * ```
  * <MessageContainer/>
  * ```
  *
  * ### In widget message - eg. Sites Map notification
- * ![MessageContainer](manual/asset/MessageContainer_1.png)
  * ```
  * <MessageContainer wide={true} margin='30px auto'/>
  * ```

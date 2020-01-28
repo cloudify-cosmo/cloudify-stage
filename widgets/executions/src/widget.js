@@ -39,13 +39,13 @@ Stage.defineWidget({
                 'Actions'
             ],
             default: 'Blueprint,Deployment,Workflow,Created,Ended,Creator,Attributes,Actions,Status',
-            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+            type: Stage.Shared.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
             id: 'showSystemExecutions',
             name: 'Show system executions',
             default: true,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+            type: Stage.Shared.GenericField.BOOLEAN_TYPE
         },
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)

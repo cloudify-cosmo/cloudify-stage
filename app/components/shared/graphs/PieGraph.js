@@ -27,12 +27,7 @@ import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
  * ]
  * ```
  *
- * ## Access
- * `Stage.Basic.Graphs.PieGraph`
- *
  * ## Usage
- *
- * ![PieGraph](manual/asset/graphs/PieGraph_0.png)
  *
  * ```
  * let formattedData = [
@@ -42,7 +37,7 @@ import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
  *      {name: 'Error',       color: '#db2828', value: 8}
  * ];
  *
- * return (<PieGraph widget={widget} data={formattedData} toolbox={toolbox} />);
+ * return (<PieGraph data={formattedData} />);
  * ```
  */
 export default class PieGraph extends Component {
@@ -53,23 +48,11 @@ export default class PieGraph extends Component {
     /**
      * propTypes
      *
-     * @property {object} widget Widget object
      * @property {object[]} data graph input data
-     * @property {object} toolbox Toolbox object
      */
     static propTypes = {
-        widget: PropTypes.object.isRequired,
-        data: PropTypes.array.isRequired,
-        toolbox: PropTypes.object.isRequired
+        data: PropTypes.array.isRequired
     };
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
-        );
-    }
 
     render() {
         const { data } = this.props;

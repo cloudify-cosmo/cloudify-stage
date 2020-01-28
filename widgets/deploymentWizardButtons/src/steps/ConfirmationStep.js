@@ -4,16 +4,18 @@
 
 import TaskList from './helpers/TaskList';
 import Task from './helpers/Task';
+import { createWizardStep } from '../wizard/wizardUtils';
+import StepActions from '../wizard/StepActions';
+import StepContent from '../wizard/StepContent';
 
 const confirmationStepId = 'confirm';
-const { createWizardStep } = Stage.Basic.Wizard.Utils;
 
 class ConfirmationStepActions extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
+    static propTypes = StepActions.propTypes;
 
     async isUsed(deploymentId) {
         const deploymentActions = new Stage.Common.DeploymentActions(this.props.toolbox);
@@ -53,9 +55,8 @@ class ConfirmationStepActions extends React.Component {
     }
 
     render() {
-        const { Wizard } = Stage.Basic;
         return (
-            <Wizard.Step.Actions
+            <StepActions
                 {...this.props}
                 onNext={this.onNext.bind(this)}
                 nextLabel="Install"
@@ -70,7 +71,7 @@ class ConfirmationStepContent extends React.Component {
         super(props);
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
+    static propTypes = StepContent.propTypes;
 
     static chooseId(baseId, promise, idName) {
         const maxSuffixNumber = 1000;

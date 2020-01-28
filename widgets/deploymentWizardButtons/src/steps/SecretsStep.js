@@ -7,10 +7,12 @@ import ResourceAction from './helpers/ResourceAction';
 import NoResourceMessage from './helpers/NoResourceMessage';
 
 const secretsStepId = 'secrets';
-const { createWizardStep } = Stage.Basic.Wizard.Utils;
+import { createWizardStep } from '../wizard/wizardUtils';
+import StepActions from '../wizard/StepActions';
+import StepContent from '../wizard/StepContent';
 
 class SecretsStepActions extends React.Component {
-    static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
+    static propTypes = StepActions.propTypes;
 
     onNext(id) {
         return this.props
@@ -39,7 +41,7 @@ class SecretsStepActions extends React.Component {
 
     render() {
         const { Wizard } = Stage.Basic;
-        return <Wizard.Step.Actions {...this.props} onNext={this.onNext.bind(this)} />;
+        return <StepActions {...this.props} onNext={this.onNext.bind(this)} />;
     }
 }
 
@@ -50,7 +52,7 @@ class SecretsStepContent extends React.Component {
         this.state = SecretsStepContent.initialState;
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
+    static propTypes = StepContent.propTypes;
 
     static statusUnknown = 0;
 

@@ -13,8 +13,8 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     initialConfiguration: [
-        { id: 'label', name: 'Button label', default: 'Button Link', type: Stage.Basic.GenericField.STRING },
-        { id: 'url', name: 'URL address', default: '', type: Stage.Basic.GenericField.STRING }
+        { id: 'label', name: 'Button label', default: 'Button Link', type: Stage.Shared.GenericField.STRING },
+        { id: 'url', name: 'URL address', default: '', type: Stage.Shared.GenericField.STRING }
     ],
     isReact: true,
     hasReadme: true,

@@ -1,34 +1,12 @@
 /**
- * Created by jakubniezgoda on 07/06/2018.
- */
-
-import PropTypes from 'prop-types';
-import React from 'react';
-
-import { Form } from 'cloudify-ui-components';
-import StageUtils from '../../utils/stageUtils';
-
-/**
  * NodeInstancesFilter - a component showing dropdown with nodes instances of specified deployment.
  * Data is dynamically fetched from manager.
- *
- * ## Access
- * `Stage.Basic.NodeInstancesFilter`
- *
- * ## Usage
- * ![NodeInstancesFilter](manual/asset/NodeInstancesFilter_0.png)
- *
- * ```
- * <NodeInstancesFilter name='nodeFilter' value={[]} onChange={()=>{}} deploymentId='nodecellar' />
- * ```
- *
  */
 export default class NodeInstancesFilter extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = NodeInstancesFilter.initialState(props);
-        this.toolbox = StageUtils.getToolbox(() => {}, () => {}, null);
     }
 
     /**
@@ -36,8 +14,9 @@ export default class NodeInstancesFilter extends React.Component {
      *
      * @property {string} name name of the field
      * @property {string} value value of the field
-     * @property {string} deploymentId ID of deployment for which Node Instances will be fetched
+     * @property {object} toolbox Toolbox object
      * @property {Function} onChange function to be called on field's value change
+     * @property {string} [deploymentId=''] ID of deployment for which Node Instances will be fetched
      * @property {string} [label=''] field label
      * @property {string} [placeholder=''] field's placeholder
      * @property {string} [help=''] field's help description
@@ -47,6 +26,7 @@ export default class NodeInstancesFilter extends React.Component {
         name: PropTypes.string.isRequired,
         value: PropTypes.array.isRequired,
         onChange: PropTypes.func.isRequired,
+        toolbox: PropTypes.object.isRequired,
         deploymentId: PropTypes.string,
         label: PropTypes.string,
         placeholder: PropTypes.string,
@@ -55,6 +35,7 @@ export default class NodeInstancesFilter extends React.Component {
     };
 
     static defaultProps = {
+        deploymentId: '',
         label: '',
         placeholder: '',
         help: '',
@@ -94,7 +75,7 @@ export default class NodeInstancesFilter extends React.Component {
         errors.nodeInstanceIds = null;
 
         this.setState({ loading: true, nodeInstances: [], errors });
-        this.toolbox
+        this.props.toolbox
             .getManager()
             .doGet(fetchUrl, params)
             .then(data => {
@@ -121,6 +102,7 @@ export default class NodeInstancesFilter extends React.Component {
     }
 
     render() {
+        const { Form } = Stage.Basic;
         const { errors } = this.state;
 
         return (
@@ -141,3 +123,8 @@ export default class NodeInstancesFilter extends React.Component {
         );
     }
 }
+
+Stage.defineCommon({
+    name: 'NodeInstancesFilter',
+    common: NodeInstancesFilter
+});

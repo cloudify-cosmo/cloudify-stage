@@ -2,6 +2,8 @@
  * Created by jakub.niezgoda on 13/08/2018.
  */
 
+import Wizard from './wizard';
+
 export default class WizardButton extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -16,7 +18,7 @@ export default class WizardButton extends React.Component {
         name: PropTypes.string.isRequired,
         icon: PropTypes.string.isRequired,
         wizardTitle: PropTypes.string.isRequired,
-        steps: Stage.Basic.Wizard.Modal.propTypes.steps,
+        steps: Wizard.Modal.propTypes.steps,
         toolbox: PropTypes.object.isRequired
     };
 
@@ -30,7 +32,7 @@ export default class WizardButton extends React.Component {
     }
 
     render() {
-        const { Button, Icon, Wizard } = Stage.Basic;
+        const { Button, Icon } = Stage.Basic;
         const { color, icon, name, steps, toolbox, wizardTitle } = this.props;
 
         return (

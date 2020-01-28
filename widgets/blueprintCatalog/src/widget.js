@@ -27,7 +27,7 @@ Stage.defineWidget({
             placeHolder: 'Type URL to blueprint examples JSON file',
             description: 'If set, then GitHub options are not used for fetching data.',
             default: '//repository.cloudifysource.org/cloudify/blueprints/5.0.5/examples.json',
-            type: Stage.Basic.GenericField.STRING_TYPE
+            type: Stage.Shared.GenericField.STRING_TYPE
         },
         {
             id: 'username',
@@ -37,7 +37,7 @@ Stage.defineWidget({
                 'GitHub user or organization account name which is the owner of the repositories to fetch. ' +
                 'Used only if Blueprints Examples URL is not set.',
             default: 'cloudify-examples',
-            type: Stage.Basic.GenericField.STRING_TYPE
+            type: Stage.Shared.GenericField.STRING_TYPE
         },
         {
             id: 'filter',
@@ -47,21 +47,21 @@ Stage.defineWidget({
                 "Optional filter for GitHub repositories. See GitHub's web page 'Searching repositories' for more details. " +
                 'Used only if Blueprints Examples URL is not set.',
             default: 'blueprint in:name NOT local',
-            type: Stage.Basic.GenericField.STRING_TYPE
+            type: Stage.Shared.GenericField.STRING_TYPE
         },
         {
             id: 'displayStyle',
             name: 'Display style',
             items: [{ name: 'Table', value: 'table' }, { name: 'Catalog', value: 'catalog' }],
             default: 'catalog',
-            type: Stage.Basic.GenericField.LIST_TYPE
+            type: Stage.Shared.GenericField.LIST_TYPE
         },
         {
             id: 'sortByName',
             name: 'Sort by name',
             description: 'If set to true, then blueprints will be sorted by name.',
             default: false,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+            type: Stage.Shared.GenericField.BOOLEAN_TYPE
         }
     ],
 

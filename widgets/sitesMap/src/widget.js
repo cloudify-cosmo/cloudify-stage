@@ -19,7 +19,7 @@ Stage.defineWidget({
             id: 'showAllLabels',
             name: 'Show all the site labels',
             default: false,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+            type: Stage.Shared.GenericField.BOOLEAN_TYPE
         }
     ],
 

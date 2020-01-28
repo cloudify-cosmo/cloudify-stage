@@ -1,8 +1,6 @@
-/**
- * Created by kinneretzin on 06/10/2016.
- */
-
 // NOTE: When you update this list, please also update list in: doc/index.md
+// TODO
+
 import {
     Accordion,
     Breadcrumb,
@@ -30,8 +28,6 @@ import {
     Step,
     Table
 } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import SplitterLayout from 'react-splitter-layout';
 
 import {
     Alert,
@@ -63,21 +59,14 @@ import {
     VisibilityIcon
 } from 'cloudify-ui-components';
 
-import Cluster from './cluster';
-import ExecutionStatus from './ExecutionStatus';
-import GenericField from './GenericField';
-import Graphs from './graphs';
-import IdPopup from './IdPopup';
-import Leaflet from './leaflet';
-import MaintenanceModeActivationButton from './maintenance/MaintenanceModeActivationButton';
-import MaintenanceModeModal from './maintenance/MaintenanceModeModal';
-import MessageContainer from './MessageContainer';
-import NodeFilter from './NodeFilter';
-import NodeInstancesFilter from './NodeInstancesFilter';
-import PageFilter from './PageFilter';
-import ParameterValue from './ParameterValue';
-import ParameterValueDescription from './ParameterValueDescription';
-import Wizard from './wizard';
+import { Map, TileLayer, Marker, Popup as LeafletPopup } from 'react-leaflet';
+
+const Leaflet = {
+    Map,
+    TileLayer,
+    Marker,
+    Popup: LeafletPopup
+};
 
 export {
     Accordion,
@@ -89,7 +78,6 @@ export {
     Card,
     Checkbox,
     Checkmark,
-    Cluster,
     Confirm,
     Container,
     CopyToClipboardButton,
@@ -101,15 +89,11 @@ export {
     Dropdown,
     EditableLabel,
     ErrorMessage,
-    ExecutionStatus,
     Form,
-    GenericField,
-    Graphs,
     Grid,
     Header,
     HighlightText,
     Icon,
-    IdPopup,
     Image,
     Input,
     Item,
@@ -117,21 +101,12 @@ export {
     Label,
     Leaflet,
     List,
-    Link,
     Loader,
     Loading,
-    MaintenanceModeActivationButton,
-    MaintenanceModeModal,
     Menu,
     Message,
-    MessageContainer,
     Modal,
-    NodeFilter,
-    NodeInstancesFilter,
     NodesTree,
-    ParameterValue,
-    ParameterValueDescription,
-    PageFilter,
     Popup,
     PopupConfirm,
     PopupHelp,
@@ -143,10 +118,8 @@ export {
     ReadmeModal,
     Segment,
     Sidebar,
-    SplitterLayout,
     Step,
     Table,
     VisibilityIcon,
-    VisibilityField,
-    Wizard
+    VisibilityField
 };

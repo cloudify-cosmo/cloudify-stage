@@ -5,10 +5,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal, MessageContainer } from '../basic';
+import { Divider, Header } from '../basic';
+import {
+    ClusterServicesList,
+    MaintenanceModeActivationButton,
+    MaintenanceModeModal,
+    MessageContainer
+} from '../shared';
 import Banner from '../../containers/banner/Banner';
 import Consts from '../../utils/consts';
-import ClusterServicesList from '../basic/cluster/ClusterServicesList';
 import FullScreenSegment from '../layout/FullScreenSegment';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StageUtils from '../../utils/stageUtils';

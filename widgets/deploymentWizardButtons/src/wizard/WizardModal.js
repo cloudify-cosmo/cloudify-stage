@@ -1,12 +1,3 @@
-/**
- * Created by jakub.niezgoda on 20/07/2018.
- */
-
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Modal, Step } from 'semantic-ui-react';
-import { ErrorMessage, Confirm } from 'cloudify-ui-components';
-
 import './Wizard.css';
 
 /**
@@ -15,12 +6,8 @@ import './Wizard.css';
  *
  * Steps have to be constructed using {@link createWizardStep} function.
  *
- * ## Access
- * `Stage.Basic.Wizard.Modal`
- *
  * ## Usage
  *
- * ![WizardModal](manual/asset/wizard/WizardModal_0.png)
  * ```
  * const wizardTitle = 'Hello World Wizard';
  * const helloWorldWizardSteps = [
@@ -31,7 +18,7 @@ import './Wizard.css';
  *               onClose={this.closeWizard.bind(this)} toolbox={toolbox} />
  *```
  */
-export default class WizardModal extends Component {
+export default class WizardModal extends React.Component {
     constructor(props) {
         super(props);
 
@@ -296,6 +283,8 @@ export default class WizardModal extends Component {
     }
 
     render() {
+        const { Confirm, ErrorMessage, Modal, Step } = Stage.Basic;
+
         const { steps } = this.props;
         const ActiveStep = steps[this.state.activeStepIndex];
         const activeStepName = this.getStepNameByIndex(this.state.activeStepIndex);

@@ -21,14 +21,14 @@ Stage.defineWidget({
             name: 'Plugins Catalog JSON Source',
             placeHolder: 'Type JSON Path',
             default: '//repository.cloudifysource.org/cloudify/wagons/plugins.json',
-            type: Stage.Basic.GenericField.STRING_TYPE
+            type: Stage.Shared.GenericField.STRING_TYPE
         },
         {
             id: 'sortByName',
             name: 'Sort by name',
             description: 'If set to true, then plugins will be sorted by name.',
             default: false,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+            type: Stage.Shared.GenericField.BOOLEAN_TYPE
         }
     ],
 

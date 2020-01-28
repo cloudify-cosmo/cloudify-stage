@@ -20,7 +20,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const { MaintenanceModeActivationButton, MaintenanceModeModal } = Stage.Basic;
+        const { MaintenanceModeActivationButton, MaintenanceModeModal } = Stage.Shared;
 
         return (
             <div>

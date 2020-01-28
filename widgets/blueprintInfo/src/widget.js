@@ -23,7 +23,7 @@ Stage.defineWidget({
             id: 'blueprintId',
             name: 'Blueprint ID',
             placeHolder: 'Enter the blueprint id you wish to show info',
-            type: Stage.Basic.GenericField.STRING_TYPE
+            type: Stage.Shared.GenericField.STRING_TYPE
         }
     ],
 

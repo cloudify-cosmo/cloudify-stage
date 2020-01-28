@@ -2,11 +2,10 @@
  * Created by kinneretzin on 15/11/2016.
  */
 
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import React, { Component } from 'react';
-import { Input, Checkbox } from 'semantic-ui-react';
-import { Dropdown, Form } from 'cloudify-ui-components';
+import { Checkbox, Dropdown, Input, Form } from '../basic';
 import { getToolbox } from '../../utils/Toolbox';
 
 /**

@@ -33,17 +33,8 @@ class InputsSection extends React.Component {
     }
 
     render() {
-        const {
-            Form,
-            Header,
-            Icon,
-            List,
-            ParameterValue,
-            ParameterValueDescription,
-            Popup,
-            PopupHelp,
-            Table
-        } = Stage.Basic;
+        const { Form, Header, Icon, List, Popup, PopupHelp, Table } = Stage.Basic;
+        const { ParameterValue, ParameterValueDescription } = Stage.Common;
         const { Json } = Stage.Utils;
 
         const newInputs = Array.sort(_.keys(this.props.newInputs));

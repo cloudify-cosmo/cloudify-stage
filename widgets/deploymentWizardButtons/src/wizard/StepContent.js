@@ -1,17 +1,7 @@
 /**
- * Created by jakub.niezgoda on 31/07/2018.
- */
-
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
-/**
  * StepContent component is interface for components implementing step content for {@link WizardModal}
- *
- * ## Access
- * `Stage.Basic.Wizard.Step.Content`
  */
-export default class StepContent extends Component {
+export default class StepContent extends React.Component {
     constructor(props) {
         super(props);
     }

@@ -12,7 +12,8 @@ import FullScreenSegment from './layout/FullScreenSegment';
 import EulaLink from './license/EulaLink';
 import CurrentLicense from './license/CurrentLicense';
 import UploadLicense from './license/UploadLicense';
-import { Button, Form, Grid, Header, Icon, Message, MessageContainer } from './basic';
+import { Button, Form, Grid, Header, Icon, Message } from './basic';
+import { MessageContainer } from './shared';
 
 function LicenseSwitchButton({ isEditLicenseActive, onClick, color }) {
     return (

@@ -25,7 +25,7 @@ Stage.defineWidget({
             placeHolder: 'Select fields from the list',
             items: ['Deployment', 'IP', 'Last Execution', 'Status', 'Actions'],
             default: 'Deployment,IP,Last Execution,Status,Actions',
-            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+            type: Stage.Shared.GenericField.MULTI_SELECT_LIST_TYPE
         }
     ],
 

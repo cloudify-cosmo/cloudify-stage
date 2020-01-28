@@ -21,8 +21,6 @@ import {
 } from 'recharts';
 import { format as d3format } from 'd3-format';
 
-import StageUtils from '../../../utils/stageUtils';
-
 /**
  * Graph is a component to present data in form of line or bar charts.
  * Up to {@link Graph.MAX_NUMBER_OF_CHARTS} charts can be displayed within one Graph component.
@@ -64,13 +62,9 @@ import StageUtils from '../../../utils/stageUtils';
  * ```
  * Up to {@link Graph.MAX_NUMBER_OF_CHARTS} charts can be defined in charts configuration array.
  *
- * ## Access
- * `Stage.Basic.Graphs.Graph`
- *
  * ## Usage
  *
  * ### Bar chart
- * ![Graph 0](manual/asset/graphs/Graph_0.png)
  *
  * ```
  * let data = [
@@ -84,7 +78,6 @@ import StageUtils from '../../../utils/stageUtils';
  * ```
  *
  * ### Line chart
- * ![Graph 1](manual/asset/graphs/Graph_1.png)
  *
  * ```
  * let data = [
@@ -100,7 +93,6 @@ import StageUtils from '../../../utils/stageUtils';
  * ```
  *
  * ### Area chart
- * ![Graph 2](manual/asset/graphs/Graph_2.png)
  *
  * ```
  * let data = [
@@ -117,7 +109,6 @@ import StageUtils from '../../../utils/stageUtils';
  *
  *
  * ### Line chart - multi-charts, one Y-axis per chart
- * ![Graph 3](manual/asset/graphs/Graph_3.png)
  *
  * ```
  * let data = [
@@ -138,7 +129,6 @@ import StageUtils from '../../../utils/stageUtils';
  * ```
  *
  * ### Line chart - multi-charts, one Y-axis
- * ![Graph 4](manual/asset/graphs/Graph_4.png)
  *
  * ```
  * let data = [
@@ -155,7 +145,6 @@ import StageUtils from '../../../utils/stageUtils';
  *
  * return (<Graph charts={charts} data={data} type={Graph.LINE_CHART_TYPE} />);
  * ```
- 
  */
 export default class Graph extends Component {
     /**
@@ -343,7 +332,7 @@ export default class Graph extends Component {
         });
 
         const xAxisDataFormatter = value => {
-            return StageUtils.Time.formatLocalTimestamp(value, this.props.xAxisTimeFormat, this.props.dataTimeFormat);
+            return Stage.Utils.Time.formatLocalTimestamp(value, this.props.xAxisTimeFormat, this.props.dataTimeFormat);
         };
 
         return (

@@ -11,25 +11,19 @@ import ExecutionUtils from '../../utils/shared/ExecutionUtils';
 
 /**
  * ExecutionStatus is a component which shows execution status as icon with optional status and workflow ID strings.
- *
- * ## Access
- * `Stage.Basic.ExecutionStatus`
- *
+ * *
  * ## Usage
  * ### Label with status and worfklow ID
- * ![ExecutionStatus](manual/asset/ExecutionStatus_0.png)
  * ```
  * <ExecutionStatus execution={execution} />
  * ```
  *
  * ### Only icon
- * ![ExecutionStatus](manual/asset/ExecutionStatus_1.png)
  * ```
  * <ExecutionStatus execution={execution} showLabel={false} />
  * ```
  *
  * ### Scheduled execution popup
- * ![ExecutionStatus](manual/asset/ExecutionStatus_2.png)
  * ```
  * <ExecutionStatus execution={execution} showWorkflowId={false} />
  * ```
@@ -40,9 +34,9 @@ export default class ExecutionStatus extends Component {
      * @property {object} execution Execution resource object
      * @property {object} [labelProps={}] Props to be passed to Label component
      * @property {object} [iconProps={}] Props to be passed to Icon component
-     * @property {bool} [allowShowingPopup=true] If set to true and execution is in one of the waiting states, then popup will be shown on hovering execution status label displaying scheduled_for value
-     * @property {bool} [showLabel=true] If set to true, then execution status will be added to label
-     * @property {bool} [showWorkflowId=true] If set to true, then workflow ID will be added to label
+     * @property {boolean} [allowShowingPopup=true] If set to true and execution is in one of the waiting states, then popup will be shown on hovering execution status label displaying scheduled_for value
+     * @property {boolean} [showLabel=true] If set to true, then execution status will be added to label
+     * @property {boolean} [showWorkflowId=true] If set to true, then workflow ID will be added to label
      */
     static propTypes = {
         execution: PropTypes.object.isRequired,

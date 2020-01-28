@@ -16,16 +16,11 @@ import {
     PopupMenu
 } from 'cloudify-ui-components';
 
-import ExecutionStatus from '../ExecutionStatus';
-import Consts from '../../../utils/consts';
-import StageUtils from '../../../utils/stageUtils';
-import {
-    switchMaintenance,
-    getActiveExecutions,
-    setActiveExecutions,
-    doCancelExecution
-} from '../../../actions/managers';
-import ExecutionUtils from '../../../utils/shared/ExecutionUtils';
+import ExecutionUtils from '../../utils/shared/ExecutionUtils';
+import { switchMaintenance, getActiveExecutions, setActiveExecutions, doCancelExecution } from '../../actions/managers';
+import ExecutionStatus from './ExecutionStatus';
+import Consts from '../../utils/consts';
+import StageUtils from '../../utils/stageUtils';
 
 const POLLING_INTERVAL = 2000;
 

@@ -1,9 +1,3 @@
-/**
- * Created by jakub.niezgoda on 02/08/2018.
- */
-
-import React, { Component } from 'react';
-
 import StepActions from './StepActions';
 import StepContent from './StepContent';
 
@@ -12,7 +6,7 @@ function getDisplayName(WrappedComponent) {
 }
 
 function createStepContent(ContentComponent, id) {
-    class StepContentComponent extends Component {
+    class StepContentComponent extends React.Component {
         constructor(props) {
             super(props);
         }
@@ -30,7 +24,7 @@ function createStepContent(ContentComponent, id) {
 }
 
 function createStepActions(ActionsComponent, id) {
-    class StepActionsComponent extends Component {
+    class StepActionsComponent extends React.Component {
         constructor(props) {
             super(props);
         }
@@ -48,7 +42,7 @@ function createStepActions(ActionsComponent, id) {
 }
 
 /**
- * Function creating step object. Can be accessed using: `Stage.Basic.Wizard.Utils.createWizardStep`.
+ * Function creating step object.
  *
  * @param {string} id step ID
  * @param {string} title step name to be shown in header part (top) of the wizard

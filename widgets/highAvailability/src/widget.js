@@ -11,8 +11,8 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     render(widget, data, error, toolbox) {
-        const { Cluster } = Stage.Basic;
+        const { ClusterServicesList } = Stage.Shared;
 
-        return <Cluster.ClusterServicesList toolbox={toolbox} />;
+        return <ClusterServicesList toolbox={toolbox} />;
     }
 });

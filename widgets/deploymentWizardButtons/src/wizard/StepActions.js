@@ -1,18 +1,7 @@
 /**
- * Created by jakub.niezgoda on 31/07/2018.
- */
-
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Button } from 'semantic-ui-react';
-
-/**
  * StepActions component is interface for components implementing step actions for {@link WizardModal}
- *
- * ## Access
- * `Stage.Basic.Wizard.Step.Actions`
  */
-export default class StepActions extends Component {
+export default class StepActions extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -105,6 +94,8 @@ export default class StepActions extends Component {
     }
 
     render() {
+        const { Button } = Stage.Basic;
+
         return (
             <>
                 {this.props.children}

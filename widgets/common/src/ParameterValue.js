@@ -1,34 +1,10 @@
-/**
- * Created by jakubniezgoda on 24/10/2018.
- */
-
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { types } from 'cloudify-ui-common';
-import { CopyToClipboardButton, HighlightText } from 'cloudify-ui-components';
-
-import StageUtils from '../../utils/stageUtils';
 
 /**
  * ParameterValue is a component which shows parameters (e.g. deployment/blueprint inputs, outputs, runtime properties, ...)
  * in nice user-friendly formatted manner with copy to clipboard button.
- *
- * ## Access
- * `Stage.Basic.ParameterValue`
- *
- * ## Usage
- * ```
- * <ParameterValue value={value} />
- * ```
- *
- * ### ParameterValue for JSON
- * ![ParameterValue JSON](manual/asset/ParameterValue_0.png)
- *
- * ### ParameterValue for string
- * ![ParameterValue STRING](manual/asset/ParameterValue_1.png)
- *
  */
-export default class ParameterValue extends Component {
+export default class ParameterValue extends React.Component {
     /**
      * propTypes
      *
@@ -50,7 +26,8 @@ export default class ParameterValue extends Component {
     }
 
     getValueElement(stringValue) {
-        const { Url } = StageUtils;
+        const { HighlightText } = Stage.Basic;
+        const { Url } = Stage.Utils;
 
         const commonStyle = { padding: '0.5em', whiteSpace: 'pre-wrap', wordBreak: 'break-word' };
         const typedValue = this.props.value;
@@ -97,7 +74,8 @@ export default class ParameterValue extends Component {
     }
 
     render() {
-        const { Json } = StageUtils;
+        const { CopyToClipboardButton } = Stage.Basic;
+        const { Json } = Stage.Utils;
 
         const stringValue = _.isObject(this.props.value)
             ? Json.stringify(this.props.value, true)
@@ -113,3 +91,8 @@ export default class ParameterValue extends Component {
         );
     }
 }
+
+Stage.defineCommon({
+    name: 'ParameterValue',
+    common: ParameterValue
+});
