@@ -9,7 +9,7 @@ import { clusterNodeStatusEnum, clusterNodeStatuses } from './consts';
 export default function NodeStatus({ name, type, status, services }) {
     const icon = {
         [clusterNodeStatusEnum.OK]: <Icon name="checkmark" color="green" link />,
-        [clusterNodeStatusEnum.FAIL]: <Icon name="remove" color="red" link />
+        [clusterNodeStatusEnum.Fail]: <Icon name="remove" color="red" link />
     }[status];
 
     return (
