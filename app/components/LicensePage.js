@@ -6,7 +6,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Consts from '../utils/consts';
-import StageUtils from '../utils/stageUtils';
 import Banner from '../containers/banner/Banner';
 import FullScreenSegment from './layout/FullScreenSegment';
 import EulaLink from './license/EulaLink';
@@ -148,23 +147,23 @@ export default class LicensePage extends Component {
         this.onLicenseButtonClick = this.onLicenseButtonClick.bind(this);
         this.onLicenseEdit = this.onLicenseEdit.bind(this);
         this.onLicenseUpload = this.onLicenseUpload.bind(this);
-        this.toolbox = StageUtils.getToolbox(() => {}, () => {}, null);
     }
 
     static propTypes = {
+        canUploadLicense: PropTypes.bool.isRequired,
         isProductOperational: PropTypes.bool.isRequired,
         license: PropTypes.object.isRequired,
         onLicenseChange: PropTypes.func.isRequired,
         onGoToApp: PropTypes.func.isRequired,
-        status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired
+        status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired,
+        manager: PropTypes.object.isRequired
     };
 
     static defaultProps = {};
 
     componentDidMount() {
         this.setState({ isLoading: true });
-        return this.toolbox
-            .getManager()
+        return this.props.manager
             .doGet('/license')
             .then(data => {
                 const license = _.get(data, 'items[0]', {});
@@ -185,8 +184,7 @@ export default class LicensePage extends Component {
     onLicenseUpload() {
         this.setState({ isLoading: true });
 
-        return this.toolbox
-            .getManager()
+        return this.props.manager
             .doPut('/license', null, this.state.license)
             .then(data => {
                 this.setState({ isLoading: false, error: null, isEditLicenseActive: false });

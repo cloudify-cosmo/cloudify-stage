@@ -10,9 +10,9 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('highAvailability'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
-    render(widget, data, error, toolbox) {
+    render() {
         const { ClusterServicesList } = Stage.Shared;
 
-        return <ClusterServicesList toolbox={toolbox} />;
+        return <ClusterServicesList />;
     }
 });

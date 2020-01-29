@@ -6,7 +6,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Checkbox, Dropdown, Input, Form } from '../basic';
-import { getToolbox } from '../../utils/Toolbox';
 
 /**
  * GenericField is a generic component which can be used as different input fields in {@link Form} component
@@ -211,7 +210,6 @@ export default class GenericField extends Component {
     constructor(props, context) {
         super(props, context);
 
-        this.toolbox = getToolbox(() => {}, () => {}, null);
         this.state = GenericField.isListType(props.type) ? { options: [] } : {};
     }
 
@@ -239,11 +237,6 @@ export default class GenericField extends Component {
 
             this.setState({ options });
         }
-    }
-
-    _storeValueInContext(name, value) {
-        this.toolbox.getContext().setValue([name], value);
-        this.toolbox.getEventBus().trigger(`${name}:change`);
     }
 
     _handleInputChange(proxy, field) {

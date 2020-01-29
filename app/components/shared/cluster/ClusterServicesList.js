@@ -25,16 +25,11 @@ PublicIP.defaultProps = {
     ip: ''
 };
 
-function ClusterServicesList({ services, toolbox }) {
+function ClusterServicesList({ services }) {
     const noServicesMessage = 'There are no Cluster Services available.';
 
     return (
-        <DataTable
-            fetchData={toolbox.refresh}
-            noDataMessage={noServicesMessage}
-            noDataAvailable={_.isEmpty(services)}
-            selectable
-        >
+        <DataTable noDataMessage={noServicesMessage} noDataAvailable={_.isEmpty(services)} selectable>
             <DataTable.Column label="Service Type" width="20%" />
             <DataTable.Column label="Node Name" width="25%" />
             <DataTable.Column label="Status" width="5%" />
@@ -100,8 +95,7 @@ const clusterServiceProps = PropTypes.shape({
 }).isRequired;
 
 ClusterServicesList.propTypes = {
-    services: PropTypes.shape(_.mapValues(clusterServiceEnum, () => clusterServiceProps)).isRequired,
-    toolbox: PropTypes.shape({ refresh: PropTypes.func.isRequired }).isRequired
+    services: PropTypes.shape(_.mapValues(clusterServiceEnum, () => clusterServiceProps)).isRequired
 };
 
 const mapStateToProps = state => ({

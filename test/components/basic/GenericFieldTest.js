@@ -6,7 +6,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
 import configureMockStore from 'redux-mock-store';
-import GenericField from 'app/components/basic/GenericField';
+import GenericField from 'app/components/shared/GenericField';
 import { createToolbox } from 'app/utils/Toolbox';
 
 const mockStore = configureMockStore();
