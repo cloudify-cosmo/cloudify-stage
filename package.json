@@ -9,7 +9,6 @@
     "devtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec",
     "devServer": "node devServer.js",
     "lint": "eslint app backend widgets test scripts --ext .js",
-    "doc": "esdoc -c ./doc/esdoc.json",
     "docWidgets": "node scripts/updateReadmes.js",
     "e2e": "npm run e2e:old && npm run e2e:new",
     "e2e:old": "nightwatch -c ./test/nightwatch/nightwatch.conf.js",
