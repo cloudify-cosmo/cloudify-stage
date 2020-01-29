@@ -5,11 +5,11 @@
 import ResourceStatus from './helpers/ResourceStatus';
 import ResourceAction from './helpers/ResourceAction';
 import NoResourceMessage from './helpers/NoResourceMessage';
-
-const secretsStepId = 'secrets';
 import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+
+const secretsStepId = 'secrets';
 
 class SecretsStepActions extends React.Component {
     static propTypes = StepActions.propTypes;

@@ -55,14 +55,7 @@ class ConfirmationStepActions extends React.Component {
     }
 
     render() {
-        return (
-            <StepActions
-                {...this.props}
-                onNext={this.onNext.bind(this)}
-                nextLabel="Install"
-                nextIcon="download"
-            />
-        );
+        return <StepActions {...this.props} onNext={this.onNext.bind(this)} nextLabel="Install" nextIcon="download" />;
     }
 }
 

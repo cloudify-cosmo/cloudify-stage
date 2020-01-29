@@ -108,13 +108,7 @@ class InstallStepActions extends React.Component {
         if (tasksStats.allTasksEnded && this.state.secondsRemaining > 0) {
             // success, waiting for redirection
             return (
-                <StepActions
-                    {...this.props}
-                    showNext={false}
-                    showPrev={false}
-                    showStartOver={false}
-                    showClose={false}
-                >
+                <StepActions {...this.props} showNext={false} showPrev={false} showStartOver={false} showClose={false}>
                     <Progress size="large" percent={percent} autoSuccess>
                         Installation started! Redirecting to deployment page in {this.state.secondsRemaining} seconds...
                     </Progress>

@@ -123,7 +123,6 @@ export default class extends React.Component {
         const { IdPopup } = Stage.Shared;
         const { DeleteConfirm, UploadPluginModal } = Stage.Common;
 
-
         return (
             <div>
                 <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
