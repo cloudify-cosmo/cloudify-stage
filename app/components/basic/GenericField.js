@@ -90,129 +90,32 @@ import { Checkbox, Dropdown, Form } from 'cloudify-ui-components';
  */
 
 export default class GenericField extends Component {
-    /**
-     * alphanumeric input field
-     */
-    static STRING_TYPE = 'string';
-
-    /**
-     * password input field
-     */
-    static PASSWORD_TYPE = 'password';
-
-    /**
-     * numeric input field
-     */
-    static NUMBER_TYPE = 'number';
-
-    /**
-     * two-state input field
-     */
-    static BOOLEAN_TYPE = 'boolean';
-
-    /**
-     * boolean with no default
-     */
-    static BOOLEAN_LIST_TYPE = 'booleanList';
-
-    /**
-     * dropdown alphanumeric list field
-     */
-    static LIST_TYPE = 'list';
-
-    /**
-     * dropdown numeric list field
-     */
-    static NUMBER_LIST_TYPE = 'numberList';
-
-    /**
-     * dropdown multiselection list
-     */
-    static MULTI_SELECT_LIST_TYPE = 'multiSelectList';
-
-    /**
-     * dropdown editable list
-     */
-    static EDITABLE_LIST_TYPE = 'editableList';
-
-    /**
-     * dropdown editable numeric list
-     */
-    static NUMBER_EDITABLE_LIST_TYPE = 'numberEditableList';
-
-    /**
-     * custom input field
-     */
-    static CUSTOM_TYPE = 'custom';
-
-    static isListType(type) {
-        return (
-            type === GenericField.LIST_TYPE ||
-            type === GenericField.NUMBER_LIST_TYPE ||
-            type === GenericField.MULTI_SELECT_LIST_TYPE ||
-            type === GenericField.BOOLEAN_LIST_TYPE ||
-            type === GenericField.EDITABLE_LIST_TYPE ||
-            type === GenericField.NUMBER_EDITABLE_LIST_TYPE
-        );
-    }
-
-    /**
-     * propTypes
-     *
-     * @property {string} label field's label to show above the field
-     * @property {string} name name of the input field
-     * @property {string} [placeholder=''] specifies a short hint that describes the expected value of an input field
-     * @property {string} [error=false] specifies if a field should be marked as field with error
-     * @property {string} [type=GenericField.STRING_TYPE] specifies type of the field
-     * @property {string} [icon=null] additional icon in right side of the input field
-     * @property {string|element} [description=''] fields description showed in popup when user hovers field
-     * @property {object} [value=''] specifies the value of an <input> element
-     * @property {boolean} [required={true}] define if a field is required adding a red star icon to label
-     * @property {object[]} [items=[]] list of items (for list types)
-     * @property {Function} [onChange=()=>{}] function called on input value change
-     * @property {number} [max=null] maximal value (only for {@link GenericField.NUMBER_TYPE} type)
-     * @property {number} [min=null] minimal value (only for {@link GenericField.NUMBER_TYPE} type)
-     */
-    static propTypes = {
-        label: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        placeholder: PropTypes.string,
-        error: PropTypes.bool,
-        type: PropTypes.string,
-        icon: PropTypes.string,
-        description: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        value: PropTypes.any,
-        required: PropTypes.bool,
-        onChange: PropTypes.func,
-
-        // field specific configuration
-        items: PropTypes.array,
-        max: PropTypes.number,
-        min: PropTypes.number
-    };
-
-    static defaultProps = {
-        placeholder: '',
-        error: false,
-        type: GenericField.STRING_TYPE,
-        icon: null,
-        description: '',
-        value: '',
-        onChange: () => {},
-
-        // field specific configuration
-        items: [],
-        max: null,
-        min: null
-    };
-
     constructor(props, context) {
         super(props, context);
 
         this.state = GenericField.isListType(props.type) ? { options: [] } : {};
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    _initOptions(props) {
+    componentDidMount() {
+        this.initOptions(this.props);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            !_.isEqual(JSON.stringify(this.props), JSON.stringify(nextProps)) ||
+            !_.isEqual(JSON.stringify(this.state), JSON.stringify(nextState))
+        );
+    }
+
+    componentDidUpdate(prevProps) {
+        const { items } = this.props;
+        if (items !== prevProps.items) {
+            this.initOptions(this.props);
+        }
+    }
+
+    initOptions(props) {
         if (props.type === GenericField.BOOLEAN_LIST_TYPE) {
             this.setState({
                 options: [{ text: 'false', value: false }, { text: 'true', value: true }]
@@ -238,130 +141,282 @@ export default class GenericField extends Component {
         }
     }
 
-    _handleInputChange(proxy, field) {
-        this.props.onChange(proxy, { ...field, genericType: this.props.type });
-    }
-
-    componentDidMount() {
-        this._initOptions(this.props);
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.items !== prevProps.items) {
-            this._initOptions(this.props);
-        }
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return (
-            !_.isEqual(JSON.stringify(this.props), JSON.stringify(nextProps)) ||
-            !_.isEqual(JSON.stringify(this.state), JSON.stringify(nextState))
-        );
-    }
-
-    static formatValue(type, value) {
-        if (type === GenericField.MULTI_SELECT_LIST_TYPE) {
-            value = _.split(value, ',');
-        } else if (type === GenericField.BOOLEAN_TYPE) {
-            value = (_.isBoolean(value) && value) || (_.isString(value) && value === 'true');
-        } else if (
-            type === GenericField.NUMBER_TYPE ||
-            type === GenericField.NUMBER_LIST_TYPE ||
-            type === GenericField.NUMBER_EDITABLE_LIST_TYPE
-        ) {
-            value = parseInt(value) || 0;
-        }
-
-        return value;
+    handleInputChange(proxy, field) {
+        const { onChange, type } = this.props;
+        onChange(proxy, { ...field, genericType: type });
     }
 
     render() {
-        let field;
+        const {
+            component,
+            default: defaultValue,
+            description,
+            error,
+            icon,
+            label,
+            max,
+            min,
+            name,
+            placeholder,
+            required,
+            type,
+            value
+        } = this.props;
+        const { options } = this.state;
+        let field = null;
 
         if (
-            this.props.type === GenericField.STRING_TYPE ||
-            this.props.type === GenericField.NUMBER_TYPE ||
-            this.props.type === GenericField.PASSWORD_TYPE
+            type === GenericField.STRING_TYPE ||
+            type === GenericField.NUMBER_TYPE ||
+            type === GenericField.PASSWORD_TYPE
         ) {
             field = (
                 <Input
-                    icon={this.props.icon}
-                    name={this.props.name}
-                    type={this.props.type === GenericField.STRING_TYPE ? 'text' : this.props.type}
-                    placeholder={this.props.placeholder}
-                    value={this.props.value === null ? '' : this.props.value}
-                    onChange={this._handleInputChange.bind(this)}
-                    max={this.props.type === GenericField.NUMBER_TYPE ? this.props.max : null}
-                    min={this.props.type === GenericField.NUMBER_TYPE ? this.props.min : null}
+                    icon={icon}
+                    name={name}
+                    type={type === GenericField.STRING_TYPE ? 'text' : type}
+                    placeholder={placeholder}
+                    value={value === null ? '' : value}
+                    onChange={this.handleInputChange}
+                    max={type === GenericField.NUMBER_TYPE ? max : null}
+                    min={type === GenericField.NUMBER_TYPE ? min : null}
                 />
             );
-        } else if (this.props.type === GenericField.BOOLEAN_TYPE) {
+        } else if (type === GenericField.BOOLEAN_TYPE) {
             field = (
                 <Checkbox
-                    name={this.props.name}
+                    label=" "
+                    name={name}
                     toggle
-                    checked={
-                        (_.isBoolean(this.props.value) && this.props.value) ||
-                        (_.isString(this.props.value) && this.props.value === 'true')
-                    }
-                    onChange={this._handleInputChange.bind(this)}
+                    checked={(_.isBoolean(value) && value) || (_.isString(value) && value === 'true')}
+                    onChange={this.handleInputChange}
                 />
             );
-        } else if (GenericField.isListType(this.props.type)) {
+        } else if (GenericField.isListType(type)) {
             field = (
                 <Dropdown
                     fluid
                     selection
-                    value={this.props.value}
-                    name={this.props.name}
-                    multiple={this.props.type === GenericField.MULTI_SELECT_LIST_TYPE}
+                    value={value}
+                    name={name}
+                    multiple={type === GenericField.MULTI_SELECT_LIST_TYPE}
                     allowAdditions={
-                        this.props.type === GenericField.EDITABLE_LIST_TYPE ||
-                        this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE
+                        type === GenericField.EDITABLE_LIST_TYPE || type === GenericField.NUMBER_EDITABLE_LIST_TYPE
                     }
-                    search={
-                        this.props.type === GenericField.EDITABLE_LIST_TYPE ||
-                        this.props.type === GenericField.NUMBER_EDITABLE_LIST_TYPE
-                    }
-                    placeholder={this.props.placeholder || 'Please select'}
-                    options={this.state.options}
-                    onAddItem={(e, { value }) => {
-                        this.setState({ options: [{ text: value, value }, ...this.state.options] });
+                    search={type === GenericField.EDITABLE_LIST_TYPE || type === GenericField.NUMBER_EDITABLE_LIST_TYPE}
+                    placeholder={placeholder || 'Please select'}
+                    options={options}
+                    onAddItem={(e, { value: newValue }) => {
+                        this.setState({ options: [{ text: newValue, value: newValue }, ...options] });
                     }}
-                    onChange={this._handleInputChange.bind(this)}
+                    onChange={this.handleInputChange}
                     clearable={false}
                 />
             );
-        } else if (this.props.type === GenericField.CUSTOM_TYPE) {
+        } else if (type === GenericField.CUSTOM_TYPE) {
             const optionalProps = _.keys(GenericField.defaultProps);
             const requiredProps = ['name', 'label', 'component'];
             const componentProps = _.omit(this.props, [...optionalProps, ...requiredProps]);
-            const CustomComponent = this.props.component;
 
-            if (_.isUndefined(CustomComponent)) {
-                return new Error(`For \`${this.props.type}\` type \`component\` prop have to be supplied.`);
+            if (_.isUndefined(component)) {
+                return new Error(`For \`${type}\` type \`component\` prop have to be supplied.`);
             }
 
             field = (
-                <CustomComponent
-                    name={this.props.name}
-                    value={_.isUndefined(this.props.value) ? this.props.default : this.props.value}
-                    onChange={this._handleInputChange.bind(this)}
+                <component
+                    name={name}
+                    value={_.isUndefined(value) ? defaultValue : value}
+                    onChange={this.handleInputChange}
+                    /* eslint-disable-next-line react/jsx-props-no-spreading */
                     {...componentProps}
                 />
             );
         }
 
         return (
-            <Form.Field
-                className={this.props.name}
-                help={this.props.description}
-                label={this.props.label}
-                required={this.props.required}
-                error={this.props.error}
-            >
+            <Form.Field className={name} help={description} label={label} required={required} error={error}>
                 {field}
             </Form.Field>
         );
     }
 }
+
+/**
+ * alphanumeric input field
+ */
+GenericField.STRING_TYPE = 'string';
+
+/**
+ * password input field
+ */
+GenericField.PASSWORD_TYPE = 'password';
+
+/**
+ * numeric input field
+ */
+GenericField.NUMBER_TYPE = 'number';
+
+/**
+ * two-state input field
+ */
+GenericField.BOOLEAN_TYPE = 'boolean';
+
+/**
+ * boolean with no default
+ */
+GenericField.BOOLEAN_LIST_TYPE = 'booleanList';
+
+/**
+ * dropdown alphanumeric list field
+ */
+GenericField.LIST_TYPE = 'list';
+
+/**
+ * dropdown numeric list field
+ */
+GenericField.NUMBER_LIST_TYPE = 'numberList';
+
+/**
+ * dropdown multiselection list
+ */
+GenericField.MULTI_SELECT_LIST_TYPE = 'multiSelectList';
+
+/**
+ * dropdown editable list
+ */
+GenericField.EDITABLE_LIST_TYPE = 'editableList';
+
+/**
+ * dropdown editable numeric list
+ */
+GenericField.NUMBER_EDITABLE_LIST_TYPE = 'numberEditableList';
+
+/**
+ * custom input field
+ */
+GenericField.CUSTOM_TYPE = 'custom';
+
+GenericField.formatValue = (type, value) => {
+    let formattedValue = null;
+
+    if (type === GenericField.MULTI_SELECT_LIST_TYPE) {
+        formattedValue = _.split(value, ',');
+    } else if (type === GenericField.BOOLEAN_TYPE) {
+        formattedValue = (_.isBoolean(value) && value) || (_.isString(value) && value === 'true');
+    } else if (
+        type === GenericField.NUMBER_TYPE ||
+        type === GenericField.NUMBER_LIST_TYPE ||
+        type === GenericField.NUMBER_EDITABLE_LIST_TYPE
+    ) {
+        formattedValue = parseInt(value, 10) || 0;
+    }
+
+    return formattedValue;
+};
+
+GenericField.isListType = type => {
+    return (
+        type === GenericField.LIST_TYPE ||
+        type === GenericField.NUMBER_LIST_TYPE ||
+        type === GenericField.MULTI_SELECT_LIST_TYPE ||
+        type === GenericField.BOOLEAN_LIST_TYPE ||
+        type === GenericField.EDITABLE_LIST_TYPE ||
+        type === GenericField.NUMBER_EDITABLE_LIST_TYPE
+    );
+};
+
+GenericField.propTypes = {
+    /**
+     * field's label to show above the field
+     */
+    label: PropTypes.string.isRequired,
+
+    /**
+     * name of the input field
+     */
+    name: PropTypes.string.isRequired,
+
+    /**
+     *
+     */
+    component: PropTypes.node,
+
+    /**
+     * default value of the field
+     */
+    // eslint-disable-next-line react/forbid-prop-types
+    default: PropTypes.any,
+
+    /**
+     * fields description showed in popup when user hovers field
+     */
+    description: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+
+    /**
+     * specifies if a field should be marked as field with error
+     */
+    error: PropTypes.bool,
+
+    /**
+     * additional icon in right side of the input field
+     */
+    icon: PropTypes.string,
+
+    /**
+     * list of items (for list types)
+     */
+    // eslint-disable-next-line react/forbid-prop-types
+    items: PropTypes.array,
+
+    /**
+     * maximal value (only for GenericField.NUMBER_TYPE types)
+     */
+    max: PropTypes.number,
+
+    /**
+     * minimal value (only for GenericField.NUMBER_TYPE types)
+     */
+    min: PropTypes.number,
+
+    /**
+     * function called on input value change
+     */
+    onChange: PropTypes.func,
+
+    /**
+     * specifies a short hint that describes the expected value of an input field
+     */
+    placeholder: PropTypes.string,
+
+    /**
+     * define if a field is required adding a red star icon to label
+     */
+    required: PropTypes.bool,
+
+    /**
+     * specifies type of the field
+     */
+    type: PropTypes.string,
+
+    /**
+     * specifies the value of the field
+     */
+    // eslint-disable-next-line react/forbid-prop-types
+    value: PropTypes.any
+};
+
+GenericField.defaultProps = {
+    component: null,
+    default: '',
+    description: '',
+    error: false,
+    icon: null,
+    items: [],
+    max: null,
+    min: null,
+    onChange: () => {},
+    placeholder: '',
+    required: false,
+    type: GenericField.STRING_TYPE,
+    value: ''
+};
