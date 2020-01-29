@@ -2,7 +2,6 @@ import ExecutionStatus from './ExecutionStatus';
 import ClusterServicesList from './cluster/ClusterServicesList';
 import ClusterStatusIcon from './cluster/ClusterStatusIcon';
 import ClusterServicesOverview from './cluster/ClusterServicesOverview';
-import GenericField from './GenericField';
 import Graph from './graphs/Graph';
 import PieGraph from './graphs/PieGraph';
 import IdPopup from './IdPopup';
@@ -17,7 +16,6 @@ export {
     ClusterServicesOverview,
     ClusterStatusIcon,
     ExecutionStatus,
-    GenericField,
     Graph,
     IdPopup,
     Link,

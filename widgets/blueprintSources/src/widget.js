@@ -23,7 +23,7 @@ Stage.defineWidget({
             id: 'contentPaneWidth',
             name: 'Content pane initial width in %',
             default: 65,
-            type: Stage.Shared.GenericField.NUMBER_TYPE
+            type: Stage.Basic.GenericField.NUMBER_TYPE
         }
     ],
 

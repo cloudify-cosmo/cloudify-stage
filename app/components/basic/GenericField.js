@@ -5,7 +5,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Checkbox, Dropdown, Input, Form } from '../basic';
+import { Input } from 'semantic-ui-react';
+import { Checkbox, Dropdown, Form } from 'cloudify-ui-components';
 
 /**
  * GenericField is a generic component which can be used as different input fields in {@link Form} component
@@ -183,7 +184,6 @@ export default class GenericField extends Component {
         value: PropTypes.any,
         required: PropTypes.bool,
         onChange: PropTypes.func,
-        storeValueInContext: PropTypes.bool,
 
         // field specific configuration
         items: PropTypes.array,
@@ -199,7 +199,6 @@ export default class GenericField extends Component {
         description: '',
         value: '',
         onChange: () => {},
-        storeValueInContext: false,
 
         // field specific configuration
         items: [],
@@ -240,16 +239,10 @@ export default class GenericField extends Component {
     }
 
     _handleInputChange(proxy, field) {
-        if (this.props.storeValueInContext) {
-            this._storeValueInContext(field.name, field.value);
-        }
         this.props.onChange(proxy, { ...field, genericType: this.props.type });
     }
 
     componentDidMount() {
-        if (this.props.storeValueInContext) {
-            this._storeValueInContext(this.props.name, this.props.value);
-        }
         this._initOptions(this.props);
     }
 

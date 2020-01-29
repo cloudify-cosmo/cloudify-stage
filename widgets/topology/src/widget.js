@@ -24,17 +24,17 @@ Stage.defineWidget({
             id: 'enableNodeClick',
             name: 'Enable node click',
             default: true,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'enableGroupClick',
             name: 'Enable group click',
             default: true,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
-        { id: 'enableZoom', name: 'Enable zoom', default: true, type: Stage.Shared.GenericField.BOOLEAN_TYPE },
-        { id: 'enableDrag', name: 'Enable drag', default: true, type: Stage.Shared.GenericField.BOOLEAN_TYPE },
-        { id: 'showToolbar', name: 'Show toolbar', default: true, type: Stage.Shared.GenericField.BOOLEAN_TYPE }
+        { id: 'enableZoom', name: 'Enable zoom', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
+        { id: 'enableDrag', name: 'Enable drag', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
+        { id: 'showToolbar', name: 'Show toolbar', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE }
     ],
 
     fetchData(widget, toolbox) {

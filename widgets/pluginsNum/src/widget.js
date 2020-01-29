@@ -21,7 +21,7 @@ Stage.defineWidget({
             id: 'page',
             name: 'Page to open on click',
             description: 'Page to open when user clicks on widget content',
-            type: Stage.Shared.GenericField.CUSTOM_TYPE,
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
             default: 'system_resources',
             component: Stage.Shared.PageFilter
         }

@@ -36,7 +36,7 @@ Stage.defineWidget({
                 'Groups'
             ],
             default: 'Name,Type,Blueprint,Deployment,Contained in,Connected to,Host,Creator,# Instances,Groups',
-            type: Stage.Shared.GenericField.MULTI_SELECT_LIST_TYPE
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         }
     ],
     fetchUrl: {

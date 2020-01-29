@@ -58,38 +58,38 @@ Stage.defineWidget({
             id: 'filterByBlueprints',
             name: 'Show blueprint filter',
             default: true,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'filterByDeployments',
             name: 'Show deployment filter',
             default: true,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'filterByExecutions',
             name: 'Show execution filter',
             default: true,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
-        { id: 'filterByNodes', name: 'Show node filter', default: false, type: Stage.Shared.GenericField.BOOLEAN_TYPE },
+        { id: 'filterByNodes', name: 'Show node filter', default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
         {
             id: 'filterByNodeInstances',
             name: 'Show node instance filter',
             default: false,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'filterByExecutionsStatus',
             name: 'Show execution status filter',
             default: false,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'filterBySiteName',
             name: 'Show site name filter',
             default: false,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'allowMultipleSelection',
@@ -97,7 +97,7 @@ Stage.defineWidget({
             description:
                 'Allows selecting more than one blueprint, deployment, node, node instance and execution in the filter',
             default: false,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
     ],
 

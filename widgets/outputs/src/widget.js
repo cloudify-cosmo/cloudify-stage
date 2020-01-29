@@ -18,7 +18,7 @@ Stage.defineWidget({
             id: 'showCapabilities',
             name: 'Show Capabilities',
             default: true,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
     ],
 

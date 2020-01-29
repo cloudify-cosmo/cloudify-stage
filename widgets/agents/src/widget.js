@@ -29,7 +29,7 @@ Stage.defineWidget({
             placeHolder: 'Select fields from the list',
             items: ['Id', 'Node', 'Deployment', 'IP', 'Install Method', 'System', 'Version', 'Actions'],
             default: 'Id,Node,Deployment,IP,Install Method,System,Version,Actions',
-            type: Stage.Shared.GenericField.MULTI_SELECT_LIST_TYPE
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
             id: 'installMethods',
@@ -39,7 +39,7 @@ Stage.defineWidget({
             placeHolder: 'Select Install Methods from the list',
             items: Consts.installMethodsOptions,
             default: '',
-            type: Stage.Shared.GenericField.MULTI_SELECT_LIST_TYPE
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         }
     ],
 

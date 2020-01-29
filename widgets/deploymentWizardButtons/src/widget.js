@@ -36,25 +36,25 @@ Stage.defineWidget({
             id: 'showHelloWorldWizardButton',
             name: 'Show Hello World Wizard button',
             default: configurationDefaults.showHelloWorldWizardButton,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'helloWorldWizardButtonLabel',
             name: 'Hello World Wizard button label',
             default: configurationDefaults.helloWorldWizardButtonLabel,
-            type: Stage.Shared.GenericField.STRING_TYPE
+            type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'showDeploymentWizardButton',
             name: 'Show Deployment Wizard button',
             default: configurationDefaults.showDeploymentWizardButton,
-            type: Stage.Shared.GenericField.BOOLEAN_TYPE
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'deploymentWizardButtonLabel',
             name: 'Deployment Wizard button label',
             default: configurationDefaults.deploymentWizardButtonLabel,
-            type: Stage.Shared.GenericField.STRING_TYPE
+            type: Stage.Basic.GenericField.STRING_TYPE
         }
     ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),

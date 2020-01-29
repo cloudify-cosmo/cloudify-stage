@@ -5,7 +5,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { expect } from 'chai';
-import GenericField from '../../../app/components/shared/GenericField';
+import GenericField from '../../../app/components/basic/GenericField';
 
 describe('(Component) GenericField', () => {
     it('default type', () => {

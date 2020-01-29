@@ -61,6 +61,8 @@ import {
 
 import { Map, TileLayer, Marker, Popup as LeafletPopup } from 'react-leaflet';
 
+import GenericField from './GenericField';
+
 const Leaflet = {
     Map,
     TileLayer,
@@ -90,6 +92,7 @@ export {
     EditableLabel,
     ErrorMessage,
     Form,
+    GenericField,
     Grid,
     Header,
     HighlightText,

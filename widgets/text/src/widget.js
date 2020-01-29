@@ -18,13 +18,13 @@ Stage.defineWidget({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('text'),
     initialConfiguration: [
-        { id: 'header', name: 'Header', default: 'Header text', type: Stage.Shared.GenericField.STRING_TYPE },
+        { id: 'header', name: 'Header', default: 'Header text', type: Stage.Basic.GenericField.STRING_TYPE },
         {
             id: 'content',
             name: 'Content',
             description: 'Markdown is supported',
             default: 'Markdown supported content. Update in widget configuration.',
-            type: Stage.Shared.GenericField.CUSTOM_TYPE,
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Basic.Form.TextArea
         },
 
@@ -32,14 +32,14 @@ Stage.defineWidget({
             id: 'headerTextColor',
             name: 'Header text color',
             default: '#000000',
-            type: Stage.Shared.GenericField.CUSTOM_TYPE,
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Basic.Form.ColorPicker
         },
         {
             id: 'headerTextSize',
             name: 'Header text size [px]',
             default: '20',
-            type: Stage.Shared.GenericField.NUMBER_TYPE,
+            type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 6,
             max: 100
         },
@@ -48,21 +48,21 @@ Stage.defineWidget({
             name: 'Header text font',
             default: textFonts[0].value,
             items: textFonts,
-            type: Stage.Shared.GenericField.LIST_TYPE
+            type: Stage.Basic.GenericField.LIST_TYPE
         },
 
         {
             id: 'contentTextColor',
             name: 'Content text color',
             default: '#000000',
-            type: Stage.Shared.GenericField.CUSTOM_TYPE,
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Basic.Form.ColorPicker
         },
         {
             id: 'contentTextSize',
             name: 'Content text size [px]',
             default: '14',
-            type: Stage.Shared.GenericField.NUMBER_TYPE,
+            type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 6,
             max: 100
         },
@@ -71,7 +71,7 @@ Stage.defineWidget({
             name: 'Content text font',
             default: textFonts[0].value,
             items: textFonts,
-            type: Stage.Shared.GenericField.LIST_TYPE
+            type: Stage.Basic.GenericField.LIST_TYPE
         }
     ],
 
