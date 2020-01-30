@@ -3,8 +3,7 @@
  */
 
 import { Topology as BlueprintTopology, DataProcessingService } from 'cloudify-blueprint-topology';
-import createBaseTopology from './createBaseTopology';
-import createExpandedTopology from './createExpandedTopology';
+import { createBaseTopology, createExpandedTopology } from './DataProcessor';
 
 export default class Topology extends React.Component {
     constructor(props, context) {
