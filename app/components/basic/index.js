@@ -1,6 +1,3 @@
-// NOTE: When you update this list, please also update list in: doc/index.md
-// TODO
-
 import {
     Accordion,
     Breadcrumb,
@@ -44,6 +41,7 @@ import {
     EditableLabel,
     ErrorMessage,
     Form,
+    GenericField,
     HighlightText,
     KeyIndicator,
     Loading,
@@ -60,8 +58,6 @@ import {
 } from 'cloudify-ui-components';
 
 import { Map, TileLayer, Marker, Popup as LeafletPopup } from 'react-leaflet';
-
-import GenericField from './GenericField';
 
 const Leaflet = {
     Map,

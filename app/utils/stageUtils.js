@@ -4,7 +4,7 @@
 
 import md5 from 'blueimp-md5';
 import _ from 'lodash';
-import GenericField from '../components/basic/GenericField';
+import { GenericField } from '../components/basic';
 
 import ExecutionUtils from './shared/ExecutionUtils';
 import JsonUtils from './shared/JsonUtils';

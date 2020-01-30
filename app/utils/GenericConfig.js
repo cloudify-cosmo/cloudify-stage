@@ -2,7 +2,7 @@
  * Created by jakub.niezgoda on 05/02/2018.
  */
 
-import GenericField from '../components/basic/GenericField';
+import { GenericField } from '../components/basic';
 
 export default class GenericConfig {
     static POLLING_TIME_CONFIG = (pollingTime = 0) => {
@@ -12,7 +12,8 @@ export default class GenericConfig {
             default: pollingTime,
             placeHolder: 'Enter time interval in seconds',
             description: 'Data of the widget will be refreshed per provided interval time in seconds',
-            type: GenericField.NUMBER_TYPE
+            type: GenericField.NUMBER_TYPE,
+            min: 0
         };
     };
 
