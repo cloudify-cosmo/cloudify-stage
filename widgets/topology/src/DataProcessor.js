@@ -69,7 +69,7 @@ export function createBaseTopology(data) {
         return {};
     }
 
-    return DataProcessingService.encodeTopology(createBlueprintData(plan), createHierarchy(plan));
+    return DataProcessingService.encodeTopology(createBlueprintData(data), createHierarchy(plan));
 }
 
 let componentNodeId = 0;
