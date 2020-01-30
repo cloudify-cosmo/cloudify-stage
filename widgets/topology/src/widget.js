@@ -63,7 +63,13 @@ Stage.defineWidget({
         const blueprintId = toolbox.getContext().getValue('blueprintId');
         const expandedDeployments = toolbox.getContext().getValue('deploymentsToExpand');
 
-        const formattedData = { deploymentsData: data, deploymentId, blueprintId, topologyConfig, expandedDeployments };
+        const formattedData = {
+            deploymentsData: data,
+            deploymentId,
+            blueprintId,
+            topologyConfig,
+            expandedDeployments
+        };
 
         return <Topology widget={widget} data={formattedData} toolbox={toolbox} />;
     }
