@@ -173,7 +173,8 @@ function NoDataMessage({ sitesAreDefined }) {
 }
 
 function MapMessage({ text, addLink }) {
-    const { Link, Message, MessageContainer } = Stage.Basic;
+    const { Message } = Stage.Basic;
+    const { Link, MessageContainer } = Stage.Shared;
     const SITES_PAGE_PATH = '/page/site_management';
 
     return (

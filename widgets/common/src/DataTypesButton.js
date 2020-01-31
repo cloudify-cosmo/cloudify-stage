@@ -3,8 +3,8 @@
  */
 
 function DataType({ name, description, version, derivedFrom, properties }) {
-    const { Header, ParameterValue, Segment, Table } = Stage.Basic;
-    const { InputsUtils } = Stage.Common;
+    const { Header, Segment, Table } = Stage.Basic;
+    const { InputsUtils, ParameterValue } = Stage.Common;
     const DataTypeProperty = ({ show, name, value }) =>
         show && (
             <>

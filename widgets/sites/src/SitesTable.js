@@ -103,7 +103,7 @@ export default class SitesTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Sites available. Click "Create" to create Sites.';
         const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
-        const { data } = this.props;
+        const { data, toolbox } = this.props;
         let latitude;
         let longitude = null;
 
@@ -168,6 +168,7 @@ export default class SitesTable extends React.Component {
                                                             zoomControl: false,
                                                             style: { width: 200, height: 200 }
                                                         }}
+                                                        toolbox={toolbox}
                                                     />
                                                 </Popup.Content>
                                             </Popup>

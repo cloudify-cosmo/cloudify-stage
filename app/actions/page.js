@@ -7,7 +7,6 @@ import { stringify } from 'query-string';
 import * as types from './types';
 import { clearContext } from './context';
 import { popDrilldownContext } from './drilldownContext';
-import { setAppError } from './app';
 import { addWidget } from './widgets';
 import { clearWidgetsData } from './WidgetData';
 import Internal from '../utils/Internal';

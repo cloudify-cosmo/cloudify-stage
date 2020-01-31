@@ -20,7 +20,6 @@
         "global-require": ["warn"],
         "import/extensions": ["warn"],
         "import/named": ["warn"],
-        "import/no-cycle": ["warn"],
         "import/no-extraneous-dependencies": ["warn"],
         "import/no-unresolved": ["warn"],
         "import/order": ["warn"],

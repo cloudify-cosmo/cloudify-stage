@@ -134,7 +134,8 @@ export default class InstallAgentsModal extends React.Component {
     }
 
     render() {
-        const { ApproveButton, Button, CancelButton, Form, Icon, Message, Modal, NodeFilter } = Stage.Basic;
+        const { ApproveButton, Button, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
+        const { NodeFilter } = Stage.Common;
 
         return (
             <Modal open={this.props.open} onClose={() => this.props.onHide()}>
@@ -166,6 +167,7 @@ export default class InstallAgentsModal extends React.Component {
                                         allowedNodes={this.state.allowedNodes}
                                         allowedNodeInstances={this.state.allowedNodeInstances}
                                         onChange={this.handleInputChange.bind(this)}
+                                        toolbox={this.props.toolbox}
                                     />
                                 </Form.Field>
 

@@ -4,7 +4,7 @@
 
 import { push } from 'connected-react-router';
 import { clearContext } from './context';
-import { setAppError } from './app';
+import { setAppError } from './appState';
 import Consts from '../utils/consts';
 
 export function showAppError(err) {
