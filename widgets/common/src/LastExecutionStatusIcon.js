@@ -30,17 +30,8 @@ export default class LastExecutionStatusIcon extends React.Component {
     };
 
     render() {
-        const {
-            CancelButton,
-            Button,
-            CopyToClipboardButton,
-            ExecutionStatus,
-            HighlightText,
-            Icon,
-            Table,
-            Modal,
-            Popup
-        } = Stage.Basic;
+        const { CancelButton, Button, CopyToClipboardButton, HighlightText, Icon, Table, Modal, Popup } = Stage.Basic;
+        const { ExecutionStatus } = Stage.Shared;
         const { Utils } = Stage;
         const execution = { workflow_id: '', status: '', ...this.props.execution };
 

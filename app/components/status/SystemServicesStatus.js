@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import { Table } from '../basic';
-import ClusterStatusOverview from '../basic/cluster/ClusterServicesOverview';
-import { clusterServiceEnum, clusterServiceStatusEnum, clusterServiceStatuses } from '../basic/cluster/consts';
+import ClusterStatusOverview from '../shared/cluster/ClusterServicesOverview';
+import { clusterServiceEnum, clusterServiceStatusEnum, clusterServiceStatuses } from '../shared/cluster/consts';
 
 export default function SystemServicesStatus({ services, isFetching, fetchingError }) {
     return (

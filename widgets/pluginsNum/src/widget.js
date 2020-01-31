@@ -23,7 +23,7 @@ Stage.defineWidget({
             description: 'Page to open when user clicks on widget content',
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             default: 'system_resources',
-            component: Stage.Basic.PageFilter
+            component: Stage.Shared.PageFilter
         }
     ],
     fetchUrl: '[manager]/plugins?_include=id&_size=1',
@@ -33,7 +33,8 @@ Stage.defineWidget({
             return <Stage.Basic.Loading />;
         }
 
-        const { KeyIndicator, Link } = Stage.Basic;
+        const { KeyIndicator } = Stage.Basic;
+        const { Link } = Stage.Shared;
 
         const num = _.get(data, 'metadata.pagination.total', 0);
         const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';

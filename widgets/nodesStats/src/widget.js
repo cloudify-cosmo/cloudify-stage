@@ -23,12 +23,12 @@ Stage.defineWidget({
         };
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data) {
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading />;
         }
 
-        const { PieGraph } = Stage.Basic.Graphs;
+        const { PieGraph } = Stage.Shared;
         const { NodeInstancesConsts } = Stage.Common;
 
         const states = _.reduce(
@@ -46,6 +46,6 @@ Stage.defineWidget({
             value: _.sum(_.map(groupState.states, state => (_.isNumber(states[state]) ? states[state] : 0)))
         }));
 
-        return <PieGraph widget={widget} data={formattedData} toolbox={toolbox} />;
+        return <PieGraph data={formattedData} />;
     }
 });

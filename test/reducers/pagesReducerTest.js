@@ -11,7 +11,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 
 import pageReducer from '../../app/reducers/pageReducer';
 
-import { drillDownToPage } from '../../app/actions/widgets';
+import { drillDownToPage } from '../../app/actions/drilldownPage';
 import { changePageName, changePageDescription, removePage } from '../../app/actions/page';
 
 import * as types from '../../app/actions/types';

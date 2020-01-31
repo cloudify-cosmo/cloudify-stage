@@ -4,16 +4,18 @@
 
 import ResourceStatus from './helpers/ResourceStatus';
 import NoResourceMessage from './helpers/NoResourceMessage';
+import { createWizardStep } from '../wizard/wizardUtils';
+import StepActions from '../wizard/StepActions';
+import StepContent from '../wizard/StepContent';
 
 const inputsStepId = 'inputs';
-const { createWizardStep } = Stage.Basic.Wizard.Utils;
 
 class InputsStepActions extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
+    static propTypes = StepActions.propTypes;
 
     static inputsDataPath = 'blueprint.inputs';
 
@@ -45,7 +47,7 @@ class InputsStepActions extends React.Component {
 
     render() {
         const { Wizard } = Stage.Basic;
-        return <Wizard.Step.Actions {...this.props} onNext={this.onNext.bind(this)} />;
+        return <StepActions {...this.props} onNext={this.onNext.bind(this)} />;
     }
 }
 
@@ -58,7 +60,7 @@ class InputsStepContent extends React.Component {
         };
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
+    static propTypes = StepContent.propTypes;
 
     static inputsDataPath = 'blueprint.inputs';
 

@@ -1,6 +1,7 @@
 /**
  * Created by pposel on 28/02/2017.
  */
+import SplitterLayout from 'react-splitter-layout';
 import Actions from './actions';
 
 export default class BlueprintSources extends React.Component {
@@ -65,7 +66,7 @@ export default class BlueprintSources extends React.Component {
     }
 
     render() {
-        const { NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon, SplitterLayout } = Stage.Basic;
+        const { NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 
         const { data } = this.props;
         const loop = items => {

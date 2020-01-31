@@ -39,7 +39,7 @@ Stage.defineWidget({
             })),
             status_sum => status_sum.status
         );
-        const { Graph } = Stage.Basic.Graphs;
+        const { Graph } = Stage.Shared;
         const charts = [{ name: 'number_of_executions', label: 'Number of executions', axisLabel: 'status' }];
         return (
             <Graph

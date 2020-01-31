@@ -2,7 +2,7 @@
  * Created by kinneretzin on 09/02/2017.
  */
 
-import { saveUserAppData } from '../actions/userApp';
+import { saveUserAppData } from '../actions/userAppCommon';
 
 let singleton = null;
 

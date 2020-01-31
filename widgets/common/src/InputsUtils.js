@@ -175,7 +175,8 @@ class InputsUtils {
     }
 
     static getHelp(description, type, constraints, defaultValue, dataType) {
-        const { Header, List, ParameterValue } = Stage.Basic;
+        const { Header, List } = Stage.Basic;
+        const { ParameterValue } = Stage.Common;
 
         const HelpProperty = ({ show, name, value }) =>
             show && (

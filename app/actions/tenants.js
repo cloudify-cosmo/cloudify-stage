@@ -4,7 +4,7 @@
 
 import * as types from './types';
 import Manager from '../utils/Manager';
-import { setAppLoading } from './app';
+import { setAppLoading } from './appState';
 import { setEditMode } from './config';
 import { clearContext } from './context';
 import { reloadUserAppData } from './userApp';

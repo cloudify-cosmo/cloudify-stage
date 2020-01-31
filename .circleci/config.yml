@@ -81,9 +81,6 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: Generate components documentation
-          command: npm run doc
-      - run:
           name: Generate widgets documentation
           command: npm run docWidgets
       - run:
