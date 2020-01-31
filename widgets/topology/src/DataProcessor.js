@@ -2,6 +2,19 @@ import { Consts, DataProcessingService, NodeDataUtils } from 'cloudify-blueprint
 import ExecutionsService from './ExecutionsService';
 import NodeStatusService from './NodeStatusService';
 
+/**
+ * @typedef {object} BlueprintData
+ * @property {object} data.data.plan Raw blueprint data from manager
+ * @property {Array|object} data.executions
+ * @property {Array} data.instances
+ */
+
+/**
+ * Takes blueprint plan, as returned by manager, as well as executions and instances data and transforms it into
+ * yaml-compatible blueprint data structure containing 'node_templaes' and 'groups' properties
+ *
+ * @param {BlueprintData} data
+ */
 export function createBlueprintData(data) {
     const { plan } = data.data;
 
@@ -55,12 +68,10 @@ export function createBlueprintData(data) {
 }
 
 /**
- * @description
- * removes 'plan' from topologyData and splits it to node_templates and hierarchy.
- * if 'plan' does not exists, does nothing.
+ * Takes blueprint plan, as returned by manager, as well as executions and instances data and transforms it into
+ * topology compatible blueprint data structure containing 'nodes', 'connectors' and 'groups' properties
  *
- * @param {object} data
- * @param {object} data.data.plan raw data from manager. contains both nodes and type_hierarchy
+ * @param {BlueprintData} data
  */
 export function createBaseTopology(data) {
     const { plan } = data.data;
@@ -73,13 +84,20 @@ export function createBaseTopology(data) {
 }
 
 let componentNodeId = 0;
-export function createExpandedTopology(topologyData, extendedNode) {
+
+/**
+ * Takes component's blueprint data, creates a topology and nests it inside given component node
+ *
+ * @param {BlueprintData} componentBlueprintData
+ * @param {object} extendedNode Topology comopnent node to be extended
+ */
+export function createExpandedTopology(componentBlueprintData, extendedNode) {
     /* Converting the topology of extended node's remote deployment (which is relevant
      * in the case of node type like Component or SharedResource that are proxy to a
      * remote deployment) to widget format and embedding it in the node view, which is
      * done by creating a fake contained-in relationship and behavior.
      */
-    const res = createBaseTopology(topologyData);
+    const res = createBaseTopology(componentBlueprintData);
 
     _.each(res.nodes, (node, index) => {
         const rel = {
@@ -112,7 +130,12 @@ export function createExpandedTopology(topologyData, extendedNode) {
     return res;
 }
 
-export function createHierarchy(blueprintPlan = []) {
+/**
+ * Creates hierarchy map out of blueprint plan as returned by manager
+ *
+ * @param {object} blueprintPlan
+ */
+export function createHierarchy(blueprintPlan) {
     const hierarchy = {};
 
     _.each(blueprintPlan.nodes, node => {
