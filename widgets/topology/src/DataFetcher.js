@@ -71,7 +71,6 @@ export default class DataFetcher {
                     const blueprintPlan = blueprint.plan || {};
                     let nodes = data[1].items ? data[1].items : [];
                     const nodeInstances = data[2].items ? data[2].items : [];
-                    const execution = data[3];
 
                     blueprintPlan.nodes = this.sortNodesById(blueprintPlan.nodes);
                     nodes = this.sortNodesById(nodes);
@@ -87,7 +86,7 @@ export default class DataFetcher {
                     const topologyData = {
                         data: blueprint,
                         instances: nodeInstances,
-                        executions: execution,
+                        inProgress: data[3],
                         layout: _.nth(data, 4)
                     };
 

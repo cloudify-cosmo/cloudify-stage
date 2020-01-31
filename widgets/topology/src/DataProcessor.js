@@ -1,25 +1,21 @@
 import { Consts, DataProcessingService, NodeDataUtils } from 'cloudify-blueprint-topology';
-import ExecutionsService from './ExecutionsService';
 import NodeStatusService from './NodeStatusService';
 
 /**
  * @typedef {object} BlueprintData
  * @property {object} data.data.plan Raw blueprint data from manager
- * @property {Array|object} data.executions
+ * @property {boolean} data.inProgress
  * @property {Array} data.instances
  */
 
 /**
- * Takes blueprint plan, as returned by manager, as well as executions and instances data and transforms it into
+ * Takes blueprint plan, as returned by manager, as well as inProgress flag and instances data and transforms it into
  * yaml-compatible blueprint data structure containing 'node_templaes' and 'groups' properties
  *
  * @param {BlueprintData} data
  */
 export function createBlueprintData(data) {
     const { plan } = data.data;
-
-    // is execution in progress?
-    const inProgress = data.executions ? ExecutionsService.isRunning(data.executions) : false;
 
     let instancesPerNode = null;
     if (data.instances) {
@@ -34,7 +30,7 @@ export function createBlueprintData(data) {
 
         if (instancesPerNode) {
             const nodeInstances = instancesPerNode[node.id];
-            const state = NodeStatusService.getNodeState(inProgress, nodeInstances);
+            const state = NodeStatusService.getNodeState(data.inProgress, nodeInstances);
 
             node.deployStatus = {
                 label: state,
@@ -68,7 +64,7 @@ export function createBlueprintData(data) {
 }
 
 /**
- * Takes blueprint plan, as returned by manager, as well as executions and instances data and transforms it into
+ * Takes blueprint plan, as returned by manager, as well as inProgress flag and instances data and transforms it into
  * topology compatible blueprint data structure containing 'nodes', 'connectors' and 'groups' properties
  *
  * @param {BlueprintData} data
