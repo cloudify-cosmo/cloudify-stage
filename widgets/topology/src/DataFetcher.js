@@ -1,5 +1,3 @@
-import yaml from 'js-yaml';
-
 export default class DataFetcher {
     static fetch(toolbox, blueprintId, deploymentId, fetchLayout) {
         if (_.isEmpty(deploymentId) && _.isEmpty(blueprintId)) {
@@ -10,26 +8,7 @@ export default class DataFetcher {
             return toolbox
                 .getInternal()
                 .doGet(`/bud/layout/${layoutBlueprintId}`)
-                .catch(() =>
-                    toolbox
-                        .getInternal()
-                        .doGet(`/source/browse/${layoutBlueprintId}/archive`)
-                        .then(data =>
-                            _.chain(data)
-                                .get('children[0].children')
-                                .find({ title: 'info.yaml' })
-                                .get('key')
-                                .value()
-                        )
-                        .then(path =>
-                            path
-                                ? toolbox
-                                      .getInternal()
-                                      .doGet('/source/browse/file', { path })
-                                      .then(yaml.safeLoad)
-                                : null
-                        )
-                );
+                .catch(_.constant(null));
         }
 
         if (deploymentId) {
