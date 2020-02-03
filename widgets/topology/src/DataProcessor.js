@@ -1,5 +1,11 @@
 import { Consts, DataProcessingService, NodeDataUtils } from 'cloudify-blueprint-topology';
-import NodeStatusService from './NodeStatusService';
+import {
+    isCompleted,
+    getColorByStatus,
+    getContentByStatus,
+    getInstancesCountPerState,
+    getNodeState
+} from './NodeStatusService';
 
 /**
  * @typedef {object} BlueprintData
@@ -30,14 +36,14 @@ export function createBlueprintData(data) {
 
         if (instancesPerNode) {
             const nodeInstances = instancesPerNode[node.id];
-            const state = NodeStatusService.getNodeState(data.inProgress, nodeInstances);
+            const state = getNodeState(data.inProgress, nodeInstances);
 
             node.deployStatus = {
                 label: state,
-                completed: _.size(_.filter(instancesPerNode[node.id], NodeStatusService.isCompleted)),
-                icon: NodeStatusService.getContentByStatus(state),
-                color: NodeStatusService.getColorByStatus(state),
-                states: NodeStatusService.getInstancesCountPerState(nodeInstances)
+                completed: _.size(_.filter(instancesPerNode[node.id], isCompleted)),
+                icon: getContentByStatus(state),
+                color: getColorByStatus(state),
+                states: getInstancesCountPerState(nodeInstances)
             };
 
             if (
