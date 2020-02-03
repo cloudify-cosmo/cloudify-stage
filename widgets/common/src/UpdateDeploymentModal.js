@@ -196,8 +196,15 @@ class UpdateDeploymentModal extends React.Component {
     }
 
     render() {
-        const { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal, NodeInstancesFilter } = Stage.Basic;
-        const { DataTypesButton, InputsHeader, InputsUtils, YamlFileButton, UpdateDetailsModal } = Stage.Common;
+        const { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal } = Stage.Basic;
+        const {
+            DataTypesButton,
+            InputsHeader,
+            InputsUtils,
+            NodeInstancesFilter,
+            YamlFileButton,
+            UpdateDetailsModal
+        } = Stage.Common;
 
         const blueprints = { items: [], ...this.state.blueprints };
         const blueprintsOptions = _.map(blueprints.items, blueprint => {
@@ -346,6 +353,7 @@ class UpdateDeploymentModal extends React.Component {
                                                    of deployment update. They will be
                                                    reinstalled even if "Run automatic reinstall"
                                                    is not set'
+                            toolbox={this.props.toolbox}
                         />
 
                         <Form.Field>

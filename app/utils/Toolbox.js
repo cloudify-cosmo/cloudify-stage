@@ -4,7 +4,7 @@
 
 import 'proxy-polyfill';
 
-import { drillDownToPage } from '../actions/widgets';
+import { drillDownToPage } from '../actions/drilldownPage';
 import { selectPageByName, selectHomePage, selectParentPage } from '../actions/page';
 
 import EventBus from './EventBus';

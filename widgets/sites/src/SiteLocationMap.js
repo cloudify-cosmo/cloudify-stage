@@ -7,20 +7,21 @@ class SiteLocationMap extends React.Component {
      * @property {object} mapOptions - props to be passed to Leaflet.Map component
      * @property {string} mapUrl - map provider URL
      * @property {string} tilesUrlTemplate - map tiles provider template URL
+     * @property {object} toolbox Toolbox object
      */
     static propTypes = {
         attribution: PropTypes.string.isRequired,
         location: PropTypes.string.isRequired,
         mapOptions: PropTypes.object.isRequired,
         mapUrl: PropTypes.string.isRequired,
-        tilesUrlTemplate: PropTypes.string.isRequired
+        tilesUrlTemplate: PropTypes.string.isRequired,
+        toolbox: PropTypes.object.isRequired
     };
 
     constructor(props, context) {
         super(props, context);
 
         this.initialLocation = this.props.location;
-        this.toolbox = Stage.Utils.getToolbox(() => {}, () => {}, null);
         this.state = {
             isMapAvailable: true
         };
@@ -28,7 +29,7 @@ class SiteLocationMap extends React.Component {
 
     componentDidMount() {
         const { mapUrl } = this.props;
-        this.toolbox
+        this.props.toolbox
             .getExternal()
             .isReachable(mapUrl)
             .then(isMapAvailable => this.setState({ isMapAvailable }));

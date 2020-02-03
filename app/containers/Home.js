@@ -2,12 +2,12 @@
  * Created by addihorowitz on 19/09/2016.
  */
 
-import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { parse } from 'query-string';
 import Home from '../components/Home';
-import { setAppError, storeCurrentPageId } from '../actions/app';
+import { setAppError } from '../actions/appState';
+import { storeCurrentPageId } from '../actions/app';
 import { clearContext, setValue } from '../actions/context';
 import { setDrilldownContext } from '../actions/drilldownContext';
 

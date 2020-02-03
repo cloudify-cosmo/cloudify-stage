@@ -5,12 +5,11 @@
 import { push } from 'connected-react-router';
 import * as types from './types';
 import { createPagesFromTemplate } from './page';
-import { setAppLoading, setAppError } from './app';
+import { setAppLoading, setAppError } from './appState';
+import { saveUserAppData, CURRENT_APP_DATA_VERSION } from './userAppCommon';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 import UserAppDataAutoSaver from '../utils/UserAppDataAutoSaver';
-
-const CURRENT_APP_DATA_VERSION = 4;
 
 function setPages(pages) {
     return {
@@ -29,15 +28,6 @@ export function resetPagesForTenant(tenant) {
             const internal = new Internal(getState().manager);
             return internal.doGet('ua/clear-pages', { tenant });
         }
-    };
-}
-
-export function saveUserAppData() {
-    return function(dispatch, getState) {
-        const data = { appData: _.pick(getState(), 'pages'), version: CURRENT_APP_DATA_VERSION };
-
-        const internal = new Internal(getState().manager);
-        return internal.doPost('/ua', null, data);
     };
 }
 

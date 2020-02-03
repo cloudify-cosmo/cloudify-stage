@@ -4,9 +4,11 @@
 
 import TaskList from './helpers/TaskList';
 import Task from './helpers/Task';
+import { createWizardStep } from '../wizard/wizardUtils';
+import StepActions from '../wizard/StepActions';
+import StepContent from '../wizard/StepContent';
 
 const installStepId = 'install';
-const { createWizardStep } = Stage.Basic.Wizard.Utils;
 const emptyTasksStats = _.reduce(_.values(Task.Status), (acc, status) => ({ ...acc, [status]: 0 }), {});
 
 class InstallStepActions extends React.Component {
@@ -17,7 +19,7 @@ class InstallStepActions extends React.Component {
         this.state = InstallStepActions.initialState;
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
+    static propTypes = StepActions.propTypes;
 
     static initialState = {
         secondsRemaining: -1
@@ -79,7 +81,7 @@ class InstallStepActions extends React.Component {
     }
 
     render() {
-        const { Button, Progress, Wizard } = Stage.Basic;
+        const { Button, Progress } = Stage.Basic;
 
         const tasksStats = this.getTasksStats();
         const percent =
@@ -90,7 +92,7 @@ class InstallStepActions extends React.Component {
         if (!tasksStats.installationEnded && this.state.secondsRemaining === -1) {
             // in progress
             return (
-                <Wizard.Step.Actions
+                <StepActions
                     {...this.props}
                     showNext={false}
                     showPrev={false}
@@ -100,19 +102,13 @@ class InstallStepActions extends React.Component {
                     <Progress progress size="large" percent={percent} indicating>
                         Installation in progress...
                     </Progress>
-                </Wizard.Step.Actions>
+                </StepActions>
             );
         }
         if (tasksStats.allTasksEnded && this.state.secondsRemaining > 0) {
             // success, waiting for redirection
             return (
-                <Wizard.Step.Actions
-                    {...this.props}
-                    showNext={false}
-                    showPrev={false}
-                    showStartOver={false}
-                    showClose={false}
-                >
+                <StepActions {...this.props} showNext={false} showPrev={false} showStartOver={false} showClose={false}>
                     <Progress size="large" percent={percent} autoSuccess>
                         Installation started! Redirecting to deployment page in {this.state.secondsRemaining} seconds...
                     </Progress>
@@ -122,13 +118,13 @@ class InstallStepActions extends React.Component {
                         labelPosition="left"
                         onClick={this.cancelRedirection.bind(this)}
                     />
-                </Wizard.Step.Actions>
+                </StepActions>
             );
         }
         if (tasksStats.allTasksEnded && this.state.secondsRemaining === 0) {
             // success, no redirection
             return (
-                <Wizard.Step.Actions
+                <StepActions
                     {...this.props}
                     showNext={false}
                     showPrev={false}
@@ -145,13 +141,13 @@ class InstallStepActions extends React.Component {
                         content="Go to Deployment page"
                         onClick={this.drillDownToDeploymentPage.bind(this)}
                     />
-                </Wizard.Step.Actions>
+                </StepActions>
             );
         }
         if (tasksStats.anyTaskFailed) {
             // failure
             return (
-                <Wizard.Step.Actions
+                <StepActions
                     {...this.props}
                     showNext={false}
                     showPrev={false}
@@ -162,7 +158,7 @@ class InstallStepActions extends React.Component {
                     <Progress size="large" percent={100} error>
                         Installation failed. Check error details above.
                     </Progress>
-                </Wizard.Step.Actions>
+                </StepActions>
             );
         }
         return null;
@@ -178,7 +174,7 @@ class InstallStepContent extends React.Component {
         };
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
+    static propTypes = StepContent.propTypes;
 
     componentDidMount() {
         const { tasks } = this.props.wizardData;
