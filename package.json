@@ -70,8 +70,7 @@
     "request": "^2.88.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "0.84.0",
-    "uuid": "^3.3.2",
-    "yamljs": "^0.3.0"
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
@@ -132,6 +131,7 @@
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
     "size-limit": "^0.20.1",
+    "source-map-loader": "^0.2.4",
     "style-loader": "^1.0.0",
     "timekeeper": "^1.0.0",
     "url-loader": "^2.1.0",
