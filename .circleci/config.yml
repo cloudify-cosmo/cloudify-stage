@@ -87,7 +87,7 @@ jobs:
           name: Check if widgets documentation is up to date
           command: git diff --exit-code ./widgets
       - run:
-          name: Check if proper cloudify-ui-components version is used in official documentation
+          name: Check if cloudify-ui-components version is the same as in official documentation
           command: npm run docCheck
 
 
