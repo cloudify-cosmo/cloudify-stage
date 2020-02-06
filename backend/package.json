@@ -1,6 +1,6 @@
 {
   "name": "stage-backend",
-  "version": "20.01.05",
+  "version": "20.02.23",
   "description": "Cloudify Console Backend",
   "main": "server.js",
   "scripts": {
