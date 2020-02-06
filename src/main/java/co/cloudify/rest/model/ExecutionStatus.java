@@ -1,4 +1,4 @@
-package co.cloudify.rest.model.helpers;
+package co.cloudify.rest.model;
 
 import java.util.Arrays;
 import java.util.List;

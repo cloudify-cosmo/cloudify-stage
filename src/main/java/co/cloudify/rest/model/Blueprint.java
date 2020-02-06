@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Note: this class will probably be auto-generated soon, so please
@@ -15,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * getters and setters.
  * 
  * @author	Isaac Shabtay
-	 */
+ */
 @XmlRootElement
 public class Blueprint implements Serializable {
 	/**	Serialization UID.	*/
@@ -97,7 +96,7 @@ public class Blueprint implements Serializable {
 	
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+		return new ToStringBuilder(this)
 				.append("id", id)
 				.toString();
 	}

@@ -52,6 +52,10 @@ public class Deployment {
 	@XmlElement(name = "scaling_groups")
 	private Map<String, Object> scalingGroups;
 	
+	public String getId() {
+		return id;
+	}
+	
 	public Map<String, Object> getInputs() {
 		return inputs;
 	}

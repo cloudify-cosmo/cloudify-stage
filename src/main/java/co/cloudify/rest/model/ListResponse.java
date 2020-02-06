@@ -1,19 +1,44 @@
 package co.cloudify.rest.model;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Encapsulates a list-style response from Cloudify Manager.
+ * This class implements {@link Iterable}, to make it easier for callers
+ * to obtain all list elements.
+ * 
+ * @author	Isaac Shabtay
+ *
+ * @param	<T>	type of contained items
+ */
 @XmlRootElement(name = "items")
-public class ListResponse<T> {
+public class ListResponse<T> implements Iterable<T>{
 	@XmlElement
 	private List<T> items;
 	
 	@XmlElement
 	private Metadata metadata;
 	
+	/**
+	 * @return	A {@link List} of all items.
+	 */
 	public List<T> getItems() {
 		return items;
+	}
+	
+	/**
+	 * @return	The {@link Metadata} information.
+	 */
+	public Metadata getMetadata() {
+		return metadata;
+	}
+	
+	@Override
+	public Iterator<T> iterator() {
+		return items.iterator();
 	}
 }

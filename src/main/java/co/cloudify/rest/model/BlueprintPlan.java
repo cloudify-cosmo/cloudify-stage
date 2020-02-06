@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import co.cloudify.rest.model.helpers.BlueprintInput;
-
 @XmlRootElement
 public class BlueprintPlan {
 	@XmlElement

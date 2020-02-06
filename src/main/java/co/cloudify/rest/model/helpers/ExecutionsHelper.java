@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.client.ExecutionsClient;
 import co.cloudify.rest.model.Execution;
+import co.cloudify.rest.model.ExecutionStatus;
 
 public class ExecutionsHelper {
 	private static final Logger logger = LoggerFactory.getLogger(ExecutionsHelper.class);

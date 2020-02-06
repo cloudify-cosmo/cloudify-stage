@@ -20,7 +20,10 @@ public class ClientTest {
 			tenant = "default_tenant";
 		}
 		
-		CloudifyClient client = CloudifyClient.create(username, password, host, false, tenant);
+		CloudifyClient client = CloudifyClient.create(host, username, password, false, tenant);
+//		Blueprint bp = client.getBlueprintsClient().get("b");
+//		System.out.println(bp.getPlan());
+//		client.getBlueprintsClient().delete("b");
 //		BlueprintsClient blueprintsClient = client.getBlueprintsClient();
 //		Iterable<Blueprint> list = blueprintsClient.list();
 //		Blueprint bp = list.iterator().next();
@@ -33,7 +36,7 @@ public class ClientTest {
 		Execution execution = execClient.get("17264e5d-f9d1-4087-8aa2-492c4336f18e");
 		ExecutionsHelper.followExecution(client, execution);
 		EventsClient eventsClient = client.getEventsClient();
-		Iterable<Event> events = eventsClient.list(execution.getId(), true);
+		Iterable<Event> events = eventsClient.list(execution, true);
 		for (Event event: events) {
 			System.out.println(EventsHelper.formatEvent(event));
 		}

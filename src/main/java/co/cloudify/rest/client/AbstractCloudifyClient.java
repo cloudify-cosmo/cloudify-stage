@@ -10,8 +10,15 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
+/**
+ * Root class for all Cloudify clients.
+ * 
+ * @author	Isaac Shabtay
+ */
 public class AbstractCloudifyClient {
+	/**	Underlying HTTP client.	*/
 	protected Client	api;
+	/**	A {@link WebTarget} instance representing the base path. */
 	protected WebTarget	base;
 	
 	protected AbstractCloudifyClient(final Client restClient, final WebTarget baseTarget) {
@@ -25,9 +32,8 @@ public class AbstractCloudifyClient {
 	}
 	
 	protected WebTarget getTarget(final String path, final Map<String, Object> tokens) {
-		WebTarget target = base.path(path);
-		target = target.resolveTemplates(tokens);
-		return target;
+		return base.path(path)
+				.resolveTemplates(tokens);
 	}
 	
 	protected Invocation jsonGet(final String path) {
@@ -43,9 +49,8 @@ public class AbstractCloudifyClient {
 	}
 	
 	protected Invocation jsonRequest(final String path, final String method, final Map<String, Object> tokens) {
-		WebTarget target = getTarget(path, tokens);
-		Builder request = getBuilder(target);
-		Invocation invocation = request.build(method);
-		return invocation;
+		return getBuilder(
+				getTarget(path, tokens))
+				.build(method);
 	}
 }

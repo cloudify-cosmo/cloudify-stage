@@ -8,9 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import co.cloudify.rest.model.helpers.EventLevel;
-import co.cloudify.rest.model.helpers.EventType;
-
 @XmlRootElement
 public class Event {
 	@XmlElement(name = "_storage_id")

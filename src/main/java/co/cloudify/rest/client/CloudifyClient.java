@@ -1,9 +1,17 @@
 package co.cloudify.rest.client;
 
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
+/**
+ * Focal point for all Cloudify REST operations.
+ * 
+ * @author	Isaac Shabtay
+ */
 public class CloudifyClient extends AbstractCloudifyClient {
 	protected BlueprintsClient blueprintsClient;
 	protected DeploymentsClient deploymentsClient;
@@ -20,11 +28,22 @@ public class CloudifyClient extends AbstractCloudifyClient {
 	}
 
 	public static CloudifyClient create(
-			String username, String password, String host,
+			String host, String username, String password,
 			boolean secure, String tenant) {
+		SSLContext sslContext;
+		try {
+			sslContext = SSLContext.getInstance("SSL");
+		} catch (NoSuchAlgorithmException ex) {
+			throw new IllegalStateException("Failed obtaining SSL context", ex);
+		}
+		//	TODO: Add certs
+		
 		Client client = ClientBuilder
-				.newClient()
-				.register(new BasicAuthenticator(username, password, tenant));
+				.newBuilder()
+				.sslContext(sslContext)
+				.build();
+		client.register(new BasicAuthenticator(username, password, tenant));
+		client.register(new ResponseProcessor());
 		String endpoint = String.format("%s://%s", secure ? "https" : "http", host);
 		WebTarget baseTarget = client.target(endpoint);
 		CloudifyClient cClient = new CloudifyClient(client, baseTarget);
