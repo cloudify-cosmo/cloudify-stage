@@ -57,6 +57,7 @@ const browserHistory = createBrowserHistory({
 export default class app {
     static load() {
         window.React = React;
+        window.ReactDOM = ReactDOM;
         window.PropTypes = PropTypes;
         window.L = Leaflet;
         window.connectToStore = connect;
