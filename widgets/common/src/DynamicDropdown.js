@@ -65,6 +65,12 @@ function DynamicDropdown({
     }, []);
 
     useEffect(() => {
+        if (!_.isEmpty(value) && _.isEmpty(options)) {
+            setOptions([{ [valueProp]: value }]);
+        }
+    }, [value]);
+
+    useEffect(() => {
         if (loaderVisible) {
             loadMore();
         }
