@@ -28,16 +28,12 @@ export default class DeployModal extends React.Component {
      *
      * @property {object} toolbox Toolbox object
      * @property {boolean} open specifies whether the deploy modal is displayed
-     * @property {object} blueprints holds list of blueprints
      * @property {Function} onHide function to be called when the modal is closed
-     * @property {object} sites holds list of sites
      */
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
         open: PropTypes.bool.isRequired,
-        blueprints: PropTypes.object.isRequired,
-        onHide: PropTypes.func,
-        sites: PropTypes.object.isRequired
+        onHide: PropTypes.func
     };
 
     static defaultProps = {
@@ -60,13 +56,13 @@ export default class DeployModal extends React.Component {
         return true;
     }
 
-    _selectBlueprint(proxy, data) {
-        if (!_.isEmpty(data.value)) {
+    selectBlueprint(id) {
+        if (!_.isEmpty(id)) {
             this.setState({ loading: true });
 
             const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
             actions
-                .doGetFullBlueprintData({ id: data.value })
+                .doGetFullBlueprintData({ id })
                 .then(blueprint => {
                     const deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(blueprint.plan);
                     this.setState({ deploymentInputs, blueprint, errors: {}, loading: false });
@@ -170,15 +166,7 @@ export default class DeployModal extends React.Component {
 
     render() {
         const { ApproveButton, CancelButton, Form, Icon, Message, Modal, VisibilityField } = Stage.Basic;
-        const { DataTypesButton, InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
-
-        const blueprints = { items: [], ...this.props.blueprints };
-        const options = _.map(blueprints.items, blueprint => {
-            return { text: blueprint.id, value: blueprint.id };
-        });
-        const site_options = _.map(this.props.sites.items, site => {
-            return { text: site.name, value: site.name };
-        });
+        const { DataTypesButton, InputsHeader, InputsUtils, YamlFileButton, DynamicDropdown } = Stage.Common;
 
         return (
             <Modal open={this.props.open} onClose={() => this.props.onHide()} closeOnEscape={false}>
@@ -216,13 +204,12 @@ export default class DeployModal extends React.Component {
                             label="Site name"
                             help="(Optional) Specify a site to which this deployment will be assigned."
                         >
-                            <Form.Dropdown
-                                search
-                                selection
+                            <DynamicDropdown
                                 value={this.state.siteName}
+                                onChange={value => this.setState({ siteName: value })}
                                 name="siteName"
-                                options={site_options}
-                                onChange={this._handleInputChange.bind(this)}
+                                fetchUrl="/sites?_include=name&_sort=name"
+                                toolbox={this.props.toolbox}
                             />
                         </Form.Field>
 
@@ -232,13 +219,13 @@ export default class DeployModal extends React.Component {
                             required
                             help="Select the blueprint based on which this deployment will be created."
                         >
-                            <Form.Dropdown
-                                search
-                                selection
+                            <DynamicDropdown
                                 value={this.state.blueprint.id}
                                 name="blueprintName"
-                                options={options}
-                                onChange={this._selectBlueprint.bind(this)}
+                                fetchUrl="/blueprints?_include=id"
+                                onChange={this.selectBlueprint.bind(this)}
+                                toolbox={this.props.toolbox}
+                                prefetch
                             />
                         </Form.Field>
 

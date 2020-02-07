@@ -1,8 +1,3 @@
-/**
- * Created by kinneretzin on 27/10/2016.
- */
-import Dropdown from './Dropdown';
-
 const deploymentFilter = { deployment_id: 'deploymentId' };
 const blueprintFilter = { blueprint_id: 'blueprintId' };
 const blueprintDeploymentFilter = { ...deploymentFilter, ...blueprintFilter };
@@ -133,7 +128,49 @@ export default class Filter extends React.Component {
 
     render() {
         const { ErrorMessage, Form } = Stage.Basic;
-        const { configuration } = this.props;
+
+        const createDropdown = ({
+            stateProp,
+            enabledConfigurationKey,
+            fetchAll,
+            fetchIncludeExtra,
+            fetchManagerEndpoint,
+            entityName,
+            textFormatter,
+            valueProp,
+            pageSize,
+            filter
+        }) => {
+            const { DynamicDropdown } = Stage.Common;
+            const { configuration } = this.props;
+            const joinedEntityName = entityName.replace(' ', '');
+            if (configuration[enabledConfigurationKey || `filterBy${joinedEntityName}s`]) {
+                return (
+                    <Form.Field key={entityName}>
+                        <DynamicDropdown
+                            multiple={configuration.allowMultipleSelection}
+                            fetchUrl={`/${fetchManagerEndpoint ||
+                                `${entityName.replace(' ', '-').toLowerCase()}s`}?_include=${_(filter)
+                                .keys()
+                                .concat(valueProp || 'id')
+                                .concat(fetchIncludeExtra || [])
+                                .join()}`}
+                            onChange={this[`select${joinedEntityName}`].bind(this)}
+                            toolbox={this.props.toolbox}
+                            value={this.state[stateProp || `${_.lowerFirst(joinedEntityName)}Id`]}
+                            placeholder={entityName}
+                            fetchAll={fetchAll}
+                            textFormatter={textFormatter}
+                            valueProp={valueProp}
+                            pageSize={pageSize}
+                            filter={filter}
+                        />
+                    </Form.Field>
+                );
+            }
+
+            return null;
+        };
 
         return (
             <div>
@@ -141,80 +178,52 @@ export default class Filter extends React.Component {
 
                 <Form size="small">
                     <Form.Group inline widths="equal">
-                        <Dropdown
-                            value={this.state.blueprintId}
-                            configuration={configuration}
-                            entityName="Blueprint"
-                            fetchUrl="/blueprints?_include=id"
-                            onChange={this.selectBlueprint.bind(this)}
-                            toolbox={this.props.toolbox}
-                        />
-                        <Dropdown
-                            value={this.state.deploymentId}
-                            configuration={configuration}
-                            entityName="Deployment"
-                            fetchUrl="/deployments?_include=id,blueprint_id"
-                            onChange={this.selectDeployment.bind(this)}
-                            toolbox={this.props.toolbox}
-                            filter={blueprintFilter}
-                            pageSize={20}
-                        />
-                        <Dropdown
-                            value={this.state.nodeId}
-                            configuration={configuration}
-                            entityName="Node"
-                            fetchUrl="/nodes?_include=id,blueprint_id,deployment_id"
-                            onChange={this.selectNode.bind(this)}
-                            toolbox={this.props.toolbox}
-                            filter={blueprintDeploymentFilter}
-                            pageSize={40}
-                        />
-                        <Dropdown
-                            value={this.state.nodeInstanceId}
-                            configuration={configuration}
-                            entityName="Node Instance"
-                            fetchUrl="/node-instances?_include=id,deployment_id,node_id"
-                            onChange={this.selectNodeInstance.bind(this)}
-                            toolbox={this.props.toolbox}
-                            filter={{ ...deploymentFilter, node_id: 'nodeId' }}
-                            pageSize={40}
-                        />
-                        <Dropdown
-                            value={this.state.executionId}
-                            configuration={configuration}
-                            entityName="Execution"
-                            fetchUrl="/executions?_include=id,blueprint_id,deployment_id,workflow_id"
-                            textFormatter={item => `${item.id} (${item.workflow_id})`}
-                            onChange={this.selectExecution.bind(this)}
-                            toolbox={this.props.toolbox}
-                            filter={blueprintDeploymentFilter}
-                            pageSize={20}
-                        />
-                        <Dropdown
-                            value={this.state.executionStatus}
-                            configuration={configuration}
-                            entityName="Execution Status"
-                            enabledConfigurationKey="ExecutionsStatus"
-                            fetchUrl="/executions?_include=id,blueprint_id,deployment_id,status_display"
-                            fetchAll
-                            valueProp="status_display"
-                            onChange={this.selectExecutionStatus.bind(this)}
-                            toolbox={this.props.toolbox}
-                            filter={{
-                                ...blueprintDeploymentFilter,
-                                id: 'executionId'
-                            }}
-                        />
-                        <Dropdown
-                            value={this.state.siteName}
-                            configuration={configuration}
-                            entityName="Site Name"
-                            enabledConfigurationKey="SiteName"
-                            fetchUrl="/sites?_include=name"
-                            valueProp="name"
-                            onChange={this.selectSiteName.bind(this)}
-                            toolbox={this.props.toolbox}
-                        />
+                        {[
+                            createDropdown({
+                                entityName: 'Blueprint'
+                            }),
+                            createDropdown({
+                                entityName: 'Deployment',
+                                filter: blueprintFilter,
+                                pageSize: 20
+                            }),
+                            createDropdown({
+                                entityName: 'Node',
+                                filter: blueprintDeploymentFilter,
+                                pageSize: 40
+                            }),
+                            createDropdown({
+                                entityName: 'Node Instance',
+                                filter: { ...deploymentFilter, node_id: 'nodeId' },
+                                pageSize: 40
+                            }),
+                            createDropdown({
+                                entityName: 'Execution',
+                                fetchIncludeExtra: 'workflow_id',
+                                textFormatter: item => `${item.id} (${item.workflow_id})`,
+                                filter: blueprintDeploymentFilter,
+                                pageSize: 20
+                            }),
+                            createDropdown({
+                                entityName: 'Execution Status',
+                                stateProp: 'executionStatus',
+                                enabledConfigurationKey: 'filterByExecutionsStatus',
+                                fetchManagerEndpoint: 'executions',
+                                fetchAll: true,
+                                valueProp: 'status_display',
+                                filter: {
+                                    ...blueprintDeploymentFilter,
+                                    id: 'executionId'
+                                }
+                            }),
+                            createDropdown({
+                                entityName: 'Site Name',
+                                stateProp: 'siteName',
+                                enabledConfigurationKey: 'filterBySiteName',
+                                fetchManagerEndpoint: 'sites',
+                                valueProp: 'name'
+                            })
+                        ]}
                     </Form.Group>
                 </Form>
             </div>
