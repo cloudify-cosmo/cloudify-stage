@@ -13,7 +13,6 @@ Stage.defineWidget({
     color: 'yellow',
     showHeader: false,
     showBorder: false,
-    hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
     isReact: true,
     hasReadme: true,

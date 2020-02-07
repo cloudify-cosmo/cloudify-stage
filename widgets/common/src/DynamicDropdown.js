@@ -1,4 +1,5 @@
 import VisibilitySensor from 'react-visibility-sensor';
+import './DynamicDropdown.css';
 
 let instanceCount = 0;
 
@@ -104,6 +105,7 @@ function DynamicDropdown({
 
     return (
         <Form.Dropdown
+            className="dynamic"
             search
             selection
             selectOnBlur={false}
