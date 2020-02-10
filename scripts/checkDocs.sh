@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ -z ${CIRCLE_BRANCH+x} ]; then
+if [ -n "${CIRCLE_BRANCH+x}" ]; then
   STAGE_BRANCH=${CIRCLE_BRANCH}
   CURL_OPTIONS="-u ${GITHUB_USERNAME}:${GITHUB_TOKEN}"
 else
