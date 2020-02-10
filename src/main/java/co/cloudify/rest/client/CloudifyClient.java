@@ -20,7 +20,6 @@ public class CloudifyClient extends AbstractCloudifyClient {
 	
 	protected CloudifyClient(Client restClient, WebTarget base) {
 		super(restClient, base);
-		
 		blueprintsClient = new BlueprintsClient(api, base);
 		deploymentsClient = new DeploymentsClient(api, base);
 		executionsClient = new ExecutionsClient(api, base);

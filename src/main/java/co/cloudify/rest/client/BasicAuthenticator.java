@@ -1,13 +1,14 @@
 package co.cloudify.rest.client;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * A {@link ClientRequestFilter} implementation for HTTP basic authentication.
@@ -16,6 +17,8 @@ import javax.xml.bind.DatatypeConverter;
  */
 @Provider
 public class BasicAuthenticator implements ClientRequestFilter {
+	private static final String	TENANT_HEADER = "Tenant";
+	
     private final String username;
     private final String password;
     private final String tenant;
@@ -29,17 +32,13 @@ public class BasicAuthenticator implements ClientRequestFilter {
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
         MultivaluedMap<String, Object> headers = requestContext.getHeaders();
-        final String basicAuthentication = getBasicAuthentication();
-        headers.add("Authorization", basicAuthentication);
-        headers.add("Tenant", tenant);
+        headers.add(HttpHeaders.AUTHORIZATION, getBasicAuthentication());
+        headers.add(TENANT_HEADER, tenant);
     }
 
     private String getBasicAuthentication() {
         String token = String.format("%s:%s",  username, password);
-        try {
-            return "BASIC " + DatatypeConverter.printBase64Binary(token.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException ex) {
-            throw new IllegalStateException("Failed encoding basic authentication token", ex);
-        }
+        return String.format("BASIC %s", Base64.getEncoder().encodeToString(
+        		StandardCharsets.UTF_8.encode(token).array()));
     }
 }

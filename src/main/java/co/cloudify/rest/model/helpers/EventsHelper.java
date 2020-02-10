@@ -9,6 +9,13 @@ import co.cloudify.rest.model.Event;
 public class EventsHelper {
 	private static final String DATETIME_FORMAT = "dd-MM-yyyy hh:mm:ss";
 	
+	/**
+	 * Returns the string representation of an event/log record.
+	 * 
+	 * @param	event	event/log record
+	 * 
+	 * @return	String representation.
+	 */
 	public static String formatEvent (final Event event) {
 		StringBuilder formatted = new StringBuilder();
 		if (event.getLevel() != null) {
@@ -19,8 +26,17 @@ public class EventsHelper {
 		if (event.getDeploymentId() != null) {
 			formatted.append(String.format(" <%s>", event.getDeploymentId()));
 		}
-		if (event.getNodeInstanceId() != null) {
-			StringBuilder s = new StringBuilder(event.getNodeInstanceId());
+		String nodeInstanceId = event.getNodeInstanceId();
+		String sourceId = event.getSourceId();
+		String targetId = event.getTargetId();
+		
+		if (nodeInstanceId != null || (sourceId != null && targetId != null)) {
+			StringBuilder s = new StringBuilder(StringUtils.defaultString(sourceId, nodeInstanceId));
+			if (targetId != null) {
+				s.append("->");
+				s.append(targetId);
+			}
+			
 			if (event.getOperation() != null) {
 				s.append(".");
 				s.append(StringUtils.substringAfterLast(event.getOperation(), "."));

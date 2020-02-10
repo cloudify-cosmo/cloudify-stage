@@ -1,6 +1,5 @@
 package co.cloudify.rest.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -16,9 +15,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author	Isaac Shabtay
  */
 @XmlRootElement
-public class Blueprint implements Serializable {
-	/**	Serialization UID.	*/
-	private static final long serialVersionUID = -2539660074667935923L;
+public class Blueprint {
 	private String id;
 	@XmlElement(name = "created_at")
 	private Date createdAt;

@@ -79,6 +79,14 @@ public class Event {
 		return eventType;
 	}
 	
+	public String getSourceId() {
+		return sourceId;
+	}
+	
+	public String getTargetId() {
+		return targetId;
+	}
+	
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)

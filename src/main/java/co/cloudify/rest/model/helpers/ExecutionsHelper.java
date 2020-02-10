@@ -19,8 +19,7 @@ public class ExecutionsHelper {
 	 * 
 	 * @return	The most up-to-date representation of the execution.
 	 */
-	public static Execution followExecution(final CloudifyClient client,
-			Execution execution) {
+	public static Execution followExecution(final CloudifyClient client, Execution execution) {
 		ExecutionsClient executionsClient = client.getExecutionsClient();
 		String executionId = execution.getId();
 		while(true) {

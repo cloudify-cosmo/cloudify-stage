@@ -3,24 +3,30 @@ package co.cloudify.rest.client;
 import java.util.Collections;
 
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+
+import org.apache.commons.lang3.Validate;
 
 import co.cloudify.rest.model.Blueprint;
 import co.cloudify.rest.model.ListResponse;
 
 public class BlueprintsClient extends AbstractCloudifyClient {
+	/**	Base API path. */
 	private static final String BASE_PATH = "/api/v3.1/blueprints";
+	/**	Path for specific resource. */
 	private static final String ID_PATH = BASE_PATH + "/{id}";
 
 	public BlueprintsClient(Client restClient, WebTarget base) {
 		super(restClient, base);
 	}
 	
-	protected WebTarget getBlueprintTarget(final String id) {
-		return getTarget(ID_PATH, Collections.singletonMap("id", id));
+	protected Builder getBlueprintsBuilder(final String ... args) {
+		Validate.isTrue(args.length <= 1);
+		return getBuilder(getTarget(ID_PATH, args.length == 1 ? Collections.singletonMap("id", args[0]) : Collections.emptyMap()));
 	}
-
+	
 	/**
 	 * Get a blueprint by ID.
 	 * 
@@ -29,9 +35,7 @@ public class BlueprintsClient extends AbstractCloudifyClient {
 	 * @return	A {@link Blueprint} instance for that blueprint.
 	 */
 	public Blueprint get(final String id) {
-		return getBuilder(
-				getBlueprintTarget(id)
-				).get(Blueprint.class);
+		return getBlueprintsBuilder(id).get(Blueprint.class);
 	}
 	
 	/**
@@ -40,15 +44,13 @@ public class BlueprintsClient extends AbstractCloudifyClient {
 	 * @param	id	ID of blueprint to delete
 	 */
 	public void delete(final String id) {
-		getBuilder(
-				getBlueprintTarget(id)
-				).delete();
+		getBlueprintsBuilder(id).delete();
 	}
 	
 	/**
 	 * @return	A list of all blueprints.
 	 */
 	public ListResponse<Blueprint> list() {
-		return jsonGet(BASE_PATH).invoke(new GenericType<ListResponse<Blueprint>>() {});
+		return getBlueprintsBuilder().get(new GenericType<ListResponse<Blueprint>>() {});
 	}
 }

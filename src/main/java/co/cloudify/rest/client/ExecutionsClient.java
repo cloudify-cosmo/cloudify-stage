@@ -5,8 +5,11 @@ import java.util.Map;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+
+import org.apache.commons.lang3.Validate;
 
 import co.cloudify.rest.client.params.ExecutionStartParams;
 import co.cloudify.rest.model.Deployment;
@@ -23,12 +26,9 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 		super(restClient, baseTarget);
 	}
 
-	protected WebTarget getExecutionsTarget() {
-		return getTarget(BASE_PATH);
-	}
-	
-	protected WebTarget getExecutionsTarget(String id) {
-		return getTarget(ID_PATH, Collections.singletonMap("id", id));
+	protected Builder getExecutionsBuilder(final String ... args) {
+		Validate.isTrue(args.length <= 1);
+		return getBuilder(getTarget(ID_PATH, args.length == 1 ? Collections.singletonMap("id", args[0]) : Collections.emptyMap()));
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 	 * @return	A corresponding {@link Execution} instance.
 	 */
 	public Execution get(String id) {
-		return getBuilder(getExecutionsTarget(id)).get(Execution.class);
+		return getExecutionsBuilder(id).get(Execution.class);
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 	 * @return	A list of all executions.
 	 */
 	public ListResponse<Execution> list() {
-		return getBuilder(getExecutionsTarget()).get(new GenericType<ListResponse<Execution>>() {});
+		return getExecutionsBuilder().get(new GenericType<ListResponse<Execution>>() {});
 	}
 	
 	/**
@@ -75,6 +75,6 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 	 */
 	public Execution start(String deploymentId, String workflowId, Map<String, Object> parameters) {
 		ExecutionStartParams params = new ExecutionStartParams(workflowId, deploymentId, parameters);
-		return getBuilder(getExecutionsTarget()).buildPost(Entity.json(params)).invoke(Execution.class);
+		return getExecutionsBuilder().post(Entity.json(params), Execution.class);
 	}
 }

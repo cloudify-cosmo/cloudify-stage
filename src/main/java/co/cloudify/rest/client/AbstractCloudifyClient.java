@@ -36,21 +36,7 @@ public class AbstractCloudifyClient {
 				.resolveTemplates(tokens);
 	}
 	
-	protected Invocation jsonGet(final String path) {
-		return jsonGet(path, Collections.emptyMap());
-	}
-
-	protected Invocation jsonGet(final String path, final Map<String, Object> tokens) {
-		return jsonRequest(path, HttpMethod.GET, tokens);
-	}
-
 	protected Builder getBuilder(final WebTarget target) {
 		return target.request(MediaType.APPLICATION_JSON);
-	}
-	
-	protected Invocation jsonRequest(final String path, final String method, final Map<String, Object> tokens) {
-		return getBuilder(
-				getTarget(path, tokens))
-				.build(method);
 	}
 }

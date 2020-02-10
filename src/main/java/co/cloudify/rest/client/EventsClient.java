@@ -81,6 +81,6 @@ public class EventsClient extends AbstractCloudifyClient {
 			.size(batchSize)
 			.includeLogs(includeLogs);
 		target = params.update(target);
-		return getBuilder(target).buildGet().invoke(new GenericType<ListResponse<Event>>() {});
+		return getBuilder(target).get(new GenericType<ListResponse<Event>>() {});
 	}
 }

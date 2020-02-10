@@ -5,8 +5,11 @@ import java.util.Map;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+
+import org.apache.commons.lang3.Validate;
 
 import co.cloudify.rest.client.params.DeploymentCreateParams;
 import co.cloudify.rest.model.Blueprint;
@@ -28,15 +31,16 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 		super(restClient, base);
 	}
 
-	protected WebTarget getDeploymentTarget(final String id) {
-		return getTarget(ID_PATH, Collections.singletonMap("id", id));
+	protected Builder getDeploymentsBuilder(final String ... args) {
+		Validate.isTrue(args.length <= 1);
+		return getBuilder(getTarget(ID_PATH, args.length == 1 ? Collections.singletonMap("id", args[0]) : Collections.emptyMap()));
 	}
 	
 	/**
 	 * @return	A {@link ListResponse} of all deployments.
 	 */
 	public ListResponse<Deployment> list() {
-		return jsonGet(BASE_PATH).invoke(new GenericType<ListResponse<Deployment>>() {});
+		return getDeploymentsBuilder().get(new GenericType<ListResponse<Deployment>>() {});
 	}
 	
 	/**
@@ -47,9 +51,7 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	 * @return	A {@link Deployment} instance describing the deployment.
 	 */
 	public Deployment get(final String id) {
-		return getBuilder(
-				getDeploymentTarget(id)
-				).get(Deployment.class);
+		return getDeploymentsBuilder(id).get(Deployment.class);
 	}
 
 	/**
@@ -77,10 +79,7 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	 */
 	public Deployment create(final String id, final String blueprintId,
 			final Map<String, Object> inputs) {
-		return getBuilder(getDeploymentTarget(id))
-				.buildPut(Entity.json(
-						new DeploymentCreateParams(blueprintId, inputs))
-						).invoke(Deployment.class);
+		return getDeploymentsBuilder(id).put(Entity.json(new DeploymentCreateParams(blueprintId, inputs)), Deployment.class);
 	}
 	
 	/**
@@ -89,8 +88,6 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	 * @param	id	deployment to delete
 	 */
 	public void delete(final String id) {
-		getBuilder(
-				getDeploymentTarget(id))
-		.delete();
+		getDeploymentsBuilder(id).delete();
 	}
 }
