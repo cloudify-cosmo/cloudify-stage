@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+set -x
 
-if [ -n "${CIRCLE_BRANCH+x}" ]; then
+if [ -n "${CIRCLE_BRANCH}" ]; then
   STAGE_BRANCH=${CIRCLE_BRANCH}
   CURL_OPTIONS="-u ${GITHUB_USERNAME}:${GITHUB_TOKEN}"
 else
   STAGE_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-  CURL_OPTIONS=""
+  CURL_OPTIONS=
 fi
 
 DOCS_BRANCH="master"
