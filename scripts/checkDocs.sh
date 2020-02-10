@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -x
 
 if [ -n "${CIRCLE_BRANCH}" ]; then
   STAGE_BRANCH=${CIRCLE_BRANCH}
