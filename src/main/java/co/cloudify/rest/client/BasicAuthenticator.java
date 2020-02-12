@@ -34,7 +34,7 @@ public class BasicAuthenticator implements ClientRequestFilter {
         //	TODO: Check why this doesn't work.
 //        String authHeader = String.format("BASIC %s", Base64.getEncoder().encodeToString(
 //        		StandardCharsets.UTF_8.encode(token).array()));
-        String authHeader1 = String.format("BASIC %s", Base64.getEncoder().encodeToString(
+        String authHeader = String.format("BASIC %s", Base64.getEncoder().encodeToString(
         		token.getBytes("UTF-8")));
         MultivaluedMap<String, Object> headers = requestContext.getHeaders();
         headers.putSingle(HttpHeaders.AUTHORIZATION, authHeader);
