@@ -1,4 +1,4 @@
-import { styles } from '../support/cluster_status_commons';
+import { className, styles } from '../support/cluster_status_commons';
 
 describe('Cluster Status', () => {
     before(() => {
@@ -18,14 +18,21 @@ describe('Cluster Status', () => {
     });
 
     const clusterStatusFetchTimeout = { timeout: 12000 };
+
+    const rowNumber = {
+        manager: 1,
+        database: 4,
+        broker: 7
+    };
+
     const checkServicesStatus = (inWidget, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus) => {
         let managerCell = 'tbody tr:nth-child(1)';
         let databaseCell = 'tbody tr:nth-child(2)';
         let brokerCell = 'tbody tr:nth-child(3)';
         if (inWidget) {
-            managerCell = 'tbody tr:nth-child(1) td:nth-child(1)';
-            databaseCell = 'tbody tr:nth-child(4) td:nth-child(1)';
-            brokerCell = 'tbody tr:nth-child(7) td:nth-child(1)';
+            managerCell = `tbody tr:nth-child(${rowNumber.manager}) td:nth-child(1)`;
+            databaseCell = `tbody tr:nth-child(${rowNumber.database}) td:nth-child(1)`;
+            brokerCell = `tbody tr:nth-child(${rowNumber.broker}) td:nth-child(1)`;
         }
 
         cy.get(managerCell).should('have.text', ' Manager');
@@ -75,7 +82,7 @@ describe('Cluster Status', () => {
     });
 
     it('is in sync between Cluster Status widget and system status icon', () => {
-        const checkStatus = (overallStatus, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus) => {
+        const checkOverallStatus = (overallStatus, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus) => {
             // Check system status icon and Cluster Status widget
             let iconColor = 'gray';
             if (overallStatus === 'OK') {
@@ -101,17 +108,50 @@ describe('Cluster Status', () => {
             cy.get('.popup').should('not.exist');
         };
 
+        const checkNodesStatus = (
+            service,
+            expectedFirstNodeStatus,
+            expectedSecondNodeStatus,
+            expectedThirdNodeStatus
+        ) => {
+            const checkStatusIcon = (nodeStatusIcon, expectedNodeStatus) => {
+                cy.get(nodeStatusIcon).should('have.class', className[expectedNodeStatus]);
+
+                cy.get(nodeStatusIcon).trigger('mouseover');
+                cy.get('.popup').should('exist');
+                cy.get(nodeStatusIcon).trigger('mouseout');
+                cy.get('.popup').should('not.exist');
+            };
+
+            const firstNodeCell = `tbody tr:nth-child(${rowNumber[service]}) > td:nth-child(3) > span > i.icon`;
+            const secondNodeCell = `tbody tr:nth-child(${rowNumber[service] + 1}) > td:nth-child(2) > span > i.icon`;
+            const thirdNodeCell = `tbody tr:nth-child(${rowNumber[service] + 2}) > td:nth-child(2) > span > i.icon`;
+
+            checkStatusIcon(firstNodeCell, expectedFirstNodeStatus);
+            checkStatusIcon(secondNodeCell, expectedSecondNodeStatus);
+            checkStatusIcon(thirdNodeCell, expectedThirdNodeStatus);
+        };
+
         cy.get('.admin_operationsPageMenuItem').click();
         cy.location('pathname').should('be.equal', '/console/page/admin_operations');
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-        checkStatus('Degraded', 'Degraded', 'OK', 'OK');
+        checkOverallStatus('Degraded', 'Degraded', 'OK', 'OK');
+        checkNodesStatus('manager', 'OK', 'OK', 'OK');
+        checkNodesStatus('database', 'OK', 'OK', 'OK');
+        checkNodesStatus('broker', 'OK', 'OK', 'OK');
 
         cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/ok.json').as('clusterStatusFull');
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-        checkStatus('OK', 'OK', 'OK', 'OK');
+        checkOverallStatus('OK', 'OK', 'OK', 'OK');
+        checkNodesStatus('manager', 'OK', 'OK', 'OK');
+        checkNodesStatus('database', 'OK', 'OK', 'OK');
+        checkNodesStatus('broker', 'OK', 'OK', 'OK');
 
         cy.route(/cluster-status\?summary=false/, 'fixture:cluster_status/fail.json').as('clusterStatusFull');
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-        checkStatus('Fail', 'Fail', 'OK', 'Fail');
+        checkOverallStatus('Fail', 'Fail', 'OK', 'Fail');
+        checkNodesStatus('manager', 'OK', 'OK', 'Fail');
+        checkNodesStatus('database', 'OK', 'OK', 'OK');
+        checkNodesStatus('broker', 'OK', 'OK', 'Fail');
     });
 });
