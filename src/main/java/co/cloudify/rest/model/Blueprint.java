@@ -48,6 +48,10 @@ public class Blueprint {
 		return id;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+	
 	public BlueprintPlan getPlan() {
 		return plan;
 	}
