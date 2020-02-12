@@ -29,6 +29,7 @@ public class Blueprint {
 	private String tenantName;
 	@XmlElement
 	private BlueprintPlan plan;
+	@XmlElement
 	private String description;
 	@XmlElement(name = "private_resource")
 	private boolean privateResource;
@@ -47,50 +48,10 @@ public class Blueprint {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getMainFileName() {
-		return mainFileName;
-	}
-
-	public void setMainFileName(String mainFileName) {
-		this.mainFileName = mainFileName;
-	}
-
 	public BlueprintPlan getPlan() {
 		return plan;
 	}
 
-	public void setPlan(BlueprintPlan plan) {
-		this.plan = plan;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)

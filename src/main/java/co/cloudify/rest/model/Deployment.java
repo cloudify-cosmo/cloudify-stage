@@ -60,6 +60,14 @@ public class Deployment {
 		return inputs;
 	}
 	
+	public Map<String, Object> getOutputs() {
+		return outputs;
+	}
+	
+	public Map<String, Object> getCapabilities() {
+		return capabilities;
+	}
+	
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)

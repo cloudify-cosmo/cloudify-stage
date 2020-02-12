@@ -31,14 +31,11 @@ public class BasicAuthenticator implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        MultivaluedMap<String, Object> headers = requestContext.getHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, getBasicAuthentication());
-        headers.add(TENANT_HEADER, tenant);
-    }
-
-    private String getBasicAuthentication() {
         String token = String.format("%s:%s",  username, password);
-        return String.format("BASIC %s", Base64.getEncoder().encodeToString(
+        String authHeader = String.format("BASIC %s", Base64.getEncoder().encodeToString(
         		StandardCharsets.UTF_8.encode(token).array()));
+        MultivaluedMap<String, Object> headers = requestContext.getHeaders();
+        headers.putSingle(HttpHeaders.AUTHORIZATION, authHeader);
+        headers.putSingle(TENANT_HEADER, tenant);
     }
 }

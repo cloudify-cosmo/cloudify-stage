@@ -2,6 +2,7 @@ package co.cloudify.rest.model;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -40,5 +41,10 @@ public class ListResponse<T> implements Iterable<T>{
 	@Override
 	public Iterator<T> iterator() {
 		return items.iterator();
+	}
+	
+	@Override
+	public Spliterator<T> spliterator() {
+		throw new UnsupportedOperationException();
 	}
 }
