@@ -9,7 +9,7 @@ else
 fi
 
 DOCS_BRANCH="master"
-if [[ $STAGE_BRANCH =~ [0-9].[0-9]{1,2}-build ]];then
+if [[ $STAGE_BRANCH =~ [0-9].[0-9]{1,2}-build ]]; then
   DOCS_BRANCH=STAGE_BRANCH
 fi
 
