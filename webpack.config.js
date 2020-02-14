@@ -77,7 +77,7 @@ const rules = [
 
                 options: {
                     limit: 100000,
-                    name: '/static/fonts/[name].[ext]'
+                    name: './static/fonts/[name].[ext]'
                 }
             }
         ]

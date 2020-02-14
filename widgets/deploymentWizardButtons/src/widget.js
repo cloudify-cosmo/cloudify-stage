@@ -59,7 +59,28 @@ Stage.defineWidget({
     ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
 
+    fetchData(widget, toolbox) {
+        const { isReachable } = toolbox.getExternal();
+        return Promise.all([
+            isReachable('http://repository.cloudifysource.org/cloudify/wagons/plugins.json'),
+            isReachable('https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip')
+        ]);
+    },
+
     render(widget, data, error, toolbox) {
+        if (!_.every(data, Boolean)) {
+            const { Message } = Stage.Basic;
+            const { MessageContainer } = Stage.Shared;
+            return (
+                <MessageContainer wide size="mini" margin="0">
+                    <Message style={{ padding: 7 }}>
+                        The widget cannot function properly because there is no connection to required external
+                        resources. Please check Internet connection.
+                    </Message>
+                </MessageContainer>
+            );
+        }
+
         const { Divider } = Stage.Basic;
 
         const helloWorldWizardSteps = [

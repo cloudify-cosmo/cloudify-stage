@@ -13,7 +13,7 @@ import './styles/style.scss';
 import 'cloudify-ui-common/styles/font-cloudify.css';
 
 // Import semantic
-import 'semantic-ui-css/semantic.min.css';
+import 'semantic-ui-css-offline/semantic.min.css';
 
 // Import react grid
 import 'react-grid-layout/css/styles.css';

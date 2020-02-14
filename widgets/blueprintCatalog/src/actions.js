@@ -32,8 +32,7 @@ export default class Actions {
                         total_count: numberOfBlueprints,
                         source: Consts.JSON_DATA_SOURCE
                     });
-                })
-                .catch(() => Promise.reject({ message: `Cannot fetch data from ${this.jsonPath}.` }));
+                });
         }
         // GitHub API
         return this.toolbox

@@ -46,7 +46,7 @@ Stage.defineWidget({
             ...widget.configuration
         });
 
-        return actions.doGetPluginsList();
+        return actions.doGetPluginsList().catch(_.identity);
     },
 
     /**
@@ -59,6 +59,19 @@ Stage.defineWidget({
      * @returns
      */
     render(widget, data, error, toolbox) {
+        if (data instanceof Error) {
+            const { Message } = Stage.Basic;
+            const { MessageContainer } = Stage.Shared;
+            return (
+                <MessageContainer wide margin="30px auto">
+                    <Message>
+                        The widget content cannot be displayed because there is no connection to plugins repository.
+                        Please check network connection and widget's configuration.
+                    </Message>
+                </MessageContainer>
+            );
+        }
+
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading />;
         }
