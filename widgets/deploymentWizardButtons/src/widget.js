@@ -10,6 +10,7 @@ import SecretsStep from './steps/SecretsStep';
 import InputsStep from './steps/InputsStep';
 import ConfirmationStep from './steps/ConfirmationStep';
 import InstallStep from './steps/InstallStep';
+import { HELLO_WORLD_BLUEPRINT_URL, PLUGINS_CATALOG_URL } from './urls';
 
 const configurationDefaults = {
     showHelloWorldWizardButton: true,
@@ -60,10 +61,14 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
 
     fetchData(widget, toolbox) {
-        const { isReachable } = toolbox.getExternal();
         return Promise.all([
-            isReachable('http://repository.cloudifysource.org/cloudify/wagons/plugins.json'),
-            isReachable('https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip')
+            toolbox.getExternal().isReachable(PLUGINS_CATALOG_URL),
+            toolbox
+                .getInternal()
+                .doGet('/external/content', {
+                    url: HELLO_WORLD_BLUEPRINT_URL
+                })
+                .catch(_.noop)
         ]);
     },
 

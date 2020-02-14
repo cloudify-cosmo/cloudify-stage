@@ -5,6 +5,7 @@
 import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
+import { HELLO_WORLD_BLUEPRINT_URL } from '../urls';
 
 const infrastructureStepId = 'infrastructure';
 
@@ -46,13 +47,11 @@ class InfrastructureStepContent extends React.Component {
 
     static defaultBlueprintName = 'hello-world';
 
-    static helloWorldBlueprintUrl = 'https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip';
-
     static defaultBlueprintYaml = 'aws.yaml';
 
     static initialState = {
         stepData: {
-            blueprintUrl: InfrastructureStepContent.helloWorldBlueprintUrl,
+            blueprintUrl: HELLO_WORLD_BLUEPRINT_URL,
             blueprintFile: null,
             blueprintName: InfrastructureStepContent.defaultBlueprintName,
             blueprintFileName: InfrastructureStepContent.defaultBlueprintYaml,
