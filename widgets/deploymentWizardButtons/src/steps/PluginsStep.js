@@ -8,7 +8,6 @@ import NoResourceMessage from './helpers/NoResourceMessage';
 import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
-import { PLUGINS_CATALOG_URL } from '../urls';
 
 const pluginsStepId = 'plugins';
 
@@ -150,7 +149,7 @@ class PluginsStepContent extends React.Component {
                     this.props.toolbox
                         .getManager()
                         .doGet('/plugins?_include=distribution,package_name,package_version,visibility'),
-                    this.props.toolbox.getExternal().doGet(PLUGINS_CATALOG_URL)
+                    this.props.toolbox.getExternal().doGet(Stage.Common.Consts.externalUrls.pluginsCatalog)
                 ])
             )
             .then(([pluginsInManager, pluginsInCatalog]) => {

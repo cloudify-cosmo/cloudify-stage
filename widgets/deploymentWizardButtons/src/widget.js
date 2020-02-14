@@ -10,7 +10,6 @@ import SecretsStep from './steps/SecretsStep';
 import InputsStep from './steps/InputsStep';
 import ConfirmationStep from './steps/ConfirmationStep';
 import InstallStep from './steps/InstallStep';
-import { HELLO_WORLD_BLUEPRINT_URL, PLUGINS_CATALOG_URL } from './urls';
 
 const configurationDefaults = {
     showHelloWorldWizardButton: true,
@@ -62,11 +61,11 @@ Stage.defineWidget({
 
     fetchData(widget, toolbox) {
         return Promise.all([
-            toolbox.getExternal().isReachable(PLUGINS_CATALOG_URL),
+            toolbox.getExternal().isReachable(Stage.Common.Consts.externalUrls.pluginsCatalog),
             toolbox
                 .getInternal()
                 .doGet('/external/content', {
-                    url: HELLO_WORLD_BLUEPRINT_URL
+                    url: Stage.Common.Consts.externalUrls.helloWorldBlueprint
                 })
                 .catch(_.noop)
         ]);

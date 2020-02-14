@@ -5,7 +5,6 @@
 import { createWizardStep } from '../wizard/wizardUtils';
 import StepActions from '../wizard/StepActions';
 import StepContent from '../wizard/StepContent';
-import { HELLO_WORLD_BLUEPRINT_URL } from '../urls';
 
 const infrastructureStepId = 'infrastructure';
 
@@ -51,7 +50,7 @@ class InfrastructureStepContent extends React.Component {
 
     static initialState = {
         stepData: {
-            blueprintUrl: HELLO_WORLD_BLUEPRINT_URL,
+            blueprintUrl: Stage.Common.Consts.externalUrls.helloWorldBlueprint,
             blueprintFile: null,
             blueprintName: InfrastructureStepContent.defaultBlueprintName,
             blueprintFileName: InfrastructureStepContent.defaultBlueprintYaml,

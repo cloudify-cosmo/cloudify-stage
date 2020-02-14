@@ -19,6 +19,11 @@ const consts = {
             maxBoundsViscosity: 0.75
         },
         initialZoom: 2.5
+    },
+    externalUrls: {
+        pluginsCatalog: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json',
+        blueprintsCatalog: 'http://repository.cloudifysource.org/cloudify/blueprints/5.0.5/examples.json',
+        helloWorldBlueprint: 'https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip'
     }
 };
 
