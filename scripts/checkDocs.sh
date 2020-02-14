@@ -23,12 +23,12 @@ VERSION_IN_DOCS=$(curl -s "$CURL_OPTIONS" "$WIDGET_COMPONENTS_URL" | grep ui_com
 VERSION_IN_STAGE=$(npm view ${COMPONENTS_REPOSITORY} version)
 
 echo "Checking version of ${COMPONENTS_REPOSITORY} package in official Cloudify documentation ..."
- if [ "$VERSION_IN_DOCS" == "$VERSION_IN_STAGE" ]; then
-     echo "Version of ${COMPONENTS_REPOSITORY} is in sync with ${STAGE_REPOSITORY}."
- else
-     echo "Version of ${COMPONENTS_REPOSITORY} is not in sync with ${STAGE_REPOSITORY}."
-     echo "- ${COMPONENTS_REPOSITORY} in ${STAGE_REPOSITORY}: '${VERSION_IN_STAGE}'"
-     echo "- ${COMPONENTS_REPOSITORY} in ${DOCS_REPOSITORY}: '${VERSION_IN_DOCS}'"
-     echo "Please update ${WIDGETS_COMPONENTS_PATH} file in ${DOCS_REPOSITORY} repository on ${DOCS_BRANCH} branch."
-     exit 1
- fi
+if [ "$VERSION_IN_DOCS" == "$VERSION_IN_STAGE" ]; then
+  echo "Version of ${COMPONENTS_REPOSITORY} is in sync with ${STAGE_REPOSITORY}."
+else
+  echo "Version of ${COMPONENTS_REPOSITORY} is not in sync with ${STAGE_REPOSITORY}."
+  echo "- ${COMPONENTS_REPOSITORY} in ${STAGE_REPOSITORY}: '${VERSION_IN_STAGE}'"
+  echo "- ${COMPONENTS_REPOSITORY} in ${DOCS_REPOSITORY}: '${VERSION_IN_DOCS}'"
+  echo "Please update ${WIDGETS_COMPONENTS_PATH} file in ${DOCS_REPOSITORY} repository on ${DOCS_BRANCH} branch."
+  exit 1
+fi

@@ -17,10 +17,10 @@
     "e2e:new": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
     "e2e:new:open": "cypress open",
     "e2e:new:dev": "cypress run --reporter spec",
-    "beforebuild": "sh scripts/preinstall.sh",
+    "beforebuild": "bash scripts/preinstall.sh",
     "build": "webpack --config webpack.config-prod.js --bail",
-    "zip": "sh scripts/createPackage.sh",
-    "upload": "sh scripts/uploadPackage.sh",
+    "zip": "bash scripts/createPackage.sh",
+    "upload": "bash scripts/uploadPackage.sh",
     "size": "size-limit"
   },
   "author": "Cloudify",
