@@ -134,14 +134,13 @@ class SitesMap extends React.Component {
         const { isMapAvailable } = this.state;
 
         if (!isMapAvailable) {
-            const NO_INTERNET_MESSAGE = `The widget content cannot be displayed because there is no connection 
-                                         to the maps repository. Please check network connection and widget's configuration.`;
-            return <MapMessage text={NO_INTERNET_MESSAGE} />;
+            const { NoDataMessage } = Stage.Common;
+            return <NoDataMessage repositoryName="maps" />;
         }
 
         const markers = this._createMarkers();
         if (_.isEmpty(markers)) {
-            return <NoDataMessage sitesAreDefined={sitesAreDefined} />;
+            return <NoSitesDataMessage sitesAreDefined={sitesAreDefined} />;
         }
 
         const mapOptions = { ...Stage.Common.Consts.leaflet.mapOptions };
@@ -165,24 +164,15 @@ class SitesMap extends React.Component {
 
 export default connectToStore(state => _.get(state, 'config.app.maps', () => ({})), {})(SitesMap);
 
-function NoDataMessage({ sitesAreDefined }) {
+function NoSitesDataMessage({ sitesAreDefined }) {
+    const { NoDataMessage } = Stage.Common;
+    const { Link } = Stage.Shared;
     const REASON = sitesAreDefined ? 'the defined sites have no location' : 'no sites are defined';
     const NO_DATA_MESSAGE = `This widget shares site location and status info.
                              There is no data to display because ${REASON}. Sites can be added in the `;
-    return <MapMessage text={NO_DATA_MESSAGE} addLink />;
-}
-
-function MapMessage({ text, addLink }) {
-    const { Message } = Stage.Basic;
-    const { Link, MessageContainer } = Stage.Shared;
-    const SITES_PAGE_PATH = '/page/site_management';
-
     return (
-        <MessageContainer wide margin="30px auto">
-            <Message>
-                {text}
-                {addLink && <Link to={SITES_PAGE_PATH}>Site Management page.</Link>}
-            </Message>
-        </MessageContainer>
+        <NoDataMessage>
+            {NO_DATA_MESSAGE} <Link to="/page/site_management">Site Management page.</Link>
+        </NoDataMessage>
     );
 }
