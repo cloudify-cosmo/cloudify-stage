@@ -3,10 +3,10 @@ package co.cloudify.rest;
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.client.EventsClient;
 import co.cloudify.rest.client.ExecutionsClient;
+import co.cloudify.rest.helpers.EventsHelper;
+import co.cloudify.rest.helpers.ExecutionsHelper;
 import co.cloudify.rest.model.Event;
 import co.cloudify.rest.model.Execution;
-import co.cloudify.rest.model.helpers.EventsHelper;
-import co.cloudify.rest.model.helpers.ExecutionsHelper;
 
 public class ClientTest {
 	public static void main(String []args) throws Exception {
@@ -34,7 +34,7 @@ public class ClientTest {
 //		System.out.println(e);
 		ExecutionsClient execClient = client.getExecutionsClient();
 		Execution execution = execClient.get("86cfdecb-7ee4-417c-aa88-486801148fde");
-		ExecutionsHelper.followExecution(client, execution);
+		ExecutionsHelper.followExecution(client, execution, null);
 		EventsClient eventsClient = client.getEventsClient();
 		Iterable<Event> events = eventsClient.list(execution, true);
 		for (Event event: events) {

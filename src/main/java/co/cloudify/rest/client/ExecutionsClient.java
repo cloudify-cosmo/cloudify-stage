@@ -28,7 +28,7 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 
 	protected Builder getExecutionsBuilder(final String ... args) {
 		Validate.isTrue(args.length <= 1);
-		return getBuilder(getTarget(ID_PATH, args.length == 1 ? Collections.singletonMap("id", args[0]) : Collections.emptyMap()));
+		return getBuilder(getTarget(args.length == 1 ? ID_PATH : BASE_PATH, args.length == 1 ? Collections.singletonMap("id", args[0]) : Collections.emptyMap()));
 	}
 	
 	/**
@@ -49,6 +49,15 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 	 */
 	public ListResponse<Execution> list() {
 		return getExecutionsBuilder().get(new GenericType<ListResponse<Execution>>() {});
+	}
+	
+	public ListResponse<Execution> list(final Deployment deployment) {
+		return list(deployment.getId());
+	}
+	
+	public ListResponse<Execution> list(final String deploymentId) {
+		WebTarget target = getTarget(BASE_PATH).queryParam("deployment_id", deploymentId);
+		return getBuilder(target).get(new GenericType<ListResponse<Execution>>() {});
 	}
 	
 	/**

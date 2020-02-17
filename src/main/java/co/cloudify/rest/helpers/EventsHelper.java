@@ -1,4 +1,4 @@
-package co.cloudify.rest.model.helpers;
+package co.cloudify.rest.helpers;
 
 import java.text.SimpleDateFormat;
 
@@ -8,6 +8,10 @@ import co.cloudify.rest.model.Event;
 
 public class EventsHelper {
 	private static final String DATETIME_FORMAT = "dd-MM-yyyy hh:mm:ss";
+
+	public static String formatEvent(final Event event) {
+		return formatEvent(event, true);
+	}
 	
 	/**
 	 * Returns the string representation of an event/log record.
@@ -16,12 +20,14 @@ public class EventsHelper {
 	 * 
 	 * @return	String representation.
 	 */
-	public static String formatEvent (final Event event) {
+	public static String formatEvent (final Event event, final boolean includeLevel) {
 		StringBuilder formatted = new StringBuilder();
-		if (event.getLevel() != null) {
-			formatted.append(String.format(" [%-5s]", event.getLevel()));
-		} else {
-			formatted.append(String.format(" %7s", StringUtils.EMPTY));
+		if (includeLevel) {
+			if (event.getLevel() != null) {
+				formatted.append(String.format(" [%-5s]", event.getLevel()));
+			} else {
+				formatted.append(String.format(" %7s", StringUtils.EMPTY));
+			}
 		}
 		if (event.getDeploymentId() != null) {
 			formatted.append(String.format(" <%s>", event.getDeploymentId()));

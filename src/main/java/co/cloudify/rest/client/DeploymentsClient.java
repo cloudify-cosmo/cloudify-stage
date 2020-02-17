@@ -14,6 +14,7 @@ import org.apache.commons.lang3.Validate;
 import co.cloudify.rest.client.params.DeploymentCreateParams;
 import co.cloudify.rest.model.Blueprint;
 import co.cloudify.rest.model.Deployment;
+import co.cloudify.rest.model.DeploymentCapabilities;
 import co.cloudify.rest.model.ListResponse;
 
 /**
@@ -26,6 +27,8 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	private static final String BASE_PATH = "/api/v3.1/deployments";
 	/**	Path for specific resource. */
 	private static final String ID_PATH = BASE_PATH + "/{id}";
+	/**	Path for capabilities. */
+	private static final String CAPABILITIES_PATH = BASE_PATH + "/{id}/capabilities";
 
 	public DeploymentsClient(Client restClient, WebTarget base) {
 		super(restClient, base);
@@ -33,7 +36,8 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 
 	protected Builder getDeploymentsBuilder(final String ... args) {
 		Validate.isTrue(args.length <= 1);
-		return getBuilder(getTarget(ID_PATH, args.length == 1 ? Collections.singletonMap("id", args[0]) : Collections.emptyMap()));
+		//	TODO singleton externalize
+		return getBuilder(getTarget(args.length == 1 ? ID_PATH : BASE_PATH, args.length == 1 ? Collections.singletonMap("id", args[0]) : Collections.emptyMap()));
 	}
 	
 	/**
@@ -80,6 +84,10 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	public Deployment create(final String id, final String blueprintId,
 			final Map<String, Object> inputs) {
 		return getDeploymentsBuilder(id).put(Entity.json(new DeploymentCreateParams(blueprintId, inputs)), Deployment.class);
+	}
+	
+	public Map<String, Object> getCapabilities(final Deployment deployment) {
+		return getBuilder(getTarget(CAPABILITIES_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentCapabilities.class).getCapabilities();
 	}
 	
 	/**

@@ -1,5 +1,6 @@
-package co.cloudify.rest.model.helpers;
+package co.cloudify.rest.helpers;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,8 @@ import co.cloudify.rest.model.ExecutionStatus;
 public class ExecutionsHelper {
 	private static final Logger logger = LoggerFactory.getLogger(ExecutionsHelper.class);
 	
+	private static ExecutionFollowCallback DEFAULT_FOLLOW_CALLBACK = new DefaultExecutionFollowCallback();
+	
 	/**
 	 * Follows an execution until it ends.
 	 * 
@@ -19,11 +22,15 @@ public class ExecutionsHelper {
 	 * 
 	 * @return	The most up-to-date representation of the execution.
 	 */
-	public static Execution followExecution(final CloudifyClient client, Execution execution) {
+	public static Execution followExecution(final CloudifyClient client, Execution execution,
+			ExecutionFollowCallback callback) {
 		ExecutionsClient executionsClient = client.getExecutionsClient();
 		String executionId = execution.getId();
+		ExecutionFollowCallback effectiveCallback = ObjectUtils.defaultIfNull(callback, DEFAULT_FOLLOW_CALLBACK);
+		effectiveCallback.start(execution);
 		while(true) {
 			execution = executionsClient.get(executionId);
+			effectiveCallback.callback(execution);
 			if (ExecutionStatus.TERMINAL_STATUSES.contains(execution.getStatus())) {
 				break;
 			}
@@ -34,6 +41,7 @@ public class ExecutionsHelper {
 				break;
 			}
 		}
+		effectiveCallback.end(execution);
 		return execution;
 	}
 }
