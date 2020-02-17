@@ -149,9 +149,7 @@ class PluginsStepContent extends React.Component {
                     this.props.toolbox
                         .getManager()
                         .doGet('/plugins?_include=distribution,package_name,package_version,visibility'),
-                    this.props.toolbox
-                        .getExternal()
-                        .doGet('http://repository.cloudifysource.org/cloudify/wagons/plugins.json')
+                    this.props.toolbox.getExternal().doGet(Stage.Common.Consts.externalUrls.pluginsCatalog)
                 ])
             )
             .then(([pluginsInManager, pluginsInCatalog]) => {

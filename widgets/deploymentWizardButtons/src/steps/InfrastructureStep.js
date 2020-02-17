@@ -46,13 +46,11 @@ class InfrastructureStepContent extends React.Component {
 
     static defaultBlueprintName = 'hello-world';
 
-    static helloWorldBlueprintUrl = 'https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip';
-
     static defaultBlueprintYaml = 'aws.yaml';
 
     static initialState = {
         stepData: {
-            blueprintUrl: InfrastructureStepContent.helloWorldBlueprintUrl,
+            blueprintUrl: Stage.Common.Consts.externalUrls.helloWorldBlueprint,
             blueprintFile: null,
             blueprintName: InfrastructureStepContent.defaultBlueprintName,
             blueprintFileName: InfrastructureStepContent.defaultBlueprintYaml,

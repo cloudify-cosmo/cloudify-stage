@@ -20,7 +20,7 @@ Stage.defineWidget({
             id: 'jsonPath',
             name: 'Plugins Catalog JSON Source',
             placeHolder: 'Type JSON Path',
-            default: '//repository.cloudifysource.org/cloudify/wagons/plugins.json',
+            default: Stage.Common.Consts.externalUrls.pluginsCatalog,
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
@@ -46,7 +46,7 @@ Stage.defineWidget({
             ...widget.configuration
         });
 
-        return actions.doGetPluginsList();
+        return actions.doGetPluginsList().catch(_.identity);
     },
 
     /**
@@ -59,6 +59,10 @@ Stage.defineWidget({
      * @returns
      */
     render(widget, data, error, toolbox) {
+        if (data instanceof Error) {
+            return <Stage.Common.NoDataMessage repositoryName="plugins" />;
+        }
+
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading />;
         }
