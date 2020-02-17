@@ -152,7 +152,7 @@ function DynamicDropdown({
 }
 
 DynamicDropdown.propTypes = {
-    multiple: PropTypes.bool.isRequired,
+    multiple: PropTypes.bool,
     placeholder: PropTypes.string,
     fetchUrl: PropTypes.string.isRequired,
     fetchAll: PropTypes.bool,
@@ -176,7 +176,8 @@ DynamicDropdown.defaultProps = {
     pageSize: 10,
     placeholder: null,
     name: null,
-    prefetch: false
+    prefetch: false,
+    multiple: false
 };
 
 Stage.defineCommon({

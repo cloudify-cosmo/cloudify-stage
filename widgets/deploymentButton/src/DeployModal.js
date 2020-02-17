@@ -208,7 +208,8 @@ export default class DeployModal extends React.Component {
                                 value={this.state.siteName}
                                 onChange={value => this.setState({ siteName: value })}
                                 name="siteName"
-                                fetchUrl="/sites?_include=name&_sort=name"
+                                fetchUrl="/sites?_include=name"
+                                valueProp="name"
                                 toolbox={this.props.toolbox}
                             />
                         </Form.Field>
