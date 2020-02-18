@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 @XmlRootElement
 public class Execution {
 	@XmlElement
@@ -53,5 +55,18 @@ public class Execution {
 	
 	public ExecutionStatus getStatus() {
 		return status;
+	}
+	
+	public String getError() {
+		return error;
+	}
+	
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+				.append("id", id)
+				.append("status", status)
+				.append("error", error)
+				.toString();
 	}
 }

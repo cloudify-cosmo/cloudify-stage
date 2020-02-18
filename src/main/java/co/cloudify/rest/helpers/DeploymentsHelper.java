@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.client.DeploymentsClient;
 import co.cloudify.rest.client.ExecutionsClient;
-import co.cloudify.rest.client.exceptions.CloudifyNotFoundException;
+import co.cloudify.rest.client.exceptions.DeploymentNotFoundException;
 import co.cloudify.rest.model.Deployment;
 import co.cloudify.rest.model.Execution;
 import co.cloudify.rest.model.ListResponse;
@@ -49,7 +49,7 @@ public class DeploymentsHelper {
 				//	No exception thrown; the deployment still exists.
 				Thread.sleep(POLLING_INTERVAL);
 				continue;
-			} catch (CloudifyNotFoundException ex) {
+			} catch (DeploymentNotFoundException ex) {
 				//	Deleted.
 			} catch (InterruptedException ex) {
 				logger.warn("Asked to stop waiting", ex);

@@ -22,6 +22,10 @@ public class CloudifyClientException extends RuntimeException {
 		super();
 	}
 	
+	public CloudifyClientException(final String msg) {
+		super(msg);
+	}
+	
 	public CloudifyClientException(final String msg, final Throwable root) {
 		super(msg, root);
 	}

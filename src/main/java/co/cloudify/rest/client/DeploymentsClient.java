@@ -3,6 +3,7 @@ package co.cloudify.rest.client;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
@@ -11,6 +12,7 @@ import javax.ws.rs.core.GenericType;
 
 import org.apache.commons.lang3.Validate;
 
+import co.cloudify.rest.client.exceptions.DeploymentNotFoundException;
 import co.cloudify.rest.client.params.DeploymentCreateParams;
 import co.cloudify.rest.model.Blueprint;
 import co.cloudify.rest.model.Deployment;
@@ -58,7 +60,11 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	 * @return	A {@link Deployment} instance describing the deployment.
 	 */
 	public Deployment get(final String id) {
-		return getDeploymentsBuilder(id).get(Deployment.class);
+		try {
+			return getDeploymentsBuilder(id).get(Deployment.class);
+		} catch (NotFoundException ex) {
+			throw new DeploymentNotFoundException(id, ex);
+		}
 	}
 
 	/**
@@ -90,11 +96,19 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	}
 	
 	public Map<String, Object> getOutputs(final Deployment deployment) {
-		return getBuilder(getTarget(OUTPUTS_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentOutputs.class).getOutputs();
+		try {
+			return getBuilder(getTarget(OUTPUTS_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentOutputs.class).getOutputs();
+		} catch (NotFoundException ex) {
+			throw new DeploymentNotFoundException(deployment.getId(), ex);
+		}
 	}
 	
 	public Map<String, Object> getCapabilities(final Deployment deployment) {
-		return getBuilder(getTarget(CAPABILITIES_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentCapabilities.class).getCapabilities();
+		try {
+			return getBuilder(getTarget(CAPABILITIES_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentCapabilities.class).getCapabilities();
+		} catch (NotFoundException ex) {
+			throw new DeploymentNotFoundException(deployment.getId(), ex);
+		}
 	}
 	
 	/**
@@ -103,6 +117,10 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	 * @param	id	deployment to delete
 	 */
 	public void delete(final String id) {
-		getDeploymentsBuilder(id).delete();
+		try {
+			getDeploymentsBuilder(id).delete();
+		} catch (NotFoundException ex) {
+			throw new DeploymentNotFoundException(id, ex);
+		}
 	}
 }

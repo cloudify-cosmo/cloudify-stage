@@ -1,10 +1,12 @@
 package co.cloudify.rest;
 
 import co.cloudify.rest.client.CloudifyClient;
+import co.cloudify.rest.client.DeploymentsClient;
 import co.cloudify.rest.client.EventsClient;
 import co.cloudify.rest.client.ExecutionsClient;
 import co.cloudify.rest.helpers.EventsHelper;
 import co.cloudify.rest.helpers.ExecutionsHelper;
+import co.cloudify.rest.model.Deployment;
 import co.cloudify.rest.model.Event;
 import co.cloudify.rest.model.Execution;
 
@@ -21,6 +23,10 @@ public class ClientTest {
 		}
 		
 		CloudifyClient client = CloudifyClient.create(host, username, password, false, tenant);
+		DeploymentsClient deploymentsClient = client.getDeploymentsClient();
+		Deployment deployment = deploymentsClient.get("moeeee");
+		System.out.println(deployment);
+		
 //		Blueprint bp = client.getBlueprintsClient().get("b");
 //		System.out.println(bp.getPlan());
 //		client.getBlueprintsClient().delete("b");
@@ -32,13 +38,13 @@ public class ClientTest {
 //		System.out.println(d.getInputs());
 //		Deployment e = client.getDeploymentsClient().create("f", "b", d.getInputs(), false);
 //		System.out.println(e);
-		ExecutionsClient execClient = client.getExecutionsClient();
-		Execution execution = execClient.get("86cfdecb-7ee4-417c-aa88-486801148fde");
-		ExecutionsHelper.followExecution(client, execution, null);
-		EventsClient eventsClient = client.getEventsClient();
-		Iterable<Event> events = eventsClient.list(execution, true);
-		for (Event event: events) {
-			System.out.println(EventsHelper.formatEvent(event));
-		}
+//		ExecutionsClient execClient = client.getExecutionsClient();
+//		Execution execution = execClient.get("86cfdecb-7ee4-417c-aa88-486801148fde");
+//		ExecutionsHelper.followExecution(client, execution, null);
+//		EventsClient eventsClient = client.getEventsClient();
+//		Iterable<Event> events = eventsClient.list(execution, true);
+//		for (Event event: events) {
+//			System.out.println(EventsHelper.formatEvent(event));
+//		}
 	}
 }
