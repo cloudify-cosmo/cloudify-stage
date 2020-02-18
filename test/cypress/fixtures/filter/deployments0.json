@@ -1,0 +1,91 @@
+{
+    "items": [
+        {
+            "id": "app2.2",
+            "blueprint_id": "app2.2-clickme"
+        },
+        {
+            "id": "app2.3",
+            "blueprint_id": "app2.3"
+        },
+        {
+            "id": "app2.4",
+            "blueprint_id": "app2.4"
+        },
+        {
+            "id": "app2.5",
+            "blueprint_id": "app2.5"
+        },
+        {
+            "id": "app2.6",
+            "blueprint_id": "app2.6"
+        },
+        {
+            "id": "app2.7",
+            "blueprint_id": "app2.7"
+        },
+        {
+            "id": "bp6.1",
+            "blueprint_id": "Bp6"
+        },
+        {
+            "id": "com",
+            "blueprint_id": "suffix_demo"
+        },
+        {
+            "id": "com1",
+            "blueprint_id": "suffix_demo"
+        },
+        {
+            "id": "com2",
+            "blueprint_id": "suffix_demo"
+        },
+        {
+            "id": "com3",
+            "blueprint_id": "suffix_demo"
+        },
+        {
+            "id": "com4",
+            "blueprint_id": "suffix_demo2"
+        },
+        {
+            "id": "com5",
+            "blueprint_id": "suffix_demo2"
+        },
+        {
+            "id": "com6",
+            "blueprint_id": "suffix_demo2"
+        },
+        {
+            "id": "component",
+            "blueprint_id": "New_Blueprint_2"
+        },
+        {
+            "id": "component_depl",
+            "blueprint_id": "app2"
+        },
+        {
+            "id": "f",
+            "blueprint_id": "aws-example-network"
+        },
+        {
+            "id": "gjh",
+            "blueprint_id": "New_Blueprint_4"
+        },
+        {
+            "id": "hello-world_2",
+            "blueprint_id": "hello-world_1"
+        },
+        {
+            "id": "hjhj",
+            "blueprint_id": "New_Blueprint_5"
+        }
+    ],
+    "metadata": {
+        "pagination": {
+            "total": 24,
+            "offset": 0,
+            "size": 20
+        }
+    }
+}
