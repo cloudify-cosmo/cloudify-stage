@@ -1,0 +1,41 @@
+{
+    "items": [
+        {
+            "id": "app"
+        },
+        {
+            "id": "app2"
+        },
+        {
+            "id": "app2.1"
+        },
+        {
+            "id": "app2.2-clickme"
+        },
+        {
+            "id": "app2.3"
+        },
+        {
+            "id": "app2.4"
+        },
+        {
+            "id": "app2.5"
+        },
+        {
+            "id": "app2.6"
+        },
+        {
+            "id": "app2.7"
+        },
+        {
+            "id": "aws-example-network"
+        }
+    ],
+    "metadata": {
+        "pagination": {
+            "total": 21,
+            "offset": 0,
+            "size": 10
+        }
+    }
+}

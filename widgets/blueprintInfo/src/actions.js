@@ -22,6 +22,6 @@ export default class Actions {
     doGetBlueprintDeployments(blueprintId) {
         return this.toolbox
             .getManager()
-            .doGetFull('/deployments?_include=id,blueprint_id', { blueprint_id: blueprintId });
+            .doGet('/summary/deployments', { blueprint_id: blueprintId, _target_field: 'blueprint_id' });
     }
 }
