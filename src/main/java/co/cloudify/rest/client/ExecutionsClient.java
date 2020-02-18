@@ -3,6 +3,7 @@ package co.cloudify.rest.client;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
@@ -11,6 +12,7 @@ import javax.ws.rs.core.GenericType;
 
 import org.apache.commons.lang3.Validate;
 
+import co.cloudify.rest.client.exceptions.CloudifyClientException;
 import co.cloudify.rest.client.params.ExecutionStartParams;
 import co.cloudify.rest.model.Deployment;
 import co.cloudify.rest.model.Execution;
@@ -84,6 +86,10 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 	 */
 	public Execution start(String deploymentId, String workflowId, Map<String, Object> parameters) {
 		ExecutionStartParams params = new ExecutionStartParams(workflowId, deploymentId, parameters);
-		return getExecutionsBuilder().post(Entity.json(params), Execution.class);
+		try {
+			return getExecutionsBuilder().post(Entity.json(params), Execution.class);
+		} catch (BadRequestException ex) {
+			throw new CloudifyClientException("Failed starting execution", ex);
+		}
 	}
 }

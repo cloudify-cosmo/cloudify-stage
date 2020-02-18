@@ -2,13 +2,9 @@ package co.cloudify.rest;
 
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.client.DeploymentsClient;
-import co.cloudify.rest.client.EventsClient;
-import co.cloudify.rest.client.ExecutionsClient;
-import co.cloudify.rest.helpers.EventsHelper;
-import co.cloudify.rest.helpers.ExecutionsHelper;
+import co.cloudify.rest.client.exceptions.CloudifyClientException;
+import co.cloudify.rest.client.exceptions.CloudifyClientExceptionData;
 import co.cloudify.rest.model.Deployment;
-import co.cloudify.rest.model.Event;
-import co.cloudify.rest.model.Execution;
 
 public class ClientTest {
 	public static void main(String []args) throws Exception {
@@ -23,9 +19,19 @@ public class ClientTest {
 		}
 		
 		CloudifyClient client = CloudifyClient.create(host, username, password, false, tenant);
+		try {
+			client.getExecutionsClient().start("m", "boo", null);
+		} catch (CloudifyClientException ex) {
+			ex.printStackTrace();
+			System.err.println(CloudifyClientExceptionData.fromCloudifyClientException(ex));
+		} finally {}
 		DeploymentsClient deploymentsClient = client.getDeploymentsClient();
-		Deployment deployment = deploymentsClient.get("moeeee");
-		System.out.println(deployment);
+		try {
+			Deployment deployment = deploymentsClient.get("moeeee");
+			System.out.println(deployment);
+		} catch (CloudifyClientException ex) {
+			System.err.println(CloudifyClientExceptionData.fromCloudifyClientException(ex));
+		} finally {}
 		
 //		Blueprint bp = client.getBlueprintsClient().get("b");
 //		System.out.println(bp.getPlan());
