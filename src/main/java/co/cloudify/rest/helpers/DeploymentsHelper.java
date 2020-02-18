@@ -3,16 +3,24 @@ package co.cloudify.rest.helpers;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.client.DeploymentsClient;
 import co.cloudify.rest.client.ExecutionsClient;
+import co.cloudify.rest.client.exceptions.CloudifyNotFoundException;
 import co.cloudify.rest.model.Deployment;
 import co.cloudify.rest.model.Execution;
 import co.cloudify.rest.model.ListResponse;
 
 public class DeploymentsHelper {
+	private static final Logger logger = LoggerFactory.getLogger(DeploymentsHelper.class);
+	
+	private static final int POLLING_INTERVAL = 2000;
+	
 	public static Deployment createDeploymentAndWait(CloudifyClient client, String id, String blueprintId,
-			final Map<String, Object> inputs, final ExecutionFollowCallback callback) {
+			final Map<String, Object> inputs, final ExecutionFollowCallback callback) throws Exception {
 		DeploymentsClient deploymentsClient = client.getDeploymentsClient();
 		Deployment deployment = deploymentsClient.create(id, blueprintId, inputs);
 
@@ -30,5 +38,23 @@ public class DeploymentsHelper {
 		Execution depCreationExecution = items.get(0);
 		depCreationExecution = ExecutionsHelper.followExecution(client, depCreationExecution, callback);
 		return deployment;
+	}
+	
+	public static void deleteDeploymentAndCheck(CloudifyClient client, String id) {
+		DeploymentsClient deploymentsClient = client.getDeploymentsClient();
+		deploymentsClient.delete(id);
+		while (true) {
+			try {
+				deploymentsClient.get(id);
+				//	No exception thrown; the deployment still exists.
+				Thread.sleep(POLLING_INTERVAL);
+				continue;
+			} catch (CloudifyNotFoundException ex) {
+				//	Deleted.
+			} catch (InterruptedException ex) {
+				logger.warn("Asked to stop waiting", ex);
+			}
+			break;
+		}
 	}
 }

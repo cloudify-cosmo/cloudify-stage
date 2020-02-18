@@ -20,7 +20,17 @@ public class DefaultExecutionFollowCallback implements ExecutionFollowCallback {
 	}
 
 	@Override
+	public void last(Execution execution) {
+		//	Nothing.
+	}
+	
+	@Override
 	public void end(Execution execution) {
+		//	Nothing.
+	}
+	
+	@Override
+	public void exception(Execution execution, Throwable exception) {
 		//	Nothing.
 	}
 }

@@ -5,6 +5,13 @@ import java.io.PrintStream;
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.model.Event;
 
+/**
+ * A {@link LogEmitterExecutionFollower} implementation that prints to a {@link PrintStream}.
+ * This is useful, among others, for Jenkins.
+ * 
+ * @author	Isaac Shabtay
+ *
+ */
 public class PrintStreamLogEmitterExecutionFollower extends LogEmitterExecutionFollower {
 	private PrintStream printStream;
 
@@ -21,7 +28,6 @@ public class PrintStreamLogEmitterExecutionFollower extends LogEmitterExecutionF
 	@Override
 	protected void emit(final Event event) {
 		String text = EventsHelper.formatEvent(event);
-		System.err.println(text);
 		printStream.println(text);
 	}
 }

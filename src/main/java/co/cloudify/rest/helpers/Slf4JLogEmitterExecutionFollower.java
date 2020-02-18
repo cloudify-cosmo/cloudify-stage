@@ -6,6 +6,12 @@ import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.model.Event;
 import co.cloudify.rest.model.EventLevel;
 
+/**
+ * A {@link LogEmitterExecutionFollower} implementation that outputs to an
+ * SLF4J logger.
+ * 
+ * @author	Isaac Shabtay
+ */
 public class Slf4JLogEmitterExecutionFollower extends LogEmitterExecutionFollower {
 	private Logger logger;
 
@@ -23,6 +29,8 @@ public class Slf4JLogEmitterExecutionFollower extends LogEmitterExecutionFollowe
 	protected void emit(final Event event) {
 		EventLevel level = event.getLevel();
 		String text = EventsHelper.formatEvent(event, false);
+		//	Apparently SLF4J doesn't offer a logging method that accepts a level
+		//	as a parameter...
 		switch (level) {
 		case debug:
 			logger.debug(text);

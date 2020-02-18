@@ -2,9 +2,6 @@ package co.cloudify.rest.helpers;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.client.EventsClient;
 import co.cloudify.rest.model.Event;
@@ -13,8 +10,6 @@ import co.cloudify.rest.model.ListResponse;
 import co.cloudify.rest.model.Pagination;
 
 public abstract class LogEmitterExecutionFollower extends DefaultExecutionFollowCallback {
-	private static final Logger logger = LoggerFactory.getLogger(LogEmitterExecutionFollower.class);
-	
 	private static final long DEFAULT_SIZE = 1000;
 
 	private EventsClient client;
@@ -42,10 +37,10 @@ public abstract class LogEmitterExecutionFollower extends DefaultExecutionFollow
 	}
 	
 	@Override
-	public void end(Execution execution) {
+	public void last(Execution execution) {
 		fetch(execution);
 	}
-
+	
 	protected abstract void emit(final Event event);
 	
 	protected void fetch(Execution execution) {

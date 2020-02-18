@@ -11,37 +11,43 @@ import co.cloudify.rest.model.ExecutionStatus;
 
 public class ExecutionsHelper {
 	private static final Logger logger = LoggerFactory.getLogger(ExecutionsHelper.class);
-	
+
 	private static ExecutionFollowCallback DEFAULT_FOLLOW_CALLBACK = new DefaultExecutionFollowCallback();
-	
+
 	/**
 	 * Follows an execution until it ends.
 	 * 
-	 * @param	client		Cloudify's REST client
-	 * @param	execution	execution to track
+	 * @param client    Cloudify's REST client
+	 * @param execution execution to track
+	 * @param callback  a callback object to call while following
 	 * 
-	 * @return	The most up-to-date representation of the execution.
+	 * @return The most up-to-date representation of the execution.
 	 */
 	public static Execution followExecution(final CloudifyClient client, Execution execution,
-			ExecutionFollowCallback callback) {
+			ExecutionFollowCallback callback) throws Exception {
 		ExecutionsClient executionsClient = client.getExecutionsClient();
 		String executionId = execution.getId();
 		ExecutionFollowCallback effectiveCallback = ObjectUtils.defaultIfNull(callback, DEFAULT_FOLLOW_CALLBACK);
 		effectiveCallback.start(execution);
-		while(true) {
-			execution = executionsClient.get(executionId);
-			effectiveCallback.callback(execution);
-			if (ExecutionStatus.TERMINAL_STATUSES.contains(execution.getStatus())) {
-				break;
+		try {
+			while (true) {
+				execution = executionsClient.get(executionId);
+				effectiveCallback.callback(execution);
+				if (ExecutionStatus.TERMINAL_STATUSES.contains(execution.getStatus())) {
+					break;
+				}
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException ex) {
+					logger.warn("Asked to stop waiting; returning", ex);
+					break;
+				}
 			}
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException ex) {
-				logger.warn("Asked to stop waiting; returning", ex);
-				break;
-			}
+			effectiveCallback.last(execution);
+			effectiveCallback.end(execution);
+		} catch (Exception ex) {
+			effectiveCallback.exception(execution, ex);
 		}
-		effectiveCallback.end(execution);
 		return execution;
 	}
 }

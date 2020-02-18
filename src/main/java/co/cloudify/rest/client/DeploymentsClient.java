@@ -15,6 +15,7 @@ import co.cloudify.rest.client.params.DeploymentCreateParams;
 import co.cloudify.rest.model.Blueprint;
 import co.cloudify.rest.model.Deployment;
 import co.cloudify.rest.model.DeploymentCapabilities;
+import co.cloudify.rest.model.DeploymentOutputs;
 import co.cloudify.rest.model.ListResponse;
 
 /**
@@ -27,6 +28,8 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	private static final String BASE_PATH = "/api/v3.1/deployments";
 	/**	Path for specific resource. */
 	private static final String ID_PATH = BASE_PATH + "/{id}";
+	/**	Path for outputs. */
+	private static final String OUTPUTS_PATH = BASE_PATH + "/{id}/outputs";
 	/**	Path for capabilities. */
 	private static final String CAPABILITIES_PATH = BASE_PATH + "/{id}/capabilities";
 
@@ -84,6 +87,10 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	public Deployment create(final String id, final String blueprintId,
 			final Map<String, Object> inputs) {
 		return getDeploymentsBuilder(id).put(Entity.json(new DeploymentCreateParams(blueprintId, inputs)), Deployment.class);
+	}
+	
+	public Map<String, Object> getOutputs(final Deployment deployment) {
+		return getBuilder(getTarget(OUTPUTS_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentOutputs.class).getOutputs();
 	}
 	
 	public Map<String, Object> getCapabilities(final Deployment deployment) {
