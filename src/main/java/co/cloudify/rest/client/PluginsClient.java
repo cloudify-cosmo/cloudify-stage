@@ -8,7 +8,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Arrays;
 
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -60,7 +59,7 @@ public class PluginsClient extends AbstractCloudifyClient {
 			try (InputStream is = new FileInputStream(tempZip)) {
 				try {
 					return getBuilder(getTarget(BASE_PATH)).post(Entity.entity(is, MediaType.APPLICATION_OCTET_STREAM), Plugin.class);
-				} catch (BadRequestException ex) {
+				} catch (WebApplicationException ex) {
 					throw CloudifyClientException.create("Failed uploading plugin", ex);
 				}
 			}
