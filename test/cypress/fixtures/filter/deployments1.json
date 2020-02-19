@@ -1,0 +1,27 @@
+{
+    "items": [
+        {
+            "id": "test",
+            "blueprint_id": "Bp_with_component"
+        },
+        {
+            "id": "test2",
+            "blueprint_id": "app"
+        },
+        {
+            "id": "test3",
+            "blueprint_id": "component"
+        },
+        {
+            "id": "uuu",
+            "blueprint_id": "app2.2-clickme"
+        }
+    ],
+    "metadata": {
+        "pagination": {
+            "total": 24,
+            "offset": 20,
+            "size": 20
+        }
+    }
+}
