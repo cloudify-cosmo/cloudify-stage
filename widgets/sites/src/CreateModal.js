@@ -75,6 +75,7 @@ export default class CreateModal extends React.Component {
     render() {
         const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
         const createButton = <Button content="Create" icon="add" labelPosition="left" />;
+        const { toolbox } = this.props;
 
         return (
             <Modal
@@ -106,7 +107,7 @@ export default class CreateModal extends React.Component {
                             />
                         </Form.Field>
                         <Form.Field error={this.state.errors.siteLocation}>
-                            <SiteLocationInput onChange={this._handleInputChange.bind(this)} />
+                            <SiteLocationInput onChange={this._handleInputChange.bind(this)} toolbox={toolbox} />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
