@@ -1,9 +1,7 @@
 package co.cloudify.rest;
 
-import java.io.File;
-
 import co.cloudify.rest.client.CloudifyClient;
-import co.cloudify.rest.model.Blueprint;
+import co.cloudify.rest.model.Plugin;
 
 public class ClientTest {
 	public static void main(String []args) throws Exception {
@@ -18,8 +16,10 @@ public class ClientTest {
 		}
 		
 		CloudifyClient client = CloudifyClient.create(host, username, password, false, tenant);
-		Blueprint upload = client.getBlueprintsClient().upload("mybp", new File("/mnt/cfy/blueprints/simple"), "blueprint.yaml");
+		Plugin upload = client.getPluginsClient().upload("/home/isaac/cfy/git/cloudify-terraform-plugin/cloudify_terraform_plugin-0.7-py27-none-linux_x86_64-centos-Core.wgn", "/home/isaac/cfy/git/cloudify-terraform-plugin/plugin.yaml");
 		System.err.println(upload);
+//		Blueprint upload = client.getBlueprintsClient().upload("mybp", new File("/mnt/cfy/blueprints/simple"), "blueprint.yaml");
+//		System.err.println(upload);
 //		try {
 //			client.getExecutionsClient().start("m", "boo", null);
 //		} catch (CloudifyClientException ex) {

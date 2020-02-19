@@ -25,6 +25,7 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.Validate;
 
 import co.cloudify.rest.client.exceptions.BlueprintNotFoundException;
@@ -90,9 +91,7 @@ public class BlueprintsClient extends AbstractCloudifyClient {
 							ArchiveEntry entry = taos.createArchiveEntry(file.toFile(), String.format("blueprint/%s", rootPath.relativize(file)));
 							taos.putArchiveEntry(entry);
 							if (file.toFile().isFile()) {
-								try (InputStream is = Files.newInputStream(file)) {
-									IOUtils.copy(is, taos);
-								}
+								FileUtils.copyFile(file.toFile(), taos);
 							}
 							taos.closeArchiveEntry();
 							return FileVisitResult.CONTINUE;

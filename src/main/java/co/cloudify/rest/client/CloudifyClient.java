@@ -17,6 +17,7 @@ public class CloudifyClient extends AbstractCloudifyClient {
 	protected DeploymentsClient deploymentsClient;
 	protected ExecutionsClient executionsClient;
 	protected EventsClient eventsClient;
+	protected PluginsClient pluginsClient;
 	
 	protected CloudifyClient(Client restClient, WebTarget base) {
 		super(restClient, base);
@@ -24,6 +25,7 @@ public class CloudifyClient extends AbstractCloudifyClient {
 		deploymentsClient = new DeploymentsClient(api, base);
 		executionsClient = new ExecutionsClient(api, base);
 		eventsClient = new EventsClient(api, base);
+		pluginsClient = new PluginsClient(api, base);
 	}
 
 	public static CloudifyClient create(
@@ -63,5 +65,9 @@ public class CloudifyClient extends AbstractCloudifyClient {
 	
 	public EventsClient getEventsClient() {
 		return eventsClient;
+	}
+	
+	public PluginsClient getPluginsClient() {
+		return pluginsClient;
 	}
 }
