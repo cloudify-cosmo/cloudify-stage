@@ -1,5 +1,11 @@
 package co.cloudify.rest;
 
+import java.io.File;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.model.Plugin;
 
@@ -16,7 +22,11 @@ public class ClientTest {
 		}
 		
 		CloudifyClient client = CloudifyClient.create(host, username, password, false, tenant);
-		Plugin upload = client.getPluginsClient().upload("/home/isaac/cfy/git/cloudify-terraform-plugin/cloudify_terraform_plugin-0.7-py27-none-linux_x86_64-centos-Core.wgn", "/home/isaac/cfy/git/cloudify-terraform-plugin/plugin.yaml");
+		Plugin upload = client.getPluginsClient().upload("/home/isaac/cfy/git/cloudify-terraform-plugin/cloudify_terraform_plugin-0.7-py27-none-linux_x86_64-centos-Core.wgn", "https://www.getcloudify.org/spec/aws-plugin/2.3.0/plugin.yaml");
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		mapper.registerModule(new JaxbAnnotationModule());
+		mapper.writeValue(new File("/tmp/boo.json"), upload);
 		System.err.println(upload);
 //		Blueprint upload = client.getBlueprintsClient().upload("mybp", new File("/mnt/cfy/blueprints/simple"), "blueprint.yaml");
 //		System.err.println(upload);

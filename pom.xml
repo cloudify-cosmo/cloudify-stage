@@ -5,6 +5,9 @@
 	<groupId>co.cloudify</groupId>
 	<artifactId>rest-client</artifactId>
 	<version>5.0.5</version>
+	<properties>
+		<jersey.version>2.30</jersey.version>
+	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<!-- Compile-time dependencies -->
@@ -43,8 +46,8 @@
 			<dependency>
 				<groupId>org.glassfish.jersey.core</groupId>
 				<artifactId>jersey-client</artifactId>
-				<version>2.30</version>
-				<scope>runtime</scope>
+				<version>${jersey.version}</version>
+				<scope>test</scope>
 				<exclusions>
 					<exclusion>
 						<groupId>jakarta.ws.rs</groupId>
@@ -55,14 +58,14 @@
 			<dependency>
 				<groupId>org.glassfish.jersey.inject</groupId>
 				<artifactId>jersey-hk2</artifactId>
-				<version>2.30</version>
-				<scope>runtime</scope>
+				<version>${jersey.version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.glassfish.jersey.media</groupId>
 				<artifactId>jersey-media-json-jackson</artifactId>
-				<version>2.30</version>
-				<scope>runtime</scope>
+				<version>${jersey.version}</version>
+				<scope>test</scope>
 				<exclusions>
 					<exclusion>
 						<groupId>jakarta.ws.rs</groupId>

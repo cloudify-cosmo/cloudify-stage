@@ -7,13 +7,14 @@ import java.net.URL;
 import java.util.function.Function;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class Utilities {
 	public static File copyFileOrURLToDir(String location, File directory) throws IOException {
 		File returnedFile;
 		try {
 			URL url = new URL(location);
-			returnedFile = new File(directory, url.getFile());
+			returnedFile = new File(directory, StringUtils.substringAfterLast(url.getPath(), "/"));
 			FileUtils.copyURLToFile(url, returnedFile);
 		} catch (MalformedURLException ex) {
 			File file = new File(location);

@@ -8,6 +8,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Arrays;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -17,6 +19,7 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
 
+import co.cloudify.rest.client.exceptions.CloudifyClientException;
 import co.cloudify.rest.helpers.Utilities;
 import co.cloudify.rest.model.Plugin;
 
@@ -29,9 +32,13 @@ public class PluginsClient extends AbstractCloudifyClient {
 	}
 	
 	public Plugin upload(final URL archiveUrl) throws IOException {
-		return getBuilder(
-				getTarget(BASE_PATH).queryParam("plugin_archive_url", archiveUrl.toString())
-				).post(null, Plugin.class);
+		try {
+			return getBuilder(
+					getTarget(BASE_PATH).queryParam("plugin_archive_url", archiveUrl.toString())
+					).post(null, Plugin.class);
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed uploading plugin", ex);
+		}
 	}
 	
 	public Plugin upload(final String wagonLocation, final String yamlLocation) throws IOException {
@@ -51,9 +58,12 @@ public class PluginsClient extends AbstractCloudifyClient {
 			}
 	
 			try (InputStream is = new FileInputStream(tempZip)) {
-				return getBuilder(getTarget(BASE_PATH)).post(Entity.entity(is, MediaType.APPLICATION_OCTET_STREAM), Plugin.class);
+				try {
+					return getBuilder(getTarget(BASE_PATH)).post(Entity.entity(is, MediaType.APPLICATION_OCTET_STREAM), Plugin.class);
+				} catch (BadRequestException ex) {
+					throw CloudifyClientException.create("Failed uploading plugin", ex);
+				}
 			}
-			
 		} finally {
 			FileUtils.deleteDirectory(tempDir);
 			if (tempZip != null) {

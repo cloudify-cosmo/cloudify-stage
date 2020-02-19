@@ -89,7 +89,7 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 		try {
 			return getExecutionsBuilder().post(Entity.json(params), Execution.class);
 		} catch (BadRequestException ex) {
-			throw new CloudifyClientException("Failed starting execution", ex);
+			throw CloudifyClientException.create("Failed starting execution", ex);
 		}
 	}
 }
