@@ -2,9 +2,10 @@
 
 STAGE_PACKAGE=${STAGE_PACKAGE:-stage.tar.gz}
 COMMAND="
+  rm -rf cloudify-stage
   tar xzf stage.tar.gz;
   sudo service cloudify-stage stop;
-  sudo rsync -ai cloudify-stage /opt;
+  sudo rsync -ai --delete cloudify-stage /opt;
   sudo chown -R stage_user:stage_group /opt/cloudify-stage;
   cd /opt/cloudify-stage/backend;
   sudo /opt/nodejs/bin/npm run db-migrate;
