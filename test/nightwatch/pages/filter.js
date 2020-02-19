@@ -4,41 +4,37 @@
 
 module.exports = {
     elements: {
-        blueprintSearch: '.filterWidget #blueprintFilterField',
-        deploymentSearch: '.filterWidget #deploymentFilterField'
+        blueprintSearch: '.filterWidget #dynamicDropdown1',
+        deploymentSearch: '.filterWidget #dynamicDropdown2'
     },
     commands: [
         {
             isBlueprintPresent(blueprint, callback) {
-                return this.waitForElementPresent('.filterWidget #blueprintFilterField div[role="listbox"]').isPresent(
-                    `.filterWidget #blueprintFilterField div[option-value="${blueprint}"]`,
+                return this.waitForElementPresent('.filterWidget #dynamicDropdown1 div[role="listbox"]').isPresent(
+                    `.filterWidget #dynamicDropdown1 div[option-value="${blueprint}"]`,
                     callback
                 );
             },
             isDeploymentPresent(deployment, callback) {
-                return this.waitForElementPresent('.filterWidget #deploymentFilterField div[role="listbox"]').isPresent(
-                    `.filterWidget #deploymentFilterField div[option-value="${deployment}"]`,
+                return this.waitForElementPresent('.filterWidget #dynamicDropdown2 div[role="listbox"]').isPresent(
+                    `.filterWidget #dynamicDropdown2 div[option-value="${deployment}"]`,
                     callback
                 );
             },
             waitForBlueprintPresent(blueprint) {
-                return this.waitForElementPresent(
-                    `.filterWidget #blueprintFilterField div[option-value="${blueprint}"]`
-                );
+                return this.waitForElementPresent(`.filterWidget #dynamicDropdown1 div[option-value="${blueprint}"]`);
             },
             waitForBlueprintNotPresent(blueprint) {
                 return this.waitForElementNotPresent(
-                    `.filterWidget #blueprintFilterField div[option-value="${blueprint}"]`
+                    `.filterWidget #dynamicDropdown1 div[option-value="${blueprint}"]`
                 );
             },
             waitForDeploymentPresent(deployment) {
-                return this.waitForElementPresent(
-                    `.filterWidget #deploymentFilterField div[option-value="${deployment}"]`
-                );
+                return this.waitForElementPresent(`.filterWidget #dynamicDropdown2 div[option-value="${deployment}"]`);
             },
             waitForDeploymentNotPresent(deployment) {
                 return this.waitForElementNotPresent(
-                    `.filterWidget #deploymentFilterField div[option-value="${deployment}"]`
+                    `.filterWidget #dynamicDropdown2 div[option-value="${deployment}"]`
                 );
             }
         }
