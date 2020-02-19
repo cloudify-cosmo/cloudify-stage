@@ -62,7 +62,7 @@ Stage.defineWidget({
                     ...data[0],
                     created_at: Stage.Utils.Time.formatTimestamp(data[0].created_at),
                     updated_at: Stage.Utils.Time.formatTimestamp(data[0].updated_at),
-                    deployments: data[1].items[0].deployments
+                    deployments: _.get(data[1].items[0], 'deployments', 0)
                 }));
             }
             return Promise.resolve({ id: '' });
