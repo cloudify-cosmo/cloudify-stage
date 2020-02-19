@@ -7,9 +7,7 @@
 	<version>5.0.5</version>
 	<dependencyManagement>
 		<dependencies>
-			<!--
-			Compile-time dependencies
-			-->
+			<!-- Compile-time dependencies -->
 			<dependency>
 				<groupId>javax.ws.rs</groupId>
 				<artifactId>javax.ws.rs-api</artifactId>
@@ -35,10 +33,13 @@
 				<artifactId>json</artifactId>
 				<version>20190722</version>
 			</dependency>
-			<!--
-			Test-time dependencies. We use Apache Jersey as a JAX-RS implementation
-			for our tests. Users may use any other provider.
-			-->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>1.20</version>
+			</dependency>
+			<!-- Test-time dependencies. We use Apache Jersey as a JAX-RS implementation 
+				for our tests. Users may use any other provider. -->
 			<dependency>
 				<groupId>org.glassfish.jersey.core</groupId>
 				<artifactId>jersey-client</artifactId>
@@ -101,6 +102,10 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -179,53 +184,19 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
-			<!--
-			<plugin>
-				<groupId>io.swagger</groupId>
-				<artifactId>swagger-codegen-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
-							<generateApis>false</generateApis>
-							<generateApiTests>false</generateApiTests>
-							<generateModels>true</generateModels>
-							<generateModelDocumentation>true</generateModelDocumentation>
-							<generateSupportingFiles>false</generateSupportingFiles>
-							<modelPackage>co.cloudify.rest.model</modelPackage>
-							<language>java</language>
-							<configOptions>
-								<sourceFolder>swagger</sourceFolder>
-								<dateLibrary>java8</dateLibrary>
-								<java8>true</java8>
-								<library>jersey2</library>
-							</configOptions>
-							<output>target/generated-sources</output>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>${project.basedir}/target/generated-sources/swagger</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			-->
+			<!-- <plugin> <groupId>io.swagger</groupId> <artifactId>swagger-codegen-maven-plugin</artifactId> 
+				<executions> <execution> <goals> <goal>generate</goal> </goals> <configuration> 
+				<inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec> <generateApis>false</generateApis> 
+				<generateApiTests>false</generateApiTests> <generateModels>true</generateModels> 
+				<generateModelDocumentation>true</generateModelDocumentation> <generateSupportingFiles>false</generateSupportingFiles> 
+				<modelPackage>co.cloudify.rest.model</modelPackage> <language>java</language> 
+				<configOptions> <sourceFolder>swagger</sourceFolder> <dateLibrary>java8</dateLibrary> 
+				<java8>true</java8> <library>jersey2</library> </configOptions> <output>target/generated-sources</output> 
+				</configuration> </execution> </executions> </plugin> <plugin> <groupId>org.codehaus.mojo</groupId> 
+				<artifactId>build-helper-maven-plugin</artifactId> <executions> <execution> 
+				<phase>generate-sources</phase> <goals> <goal>add-source</goal> </goals> 
+				<configuration> <sources> <source>${project.basedir}/target/generated-sources/swagger</source> 
+				</sources> </configuration> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 	<reporting>
