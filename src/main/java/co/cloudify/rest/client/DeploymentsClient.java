@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.GenericType;
 
 import org.apache.commons.lang3.Validate;
 
+import co.cloudify.rest.client.exceptions.CloudifyClientException;
 import co.cloudify.rest.client.exceptions.DeploymentNotFoundException;
 import co.cloudify.rest.client.params.DeploymentCreateParams;
 import co.cloudify.rest.model.Blueprint;
@@ -64,6 +66,8 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 			return getDeploymentsBuilder(id).get(Deployment.class);
 		} catch (NotFoundException ex) {
 			throw new DeploymentNotFoundException(id, ex);
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed retrieving deployment", ex);
 		}
 	}
 
@@ -92,7 +96,11 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	 */
 	public Deployment create(final String id, final String blueprintId,
 			final Map<String, Object> inputs) {
-		return getDeploymentsBuilder(id).put(Entity.json(new DeploymentCreateParams(blueprintId, inputs)), Deployment.class);
+		try {
+			return getDeploymentsBuilder(id).put(Entity.json(new DeploymentCreateParams(blueprintId, inputs)), Deployment.class);
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed creating deployment", ex);
+		}
 	}
 	
 	public Map<String, Object> getOutputs(final Deployment deployment) {
@@ -100,6 +108,8 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 			return getBuilder(getTarget(OUTPUTS_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentOutputs.class).getOutputs();
 		} catch (NotFoundException ex) {
 			throw new DeploymentNotFoundException(deployment.getId(), ex);
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed retrieving outputs", ex);
 		}
 	}
 	
@@ -108,6 +118,8 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 			return getBuilder(getTarget(CAPABILITIES_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentCapabilities.class).getCapabilities();
 		} catch (NotFoundException ex) {
 			throw new DeploymentNotFoundException(deployment.getId(), ex);
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed retrieving capabilities", ex);
 		}
 	}
 	
@@ -121,6 +133,8 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 			getDeploymentsBuilder(id).delete();
 		} catch (NotFoundException ex) {
 			throw new DeploymentNotFoundException(id, ex);
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed deleting deployment", ex);
 		}
 	}
 }
