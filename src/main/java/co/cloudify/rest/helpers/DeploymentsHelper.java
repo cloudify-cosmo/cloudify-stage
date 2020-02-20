@@ -40,7 +40,7 @@ public class DeploymentsHelper {
 		return deployment;
 	}
 	
-	public static void deleteDeploymentAndCheck(CloudifyClient client, String id) {
+	public static void deleteDeploymentAndWait(CloudifyClient client, String id) {
 		DeploymentsClient deploymentsClient = client.getDeploymentsClient();
 		deploymentsClient.delete(id);
 		while (true) {

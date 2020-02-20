@@ -44,7 +44,6 @@ public class CloudifyClient extends AbstractCloudifyClient {
 				.sslContext(sslContext)
 				.build();
 		client.register(new BasicAuthenticator(username, password, tenant));
-		client.register(new ResponseProcessor());
 		String endpoint = String.format("%s://%s", secure ? "https" : "http", host);
 		WebTarget baseTarget = client.target(endpoint);
 		CloudifyClient cClient = new CloudifyClient(client, baseTarget);

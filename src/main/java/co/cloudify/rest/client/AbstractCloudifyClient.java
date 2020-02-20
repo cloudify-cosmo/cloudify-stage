@@ -1,11 +1,8 @@
 package co.cloudify.rest.client;
 
-import java.util.Collections;
 import java.util.Map;
 
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
