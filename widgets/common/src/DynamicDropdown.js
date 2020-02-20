@@ -16,7 +16,8 @@ function DynamicDropdown({
     textFormatter,
     pageSize,
     name,
-    prefetch
+    prefetch,
+    className
 }) {
     const { useState, useEffect } = React;
 
@@ -111,7 +112,7 @@ function DynamicDropdown({
 
     return (
         <Form.Dropdown
-            className="dynamic"
+            className={`dynamic ${className}`}
             search
             selection
             selectOnBlur={false}
@@ -164,7 +165,8 @@ DynamicDropdown.propTypes = {
     textFormatter: PropTypes.func,
     pageSize: PropTypes.number,
     name: PropTypes.string,
-    prefetch: PropTypes.bool
+    prefetch: PropTypes.bool,
+    className: PropTypes.string
 };
 
 DynamicDropdown.defaultProps = {
@@ -177,7 +179,8 @@ DynamicDropdown.defaultProps = {
     placeholder: null,
     name: null,
     prefetch: false,
-    multiple: false
+    multiple: false,
+    className: ''
 };
 
 Stage.defineCommon({

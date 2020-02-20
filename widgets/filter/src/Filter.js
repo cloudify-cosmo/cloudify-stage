@@ -145,6 +145,7 @@ export default class Filter extends React.Component {
             const { configuration } = this.props;
             const joinedEntityName = entityName.replace(' ', '');
             if (configuration[enabledConfigurationKey || `filterBy${joinedEntityName}s`]) {
+                const camelCaseEntityName = _.lowerFirst(joinedEntityName);
                 return (
                     <Form.Field key={entityName}>
                         <DynamicDropdown
@@ -157,13 +158,14 @@ export default class Filter extends React.Component {
                                 .join()}`}
                             onChange={this[`select${joinedEntityName}`].bind(this)}
                             toolbox={this.props.toolbox}
-                            value={this.state[stateProp || `${_.lowerFirst(joinedEntityName)}Id`]}
+                            value={this.state[stateProp || `${camelCaseEntityName}Id`]}
                             placeholder={entityName}
                             fetchAll={fetchAll}
                             textFormatter={textFormatter}
                             valueProp={valueProp}
                             pageSize={pageSize}
                             filter={filter}
+                            className={`${camelCaseEntityName}FilterField`}
                         />
                     </Form.Field>
                 );
