@@ -29,8 +29,6 @@ exports.command = function(blueprintName) {
                 blueprintActionButtons.section.removeConfirm
                     .clickElement('@okButton')
                     .waitForElementNotPresent('@okButton');
-
-                this.page.filter().waitForBlueprintNotPresent(blueprintName);
             });
         } else {
             this.log('not removing', blueprintName, "blueprint, it doesn't exist");

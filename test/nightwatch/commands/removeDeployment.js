@@ -26,11 +26,6 @@ exports.command = function(deploymentName) {
                 deploymentActionButtons.section.removeConfirm
                     .clickElement('@okButton')
                     .waitForElementNotPresent('@okButton');
-
-                const filter = this.page.filter();
-                filter
-                    .waitForDeploymentNotPresent(deploymentName)
-                    .selectOptionInDropdown('@deploymentSearch', filter.elements.deploymentSearch.selector, '');
             });
         } else {
             this.log('not removing', deploymentName, "deployment, it doesn't exist");
