@@ -17,7 +17,8 @@ function DynamicDropdown({
     pageSize,
     name,
     prefetch,
-    className
+    className,
+    refreshEvent
 }) {
     const { useState, useEffect } = React;
 
@@ -63,6 +64,22 @@ function DynamicDropdown({
 
     useEffect(() => {
         if (prefetch) loadMore();
+    }, []);
+
+    useEffect(() => {
+        function refreshData() {
+            setOptions([]);
+            setHasMore(true);
+            setCurrentPage(-1);
+        }
+        if (refreshEvent) {
+            toolbox.getEventBus().on(refreshEvent, refreshData);
+            return () => {
+                toolbox.getEventBus().off(refreshEvent, refreshData);
+            };
+        }
+
+        return undefined;
     }, []);
 
     useEffect(() => {
@@ -166,7 +183,8 @@ DynamicDropdown.propTypes = {
     pageSize: PropTypes.number,
     name: PropTypes.string,
     prefetch: PropTypes.bool,
-    className: PropTypes.string
+    className: PropTypes.string,
+    refreshEvent: PropTypes.string
 };
 
 DynamicDropdown.defaultProps = {
@@ -180,7 +198,8 @@ DynamicDropdown.defaultProps = {
     name: null,
     prefetch: false,
     multiple: false,
-    className: ''
+    className: '',
+    refreshEvent: null
 };
 
 Stage.defineCommon({

@@ -19,26 +19,14 @@ export default class Filter extends React.Component {
         );
     }
 
-    _refreshData() {
-        this.props.toolbox.refresh();
-    }
-
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('blueprints:refresh', this._refreshData, this);
-        this.props.toolbox.getEventBus().on('deployments:refresh', this._refreshData, this);
-        this.props.toolbox.getEventBus().on('nodes:refresh', this._refreshData, this);
-        this.props.toolbox.getEventBus().on('executions:refresh', this._refreshData, this);
-        this.props.toolbox.getEventBus().on('events:refresh', this._refreshData, this);
-        this.props.toolbox.getEventBus().on('topology:refresh', this._refreshData, this);
+        this.props.toolbox.getEventBus().on('blueprints:refresh', this.selectBlueprint, this);
+        this.props.toolbox.getEventBus().on('deployments:refresh', this.selectDeployment, this);
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('blueprints:refresh', this._refreshData);
-        this.props.toolbox.getEventBus().off('deployments:refresh', this._refreshData);
-        this.props.toolbox.getEventBus().off('nodes:refresh', this._refreshData);
-        this.props.toolbox.getEventBus().off('executions:refresh', this._refreshData);
-        this.props.toolbox.getEventBus().off('events:refresh', this._refreshData);
-        this.props.toolbox.getEventBus().off('topology:refresh', this._refreshData);
+        this.props.toolbox.getEventBus().off('blueprints:refresh', this.selectBlueprint);
+        this.props.toolbox.getEventBus().off('deployments:refresh', this.selectDeployment);
     }
 
     setValue(name, value) {
@@ -87,7 +75,7 @@ export default class Filter extends React.Component {
         }
     }
 
-    selectBlueprint(blueprintIds) {
+    selectBlueprint(blueprintIds = null) {
         this.setValue('blueprintId', blueprintIds);
         this.setValue('deploymentId', null);
         this.setValue('nodeId', null);
@@ -95,7 +83,7 @@ export default class Filter extends React.Component {
         this.updateDeplomentNodeIdValue(null, null);
     }
 
-    selectDeployment(deploymentIds) {
+    selectDeployment(deploymentIds = null) {
         this.setValue('deploymentId', deploymentIds);
         this.setValue('nodeInstanceId', null);
         this.setValue('nodeId', null);
@@ -139,7 +127,8 @@ export default class Filter extends React.Component {
             textFormatter,
             valueProp,
             pageSize,
-            filter
+            filter,
+            flushOnRefreshEvent
         }) => {
             const { DynamicDropdown } = Stage.Common;
             const { configuration } = this.props;
@@ -166,6 +155,7 @@ export default class Filter extends React.Component {
                             pageSize={pageSize}
                             filter={filter}
                             className={`${camelCaseEntityName}FilterField`}
+                            refreshEvent={flushOnRefreshEvent ? `${camelCaseEntityName}s:refresh` : null}
                         />
                     </Form.Field>
                 );
@@ -182,12 +172,14 @@ export default class Filter extends React.Component {
                     <Form.Group inline widths="equal">
                         {[
                             createDropdown({
-                                entityName: 'Blueprint'
+                                entityName: 'Blueprint',
+                                flushOnRefreshEvent: true
                             }),
                             createDropdown({
                                 entityName: 'Deployment',
                                 filter: blueprintFilter,
-                                pageSize: 20
+                                pageSize: 20,
+                                flushOnRefreshEvent: true
                             }),
                             createDropdown({
                                 entityName: 'Node',
