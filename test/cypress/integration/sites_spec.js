@@ -138,7 +138,7 @@ describe('Sites Management', () => {
         // use map to specify location
         cy.get(':nth-child(3) > .field > .ui > button').click();
         cy.get('.leaflet-container').click();
-        cy.get(':nth-child(3) > .field > .ui > input').should('have.value', '0, 0');
+        cy.get(':nth-child(3) > .field > .ui > input').should('have.value', '0.08789059053082422, 0');
 
         // change visibility
         cy.get('.modal > :nth-child(1) > .green').click();
@@ -146,7 +146,7 @@ describe('Sites Management', () => {
         // submit
         cy.get('.actions > .green').click();
 
-        verifySiteRow(1, { name, location: '0.0, 0.0', visibility: 'private' });
+        verifySiteRow(1, { name, location: '0.0878905905308, 0.0', visibility: 'private' });
     });
 
     for (const site of invalidSites) {
@@ -197,12 +197,12 @@ describe('Sites Management', () => {
         cy.get(':nth-child(3) > .field > .ui > button').click();
         cy.get('.leaflet-container').click();
 
-        cy.get(':nth-child(3) > .field > .ui > input').should('have.value', '32.10118973232094, 34.80468750000001');
+        cy.get(':nth-child(3) > .field > .ui > input').should('have.value', '32.175612478499346, 34.80468750000001');
 
         // Click update
         cy.get('.actions > .green').click();
 
-        verifySiteRow(1, { name: siteWithLocation.name, location: '32.1011897323, 34.8046875' });
+        verifySiteRow(1, { name: siteWithLocation.name, location: '32.1756124785, 34.8046875' });
     });
 
     it('update the visibility of a site', () => {
