@@ -25,6 +25,7 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import co.cloudify.rest.client.exceptions.BlueprintNotFoundException;
@@ -56,7 +57,7 @@ public class BlueprintsClient extends AbstractCloudifyClient {
 	public Blueprint get(final String id) {
 		return getBlueprintsBuilder(id).get(Blueprint.class);
 	}
-	
+
 	public Blueprint uploadArchive(final String id, final File blueprintArchive, final String main) throws IOException {
 		WebTarget target = getTarget(ID_PATH, Collections.singletonMap("id", id));
 		target = target.queryParam("application_file_name", main);
@@ -126,6 +127,14 @@ public class BlueprintsClient extends AbstractCloudifyClient {
 	 * @return	A list of all blueprints.
 	 */
 	public ListResponse<Blueprint> list() {
-		return getBlueprintsBuilder().get(new GenericType<ListResponse<Blueprint>>() {});
+		return list(null);
+	}
+
+	public ListResponse<Blueprint> list(final String searchString) {
+		WebTarget target = getTarget(BASE_PATH);
+		if (StringUtils.isNotBlank(searchString)) {
+			target = target.queryParam("_search", searchString);
+		};
+		return getBuilder(target).get(new GenericType<ListResponse<Blueprint>>() {});
 	}
 }

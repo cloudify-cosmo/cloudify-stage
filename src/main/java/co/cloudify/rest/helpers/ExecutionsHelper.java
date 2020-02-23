@@ -40,7 +40,7 @@ public class ExecutionsHelper {
 					Thread.sleep(2000);
 				} catch (InterruptedException ex) {
 					logger.warn("Asked to stop waiting; returning", ex);
-					break;
+					throw ex;
 				}
 			}
 			effectiveCallback.last(execution);

@@ -3,6 +3,7 @@ package co.cloudify.rest.model;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
+import java.util.stream.Stream;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @param	<T>	type of contained items
  */
 @XmlRootElement(name = "items")
-public class ListResponse<T> implements Iterable<T>{
+public class ListResponse<T> implements Iterable<T> {
 	@XmlElement
 	private List<T> items;
 	
@@ -41,6 +42,10 @@ public class ListResponse<T> implements Iterable<T>{
 	@Override
 	public Iterator<T> iterator() {
 		return items.iterator();
+	}
+	
+	public Stream<T> stream() {
+		return items.stream();
 	}
 	
 	@Override
