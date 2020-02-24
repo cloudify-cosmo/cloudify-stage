@@ -9,6 +9,15 @@ import co.cloudify.rest.model.Execution;
  *
  */
 public class DefaultExecutionFollowCallback implements ExecutionFollowCallback {
+	private static final DefaultExecutionFollowCallback SINGLETON_INSTANCE = new DefaultExecutionFollowCallback();
+	
+	/**
+	 * @return	Singleton instance.
+	 */
+	public static final DefaultExecutionFollowCallback getInstance() {
+		return SINGLETON_INSTANCE;
+	}
+	
 	@Override
 	public void start(Execution execution) {
 		//	Nothing.
