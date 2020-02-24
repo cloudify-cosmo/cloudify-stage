@@ -16,7 +16,7 @@ public class BlueprintInput {
 	@XmlElement
 	private String description;
 	@XmlElement
-	private List<Object> constraints;
+	private List<InputConstraint> constraints;
 
 	@Override
 	public String toString() {
@@ -24,6 +24,7 @@ public class BlueprintInput {
 				.append("type", type)
 				.append("defaultValue", defaultValue)
 				.append("description", description)
+				.append("constraints", constraints)
 				.toString();
 	}
 }
