@@ -86,6 +86,7 @@ public class BlueprintsClient extends AbstractCloudifyClient {
 				//	re-throw the wrapped exception if it's an IOException.
 				try {
 					Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
+						@Override
 					    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					    	super.visitFile(file, attrs);
 							ArchiveEntry entry = taos.createArchiveEntry(file.toFile(), String.format("blueprint/%s", rootPath.relativize(file)));

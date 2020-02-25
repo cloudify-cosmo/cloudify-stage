@@ -51,6 +51,8 @@ public class Deployment {
 	private List<Object> workflows;
 	@XmlElement(name = "scaling_groups")
 	private Map<String, Object> scalingGroups;
+	@XmlElement(name = "runtime_only_evaluation")
+	private Boolean runtimeOnlyEvaluation;
 	
 	public String getId() {
 		return id;

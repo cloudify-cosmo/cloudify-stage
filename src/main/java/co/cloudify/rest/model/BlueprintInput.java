@@ -18,6 +18,22 @@ public class BlueprintInput {
 	@XmlElement
 	private List<InputConstraint> constraints;
 
+	public String getType() {
+		return type;
+	}
+	
+	public Object getDefaultValue() {
+		return defaultValue;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public List<InputConstraint> getConstraints() {
+		return constraints;
+	}
+	
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
