@@ -1,5 +1,6 @@
 package co.cloudify.rest.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
@@ -9,7 +10,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @XmlRootElement
-public class Execution {
+public class Execution implements Serializable {
+	/**	Serialization UID. */
+	private static final long serialVersionUID = 1L;
+
 	@XmlElement
 	private String id;
 	@XmlElement
