@@ -91,6 +91,7 @@ public class ExecutionsHelper {
 			effectiveCallback.end(execution);
 		} catch (Exception ex) {
 			effectiveCallback.exception(execution, ex);
+			throw ex;
 		}
 		return execution;
 	}

@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.model.Event;
 import co.cloudify.rest.model.EventLevel;
+import co.cloudify.rest.model.Execution;
 
 /**
  * A {@link LogEmitterExecutionFollower} implementation that prints to a {@link PrintStream}.
@@ -42,5 +43,11 @@ public class PrintStreamLogEmitterExecutionFollower extends LogEmitterExecutionF
 	protected void emit(final Event event) {
 		String text = EventsHelper.formatEvent(event);
 		printStream.println(text);
+	}
+	
+	@Override
+	public void exception(Execution execution, Throwable exception) {
+		printStream.println("Exception encountered");
+		exception.printStackTrace(printStream);
 	}
 }

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import co.cloudify.rest.client.CloudifyClient;
 import co.cloudify.rest.model.Event;
 import co.cloudify.rest.model.EventLevel;
+import co.cloudify.rest.model.Execution;
 
 /**
  * A {@link LogEmitterExecutionFollower} implementation that outputs to an
@@ -59,5 +60,10 @@ public class Slf4JLogEmitterExecutionFollower extends LogEmitterExecutionFollowe
 			logger.info("[Unrecognized level: {}] {}", level, text);
 			break;
 		}
+	}
+	
+	@Override
+	public void exception(Execution execution, Throwable exception) {
+		logger.error("Exception encountered while following execution", exception);
 	}
 }
