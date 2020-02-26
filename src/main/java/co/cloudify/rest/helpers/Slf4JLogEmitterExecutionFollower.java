@@ -20,8 +20,19 @@ public class Slf4JLogEmitterExecutionFollower extends LogEmitterExecutionFollowe
 		this.logger = logger;
 	}
 
+	public Slf4JLogEmitterExecutionFollower(final CloudifyClient client, final Logger logger, final EventLevel minimumLevel) {
+		super(client, minimumLevel);
+		this.logger = logger;
+	}
+
 	public Slf4JLogEmitterExecutionFollower(final CloudifyClient client, final Logger logger, final long size) {
 		super(client, size);
+		this.logger = logger;
+	}
+
+	public Slf4JLogEmitterExecutionFollower(final CloudifyClient client, final Logger logger, final long size,
+			final EventLevel minimumLevel) {
+		super(client, size, minimumLevel);
 		this.logger = logger;
 	}
 
