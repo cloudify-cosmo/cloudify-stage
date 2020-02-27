@@ -100,7 +100,7 @@ describe('Filter', () => {
             cy.contains('.blueprintFilterField', 'No results found.');
         });
 
-        it('deployment creation and removal', () => {
+        it.only('deployment creation and removal', () => {
             const blueprintName = uploadExampleBlueprint();
 
             cy.contains('Deployments').click();
@@ -130,6 +130,7 @@ describe('Filter', () => {
             cy.get('.deploymentFilterField input').type(deploymentName);
             cy.get(`div[option-value=${deploymentName}]`).click();
 
+            cy.contains('.deploymentsWidget .row', deploymentName).find('.green.checkmark');
             cy.contains('.deploymentsWidget .row', deploymentName)
                 .find('.menuAction')
                 .click();
