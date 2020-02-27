@@ -67,7 +67,9 @@ describe('Filter', () => {
                 .click();
             const blueprintNameSuffix = Date.now();
             cy.get('input[name=blueprintName]').type(blueprintNameSuffix);
-            cy.contains('.ok', 'Upload').click();
+            cy.contains('.ok', 'Upload', { timeout: 90000 })
+                .click()
+                .should('not.exist');
 
             return blueprint + blueprintNameSuffix;
         }
