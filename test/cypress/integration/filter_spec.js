@@ -100,7 +100,7 @@ describe('Filter', () => {
             cy.contains('.blueprintFilterField', 'No results found.');
         });
 
-        it.only('deployment creation and removal', () => {
+        it('deployment creation and removal', () => {
             const blueprintName = uploadExampleBlueprint();
 
             cy.contains('Deployments').click();
@@ -136,6 +136,8 @@ describe('Filter', () => {
                 .click();
             cy.contains('Force Delete').click();
             cy.contains('Yes').click();
+
+            cy.contains('.deploymentsWidget .row', deploymentName).should('not.exist');
 
             cy.get('.deploymentFilterField > .text.default');
             cy.get('.deploymentFilterField input').type(deploymentName);
