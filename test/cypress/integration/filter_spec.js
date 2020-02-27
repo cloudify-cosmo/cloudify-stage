@@ -54,9 +54,8 @@ describe('Filter', () => {
             cy.contains('tr', 'AWS')
                 .find('button')
                 .click();
-            cy.contains('.ok', 'Upload')
-                .click()
-                .should('not.have.class', 'loading');
+            cy.contains('.ok', 'Upload').click();
+            cy.contains('.ok.loading', 'Upload').should('not.exist');
 
             cy.get('body').type('{esc}');
         });
