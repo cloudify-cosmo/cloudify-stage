@@ -6,7 +6,6 @@ import co.cloudify.rest.model.Execution;
  * Skeleton for {@link ExecutionFollowCallback} that does nothing.
  * 
  * @author	Isaac Shabtay
- *
  */
 public class DefaultExecutionFollowCallback implements ExecutionFollowCallback {
 	private static final DefaultExecutionFollowCallback SINGLETON_INSTANCE = new DefaultExecutionFollowCallback();

@@ -3,14 +3,12 @@ package co.cloudify.rest.client;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
-
-import org.apache.commons.lang3.Validate;
 
 import co.cloudify.rest.client.exceptions.CloudifyClientException;
 import co.cloudify.rest.client.params.ExecutionStartParams;
@@ -28,9 +26,16 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 		super(restClient, baseTarget);
 	}
 
-	protected Builder getExecutionsBuilder(final String ... args) {
-		Validate.isTrue(args.length <= 1);
-		return getBuilder(getTarget(args.length == 1 ? ID_PATH : BASE_PATH, args.length == 1 ? Collections.singletonMap("id", args[0]) : Collections.emptyMap()));
+	protected WebTarget getExecutionsTarget() {
+		return getTarget(BASE_PATH);
+	}
+	
+	protected Builder getExecutionsBuilder() {
+		return getBuilder(getExecutionsTarget());
+	}
+	
+	protected Builder getExecutionBuilder(String id) {
+		return getBuilder(getTarget(ID_PATH, Collections.singletonMap("id", id)));
 	}
 	
 	/**
@@ -41,7 +46,11 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 	 * @return	A corresponding {@link Execution} instance.
 	 */
 	public Execution get(String id) {
-		return getExecutionsBuilder(id).get(Execution.class);
+		try {
+			return getExecutionBuilder(id).get(Execution.class);
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed retrieving execution", ex);
+		}
 	}
 	
 	/**
@@ -50,7 +59,7 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 	 * @return	A list of all executions.
 	 */
 	public ListResponse<Execution> list() {
-		return getExecutionsBuilder().get(new GenericType<ListResponse<Execution>>() {});
+		return list((String) null);
 	}
 	
 	public ListResponse<Execution> list(final Deployment deployment) {
@@ -58,8 +67,17 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 	}
 	
 	public ListResponse<Execution> list(final String deploymentId) {
-		WebTarget target = getTarget(BASE_PATH).queryParam("deployment_id", deploymentId);
-		return getBuilder(target).get(new GenericType<ListResponse<Execution>>() {});
+		WebTarget executionsTarget = getExecutionsTarget();
+		if (deploymentId != null) {
+			executionsTarget = executionsTarget
+					.queryParam("deployment_id", deploymentId);
+		}
+		try {
+			return getBuilder(executionsTarget).get(
+					new GenericType<ListResponse<Execution>>() {});
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed listing executions", ex);
+		}
 	}
 	
 	/**
@@ -88,7 +106,7 @@ public class ExecutionsClient extends AbstractCloudifyClient {
 		ExecutionStartParams params = new ExecutionStartParams(workflowId, deploymentId, parameters);
 		try {
 			return getExecutionsBuilder().post(Entity.json(params), Execution.class);
-		} catch (BadRequestException ex) {
+		} catch (WebApplicationException ex) {
 			throw CloudifyClientException.create("Failed starting execution", ex);
 		}
 	}

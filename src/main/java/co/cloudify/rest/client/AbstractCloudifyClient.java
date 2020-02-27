@@ -29,7 +29,7 @@ public class AbstractCloudifyClient {
 	}
 	
 	protected WebTarget getTarget(final String path, final Map<String, Object> tokens) {
-		return base.path(path)
+		return getTarget(path)
 				.resolveTemplates(tokens);
 	}
 	

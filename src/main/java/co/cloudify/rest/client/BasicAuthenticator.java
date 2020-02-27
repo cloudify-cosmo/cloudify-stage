@@ -1,6 +1,7 @@
 package co.cloudify.rest.client;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import javax.ws.rs.client.ClientRequestContext;
@@ -32,10 +33,11 @@ public class BasicAuthenticator implements ClientRequestFilter {
     public void filter(ClientRequestContext requestContext) throws IOException {
         String token = String.format("%s:%s",  username, password);
         //	TODO: Check why this doesn't work.
-//        String authHeader = String.format("BASIC %s", Base64.getEncoder().encodeToString(
-//        		StandardCharsets.UTF_8.encode(token).array()));
-        String authHeader = String.format("BASIC %s", Base64.getEncoder().encodeToString(
-        		token.getBytes("UTF-8")));
+        //	byte[] asBytes = StandardCharsets.UTF_8.encode(token).array();
+        byte[] asBytes = token.getBytes(StandardCharsets.UTF_8.name());
+        String authHeader = String.format(
+        		"BASIC %s",
+        		Base64.getEncoder().encodeToString(asBytes));
         MultivaluedMap<String, Object> headers = requestContext.getHeaders();
         headers.putSingle(HttpHeaders.AUTHORIZATION, authHeader);
         headers.putSingle(TENANT_HEADER, tenant);

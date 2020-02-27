@@ -11,7 +11,7 @@ import co.cloudify.rest.model.Execution;
  * A {@link LogEmitterExecutionFollower} implementation that outputs to an
  * SLF4J logger.
  * 
- * @author	Isaac Shabtay
+ * @author Isaac Shabtay
  */
 public class Slf4JLogEmitterExecutionFollower extends LogEmitterExecutionFollower {
 	private Logger logger;
@@ -21,7 +21,8 @@ public class Slf4JLogEmitterExecutionFollower extends LogEmitterExecutionFollowe
 		this.logger = logger;
 	}
 
-	public Slf4JLogEmitterExecutionFollower(final CloudifyClient client, final Logger logger, final EventLevel minimumLevel) {
+	public Slf4JLogEmitterExecutionFollower(final CloudifyClient client, final Logger logger,
+	        final EventLevel minimumLevel) {
 		super(client, minimumLevel);
 		this.logger = logger;
 	}
@@ -32,7 +33,7 @@ public class Slf4JLogEmitterExecutionFollower extends LogEmitterExecutionFollowe
 	}
 
 	public Slf4JLogEmitterExecutionFollower(final CloudifyClient client, final Logger logger, final long size,
-			final EventLevel minimumLevel) {
+	        final EventLevel minimumLevel) {
 		super(client, size, minimumLevel);
 		this.logger = logger;
 	}
@@ -41,27 +42,27 @@ public class Slf4JLogEmitterExecutionFollower extends LogEmitterExecutionFollowe
 	protected void emit(final Event event) {
 		EventLevel level = event.getLevel();
 		String text = EventsHelper.formatEvent(event, false);
-		//	Apparently SLF4J doesn't offer a logging method that accepts a level
-		//	as a parameter...
+		// Apparently SLF4J doesn't offer a logging method that accepts a level
+		// as a parameter...
 		switch (level) {
-		case debug:
-			logger.debug(text);
-			break;
-		case error:
-			logger.error(text);
-			break;
-		case info:
-			logger.info(text);
-			break;
-		case warning:
-			logger.warn(text);
-			break;
-		default:
-			logger.info("[Unrecognized level: {}] {}", level, text);
-			break;
+			case debug:
+				logger.debug(text);
+				break;
+			case error:
+				logger.error(text);
+				break;
+			case info:
+				logger.info(text);
+				break;
+			case warning:
+				logger.warn(text);
+				break;
+			default:
+				logger.info("[Unrecognized level: {}] {}", level, text);
+				break;
 		}
 	}
-	
+
 	@Override
 	public void exception(Execution execution, Throwable exception) {
 		logger.error("Exception encountered while following execution", exception);

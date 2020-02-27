@@ -1,9 +1,11 @@
 package co.cloudify.rest.client;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
+import co.cloudify.rest.client.exceptions.CloudifyClientException;
 import co.cloudify.rest.client.params.EventsListParams;
 import co.cloudify.rest.model.Event;
 import co.cloudify.rest.model.EventType;
@@ -81,6 +83,11 @@ public class EventsClient extends AbstractCloudifyClient {
 			.size(batchSize)
 			.includeLogs(includeLogs);
 		target = params.update(target);
-		return getBuilder(target).get(new GenericType<ListResponse<Event>>() {});
+		try {
+			return getBuilder(target).get(new GenericType<ListResponse<Event>>() {});
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed retrieving events/logs", ex);
+			
+		}
 	}
 }

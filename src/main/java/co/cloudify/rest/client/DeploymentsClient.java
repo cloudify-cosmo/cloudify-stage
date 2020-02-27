@@ -11,8 +11,6 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
-import org.apache.commons.lang3.Validate;
-
 import co.cloudify.rest.client.exceptions.CloudifyClientException;
 import co.cloudify.rest.client.exceptions.DeploymentNotFoundException;
 import co.cloudify.rest.client.params.DeploymentCreateParams;
@@ -25,45 +23,51 @@ import co.cloudify.rest.model.ListResponse;
 /**
  * Client for deployment-related operations.
  * 
- * @author	Isaac Shabtay
+ * @author Isaac Shabtay
  */
 public class DeploymentsClient extends AbstractCloudifyClient {
-	/**	Base API path. */
+	/** Base API path. */
 	private static final String BASE_PATH = "/api/v3.1/deployments";
-	/**	Path for specific resource. */
+	/** Path for specific resource. */
 	private static final String ID_PATH = BASE_PATH + "/{id}";
-	/**	Path for outputs. */
-	private static final String OUTPUTS_PATH = BASE_PATH + "/{id}/outputs";
-	/**	Path for capabilities. */
-	private static final String CAPABILITIES_PATH = BASE_PATH + "/{id}/capabilities";
+	/** Path for outputs. */
+	private static final String OUTPUTS_PATH = ID_PATH + "/outputs";
+	/** Path for capabilities. */
+	private static final String CAPABILITIES_PATH = ID_PATH + "/capabilities";
 
 	public DeploymentsClient(Client restClient, WebTarget base) {
 		super(restClient, base);
 	}
 
-	protected Builder getDeploymentsBuilder(final String ... args) {
-		Validate.isTrue(args.length <= 1);
-		//	TODO singleton externalize
-		return getBuilder(getTarget(args.length == 1 ? ID_PATH : BASE_PATH, args.length == 1 ? Collections.singletonMap("id", args[0]) : Collections.emptyMap()));
+	protected Builder getDeploymentsBuilder() {
+		return getBuilder(getTarget(BASE_PATH));
 	}
-	
+
+	protected Builder getDeploymentBuilder(String path, String id) {
+		return getBuilder(getTarget(path, Collections.singletonMap("id", id)));
+	}
+
 	/**
-	 * @return	A {@link ListResponse} of all deployments.
+	 * @return A {@link ListResponse} of all deployments.
 	 */
 	public ListResponse<Deployment> list() {
-		return getDeploymentsBuilder().get(new GenericType<ListResponse<Deployment>>() {});
+		try {
+			return getDeploymentsBuilder().get(new GenericType<ListResponse<Deployment>>() {});
+		} catch (WebApplicationException ex) {
+			throw CloudifyClientException.create("Failed listing deployments", ex);
+		}
 	}
-	
+
 	/**
 	 * Returns a specific deployment.
 	 * 
-	 * @param	id	deployment's ID
+	 * @param id deployment's ID
 	 * 
-	 * @return	A {@link Deployment} instance describing the deployment.
+	 * @return A {@link Deployment} instance describing the deployment.
 	 */
 	public Deployment get(final String id) {
 		try {
-			return getDeploymentsBuilder(id).get(Deployment.class);
+			return getDeploymentBuilder(ID_PATH, id).get(Deployment.class);
 		} catch (NotFoundException ex) {
 			throw new DeploymentNotFoundException(id, ex);
 		} catch (WebApplicationException ex) {
@@ -74,63 +78,70 @@ public class DeploymentsClient extends AbstractCloudifyClient {
 	/**
 	 * Creates a deployment.
 	 * 
-	 * @param	id			new deployment's ID
-	 * @param	blueprint	blueprint to associate deployment with
-	 * @param	inputs		deployment inputs
+	 * @param id        new deployment's ID
+	 * @param blueprint blueprint to associate deployment with
+	 * @param inputs    deployment inputs
 	 * 
-	 * @return	A {@link Deployment} instance for the new deployment.
+	 * @return A {@link Deployment} instance for the new deployment.
 	 */
 	public Deployment create(final String id, final Blueprint blueprint,
-			final Map<String, Object> inputs) {
+	        final Map<String, Object> inputs) {
 		return create(id, blueprint.getId(), inputs);
 	}
 
 	/**
-	 * Creates a deployment.
+	 * Creates a deployment. Note: this is an asynchronous operation.
 	 * 
-	 * @param	id			new deployment's ID
-	 * @param	blueprintId	blueprint to associate deployment with
-	 * @param	inputs		deployment inputs
+	 * @param id          new deployment's ID
+	 * @param blueprintId blueprint to associate deployment with
+	 * @param inputs      deployment inputs
 	 * 
-	 * @return	A {@link Deployment} instance for the new deployment.
+	 * @return A {@link Deployment} instance for the new deployment.
 	 */
 	public Deployment create(final String id, final String blueprintId,
-			final Map<String, Object> inputs) {
+	        final Map<String, Object> inputs) {
 		try {
-			return getDeploymentsBuilder(id).put(Entity.json(new DeploymentCreateParams(blueprintId, inputs)), Deployment.class);
+			return getDeploymentBuilder(ID_PATH, id).put(
+			        Entity.json(
+			                new DeploymentCreateParams(blueprintId, inputs)),
+			        Deployment.class);
 		} catch (WebApplicationException ex) {
 			throw CloudifyClientException.create("Failed creating deployment", ex);
 		}
 	}
-	
+
 	public Map<String, Object> getOutputs(final Deployment deployment) {
+		String id = deployment.getId();
 		try {
-			return getBuilder(getTarget(OUTPUTS_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentOutputs.class).getOutputs();
+			return getDeploymentBuilder(OUTPUTS_PATH, id)
+			        .get(DeploymentOutputs.class).getOutputs();
 		} catch (NotFoundException ex) {
-			throw new DeploymentNotFoundException(deployment.getId(), ex);
+			throw new DeploymentNotFoundException(id, ex);
 		} catch (WebApplicationException ex) {
 			throw CloudifyClientException.create("Failed retrieving outputs", ex);
 		}
 	}
-	
+
 	public Map<String, Object> getCapabilities(final Deployment deployment) {
+		String id = deployment.getId();
 		try {
-			return getBuilder(getTarget(CAPABILITIES_PATH, Collections.singletonMap("id", deployment.getId()))).get(DeploymentCapabilities.class).getCapabilities();
+			return getDeploymentBuilder(CAPABILITIES_PATH, id)
+			        .get(DeploymentCapabilities.class).getCapabilities();
 		} catch (NotFoundException ex) {
-			throw new DeploymentNotFoundException(deployment.getId(), ex);
+			throw new DeploymentNotFoundException(id, ex);
 		} catch (WebApplicationException ex) {
 			throw CloudifyClientException.create("Failed retrieving capabilities", ex);
 		}
 	}
-	
+
 	/**
-	 * Deletes a deployment.
+	 * Deletes a deployment. Note: this operation is asynchronous.
 	 * 
-	 * @param	id	deployment to delete
+	 * @param id deployment to delete
 	 */
 	public void delete(final String id) {
 		try {
-			getDeploymentsBuilder(id).delete();
+			getDeploymentBuilder(ID_PATH, id).delete();
 		} catch (NotFoundException ex) {
 			throw new DeploymentNotFoundException(id, ex);
 		} catch (WebApplicationException ex) {

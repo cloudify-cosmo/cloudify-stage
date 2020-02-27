@@ -8,7 +8,9 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 /**
- * Focal point for all Cloudify REST operations.
+ * <p>Focal point for all Cloudify REST operations.</p>
+ * <p>Use {@link #create(String, String, String, boolean, String)} to create a
+ * {@link CloudifyClient} instance.</p>
  * 
  * @author	Isaac Shabtay
  */
@@ -31,14 +33,13 @@ public class CloudifyClient extends AbstractCloudifyClient {
 	public static CloudifyClient create(
 			String host, String username, String password,
 			boolean secure, String tenant) {
+		//	TODO: Add support for specifying certs.
 		SSLContext sslContext;
 		try {
 			sslContext = SSLContext.getInstance("SSL");
 		} catch (NoSuchAlgorithmException ex) {
 			throw new IllegalStateException("Failed obtaining SSL context", ex);
 		}
-		//	TODO: Add certs
-		
 		Client client = ClientBuilder
 				.newBuilder()
 				.sslContext(sslContext)
@@ -46,8 +47,7 @@ public class CloudifyClient extends AbstractCloudifyClient {
 		client.register(new BasicAuthenticator(username, password, tenant));
 		String endpoint = String.format("%s://%s", secure ? "https" : "http", host);
 		WebTarget baseTarget = client.target(endpoint);
-		CloudifyClient cClient = new CloudifyClient(client, baseTarget);
-		return cClient;
+		return new CloudifyClient(client, baseTarget);
 	}
 	
 	public BlueprintsClient getBlueprintsClient() {

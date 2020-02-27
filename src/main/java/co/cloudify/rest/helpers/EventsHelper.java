@@ -49,6 +49,10 @@ public class EventsHelper {
 			}
 			formatted.append(String.format(" [%s]", s));
 		}
-		return String.format("%s%s %s", new SimpleDateFormat(DATETIME_FORMAT).format(event.getReportedTimestamp()), formatted, event.getMessage());
+		return String.format("%s%s %s",
+				new SimpleDateFormat(DATETIME_FORMAT).format(
+						event.getReportedTimestamp()),
+				formatted,
+				event.getMessage());
 	}
 }

@@ -11,8 +11,7 @@ import co.cloudify.rest.model.Execution;
  * A {@link LogEmitterExecutionFollower} implementation that prints to a {@link PrintStream}.
  * This is useful, among others, for Jenkins.
  * 
- * @author	Isaac Shabtay
- *
+ * @author Isaac Shabtay
  */
 public class PrintStreamLogEmitterExecutionFollower extends LogEmitterExecutionFollower {
 	private PrintStream printStream;
@@ -23,18 +22,20 @@ public class PrintStreamLogEmitterExecutionFollower extends LogEmitterExecutionF
 	}
 
 	public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream,
-			final EventLevel minimumLevel) {
+	        final EventLevel minimumLevel) {
 		super(client, minimumLevel);
 		this.printStream = printStream;
 	}
 
-	public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream, final long size) {
+	public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream,
+	        final long size) {
 		super(client, size);
 		this.printStream = printStream;
 	}
 
-	public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream, final long size,
-			final EventLevel minimumLevel) {
+	public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream,
+	        final long size,
+	        final EventLevel minimumLevel) {
 		super(client, size, minimumLevel);
 		this.printStream = printStream;
 	}
@@ -44,7 +45,7 @@ public class PrintStreamLogEmitterExecutionFollower extends LogEmitterExecutionF
 		String text = EventsHelper.formatEvent(event);
 		printStream.println(text);
 	}
-	
+
 	@Override
 	public void exception(Execution execution, Throwable exception) {
 		printStream.println("Exception encountered");

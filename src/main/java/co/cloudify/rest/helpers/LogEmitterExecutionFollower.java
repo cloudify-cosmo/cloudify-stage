@@ -64,7 +64,6 @@ public abstract class LogEmitterExecutionFollower extends DefaultExecutionFollow
 				.stream()
 				.filter(event -> event.getLevel() == null || event.getLevel().numeric() >= minimumNumeric)
 				.forEach(x -> emit(x));
-			items.forEach(System.err::println);
 			offset += items.size();
 			if (offset >= pagination.getTotal()) {
 				break;
