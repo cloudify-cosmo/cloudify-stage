@@ -119,6 +119,9 @@ describe('Sites Management', () => {
     beforeEach(function() {
         cy.deleteSites();
         reloadSiteManagementPage();
+
+        cy.server();
+        cy.route(/maps\.wikimedia\.org/, '');
     });
 
     it('create new site with location', () => {
