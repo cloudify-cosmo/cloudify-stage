@@ -1,5 +1,6 @@
 package co.cloudify.rest.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
@@ -18,7 +19,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @param	<T>	type of contained items
  */
 @XmlRootElement(name = "items")
-public class ListResponse<T> implements Iterable<T> {
+public class ListResponse<T> implements Iterable<T>, Serializable {
+	/**	Serialization UID. */
+	private static final long serialVersionUID = 1L;
+
 	@XmlElement
 	private List<T> items;
 	

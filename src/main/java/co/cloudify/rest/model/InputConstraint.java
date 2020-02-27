@@ -1,5 +1,7 @@
 package co.cloudify.rest.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -7,7 +9,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @XmlRootElement
 @XmlJavaTypeAdapter(value = InputConstraintAdapter.class)
-public class InputConstraint {
+public class InputConstraint implements Serializable {
+	/**	Serialization UID. */
+	private static final long serialVersionUID = 1L;
+
 	private ConstraintType type;
 	private Object value;
 	

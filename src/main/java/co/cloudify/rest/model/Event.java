@@ -1,5 +1,6 @@
 package co.cloudify.rest.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @XmlRootElement
-public class Event {
+public class Event implements Serializable {
+	/**	Serialization UID. */
+	private static final long serialVersionUID = 1L;
+
 	@XmlElement(name = "_storage_id")
 	private long storageId;
 	@XmlElement(name = "deployment_id")

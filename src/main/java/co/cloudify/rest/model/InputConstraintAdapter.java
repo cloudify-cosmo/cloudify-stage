@@ -6,7 +6,7 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class InputConstraintAdapter extends XmlAdapter<Map<String, Object>, InputConstraint>{
+public class InputConstraintAdapter extends XmlAdapter<Map<String, Object>, InputConstraint> {
 	@Override
 	public Map<String, Object> marshal(InputConstraint v) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

@@ -55,7 +55,11 @@ public class BlueprintsClient extends AbstractCloudifyClient {
 	 * @return	A {@link Blueprint} instance for that blueprint.
 	 */
 	public Blueprint get(final String id) {
-		return getBlueprintsBuilder(id).get(Blueprint.class);
+		try {
+			return getBlueprintsBuilder(id).get(Blueprint.class);
+		} catch (NotFoundException ex) {
+			throw new BlueprintNotFoundException(id, ex);
+		}
 	}
 
 	public Blueprint uploadArchive(final String id, final File blueprintArchive, final String main) throws IOException {
@@ -135,7 +139,7 @@ public class BlueprintsClient extends AbstractCloudifyClient {
 		WebTarget target = getTarget(BASE_PATH);
 		if (StringUtils.isNotBlank(searchString)) {
 			target = target.queryParam("_search", searchString);
-		};
+		}
 		return getBuilder(target).get(new GenericType<ListResponse<Blueprint>>() {});
 	}
 }
