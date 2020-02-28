@@ -60,15 +60,17 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
 
     fetchData(widget, toolbox) {
-        return Promise.all([
-            toolbox.getExternal().isReachable(Stage.Common.Consts.externalUrls.pluginsCatalog),
-            toolbox
-                .getInternal()
-                .doGet('/external/content', {
-                    url: Stage.Common.Consts.externalUrls.helloWorldBlueprint
-                })
-                .catch(_.noop)
-        ]);
+        const { externalUrls } = Stage.Common.Consts;
+        return Promise.all(
+            [externalUrls.pluginsCatalog, externalUrls.helloWorldBlueprint].map(url =>
+                toolbox
+                    .getInternal()
+                    .doGet('/external/content', {
+                        url
+                    })
+                    .catch(_.noop)
+            )
+        );
     },
 
     render(widget, data, error, toolbox) {
