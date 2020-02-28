@@ -2,7 +2,7 @@
 
 [note: Frontend {bg:forestgreen}]<--HTTP-->[ExpressJS Web Server|server.js {bg:red}]
 
-[ExpressJS Web Server|server.js]->[Routes|folder: &#47;routes|Applications;URL: &#47;applications|Auth;URL: &#47;auth|BlueprintAdditions;URL: &#47;ba|ClientConfig;URL: &#47;config|External;URL: &#47;external|File;URL: &#47;file|GitHub;URL: &#47;github|Plugins;URL: &#47;plugins|ServerProxy;URL: &#47;sp|SourceBrowser;URL: &#47;source|Style;URL: &#47;style|Templates;URL: &#47;templates|Tours;URL: &#47;tours|UserApp;URL: &#47;ua|WidgetBackend;URL: &#47;wb|Widgets;URL: &#47;widgets]
+[ExpressJS Web Server|server.js]->[Routes|folder: &#47;routes|Applications;URL: &#47;applications|Auth;URL: &#47;auth|BlueprintAdditions;URL: &#47;ba|BlueprintUserData;URL: &#47;bud|ClientConfig;URL: &#47;config|External;URL: &#47;external|File;URL: &#47;file|GitHub;URL: &#47;github|Plugins;URL: &#47;plugins|ServerProxy;URL: &#47;sp|SourceBrowser;URL: &#47;source|Style;URL: &#47;style|Templates;URL: &#47;templates|Tours;URL: &#47;tours|UserApp;URL: &#47;ua|WidgetBackend;URL: &#47;wb|Widgets;URL: &#47;widgets]
 
 [ExpressJS Web Server]->[Database Connection|db&#47;Connection.js]
 [Database Connection|]->[note: Postgres DB {bg:forestgreen}]

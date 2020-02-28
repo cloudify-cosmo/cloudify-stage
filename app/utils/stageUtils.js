@@ -4,9 +4,7 @@
 
 import md5 from 'blueimp-md5';
 import _ from 'lodash';
-import { getToolbox } from './Toolbox';
-
-import GenericField from '../components/basic/form/GenericField';
+import { GenericField } from '../components/basic';
 
 import ExecutionUtils from './shared/ExecutionUtils';
 import JsonUtils from './shared/JsonUtils';
@@ -148,10 +146,6 @@ export default class StageUtils {
         });
 
         return configs;
-    }
-
-    static getToolbox(onRefresh, onLoading, widget) {
-        return getToolbox(onRefresh, onLoading, widget);
     }
 
     static isUserAuthorized(permission, managerData) {

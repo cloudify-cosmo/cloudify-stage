@@ -49,8 +49,6 @@ exports.command = function(blueprintName, blueprintUrl = '', blueprintYamlFile =
                     .clickElement('@okButton');
 
                 blueprints.waitForElementNotPresent('@uploadModal');
-
-                this.page.filter().waitForBlueprintPresent(blueprintName);
             });
         } else {
             this.log('not adding', blueprintName, 'blueprint, it already exists');

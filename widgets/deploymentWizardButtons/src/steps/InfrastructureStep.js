@@ -2,15 +2,18 @@
  * Created by jakub.niezgoda on 31/07/2018.
  */
 
+import { createWizardStep } from '../wizard/wizardUtils';
+import StepActions from '../wizard/StepActions';
+import StepContent from '../wizard/StepContent';
+
 const infrastructureStepId = 'infrastructure';
-const { createWizardStep } = Stage.Basic.Wizard.Utils;
 
 class InfrastructureStepActions extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
+    static propTypes = StepActions.propTypes;
 
     onNext(id) {
         let fetchedStepData = {};
@@ -30,8 +33,7 @@ class InfrastructureStepActions extends React.Component {
     }
 
     render() {
-        const { Wizard } = Stage.Basic;
-        return <Wizard.Step.Actions {...this.props} onNext={this.onNext.bind(this)} />;
+        return <StepActions {...this.props} onNext={this.onNext.bind(this)} />;
     }
 }
 
@@ -44,13 +46,11 @@ class InfrastructureStepContent extends React.Component {
 
     static defaultBlueprintName = 'hello-world';
 
-    static helloWorldBlueprintUrl = 'https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip';
-
     static defaultBlueprintYaml = 'aws.yaml';
 
     static initialState = {
         stepData: {
-            blueprintUrl: InfrastructureStepContent.helloWorldBlueprintUrl,
+            blueprintUrl: Stage.Common.Consts.externalUrls.helloWorldBlueprint,
             blueprintFile: null,
             blueprintName: InfrastructureStepContent.defaultBlueprintName,
             blueprintFileName: InfrastructureStepContent.defaultBlueprintYaml,
@@ -60,7 +60,7 @@ class InfrastructureStepContent extends React.Component {
         }
     };
 
-    static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
+    static propTypes = StepContent.propTypes;
 
     componentDidMount() {
         if (!_.isEmpty(this.props.stepData)) {

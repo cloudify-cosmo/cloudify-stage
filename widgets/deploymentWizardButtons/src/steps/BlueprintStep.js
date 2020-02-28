@@ -2,15 +2,18 @@
  * Created by jakub.niezgoda on 10/08/2018.
  */
 
+import { createWizardStep } from '../wizard/wizardUtils';
+import StepActions from '../wizard/StepActions';
+import StepContent from '../wizard/StepContent';
+
 const blueprintStepId = 'blueprint';
-const { createWizardStep } = Stage.Basic.Wizard.Utils;
 
 class BlueprintStepActions extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Actions.propTypes;
+    static propTypes = StepActions.propTypes;
 
     onNext(id) {
         let fetchedStepData = {};
@@ -69,8 +72,7 @@ class BlueprintStepActions extends React.Component {
     }
 
     render() {
-        const { Wizard } = Stage.Basic;
-        return <Wizard.Step.Actions {...this.props} onNext={this.onNext.bind(this)} />;
+        return <StepActions {...this.props} onNext={this.onNext.bind(this)} />;
     }
 }
 
@@ -79,7 +81,7 @@ class BlueprintStepContent extends React.Component {
         super(props);
     }
 
-    static propTypes = Stage.Basic.Wizard.Step.Content.propTypes;
+    static propTypes = StepContent.propTypes;
 
     static defaultBlueprintState = {
         blueprintUrl: '',

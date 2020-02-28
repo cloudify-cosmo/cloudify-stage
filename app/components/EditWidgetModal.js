@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { Modal, ApproveButton, CancelButton, GenericField, Form, Message } from './basic';
+import { Modal, ApproveButton, CancelButton, Form, GenericField, Message } from './basic';
 
 export default class EditWidgetModal extends Component {
     constructor(props, context) {

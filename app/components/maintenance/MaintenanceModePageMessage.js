@@ -5,13 +5,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Divider, Header, MaintenanceModeActivationButton, MaintenanceModeModal, MessageContainer } from '../basic';
+import { Divider, Header } from '../basic';
+import {
+    ClusterServicesList,
+    MaintenanceModeActivationButton,
+    MaintenanceModeModal,
+    MessageContainer
+} from '../shared';
 import Banner from '../../containers/banner/Banner';
 import Consts from '../../utils/consts';
-import ClusterServicesList from '../basic/cluster/ClusterServicesList';
 import FullScreenSegment from '../layout/FullScreenSegment';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
-import StageUtils from '../../utils/stageUtils';
 import StatusPoller from '../../utils/StatusPoller';
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 
@@ -22,7 +26,6 @@ export default class MaintenanceModePageMessage extends Component {
         this.state = {
             showMaintenanceModal: false
         };
-        this.toolbox = StageUtils.getToolbox(() => {}, () => {}, null);
     }
 
     componentDidMount() {
@@ -67,7 +70,7 @@ export default class MaintenanceModePageMessage extends Component {
                             <Divider />
                             <SystemStatusHeader />
 
-                            {!isFetchingClusterStatus && <ClusterServicesList toolbox={this.toolbox} />}
+                            {!isFetchingClusterStatus && <ClusterServicesList />}
                         </div>
                     )}
                 </MessageContainer>

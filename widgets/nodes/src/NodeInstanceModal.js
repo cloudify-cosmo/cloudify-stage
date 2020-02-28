@@ -12,14 +12,8 @@ export default class extends React.Component {
     render() {
         const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
         const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
-        const {
-            CancelButton,
-            CopyToClipboardButton,
-            DataTable,
-            Modal,
-            ParameterValue,
-            ParameterValueDescription
-        } = Stage.Basic;
+        const { CancelButton, CopyToClipboardButton, DataTable, Modal } = Stage.Basic;
+        const { ParameterValue, ParameterValueDescription } = Stage.Common;
         const { Json } = Stage.Utils;
 
         const { instance } = this.props;

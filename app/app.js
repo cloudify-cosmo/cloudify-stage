@@ -13,14 +13,11 @@ import './styles/style.scss';
 import 'cloudify-ui-common/styles/font-cloudify.css';
 
 // Import semantic
-import 'semantic-ui-css/semantic.min.css';
+import 'semantic-ui-css-offline/semantic.min.css';
 
 // Import react grid
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-
-// Import highlight
-import 'highlight.js/styles/xcode.css';
 
 // Import hopscotch
 import 'hopscotch/dist/css/hopscotch.css';
@@ -60,6 +57,7 @@ const browserHistory = createBrowserHistory({
 export default class app {
     static load() {
         window.React = React;
+        window.ReactDOM = ReactDOM;
         window.PropTypes = PropTypes;
         window.L = Leaflet;
         window.connectToStore = connect;

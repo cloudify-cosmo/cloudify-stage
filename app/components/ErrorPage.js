@@ -7,7 +7,8 @@ import { Redirect } from 'react-router-dom';
 
 import Consts from '../utils/consts';
 import LinkToLogin from '../containers/LinkToLogin';
-import { Header, Message, MessageContainer } from './basic';
+import { Header, Message } from './basic';
+import { MessageContainer } from './shared';
 
 export default class ErrorPage extends Component {
     render() {

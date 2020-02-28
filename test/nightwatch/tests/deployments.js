@@ -106,17 +106,13 @@ module.exports = {
         page.section.removeDeploymentModal.clickYes();
 
         page.section.deploymentsTable.checkIfDeploymentRemoved(DEPLOYMENT_NAME);
-
-        // Fix strange issue in the filter when deployment is removed
-        client.page
-            .filter()
-            .selectOptionInDropdown('@deploymentSearch', client.page.filter().elements.deploymentSearch.selector, '');
     },
 
     after(client) {
         client
             .moveToEditMode()
             .addPage() // To remove deployment and blueprint with fresh data in filter widgets
+            .moveOutOfEditMode()
             .removeDeployment(DEPLOYMENT_NAME)
             .removeBlueprint(BLUEPRINT_NAME)
             .resetPages()

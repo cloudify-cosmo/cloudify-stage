@@ -18,8 +18,8 @@ export default class StatusIcon extends React.Component {
     };
 
     render() {
-        const { Cluster, Icon, Popup } = Stage.Basic;
-        const { ClusterStatusIcon, ClusterServicesOverview } = Cluster;
+        const { Icon, Popup } = Stage.Basic;
+        const { ClusterStatusIcon, ClusterServicesOverview } = Stage.Shared;
 
         const { isFetching } = this.props;
         const { status, services } = this.props.status;

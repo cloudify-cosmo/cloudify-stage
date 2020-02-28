@@ -111,18 +111,15 @@ export default class ExecutionsTable extends React.Component {
             CopyToClipboardButton,
             DataTable,
             ErrorMessage,
-            ExecutionStatus,
             HighlightText,
-            IdPopup,
             Icon,
             Menu,
             Modal,
-            ParameterValue,
-            ParameterValueDescription,
             PopupMenu,
             Table
         } = Stage.Basic;
-        const { UpdateDetailsModal } = Stage.Common;
+        const { ExecutionStatus, IdPopup } = Stage.Shared;
+        const { ParameterValue, ParameterValueDescription, UpdateDetailsModal } = Stage.Common;
         const { Utils } = Stage;
 
         const { MenuAction } = ExecutionsTable;
@@ -371,7 +368,7 @@ export default class ExecutionsTable extends React.Component {
                 >
                     <Modal.Header>Error details</Modal.Header>
                     <Modal.Content scrolling>
-                        <HighlightText className="python">{execution.error}</HighlightText>
+                        <HighlightText language="python">{execution.error}</HighlightText>
                     </Modal.Content>
                     <Modal.Actions>
                         <CopyToClipboardButton content="Copy Error" text={execution.error} />

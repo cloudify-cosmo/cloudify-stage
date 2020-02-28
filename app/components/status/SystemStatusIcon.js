@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ClusterStatusIcon from '../basic/cluster/ClusterStatusIcon';
+import ClusterStatusIcon from '../shared/cluster/ClusterStatusIcon';
 
 export default function SystemStatusIcon({ systemStatus }) {
     return <ClusterStatusIcon status={systemStatus} />;

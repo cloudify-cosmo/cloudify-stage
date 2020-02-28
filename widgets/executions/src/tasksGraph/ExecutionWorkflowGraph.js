@@ -1,10 +1,13 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
+import { UncontrolledReactSVGPanZoom } from 'react-svg-pan-zoom';
 import GraphNodes from './GraphNodes';
 import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000;
+const MAX_GRAPH_HEIGHT = 380;
+const GRAPH_VERTICAL_MARGIN = 15;
 
 export default class ExecutionWorkflowGraph extends React.Component {
     /**
@@ -18,15 +21,31 @@ export default class ExecutionWorkflowGraph extends React.Component {
         super(props, context);
         this.state = {
             graphResult: null,
-            error: ''
+            error: '',
+            maximized: false,
+            containerWidth: 0,
+            modalWidth: 0
         };
         this.timer = null;
         this.cancelablePromise = null;
         this.startPolling = this.startPolling.bind(this); // Required for the setTimeout function which changes the scope for 'this'
+        this.wrapper = React.createRef();
+        this.modal = React.createRef();
     }
 
     componentDidMount() {
         this.startPolling();
+    }
+
+    componentDidUpdate() {
+        const containerWidth = _.get(this.wrapper.current, 'offsetWidth');
+        if (containerWidth && containerWidth !== this.state.containerWidth) {
+            this.setState({ containerWidth });
+        }
+        const modalWidth = _.get(this.modal.current, 'offsetWidth');
+        if (modalWidth && modalWidth !== this.state.modalWidth) {
+            this.setState({ modalWidth });
+        }
     }
 
     componentWillUnmount() {
@@ -67,15 +86,54 @@ export default class ExecutionWorkflowGraph extends React.Component {
         return this.props.widgetBackend.doGet('get_tasks_graph', { ...tasksGraphParams });
     }
 
-    render() {
-        const { Header, Loading, Message } = Stage.Basic;
-        if (this.state.graphResult !== null) {
-            return (
-                <div id="graphContainer">
-                    <svg height={this.state.graphResult.height} width={this.state.graphResult.width}>
+    renderGraph(width, height) {
+        return (
+            <UncontrolledReactSVGPanZoom
+                width={width}
+                height={height}
+                background="#fff"
+                tool="pan"
+                miniatureProps={{ position: 'none' }}
+                toolbarProps={{ position: 'none' }}
+            >
+                <svg>
+                    <g transform={`translate(0, ${GRAPH_VERTICAL_MARGIN})`}>
                         <GraphNodes graphNodes={this.state.graphResult.children} />
                         <GraphEdges graphEdges={this.state.graphResult.edges} />
-                    </svg>
+                    </g>
+                </svg>
+            </UncontrolledReactSVGPanZoom>
+        );
+    }
+
+    render() {
+        const { Header, Loading, Message, Icon, Modal } = Stage.Basic;
+        if (this.state.graphResult !== null) {
+            const height = this.state.graphResult.height + 2 * GRAPH_VERTICAL_MARGIN;
+            return (
+                <div ref={this.wrapper} style={{ position: 'relative' }}>
+                    {this.renderGraph(this.state.containerWidth - 1, Math.min(MAX_GRAPH_HEIGHT, height))}
+                    <Icon
+                        name="expand"
+                        link
+                        style={{
+                            position: 'absolute',
+                            top: 1,
+                            right: -2,
+                            background: 'white',
+                            opacity: 1,
+                            display: 'inline-table',
+                            padding: '0 2px'
+                        }}
+                        onClick={() => this.setState({ maximized: true })}
+                    />
+                    <Modal
+                        open={this.state.maximized}
+                        onClose={() => this.setState({ maximized: false })}
+                        size="fullscreen"
+                    >
+                        <div ref={this.modal}>{this.renderGraph(this.state.modalWidth, height)}</div>
+                    </Modal>
                 </div>
             );
         }

@@ -1,6 +1,7 @@
 /**
  * Created by pposel on 28/02/2017.
  */
+import SplitterLayout from 'react-splitter-layout';
 import Actions from './actions';
 
 export default class BlueprintSources extends React.Component {
@@ -45,15 +46,13 @@ export default class BlueprintSources extends React.Component {
         actions
             .doGetFileContent(path)
             .then(data => {
-                let type = '';
+                let type = 'json';
                 if (_.endsWith(path, '.yaml') || _.endsWith(path, '.yml')) {
                     type = 'yaml';
                 } else if (_.endsWith(path, '.py')) {
                     type = 'python';
                 } else if (_.endsWith(path, '.sh')) {
                     type = 'bash';
-                } else if (_.endsWith(path, '.json')) {
-                    type = 'json';
                 }
 
                 this.props.toolbox.loading(false);
@@ -67,7 +66,7 @@ export default class BlueprintSources extends React.Component {
     }
 
     render() {
-        const { NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon, SplitterLayout } = Stage.Basic;
+        const { NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 
         const { data } = this.props;
         const loop = items => {
@@ -121,7 +120,13 @@ export default class BlueprintSources extends React.Component {
                         secondaryInitialSize={this.props.widget.configuration.contentPaneWidth}
                     >
                         <div>
-                            <NodesTree showLine selectable defaultExpandAll onSelect={this._selectFile.bind(this)}>
+                            <NodesTree
+                                className="nodes-tree"
+                                showLine
+                                selectable
+                                defaultExpandAll
+                                onSelect={this._selectFile.bind(this)}
+                            >
                                 <NodesTree.Node
                                     key="blueprint"
                                     disabled
@@ -165,7 +170,7 @@ export default class BlueprintSources extends React.Component {
                         </div>
                         {this.state.content ? (
                             <div className="alignHighlight">
-                                <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
+                                <HighlightText language={this.state.type}>{this.state.content}</HighlightText>
                                 <Label
                                     attached="top right"
                                     size="small"
@@ -175,7 +180,7 @@ export default class BlueprintSources extends React.Component {
                                     {this.state.filename}
                                 </Label>
                                 <Modal open={this.state.maximized} onClose={() => this.setState({ maximized: false })}>
-                                    <HighlightText className={this.state.type}>{this.state.content}</HighlightText>
+                                    <HighlightText language={this.state.type}>{this.state.content}</HighlightText>
                                 </Modal>
                             </div>
                         ) : (

@@ -1,0 +1,65 @@
+[
+    {
+        "relationships": [
+            {
+                "target_name": "host",
+                "type": "cloudify.relationships.contained_in",
+                "target_id": "host_70056"
+            }
+        ],
+        "runtime_properties": {},
+        "node_id": "mongod",
+        "version": null,
+        "state": "starting",
+        "host_id": "host_70056",
+        "deployment_id": "instances",
+        "id": "mongod_31434"
+    },
+    {
+        "relationships": [],
+        "runtime_properties": {},
+        "node_id": "host",
+        "version": null,
+        "state": "started",
+        "host_id": "host_70056",
+        "deployment_id": "instances",
+        "id": "host_70056"
+    },
+    {
+        "relationships": [
+            {
+                "target_name": "host",
+                "type": "cloudify.relationships.contained_in",
+                "target_id": "host_70056"
+            }
+        ],
+        "runtime_properties": {},
+        "node_id": "nodejs",
+        "version": null,
+        "state": "deleted",
+        "host_id": "host_70056",
+        "deployment_id": "instances",
+        "id": "nodejs_b05b7"
+    },
+    {
+        "relationships": [
+            {
+                "target_name": "mongod",
+                "type": "node_connected_to_mongo",
+                "target_id": "mongod_31434"
+            },
+            {
+                "target_name": "nodejs",
+                "type": "node_contained_in_nodejs",
+                "target_id": "nodejs_b05b7"
+            }
+        ],
+        "runtime_properties": {},
+        "node_id": "nodecellar",
+        "version": null,
+        "state": "uninitialized",
+        "host_id": "host_70056",
+        "deployment_id": "instances",
+        "id": "nodecellar_fc9ea"
+    }
+]

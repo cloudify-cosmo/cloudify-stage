@@ -2,6 +2,8 @@
  * Created by jakubniezgoda on 03/03/2017.
  */
 
+import { types } from 'cloudify-ui-common';
+
 export default class JsonUtils {
     static stringify(value, indented = false, ignoreEmpty = false) {
         if (!ignoreEmpty && value === '') {
@@ -17,85 +19,18 @@ export default class JsonUtils {
     }
 
     static toType(obj) {
-        return {}.toString
-            .call(obj)
-            .match(/\s([a-zA-Z]+)/)[1]
-            .toLowerCase();
+        return types.toType(obj);
     }
 
     static toCloudifyType(obj) {
-        const type = JsonUtils.toType(obj);
-
-        switch (type) {
-            case 'boolean':
-            case 'string':
-                return type;
-            case 'number':
-                return _.isInteger(obj) ? 'integer' : 'float';
-            case 'array':
-                return 'list';
-            case 'object':
-                return 'dict';
-            default:
-                return undefined;
-        }
+        return types.toCloudifyType(obj);
     }
 
     static getStringValue(value) {
-        let ret = null;
-
-        switch (JsonUtils.toType(value)) {
-            case 'array':
-            case 'object':
-                ret = JSON.stringify(value);
-                break;
-            case 'boolean':
-            case 'string':
-            case 'number':
-            default:
-                ret = String(value);
-                break;
-        }
-
-        return ret;
+        return types.getStringValue(value);
     }
 
     static getTypedValue(value) {
-        const initialType = JsonUtils.toType(value);
-
-        if (initialType === 'string') {
-            // Null or Undefined
-            if (value === 'null') {
-                return null;
-            }
-            if (value === 'undefined') {
-                return undefined;
-            }
-
-            // Boolean
-            if (value === 'true') {
-                return true;
-            }
-            if (value === 'false') {
-                return false;
-            }
-
-            // Number
-            const numericValue = Number(value);
-            if (!isNaN(numericValue)) {
-                return numericValue;
-            }
-
-            // Object or Array
-            let jsonValue = null;
-            try {
-                jsonValue = JSON.parse(value);
-            } catch (e) {
-                return value;
-            }
-
-            return jsonValue;
-        }
-        return value;
+        return types.getTypedValue(value);
     }
 }

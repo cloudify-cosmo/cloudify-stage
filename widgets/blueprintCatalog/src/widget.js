@@ -26,7 +26,7 @@ Stage.defineWidget({
             name: 'Blueprints Examples URL',
             placeHolder: 'Type URL to blueprint examples JSON file',
             description: 'If set, then GitHub options are not used for fetching data.',
-            default: '//repository.cloudifysource.org/cloudify/blueprints/5.0.5/examples.json',
+            default: Stage.Common.Consts.externalUrls.blueprintsCatalog,
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
@@ -80,42 +80,51 @@ Stage.defineWidget({
             widget.configuration.jsonPath
         );
 
-        return actions.doGetRepos(params).then(data => {
-            const defaultImagePath = Stage.Utils.Url.widgetResourceUrl(
-                'blueprintCatalog',
-                Consts.DEFAULT_IMAGE,
-                false,
-                false
-            );
-            let repos = data.items;
-            const { source } = data;
-            const total = data.total_count;
-            if (data.source === Consts.GITHUB_DATA_SOURCE) {
-                const isAuthenticated = data.isAuth;
+        return actions
+            .doGetRepos(params)
+            .then(data => {
+                const defaultImagePath = Stage.Utils.Url.widgetResourceUrl(
+                    'blueprintCatalog',
+                    Consts.DEFAULT_IMAGE,
+                    false,
+                    false
+                );
+                let repos = data.items;
+                const { source } = data;
+                const total = data.total_count;
+                if (data.source === Consts.GITHUB_DATA_SOURCE) {
+                    const isAuthenticated = data.isAuth;
 
-                const fetches = _.map(repos, repo =>
-                    actions
-                        .doFindImage(repo.name, defaultImagePath)
-                        .then(imageUrl => Promise.resolve(Object.assign(repo, { image_url: imageUrl })))
+                    const fetches = _.map(repos, repo =>
+                        actions
+                            .doFindImage(repo.name, defaultImagePath)
+                            .then(imageUrl => Promise.resolve(Object.assign(repo, { image_url: imageUrl })))
+                    );
+
+                    return Promise.all(fetches).then(items =>
+                        Promise.resolve({ items, total, source, isAuthenticated })
+                    );
+                }
+                repos = _.map(repos, repo =>
+                    _.isEmpty(repo.image_url)
+                        ? { ...repo, image_url: defaultImagePath }
+                        : { ...repo, image_url: `/external/content?url=${encodeURIComponent(repo.image_url)}` }
                 );
 
-                return Promise.all(fetches).then(items => Promise.resolve({ items, total, source, isAuthenticated }));
-            }
-            repos = _.map(repos, repo =>
-                _.isEmpty(repo.image_url)
-                    ? { ...repo, image_url: defaultImagePath }
-                    : { ...repo, image_url: `/external/content?url=${encodeURIComponent(repo.image_url)}` }
-            );
+                if (_.get(widget.configuration, 'sortByName', false)) {
+                    repos = _.sortBy(repos, 'name');
+                }
 
-            if (_.get(widget.configuration, 'sortByName', false)) {
-                repos = _.sortBy(repos, 'name');
-            }
-
-            return Promise.resolve({ items: repos, total, source });
-        });
+                return Promise.resolve({ items: repos, total, source });
+            })
+            .catch(_.identity);
     },
 
     render(widget, data, error, toolbox) {
+        if (data instanceof Error) {
+            return <Stage.Common.NoDataMessage repositoryName="blueprints" />;
+        }
+
         if (_.isEmpty(data)) {
             return <Stage.Basic.Loading />;
         }

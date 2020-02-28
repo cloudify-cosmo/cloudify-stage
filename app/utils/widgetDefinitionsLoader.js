@@ -9,7 +9,8 @@ import 'd3';
 import momentImport from 'moment';
 import markdownImport from 'markdown';
 
-import * as BasicComponents from '../components/basic';
+import * as Basic from '../components/basic';
+import * as Shared from '../components/shared';
 import StageUtils from './stageUtils';
 import LoaderUtils from './LoaderUtils';
 
@@ -26,7 +27,8 @@ export default class WidgetDefinitionsLoader {
             defineWidget: widgetDefinition => {
                 widgetDefinitions.push(new WidgetDefinition({ ...widgetDefinition, id: document.currentScript.id }));
             },
-            Basic: BasicComponents,
+            Basic,
+            Shared,
             ComponentToHtmlString: component => {
                 return ReactDOMServer.renderToString(component);
             },

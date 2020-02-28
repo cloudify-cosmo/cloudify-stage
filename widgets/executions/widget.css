@@ -2,6 +2,15 @@
 #graphContainerLoading {
     height: 200px;
 }
+
+.ui.modal svg {
+    border-radius: 4px;
+}
+
+.ui.modal.fullscreen {
+    left: unset !important;
+}
+
 /* g containers */
 .g-tasks-graph-general {
     stroke: black;

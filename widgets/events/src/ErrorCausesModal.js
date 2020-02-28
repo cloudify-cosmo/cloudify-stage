@@ -50,7 +50,7 @@ export default class ErrorCausesModal extends React.Component {
                             <Header size="small">Message</Header>
                             <Message error>{message}</Message>
                             <Header size="small">Traceback</Header>
-                            <HighlightText className="python">{traceback}</HighlightText>
+                            <HighlightText language="python">{traceback}</HighlightText>
                         </Segment>
                     ))}
                 </Modal.Content>

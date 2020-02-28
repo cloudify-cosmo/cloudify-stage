@@ -3,6 +3,7 @@
  */
 
 import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
 import pages from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
 import tours from './toursReducer';
@@ -15,18 +16,20 @@ import app from './appReducer';
 import widgetData from './widgetDataReducer';
 import drilldownContext from './drilldownContextReducer';
 
-const rootReducer = combineReducers({
-    app,
-    manager,
-    pages,
-    widgetDefinitions,
-    tours,
-    templates,
-    templateManagement,
-    context,
-    drilldownContext,
-    config,
-    widgetData
-});
+const rootReducer = history =>
+    combineReducers({
+        router: connectRouter(history),
+        app,
+        manager,
+        pages,
+        widgetDefinitions,
+        tours,
+        templates,
+        templateManagement,
+        context,
+        drilldownContext,
+        config,
+        widgetData
+    });
 
 export default rootReducer;

@@ -72,6 +72,7 @@ export default class UpdateModal extends React.Component {
 
     render() {
         const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
+        const { toolbox } = this.props;
 
         return (
             <div>
@@ -98,6 +99,7 @@ export default class UpdateModal extends React.Component {
                                 <SiteLocationInput
                                     value={this.state.siteLocation}
                                     onChange={this._handleInputChange.bind(this)}
+                                    toolbox={toolbox}
                                 />
                             </Form.Field>
                         </Form>

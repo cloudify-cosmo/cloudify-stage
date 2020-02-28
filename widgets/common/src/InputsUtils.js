@@ -1,6 +1,35 @@
-/**
- * Created by jakubniezgoda on 18/10/2018.
- */
+function RevertToDefaultIcon({ value, defaultValue, onClick }) {
+    const { Icon, Popup } = Stage.Basic;
+
+    return !_.isNil(defaultValue) && !_.isEqual(value, defaultValue) ? (
+        <Popup trigger={<Icon name="undo" link onClick={onClick} />}>Revert to default value</Popup>
+    ) : null;
+}
+
+RevertToDefaultIcon.propTypes = {
+    /**
+     * value typed field value
+     */
+    // eslint-disable-next-line react/forbid-prop-types
+    value: PropTypes.any,
+
+    /**
+     * defaultValue typed field default value
+     */
+    // eslint-disable-next-line react/forbid-prop-types
+    defaultValue: PropTypes.any,
+
+    /**
+     * onClick function to be called on revert icon click
+     */
+    onClick: PropTypes.func
+};
+
+RevertToDefaultIcon.defaultProps = {
+    value: undefined, // value can be null/undefined
+    defaultValue: undefined, // defaultValue can be null/undefined
+    onClick: _.noop
+};
 
 class InputsUtils {
     static DEFAULT_INITIAL_VALUE_FOR_LIST = '[]';
@@ -120,7 +149,6 @@ class InputsUtils {
     /* Components */
 
     static getRevertToDefaultIcon(name, value, defaultValue, inputChangeFunction) {
-        const { RevertToDefaultIcon } = Stage.Basic;
         const { Json } = Stage.Utils;
 
         const stringValue = Json.getStringValue(value);
@@ -147,7 +175,8 @@ class InputsUtils {
     }
 
     static getHelp(description, type, constraints, defaultValue, dataType) {
-        const { Header, List, ParameterValue } = Stage.Basic;
+        const { Header, List } = Stage.Basic;
+        const { ParameterValue } = Stage.Common;
 
         const HelpProperty = ({ show, name, value }) =>
             show && (

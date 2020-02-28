@@ -69,11 +69,11 @@ export default class PageManagement extends Component {
                                 <Breadcrumb.Divider />
                                 <Breadcrumb.Section active>
                                     <EditableLabel
-                                        text={this.props.page.name}
+                                        value={this.props.page.name}
                                         placeHolder="You must fill a page name"
                                         className="section active pageTitle"
-                                        isEditEnable={this.props.isPageEditMode}
-                                        onEditDone={this.props.onPageNameChange}
+                                        enabled={this.props.isPageEditMode}
+                                        onChange={this.props.onPageNameChange}
                                     />
                                 </Breadcrumb.Section>
                             </Breadcrumb>

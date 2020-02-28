@@ -2,8 +2,7 @@
  * Created by jakub.niezgoda on 05/02/2018.
  */
 
-import GenericField from '../components/basic/form/GenericField';
-import Pagination from '../components/basic/pagination/Pagination';
+import { GenericField } from '../components/basic';
 
 export default class GenericConfig {
     static POLLING_TIME_CONFIG = (pollingTime = 0) => {
@@ -13,11 +12,12 @@ export default class GenericConfig {
             default: pollingTime,
             placeHolder: 'Enter time interval in seconds',
             description: 'Data of the widget will be refreshed per provided interval time in seconds',
-            type: GenericField.NUMBER_TYPE
+            type: GenericField.NUMBER_TYPE,
+            min: 0
         };
     };
 
-    static PAGE_SIZE_CONFIG = (pageSize = Pagination.PAGE_SIZE_LIST(5)[0]) => {
+    static PAGE_SIZE_CONFIG = (pageSize = 5) => {
         return {
             id: 'pageSize',
             default: pageSize,

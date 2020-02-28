@@ -36,6 +36,7 @@ const options = {
         [`${contextPath}/ua`]: proxyOptions,
         [`${contextPath}/source`]: proxyOptions,
         [`${contextPath}/ba`]: proxyOptions,
+        [`${contextPath}/bud`]: proxyOptions,
         [`${contextPath}/clientConfig`]: proxyOptions,
         [`${contextPath}/github`]: proxyOptions,
         [`${contextPath}/external`]: proxyOptions,
@@ -45,7 +46,8 @@ const options = {
         [`${contextPath}/tours`]: proxyOptions,
         [`${contextPath}/wb`]: proxyOptions,
         [`${contextPath}/file`]: proxyOptions,
-        [`${contextPath}/plugins`]: proxyOptions
+        [`${contextPath}/plugins`]: proxyOptions,
+        [`${contextPath}/userData`]: proxyOptions
     },
     watchOptions: {
         ignored: ['**/userData/**']

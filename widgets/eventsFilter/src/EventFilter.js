@@ -26,7 +26,7 @@ export default class EventFilter extends React.Component {
     static initialState = (eventTypeOptions, logLevelOptions) => ({
         fields: {
             eventType: [],
-            timeRange: Stage.Basic.TimeFilter.EMPTY_VALUE,
+            timeRange: Stage.Basic.DateRangeInput.EMPTY_VALUE,
             timeStart: '',
             timeEnd: '',
             type: '',
@@ -112,44 +112,44 @@ export default class EventFilter extends React.Component {
     }
 
     render() {
-        const { Form, Popup, TimeFilter } = Stage.Basic;
+        const { Form, Popup, DateRangeInput } = Stage.Basic;
         const { EventUtils } = Stage.Common;
 
         const timeRanges = {
             'Last 15 Minutes': {
                 start: moment()
                     .subtract(15, 'minutes')
-                    .format(TimeFilter.DATETIME_FORMAT),
+                    .format(DateRangeInput.DATETIME_FORMAT),
                 end: ''
             },
             'Last 30 Minutes': {
                 start: moment()
                     .subtract(30, 'minutes')
-                    .format(TimeFilter.DATETIME_FORMAT),
+                    .format(DateRangeInput.DATETIME_FORMAT),
                 end: ''
             },
             'Last Hour': {
                 start: moment()
                     .subtract(1, 'hours')
-                    .format(TimeFilter.DATETIME_FORMAT),
+                    .format(DateRangeInput.DATETIME_FORMAT),
                 end: ''
             },
             'Last 2 Hours': {
                 start: moment()
                     .subtract(2, 'hours')
-                    .format(TimeFilter.DATETIME_FORMAT),
+                    .format(DateRangeInput.DATETIME_FORMAT),
                 end: ''
             },
             'Last Day': {
                 start: moment()
                     .subtract(1, 'days')
-                    .format(TimeFilter.DATETIME_FORMAT),
+                    .format(DateRangeInput.DATETIME_FORMAT),
                 end: ''
             },
             'Last Week': {
                 start: moment()
                     .subtract(1, 'weeks')
-                    .format(TimeFilter.DATETIME_FORMAT),
+                    .format(DateRangeInput.DATETIME_FORMAT),
                 end: ''
             }
         };
@@ -233,12 +233,12 @@ export default class EventFilter extends React.Component {
                         onChange={this._handleInputChange.bind(this)}
                     />
                     <Form.Field>
-                        <TimeFilter
+                        <Form.DateRange
                             fluid
                             placeholder="Time Range"
                             name="timeRange"
                             ranges={timeRanges}
-                            defaultValue={TimeFilter.EMPTY_VALUE}
+                            defaultValue={DateRangeInput.EMPTY_VALUE}
                             value={this.state.fields.timeRange}
                             onChange={this._handleInputChange.bind(this)}
                         />

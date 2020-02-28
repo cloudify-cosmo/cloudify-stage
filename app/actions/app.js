@@ -1,5 +1,6 @@
 import * as types from './types';
 
+import { setAppLoading, setAppError } from './appState';
 import { loadTemplates } from './templates';
 import { loadTours } from './tours';
 import { loadWidgetDefinitions } from './widgets';
@@ -9,20 +10,6 @@ import { loadOrCreateUserAppData } from './userApp';
 import { getUserData } from './managers';
 import { getClusterStatus } from './clusterStatus';
 import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
-
-export function setAppLoading(isLoading) {
-    return {
-        type: types.SET_APP_LOADING,
-        isLoading
-    };
-}
-
-export function setAppError(error) {
-    return {
-        type: types.SET_APP_ERROR,
-        error
-    };
-}
 
 export function intialPageLoad() {
     return function(dispatch, getState) {

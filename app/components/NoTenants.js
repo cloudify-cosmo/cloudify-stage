@@ -5,7 +5,8 @@
 import React, { Component } from 'react';
 
 import LinkToLogin from '../containers/LinkToLogin';
-import { Header, Message, MessageContainer } from './basic';
+import { Header, Message } from './basic';
+import { MessageContainer } from './shared';
 
 export default class NoTenants extends Component {
     render() {

@@ -36,6 +36,7 @@ const ServerProxy = require('./routes/ServerProxy');
 const UserApp = require('./routes/UserApp');
 const Applications = require('./routes/Applications');
 const BlueprintAdditions = require('./routes/BlueprintAdditions');
+const BlueprintUserData = require('./routes/BlueprintUserData');
 const clientConfig = require('./routes/ClientConfig');
 const SourceBrowser = require('./routes/SourceBrowser');
 const GitHub = require('./routes/GitHub');
@@ -103,7 +104,13 @@ app.use(
 app.use(
     `${contextPath}/userData`,
     passport.authenticate('cookie', { session: false }),
-    expressStaticGzip(path.resolve(__dirname, '../dist/userData'), { enableBrotli: true, indexFromEmptyFile: false })
+    expressStaticGzip(
+        path.resolve(__dirname, process.env.NODE_ENV === 'development' ? '../userData' : '../dist/userData'),
+        {
+            enableBrotli: true,
+            indexFromEmptyFile: false
+        }
+    )
 );
 
 // Serving static content only in development mode. In production mode it is served by Nginx.
@@ -121,6 +128,7 @@ app.use(`${contextPath}/ua`, UserApp);
 app.use(`${contextPath}/applications`, Applications);
 app.use(`${contextPath}/source`, SourceBrowser);
 app.use(`${contextPath}/ba`, BlueprintAdditions);
+app.use(`${contextPath}/bud`, BlueprintUserData);
 app.use(`${contextPath}/style`, Style);
 app.use(`${contextPath}/widgets`, Widgets);
 app.use(`${contextPath}/templates`, Templates);

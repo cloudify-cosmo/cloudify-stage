@@ -153,7 +153,7 @@ export default class ExecuteDeploymentModal extends React.Component {
     }
 
     render() {
-        const { ApproveButton, CancelButton, Divider, Form, Header, Icon, Modal, Message, TimePicker } = Stage.Basic;
+        const { ApproveButton, CancelButton, DateInput, Divider, Form, Header, Icon, Modal, Message } = Stage.Basic;
         const { InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
 
         const workflow = { name: '', parameters: [], ...this.props.workflow };
@@ -273,7 +273,7 @@ export default class ExecuteDeploymentModal extends React.Component {
                             />
                             {this.state.schedule && <Divider hidden />}
                             {this.state.schedule && (
-                                <TimePicker
+                                <DateInput
                                     name="scheduledTime"
                                     value={this.state.scheduledTime}
                                     defaultValue=""

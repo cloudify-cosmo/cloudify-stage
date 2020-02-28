@@ -5,9 +5,6 @@
 class UploadPluginForm extends React.Component {
     constructor(props) {
         super(props);
-
-        this.wagonFileRef = React.createRef();
-        this.yamlFileRef = React.createRef();
     }
 
     static propTypes = {
@@ -40,24 +37,11 @@ class UploadPluginForm extends React.Component {
     static NO_ERRORS = { errors: {} };
 
     componentDidMount() {
-        this.wagonFileRef.current && this.wagonFileRef.current.reset();
-        this.yamlFileRef.current && this.yamlFileRef.current.reset();
         this.resetErrors();
     }
 
     resetErrors() {
         this.props.onChange(UploadPluginForm.NO_ERRORS);
-    }
-
-    _handleInputChange(proxy, field) {
-        this.props.onChange({ ...UploadPluginForm.NO_ERRORS, ...Stage.Basic.Form.fieldNameValue(field) });
-    }
-
-    _onWagonUrlFocus() {
-        if (this.props.wagonFile) {
-            this.wagonFileRef.current && this.wagonFileRef.current.reset();
-            this._onWagonFileReset();
-        }
     }
 
     _onWagonFileChange(file) {
@@ -68,17 +52,6 @@ class UploadPluginForm extends React.Component {
         });
     }
 
-    _onWagonFileReset() {
-        this.props.onChange({ ...UploadPluginForm.NO_ERRORS, wagonFile: null, wagonUrl: '' });
-    }
-
-    _onYamlUrlFocus() {
-        if (this.props.yamlFile) {
-            this.yamlFileRef.current && this.yamlFileRef.current.reset();
-            this._onYamlFileReset();
-        }
-    }
-
     _onYamlFileChange(file) {
         this.props.onChange({
             ...UploadPluginForm.NO_ERRORS,
@@ -87,8 +60,20 @@ class UploadPluginForm extends React.Component {
         });
     }
 
-    _onYamlFileReset() {
-        this.props.onChange({ ...UploadPluginForm.NO_ERRORS, yamlFile: null, yamlUrl: '' });
+    onWagonUrlChange(wagonUrl) {
+        this.props.onChange({
+            ...UploadPluginForm.NO_ERRORS,
+            wagonFile: null,
+            wagonUrl
+        });
+    }
+
+    onYamlUrlChange(yamlUrl) {
+        this.props.onChange({
+            ...UploadPluginForm.NO_ERRORS,
+            yamlFile: null,
+            yamlUrl
+        });
     }
 
     render() {
@@ -105,13 +90,8 @@ class UploadPluginForm extends React.Component {
                     name="wagon"
                     value={this.props.wagonUrl}
                     placeholder={this.props.wagonPlaceholder}
-                    onChangeUrl={this._handleInputChange.bind(this)}
-                    onFocusUrl={this._onWagonUrlFocus.bind(this)}
-                    onBlurUrl={_.noop}
+                    onChangeUrl={this.onWagonUrlChange.bind(this)}
                     onChangeFile={this._onWagonFileChange.bind(this)}
-                    onResetFile={this._onWagonFileReset.bind(this)}
-                    label={<Label>{!this.props.wagonFile ? 'URL' : 'File'}</Label>}
-                    fileInputRef={this.wagonFileRef}
                 />
             </Form.Field>,
             <Form.Field
@@ -124,13 +104,8 @@ class UploadPluginForm extends React.Component {
                     name="yaml"
                     value={this.props.yamlUrl}
                     placeholder={this.props.yamlPlaceholder}
-                    onChangeUrl={this._handleInputChange.bind(this)}
-                    onFocusUrl={this._onYamlUrlFocus.bind(this)}
-                    onBlurUrl={_.noop}
+                    onChangeUrl={this.onYamlUrlChange.bind(this)}
                     onChangeFile={this._onYamlFileChange.bind(this)}
-                    onResetFile={this._onYamlFileReset.bind(this)}
-                    label={<Label>{!this.props.yamlFile ? 'URL' : 'File'}</Label>}
-                    fileInputRef={this.yamlFileRef}
                 />
             </Form.Field>
         ];

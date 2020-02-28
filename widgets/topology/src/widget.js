@@ -40,11 +40,11 @@ Stage.defineWidget({
     fetchData(widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = toolbox.getContext().getValue('blueprintId');
-        const expandedDeployments = [DataFetcher.fetch(toolbox, blueprintId, deploymentId)];
+        const expandedDeployments = [DataFetcher.fetch(toolbox, blueprintId, deploymentId, true)];
 
         const deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
         _.each(deploymentsToFetch, dep => {
-            expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep));
+            expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep, false));
         });
 
         return Promise.all(expandedDeployments);
@@ -63,8 +63,13 @@ Stage.defineWidget({
         const blueprintId = toolbox.getContext().getValue('blueprintId');
         const expandedDeployments = toolbox.getContext().getValue('deploymentsToExpand');
 
-        const deploymentsData = { ...data };
-        const formattedData = { deploymentsData, deploymentId, blueprintId, topologyConfig, expandedDeployments };
+        const formattedData = {
+            deploymentsData: data,
+            deploymentId,
+            blueprintId,
+            topologyConfig,
+            expandedDeployments
+        };
 
         return <Topology widget={widget} data={formattedData} toolbox={toolbox} />;
     }

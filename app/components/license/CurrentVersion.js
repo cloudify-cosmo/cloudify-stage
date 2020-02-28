@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-import { Icon, Header, Message, Table } from '../basic';
+import { Icon, Header, Message, Segment, Table } from '../basic';
 
 export default function CurrentVersion({ version = {} }) {
     version.distro = _.join([version.distribution, version.distro_release], ' ');
@@ -17,29 +17,31 @@ export default function CurrentVersion({ version = {} }) {
     ];
 
     return !_.isEmpty(version) ? (
-        <Table basic="very" size="large" celled>
-            <Table.Body>
-                {_.map(fields, field => {
-                    const value = version[field.name];
+        <Segment>
+            <Table basic="very" size="large" celled>
+                <Table.Body>
+                    {_.map(fields, field => {
+                        const value = version[field.name];
 
-                    return !!field.hide && field.hide(value) ? null : (
-                        <Table.Row key={field.header}>
-                            <Table.Cell width={5}>
-                                <Header as="h4">
-                                    <Icon
-                                        name={field.icon}
-                                        size="large"
-                                        style={{ display: 'inline-block', float: 'left' }}
-                                    />
-                                    <Header.Content>{field.header}</Header.Content>
-                                </Header>
-                            </Table.Cell>
-                            <Table.Cell>{field.format(version[field.name])}</Table.Cell>
-                        </Table.Row>
-                    );
-                })}
-            </Table.Body>
-        </Table>
+                        return !!field.hide && field.hide(value) ? null : (
+                            <Table.Row key={field.header}>
+                                <Table.Cell width={5}>
+                                    <Header as="h4">
+                                        <Icon
+                                            name={field.icon}
+                                            size="large"
+                                            style={{ display: 'inline-block', float: 'left' }}
+                                        />
+                                        <Header.Content>{field.header}</Header.Content>
+                                    </Header>
+                                </Table.Cell>
+                                <Table.Cell>{field.format(version[field.name])}</Table.Cell>
+                            </Table.Row>
+                        );
+                    })}
+                </Table.Body>
+            </Table>
+        </Segment>
     ) : (
         <Message>There is no version data.</Message>
     );

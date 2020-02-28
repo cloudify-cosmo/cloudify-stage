@@ -59,7 +59,32 @@ Stage.defineWidget({
     ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentWizardButtons'),
 
+    fetchData(widget, toolbox) {
+        return Promise.all([
+            toolbox.getExternal().isReachable(Stage.Common.Consts.externalUrls.pluginsCatalog),
+            toolbox
+                .getInternal()
+                .doGet('/external/content', {
+                    url: Stage.Common.Consts.externalUrls.helloWorldBlueprint
+                })
+                .catch(_.noop)
+        ]);
+    },
+
     render(widget, data, error, toolbox) {
+        if (!_.every(data, Boolean)) {
+            const { Message } = Stage.Basic;
+            const { MessageContainer } = Stage.Shared;
+            return (
+                <MessageContainer wide size="mini" margin="0">
+                    <Message style={{ padding: 7 }}>
+                        The widget cannot function properly because there is no connection to required external
+                        resources. Please check Internet connection.
+                    </Message>
+                </MessageContainer>
+            );
+        }
+
         const { Divider } = Stage.Basic;
 
         const helloWorldWizardSteps = [

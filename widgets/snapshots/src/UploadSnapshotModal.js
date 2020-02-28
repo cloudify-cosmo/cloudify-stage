@@ -9,7 +9,6 @@ export default class UploadModal extends React.Component {
         super(props, context);
 
         this.state = { ...UploadModal.initialState, open: false };
-        this.snapshotFileRef = React.createRef();
     }
 
     static initialState = {
@@ -32,7 +31,6 @@ export default class UploadModal extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (!prevState.open && this.state.open) {
-            this.snapshotFileRef.current && this.snapshotFileRef.current.reset();
             this.setState(UploadModal.initialState);
         }
     }
@@ -78,21 +76,14 @@ export default class UploadModal extends React.Component {
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     }
 
-    _onSnapshotUrlFocus() {
-        if (this.state.snapshotFile) {
-            this.snapshotFileRef.current && this.snapshotFileRef.current.reset();
-            this._onSnapshotReset();
-        }
-    }
-
     _onSnapshotFileChange(file) {
         if (file) {
             this.setState({ snapshotUrl: file.name, snapshotFile: file });
         }
     }
 
-    _onSnapshotFileReset() {
-        this.setState({ snapshotUrl: '', snapshotFile: null });
+    onSnapshotUrlChange(snapshotUrl) {
+        this.setState({ snapshotUrl, snapshotFile: null });
     }
 
     render() {
@@ -121,13 +112,8 @@ export default class UploadModal extends React.Component {
                                 name="snapshot"
                                 value={this.state.snapshotUrl}
                                 placeholder="Provide the snapshot's file URL or click browse to select a file"
-                                onChangeUrl={this._handleInputChange.bind(this)}
-                                onFocusUrl={this._onSnapshotUrlFocus.bind(this)}
-                                onBlurUrl={() => {}}
+                                onChangeUrl={this.onSnapshotUrlChange.bind(this)}
                                 onChangeFile={this._onSnapshotFileChange.bind(this)}
-                                onResetFile={this._onSnapshotFileReset.bind(this)}
-                                label={<Label>{!this.state.snapshotFile ? 'URL' : 'File'}</Label>}
-                                fileInputRef={this.snapshotFileRef}
                             />
                         </Form.Field>
 
