@@ -29,6 +29,8 @@ export default class Topology extends React.Component {
         this.topology = null;
         this.processedTopologyData = null;
         this.scrollerGlassHandler = new ScrollerGlassHandler(this.glassRef);
+
+        this.state = {};
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -85,6 +87,10 @@ export default class Topology extends React.Component {
                         null,
                         layout
                     )
+                    .then(() => {
+                        this.setState({ saveConfirmationOpen: true });
+                        setTimeout(() => this.setState({ saveConfirmationOpen: false }), 2500);
+                    })
         });
 
         this.topology.start();
@@ -259,7 +265,14 @@ export default class Topology extends React.Component {
                 <div className="scrollGlass" ref={this.glassRef}>
                     <span className="message">Click to release scroller</span>
                 </div>
-                <div id="topologyContainer" />
+                <Stage.Basic.Popup
+                    open={this.state.saveConfirmationOpen}
+                    content="Topology layout saved"
+                    position="top center"
+                    style={{ left: 'unset', right: 65 }}
+                    on=""
+                    trigger={<div id="topologyContainer" />}
+                />
             </div>
         );
     }
