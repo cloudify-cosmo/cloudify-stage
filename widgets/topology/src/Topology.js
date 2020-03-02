@@ -30,7 +30,7 @@ export default class Topology extends React.Component {
         this.processedTopologyData = null;
         this.scrollerGlassHandler = new ScrollerGlassHandler(this.glassRef);
 
-        this.state = {};
+        this.state = { saveConfirmationOpen: false };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -270,7 +270,6 @@ export default class Topology extends React.Component {
                     content="Topology layout saved"
                     position="top center"
                     style={{ left: 'unset', right: 65 }}
-                    on=""
                     trigger={<div id="topologyContainer" />}
                 />
             </div>
