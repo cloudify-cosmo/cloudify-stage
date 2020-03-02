@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 @XmlRootElement
 public class Pagination implements Serializable {
@@ -33,7 +34,7 @@ public class Pagination implements Serializable {
 	
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this)
+		return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
 				.append("total", total)
 				.append("offset", offset)
 				.append("size", size)

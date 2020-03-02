@@ -9,6 +9,9 @@ import java.util.stream.Stream;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * Encapsulates a list-style response from Cloudify Manager.
  * This class implements {@link Iterable}, to make it easier for callers
@@ -55,5 +58,13 @@ public class ListResponse<T> implements Iterable<T>, Serializable {
 	@Override
 	public Spliterator<T> spliterator() {
 		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+				.append("metadata", metadata)
+				.append("items", items)
+				.toString();
 	}
 }

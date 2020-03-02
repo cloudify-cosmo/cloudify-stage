@@ -1,4 +1,4 @@
-package co.cloudify.rest.client;
+package co.cloudify.rest.client.filters;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -7,7 +7,6 @@ import java.util.Base64;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 
 /**
@@ -17,16 +16,12 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class BasicAuthenticator implements ClientRequestFilter {
-	private static final String	TENANT_HEADER = "Tenant";
-	
     private final String username;
     private final String password;
-    private final String tenant;
 
-    public BasicAuthenticator(String username, String password, String tenant) {
+    public BasicAuthenticator(String username, String password) {
         this.username = username;
         this.password = password;
-        this.tenant = tenant;
     }
 
     @Override
@@ -38,8 +33,6 @@ public class BasicAuthenticator implements ClientRequestFilter {
         String authHeader = String.format(
         		"BASIC %s",
         		Base64.getEncoder().encodeToString(asBytes));
-        MultivaluedMap<String, Object> headers = requestContext.getHeaders();
-        headers.putSingle(HttpHeaders.AUTHORIZATION, authHeader);
-        headers.putSingle(TENANT_HEADER, tenant);
+        requestContext.getHeaders().putSingle(HttpHeaders.AUTHORIZATION, authHeader);
     }
 }
