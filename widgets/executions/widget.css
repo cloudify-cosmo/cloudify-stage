@@ -18,29 +18,27 @@
 
 .g-tasks-graph-edge {
     fill: none;
-    stroke-width: 2;
 }
 
 /* Node styling */
 .rect-tasks-graph-general {
-    stroke-width: 2;
-    fill: rgb(222, 245, 255);
+    fill: rgb(223, 236, 241);
 }
 
 .rect-tasks-graph-pending {
-    fill: rgba(128, 128, 128, 0.76);
+    fill: rgb(245, 245, 245);
 }
 
 .rect-tasks-graph-running {
-    fill: rgba(215, 227, 45, 0.801);
+    fill: rgb(240, 234, 0);
 }
 
 .rect-tasks-graph-succeeded {
-    fill: rgba(25, 200, 54, 0.836);
+    fill: rgb(39, 230, 109);
 }
 
 .rect-tasks-graph-failed {
-    fill: rgba(204, 50, 50, 0.822)
+    fill: rgb(204, 50, 50);
 }
 
 .text-tasks-graph-subgraph-title {

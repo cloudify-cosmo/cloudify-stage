@@ -91,9 +91,9 @@ module.exports = r => {
             children: [],
             edges: []
         };
-        const paddingLeftRight = 12;
-        const paddingTop = 20;
-        const paddingBottom = 16;
+        const paddingLeftRight = 24;
+        const paddingTop = 46;
+        const paddingBottom = 28;
         const subGraphLayoutOptions = {
             'elk.padding': `[top=${paddingTop},left=${paddingLeftRight},bottom=${paddingBottom},right=${paddingLeftRight}]`
         };
@@ -102,7 +102,7 @@ module.exports = r => {
         // This will be used when a text needs to be displayed inside a node (rectangle)
         // and exceeds its width, resulting in increasing the rectangle's height and
         // breaking the string into 2 (and so forth...)
-        const textSizingFactor = 5.6;
+        const textSizingFactor = 5.8;
         const textHeight = 18;
 
         const runGraphCreation = () => {
@@ -378,6 +378,7 @@ module.exports = r => {
                     if (numberOfSplits > 0) {
                         subGraph.height += textHeight * numberOfSplits;
                     }
+                    subGraph.height += 10;
                 }
             });
             return allSubgraphs;
