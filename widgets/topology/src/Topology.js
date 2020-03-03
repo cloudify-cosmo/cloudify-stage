@@ -2,6 +2,8 @@ import { Topology as BlueprintTopology } from 'cloudify-blueprint-topology';
 import { createBaseTopology, createExpandedTopology } from './DataProcessor';
 import ScrollerGlassHandler from './ScrollerGlassHandler';
 
+const saveConfirmationTimeout = 2500;
+
 function isNodesChanged(topologyNodes, newNodes) {
     // compare # of nodes
     if (topologyNodes.length !== newNodes.length) {
@@ -29,6 +31,8 @@ export default class Topology extends React.Component {
         this.topology = null;
         this.processedTopologyData = null;
         this.scrollerGlassHandler = new ScrollerGlassHandler(this.glassRef);
+
+        this.state = { saveConfirmationOpen: false };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -85,6 +89,10 @@ export default class Topology extends React.Component {
                         null,
                         layout
                     )
+                    .then(() => {
+                        this.setState({ saveConfirmationOpen: true });
+                        setTimeout(() => this.setState({ saveConfirmationOpen: false }), saveConfirmationTimeout);
+                    })
         });
 
         this.topology.start();
@@ -249,6 +257,7 @@ export default class Topology extends React.Component {
     }
 
     render() {
+        const { Popup } = Stage.Basic;
         return (
             <div
                 ref={this.topologyParentContainerRef}
@@ -259,7 +268,13 @@ export default class Topology extends React.Component {
                 <div className="scrollGlass" ref={this.glassRef}>
                     <span className="message">Click to release scroller</span>
                 </div>
-                <div id="topologyContainer" />
+                <Popup
+                    open={this.state.saveConfirmationOpen}
+                    content="Topology layout saved"
+                    position="top center"
+                    style={{ left: 'unset', right: 65 }}
+                    trigger={<div id="topologyContainer" />}
+                />
             </div>
         );
     }
