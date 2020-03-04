@@ -13,32 +13,16 @@
 
 /* g containers */
 .g-tasks-graph-general {
-    stroke: black;
+    stroke: #5a5a5a;
 }
 
 .g-tasks-graph-edge {
-    fill: none;
+    fill: #5a5a5a;
 }
 
 /* Node styling */
-.rect-tasks-graph-general {
-    fill: rgb(223, 236, 241);
-}
-
-.rect-tasks-graph-pending {
-    fill: rgb(245, 245, 245);
-}
-
-.rect-tasks-graph-running {
-    fill: rgb(240, 234, 0);
-}
-
-.rect-tasks-graph-succeeded {
-    fill: rgb(39, 230, 109);
-}
-
-.rect-tasks-graph-failed {
-    fill: rgb(204, 50, 50);
+rect {
+    fill: white;
 }
 
 .text-tasks-graph-subgraph-title {

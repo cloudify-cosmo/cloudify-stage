@@ -179,7 +179,7 @@ module.exports = r => {
                             text: taskName,
                             retry: 0,
                             type: task.type,
-                            state: task.state,
+                            state: _.upperFirst(task.state),
                             operation: taskOperation,
                             display_text: ''
                         }
