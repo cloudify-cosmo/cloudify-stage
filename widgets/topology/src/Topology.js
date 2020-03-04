@@ -211,7 +211,9 @@ export default class Topology extends React.Component {
             this.topologyData = this.buildTopologyData();
 
             if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
-                this.topology.setTopology(this.topologyData, this.props.data.deploymentsData[0].layout);
+                const { layout } = this.props.data.deploymentsData[0];
+                this.topology.setTopology(this.topologyData, layout);
+                this.topology.setScale(_.get(layout, 'scaleInfo'));
                 this.topology.setLoading(false);
             } else {
                 this.topology.refreshTopologyDeploymentStatus(this.topologyData);
