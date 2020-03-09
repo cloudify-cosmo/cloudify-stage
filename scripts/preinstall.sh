@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -x
+set -xo pipefail
 
 npm ci
 cd backend
