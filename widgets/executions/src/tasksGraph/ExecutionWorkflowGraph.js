@@ -98,6 +98,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
         const { maximized, modalPosition, position } = this.state;
         const currentPosition = maximized ? modalPosition : position;
         const positionToFocusOn = {
+            // See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform#Matrix
             e: currentPosition.e - ((currentPosition.e - x) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
             f: currentPosition.f - ((currentPosition.f - y) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
             a: currentPosition.a - ((currentPosition.a - 1) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
@@ -139,6 +140,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     <Icon
                         name="play"
                         link
+                        color={this.state.autoFocus ? 'green' : null}
                         style={{
                             padding: '0 2px',
                             marginRight: 0
@@ -166,11 +168,9 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     miniatureProps={{ position: 'none' }}
                     toolbarProps={{ position: 'none' }}
                     value={this.state[positionStateProp]}
-                    onChangeValue={position => {
-                        this.setState({ [positionStateProp]: position });
-                        if (!_.isMatch(this.state[positionStateProp], _.pick(position, ['a', 'b', 'c', 'd', 'e', 'f'])))
-                            this.setState({ autoFocus: false });
-                    }}
+                    onChangeValue={position => this.setState({ [positionStateProp]: position })}
+                    onZoom={() => this.setState({ autoFocus: false })}
+                    onPan={() => this.setState({ autoFocus: false })}
                     onChangeTool={_.noop}
                 >
                     <svg width={this.state.graphResult.width} height={this.state.graphResult.height}>
