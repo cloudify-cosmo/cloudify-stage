@@ -22,9 +22,14 @@ export default class Actions {
             // JSON URL
             return this.toolbox
                 .getInternal()
-                .doGet('/external/content', {
-                    url: this.jsonPath
-                })
+                .doGet(
+                    '/external/content',
+                    {
+                        url: this.jsonPath
+                    },
+                    false
+                )
+                .then(response => response.json())
                 .then(data => {
                     const numberOfBlueprints = data.length;
                     const startOffset = Math.min(params.per_page * (params.page - 1), numberOfBlueprints);

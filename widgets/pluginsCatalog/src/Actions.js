@@ -25,7 +25,10 @@ export default class Actions {
      * @access public
      */
     doGetPluginsList() {
-        return this.toolbox.getInternal().doGet('/external/content', { url: this.jsonPath });
+        return this.toolbox
+            .getInternal()
+            .doGet('/external/content', { url: this.jsonPath }, false)
+            .then(response => response.json());
     }
 
     /**
