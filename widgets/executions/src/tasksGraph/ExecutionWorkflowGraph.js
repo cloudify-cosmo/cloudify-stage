@@ -1,13 +1,16 @@
 /**
  * Created by barucoh on 23/1/2019.
  */
-import { UncontrolledReactSVGPanZoom } from 'react-svg-pan-zoom';
+import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import GraphNodes from './GraphNodes';
 import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000;
 const MAX_GRAPH_HEIGHT = 380;
-const GRAPH_VERTICAL_MARGIN = 15;
+const GRAPH_MARGIN = 15;
+
+const AUTO_FOCUS_ANIMATION_FRAMES = 30;
+const AUTO_FOCUS_ANIMATION_FRAME_DURATION = 15;
 
 export default class ExecutionWorkflowGraph extends React.Component {
     /**
@@ -24,7 +27,9 @@ export default class ExecutionWorkflowGraph extends React.Component {
             error: '',
             maximized: false,
             containerWidth: 0,
-            modalWidth: 0
+            modalWidth: 0,
+            position: {},
+            modalPosition: {}
         };
         this.timer = null;
         this.cancelablePromise = null;
@@ -60,6 +65,9 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     this.setState({
                         graphResult: tasksGraph
                     });
+                    if (this.state.autoFocus) {
+                        this.scrollToInProgress();
+                    }
                 }
             })
             .catch(error => {
@@ -86,53 +94,114 @@ export default class ExecutionWorkflowGraph extends React.Component {
         return this.props.widgetBackend.doGet('get_tasks_graph', { ...tasksGraphParams });
     }
 
-    renderGraph(width, height) {
+    scrollTo(x, y, frame = 1) {
+        const { maximized, modalPosition, position } = this.state;
+        const currentPosition = maximized ? modalPosition : position;
+        const positionToFocusOn = {
+            // See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform#Matrix
+            e: currentPosition.e - ((currentPosition.e - x) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
+            f: currentPosition.f - ((currentPosition.f - y) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
+            a: currentPosition.a - ((currentPosition.a - 1) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
+            d: currentPosition.d - ((currentPosition.d - 1) * frame) / AUTO_FOCUS_ANIMATION_FRAMES
+        };
+        this.setState({
+            [maximized ? 'modalPosition' : 'position']: { ...currentPosition, ...positionToFocusOn }
+        });
+        if (frame !== AUTO_FOCUS_ANIMATION_FRAMES && this.state.autoFocus)
+            setTimeout(() => this.scrollTo(x, y, frame + 1), AUTO_FOCUS_ANIMATION_FRAME_DURATION);
+    }
+
+    scrollToInProgress() {
+        const focusNode = _.find(this.state.graphResult.children, containerNode =>
+            _.find(containerNode.children, subGraphNode =>
+                _.includes(['sent', 'rescheduled'], subGraphNode.labels[0].state)
+            )
+        );
+        if (focusNode) {
+            this.scrollTo(-focusNode.x + GRAPH_MARGIN, -focusNode.y + GRAPH_MARGIN);
+        }
+    }
+
+    renderGraph(width, height, positionStateProp, openInModalIcon) {
+        const { Icon } = Stage.Basic;
         return (
-            <UncontrolledReactSVGPanZoom
-                width={width}
-                height={height}
-                background="#fff"
-                tool="pan"
-                miniatureProps={{ position: 'none' }}
-                toolbarProps={{ position: 'none' }}
-            >
-                <svg>
-                    <g transform={`translate(0, ${GRAPH_VERTICAL_MARGIN})`}>
-                        <GraphNodes graphNodes={this.state.graphResult.children} />
-                        <GraphEdges graphEdges={this.state.graphResult.edges} />
-                    </g>
-                </svg>
-            </UncontrolledReactSVGPanZoom>
+            <>
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 1,
+                        right: 2,
+                        background: 'white',
+                        opacity: 1,
+                        display: 'inline-table',
+                        zIndex: 1
+                    }}
+                >
+                    <Icon
+                        name="play"
+                        link
+                        color={this.state.autoFocus ? 'green' : null}
+                        style={{
+                            padding: '0 2px',
+                            marginRight: 0
+                        }}
+                        onClick={() => this.setState({ autoFocus: true }, this.scrollToInProgress)}
+                        title="Focus on tasks in progress"
+                    />
+                    {openInModalIcon && (
+                        <Icon
+                            name="expand"
+                            link
+                            style={{
+                                marginRight: 0
+                            }}
+                            onClick={() => this.setState({ maximized: true })}
+                            title="Open in window"
+                        />
+                    )}
+                </div>
+                <ReactSVGPanZoom
+                    width={width}
+                    height={height}
+                    background="#fff"
+                    tool="pan"
+                    miniatureProps={{ position: 'none' }}
+                    toolbarProps={{ position: 'none' }}
+                    value={this.state[positionStateProp]}
+                    onChangeValue={position => this.setState({ [positionStateProp]: position })}
+                    onZoom={() => this.setState({ autoFocus: false })}
+                    onPan={() => this.setState({ autoFocus: false })}
+                    onChangeTool={_.noop}
+                >
+                    <svg width={this.state.graphResult.width} height={this.state.graphResult.height}>
+                        <g transform={`translate(0, ${GRAPH_MARGIN})`}>
+                            <GraphNodes graphNodes={this.state.graphResult.children} />
+                            <GraphEdges graphEdges={this.state.graphResult.edges} />
+                        </g>
+                    </svg>
+                </ReactSVGPanZoom>
+            </>
         );
     }
 
     render() {
-        const { Header, Loading, Message, Icon, Modal } = Stage.Basic;
+        const { Loading, Message, Modal } = Stage.Basic;
         if (this.state.graphResult !== null) {
-            const height = this.state.graphResult.height + 2 * GRAPH_VERTICAL_MARGIN;
+            const height = this.state.graphResult.height + 2 * GRAPH_MARGIN;
             return (
                 <div ref={this.wrapper} style={{ position: 'relative' }}>
-                    {this.renderGraph(this.state.containerWidth - 1, Math.min(MAX_GRAPH_HEIGHT, height))}
-                    <Icon
-                        name="expand"
-                        link
-                        style={{
-                            position: 'absolute',
-                            top: 1,
-                            right: -2,
-                            background: 'white',
-                            opacity: 1,
-                            display: 'inline-table',
-                            padding: '0 2px'
-                        }}
-                        onClick={() => this.setState({ maximized: true })}
-                    />
+                    {this.renderGraph(
+                        Math.max(0, this.state.containerWidth - 1),
+                        Math.min(MAX_GRAPH_HEIGHT, height),
+                        'position',
+                        true
+                    )}
                     <Modal
                         open={this.state.maximized}
                         onClose={() => this.setState({ maximized: false })}
                         size="fullscreen"
                     >
-                        <div ref={this.modal}>{this.renderGraph(this.state.modalWidth, height)}</div>
+                        <div ref={this.modal}>{this.renderGraph(this.state.modalWidth, height, 'modalPosition')}</div>
                     </Modal>
                 </div>
             );
