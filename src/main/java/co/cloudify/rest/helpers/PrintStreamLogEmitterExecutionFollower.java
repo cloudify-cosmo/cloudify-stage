@@ -14,41 +14,41 @@ import co.cloudify.rest.model.Execution;
  * @author Isaac Shabtay
  */
 public class PrintStreamLogEmitterExecutionFollower extends LogEmitterExecutionFollower {
-	private PrintStream printStream;
+    private PrintStream printStream;
 
-	public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream) {
-		super(client);
-		this.printStream = printStream;
-	}
+    public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream) {
+        super(client);
+        this.printStream = printStream;
+    }
 
-	public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream,
-	        final EventLevel minimumLevel) {
-		super(client, minimumLevel);
-		this.printStream = printStream;
-	}
+    public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream,
+            final EventLevel minimumLevel) {
+        super(client, minimumLevel);
+        this.printStream = printStream;
+    }
 
-	public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream,
-	        final long size) {
-		super(client, size);
-		this.printStream = printStream;
-	}
+    public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream,
+            final long size) {
+        super(client, size);
+        this.printStream = printStream;
+    }
 
-	public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream,
-	        final long size,
-	        final EventLevel minimumLevel) {
-		super(client, size, minimumLevel);
-		this.printStream = printStream;
-	}
+    public PrintStreamLogEmitterExecutionFollower(final CloudifyClient client, final PrintStream printStream,
+            final long size,
+            final EventLevel minimumLevel) {
+        super(client, size, minimumLevel);
+        this.printStream = printStream;
+    }
 
-	@Override
-	protected void emit(final Event event) {
-		String text = EventsHelper.formatEvent(event);
-		printStream.println(text);
-	}
+    @Override
+    protected void emit(final Event event) {
+        String text = EventsHelper.formatEvent(event);
+        printStream.println(text);
+    }
 
-	@Override
-	public void exception(Execution execution, Throwable exception) {
-		printStream.println("Exception encountered");
-		exception.printStackTrace(printStream);
-	}
+    @Override
+    public void exception(Execution execution, Throwable exception) {
+        printStream.println("Exception encountered");
+        exception.printStackTrace(printStream);
+    }
 }

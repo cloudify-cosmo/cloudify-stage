@@ -10,33 +10,33 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @XmlRootElement
 @XmlJavaTypeAdapter(value = InputConstraintAdapter.class)
 public class InputConstraint implements Serializable {
-	/**	Serialization UID. */
-	private static final long serialVersionUID = 1L;
+    /** Serialization UID. */
+    private static final long serialVersionUID = 1L;
 
-	private ConstraintType type;
-	private Object value;
-	
-	public ConstraintType getType() {
-		return type;
-	}
-	
-	public void setType(ConstraintType type) {
-		this.type = type;
-	}
-	
-	public Object getValue() {
-		return value;
-	}
-	
-	public void setValue(Object value) {
-		this.value = value;
-	}
-	
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this)
-				.append("type", type)
-				.append("value", value)
-				.toString();
-	}
+    private ConstraintType type;
+    private Object value;
+
+    public ConstraintType getType() {
+        return type;
+    }
+
+    public void setType(ConstraintType type) {
+        this.type = type;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("type", type)
+                .append("value", value)
+                .toString();
+    }
 }

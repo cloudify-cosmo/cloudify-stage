@@ -12,7 +12,7 @@ import javax.ws.rs.ext.Provider;
 /**
  * A {@link ClientRequestFilter} implementation for HTTP basic authentication.
  * 
- * @author	Isaac Shabtay
+ * @author Isaac Shabtay
  */
 @Provider
 public class BasicAuthenticator implements ClientRequestFilter {
@@ -26,13 +26,13 @@ public class BasicAuthenticator implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        String token = String.format("%s:%s",  username, password);
-        //	TODO: Check why this doesn't work.
-        //	byte[] asBytes = StandardCharsets.UTF_8.encode(token).array();
+        String token = String.format("%s:%s", username, password);
+        // TODO: Check why this doesn't work.
+        // byte[] asBytes = StandardCharsets.UTF_8.encode(token).array();
         byte[] asBytes = token.getBytes(StandardCharsets.UTF_8.name());
         String authHeader = String.format(
-        		"BASIC %s",
-        		Base64.getEncoder().encodeToString(asBytes));
+                "BASIC %s",
+                Base64.getEncoder().encodeToString(asBytes));
         requestContext.getHeaders().putSingle(HttpHeaders.AUTHORIZATION, authHeader);
     }
 }

@@ -17,54 +17,54 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * This class implements {@link Iterable}, to make it easier for callers
  * to obtain all list elements.
  * 
- * @author	Isaac Shabtay
+ * @author Isaac Shabtay
  *
- * @param	<T>	type of contained items
+ * @param <T> type of contained items
  */
 @XmlRootElement(name = "items")
 public class ListResponse<T> implements Iterable<T>, Serializable {
-	/**	Serialization UID. */
-	private static final long serialVersionUID = 1L;
+    /** Serialization UID. */
+    private static final long serialVersionUID = 1L;
 
-	@XmlElement
-	private List<T> items;
-	
-	@XmlElement
-	private Metadata metadata;
-	
-	/**
-	 * @return	A {@link List} of all items.
-	 */
-	public List<T> getItems() {
-		return items;
-	}
-	
-	/**
-	 * @return	The {@link Metadata} information.
-	 */
-	public Metadata getMetadata() {
-		return metadata;
-	}
-	
-	@Override
-	public Iterator<T> iterator() {
-		return items.iterator();
-	}
-	
-	public Stream<T> stream() {
-		return items.stream();
-	}
-	
-	@Override
-	public Spliterator<T> spliterator() {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
-				.append("metadata", metadata)
-				.append("items", items)
-				.toString();
-	}
+    @XmlElement
+    private List<T> items;
+
+    @XmlElement
+    private Metadata metadata;
+
+    /**
+     * @return A {@link List} of all items.
+     */
+    public List<T> getItems() {
+        return items;
+    }
+
+    /**
+     * @return The {@link Metadata} information.
+     */
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return items.iterator();
+    }
+
+    public Stream<T> stream() {
+        return items.stream();
+    }
+
+    @Override
+    public Spliterator<T> spliterator() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+                .append("metadata", metadata)
+                .append("items", items)
+                .toString();
+    }
 }
