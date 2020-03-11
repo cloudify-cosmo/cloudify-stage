@@ -11,6 +11,27 @@
     left: unset !important;
 }
 
+.executions-graph-toolbar {
+    position: absolute;
+    top: 1px;
+    right: 2px;
+    background: white;
+    opacity: 1;
+    height: 19px;
+    z-index: 1;
+}
+
+.executions-graph-toolbar i {
+    padding: 0 2px;
+    margin-right: 0;
+}
+
+.ui.modal .executions-graph-toolbar {
+    height: 16px;
+    padding-top: 1px;
+    right: 1px;
+}
+
 /* g containers */
 .g-tasks-graph-general {
     stroke: black;

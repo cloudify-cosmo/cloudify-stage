@@ -6,7 +6,8 @@ import GraphNodes from './GraphNodes';
 import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000;
-const MAX_GRAPH_HEIGHT = 380;
+const MAX_TABLE_GRAPH_HEIGHT = 380;
+const MIN_MODAL_GRAPH_HEIGHT = 300;
 const GRAPH_MARGIN = 15;
 
 const AUTO_FOCUS_ANIMATION_FRAMES = 30;
@@ -94,21 +95,21 @@ export default class ExecutionWorkflowGraph extends React.Component {
         return this.props.widgetBackend.doGet('get_tasks_graph', { ...tasksGraphParams });
     }
 
-    scrollTo(x, y, frame = 1) {
+    scrollTo(x, y, zoom = 1, autoFocusOnly = true, frame = 1) {
         const { maximized, modalPosition, position } = this.state;
         const currentPosition = maximized ? modalPosition : position;
         const positionToFocusOn = {
             // See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform#Matrix
             e: currentPosition.e - ((currentPosition.e - x) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
             f: currentPosition.f - ((currentPosition.f - y) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
-            a: currentPosition.a - ((currentPosition.a - 1) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
-            d: currentPosition.d - ((currentPosition.d - 1) * frame) / AUTO_FOCUS_ANIMATION_FRAMES
+            a: currentPosition.a - ((currentPosition.a - zoom) * frame) / AUTO_FOCUS_ANIMATION_FRAMES,
+            d: currentPosition.d - ((currentPosition.d - zoom) * frame) / AUTO_FOCUS_ANIMATION_FRAMES
         };
         this.setState({
             [maximized ? 'modalPosition' : 'position']: { ...currentPosition, ...positionToFocusOn }
         });
-        if (frame !== AUTO_FOCUS_ANIMATION_FRAMES && this.state.autoFocus)
-            setTimeout(() => this.scrollTo(x, y, frame + 1), AUTO_FOCUS_ANIMATION_FRAME_DURATION);
+        if (frame !== AUTO_FOCUS_ANIMATION_FRAMES && (this.state.autoFocus || !autoFocusOnly))
+            setTimeout(() => this.scrollTo(x, y, zoom, autoFocusOnly, frame + 1), AUTO_FOCUS_ANIMATION_FRAME_DURATION);
     }
 
     scrollToInProgress() {
@@ -122,39 +123,38 @@ export default class ExecutionWorkflowGraph extends React.Component {
         }
     }
 
-    renderGraph(width, height, positionStateProp, openInModalIcon) {
+    renderGraph(width, height, positionStateProp, openInModalIcon = true, minimap) {
         const { Icon } = Stage.Basic;
         return (
             <>
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 1,
-                        right: 2,
-                        background: 'white',
-                        opacity: 1,
-                        display: 'inline-table',
-                        zIndex: 1
-                    }}
-                >
+                <div className="executions-graph-toolbar">
                     <Icon
                         name="play"
                         link
                         color={this.state.autoFocus ? 'green' : null}
-                        style={{
-                            padding: '0 2px',
-                            marginRight: 0
-                        }}
                         onClick={() => this.setState({ autoFocus: true }, this.scrollToInProgress)}
                         title="Focus on tasks in progress"
+                    />
+                    <Icon
+                        name="expand arrows alternate"
+                        link
+                        onClick={() =>
+                            this.scrollTo(
+                                0,
+                                0,
+                                Math.min(
+                                    width / (this.state.graphResult.width + GRAPH_MARGIN),
+                                    height / (this.state.graphResult.height + GRAPH_MARGIN)
+                                ),
+                                false
+                            )
+                        }
+                        title="Fit to view"
                     />
                     {openInModalIcon && (
                         <Icon
                             name="expand"
                             link
-                            style={{
-                                marginRight: 0
-                            }}
                             onClick={() => this.setState({ maximized: true })}
                             title="Open in window"
                         />
@@ -165,7 +165,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     height={height}
                     background="#fff"
                     tool="pan"
-                    miniatureProps={{ position: 'none' }}
+                    miniatureProps={minimap ? undefined : { position: 'none' }}
                     toolbarProps={{ position: 'none' }}
                     value={this.state[positionStateProp]}
                     onChangeValue={position => this.setState({ [positionStateProp]: position })}
@@ -192,16 +192,23 @@ export default class ExecutionWorkflowGraph extends React.Component {
                 <div ref={this.wrapper} style={{ position: 'relative' }}>
                     {this.renderGraph(
                         Math.max(0, this.state.containerWidth - 1),
-                        Math.min(MAX_GRAPH_HEIGHT, height),
-                        'position',
-                        true
+                        Math.min(MAX_TABLE_GRAPH_HEIGHT, height),
+                        'position'
                     )}
                     <Modal
                         open={this.state.maximized}
                         onClose={() => this.setState({ maximized: false })}
                         size="fullscreen"
                     >
-                        <div ref={this.modal}>{this.renderGraph(this.state.modalWidth, height, 'modalPosition')}</div>
+                        <div ref={this.modal}>
+                            {this.renderGraph(
+                                this.state.modalWidth,
+                                Math.max(MIN_MODAL_GRAPH_HEIGHT, height),
+                                'modalPosition',
+                                false,
+                                true
+                            )}
+                        </div>
                     </Modal>
                 </div>
             );
