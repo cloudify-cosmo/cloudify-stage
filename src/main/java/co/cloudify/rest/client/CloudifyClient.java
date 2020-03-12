@@ -66,7 +66,7 @@ public class CloudifyClient extends AbstractCloudifyClient {
         }
         Client client = ClientBuilder
                 .newBuilder()
-                .sslContext(sslContext)
+//                .sslContext(sslContext)
                 .build();
         if (username != null && password != null) {
             client.register(new BasicAuthenticator(username, password));

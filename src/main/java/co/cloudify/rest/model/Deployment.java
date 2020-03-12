@@ -62,6 +62,10 @@ public class Deployment implements Serializable {
         return id;
     }
 
+    public String getBlueprintId() {
+        return blueprintId;
+    }
+
     public Map<String, Object> getInputs() {
         return inputs;
     }
