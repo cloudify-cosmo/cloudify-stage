@@ -9,9 +9,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Note: this class will probably be auto-generated soon, so please
- * don't add any methods to it. It should only contain model fields,
- * getters and setters.
+ * Note: this class will probably be auto-generated soon, so please don't add
+ * any methods to it. It should only contain model fields, getters and setters.
  * 
  * @author Isaac Shabtay
  */

@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Generic exception thrown when receiving a bad response code from
- * Cloudify Manager.
+ * Generic exception thrown when receiving a bad response code from Cloudify
+ * Manager.
  * 
  * @author Isaac Shabtay
  */

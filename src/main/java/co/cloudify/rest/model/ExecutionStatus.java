@@ -15,6 +15,9 @@ public enum ExecutionStatus {
     queued,
     scheduled;
 
-    /** All statuses that imply that the execution is no longer running, and is not intended to run. */
+    /**
+     * All statuses that imply that the execution is no longer running, and is not
+     * intended to run.
+     */
     public static final List<ExecutionStatus> TERMINAL_STATUSES = Arrays.asList(terminated, failed, cancelled);
 }

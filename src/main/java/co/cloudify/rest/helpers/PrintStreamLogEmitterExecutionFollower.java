@@ -8,8 +8,8 @@ import co.cloudify.rest.model.EventLevel;
 import co.cloudify.rest.model.Execution;
 
 /**
- * A {@link LogEmitterExecutionFollower} implementation that prints to a {@link PrintStream}.
- * This is useful, among others, for Jenkins.
+ * A {@link LogEmitterExecutionFollower} implementation that prints to a
+ * {@link PrintStream}. This is useful, among others, for Jenkins.
  * 
  * @author Isaac Shabtay
  */

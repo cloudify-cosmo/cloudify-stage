@@ -8,8 +8,8 @@ import co.cloudify.rest.model.EventLevel;
 import co.cloudify.rest.model.Execution;
 
 /**
- * A {@link LogEmitterExecutionFollower} implementation that outputs to an
- * SLF4J logger.
+ * A {@link LogEmitterExecutionFollower} implementation that outputs to an SLF4J
+ * logger.
  * 
  * @author Isaac Shabtay
  */
@@ -45,21 +45,21 @@ public class Slf4JLogEmitterExecutionFollower extends LogEmitterExecutionFollowe
         // Apparently SLF4J doesn't offer a logging method that accepts a level
         // as a parameter...
         switch (level) {
-            case debug:
-                logger.debug(text);
-                break;
-            case error:
-                logger.error(text);
-                break;
-            case info:
-                logger.info(text);
-                break;
-            case warning:
-                logger.warn(text);
-                break;
-            default:
-                logger.info("[Unrecognized level: {}] {}", level, text);
-                break;
+        case debug:
+            logger.debug(text);
+            break;
+        case error:
+            logger.error(text);
+            break;
+        case info:
+            logger.info(text);
+            break;
+        case warning:
+            logger.warn(text);
+            break;
+        default:
+            logger.info("[Unrecognized level: {}] {}", level, text);
+            break;
         }
     }
 

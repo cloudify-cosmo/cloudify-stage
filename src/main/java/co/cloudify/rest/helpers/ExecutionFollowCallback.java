@@ -3,8 +3,8 @@ package co.cloudify.rest.helpers;
 import co.cloudify.rest.model.Execution;
 
 /**
- * Provides callbacks for following executions. While following an execution, an implementation
- * of this interface may be called.
+ * Provides callbacks for following executions. While following an execution, an
+ * implementation of this interface may be called.
  * 
  * @author Isaac Shabtay
  */
@@ -33,7 +33,8 @@ public interface ExecutionFollowCallback {
     public void last(final Execution execution);
 
     /**
-     * Called after {@link #last(Execution)}. This can be used for releasing resources.
+     * Called after {@link #last(Execution)}. This can be used for releasing
+     * resources.
      * 
      * @param execution the execution being followed
      */

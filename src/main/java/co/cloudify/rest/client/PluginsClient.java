@@ -28,11 +28,12 @@ import co.cloudify.rest.model.Plugin;
  * Client for plugin-related operations.
  * </p>
  * <p>
- * <b>NOTE:</b>As of Cloudify 5.0.5, plugin operations at the REST client
- * level are asynchronous. The only way to know whether plugin installation
- * ended, is by looking for executions of the "install_plugin" system workflow,
- * and comparing the execution parameters. See
- * <a href="https://cloudifysource.atlassian.net/browse/CYBL-939">CYBL-939</a> for more information.
+ * <b>NOTE:</b>As of Cloudify 5.0.5, plugin operations at the REST client level
+ * are asynchronous. The only way to know whether plugin installation ended, is
+ * by looking for executions of the "install_plugin" system workflow, and
+ * comparing the execution parameters. See
+ * <a href="https://cloudifysource.atlassian.net/browse/CYBL-939">CYBL-939</a>
+ * for more information.
  * </p>
  * 
  * @author Isaac Shabtay
@@ -79,7 +80,8 @@ public class PluginsClient extends AbstractCloudifyClient {
      * 
      * @return A {@link Plugin} instance for the new plugin
      * 
-     * @throws IOException Failed reading the wagon or the <code>plugin.yaml</code> file.
+     * @throws IOException Failed reading the wagon or the <code>plugin.yaml</code>
+     *                     file.
      */
     public Plugin upload(final String wagonLocation, final String yamlLocation) throws IOException {
         File tempDir = Files.createTempDirectory("plugin").toFile();

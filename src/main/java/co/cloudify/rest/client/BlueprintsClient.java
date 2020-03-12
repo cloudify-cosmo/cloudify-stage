@@ -96,9 +96,9 @@ public class BlueprintsClient extends AbstractCloudifyClient {
     }
 
     /**
-     * Uploads a blueprint from the URL.
-     * This command doesn't download the URL contents locally. The specified URL must be accessible
-     * from within Cloudify Manager.
+     * Uploads a blueprint from the URL. This command doesn't download the URL
+     * contents locally. The specified URL must be accessible from within Cloudify
+     * Manager.
      * 
      * @param id         blueprint ID
      * @param archiveUrl URL to archive
@@ -138,7 +138,8 @@ public class BlueprintsClient extends AbstractCloudifyClient {
                 Path rootPath = rootDirectory.toPath();
 
                 // Work around the fact that lambda expressions can't throw checked exceptions.
-                // Wrap IOException with RuntimeException, and when catching a runtime exception,
+                // Wrap IOException with RuntimeException, and when catching a runtime
+                // exception,
                 // re-throw the wrapped exception if it's an IOException.
                 try {
                     Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {

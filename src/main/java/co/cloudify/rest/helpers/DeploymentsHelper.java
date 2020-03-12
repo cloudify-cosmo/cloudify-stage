@@ -26,7 +26,8 @@ public class DeploymentsHelper {
      * @param id          deployment ID
      * @param blueprintId blueprint ID
      * @param inputs      deployment inputs
-     * @param callback    an {@link ExecutionFollowCallback} instance containing callback methods
+     * @param callback    an {@link ExecutionFollowCallback} instance containing
+     *                    callback methods
      * 
      * @return The created {@link Deployment} instance.
      * 
@@ -39,7 +40,8 @@ public class DeploymentsHelper {
 
         // Currently, the REST call for deployment creation doesn't return
         // the execution ID of the "create_deployment_environment" execution, so
-        // we need to look for it awkwardly (see https://cloudifysource.atlassian.net/browse/CYBL-955).
+        // we need to look for it awkwardly (see
+        // https://cloudifysource.atlassian.net/browse/CYBL-955).
 
         ExecutionsClient executionsClient = client.getExecutionsClient();
         ListResponse<Execution> executions = executionsClient.list(deployment);

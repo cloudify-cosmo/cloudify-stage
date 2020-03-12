@@ -30,6 +30,7 @@ public class CloudifyClient extends AbstractCloudifyClient {
     protected EventsClient eventsClient;
     protected PluginsClient pluginsClient;
     protected TokensClient tokensClient;
+    protected TenantsClient tenantsClient;
 
     protected CloudifyClient(Client restClient, WebTarget base) {
         super(restClient, base);
@@ -39,6 +40,7 @@ public class CloudifyClient extends AbstractCloudifyClient {
         eventsClient = new EventsClient(api, base);
         pluginsClient = new PluginsClient(api, base);
         tokensClient = new TokensClient(api, base);
+        tenantsClient = new TenantsClient(api, base);
     }
 
     public static CloudifyClient create(
@@ -108,5 +110,9 @@ public class CloudifyClient extends AbstractCloudifyClient {
 
     public TokensClient getTokensClient() {
         return tokensClient;
+    }
+
+    public TenantsClient getTenantsClient() {
+        return tenantsClient;
     }
 }

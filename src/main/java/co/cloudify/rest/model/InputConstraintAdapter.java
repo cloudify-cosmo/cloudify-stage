@@ -13,11 +13,11 @@ public class InputConstraintAdapter extends XmlAdapter<Map<String, Object>, Inpu
         String key = v.getType().name();
         Object value;
         switch (v.getType()) {
-            case valid_values:
-                value = v.getValue();
-                break;
-            default:
-                throw new IllegalArgumentException(String.format("Unexpected constraint type: %s", v.getType()));
+        case valid_values:
+            value = v.getValue();
+            break;
+        default:
+            throw new IllegalArgumentException(String.format("Unexpected constraint type: %s", v.getType()));
         }
         map.put(key, value);
         return map;
@@ -34,11 +34,11 @@ public class InputConstraintAdapter extends XmlAdapter<Map<String, Object>, Inpu
         Object constraintValue;
 
         switch (constraintType) {
-            case valid_values:
-                constraintValue = v.get(key);
-                break;
-            default:
-                throw new IllegalArgumentException(String.format("Unexpected constraint type: %s", constraintType));
+        case valid_values:
+            constraintValue = v.get(key);
+            break;
+        default:
+            throw new IllegalArgumentException(String.format("Unexpected constraint type: %s", constraintType));
         }
 
         InputConstraint constraint = new InputConstraint();

@@ -13,9 +13,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Encapsulates a list-style response from Cloudify Manager.
- * This class implements {@link Iterable}, to make it easier for callers
- * to obtain all list elements.
+ * Encapsulates a list-style response from Cloudify Manager. This class
+ * implements {@link Iterable}, to make it easier for callers to obtain all list
+ * elements.
  * 
  * @author Isaac Shabtay
  *

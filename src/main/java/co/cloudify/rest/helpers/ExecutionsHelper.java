@@ -25,10 +25,11 @@ public class ExecutionsHelper {
      * @param deploymentId deployment to start execution for
      * @param workflowId   workflow to start
      * @param parameters   workflow parameters
-     * @param callback     an {@link ExecutionFollowCallback} instance to use for callbacks;
-     *                     may be <code>null</code>, in which case it won't be followed. For
-     *                     a no-op following (that is, just wait until execution is over),
-     *                     use {@link DefaultExecutionFollowCallback}
+     * @param callback     an {@link ExecutionFollowCallback} instance to use for
+     *                     callbacks; may be <code>null</code>, in which case it
+     *                     won't be followed. For a no-op following (that is, just
+     *                     wait until execution is over), use
+     *                     {@link DefaultExecutionFollowCallback}
      * 
      * @return The updated {@link Execution} object.
      * 
@@ -51,10 +52,11 @@ public class ExecutionsHelper {
      * 
      * @param client       a {@link CloudifyClient} pointing at Cloudify Manager
      * @param deploymentId deployment to start execution for
-     * @param callback     an {@link ExecutionFollowCallback} instance to use for callbacks;
-     *                     may be <code>null</code>, in which case it won't be followed. For
-     *                     a no-op following (that is, just wait until execution is over),
-     *                     use {@link DefaultExecutionFollowCallback}
+     * @param callback     an {@link ExecutionFollowCallback} instance to use for
+     *                     callbacks; may be <code>null</code>, in which case it
+     *                     won't be followed. For a no-op following (that is, just
+     *                     wait until execution is over), use
+     *                     {@link DefaultExecutionFollowCallback}
      * 
      * @return The updated {@link Execution} object.
      * 
