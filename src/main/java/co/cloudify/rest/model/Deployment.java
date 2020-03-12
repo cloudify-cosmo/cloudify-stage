@@ -52,7 +52,7 @@ public class Deployment implements Serializable {
     @XmlElement
     private Object groups;
     @XmlElement
-    private List<Object> workflows;
+    private List<Workflow> workflows;
     @XmlElement(name = "scaling_groups")
     private Map<String, Object> scalingGroups;
     @XmlElement(name = "runtime_only_evaluation")
@@ -78,11 +78,16 @@ public class Deployment implements Serializable {
         return capabilities;
     }
 
+    public List<Workflow> getWorkflows() {
+        return workflows;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("blueprintId", blueprintId)
+                .append("inputs", inputs)
                 .toString();
     }
 }
