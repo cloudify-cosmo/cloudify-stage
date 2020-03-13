@@ -46,7 +46,7 @@ Stage.defineWidget({
             ...widget.configuration
         });
 
-        return actions.doGetPluginsList().catch(_.identity);
+        return actions.doGetPluginsList().catch(e => (e instanceof Error ? e : Error(e)));
     },
 
     /**
@@ -60,7 +60,7 @@ Stage.defineWidget({
      */
     render(widget, data, error, toolbox) {
         if (data instanceof Error) {
-            return <Stage.Common.NoDataMessage repositoryName="plugins" />;
+            return <Stage.Common.NoDataMessage error={data} repositoryName="plugins" />;
         }
 
         if (_.isEmpty(data)) {
