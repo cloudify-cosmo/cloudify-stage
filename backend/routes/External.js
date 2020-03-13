@@ -11,7 +11,7 @@ function _pipeRequest(req, res, next, url, queryString) {
     logger.debug(`Piping get request to url: ${url} with query string: ${queryString}`);
 
     req.pipe(
-        request.get({ url, qs: queryString }).on('error', function(err) {
+        request.get({ url: url.startsWith('//') ? `http:${url}` : url, qs: queryString }).on('error', function(err) {
             res.status(500).send({ message: err.message });
         })
     ).pipe(res);
