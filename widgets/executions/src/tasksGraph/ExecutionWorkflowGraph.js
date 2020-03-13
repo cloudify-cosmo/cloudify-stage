@@ -96,7 +96,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
     }
 
     scrollTo(x, y, zoom = 1, autoFocusOnly = true, frame = 1) {
-        const { maximized, modalPosition, position } = this.state;
+        const { maximized, modalPosition, position, autoFocus } = this.state;
         const currentPosition = maximized ? modalPosition : position;
         const positionToFocusOn = {
             // See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform#Matrix
@@ -108,7 +108,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
         this.setState({
             [maximized ? 'modalPosition' : 'position']: { ...currentPosition, ...positionToFocusOn }
         });
-        if (frame !== AUTO_FOCUS_ANIMATION_FRAMES && (this.state.autoFocus || !autoFocusOnly))
+        if (frame !== AUTO_FOCUS_ANIMATION_FRAMES && (autoFocus || !autoFocusOnly))
             setTimeout(() => this.scrollTo(x, y, zoom, autoFocusOnly, frame + 1), AUTO_FOCUS_ANIMATION_FRAME_DURATION);
     }
 
@@ -151,12 +151,20 @@ export default class ExecutionWorkflowGraph extends React.Component {
                         }
                         title="Fit to view"
                     />
-                    {openInModalIcon && (
+                    {openInModalIcon ? (
                         <Icon
                             name="expand"
                             link
                             onClick={() => this.setState({ maximized: true })}
                             title="Open in window"
+                        />
+                    ) : (
+                        <Icon
+                            name="close"
+                            link
+                            onClick={() => this.setState({ maximized: false })}
+                            style={{ fontSize: '1.25em', marginTop: -2 }}
+                            title="Close window"
                         />
                     )}
                 </div>
@@ -199,6 +207,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                         open={this.state.maximized}
                         onClose={() => this.setState({ maximized: false })}
                         size="fullscreen"
+                        closeOnDimmerClick={false}
                     >
                         <div ref={this.modal}>
                             {this.renderGraph(

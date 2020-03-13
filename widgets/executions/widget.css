@@ -24,6 +24,7 @@
 .executions-graph-toolbar i {
     padding: 0 2px;
     margin-right: 0;
+    vertical-align: top;
 }
 
 .ui.modal .executions-graph-toolbar {
