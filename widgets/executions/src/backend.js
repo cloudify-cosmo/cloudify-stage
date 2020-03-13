@@ -158,7 +158,7 @@ module.exports = r => {
             const allSubgraphs = {};
             _.map(operationsList, task => {
                 let taskName = _.split(task.name, 'cloudify.interfaces.');
-                taskName = taskName.length > 1 ? taskName[1] : taskName[0];
+                taskName = taskName.length > 1 ? taskName[1] : _.upperFirst(taskName[0]);
 
                 let taskOperation = '';
                 if (

@@ -7,7 +7,7 @@ import GraphEdges from './GraphEdges';
 
 const POLLING_INTERVAL = 5000;
 const MAX_GRAPH_HEIGHT = 380;
-const GRAPH_MARGIN = 15;
+const GRAPH_MARGIN = 25;
 
 const AUTO_FOCUS_ANIMATION_FRAMES = 30;
 const AUTO_FOCUS_ANIMATION_FRAME_DURATION = 15;
@@ -114,7 +114,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
     scrollToInProgress() {
         const focusNode = _.find(this.state.graphResult.children, containerNode =>
             _.find(containerNode.children, subGraphNode =>
-                _.includes(['sent', 'rescheduled'], subGraphNode.labels[0].state)
+                _.includes(['Sent', 'Rescheduled'], subGraphNode.labels[0].state)
             )
         );
         if (focusNode) {
@@ -168,16 +168,20 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     miniatureProps={{ position: 'none' }}
                     toolbarProps={{ position: 'none' }}
                     value={this.state[positionStateProp]}
-                    onChangeValue={position => this.setState({ [positionStateProp]: position })}
+                    onChangeValue={position =>
+                        this.setState({
+                            [positionStateProp]: _.isEmpty(this.state[positionStateProp])
+                                ? { ...position, f: GRAPH_MARGIN }
+                                : position
+                        })
+                    }
                     onZoom={() => this.setState({ autoFocus: false })}
                     onPan={() => this.setState({ autoFocus: false })}
                     onChangeTool={_.noop}
                 >
                     <svg width={this.state.graphResult.width} height={this.state.graphResult.height}>
-                        <g transform={`translate(0, ${GRAPH_MARGIN})`}>
-                            <GraphNodes graphNodes={this.state.graphResult.children} />
-                            <GraphEdges graphEdges={this.state.graphResult.edges} />
-                        </g>
+                        <GraphNodes graphNodes={this.state.graphResult.children} />
+                        <GraphEdges graphEdges={this.state.graphResult.edges} />
                     </svg>
                 </ReactSVGPanZoom>
             </>
@@ -187,7 +191,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
     render() {
         const { Loading, Message, Modal } = Stage.Basic;
         if (this.state.graphResult !== null) {
-            const height = this.state.graphResult.height + 2 * GRAPH_MARGIN;
+            const height = this.state.graphResult.height + 2 * GRAPH_MARGIN + 8;
             return (
                 <div ref={this.wrapper} style={{ position: 'relative' }}>
                     {this.renderGraph(
