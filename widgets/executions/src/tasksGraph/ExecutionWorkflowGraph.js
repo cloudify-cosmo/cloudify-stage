@@ -114,7 +114,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
     scrollToInProgress() {
         const focusNode = _.find(this.state.graphResult.children, containerNode =>
             _.find(containerNode.children, subGraphNode =>
-                _.includes(['Sent', 'Rescheduled'], subGraphNode.labels[0].state)
+                _.includes(['Started', 'Sent', 'Rescheduled'], subGraphNode.labels[0].state)
             )
         );
         if (focusNode) {
