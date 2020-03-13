@@ -117,12 +117,12 @@ Stage.defineWidget({
 
                 return Promise.resolve({ items: repos, total, source });
             })
-            .catch(_.identity);
+            .catch(e => (e instanceof Error ? e : Error(e)));
     },
 
     render(widget, data, error, toolbox) {
         if (data instanceof Error) {
-            return <Stage.Common.NoDataMessage repositoryName="blueprints" />;
+            return <Stage.Common.NoDataMessage error={data} repositoryName="blueprints" />;
         }
 
         if (_.isEmpty(data)) {
