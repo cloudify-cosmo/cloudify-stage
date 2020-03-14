@@ -5,6 +5,7 @@
     <artifactId>rest-client</artifactId>
     <version>5.0.5</version>
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jersey.version>2.30</jersey.version>
     </properties>
     <dependencyManagement>
