@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Spliterator;
 import java.util.stream.Stream;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -22,6 +24,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @param <T> type of contained items
  */
 @XmlRootElement(name = "items")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ListResponse<T> implements Iterable<T>, Serializable {
     /** Serialization UID. */
     private static final long serialVersionUID = 1L;

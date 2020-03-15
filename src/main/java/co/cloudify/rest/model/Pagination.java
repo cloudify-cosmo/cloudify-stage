@@ -2,6 +2,8 @@ package co.cloudify.rest.model;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -9,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Pagination implements Serializable {
     /** Serialization UID. */
     private static final long serialVersionUID = 1L;

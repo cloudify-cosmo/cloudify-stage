@@ -3,12 +3,15 @@ package co.cloudify.rest.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class BlueprintInput implements Serializable {
     /** Serialization UID. */
     private static final long serialVersionUID = 1L;

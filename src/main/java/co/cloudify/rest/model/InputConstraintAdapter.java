@@ -6,6 +6,11 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
+/**
+ * An {@link XmlAdapter} implementation that marshals/unmarshals input constraints.
+ * 
+ * @author Isaac Shabtay
+ */
 public class InputConstraintAdapter extends XmlAdapter<Map<String, Object>, InputConstraint> {
     @Override
     public Map<String, Object> marshal(InputConstraint v) throws Exception {
