@@ -6,6 +6,8 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * A {@link ClientRequestFilter} implementation for adding the tenant header.
  * 
@@ -24,5 +26,12 @@ public class TenantFilter implements ClientRequestFilter {
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
         requestContext.getHeaders().putSingle(TENANT_HEADER, tenant);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("tenant", tenant)
+                .toString();
     }
 }

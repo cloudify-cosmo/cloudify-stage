@@ -42,8 +42,7 @@ public class PrintStreamLogEmitterExecutionFollower extends LogEmitterExecutionF
 
     @Override
     protected void emit(final Event event) {
-        String text = EventsHelper.formatEvent(event);
-        printStream.println(text);
+        printStream.println(EventsHelper.formatEvent(event));
     }
 
     @Override

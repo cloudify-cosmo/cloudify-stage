@@ -10,6 +10,12 @@ import co.cloudify.rest.model.Execution;
 import co.cloudify.rest.model.ListResponse;
 import co.cloudify.rest.model.Pagination;
 
+/**
+ * An {@link ExecutionFollowCallback} implementation that emits events/logs
+ * into a logger of some sort. See subclasses for options.
+ * 
+ * @author Isaac Shabtay
+ */
 public abstract class LogEmitterExecutionFollower extends DefaultExecutionFollowCallback {
     private static final long DEFAULT_SIZE = 1000;
 
@@ -52,6 +58,12 @@ public abstract class LogEmitterExecutionFollower extends DefaultExecutionFollow
         fetch(execution);
     }
 
+    /**
+     * Implemented by subclasses: the actual mechanism of emitting an event/log into
+     * the log.
+     * 
+     * @param event event to emit
+     */
     protected abstract void emit(final Event event);
 
     protected void fetch(Execution execution) {

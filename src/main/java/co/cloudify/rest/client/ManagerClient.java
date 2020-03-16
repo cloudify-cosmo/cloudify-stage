@@ -8,6 +8,11 @@ import co.cloudify.rest.client.exceptions.CloudifyClientException;
 import co.cloudify.rest.model.Status;
 import co.cloudify.rest.model.Version;
 
+/**
+ * A REST client for general, manager-wide operations.
+ * 
+ * @author Isaac Shabtay
+ */
 public class ManagerClient extends AbstractCloudifyClient {
     /** Status API path. */
     private static final String STATUS_PATH = "/api/v3.1/status";
@@ -18,6 +23,9 @@ public class ManagerClient extends AbstractCloudifyClient {
         super(restClient, base);
     }
 
+    /**
+     * @return Cloudify Manager's version information.
+     */
     public Version getVersion() {
         try {
             return getBuilder(getTarget(VERSION_PATH)).get(Version.class);
@@ -26,6 +34,9 @@ public class ManagerClient extends AbstractCloudifyClient {
         }
     }
 
+    /**
+     * @return Cloudify Manager's status information.
+     */
     public Status getStatus() {
         try {
             return getBuilder(getTarget(STATUS_PATH)).get(Status.class);

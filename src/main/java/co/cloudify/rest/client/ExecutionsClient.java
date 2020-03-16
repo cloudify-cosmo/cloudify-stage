@@ -16,6 +16,11 @@ import co.cloudify.rest.model.Deployment;
 import co.cloudify.rest.model.Execution;
 import co.cloudify.rest.model.ListResponse;
 
+/**
+ * A REST client for executions-related operations.
+ * 
+ * @author Isaac Shabtay
+ */
 public class ExecutionsClient extends AbstractCloudifyClient {
     /** Base API path. */
     private static final String BASE_PATH = "/api/v3.1/executions";
@@ -103,7 +108,7 @@ public class ExecutionsClient extends AbstractCloudifyClient {
      * @return An {@link Execution} object, representing the created execution.
      */
     public Execution start(String deploymentId, String workflowId, Map<String, Object> parameters) {
-        ExecutionStartParams params = new ExecutionStartParams(workflowId, deploymentId, parameters);
+        ExecutionStartParams params = new ExecutionStartParams(deploymentId, workflowId, parameters);
         try {
             return getExecutionsBuilder().post(Entity.json(params), Execution.class);
         } catch (WebApplicationException ex) {

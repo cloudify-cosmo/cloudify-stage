@@ -3,16 +3,16 @@ package co.cloudify.rest.client.exceptions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.json.JSONObject;
 
 @XmlRootElement
 public class CloudifyClientExceptionData implements Serializable {
@@ -67,13 +67,11 @@ public class CloudifyClientExceptionData implements Serializable {
             Object entity = response.getEntity();
             if (entity instanceof InputStream) {
                 InputStream is = (InputStream) entity;
-                String bodyAsString;
-                try {
-                    bodyAsString = IOUtils.toString(is, StandardCharsets.UTF_8);
-                    JSONObject jsonObj = new JSONObject(bodyAsString);
-                    exceptionData.setMessage(jsonObj.optString("message", "<not provided>"));
-                    exceptionData.setErrorCode(jsonObj.optString("error_code", "<not provided>"));
-                    exceptionData.setServerTraceback(jsonObj.optString("server_traceback", "<not provided>"));
+                try (JsonReader reader = Json.createReader(is)) {
+                    JsonObject jsonObj = reader.readObject();
+                    exceptionData.setMessage(jsonObj.getString("message", "<not provided>"));
+                    exceptionData.setErrorCode(jsonObj.getString("error_code", "<not provided>"));
+                    exceptionData.setServerTraceback(jsonObj.getString("server_traceback", "<not provided>"));
                 } finally {
                     is.close();
                 }

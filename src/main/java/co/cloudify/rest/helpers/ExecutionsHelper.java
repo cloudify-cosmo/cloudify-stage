@@ -67,6 +67,22 @@ public class ExecutionsHelper {
         return start(client, deploymentId, "install", null, callback);
     }
 
+    /**
+     * Run the "uninstall" workflow.
+     * 
+     * @param client        a {@link CloudifyClient} pointing at Cloudify Manager
+     * @param deploymentId  deployment to start execution for
+     * @param ignoreFailure whether to ignore failures during uninstall
+     * @param callback      an {@link ExecutionFollowCallback} instance to use for
+     *                      callbacks; may be <code>null</code>, in which case it
+     *                      won't be followed. For a no-op following (that is, just
+     *                      wait until execution is over), use
+     *                      {@link DefaultExecutionFollowCallback}
+     * 
+     * @return The updated {@link Execution} object.
+     * 
+     * @throws Exception May be anything thrown by Cloudify's REST client.
+     */
     public static Execution uninstall(final CloudifyClient client, final String deploymentId, Boolean ignoreFailure,
             ExecutionFollowCallback callback) throws Exception {
         Map<String, Object> params = ignoreFailure != null ? Collections.singletonMap("ignore_failure", ignoreFailure)
@@ -112,6 +128,16 @@ public class ExecutionsHelper {
         return execution;
     }
 
+    /**
+     * Validates an execution: if its status is not {@link ExecutionStatus#terminated},
+     * an exception is raised.
+     * 
+     * @param execution execution to validate
+     * @param msg       message exception message, in case validation failed
+     * @param args      parameters for the exception message
+     * 
+     * @throws ExecutionNotCompletedException Thrown when the execution fails validation.
+     */
     public static void validate(final Execution execution, final String msg, final Object... args)
             throws ExecutionNotCompletedException {
         if (execution.getStatus() != ExecutionStatus.terminated) {

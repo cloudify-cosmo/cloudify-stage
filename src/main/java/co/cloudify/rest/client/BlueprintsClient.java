@@ -33,6 +33,11 @@ import co.cloudify.rest.client.exceptions.CloudifyClientException;
 import co.cloudify.rest.model.Blueprint;
 import co.cloudify.rest.model.ListResponse;
 
+/**
+ * REST client for blueprint-related operations.
+ * 
+ * @author Isaac Shabtay
+ */
 public class BlueprintsClient extends AbstractCloudifyClient {
     /** Base API path. */
     private static final String BASE_PATH = "/api/v3.1/blueprints";
