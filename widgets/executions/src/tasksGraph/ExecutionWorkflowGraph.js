@@ -4,6 +4,7 @@
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import GraphNodes from './GraphNodes';
 import GraphEdges from './GraphEdges';
+import states from './States';
 
 const POLLING_INTERVAL = 5000;
 
@@ -115,9 +116,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
 
     scrollToInProgress() {
         const focusNode = _.find(this.state.graphResult.children, containerNode =>
-            _.find(containerNode.children, subGraphNode =>
-                _.includes(['Started', 'Sent', 'Rescheduled'], subGraphNode.labels[0].state)
-            )
+            _.find(containerNode.children, subGraphNode => _.includes(states.inProgress, subGraphNode.labels[0].state))
         );
         if (focusNode) {
             this.scrollTo(-focusNode.x + GRAPH_MARGIN, -focusNode.y + GRAPH_MARGIN);

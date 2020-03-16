@@ -4,9 +4,17 @@
 /**
  * @property {Any} [graphNode] - A Graph Node to render
  */
+import states from './States';
+
 const textHeight = 18;
 const rx = 3;
 const stateBarHeight = 5;
+
+const colors = {
+    inProgress: 'rgb(215,227,45)',
+    succeeded: 'rgb(3,191,0)',
+    failed: 'rgb(249, 25, 25)'
+};
 
 const GraphNode = ({ graphNode }) => {
     const labels = graphNode.labels[0];
@@ -17,20 +25,8 @@ const GraphNode = ({ graphNode }) => {
     const displayText = labels.display_text;
 
     const { state } = labels;
-    let stateColor;
-    switch (state) {
-        case 'Rescheduled':
-        case 'Sent':
-            stateColor = 'rgb(215,227,45)';
-            break;
-        case 'Succeeded':
-            stateColor = 'rgb(3,191,0)';
-            break;
-        case 'Failed':
-            stateColor = 'rgb(249, 25, 25)';
-            break;
-        default:
-    }
+    const mappedState = _.findKey(states, stateArray => _.includes(stateArray, state));
+    const stateColor = colors[mappedState];
 
     const headerHeight = _.size(title) * textHeight + textHeight / 2;
     return (
