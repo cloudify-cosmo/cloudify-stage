@@ -43,7 +43,19 @@ class BlueprintActions {
             data.site_name = siteName;
         }
 
-        return this.toolbox.getManager().doPut(`/deployments/${deploymentId}`, null, data);
+        return this.toolbox
+            .getManager()
+            .doPut(`/deployments/${deploymentId}`, null, data)
+            .catch(err =>
+                Promise.reject(
+                    err.code === 'deployment_plugin_not_found'
+                        ? {
+                              ...err,
+                              message: `${err.message}. Install the plugin or use "Skip plugins validation" option.`
+                          }
+                        : err
+                )
+            );
     }
 
     doUpload(blueprintName, blueprintFileName, blueprintUrl, file, imageUrl, image, visibility) {

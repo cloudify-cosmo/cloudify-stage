@@ -246,7 +246,11 @@ export default class External {
                     interceptor.handleLicenseError(resJson.error_code);
                     return Promise.reject(LICENSE_ERR);
                 }
-                return Promise.reject({ message: message || response.statusText, status: response.status });
+                return Promise.reject({
+                    message: message || response.statusText,
+                    status: response.status,
+                    code: resJson.error_code
+                });
             } catch (e) {
                 logger.error(e);
                 return Promise.reject({ message: response.statusText, status: response.status });
