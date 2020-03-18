@@ -91,9 +91,9 @@ module.exports = r => {
             children: [],
             edges: []
         };
-        const paddingLeftRight = 12;
-        const paddingTop = 20;
-        const paddingBottom = 16;
+        const paddingLeftRight = 24;
+        const paddingTop = 46;
+        const paddingBottom = 28;
         const subGraphLayoutOptions = {
             'elk.padding': `[top=${paddingTop},left=${paddingLeftRight},bottom=${paddingBottom},right=${paddingLeftRight}]`
         };
@@ -102,7 +102,7 @@ module.exports = r => {
         // This will be used when a text needs to be displayed inside a node (rectangle)
         // and exceeds its width, resulting in increasing the rectangle's height and
         // breaking the string into 2 (and so forth...)
-        const textSizingFactor = 5.6;
+        const textSizingFactor = 5.8;
         const textHeight = 18;
 
         const runGraphCreation = () => {
@@ -158,7 +158,7 @@ module.exports = r => {
             const allSubgraphs = {};
             _.map(operationsList, task => {
                 let taskName = _.split(task.name, 'cloudify.interfaces.');
-                taskName = taskName.length > 1 ? taskName[1] : taskName[0];
+                taskName = taskName.length > 1 ? taskName[1] : _.upperFirst(taskName[0]);
 
                 let taskOperation = '';
                 if (
@@ -179,7 +179,7 @@ module.exports = r => {
                             text: taskName,
                             retry: 0,
                             type: task.type,
-                            state: task.state,
+                            state: _.upperFirst(task.state),
                             operation: taskOperation,
                             display_text: ''
                         }
@@ -378,6 +378,7 @@ module.exports = r => {
                     if (numberOfSplits > 0) {
                         subGraph.height += textHeight * numberOfSplits;
                     }
+                    subGraph.height += 10;
                 }
             });
             return allSubgraphs;

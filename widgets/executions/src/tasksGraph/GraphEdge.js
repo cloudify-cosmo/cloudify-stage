@@ -11,17 +11,24 @@ const GraphEdge = props => {
     const { bendPoints } = edge.sections[0];
     const { endPoint } = edge.sections[0];
 
-    // Used to visually draw the arrow better
-    const svgArrowVisualAdjustment = -0.9;
-    // Used to draw an arrow shape
-    const svgArrow_X = -5;
-    const svgArrowBot_Y = 5;
-    const svgArrowTop_Y = -5;
-
     const drawingPath = {
         x: 0,
         y: 0
     };
+
+    function drawArrow() {
+        const svgArrowVisualAdjustment = -0.9;
+        const svgArrowX = -7;
+        const svgArrowY = 3;
+
+        return (
+            <polygon
+                points={`${endPoint.x + svgArrowVisualAdjustment},${endPoint.y} ${endPoint.x + svgArrowX},${endPoint.y +
+                    svgArrowY} ${endPoint.x + svgArrowX},${endPoint.y - svgArrowY}`}
+            />
+        );
+    }
+
     if (!bendPoints) {
         // No Bend Points
         // Start point to end point
@@ -33,24 +40,7 @@ const GraphEdge = props => {
                     key={`${startPoint.x + startPoint.y + drawingPath.x + drawingPath.y}`}
                     d={`m${startPoint.x} ${startPoint.y} l${drawingPath.x} ${drawingPath.y}`}
                 />
-                <path
-                    key={`${endPoint.x +
-                        svgArrowVisualAdjustment +
-                        endPoint.y +
-                        svgArrowBot_Y +
-                        svgArrow_X +
-                        svgArrowBot_Y}`}
-                    d={`m${endPoint.x + svgArrowVisualAdjustment} ${endPoint.y} l${svgArrow_X} ${svgArrowBot_Y}`}
-                />
-                <path
-                    key={`${endPoint.x +
-                        svgArrowVisualAdjustment +
-                        endPoint.y +
-                        svgArrowTop_Y +
-                        svgArrow_X +
-                        svgArrowTop_Y}`}
-                    d={`m${endPoint.x + svgArrowVisualAdjustment} ${endPoint.y} l${svgArrow_X} ${svgArrowTop_Y}`}
-                />
+                {drawArrow()}
             </g>
         );
     }
@@ -86,24 +76,7 @@ const GraphEdge = props => {
                 key={`${endPoint.x + endPoint.y + drawingPath.x + drawingPath.y}`}
                 d={`m${lastBendPoint.x} ${lastBendPoint.y} l${lastDrawingPath.x} ${lastDrawingPath.y}`}
             />
-            <path
-                key={`${endPoint.x +
-                    svgArrowVisualAdjustment +
-                    endPoint.y +
-                    svgArrowBot_Y +
-                    svgArrow_X +
-                    svgArrowBot_Y}`}
-                d={`m${endPoint.x + svgArrowVisualAdjustment} ${endPoint.y} l${svgArrow_X} ${svgArrowBot_Y}`}
-            />
-            <path
-                key={`${endPoint.x +
-                    svgArrowVisualAdjustment +
-                    endPoint.y +
-                    svgArrowTop_Y +
-                    svgArrow_X +
-                    svgArrowTop_Y}`}
-                d={`m${endPoint.x + svgArrowVisualAdjustment} ${endPoint.y} l${svgArrow_X} ${svgArrowTop_Y}`}
-            />
+            {drawArrow()}
         </g>
     );
 };
