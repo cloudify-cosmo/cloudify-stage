@@ -263,20 +263,13 @@
             },
             {
                 "title": "Update a Deployment",
-                "content": "You can click on a deployment to see the workflows available for that deployment.<br />Click on the <strong>Update Deployment</strong> button in a deployment.<br>Notice that you can <strong>change the blueprint, change the inputs, and you can explicitly list the nodes to update</strong>. The Deployment Events/Logs in the deployment show the events on the deployment as they are happening. ",
-                "target": "div.deploymentsWidget div.segment.clickable",
-                "onNextRedirectTo": ["/page/statistics", "Statistics", "No Deployment Metric Graph widget", "You need to have at least one <strong>Deployment Metric Graph</strong> widget to proceed to the next step."],
+                "content": "You can click on a deployment to execute workflows available for that deployment.<br />Click on the <strong>Update Deployment</strong> button in a deployment.<br>Notice that you can <strong>change the blueprint, change the inputs, and you can explicitly list the nodes to update</strong>. The Deployment Events/Logs in the deployment show the events on the deployment as they are happening. ",
+                "target": "div.deploymentsWidget .segmentList > div > div.segment:first-child",
                 "placement": "bottom"
             },
             {
-                "title": "Statistics",
-                "content": "The statistics show the memory and CPU load on the deployments.",
-                "target": "div.graphWidget",
-                "placement": "left"
-            },
-            {
-                "title": "Filter the Statistics",
-                "content": "You can select specific parameters in the filters to show statistics for specific, running deployments.",
+                "title": "Filter the Deployments",
+                "content": "You can use the filters to show deployments for specific blueprints or sites.",
                 "target": "div.filterWidget",
                 "placement": "bottom"
             },
