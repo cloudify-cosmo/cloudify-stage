@@ -24,7 +24,7 @@
                 "placement": "bottom"
             },
             {
-                "title": "Manager services status",
+                "title": "System status",
                 "content": "Here you can quickly review the status of the Cloudify services to see if there is anything that needs attention.",
                 "target": ".right.menu .item",
                 "placement": "bottom"
@@ -39,7 +39,7 @@
             },
             {
                 "title": "Get help",
-                "content": "If you need more information about using the Console or the Cloudify Manager, here you can find links to <strong>documentation</strong>, <strong>video tutorials</strong>, and <strong>knowledge base articles</strong>.",
+                "content": "If you need more information about using the Console or the Cloudify Manager, here you can find link to <strong>documentation</strong>.",
                 "target": ".right.menu .helpMenu",
                 "placement": "bottom",
                 "xOffset": -200,
@@ -81,8 +81,8 @@
             },
             {
                 "title": "Resource actions",
-                "content": "You can <strong>upload blueprints, create deployments and upload plugins</strong> straight from the dashboard.",
-                "target": ".widget.deploymentButtonWidget",
+                "content": "Depending on your permissions you can <strong>upload blueprints, create deployments and upload plugins</strong> straight from the dashboard.",
+                "target": ".widget.blueprintNumWidget",
                 "placement": "bottom"
             },
             {
