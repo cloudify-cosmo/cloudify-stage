@@ -44,6 +44,10 @@ public class BlueprintsClient extends AbstractCloudifyClient {
     /** Path for specific resource. */
     private static final String ID_PATH = BASE_PATH + "/{id}";
 
+    /** Allowable sort keys. */
+    public static final String[] SORT_KEYS = { "id", "created_at", "main_file_name", "description", "tenant_name",
+            "updated_at", "created_by", "private_resource", "resource_availability", "visibility", "is_hidden" };
+
     public BlueprintsClient(Client restClient, WebTarget base) {
         super(restClient, base);
     }
@@ -204,9 +208,26 @@ public class BlueprintsClient extends AbstractCloudifyClient {
      * @return A list of matching blueprints.
      */
     public ListResponse<Blueprint> list(final String searchString) {
+        return list(searchString, null, false);
+    }
+
+    /**
+     * Returns a list of all blueprints with ID's containing a string.
+     * 
+     * @param searchString string to search for
+     * @param sortKey      key to sort by
+     * @param descending   <code>true</code> for a descending sorting order
+     * 
+     * @return A list of matching blueprints.
+     */
+    public ListResponse<Blueprint> list(final String searchString, final String sortKey, final boolean descending) {
         WebTarget target = getTarget(BASE_PATH);
         if (StringUtils.isNotBlank(searchString)) {
             target = target.queryParam("_search", searchString);
+        }
+        if (StringUtils.isNotBlank(sortKey)) {
+            target = target.queryParam("_sort", String.format("%s%s",
+                    descending ? "-" : StringUtils.EMPTY, sortKey));
         }
         try {
             return getBuilder(target).get(new GenericType<ListResponse<Blueprint>>() {});
