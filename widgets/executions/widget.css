@@ -43,10 +43,6 @@
 }
 
 /* Node styling */
-rect {
-    fill: white;
-}
-
 .text-tasks-graph-subgraph-title {
     stroke-width: 0.03em;
 }
