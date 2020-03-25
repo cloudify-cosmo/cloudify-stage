@@ -17,7 +17,7 @@
     "e2e:new": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
     "e2e:new:open": "cypress open",
     "e2e:new:dev": "cypress run --reporter spec",
-    "beforebuild": "bash scripts/preinstall.sh",
+    "beforebuild": "npm ci --prefer-offline && (cd backend && npm ci --prefer-offline)",
     "build": "webpack --config webpack.config-prod.js --bail",
     "zip": "bash scripts/createPackage.sh",
     "upload": "bash scripts/uploadPackage.sh",

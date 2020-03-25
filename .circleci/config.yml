@@ -17,15 +17,20 @@ jobs:
 
     steps:
       - checkout
-
+      - restore_cache:
+          keys:
+            - v2-npm-{{ checksum "package-lock.json" }}-{{ checksum "backend/package-lock.json" }}
+            - v2-npm-
       - run:
           name: Install dependencies
           command: npm run beforebuild
-
+      - save_cache:
+          paths:
+            - ~/.npm
+          key: v2-npm-{{ checksum "package-lock.json" }}-{{ checksum "backend/package-lock.json" }}
       - run:
           name: Build application
           command: npm run build
-
       - persist_to_workspace:
           root: ~/
           paths:
