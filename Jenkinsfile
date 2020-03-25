@@ -1,7 +1,11 @@
 pipeline {
     agent { label 'web-ui' }
+    parameters {
+        choice(choices: "v12.16.1\nv10.14.0", description: 'NodeJS Version', name: 'NODEJS_VERSION')
+    }
     environment {
         BRANCH_NAME="${env.BRANCH_NAME}"
+        JENKINS_HOME="${env.JENKINS_HOME}"
     }
 
     stages {
@@ -15,6 +19,14 @@ pipeline {
             steps {
                 sh 'sudo chown jenkins:jenkins -R ../*'
                 step([$class: 'WsCleanup'])
+            }
+        }
+        stage('Set NodeJS Version') {
+            steps {
+                sh '''#!/usr/bin/env bash
+                    source ${JENKINS_HOME}/.profile
+                    nvm use ${NODEJS_VERSION}
+                '''
             }
         }
 
