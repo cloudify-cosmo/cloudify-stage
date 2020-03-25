@@ -19,16 +19,15 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-npm-{{ checksum "package-lock.json" }}-{{ checksum "backend/package-lock.json" }}
-            - v1-npm-
+            - v2-npm-{{ checksum "package-lock.json" }}-{{ checksum "backend/package-lock.json" }}
+            - v2-npm-
       - run:
           name: Install dependencies
           command: npm run beforebuild
       - save_cache:
           paths:
-            - node_modules
-            - backend/node_modules
-          key: v1-npm-{{ checksum "package-lock.json" }}-{{ checksum "backend/package-lock.json" }}
+            - ~/.npm
+          key: v2-npm-{{ checksum "package-lock.json" }}-{{ checksum "backend/package-lock.json" }}
       - run:
           name: Build application
           command: npm run build
