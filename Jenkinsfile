@@ -24,7 +24,6 @@ pipeline {
                 dir('cloudify-stage') {
                     sh 'npm run beforebuild'
                     sh 'npm run build'
-                    sh 'sudo chown jenkins:jenkins -R .'
                 }
             }
         }
@@ -32,7 +31,7 @@ pipeline {
         stage('Pack') {
             steps {
                 dir('cloudify-stage') {
-                    sh 'sudo npm run zip'
+                    sh 'npm run zip'
                 }
                 sh '''#!/bin/bash
                       first=$(echo $BRANCH_NAME | cut -d. -f1)
