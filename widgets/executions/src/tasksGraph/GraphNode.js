@@ -56,7 +56,7 @@ const GraphNode = ({ graphNode }) => {
                 height={headerHeight}
                 width={graphNode.width - 1}
                 strokeWidth={0}
-                style={{ fill: !_.isEmpty(graphNode.children) && '#F2F2F2' }}
+                style={{ fill: !_.isEmpty(graphNode.children) ? '#F2F2F2' : 'white' }}
             />
             <rect height={graphNode.height} width={graphNode.width} rx={rx} fillOpacity={0} />
             <path d={`m 0,${headerHeight} h ${graphNode.width} z`} strokeWidth={0.5} />
