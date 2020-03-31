@@ -11,12 +11,12 @@ import './Wizard.css';
  * ```
  * const wizardTitle = 'Hello World Wizard';
  * const helloWorldWizardSteps = [
- *     InfrastructureStep, PluginsStep, SecretsStep, InputsStep, ConfirmationStep, InstallStep
+ * InfrastructureStep, PluginsStep, SecretsStep, InputsStep, ConfirmationStep, InstallStep
  * ];
  *
  * <Wizard.Modal header={wizardTitle} open={this.state.open} steps={helloWorldWizardSteps}
- *               onClose={this.closeWizard.bind(this)} toolbox={toolbox} />
- *```
+ * onClose={this.closeWizard.bind(this)} toolbox={toolbox} />
+ * ```
  */
 export default class WizardModal extends React.Component {
     constructor(props) {

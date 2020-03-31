@@ -59,6 +59,8 @@ export default class PluginsCatalogList extends React.Component {
 
     /**
      * Upload Click Event
+     *
+     * @param plugin
      */
     onUpload(plugin) {
         this.setState({ plugin });

@@ -5,7 +5,7 @@
 const fs = require('fs-extra');
 const pathlib = require('path');
 
-const Utils = require('./../utils');
+const Utils = require('../utils');
 const TemplateHandler = require('./TemplateHandler');
 const logger = require('./LoggerHandler').getLogger('ToursHandler');
 

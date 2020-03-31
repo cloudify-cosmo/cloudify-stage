@@ -151,7 +151,6 @@
         "PropTypes": true,
         "React": true,
 
-        "Stage": true,
-        "cloudifyTopology": true
+        "Stage": true
     }
 }
