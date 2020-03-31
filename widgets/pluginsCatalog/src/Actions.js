@@ -9,7 +9,7 @@ export default class Actions {
     /**
      * Creates an instance of Actions.
      *
-     * @param {object}
+     * @param {object} o
      * @memberof Actions
      * @access public
      */
@@ -34,8 +34,9 @@ export default class Actions {
     /**
      * upload plugins to api
      *
-     * @param {any} archiveUrl
-     * @param {boolean} [privateResource=false]
+     * @param wagonUrl
+     * @param yamlUrl
+     * @param visibility
      * @access public
      */
     doUpload(wagonUrl, yamlUrl, visibility) {

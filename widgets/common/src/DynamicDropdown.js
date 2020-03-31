@@ -165,7 +165,7 @@ function DynamicDropdown({
                 }
                 return preparedOptions;
             })()}
-        ></Form.Dropdown>
+        />
     );
 }
 
