@@ -2,32 +2,36 @@
   "name": "cloudify-stage",
   "version": "5.1.0-.dev1",
   "description": "Cloudify Console",
-  "main": "app/main.js",
+  "repository": "https://github.com/cloudify-cosmo/cloudify-stage",
+  "license": "Apache-2.0",
+  "author": "Cloudify",
+  "files": [
+    "backend",
+    "dist",
+    "conf/app.json",
+    "conf/manager.json",
+    "conf/README.md",
+    "conf/userConfig.json"
+  ],
   "scripts": {
-    "test": "npm run lint && npm run prodtest && npm run size",
-    "prodtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec --recursive \"./test/**/*Test.js\"",
-    "devtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec",
+    "beforebuild": "npm ci --prefer-offline && (cd backend && npm ci --prefer-offline)",
+    "build": "webpack --config webpack.config-prod.js --bail",
     "devServer": "node devServer.js",
-    "lint": "eslint app backend widgets test scripts --ext .js",
+    "devtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec",
     "docCheck": "bash scripts/checkDocs.sh",
     "docWidgets": "node scripts/updateReadmes.js",
     "e2e": "npm run e2e:old && npm run e2e:new",
+    "e2e:new": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
+    "e2e:new:dev": "cypress run --reporter spec",
+    "e2e:new:open": "cypress open",
     "e2e:old": "nightwatch -c ./test/nightwatch/nightwatch.conf.js",
     "e2e:old:dev": "nightwatch -c ./test/nightwatch/nightwatch.conf.js --env dev",
-    "e2e:new": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
-    "e2e:new:open": "cypress open",
-    "e2e:new:dev": "cypress run --reporter spec",
-    "beforebuild": "npm ci --prefer-offline && (cd backend && npm ci --prefer-offline)",
-    "build": "webpack --config webpack.config-prod.js --bail",
-    "zip": "bash scripts/createPackage.sh",
+    "lint": "eslint app backend widgets test scripts --ext .js",
+    "prodtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec --recursive \"./test/**/*Test.js\"",
+    "size": "size-limit",
+    "test": "npm run lint && npm run prodtest && npm run size",
     "upload": "bash scripts/uploadPackage.sh",
-    "size": "size-limit"
-  },
-  "author": "Cloudify",
-  "license": "Apache-2.0",
-  "repository": "https://github.com/cloudify-cosmo/cloudify-stage",
-  "engines": {
-    "node": "12.x"
+    "zip": "bash scripts/createPackage.sh"
   },
   "dependencies": {
     "better-console": "^0.2.4",
@@ -149,5 +153,8 @@
     "webpack-cli": "^3.3.9",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-dev-server": "^3.8.2"
+  },
+  "engines": {
+    "node": "12.x"
   }
 }
