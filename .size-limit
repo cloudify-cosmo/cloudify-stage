@@ -8,7 +8,7 @@
     },
     {
         "name": "Application (brotli)",
-        "limit": "8.18 MB",
+        "limit": "8.2 MB",
         "gzip": false,
         "webpack": false,
         "path": ["dist/static/js/*.br", "dist/appData/widgets/*/widget.js.br", "dist/appData/widgets/*/widget.css", "dist/appData/widgets/*/widget.png", "dist/appData/widgets/*/widget.html", "dist/appData/widgets/*/README.md", "dist/appData/widgets/*/backend.js", "dist/appData/templates/**", "dist/static/images/*", "dist/static/fonts/*", "dist/static/*" ]
@@ -29,7 +29,7 @@
     },
     {
         "name": "Application package",
-        "limit": "16.47 MB",
+        "limit": "16.5 MB",
         "gzip": false,
         "webpack": false,
         "path": "dist/**"
