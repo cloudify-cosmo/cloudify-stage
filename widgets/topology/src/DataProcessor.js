@@ -101,7 +101,7 @@ export function createExpandedTopology(componentBlueprintData, extendedNode) {
      * remote deployment) to widget format and embedding it in the node view, which is
      * done by creating a fake contained-in relationship and behavior.
      */
-    const res = createBaseTopology(componentBlueprintData);
+    const res = _.cloneDeep(componentBlueprintData);
 
     _.each(res.nodes, (node, index) => {
         const rel = {
