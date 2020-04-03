@@ -4,6 +4,7 @@
 
 import Topology from './Topology';
 import DataFetcher from './DataFetcher';
+import { createBaseTopology } from './DataProcessor';
 
 Stage.defineWidget({
     id: 'topology',
@@ -40,17 +41,47 @@ Stage.defineWidget({
     fetchData(widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = toolbox.getContext().getValue('blueprintId');
-        const expandedDeployments = [DataFetcher.fetch(toolbox, blueprintId, deploymentId, true)];
 
-        const deploymentsToFetch = toolbox.getContext().getValue('deploymentsToExpand');
-        _.each(deploymentsToFetch, dep => {
-            expandedDeployments.push(DataFetcher.fetch(toolbox, null, dep, false));
+        function fetchComponentsDeployemntsData(rootDeploymentData) {
+            return Promise.all(
+                _(rootDeploymentData.nodes)
+                    .map('templateData')
+                    .filter({ actual_number_of_instances: 1 })
+                    .map(templateData =>
+                        _(templateData.deploymentSettings)
+                            .map('id')
+                            .compact()
+                            .head()
+                    )
+                    .compact()
+                    .map(depId =>
+                        DataFetcher.fetch(toolbox, null, depId, false).then(componentDeploymentData => {
+                            const processedNestedDeploymentData = createBaseTopology(componentDeploymentData);
+                            return fetchComponentsDeployemntsData(processedNestedDeploymentData).then(
+                                nestedDeploymentData => ({
+                                    [depId]: processedNestedDeploymentData,
+                                    ...nestedDeploymentData
+                                })
+                            );
+                        })
+                    )
+            ).then(componentDeployemntsData => _.merge(...componentDeployemntsData));
+        }
+
+        return DataFetcher.fetch(toolbox, blueprintId, deploymentId, true).then(rawBlueprintData => {
+            const processedBlueprintData = createBaseTopology(rawBlueprintData);
+            const result = { processedBlueprintData, rawBlueprintData };
+            if (deploymentId) {
+                return fetchComponentsDeployemntsData(processedBlueprintData).then(componentDeployemntsData => ({
+                    componentDeployemntsData,
+                    ...result
+                }));
+            }
+            return result;
         });
-
-        return Promise.all(expandedDeployments);
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data = {}, error, toolbox) {
         const topologyConfig = {
             enableNodeClick: widget.configuration.enableNodeClick,
             enableGroupClick: widget.configuration.enableGroupClick,
@@ -61,14 +92,15 @@ Stage.defineWidget({
 
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = toolbox.getContext().getValue('blueprintId');
-        const expandedDeployments = toolbox.getContext().getValue('deploymentsToExpand');
 
+        const { rawBlueprintData } = data;
         const formattedData = {
-            deploymentsData: data,
+            blueprintDeploymentData: data.processedBlueprintData,
+            componentDeployemntsData: data.componentDeployemntsData,
+            layout: _.get(rawBlueprintData, 'layout'),
             deploymentId,
-            blueprintId,
-            topologyConfig,
-            expandedDeployments
+            blueprintId: blueprintId || _.get(rawBlueprintData, 'data.id'),
+            topologyConfig
         };
 
         return <Topology widget={widget} data={formattedData} toolbox={toolbox} />;
