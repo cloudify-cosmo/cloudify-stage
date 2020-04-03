@@ -1,7 +1,7 @@
 function RevertToDefaultIcon({ value, defaultValue, onClick }) {
     const { Icon, Popup } = Stage.Basic;
 
-    return !_.isNil(defaultValue) && !_.isEqual(value, defaultValue) ? (
+    return !_.isUndefined(defaultValue) && !_.isEqual(value, defaultValue) ? (
         <Popup trigger={<Icon name="undo" link onClick={onClick} />}>Revert to default value</Popup>
     ) : null;
 }
@@ -26,8 +26,8 @@ RevertToDefaultIcon.propTypes = {
 };
 
 RevertToDefaultIcon.defaultProps = {
-    value: undefined, // value can be null/undefined
-    defaultValue: undefined, // defaultValue can be null/undefined
+    value: undefined, // value can be undefined
+    defaultValue: undefined, // defaultValue can be undefined
     onClick: _.noop
 };
 
@@ -65,7 +65,7 @@ class InputsUtils {
     static getInputFieldInitialValue(defaultValue, type = undefined, dataType = undefined) {
         const { Json } = Stage.Utils;
 
-        if (_.isNil(defaultValue)) {
+        if (_.isUndefined(defaultValue)) {
             switch (type) {
                 case 'list':
                     return InputsUtils.DEFAULT_INITIAL_VALUE_FOR_LIST;
@@ -167,7 +167,7 @@ class InputsUtils {
 
         const revertToDefault = () => inputChangeFunction(null, { name, value: cloudifyTypedDefaultValue });
 
-        return _.isNil(typedDefaultValue) ? (
+        return _.isUndefined(typedDefaultValue) ? (
             undefined
         ) : (
             <RevertToDefaultIcon value={typedValue} defaultValue={typedDefaultValue} onClick={revertToDefault} />
@@ -224,24 +224,25 @@ class InputsUtils {
     static getFormInputField(name, value, defaultValue, description, onChange, error, type, constraints, dataType) {
         const { Form } = Stage.Basic;
         const help = InputsUtils.getHelp(description, type, constraints, defaultValue, dataType);
+        const required = _.isUndefined(defaultValue);
 
         switch (type) {
             case 'boolean':
                 return (
-                    <Form.Field key={name} help={help} required={_.isNil(defaultValue)}>
+                    <Form.Field key={name} help={help} required={required}>
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
                     </Form.Field>
                 );
             case 'integer':
                 return (
-                    <Form.Field key={name} error={error} help={help} required={_.isNil(defaultValue)} label={name}>
+                    <Form.Field key={name} error={error} help={help} required={required} label={name}>
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
                     </Form.Field>
                 );
             case 'string':
             default:
                 return (
-                    <Form.Field key={name} error={error} help={help} required={_.isNil(defaultValue)} label={name}>
+                    <Form.Field key={name} error={error} help={help} required={required} label={name}>
                         {InputsUtils.getInputField(name, value, defaultValue, onChange, error, type, constraints)}
                     </Form.Field>
                 );
@@ -373,13 +374,13 @@ class InputsUtils {
 
     static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes) {
         const enhancedInputs = _.sortBy(_.map(inputs, (input, name) => ({ name, ...input })), [
-            input => !_.isNil(input.default),
+            input => !_.isUndefined(input.default),
             'name'
         ]);
 
         return _.map(enhancedInputs, input => {
             const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes[input.type] : undefined;
-            const value = _.isNil(inputsState[input.name])
+            const value = _.isUndefined(inputsState[input.name])
                 ? InputsUtils.getInputFieldInitialValue(input.default, input.type, dataType)
                 : inputsState[input.name];
             return InputsUtils.getFormInputField(
@@ -444,7 +445,7 @@ class InputsUtils {
             const newValue = newValues[inputName];
             const currentValue = currentValues[inputName];
 
-            if (_.isNil(newValue)) {
+            if (_.isUndefined(newValue)) {
                 inputs[inputName] = currentValue;
             } else {
                 inputs[inputName] = InputsUtils.getInputFieldInitialValue(newValue, inputObj.type);
@@ -476,7 +477,7 @@ class InputsUtils {
             const stringInputValue = Json.getStringValue(inputsValues[inputName]);
             let typedInputValue = Json.getTypedValue(inputsValues[inputName]);
 
-            if (_.isEmpty(stringInputValue) && _.isNil(inputObj.default)) {
+            if (_.isEmpty(stringInputValue) && _.isUndefined(inputObj.default)) {
                 inputsWithoutValues[inputName] = true;
             } else if (
                 _.startsWith(stringInputValue, InputsUtils.STRING_VALUE_SURROUND_CHAR) &&
