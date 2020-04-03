@@ -2,11 +2,6 @@
     {
         "icon": "https://cloudify.co/wp-content/uploads/2019/08/oslogo.png",
         "name": "cloudify-openstack-plugin",
-        "title": "OpenStack v3"
-    },
-    {
-        "icon": "https://cloudify.co/wp-content/uploads/2019/08/oslogo.png",
-        "name": "cloudify-openstack-plugin",
         "title": "OpenStack"
     },
     {

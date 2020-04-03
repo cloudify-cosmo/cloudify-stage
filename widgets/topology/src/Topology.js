@@ -157,10 +157,10 @@ export default class Topology extends React.Component {
             return deploymentsToExpand.length;
         };
 
-        const deployemntsToExpand = [...this.state.expandedDeployments];
-        let deploymentsCount = deployemntsToExpand.length;
+        const deploymentsToExpand = [...this.state.expandedDeployments];
+        let deploymentsCount = deploymentsToExpand.length;
         for (;;) {
-            const currentDeploymentsCount = expandDeployments(deployemntsToExpand);
+            const currentDeploymentsCount = expandDeployments(deploymentsToExpand);
             if (currentDeploymentsCount === deploymentsCount) {
                 break;
             }
