@@ -7,7 +7,7 @@ Cypress.Commands.add('createSite', site => {
         data.visibility = site.visibility;
     }
 
-    cy.cfyRequest(`/sites/${site.name}`, 'PUT', { tenant: 'default_tenant' }, data);
+    cy.cfyRequest(`/sites/${site.name}`, 'PUT', data);
 });
 
 Cypress.Commands.add('createSites', sites => {
@@ -17,11 +17,11 @@ Cypress.Commands.add('createSites', sites => {
 });
 
 Cypress.Commands.add('deleteSite', siteName => {
-    cy.cfyRequest(`/sites/${siteName}`, 'DELETE', { tenant: 'default_tenant' });
+    cy.cfyRequest(`/sites/${siteName}`, 'DELETE');
 });
 
 Cypress.Commands.add('deleteSites', () => {
-    cy.cfyRequest('/sites', 'GET', { tenant: 'default_tenant' }).then(response => {
+    cy.cfyRequest('/sites', 'GET').then(response => {
         for (const site of response.body.items) {
             cy.deleteSite(site.name);
         }
