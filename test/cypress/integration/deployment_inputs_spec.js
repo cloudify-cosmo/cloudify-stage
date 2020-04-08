@@ -1,4 +1,4 @@
-describe('Deployment - Inputs', () => {
+describe('Deployments - Create new deployment modal', () => {
     const blueprintPrefix = 'cypress_test_';
     const firstInputNthChild = 8;
 
@@ -9,21 +9,30 @@ describe('Deployment - Inputs', () => {
                 cy.get('input').type(`${blueprintPrefix}${type}`);
                 cy.get(`div[option-value="${blueprintPrefix}${type}_type"]`).click();
             });
+        cy.get('form').should('have.class', 'loading');
+        cy.get('form', { timeout: 5000 }).should('not.have.class', 'loading');
+    };
+
+    const checkAttribute = (input, attrName, attrValue) => {
+        if (attrValue !== null) {
+            expect(input).to.have.attr(attrName, String(attrValue));
+        } else {
+            expect(input).to.not.have.attr(attrName);
+        }
     };
 
     const verifyNumberInput = (min = null, max = null, value = '', step = 1) => {
         cy.get('input').then($input => {
-            const checkAttr = (attrName, attrValue) => {
-                if (attrValue !== null) {
-                    expect($input).to.have.attr(attrName, String(attrValue));
-                } else {
-                    expect($input).to.not.have.attr(attrName);
-                }
-            };
-            checkAttr('min', min);
-            checkAttr('max', max);
-            checkAttr('step', step);
-            checkAttr('value', value);
+            checkAttribute($input, 'min', min);
+            checkAttribute($input, 'max', max);
+            checkAttribute($input, 'step', step);
+            checkAttribute($input, 'value', value);
+        });
+    };
+
+    const verifyTextInput = (value = '') => {
+        cy.get('input').then($input => {
+            checkAttribute($input, 'value', value);
         });
     };
 
@@ -282,27 +291,116 @@ describe('Deployment - Inputs', () => {
             });
     });
 
-    it.only('handles string types', () => {
+    it('handles string types', () => {
         selectBlueprintInModal('string');
 
         cy.get(`form :nth-child(${firstInputNthChild}).field`)
             .as('string_no_default')
-            .within(() => {});
+            .within(() => {
+                verifyTextInput();
+            });
 
         cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
             .as('string_constraint_pattern')
-            .within(() => {});
+            .within(() => {
+                verifyTextInput('Ubuntu 18.04');
+                cy.get('input')
+                    .clear()
+                    .type('Something')
+                    .blur();
+                verifyTextInput('Something');
+                cy.get('i.undo.link.icon')
+                    .as('revertToDefaultValue')
+                    .should('be.visible');
+                cy.get('@revertToDefaultValue').click();
+                cy.get('@revertToDefaultValue').should('not.be.visible');
+                verifyTextInput('Ubuntu 18.04');
+            });
 
         cy.get(`form :nth-child(${firstInputNthChild + 2}).field`)
             .as('string_constraint_valid_values')
-            .within(() => {});
+            .within(() => {
+                cy.get('div.text')
+                    .as('text')
+                    .should('have.text', 'en');
+                cy.get('div.dropdown').click();
+
+                cy.get('div[name="pl"]').should('be.visible');
+                cy.get('div[name="en"]').should('be.visible');
+                cy.get('div[name="fr"]').should('be.visible');
+                cy.get('div[name="pl"]').click();
+                cy.get('@text').should('have.text', 'pl');
+
+                cy.get('i.undo.link.icon')
+                    .as('revertToDefaultValue')
+                    .should('be.visible');
+                cy.get('@revertToDefaultValue').click();
+
+                cy.get('@revertToDefaultValue').should('not.be.visible');
+                cy.get('@text').should('have.text', 'en');
+
+                cy.get('i.dropdown.icon')
+                    .as('dropdownOrClearIcon')
+                    .should('be.visible')
+                    .should('have.class', 'clear');
+                cy.get('@dropdownOrClearIcon').click();
+
+                cy.get('@text').should('have.text', '');
+                cy.get('@revertToDefaultValue').should('be.visible');
+                cy.get('@dropdownOrClearIcon').should('not.have.class', 'clear');
+            });
 
         cy.get(`form :nth-child(${firstInputNthChild + 3}).field`)
             .as('string_default')
-            .within(() => {});
+            .within(() => {
+                verifyTextInput('Some default string');
+            });
 
         cy.get(`form :nth-child(${firstInputNthChild + 4}).field`)
             .as('string_default_null')
-            .within(() => {});
+            .within(() => {
+                verifyTextInput('null');
+            });
+    });
+
+    it('parses constraint error message from /deployments REST API', () => {
+        selectBlueprintInModal('string');
+
+        const deploymentName = 'test';
+
+        cy.server();
+        cy.route({
+            method: 'PUT',
+            url: `/console/sp/?su=/deployments/${deploymentName}`
+        }).as('deployBlueprint');
+
+        cy.get('input[name="deploymentName"]').type(deploymentName);
+        cy.get(`form :nth-child(${firstInputNthChild}).field`)
+            .as('string_no_default')
+            .within(() => {
+                cy.get('input')
+                    .clear()
+                    .type('Something');
+            });
+
+        cy.get(`form :nth-child(${firstInputNthChild + 1}).field`)
+            .as('string_constraint_pattern')
+            .within(() => {
+                cy.get('input')
+                    .clear()
+                    .type('CentOS 7.6')
+                    .blur();
+            });
+        cy.get('string_constraint_pattern').should('not.have.class', 'error');
+
+        cy.get('.actions > button.ui.button.green').click();
+        cy.wait('@deployBlueprint');
+
+        cy.get('div.error.message > ul > li').should(
+            'have.text',
+            'Value CentOS 7.6 of input string_constraint_pattern violates ' +
+                'constraint pattern(Ubuntu \\d{2}\\.\\d{2}) operator.'
+        );
+        cy.get('@string_constraint_pattern').should('have.class', 'error');
     });
 });

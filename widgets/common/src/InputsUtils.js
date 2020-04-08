@@ -500,17 +500,11 @@ class InputsUtils {
     }
 
     static getErrorObject(message) {
-        const typeValidationMatch = message.match(/Property type validation failed in '(.[^']+)'/);
-        const propertyMissingMatch = message.match(/Value of input (.[^ ]+) is missing/);
         const constraintValidationMatch = message.match(/of input (.[^ ]+) violates constraint/);
 
         let errorFieldKey = 'error';
-        if (typeValidationMatch) {
-            errorFieldKey = typeValidationMatch[1];
-        } else if (propertyMissingMatch) {
-            errorFieldKey = propertyMissingMatch[1];
-        } else if (constraintValidationMatch) {
-            errorFieldKey = constraintValidationMatch[1];
+        if (constraintValidationMatch) {
+            [, errorFieldKey] = constraintValidationMatch;
         }
 
         return { [errorFieldKey]: message };
