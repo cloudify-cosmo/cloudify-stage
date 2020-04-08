@@ -8,12 +8,18 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+import './blueprints';
 import './users';
 import './sites';
 import './templates';
 import './localStorage';
 
 let token = '';
+
+const getCommonHeaders = () => ({
+    'Authentication-Token': token,
+    tenant: 'default_tenant'
+});
 
 Cypress.Commands.add('restoreState', () => cy.restoreLocalStorage());
 
@@ -61,22 +67,43 @@ Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = 
             su: url
         },
         headers: {
-            'Authentication-Token': token,
             'Content-Type': 'application/json',
+            ...getCommonHeaders(),
             ...headers
         },
         body
     })
 );
 
+Cypress.Commands.add('cfyFileRequest', (filePath, isBinaryFile, url, method = 'PUT', headers = null) => {
+    const filePromise = isBinaryFile
+        ? cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary))
+        : cy.fixture(filePath);
+
+    return filePromise.then(fileContent =>
+        cy.window().then(
+            window =>
+                new Promise((resolve, reject) => {
+                    const xhr = new window.XMLHttpRequest();
+                    xhr.open(method, `/console/sp?su=${encodeURIComponent(url)}`);
+                    xhr.onload = resolve;
+                    xhr.onerror = reject;
+                    Object.entries({ ...getCommonHeaders(), ...headers }).forEach(([name, value]) =>
+                        xhr.setRequestHeader(name, value)
+                    );
+                    xhr.send(fileContent);
+                })
+        )
+    );
+});
+
 Cypress.Commands.add('stageRequest', (url, method = 'GET', headers = null, body = null) => {
     cy.request({
         method,
         url,
         headers: {
-            'Authentication-Token': token,
             'Content-Type': 'application/json',
-            tenant: 'default-tenant',
+            ...getCommonHeaders(),
             ...headers
         },
         body
