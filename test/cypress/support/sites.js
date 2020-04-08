@@ -7,7 +7,7 @@ Cypress.Commands.add('createSite', site => {
         data.visibility = site.visibility;
     }
 
-    cy.cfyRequest(`/sites/${site.name}`, 'PUT', data);
+    cy.cfyRequest(`/sites/${site.name}`, 'PUT', null, data);
 });
 
 Cypress.Commands.add('createSites', sites => {
