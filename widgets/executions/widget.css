@@ -3,6 +3,10 @@
     height: 200px;
 }
 
+.executionsWidget svg g, .ui.modal svg g {
+    pointer-events: all !important;
+}
+
 .ui.modal svg {
     border-radius: 4px;
 }

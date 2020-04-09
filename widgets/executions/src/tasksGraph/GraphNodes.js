@@ -10,13 +10,13 @@ import GraphEdges from './GraphEdges';
 
 const textVisualAdjustment = 5;
 
-const GraphNodes = props =>
-    props.graphNodes.map(graphNode => (
+const GraphNodes = ({ graphNodes, context }) =>
+    graphNodes.map(graphNode => (
         <g key={graphNode.id} transform={`translate(${graphNode.x}, ${graphNode.y + textVisualAdjustment})`}>
-            <GraphNode graphNode={graphNode} />
+            <GraphNode graphNode={graphNode} context={context} />
             {!_.isEmpty(graphNode.children) && (
                 <>
-                    <GraphNodes graphNodes={graphNode.children} />
+                    <GraphNodes graphNodes={graphNode.children} context={context} />
                     <GraphEdges graphEdges={graphNode.edges} />
                 </>
             )}

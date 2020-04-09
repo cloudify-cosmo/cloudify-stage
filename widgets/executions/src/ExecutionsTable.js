@@ -52,13 +52,15 @@ export default class ExecutionsTable extends React.Component {
     }
 
     _selectExecution(item) {
-        const oldSelectedExecutionId = this.props.toolbox.getContext().getValue('executionId');
-        this.props.toolbox.getContext().setValue('executionId', item.id === oldSelectedExecutionId ? null : item.id);
-        if (item.id === oldSelectedExecutionId) {
-            this.props.toolbox.getContext().setValue('executionId', null);
-        } else {
-            this.props.toolbox.getContext().setValue('executionId', item.id);
-        }
+        const context = this.props.toolbox.getContext();
+        const oldSelectedExecutionId = context.getValue('executionId');
+        context.setValue('executionId', item.id === oldSelectedExecutionId ? null : item.id);
+        context.setValue('nodeInstanceId', null);
+        const eventFilter = 'eventFilter';
+        context.setValue(eventFilter, {
+            ...context.getValue(eventFilter),
+            operationText: null
+        });
     }
 
     actOnExecution(execution, action) {
@@ -296,10 +298,7 @@ export default class ExecutionsTable extends React.Component {
                                     </DataTable.Data>
                                 </DataTable.Row>
                                 <DataTable.DataExpandable key={item.id}>
-                                    <ExecutionWorkflowGraph
-                                        selectedExecution={item}
-                                        widgetBackend={this.props.toolbox.getWidgetBackend()}
-                                    />
+                                    <ExecutionWorkflowGraph selectedExecution={item} toolbox={this.props.toolbox} />
                                 </DataTable.DataExpandable>
                             </DataTable.RowExpandable>
                         );
