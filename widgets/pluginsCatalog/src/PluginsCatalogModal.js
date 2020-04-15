@@ -68,7 +68,7 @@ export default class PluginsCatalogModal extends React.Component {
     onApprove() {
         this.setState({ loading: true });
         this.props.actions
-            .doUpload(this.props.plugin.url, this.props.plugin.yamlUrl, this.state.visibility)
+            .doUpload(this.props.plugin, this.state.visibility)
             .then(() => {
                 this.setState({ errors: null, loading: false });
                 this.props.toolbox.getEventBus().trigger('plugins:refresh');

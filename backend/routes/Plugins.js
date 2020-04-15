@@ -45,11 +45,14 @@ function downloadFile(url) {
     });
 }
 
-function zipFiles(wagonFile, wagonFilename, yamlFile, output) {
+function zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, output) {
     return new Promise((resolve, reject) => {
         const archive = archiver('zip');
         archive.append(wagonFile, { name: wagonFilename });
         archive.append(yamlFile, { name: 'plugin.yaml' });
+        if (iconFile) {
+            archive.append(iconFile, { name: 'icon.png' });
+        }
 
         archive.on('error', err => {
             logger.error(`Failed archiving plugin. ${err}`);
@@ -89,8 +92,10 @@ router.post(
             promises.push(Promise.resolve(req.files.yaml_file[0].buffer));
         }
 
+        promises.push(req.query.iconUrl ? downloadFile(req.query.iconUrl) : null);
+
         Promise.all(promises)
-            .then(([wagonFile, yamlFile]) => {
+            .then(([wagonFile, yamlFile, iconFile]) => {
                 const uploadRequest = ManagerHandler.request(
                     'post',
                     `/plugins?visibility=${req.query.visibility}`,
@@ -113,7 +118,7 @@ router.post(
                     }
                 );
 
-                zipFiles(wagonFile, wagonFilename, yamlFile, uploadRequest).catch(err => {
+                zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, uploadRequest).catch(err => {
                     res.status(500).send({ message: `Failed zipping the plugin. ${err}` });
                 });
             })

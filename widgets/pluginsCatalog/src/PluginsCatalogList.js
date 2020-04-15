@@ -123,7 +123,11 @@ export default class PluginsCatalogList extends React.Component {
                                         icon="upload"
                                         onClick={event => {
                                             event.preventDefault();
-                                            this.onUpload({ ...item.wagon, yamlUrl: item.link, title: item.title });
+                                            this.onUpload({
+                                                ...item.wagon,
+                                                ..._.pick(item, 'title', 'icon'),
+                                                yamlUrl: item.link
+                                            });
                                         }}
                                     />
                                 </DataTable.Data>
