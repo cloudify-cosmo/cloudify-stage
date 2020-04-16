@@ -69,6 +69,20 @@ function zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, output) {
     });
 }
 
+router.get('/icons/:pluginId', (req, res) => {
+    req.pipe(
+        request(`${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`).on(
+            'response',
+            function(response) {
+                if (response.statusCode === 404) {
+                    res.status(200).end();
+                    this.abort();
+                }
+            }
+        )
+    ).pipe(res);
+});
+
 router.post(
     '/upload',
     passport.authenticate('token', { session: false }),

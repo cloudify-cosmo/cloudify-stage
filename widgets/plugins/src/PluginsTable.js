@@ -119,7 +119,7 @@ export default class extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
-        const { Button, DataTable, ErrorMessage, ResourceVisibility } = Stage.Basic;
+        const { Button, DataTable, ErrorMessage, ResourceVisibility, Image, Icon } = Stage.Basic;
         const { IdPopup } = Stage.Shared;
         const { DeleteConfirm, UploadPluginModal } = Stage.Common;
 
@@ -139,6 +139,7 @@ export default class extends React.Component {
                     noDataMessage={NO_DATA_MESSAGE}
                 >
                     <DataTable.Column name="id" />
+                    <DataTable.Column />
                     <DataTable.Column label="Package name" name="package_name" width="20%" />
                     <DataTable.Column label="Package version" name="package_version" width="10%" />
                     <DataTable.Column label="Supported platform" name="supported_platform" width="10%" />
@@ -163,6 +164,13 @@ export default class extends React.Component {
                             >
                                 <DataTable.Data>
                                     <IdPopup selected={item.id === this.state.hoveredPlugin} id={item.id} />
+                                </DataTable.Data>
+                                <DataTable.Data>
+                                    {item.icon ? (
+                                        <Image src={item.icon} width="25" />
+                                    ) : (
+                                        <Icon name="plug" size="large" />
+                                    )}
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.package_name}
