@@ -71,14 +71,10 @@ export default class Topology extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { blueprintId, configuration, data, deploymentId } = this.props;
+        const { blueprintId, configuration, data } = this.props;
         const { expandedDeployments } = this.state;
 
-        if (
-            configuration !== prevProps.configuration ||
-            blueprintId !== prevProps.blueprintId ||
-            deploymentId !== prevProps.deploymentId
-        ) {
+        if (configuration !== prevProps.configuration || blueprintId !== prevProps.blueprintId) {
             this.startTopology();
         }
 
