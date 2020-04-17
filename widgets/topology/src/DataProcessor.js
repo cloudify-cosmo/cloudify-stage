@@ -48,18 +48,21 @@ export function createBlueprintData(data) {
                     states: getInstancesCountPerState(nodeInstances)
                 };
 
-            if (
-                NodeDataUtils.isInheritedFrom(node.type_hierarchy, Consts.componentType) ||
-                NodeDataUtils.isInheritedFrom(node.type_hierarchy, Consts.sharedResourceType)
-            ) {
-                node.deploymentSettings = {};
-                _.each(nodeInstances, nodeInstance => {
-                    if (nodeInstance.runtime_properties && nodeInstance.runtime_properties.deployment) {
-                        node.deploymentSettings[nodeInstance.id] = {
-                            id: nodeInstance.runtime_properties.deployment.id
-                        };
-                    }
-                });
+            if (node.actual_number_of_instances === 1) {
+                if (
+                    NodeDataUtils.isInheritedFrom(node.type_hierarchy, Consts.componentType) ||
+                    NodeDataUtils.isInheritedFrom(node.type_hierarchy, Consts.sharedResourceType)
+                ) {
+                    node.deploymentId = _.chain(nodeInstances)
+                        .head()
+                        .get('runtime_properties.deployment.id')
+                        .value();
+                } else if (NodeDataUtils.isInheritedFrom(node.type_hierarchy, Consts.terraformModuleType)) {
+                    node.terraformResources = _.chain(nodeInstances)
+                        .head()
+                        .get('runtime_properties.resources')
+                        .value();
+                }
             }
         }
 

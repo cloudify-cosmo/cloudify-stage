@@ -82,8 +82,9 @@ export default class Topology extends React.Component {
             onNodeSelected: node => this.setSelectedNode(node),
             onDataProcessed: data => (this.processedTopologyData = data),
             onDeploymentNodeClick: deploymentId => this.goToDeploymentPage(deploymentId),
-            onExpandClick: (deploymentId, nodeId) => this.markDeploymentsToExpand(deploymentId, nodeId),
+            onExpandClick: deploymentId => this.markDeploymentsToExpand(deploymentId),
             onCollapseClick: deploymentId => this.collapseExpendedDeployments(deploymentId),
+            onTerraformDetailsClick: node => this.setState({ terraformDetails: node.templateData.terraformResources }),
             onLayoutSave: layout =>
                 this.props.toolbox
                     .getInternal()
@@ -111,20 +112,14 @@ export default class Topology extends React.Component {
                 .map('templateData')
                 .filter({ actual_number_of_instances: 1 })
                 .each(templateData => {
-                    const deploymentId = _(templateData.deploymentSettings)
-                        .map('id')
-                        .compact()
-                        .head();
-                    if (deploymentId) {
-                        const componentDeploymentData = this.props.data.componentDeployemntsData[deploymentId];
-                        if (componentDeploymentData) {
-                            determineComponentsPlugins(componentDeploymentData);
-                            templateData.plugins = _(componentDeploymentData.nodes)
-                                .flatMap('templateData.plugins')
-                                .filter('package_name')
-                                .uniq()
-                                .value();
-                        }
+                    const componentDeploymentData = this.props.data.componentDeployemntsData[templateData.deploymentId];
+                    if (componentDeploymentData) {
+                        determineComponentsPlugins(componentDeploymentData);
+                        templateData.plugins = _(componentDeploymentData.nodes)
+                            .flatMap('templateData.plugins')
+                            .filter('package_name')
+                            .uniq()
+                            .value();
                     }
                 });
         };
@@ -170,18 +165,8 @@ export default class Topology extends React.Component {
         return topology;
     }
 
-    findExpandedNode(currentTopology, nodeId) {
-        return _.find(currentTopology.nodes, node => {
-            let found = false;
-            _.each(node.templateData.deploymentSettings, deploymentSettings => {
-                // This will check if one of the node instances has that id,
-                // currently we only support one node instance for nodes that can extend.
-                if (deploymentSettings.id === nodeId) {
-                    found = true;
-                }
-            });
-            return found;
-        });
+    findExpandedNode(currentTopology, deploymentId) {
+        return _.find(currentTopology.nodes, node => node.templateData.deploymentId === deploymentId);
     }
 
     selectNode(nodeId) {
@@ -277,7 +262,7 @@ export default class Topology extends React.Component {
     }
 
     render() {
-        const { Popup } = Stage.Basic;
+        const { Popup, Modal, DataTable, HighlightText, CancelButton } = Stage.Basic;
         return (
             <div
                 ref={this.topologyParentContainerRef}
@@ -295,6 +280,34 @@ export default class Topology extends React.Component {
                     style={{ left: 'unset', right: 65 }}
                     trigger={<div id="topologyContainer" />}
                 />
+                <Modal open={this.state.terraformDetails} onClose={() => this.setState({ terraformDetails: null })}>
+                    <Modal.Header>Terraform resources</Modal.Header>
+                    <Modal.Content>
+                        <DataTable>
+                            <DataTable.Column label="Object (type)" />
+                            <DataTable.Column label="Name" />
+                            <DataTable.Column label="Provider" />
+                            <DataTable.Column label="Raw data" />
+
+                            {_(this.state.terraformDetails)
+                                .sortBy('type')
+                                .map(tfResource => (
+                                    <DataTable.Row>
+                                        <DataTable.Data>{tfResource.type}</DataTable.Data>
+                                        <DataTable.Data>{tfResource.name}</DataTable.Data>
+                                        <DataTable.Data>{tfResource.provider}</DataTable.Data>
+                                        <DataTable.Data>
+                                            <HighlightText>{JSON.stringify(tfResource, null, 2)}</HighlightText>
+                                        </DataTable.Data>
+                                    </DataTable.Row>
+                                ))
+                                .value()}
+                        </DataTable>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <CancelButton onClick={() => this.setState({ terraformDetails: null })} content="Close" />
+                    </Modal.Actions>
+                </Modal>
             </div>
         );
     }

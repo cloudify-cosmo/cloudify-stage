@@ -45,14 +45,7 @@ Stage.defineWidget({
         function fetchComponentsDeployemntsData(rootDeploymentData) {
             return Promise.all(
                 _(rootDeploymentData.nodes)
-                    .map('templateData')
-                    .filter({ actual_number_of_instances: 1 })
-                    .map(templateData =>
-                        _(templateData.deploymentSettings)
-                            .map('id')
-                            .compact()
-                            .head()
-                    )
+                    .map('templateData.deploymentId')
                     .compact()
                     .map(depId =>
                         DataFetcher.fetch(toolbox, null, depId, false).then(componentDeploymentData => {
