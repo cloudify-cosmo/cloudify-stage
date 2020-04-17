@@ -13,13 +13,27 @@ function isNodesChanged(topologyNodes, newNodes) {
     }
 
     // compare node names, and if in the same order
-    for (let i = 0; i < topologyNodes.length; i++) {
+    for (let i = 0; i < topologyNodes.length; i += 1) {
         if (topologyNodes[i].name !== newNodes[i].name) {
             return true;
         }
     }
 
     return false;
+}
+
+function findExpandedNode(currentTopology, nodeId) {
+    return _.find(currentTopology.nodes, node => {
+        let found = false;
+        _.each(node.templateData.deploymentSettings, deploymentSettings => {
+            // This will check if one of the node instances has that id,
+            // currently we only support one node instance for nodes that can extend.
+            if (deploymentSettings.id === nodeId) {
+                found = true;
+            }
+        });
+        return found;
+    });
 }
 
 export default class Topology extends React.Component {
@@ -37,46 +51,72 @@ export default class Topology extends React.Component {
         this.state = { saveConfirmationOpen: false, expandedDeployments: [] };
     }
 
+    componentDidMount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().on('topology:selectNode', this.selectNode, this);
+        this.startTopology();
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
+        const { blueprintId, configuration, data, deploymentId } = this.props;
         return (
-            !_.isEqual(this.props.blueprintId, nextProps.blueprintId) ||
-            !_.isEqual(this.props.configuration, nextProps.configuration) ||
-            !_.isEqual(this.props.deploymentId, nextProps.deploymentId) ||
-            !_.isEqual(this.props.data, nextProps.data) ||
+            !_.isEqual(blueprintId, nextProps.blueprintId) ||
+            !_.isEqual(configuration, nextProps.configuration) ||
+            !_.isEqual(data, nextProps.data) ||
+            !_.isEqual(deploymentId, nextProps.deploymentId) ||
             !_.isEqual(this.state, nextState)
         );
     }
 
-    componentDidMount() {
-        this.props.toolbox.getEventBus().on('topology:selectNode', this.selectNode, this);
-        this.startTopology();
-    }
+    componentDidUpdate(prevProps) {
+        const { blueprintId, configuration, data, deploymentId, toolbox } = this.props;
 
-    componentWillUnmount() {
-        this.destroyTopology();
-        this.props.toolbox.getEventBus().off('topology:selectNode');
-    }
+        if (configuration !== prevProps.configuration) {
+            this.startTopology();
+        }
 
-    destroyTopology() {
-        if (!_.isNil(this.topology)) {
-            this.topology.destroy();
-            this.topology = null;
+        if (blueprintId !== prevProps.blueprintId || deploymentId !== prevProps.deploymentId) {
+            this.topology.setLoading(true);
+            this.topologyData = null;
+            toolbox.refresh();
+        }
+
+        if (data.blueprintDeploymentData !== prevProps.data.blueprintDeploymentData) {
+            const isFirstTimeLoading = this.topologyData === null;
+            const oldTopologyData = this.topologyData;
+            this.topologyData = this.buildTopologyData();
+
+            if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
+                const { layout } = data;
+                this.topology.setTopology(this.topologyData, layout);
+                this.topology.setLoading(false);
+                if (isFirstTimeLoading) this.topology.setScale(_.get(layout, 'scaleInfo'));
+            } else {
+                this.topology.refreshTopologyDeploymentStatus(this.topologyData);
+            }
         }
     }
 
+    componentWillUnmount() {
+        const { toolbox } = this.props;
+        this.destroyTopology();
+        toolbox.getEventBus().off('topology:selectNode');
+    }
+
     startTopology() {
+        const { blueprintId, configuration, toolbox } = this.props;
         this.destroyTopology();
         this.topology = new BlueprintTopology({
             isLoading: true,
             selector: '#topologyContainer',
             autoScale: true,
-            showToolbar: _.get(this.props.configuration, 'showToolbar', true),
+            showToolbar: _.get(configuration, 'showToolbar', true),
             showToolbarCursorActions: false,
             showToolbarLayoutActions: true,
-            enableGroupClick: _.get(this.props.configuration, 'enableGroupClick', true),
-            enableNodeClick: _.get(this.props.configuration, 'enableNodeClick', true),
-            enableZoom: _.get(this.props.configuration, 'enableZoom', true),
-            enableDrag: _.get(this.props.configuration, 'enableDrag', true),
+            enableGroupClick: _.get(configuration, 'enableGroupClick', true),
+            enableNodeClick: _.get(configuration, 'enableNodeClick', true),
+            enableZoom: _.get(configuration, 'enableZoom', true),
+            enableDrag: _.get(configuration, 'enableDrag', true),
             enableDrop: true,
             enableDragEdit: false,
             enableDragToSelect: true,
@@ -87,9 +127,9 @@ export default class Topology extends React.Component {
             onExpandClick: (deploymentId, nodeId) => this.markDeploymentsToExpand(deploymentId, nodeId),
             onCollapseClick: deploymentId => this.collapseExpendedDeployments(deploymentId),
             onLayoutSave: layout =>
-                this.props.toolbox
+                toolbox
                     .getInternal()
-                    .doPut(`/bud/layout/${this.props.blueprintId}`, null, layout)
+                    .doPut(`/bud/layout/${blueprintId}`, null, layout)
                     .then(() => {
                         this.setState({ saveConfirmationOpen: true });
                         setTimeout(() => this.setState({ saveConfirmationOpen: false }), saveConfirmationTimeout);
@@ -101,7 +141,11 @@ export default class Topology extends React.Component {
     }
 
     buildTopologyData() {
-        const { blueprintDeploymentData } = this.props.data;
+        const {
+            data: { blueprintDeploymentData, componentDeploymentsData }
+        } = this.props;
+        const { expandedDeployments } = this.state;
+
         if (_.isEmpty(blueprintDeploymentData)) {
             return null;
         }
@@ -118,7 +162,7 @@ export default class Topology extends React.Component {
                         .compact()
                         .head();
                     if (deploymentId) {
-                        const componentDeploymentData = this.props.data.componentDeploymentsData[deploymentId];
+                        const componentDeploymentData = componentDeploymentsData[deploymentId];
                         if (componentDeploymentData) {
                             determineComponentsPlugins(componentDeploymentData);
                             templateData.plugins = _(componentDeploymentData.nodes)
@@ -135,13 +179,13 @@ export default class Topology extends React.Component {
 
         const expandDeployments = deploymentsToExpand => {
             [...deploymentsToExpand].forEach(deploymentId => {
-                const expandedNodeData = this.findExpandedNode(topology, deploymentId);
+                const expandedNodeData = findExpandedNode(topology, deploymentId);
                 if (!expandedNodeData) {
                     return;
                 }
 
                 const expandedTopology = createExpandedTopology(
-                    this.props.data.componentDeploymentsData[deploymentId],
+                    componentDeploymentsData[deploymentId],
                     expandedNodeData
                 );
                 _.each(expandedTopology.nodes, node => {
@@ -159,7 +203,7 @@ export default class Topology extends React.Component {
             return deploymentsToExpand.length;
         };
 
-        const deploymentsToExpand = [...this.state.expandedDeployments];
+        const deploymentsToExpand = [...expandedDeployments];
         let deploymentsCount = deploymentsToExpand.length;
         for (;;) {
             const currentDeploymentsCount = expandDeployments(deploymentsToExpand);
@@ -170,20 +214,6 @@ export default class Topology extends React.Component {
         }
 
         return topology;
-    }
-
-    findExpandedNode(currentTopology, nodeId) {
-        return _.find(currentTopology.nodes, node => {
-            let found = false;
-            _.each(node.templateData.deploymentSettings, deploymentSettings => {
-                // This will check if one of the node instances has that id,
-                // currently we only support one node instance for nodes that can extend.
-                if (deploymentSettings.id === nodeId) {
-                    found = true;
-                }
-            });
-            return found;
-        });
     }
 
     selectNode(nodeId) {
@@ -201,54 +231,31 @@ export default class Topology extends React.Component {
     }
 
     setSelectedNode(selectedNode) {
-        if (this.props.deploymentId) {
-            this.props.toolbox.getContext().setValue('depNodeId', selectedNode.name + this.props.deploymentId);
-            this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
-        } else if (this.props.blueprintId) {
-            this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
+        const { deploymentId, blueprintId, toolbox } = this.props;
+        if (deploymentId) {
+            toolbox.getContext().setValue('depNodeId', selectedNode.name + deploymentId);
+            toolbox.getContext().setValue('nodeId', selectedNode.name);
+        } else if (blueprintId) {
+            toolbox.getContext().setValue('nodeId', selectedNode.name);
         }
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.configuration !== prevProps.configuration) {
-            this.startTopology();
-        }
-
-        if (this.props.blueprintId !== prevProps.blueprintId || this.props.deploymentId !== prevProps.deploymentId) {
-            this.topology.setLoading(true);
-            this.topologyData = null;
-            this.props.toolbox.refresh();
-        }
-
-        if (this.props.data.blueprintDeploymentData !== prevProps.data.blueprintDeploymentData) {
-            const isFirstTimeLoading = this.topologyData === null;
-            const oldTopologyData = this.topologyData;
-            this.topologyData = this.buildTopologyData();
-
-            if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
-                const { layout } = this.props.data;
-                this.topology.setTopology(this.topologyData, layout);
-                this.topology.setLoading(false);
-                if (isFirstTimeLoading) this.topology.setScale(_.get(layout, 'scaleInfo'));
-            } else {
-                this.topology.refreshTopologyDeploymentStatus(this.topologyData);
-            }
+    destroyTopology() {
+        if (!_.isNil(this.topology)) {
+            this.topology.destroy();
+            this.topology = null;
         }
     }
 
     goToDeploymentPage(nodeDeploymentId) {
-        this.props.toolbox.getContext().setValue('deploymentId', nodeDeploymentId);
-        this.props.toolbox.goToPage('deployments');
-        this.props.toolbox.drillDown(
-            this.props.toolbox.getWidget(),
-            'deployment',
-            { deploymentId: nodeDeploymentId },
-            nodeDeploymentId
-        );
+        const { toolbox } = this.props;
+        toolbox.getContext().setValue('deploymentId', nodeDeploymentId);
+        toolbox.goToPage('deployments');
+        toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId: nodeDeploymentId }, nodeDeploymentId);
     }
 
     markDeploymentsToExpand(deploymentId) {
-        const currentExpanded = this.state.expandedDeployments;
+        const { expandedDeployments: currentExpanded } = this.state;
 
         if (_.includes(currentExpanded, deploymentId)) {
             // Nothing to do
@@ -259,12 +266,13 @@ export default class Topology extends React.Component {
     }
 
     collapseExpendedDeployments(deploymentId) {
-        const currentExpanded = this.state.expandedDeployments;
+        const { expandedDeployments: currentExpanded } = this.state;
 
         this.setState({ expandedDeployments: _.without(currentExpanded, deploymentId) });
     }
 
     render() {
+        const { saveConfirmationOpen } = this.state;
         const { Popup } = Stage.Basic;
         return (
             <div
@@ -277,7 +285,7 @@ export default class Topology extends React.Component {
                     <span className="message">Click to release scroller</span>
                 </div>
                 <Popup
-                    open={this.state.saveConfirmationOpen}
+                    open={saveConfirmationOpen}
                     content="Topology layout saved"
                     position="top center"
                     style={{ left: 'unset', right: 65 }}
@@ -287,3 +295,38 @@ export default class Topology extends React.Component {
         );
     }
 }
+Topology.propTypes = {
+    blueprintId: PropTypes.string,
+    deploymentId: PropTypes.string,
+    configuration: PropTypes.shape({
+        showToolbar: PropTypes.string,
+        enableGroupClick: PropTypes.string,
+        enableNodeClick: PropTypes.string,
+        enableZoom: PropTypes.string,
+        enableDrag: PropTypes.string
+    }),
+    data: PropTypes.shape({
+        blueprintDeploymentData: PropTypes.object,
+        componentDeploymentsData: PropTypes.object,
+        layout: PropTypes.object
+    }),
+    // eslint-disable-next-line react/forbid-prop-types
+    toolbox: PropTypes.object.isRequired
+};
+
+Topology.defaultProps = {
+    blueprintId: '',
+    deploymentId: '',
+    configuration: {
+        showToolbar: true,
+        enableGroupClick: true,
+        enableNodeClick: true,
+        enableZoom: true,
+        enableDrag: true
+    },
+    data: {
+        blueprintDeploymentData: {},
+        componentDeploymentsData: {},
+        layout: {}
+    }
+};
