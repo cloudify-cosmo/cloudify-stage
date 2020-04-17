@@ -1,9 +1,8 @@
 import { Topology as BlueprintTopology } from 'cloudify-blueprint-topology';
 import { createExpandedTopology } from './DataProcessor';
 import ScrollerGlassHandler from './ScrollerGlassHandler';
-import DataFetcher from './DataFetcher';
 
-import pluginsData from './pluginsData';
+import pluginsData from './pluginsData.json';
 
 const saveConfirmationTimeout = 2500;
 
@@ -40,14 +39,17 @@ export default class Topology extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            !_.isEqual(this.props.widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(this.props.data, nextProps.data)
+            !_.isEqual(this.props.blueprintId, nextProps.blueprintId) ||
+            !_.isEqual(this.props.configuration, nextProps.configuration) ||
+            !_.isEqual(this.props.deploymentId, nextProps.deploymentId) ||
+            !_.isEqual(this.props.data, nextProps.data) ||
+            !_.isEqual(this.state, nextState)
         );
     }
 
     componentDidMount() {
         this.props.toolbox.getEventBus().on('topology:selectNode', this.selectNode, this);
+        this.startTopology();
     }
 
     componentWillUnmount() {
@@ -68,13 +70,13 @@ export default class Topology extends React.Component {
             isLoading: true,
             selector: '#topologyContainer',
             autoScale: true,
-            showToolbar: _.get(this.props.data, 'topologyConfig.showToolbar', true),
+            showToolbar: _.get(this.props.configuration, 'showToolbar', true),
             showToolbarCursorActions: false,
             showToolbarLayoutActions: true,
-            enableGroupClick: _.get(this.props.data, 'topologyConfig.enableGroupClick', true),
-            enableNodeClick: _.get(this.props.data, 'topologyConfig.enableNodeClick', true),
-            enableZoom: _.get(this.props.data, 'topologyConfig.enableZoom', true),
-            enableDrag: _.get(this.props.data, 'topologyConfig.enableDrag', true),
+            enableGroupClick: _.get(this.props.configuration, 'enableGroupClick', true),
+            enableNodeClick: _.get(this.props.configuration, 'enableNodeClick', true),
+            enableZoom: _.get(this.props.configuration, 'enableZoom', true),
+            enableDrag: _.get(this.props.configuration, 'enableDrag', true),
             enableDrop: true,
             enableDragEdit: false,
             enableDragToSelect: true,
@@ -87,15 +89,15 @@ export default class Topology extends React.Component {
             onLayoutSave: layout =>
                 this.props.toolbox
                     .getInternal()
-                    .doPut(`/bud/layout/${this.props.data.blueprintId}`, null, layout)
+                    .doPut(`/bud/layout/${this.props.blueprintId}`, null, layout)
                     .then(() => {
                         this.setState({ saveConfirmationOpen: true });
                         setTimeout(() => this.setState({ saveConfirmationOpen: false }), saveConfirmationTimeout);
                     }),
             pluginsCatalog: pluginsData
         });
-
         this.topology.start();
+        this.topology.setLoading(false);
     }
 
     buildTopologyData() {
@@ -116,7 +118,7 @@ export default class Topology extends React.Component {
                         .compact()
                         .head();
                     if (deploymentId) {
-                        const componentDeploymentData = this.props.data.componentDeployemntsData[deploymentId];
+                        const componentDeploymentData = this.props.data.componentDeploymentsData[deploymentId];
                         if (componentDeploymentData) {
                             determineComponentsPlugins(componentDeploymentData);
                             templateData.plugins = _(componentDeploymentData.nodes)
@@ -139,7 +141,7 @@ export default class Topology extends React.Component {
                 }
 
                 const expandedTopology = createExpandedTopology(
-                    this.props.data.componentDeployemntsData[deploymentId],
+                    this.props.data.componentDeploymentsData[deploymentId],
                     expandedNodeData
                 );
                 _.each(expandedTopology.nodes, node => {
@@ -199,40 +201,26 @@ export default class Topology extends React.Component {
     }
 
     setSelectedNode(selectedNode) {
-        if (this.props.data.deploymentId) {
-            this.props.toolbox.getContext().setValue('depNodeId', selectedNode.name + this.props.data.deploymentId);
+        if (this.props.deploymentId) {
+            this.props.toolbox.getContext().setValue('depNodeId', selectedNode.name + this.props.deploymentId);
             this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
-        } else if (this.props.data.blueprintId) {
+        } else if (this.props.blueprintId) {
             this.props.toolbox.getContext().setValue('nodeId', selectedNode.name);
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (
-            this.props.data.topologyConfig &&
-            (this.props.data.topologyConfig.enableNodeClick !== prevProps.data.topologyConfig.enableNodeClick ||
-                this.props.data.topologyConfig.enableGroupClick !== prevProps.data.topologyConfig.enableGroupClick ||
-                this.props.data.topologyConfig.enableZoom !== prevProps.data.topologyConfig.enableZoom ||
-                this.props.data.topologyConfig.enableDrag !== prevProps.data.topologyConfig.enableDrag ||
-                this.props.data.topologyConfig.showToolbar !== prevProps.data.topologyConfig.showToolbar)
-        ) {
-            if (this.topology) {
-                this.destroyTopology();
-                this.startTopology();
-            }
+    componentDidUpdate(prevProps) {
+        if (this.props.configuration !== prevProps.configuration) {
+            this.startTopology();
         }
 
-        if (
-            this.props.data.blueprintId !== prevProps.data.blueprintId ||
-            this.props.data.deploymentId !== prevProps.data.deploymentId
-        ) {
+        if (this.props.blueprintId !== prevProps.blueprintId || this.props.deploymentId !== prevProps.deploymentId) {
             this.topology.setLoading(true);
             this.topologyData = null;
             this.props.toolbox.refresh();
-        } else if (!_.isEmpty(this.props.data.blueprintDeploymentData)) {
-            if (!this.topology) {
-                this.startTopology();
-            }
+        }
+
+        if (this.props.data.blueprintDeploymentData !== prevProps.data.blueprintDeploymentData) {
             const isFirstTimeLoading = this.topologyData === null;
             const oldTopologyData = this.topologyData;
             this.topologyData = this.buildTopologyData();

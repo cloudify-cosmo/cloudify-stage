@@ -42,7 +42,7 @@ Stage.defineWidget({
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        function fetchComponentsDeployemntsData(rootDeploymentData) {
+        function fetchComponentsDeploymentsData(rootDeploymentData) {
             return Promise.all(
                 _(rootDeploymentData.nodes)
                     .map('templateData')
@@ -57,7 +57,7 @@ Stage.defineWidget({
                     .map(depId =>
                         DataFetcher.fetch(toolbox, null, depId, false).then(componentDeploymentData => {
                             const processedNestedDeploymentData = createBaseTopology(componentDeploymentData);
-                            return fetchComponentsDeployemntsData(processedNestedDeploymentData).then(
+                            return fetchComponentsDeploymentsData(processedNestedDeploymentData).then(
                                 nestedDeploymentData => ({
                                     [depId]: processedNestedDeploymentData,
                                     ...nestedDeploymentData
@@ -65,15 +65,15 @@ Stage.defineWidget({
                             );
                         })
                     )
-            ).then(componentDeployemntsData => _.merge(...componentDeployemntsData));
+            ).then(componentDeploymentsData => _.merge(...componentDeploymentsData));
         }
 
         return DataFetcher.fetch(toolbox, blueprintId, deploymentId, true).then(rawBlueprintData => {
             const processedBlueprintData = createBaseTopology(rawBlueprintData);
             const result = { processedBlueprintData, rawBlueprintData };
             if (deploymentId) {
-                return fetchComponentsDeployemntsData(processedBlueprintData).then(componentDeployemntsData => ({
-                    componentDeployemntsData,
+                return fetchComponentsDeploymentsData(processedBlueprintData).then(componentDeploymentsData => ({
+                    componentDeploymentsData,
                     ...result
                 }));
             }
@@ -81,28 +81,28 @@ Stage.defineWidget({
         });
     },
 
-    render(widget, data = {}, error, toolbox) {
-        const topologyConfig = {
-            enableNodeClick: widget.configuration.enableNodeClick,
-            enableGroupClick: widget.configuration.enableGroupClick,
-            enableZoom: widget.configuration.enableZoom,
-            enableDrag: widget.configuration.enableDrag,
-            showToolbar: widget.configuration.showToolbar
-        };
-
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
+    render(widget, data, error, toolbox) {
+        const {
+            processedBlueprintData: blueprintDeploymentData,
+            componentDeploymentsData,
+            rawBlueprintData: { layout }
+        } = _.isEmpty(data) ? { rawBlueprintData: { layout: {} } } : data;
         const blueprintId = toolbox.getContext().getValue('blueprintId');
-
-        const { rawBlueprintData } = data;
+        const deploymentId = toolbox.getContext().getValue('deploymentId');
         const formattedData = {
-            blueprintDeploymentData: data.processedBlueprintData,
-            componentDeployemntsData: data.componentDeployemntsData,
-            layout: _.get(rawBlueprintData, 'layout'),
-            deploymentId,
-            blueprintId: blueprintId || _.get(rawBlueprintData, 'data.id'),
-            topologyConfig
+            blueprintDeploymentData,
+            componentDeploymentsData,
+            layout
         };
 
-        return <Topology widget={widget} data={formattedData} toolbox={toolbox} />;
+        return (
+            <Topology
+                blueprintId={blueprintId}
+                deploymentId={deploymentId}
+                configuration={widget.configuration}
+                data={formattedData}
+                toolbox={toolbox}
+            />
+        );
     }
 });
