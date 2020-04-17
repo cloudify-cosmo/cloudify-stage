@@ -100,6 +100,8 @@ class PluginsStepContent extends React.Component {
         yamlFile: null,
         wagonUrl: '',
         wagonFile: null,
+        iconUrl: '',
+        iconFile: null,
         visibility: Stage.Common.Consts.defaultVisibility,
         status: PluginsStepContent.statusUnknown
     };
@@ -328,14 +330,12 @@ class PluginsStepContent extends React.Component {
                     <ResourceAction>
                         <UploadPluginForm
                             wagonUrl={this.props.stepData[pluginName].wagonUrl}
-                            wagonFile={this.props.stepData[pluginName].wagonFile}
-                            wagonPlaceholder=""
                             yamlUrl={this.props.stepData[pluginName].yamlUrl}
-                            yamlFile={this.props.stepData[pluginName].yamlFile}
-                            yamlPlaceholder=""
+                            iconUrl={this.props.stepData[pluginName].iconUrl}
                             errors={this.props.errors[pluginName]}
                             wrapInForm={false}
                             addRequiredMarks={false}
+                            hidePlaceholders
                             loading={this.props.loading}
                             onChange={this.onChange(pluginName).bind(this)}
                         />
