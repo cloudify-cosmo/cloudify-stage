@@ -38,9 +38,18 @@ Stage.defineWidget({
         { id: 'showToolbar', name: 'Show toolbar', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE }
     ],
 
-    fetchData(widget, toolbox) {
+    fetchParams(widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = toolbox.getContext().getValue('blueprintId');
+
+        return {
+            blueprintId,
+            deploymentId
+        };
+    },
+
+    fetchData(widget, toolbox, params) {
+        const { blueprintId, deploymentId } = params;
 
         function fetchComponentsDeploymentsData(rootDeploymentData) {
             return Promise.all(
@@ -85,10 +94,14 @@ Stage.defineWidget({
         const {
             processedBlueprintData: blueprintDeploymentData,
             componentDeploymentsData,
-            rawBlueprintData: { layout }
-        } = _.isEmpty(data) ? { rawBlueprintData: { layout: {} } } : data;
-        const blueprintId = toolbox.getContext().getValue('blueprintId');
+            rawBlueprintData: {
+                data: { id },
+                layout
+            }
+        } = _.isEmpty(data) ? { rawBlueprintData: { data: { id: '' }, layout: {} } } : data;
+
         const deploymentId = toolbox.getContext().getValue('deploymentId');
+        const blueprintId = deploymentId ? id : toolbox.getContext().getValue('blueprintId');
         const formattedData = {
             blueprintDeploymentData,
             componentDeploymentsData,
