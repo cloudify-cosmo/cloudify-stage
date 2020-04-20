@@ -86,7 +86,7 @@ router.get('/icons/:pluginId', (req, res) => {
 router.post(
     '/upload',
     passport.authenticate('token', { session: false }),
-    upload.fields([{ name: 'wagon_file', maxCount: 1 }, { name: 'yaml_file', maxCount: 1 }]),
+    upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,
     function(req, res, next) {
         const promises = [];
@@ -106,7 +106,13 @@ router.post(
             promises.push(Promise.resolve(req.files.yaml_file[0].buffer));
         }
 
-        promises.push(req.query.iconUrl ? downloadFile(req.query.iconUrl) : null);
+        if (req.query.iconUrl) {
+            promises.push(downloadFile(req.query.iconUrl));
+        } else if (_.get(req.files, 'icon_file')) {
+            promises.push(Promise.resolve(req.files.icon_file[0].buffer));
+        } else {
+            promises.push(null);
+        }
 
         Promise.all(promises)
             .then(([wagonFile, yamlFile, iconFile]) => {

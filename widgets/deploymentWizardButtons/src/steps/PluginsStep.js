@@ -37,13 +37,18 @@ class PluginsStepActions extends React.Component {
                         ? !pluginObject.wagonFile
                         : !Stage.Utils.Url.isUrl(wagonUrl);
                     const yamlNotValid = _.isEmpty(yamlUrl) ? !pluginObject.yamlFile : !Stage.Utils.Url.isUrl(yamlUrl);
+                    const iconNotValid =
+                        !pluginObject.iconFile &&
+                        !_.isEmpty(pluginObject.iconUrl) &&
+                        !Stage.Utils.Url.isUrl(pluginObject.iconUrl);
 
-                    if (wagonNotValid || yamlNotValid) {
+                    if (wagonNotValid || yamlNotValid || iconNotValid) {
                         missingFields.push(pluginName);
 
                         errors[pluginName] = {
                             wagonUrl: wagonNotValid,
-                            yamlUrl: yamlNotValid
+                            yamlUrl: yamlNotValid,
+                            iconUrl: iconNotValid
                         };
                     }
                 });
@@ -100,6 +105,8 @@ class PluginsStepContent extends React.Component {
         yamlFile: null,
         wagonUrl: '',
         wagonFile: null,
+        iconUrl: '',
+        iconFile: null,
         visibility: Stage.Common.Consts.defaultVisibility,
         status: PluginsStepContent.statusUnknown
     };
@@ -328,14 +335,12 @@ class PluginsStepContent extends React.Component {
                     <ResourceAction>
                         <UploadPluginForm
                             wagonUrl={this.props.stepData[pluginName].wagonUrl}
-                            wagonFile={this.props.stepData[pluginName].wagonFile}
-                            wagonPlaceholder=""
                             yamlUrl={this.props.stepData[pluginName].yamlUrl}
-                            yamlFile={this.props.stepData[pluginName].yamlFile}
-                            yamlPlaceholder=""
+                            iconUrl={this.props.stepData[pluginName].iconUrl}
                             errors={this.props.errors[pluginName]}
                             wrapInForm={false}
                             addRequiredMarks={false}
+                            hidePlaceholders
                             loading={this.props.loading}
                             onChange={this.onChange(pluginName).bind(this)}
                         />
