@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 
 import EditWidget from '../containers/EditWidget';
 import WidgetDynamicContent from './WidgetDynamicContent';
-import { Loading, Icon, ReadmeModal, EditableLabel } from './basic';
+import { EditableLabel, ErrorMessage, Icon, Loading, ReadmeModal } from './basic';
 import stageUtils from '../utils/stageUtils';
 
 export default class Widget extends Component {
@@ -17,8 +17,9 @@ export default class Widget extends Component {
 
         this.widgetItemRef = React.createRef();
         this.state = {
-            showReadmeModal: false,
-            readmeContent: ''
+            hasError: false,
+            readmeContent: '',
+            showReadmeModal: false
         };
     }
 
@@ -36,6 +37,10 @@ export default class Widget extends Component {
         fetchWidgetData: PropTypes.func.isRequired,
         pageManagementMode: PropTypes.string
     };
+
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
 
     _widgetConfigUpdate(config) {
         if (config) {
@@ -66,6 +71,10 @@ export default class Widget extends Component {
 
     _isUserAuthorized() {
         return stageUtils.isUserAuthorized(this.props.widget.definition.permission, this.props.manager);
+    }
+
+    componentDidCatch(error, info) {
+        console.error(error, info);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -215,9 +224,11 @@ export default class Widget extends Component {
                     )}
                 </div>
 
-                {this.props.widget.definition &&
-                !_.isEmpty(_.get(this.props, 'manager.tenants.selected')) &&
-                !_.get(this.props, 'manager.tenants.isFetching') ? (
+                {this.state.hasError ? (
+                    <ErrorMessage autoHide={false} error="Cannot render widget. Check browser console for details." />
+                ) : this.props.widget.definition &&
+                  !_.isEmpty(_.get(this.props, 'manager.tenants.selected')) &&
+                  !_.get(this.props, 'manager.tenants.isFetching') ? (
                     <WidgetDynamicContent
                         widget={this.props.widget}
                         context={this.props.context}

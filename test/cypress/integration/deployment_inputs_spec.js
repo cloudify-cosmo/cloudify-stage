@@ -1,5 +1,5 @@
 describe('Deployments - Create new deployment modal', () => {
-    const blueprintPrefix = 'cypress_test_';
+    const blueprintPrefix = 'inputs_test_';
     const firstInputNthChild = 8;
 
     const selectBlueprintInModal = type => {
