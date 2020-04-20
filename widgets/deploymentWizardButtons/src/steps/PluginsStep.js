@@ -37,13 +37,18 @@ class PluginsStepActions extends React.Component {
                         ? !pluginObject.wagonFile
                         : !Stage.Utils.Url.isUrl(wagonUrl);
                     const yamlNotValid = _.isEmpty(yamlUrl) ? !pluginObject.yamlFile : !Stage.Utils.Url.isUrl(yamlUrl);
+                    const iconNotValid =
+                        !pluginObject.iconFile &&
+                        !_.isEmpty(pluginObject.iconUrl) &&
+                        !Stage.Utils.Url.isUrl(pluginObject.iconUrl);
 
-                    if (wagonNotValid || yamlNotValid) {
+                    if (wagonNotValid || yamlNotValid || iconNotValid) {
                         missingFields.push(pluginName);
 
                         errors[pluginName] = {
                             wagonUrl: wagonNotValid,
-                            yamlUrl: yamlNotValid
+                            yamlUrl: yamlNotValid,
+                            iconUrl: iconNotValid
                         };
                     }
                 });
