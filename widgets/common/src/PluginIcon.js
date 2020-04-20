@@ -1,5 +1,3 @@
-import RoleModal from './RoleModal';
-
 export default function PluginIcon({ src }) {
     const { Image, Icon } = Stage.Basic;
     return src ? <Image src={src} width="25" /> : <Icon name="plug" size="large" />;
