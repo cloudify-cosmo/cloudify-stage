@@ -126,7 +126,9 @@ export default class Topology extends React.Component {
             enableDragToSelect: true,
             enableContextMenu: false,
             onNodeSelected: node => this.setSelectedNode(node),
-            onDataProcessed: data => (this.processedTopologyData = data),
+            onDataProcessed: data => {
+                this.processedTopologyData = data;
+            },
             onDeploymentNodeClick: deploymentId => this.goToDeploymentPage(deploymentId),
             onExpandClick: (deploymentId, nodeId) => this.markDeploymentsToExpand(deploymentId, nodeId),
             onCollapseClick: deploymentId => this.collapseExpendedDeployments(deploymentId),
@@ -196,9 +198,9 @@ export default class Topology extends React.Component {
                     node.name = `${node.name}(${expandedNodeData.name})`;
                 });
 
-                topology.connectors.push.apply(topology.connectors, expandedTopology.connectors);
-                topology.groups.push.apply(topology.groups, expandedTopology.groups);
-                topology.nodes.push.apply(topology.nodes, expandedTopology.nodes);
+                topology.connectors.push(...expandedTopology.connectors);
+                topology.groups.push(...expandedTopology.groups);
+                topology.nodes.push(...expandedTopology.nodes);
 
                 _.pull(deploymentsToExpand, deploymentId);
             });
