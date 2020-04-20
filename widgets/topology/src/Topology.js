@@ -4,6 +4,7 @@ import ScrollerGlassHandler from './ScrollerGlassHandler';
 import DataFetcher from './DataFetcher';
 
 import pluginsData from './pluginsData';
+import TerraformDetailsModal from './TerraformDetailsModal';
 
 const saveConfirmationTimeout = 2500;
 
@@ -262,7 +263,7 @@ export default class Topology extends React.Component {
     }
 
     render() {
-        const { Popup, Modal, DataTable, HighlightText, CancelButton } = Stage.Basic;
+        const { Popup } = Stage.Basic;
         return (
             <div
                 ref={this.topologyParentContainerRef}
@@ -280,34 +281,10 @@ export default class Topology extends React.Component {
                     style={{ left: 'unset', right: 65 }}
                     trigger={<div id="topologyContainer" />}
                 />
-                <Modal open={this.state.terraformDetails} onClose={() => this.setState({ terraformDetails: null })}>
-                    <Modal.Header>Terraform resources</Modal.Header>
-                    <Modal.Content>
-                        <DataTable>
-                            <DataTable.Column label="Object (type)" />
-                            <DataTable.Column label="Name" />
-                            <DataTable.Column label="Provider" />
-                            <DataTable.Column label="Raw data" />
-
-                            {_(this.state.terraformDetails)
-                                .sortBy('type')
-                                .map(tfResource => (
-                                    <DataTable.Row>
-                                        <DataTable.Data>{tfResource.type}</DataTable.Data>
-                                        <DataTable.Data>{tfResource.name}</DataTable.Data>
-                                        <DataTable.Data>{tfResource.provider}</DataTable.Data>
-                                        <DataTable.Data>
-                                            <HighlightText>{JSON.stringify(tfResource, null, 2)}</HighlightText>
-                                        </DataTable.Data>
-                                    </DataTable.Row>
-                                ))
-                                .value()}
-                        </DataTable>
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <CancelButton onClick={() => this.setState({ terraformDetails: null })} content="Close" />
-                    </Modal.Actions>
-                </Modal>
+                <TerraformDetailsModal
+                    terraformDetails={this.state.terraformDetails}
+                    onClose={() => this.setState({ terraformDetails: null })}
+                />
             </div>
         );
     }
