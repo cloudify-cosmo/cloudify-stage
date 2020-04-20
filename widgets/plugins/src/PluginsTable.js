@@ -119,9 +119,9 @@ export default class extends React.Component {
 
     render() {
         const NO_DATA_MESSAGE = 'There are no Plugins available. Click "Upload" to add Plugins.';
-        const { Button, DataTable, ErrorMessage, ResourceVisibility, Image, Icon } = Stage.Basic;
+        const { Button, DataTable, ErrorMessage, ResourceVisibility } = Stage.Basic;
         const { IdPopup } = Stage.Shared;
-        const { DeleteConfirm, UploadPluginModal } = Stage.Common;
+        const { DeleteConfirm, UploadPluginModal, PluginIcon } = Stage.Common;
 
         return (
             <div>
@@ -166,11 +166,7 @@ export default class extends React.Component {
                                     <IdPopup selected={item.id === this.state.hoveredPlugin} id={item.id} />
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {item.icon ? (
-                                        <Image src={item.icon} width="25" />
-                                    ) : (
-                                        <Icon name="plug" size="large" />
-                                    )}
+                                    <PluginIcon src={item.icon} />
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.package_name}
