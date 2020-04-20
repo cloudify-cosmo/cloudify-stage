@@ -74,7 +74,8 @@ export default class PluginsCatalogList extends React.Component {
   */
     render() {
         const NO_DATA_MESSAGE = "There are no Plugins available in catalog. Check widget's configuration.";
-        const { DataTable, Image, Message, Button } = Stage.Basic;
+        const { DataTable, Message, Button } = Stage.Basic;
+        const { PluginIcon } = Stage.Common;
 
         const distro = `${this.props.toolbox
             .getManager()
@@ -113,7 +114,7 @@ export default class PluginsCatalogList extends React.Component {
                         return (
                             <DataTable.Row key={item.title}>
                                 <DataTable.Data>
-                                    <Image src={item.icon} height="25" />
+                                    <PluginIcon src={item.icon} />
                                 </DataTable.Data>
                                 <DataTable.Data>{item.title}</DataTable.Data>
                                 <DataTable.Data>{item.description}</DataTable.Data>

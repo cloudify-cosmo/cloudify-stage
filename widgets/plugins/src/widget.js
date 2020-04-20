@@ -17,12 +17,43 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30), Stage.GenericConfig.PAGE_SIZE_CONFIG()],
-    fetchUrl:
-        '[manager]/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at,created_by,visibility[params]',
-    fetchParams: (widget, toolbox) =>
-        toolbox.getContext().getValue('onlyMyResources')
-            ? { created_by: toolbox.getManager().getCurrentUsername() }
-            : {},
+
+    fetchData(widget, toolbox) {
+        return toolbox
+            .getManager()
+            .doGet(
+                '/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at,created_by,visibility',
+                toolbox.getContext().getValue('onlyMyResources')
+                    ? { created_by: toolbox.getManager().getCurrentUsername() }
+                    : {}
+            )
+            .then(data =>
+                Promise.allSettled(
+                    _.map(data.items, item =>
+                        toolbox
+                            .getInternal()
+                            .doGet(`/plugins/icons/${item.id}`, null, false)
+                            .then(response => response.blob())
+                            .then(
+                                blob =>
+                                    new Promise(resolve => {
+                                        if (blob.size) {
+                                            const reader = new FileReader();
+                                            reader.addEventListener('error', () => resolve());
+                                            reader.addEventListener('load', () => {
+                                                item.icon = reader.result;
+                                                resolve();
+                                            });
+                                            reader.readAsDataURL(blob);
+                                        } else {
+                                            resolve();
+                                        }
+                                    })
+                            )
+                    )
+                ).then(_.constant(data))
+            );
+    },
 
     render(widget, data, error, toolbox) {
         if (_.isEmpty(data)) {
