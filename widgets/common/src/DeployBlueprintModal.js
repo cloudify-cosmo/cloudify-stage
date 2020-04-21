@@ -14,6 +14,7 @@ class DeployBlueprintModal extends React.Component {
     static initialState = {
         loading: false,
         errors: {},
+        blueprint: DeployBlueprintModal.EMPTY_BLUEPRINT,
         deploymentName: '',
         yamlFile: null,
         fileLoading: false,
@@ -21,7 +22,6 @@ class DeployBlueprintModal extends React.Component {
         visibility: Stage.Common.Consts.defaultVisibility,
         skipPluginsValidation: false,
         siteName: '',
-        sites: { items: [] },
         runtimeOnlyEvaluation: false
     };
 
@@ -36,28 +36,23 @@ class DeployBlueprintModal extends React.Component {
     static propTypes = {
         toolbox: PropTypes.object.isRequired,
         open: PropTypes.bool.isRequired,
-        blueprint: PropTypes.object.isRequired,
+        blueprintId: PropTypes.string,
         onHide: PropTypes.func
     };
 
     static defaultProps = {
-        onHide: () => {}
+        onHide: _.noop,
+        blueprintId: ''
     };
 
     componentDidUpdate(prevProps) {
         if (!prevProps.open && this.props.open) {
-            this.setState(DeployBlueprintModal.initialState);
-            const deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(this.props.blueprint.plan);
-            const actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-            actions
-                .doGetSites()
-                .then(sites => {
-                    this.setState({ deploymentInputs, sites });
-                })
-                .catch(err => {
-                    this.setState({ loading: false, error: err.message });
-                });
+            this.setState(DeployBlueprintModal.initialState, () => this.selectBlueprint(this.props.blueprintId));
         }
+    }
+
+    isBlueprintSelectable() {
+        return _.isEmpty(this.props.blueprintId);
     }
 
     onApprove() {
@@ -70,12 +65,36 @@ class DeployBlueprintModal extends React.Component {
         return true;
     }
 
+    selectBlueprint(id) {
+        if (!_.isEmpty(id)) {
+            this.setState({ loading: true });
+
+            const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
+            actions
+                .doGetFullBlueprintData({ id })
+                .then(blueprint => {
+                    const deploymentInputs = Stage.Common.InputsUtils.getInputsInitialValuesFrom(blueprint.plan);
+                    this.setState({ deploymentInputs, blueprint, errors: {}, loading: false });
+                })
+                .catch(err => {
+                    this.setState({
+                        blueprint: DeployBlueprintModal.EMPTY_BLUEPRINT,
+                        loading: false,
+                        errors: { error: err.message }
+                    });
+                });
+        } else {
+            this.setState({ blueprint: DeployBlueprintModal.EMPTY_BLUEPRINT, errors: {} });
+        }
+    }
+
     _submitDeploy() {
         const { InputsUtils } = Stage.Common;
+        const { blueprint } = this.state;
         const errors = {};
 
-        if (!this.props.blueprint) {
-            errors.error = 'Blueprint not selected';
+        if (_.isEmpty(this.state.blueprint.id)) {
+            errors.blueprintName = 'Please select blueprint from the list';
         }
 
         if (_.isEmpty(this.state.deploymentName)) {
@@ -84,7 +103,7 @@ class DeployBlueprintModal extends React.Component {
 
         const inputsWithoutValue = {};
         const deploymentInputs = InputsUtils.getInputsToSend(
-            this.props.blueprint.plan.inputs,
+            blueprint.plan.inputs,
             this.state.deploymentInputs,
             inputsWithoutValue
         );
@@ -101,7 +120,7 @@ class DeployBlueprintModal extends React.Component {
         const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         actions
             .doDeploy(
-                this.props.blueprint,
+                blueprint,
                 this.state.deploymentName,
                 deploymentInputs,
                 this.state.visibility,
@@ -127,13 +146,14 @@ class DeployBlueprintModal extends React.Component {
 
         const { FileActions, InputsUtils } = Stage.Common;
         const actions = new FileActions(this.props.toolbox);
+        const { blueprint } = this.state;
         this.setState({ fileLoading: true });
 
         actions
             .doGetYamlFileContent(file)
             .then(yamlInputs => {
                 const deploymentInputs = InputsUtils.getUpdatedInputs(
-                    this.props.blueprint.plan.inputs,
+                    blueprint.plan.inputs,
                     this.state.deploymentInputs,
                     yamlInputs
                 );
@@ -157,12 +177,8 @@ class DeployBlueprintModal extends React.Component {
 
     render() {
         const { ApproveButton, CancelButton, Form, Icon, Message, Modal, VisibilityField } = Stage.Basic;
-        const { DataTypesButton, InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
-
-        const blueprint = { ...DeployBlueprintModal.EMPTY_BLUEPRINT, ...this.props.blueprint };
-        const site_options = _.map(this.state.sites.items, site => {
-            return { text: site.name, value: site.name };
-        });
+        const { DataTypesButton, InputsHeader, InputsUtils, YamlFileButton, DynamicDropdown } = Stage.Common;
+        const { blueprint } = this.state;
 
         return (
             <Modal
@@ -205,15 +221,33 @@ class DeployBlueprintModal extends React.Component {
                             label="Site name"
                             help="(Optional) Specify a site to which this deployment will be assigned."
                         >
-                            <Form.Dropdown
-                                search
-                                selection
+                            <DynamicDropdown
                                 value={this.state.siteName}
+                                onChange={value => this.setState({ siteName: value })}
                                 name="siteName"
-                                options={site_options}
-                                onChange={this._handleInputChange.bind(this)}
+                                fetchUrl="/sites?_include=name"
+                                valueProp="name"
+                                toolbox={this.props.toolbox}
                             />
                         </Form.Field>
+
+                        {this.isBlueprintSelectable() && (
+                            <Form.Field
+                                error={this.state.errors.blueprintName}
+                                label="Blueprint"
+                                required
+                                help="Select the blueprint based on which this deployment will be created."
+                            >
+                                <DynamicDropdown
+                                    value={this.state.blueprint.id}
+                                    name="blueprintName"
+                                    fetchUrl="/blueprints?_include=id"
+                                    onChange={this.selectBlueprint.bind(this)}
+                                    toolbox={this.props.toolbox}
+                                    prefetch
+                                />
+                            </Form.Field>
+                        )}
 
                         {blueprint.id && (
                             <>
@@ -280,7 +314,7 @@ class DeployBlueprintModal extends React.Component {
                         disabled={this.state.loading}
                         content="Deploy"
                         icon="rocket"
-                        color="green"
+                        className="green"
                     />
                 </Modal.Actions>
             </Modal>
