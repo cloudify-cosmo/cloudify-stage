@@ -2,8 +2,6 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
-import DeployModal from './DeployModal';
-
 export default class extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -23,6 +21,7 @@ export default class extends React.Component {
 
     render() {
         const { Button } = Stage.Basic;
+        const { DeployBlueprintModal } = Stage.Common;
 
         return (
             <div>
@@ -36,7 +35,11 @@ export default class extends React.Component {
                     onClick={this._createDeployment.bind(this)}
                 />
 
-                <DeployModal open={this.state.open} onHide={this._hideModal.bind(this)} toolbox={this.props.toolbox} />
+                <DeployBlueprintModal
+                    open={this.state.open}
+                    onHide={this._hideModal.bind(this)}
+                    toolbox={this.props.toolbox}
+                />
             </div>
         );
     }

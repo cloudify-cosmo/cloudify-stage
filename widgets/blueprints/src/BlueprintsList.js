@@ -12,11 +12,10 @@ export default class BlueprintList extends React.Component {
         this.state = {
             showDeploymentModal: false,
             showUploadModal: false,
-            blueprint: {},
+            blueprintId: '',
             confirmDelete: false,
             error: null,
-            force: false,
-            item: { id: '' }
+            force: false
         };
     }
 
@@ -40,28 +39,15 @@ export default class BlueprintList extends React.Component {
     }
 
     _createDeployment(item) {
-        // Get the full blueprint data (including plan for inputs)
-        const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions
-            .doGetFullBlueprintData(item)
-            .then(blueprint => {
-                this.setState({ error: null, blueprint, showDeploymentModal: true });
-            })
-            .catch(err => {
-                this.setState({ error: err.message });
-            });
+        this.setState({ error: null, blueprintId: item.id, showDeploymentModal: true });
     }
 
     _deleteBlueprintConfirm(item) {
-        this.setState({
-            confirmDelete: true,
-            item,
-            force: false
-        });
+        this.setState({ confirmDelete: true, blueprintId: item.id, force: false });
     }
 
     _deleteBlueprint() {
-        if (!this.state.item) {
+        if (!this.state.blueprintId) {
             this.setState({ error: 'Something went wrong, no blueprint was selected for delete' });
             return;
         }
@@ -69,7 +55,7 @@ export default class BlueprintList extends React.Component {
         const actions = new Stage.Common.BlueprintActions(this.props.toolbox);
         this.setState({ confirmDelete: false });
         actions
-            .doDelete(this.state.item, this.state.force)
+            .doDelete(this.state.blueprintId, this.state.force)
             .then(() => {
                 this.setState({ error: null });
                 this.props.toolbox.refresh();
@@ -172,7 +158,7 @@ export default class BlueprintList extends React.Component {
                 )}
 
                 <DeleteConfirm
-                    resourceName={`blueprint ${_.get(this.state.item, 'id', '')}`}
+                    resourceName={`blueprint ${this.state.blueprintId}`}
                     force={this.state.force}
                     open={this.state.confirmDelete}
                     onConfirm={this._deleteBlueprint.bind(this)}
@@ -182,7 +168,7 @@ export default class BlueprintList extends React.Component {
 
                 <DeployBlueprintModal
                     open={this.state.showDeploymentModal}
-                    blueprint={this.state.blueprint}
+                    blueprintId={this.state.blueprintId}
                     onHide={this._hideDeploymentModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
