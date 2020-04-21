@@ -9,6 +9,7 @@
 // ***********************************************
 
 import './blueprints';
+import './deployments';
 import './users';
 import './sites';
 import './templates';

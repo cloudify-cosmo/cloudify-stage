@@ -11,24 +11,18 @@ class PluginActions {
         return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`, null, { force });
     }
 
-    doUpload(visibility, wagonUrl, yamlUrl, wagonFile, yamlFile) {
+    doUpload(visibility, resources) {
         const params = { visibility };
-
-        if (!_.isEmpty(wagonUrl)) {
-            params.wagonUrl = wagonUrl;
-        }
-
-        if (!_.isEmpty(yamlUrl)) {
-            params.yamlUrl = yamlUrl;
-        }
         const files = {};
-        if (wagonFile) {
-            files.wagon_file = wagonFile;
-        }
 
-        if (yamlFile) {
-            files.yaml_file = yamlFile;
-        }
+        _.each(resources, ({ url, file }, name) => {
+            if (file) {
+                params[`${name}Url`] = '';
+                files[`${name}_file`] = file;
+            } else if (!_.isEmpty(url)) {
+                params[`${name}Url`] = url;
+            }
+        });
 
         return this.toolbox.getInternal().doUpload('/plugins/upload', params, !_.isEmpty(files) ? files : null, 'post');
     }

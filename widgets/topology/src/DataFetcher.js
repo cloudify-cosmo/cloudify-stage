@@ -1,6 +1,6 @@
 export default class DataFetcher {
     static fetch(toolbox, blueprintId, deploymentId, fetchLayout) {
-        if (_.isEmpty(deploymentId) && _.isEmpty(blueprintId)) {
+        if (!deploymentId && !blueprintId) {
             return Promise.resolve({ data: {} });
         }
 
@@ -73,19 +73,18 @@ export default class DataFetcher {
                 });
             });
         }
-        if (blueprintId) {
-            return Promise.all([
-                toolbox.getManager().doGet(`/blueprints/${blueprintId}`),
-                getLayoutPromise(blueprintId)
-            ]).then(data => ({
-                data: data[0],
-                layout: data[1]
-            }));
-        }
+
+        return Promise.all([
+            toolbox.getManager().doGet(`/blueprints/${blueprintId}`),
+            getLayoutPromise(blueprintId)
+        ]).then(data => ({
+            data: data[0],
+            layout: data[1]
+        }));
     }
 
     static sortNodesById(nodes) {
-        nodes.sort(function(node1, node2) {
+        nodes.sort((node1, node2) => {
             if (node1.id < node2.id) {
                 return -1;
             }
