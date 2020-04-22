@@ -7,6 +7,8 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Root class for all Cloudify clients.
  * 
@@ -35,5 +37,18 @@ public class AbstractCloudifyClient {
 
     protected Builder getBuilder(final WebTarget target) {
         return target.request(MediaType.APPLICATION_JSON);
+    }
+
+    protected WebTarget commonListParams(WebTarget target, final String searchString,
+            final String sortKey,
+            final boolean descending) {
+        if (StringUtils.isNotBlank(searchString)) {
+            target = target.queryParam("_search", searchString);
+        }
+        if (StringUtils.isNotBlank(sortKey)) {
+            target = target.queryParam("_sort", String.format("%s%s",
+                    descending ? "-" : StringUtils.EMPTY, sortKey));
+        }
+        return target;
     }
 }

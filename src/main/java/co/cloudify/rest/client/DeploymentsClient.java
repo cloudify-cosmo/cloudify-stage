@@ -52,7 +52,21 @@ public class DeploymentsClient extends AbstractCloudifyClient {
      */
     public ListResponse<Deployment> list() {
         try {
-            return getDeploymentsBuilder().get(new GenericType<ListResponse<Deployment>>() {});
+            return list((String) null, null, null, false);
+        } catch (WebApplicationException ex) {
+            throw CloudifyClientException.create("Failed listing deployments", ex);
+        }
+    }
+
+    public ListResponse<Deployment> list(final String blueprintId, final String searchString, final String sortKey,
+            final boolean descending) {
+        WebTarget target = getTarget(BASE_PATH);
+        if (blueprintId != null) {
+            target = target.queryParam("blueprint_id", blueprintId);
+        }
+        target = commonListParams(target, searchString, sortKey, descending);
+        try {
+            return getBuilder(target).get(new GenericType<ListResponse<Deployment>>() {});
         } catch (WebApplicationException ex) {
             throw CloudifyClientException.create("Failed listing deployments", ex);
         }

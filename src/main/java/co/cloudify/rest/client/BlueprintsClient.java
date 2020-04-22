@@ -26,7 +26,6 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import co.cloudify.rest.client.exceptions.BlueprintNotFoundException;
 import co.cloudify.rest.client.exceptions.CloudifyClientException;
@@ -222,17 +221,11 @@ public class BlueprintsClient extends AbstractCloudifyClient {
      */
     public ListResponse<Blueprint> list(final String searchString, final String sortKey, final boolean descending) {
         WebTarget target = getTarget(BASE_PATH);
-        if (StringUtils.isNotBlank(searchString)) {
-            target = target.queryParam("_search", searchString);
-        }
-        if (StringUtils.isNotBlank(sortKey)) {
-            target = target.queryParam("_sort", String.format("%s%s",
-                    descending ? "-" : StringUtils.EMPTY, sortKey));
-        }
+        target = commonListParams(target, searchString, sortKey, descending);
         try {
             return getBuilder(target).get(new GenericType<ListResponse<Blueprint>>() {});
         } catch (WebApplicationException ex) {
-            throw CloudifyClientException.create("Failed listing blueprints", ex);
+            throw CloudifyClientException.create("Failed listing deployments", ex);
         }
     }
 }
