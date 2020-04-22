@@ -28,7 +28,7 @@ Stage.defineWidget({
                     : {}
             )
             .then(data =>
-                Promise.all(
+                Promise.allSettled(
                     _.map(data.items, item =>
                         toolbox
                             .getInternal()
