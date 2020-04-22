@@ -70,8 +70,10 @@ function zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, output) {
 }
 
 router.get('/icons/:pluginId', (req, res) => {
+    const options = {};
+    ManagerHandler.updateOptions(options, 'get');
     req.pipe(
-        request(`${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`).on(
+        request(`${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`, options).on(
             'response',
             function(response) {
                 if (response.statusCode === 404) {
