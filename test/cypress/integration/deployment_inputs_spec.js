@@ -244,10 +244,17 @@ describe('Deployments - Create new deployment modal', () => {
 
                 cy.get('@reactJsonView').trigger('mouseover');
                 cy.get('@switchIcon').click();
-                cy.get('@rawTextArea').should(
-                    'have.text',
-                    '{"a":1,"c":[1,2,3],"b":3.14,"d":{"e":1,"f":null},"g":"abc"}'
-                );
+                cy.get('@rawTextArea')
+                    .invoke('text')
+                    .then(text =>
+                        expect(JSON.parse(text)).to.deep.equal({
+                            a: 1,
+                            b: 3.14,
+                            c: [1, 2, 3],
+                            d: { e: 1, f: null },
+                            g: 'abc'
+                        })
+                    );
             });
     });
 

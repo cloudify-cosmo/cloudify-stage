@@ -149,7 +149,7 @@ describe('Sites Management', () => {
         // submit
         cy.get('.actions > .green').click();
 
-        verifySiteRow(1, { name, location: '0.0878905905308, 0.0', visibility: 'private' });
+        verifySiteRow(1, { name, location: '0.0878905905308242, 0.0', visibility: 'private' });
     });
 
     for (const site of invalidSites) {
@@ -205,7 +205,7 @@ describe('Sites Management', () => {
         // Click update
         cy.get('.actions > .green').click();
 
-        verifySiteRow(1, { name: siteWithLocation.name, location: '32.1756124785, 34.8046875' });
+        verifySiteRow(1, { name: siteWithLocation.name, location: '32.1756124784993, 34.8046875' });
     });
 
     it('update the visibility of a site', () => {
