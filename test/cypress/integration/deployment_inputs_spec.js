@@ -9,8 +9,8 @@ describe('Deployments - Create new deployment modal', () => {
                 cy.get('input').type(`${blueprintPrefix}${type}`);
                 cy.get(`div[option-value="${blueprintPrefix}${type}_type"]`).click();
             });
-        cy.get('form').should('have.class', 'loading');
-        cy.get('form', { timeout: 5000 }).should('not.have.class', 'loading');
+        cy.get('.modal form').should('have.class', 'loading');
+        cy.get('.modal form', { timeout: 5000 }).should('not.have.class', 'loading');
     };
 
     const checkAttribute = (input, attrName, attrValue) => {
