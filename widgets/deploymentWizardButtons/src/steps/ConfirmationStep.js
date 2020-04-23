@@ -89,12 +89,18 @@ class ConfirmationStepContent extends React.Component {
 
         for (const pluginName of _.keys(plugins)) {
             const plugin = plugins[pluginName];
-            const wagonUrl = plugin.wagonFile ? '' : plugin.wagonUrl;
-            const yamlUrl = plugin.yamlFile ? '' : plugin.yamlUrl;
+
+            const createUploadResource = name => ({
+                [name]: { url: plugin[`${name}Url`], file: plugin[`${name}File`] }
+            });
 
             tasks.push(
                 new Task(`Upload plugin ${pluginName}`, () =>
-                    pluginActions.doUpload(plugin.visibility, wagonUrl, yamlUrl, plugin.wagonFile, plugin.yamlFile)
+                    pluginActions.doUpload(plugin.visibility, {
+                        ...createUploadResource('wagon'),
+                        ...createUploadResource('yaml'),
+                        ...createUploadResource('icon')
+                    })
                 )
             );
         }

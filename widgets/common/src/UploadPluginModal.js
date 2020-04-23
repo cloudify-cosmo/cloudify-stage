@@ -21,6 +21,8 @@ class UploadPluginModal extends React.Component {
         wagonFile: null,
         yamlUrl: '',
         yamlFile: null,
+        iconUrl: '',
+        iconFile: null,
         errors: {},
         visibility: Stage.Common.Consts.defaultVisibility
     };
@@ -36,8 +38,7 @@ class UploadPluginModal extends React.Component {
     }
 
     uploadPlugin() {
-        const wagonUrl = this.state.wagonFile ? '' : this.state.wagonUrl;
-        const yamlUrl = this.state.yamlFile ? '' : this.state.yamlUrl;
+        const { wagonUrl, yamlUrl, iconUrl } = this.state;
 
         const errors = {};
 
@@ -57,6 +58,10 @@ class UploadPluginModal extends React.Component {
             }
         }
 
+        if (!this.state.iconFile && !_.isEmpty(iconUrl) && !Stage.Utils.Url.isUrl(iconUrl)) {
+            errors.iconUrl = 'Please provide valid URL for icon file';
+        }
+
         if (!_.isEmpty(errors)) {
             this.setState({ errors });
             return false;
@@ -65,9 +70,17 @@ class UploadPluginModal extends React.Component {
         // Disable the form
         this.setState({ loading: true });
 
+        const createUploadResource = name => ({
+            [name]: { url: this.state[`${name}Url`], file: this.state[`${name}File`] }
+        });
+
         const actions = new Stage.Common.PluginActions(this.props.toolbox);
         actions
-            .doUpload(this.state.visibility, wagonUrl, yamlUrl, this.state.wagonFile, this.state.yamlFile)
+            .doUpload(this.state.visibility, {
+                ...createUploadResource('wagon'),
+                ...createUploadResource('yaml'),
+                ...createUploadResource('icon')
+            })
             .then(() => {
                 this.setState({ errors: {}, loading: false }, this.props.onHide);
                 this.props.toolbox.refresh();
@@ -99,9 +112,8 @@ class UploadPluginModal extends React.Component {
                 <Modal.Content>
                     <UploadPluginForm
                         wagonUrl={this.state.wagonUrl}
-                        wagonFile={this.state.wagonFile}
                         yamlUrl={this.state.yamlUrl}
-                        yamlFile={this.state.yamlFile}
+                        iconUrl={this.state.iconUrl}
                         errors={this.state.errors}
                         loading={this.state.loading}
                         onChange={this.onFormFieldChange.bind(this)}

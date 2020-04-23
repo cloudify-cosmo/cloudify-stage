@@ -45,11 +45,14 @@ function downloadFile(url) {
     });
 }
 
-function zipFiles(wagonFile, wagonFilename, yamlFile, output) {
+function zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, output) {
     return new Promise((resolve, reject) => {
         const archive = archiver('zip');
         archive.append(wagonFile, { name: wagonFilename });
         archive.append(yamlFile, { name: 'plugin.yaml' });
+        if (iconFile) {
+            archive.append(iconFile, { name: 'icon.png' });
+        }
 
         archive.on('error', err => {
             logger.error(`Failed archiving plugin. ${err}`);
@@ -66,10 +69,24 @@ function zipFiles(wagonFile, wagonFilename, yamlFile, output) {
     });
 }
 
+router.get('/icons/:pluginId', (req, res) => {
+    req.pipe(
+        request(`${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`).on(
+            'response',
+            function(response) {
+                if (response.statusCode === 404) {
+                    res.status(200).end();
+                    this.abort();
+                }
+            }
+        )
+    ).pipe(res);
+});
+
 router.post(
     '/upload',
     passport.authenticate('token', { session: false }),
-    upload.fields([{ name: 'wagon_file', maxCount: 1 }, { name: 'yaml_file', maxCount: 1 }]),
+    upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,
     function(req, res, next) {
         const promises = [];
@@ -89,8 +106,16 @@ router.post(
             promises.push(Promise.resolve(req.files.yaml_file[0].buffer));
         }
 
+        if (req.query.iconUrl) {
+            promises.push(downloadFile(req.query.iconUrl));
+        } else if (_.get(req.files, 'icon_file')) {
+            promises.push(Promise.resolve(req.files.icon_file[0].buffer));
+        } else {
+            promises.push(null);
+        }
+
         Promise.all(promises)
-            .then(([wagonFile, yamlFile]) => {
+            .then(([wagonFile, yamlFile, iconFile]) => {
                 const uploadRequest = ManagerHandler.request(
                     'post',
                     `/plugins?visibility=${req.query.visibility}`,
@@ -113,7 +138,7 @@ router.post(
                     }
                 );
 
-                zipFiles(wagonFile, wagonFilename, yamlFile, uploadRequest).catch(err => {
+                zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, uploadRequest).catch(err => {
                     res.status(500).send({ message: `Failed zipping the plugin. ${err}` });
                 });
             })

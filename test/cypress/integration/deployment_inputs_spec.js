@@ -1,5 +1,5 @@
 describe('Deployments - Create new deployment modal', () => {
-    const blueprintPrefix = 'cypress_test_';
+    const blueprintPrefix = 'inputs_test_';
     const firstInputNthChild = 8;
 
     const selectBlueprintInModal = type => {
@@ -9,8 +9,8 @@ describe('Deployments - Create new deployment modal', () => {
                 cy.get('input').type(`${blueprintPrefix}${type}`);
                 cy.get(`div[option-value="${blueprintPrefix}${type}_type"]`).click();
             });
-        cy.get('form').should('have.class', 'loading');
-        cy.get('form', { timeout: 5000 }).should('not.have.class', 'loading');
+        cy.get('.modal form').should('have.class', 'loading');
+        cy.get('.modal form', { timeout: 5000 }).should('not.have.class', 'loading');
     };
 
     const checkAttribute = (input, attrName, attrValue) => {
@@ -244,10 +244,17 @@ describe('Deployments - Create new deployment modal', () => {
 
                 cy.get('@reactJsonView').trigger('mouseover');
                 cy.get('@switchIcon').click();
-                cy.get('@rawTextArea').should(
-                    'have.text',
-                    '{"a":1,"c":[1,2,3],"b":3.14,"d":{"e":1,"f":null},"g":"abc"}'
-                );
+                cy.get('@rawTextArea')
+                    .invoke('text')
+                    .then(text =>
+                        expect(JSON.parse(text)).to.deep.equal({
+                            a: 1,
+                            b: 3.14,
+                            c: [1, 2, 3],
+                            d: { e: 1, f: null },
+                            g: 'abc'
+                        })
+                    );
             });
     });
 
