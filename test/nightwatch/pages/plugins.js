@@ -16,7 +16,7 @@ module.exports = {
             selector: '.pluginsTable',
             elements: {
                 searchInput: 'input',
-                packageName: 'tr td:nth-child(2)',
+                packageName: 'tr td:nth-child(3)',
                 deleteButton: '.rowActions i.trash'
             }
         },

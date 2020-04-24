@@ -18,17 +18,17 @@ Stage.defineWidget({
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30), Stage.GenericConfig.PAGE_SIZE_CONFIG()],
 
-    fetchData(widget, toolbox) {
+    fetchData(widget, toolbox, params) {
         return toolbox
             .getManager()
             .doGet(
                 '/plugins?_include=id,package_name,package_version,supported_platform,distribution,distribution_release,uploaded_at,created_by,visibility',
                 toolbox.getContext().getValue('onlyMyResources')
-                    ? { created_by: toolbox.getManager().getCurrentUsername() }
-                    : {}
+                    ? { ...params, created_by: toolbox.getManager().getCurrentUsername() }
+                    : params
             )
             .then(data =>
-                Promise.allSettled(
+                Promise.all(
                     _.map(data.items, item =>
                         toolbox
                             .getInternal()
