@@ -14,6 +14,19 @@ const paths = Object.freeze({
     deployAndInstall: 'deployAndInstall'
 });
 
+const messages = {
+    [paths.deploy]: {
+        [steps.validateData]: '1/2: Validating data...',
+        [steps.deployBlueprint]: '2/2: Deploying blueprint...'
+    },
+    [paths.deployAndInstall]: {
+        [steps.validateData]: '1/4: Validating data...',
+        [steps.deployBlueprint]: '2/4: Deploying blueprint...',
+        [steps.waitForDeployment]: '3/4: Creating deployment environment... ',
+        [steps.installDeployment]: '4/4: Installing deployment...'
+    }
+};
+
 class DeployBlueprintModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
@@ -62,19 +75,6 @@ class DeployBlueprintModal extends React.Component {
     }
 
     setLoadingMessage(path, step) {
-        const messages = {
-            [paths.deploy]: {
-                [steps.validateData]: '1/2: Validating data...',
-                [steps.deployBlueprint]: '2/2: Deploying blueprint...'
-            },
-            [paths.deployAndInstall]: {
-                [steps.validateData]: '1/4: Validating data...',
-                [steps.deployBlueprint]: '2/4: Deploying blueprint...',
-                [steps.waitForDeployment]: '3/4: Creating deployment environment... ',
-                [steps.installDeployment]: '4/4: Installing deployment...'
-            }
-        };
-
         // eslint-disable-next-line security/detect-object-injection
         this.setState({ loadingMessage: messages[path][step] });
     }
