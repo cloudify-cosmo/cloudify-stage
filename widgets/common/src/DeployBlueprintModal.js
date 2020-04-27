@@ -156,7 +156,7 @@ class DeployBlueprintModal extends React.Component {
 
     selectBlueprint(id) {
         if (!_.isEmpty(id)) {
-            this.setState({ loading: true });
+            this.setState({ loading: true, loadingMessage: 'Loading inputs...' });
             const { toolbox } = this.props;
             const { BlueprintActions, InputsUtils } = Stage.Common;
 

@@ -9,8 +9,10 @@ describe('Deployments - Create new deployment modal', () => {
                 cy.get('input').type(`${blueprintPrefix}${type}`);
                 cy.get(`div[option-value="${blueprintPrefix}${type}_type"]`).click();
             });
-        cy.get('.modal form').should('have.class', 'loading');
-        cy.get('.modal form', { timeout: 5000 }).should('not.have.class', 'loading');
+        cy.get('div.deployBlueprintModal div.ui.text.loader')
+            .as('loader')
+            .should('be.visible');
+        cy.get('@loader', { timeout: 5000 }).should('not.be.visible');
     };
 
     const checkAttribute = (input, attrName, attrValue) => {
@@ -400,7 +402,7 @@ describe('Deployments - Create new deployment modal', () => {
             });
         cy.get('string_constraint_pattern').should('not.have.class', 'error');
 
-        cy.get('.actions > button.ui.button.green').click();
+        cy.get(`.actions > .ui:nth-child(2)`).click();
         cy.wait('@deployBlueprint');
 
         cy.get('div.error.message > ul > li').should(
