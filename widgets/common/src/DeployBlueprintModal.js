@@ -14,7 +14,7 @@ const paths = Object.freeze({
     deployAndInstall: 'deployAndInstall'
 });
 
-const messages = {
+const messages = Object.freeze({
     [paths.deploy]: {
         [steps.validateData]: '1/2: Validating data...',
         [steps.deployBlueprint]: '2/2: Deploying blueprint...'
@@ -25,7 +25,7 @@ const messages = {
         [steps.waitForDeployment]: '3/4: Creating deployment environment... ',
         [steps.installDeployment]: '4/4: Installing deployment...'
     }
-};
+});
 
 class DeployBlueprintModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
