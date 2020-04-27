@@ -2,6 +2,12 @@
  * Created by jakub.niezgoda on 17/08/2018.
  */
 
+const placeholders = {
+    wagon: "Provide the plugin's wagon file URL or click browse to select a file",
+    yaml: "Provide the plugin's YAML file URL or click browse to select a file",
+    icon: "Provide the plugin's icon file URL or click browse to select a file"
+};
+
 class UploadPluginForm extends React.Component {
     constructor(props) {
         super(props);
@@ -9,25 +15,20 @@ class UploadPluginForm extends React.Component {
 
     static propTypes = {
         wagonUrl: PropTypes.string,
-        wagonFile: PropTypes.object,
-        wagonPlaceholder: PropTypes.string,
         yamlUrl: PropTypes.string,
-        yamlFile: PropTypes.object,
-        yamlPlaceholder: PropTypes.string,
+        iconUrl: PropTypes.string,
         errors: PropTypes.object,
         loading: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
         wrapInForm: PropTypes.bool,
-        addRequiredMarks: PropTypes.bool
+        addRequiredMarks: PropTypes.bool,
+        hidePlaceholders: PropTypes.bool
     };
 
     static defaultProps = {
         wagonUrl: '',
-        wagonFile: null,
-        wagonPlaceholder: "Provide the plugin's wagon file URL or click browse to select a file",
         yamlUrl: '',
-        yamlFile: null,
-        yamlPlaceholder: "Provide the plugin's YAML file URL or click browse to select a file",
+        iconUrl: '',
         errors: {},
         loading: false,
         wrapInForm: true,
@@ -44,70 +45,38 @@ class UploadPluginForm extends React.Component {
         this.props.onChange(UploadPluginForm.NO_ERRORS);
     }
 
-    _onWagonFileChange(file) {
+    onChange(field, file, url) {
         this.props.onChange({
             ...UploadPluginForm.NO_ERRORS,
-            wagonFile: file || null,
-            wagonUrl: file ? file.name : ''
+            [`${field}File`]: file,
+            [`${field}Url`]: url
         });
     }
 
-    _onYamlFileChange(file) {
-        this.props.onChange({
-            ...UploadPluginForm.NO_ERRORS,
-            yamlFile: file || null,
-            yamlUrl: file ? file.name : ''
-        });
-    }
-
-    onWagonUrlChange(wagonUrl) {
-        this.props.onChange({
-            ...UploadPluginForm.NO_ERRORS,
-            wagonFile: null,
-            wagonUrl
-        });
-    }
-
-    onYamlUrlChange(yamlUrl) {
-        this.props.onChange({
-            ...UploadPluginForm.NO_ERRORS,
-            yamlFile: null,
-            yamlUrl
-        });
+    createFormField(field, required) {
+        const { Form } = Stage.Basic;
+        const fieldName = field.toLowerCase();
+        const urlProp = `${fieldName}Url`;
+        return (
+            <Form.Field label={`${field} file`} required={required} key={field} error={this.props.errors[urlProp]}>
+                <Form.UrlOrFile
+                    name={fieldName}
+                    value={this.props[urlProp]}
+                    placeholder={this.props.hidePlaceholders ? '' : placeholders[fieldName]}
+                    onChangeUrl={url => this.onChange(fieldName, null, url)}
+                    onChangeFile={file => this.onChange(fieldName, file || null, file ? file.name : '')}
+                />
+            </Form.Field>
+        );
     }
 
     render() {
-        const { Container, Form, Label } = Stage.Basic;
+        const { Container, Form } = Stage.Basic;
 
         const formFields = [
-            <Form.Field
-                label="Wagon file"
-                required={this.props.addRequiredMarks}
-                key="wagon"
-                error={this.props.errors.wagonUrl}
-            >
-                <Form.UrlOrFile
-                    name="wagon"
-                    value={this.props.wagonUrl}
-                    placeholder={this.props.wagonPlaceholder}
-                    onChangeUrl={this.onWagonUrlChange.bind(this)}
-                    onChangeFile={this._onWagonFileChange.bind(this)}
-                />
-            </Form.Field>,
-            <Form.Field
-                label="YAML file"
-                required={this.props.addRequiredMarks}
-                key="yaml"
-                error={this.props.errors.yamlUrl}
-            >
-                <Form.UrlOrFile
-                    name="yaml"
-                    value={this.props.yamlUrl}
-                    placeholder={this.props.yamlPlaceholder}
-                    onChangeUrl={this.onYamlUrlChange.bind(this)}
-                    onChangeFile={this._onYamlFileChange.bind(this)}
-                />
-            </Form.Field>
+            this.createFormField('Wagon', this.props.addRequiredMarks),
+            this.createFormField('YAML', this.props.addRequiredMarks),
+            this.createFormField('Icon', false)
         ];
 
         if (this.props.wrapInForm) {

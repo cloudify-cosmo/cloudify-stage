@@ -31,7 +31,7 @@ function _errorHandler(url, res, err) {
 function buildManagerUrl(req, res, next) {
     const serverUrl = req.query.su;
     if (serverUrl) {
-        req.su = ManagerHandler.getUrl() + serverUrl;
+        req.su = ManagerHandler.getApiUrl() + serverUrl;
         logger.debug(`Proxying ${req.method} request to server with url: ${req.su}`);
         next();
     } else {

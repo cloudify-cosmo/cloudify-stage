@@ -17,7 +17,11 @@ module.exports = (function() {
         process.exit(1);
     }
 
-    function getUrl() {
+    function getManagerUrl() {
+        return config.managerUrl;
+    }
+
+    function getApiUrl() {
         return `${config.managerUrl}/api/${config.manager.apiVersion}`;
     }
 
@@ -47,7 +51,7 @@ module.exports = (function() {
     }
 
     function request(method, url, headers, data, onSuccess, onError, timeout) {
-        const requestUrl = this.getUrl() + (_.startsWith(url, '/') ? url : `/${url}`);
+        const requestUrl = this.getApiUrl() + (_.startsWith(url, '/') ? url : `/${url}`);
         const requestOptions = {};
         this.updateOptions(requestOptions, method, timeout, headers, data);
 
@@ -82,7 +86,8 @@ module.exports = (function() {
     }
 
     return {
-        getUrl,
+        getApiUrl,
+        getManagerUrl,
         updateOptions,
         request,
         jsonRequest
