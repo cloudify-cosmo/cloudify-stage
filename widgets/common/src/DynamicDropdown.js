@@ -83,8 +83,10 @@ function DynamicDropdown({
     }, []);
 
     useEffect(() => {
-        if (!_.isEmpty(value) && _.isEmpty(options)) {
-            setOptions([{ [valueProp]: value }]);
+        if (_.isEmpty(value)) {
+            setOptions(_.reject(options, 'implicit'));
+        } else if (!_.find(options, { [valueProp]: value })) {
+            setOptions([{ [valueProp]: value, implicit: true }, ...options]);
         }
     }, [value]);
 
@@ -98,7 +100,7 @@ function DynamicDropdown({
         .filter(option =>
             _(filter)
                 .mapValues(v => toolbox.getContext().getValue(v))
-                .map((v, k) => _.isEmpty(v) || _.includes(v, option[k]))
+                .map((v, k) => _.isEmpty(v) || _.isEmpty(option[k]) || _.includes(v, option[k]))
                 .every(Boolean)
         )
         .uniqBy(valueProp)

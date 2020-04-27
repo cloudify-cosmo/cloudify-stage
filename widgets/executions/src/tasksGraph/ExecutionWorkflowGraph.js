@@ -188,10 +188,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     onChangeTool={_.noop}
                 >
                     <svg width={this.state.graphResult.width} height={this.state.graphResult.height}>
-                        <GraphNodes
-                            graphNodes={this.state.graphResult.children}
-                            context={this.props.toolbox.getContext()}
-                        />
+                        <GraphNodes graphNodes={this.state.graphResult.children} toolbox={this.props.toolbox} />
                         <GraphEdges graphEdges={this.state.graphResult.edges} />
                     </svg>
                 </ReactSVGPanZoom>

@@ -52,7 +52,9 @@ export default class ExecutionsTable extends React.Component {
     }
 
     _selectExecution(item) {
-        const context = this.props.toolbox.getContext();
+        const { toolbox } = this.props;
+
+        const context = toolbox.getContext();
         const oldSelectedExecutionId = context.getValue('executionId');
         context.setValue('executionId', item.id === oldSelectedExecutionId ? null : item.id);
         context.setValue('nodeInstanceId', null);
@@ -61,6 +63,8 @@ export default class ExecutionsTable extends React.Component {
             ...context.getValue(eventFilter),
             operationText: null
         });
+
+        toolbox.getEventBus().trigger('filter:refresh');
     }
 
     actOnExecution(execution, action) {

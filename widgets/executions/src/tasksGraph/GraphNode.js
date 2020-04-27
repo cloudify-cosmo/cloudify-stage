@@ -16,7 +16,7 @@ const colors = {
     failed: 'rgb(249, 25, 25)'
 };
 
-const GraphNode = ({ graphNode, context }) => {
+const GraphNode = ({ graphNode, toolbox }) => {
     const { Icon } = Stage.Basic;
     const labels = graphNode.labels[0];
 
@@ -89,12 +89,18 @@ const GraphNode = ({ graphNode, context }) => {
                         style={{ fontSize: '1.3em', cursor: 'pointer' }}
                         title="Show related entries in Deployment Events/Logs widget"
                         onClick={() => {
+                            const context = toolbox.getContext();
+                            const eventBus = toolbox.getEventBus();
+
                             context.setValue('nodeInstanceId', nodeInstanceId);
+                            eventBus.trigger('filter:refresh');
+
                             const eventFilter = 'eventFilter';
                             context.setValue(eventFilter, {
                                 ...context.getValue(eventFilter),
                                 operationText: operation
                             });
+                            eventBus.trigger('eventsFilter:refresh');
                         }}
                     />
                 </foreignObject>
@@ -129,9 +135,9 @@ GraphNode.propTypes = {
         nodeInstanceId: PropTypes.string,
         operation: PropTypes.string
     }).isRequired,
-    context: PropTypes.shape({
-        setValue: PropTypes.func.isRequired,
-        getValue: PropTypes.func.isRequired
+    toolbox: PropTypes.shape({
+        getContext: PropTypes.func.isRequired,
+        getEventBus: PropTypes.func.isRequired
     }).isRequired
 };
 
