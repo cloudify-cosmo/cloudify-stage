@@ -15,11 +15,11 @@ class BlueprintActions {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprint.id}`);
     }
 
-    doDelete(blueprint, force = false) {
+    doDelete(blueprintId, force = false) {
         return this.toolbox
             .getManager()
-            .doDelete(`/blueprints/${blueprint.id}`, { force })
-            .then(() => this.doDeleteImage(blueprint.id));
+            .doDelete(`/blueprints/${blueprintId}`, { force })
+            .then(() => this.doDeleteImage(blueprintId));
     }
 
     doDeploy(

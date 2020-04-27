@@ -93,6 +93,29 @@ class DeploymentActions {
     doGetSites() {
         return this.toolbox.getManager().doGet('/sites?_include=name&_sort=name');
     }
+
+    async waitUntilCreated(deploymentId, maxNumberOfRetries = 60, waitingInterval = 1000 /* ms */) {
+        const { ExecutionActions } = Stage.Common;
+
+        const executionActions = new ExecutionActions(this.toolbox);
+        let deploymentCreated = false;
+        for (let i = 0; i < maxNumberOfRetries && !deploymentCreated; i += 1) {
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise(resolve => {
+                setTimeout(resolve, waitingInterval);
+            })
+                .then(() => executionActions.doGetExecutions(deploymentId))
+                .then(({ items }) => {
+                    deploymentCreated = !_.isEmpty(items) && _.isUndefined(_.find(items, { ended_at: null }));
+                });
+        }
+
+        if (deploymentCreated) {
+            return Promise.resolve();
+        }
+        const timeout = Math.floor((maxNumberOfRetries * waitingInterval) / 1000);
+        return Promise.reject(`Timeout exceeded. Deployment was not created after ${timeout} seconds.`);
+    }
 }
 
 Stage.defineCommon({

@@ -167,36 +167,13 @@ class ConfirmationStepContent extends React.Component {
 
     addDeployBlueprintTask(deploymentId, blueprintId, inputs, visibility, tasks) {
         const blueprintActions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        const executionActions = new Stage.Common.ExecutionActions(this.props.toolbox);
-
-        const waitForDeploymentIsCreated = async () => {
-            const maxNumberOfRetries = 60;
-            const waitingInterval = 1000; // ms
-
-            let deploymentCreated = false;
-            for (let i = 0; i < maxNumberOfRetries && !deploymentCreated; i++) {
-                await new Promise(resolve => {
-                    console.debug('Waiting for deployment is created...', i);
-                    setTimeout(resolve, waitingInterval);
-                })
-                    .then(() => executionActions.doGetExecutions(deploymentId))
-                    .then(({ items }) => {
-                        deploymentCreated = !_.isEmpty(items) && _.isUndefined(_.find(items, { ended_at: null }));
-                    });
-            }
-
-            if (deploymentCreated) {
-                return Promise.resolve();
-            }
-            const timeout = Math.floor((maxNumberOfRetries * waitingInterval) / 1000);
-            return Promise.reject(`Timeout exceeded. Deployment was not created after ${timeout} seconds.`);
-        };
+        const deploymentActions = new Stage.Common.DeploymentActions(this.props.toolbox);
 
         tasks.push(
             new Task(`Create ${deploymentId} deployment from ${blueprintId} blueprint`, () =>
                 blueprintActions
                     .doDeploy({ id: blueprintId }, deploymentId, inputs, visibility)
-                    .then(() => waitForDeploymentIsCreated())
+                    .then(() => deploymentActions.waitUntilCreated(deploymentId))
             )
         );
 

@@ -1,0 +1,12 @@
+.dropdown.dynamic .menu .item.disabled {
+    padding: 0 !important;
+    background: white !important;
+}
+
+.dropdown.dynamic .menu .item.disabled .ui.segment {
+    margin: 3px 0 9px 0;
+}
+
+.dropdown.dynamic .menu .item.disabled .text {
+    display: none;
+}

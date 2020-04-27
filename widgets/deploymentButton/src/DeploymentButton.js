@@ -2,44 +2,17 @@
  * Created by kinneretzin on 18/10/2016.
  */
 
-import DeployModal from './DeployModal';
-
 export default class extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
-            open: false,
-            loading: false,
-            error: null,
-            blueprints: { items: [] },
-            sites: { items: [] }
+            open: false
         };
     }
 
     _createDeployment() {
-        this.setState({ loading: true });
-
-        let actions = new Stage.Common.BlueprintActions(this.props.toolbox);
-        actions
-            .doGetBlueprints()
-            .then(blueprints => {
-                this.setState({ loading: false, error: null, blueprints, open: true });
-            })
-            .catch(err => {
-                this.setState({ loading: false, error: err.message });
-            });
-
-        actions = new Stage.Common.DeploymentActions(this.props.toolbox);
-        actions
-            .doGetSites()
-            .then(sites => {
-                const { blueprints } = this.state;
-                this.setState({ loading: false, error: null, sites, blueprints, open: true });
-            })
-            .catch(err => {
-                this.setState({ loading: false, error: err.message });
-            });
+        this.setState({ open: true });
     }
 
     _hideModal() {
@@ -47,12 +20,11 @@ export default class extends React.Component {
     }
 
     render() {
-        const { Button, ErrorMessage } = Stage.Basic;
+        const { Button } = Stage.Basic;
+        const { DeployBlueprintModal } = Stage.Common;
 
         return (
             <div>
-                <ErrorMessage error={this.state.error} onDismiss={() => this.setState({ error: null })} autoHide />
-
                 <Button
                     color="green"
                     icon="rocket"
@@ -63,10 +35,8 @@ export default class extends React.Component {
                     onClick={this._createDeployment.bind(this)}
                 />
 
-                <DeployModal
+                <DeployBlueprintModal
                     open={this.state.open}
-                    blueprints={this.state.blueprints}
-                    sites={this.state.sites}
                     onHide={this._hideModal.bind(this)}
                     toolbox={this.props.toolbox}
                 />
