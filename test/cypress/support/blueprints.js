@@ -1,3 +1,5 @@
+import { waitUntilEmpty } from './resource_commons';
+
 Cypress.Commands.add('uploadBlueprint', (pathOrUrl, id, yamlFile = 'blueprint.yaml') => {
     if (pathOrUrl.startsWith('http')) {
         return cy.cfyRequest(
@@ -14,7 +16,7 @@ Cypress.Commands.add('deleteBlueprint', (blueprintId, force = false) => {
 });
 
 Cypress.Commands.add('deleteBlueprints', (search, force = false) => {
-    cy.cfyRequest(`/blueprints?_search=${search}`, 'GET').then(response =>
-        response.body.items.forEach(({ id }) => cy.deleteBlueprint(id, force))
-    );
+    cy.cfyRequest(`/blueprints?_search=${search}`, 'GET')
+        .then(response => response.body.items.forEach(({ id }) => cy.deleteBlueprint(id, force)))
+        .then(() => waitUntilEmpty('blueprints', search));
 });

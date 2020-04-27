@@ -10,6 +10,7 @@
 
 import './blueprints';
 import './deployments';
+import './executions';
 import './users';
 import './sites';
 import './templates';
