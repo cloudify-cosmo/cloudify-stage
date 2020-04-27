@@ -119,7 +119,7 @@ module.exports = {
             elements: {
                 privateResource: '.header i[title="Private resource"]',
                 deploymentName: '.content input[name="deploymentName"]',
-                deployButton: '.actions button.ok',
+                deployButton: '.actions button:nth-child(2)',
                 cancelButton: '.actions button.cancel'
             },
             commands: [
