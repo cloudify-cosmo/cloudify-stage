@@ -74,6 +74,7 @@ describe('Topology', () => {
         cy.contains('Default workflows').click();
         cy.contains('.menu a', 'Install').click();
         cy.contains('.modal .button', 'Execute').click();
+        cy.get('.executionsTable tr:eq(2)');
         cy.get('.executionsTable tr:eq(1)').contains('completed');
 
         cy.reload();
