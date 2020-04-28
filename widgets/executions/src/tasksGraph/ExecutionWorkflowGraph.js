@@ -94,7 +94,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
             execution_id: this.props.selectedExecution.id,
             name: this.props.selectedExecution.workflow_id
         };
-        return this.props.widgetBackend.doGet('get_tasks_graph', { ...tasksGraphParams });
+        return this.props.toolbox.getWidgetBackend().doGet('get_tasks_graph', { ...tasksGraphParams });
     }
 
     scrollTo(x, y, zoom = 1, autoFocusOnly = true, frame = 1) {
@@ -188,7 +188,7 @@ export default class ExecutionWorkflowGraph extends React.Component {
                     onChangeTool={_.noop}
                 >
                     <svg width={this.state.graphResult.width} height={this.state.graphResult.height}>
-                        <GraphNodes graphNodes={this.state.graphResult.children} />
+                        <GraphNodes graphNodes={this.state.graphResult.children} toolbox={this.props.toolbox} />
                         <GraphEdges graphEdges={this.state.graphResult.edges} />
                     </svg>
                 </ReactSVGPanZoom>

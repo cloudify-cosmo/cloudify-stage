@@ -161,16 +161,15 @@ module.exports = r => {
                 taskName = taskName.length > 1 ? taskName[1] : _.upperFirst(taskName[0]);
 
                 let taskOperation = '';
-                if (
-                    task.parameters.task_kwargs.cloudify_context &&
-                    task.parameters.task_kwargs.cloudify_context.operation
-                ) {
-                    taskOperation = task.parameters.task_kwargs.cloudify_context.operation.name;
+                const taskArgs = task.parameters.task_kwargs;
+                if (taskArgs.cloudify_context && taskArgs.cloudify_context.operation) {
+                    taskOperation = taskArgs.cloudify_context.operation.name;
                     taskOperation = _.split(taskOperation, 'cloudify.interfaces.');
                     taskOperation = taskOperation.length > 1 ? taskOperation[1] : taskOperation[0];
                     taskOperation = _.capitalize(_.lowerCase(taskOperation));
                 }
 
+                const cloudifyContext = _.get(taskArgs.kwargs, '__cloudify_context', {});
                 let subGraph = {
                     // subGraph can be a subGraph or a 'leaf'
                     id: task.id,
@@ -184,6 +183,8 @@ module.exports = r => {
                             display_text: ''
                         }
                     ],
+                    nodeInstanceId: cloudifyContext.node_id,
+                    operation: _.get(cloudifyContext.operation, 'name'),
                     children: [],
                     edges: [],
                     containing_subgraph: null // Needed to distinguish which nodes to keep (=not null -> not root-level subgraphs -> will be removed)
@@ -350,30 +351,30 @@ module.exports = r => {
                 }
                 if (subGraph.children && subGraph.children.length === 0) {
                     // if leaf and not the 'edges' object
+                    const labels = subGraph.labels[0];
                     let numberOfSplits = 0;
                     let textToCalculate = '';
-                    if (subGraph.labels[0].text) {
-                        textToCalculate = subGraph.labels[0].text;
+                    if (labels.text) {
+                        textToCalculate = labels.text;
                         textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
                         // Each element in the resulting array will be rendered in a separate <text> element
-                        subGraph.labels[0].display_title = textToCalculate;
+                        labels.display_title = textToCalculate;
                         numberOfSplits += textToCalculate.length - 1;
                     }
                     // Description text
                     const tempArr = [];
-                    if (subGraph.labels[0].operation) {
-                        tempArr.push(subGraph.labels[0].operation);
+                    if (labels.operation) {
+                        tempArr.push(labels.operation);
                     }
-                    if (subGraph.labels[0].state) {
-                        tempArr.push(subGraph.labels[0].state);
-                    }
-                    if (subGraph.labels[0].retry) {
-                        tempArr.push(subGraph.labels[0].retry);
+                    const { state } = labels;
+                    if (state) {
+                        const retriesCount = labels.retry;
+                        tempArr.push(state === 'Pending' && retriesCount ? `Pending retry (${retriesCount})` : state);
                     }
                     textToCalculate = tempArr.join(' - ');
                     textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
                     // Each element in the resulting array will be rendered in a separate <text> element
-                    subGraph.labels[0].display_text = textToCalculate;
+                    labels.display_text = textToCalculate;
                     numberOfSplits += textToCalculate.length - 1;
                     if (numberOfSplits > 0) {
                         subGraph.height += textHeight * numberOfSplits;

@@ -16,7 +16,8 @@ const colors = {
     failed: 'rgb(249, 25, 25)'
 };
 
-const GraphNode = ({ graphNode }) => {
+const GraphNode = ({ graphNode, toolbox }) => {
+    const { Icon } = Stage.Basic;
     const labels = graphNode.labels[0];
 
     let currentTextPlacement_Y = 0;
@@ -29,6 +30,7 @@ const GraphNode = ({ graphNode }) => {
     const stateColor = colors[mappedState];
 
     const headerHeight = _.size(title) * textHeight + textHeight / 2;
+    const { nodeInstanceId, operation } = graphNode;
     return (
         <g className="g-tasks-graph-general">
             {stateColor && (
@@ -75,6 +77,34 @@ const GraphNode = ({ graphNode }) => {
                     </text>
                 ))}
             >
+            {displayText && nodeInstanceId && operation && (state !== 'Pending' || labels.retry > 0) && (
+                <foreignObject
+                    width={textHeight}
+                    height={textHeight * 2}
+                    x={graphNode.width - textHeight - 3}
+                    y={headerHeight + 3}
+                >
+                    <Icon
+                        name="file alternate outline"
+                        style={{ fontSize: '1.3em', cursor: 'pointer' }}
+                        title="Show related entries in Deployment Events/Logs widget"
+                        onClick={() => {
+                            const context = toolbox.getContext();
+                            const eventBus = toolbox.getEventBus();
+
+                            context.setValue('nodeInstanceId', nodeInstanceId);
+                            eventBus.trigger('filter:refresh');
+
+                            const eventFilter = 'eventFilter';
+                            context.setValue(eventFilter, {
+                                ...context.getValue(eventFilter),
+                                operationText: operation
+                            });
+                            eventBus.trigger('eventsFilter:refresh');
+                        }}
+                    />
+                </foreignObject>
+            )}
             {displayText &&
                 displayText.map(line => (
                     <text
@@ -95,12 +125,19 @@ GraphNode.propTypes = {
             PropTypes.shape({
                 displayTitle: PropTypes.arrayOf(PropTypes.string),
                 text: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-                state: PropTypes.string
+                state: PropTypes.string,
+                retry: PropTypes.number
             })
         ),
         height: PropTypes.number,
         width: PropTypes.number,
-        children: PropTypes.array
+        children: PropTypes.array,
+        nodeInstanceId: PropTypes.string,
+        operation: PropTypes.string
+    }).isRequired,
+    toolbox: PropTypes.shape({
+        getContext: PropTypes.func.isRequired,
+        getEventBus: PropTypes.func.isRequired
     }).isRequired
 };
 

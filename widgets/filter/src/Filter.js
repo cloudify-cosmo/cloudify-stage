@@ -2,12 +2,29 @@ const deploymentFilter = { deployment_id: 'deploymentId' };
 const blueprintFilter = { blueprint_id: 'blueprintId' };
 const blueprintDeploymentFilter = { ...deploymentFilter, ...blueprintFilter };
 
+const filterFields = [
+    'blueprintId',
+    'deploymentId',
+    'nodeId',
+    'nodeInstanceId',
+    'executionId',
+    'executionStatus',
+    'siteName'
+];
+
 export default class Filter extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
+            ...this.getStateFromContext(),
             error: null
+        };
+
+        this.eventHandlers = {
+            'blueprints:refresh': this.selectBlueprint,
+            'deployments:refresh': this.selectDeployment,
+            'filter:refresh': () => this.setState(this.getStateFromContext())
         };
     }
 
@@ -20,13 +37,21 @@ export default class Filter extends React.Component {
     }
 
     componentDidMount() {
-        this.props.toolbox.getEventBus().on('blueprints:refresh', this.selectBlueprint, this);
-        this.props.toolbox.getEventBus().on('deployments:refresh', this.selectDeployment, this);
+        const { toolbox } = this.props;
+        _.each(this.eventHandlers, (handler, eventName) => toolbox.getEventBus().on(eventName, handler, this));
     }
 
     componentWillUnmount() {
-        this.props.toolbox.getEventBus().off('blueprints:refresh', this.selectBlueprint);
-        this.props.toolbox.getEventBus().off('deployments:refresh', this.selectDeployment);
+        const { toolbox } = this.props;
+        _.each(this.eventHandlers, (handler, eventName) => toolbox.getEventBus().off(eventName, handler));
+    }
+
+    getStateFromContext() {
+        const { toolbox } = this.props;
+        return _(filterFields)
+            .keyBy()
+            .mapValues(filterField => toolbox.getContext().getValue(filterField) || null)
+            .value();
     }
 
     setValue(name, value) {
@@ -39,14 +64,8 @@ export default class Filter extends React.Component {
         const newAllowMultipleSelection = this.props.configuration.allowMultipleSelection;
 
         if (oldAllowMultipleSelection !== newAllowMultipleSelection) {
-            this.setValue('blueprintId', null);
-            this.setValue('deploymentId', null);
-            this.setValue('nodeId', null);
-            this.setValue('nodeInstanceId', null);
-            this.setValue('executionId', null);
+            filterFields.forEach(filterField => this.setValue(filterField, null));
             this.setValue('depNodeId', null);
-            this.setValue('executionStatus', null);
-            this.setValue('siteName', null);
         }
     }
 
@@ -194,7 +213,8 @@ export default class Filter extends React.Component {
                             createDropdown({
                                 entityName: 'Execution',
                                 fetchIncludeExtra: 'workflow_id',
-                                textFormatter: item => `${item.id} (${item.workflow_id})`,
+                                textFormatter: item =>
+                                    item.workflow_id ? `${item.id} (${item.workflow_id})` : item.id,
                                 filter: blueprintDeploymentFilter,
                                 pageSize: 20
                             }),

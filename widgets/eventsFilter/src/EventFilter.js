@@ -1,3 +1,17 @@
+const contextValueKey = 'eventFilter';
+const refreshEvent = 'eventsFilter:refresh';
+
+const initialFields = Object.freeze({
+    eventType: [],
+    timeRange: Stage.Basic.DateRangeInput.EMPTY_VALUE,
+    timeStart: '',
+    timeEnd: '',
+    type: '',
+    messageText: '',
+    operationText: '',
+    logLevel: []
+});
+
 export default class EventFilter extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -24,16 +38,7 @@ export default class EventFilter extends React.Component {
     }
 
     static initialState = (eventTypeOptions, logLevelOptions) => ({
-        fields: {
-            eventType: [],
-            timeRange: Stage.Basic.DateRangeInput.EMPTY_VALUE,
-            timeStart: '',
-            timeEnd: '',
-            type: '',
-            messageText: '',
-            operationText: '',
-            logLevel: []
-        },
+        fields: initialFields,
         eventTypeOptions,
         logLevelOptions
     });
@@ -43,10 +48,23 @@ export default class EventFilter extends React.Component {
     }
 
     componentDidMount() {
+        const { toolbox } = this.props;
         this.debouncedContextUpdate = _.debounce(
-            () => this.props.toolbox.getContext().setValue('eventFilter', this.state.fields),
+            () => toolbox.getContext().setValue(contextValueKey, this.state.fields),
             500
         );
+        toolbox.getEventBus().on(refreshEvent, this.refreshFilter, this);
+    }
+
+    componentWillUnmount() {
+        const { toolbox } = this.props;
+        toolbox.getEventBus().off(refreshEvent, this.refreshFilter);
+    }
+
+    refreshFilter() {
+        const { toolbox } = this.props;
+        const fields = toolbox.getContext().getValue(contextValueKey);
+        this.setState({ fields: { ...initialFields, ...fields } });
     }
 
     _renderLabel(data, index, defaultLabelProps) {
