@@ -5,7 +5,7 @@ describe('Topology', () => {
     const blueprintId = `${resourcePrefix}bp`;
     const deploymentId = `${resourcePrefix}dep`;
     const pluginWagonUrl =
-        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.13.1/cloudify_terraform_plugin-0.13.1-py27-none-linux_x86_64-centos-Core.wgn';
+        'http://repository.cloudifysource.org/cloudify/wagons/cloudify-terraform-plugin/0.13.1/cloudify_terraform_plugin-0.13.1-py27-none-linux_x86_64-redhat-Maipo.wgn';
     const pluginYamlUrl = 'http://www.getcloudify.org/spec/terraform-plugin/0.13.1/plugin.yaml';
     const blueprintFile = 'blueprints/topology.zip';
 
