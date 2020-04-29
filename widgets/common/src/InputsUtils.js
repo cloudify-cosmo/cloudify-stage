@@ -223,7 +223,7 @@ class InputsUtils {
         let deploymentInputs = {};
 
         _.forEach(inputs, (inputObj, inputName) => {
-            let stringInputValue = inputsValues[inputName];
+            const stringInputValue = JsonUtils.getStringValue(inputsValues[inputName]);
             let typedInputValue = JsonUtils.getTypedValue(stringInputValue);
 
             if (_.isEmpty(stringInputValue) && _.isNil(inputObj.default)) {
