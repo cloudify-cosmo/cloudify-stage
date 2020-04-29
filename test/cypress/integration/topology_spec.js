@@ -70,10 +70,7 @@ describe('Topology', () => {
         cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
 
         // Install the deployment
-        cy.contains('Execute workflow').click();
-        cy.contains('Default workflows').click();
-        cy.contains('.menu a', 'Install').click();
-        cy.contains('.modal .button', 'Execute').click();
+        cy.executeWorkflow(deploymentId, 'install');
         cy.get('.executionsTable tr:eq(2)');
         cy.get('.executionsTable tr:eq(1)').contains('completed');
 
