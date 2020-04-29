@@ -310,15 +310,19 @@ describe('Template Management', () => {
         cy.removeUserTemplates();
 
         // Install templates
-        cy.stageRequest('/console/templates', 'POST', null, {
-            id: 'templateForViewer',
-            data: { roles: [defaultUser.tenants[0].role], tenants: [defaultUser.tenants[0].name] },
-            pages: [builtInPages[0].id, builtInPages[2].id, builtInPages[4].id]
+        cy.stageRequest('/console/templates', 'POST', {
+            body: {
+                id: 'templateForViewer',
+                data: { roles: [defaultUser.tenants[0].role], tenants: [defaultUser.tenants[0].name] },
+                pages: [builtInPages[0].id, builtInPages[2].id, builtInPages[4].id]
+            }
         });
-        cy.stageRequest('/console/templates', 'POST', null, {
-            id: 'templateForManager',
-            data: { roles: [defaultUser.tenants[1].role], tenants: [defaultUser.tenants[1].name] },
-            pages: [builtInPages[1].id, builtInPages[3].id, builtInPages[5].id]
+        cy.stageRequest('/console/templates', 'POST', {
+            body: {
+                id: 'templateForManager',
+                data: { roles: [defaultUser.tenants[1].role], tenants: [defaultUser.tenants[1].name] },
+                pages: [builtInPages[1].id, builtInPages[3].id, builtInPages[5].id]
+            }
         });
 
         cy.login(defaultUser.username, defaultUser.password);

@@ -3,6 +3,7 @@ import { createExpandedTopology } from './DataProcessor';
 import ScrollerGlassHandler from './ScrollerGlassHandler';
 
 import pluginsData from './pluginsData.json';
+import TerraformDetailsModal from './TerraformDetailsModal';
 
 const saveConfirmationTimeout = 2500;
 
@@ -22,18 +23,8 @@ function isNodesChanged(topologyNodes, newNodes) {
     return false;
 }
 
-function findExpandedNode(currentTopology, nodeId) {
-    return _.find(currentTopology.nodes, node => {
-        let found = false;
-        _.each(node.templateData.deploymentSettings, deploymentSettings => {
-            // This will check if one of the node instances has that id,
-            // currently we only support one node instance for nodes that can extend.
-            if (deploymentSettings.id === nodeId) {
-                found = true;
-            }
-        });
-        return found;
-    });
+function findExpandedNode(currentTopology, deploymentId) {
+    return _.find(currentTopology.nodes, node => node.templateData.deploymentId === deploymentId);
 }
 
 export default class Topology extends React.Component {
@@ -130,8 +121,9 @@ export default class Topology extends React.Component {
                 this.processedTopologyData = data;
             },
             onDeploymentNodeClick: deploymentId => this.goToDeploymentPage(deploymentId),
-            onExpandClick: (deploymentId, nodeId) => this.markDeploymentsToExpand(deploymentId, nodeId),
+            onExpandClick: deploymentId => this.markDeploymentsToExpand(deploymentId),
             onCollapseClick: deploymentId => this.collapseExpendedDeployments(deploymentId),
+            onTerraformDetailsClick: node => this.setState({ terraformDetails: node.templateData.terraformResources }),
             onLayoutSave: layout =>
                 toolbox
                     .getInternal()
@@ -162,20 +154,14 @@ export default class Topology extends React.Component {
                 .map('templateData')
                 .filter({ actual_number_of_instances: 1 })
                 .each(templateData => {
-                    const deploymentId = _(templateData.deploymentSettings)
-                        .map('id')
-                        .compact()
-                        .head();
-                    if (deploymentId) {
-                        const componentDeploymentData = componentDeploymentsData[deploymentId];
-                        if (componentDeploymentData) {
-                            determineComponentsPlugins(componentDeploymentData);
-                            templateData.plugins = _(componentDeploymentData.nodes)
-                                .flatMap('templateData.plugins')
-                                .filter('package_name')
-                                .uniq()
-                                .value();
-                        }
+                    const componentDeploymentData = componentDeploymentsData[templateData.deploymentId];
+                    if (componentDeploymentData) {
+                        determineComponentsPlugins(componentDeploymentData);
+                        templateData.plugins = _(componentDeploymentData.nodes)
+                            .flatMap('templateData.plugins')
+                            .filter('package_name')
+                            .uniq()
+                            .value();
                     }
                 });
         };
@@ -295,6 +281,10 @@ export default class Topology extends React.Component {
                     position="top center"
                     style={{ left: 'unset', right: 65 }}
                     trigger={<div id="topologyContainer" />}
+                />
+                <TerraformDetailsModal
+                    terraformDetails={this.state.terraformDetails}
+                    onClose={() => this.setState({ terraformDetails: null })}
                 />
             </div>
         );

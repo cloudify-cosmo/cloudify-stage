@@ -15,6 +15,7 @@ import './users';
 import './sites';
 import './templates';
 import './localStorage';
+import './plugins';
 
 let token = '';
 
@@ -99,16 +100,15 @@ Cypress.Commands.add('cfyFileRequest', (filePath, isBinaryFile, url, method = 'P
     );
 });
 
-Cypress.Commands.add('stageRequest', (url, method = 'GET', headers = null, body = null) => {
+Cypress.Commands.add('stageRequest', (url, method = 'GET', options) => {
     cy.request({
         method,
         url,
         headers: {
             'Content-Type': 'application/json',
-            ...getCommonHeaders(),
-            ...headers
+            ...getCommonHeaders()
         },
-        body
+        ...options
     });
 });
 
