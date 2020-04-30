@@ -1,8 +1,6 @@
 import { Topology as BlueprintTopology } from 'cloudify-blueprint-topology';
 import { createExpandedTopology } from './DataProcessor';
 import ScrollerGlassHandler from './ScrollerGlassHandler';
-
-import pluginsData from './pluginsData.json';
 import TerraformDetailsModal from './TerraformDetailsModal';
 
 const saveConfirmationTimeout = 2500;
@@ -65,7 +63,11 @@ export default class Topology extends React.Component {
         const { blueprintId, configuration, data } = this.props;
         const { expandedDeployments } = this.state;
 
-        if (configuration !== prevProps.configuration || blueprintId !== prevProps.blueprintId) {
+        if (
+            configuration !== prevProps.configuration ||
+            blueprintId !== prevProps.blueprintId ||
+            !_.isEqual(data.icons, prevProps.data.icons)
+        ) {
             this.startTopology();
         }
 
@@ -99,7 +101,12 @@ export default class Topology extends React.Component {
     }
 
     startTopology() {
-        const { blueprintId, configuration, toolbox } = this.props;
+        const {
+            blueprintId,
+            configuration,
+            toolbox,
+            data: { icons }
+        } = this.props;
         this.destroyTopology();
         this.topology = new BlueprintTopology({
             isLoading: true,
@@ -132,7 +139,7 @@ export default class Topology extends React.Component {
                         this.setState({ saveConfirmationOpen: true });
                         setTimeout(() => this.setState({ saveConfirmationOpen: false }), saveConfirmationTimeout);
                     }),
-            pluginsCatalog: pluginsData
+            pluginsCatalog: _.map(icons, (icon, name) => ({ icon, name, title: name }))
         });
         this.topology.start();
     }
@@ -303,7 +310,8 @@ Topology.propTypes = {
     data: PropTypes.shape({
         blueprintDeploymentData: PropTypes.object,
         componentDeploymentsData: PropTypes.object,
-        layout: PropTypes.object
+        layout: PropTypes.object,
+        icons: PropTypes.object
     }),
     // eslint-disable-next-line react/forbid-prop-types
     toolbox: PropTypes.object.isRequired
@@ -322,6 +330,7 @@ Topology.defaultProps = {
     data: {
         blueprintDeploymentData: {},
         componentDeploymentsData: {},
-        layout: {}
+        layout: {},
+        icons: {}
     }
 };

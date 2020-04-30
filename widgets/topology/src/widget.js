@@ -70,17 +70,72 @@ Stage.defineWidget({
             ).then(componentDeploymentsData => _.merge(...componentDeploymentsData));
         }
 
-        return DataFetcher.fetch(toolbox, blueprintId, deploymentId, true).then(rawBlueprintData => {
-            const processedBlueprintData = createBaseTopology(rawBlueprintData);
-            const result = { processedBlueprintData, rawBlueprintData };
-            if (deploymentId) {
-                return fetchComponentsDeploymentsData(processedBlueprintData).then(componentDeploymentsData => ({
-                    componentDeploymentsData,
-                    ...result
-                }));
-            }
-            return result;
-        });
+        return DataFetcher.fetch(toolbox, blueprintId, deploymentId, true)
+            .then(rawBlueprintData => {
+                const processedBlueprintData = createBaseTopology(rawBlueprintData);
+                const result = { processedBlueprintData, rawBlueprintData };
+                if (deploymentId) {
+                    return fetchComponentsDeploymentsData(processedBlueprintData).then(componentDeploymentsData => ({
+                        componentDeploymentsData,
+                        ...result
+                    }));
+                }
+                return result;
+            })
+            .then(data => {
+                const plugins = _(data.componentDeploymentsData)
+                    .flatMap('nodes')
+                    .concat(data.processedBlueprintData.nodes)
+                    .flatMap('templateData.plugins')
+                    .map(plugin => _.pick(plugin, 'package_name', 'package_version'))
+                    .uniqWith(_.isEqual)
+                    .filter(plugin => plugin.package_name && plugin.package_version)
+                    .value();
+
+                if (_.isEmpty(plugins)) return data;
+
+                return toolbox
+                    .getManager()
+                    .doGet('/plugins?_include=id,package_name,package_version')
+                    .then(pluginsData =>
+                        Promise.all(
+                            _.map(plugins, plugin =>
+                                toolbox
+                                    .getInternal()
+                                    .doGet(
+                                        `/plugins/icons/${
+                                            (
+                                                _.find(pluginsData.items, plugin) ||
+                                                _.find(pluginsData.items, _.pick(plugin, 'package_name'))
+                                            ).id
+                                        }`,
+                                        null,
+                                        false
+                                    )
+                                    .then(response => response.blob())
+                                    .then(
+                                        blob =>
+                                            new Promise(resolve => {
+                                                if (blob.size) {
+                                                    const reader = new FileReader();
+                                                    reader.addEventListener('error', () => resolve());
+                                                    reader.addEventListener('load', () => {
+                                                        resolve({ [plugin.package_name]: reader.result });
+                                                    });
+                                                    reader.readAsDataURL(blob);
+                                                } else {
+                                                    resolve();
+                                                }
+                                            })
+                                    )
+                            )
+                        )
+                    )
+                    .then(icons => ({
+                        ...data,
+                        icons: _.reduce(icons, _.merge)
+                    }));
+            });
     },
 
     render(widget, data, error, toolbox) {
@@ -90,7 +145,8 @@ Stage.defineWidget({
             rawBlueprintData: {
                 data: { id },
                 layout
-            }
+            },
+            icons
         } = _.isEmpty(data) ? { rawBlueprintData: { data: { id: '' }, layout: {} } } : data;
 
         const deploymentId = toolbox.getContext().getValue('deploymentId');
@@ -98,7 +154,8 @@ Stage.defineWidget({
         const formattedData = {
             blueprintDeploymentData,
             componentDeploymentsData,
-            layout
+            layout,
+            icons
         };
 
         return (
