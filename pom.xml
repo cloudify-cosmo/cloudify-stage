@@ -8,6 +8,24 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jersey.version>2.30</jersey.version>
     </properties>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>isaac-s</id>
+            <name>Isaac Shabtay</name>
+            <email>isaac-s@users.noreply.github.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <connection>https://github.com/cloudify-cosmo/cloudify-java-rest-client.git</connection>
+        <developerConnection>https://github.com/cloudify-cosmo/cloudify-java-rest-client.git</developerConnection>
+        <url>https://github.com/cloudify-cosmo/cloudify-java-rest-client.git</url>
+    </scm>
     <dependencies>
         <!--
         Compile-time dependencies.
