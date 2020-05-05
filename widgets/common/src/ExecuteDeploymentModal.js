@@ -190,7 +190,7 @@ export default class ExecuteDeploymentModal extends React.Component {
                 className="executeWorkflowModal"
             >
                 <Modal.Header>
-                    <Icon name="road" /> Execute workflow {workflow.name}
+                    <Icon name="cogs" /> Execute workflow {workflow.name}
                     {deploymentName && ` on ${deploymentName}`}
                 </Modal.Header>
 
@@ -313,7 +313,7 @@ export default class ExecuteDeploymentModal extends React.Component {
                         onClick={this.onApprove.bind(this)}
                         disabled={this.state.loading}
                         content="Execute"
-                        icon="rocket"
+                        icon="cogs"
                         color="green"
                     />
                 </Modal.Actions>
