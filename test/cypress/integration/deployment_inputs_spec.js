@@ -39,7 +39,7 @@ describe('Deployments - Create new deployment modal', () => {
     };
 
     before(() => {
-        cy.activate('valid_spire_license').login();
+        cy.activate('valid_trial_license').login();
 
         cy.deleteBlueprints(blueprintPrefix);
         const types = ['boolean', 'dict', 'float', 'integer', 'list', 'regex', 'string'];

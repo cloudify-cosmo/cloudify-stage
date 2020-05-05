@@ -10,7 +10,7 @@ describe('Topology', () => {
     const blueprintFile = 'blueprints/topology.zip';
 
     before(() => {
-        cy.activate('valid_spire_license').login();
+        cy.activate('valid_trial_license').login();
 
         cy.installPlugin(pluginWagonUrl, pluginYamlUrl)
             .deleteDeployments(resourcePrefix, true)

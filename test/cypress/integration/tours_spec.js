@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 describe('Tours', () => {
-    before(() => cy.activate('valid_spire_license').deleteAllUsersAndTenants());
+    before(() => cy.activate('valid_trial_license').deleteAllUsersAndTenants());
 
     beforeEach(() => cy.get('#toursButton').click());
 

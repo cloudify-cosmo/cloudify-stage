@@ -2,7 +2,7 @@ import { className, styles } from '../support/cluster_status_commons';
 
 describe('Cluster Status', () => {
     before(() => {
-        cy.activate('valid_spire_license');
+        cy.activate('valid_trial_license');
         cy.login();
     });
 
