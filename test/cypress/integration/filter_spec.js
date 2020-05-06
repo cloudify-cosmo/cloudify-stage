@@ -1,6 +1,6 @@
 describe('Filter', () => {
     before(() => {
-        cy.activate('valid_spire_license')
+        cy.activate('valid_trial_license')
             .deleteAllUsersAndTenants()
             .login();
     });
