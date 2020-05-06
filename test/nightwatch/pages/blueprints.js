@@ -2,6 +2,8 @@
  * Created by kinneretzin on 25/12/2016.
  */
 
+const _ = require('lodash');
+
 module.exports = {
     sections: {
         blueprintsTable: {
@@ -125,16 +127,15 @@ module.exports = {
             commands: [
                 {
                     fillIn(deploymentName, blueprintInputs) {
-                        const _ = require('lodash');
                         this.waitForElementVisible('@deploymentName')
                             .setElementValue('@deploymentName', deploymentName)
                             .api.perform(() =>
-                                _.each(blueprintInputs, (inputObject, inputName) =>
-                                    this.setElementValue(
-                                        `${inputObject.type === 'string' ? 'input' : 'textarea'}[name="${inputName}"]`,
-                                        inputObject.value
-                                    )
-                                )
+                                _.each(blueprintInputs, (inputObject, inputName) => {
+                                    const selector = `${
+                                        inputObject.type === 'string' ? 'input' : 'textarea'
+                                    }[name="${inputName}"]`;
+                                    return this.resetValue(selector).setElementValue(selector, inputObject.value);
+                                })
                             );
                         return this;
                     },
@@ -224,7 +225,8 @@ module.exports = {
     props: {
         widgetId: 'blueprints',
         testBlueprint: 'blueprint',
-        testBlueprintUrl: 'https://github.com/cloudify-cosmo/cloudify-nodecellar-example/archive/master.zip',
+        testBlueprintUrl:
+            'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-42/simple-hello-world-example.zip',
         testBlueprintYamlFile: 'local-blueprint.yaml'
     },
 
