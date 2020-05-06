@@ -221,7 +221,7 @@ export default class Topology extends React.Component {
                     name: resource.name,
                     templateData: {
                         type: 'cloudify.nodes.terraform.Node',
-                        plugins: terraformNode.templateData.plugins,
+                        plugins: [{ package_name: 'Terraform resource' }],
                         capabilities: {
                             scalable: {
                                 properties: {}
