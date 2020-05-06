@@ -24,7 +24,7 @@
     "e2e:new": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
     "e2e:new:dev": "cypress run --reporter spec",
     "e2e:new:open": "cypress open",
-    "e2e:old": "echo nightwatch -c ./test/nightwatch/nightwatch.conf.js",
+    "e2e:old": "nightwatch -c ./test/nightwatch/nightwatch.conf.js",
     "e2e:old:dev": "nightwatch -c ./test/nightwatch/nightwatch.conf.js --env dev",
     "lint": "eslint app backend widgets test scripts --ext .js",
     "prodtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec --recursive \"./test/**/*Test.js\"",
