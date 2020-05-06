@@ -227,7 +227,7 @@ module.exports = {
         testBlueprint: 'blueprint',
         testBlueprintUrl:
             'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-42/simple-hello-world-example.zip',
-        testBlueprintYamlFile: 'local-blueprint.yaml'
+        testBlueprintYamlFile: 'blueprint.yaml'
     },
 
     commands: [
