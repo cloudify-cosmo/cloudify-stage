@@ -4,6 +4,7 @@
 
 import MenuAction from './MenuAction';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
+import ExecutionProgress from './ExecutionProgress';
 
 export default class DeploymentsSegment extends React.Component {
     static propTypes = {
@@ -146,6 +147,11 @@ export default class DeploymentsSegment extends React.Component {
                                     </Grid.Column>
                                 </Grid.Row>
                             </Grid>
+                            <ExecutionProgress
+                                execution={item.lastExecution}
+                                instancesCount={item.nodeInstancesCount}
+                                instancesStates={item.nodeInstancesStates}
+                            />
                         </DataSegment.Item>
                     );
                 })}
