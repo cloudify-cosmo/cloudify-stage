@@ -77,36 +77,64 @@ describe('Topology', () => {
         cy.reload();
 
         // Check terraform module details
-        function checkTerraformRawData(row, triggers) {
-            cy.get(`.modal tr:eq(${row}) td:eq(3)`)
-                .invoke('text')
-                .then(rawData => {
-                    const parsedData = JSON.parse(rawData);
-                    expect(_.omit(parsedData, 'instances')).to.deep.equal({
-                        provider: 'provider.null',
-                        type: 'null_resource',
-                        mode: 'managed',
-                        name: `foo${row}`
-                    });
-                    expect(parsedData.instances.length).to.equal(1);
-                    expect(_.omit(parsedData.instances[0], 'attributes')).to.deep.equal({
-                        private: 'bnVsbA==',
-                        schema_version: 0
-                    });
-                    expect(_.size(parsedData.instances[0].attributes)).to.equal(2);
-                    expect(parsedData.instances[0].attributes.id).to.match(/^\d+$/);
-                    expect(parsedData.instances[0].attributes.triggers).to.deep.equal(triggers);
-                });
-        }
-
-        cy.get('.nodeTopologyButton').click({ force: true });
+        cy.get('.nodeTopologyButton:eq(0)').click({ force: true });
         cy.get('.modal td:eq(0)').should('have.text', 'null_resource');
         cy.get('.modal td:eq(2)').should('have.text', 'provider.null');
         cy.get('.modal tr:eq(1) td:eq(1)').should('have.text', 'foo1');
         cy.get('.modal tr:eq(2) td:eq(1)').should('have.text', 'foo2');
-        checkTerraformRawData(1, {
-            cluster_instance_ids: 'dummy_id'
-        });
-        checkTerraformRawData(2, null);
+        cy.get('.modal tr:eq(1) td:eq(3)')
+            .invoke('text')
+            .then(rawData => {
+                const parsedData = JSON.parse(rawData);
+                expect(_.omit(parsedData, 'instances')).to.deep.equal({
+                    provider: 'provider.null',
+                    type: 'null_resource',
+                    mode: 'managed',
+                    name: 'foo1',
+                    each: 'list'
+                });
+                expect(parsedData.instances.length).to.equal(2);
+                parsedData.instances.forEach((instance, i) => {
+                    expect(_.omit(instance, 'attributes')).to.deep.equal({
+                        private: 'bnVsbA==',
+                        schema_version: 0,
+                        dependencies: ['null_resource.foo2'],
+                        index_key: i
+                    });
+                    expect(_.size(instance.attributes)).to.equal(2);
+                    expect(instance.attributes.id).to.match(/^\d+$/);
+                    expect(instance.attributes.triggers).to.deep.equal({ cluster_instance_ids: 'dummy_id' });
+                });
+            });
+        cy.get('.modal tr:eq(2) td:eq(3)')
+            .invoke('text')
+            .then(rawData => {
+                const parsedData = JSON.parse(rawData);
+                expect(_.omit(parsedData, 'instances')).to.deep.equal({
+                    provider: 'provider.null',
+                    type: 'null_resource',
+                    mode: 'managed',
+                    name: 'foo2'
+                });
+                expect(parsedData.instances.length).to.equal(1);
+                expect(_.omit(parsedData.instances[0], 'attributes')).to.deep.equal({
+                    private: 'bnVsbA==',
+                    schema_version: 0
+                });
+                expect(_.size(parsedData.instances[0].attributes)).to.equal(2);
+                expect(parsedData.instances[0].attributes.id).to.match(/^\d+$/);
+                expect(parsedData.instances[0].attributes.triggers).to.be.null;
+            });
+        cy.contains('Close').click();
+
+        cy.get('.nodeTopologyButton:eq(1)').click({ force: true });
+        cy.contains('.nodeContainer', 'foo1').contains('.plannedInstances', 2);
+        cy.contains('.nodeContainer', 'foo2').contains('.plannedInstances', 1);
+        cy.get('.connectorContainer').should('have.length', 2);
+
+        cy.get('.nodeTopologyButton:eq(1)').click({ force: true });
+        cy.contains('foo1').should('not.exist');
+        cy.contains('foo2').should('not.exist');
+        cy.get('.connectorContainer').should('have.length', 1);
     });
 });

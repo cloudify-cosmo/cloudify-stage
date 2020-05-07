@@ -37,7 +37,7 @@ export default class Topology extends React.Component {
         this.processedTopologyData = null;
         this.scrollerGlassHandler = new ScrollerGlassHandler(this.glassRef);
 
-        this.state = { saveConfirmationOpen: false, expandedDeployments: [] };
+        this.state = { saveConfirmationOpen: false, expandedDeployments: [], expandedTerraformNodes: [] };
     }
 
     componentDidMount() {
@@ -61,7 +61,7 @@ export default class Topology extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         const { blueprintId, configuration, data } = this.props;
-        const { expandedDeployments } = this.state;
+        const { expandedDeployments, expandedTerraformNodes } = this.state;
 
         if (
             configuration !== prevProps.configuration ||
@@ -73,7 +73,8 @@ export default class Topology extends React.Component {
 
         if (
             data.blueprintDeploymentData !== prevProps.data.blueprintDeploymentData ||
-            expandedDeployments !== prevState.expandedDeployments
+            expandedDeployments !== prevState.expandedDeployments ||
+            expandedTerraformNodes !== prevState.expandedTerraformNodes
         ) {
             const isFirstTimeLoading = this.topologyData === null;
             const oldTopologyData = this.topologyData;
@@ -128,9 +129,11 @@ export default class Topology extends React.Component {
                 this.processedTopologyData = data;
             },
             onDeploymentNodeClick: deploymentId => this.goToDeploymentPage(deploymentId),
-            onExpandClick: deploymentId => this.markDeploymentsToExpand(deploymentId),
-            onCollapseClick: deploymentId => this.collapseExpendedDeployments(deploymentId),
+            onExpandClick: this.getExpandHandler('expandedDeployments'),
+            onCollapseClick: this.getCollapseHandler('expandedDeployments'),
             onTerraformDetailsClick: node => this.setState({ terraformDetails: node.templateData.terraformResources }),
+            onTerraformExpandClick: this.getExpandHandler('expandedTerraformNodes'),
+            onTerraformCollapseClick: this.getCollapseHandler('expandedTerraformNodes'),
             onLayoutSave: layout =>
                 toolbox
                     .getInternal()
@@ -148,7 +151,7 @@ export default class Topology extends React.Component {
         const {
             data: { blueprintDeploymentData, componentDeploymentsData }
         } = this.props;
-        const { expandedDeployments } = this.state;
+        const { expandedDeployments, expandedTerraformNodes } = this.state;
 
         if (_.isEmpty(blueprintDeploymentData)) {
             return null;
@@ -211,6 +214,56 @@ export default class Topology extends React.Component {
             deploymentsCount = currentDeploymentsCount;
         }
 
+        expandedTerraformNodes.forEach(terraformNodeData => {
+            const terraformNode = _.find(topology.nodes, node => _.matches(node.templateData, terraformNodeData));
+            const terraformDeploymentNodes = _.map(terraformNode.templateData.terraformResources, resource => {
+                const newNode = {
+                    name: resource.name,
+                    templateData: {
+                        type: 'cloudify.nodes.terraform.Node',
+                        plugins: [{ package_name: 'Terraform resource' }],
+                        capabilities: {
+                            scalable: {
+                                properties: {}
+                            }
+                        },
+                        actual_planned_number_of_instances: _.size(resource.instances)
+                    },
+                    container: { parent: terraformNode }
+                };
+                terraformNode.children = terraformNode.children || [];
+                terraformNode.children.push(newNode);
+                return newNode;
+            });
+            topology.nodes.push(...terraformDeploymentNodes);
+
+            _.each(terraformNode.templateData.terraformResources, resource =>
+                _(resource.instances)
+                    .flatMap('dependencies')
+                    .compact()
+                    .uniq()
+                    .forEach(dependency => {
+                        const [, dependencyName] = dependency.split('.');
+                        const side1 = _.find(terraformDeploymentNodes, _.pick(resource, 'name'));
+                        const side2 = _.find(terraformDeploymentNodes, { name: dependencyName });
+                        const connector = {
+                            name: '',
+                            id: `terraformDependency:${resource.name}.${dependencyName}`,
+                            templateData: {
+                                type: 'cloudify.relationships.depends_on'
+                            },
+                            side1,
+                            side2
+                        };
+                        side1.connectedTo = side1.connectedTo || [];
+                        side1.connectedTo.push(connector);
+                        side2.connectedTo = side2.connectedTo || [];
+                        side2.connectedTo.push(connector);
+                        topology.connectors.push(connector);
+                    })
+            );
+        });
+
         return topology;
     }
 
@@ -252,21 +305,24 @@ export default class Topology extends React.Component {
         toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId: nodeDeploymentId }, nodeDeploymentId);
     }
 
-    markDeploymentsToExpand(deploymentId) {
-        const { expandedDeployments: currentExpanded } = this.state;
+    getExpandHandler(stateProp) {
+        return entityId => {
+            const currentExpanded = this.state[stateProp];
 
-        if (_.includes(currentExpanded, deploymentId)) {
-            // Nothing to do
-            return;
-        }
+            if (_.find(currentExpanded, entityId)) {
+                // Nothing to do
+                return;
+            }
 
-        this.setState({ expandedDeployments: [...currentExpanded, deploymentId] });
+            this.setState({ [stateProp]: [...currentExpanded, entityId] });
+        };
     }
 
-    collapseExpendedDeployments(deploymentId) {
-        const { expandedDeployments: currentExpanded } = this.state;
-
-        this.setState({ expandedDeployments: _.without(currentExpanded, deploymentId) });
+    getCollapseHandler(stateProp) {
+        return entityId => {
+            const currentExpanded = this.state[stateProp];
+            this.setState({ [stateProp]: _.reject(currentExpanded, entityId) });
+        };
     }
 
     render() {
