@@ -3,15 +3,17 @@
  */
 
 const BLUEPRINT_NAME = 'TestBlueprint123';
-const BLUEPRINT_FILENAME = 'simple-blueprint.yaml';
+const BLUEPRINT_FILENAME = 'blueprint.yaml';
 const BLUEPRINT_SINGLE_YAML_NAME = 'SingleYamlBlueprint';
 const BLUEPRINT_SINGLE_YAML_FILENAME = 'singleYamlBlueprint.yaml';
+const DEPLOYMENT_NAME = 'TestDeployment123';
 
 module.exports = {
     before(client) {
         client
             .log('Setting up...')
             .login()
+            .removeDeployment(DEPLOYMENT_NAME)
             .removeBlueprint(BLUEPRINT_NAME)
             .prepareTestWidget(client.page.blueprints().props.widgetId);
     },
@@ -62,18 +64,9 @@ module.exports = {
     },
 
     'Blueprint deploy': function(client) {
-        const DEPLOYMENT_NAME = 'TestDeployment123';
         const BLUEPRINT_INPUTS = {
-            agent_private_key_path: {
-                value: 'agentpath',
-                type: null
-            },
-            agent_user: {
-                value: 'agentuser',
-                type: null
-            },
-            host_ip: {
-                value: 'IP',
+            webserver_port: {
+                value: '9999',
                 type: null
             }
         };
@@ -95,21 +88,6 @@ module.exports = {
         // Wait for widget to fetch data and update deployment count
         client.pause(5000);
         page.section.blueprintsTable.checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 1);
-
-        page.removeDeployment(DEPLOYMENT_NAME);
-
-        // Wait for widget to fetch data and update deployment count
-        client.pause(5000);
-        page.section.blueprintsTable.checkIfDeploymentsCountEqual(BLUEPRINT_NAME, 0);
-    },
-
-    'Blueprint remove - archive file': function(client) {
-        const page = client.page.blueprints();
-
-        page.section.blueprintsTable.checkIfBlueprintPresent(BLUEPRINT_NAME).clickRemove(BLUEPRINT_NAME);
-        page.section.removeBlueprintModal.clickYes();
-
-        page.section.blueprintsTable.checkIfBlueprintRemoved(BLUEPRINT_NAME);
     },
 
     'Blueprint upload - single YAML file': function(client) {

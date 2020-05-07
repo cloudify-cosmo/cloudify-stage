@@ -26,10 +26,10 @@ module.exports = {
             .section.source.waitForElementPresent('@tree')
             .waitForElementPresent('@blueprintHeader')
             .assert.containsText('@blueprintHeader', client.page.blueprints().props.testBlueprint)
-            .waitForElementPresent('@vsphereYaml')
-            .assert.containsText('@vsphereYaml', client.page.blueprintSources().props.vsphereYaml)
+            .waitForElementPresent('@blueprintYaml')
+            .assert.containsText('@blueprintYaml', client.page.blueprintSources().props.blueprintYaml)
             .waitForElementPresent('@emptyContent')
-            .clickElement('@vsphereYaml')
+            .clickElement('@blueprintYaml')
             .waitForElementPresent('@contentSnippet')
             .waitForElementPresent('@fullScreenButton')
             .clickElement('@fullScreenButton');
