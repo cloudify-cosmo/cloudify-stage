@@ -42,7 +42,7 @@ export default class extends React.Component {
     render() {
         const NO_DATA_MESSAGE =
             "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.";
-        const { DataTable, ErrorMessage, Header, Button } = Stage.Basic;
+        const { Button, DataTable, ErrorMessage, Header } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
 
         const { blueprintId, deploymentId, outputsAndCapabilities } = this.props.data;
