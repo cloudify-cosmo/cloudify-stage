@@ -20,7 +20,7 @@
     "devtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec",
     "docCheck": "bash scripts/checkDocs.sh",
     "docWidgets": "node scripts/updateReadmes.js",
-    "e2e": "npm run e2e:old && npm run e2e:new",
+    "e2e": "bash scripts/runE2ETests.sh",
     "e2e:new": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
     "e2e:new:dev": "cypress run --reporter spec",
     "e2e:new:open": "cypress open",
