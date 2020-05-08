@@ -47,7 +47,7 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
                 body: license
             })
         )
-        .then(() => {
+        .then(() =>
             cy.request({
                 method: 'GET',
                 url: '/console/sp',
@@ -58,8 +58,10 @@ Cypress.Commands.add('activate', (license = 'valid_trial_license') =>
                     Authorization: `Basic ${btoa('admin:admin')}`,
                     'Content-Type': 'application/json'
                 }
-            }).then(response => (token = response.body.value));
-        })
+            })
+        )
+        .then(response => (token = response.body.value))
+        .then(() => cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`))
 );
 
 Cypress.Commands.add('cfyRequest', (url, method = 'GET', headers = null, body = null) =>

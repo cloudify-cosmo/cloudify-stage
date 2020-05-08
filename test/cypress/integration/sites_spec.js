@@ -106,17 +106,12 @@ describe('Sites Management', () => {
     before(() => {
         cy.activate('valid_spire_license')
             .deleteAllUsersAndTenants()
-            .login();
-        cy.get('.usersMenu')
-            .click()
-            .contains('Reset Templates')
-            .click();
-        cy.contains('Yes').click();
-        cy.get('#loader');
-        cy.visit('/console/page/site_management').waitUntilLoaded();
+            .login()
+            .visit('/console/page/site_management')
+            .waitUntilLoaded();
     });
 
-    beforeEach(function() {
+    beforeEach(() => {
         cy.deleteSites();
         reloadSiteManagementPage();
 

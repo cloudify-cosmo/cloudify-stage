@@ -66,7 +66,7 @@ describe('License Management', () => {
         cy.activate().login();
     });
 
-    beforeEach(function() {
+    beforeEach(() => {
         cy.restoreState();
     });
 
