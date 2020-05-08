@@ -2,16 +2,23 @@
  * Created by jakub.niezgoda on 21/09/2018.
  */
 
+const groupNames = {
+    uninitialized: 'uninitialized',
+    inProgress: 'in progress',
+    started: 'started',
+    deleted: 'deleted'
+};
+
 const groupStates = [
     {
-        name: 'uninitialized',
+        name: groupNames.uninitialized,
         icon: 'cancel',
         colorSUI: 'blue',
         colorHTML: '#2185d0',
         states: ['uninitialized']
     },
     {
-        name: 'in progress',
+        name: groupNames.inProgress,
         icon: 'spinner',
         colorSUI: 'yellow',
         colorHTML: '#fbbd08',
@@ -28,14 +35,14 @@ const groupStates = [
         ]
     },
     {
-        name: 'started',
+        name: groupNames.started,
         icon: 'checkmark',
         colorSUI: 'green',
         colorHTML: '#21ba45',
         states: ['started']
     },
     {
-        name: 'deleted',
+        name: groupNames.deleted,
         icon: 'trash',
         colorSUI: 'black',
         colorHTML: '#1b1c1d',
@@ -45,5 +52,5 @@ const groupStates = [
 
 Stage.defineCommon({
     name: 'NodeInstancesConsts',
-    common: { groupStates }
+    common: { groupNames, groupStates }
 });
