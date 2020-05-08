@@ -44,12 +44,6 @@ describe('Filter', () => {
 
     describe('refreshes dropdown data on', () => {
         before(() => {
-            cy.get('.usersMenu')
-                .click()
-                .contains('Reset Templates')
-                .click();
-            cy.contains('Yes').click();
-
             cy.contains('Cloudify Catalog').click();
             cy.contains('tr', 'AWS')
                 .find('button')
