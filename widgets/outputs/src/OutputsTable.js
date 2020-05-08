@@ -45,7 +45,7 @@ export default class extends React.Component {
         const { DataTable, ErrorMessage, Header, Button } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
 
-        const { outputsAndCapabilities, blueprintId, deploymentId } = this.props.data;
+        const { blueprintId, deploymentId, outputsAndCapabilities } = this.props.data;
 
         return (
             <div>
