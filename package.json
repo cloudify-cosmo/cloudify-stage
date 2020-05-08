@@ -18,9 +18,9 @@
     "build": "webpack --config webpack.config-prod.js --bail",
     "devServer": "node devServer.js",
     "devtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec",
-    "docCheck": "bash scripts/checkDocs.sh",
+    "docCheck": "scripts/checkDocs.sh",
     "docWidgets": "node scripts/updateReadmes.js",
-    "e2e": "bash scripts/runE2ETests.sh",
+    "e2e": "scripts/runE2ETests.sh",
     "e2e:new": "cypress run --reporter cypress-multi-reporters --reporter-options configFile=test/cypress/reporter-config.json",
     "e2e:new:dev": "cypress run --reporter spec",
     "e2e:new:open": "cypress open",
@@ -30,8 +30,8 @@
     "prodtest": "mocha --require @babel/register --require esm --require ./test/setup.js -R spec --recursive \"./test/**/*Test.js\"",
     "size": "size-limit",
     "test": "npm run lint && npm run prodtest && npm run size",
-    "upload": "bash scripts/uploadPackage.sh",
-    "zip": "bash scripts/createPackage.sh"
+    "upload": "scripts/uploadPackage.sh",
+    "zip": "scripts/createPackage.sh"
   },
   "dependencies": {
     "better-console": "^0.2.4",
