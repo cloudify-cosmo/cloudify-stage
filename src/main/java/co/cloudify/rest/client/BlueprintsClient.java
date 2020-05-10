@@ -26,6 +26,7 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import co.cloudify.rest.client.exceptions.BlueprintNotFoundException;
 import co.cloudify.rest.client.exceptions.CloudifyClientException;
@@ -118,8 +119,12 @@ public class BlueprintsClient extends AbstractCloudifyClient {
         try {
             return getBuilder(
                     getBlueprintTarget(id)
-                            .queryParam("blueprint_archive_url", archiveUrl.toString()))
-                                    .put(null, Blueprint.class);
+                            .queryParam("blueprint_archive_url", archiveUrl.toString())
+                            .queryParam("application_file_name", main))
+                                    .put(
+                                            // https://stackoverflow.com/questions/34759569/how-call-put-through-jersy-rest-client-with-null-entity
+                                            Entity.text(StringUtils.EMPTY),
+                                            Blueprint.class);
         } catch (WebApplicationException ex) {
             throw CloudifyClientException.create("Failed uploading blueprint", ex);
         }
