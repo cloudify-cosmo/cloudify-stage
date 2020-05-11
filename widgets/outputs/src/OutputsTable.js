@@ -2,7 +2,9 @@ export default class extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            error: null
+            error: null,
+            sortColumn: 'name',
+            sortAscending: true
         };
     }
 
@@ -38,12 +40,10 @@ export default class extends React.Component {
     render() {
         const NO_DATA_MESSAGE =
             "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.";
-        const { DataTable, ErrorMessage, Header, Label } = Stage.Basic;
+        const { Button, DataTable, ErrorMessage, Header } = Stage.Basic;
         const { ParameterValue, ParameterValueDescription } = Stage.Common;
 
-        const { outputsAndCapabilities } = this.props.data;
-
-        const compareNames = (a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
+        const { blueprintId, deploymentId, outputsAndCapabilities } = this.props.data;
 
         return (
             <div>
@@ -53,8 +53,10 @@ export default class extends React.Component {
                     className="outputsTable"
                     noDataAvailable={_.isEmpty(outputsAndCapabilities)}
                     noDataMessage={NO_DATA_MESSAGE}
+                    fetchData={({ gridParams }) => this.setState(_.pick(gridParams, 'sortColumn', 'sortAscending'))}
                 >
-                    <DataTable.Column label="Name" width="35%" />
+                    <DataTable.Column label="Name" name="name" width="35%" />
+                    <DataTable.Column label="Type" name="isOutput" />
                     <DataTable.Column
                         label={
                             <span>
@@ -63,22 +65,39 @@ export default class extends React.Component {
                         }
                         width="65%"
                     />
-                    {outputsAndCapabilities.sort(compareNames).map(outputOrCapability => (
-                        <DataTable.Row key={outputOrCapability.name}>
-                            <DataTable.Data>
-                                <Header size="tiny">
-                                    {outputOrCapability.name}
-                                    {outputOrCapability.isCapability && (
-                                        <Label size="mini" color="blue" content="capability" />
-                                    )}
-                                    <Header.Subheader>{outputOrCapability.description}</Header.Subheader>
-                                </Header>
-                            </DataTable.Data>
-                            <DataTable.Data>
-                                <ParameterValue value={outputOrCapability.value} />
-                            </DataTable.Data>
-                        </DataTable.Row>
-                    ))}
+                    {_.chain(outputsAndCapabilities)
+                        .sortBy(this.state.sortColumn)
+                        .thru(data => (this.state.sortAscending ? data : _.reverse(data)))
+                        .map(outputOrCapability => (
+                            <DataTable.Row key={outputOrCapability.name}>
+                                <DataTable.Data>
+                                    <Header size="tiny">
+                                        {outputOrCapability.name}
+                                        <Header.Subheader>{outputOrCapability.description}</Header.Subheader>
+                                    </Header>
+                                </DataTable.Data>
+                                <DataTable.Data>{outputOrCapability.isOutput ? 'Output' : 'Capability'}</DataTable.Data>
+                                <DataTable.Data>
+                                    <ParameterValue value={outputOrCapability.value} />
+                                </DataTable.Data>
+                            </DataTable.Row>
+                        ))
+                        .value()}
+                    <DataTable.Action>
+                        {!_.isEmpty(outputsAndCapabilities) && (
+                            <Button
+                                content="Export to JSON"
+                                icon="external share"
+                                labelPosition="left"
+                                onClick={() =>
+                                    Stage.Utils.saveAs(
+                                        new Blob([JSON.stringify(outputsAndCapabilities)]),
+                                        `${deploymentId || blueprintId}-Outputs-Capabilities.json`
+                                    )
+                                }
+                            />
+                        )}
+                    </DataTable.Action>
                 </DataTable>
             </div>
         );
