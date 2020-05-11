@@ -1,5 +1,3 @@
-import { saveAs } from 'file-saver';
-
 export default class extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -92,7 +90,7 @@ export default class extends React.Component {
                                 icon="external share"
                                 labelPosition="left"
                                 onClick={() =>
-                                    saveAs(
+                                    Stage.Utils.saveAs(
                                         new Blob([JSON.stringify(outputsAndCapabilities)]),
                                         `${deploymentId || blueprintId}-Outputs-Capabilities.json`
                                     )
