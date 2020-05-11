@@ -14,6 +14,7 @@
     "conf/userConfig.json"
   ],
   "scripts": {
+    "audit": "npm audit --production && cd backend && npm run audit",
     "beforebuild": "npm ci --prefer-offline && (cd backend && npm ci --prefer-offline)",
     "build": "webpack --config webpack.config-prod.js --bail",
     "devServer": "node devServer.js",

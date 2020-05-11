@@ -95,6 +95,15 @@ jobs:
           name: Check if cloudify-ui-components version is the same as in official documentation
           command: npm run docCheck
 
+  audit:
+    <<: *default-env
+
+    steps:
+      -   attach_workspace:
+            at: ~/
+      -   run:
+            name: Run npm production dependencies security audit
+            command: npm run audit
 
 workflows:
   version: 2
@@ -110,3 +119,9 @@ workflows:
       - checkDocs:
           requires:
             - build
+      - audit:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
