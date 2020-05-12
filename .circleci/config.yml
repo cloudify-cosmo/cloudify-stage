@@ -55,7 +55,10 @@ jobs:
           command: rpmlint packaging/cloudify-stage.spec
       - run:
           name: Installing NVM to provide NodeJS
-          command: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+          command: |
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+            echo 'export NVM_DIR=$HOME/.nvm' >> $BASH_ENV
+            echo 'source $NVM_DIR/nvm.sh' >> $BASH_ENV
       - run:
           name: Installing build dependencies
           command: |
@@ -151,6 +154,7 @@ workflows:
     jobs:
 #      - build
       - build-rpm
+
 #      - test:
 #          requires:
 #            - build
