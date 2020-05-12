@@ -50,12 +50,14 @@ jobs:
             echo 'export CLOUDIFY_VERSION=5.1.0' >> $BASH_ENV
             echo 'export CLOUDIFY_PACKAGE_RELEASE=.dev1' >> $BASH_ENV
       - run:
-          name: Installing NVM
+          name: Setting up NVM
           command: |
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
             echo 'export NVM_DIR=$HOME/.nvm' >> $BASH_ENV
             echo 'source $NVM_DIR/nvm.sh' >> $BASH_ENV
-            nvm install
+      - run:
+          name: Installing NVM
+          command: nvm install
       - run:
           name: Installing RPM development tools
           command: sudo yum install rpmdevtools rpmlint -y
