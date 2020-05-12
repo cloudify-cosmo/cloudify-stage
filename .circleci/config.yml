@@ -48,11 +48,11 @@ jobs:
             export CLOUDIFY_VERSION=5.1.0
             export CLOUDIFY_PACKAGE_RELEASE=.dev1
       - run:
-          command: Installing RPM development tools
-          name: sudo yum install rpmdevtools rpmlint -y
+          name: Installing RPM development tools
+          command: sudo yum install rpmdevtools rpmlint -y
       - run:
-          command: Linting RPM spec file
-          name: rpmlint packaging/cloudify-stage.spec
+          name: Linting RPM spec file
+          command: rpmlint packaging/cloudify-stage.spec
       - run:
           name: Installing build dependencies
           command: sudo yum-builddep -y packaging/cloudify-stage.spec
