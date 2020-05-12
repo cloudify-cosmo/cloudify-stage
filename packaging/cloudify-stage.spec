@@ -18,6 +18,7 @@ Cloudify Stage provides Graphical User Interface for managing and analyzing Clou
 
 %prep
 
+nvm install
 npm run beforebuild
 
 
