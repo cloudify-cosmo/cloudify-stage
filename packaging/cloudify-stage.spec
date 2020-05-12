@@ -1,7 +1,3 @@
-# TODO: Move out from here
-%define CLOUDIFY_VERSION 5.1.0
-%define CLOUDIFY_PACKAGE_RELEASE .dev1
-
 %define stage_path /opt/%{name}
 %define logs_path /var/log/cloudify/stage
 

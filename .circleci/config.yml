@@ -39,14 +39,16 @@ jobs:
   build-rpm:
     docker:
       - image: rpmbuild/centos7
+
     working_directory: ~/rpm
+
     steps:
       - checkout
       - run:
-          name: Set version environment variables
+          name: Setting version environment variables
           command: | # TODO: Hardcoded as temporary solution
-            export CLOUDIFY_VERSION=5.1.0
-            export CLOUDIFY_PACKAGE_RELEASE=.dev1
+            echo 'export CLOUDIFY_VERSION=5.1.0' >> $BASH_ENV
+            echo 'export CLOUDIFY_PACKAGE_RELEASE=.dev1' >> $BASH_ENV
       - run:
           name: Installing RPM development tools
           command: sudo yum install rpmdevtools rpmlint -y
@@ -80,10 +82,12 @@ jobs:
               -D "CLOUDIFY_VERSION ${CLOUDIFY_VERSION}" \
               -D "CLOUDIFY_PACKAGE_RELEASE ${CLOUDIFY_PACKAGE_RELEASE}" \
               -bb packaging/cloudify-stage.spec
-      - run: |
-          mkdir result
-          mv noarch/*.rpm result || true
-          mv x86_64/*.rpm result || true
+      - run:
+          name: Moving RPMs
+          command: |
+            mkdir result
+            mv noarch/*.rpm result || true
+            mv x86_64/*.rpm result || true
       - store_artifacts:
           path: result
           destination: result
@@ -152,15 +156,14 @@ workflows:
   version: 2
   build-test-check:
     jobs:
-#      - build
+      - build
       - build-rpm
-
-#      - test:
-#          requires:
-#            - build
-#      - checkBundleSize:
-#          requires:
-#            - build
-#      - checkDocs:
-#          requires:
-#            - build
+      - test:
+          requires:
+            - build
+      - checkBundleSize:
+          requires:
+            - build
+      - checkDocs:
+          requires:
+            - build
