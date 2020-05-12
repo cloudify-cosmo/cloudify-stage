@@ -99,11 +99,11 @@ jobs:
     <<: *default-env
 
     steps:
-      -   attach_workspace:
-            at: ~/
-      -   run:
-            name: Run npm production dependencies security audit
-            command: npm run audit
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Run npm production dependencies security audit
+          command: npm run audit
 
 workflows:
   version: 2
