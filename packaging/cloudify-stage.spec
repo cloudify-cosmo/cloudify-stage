@@ -15,7 +15,6 @@ URL:            https://github.com/cloudify-cosmo/%{name}
 Vendor:         Cloudify Platform Ltd.
 Packager:       Cloudify Platform Ltd.
 
-BuildRequires:  nodejs >= 12.16.1
 AutoReqProv:    no
 
 %description
