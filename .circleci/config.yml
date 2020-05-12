@@ -55,7 +55,9 @@ jobs:
           command: rpmlint packaging/cloudify-stage.spec
       - run:
           name: Installing build dependencies
-          command: sudo yum-builddep -y packaging/cloudify-stage.spec
+          command: |
+            curl -sL https://rpm.nodesource.com/setup_12.x | sudo bash -
+            sudo yum-builddep -y packaging/cloudify-stage.spec
       - run:
           name: Downloading sources
           command: |
