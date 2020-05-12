@@ -7,7 +7,7 @@
   "author": "Cloudify",
   "main": "server.js",
   "scripts": {
-    "audit": "npm audit --production --audit-level=moderate",
+    "audit": "npm audit --production",
     "db-migrate": "node migration up",
     "db-migrate-clear": "node migration clear",
     "db-migrate-create": "sequelize migration:create --config ../conf/app.json",
@@ -56,7 +56,7 @@
     "passport-unique-token": "^0.1.4",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "pm2": "^4.2.3",
+    "pm2": "^4.3.1",
     "request": "^2.83.0",
     "request-debug": "^0.2.0",
     "sanitize-filename": "^1.6.1",
