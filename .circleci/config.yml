@@ -146,14 +146,14 @@ workflows:
   version: 2
   build-test-check:
     jobs:
-      - build
+#      - build
       - build-rpm
-      - test:
-          requires:
-            - build
-      - checkBundleSize:
-          requires:
-            - build
-      - checkDocs:
-          requires:
-            - build
+#      - test:
+#          requires:
+#            - build
+#      - checkBundleSize:
+#          requires:
+#            - build
+#      - checkDocs:
+#          requires:
+#            - build
