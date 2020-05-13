@@ -50,37 +50,24 @@ jobs:
             echo 'export CLOUDIFY_VERSION=5.1.0' >> $BASH_ENV
             echo 'export CLOUDIFY_PACKAGE_RELEASE=.dev1' >> $BASH_ENV
       - run:
-          name: Setting up NVM
+          name: Installing NodeJS & RPM development tools
           command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-            echo 'export NVM_DIR=$HOME/.nvm' >> $BASH_ENV
-            echo 'source $NVM_DIR/nvm.sh' >> $BASH_ENV
-      - run:
-          name: Installing NVM
-          command: nvm install
-      - run:
-          name: Installing RPM development tools
-          command: sudo yum install rpmdevtools rpmlint -y
+            sudo yum install https://rpm.nodesource.com/pub_12.x/el/7/x86_64/nodejs-12.16.1-1nodesource.x86_64.rpm
+            sudo yum install rpmdevtools rpmlint -y
       - run:
           name: Linting RPM spec file
           command: rpmlint packaging/cloudify-stage.spec
       - run:
-          name: Building RPM from cloudify-stage.spec
+          name: Building RPM
           command: |
             sudo chmod a+wx /opt
             rpmbuild \
               -D "CLOUDIFY_VERSION ${CLOUDIFY_VERSION}" \
               -D "CLOUDIFY_PACKAGE_RELEASE ${CLOUDIFY_PACKAGE_RELEASE}" \
               -bb packaging/cloudify-stage.spec
-      - run:
-          name: Moving RPMs
-          command: |
-            mkdir result
-            mv noarch/*.rpm result || true
-            mv x86_64/*.rpm result || true
       - store_artifacts:
-          path: result
-          destination: result
+          path: x86_64
+          destination: rpm
 
   test:
     <<: *default-working-directory

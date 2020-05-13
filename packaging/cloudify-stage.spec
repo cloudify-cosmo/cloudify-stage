@@ -11,10 +11,14 @@ URL:            https://github.com/cloudify-cosmo/%{name}
 Vendor:         Cloudify Platform Ltd.
 Packager:       Cloudify Platform Ltd.
 
+BuildRequires:  nodejs >= 12.16.1, rsync
+Requires:       nodejs >= 12.16.1
 AutoReqProv:    no
 
 %description
+
 Cloudify Stage provides Graphical User Interface for managing and analyzing Cloudify Manager.
+
 
 %prep
 
