@@ -1,3 +1,4 @@
+%define _libdir %{_exec_prefix}/lib
 %define stage_path /opt/%{name}
 %define logs_path /var/log/cloudify/stage
 
