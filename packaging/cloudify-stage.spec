@@ -12,8 +12,9 @@ Vendor:         Cloudify Platform Ltd.
 Packager:       Cloudify Platform Ltd.
 
 BuildRequires:  nodejs >= 12.16.1, rsync
-Requires:       nodejs >= 12.16.1
+Requires:       nodejs >= 12.16.1, cloudify-rest-service, shadow-utils
 AutoReqProv:    no
+
 
 %description
 
@@ -40,6 +41,9 @@ cp -r %{_builddir}/dist %{buildroot}%{stage_path}
 
 mkdir -p %{buildroot}%{logs_path}
 
+cp -R %{buildroot}/packaging/files/* %{buildroot}
+visudo -cf %{buildroot}/etc/sudoers.d/cloudify-stage
+
 
 %pre
 
@@ -49,8 +53,19 @@ usermod -aG cfyuser stage_user
 usermod -aG stage_group cfyuser
 
 
+%postun
+
+groupdel stage_group
+userdel -r -f stage_user
+
+
 %files
 
+%defattr(-,root,root)
+/etc/logrotate.d/cloudify-stage
+/etc/sudoers.d/cloudify-stage
+/usr/lib/systemd/system/cloudify-stage.service
+/opt/cloudify/stage/restore-snapshot.py
 %attr(-,stage_user,stage_group) %{stage_path}
 %attr(-,cfyuser,cfyuser) %{stage_path}/conf
 %attr(-,stage_user,stage_group) %{logs_path}

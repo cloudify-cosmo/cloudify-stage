@@ -1,0 +1,5 @@
+# snapshot restore script
+cfyuser ALL=(stage_user) NOPASSWD:/opt/manager/env/bin/python
+
+# running node scripts
+cfyuser ALL=(stage_user) NOPASSWD:/usr/bin/node
