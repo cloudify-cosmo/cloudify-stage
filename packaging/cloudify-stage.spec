@@ -39,9 +39,9 @@ cp -r %{_builddir}/backend %{buildroot}%{stage_path}
 rsync -avr --exclude='me.json*' %{_builddir}/conf %{buildroot}%{stage_path}
 cp -r %{_builddir}/dist %{buildroot}%{stage_path}
 
-mkdir -p %{buildroot}%{logs_path}
+cp -R %{_builddir}/packaging/files/* %{buildroot}
 
-cp -R %{buildroot}/packaging/files/* %{buildroot}
+mkdir -p %{buildroot}%{logs_path}
 visudo -cf %{buildroot}/etc/sudoers.d/cloudify-stage
 
 
@@ -64,7 +64,7 @@ userdel -r -f stage_user
 %defattr(-,root,root)
 /etc/logrotate.d/cloudify-stage
 /etc/sudoers.d/cloudify-stage
-/usr/lib/systemd/system/cloudify-stage.service
+%{_libdir}/systemd/system/cloudify-stage.service
 /opt/cloudify/stage/restore-snapshot.py
 %attr(-,stage_user,stage_group) %{stage_path}
 %attr(-,cfyuser,cfyuser) %{stage_path}/conf

@@ -53,7 +53,7 @@ jobs:
           name: Installing NodeJS & RPM development tools
           command: |
             sudo yum install -y \
-              https://rpm.nodesource.com/pub_12.x/el/7/x86_64/nodejs-12.16.1-1nodesource.x86_64.rpm \
+              http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm \
               rpmdevtools rpmlint
       - run:
           name: Linting RPM spec file
