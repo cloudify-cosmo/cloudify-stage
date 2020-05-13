@@ -66,7 +66,7 @@ userdel -r -f stage_user
 /etc/logrotate.d/cloudify-stage
 /etc/sudoers.d/cloudify-stage
 %{_libdir}/systemd/system/cloudify-stage.service
-/opt/cloudify/stage/restore-snapshot.py
+/opt/cloudify/stage
 %attr(-,stage_user,stage_group) %{stage_path}
 %attr(-,cfyuser,cfyuser) %{stage_path}/conf
 %attr(-,stage_user,stage_group) %{logs_path}
