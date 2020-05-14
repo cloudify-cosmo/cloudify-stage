@@ -17,7 +17,7 @@ COMMANDS_FOR_RPM="
   ${PRE_COMMANDS}
   sudo yum remove cloudify-stage -y;
   sudo yum install ${STAGE_PACKAGE} -y;
-  sudo systemctl daemon-reload
+  sudo systemctl daemon-reload;
   ${POST_COMMANDS}"
 
 COMMANDS_FOR_TAR_GZ="
