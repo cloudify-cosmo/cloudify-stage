@@ -1,5 +1,5 @@
 %define _libdir %{_exec_prefix}/lib
-%define stage_path /opt/%{name}
+%define stage_path /opt/cloudify-stage
 %define logs_path /var/log/cloudify/stage
 
 Name:           cloudify-stage
@@ -8,7 +8,7 @@ Release:        %{CLOUDIFY_PACKAGE_RELEASE}%{?dist}
 Summary:        Cloudify UI
 Group:          Applications/Multimedia
 License:        Apache 2.0
-URL:            https://github.com/cloudify-cosmo/%{name}
+URL:            https://github.com/cloudify-cosmo/cloudify-stage
 Vendor:         Cloudify Platform Ltd.
 Packager:       Cloudify Platform Ltd.
 
@@ -34,15 +34,20 @@ npm run build
 
 %install
 
+# Adding stage files
 mkdir -p %{buildroot}%{stage_path}
 cp %{_builddir}/package.json %{buildroot}%{stage_path}
 cp -r %{_builddir}/backend %{buildroot}%{stage_path}
 rsync -avr --exclude='me.json*' %{_builddir}/conf %{buildroot}%{stage_path}
 cp -r %{_builddir}/dist %{buildroot}%{stage_path}
 
-cp -R %{_builddir}/packaging/files/* %{buildroot}
-
+# Adding system files
+cp -r %{_builddir}/packaging/files/* %{buildroot}
 mkdir -p %{buildroot}%{logs_path}
+
+
+%check
+
 visudo -cf %{buildroot}/etc/sudoers.d/cloudify-stage
 
 
@@ -56,8 +61,8 @@ usermod -aG stage_group cfyuser
 
 %postun
 
+userdel -fr stage_user
 groupdel stage_group
-userdel -r -f stage_user
 
 
 %files

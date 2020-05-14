@@ -60,7 +60,7 @@ You can create application package and deploy it on a remote Cloudify Manager se
 
 ### Package creation
 
-You can use either tarball package or RPM package.
+You can create either tarball package or RPM package.
 
 #### Tarball package
 
@@ -72,8 +72,8 @@ To create tarball package:
 #### RPM package
 
 To create RPM package:  
-1. Push your changes to branch
-1. Your RPM package will automatically be created by [CircleCI](https://circleci.com/gh/cloudify-cosmo/cloudify-stage) (check Artifacts tab on the `build-rpm` job) 
+1. Push branch with your changes to the remote.
+1. Your RPM package will automatically be created by [CircleCI](https://circleci.com/gh/cloudify-cosmo/cloudify-stage) (check Artifacts tab on the `build-rpm` job).
 
 ### Package upload
 

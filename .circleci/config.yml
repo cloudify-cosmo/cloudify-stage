@@ -54,13 +54,12 @@ jobs:
             tee -a $BASH_ENV <version_info
       - run:
           name: Install NodeJS & RPM development tools
-          command: |
-            sudo yum install -y \
+          command: sudo yum install -y \
               http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm \
               rpmdevtools rpmlint
       - run:
           name: Lint RPM spec file
-          command: rpmlint packaging/cloudify-stage.spec
+          command: rpmlint --info packaging/cloudify-stage.spec
       - run:
           name: Install build dependencies for RPM spec file
           command: sudo yum-builddep -y packaging/cloudify-stage.spec
