@@ -59,7 +59,7 @@ class InputsHeader extends React.Component {
                                     Surround value with <strong>"</strong> (double quotes) to explicitly declare it as a
                                     string, e.g.:
                                     <br />
-                                    <strong>"true"</strong> will be treated as string not a boolean value.
+                                    <strong>"true"</strong> will be treated as a string, not a boolean value.
                                 </p>
                                 <p>
                                     Use <strong>""</strong> for an empty string.
