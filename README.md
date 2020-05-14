@@ -60,22 +60,35 @@ You can create application package and deploy it on a remote Cloudify Manager se
 
 ### Package creation
 
-To create application package:  
+You can use either tarball package or RPM package.
+
+#### Tarball package
+
+To create tarball package:  
 1. Create production build by running: `npm run build`.
 1. Pack all necessary files into archive by running: `npm run zip`. 
-1. Application package will be in `stage.tar.gz` file in repository main directory. 
+1. Application package will be in `stage.tar.gz` file in repository main directory.
+
+#### RPM package
+
+To create RPM package:  
+1. Push your changes to branch
+1. Your RPM package will automatically be created by [CircleCI](https://circleci.com/gh/cloudify-cosmo/cloudify-stage) (check Artifacts tab on the `build-rpm` job) 
 
 ### Package upload
 
 To upload the package to the remote Cloudify Manager:
-1. Define path to private SSH key to access Cloudify Manager: `export SSH_KEY_PATH=<PATH>`.
-1. Define Cloudify Manager IP adress: `export MANAGER_IP=<MANAGER_IP>`.
-1. Upload package to the Cloudify Manager and restart UI services: `npm run upload`.
+1. Have private SSH key to access Cloudify Manager in `~/.ssh/cloudify.key`or explicitly define path to it: `export SSH_KEY_PATH=<PATH>`.
+1. Have `manager.ip` defined in `conf/me.json` or explicitly define Cloudify Manager IP address: `export MANAGER_IP=<MANAGER_IP>`.
+1. Have tarball package (`stage.tar.gz`) present or explicitly define path to tarball or RPM package: `export STAGE_PACKAGE=<PATH>`.
+1. Run uploading script: `npm run upload`.
 1. Open browser and go to page `http://<MANAGER_IP>` to see if application is running.
 
 ### Package content
 
-Package archive contains the following resources:
+#### Tarball package
+
+Package tarball archive contains the following resources:
 
 * `backend` - Stage Backend - whole [backend](./backend) folder
 * `conf` - configuration files (see [Configuration](./conf/README.md) for details)
@@ -108,6 +121,9 @@ Package archive contains the following resources:
     * `templates` - custom templates (empty in clean package)
       * `pages` - custom pages (empty in clean package)
 
+#### RPM package
+
+RPM package has all the files present in tarball package. In addition all files from [packaging/files](./packaging/files) directory are installed. 
 
 ## Tests
 
