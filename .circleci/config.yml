@@ -45,10 +45,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Setting version environment variables
-          command: | # TODO: Hardcoded as temporary solution
-            echo 'export CLOUDIFY_VERSION=5.1.0' >> $BASH_ENV
-            echo 'export CLOUDIFY_PACKAGE_RELEASE=.dev1' >> $BASH_ENV
+          name: Get current version numbers from cloudify-manager
+          command: |
+            # Try to download the file from a branch named the same as current branch, otherwise master
+            CLOUDIFY_MANAGER_URL=https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager
+            curl -fO "${CLOUDIFY_MANAGER_URL}/${CIRCLE_BRANCH}/packaging/version_info" || \
+              curl -fO "${CLOUDIFY_MANAGER_URL}/master/packaging/version_info"
+            tee -a $BASH_ENV <version_info
       - run:
           name: Installing NodeJS & RPM development tools
           command: |
