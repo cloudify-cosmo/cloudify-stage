@@ -53,16 +53,27 @@ jobs:
               curl -fO "${CLOUDIFY_MANAGER_URL}/master/packaging/version_info"
             tee -a $BASH_ENV <version_info
       - run:
-          name: Installing NodeJS & RPM development tools
+          name: Install NodeJS & RPM development tools
           command: |
             sudo yum install -y \
               http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm \
               rpmdevtools rpmlint
       - run:
-          name: Linting RPM spec file
+          name: Lint RPM spec file
           command: rpmlint packaging/cloudify-stage.spec
       - run:
-          name: Building RPM
+          name: Install build dependencies for RPM spec file
+          command: sudo yum-builddep -y packaging/cloudify-stage.spec
+      - run:
+          name: Download sources for RPM spec file
+          command: |
+            spectool \
+              -d "CLOUDIFY_VERSION ${CLOUDIFY_VERSION}" \
+              -d "CLOUDIFY_PACKAGE_RELEASE ${CLOUDIFY_PACKAGE_RELEASE}" \
+              -P packaging/cloudify-stage.spec \
+              -S -g
+      - run:
+          name: Build RPM
           command: |
             sudo chmod a+wx /opt
             rpmbuild \
