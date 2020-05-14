@@ -54,7 +54,8 @@ jobs:
             tee -a $BASH_ENV <version_info
       - run:
           name: Install NodeJS & RPM development tools
-          command: sudo yum install -y \
+          command: |
+            sudo yum install -y \
               http://repository.cloudifysource.org/cloudify/components/nodejs-12.16.1-1nodesource.x86_64.rpm \
               rpmdevtools rpmlint
       - run:
