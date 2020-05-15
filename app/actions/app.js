@@ -12,7 +12,7 @@ import { getClusterStatus } from './clusterStatus';
 import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 
 export function intialPageLoad() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         dispatch(setAppLoading(true));
         const state = getState();
         return dispatch(getTenants(state.manager))

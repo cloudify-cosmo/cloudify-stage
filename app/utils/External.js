@@ -124,7 +124,7 @@ export default class External {
                         const reader = new FileReader();
                         const zip = new JSZip();
 
-                        reader.onload = function(event) {
+                        reader.onload = event => {
                             const fileContent = event.target.result;
                             zip.folder(files.name).file(files.name, fileContent);
                             zip.generateAsync({
@@ -146,7 +146,7 @@ export default class External {
                             );
                         };
 
-                        reader.onerror = function(event) {
+                        reader.onerror = event => {
                             const errorMessage = `Cannot read file. Error code: ${event.target.error.code}`;
                             logger.error(errorMessage);
                             reject({ message: errorMessage });

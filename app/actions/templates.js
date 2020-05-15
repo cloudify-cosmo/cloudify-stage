@@ -13,9 +13,8 @@ export function storeTemplates(templates) {
 }
 
 export function loadTemplates() {
-    return function(dispatch, getState) {
-        return templatesLoader.load(getState().manager).then(result => dispatch(storeTemplates(result)));
-    };
+    return (dispatch, getState) =>
+        templatesLoader.load(getState().manager).then(result => dispatch(storeTemplates(result)));
 }
 
 export function addTemplate(templateId, pages) {

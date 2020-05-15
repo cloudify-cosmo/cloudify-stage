@@ -198,7 +198,6 @@ export default class AddWidgetModal extends Component {
                 </Button.Content>
             </Button>
         );
-
         const updateWidgetBtn = (
             <Button
                 floated="left"
@@ -290,8 +289,8 @@ export default class AddWidgetModal extends Component {
                                 <Grid.Column width={4}>{menuContent}</Grid.Column>
                                 <Grid.Column width={12}>
                                     <Item.Group divided className="widgetsList">
-                                        {this.state.filteredWidgetDefinitions.map(function(widget) {
-                                            return (
+                                        {this.state.filteredWidgetDefinitions.map(
+                                            widget => (
                                                 <Item
                                                     key={widget.id}
                                                     data-id={widget.id}
@@ -344,8 +343,9 @@ export default class AddWidgetModal extends Component {
                                                         </Item.Extra>
                                                     </Item.Content>
                                                 </Item>
-                                            );
-                                        }, this)}
+                                            ),
+                                            this
+                                        )}
 
                                         {_.isEmpty(this.state.filteredWidgetDefinitions) && (
                                             <Item className="alignCenter" content="No widgets available" />

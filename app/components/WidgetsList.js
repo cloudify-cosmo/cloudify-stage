@@ -39,7 +39,7 @@ export default class WidgetsList extends Component {
         ) : (
             <div>
                 <Grid isEditMode={this.props.isEditMode} onGridDataChange={this._updateWidget.bind(this)}>
-                    {this.props.widgets.map(function(widget) {
+                    {this.props.widgets.map(widget => {
                         const widgetDefId = (widget.definition || {}).id;
                         return (
                             <GridItem

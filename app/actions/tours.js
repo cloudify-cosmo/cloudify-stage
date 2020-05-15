@@ -163,14 +163,14 @@ export function storeTours(tours) {
 }
 
 export function loadTours() {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         hopscotchRegisterHelpers(dispatch);
         return Tours.load(getState().manager).then(result => dispatch(storeTours(result)));
     };
 }
 
 export function startTour(tour) {
-    return function(dispatch, getState) {
+    return (dispatch, getState) => {
         const path = getState().router.location.pathname;
 
         if (!_.isNil(tour.startAt) && tour.startAt !== path) {
