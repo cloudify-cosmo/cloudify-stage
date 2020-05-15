@@ -5,7 +5,7 @@
 const req = require('request');
 const logger = require('./LoggerHandler').getLogger('RequestHandler');
 
-module.exports = (function() {
+module.exports = (() => {
     function request(method, requestUrl, options, onSuccess, onError) {
         options.method = method;
 

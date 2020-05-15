@@ -21,7 +21,7 @@ const userPagesFolder = pathlib.resolve(userTemplatesFolder, 'pages');
 
 const allTenants = '*';
 
-module.exports = (function() {
+module.exports = (() => {
     function _getTemplates(folder, isCustom, filter) {
         const compareTemplates = (templateA, templateB) => {
             const conflictingTemplates =

@@ -17,7 +17,7 @@ const logger = require('./LoggerHandler').getLogger('SourceHandler');
 const browseSourcesDir = pathlib.join(os.tmpdir(), config.app.source.browseSourcesDir);
 const lookupYamlsDir = pathlib.join(os.tmpdir(), config.app.source.lookupYamlsDir);
 
-module.exports = (function() {
+module.exports = (() => {
     function browseArchiveTree(req) {
         const archiveUrl = `/blueprints/${req.params.blueprintId}/archive`;
         logger.debug('download archive from url', archiveUrl);

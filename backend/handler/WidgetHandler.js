@@ -20,7 +20,7 @@ const builtInWidgetsFolder = Utils.getResourcePath('widgets', false);
 const userWidgetsFolder = Utils.getResourcePath('widgets', true);
 const widgetTempDir = pathlib.join(os.tmpdir(), config.app.widgets.tempDir);
 
-module.exports = (function() {
+module.exports = (() => {
     function _saveMultipartData(req) {
         const targetPath = pathlib.join(widgetTempDir, `widget${Date.now()}`);
         return ArchiveHelper.saveMultipartData(req, targetPath, 'widget');

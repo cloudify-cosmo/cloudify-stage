@@ -7,7 +7,7 @@ const param = require('jquery-param');
 const ManagerHandler = require('../ManagerHandler');
 const consts = require('../../consts');
 
-module.exports = (function() {
+module.exports = (() => {
     function call(method, url, params, data, headers = {}) {
         if (!_.isEmpty(params)) {
             const queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);

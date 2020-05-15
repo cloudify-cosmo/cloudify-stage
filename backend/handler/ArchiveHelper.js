@@ -13,7 +13,7 @@ const RequestHandler = require('./RequestHandler');
 
 const logger = require('./LoggerHandler').getLogger('ArchiveHelper');
 
-module.exports = (function() {
+module.exports = (() => {
     function saveMultipartData(req, targetDir, multipartId) {
         const storage = multer.diskStorage({
             destination(req, file, cb) {
@@ -59,10 +59,8 @@ module.exports = (function() {
             logger.debug('Fetching file from url', archiveUrl);
 
             let getRequest = null;
-            const onErrorFetch = function(error) {
-                reject(error);
-            };
-            const onSuccessFetch = function(response) {
+            const onErrorFetch = reject;
+            const onSuccessFetch = response => {
                 let archiveFile = _extractFilename(response.headers['content-disposition']);
 
                 logger.debug('Filename extracted from content-disposition', archiveFile);

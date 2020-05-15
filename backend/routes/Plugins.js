@@ -75,6 +75,7 @@ router.get('/icons/:pluginId', (req, res) => {
     req.pipe(
         request(`${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`, options).on(
             'response',
+            // eslint-disable-next-line func-names
             function(response) {
                 if (response.statusCode === 404) {
                     res.status(200).end();

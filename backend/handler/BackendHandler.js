@@ -17,67 +17,65 @@ const logger = require('./LoggerHandler').getLogger('WidgetBackend');
 const builtInWidgetsFolder = Utils.getResourcePath('widgets', false);
 const userWidgetsFolder = Utils.getResourcePath('widgets', true);
 
-const BackendRegistrator = function(widgetId, resolve, reject) {
-    return {
-        register: (serviceName, method, service) => {
-            if (!serviceName) {
-                return reject('Service name must be provided');
-            }
-            serviceName = _.toUpper(serviceName);
-
-            if (!_.isString(method)) {
-                service = method;
-                method = consts.ALLOWED_METHODS_OBJECT.get;
-            } else if (!_.isNil(method)) {
-                method = _.toUpper(method);
-                if (!_.includes(consts.ALLOWED_METHODS_ARRAY, method)) {
-                    return reject(
-                        `Method '${method}' not allowed. Valid methods: ${consts.ALLOWED_METHODS_ARRAY.toString()}`
-                    );
-                }
-            }
-
-            if (!service) {
-                return reject('Service body must be provided');
-            }
-            if (!_.isFunction(service)) {
-                return reject('Service body must be a function (function(request, response, next, helper) {...})');
-            }
-
-            const getServiceString = (widgetId, method, serviceName) =>
-                `widget=${widgetId} method=${method} name=${serviceName}`;
-            logger.info(`--- registering service ${getServiceString(widgetId, method, serviceName)}`);
-
-            return db.WidgetBackend.findOrCreate({
-                where: {
-                    widgetId,
-                    serviceName,
-                    method
-                },
-                defaults: {
-                    script: ''
-                }
-            })
-                .spread(widgetBackend => {
-                    logger.debug(`--- updating entry for service: ${getServiceString(widgetId, method, serviceName)}`);
-                    return widgetBackend.update(
-                        { script: new VMScript(`module.exports = ${service.toString()}`) },
-                        { fields: ['script'] }
-                    );
-                })
-                .then(() => {
-                    logger.info(`--- registered service: ${getServiceString(widgetId, method, serviceName)}`);
-                    return resolve();
-                })
-                .catch(error => {
-                    logger.error(error);
-                    return reject(`--- error registering service: ${getServiceString(widgetId, method, serviceName)}`);
-                });
+const BackendRegistrator = (widgetId, resolve, reject) => ({
+    register: (serviceName, method, service) => {
+        if (!serviceName) {
+            return reject('Service name must be provided');
         }
-    };
-};
+        serviceName = _.toUpper(serviceName);
 
-module.exports = (function() {
+        if (!_.isString(method)) {
+            service = method;
+            method = consts.ALLOWED_METHODS_OBJECT.get;
+        } else if (!_.isNil(method)) {
+            method = _.toUpper(method);
+            if (!_.includes(consts.ALLOWED_METHODS_ARRAY, method)) {
+                return reject(
+                    `Method '${method}' not allowed. Valid methods: ${consts.ALLOWED_METHODS_ARRAY.toString()}`
+                );
+            }
+        }
+
+        if (!service) {
+            return reject('Service body must be provided');
+        }
+        if (!_.isFunction(service)) {
+            return reject('Service body must be a function (function(request, response, next, helper) {...})');
+        }
+
+        const getServiceString = (widgetId, method, serviceName) =>
+            `widget=${widgetId} method=${method} name=${serviceName}`;
+        logger.info(`--- registering service ${getServiceString(widgetId, method, serviceName)}`);
+
+        return db.WidgetBackend.findOrCreate({
+            where: {
+                widgetId,
+                serviceName,
+                method
+            },
+            defaults: {
+                script: ''
+            }
+        })
+            .spread(widgetBackend => {
+                logger.debug(`--- updating entry for service: ${getServiceString(widgetId, method, serviceName)}`);
+                return widgetBackend.update(
+                    { script: new VMScript(`module.exports = ${service.toString()}`) },
+                    { fields: ['script'] }
+                );
+            })
+            .then(() => {
+                logger.info(`--- registered service: ${getServiceString(widgetId, method, serviceName)}`);
+                return resolve();
+            })
+            .catch(error => {
+                logger.error(error);
+                return reject(`--- error registering service: ${getServiceString(widgetId, method, serviceName)}`);
+            });
+    }
+});
+
+module.exports = (() => {
     function _getUserWidgets() {
         return fs
             .readdirSync(userWidgetsFolder)

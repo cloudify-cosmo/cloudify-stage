@@ -7,7 +7,7 @@ const param = require('jquery-param');
 const RequestHandler = require('../RequestHandler');
 const consts = require('../../consts');
 
-module.exports = (function() {
+module.exports = (() => {
     function call(method, url, params, data, parseResponse = true, headers = {}, certificate = null) {
         return new Promise((resolve, reject) => {
             const options = { headers: {} };
